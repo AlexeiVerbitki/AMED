@@ -1,0 +1,105 @@
+<div class="container-fluid sky z-depth-2">
+  <form [formGroup]='rForm'>
+    <h3 class="text-center my-3 font-weight-bold">Inregistrare cerere</h3>
+    <hr>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="md-form">
+          <input id="nrCererii" mdbInputDirective type="text" class="form-control"
+                 formControlName="requestNumber" [attr.disabled]="true">
+          <label for="nrCererii">Nr. cererii</label>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <app-document [documents]="documents"></app-document>
+    <div *ngIf="formSubmitted && documents.length==0">
+      <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
+    </div>
+    <hr>
+    <div class="row">
+
+      <div class="col-md-6" formGroupName="medicament">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-label>Compania solicitant <span class="text-danger">*</span></mat-label>
+            <input type="text" aria-label="Number" matInput
+                   formControlName="company" [matAutocomplete]="auto" (ngModelChange)="checkCompanyValue()">
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+              <mat-option *ngFor="let x of filteredOptions | async" [value]="x">
+                {{x.name}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <div *ngIf="formSubmitted && rForm.get('medicament.company').invalid">
+            <small class="text-muted"><strong class="text-danger">Compania solicitantă trebuie selectată</strong></small>
+          </div>
+          <div *ngIf="formSubmitted && isWrongValueCompany && rForm.get('medicament.company').valid">
+            <small class="text-muted"><strong class="text-danger">Compania solicitantă este incorectă</strong></small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6" formGroupName="medicament">
+        <div class="md-form">
+          <input id="med" mdbInputDirective type="text" class="form-control" formControlName="name">
+          <label for="med">Medicamentul
+            <span class="text-danger">*</span>
+          </label>
+          <div *ngIf="formSubmitted && rForm.get('medicament.name').invalid">
+            <small class="text-muted"><strong class="text-danger">Medicamentul trebuie introdus</strong></small>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12" formGroupName="type">
+        <div class="md-form">
+          <h5 class="text-center font-weight-bold">
+            Inregistrare
+          </h5>
+          <hr>
+          <mat-radio-group formControlName="id">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-12">
+                  <mat-radio-button name="prop1" value="1">Autorizatie de activitate</mat-radio-button>
+                </div>
+                <div class="col-md-12">
+                  <mat-radio-button name="prop2" value="2">Autorizatie de import/export</mat-radio-button>
+                </div>
+                <div class="col-md-12">
+                  <mat-radio-button name="prop3" value="3">Modificarea autorizaţiei de activitate cu precursori/psihotrope/stupefiante</mat-radio-button>
+                </div>
+                <div class="col-md-12">
+                  <mat-radio-button name="prop4" value="4">Duplicatul autorizatiei de activitate cu precursori/psihotrope/stupefiante</mat-radio-button>
+                </div>
+              </div>
+            </div>
+          </mat-radio-group>
+        </div>
+      </div>
+      <div class="text-center w-100 mt-3">
+        <div class="alert alert-primary">
+          <span>Nr. de inregistrare a cererii: </span>
+          <strong>{{generatedDocNrSeq}}</strong>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="text-center">
+      <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">
+        Urmatorul pas
+      </button>
+    </div>
+  </form>
+</div>
+

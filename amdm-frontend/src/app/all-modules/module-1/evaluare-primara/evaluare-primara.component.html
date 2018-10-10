@@ -1,0 +1,402 @@
+<div class="container-fluid sky z-depth-2">
+  <form [formGroup]='eForm'>
+  <h3 class="text-center my-3 font-weight-bold">Evaluare primara</h3>
+  <hr>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="nrCererii" mdbInputDirective type="text" class="form-control" formControlName="requestNumber" [attr.disabled]="true">
+          <label for="nrCererii">Nr. cererii</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  <hr>
+  <app-document [documents]="documents"></app-document>
+  <hr>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="md-form" formGroupName="medicament">
+        <input id="compSolicitant" mdbInputDirective type="text" class="form-control" formControlName="company" [attr.disabled]="true">
+        <label for="compSolicitant">Compania solicitant</label>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="md-form" formGroupName="medicament">
+        <input id="med" mdbInputDirective type="text" class="form-control" formControlName="name" [attr.disabled]="true">
+        <label for="med">Medicamentul</label>
+      </div>
+    </div>
+    <div class="col-md-12" formGroupName="type">
+      <div class="md-form">
+        <h5 class="text-center font-weight-bold">
+          Inregistrare
+        </h5>
+        <hr>
+        <mat-radio-group formControlName="id">
+          <div class="container">
+            <div class="row">
+              <div class="col-12">
+                <mat-radio-button name="prop1" value="1">Primară</mat-radio-button>
+              </div>
+              <div class="col-12">
+                <mat-radio-button name="prop2" value="2">Repetată</mat-radio-button>
+              </div>
+            </div>
+          </div>
+        </mat-radio-group>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <h5 class="text-center font-weight-bold">Forma farmaceutică</h5>
+  <hr>
+<div class="row" formGroupName="medicament">
+  <div class="col-6">
+    <div class="md-form-modified">
+      <!--<mat-form-field class="w-100">-->
+        <!--<mat-label>Tip <span class="text-danger">*</span></mat-label>-->
+        <!--<input type="text" aria-label="Number" matInput-->
+               <!--formControlName="pharmaceuticalFormType" [matAutocomplete]="auto" (ngModelChange)="checkPharmaceuticalFormTypeValue()">-->
+        <!--<mat-autocomplete #auto="matAutocomplete" [displayWith]="displayDescription">-->
+          <!--<mat-option *ngFor="let x of filteredFormTypes | async" [value]="x">-->
+            <!--{{x.description}}-->
+          <!--</mat-option>-->
+        <!--</mat-autocomplete>-->
+      <!--</mat-form-field>-->
+      <ng-select id="test" name="test" [items]="pharmaceuticalFormTypes"
+                 bindLabel="description"
+                 placeholder="Tip *"
+                 (ngModelChange)="checkPharmaceuticalFormTypeValue()"
+                 formControlName="pharmaceuticalFormType">
+      </ng-select>
+      <div *ngIf="formSubmitted && eForm.get('medicament.pharmaceuticalFormType').invalid">
+        <small class="text-muted"><strong class="text-danger">Tipul trebuie selectat</strong></small>
+      </div>
+      <!--<div *ngIf="isWrongValuePharmaceuticalFormType && eForm.get('medicament.pharmaceuticalFormType').valid">-->
+        <!--<small class="text-muted"><strong class="text-danger">Tipul este incorect</strong></small>-->
+      <!--</div>-->
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="md-form-modified">
+      <!--<mat-form-field class="w-100">-->
+        <!--<mat-label>Denumire <span class="text-danger">*</span></mat-label>-->
+        <!--<input type="text" aria-label="Number" matInput-->
+               <!--formControlName="pharmaceuticalForm" [matAutocomplete]="auto2" (ngModelChange)="checkPharmaceuticalFormValue()">-->
+        <!--<mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayDescription">-->
+          <!--<mat-option *ngFor="let x of filteredForms | async" [value]="x">-->
+            <!--{{x.description}}-->
+          <!--</mat-option>-->
+        <!--</mat-autocomplete>-->
+      <!--</mat-form-field>-->
+      <ng-select id="test" name="test" [items]="pharmaceuticalForms"
+                 bindLabel="description"
+                 placeholder="Denumire *"
+                 formControlName="pharmaceuticalForm">
+      </ng-select>
+      <div *ngIf="formSubmitted && eForm.get('medicament.pharmaceuticalForm').invalid">
+        <small class="text-muted"><strong class="text-danger">Denumirea trebuie selectata</strong></small>
+      </div>
+      <!--<div *ngIf="isWrongValuePharmaceuticalForm && eForm.get('medicament.pharmaceuticalForm').valid">-->
+        <!--<small class="text-muted"><strong class="text-danger">Denumirea este incorecta</strong></small>-->
+      <!--</div>-->
+    </div>
+  </div>
+</div>
+  <h5 class="text-center font-weight-bold">Substanţe active</h5>
+  <hr>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="md-form-modified">
+        <!--<mat-form-field class="w-100">-->
+          <!--<mat-label>Denumire <span class="text-danger">*</span></mat-label>-->
+          <!--<input type="text" aria-label="Number" matInput-->
+                 <!--formControlName="activeSubstance" [matAutocomplete]="auto3" (ngModelChange)="checkActiveSubstanceValue()">-->
+          <!--<mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayDescription">-->
+            <!--<mat-option *ngFor="let x of filteredActiveSubstances | async" [value]="x">-->
+              <!--{{x.description}}-->
+            <!--</mat-option>-->
+          <!--</mat-autocomplete>-->
+        <!--</mat-form-field>-->
+                   <!--placeholder="Denumire"-->
+
+                   <!--placeholder="`Denumire <span class='text-danger'>*</span>`"-->
+
+        <ng-select id="test" name="test" [items]="activeSubstances"
+                   bindLabel="description"
+                   placeholder="Denumire*"
+                   (ngModelChange)="checkActiveSubstanceValue()"
+                   formControlName="activeSubstance">
+        </ng-select>
+
+        <div *ngIf="isAddSubstancePressed && eForm.get('activeSubstance').invalid">
+          <small class="text-muted"><strong class="text-danger">Denumirea trebuie selectata</strong></small>
+        </div>
+        <div *ngIf="isWrongValueActiveSubstance && eForm.get('activeSubstance').valid">
+          <small class="text-muted"><strong class="text-danger">Denumirea este incorecta</strong></small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="md-form">
+        <input id="codCas" mdbInputDirective type="text" class="form-control" [attr.disabled]="true" formControlName="activeSubstanceCode">
+        <label for="codCas">Cod CAS</label>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="md-form">
+        <input id="quantity" mdbInputDirective type="number" class="form-control" formControlName="activeSubstanceQuantity">
+        <label for="quantity">Cantitate<span class="text-danger">*</span></label>
+        <div *ngIf="isAddSubstancePressed && eForm.get('activeSubstanceQuantity').invalid">
+          <small class="text-muted"><strong class="text-danger">Cantitatea trebuie introdusa</strong></small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="md-form-modified">
+        <mat-form-field class="w-100">
+          <mat-select placeholder="Unitate de masura" formControlName="activeSubstanceUnit">
+            <mat-option *ngFor="let x of doza" [value]="x.value">{{ x.viewValue }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div *ngIf="isAddSubstancePressed && eForm.get('activeSubstanceUnit').invalid">
+          <small class="text-muted"><strong class="text-danger">Unitatea de masura trebuie selectata</strong></small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="position-button">
+    <button class="btn btn-indigo btn-sm" mdbWavesEffect (click)="addActiveSubstance()">Adaugă substanţa activă</button>
+  </div>
+    <table class="table table-widths text-center">
+      <thead class="black white-text">
+      <tr>
+        <th scope="col">Denumire</th>
+        <th scope="col">Cod CAS</th>
+        <th scope="col">Cantitate</th>
+        <th scope="col">Unitate de masura</th>
+        <th scope="col">Actiuni</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let substance of activeSubstancesTable;let i = index">
+        <th scope="row">{{ substance.descrption }}</th>
+        <td>{{ substance.code }}</td>
+        <td>{{ substance.quantity }}</td>
+        <td>{{ substance.unit }}</td>
+        <td>
+          <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeSubstance(i)" mdbWavesEffect>Delete</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  <hr>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="md-form">
+        <input id="denumireaComunInter" mdbInputDirective type="text" class="form-control">
+        <label for="denumireaComunInter">Denumirea comună internaționala</label>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="md-form">
+        <input id="volum" mdbInputDirective type="text" class="form-control">
+        <label for="volum">Volumul</label>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="md-form">
+        <input id="divizare" mdbInputDirective type="text" class="form-control">
+        <label for="divizare">Divizare(ări) ambalajului</label>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="md-form">
+        <input id="codMed" mdbInputDirective type="text" class="form-control">
+        <label for="codMed">Codul(rile) medicamentului</label>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="md-form">
+        <input id="termenVal" mdbInputDirective type="text" class="form-control">
+        <label for="termenVal">Termen de valabilitate</label>
+      </div>
+    </div>
+  </div>
+  <hr>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Clasificarea medicamentului">
+              <mat-option *ngFor="let x of clasifyMed" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <h5 class="text-center font-weight-bold">Grup medicament</h5>
+          <hr>
+          <div class="container">
+            <mat-radio-group formControlName="medicamentGroup">
+              <div class="row">
+                <div class="col-12">
+                  <mat-radio-button name="prop1" value="A1">Vital</mat-radio-button>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop2" value="B1">Esenţial</mat-radio-button>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop2" value="C1">Nonesenţial</mat-radio-button>
+                </div>
+              </div>
+            </mat-radio-group>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <h5 class="text-center font-weight-bold">Eliberare receta</h5>
+          <hr>
+          <div class="container">
+            <mat-radio-group formControlName="recetaType">
+              <div class="row">
+                <div class="col-12">
+                  <mat-radio-button name="prop1" value="A2">Cu prescripţia</mat-radio-button>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop2" value="B2">Fără prescripţia</mat-radio-button>
+                </div>
+              </div>
+            </mat-radio-group>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="denumireaAutProd" mdbInputDirective type="text" class="form-control">
+          <label for="denumireaAutProd">Deţinătorul(ii) autorizaţiei de producere</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="taraDetinAutProd" mdbInputDirective type="text" class="form-control">
+          <label for="taraDetinAutProd">Ţara deţinătorului autorizaţiei de producere</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="adresaDetAutProd" mdbInputDirective type="text" class="form-control">
+          <label for="adresaDetAutProd">Adresa deţinătorului autorizaţiei de producere</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="prodSubsActiv" mdbInputDirective type="text" class="form-control">
+          <label for="prodSubsActiv">Producătorul(ii) substanţei active</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="taraProSubsActiv" mdbInputDirective type="text" class="form-control">
+          <label for="taraProSubsActiv">Ţara producătorului substanţei active</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="adresaProdSubsActive" mdbInputDirective type="text" class="form-control">
+          <label for="adresaProdSubsActive">Adresa producătorului substanţei active</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="prodProduFinish" mdbInputDirective type="text" class="form-control">
+          <label for="prodProduFinish">Producătorul(ii) produsului finit</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="taraProdProduInit" mdbInputDirective type="text" class="form-control">
+          <label for="taraProdProduInit">Ţara producătorului produsului finit</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="adresaProdProduFinish" mdbInputDirective type="text" class="form-control">
+          <label for="adresaProdProduFinish">Adresa producătorului produsului finit</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="md-form">
+          <div class="alert alert-primary">
+            Nr. scrisorii(ilor) de notificare
+            <a href="#" class="alert-link">12345</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker1" placeholder="Data scrisorii(ilor) de notificare">
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker1></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="bonulPlata" mdbInputDirective type="text" class="form-control">
+          <label for="bonulPlata">Bonul(rile) de plată</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker2" placeholder="Data bonului(rilor) de plată">
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker2></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="suma" mdbInputDirective type="number" class="form-control">
+          <label for="suma">Suma achitării (lei)</label>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="md-form">
+          <input id="motivEmiBon" mdbInputDirective type="text" class="form-control">
+          <label for="motivEmiBon">Motivul emiterii bonului</label>
+        </div>
+      </div>
+    </div>
+    <div class="text-center">
+      <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Urmatorul
+        pas</button>
+      <button class="btn btn-dark-red-color waves-light btn-sm waves-light" routerLink="/drugs/cancel" mdbWavesEffect>Intrerupere</button>
+    </div>
+  </form>
+</div>

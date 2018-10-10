@@ -1,0 +1,100 @@
+package com.bass.amed.entity;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "nm_pharmaceutical_forms", schema = "amed", catalog = "")
+public class NmPharmaceuticalFormsEntity
+{
+    private Integer id;
+    private String code;
+    private String description;
+    private NmPharmaceuticalFormTypesEntity type;
+
+    @Id
+    @Column(name = "id")
+    public Integer getId()
+    {
+        return id;
+    }
+
+    public void setId(Integer id)
+    {
+        this.id = id;
+    }
+
+    @Basic
+    @Column(name = "code")
+    public String getCode()
+    {
+        return code;
+    }
+
+    public void setCode(String code)
+    {
+        this.code = code;
+    }
+
+    @Basic
+    @Column(name = "description")
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
+
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE} )
+    @JoinColumn( name = "type_id" )
+    public NmPharmaceuticalFormTypesEntity getType()
+    {
+        return type;
+    }
+
+    public void setType(NmPharmaceuticalFormTypesEntity type)
+    {
+        this.type = type;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass())
+        {
+            return false;
+        }
+
+        NmPharmaceuticalFormsEntity that = (NmPharmaceuticalFormsEntity) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null)
+        {
+            return false;
+        }
+        if (code != null ? !code.equals(that.code) : that.code != null)
+        {
+            return false;
+        }
+        if (description != null ? !description.equals(that.description) : that.description != null)
+        {
+            return false;
+        }
+        return type != null ? type.equals(that.type) : that.type == null;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (code != null ? code.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        return result;
+    }
+}

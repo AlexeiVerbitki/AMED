@@ -1,0 +1,143 @@
+<div class="container z-depth-2 sky">
+  <div class="table-width">
+    <div class="text-right">
+      <mat-form-field class="w-50">
+        <mat-icon matPrefix class="pr-search">search</mat-icon>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter" class="w-50">
+      </mat-form-field>
+    </div>
+    <hr>
+    <table mat-table [dataSource]="dataSource" class="w-100" matSort>
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> ID </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="medicament_id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Code </th>
+        <td mat-cell *matCellDef="let element"> {{element.medicament_id}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="distribution_mandate_nr">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Denumirea </th>
+        <td mat-cell *matCellDef="let element"> {{element.distribution_mandate_nr}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="distribution_mandate_date">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Group ID </th>
+        <td mat-cell *matCellDef="let element"> {{element.distribution_mandate_date | date: 'dd/MM/yy'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Actiune </th>
+        <td mat-cell *matCellDef="let element">
+          <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect data-toggle="modal" data-target="#edit" (click)="edit.show()">Editare</button>
+          <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect>Stergere</button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+  </div>
+
+  <div class="position-button mt-3">
+    <button class="btn btn-dark-green-color waves-light btn-sm waves-light" mdbWavesEffect data-toggle="modal" data-target="#add"
+      (click)="add.show()">Adaugare</button>
+  </div>
+</div>
+
+
+<div mdbModal #edit="mdbModal" class="modal fade top" id="frameModalTop" tabindex="-1" role="dialog" aria-labelledby="editLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-notify modal-info" role="document">
+    <!--Content-->
+    <div class="modal-content">
+      <!--Header-->
+      <div class="modal-header text-center">
+        <h4 class="modal-title white-text w-100 font-weight-bold py-2">Editare</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="edit.hide()">
+          <span aria-hidden="true" class="white-text">&times;</span>
+        </button>
+      </div>
+
+      <!--Body-->
+      <div class="modal-body">
+
+        <div class="md-form mb-4">
+          <input type="number" id="medicament_id" class="form-control" mdbInputDirective [formControl]="medicamentIdEdit">
+          <label for="medicament_id" data-error="wrong" data-success="right">Medicament ID</label>
+        </div>
+
+        <div class="md-form mb-4">
+          <input type="text" id="distribution_mandate_nr" class="form-control" mdbInputDirective [formControl]="distributionMandateNrEdit">
+          <label for="distribution_mandate_nr" data-error="wrong" data-success="right">Distribution Mandat ID</label>
+        </div>
+
+        <div class="md-form mb-4">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker" placeholder="Distribution mandat Date" [formControl]="distributionMandateDateEdit">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+      </div>
+
+      <!--Footer-->
+      <div class="modal-footer justify-content-center">
+        <a type="button" mdbBtn color="primary" class="waves-effect" mdbWavesEffect>Salveaza
+        </a>
+      </div>
+    </div>
+    <!--/.Content-->
+  </div>
+</div>
+
+
+<div mdbModal #add="mdbModal" class="modal fade top" id="frameModalTop" tabindex="-1" role="dialog" aria-labelledby="addLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-notify modal-success" role="document">
+    <!--Content-->
+    <div class="modal-content">
+      <!--Header-->
+      <div class="modal-header text-center">
+        <h4 class="modal-title white-text w-100 font-weight-bold py-2">Adaugare</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="add.hide()">
+          <span aria-hidden="true" class="white-text">&times;</span>
+        </button>
+      </div>
+
+      <!--Body-->
+      <div class="modal-body">
+
+        <div class="md-form mb-4">
+          <input type="number" id="medicament_id" class="form-control" mdbInputDirective [formControl]="medicamentIdAdd">
+          <label for="medicament_id" data-error="wrong" data-success="right">Medicament ID</label>
+        </div>
+
+        <div class="md-form mb-4">
+          <input type="text" id="distribution_mandate_nr" class="form-control" mdbInputDirective [formControl]="distributionMandateNrAdd">
+          <label for="distribution_mandate_nr" data-error="wrong" data-success="right">Distribution Mandat ID</label>
+        </div>
+
+        <div class="md-form mb-4">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker2" placeholder="Distribution mandat Date" [formControl]="distributionMandateDateAdd">
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+      </div>
+
+      <!--Footer-->
+      <div class="modal-footer justify-content-center">
+        <a type="button" mdbBtn color="success" class="waves-effect" mdbWavesEffect>Salveaza
+        </a>
+      </div>
+    </div>
+    <!--/.Content-->
+  </div>
+</div>

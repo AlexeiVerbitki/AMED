@@ -1,0 +1,377 @@
+<div class="container z-depth-2 sky">
+  <div class="table-width">
+    <div class="text-right">
+      <mat-form-field class="w-50">
+        <mat-icon matPrefix class="pr-search">search</mat-icon>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter" class="w-50">
+      </mat-form-field>
+    </div>
+    <hr>
+    <div class="example-container">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> ID </th>
+          <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="code">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Code </th>
+          <td mat-cell *matCellDef="let element"> {{element.code}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="lastname">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Last name </th>
+          <td mat-cell *matCellDef="let element"> {{element.lastname}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="firstname">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> First name </th>
+          <td mat-cell *matCellDef="let element"> {{element.firstname}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="middlename">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Middle name </th>
+          <td mat-cell *matCellDef="let element"> {{element.middlename}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="birth_date">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Birth Date </th>
+          <td mat-cell *matCellDef="let element"> {{element.birth_date | date: ('dd/mm/yy')}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="phonenumbers">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Phone Numbers </th>
+          <td mat-cell *matCellDef="let element"> {{element.phonenumbers}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="address">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Address </th>
+          <td mat-cell *matCellDef="let element"> {{element.address}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="idnp">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> IDNP </th>
+          <td mat-cell *matCellDef="let element"> {{element.idnp}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="identification_document_type_id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Identification Document Type ID
+            </th>
+          <td mat-cell *matCellDef="let element"> {{element.identification_document_type_id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="document_series">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Document Series </th>
+          <td mat-cell *matCellDef="let element"> {{element.document_series}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="document_number">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Document Number </th>
+          <td mat-cell *matCellDef="let element"> {{element.document_number}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="issue_date">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Issue Date </th>
+          <td mat-cell *matCellDef="let element"> {{element.issue_date | date: ('dd/mm/yy')}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="function">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Function </th>
+          <td mat-cell *matCellDef="let element"> {{element.function}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="science_degree">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Science Degree </th>
+          <td mat-cell *matCellDef="let element"> {{element.science_degree}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="profession_id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Science Degree </th>
+          <td mat-cell *matCellDef="let element"> {{element.profession_id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="commision_order">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Commision Order </th>
+          <td mat-cell *matCellDef="let element"> {{element.commision_order}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="chairman_of_experts">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Chairman of Experts </th>
+          <td mat-cell *matCellDef="let element"> {{element.chairman_of_experts}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Actiune </th>
+          <td mat-cell *matCellDef="let element">
+            <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect data-toggle="modal" data-target="#edit" (click)="edit.show()">Editare</button>
+            <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect>Stergere</button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+  </div>
+
+  <div class="position-button mt-3">
+    <button class="btn btn-dark-green-color waves-light btn-sm waves-light" mdbWavesEffect data-toggle="modal" data-target="#add"
+      (click)="add.show()">Adaugare</button>
+  </div>
+</div>
+
+
+<div mdbModal #edit="mdbModal" class="modal fade top" id="frameModalTop" tabindex="-1" role="dialog" aria-labelledby="editLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-notify modal-info" role="document">
+    <!--Content-->
+    <div class="modal-content">
+      <!--Header-->
+      <div class="modal-header text-center">
+        <h4 class="modal-title white-text w-100 font-weight-bold py-2">Editare</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="edit.hide()">
+          <span aria-hidden="true" class="white-text">&times;</span>
+        </button>
+      </div>
+
+      <!--Body-->
+      <div class="modal-body">
+
+        <div class="md-form mb-4">
+          <input type="text" id="code" class="form-control" mdbInputDirective [formControl]="codeEdit">
+          <label for="code" data-error="wrong" data-success="right">Code</label>
+        </div>
+
+        <div class="md-form mb-4">
+          <input type="text" id="name" class="form-control" mdbInputDirective [formControl]="nameEdit">
+          <label for="name" data-error="wrong" data-success="right">Name</label>
+        </div>
+
+        <div class="md-form mb-4">
+          <input type="text" id="lastname" class="form-control" mdbInputDirective [formControl]="lastnameEdit">
+          <label for="lastname" data-error="wrong" data-success="right">Last Name</label>
+        </div>
+
+        <div class="md-form mb-4">
+          <input type="text" id="firstname" class="form-control" mdbInputDirective [formControl]="firstnameEdit">
+          <label for="firstname" data-error="wrong" data-success="right">First Name</label>
+        </div>
+
+        <div class="md-form mb-4">
+          <input type="text" id="middlename" class="form-control" mdbInputDirective [formControl]="middlenameEdit">
+          <label for="middlename" data-error="wrong" data-success="right">Middle Name</label>
+        </div>
+
+        <div class="md-form mb-4">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker1" placeholder="Data de nastere" [formControl]="birth_dateEdit">
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="md-form mb-4">
+          <input type="text" id="phonenumbers" class="form-control" mdbInputDirective [formControl]="phonenumbersEdit">
+          <label for="phonenumbers" data-error="wrong" data-success="right">Phone Number</label>
+        </div>
+
+        <div class="md-form mb-4">
+          <input type="text" id="address" class="form-control" mdbInputDirective [formControl]="addressEdit">
+          <label for="address" data-error="wrong" data-success="right">Adresa</label>
+        </div>
+
+        <div class="md-form mb-4">
+          <input type="text" id="idnp" class="form-control" mdbInputDirective [formControl]="idnpEdit">
+          <label for="idnp" data-error="wrong" data-success="right">IDNP</label>
+        </div>
+
+        <div class="md-form mb-4">
+          <input type="number" id="identification_document_type_id" class="form-control" mdbInputDirective [formControl]="identification_document_type_idEdit">
+          <label for="identification_document_type_id" data-error="wrong" data-success="right">Identification document type ID</label>
+        </div>
+
+        <div class="md-form mb-4">
+          <input type="text" id="document_series" class="form-control" mdbInputDirective [formControl]="document_seriesEdit">
+          <label for="document_series" data-error="wrong" data-success="right">Document Series</label>
+        </div>
+
+        <div class="md-form mb-4">
+          <input type="text" id="document_number" class="form-control" mdbInputDirective [formControl]="document_numberEdit">
+          <label for="document_number" data-error="wrong" data-success="right">Document Number</label>
+        </div>
+
+        <div class="md-form mb-4">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker2" placeholder="Issue Date" [formControl]="issue_dateEdit">
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="md-form mb-4">
+          <input type="text" id="function" class="form-control" mdbInputDirective [formControl]="functionEdit">
+          <label for="function" data-error="wrong" data-success="right">Functia</label>
+        </div>
+
+        <div class="md-form mb-4">
+          <input type="text" id="science_degree" class="form-control" mdbInputDirective [formControl]="science_degreeEdit">
+          <label for="science_degree" data-error="wrong" data-success="right">Science Degree</label>
+        </div>
+
+        <div class="md-form mb-4">
+          <input type="number" id="profession_id" class="form-control" mdbInputDirective [formControl]="profession_idEdit">
+          <label for="profession_id" data-error="wrong" data-success="right">Profession ID</label>
+        </div>
+
+        <div class="md-form mb-4">
+          <input type="number" id="commision_order" class="form-control" mdbInputDirective [formControl]="commision_orderEdit">
+          <label for="commision_order" data-error="wrong" data-success="right">Commision order</label>
+        </div>
+
+        <div class="md-form mb-4">
+          <input type="number" id="chairman_of_experts" class="form-control" mdbInputDirective [formControl]="chairman_of_expertsEdit">
+          <label for="chairman_of_experts" data-error="wrong" data-success="right">Chairman of Experts</label>
+        </div>
+
+      </div>
+
+      <!--Footer-->
+      <div class="modal-footer justify-content-center">
+        <a type="button" mdbBtn color="primary" class="waves-effect" mdbWavesEffect>Salveaza
+        </a>
+      </div>
+    </div>
+    <!--/.Content-->
+  </div>
+</div>
+
+
+<div mdbModal #add="mdbModal" class="modal fade top" id="frameModalTop" tabindex="-1" role="dialog" aria-labelledby="addLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-notify modal-success" role="document">
+    <!--Content-->
+    <div class="modal-content">
+      <!--Header-->
+      <div class="modal-header text-center">
+        <h4 class="modal-title white-text w-100 font-weight-bold py-2">Adaugare</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="add.hide()">
+          <span aria-hidden="true" class="white-text">&times;</span>
+        </button>
+      </div>
+
+            <!--Body-->
+            <div class="modal-body">
+
+              <div class="md-form mb-4">
+                <input type="text" id="code" class="form-control" mdbInputDirective [formControl]="codeAdd">
+                <label for="code" data-error="wrong" data-success="right">Code</label>
+              </div>
+      
+              <div class="md-form mb-4">
+                <input type="text" id="name" class="form-control" mdbInputDirective [formControl]="nameAdd">
+                <label for="name" data-error="wrong" data-success="right">Name</label>
+              </div>
+      
+              <div class="md-form mb-4">
+                <input type="text" id="lastname" class="form-control" mdbInputDirective [formControl]="lastnameAdd">
+                <label for="lastname" data-error="wrong" data-success="right">Last Name</label>
+              </div>
+      
+              <div class="md-form mb-4">
+                <input type="text" id="firstname" class="form-control" mdbInputDirective [formControl]="firstnameAdd">
+                <label for="firstname" data-error="wrong" data-success="right">First Name</label>
+              </div>
+      
+              <div class="md-form mb-4">
+                <input type="text" id="middlename" class="form-control" mdbInputDirective [formControl]="middlenameAdd">
+                <label for="middlename" data-error="wrong" data-success="right">Middle Name</label>
+              </div>
+      
+              <div class="md-form mb-4">
+                <mat-form-field class="w-100">
+                  <input matInput [matDatepicker]="picker3" placeholder="Data de nastere" [formControl]="birth_dateAdd">
+                  <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                  <mat-datepicker #picker3></mat-datepicker>
+                </mat-form-field>
+              </div>
+      
+              <div class="md-form mb-4">
+                <input type="text" id="phonenumbers" class="form-control" mdbInputDirective [formControl]="phonenumbersAdd">
+                <label for="phonenumbers" data-error="wrong" data-success="right">Phone Number</label>
+              </div>
+      
+              <div class="md-form mb-4">
+                <input type="text" id="address" class="form-control" mdbInputDirective [formControl]="addressAdd">
+                <label for="address" data-error="wrong" data-success="right">Adresa</label>
+              </div>
+      
+              <div class="md-form mb-4">
+                <input type="text" id="idnp" class="form-control" mdbInputDirective [formControl]="idnpAdd">
+                <label for="idnp" data-error="wrong" data-success="right">IDNP</label>
+              </div>
+      
+              <div class="md-form mb-4">
+                <input type="number" id="identification_document_type_id" class="form-control" mdbInputDirective [formControl]="identification_document_type_idAdd">
+                <label for="identification_document_type_id" data-error="wrong" data-success="right">Identification document type ID</label>
+              </div>
+      
+              <div class="md-form mb-4">
+                <input type="text" id="document_series" class="form-control" mdbInputDirective [formControl]="document_seriesAdd">
+                <label for="document_series" data-error="wrong" data-success="right">Document Series</label>
+              </div>
+      
+              <div class="md-form mb-4">
+                <input type="text" id="document_number" class="form-control" mdbInputDirective [formControl]="document_numberAdd">
+                <label for="document_number" data-error="wrong" data-success="right">Document Number</label>
+              </div>
+      
+              <div class="md-form mb-4">
+                <mat-form-field class="w-100">
+                  <input matInput [matDatepicker]="picker4" placeholder="Issue Date" [formControl]="issue_dateAdd">
+                  <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                  <mat-datepicker #picker4></mat-datepicker>
+                </mat-form-field>
+              </div>
+      
+              <div class="md-form mb-4">
+                <input type="text" id="function" class="form-control" mdbInputDirective [formControl]="functionAdd">
+                <label for="function" data-error="wrong" data-success="right">Functia</label>
+              </div>
+      
+              <div class="md-form mb-4">
+                <input type="text" id="science_degree" class="form-control" mdbInputDirective [formControl]="science_degreeAdd">
+                <label for="science_degree" data-error="wrong" data-success="right">Science Degree</label>
+              </div>
+      
+              <div class="md-form mb-4">
+                <input type="number" id="profession_id" class="form-control" mdbInputDirective [formControl]="profession_idAdd">
+                <label for="profession_id" data-error="wrong" data-success="right">Profession ID</label>
+              </div>
+      
+              <div class="md-form mb-4">
+                <input type="number" id="commision_order" class="form-control" mdbInputDirective [formControl]="commision_orderAdd">
+                <label for="commision_order" data-error="wrong" data-success="right">Commision order</label>
+              </div>
+      
+              <div class="md-form mb-4">
+                <input type="number" id="chairman_of_experts" class="form-control" mdbInputDirective [formControl]="chairman_of_expertsAdd">
+                <label for="chairman_of_experts" data-error="wrong" data-success="right">Chairman of Experts</label>
+              </div>
+      
+            </div>
+
+      <!--Footer-->
+      <div class="modal-footer justify-content-center">
+        <a type="button" mdbBtn color="success" class="waves-effect" mdbWavesEffect>Salveaza
+        </a>
+      </div>
+    </div>
+    <!--/.Content-->
+  </div>
+</div>

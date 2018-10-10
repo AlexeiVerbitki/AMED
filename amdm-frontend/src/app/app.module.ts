@@ -1,0 +1,80 @@
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+
+
+import {AppComponent} from './app.component';
+import {NavbarComponent} from './navbar/navbar.component';
+
+import {AppRoutingModule} from './app-routing.module';
+import {HomepageComponent} from './homepage/homepage.component';
+import {NotFoundComponent} from './not-found/not-found.component';
+
+import {LoginComponent} from './login/login.component';
+import {SidebarComponent} from './sidebar/sidebar.component';
+import {FooterComponent} from './footer/footer.component';
+import {MainDashboardComponent} from './dashboard/main-dashboard.component';
+
+import {AuthService} from './shared/service/authetication.service';
+import {ServerUrlInterceptor} from './shared/interceptor/server-url.interceptor';
+import {AdministrationService} from './shared/service/administration.service';
+import {ConfirmationDialogComponent} from "./confirmation-dialog/confirmation-dialog.component";
+import {TaskComponent} from './task/task.component';
+import {HistoryComponent} from './history/history.component';
+import {ModuleComponent} from "./module/module.component";
+import {AdministrationComponent} from "./administration/administration.component";
+import {ModuleDashboardComponent} from "./dashboard/module-dashboard.component";
+import {JwtInterceptor} from "./shared/interceptor/jwt.interceptor";
+import {MaterialSharedModule} from "./material-shared.module";
+import {MDBBootstrapModule} from "angular-bootstrap-md";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+
+@NgModule({
+    declarations: [
+        AppComponent,
+        NavbarComponent,
+        HomepageComponent,
+        NotFoundComponent,
+        LoginComponent,
+        SidebarComponent,
+        FooterComponent,
+        MainDashboardComponent,
+        ModuleDashboardComponent,
+        ConfirmationDialogComponent,
+        TaskComponent,
+        HistoryComponent,
+        ModuleComponent,
+        AdministrationComponent,
+    ],
+    imports: [
+        BrowserAnimationsModule,
+        HttpClientModule,
+        AppRoutingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MDBBootstrapModule.forRoot(),
+        MaterialSharedModule.forRoot(),
+
+
+    ],
+    schemas: [NO_ERRORS_SCHEMA],
+    entryComponents: [
+        ConfirmationDialogComponent
+    ],
+    providers: [AuthService, AdministrationService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: JwtInterceptor,
+            multi: true
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: ServerUrlInterceptor,
+            multi: true
+        }
+    ],
+    bootstrap: [AppComponent]
+})
+
+export class AppModule {
+}

@@ -1,0 +1,272 @@
+<div class="container-fluid sky z-depth-2">
+  <h3 class="text-center my-3 font-weight-bold">Aprobarea modificărilor postautorizare</h3>
+  <hr>
+  <h5 class="text-center font-weight-bold">Ordin de întrerupere înregistrarii</h5>
+  <hr>
+  <form [formGroup]='dataForm'>
+      <div class="row">
+          <div class="col-lg-5">
+              <div class="md-form">
+                  <input id="nrCererii" mdbInputDirective type="text" class="form-control"
+                         formControlName="nrCererii" [attr.disabled]="true">
+                  <label for="nrCererii">Nr. cererii</label>
+              </div>
+          </div>
+
+          <div class="col-lg-5">
+              <div class="md-form-modified">
+                  <mat-form-field class="w-100">
+                      <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data">
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker touchUi #picker></mat-datepicker>
+                  </mat-form-field>
+              </div>
+          </div>
+          <div class="col-lg-2 position-button mt-3">
+              <label class="btn btn-indigo btn-sm" for="incarcaraFisier">
+                  <input id="incarcaraFisier" type="file" style="display:none;" (change)="onChange($event)"
+                         onclick="this.value=null;"> Incarca Cerere
+              </label>
+          </div>
+      </div>
+  </form>
+<hr>
+  <table class="table table-widths-lg text-center">
+    <thead class="black white-text">
+      <tr>
+        <th scope="col">Denumire</th>
+        <th>Format</th>
+        <th>Data incarcarii</th>
+        <th>Actiuni</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let a of aprob">
+        <th scope="row">{{ a.denumire }}</th>
+        <td>{{ a.format }}</td>
+        <td>{{ a.dataIncarcarii }}</td>
+        <td>
+          <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect>View</button>
+          <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect>Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <hr>
+  <form [formGroup]='zForm'>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Compania-solicitant">
+              <mat-option *ngFor="let x of compSolicitant" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input mdbInputDirective type="text" id="nrRegMed" class="form-control">
+          <label for="nrRegMed">Nr. de înregistrare a medicamentului</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Tipul(rile) modificărilor postautorizare">
+              <mat-option *ngFor="let x of tipPost" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="md-form">
+          <input mdbInputDirective type="text" id="nameComerc" class="form-control" disabled value="Valiexchimp">
+          <label for="nameComerc">Denumirea comercială</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input mdbInputDirective type="text" id="nameIntern" class="form-control" disabled value="Valiexchimp 2">
+          <label for="nameIntern">Denumirea comună internaționala</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input mdbInputDirective type="text" id="codATC" class="form-control" disabled value="CD12345">
+          <label for="codATC">Codul ATC</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma farmaceutica">
+              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <h5 class="text-center font-weight-bold">Aprobarea a modificărilor postautorizare</h5>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="md-form">
+          <input mdbInputDirective type="text" id="nrOrd1" class="form-control">
+          <label for="nrOrd1">Nr. ordinului</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker2" placeholder="Data">
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker2></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <h5 class="text-center font-weight-bold">Intreruperea a procedurii</h5>
+    <hr>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="md-form">
+          <input mdbInputDirective type="text" id="nrOrd2" class="form-control">
+          <label for="nrOrd2">Nr. ordinului</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker3" placeholder="Data">
+            <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker3></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col">
+        <div class="md-form">
+          <textarea type="text" id="motivCancelProd" class="md-textarea form-control" mdbInputDirective></textarea>
+          <label for="motivCancelProd" for="form7">Motivul întreruperii procedurii</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="md-form">
+          <input mdbInputDirective type="text" id="nrScrisorii" class="form-control">
+          <label for="nrScrisorii">Nr. scrisorii</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker4" placeholder="Data scrisorii">
+            <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker4></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input mdbInputDirective type="text" id="titlulScrisorii" class="form-control">
+          <label for="titlulScrisorii">Titlul scrisorii</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <h5 class="text-center font-weight-bold">Deținătorului certificatului de înregistrare</h5>
+    <hr>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="md-form">
+          <input mdbInputDirective type="text" id="name" class="form-control">
+          <label for="name">Denumirea</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Ţara">
+              <mat-option *ngFor="let x of tara" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input mdbInputDirective type="text" id="adressJur" class="form-control">
+          <label for="adressJur">Adresa juridică</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <h5 class="text-center font-weight-bold">Producătorului substanţei active</h5>
+    <hr>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="md-form">
+          <input mdbInputDirective type="text" id="denuSubsActive" class="form-control">
+          <label for="denuSubsActive">Denumirea</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Ţara">
+              <mat-option *ngFor="let x of tara" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input mdbInputDirective type="text" id="adresJurSubsAct" class="form-control">
+          <label for="adresJurSubsAct">Adresa juridică</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <h5 class="text-center font-weight-bold">Producătorului produsului finit</h5>
+    <hr>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="md-form">
+          <input mdbInputDirective type="text" id="denuProdFinish" class="form-control">
+          <label for="denuProdFinish">Denumirea</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Ţara">
+              <mat-option *ngFor="let x of tara" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input mdbInputDirective type="text" id="adressJurProdFinish" class="form-control">
+          <label for="adressJurProdFinish">Adresa juridică</label>
+        </div>
+      </div>
+    </div>
+    <div class="text-center">
+      <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" routerLink="/doc/analyze" mdbWavesEffect>Macheta grafică</button>
+      <button class="btn btn-dark-red-color waves-light btn-sm waves-light" routerLink="/drugs/cancel" mdbWavesEffect>Rezumatul caracteristicilor produsului</button>
+      <button class="btn btn-mdb-color waves-light btn-sm waves-light" routerLink="/drugs/cancel" mdbWavesEffect>Prospectul pentru utilizator</button>
+    </div>
+  </form>
+</div>

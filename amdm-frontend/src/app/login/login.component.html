@@ -1,0 +1,30 @@
+<div class="login-bg">
+<div class="container z-depth-2 login">
+  <div class="header-login">
+    <p class="h5 text-center">AMED</p>
+  </div>
+  <div class="modal-body mb-0">
+    <div *ngIf="error" class="container-fluid">
+      <p class="mat-h4 text text-center text-danger">{{error}}</p>
+    </div>
+    <form #userLoginForm="ngForm" (ngSubmit)="userLoginForm.form.valid && login()">
+      <div class="md-form form-sm">
+        <i class="fa fa-user prefix grey-text"></i>
+        <input id="username" name="username" mdbInputDirective type="text" class="form-control" #username="ngModel" [(ngModel)]="model.username" required>
+        <label for="username">Nume utilizator</label>
+      </div>
+
+      <div class="md-form form-sm">
+        <i class="fa fa-lock prefix grey-text"></i>
+        <input id="password" name="password" mdbInputDirective type="email" class="form-control" #password="ngModel" [(ngModel)]="model.password" required type="password">
+        <label for="password">Parola</label>
+      </div>
+
+      <div class="text-center mt-1-half">
+        <button class="btn btn-indigo mb-2 waves-light" mdbWavesEffect>Logare
+        </button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,67 @@
+<div class="container sky z-depth-2">
+    <h3 class="text-center my-3 font-weight-bold">Adaugare unitate de masura pentru medicamente</h3>
+    <hr>
+    <form [formGroup]='qForm'>
+  <div class="mb-5">
+      <div class="md-form">
+          <input id="cod" mdbInputDirective type="text" class="form-control" formControlName="cod">
+          <label for="cod">Cod
+            <strong class="text-danger">*</strong>
+          </label>
+        </div>
+  </div>
+  <div class="mb-5">
+      <div class="md-form">
+          <input id="denumirea" mdbInputDirective type="text" class="form-control" formControlName="denumirea">
+          <label for="denumirea">Denumirea
+            <strong class="text-danger">*</strong>
+          </label>
+        </div>
+  </div>
+  <div class="mb-5">
+      <div class="md-form">
+          <input id="descriere" mdbInputDirective type="text" class="form-control" formControlName="descriere">
+          <label for="descriere">Descriere
+            <strong class="text-danger">*</strong>
+          </label>
+        </div>
+  </div>
+    </form>
+    <div class="text-center">
+      <button type="submit" [disabled]="!qForm.valid" (click)="addForm()" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Adaugare</button>
+      <button type="button" class="btn btn-danger btn-sm waves-light" mdbWavesEffect (click)="cancel()">Anulare</button>
+    </div>
+  </div>
+  
+  
+  <div class="alerts-position">
+    <div *ngIf="qForm.controls['cod'].touched && !qForm.controls['cod'].valid">
+      <div *ngIf="!qForm.controls['cod'].errors.valid" class="alert alert-danger alert-dismissible fade show animated fadeIn" role="alert">
+        In campul
+        <strong>Cod</strong> este necesar de introdus date
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div *ngIf="qForm.controls['denumirea'].touched && !qForm.controls['denumirea'].valid">
+      <div *ngIf="!qForm.controls['denumirea'].errors.valid" class="alert alert-danger alert-dismissible fade show animated fadeIn"
+        role="alert">
+        In campul
+        <strong>Denumirea</strong> este necesar de introdus date
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div *ngIf="qForm.controls['descriere'].touched && !qForm.controls['descriere'].valid">
+      <div *ngIf="!qForm.controls['descriere'].errors.valid" class="alert alert-danger alert-dismissible fade show animated fadeIn"
+        role="alert">
+        In campul
+        <strong>Descriere</strong> este necesar de introdus date
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,93 @@
+<div class="container-fluid sky z-depth-2">
+  <h3 class="text-center my-3 font-weight-bold">Inregistrare cerere</h3>
+  <hr>
+  <form [formGroup]='dataForm'>
+    <div class="row">
+      <div class="col-lg-5">
+        <div class="md-form">
+          <input id="nrCererii" mdbInputDirective type="text" class="form-control" formControlName="nrCererii"
+            [attr.disabled]="true">
+          <label for="nrCererii">Nr. cererii</label>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-lg-2 position-button mt-3">
+        <label class="btn btn-indigo btn-sm" for="incarcaraFisier">
+          <input id="incarcaraFisier" type="file" style="display:none;" (change)="onChange($event)" onclick="this.value=null;">
+          Incarca Cerere
+        </label>
+      </div>
+    </div>
+  </form>
+  <hr>
+  <table class="table table-widths text-center">
+    <thead class="black white-text">
+      <tr>
+        <th scope="col">Denumire</th>
+        <th scope="col">Format</th>
+        <th scope="col">Data incarcarii</th>
+        <th scope="col">Actiuni</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of cereri; let i = index">
+        <th scope="row">{{ x.denumirea }}</th>
+        <td>{{ x.format }}</td>
+        <td>{{ x.dataIncarcarii }}</td>
+        <td>
+          <button class="btn btn-mdb-color btn-sm waves-light" (click)="loadFile()" mdbWavesEffect>Vizualizare</button>
+          <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeDocument(i)"
+            mdbWavesEffect>Stergere</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <hr>
+  <form [formGroup]='rForm'>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-label>Compania solicitant <span class="text-danger">*</span></mat-label>
+            <input type="text" aria-label="Number" [formControl]="rForm.controls['compGet']" matInput formControlName="compGet"
+              [matAutocomplete]="auto" (ngModelChange)="checkCompanyValue()">
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+              <mat-option *ngFor="let x of filteredOptions | async" [value]="x">
+                {{x.name}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="med" mdbInputDirective type="text" class="form-control" formControlName="med">
+          <label for="med">Medicamentul
+            <span class="text-danger">*</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="text-center w-100 mt-3">
+        <div class="alert alert-primary">
+          <span>Nr. de inregistrare a cererii: </span>
+          <strong>{{generatedDocNrSeq}}</strong>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="text-center">
+      <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Urmatorul
+        pas</button>
+    </div>
+  </form>
+</div>

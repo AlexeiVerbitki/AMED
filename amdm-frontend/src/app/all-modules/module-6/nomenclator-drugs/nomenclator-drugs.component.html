@@ -1,0 +1,118 @@
+<div class="container-fluid z-depth-2 sky">
+
+    <nav>
+      <ul>
+        <li [routerLinkActive]="['active']"><a routerLink="/dashboard/module/nomenclature/price-catalog">Nomenclatorul medicamentului</a></li>
+        <li [routerLinkActive]="['active']"><a routerLink="/dashboard/module/nomenclature/medicament-classifier">Clasificatorul medicamentului</a></li>
+        <li [routerLinkActive]="['active']"><a routerLink="/dashboard/module/nomenclature/economic-agents-classifier">Catalogul national de preturi de producator la medicamente</a></li>
+        <li [routerLinkActive]="['active']"><a routerLink="/dashboard/module/nomenclature/medicament-nomenclature">Clasificatorul agentilor economici cu gen de activitate farmaceutica</a></li>
+      </ul>
+    </nav>
+  
+    <div class="table-width">
+      <div class="text-right">
+        <mat-form-field class="w-50">
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" class="w-50">
+        </mat-form-field>
+      </div>
+      <hr>
+      <div class="example-container">
+        <table mat-table [dataSource]="dataSource" matSort>
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> ID </th>
+            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="denumireComerciala">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Denumirea comerciala </th>
+            <td mat-cell *matCellDef="let element"> {{element.denumireComerciala}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="formaFarmaceutica">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Forma farmaceutica </th>
+            <td mat-cell *matCellDef="let element"> {{element.formaFarmaceutica}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="doza">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Doza</th>
+            <td mat-cell *matCellDef="let element"> {{element.doza}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="volum">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Volum </th>
+            <td mat-cell *matCellDef="let element"> {{element.volum}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="divizarea">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Divizarea </th>
+            <td mat-cell *matCellDef="let element"> {{element.divizarea}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="dci">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> DCI </th>
+            <td mat-cell *matCellDef="let element"> {{element.dci}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="atc">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> ATC </th>
+            <td mat-cell *matCellDef="let element"> {{element.atc}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="termenDeValabilitate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Termen de Valabilitate </th>
+            <td mat-cell *matCellDef="let element"> {{element.termenDeValabilitate}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="nrDeInregistrare">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Nr. de inregistrare </th>
+            <td mat-cell *matCellDef="let element"> {{element.nrDeInregistrare}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="dataInregistrarii">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text">Data de inregistrare  </th>
+            <td mat-cell *matCellDef="let element"> {{element.dataInregistrarii | date: 'dd/MM/yyyy'}} </td>
+          </ng-container>
+            
+          <ng-container matColumnDef="detinatorulCertificatuluiDeIntreg">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Detinatorul certificatului de intreg </th>
+              <td mat-cell *matCellDef="let element"> {{element.detinatorulCertificatuluiDeIntreg}} </td>
+            </ng-container>
+  
+          <ng-container matColumnDef="taraDetinatorului">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Tara detinatorului </th>
+            <td mat-cell *matCellDef="let element"> {{element.taraDetinatorului}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="statutDeEliberare">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Statut de eliberare </th>
+            <td mat-cell *matCellDef="let element"> {{element.statutDeEliberare}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="original">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Original </th>
+            <td mat-cell *matCellDef="let element"> {{element.original}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="informatiaDespreProducator">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Informatia despre producator </th>
+            <td mat-cell *matCellDef="let element"> {{element.informatiaDespreProducator}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="instructiunea">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Instructiunea </th>
+            <td mat-cell *matCellDef="let element"> {{element.instructiunea}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="machetaAmbalajului">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Macheta ambalajului </th>
+            <td mat-cell *matCellDef="let element"> {{element.machetaAmbalajului}} </td>
+          </ng-container>
+  
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+  
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </div>
+  </div>

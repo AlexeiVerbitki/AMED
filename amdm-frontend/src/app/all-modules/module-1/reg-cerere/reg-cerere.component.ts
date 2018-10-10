@@ -1,0 +1,106 @@
+import {Component, OnInit} from '@angular/core';
+
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+
+import {MatDialog} from '@angular/material';
+import {saveAs} from 'file-saver';
+import {Observable, Subscription} from 'rxjs';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {map, startWith} from 'rxjs/operators';
+import {Router} from '@angular/router';
+import {Document} from "../../../models/document";
+import {RequestService} from "../../../shared/service/request.service";
+import {AuthService} from "../../../shared/service/authetication.service";
+
+@Component({
+    selector: 'app-reg-cerere',
+    templateUrl: './reg-cerere.component.html',
+    styleUrls: ['./reg-cerere.component.css']
+})
+export class RegCerereComponent implements OnInit {
+
+    documents: Document [] = [];
+    companii: any[];
+    rForm: FormGroup;
+    generatedDocNrSeq: number;
+    //filteredOptions: Observable<any[]>;
+    formSubmitted: boolean;
+    //isWrongValueCompany: boolean;
+    private subscriptions: Subscription[] = [];
+
+    constructor(private fb: FormBuilder, public dialog: MatDialog, private router: Router,
+                private requestService : RequestService,
+                private authService : AuthService,
+                private administrationService: AdministrationService) {
+        this.rForm = fb.group({
+            'data': {disabled: true, value: new Date()},
+            'requestNumber': [null],
+            'startDate': [new Date()],
+            'endDate': [''],
+            'currentStep' : ['R'],
+            'medicament':
+                fb.group({
+                    'name' : ['',Validators.required],
+                    'company' : [null,Validators.required],
+                    'status' : ['P']}),
+            'company' : [''],
+            'type':
+                fb.group({
+                    'id' : ['1',Validators.required]}),
+        });
+    }
+
+    ngOnInit() {
+
+        this.subscriptions.push(
+            this.administrationService.generateDocNr().subscribe(data => {
+                    this.generatedDocNrSeq = data;
+                    this.rForm.get('requestNumber').setValue(this.generatedDocNrSeq);
+                },
+                error => console.log(error)
+            )
+        );
+
+        this.subscriptions.push(
+            this.administrationService.getAllCompanies().subscribe(data => {
+                    this.companii = data;
+                },
+                error => console.log(error)
+            )
+        );
+    }
+
+    // displayFn(user?: any): string | undefined {
+    //     return user ? user.name : undefined;
+    // }
+
+    nextStep() {
+        this.formSubmitted = true;
+
+        if(this.documents.length === 0 || !this.rForm.get('medicament.company').valid || !this.rForm.get('type.id').valid || !this.rForm.get('medicament.name').valid)
+        {
+            return;
+        }
+
+        this.formSubmitted = false;
+
+        this.rForm.get('endDate').setValue(new Date());
+        this.rForm.get('company').setValue(this.rForm.value.medicament.company);
+
+        let modelToSubmit : any = this.rForm.value;
+        modelToSubmit.requestHistories = [{startDate : this.rForm.get('startDate').value,endDate : this.rForm.get('endDate').value,
+            username : this.authService.getUserName(), step : 'R' }];
+        modelToSubmit.medicament.documents = this.documents;
+
+        this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
+            this.router.navigate(['dashboard/module/medicament-registration/evaluate/'+data.body]);
+          })
+        );
+    }
+
+    // private _filter(name: string): any[] {
+    //     const filterValue = name.toLowerCase();
+    //
+    //     return this.companii.filter(option => option.name.toLowerCase().includes(filterValue));
+    // }
+}

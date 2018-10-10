@@ -1,0 +1,171 @@
+<div class="container sky z-depth-2">
+  <h3 class="text-center my-3 font-weight-bold">Cerere de autorizare a importului/exportului precursorilor/psihotropelor/stupefiantelor</h3>
+  <hr>
+  <table class="table table-widths text-center">
+    <thead class="black white-text">
+      <tr>
+        <th scope="col">Denumire</th>
+        <th scope="col">Format</th>
+        <th scope="col">Data incarcarii</th>
+        <th scope="col">Actiuni</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of cerere">
+        <th scope="row">{{ x.denumirea }}</th>
+        <td>{{ x.format }}</td>
+        <td>{{ x.dataIncarcarii }}</td>
+        <td>
+          <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect>View</button>
+          <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect>Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="col position-button">
+    <label for="incarcaFisier" class="btn btn-indigo btn-sm">
+      <input id="incarcaFisier" type="file" style="display:none;"> Incarca Fisier
+    </label>
+  </div>
+  <hr>
+  <form [formGroup]='zForm'>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker" placeholder="Data inregistrarii" required formControlName="dataReg">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="nrReg" mdbInputDirective type="text" class="form-control" formControlName="nrReg">
+          <label for="nrReg">Nr. de inregistrare a cererii
+            <span class="text-danger">*</span>
+          </label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="compSolicitant" mdbInputDirective type="text" class="form-control" formControlName="compSolicitant">
+          <label for="compSolicitant">Compania-solicitant
+            <span class="text-danger">*</span>
+          </label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Tipul autorizarii" formControlName="tipulAutorizarii">
+              <mat-option *ngFor="let x of tipulAutorizarii" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Tipul medicamentului" formControlName="tipMed">
+              <mat-option *ngFor="let x of tipMed" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Codul medicamentului" formControlName="codMed">
+              <mat-option *ngFor="let x of codMed" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="denumire" mdbInputDirective type="text" class="form-control" formControlName="denumire">
+          <label for="denumire">Denumirea medicamentului
+            <span class="text-danger">*</span>
+          </label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="cantitateMed" mdbInputDirective type="text" class="form-control" formControlName="cantitateMed">
+          <label for="cantitateMed">Cantitatea medicamentului
+            <span class="text-danger">*</span>
+          </label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma" formControlName="forma">
+              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-9">
+            <div class="md-form">
+              <input id="doza" mdbInputDirective type="text" class="form-control" formControlName="doza">
+              <label for="doza">Doza
+                <span class="text-danger">*</span>
+              </label>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="md-form">
+              <mat-form-field class="w-100">
+                <mat-select placeholder="Volum" formControlName="volum1">
+                  <mat-option *ngFor="let x of volum" [value]="x.value">{{ x.viewValue }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="seria" mdbInputDirective type="text" class="form-control" formControlName="seria">
+          <label for="seria">Seria
+            <span class="text-danger">*</span>
+          </label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Substanta activa" formControlName="subsActiva">
+              <mat-option *ngFor="let x of subsActiva" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-9">
+            <div class="md-form">
+              <input id="cantSubsActive" mdbInputDirective type="text" class="form-control" formControlName="cantSubsActive">
+              <label for="cantSubsActive">Cantitatea substanței active
+                <span class="text-danger">*</span>
+              </label>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="md-form">
+              <mat-form-field class="w-100">
+                <mat-select placeholder="Volum" formControlName="volum2">
+                  <mat-option *ngFor="let x of volum" [value]="x.value">{{ x.viewValue }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

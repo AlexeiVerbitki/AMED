@@ -1,0 +1,199 @@
+<div class="container z-depth-2 sky">
+    <div class="table-width">
+      <div class="text-right">
+        <mat-form-field class="w-50">
+          <mat-icon matPrefix class="pr-search">search</mat-icon>
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter" class="w-50">
+        </mat-form-field>
+      </div>
+      <hr>
+      <div class="example-container">
+        <table mat-table [dataSource]="dataSource" matSort>
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> ID </th>
+            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="object_address">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Adresa obiectului licentierii </th>
+            <td mat-cell *matCellDef="let element"> {{element.object_address}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="serial_nr">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Seria licentei </th>
+            <td mat-cell *matCellDef="let element"> {{element.serial_nr}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="nr">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Nr. </th>
+            <td mat-cell *matCellDef="let element"> {{element.nr}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="release_date">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Data eliberarii licentei </th>
+            <td mat-cell *matCellDef="let element"> {{element.release_date | date: 'dd/MM/yyyy'}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="cessation_date">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Data sistarii activitatii farmaceutice </th>
+            <td mat-cell *matCellDef="let element"> {{element.cessation_date | date: 'dd/MM/yyyy'}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="cessation_reason_id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Cessation Reason ID </th>
+            <td mat-cell *matCellDef="let element"> {{element.cessation_reason_id}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Actiune </th>
+            <td mat-cell *matCellDef="let element">
+              <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect data-toggle="modal" data-target="#edit" (click)="edit.show()">Editare</button>
+              <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect>Stergere</button>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+  
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </div>
+  
+    <div class="position-button mt-3">
+      <button class="btn btn-dark-green-color waves-light btn-sm waves-light" mdbWavesEffect data-toggle="modal" data-target="#add"
+        (click)="add.show()">Adaugare</button>
+    </div>
+  </div>
+  
+  
+  <div mdbModal #edit="mdbModal" class="modal fade top" id="frameModalTop" tabindex="-1" role="dialog" aria-labelledby="editLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-notify modal-info" role="document">
+      <!--Content-->
+      <div class="modal-content">
+        <!--Header-->
+        <div class="modal-header text-center">
+          <h4 class="modal-title white-text w-100 font-weight-bold py-2">Editare</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="edit.hide()">
+            <span aria-hidden="true" class="white-text">&times;</span>
+          </button>
+        </div>
+  
+        <!--Body-->
+        <div class="modal-body">
+  
+          <div class="md-form mb-5">
+            <input id="object_address" type="text" class="form-control" mdbInputDirective [formControl]="objectAddressEdit">
+            <label for="object_address"  data-error="wrong" data-success="right">Adresa obiectului licentierii</label>
+          </div>
+  
+          <div class="md-form mb-5">
+            <input id="serial_nr1" type="number" class="form-control" mdbInputDirective [formControl]="seriaNrEdit">
+            <label for="serial_nr1"  data-error="wrong" data-success="right">Seria licentei</label>
+          </div>
+  
+          <div class="md-form mb-5">
+            <input id="nr" type="number" class="form-control" mdbInputDirective [formControl]="nrEdit">
+            <label for="nr"  data-error="wrong" data-success="right">Nr.</label>
+          </div>
+  
+          <div class="md-form mb-5">
+              <mat-form-field class="w-100">
+                <input matInput [matDatepicker]="picker2" placeholder="Data eliberarii licentei" [formControl]="releaseDateEdit">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+              </mat-form-field>
+            </div>
+  
+          <div class="md-form mb-5">
+              <mat-form-field class="w-100">
+                <input matInput [matDatepicker]="picker3" placeholder="Data sistarii activitatii farmaceutice" [formControl]="cessationDateEdit">
+                <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                <mat-datepicker #picker3></mat-datepicker>
+              </mat-form-field>
+            </div>
+  
+          <div class="md-form mb-5">
+            <input id="cessation_reason_id" type="number" class="form-control" mdbInputDirective [formControl]="cessationReasonIdEdit">
+            <label for="cessation_reason_id"  data-error="wrong" data-success="right">Cessation Reason ID</label>
+          </div>
+
+  
+        </div>
+  
+        <!--Footer-->
+        <div class="modal-footer justify-content-center">
+          <a type="button" mdbBtn color="primary" class="waves-effect" mdbWavesEffect>Salveaza
+          </a>
+        </div>
+      </div>
+      <!--/.Content-->
+    </div>
+  </div>
+  
+  
+  <div mdbModal #add="mdbModal" class="modal fade top" id="frameModalTop1" tabindex="-1" role="dialog" aria-labelledby="addLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-notify modal-success" role="document">
+      <!--Content-->
+      <div class="modal-content">
+        <!--Header-->
+        <div class="modal-header text-center">
+          <h4 class="modal-title white-text w-100 font-weight-bold py-2">Adaugare</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="add.hide()">
+            <span aria-hidden="true" class="white-text">&times;</span>
+          </button>
+        </div>
+  
+  
+        <!--Body-->
+        <div class="modal-body">
+  
+            <div class="md-form mb-5">
+              <input id="object_address1" type="text" class="form-control" mdbInputDirective [formControl]="objectAddressAdd">
+              <label for="object_address1"  data-error="wrong" data-success="right">Adresa obiectului licentierii</label>
+            </div>
+    
+            <div class="md-form mb-5">
+              <input id="seria_nr1" type="number" class="form-control" mdbInputDirective [formControl]="seriaNrAdd">
+              <label for="seria_nr1"  data-error="wrong" data-success="right">Seria licentei</label>
+            </div>
+    
+            <div class="md-form mb-5">
+              <input id="nr1" type="number" class="form-control" mdbInputDirective [formControl]="nrAdd">
+              <label for="nr1"  data-error="wrong" data-success="right">Nr.</label>
+            </div>
+    
+            <div class="md-form mb-5">
+                <mat-form-field class="w-100">
+                  <input matInput [matDatepicker]="picker" placeholder="Data eliberarii licentei" [formControl]="releaseDateAdd">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </div>
+    
+            <div class="md-form mb-5">
+                <mat-form-field class="w-100">
+                  <input matInput [matDatepicker]="picker1" placeholder="Data sistarii activitatii farmaceutice" [formControl]="cessationDateAdd">
+                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+              </div>
+    
+            <div class="md-form mb-5">
+              <input id="cessation_reason_id1" type="number" class="form-control" mdbInputDirective [formControl]="cessationReasonIdAdd">
+              <label for="cessation_reason_id1"  data-error="wrong" data-success="right">Cessation Reason ID</label>
+            </div>
+  
+    
+          </div>
+  
+        <!--Footer-->
+        <div class="modal-footer justify-content-center">
+          <a type="button" mdbBtn color="success" class="waves-effect" mdbWavesEffect>Salveaza
+          </a>
+        </div>
+      </div>
+      <!--/.Content-->
+    </div>
+  </div>

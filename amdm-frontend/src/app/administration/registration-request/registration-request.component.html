@@ -1,0 +1,347 @@
+<div class="container z-depth-2 sky">
+  <div class="table-width">
+    <div class="text-right">
+      <mat-form-field class="w-50">
+        <mat-icon matPrefix class="pr-search">search</mat-icon>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter" class="w-50">
+      </mat-form-field>
+    </div>
+    <hr>
+    <div class="example-container">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> ID </th>
+          <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="request_number">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Request Number </th>
+          <td mat-cell *matCellDef="let element"> {{element.request_number}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="start_date">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Start Data </th>
+          <td mat-cell *matCellDef="let element"> {{element.start_date | date: 'dd/MM/yyyy'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="end_date">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> End Data </th>
+          <td mat-cell *matCellDef="let element"> {{element.end_date | date: 'dd/MM/yyyy'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="medicament_id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Medicament ID </th>
+          <td mat-cell *matCellDef="let element"> {{element.medicament_id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="company_id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Data sistarii activitatii farmaceutice </th>
+          <td mat-cell *matCellDef="let element"> {{element.company_id | date: 'dd/MM/yyyy'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="import_id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Import ID </th>
+          <td mat-cell *matCellDef="let element"> {{element.import_id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="license_id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> License ID </th>
+          <td mat-cell *matCellDef="let element"> {{element.license_id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Username </th>
+          <td mat-cell *matCellDef="let element"> {{element.username}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="step_id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Step ID </th>
+          <td mat-cell *matCellDef="let element"> {{element.step_id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="type_id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Type ID </th>
+          <td mat-cell *matCellDef="let element"> {{element.type_id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="medicament_annihilation_id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Medicament Annihilation ID </th>
+          <td mat-cell *matCellDef="let element"> {{element.medicament_annihilation_id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="medicament_control_committee_id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Medicament Control Committee ID </th>
+          <td mat-cell *matCellDef="let element"> {{element.medicament_control_committee_id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="clinical_trails_id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Clinical Trails ID </th>
+          <td mat-cell *matCellDef="let element"> {{element.clinical_trails_id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="applicant_id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Applicant ID </th>
+          <td mat-cell *matCellDef="let element"> {{element.applicant_id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="tax_id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Tax ID </th>
+          <td mat-cell *matCellDef="let element"> {{element.tax_id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="tax_paid">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Tax Paid </th>
+          <td mat-cell *matCellDef="let element"> {{element.tax_paid}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Actiune </th>
+          <td mat-cell *matCellDef="let element">
+            <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect data-toggle="modal" data-target="#edit" (click)="edit.show()">Editare</button>
+            <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect>Stergere</button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+  </div>
+
+  <div class="position-button mt-3">
+    <button class="btn btn-dark-green-color waves-light btn-sm waves-light" mdbWavesEffect data-toggle="modal" data-target="#add"
+      (click)="add.show()">Adaugare</button>
+  </div>
+</div>
+
+
+<div mdbModal #edit="mdbModal" class="modal fade top" id="frameModalTop" tabindex="-1" role="dialog" aria-labelledby="editLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-notify modal-info" role="document">
+    <!--Content-->
+    <div class="modal-content">
+      <!--Header-->
+      <div class="modal-header text-center">
+        <h4 class="modal-title white-text w-100 font-weight-bold py-2">Editare</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="edit.hide()">
+          <span aria-hidden="true" class="white-text">&times;</span>
+        </button>
+      </div>
+
+      <!--Body-->
+      <div class="modal-body">
+
+        <div class="md-form mb-5">
+          <input id="request_number" type="text" class="form-control" mdbInputDirective [formControl]="request_numberEdit">
+          <label for="request_number" data-error="wrong" data-success="right">Request Number</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker1" placeholder="Start Date" [formControl]="start_dateEdit">
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="md-form mb-5">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker2" placeholder="End Date" [formControl]="end_dateEdit">
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="medicament_id" type="number" class="form-control" mdbInputDirective [formControl]="medicament_idEdit">
+          <label for="medicament_id" data-error="wrong" data-success="right">Medicament ID</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="company_id" type="number" class="form-control" mdbInputDirective [formControl]="company_idEdit">
+          <label for="company_id" data-error="wrong" data-success="right">Company ID</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="import_id" type="number" class="form-control" mdbInputDirective [formControl]="import_idEdit">
+          <label for="import_id" data-error="wrong" data-success="right">Import ID</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="license_id" type="number" class="form-control" mdbInputDirective [formControl]="license_idEdit">
+          <label for="license_id" data-error="wrong" data-success="right">License ID</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="username" type="text" class="form-control" mdbInputDirective [formControl]="usernameEdit">
+          <label for="username" data-error="wrong" data-success="right">Username</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="step_id" type="number" class="form-control" mdbInputDirective [formControl]="step_idEdit">
+          <label for="step_id" data-error="wrong" data-success="right">Step ID</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="type_id" type="number" class="form-control" mdbInputDirective [formControl]="type_idEdit">
+          <label for="type_id" data-error="wrong" data-success="right">Type ID</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="medicament_annihilation_id" type="number" class="form-control" mdbInputDirective [formControl]="medicament_annihilation_idEdit">
+          <label for="medicament_annihilation_id" data-error="wrong" data-success="right">Medicament Annihilation ID</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="medicament_control_committee_id" type="number" class="form-control" mdbInputDirective [formControl]="medicament_control_committee_idEdit">
+          <label for="medicament_control_committee_id" data-error="wrong" data-success="right">Medical Control Committee ID</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="clinical_trails_id" type="number" class="form-control" mdbInputDirective [formControl]="clinical_trails_idEdit">
+          <label for="clinical_trails_id" data-error="wrong" data-success="right">Clinical trails ID</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="applicant_id" type="number" class="form-control" mdbInputDirective [formControl]="applicant_idEdit">
+          <label for="applicant_id" data-error="wrong" data-success="right">Applicant ID</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="tax_id" type="number" class="form-control" mdbInputDirective [formControl]="tax_idEdit">
+          <label for="tax_id" data-error="wrong" data-success="right">Tax ID</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="tax_paid" type="number" class="form-control" mdbInputDirective [formControl]="tax_paidEdit">
+          <label for="tax_paid" data-error="wrong" data-success="right">Tax Paid</label>
+        </div>
+
+      </div>
+
+      <!--Footer-->
+      <div class="modal-footer justify-content-center">
+        <a type="button" mdbBtn color="primary" class="waves-effect" mdbWavesEffect>Salveaza
+        </a>
+      </div>
+    </div>
+    <!--/.Content-->
+  </div>
+</div>
+
+
+<div mdbModal #add="mdbModal" class="modal fade top" id="frameModalTop" tabindex="-1" role="dialog" aria-labelledby="addLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-notify modal-success" role="document">
+    <!--Content-->
+    <div class="modal-content">
+      <!--Header-->
+      <div class="modal-header text-center">
+        <h4 class="modal-title white-text w-100 font-weight-bold py-2">Adaugare</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="add.hide()">
+          <span aria-hidden="true" class="white-text">&times;</span>
+        </button>
+      </div>
+
+
+      <!--Body-->
+      <div class="modal-body">
+
+        <div class="md-form mb-5">
+          <input id="request_number" type="text" class="form-control" mdbInputDirective [formControl]="request_numberAdd">
+          <label for="request_number" data-error="wrong" data-success="right">Request Number</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker3" placeholder="Start Date" [formControl]="start_dateAdd">
+            <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+            <mat-datepicker #picker3></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="md-form mb-5">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker4" placeholder="End Date" [formControl]="end_dateAdd">
+            <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+            <mat-datepicker #picker4></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="medicament_id" type="number" class="form-control" mdbInputDirective [formControl]="medicament_idAdd">
+          <label for="medicament_id" data-error="wrong" data-success="right">Medicament ID</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="company_id" type="number" class="form-control" mdbInputDirective [formControl]="company_idAdd">
+          <label for="company_id" data-error="wrong" data-success="right">Company ID</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="import_id" type="number" class="form-control" mdbInputDirective [formControl]="import_idAdd">
+          <label for="import_id" data-error="wrong" data-success="right">Import ID</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="license_id" type="number" class="form-control" mdbInputDirective [formControl]="license_idAdd">
+          <label for="license_id" data-error="wrong" data-success="right">License ID</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="username" type="text" class="form-control" mdbInputDirective [formControl]="usernameAdd">
+          <label for="username" data-error="wrong" data-success="right">Username</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="step_id" type="number" class="form-control" mdbInputDirective [formControl]="step_idAdd">
+          <label for="step_id" data-error="wrong" data-success="right">Step ID</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="type_id" type="number" class="form-control" mdbInputDirective [formControl]="type_idAdd">
+          <label for="type_id" data-error="wrong" data-success="right">Type ID</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="medicament_annihilation_id" type="number" class="form-control" mdbInputDirective [formControl]="medicament_annihilation_idAdd">
+          <label for="medicament_annihilation_id" data-error="wrong" data-success="right">Medicament Annihilation ID</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="medicament_control_committee_id" type="number" class="form-control" mdbInputDirective [formControl]="medicament_control_committee_idAdd">
+          <label for="medicament_control_committee_id" data-error="wrong" data-success="right">Medical Control Committee ID</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="clinical_trails_id" type="number" class="form-control" mdbInputDirective [formControl]="clinical_trails_idAdd">
+          <label for="clinical_trails_id" data-error="wrong" data-success="right">Clinical trails ID</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="applicant_id" type="number" class="form-control" mdbInputDirective [formControl]="applicant_idAdd">
+          <label for="applicant_id" data-error="wrong" data-success="right">Applicant ID</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="tax_id" type="number" class="form-control" mdbInputDirective [formControl]="tax_idAdd">
+          <label for="tax_id" data-error="wrong" data-success="right">Tax ID</label>
+        </div>
+
+        <div class="md-form mb-5">
+          <input id="tax_paid" type="number" class="form-control" mdbInputDirective [formControl]="tax_paidAdd">
+          <label for="tax_paid" data-error="wrong" data-success="right">Tax Paid</label>
+        </div>
+
+      </div>
+
+      <!--Footer-->
+      <div class="modal-footer justify-content-center">
+        <a type="button" mdbBtn color="success" class="waves-effect" mdbWavesEffect>Salveaza
+        </a>
+      </div>
+    </div>
+    <!--/.Content-->
+  </div>
+</div>

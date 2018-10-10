@@ -1,0 +1,95 @@
+.sidebar {
+  position: fixed;
+  top:0;
+  left: 0;
+  background: #122f3b;
+  width: 16.666667%;
+  height: 100%;
+  z-index: 1000;
+}
+
+.sidebar-logo {
+  margin-top: 10px;
+}
+
+.sidebar-logo a {
+  color: #ecf0f1;
+  font-style: italic;
+  transition: 0.5s;
+}
+
+.sidebar-logo a:hover {
+  color: #fff;
+  font-style: italic;
+  transition: 0.5s;
+}
+
+.sidebar .comp-name {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.sidebar .sidebar-menu {
+  margin-top: 60px;
+  font-size: 22px;
+}
+
+.sidebar .sidebar-img {
+  width: 75px;
+  height: 75px;
+}
+
+.sidebar .siderbar-menu ul {
+  margin: 0 auto;
+}
+
+.sidebar .sidebar-menu ul li:hover {
+  background: linear-gradient(40deg,#2096ff,#05ffa3)!important;
+}
+
+.sidebar-menu ul li.active {
+  background: linear-gradient(40deg, #207be0, #05b361)!important;
+}
+
+.sidebar .sidebar-menu .fa {
+  margin-right: 15px;
+  color: #fff;
+}
+
+.sidebar .sidebar-menu ul li a{
+  color: #fff;
+}
+
+.sidebar .sidebar-menu ul li a:hover{
+  color: #fff;
+}
+
+@media only screen and (min-width: 1240px) {
+  .sidebar-border {
+    border-left: 1px solid #fff;
+  }
+}
+@media only screen and (max-width: 1441px) {
+  .sidebar {
+    -ms-flex: 0 0 25%;
+    flex: 0 0 25%;
+    width: 25%;
+  }
+  .sidebar .sidebar-position {
+    text-align: center;
+  }
+  .sidebar .comp-name {
+    margin-top: 10px;
+  }
+}
+
+@media only screen and (max-width: 1241px) {
+  .sidebar {
+    -ms-flex: 0 0 25%;
+    flex: 0 0 25%;
+    width: 25%;
+  }
+  .sidebar .comp-name {
+    margin-top: 10px;
+  }
+}

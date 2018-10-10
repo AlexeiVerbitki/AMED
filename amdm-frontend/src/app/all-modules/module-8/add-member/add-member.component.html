@@ -1,0 +1,88 @@
+<div class="container sky z-depth-2">
+  <h3 class="text-center my-3 font-weight-bold">Adaugarea membrului in lista comisiei pentru nimicirea medicamentelor</h3>
+  <hr>
+  <form [formGroup]='zForm'>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Institutia" formControlName="institutia">
+              <mat-option *ngFor="let x of institut" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input mdbInputDirective ttype="text" id="nume" class="form-control" formControlName="nume">
+          <label for="">Nume</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input mdbInputDirective ttype="text" id="prenume" class="form-control" formControlName="prenume">
+          <label for="">Prenume</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Functia" formControlName="functia">
+              <mat-option *ngFor="let y of functia" [value]="y.value">{{ y.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="text-center">
+      <button type="submit" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect [disabled]="!zForm.valid"
+        (click)="addForm()">Adaugare</button>
+      <button type="button" class="btn btn-dark-red-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="cancel()">Anulare</button>
+    </div>
+  </form>
+</div>
+
+
+<div class="alerts-position">
+  <div *ngIf="zForm.controls['institutia'].touched && !zForm.controls['institutia'].valid">
+    <div *ngIf="!zForm.controls['institutia'].errors.valid" class="alert alert-danger alert-dismissible fade show animated fadeIn"
+      role="alert">
+      In campul
+      <strong>Institutia</strong> este necesar de accesat date
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+  <div *ngIf="zForm.controls['nume'].touched && !zForm.controls['nume'].valid">
+    <div *ngIf="!zForm.controls['nume'].errors.valid" class="alert alert-danger alert-dismissible fade show animated fadeIn"
+      role="alert">
+      In campul
+      <strong>Nume</strong> este necesar de introdus date
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+  <div *ngIf="zForm.controls['prenume'].touched && !zForm.controls['prenume'].valid">
+    <div *ngIf="!zForm.controls['prenume'].errors.valid" class="alert alert-danger alert-dismissible fade show animated fadeIn"
+      role="alert">
+      In campul
+      <strong>Prenume</strong> este necesar de introdus date
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+  <div *ngIf="zForm.controls['functia'].touched && !zForm.controls['functia'].valid">
+    <div *ngIf="!zForm.controls['functia'].errors.valid" class="alert alert-danger alert-dismissible fade show animated fadeIn"
+      role="alert">
+      In campul
+      <strong>Functia</strong> este necesar de accesat date
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+</div>

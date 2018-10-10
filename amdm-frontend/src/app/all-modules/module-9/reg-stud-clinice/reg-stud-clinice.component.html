@@ -1,0 +1,1452 @@
+<div class="container-fluid sky z-depth-2">
+  <h3 class="text-center my-3 font-weight-bold">Înregistrarea studiilor clinice</h3>
+  <hr>
+  <table class="table table-widths text-center">
+    <thead class="black white-text">
+      <tr>
+        <th scope="col">Denumire</th>
+        <th scope="col">Format</th>
+        <th scope="col">Data incarcarii</th>
+        <th scope="col">Actiuni</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of cerere">
+        <th scope="row">{{ x.denumirea }}</th>
+        <td>{{ x.format }}</td>
+        <td>{{ x.dataIncarcarii }}</td>
+        <td>
+          <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect>View</button>
+          <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect>Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <hr>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="md-form">
+        <input id="nrRegCerere" mdbInputDirective type="text" class="form-control">
+        <label for="nrRegCerere">Nr. de înregistrare a cererii
+          <span class="text-danger">*</span>
+        </label>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="md-form-modified">
+        <mat-form-field class="w-100">
+          <input matInput [matDatepicker]="picker" placeholder="Data de înregistrare a cererii">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker touchUi #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="md-form-modified">
+        <mat-form-field class="w-100">
+          <mat-select placeholder="Compania solicitant">
+            <mat-option *ngFor="let x of compSolicit" [value]="x.value">{{ x.viewValue }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <mat-radio-group [(ngModel)]="model">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <mat-radio-button name="prop1" value="A">Aprobarea Studiilor Clinice la medicamente</mat-radio-button>
+        </div>
+        <div class="col-md-12">
+          <mat-radio-button name="prop2" value="B">Aprobarea amendamentelor la Protocoalele Studiilor Clinice la
+            medicamente</mat-radio-button>
+        </div>
+        <div class="col-md-12">
+          <mat-radio-button name="prop3" value="C">Înregistrarea Notificărilor privind Protocolul studiului clinic cu
+            medicamente</mat-radio-button>
+        </div>
+        <div class="col-md-12">
+          <mat-radio-button name="prop4" value="D">Înregistrarea informației privind siguranța produsului de
+            investigație clinică</mat-radio-button>
+        </div>
+      </div>
+    </div>
+  </mat-radio-group>
+  <section *ngIf="model === 'A'">
+    <hr>
+    <h5 class="text-center font-weight-bold">Tipul studiului clinic</h5>
+    <hr>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="md-form">
+          <div class="container">
+            <mat-radio-group [(ngModel)]="model2">
+              <div class="row">
+                <div class="col-12">
+                  <h5 class="text-center font-weight-bold">Tratament</h5>
+                  <hr>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop1" value="A2">Unicentric</mat-radio-button>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop2" value="B2">Multicentric</mat-radio-button>
+                </div>
+              </div>
+            </mat-radio-group>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <mat-radio-group [(ngModel)]="model1">
+            <div class="container">
+              <div class="row">
+                <div class="col-12">
+                  <h5 class="text-center font-weight-bold">Proveniența</h5>
+                  <hr>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop1" value="A1">Național</mat-radio-button>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop2" value="B1">Internațional </mat-radio-button>
+                </div>
+              </div>
+            </div>
+          </mat-radio-group>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="fazaStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="fazaStudClinic">Faza Studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="numEudraCtNr" mdbInputDirective type="text" class="form-control">
+          <label for="numEudraCtNr">Numărul Eudra CT nr.</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="codStud" mdbInputDirective type="text" class="form-control">
+          <label for="codStud">Codul studiului</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="titluStud" mdbInputDirective type="text" class="form-control">
+          <label for="titluStud">Titlul studiului</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-12">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Medicamentul de investigat" [(ngModel)]="medInvests">
+              <mat-option *ngFor="let x of medInvest" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="medInvests === 'doza'">
+        <div class="md-form">
+          <input id="doza" mdbInputDirective type="text" class="form-control">
+          <label for="doza">Doza</label>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="medInvests === 'forma'">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma farmaceutică">
+              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="medInvests === 'calea'">
+        <div class="md-form">
+          <input id="caleaAdmin" mdbInputDirective type="text" class="form-control">
+          <label for="caleaAdmin">Calea de administrare</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Placebo" [(ngModel)]="placeBos">
+              <mat-option *ngFor="let x of placeBo" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="placeBos === 'doza'">
+        <div class="md-form">
+          <input id="doza" mdbInputDirective type="text" class="form-control">
+          <label for="doza">Doza</label>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="placeBos === 'forma'">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma farmaceutică">
+              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="placeBos === 'calea'">
+        <div class="md-form">
+          <input id="caleaAdminis" mdbInputDirective type="text" class="form-control">
+          <label for="caleaAdminis">Calea de administrare</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-12">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Produsul de referinţă" [(ngModel)]="prodRefs">
+              <mat-option *ngFor="let x of prodRef" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="prodRefs === 'doza'">
+        <div class="md-form">
+          <input id="doza2" mdbInputDirective type="text" class="form-control">
+          <label for="doza2">Doza</label>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="prodRefs === 'forma'">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma farmaceutică">
+              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="prodRefs === 'calea'">
+        <div class="md-form">
+          <input id="caleaDeAdministrare" mdbInputDirective type="text" class="form-control">
+          <label for="caleaDeAdministrare">Calea de administrare</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="sponsorStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="sponsorStudClinic">Sponsorul Studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="prodMedInvestigat" mdbInputDirective type="text" class="form-control">
+          <label for="prodMedInvestigat">Producătorul medicamentului de investigat</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="grupFarmMedInves" mdbInputDirective type="text" class="form-control">
+          <label for="grupFarmMedInves">Grupa farmacoterapeutică a medicamentului de investigat</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="prodProsuluiRef" mdbInputDirective type="text" class="form-control">
+          <label for="prodProsuluiRef">Producătorul produsului de referinţă</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="investigatori" mdbInputDirective type="text" class="form-control">
+          <label for="investigatori">Investigatori</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="institutiaMedLoc" mdbInputDirective type="text" class="form-control">
+          <label for="institutiaMedLoc">Instituţia medicală / Locul desfăşurării studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="popStudClinic" mdbInputDirective type="number" class="form-control">
+          <label for="popStudClinic">Populația studiului clinic Numărul pacienţilor</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="nrBon" mdbInputDirective type="text" class="form-control">
+          <label for="nrBon">№ BON SC</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="intrareBaniAMDM" mdbInputDirective type="number" class="form-control">
+          <label for="intrareBaniAMDM">Intrare bani pe contul AMDM</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="comisiaMedDataCM" mdbInputDirective type="text" class="form-control">
+          <label for="comisiaMedDataCM">Comisia Medicamentului Data CM</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="expertiiCM" mdbInputDirective type="text" class="form-control">
+          <label for="expertiiCM">Experţii CM</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="avizComMed" mdbInputDirective type="text" class="form-control">
+          <label for="avizComMed">Avizul Comisiei Medicamentului</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="avizComEtica" mdbInputDirective type="text" class="form-control">
+          <label for="avizComEtica">Avizul Comisiei de Etică</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="ordAprobStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="ordAprobStudClinic">Ordinul de aprobare studiu clinic</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="notProtStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="notProtStudClinic">Notificare la Protocolul studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="amendProtStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="amendProtStudClinic">Amendamente la Protocolul studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="farmSC" mdbInputDirective type="text" class="form-control">
+          <label for="farmSC">Farmacovigilenţa SC</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="declDeschStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="declDeschStudClinic">Declarația de deschidere a studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Finalizarea SC">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="position-button">
+          <div class="md-form">
+            <label for="CerereDeAut" class="btn btn-indigo btn-sm">
+              <input id="CerereDeAut" type="file" style="display:none;"> Cerere de autorizare
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="bonDePlata" mdbInputDirective type="text" class="form-control">
+          <label for="bonDePlata">Bonurile de plată</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="disDedistr" mdbInputDirective type="text" class="form-control">
+          <label for="disDedistr">Dispoziția de distribuire</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="scrisoareSolicitareInfo" mdbInputDirective type="text" class="form-control">
+          <label for="scrisoareSolicitareInfo">Scrisoare de solicitare a informației </label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="avizDesfStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="avizDesfStudClinic">Avizul pentru desfășurarea studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="raportComisMed" mdbInputDirective type="text" class="form-control">
+          <label for="raportComisMed">Raportul pentru Comisia Medicamentului</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="FuncRaportFlex" mdbInputDirective type="text" class="form-control">
+          <label for="FuncRaportFlex">Funcția de raportare flexibilă</label>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section *ngIf="model === 'B'">
+    <hr>
+    <h5 class="text-center font-weight-bold">Tipul studiului clinic</h5>
+    <hr>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="md-form">
+          <div class="container">
+            <mat-radio-group [(ngModel)]="model2">
+              <div class="row">
+                <div class="col-12">
+                  <h5 class="text-center font-weight-bold">Tratament</h5>
+                  <hr>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop1" value="A2">Unicentric</mat-radio-button>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop2" value="B2">Multicentric</mat-radio-button>
+                </div>
+              </div>
+            </mat-radio-group>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <mat-radio-group [(ngModel)]="model1">
+            <div class="container">
+              <div class="row">
+                <div class="col-12">
+                  <h5 class="text-center font-weight-bold">Proveniența</h5>
+                  <hr>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop1" value="A1">Național</mat-radio-button>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop2" value="B1">Internațional </mat-radio-button>
+                </div>
+              </div>
+            </div>
+          </mat-radio-group>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="fazaStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="fazaStudClinic">Faza Studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="numEudraCT" mdbInputDirective type="text" class="form-control">
+          <label for="numEudraCT">Numărul Eudra CT nr.</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="codStud" mdbInputDirective type="text" class="form-control">
+          <label for="codStud">Codul studiului</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="titluStud" mdbInputDirective type="text" class="form-control">
+          <label for="titluStud">Titlul studiului</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-12">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Medicamentul de investigat" [(ngModel)]="medInvests">
+              <mat-option *ngFor="let x of medInvest" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="medInvests === 'doza'">
+        <div class="md-form">
+          <input id="doza" mdbInputDirective type="text" class="form-control">
+          <label for="doza">Doza</label>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="medInvests === 'forma'">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma farmaceutică">
+              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="medInvests === 'calea'">
+        <div class="md-form">
+          <input id="caleaAdmin" mdbInputDirective type="text" class="form-control">
+          <label for="caleaAdmin">Calea de administrare</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Placebo" [(ngModel)]="placeBos">
+              <mat-option *ngFor="let x of placeBo" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="placeBos === 'doza'">
+        <div class="md-form">
+          <input id="doza" mdbInputDirective type="text" class="form-control">
+          <label for="doza">Doza</label>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="placeBos === 'forma'">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma farmaceutică">
+              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="placeBos === 'calea'">
+        <div class="md-form">
+          <input id="caleaAdmin" mdbInputDirective type="text" class="form-control">
+          <label for="caleaAdmin">Calea de administrare</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-12">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Produsul de referinţă" [(ngModel)]="prodRefs">
+              <mat-option *ngFor="let x of prodRef" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="prodRefs === 'doza'">
+        <div class="md-form">
+          <input id="doza" mdbInputDirective type="text" class="form-control">
+          <label for="doza">Doza</label>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="prodRefs === 'forma'">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma farmaceutică">
+              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="prodRefs === 'calea'">
+        <div class="md-form">
+          <input id="caleaAdmin" mdbInputDirective type="text" class="form-control">
+          <label for="caleaAdmin">Calea de administrare</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="sponsorStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="sponsorStudClinic">Sponsorul Studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="prodMedInvest" mdbInputDirective type="text" class="form-control">
+          <label for="prodMedInvest">Producătorul medicamentului de investigat</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="grupFarmMedInves" mdbInputDirective type="text" class="form-control">
+          <label for="grupFarmMedInves">Grupa farmacoterapeutică a medicamentului de investigat</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="prodProsuluiRef" mdbInputDirective type="text" class="form-control">
+          <label for="prodProsuluiRef">Producătorul produsului de referinţă</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="investigat" mdbInputDirective type="text" class="form-control">
+          <label for="investigat">Investigatori</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="institutiaMedLoc" mdbInputDirective type="text" class="form-control">
+          <label for="institutiaMedLoc">Instituţia medicală / Locul desfăşurării studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="popStudClinic" mdbInputDirective type="number" class="form-control">
+          <label for="popStudClinic">Populația studiului clinic Numărul pacienţilor</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="nrBonSc" mdbInputDirective type="text" class="form-control">
+          <label for="nrBonSc">№ BON SC</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="intrareBaniAMDM" mdbInputDirective type="number" class="form-control">
+          <label for="intrareBaniAMDM">Intrare bani pe contul AMDM</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="comisiaMedDataCM" mdbInputDirective type="text" class="form-control">
+          <label for="comisiaMedDataCM">Comisia Medicamentului Data CM</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="expertiCM" mdbInputDirective type="text" class="form-control">
+          <label for="expertiCM">Experţii CM</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="avizComisieMed" mdbInputDirective type="text" class="form-control">
+          <label for="avizComisieMed">Avizul Comisiei Medicamentului</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="avizComisieEtica" mdbInputDirective type="text" class="form-control">
+          <label for="avizComisieEtica">Avizul Comisiei de Etică</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="ordAprobStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="ordAprobStudClinic">Ordinul de aprobare studiu clinic</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="notProtStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="notProtStudClinic">Notificare la Protocolul studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="amendProtStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="amendProtStudClinic">Amendamente la Protocolul studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="farmaSC" mdbInputDirective type="text" class="form-control">
+          <label for="farmaSC">Farmacovigilenţa SC</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="DeclDescStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="DeclDescStudClinic">Declarația de deschidere a studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Finalizarea SC">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="position-button">
+          <div class="md-form">
+            <label for="CerereDeAut" class="btn btn-indigo btn-sm">
+              <input id="CerereDeAut" type="file" style="display:none;"> Cerere de autorizare
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="bonDePlata" mdbInputDirective type="text" class="form-control">
+          <label for="bonDePlata">Bonurile de plată</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="dispozitiaDeDistr" mdbInputDirective type="text" class="form-control">
+          <label for="dispozitiaDeDistr">Dispoziția de distribuire</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="scrisoareSolicInfo" mdbInputDirective type="text" class="form-control">
+          <label for="scrisoareSolicInfo">Scrisoare de solicitare a informației </label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="avizDesfStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="avizDesfStudClinic">Avizul pentru desfășurarea studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="raportComisiaMed" mdbInputDirective type="text" class="form-control">
+          <label for="raportComisiaMed">Raportul pentru Comisia Medicamentului</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="FunctiaRaportFlexibila" mdbInputDirective type="text" class="form-control">
+          <label for="FunctiaRaportFlexibila">Funcția de raportare flexibilă</label>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section *ngIf="model === 'C'">
+    <hr>
+    <h5 class="text-center font-weight-bold">Tipul studiului clinic</h5>
+    <hr>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="md-form">
+          <div class="container">
+            <mat-radio-group [(ngModel)]="model2">
+              <div class="row">
+                <div class="col-12">
+                  <h5 class="text-center font-weight-bold">Tratament</h5>
+                  <hr>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop1" value="A2">Unicentric</mat-radio-button>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop2" value="B2">Multicentric</mat-radio-button>
+                </div>
+              </div>
+            </mat-radio-group>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <mat-radio-group [(ngModel)]="model1">
+            <div class="container">
+              <div class="row">
+                <div class="col-12">
+                  <h5 class="text-center font-weight-bold">Proveniența</h5>
+                  <hr>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop1" value="A1">Național</mat-radio-button>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop2" value="B1">Internațional </mat-radio-button>
+                </div>
+              </div>
+            </div>
+          </mat-radio-group>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="fazaStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="fazaStudClinic">Faza Studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="numEudraCtNr" mdbInputDirective type="text" class="form-control">
+          <label for="numEudraCtNr">Numărul Eudra CT nr.</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="codStud" mdbInputDirective type="text" class="form-control">
+          <label for="codStud">Codul studiului</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="titluStud" mdbInputDirective type="text" class="form-control">
+          <label for="titluStud">Titlul studiului</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-12">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Medicamentul de investigat" [(ngModel)]="medInvests">
+              <mat-option *ngFor="let x of medInvest" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="medInvests === 'doza'">
+        <div class="md-form">
+          <input id="doza" mdbInputDirective type="text" class="form-control">
+          <label for="doza">Doza</label>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="medInvests === 'forma'">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma farmaceutică">
+              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="medInvests === 'calea'">
+        <div class="md-form">
+          <input id="caleaAdmin" mdbInputDirective type="text" class="form-control">
+          <label for="caleaAdmin">Calea de administrare</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Placebo" [(ngModel)]="placeBos">
+              <mat-option *ngFor="let x of placeBo" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="placeBos === 'doza'">
+        <div class="md-form">
+          <input id="doza" mdbInputDirective type="text" class="form-control">
+          <label for="doza">Doza</label>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="placeBos === 'forma'">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma farmaceutică">
+              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="placeBos === 'calea'">
+        <div class="md-form">
+          <input id="caleaAdmin" mdbInputDirective type="text" class="form-control">
+          <label for="caleaAdmin">Calea de administrare</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-12">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Produsul de referinţă" [(ngModel)]="prodRefs">
+              <mat-option *ngFor="let x of prodRef" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="prodRefs === 'doza'">
+        <div class="md-form">
+          <input id="doza" mdbInputDirective type="text" class="form-control">
+          <label for="doza">Doza</label>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="prodRefs === 'forma'">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma farmaceutică">
+              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="prodRefs === 'calea'">
+        <div class="md-form">
+          <input id="caleaAdmin" mdbInputDirective type="text" class="form-control">
+          <label for="caleaAdmin">Calea de administrare</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="sponsorStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="sponsorStudClinic">Sponsorul Studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="prodMedInvestigat" mdbInputDirective type="text" class="form-control">
+          <label for="prodMedInvestigat">Producătorul medicamentului de investigat</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="grupaFarmMedInvest" mdbInputDirective type="text" class="form-control">
+          <label for="grupaFarmMedInvest">Grupa farmacoterapeutică a medicamentului de investigat</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="prodProdusRef" mdbInputDirective type="text" class="form-control">
+          <label for="prodProdusRef">Producătorul produsului de referinţă</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="investigatori" mdbInputDirective type="text" class="form-control">
+          <label for="investigatori">Investigatori</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="institutiaMedLocDesStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="institutiaMedLocDesStudClinic">Instituţia medicală / Locul desfăşurării studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="popStudClinicNumPacienti" mdbInputDirective type="number" class="form-control">
+          <label for="popStudClinicNumPacienti">Populația studiului clinic Numărul pacienţilor</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="bonSc" mdbInputDirective type="text" class="form-control">
+          <label for="bonSc">№ BON SC</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="intrareBaniContAMDM" mdbInputDirective type="number" class="form-control">
+          <label for="intrareBaniContAMDM">Intrare bani pe contul AMDM</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="comMedDataCm" mdbInputDirective type="text" class="form-control">
+          <label for="comMedDataCm">Comisia Medicamentului Data CM</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="expertiCM" mdbInputDirective type="text" class="form-control">
+          <label for="expertiCM">Experţii CM</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="avizComMed" mdbInputDirective type="text" class="form-control">
+          <label for="avizComMed">Avizul Comisiei Medicamentului</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="avizComEtica" mdbInputDirective type="text" class="form-control">
+          <label for="avizComEtica">Avizul Comisiei de Etică</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="ordAprobStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="ordAprobStudClinic">Ordinul de aprobare studiu clinic</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="notProtocoloStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="notProtocoloStudClinic">Notificare la Protocolul studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="amendProtocolStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="amendProtocolStudClinic">Amendamente la Protocolul studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="farmaSC" mdbInputDirective type="text" class="form-control">
+          <label for="farmaSC">Farmacovigilenţa SC</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="declStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="declStudClinic">Declarația de deschidere a studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Finalizarea SC">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="position-button">
+          <div class="md-form">
+            <label for="CerereDeAut" class="btn btn-indigo btn-sm">
+              <input id="CerereDeAut" type="file" style="display:none;"> Cerere de autorizare
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="bonDePlata" mdbInputDirective type="text" class="form-control">
+          <label for="bonDePlata">Bonurile de plată</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="dispDistribuire" mdbInputDirective type="text" class="form-control">
+          <label for="dispDistribuire">Dispoziția de distribuire</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="scrisoareSolicitareInformatie" mdbInputDirective type="text" class="form-control">
+          <label for="scrisoareSolicitareInformatie">Scrisoare de solicitare a informației </label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="avizDesfStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="avizDesfStudClinic">Avizul pentru desfășurarea studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="raportComisiaMed" mdbInputDirective type="text" class="form-control">
+          <label for="raportComisiaMed">Raportul pentru Comisia Medicamentului</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="FuncRaportFlex" mdbInputDirective type="text" class="form-control">
+          <label for="FuncRaportFlex">Funcția de raportare flexibilă</label>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section *ngIf="model === 'D'">
+    <hr>
+    <h5 class="text-center font-weight-bold">Tipul studiului clinic</h5>
+    <hr>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="md-form">
+          <div class="container">
+            <mat-radio-group [(ngModel)]="model2">
+              <div class="row">
+                <div class="col-12">
+                  <h5 class="text-center font-weight-bold">Tratament</h5>
+                  <hr>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop1" value="A2">Unicentric</mat-radio-button>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop2" value="B2">Multicentric</mat-radio-button>
+                </div>
+              </div>
+            </mat-radio-group>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <mat-radio-group [(ngModel)]="model1">
+            <div class="container">
+              <div class="row">
+                <div class="col-12">
+                  <h5 class="text-center font-weight-bold">Proveniența</h5>
+                  <hr>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop1" value="A1">Național</mat-radio-button>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop2" value="B1">Internațional </mat-radio-button>
+                </div>
+              </div>
+            </div>
+          </mat-radio-group>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="fazaStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="fazaStudClinic">Faza Studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="numEudraCTNr" mdbInputDirective type="text" class="form-control">
+          <label for="numEudraCTNr">Numărul Eudra CT nr.</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="codStud" mdbInputDirective type="text" class="form-control">
+          <label for="codStud">Codul studiului</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="titluStud" mdbInputDirective type="text" class="form-control">
+          <label for="titluStud">Titlul studiului</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-12">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Medicamentul de investigat" [(ngModel)]="medInvests">
+              <mat-option *ngFor="let x of medInvest" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="medInvests === 'doza'">
+        <div class="md-form">
+          <input id="doza" mdbInputDirective type="text" class="form-control">
+          <label for="doza">Doza</label>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="medInvests === 'forma'">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma farmaceutică">
+              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="medInvests === 'calea'">
+        <div class="md-form">
+          <input id="caleaAdmin" mdbInputDirective type="text" class="form-control">
+          <label for="caleaAdmin">Calea de administrare</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Placebo" [(ngModel)]="placeBos">
+              <mat-option *ngFor="let x of placeBo" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="placeBos === 'doza'">
+        <div class="md-form">
+          <input id="doza" mdbInputDirective type="text" class="form-control">
+          <label for="doza">Doza</label>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="placeBos === 'forma'">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma farmaceutică">
+              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="placeBos === 'calea'">
+        <div class="md-form">
+          <input id="caleaAdmin" mdbInputDirective type="text" class="form-control">
+          <label for="caleaAdmin">Calea de administrare</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-12">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Produsul de referinţă" [(ngModel)]="prodRefs">
+              <mat-option *ngFor="let x of prodRef" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="prodRefs === 'doza'">
+        <div class="md-form">
+          <input id="doza" mdbInputDirective type="text" class="form-control">
+          <label for="doza">Doza</label>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="prodRefs === 'forma'">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma farmaceutică">
+              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="prodRefs === 'calea'">
+        <div class="md-form">
+          <input id="caleaAdmin" mdbInputDirective type="text" class="form-control">
+          <label for="caleaAdmin">Calea de administrare</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="sponsoStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="sponsoStudClinic">Sponsorul Studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="prodMedInvestigat" mdbInputDirective type="text" class="form-control">
+          <label for="prodMedInvestigat">Producătorul medicamentului de investigat</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="grupaFarmMedInvest" mdbInputDirective type="text" class="form-control">
+          <label for="grupaFarmMedInvest">Grupa farmacoterapeutică a medicamentului de investigat</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="prodProdsululRef" mdbInputDirective type="text" class="form-control">
+          <label for="prodProdsululRef">Producătorul produsului de referinţă</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="investigatori" mdbInputDirective type="text" class="form-control">
+          <label for="investigatori">Investigatori</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="institutiaMedLocDesStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="institutiaMedLocDesStudClinic">Instituţia medicală / Locul desfăşurării studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="popStudClinicNumPacienti" mdbInputDirective type="number" class="form-control">
+          <label for="popStudClinicNumPacienti">Populația studiului clinic Numărul pacienţilor</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="nrBonSC" mdbInputDirective type="text" class="form-control">
+          <label for="nrBonSC">№ BON SC</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="intrareBaniContAMDM" mdbInputDirective type="number" class="form-control">
+          <label for="intrareBaniContAMDM">Intrare bani pe contul AMDM</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="comisiaMedDataCM" mdbInputDirective type="text" class="form-control">
+          <label for="comisiaMedDataCM">Comisia Medicamentului Data CM</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="expertiiCM" mdbInputDirective type="text" class="form-control">
+          <label for="expertiiCM">Experţii CM</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="avizComisieMed" mdbInputDirective type="text" class="form-control">
+          <label for="avizComisieMed">Avizul Comisiei Medicamentului</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="avizComisieEtica" mdbInputDirective type="text" class="form-control">
+          <label for="avizComisieEtica">Avizul Comisiei de Etică</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="ordAprobStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="ordAprobStudClinic">Ordinul de aprobare studiu clinic</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="notProtocoloStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="notProtocoloStudClinic">Notificare la Protocolul studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="amendProtocolStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="amendProtocolStudClinic">Amendamente la Protocolul studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="farmSC" mdbInputDirective type="text" class="form-control">
+          <label for="farmSC">Farmacovigilenţa SC</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="declDeschStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="declDeschStudClinic">Declarația de deschidere a studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Finalizarea SC">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="position-button">
+          <div class="md-form">
+            <label for="CerereDeAut" class="btn btn-indigo btn-sm">
+              <input id="CerereDeAut" type="file" style="display:none;"> Cerere de autorizare
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="bonDePlata" mdbInputDirective type="text" class="form-control">
+          <label for="bonDePlata">Bonurile de plată</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="disDedistr" mdbInputDirective type="text" class="form-control">
+          <label for="disDedistr">Dispoziția de distribuire</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="scrisoareSolicInfo" mdbInputDirective type="text" class="form-control">
+          <label for="scrisoareSolicInfo">Scrisoare de solicitare a informației </label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="avizDesfStudClinic" mdbInputDirective type="text" class="form-control">
+          <label for="avizDesfStudClinic">Avizul pentru desfășurarea studiului clinic</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="raportComisiaMed" mdbInputDirective type="text" class="form-control">
+          <label for="raportComisiaMed">Raportul pentru Comisia Medicamentului</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="FunctiaRaportFlexibila" mdbInputDirective type="text" class="form-control">
+          <label for="FunctiaRaportFlexibila">Funcția de raportare flexibilă</label>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="text-center">
+    <button type="submit" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Inregistreaza
+      notificare</button>
+  </div>
+</div>

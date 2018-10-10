@@ -1,0 +1,27 @@
+<table class="table table-widths text-center">
+  <thead class="black white-text">
+  <tr>
+    <th scope="col">Denumire</th>
+    <th scope="col">Format</th>
+    <th scope="col">Data incarcarii</th>
+    <th scope="col">Actiuni</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let doc of documents;let i = index">
+    <th scope="row">{{ doc.name }}</th>
+    <td>{{ doc.format }}</td>
+    <td>{{ doc.date | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+    <td>
+      <button class="btn btn-mdb-color btn-sm waves-light" (click)="loadFile(doc.path)" mdbWavesEffect >View</button>
+      <button *ngIf="!doc.isOld" class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeDocument(i)" mdbWavesEffect>Delete</button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<div class="col position-button">
+  <label for="incarcaFisier" class="btn btn-indigo btn-sm">
+   <!-- <app-file-upload  (notify)="onNotify($event)"></app-file-upload>-->
+    <input id="incarcaFisier" type="file" style="display:none;" (click)="this.value=null;" (change)="addDocument($event)"> Incarcă Document
+  </label>
+</div>

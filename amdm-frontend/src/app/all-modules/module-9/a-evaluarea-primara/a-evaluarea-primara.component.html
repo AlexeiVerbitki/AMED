@@ -1,0 +1,132 @@
+<div class="container-fluid sky z-depth-2">
+  <h3 class="text-center my-3 font-weight-bold">Evaluarea primara</h3>
+  <hr>
+
+  <form [formGroup]='evaluateClinicalTrailForm'  #f="ngForm">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="regNr" mdbInputDirective type="text" class="form-control" formControlName="requestNumber" [attr.disabled]="true">
+          <label for="regNr">Nr. de înregistrare a cererii
+          </label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="regDate" mdbInputDirective type="text" class="form-control" formControlName="startDate"  [attr.disabled]="true">
+          <label for="regDate">Data de înregistrare a cererii
+          </label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="company" mdbInputDirective type="text" class="form-control" value="{{companyName}}"  [attr.disabled]="true">
+          <label for="company">Compania solicitant
+          </label>
+        </div>
+      </div>
+    </div>
+    <hr>
+
+    <app-document [documents]= "docs"></app-document>
+    <hr>
+
+      <div formGroupName="clinicalTrails">
+        <div class="col-md-12">
+          <div class="md-form">
+              <textarea type="text" id="titluStud" class="md-textarea form-control" mdbInputDirective rows="1" formControlName="title"></textarea>
+              <label for="titluStud">Titlul studiului</label>
+          </div>
+        </div>
+
+        <h5 class="text-center font-weight-bold">Tipul studiului clinic</h5>
+
+        <div class="row">
+            <div class="col-md-6">
+              <div class="md-form">
+                  <div class="container">
+                      <mat-radio-group class="radio-btn-wrapper" formControlName="treatmentId">
+                          <div class="row">
+                              <div class="col-12">
+                                  <h5 class="text-center font-weight-bold">Tratament</h5>
+                                  <hr>
+                              </div>
+                              <div class="col-md-12">
+                                  <mat-radio-button name="prop1" value="1">Unicentric</mat-radio-button>
+                              </div>
+                              <div class="col-md-12">
+                                  <mat-radio-button name="prop2" value="2">Multicentric</mat-radio-button>
+                              </div>
+                          </div>
+                      </mat-radio-group>
+                  </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="md-form">
+                    <div class="container">
+                        <mat-radio-group class="radio-btn-wrapper" formControlName="provenanceId">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h5 class="text-center font-weight-bold">Proveniența</h5>
+                                    <hr>
+                                </div>
+                                <div class="col-md-12">
+                                    <mat-radio-button name="prop1" value="3">Național</mat-radio-button>
+                                </div>
+                                <div class="col-md-12">
+                                    <mat-radio-button name="prop2" value="4">Internațional</mat-radio-button>
+                                </div>
+                            </div>
+                        </mat-radio-group>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        <div class="row">
+          <div class="col-md-4">
+              <div class="md-form">
+                  <input id="fazaStudClinic" mdbInputDirective type="text" class="form-control" formControlName="phase">
+                  <label for="fazaStudClinic">Faza Studiului clinic</label>
+              </div>
+          </div>
+          <div class="col-md-4">
+              <div class="md-form">
+                  <input id="numEudraCT" mdbInputDirective type="text" class="form-control" formControlName="eudraCtNr">
+                  <label for="numEudraCT">Numărul Eudra CT nr.</label>
+              </div>
+          </div>
+          <div class="col-md-4">
+              <div class="md-form">
+                  <input id="codStud" mdbInputDirective type="text" class="form-control" formControlName="code">
+                  <label for="codStud">Codul studiului</label>
+              </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4">
+              <div class="md-form">
+                  <input id="institutiaMedLocDesStudClinic" mdbInputDirective type="text" class="form-control" formControlName="medicalInstitution">
+                  <label for="institutiaMedLocDesStudClinic">Instituţia medicală / Locul desfăşurării studiului clinic</label>
+              </div>
+          </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="popStudClinicNumPacienti" mdbInputDirective type="number" class="form-control" formControlName="trialPopulation">
+                    <label for="popStudClinicNumPacienti">Populația studiului clinic / Numărul pacienţilor</label>
+                </div>
+            </div>
+        </div>
+
+
+      </div>
+    <hr>
+
+  </form>
+
+
+</div>

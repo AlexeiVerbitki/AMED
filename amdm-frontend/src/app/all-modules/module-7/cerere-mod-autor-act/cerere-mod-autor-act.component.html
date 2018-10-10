@@ -1,0 +1,191 @@
+<div class="container sky z-depth-2">
+    <h3 class="text-center my-3 font-weight-bold">Cerere de modificare a autorizarii de activitate cu precursori/psihotrope/stupefiante</h3>
+    <hr>
+    <table class="table table-widths text-center">
+      <thead class="black white-text">
+        <tr>
+          <th scope="col">Denumire</th>
+          <th scope="col">Format</th>
+          <th scope="col">Data incarcarii</th>
+          <th scope="col">Actiuni</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let x of cerere">
+          <th scope="row">{{ x.denumirea }}</th>
+          <td>{{ x.format }}</td>
+          <td>{{ x.dataIncarcarii }}</td>
+          <td>
+            <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect>View</button>
+            <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect>Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="col position-button">
+      <label for="incarcaFisier" class="btn btn-indigo btn-sm">
+        <input id="incarcaFisier" type="file" style="display:none;"> Incarca Fisier
+      </label>
+    </div>
+    <form [formGroup]='zForm'>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="md-form">
+            <mat-form-field class="w-100">
+              <input matInput [matDatepicker]="picker" placeholder="Data inregistrarii" required formControlName="dataReg">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker touchUi #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="md-form">
+            <input id="nrReg" mdbInputDirective type="text" class="form-control" formControlName="nrReg">
+            <label for="nrReg">Nr. de inregistrare a cererii
+              <span class="text-danger">*</span>
+            </label>
+          </div>
+        </div>
+        <hr>
+        <div class="col-md-12">
+          <div class="md-form">
+            <input id="compSolicitant" mdbInputDirective type="text" class="form-control" formControlName="compSolicitant">
+            <label for="compSolicitant">Compania-solicitant
+              <span class="text-danger">*</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="text-center">
+        <button class="btn btn-primary btn-sm waves-light" mdbWavesEffect>Adresa solicitantului <i class="fa fa-sort" aria-hidden="true"></i></button>
+      </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="md-form">
+              <mat-form-field class="w-100">
+                <mat-select placeholder="Raion">
+                  <mat-option *ngFor="let x of raion" [value]="x.value">{{ x.viewValue }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="md-form">
+              <mat-form-field class="w-100">
+                <mat-select placeholder="Localitate">
+                  <mat-option *ngFor="let x of localitate" [value]="x.value">{{ x.viewValue }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="md-form">
+              <mat-form-field class="w-100">
+                <mat-select placeholder="Strada">
+                  <mat-option *ngFor="let x of strada" [value]="x.value">{{ x.viewValue }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="md-form">
+              <mat-form-field class="w-100">
+                <mat-select placeholder="Nr.">
+                  <mat-option *ngFor="let x of nr" [value]="x.value">{{ x.viewValue }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="md-form">
+              <mat-form-field class="w-100">
+                <mat-select placeholder="Bloc">
+                  <mat-option *ngFor="let x of bloc" [value]="x.value">{{ x.viewValue }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="md-form">
+              <input id="oficiu" mdbInputDirective type="text" class="form-control">
+              <label for="oficiu">Oficiu
+                <span class="text-danger">*</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      <hr>
+      <h5 class="text-center font-weight-bold">Persoana responsabila</h5>
+      <hr>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="md-form">
+            <input id="name" mdbInputDirective type="text" class="form-control" required formControlName="name">
+            <label for="name">Nume
+              <span class="text-danger">*</span>
+            </label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="md-form">
+            <input id="surname" mdbInputDirective type="text" class="form-control" required formControlName="surname">
+            <label for="surname">Prenume
+              <span class="text-danger">*</span>
+            </label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="md-form">
+            <input id="idnp" mdbInputDirective type="text" class="form-control" required formControlName="idnp">
+            <label for="idnp">IDNP
+              <span class="text-danger">*</span>
+            </label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="md-form">
+            <input id="cellphone" mdbInputDirective type="text" class="form-control" required formControlName="cellphone">
+            <label for="cellphone">Telefon mobil
+              <span class="text-danger">*</span>
+            </label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="md-form">
+            <input id="phoneFix" mdbInputDirective type="text" class="form-control">
+            <label for="phoneFix">Telefon fix</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="md-form">
+            <input id="email" mdbInputDirective type="email" class="form-control" formControlName="email">
+            <label for="email">Email
+              <span class="text-danger">*</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="md-form">
+            <mat-form-field class="w-100">
+              <mat-select placeholder="Tipul medicamentului" formControlName="tipMed">
+                <mat-option *ngFor="let x of tipMed" [value]="x.value">{{ x.viewValue }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="md-form">
+            <mat-form-field class="w-100">
+              <input matInput [matDatepicker]="picker1" placeholder="Data expirarii" required formControlName="dataExp">
+              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker touchUi #picker1></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </form>
+    <hr>
+  </div>

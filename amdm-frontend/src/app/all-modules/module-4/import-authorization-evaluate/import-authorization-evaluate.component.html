@@ -1,0 +1,794 @@
+<div class="container-fluid sky z-depth-2">
+  <h3 class="text-center my-3 font-weight-bold">Autorizarea importului medicamentului</h3>
+  <hr>
+  <table class="table table-widths text-center">
+    <thead class="black white-text">
+      <tr>
+        <th scope="col">Denumire</th>
+        <th scope="col">Format</th>
+        <th scope="col">Data incarcarii</th>
+        <th scope="col">Actiuni</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of cerere">
+        <th scope="row">{{ x.denumirea }}</th>
+        <td>{{ x.format }}</td>
+        <td>{{ x.dataIncarcarii }}</td>
+        <td>
+          <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect>View</button>
+          <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect>Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="col position-button">
+    <label for="incarcaFisier" class="btn btn-indigo btn-sm">
+      <input id="incarcaFisier" type="file" style="display:none;"> Incarca Fisier
+    </label>
+  </div>
+  <hr>
+  <h5 class="text-center font-weight-bold">Pagina de inregistrare</h5>
+  <hr>
+  <div class="row">
+    <div class="col-md-6">
+      <mat-checkbox [(ngModel)]="medReg">Medicament inregistrat</mat-checkbox>
+    </div>
+    <div class="col-md-6">
+      <mat-checkbox [(ngModel)]="medUnreg">Medicamentul neinregistrat</mat-checkbox>
+    </div>
+    <div class="col-md-6">
+      <mat-checkbox [(ngModel)]="MatPrima">Materia primă</mat-checkbox>
+    </div>
+    <div class="col-md-6">
+      <mat-checkbox [(ngModel)]="AmbalajProd">Ambalajul pentru producerea medicamentelor</mat-checkbox>
+    </div>
+    <div class="col-md-6">
+      <mat-checkbox [(ngModel)]="Prelevare">Prelevarea a probei medii și controlului de stat </mat-checkbox>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="md-form">
+        <input id="nrRegCererii" mdbInputDirective type="text" class="form-control" disabled value="CI251020">
+        <label for="nrRegCererii">Nr. de înregistrare a cererii
+        </label>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="md-form-modified">
+        <mat-form-field class="w-100">
+          <input matInput [matDatepicker]="picker" placeholder="Data depunerii cererii" disabled [formControl]="date">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker touchUi #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="md-form-modified">
+        <mat-form-field class="w-100">
+          <mat-select placeholder="Compania solicitant">
+            <mat-option *ngFor="let x of compSolicitant" [value]="x.value">{{ x.viewValue }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <h5 class="text-center font-weight-bold">Materia prima</h5>
+  <hr>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="md-form">
+        <input id="denumirea" mdbInputDirective type="text" class="form-control">
+        <label for="denumirea">Denumirea
+        </label>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="md-form">
+        <input id="prod" mdbInputDirective type="text" class="form-control">
+        <label for="prod">Producătorul
+        </label>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="md-form-modified">
+        <mat-form-field class="w-100">
+          <mat-select placeholder="Tara">
+            <mat-option *ngFor="let x of taraProd" [value]="x.value">{{ x.viewValue }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="md-form">
+        <input id="adresa" mdbInputDirective type="text" class="form-control">
+        <label for="adresa">Adresa
+        </label>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <h5 class="text-center font-weight-bold">Vînzătorului</h5>
+  <hr>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="md-form-modified">
+        <mat-form-field class="w-100">
+          <mat-select placeholder="Tara">
+            <mat-option *ngFor="let x of taraVinz" [value]="x.value">{{ x.viewValue }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="md-form">
+        <input id="adresa" mdbInputDirective type="text" class="form-control">
+        <label for="adresa">Adresa
+        </label>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <h5 class="text-center font-weight-bold">Importator</h5>
+  <hr>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="md-form-modified">
+        <mat-form-field class="w-100">
+          <mat-select placeholder="Tara">
+            <mat-option *ngFor="let x of taraVinz" [value]="x.value">{{ x.viewValue }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="md-form">
+        <input id="adresa2" mdbInputDirective type="text" class="form-control">
+        <label for="adresa2">Adresa
+        </label>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="md-form">
+        <input id="codulVamal" mdbInputDirective type="text" class="form-control">
+        <label for="codulVamal">Codul vamal</label>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="md-form">
+        <input id="temAutImport" mdbInputDirective type="text" class="form-control">
+        <label for="temAutImport">Temeiul pentru autorizație de import (Contract)</label>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="md-form">
+        <input id="quantity" mdbInputDirective type="number" class="form-control">
+        <label for="quantity">Cantitatea</label>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="md-form">
+        <input id="pret" mdbInputDirective type="number" class="form-control">
+        <label for="pret">Prețul (lei)</label>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="md-form-modified">
+        <mat-form-field class="w-100">
+          <mat-select placeholder="Valuta">
+            <mat-option *ngFor="let x of valuta" [value]="x.value">{{ x.viewValue }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="md-form">
+        <input id="condPrec" mdbInputDirective type="text" class="form-control">
+        <label for="condPrec">Condiții și precizări</label>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="md-form">
+        <input id="nrDeclVamal" mdbInputDirective type="text" class="form-control">
+        <label for="nrDeclVamal">Nr. declaraţiei vamale</label>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="md-form-modified">
+        <mat-form-field class="w-100">
+          <input matInput [matDatepicker]="picker1" placeholder="Data declaraţiei vamale">
+          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+          <mat-datepicker touchUi #picker1></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="md-form">
+        <input id="nrAutImportRM" mdbInputDirective type="text" class="form-control">
+        <label for="nrAutImportRM">Nr. autorizaţiei de import în RM</label>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="md-form-modified">
+        <mat-form-field class="w-100">
+          <input matInput [matDatepicker]="picker2" placeholder="Termen de valabilitate">
+          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+          <mat-datepicker touchUi #picker2></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="md-form">
+        <input id="cantPrelevanta" mdbInputDirective type="text" class="form-control">
+        <label for="cantPrelevanta">Cantitatea prelevată</label>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="md-form">
+        <input id="cantRet" mdbInputDirective type="text" class="form-control">
+        <label for="cantRet">Cantitatea returnată</label>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <section *ngIf="medReg">
+    <h5 class="text-center font-weight-bold">Informația despre medicamentul înregistrat</h5>
+    <hr>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="codMed" mdbInputDirective type="text" class="form-control">
+          <label for="codMed">Codul medicamentului</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="codVamal" mdbInputDirective type="text" class="form-control">
+          <label for="codVamal">Codul vamal</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="denumireaComercMed" mdbInputDirective type="text" class="form-control">
+          <label for="denumireaComercMed">Denumirea comercială a medicamentului</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma medicamentoasă">
+              <mat-option *ngFor="let x of unitateDeMasura" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="doza" mdbInputDirective type="number" class="form-control">
+          <label for="doza">Doza</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Volum">
+              <mat-option *ngFor="let x of unitateDeMasura" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="denumireaComInt" mdbInputDirective type="number" class="form-control">
+          <label for="denumireaComInt">Denumirea comună internaționala</label>
+        </div>
+      </div>
+    </div>
+    <div class="position-button">
+      <button type="submit" class="btn btn-indigo waves-light btn-sm btn-sm-bl" mdbWavesEffect>Adauga</button>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="divMasura" mdbInputDirective type="number" class="form-control">
+          <label for="divMasura">Divizare (Unitatea de măsură)</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Volum">
+              <mat-option *ngFor="let x of unitateDeMasura" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="n" mdbInputDirective type="text" class="form-control">
+          <label for="n">N</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="quantity2" mdbInputDirective type="number" class="form-control">
+          <label for="quantity2">Cantitatea</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="pret" mdbInputDirective type="number" class="form-control">
+          <label for="pret">Prețul</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Valuta">
+              <mat-option *ngFor="let x of unitateDeMasura" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Țara producătoare">
+              <mat-option *ngFor="let x of unitateDeMasura" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="firmProd" mdbInputDirective type="text" class="form-control">
+          <label for="firmProd">Firma producătoare</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="nrRegRM" mdbInputDirective type="text" class="form-control">
+          <label for="nrRegRM">Nr. de înregistrare în RM</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker3" placeholder="Data înregistrare în RM">
+            <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker3></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="codATC" mdbInputDirective type="text" class="form-control">
+          <label for="codATC">Cod ATC</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+  </section>
+  <section *ngIf="medUnreg">
+    <h5 class="text-center font-weight-bold">Informația despre medicamentul neînregistrat</h5>
+    <hr>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="codVamal" mdbInputDirective type="text" class="form-control">
+          <label for="CodVamal">Codul vamal</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="denComercMed" mdbInputDirective type="text" class="form-control">
+          <label for="denComercMed">Denumirea comercială a medicamentului</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma medicamentoasă">
+              <mat-option *ngFor="let x of unitateDeMasura" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="doza2" mdbInputDirective type="number" class="form-control">
+          <label for="doza2">Doza</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Volum">
+              <mat-option *ngFor="let x of unitateDeMasura" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="denumireaComInt2" mdbInputDirective type="number" class="form-control">
+          <label for="denumireaComInt2">Denumirea comună internaționala</label>
+        </div>
+      </div>
+    </div>
+    <div class="position-button">
+      <button type="submit" class="btn btn-indigo waves-light btn-sm btn-sm-bl" mdbWavesEffect>Adauga</button>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="divMasura2" mdbInputDirective type="number" class="form-control">
+          <label for="divMasura2">Divizare (Unitatea de măsură)</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Volum">
+              <mat-option *ngFor="let x of unitateDeMasura" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="n2" mdbInputDirective type="text" class="form-control">
+          <label for="n2">N</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="quantity2" mdbInputDirective type="number" class="form-control">
+          <label for="quantity2">Cantitatea</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="pretul2" mdbInputDirective type="number" class="form-control">
+          <label for="pretul2">Prețul</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Valuta">
+              <mat-option *ngFor="let x of unitateDeMasura" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Țara producătoare">
+              <mat-option *ngFor="let x of unitateDeMasura" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="firmProd2" mdbInputDirective type="text" class="form-control">
+          <label for="firmProd2">Firma producătoare</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="nrRegRM2" mdbInputDirective type="text" class="form-control">
+          <label for="nrRegRM2">Nr. de înregistrare în RM</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker4" placeholder="Data înregistrare în RM">
+            <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker4></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="codATC2" mdbInputDirective type="text" class="form-control">
+          <label for="codATC2">Cod ATC</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+  </section>
+  <section *ngIf="MatPrima">
+    <h5 class="text-center font-weight-bold">Informația despre materia primă</h5>
+    <hr>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="codVamal" mdbInputDirective type="text" class="form-control">
+          <label for="codVamal">Codul vamal</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="denMatPrimeDCI" mdbInputDirective type="text" class="form-control">
+          <label for="denMatPrimeDCI">Denumirea materiei prime (DCI)</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="quantity3" mdbInputDirective type="number" class="form-control">
+          <label for="quantity3">Cantitatea</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="pret3" mdbInputDirective type="number" class="form-control">
+          <label for="pret3">Prețul</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Valuta">
+              <mat-option *ngFor="let x of unitateDeMasura" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Țara producătoare">
+              <mat-option *ngFor="let x of unitateDeMasura" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="firmProd" mdbInputDirective type="text" class="form-control">
+          <label for="firmProd">Firma producătoare</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="codATC3" mdbInputDirective type="text" class="form-control">
+          <label for="codATC3">Cod ATC</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+  </section>
+  <section *ngIf="AmbalajProd">
+      <h5 class="text-center font-weight-bold">Informația despre ambalajul</h5>
+      <hr>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="md-form">
+            <input id="codVamal2" mdbInputDirective type="text" class="form-control">
+            <label for="codVamal2">Codul vamal</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="md-form">
+            <input id="denAmbalaj" mdbInputDirective type="text" class="form-control">
+            <label for="denAmbalaj">Denumirea ambalajului</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="md-form">
+            <input id="quantity4" mdbInputDirective type="number" class="form-control">
+            <label for="quantity4">Cantitatea</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="md-form">
+            <input id="pret" mdbInputDirective type="number" class="form-control">
+            <label for="pret">Prețul</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="md-form-modified">
+            <mat-form-field class="w-100">
+              <mat-select placeholder="Valuta">
+                <mat-option *ngFor="let x of unitateDeMasura" [value]="x.value">{{ x.viewValue }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="md-form-modified">
+            <mat-form-field class="w-100">
+              <mat-select placeholder="Țara producătoare">
+                <mat-option *ngFor="let x of unitateDeMasura" [value]="x.value">{{ x.viewValue }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="md-form">
+            <input id="firmProd3" mdbInputDirective type="text" class="form-control">
+            <label for="firmProd3">Firma producătoare</label>
+          </div>
+        </div>
+      </div>
+      <hr>
+    </section>
+  <section *ngIf="Prelevare">
+    <h5 class="text-center font-weight-bold">Actul de prelevare a probei medii şi controlului de stat</h5>
+    <hr>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="codMed" mdbInputDirective type="text" class="form-control">
+          <label for="codMed">Codul medicamentului</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="codVamal4" mdbInputDirective type="text" class="form-control">
+          <label for="codVamal4">Codul vamal</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="denComercMed2" mdbInputDirective type="text" class="form-control">
+          <label for="denComercMed2">Denumirea comercială a medicamentului</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma medicamentoasă">
+              <mat-option *ngFor="let x of unitateDeMasura" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="doza3" mdbInputDirective type="number" class="form-control">
+          <label for="doza3">Doza</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Volum">
+              <mat-option *ngFor="let x of unitateDeMasura" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="denumireaComInt2" mdbInputDirective type="number" class="form-control">
+          <label for="denumireaComInt2">Denumirea comună internaționala</label>
+        </div>
+      </div>
+    </div>
+    <div class="position-button">
+      <button type="submit" class="btn btn-indigo waves-light btn-sm btn-sm-bl" mdbWavesEffect>Adauga</button>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="divMasura3" mdbInputDirective type="number" class="form-control">
+          <label for="divMasura3">Divizare (Unitatea de măsură)</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Volum">
+              <mat-option *ngFor="let x of unitateDeMasura" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="n3" mdbInputDirective type="text" class="form-control">
+          <label for="n3">N</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="quantity5" mdbInputDirective type="number" class="form-control">
+          <label for="quantity5">Cantitatea</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="pret" mdbInputDirective type="number" class="form-control">
+          <label for="pret">Prețul</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Valuta">
+              <mat-option *ngFor="let x of unitateDeMasura" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="suma" mdbInputDirective type="number" class="form-control">
+          <label for="suma">Suma</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Țara producătoare">
+              <mat-option *ngFor="let x of unitateDeMasura" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="firmProd4" mdbInputDirective type="text" class="form-control">
+          <label for="firmProd4">Firma producătoare</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="nrAutImportRM2" mdbInputDirective type="text" class="form-control">
+          <label for="nrAutImportRM2">Nr. autorizaţiei de import în RM</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form">
+          <input id="nrDeclVam" mdbInputDirective type="text" class="form-control">
+          <label for="nrDeclVam">Nr. declaraţiei vamale</label>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker6" placeholder="Data declaraţiei vamale">
+            <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker6></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker7" placeholder="Termen de valabilitate">
+            <mat-datepicker-toggle matSuffix [for]="picker7"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker7></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="cantPre" mdbInputDirective type="number" class="form-control">
+          <label for="cantPre">Cantitatea prelevată</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="cantRet" mdbInputDirective type="number" class="form-control">
+          <label for="cantRet">Cantitatea returnată</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+  </section>
+  <div class="text-center">
+    <button type="submit" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Adaugare</button>
+  </div>
+</div>

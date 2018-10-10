@@ -1,0 +1,195 @@
+<div class="container z-depth-2 sky">
+  <div class="table-width">
+    <div class="text-right">
+      <mat-form-field class="w-50">
+        <mat-icon matPrefix class="pr-search">search</mat-icon>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter" class="w-50">
+      </mat-form-field>
+    </div>
+    <hr>
+    <table mat-table [dataSource]="dataSource" class="w-100" matSort>
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Id </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="cod">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Cod </th>
+        <td mat-cell *matCellDef="let element"> {{element.cod}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Denumirea </th>
+        <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="parent">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Parent </th>
+        <td mat-cell *matCellDef="let element"> {{element.parent}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="long_description">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Denumirea deplina </th>
+        <td mat-cell *matCellDef="let element"> {{element.long_description}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="address">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Adresa </th>
+        <td mat-cell *matCellDef="let element"> {{element.address}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="bank_code">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Contul </th>
+        <td mat-cell *matCellDef="let element"> {{element.bank_code}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="phonenumbers">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Numar de contact </th>
+        <td mat-cell *matCellDef="let element"> {{element.phonenumbers}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Actiune </th>
+        <td mat-cell *matCellDef="let element">
+          <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect data-toggle="modal" data-target="#edit" (click)="edit.show()">Editare</button>
+          <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect>Stergere</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+  </div>
+
+  <div class="position-button mt-3">
+    <button class="btn btn-dark-green-color waves-light btn-sm waves-light" mdbWavesEffect data-toggle="modal" data-target="#add"
+      (click)="add.show()">Adaugare</button>
+  </div>
+
+  <div mdbModal #edit="mdbModal" class="modal fade top" id="frameModalTop" tabindex="-1" role="dialog" aria-labelledby="editLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-notify modal-info" role="document">
+      <!--Content-->
+      <div class="modal-content">
+        <!--Header-->
+        <div class="modal-header text-center">
+          <h4 class="modal-title white-text w-100 font-weight-bold py-2">Editare</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="edit.hide()">
+            <span aria-hidden="true" class="white-text">&times;</span>
+          </button>
+        </div>
+
+        <!--Body-->
+        <div class="modal-body">
+          <div class="md-form mb-4">
+            <input type="number" id="cod" class="form-control" mdbInputDirective [formControl]="codEdit">
+            <label for="cod" data-error="wrong" data-success="right">Cod</label>
+          </div>
+
+          <div class="md-form mb-4">
+            <input type="text" id="denumire" class="form-control" mdbInputDirective [formControl]="denumireEdit">
+            <label for="denumire" data-error="wrong" data-success="right">Denumire</label>
+          </div>
+
+          <div class="md-form mb-4">
+            <input type="number" id="parent" class="form-control" mdbInputDirective [formControl]="parentEdit">
+            <label for="parent" data-error="wrong" data-success="right">Parent</label>
+          </div>
+
+          <div class="md-form mb-4">
+            <input type="text" id="denumireaFull" class="form-control" mdbInputDirective [formControl]="denumireaFullEdit">
+            <label for="denumireaFull" data-error="wrong" data-success="right">Denumirea deplina</label>
+          </div>
+          
+          <div class="md-form mb-4">
+            <input type="text" id="adresa" class="form-control" mdbInputDirective [formControl]="adresaEdit">
+            <label for="adresa" data-error="wrong" data-success="right">Adresa</label>
+          </div>
+
+          <div class="md-form mb-4">
+            <input type="text" id="cont" class="form-control" mdbInputDirective [formControl]="contEdit">
+            <label for="cont" data-error="wrong" data-success="right">Contul</label>
+          </div>
+
+          <div class="md-form mb-4">
+            <input type="text" id="phone" class="form-control" mdbInputDirective [formControl]="phoneEdit">
+            <label for="phone" data-error="wrong" data-success="right">Numar de contact</label>
+          </div>
+          
+        </div>
+
+        <!--Footer-->
+        <div class="modal-footer justify-content-center">
+          <a type="button" mdbBtn color="primary" class="waves-effect" mdbWavesEffect>Salveaza
+          </a>
+        </div>
+      </div>
+      <!--/.Content-->
+    </div>
+  </div>
+
+
+  <div mdbModal #add="mdbModal" class="modal fade top" id="frameModalTop" tabindex="-1" role="dialog" aria-labelledby="addLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-notify modal-success" role="document">
+      <!--Content-->
+      <div class="modal-content">
+        <!--Header-->
+        <div class="modal-header text-center">
+          <h4 class="modal-title white-text w-100 font-weight-bold py-2">Adaugare</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="add.hide()">
+            <span aria-hidden="true" class="white-text">&times;</span>
+          </button>
+        </div>
+
+        <!--Body-->
+        <div class="modal-body">
+          <div class="md-form mb-4">
+            <input type="number" id="cod" class="form-control" mdbInputDirective [formControl]="codAdd">
+            <label for="cod" data-error="wrong" data-success="right">Cod</label>
+          </div>
+
+          <div class="md-form mb-4">
+            <input type="text" id="denumire" class="form-control" mdbInputDirective [formControl]="denumireAdd">
+            <label for="denumire" data-error="wrong" data-success="right">Denumire</label>
+          </div>
+
+          <div class="md-form mb-4">
+            <input type="number" id="parent" class="form-control" mdbInputDirective [formControl]="parentAdd">
+            <label for="parent" data-error="wrong" data-success="right">Parent</label>
+          </div>
+
+          <div class="md-form mb-4">
+            <input type="text" id="denumireaFull" class="form-control" mdbInputDirective [formControl]="denumireaFullAdd">
+            <label for="denumireaFull" data-error="wrong" data-success="right">Denumirea deplina</label>
+          </div>
+          
+          <div class="md-form mb-4">
+            <input type="text" id="adresa" class="form-control" mdbInputDirective [formControl]="adresaAdd">
+            <label for="adresa" data-error="wrong" data-success="right">Adresa</label>
+          </div>
+
+          <div class="md-form mb-4">
+            <input type="text" id="cont" class="form-control" mdbInputDirective [formControl]="contAdd">
+            <label for="cont" data-error="wrong" data-success="right">Contul</label>
+          </div>
+
+          <div class="md-form mb-4">
+            <input type="text" id="phone" class="form-control" mdbInputDirective [formControl]="phoneAdd">
+            <label for="phone" data-error="wrong" data-success="right">Numar de contact</label>
+          </div>
+          
+        </div>
+
+        <!--Footer-->
+        <div class="modal-footer justify-content-center">
+          <a type="button" mdbBtn color="success" class="waves-effect" mdbWavesEffect>Salveaza
+          </a>
+        </div>
+      </div>
+      <!--/.Content-->
+    </div>
+  </div>
+</div>

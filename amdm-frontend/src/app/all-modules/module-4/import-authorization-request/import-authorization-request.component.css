@@ -1,0 +1,24 @@
+.md-forms {
+    position: relative;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+label.required:not(:empty):after,
+.field-header.required:after {
+    content: " *";
+    color: red;
+    position: absolute;
+    right: 0px;
+    top: -15px;
+}
+
+.mt-4s {
+    padding-top: 45px;
+}
+
+.md-form-modified {
+    position: relative;
+    margin-top: 10px;
+    margin-bottom: 1.5rem;
+  }
