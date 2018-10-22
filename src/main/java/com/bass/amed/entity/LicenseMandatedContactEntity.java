@@ -1,5 +1,7 @@
 package com.bass.amed.entity;
 
+import sun.plugin.util.UserProfile;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
@@ -8,7 +10,7 @@ import java.util.Objects;
 @Table(name = "license_mandated_contact", schema = "amed", catalog = "")
 public class LicenseMandatedContactEntity
 {
-    private int id;
+    private Integer id;
     private String phoneNumber;
     private String email;
     private String requestPersonFirstname;
@@ -19,15 +21,17 @@ public class LicenseMandatedContactEntity
     private String newMandatedLastname;
     private String newMandatedNr;
     private Date newMandatedDate;
+//    private LicensesEntity licensesEntity;
 
     @Id
     @Column(name = "id")
-    public int getId()
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
+    public Integer getId()
     {
         return id;
     }
 
-    public void setId(int id)
+    public void setId(Integer id)
     {
         this.id = id;
     }
@@ -151,6 +155,17 @@ public class LicenseMandatedContactEntity
     {
         this.newMandatedDate = newMandatedDate;
     }
+
+//    @OneToOne( mappedBy = "mandatedContact")
+//    public LicensesEntity getLicensesEntity()
+//    {
+//        return licensesEntity;
+//    }
+//
+//    public void setLicensesEntity(LicensesEntity licensesEntity)
+//    {
+//        this.licensesEntity = licensesEntity;
+//    }
 
     @Override
     public boolean equals(Object o)

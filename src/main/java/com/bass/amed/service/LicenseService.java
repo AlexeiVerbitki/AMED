@@ -19,6 +19,7 @@ public class LicenseService
     @Transactional(readOnly = true)
     public LicensesEntity findById(Integer id)
     {
+
         LicensesEntity le = licensesRepository.findById(id).get();
 
         if (le == null)
@@ -26,9 +27,7 @@ public class LicenseService
             return null;
         }
 
-        le.setDocuments(null);
-        le.setDocuments(documentsRepository.findByLicenseId(le.getId()));
-
+        le.getDocuments();
         return le;
     }
 }

@@ -11,6 +11,7 @@ public class NmUnitsOfMeasurementEntity
     private String description;
 
     @Id
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
     @Column(name = "id")
     public Integer getId()
     {

@@ -11,8 +11,7 @@ public class DocumentsEntity
     private Timestamp date;
     private String name;
     private String path;
-    private String format;
-    private Integer docTypeId;
+    private NmDocumentTypesEntity docType;
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
@@ -63,28 +62,16 @@ public class DocumentsEntity
         this.path = path;
     }
 
-    @Basic
-    @Column(name = "doc_type_id")
-    public Integer getDocTypeId()
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
+    @JoinColumn( name = "doc_type_id" )
+    public NmDocumentTypesEntity getDocType()
     {
-        return docTypeId;
+        return docType;
     }
 
-    public void setDocTypeId(Integer docTypeId)
+    public void setDocType(NmDocumentTypesEntity docType)
     {
-        this.docTypeId = docTypeId;
-    }
-
-    @Basic
-    @Column(name = "format")
-    public String getFormat()
-    {
-        return format;
-    }
-
-    public void setFormat(String format)
-    {
-        this.format = format;
+        this.docType = docType;
     }
 
     @Override
@@ -117,11 +104,7 @@ public class DocumentsEntity
         {
             return false;
         }
-        if (format != null ? !format.equals(that.format) : that.format != null)
-        {
-            return false;
-        }
-        return docTypeId != null ? docTypeId.equals(that.docTypeId) : that.docTypeId == null;
+        return docType != null ? docType.equals(that.docType) : that.docType == null;
     }
 
     @Override
@@ -131,8 +114,7 @@ public class DocumentsEntity
         result = 31 * result + (date != null ? date.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (path != null ? path.hashCode() : 0);
-        result = 31 * result + (format != null ? format.hashCode() : 0);
-        result = 31 * result + (docTypeId != null ? docTypeId.hashCode() : 0);
+        result = 31 * result + (docType != null ? docType.hashCode() : 0);
         return result;
     }
 }

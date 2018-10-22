@@ -5,11 +5,19 @@ import {Observable} from 'rxjs';
 @Injectable({providedIn: 'root'})
 export class DocumentService {
 
-  constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) {
+    }
 
-  generateDocNr(): Observable<any> {
-    return this.http.get('/api/generate-doc-nr', {});
-  }
-  uploadDocument() { }
-  removeDocument() { }
+    uploadDocument() {
+    }
+
+    removeDocument() {
+    }
+
+    generateDistributionDisposition(nrCerere : any): Observable<any> {
+        return this.http.get('/api/documents/generate-distribution-disposition', {
+            params: {nrCerere: nrCerere},
+            responseType: 'text'
+        });
+    }
 }

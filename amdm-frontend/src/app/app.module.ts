@@ -1,5 +1,5 @@
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 
@@ -21,13 +21,33 @@ import {AdministrationService} from './shared/service/administration.service';
 import {ConfirmationDialogComponent} from "./confirmation-dialog/confirmation-dialog.component";
 import {TaskComponent} from './task/task.component';
 import {HistoryComponent} from './history/history.component';
-import {ModuleComponent} from "./module/module.component";
+import {ModuleComponent} from "./all-modules/module.component";
 import {AdministrationComponent} from "./administration/administration.component";
 import {ModuleDashboardComponent} from "./dashboard/module-dashboard.component";
 import {JwtInterceptor} from "./shared/interceptor/jwt.interceptor";
 import {MaterialSharedModule} from "./material-shared.module";
 import {MDBBootstrapModule} from "angular-bootstrap-md";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {ErrorInterceptor} from "./shared/interceptor/error.interceptor";
+import {ErrorResponseHandlerComponent} from "./server-response-handler/error-response-handler.component";
+import {ErrorHandlerService} from "./shared/service/error-handler.service";
+import {AdminDashboardComponent} from "./dashboard/admin-dashboard.component";
+
+const interceptors = [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: JwtInterceptor,
+    multi: true
+},
+    {
+        provide: HTTP_INTERCEPTORS,
+        useClass: ServerUrlInterceptor,
+        multi: true
+    },
+    {
+        provide: HTTP_INTERCEPTORS,
+        useClass: ErrorInterceptor,
+        multi: true
+    }];
 
 @NgModule({
     declarations: [
@@ -40,11 +60,13 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
         FooterComponent,
         MainDashboardComponent,
         ModuleDashboardComponent,
+        AdminDashboardComponent,
         ConfirmationDialogComponent,
         TaskComponent,
         HistoryComponent,
         ModuleComponent,
         AdministrationComponent,
+        ErrorResponseHandlerComponent,
     ],
     imports: [
         BrowserAnimationsModule,
@@ -53,25 +75,14 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
         FormsModule,
         ReactiveFormsModule,
         MDBBootstrapModule.forRoot(),
-        MaterialSharedModule.forRoot(),
-
+        MaterialSharedModule.forRoot()
 
     ],
-    schemas: [NO_ERRORS_SCHEMA],
+    schemas: [],
     entryComponents: [
         ConfirmationDialogComponent
     ],
-    providers: [AuthService, AdministrationService,
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: JwtInterceptor,
-            multi: true
-        },
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: ServerUrlInterceptor,
-            multi: true
-        }
+    providers: [AuthService, AdministrationService, ErrorHandlerService, interceptors
     ],
     bootstrap: [AppComponent]
 })

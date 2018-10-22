@@ -6,6 +6,8 @@ import {Subscription} from "rxjs";
 import {HttpEventType, HttpResponse} from "@angular/common/http";
 import {UploadFileService} from "../shared/service/upload/upload-file.service";
 import {saveAs} from "file-saver";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {AdministrationService} from "../shared/service/administration.service";
 
 @Component({
   selector: 'app-document',
@@ -19,10 +21,24 @@ export class DocumentComponent implements OnInit, OnDestroy {
     currentFile: any;
     private subscriptions: Subscription[] = [];
     result: any;
+    docForm: FormGroup;
+    docTypes: any[];
 
-    constructor(public dialog: MatDialog, private uploadService: UploadFileService) { }
+    constructor(public dialog: MatDialog, private uploadService: UploadFileService, private fb: FormBuilder,
+                private administrationService: AdministrationService) {
+        this.docForm = fb.group({
+            'docType': [null, Validators.required]
+        });
+    }
 
     ngOnInit() {
+        this.subscriptions.push(
+            this.administrationService.getAllDocTypes().subscribe(data => {
+                    this.docTypes = data;
+                },
+                error => console.log(error)
+            )
+        );
     }
 
     get documents(): Document [] {
@@ -50,7 +66,7 @@ export class DocumentComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.subscriptions.push(this.uploadService.removeFileFromStorage(this.documents[index].path).subscribe(data => {
-                        this.documents.splice(index,1);
+                        this.documents.splice(index, 1);
                     },
                     error => {
                         console.log(error);
@@ -63,7 +79,6 @@ export class DocumentComponent implements OnInit, OnDestroy {
 
     loadFile(path :string) {
         this.subscriptions.push(this.uploadService.loadFile(path).subscribe(data => {
-                // alert('ghfj', data, path);
                 this.saveToFileSystem(data,path.substring(path.lastIndexOf('/') + 1));
             },
 
@@ -81,9 +96,9 @@ export class DocumentComponent implements OnInit, OnDestroy {
 
 
     addDocument(event) {
-        if (this.documents.find(d => d.name === event.srcElement.files[0].name) )
+
+        if (this.documents.find(d => d.name === event.srcElement.files[0].name) ||  this.docForm.get('docType').invalid)
         {
-            console.error('Document with the same name already added', event.srcElement.files[0].name);
             return;
         }
 
@@ -95,18 +110,14 @@ export class DocumentComponent implements OnInit, OnDestroy {
 
                     let fileName = this.result.path.substring(indexForName + 1);
 
-                    let fileFormat = '';
-                    if (indexForFormat !== -1) {
-                        fileFormat = '*.' + this.result.path.substring(indexForFormat + 1);
-                    }
-
                     this.documents.push({
                         id : null,
                         name: fileName,
-                        format: fileFormat,
+                        docType : this.docForm.get('docType').value,
                         date: new Date(),
                         path: this.result.path,
                         isOld: false});
+                        this.docForm.get('docType').setValue(null);
                 }
             },
             error => {

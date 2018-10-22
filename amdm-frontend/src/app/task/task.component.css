@@ -1,0 +1,36 @@
+.table-width {
+    width : 100%;
+}
+
+th, td {
+    text-align : center !important;
+}
+
+mat-header-cell {
+    display         : flex;
+    justify-content : flex-end;
+}
+
+::ng-deep .mat-sort-header-container {
+    display         : flex;
+    justify-content : center;
+}
+
+.example-container {
+    width    : 100%;
+    overflow : auto;
+}
+
+table {
+    width : 100%;
+}
+
+.modal {
+    overflow-y : auto;
+}
+
+.md-form-modified {
+    position      : relative;
+    margin-top    : 10px;
+    margin-bottom : 1.5rem;
+}

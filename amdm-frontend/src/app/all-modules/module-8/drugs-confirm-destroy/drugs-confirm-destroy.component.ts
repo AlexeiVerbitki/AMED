@@ -3,6 +3,7 @@ import {getCerere} from '../../../models/getCerere';
 import {ComisieNimicire} from '../../../models/ComisieNimicire';
 import {Documents} from '../../../models/documents';
 import {Select} from '../../../models/select';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-drugs-confirm-destroy',
@@ -11,6 +12,7 @@ import {Select} from '../../../models/select';
 })
 export class DrugsConfirmDestroyComponent implements OnInit {
   model3: string;
+  dataForm: FormGroup;
   public cerere: getCerere[] = [
     {denumirea: 'Cerere de nimicire a medicamentelor 1', format: '*.pdf, *.doc, *.docx', dataIncarcarii: '04.05.2018'},
     {denumirea: 'Cerere de nimicire a medicamentelor 2', format: '*.pdf, *.doc, *.docx', dataIncarcarii: '05.05.2018'},
@@ -18,6 +20,12 @@ export class DrugsConfirmDestroyComponent implements OnInit {
     {denumirea: 'Cerere de nimicire a medicamentelor 4', format: '*.pdf, *.doc, *.docx', dataIncarcarii: '07.05.2018'},
     {denumirea: 'Cerere de nimicire a medicamentelor 5', format: '*.pdf, *.doc, *.docx', dataIncarcarii: '08.05.2018'}
   ];
+
+  public doza: Select[] = [
+    {value: 'mg', viewValue: 'mg'},
+    {value: 'g', viewValue: 'g'}
+  ];
+
   comisiaNimicire: ComisieNimicire[] = [
     {institut: 'Agentia Municipala Ecologica', numePrenume: 'User 1', functie: 'Doctor in Chimie'},
     {institut: 'Centrul National Stiintifico-Practic de Medicina Preventiva', numePrenume: 'User 2', functie: 'Doctor'},
@@ -37,7 +45,11 @@ export class DrugsConfirmDestroyComponent implements OnInit {
     {value: 'forma-5', viewValue: 'Forma 5'}
   ];
 
-  constructor() {
+  constructor(private fb: FormBuilder) {
+    this.dataForm = fb.group({
+      'data': { disabled: true, value: null },
+      'nrCererii': [null, Validators.required]
+    });
   }
 
   ngOnInit() {

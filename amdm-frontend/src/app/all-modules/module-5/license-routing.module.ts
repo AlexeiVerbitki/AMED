@@ -5,7 +5,7 @@ import {EvaluareCerereLicComponent} from "./evaluare-cerere-lic/evaluare-cerere-
 
 const routes: Routes = [
     {path: 'register', component: RegMedCerereLicComponent},
-    {path: 'evaluate', component: EvaluareCerereLicComponent},
+    {path: 'evaluate/:id', component: EvaluareCerereLicComponent},
 ];
 
 @NgModule({

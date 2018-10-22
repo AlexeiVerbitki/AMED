@@ -23,7 +23,7 @@
     "@angular/platform-browser-dynamic": "^6.1.0",
     "@angular/router": "^6.1.0",
     "@auth0/angular-jwt": "^2.0.0",
-    "@ng-select/ng-select": "^2.10.1",
+    "@ng-select/ng-select": "2.10.1",
     "angular-bootstrap-md": "^6.2.1",
     "animate.css": "^3.7.0",
     "bootstrap": "^4.1.3",

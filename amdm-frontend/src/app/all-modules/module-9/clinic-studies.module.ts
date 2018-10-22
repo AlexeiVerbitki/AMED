@@ -7,10 +7,10 @@ import {MDBBootstrapModule} from "angular-bootstrap-md";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MaterialSharedModule} from "../../material-shared.module";
 import {RegCerereComponent} from './reg-cerere/reg-cerere.component';
-import {DocumentComponent} from "../../document/document.component";
 import {UploadFileService} from "../../shared/service/upload/upload-file.service";
 import { AEvaluareaPrimaraComponent } from './a-evaluarea-primara/a-evaluarea-primara.component';
 import {RequestService} from "../../shared/service/request.service";
+import {DocumentModule} from "../../document/document.module";
 
 @NgModule({
     imports: [
@@ -20,10 +20,10 @@ import {RequestService} from "../../shared/service/request.service";
         ReactiveFormsModule,
         MaterialSharedModule.forRoot(),
         MDBBootstrapModule.forRoot(),
-
+        DocumentModule
     ],
     schemas: [],
-    declarations: [RegStudCliniceComponent, RegCerereComponent, DocumentComponent, AEvaluareaPrimaraComponent],
+    declarations: [RegStudCliniceComponent, RegCerereComponent, AEvaluareaPrimaraComponent],
 
     providers: [UploadFileService,RequestService],
 })

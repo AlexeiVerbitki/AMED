@@ -22,7 +22,7 @@
                 </div>
             </div>
     <hr>
-    <app-document [documents]="documents"></app-document>
+    <app-document [documents]="documents" [nrCerere]="rForm.get('requestNumber').value"></app-document>
     <div *ngIf="formSubmitted && documents.length==0">
         <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
     </div>
@@ -72,14 +72,14 @@
                         Inregistrare
                     </h5>
                     <hr>
-                    <mat-radio-group formControlName="id">
+                    <mat-radio-group formControlName="code">
                         <div class="container">
                             <div class="row">
                                 <div class="col-12">
-                                    <mat-radio-button name="prop1" value="1">Primară</mat-radio-button>
+                                    <mat-radio-button name="prop1" value="MEDP">Primară</mat-radio-button>
                                 </div>
                                 <div class="col-12">
-                                    <mat-radio-button name="prop2" value="2">Repetată</mat-radio-button>
+                                    <mat-radio-button name="prop2" value="MEDR">Repetată</mat-radio-button>
                                 </div>
                             </div>
                         </div>

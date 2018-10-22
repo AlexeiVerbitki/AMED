@@ -8,7 +8,7 @@ public class MedicamentActiveSubstancesEntity
 {
     private Integer id;
     private NmActiveSubstancesEntity activeSubstance;
-    private Integer quantity;
+    private Double quantity;
     private NmUnitsOfMeasurementEntity unitsOfMeasurement;
 
     @Id
@@ -38,12 +38,12 @@ public class MedicamentActiveSubstancesEntity
 
     @Basic
     @Column(name = "quantity")
-    public Integer getQuantity()
+    public Double getQuantity()
     {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity)
+    public void setQuantity(Double quantity)
     {
         this.quantity = quantity;
     }

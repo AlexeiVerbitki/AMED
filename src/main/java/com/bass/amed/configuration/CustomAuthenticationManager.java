@@ -36,15 +36,12 @@ import java.util.Optional;
 public class CustomAuthenticationManager implements AuthenticationManager
 {
 
-    LdapAuthenticationProvider provider = null;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomAuthenticationManager.class);
-
     private final SrcUserRepository srcUserRepository;
     private final ScrRoleRepository scrRoleRepository;
     private final ScrAuthorityRepository scrAuthorityRepository;
-
     private final LdapContextSource ldapContextSource;
+    LdapAuthenticationProvider provider = null;
 
 
     public CustomAuthenticationManager(SrcUserRepository srcUserRepository, LdapContextSource ldapContextSource, ScrRoleRepository scrRoleRepository, ScrAuthorityRepository scrAuthorityRepository)
@@ -58,8 +55,8 @@ public class CustomAuthenticationManager implements AuthenticationManager
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException
     {
-        LOGGER.debug("AUTHENTICATION Login" + authentication.getName());
-        LOGGER.debug("AUTHENTICATION Password" + authentication.getCredentials().toString());
+        LOGGER.debug("AUTHENTICATION Login: " + authentication.getName());
+        LOGGER.debug("AUTHENTICATION Password: *************");
 
         //        DirContext ctx = ldapContextSource.getContext(authentication.getPrincipal().toString(), authentication.getCredentials().toString());
 
@@ -95,22 +92,30 @@ public class CustomAuthenticationManager implements AuthenticationManager
                 LOGGER.debug("Mapping user details from context with DN: " + dn);
 
                 Optional<ScrUserEntity> isUser = srcUserRepository.findOneWithAuthoritiesByUsername(username);
-                final ScrUserEntity user = isUser.orElseThrow(() -> new UsernameNotFoundException("No user found with username" + username));
+                final ScrUserEntity user = isUser.orElseThrow(() -> new UsernameNotFoundException(username + " nu este configurat in BD locala"));
 
-                ScrRoleEntity scrRoleEntity =
-                        scrRoleRepository.findById(user.getSrcRole().getId()).orElseThrow(() -> new RuntimeException("No roles configured for this user " + username));
-
-                if (scrRoleEntity.getAuthorities().isEmpty())
+                final ScrRoleEntity srcRole = user.getSrcRole();
+                if (srcRole.getId() == null)
                 {
-                    throw new RuntimeException("No authorities granted for this role " + scrRoleEntity.getDescription());
+                    throw new UsernameNotFoundException("Nu s-a gasit nici un role p/u utilizatorul: " + username);
+                }
+
+/*
+                ScrRoleEntity scrRoleEntity =
+                        scrRoleRepository.findById(user.getSrcRole().getId()).orElseThrow(() -> new UsernameNotFoundException("Nu s-a gasit nici un role p/u utilizatorul: " + username));
+*/
+
+                if (srcRole.getAuthorities().isEmpty())
+                {
+                    throw new UsernameNotFoundException("Nu aveti autoritati pentru rolu " + srcRole.getDescription());
                 }
 
                 LdapUserDetailsImpl.Essence essence = new LdapUserDetailsImpl.Essence();
                 essence.setDn(dn);
                 essence.setUsername(authentication.getPrincipal().toString());
-                essence.addAuthority(new SimpleGrantedAuthority(scrRoleEntity.getRoleCode()));
+                essence.addAuthority(new SimpleGrantedAuthority(srcRole.getRoleCode()));
 
-                for (ScrAuthorityEntity authority : scrRoleEntity.getAuthorities())
+                for (ScrAuthorityEntity authority : srcRole.getAuthorities())
                 {
                     GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(authority.getCode());
                     essence.addAuthority(grantedAuthority);

@@ -1,6 +1,8 @@
 import {ModuleWithProviders, NgModule} from '@angular/core';
-import { NgSelectModule } from '@ng-select/ng-select';
+import {NgSelectModule} from '@ng-select/ng-select';
 import {
+    DateAdapter,
+    MAT_DATE_FORMATS,
     MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,
@@ -22,9 +24,10 @@ import {
     MatTableModule,
     MatTabsModule,
     MatToolbarModule,
-    MatTooltipModule,
+    MatTooltipModule
 } from "@angular/material";
 import {TooltipModule, WavesModule} from "angular-bootstrap-md";
+import {APP_DATE_FORMATS, AppDateAdapter} from "./shared/adapter/date.adapter";
 
 @NgModule({
     imports: [
@@ -52,10 +55,11 @@ import {TooltipModule, WavesModule} from "angular-bootstrap-md";
         MatRadioModule,
         MatTableModule,
         MatAutocompleteModule,
-        NgSelectModule
+        NgSelectModule,
+
     ],
     declarations: [],
-    exports:[
+    exports: [
         MatButtonModule,
         MatToolbarModule,
         MatSelectModule,
@@ -80,7 +84,7 @@ import {TooltipModule, WavesModule} from "angular-bootstrap-md";
         MatRadioModule,
         MatTableModule,
         MatAutocompleteModule,
-        NgSelectModule
+        NgSelectModule,
     ]
 })
 export class MaterialSharedModule {
@@ -112,7 +116,14 @@ export class MaterialSharedModule {
                 MatRadioModule,
                 MatTableModule,
                 MatAutocompleteModule,
-                NgSelectModule]
+                NgSelectModule,
+                {
+                    provide: DateAdapter, useClass: AppDateAdapter
+                },
+                {
+                    provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS
+                }
+            ]
         }
     }
 }

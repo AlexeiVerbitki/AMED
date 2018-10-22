@@ -1,38 +1,20 @@
 <div class="container sky z-depth-2">
   <h3 class="text-center my-3 font-weight-bold">Cerere de solicitare a duplicatului autorizatiei de activitate cu precursori/psihotrope/stupefiante</h3>
   <hr>
-  <table class="table table-widths text-center">
-    <thead class="black white-text">
-      <tr>
-        <th scope="col">Denumire</th>
-        <th scope="col">Format</th>
-        <th scope="col">Data incarcarii</th>
-        <th scope="col">Actiuni</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let x of cerere">
-        <th scope="row">{{ x.denumirea }}</th>
-        <td>{{ x.format }}</td>
-        <td>{{ x.dataIncarcarii }}</td>
-        <td>
-          <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect>View</button>
-          <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect>Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="col position-button">
-    <label for="incarcaFisier" class="btn btn-indigo btn-sm">
-      <input id="incarcaFisier" type="file" style="display:none;"> Incarca Fisier
-    </label>
-  </div>
-  <form [formGroup]='zForm'>
+
+  <form [formGroup]='cerereDupAutorForm'>
+
+    <app-document [documents]= "documents" [nrCerere]="generatedDocNrSeq"></app-document>
+    <div *ngIf="formSubmitted && documents.length==0">
+      <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
+    </div>
+    <hr>
+
     <div class="row">
       <div class="col-md-6">
         <div class="md-form">
           <mat-form-field class="w-100">
-            <input matInput [matDatepicker]="picker" placeholder="Data" required formControlName="data">
+            <input matInput [matDatepicker]="picker" placeholder="Data" required formControlName="data" formControlName="dataReg">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker touchUi #picker></mat-datepicker>
           </mat-form-field>
@@ -40,7 +22,7 @@
       </div>
       <div class="col-md-6">
         <div class="md-form">
-          <input id="nrReg" mdbInputDirective type="text" class="form-control" formControlName="nrReg">
+          <input id="nrReg" mdbInputDirective type="text" class="form-control" formControlName="requestNumber" [attr.disabled]="true">
           <label for="nrReg">Nr. de inregistrare a cererii
             <span class="text-danger">*</span>
           </label>
@@ -48,13 +30,20 @@
       </div>
       <hr>
       <div class="col-md-12">
-        <div class="md-form">
-          <input id="compSolicitant" mdbInputDirective type="text" class="form-control" formControlName="compSolicitant">
-          <label for="compSolicitant">Compania-solicitant
-            <span class="text-danger">*</span>
-          </label>
+        <div class="md-form-modified">
+          <ng-select id="company" name="company" [items]="companies"
+                     bindLabel="name"
+                     placeholder="Compania solicitant *"
+                     formControlName="company">
+          </ng-select>
+          <div *ngIf="formSubmitted && cerereDupAutorForm.get('company').invalid">
+            <small class="text-muted"><strong class="text-danger">Compania solicitantă trebuie selectată</strong></small>
+          </div>
         </div>
       </div>
+    </div>
+    <div class="text-center">
+      <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="saveRequest()">Inregistrare</button>
     </div>
   </form>
   <hr>

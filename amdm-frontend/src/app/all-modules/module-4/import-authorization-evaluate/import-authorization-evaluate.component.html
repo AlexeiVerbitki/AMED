@@ -3,23 +3,23 @@
   <hr>
   <table class="table table-widths text-center">
     <thead class="black white-text">
-      <tr>
-        <th scope="col">Denumire</th>
-        <th scope="col">Format</th>
-        <th scope="col">Data incarcarii</th>
-        <th scope="col">Actiuni</th>
-      </tr>
+    <tr>
+      <th scope="col">Denumire</th>
+      <th scope="col">Format</th>
+      <th scope="col">Data incarcarii</th>
+      <th scope="col">Actiuni</th>
+    </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let x of cerere">
-        <th scope="row">{{ x.denumirea }}</th>
-        <td>{{ x.format }}</td>
-        <td>{{ x.dataIncarcarii }}</td>
-        <td>
-          <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect>View</button>
-          <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect>Delete</button>
-        </td>
-      </tr>
+    <tr *ngFor="let x of cerere">
+      <th scope="row">{{ x.denumirea }}</th>
+      <td>{{ x.format }}</td>
+      <td>{{ x.dataIncarcarii }}</td>
+      <td>
+        <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect>View</button>
+        <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect>Delete</button>
+      </td>
+    </tr>
     </tbody>
   </table>
   <div class="col position-button">
@@ -285,7 +285,7 @@
       </div>
       <div class="col-md-4">
         <div class="md-form">
-          <input id="denumireaComInt" mdbInputDirective type="number" class="form-control">
+          <input id="denumireaComInt" mdbInputDirective type="text" class="form-control">
           <label for="denumireaComInt">Denumirea comună internaționala</label>
         </div>
       </div>
@@ -417,7 +417,7 @@
       </div>
       <div class="col-md-4">
         <div class="md-form">
-          <input id="denumireaComInt2" mdbInputDirective type="number" class="form-control">
+          <input id="denumireaComInt2" mdbInputDirective type="text" class="form-control">
           <label for="denumireaComInt2">Denumirea comună internaționala</label>
         </div>
       </div>
@@ -569,6 +569,7 @@
     <hr>
   </section>
   <section *ngIf="AmbalajProd">
+    <section *ngIf="Prelevare">
       <h5 class="text-center font-weight-bold">Informația despre ambalajul</h5>
       <hr>
       <div class="row">
@@ -623,7 +624,6 @@
       </div>
       <hr>
     </section>
-  <section *ngIf="Prelevare">
     <h5 class="text-center font-weight-bold">Actul de prelevare a probei medii şi controlului de stat</h5>
     <hr>
     <div class="row">
@@ -671,7 +671,7 @@
       </div>
       <div class="col-md-4">
         <div class="md-form">
-          <input id="denumireaComInt2" mdbInputDirective type="number" class="form-control">
+          <input id="denumireaComInt2" mdbInputDirective type="text" class="form-control">
           <label for="denumireaComInt2">Denumirea comună internaționala</label>
         </div>
       </div>
@@ -791,4 +791,4 @@
   <div class="text-center">
     <button type="submit" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Adaugare</button>
   </div>
-</div>
+</div>Denumirea comună internaționala

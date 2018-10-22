@@ -18,7 +18,6 @@ export class RequestService{
     }
 
     addClinicalTrailRequest(requestDetails: any): Observable<HttpResponse<any>> {
-        console.log(requestDetails);
         return this.http.post<any>('/api/add-clinical-trail-request', requestDetails, {observe: 'response'});
     }
 

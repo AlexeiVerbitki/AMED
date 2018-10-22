@@ -59,7 +59,7 @@ body {
   padding: 15px 30px;
   border-radius: 5px;
   height: 90vh;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .position-button {

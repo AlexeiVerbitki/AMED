@@ -30,6 +30,10 @@
   width: 375px;
 }
 
+.fa-25px {
+  font-size: 25px;
+}
+
 @media only screen and (max-width: 374px) {
   .login {
     margin-top: 80px;

@@ -16,15 +16,12 @@ public class RegistrationRequestsEntity
     private MedicamentEntity medicament;
     private NmEconomicAgentsEntity company;
     private Integer importId;
-    private Integer licenseId;
     private String currentStep;
     private RequestTypesEntity type;
     private Integer medicamentAnnihilationId;
     private Integer medicamentControlCommitteeId;
     private ClinicalTrialsEntity clinicalTrails;
-    private Integer applicantId;
-    private Integer taxId;
-    private Byte taxPaid;
+    private LicensesEntity license;
     private Set<RegistrationRequestHistoryEntity> requestHistories = new HashSet<>();
 
     @Id
@@ -76,7 +73,7 @@ public class RegistrationRequestsEntity
         this.endDate = endDate;
     }
 
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE} )
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
     @JoinColumn( name = "company_id" )
     public NmEconomicAgentsEntity getCompany()
     {
@@ -98,18 +95,6 @@ public class RegistrationRequestsEntity
     public void setImportId(Integer importId)
     {
         this.importId = importId;
-    }
-
-    @Basic
-    @Column(name = "license_id")
-    public Integer getLicenseId()
-    {
-        return licenseId;
-    }
-
-    public void setLicenseId(Integer licenseId)
-    {
-        this.licenseId = licenseId;
     }
 
     @Basic
@@ -148,42 +133,6 @@ public class RegistrationRequestsEntity
         this.medicamentControlCommitteeId = medicamentControlCommitteeId;
     }
 
-    @Basic
-    @Column(name = "applicant_id")
-    public Integer getApplicantId()
-    {
-        return applicantId;
-    }
-
-    public void setApplicantId(Integer applicantId)
-    {
-        this.applicantId = applicantId;
-    }
-
-    @Basic
-    @Column(name = "tax_id")
-    public Integer getTaxId()
-    {
-        return taxId;
-    }
-
-    public void setTaxId(Integer taxId)
-    {
-        this.taxId = taxId;
-    }
-
-    @Basic
-    @Column(name = "tax_paid")
-    public Byte getTaxPaid()
-    {
-        return taxPaid;
-    }
-
-    public void setTaxPaid(Byte taxPaid)
-    {
-        this.taxPaid = taxPaid;
-    }
-
     @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE,CascadeType.PERSIST } )
     @JoinColumn( name = "medicament_id" )
     public MedicamentEntity getMedicament()
@@ -196,7 +145,7 @@ public class RegistrationRequestsEntity
         this.medicament = medicament;
     }
 
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
+    @OneToOne( fetch = FetchType.LAZY, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
     @JoinColumn( name = "clinical_trails_id" )
     public ClinicalTrialsEntity getClinicalTrails()
     {
@@ -206,6 +155,18 @@ public class RegistrationRequestsEntity
     public void setClinicalTrails(ClinicalTrialsEntity clinicalTrails)
     {
         this.clinicalTrails = clinicalTrails;
+    }
+
+    @OneToOne( fetch = FetchType.LAZY, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
+    @JoinColumn( name = "license_id" )
+    public LicensesEntity getLicense()
+    {
+        return license;
+    }
+
+    public void setLicense(LicensesEntity license)
+    {
+        this.license = license;
     }
 
     @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST} )
@@ -220,7 +181,7 @@ public class RegistrationRequestsEntity
         this.requestHistories = requestHistories;
     }
 
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE} )
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
     @JoinColumn( name = "type_id" )
     public RequestTypesEntity getType()
     {
@@ -274,10 +235,6 @@ public class RegistrationRequestsEntity
         {
             return false;
         }
-        if (licenseId != null ? !licenseId.equals(that.licenseId) : that.licenseId != null)
-        {
-            return false;
-        }
         if (currentStep != null ? !currentStep.equals(that.currentStep) : that.currentStep != null)
         {
             return false;
@@ -298,18 +255,6 @@ public class RegistrationRequestsEntity
         {
             return false;
         }
-        if (applicantId != null ? !applicantId.equals(that.applicantId) : that.applicantId != null)
-        {
-            return false;
-        }
-        if (taxId != null ? !taxId.equals(that.taxId) : that.taxId != null)
-        {
-            return false;
-        }
-        if (taxPaid != null ? !taxPaid.equals(that.taxPaid) : that.taxPaid != null)
-        {
-            return false;
-        }
         return requestHistories != null ? requestHistories.equals(that.requestHistories) : that.requestHistories == null;
     }
 
@@ -323,15 +268,11 @@ public class RegistrationRequestsEntity
         result = 31 * result + (medicament != null ? medicament.hashCode() : 0);
         result = 31 * result + (company != null ? company.hashCode() : 0);
         result = 31 * result + (importId != null ? importId.hashCode() : 0);
-        result = 31 * result + (licenseId != null ? licenseId.hashCode() : 0);
         result = 31 * result + (currentStep != null ? currentStep.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (medicamentAnnihilationId != null ? medicamentAnnihilationId.hashCode() : 0);
         result = 31 * result + (medicamentControlCommitteeId != null ? medicamentControlCommitteeId.hashCode() : 0);
         result = 31 * result + (clinicalTrails != null ? clinicalTrails.hashCode() : 0);
-        result = 31 * result + (applicantId != null ? applicantId.hashCode() : 0);
-        result = 31 * result + (taxId != null ? taxId.hashCode() : 0);
-        result = 31 * result + (taxPaid != null ? taxPaid.hashCode() : 0);
         result = 31 * result + (requestHistories != null ? requestHistories.hashCode() : 0);
         return result;
     }

@@ -13,7 +13,9 @@ import {Component, OnInit} from '@angular/core';
                     </div>
                 </div>
             </div>
-        </div>`,
+        </div>
+        <app-server-response-handler></app-server-response-handler>
+        `,
     // style: ``,
 })
 export class MainDashboardComponent implements OnInit {

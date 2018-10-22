@@ -16,6 +16,7 @@ public class ClinicalTrialsEntity
     private String code;
     private String title;
     private Integer sponsor;
+    private MedicamentEntity medicament;
     private Integer medicalInstitution;
     private Integer trialPopulation;
     private String medicamentCommitteeOpinion;
@@ -25,6 +26,8 @@ public class ClinicalTrialsEntity
     private Integer openingDeclarationId;
     private String status;
     private Set<DocumentsEntity> documents;
+    private Set<ClinicalTrailsInvestigatorsEntity> investigators;
+    private Set<ReceiptsEntity> receipts;
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
@@ -121,6 +124,16 @@ public class ClinicalTrialsEntity
     public void setSponsor(Integer sponsor)
     {
         this.sponsor = sponsor;
+    }
+
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE} )
+    @JoinColumn( name = "medicament_id" )
+    public MedicamentEntity getMedicament() {
+        return medicament;
+    }
+
+    public void setMedicament(MedicamentEntity medicament) {
+        this.medicament = medicament;
     }
 
     @Basic
@@ -233,6 +246,32 @@ public class ClinicalTrialsEntity
         this.documents = documents;
     }
 
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "CLINICAL_TRAILS_ID")
+    public Set<ClinicalTrailsInvestigatorsEntity> getInvestigators() {
+        return investigators;
+    }
+
+    public void setInvestigators(Set<ClinicalTrailsInvestigatorsEntity> investigators) {
+        this.investigators = investigators;
+    }
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(name = "CLINICAL_TRAILS_RECEIPTS", joinColumns = {
+            @JoinColumn(name = "CLINICAL_TRAIL_ID")}, inverseJoinColumns = {
+            @JoinColumn(name = "RECEIPT_ID")
+    })
+    public Set<ReceiptsEntity> getReceipts() {
+        return receipts;
+    }
+
+    public void setReceipts(Set<ReceiptsEntity> receipts) {
+        this.receipts = receipts;
+    }
+
+
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -246,6 +285,7 @@ public class ClinicalTrialsEntity
                 Objects.equals(code, that.code) &&
                 Objects.equals(title, that.title) &&
                 Objects.equals(sponsor, that.sponsor) &&
+                Objects.equals(medicament, that.medicament) &&
                 Objects.equals(medicalInstitution, that.medicalInstitution) &&
                 Objects.equals(trialPopulation, that.trialPopulation) &&
                 Objects.equals(medicamentCommitteeOpinion, that.medicamentCommitteeOpinion) &&
@@ -260,6 +300,6 @@ public class ClinicalTrialsEntity
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, treatmentId, provenanceId, phase, eudraCtNr, code, title, sponsor, medicalInstitution, trialPopulation, medicamentCommitteeOpinion, eticCommitteeOpinion, approvalOrder, pharmacovigilance, openingDeclarationId, status, documents);
+        return Objects.hash(id, treatmentId, provenanceId, phase, eudraCtNr, code, title, sponsor, medicament, medicalInstitution, trialPopulation, medicamentCommitteeOpinion, eticCommitteeOpinion, approvalOrder, pharmacovigilance, openingDeclarationId, status, documents);
     }
 }

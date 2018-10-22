@@ -211,14 +211,16 @@
       </div>
     </div>
     <hr>
+
+
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-3">
         <div class="md-form">
           <input id="pretAccept" mdbInputDirective type="number" class="form-control" value="" formControlName="pretAccept">
           <label for="pretAccept">Pret acceptat <strong class="text-danger">*</strong></label>
         </div>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-3">
         <div class="md-form-modified">
           <mat-form-field class="w-100">
             <mat-select placeholder="Valuta pretului acceptat " formControlName="valutaFinishProp">
@@ -227,7 +229,26 @@
           </mat-form-field>
         </div>
       </div>
+      <div class="col-md-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker2" placeholder="Data expirarii" formControlName="dataExp">
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker2></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Motivul expirarii" formControlName="motivulExp">
+              <mat-option *ngFor="let x of motivulExp" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
     </div>
+
     <hr>
     <h5 class="text-center font-weight-bold">Documente de iesire</h5>
     <hr>
@@ -250,36 +271,34 @@
         </tr>
       </tbody>
     </table>
+
     <hr>
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-3">
         <div class="md-form">
           <input id="ordAprobPret" mdbInputDirective type="text" class="form-control" value="AB123" formControlName="ordAprobPret">
           <label for="ordAprobPret">Ordin de aprobare a pretului</label>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-3">
         <div class="md-form-modified">
           <mat-form-field class="w-100">
-            <input matInput [matDatepicker]="picker2" placeholder="Data expirarii" formControlName="dataExp">
-            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-            <mat-datepicker touchUi #picker2></mat-datepicker>
+            <input matInput [matDatepicker]="picker3" placeholder="Data emiterii ordinului">
+            <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker3></mat-datepicker>
           </mat-form-field>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="md-form-modified">
-          <mat-form-field class="w-100">
-            <mat-select placeholder="Motivul expirarii" formControlName="motivulExp">
-              <mat-option *ngFor="let x of motivulExp" [value]="x.value">{{ x.viewValue }}</mat-option>
-            </mat-select>
-          </mat-form-field>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="anexa" mdbInputDirective type="text" class="form-control">
+          <label for="anexa">Nr. Anexei pentru care a fost selectat documentul</label>
         </div>
       </div>
       <div class="col">
         <div class="md-form">
           <textarea id="note" type="text" class="md-textarea form-control" mdbInputDirective formControlName="note"></textarea>
-          <label for="note" for="form7">Note</label>
+          <label for="note" for="note">Notă (Textul notificării sau scrisorii de însoțire pentru agentul economic)</label>
         </div>
       </div>
     </div>

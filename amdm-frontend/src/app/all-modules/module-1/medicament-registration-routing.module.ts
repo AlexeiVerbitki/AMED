@@ -7,7 +7,7 @@ import {RegCerereComponent} from "./reg-cerere/reg-cerere.component";
 const routes: Routes = [
     { path: 'register', component: RegCerereComponent},
     { path: 'evaluate/:id', component: EvaluarePrimaraComponent},
-    { path: 'samsa', component: SamsaComponent},
+    { path: 'samsa/:id', component: SamsaComponent},
 ];
 
 @NgModule({

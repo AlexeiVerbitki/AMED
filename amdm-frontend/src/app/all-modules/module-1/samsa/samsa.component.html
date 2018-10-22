@@ -1,223 +1,408 @@
 <div class="container-fluid sky z-depth-2">
-  <h3 class="text-center my-3 font-weight-bold">SAMSA</h3>
+  <form [formGroup]='sForm'>
+  <h3 class="text-center my-3 font-weight-bold">Analiza dosarului</h3>
   <hr>
-  <table class="table table-widths-lg text-center">
-    <thead class="black white-text">
-      <tr>
-        <th scope="col">Denumire</th>
-        <th scope="col">Format</th>
-        <th scope="col">Data incarcarii</th>
-        <th scope="col">Actiuni</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let x of cerere">
-        <th scope="row">{{ x.denumirea }}</th>
-        <td>{{ x.format }}</td>
-        <td>{{ x.dataIncarcarii }}</td>
-        <td>
-          <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect>View</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <hr>
-  <div class="row">
-    <div class="col-md-4">
-      <div class="md-form">
-        <input id="nrCererii" mdbInputDirective type="text" class="form-control" disabled value="Nr12345">
-        <label for="nrCererii">Nr. cererii
-          <span class="text-danger">*</span>
-        </label>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="md-form-modified">
-        <mat-form-field class="w-100">
-          <input matInput [matDatepicker]="picker" placeholder="Data" disabled>
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker touchUi #picker></mat-datepicker>
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="md-form">
-        <input id="compSolicitant" mdbInputDirective type="text" class="form-control" disabled>
-        <label for="compSolicitant">Compania solicitant
-          <span class="text-danger">*</span>
-        </label>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="md-form">
-        <input id="med" mdbInputDirective type="text" class="form-control" disabled>
-        <label for="med">Medicamentul
-          <span class="text-danger">*</span>
-        </label>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="md-form">
-        <mat-radio-group [(ngModel)]="model" disabled>
-          <div class="container">
-            <div class="row">
-              <div class="col-6">
-                <mat-radio-button name="prop1" value="A2">Primară</mat-radio-button>
-              </div>
-              <div class="col-6">
-                <mat-radio-button name="prop2" value="B2">Repetată</mat-radio-button>
-              </div>
-            </div>
-          </div>
-        </mat-radio-group>
-      </div>
-    </div>
-  </div>
-  <hr>
-  <div class="row">
-    <div class="col-md-3">
-      <div class="md-form">
-        <input id="nrDizDist" mdbInputDirective type="text" class="form-control">
-        <label for="nrDizDist">Nr. dispoziţiei de distribuire
-          <span class="text-danger">*</span>
-        </label>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="md-form-modified">
-        <mat-form-field class="w-100">
-          <input matInput [matDatepicker]="picker1" placeholder="Data dispoziţiei de distribuire">
-          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-          <mat-datepicker touchUi #picker1></mat-datepicker>
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="md-form-modified">
-        <mat-form-field class="w-100">
-          <mat-select placeholder="Experţii">
-            <mat-option *ngFor="let x of experts" [value]="x.value">{{ x.viewValue }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="md-form-modified">
-        <mat-form-field class="w-100">
-          <mat-select placeholder="Domeniile de expertiză p-u experţi">
-            <mat-option *ngFor="let x of domains" [value]="x.value">{{ x.viewValue }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="md-form">
-        <input id="rezExpt" mdbInputDirective type="text" class="form-control">
-        <label for="rezExpt">Rezultatul expertizei</label>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="md-form">
-        <input id="rezLCCM" mdbInputDirective type="text" class="form-control">
-        <label for="rezLCCM">Rezultatul LCCM</label>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="md-form">
-        <div class="alert alert-primary text-center">
-          Nr. scrisorii(ilor) de notificare:
-          <a href="#" class="alert-link">Example 12345</a>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="nrCererii" mdbInputDirective type="text" class="form-control" formControlName="requestNumber" [attr.disabled]="true">
+          <label for="nrCererii">Nr. cererii</label>
         </div>
       </div>
-    </div>
-    <div class="col-md-4">
-      <div class="md-form-modified">
-        <mat-form-field class="w-100">
-          <input matInput [matDatepicker]="picker2" placeholder="Data scrisorii(ilor) de notificare">
-          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-          <mat-datepicker touchUi #picker2></mat-datepicker>
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="md-form">
-        <input id="sumaAchit" mdbInputDirective type="number" class="form-control">
-        <label for="sumaAchit">Suma achitată (lei)</label>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="md-form-modified">
-        <mat-form-field class="w-100">
-          <input matInput [matDatepicker]="picker7" placeholder="Data achitării">
-          <mat-datepicker-toggle matSuffix [for]="picker7"></mat-datepicker-toggle>
-          <mat-datepicker touchUi #picker7></mat-datepicker>
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="md-form">
-        <div class="alert alert-primary text-center">
-          Nr. de înregistrare a medicamentului:
-          <a href="#" class="alert-link">Example 1234</a>
+      <div class="col-md-6">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker></mat-datepicker>
+          </mat-form-field>
         </div>
       </div>
-    </div>
-    <div class="col-md-4">
-      <div class="md-form">
-        <input id="ordAutMed" mdbInputDirective type="text" class="form-control">
-        <label for="ordAutMed">Ordinul de autorizare a medicamentului</label>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="md-form-modified">
-        <mat-form-field class="w-100">
-          <input matInput [matDatepicker]="picker6" placeholder="Data ordinului de autorizare">
-          <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
-          <mat-datepicker touchUi #picker6></mat-datepicker>
-        </mat-form-field>
-      </div>
-    </div>
-  </div>
-    <div class="text-center">
-      <button class="btn btn-dark-red-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="basicModal.show()">Anulare</button>
-      <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Crearea</button>
-      <button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Inregistrare</button>
     </div>
     <hr>
-
-
-  <div mdbModal #basicModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
-            <span aria-hidden="true">×</span>
-          </button>
-          <h4 class="modal-title w-100" id="myModalLabel">Anulare</h4>
+  <app-document [documents]="documents" [nrCerere]="sForm.get('requestNumber').value"></app-document>
+  <hr>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="md-form" formGroupName="medicament">
+          <input id="compSolicitant" mdbInputDirective type="text" class="form-control" formControlName="companyValue" [attr.disabled]="true">
+          <label for="compSolicitant">Compania solicitant</label>
         </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-12">
-              <div class="md-form">
-                <mat-form-field class="w-100">
-                  <input matInput [matDatepicker]="picker4" placeholder="Data achitării" [formControl]="date" disabled>
-                  <mat-datepicker-toggle matSuffix [for]="picker4" disabled></mat-datepicker-toggle>
-                  <mat-datepicker touchUi #picker4></mat-datepicker>
-                </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form" formGroupName="medicament">
+          <input id="med" mdbInputDirective type="text" class="form-control" formControlName="name" [attr.disabled]="true">
+          <label for="med">Medicamentul</label>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="md-form">
+          <h5 class="text-center font-weight-bold">
+            Inregistrare
+          </h5>
+          <hr>
+          <mat-radio-group formControlName="typeValue">
+            <div class="container">
+              <div class="row">
+                <div class="col-12">
+                  <mat-radio-button name="prop1" value="MEDP">Primară</mat-radio-button>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop2" value="MEDR">Repetată</mat-radio-button>
+                </div>
               </div>
             </div>
-            <div class="col-md-12">
-              <div class="md-form">
-                <input id="motAnulCert" mdbInputDirective type="text" class="form-control">
-                <label for="motAnulCert">Motivul anulării certificatului</label>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-dark-red-color waves-light btn-sm" aria-label="Close" (click)="basicModal.hide()" mdbWavesEffect>Anulare</button>
-          <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm" mdbWavesEffect>Confirmare</button>
+          </mat-radio-group>
         </div>
       </div>
     </div>
-  </div>
+    <hr>
+    <h5 class="text-center font-weight-bold">Forma farmaceutică</h5>
+    <hr>
+    <div class="row" formGroupName="medicament">
+      <div class="col-6">
+        <div class="md-form">
+          <input id="pharmaceuticalFormTypes" mdbInputDirective type="text" class="form-control" formControlName="pharmaceuticalFormType" [attr.disabled]="true">
+          <label for="med">Tip</label>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="md-form">
+          <input id="pharmaceuticalForms" mdbInputDirective type="text" class="form-control" formControlName="pharmaceuticalForm" [attr.disabled]="true">
+          <label for="med">Denumire</label>
+        </div>
+      </div>
+    </div>
+    <h5 class="text-center font-weight-bold">Substanţe active</h5>
+    <hr>
+    <table class="table table-widths text-center">
+      <thead class="black white-text">
+      <tr>
+        <th scope="col">Denumire</th>
+        <th scope="col">Cod CAS</th>
+        <th scope="col">Cantitate</th>
+        <th scope="col">Unitate de masură</th>
+        <th scope="col">Producător</th>
+        <th scope="col">Ţară producător</th>
+        <th scope="col">Adresă producător</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let substance of activeSubstancesTable;let i = index">
+        <th scope="row">{{ substance.activeSubstance.description }}</th>
+        <td>{{ substance.activeSubstance.code }}</td>
+        <td>{{ substance.quantity }}</td>
+        <td>{{ substance.unitsOfMeasurement.description }}</td>
+        <td>{{ substance.activeSubstance.manufacture.description }}</td>
+        <td>{{ substance.activeSubstance.manufacture.country.description }}</td>
+        <td>{{ substance.activeSubstance.manufacture.address }}</td>
+      </tr>
+      </tbody>
+    </table>
+    <hr>
+    <h5 class="text-center font-weight-bold">Informatii generale medicament</h5>
+    <hr>
+    <div class="row" formGroupName="medicament">
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="dose" mdbInputDirective type="text" class="form-control" formControlName="dose" [attr.disabled]="true">
+          <label for="med">Doza</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="unitsOfMeasurement" mdbInputDirective type="text" class="form-control" formControlName="unitsOfMeasurement" [attr.disabled]="true">
+          <label for="med">Unitate de masura</label>
+        </div>
+      </div>
+    </div>
+    <div class="row" formGroupName="medicament">
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="internationalName" mdbInputDirective type="text" class="form-control" formControlName="internationalMedicamentName" [attr.disabled]="true">
+          <label for="med">Denumirea internationala</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="codMed" mdbInputDirective numberOnly type="text" class="form-control" formControlName="code" [attr.disabled]="true">
+          <label for="codMed">Codul medicamentului</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="termenVal" mdbInputDirective type="text" class="form-control" formControlName="termsOfValidity" [attr.disabled]="true">
+          <label for="termenVal">Termen de valabilitate</label>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="md-form">
+          <input id="medType" mdbInputDirective type="text" class="form-control" formControlName="medicamentType" [attr.disabled]="true">
+          <label for="termenVal">Clasificarea medicamentului</label>
+        </div>
+      </div>
+    </div>
+    <h5 class="text-center font-weight-bold">Divizare</h5>
+    <div class="row" formGroupName="medicament">
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="nrUnits" mdbInputDirective type="text" class="form-control" formControlName="unitsQuantity" [attr.disabled]="true">
+          <label for="termenVal">Numar de bucati</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="unitsQuantityMeasurement" mdbInputDirective type="text" class="form-control" formControlName="unitsQuantityMeasurement" [attr.disabled]="true">
+          <label for="termenVal">Unitate de masura</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="storageQuantity" mdbInputDirective type="text" class="form-control" formControlName="storageQuantity" [attr.disabled]="true">
+          <label for="termenVal">Cantitate stocare</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="storageQuantityMeasurement" mdbInputDirective type="text" class="form-control" formControlName="storageQuantityMeasurement" [attr.disabled]="true">
+          <label for="termenVal">Unitate de masura</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="volum" mdbInputDirective type="text" class="form-control" formControlName="volume" [attr.disabled]="true">
+          <label for="volum">Volumul</label>
+        </div>
+      </div>
+    </div>
+    <div class="row" formGroupName="medicament">
+      <div class="col-md-6">
+        <div class="md-form" formGroupName="group">
+          <h5 class="text-center font-weight-bold">Grupa medicament</h5>
+          <hr>
+          <div class="container">
+            <mat-radio-group formControlName="code">
+              <div class="row">
+                <div class="col-12">
+                  <mat-radio-button name="prop1" value="VIT">Vital</mat-radio-button>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop2" value="ES">Esenţial</mat-radio-button>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop2" value="NES">Nonesenţial</mat-radio-button>
+                </div>
+              </div>
+            </mat-radio-group>
+          </div>
+          <br/>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <h5 class="text-center font-weight-bold">Eliberare receta</h5>
+          <hr>
+          <div class="container">
+            <mat-radio-group formControlName="prescription">
+              <div class="row">
+                <div class="col-12">
+                  <mat-radio-button name="prop1" value="1">Cu prescripţia</mat-radio-button>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop2" value="0">Fără prescripţia</mat-radio-button>
+                </div>
+              </div>
+            </mat-radio-group>
+          </div>
+          <br/>
+        </div>
+      </div>
+    </div>
+    <div class="row" formGroupName="medicament">
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="authorizationHolder" mdbInputDirective type="text" class="form-control" formControlName="authorizationHolder" [attr.disabled]="true">
+          <label for="volum">Deţinătorul autorizaţiei de producere</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="taraDetinAutProd" mdbInputDirective type="text" formControlName="authorizationHolderCountry" class="form-control" [attr.disabled]="true">
+          <label for="taraDetinAutProd">Ţara deţinătorului autorizaţiei de producere</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="adresaDetAutProd" mdbInputDirective type="text" formControlName="authorizationHolderAddress" class="form-control" [attr.disabled]="true">
+          <label for="adresaDetAutProd">Adresa deţinătorului autorizaţiei de producere</label>
+        </div>
+      </div>
+    </div>
+    <div class="row" formGroupName="medicament">
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="manufacture" mdbInputDirective type="text" class="form-control" formControlName="manufacture" [attr.disabled]="true">
+          <label for="volum">Producătorul produsului finit</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="taraProdProduInit" mdbInputDirective type="text" formControlName="manufactureMedCountry" class="form-control" [attr.disabled]="true">
+          <label for="taraProdProduInit">Ţara producătorului produsului finit</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="adresaProdProduFinish" mdbInputDirective type="text" formControlName="manufactureMedAddress" class="form-control" [attr.disabled]="true">
+          <label for="adresaProdProduFinish">Adresa producătorului produsului finit</label>
+        </div>
+      </div>
+    </div>
+    <hr>
+  <!--<div class="row">-->
+    <!--<div class="col-md-3">-->
+      <!--<div class="md-form">-->
+        <!--<input id="nrDizDist" mdbInputDirective type="text" class="form-control">-->
+        <!--<label for="nrDizDist">Nr. dispoziţiei de distribuire-->
+          <!--<span class="text-danger">*</span>-->
+        <!--</label>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div class="col-md-3">-->
+      <!--<div class="md-form-modified">-->
+        <!--<mat-form-field class="w-100">-->
+          <!--<input matInput [matDatepicker]="picker1" placeholder="Data dispoziţiei de distribuire">-->
+          <!--<mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>-->
+          <!--<mat-datepicker touchUi #picker1></mat-datepicker>-->
+        <!--</mat-form-field>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div class="col-md-3">-->
+      <!--<div class="md-form-modified">-->
+        <!--<mat-form-field class="w-100">-->
+          <!--<mat-select placeholder="Experţii">-->
+            <!--<mat-option *ngFor="let x of experts" [value]="x.value">{{ x.viewValue }}</mat-option>-->
+          <!--</mat-select>-->
+        <!--</mat-form-field>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div class="col-md-3">-->
+      <!--<div class="md-form-modified">-->
+        <!--<mat-form-field class="w-100">-->
+          <!--<mat-select placeholder="Domeniile de expertiză p-u experţi">-->
+            <!--<mat-option *ngFor="let x of domains" [value]="x.value">{{ x.viewValue }}</mat-option>-->
+          <!--</mat-select>-->
+        <!--</mat-form-field>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div class="col-md-4">-->
+      <!--<div class="md-form">-->
+        <!--<input id="rezExpt" mdbInputDirective type="text" class="form-control">-->
+        <!--<label for="rezExpt">Rezultatul expertizei</label>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div class="col-md-4">-->
+      <!--<div class="md-form">-->
+        <!--<input id="rezLCCM" mdbInputDirective type="text" class="form-control">-->
+        <!--<label for="rezLCCM">Rezultatul LCCM</label>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div class="col-md-4">-->
+      <!--<div class="md-form">-->
+        <!--<div class="alert alert-primary text-center">-->
+          <!--Nr. scrisorii(ilor) de notificare:-->
+          <!--<a href="#" class="alert-link">Example 12345</a>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div class="col-md-4">-->
+      <!--<div class="md-form-modified">-->
+        <!--<mat-form-field class="w-100">-->
+          <!--<input matInput [matDatepicker]="picker2" placeholder="Data scrisorii(ilor) de notificare">-->
+          <!--<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>-->
+          <!--<mat-datepicker touchUi #picker2></mat-datepicker>-->
+        <!--</mat-form-field>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div class="col-md-4">-->
+      <!--<div class="md-form">-->
+        <!--<input id="sumaAchit" mdbInputDirective type="number" class="form-control">-->
+        <!--<label for="sumaAchit">Suma achitată (lei)</label>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div class="col-md-4">-->
+      <!--<div class="md-form-modified">-->
+        <!--<mat-form-field class="w-100">-->
+          <!--<input matInput [matDatepicker]="picker7" placeholder="Data achitării">-->
+          <!--<mat-datepicker-toggle matSuffix [for]="picker7"></mat-datepicker-toggle>-->
+          <!--<mat-datepicker touchUi #picker7></mat-datepicker>-->
+        <!--</mat-form-field>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div class="col-md-4">-->
+      <!--<div class="md-form">-->
+        <!--<div class="alert alert-primary text-center">-->
+          <!--Nr. de înregistrare a medicamentului:-->
+          <!--<a href="#" class="alert-link">Example 1234</a>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div class="col-md-4">-->
+      <!--<div class="md-form">-->
+        <!--<input id="ordAutMed" mdbInputDirective type="text" class="form-control">-->
+        <!--<label for="ordAutMed">Ordinul de autorizare a medicamentului</label>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div class="col-md-4">-->
+      <!--<div class="md-form-modified">-->
+        <!--<mat-form-field class="w-100">-->
+          <!--<input matInput [matDatepicker]="picker6" placeholder="Data ordinului de autorizare">-->
+          <!--<mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>-->
+          <!--<mat-datepicker touchUi #picker6></mat-datepicker>-->
+        <!--</mat-form-field>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+    <div class="text-center">
+      <!--<button class="btn btn-dark-red-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="basicModal.show()">Anulare</button>-->
+      <!--<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Crearea</button>-->
+      <button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Inregistrare</button>
+    </div>
+
+  <!--<div mdbModal #basicModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel" aria-hidden="true">-->
+    <!--<div class="modal-dialog" role="document">-->
+      <!--<div class="modal-content">-->
+        <!--<div class="modal-header">-->
+          <!--<button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">-->
+            <!--<span aria-hidden="true">×</span>-->
+          <!--</button>-->
+          <!--<h4 class="modal-title w-100" id="myModalLabel">Anulare</h4>-->
+        <!--</div>-->
+        <!--<div class="modal-body">-->
+          <!--<div class="row">-->
+            <!--<div class="col-12">-->
+              <!--<div class="md-form">-->
+                <!--<mat-form-field class="w-100">-->
+                  <!--<input matInput [matDatepicker]="picker4" placeholder="Data achitării" [formControl]="date" disabled>-->
+                  <!--<mat-datepicker-toggle matSuffix [for]="picker4" disabled></mat-datepicker-toggle>-->
+                  <!--<mat-datepicker touchUi #picker4></mat-datepicker>-->
+                <!--</mat-form-field>-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<div class="col-md-12">-->
+              <!--<div class="md-form">-->
+                <!--<input id="motAnulCert" mdbInputDirective type="text" class="form-control">-->
+                <!--<label for="motAnulCert">Motivul anulării certificatului</label>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+        <!--<div class="modal-footer">-->
+          <!--<button type="button" class="btn btn-dark-red-color waves-light btn-sm" aria-label="Close" (click)="basicModal.hide()" mdbWavesEffect>Anulare</button>-->
+          <!--<button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm" mdbWavesEffect>Confirmare</button>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+  </form>
+</div>

@@ -11,7 +11,6 @@ public class RegistrationRequestHistoryEntity
     private Timestamp startDate;
     private Timestamp endDate;
     private String username;
-    private Integer reistrationRequestId;
     private String step;
 
     @Id
@@ -27,7 +26,7 @@ public class RegistrationRequestHistoryEntity
         this.id = id;
     }
 
-      @Basic
+    @Basic
     @Column(name = "start_date")
     public Timestamp getStartDate()
     {
@@ -61,18 +60,6 @@ public class RegistrationRequestHistoryEntity
     public void setUsername(String username)
     {
         this.username = username;
-    }
-
-    @Basic
-    @Column(name = "registration_request_id")
-    public Integer getReistrationRequestId()
-    {
-        return reistrationRequestId;
-    }
-
-    public void setReistrationRequestId(Integer reistrationRequestId)
-    {
-        this.reistrationRequestId = reistrationRequestId;
     }
 
     @Basic
@@ -117,10 +104,6 @@ public class RegistrationRequestHistoryEntity
         {
             return false;
         }
-        if (reistrationRequestId != null ? !reistrationRequestId.equals(that.reistrationRequestId) : that.reistrationRequestId != null)
-        {
-            return false;
-        }
         return step != null ? step.equals(that.step) : that.step == null;
     }
 
@@ -131,7 +114,6 @@ public class RegistrationRequestHistoryEntity
         result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
         result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
         result = 31 * result + (username != null ? username.hashCode() : 0);
-        result = 31 * result + (reistrationRequestId != null ? reistrationRequestId.hashCode() : 0);
         result = 31 * result + (step != null ? step.hashCode() : 0);
         return result;
     }

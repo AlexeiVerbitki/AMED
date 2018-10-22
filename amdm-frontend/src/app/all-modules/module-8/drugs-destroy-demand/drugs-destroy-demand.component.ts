@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {getCerere} from '../../../models/getCerere';
 import {ComisieNimicire} from '../../../models/ComisieNimicire';
 import {Documents} from '../../../models/documents';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-drugs-destroy-demand',
@@ -9,10 +10,14 @@ import {Documents} from '../../../models/documents';
   styleUrls: ['./drugs-destroy-demand.component.css']
 })
 export class DrugsDestroyDemandComponent implements OnInit {
-
+  dataForm: FormGroup;
   model3: string;
 
-  constructor() {
+  constructor(private fb: FormBuilder) {
+    this.dataForm = fb.group({
+      'data': { disabled: true, value: null },
+      'nrCererii': [null, Validators.required]
+    });
   }
 
   public cerere: getCerere[] = [

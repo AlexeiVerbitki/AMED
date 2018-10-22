@@ -4,9 +4,9 @@
 
     <div class="text-center">
         <div class="container">
-            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'NEW'">Eliberarea licentei</h5>
-            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'MOD'">Modificarea licentei</h5>
-            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'DUP'">Eliberarea duplicatului</h5>
+            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICEL'">Eliberarea licentei</h5>
+            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICM'">Modificarea licentei</h5>
+            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICD'">Eliberarea duplicatului</h5>
         </div>
     </div>
     <hr>
@@ -23,7 +23,7 @@
             <div class="col-md-4">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
-                        <input matInput [matDatepicker]="picker2" placeholder="Data eliberarii" id="dataEliberarii"
+                        <input matInput [matDatepicker]="picker2" placeholder="Data adresarii" id="dataEliberarii"
                                formControlName="dataEliberarii">
                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                         <mat-datepicker touchUi #picker2></mat-datepicker>
@@ -34,59 +34,89 @@
 
 
         <app-document [documents]="docs" [nrCerere]="mForm.get('nrCererii').value"></app-document>
+        <div *ngIf="rFormSubbmitted && docs.length==0">
+            <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
+        </div>
 
     </form>
 
-    <form [formGroup]="rForm">
-        <section *ngIf="tipCerere === 'NEW'">
+    <form [formGroup]="rForm" (ngSubmit)="submit()">
+        <section *ngIf="tipCerere === 'LICEL'">
             <hr>
-            <legend class="text-center bg-color">Obiectele adresarii</legend>
-            <div class="row align-items-start">
-                <div class="col-md-3">
-                    <div class="md-form">
-                        <input id="tipIntreprindere" mdbInputDirective type="text" class="form-control"
-                               formControlName="tipIntreprindere">
-                        <label for="tipIntreprindere">Tipul intreprinderii</label>
+<!--=====================================================================================================================================-->
+            <h5 class="text-center font-weight-bold">Obiectele adresarii</h5>
+            <hr>
+            <form [formGroup]="oForm">
+                <div class="row">
+                    <div class="col">
+                        <div class="md-form">
+                            <input id="tipIntreprindere" mdbInputDirective type="text" class="form-control"
+                                   formControlName="tipIntreprindere">
+                            <label for="tipIntreprindere">Tipul intreprinderii<span
+                                    class="text-danger"> * </span></label>
+                        </div>
+                        <div *ngIf="oFormSubbmitted && !oForm.get('tipIntreprindere').valid">
+                            <small class="text-muted"><strong class="text-danger">Tipul intreprinderii este
+                                obligatoriu</strong></small>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col">
+                        <div class="md-form-modified-select">
+                            <ng-select class="custom"  [items]="states"
+                                       bindLabel="description"
+                                        placeholder = "Regiunea"
+                                       formControlName="region"
+                                       >
+                            </ng-select>
+                        </div>
+                        <div *ngIf="oFormSubbmitted && !oForm.get('region').valid">
+                            <small class="text-muted"><strong class="text-danger">Regiunea este obligatorie</strong>
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="md-form-modified-select">
+                            <ng-select class="custom"  [items]="localities"
+                                       bindLabel="description"
+                                       placeholder = "Localitate"
+                                       formControlName="locality"
+                            >
+                            </ng-select>
+                        </div>
+                        <div *ngIf="oFormSubbmitted && !oForm.get('locality').valid">
+                            <small class="text-muted"><strong class="text-danger">Localitatea este obligatorie</strong>
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="md-form">
+                            <input id="street" mdbInputDirective type="text" class="form-control"
+                                   formControlName="street">
+                            <label for="street">Strada</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="md-form">
+                            <input id="blocul" mdbInputDirective type="text" class="form-control"
+                                   formControlName="blocul">
+                            <label for="blocul">Blocul</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="text-center">
+                            <div class="md-form">
+                                <button type="submit" class="btn btn-indigo waves-light btn-sm btn-sm-bl" mdbWavesEffect
+                                        (click)="addNewObjAddres()">Adauga
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-3 md-form-modified">
-                    <mat-form-field class="w-100">
-                        <mat-select placeholder="Regiunea" formControlName="region">
-                            <mat-option></mat-option>
-                            <mat-option *ngFor="let state of states" [value]="state">{{ state.description }}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="col-md-3 md-form-modified">
-                    <mat-form-field class="w-100">
-                        <mat-select placeholder="Localitatea" formControlName="locality">
-                            <mat-option></mat-option>
-                            <mat-option *ngFor="let locality of localities" [value]="locality">{{ locality.description }}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="col-md-3">
-                    <div class="md-form">
-                        <input id="street" mdbInputDirective type="text" class="form-control"
-                               formControlName="street">
-                        <label for="street">Strada</label>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="md-form">
-                        <input id="blocul" mdbInputDirective type="text" class="form-control"
-                               formControlName="blocul">
-                        <label for="blocul">Blocul</label>
-                    </div>
-                </div>
-            </div>
-
-           <!-- <div class="text-center">-->
-                <input type="button" class="btn btn-primary col-md-2 btn-right-top-1" mdbWavesEffect value="Adauga"/>
-
-           <!-- </div>-->
-
-
+            </form>
+            <hr>
             <table class="table table-widths text-center">
                 <thead class="black white-text">
                 <tr>
@@ -95,51 +125,66 @@
                     <th scope="col">Localitatea</th>
                     <th scope="col">Strada</th>
                     <th scope="col">Blocul</th>
+                    <th scope="col">Actiuni</th>
                 </tr>
                 </thead>
                 <tbody>
-              <!--  <tr *ngFor="let doc of documents;let i = index">
-                    <th scope="row">{{ doc.name }}</th>
-                    <td>{{ doc.format }}</td>
-                    <td>{{ doc.date | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+                <tr *ngFor="let objAddr of objAddresses;let i = index">
+                    <th scope="row">{{ objAddr.companyType }}</th>
+                    <td>{{ objAddr.state.description }}</td>
+                    <td>{{ objAddr.locality.description }}</td>
+                    <td>{{ objAddr.street }}</td>
+                    <td>{{ objAddr.building }}</td>
                     <td>
-                        <button class="btn btn-mdb-color btn-sm waves-light" (click)="loadFile(doc.path)" mdbWavesEffect >View</button>
-                        <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeDocument(i)" mdbWavesEffect>Delete</button>
+                        <button class="btn btn-dark-red-color waves-light btn-sm waves-light" type="button"
+                                (click)="removeDocument(i)" mdbWavesEffect>Sterge
+                        </button>
                     </td>
-                </tr>-->
+                </tr>
                 </tbody>
             </table>
+            <div *ngIf="rFormSubbmitted && objAddresses.length==0">
+                <small class="text-muted"><strong class="text-danger">Nici un obiect nu a fost adaugat</strong></small>
+            </div>
+            <hr>
 
+            <h5 class="text-center font-weight-bold">Decizia</h5>
+            <hr>
             <div class="row">
-                <div class="col-md-3">
-                    <div class="md-form">
-                        <input id="adresaObcLicen" mdbInputDirective type="text" class="form-control"
-                               formControlName="adresaObcLicen">
-                        <label for="adresaObcLicen">Adresa obiectului licenţierii</label>
-                    </div>
-                </div>
                 <div class="col-md-3">
                     <div class="md-form">
                         <input id="farmDir" mdbInputDirective type="text" class="form-control"
                                formControlName="farmDir">
-                        <label for="farmDir">Farmacist diriginte (cu istoria)</label>
+                        <label for="farmDir">Farmacist diriginte (cu istoria)<span class="text-danger"> * </span></label>
+                    </div>
+                    <div *ngIf="rFormSubbmitted && !rForm.get('farmDir').valid">
+                        <small class="text-muted"><strong class="text-danger">Farmacistul trebuie introdus</strong>
+                        </small>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="md-form">
                         <input id="decizieLuata" mdbInputDirective type="text" class="form-control"
                                formControlName="decizieLuata">
-                        <label for="decizieLuata">Decizia luată</label>
+                        <label for="decizieLuata">Decizia luată <span class="text-danger"> * </span></label>
+                    </div>
+                    <div *ngIf="rFormSubbmitted && !rForm.get('decizieLuata').valid">
+                        <small class="text-muted"><strong class="text-danger">Decizia trebuie introdusa</strong>
+                        </small>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="md-form-modified">
+                    <div class="md-form-modified-select">
                         <mat-form-field class="w-100">
                             <input matInput [matDatepicker]="picker2" placeholder="Data deciziei"
                                    formControlName="decisionDate">
                             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                             <mat-datepicker touchUi #picker2></mat-datepicker>
                         </mat-form-field>
+                    </div>
+                    <div *ngIf="rFormSubbmitted && !rForm.get('decisionDate').valid">
+                        <small class="text-muted"><strong class="text-danger">Data deciziei trebuie introdusa</strong>
+                        </small>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -149,45 +194,65 @@
                         <label for="argumentDec">Argumentarea deciziei</label>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="md-form">
-                        <mat-checkbox class="form-control" formControlName="useTax">Taxa</mat-checkbox>
-                    </div>
-                </div>
+            </div>
+            <hr>
+<!--=====================================================================================================================================-->
+            <h5 class="text-center font-weight-bold">Date generale</h5>
+            <hr>
+            <div class="row">
+
                 <div class="col-md-3">
                     <div class="md-form">
                         <input id="seriaLic" mdbInputDirective type="text" class="form-control"
                                formControlName="seriaLic">
-                        <label for="seriaLic">Seria licenţei</label>
+                        <label for="seriaLic">Seria licenţei<span class="text-danger"> * </span></label>
+                    </div>
+                    <div *ngIf="rFormSubbmitted && !rForm.get('seriaLic').valid">
+                        <small class="text-muted"><strong class="text-danger">Seria licentei trebuie introdusa</strong>
+                        </small>
                     </div>
                 </div>
 
                 <div class="col-md-3">
-                    <div class="md-form-modified">
-                        <mat-form-field class="w-100">
-                            <input matInput [matDatepicker]="picker3" placeholder="Data eliberării licenţei"
-                                   formControlName="releaseDate">
-                            <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
-                            <mat-datepicker touchUi #picker3></mat-datepicker>
-                        </mat-form-field>
+                    <div class="md-form">
+                        <input id="nrLic" mdbInputDirective type="text" class="form-control"
+                               formControlName="nrLic">
+                        <label for="nrLic">Numarul licenţei<span class="text-danger"> * </span></label>
+                    </div>
+                    <div *ngIf="rFormSubbmitted && !rForm.get('nrLic').valid">
+                        <small class="text-muted"><strong class="text-danger">Numarul licentei trebuie introdus</strong>
+                        </small>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="md-form">
+
+
+                <div class="col-3">
+                    <div class="md-form-modified-select">
                         <mat-form-field class="w-100">
-                            <input matInput [matDatepicker]="picker5"
-                                   placeholder="Data sistării activităţii farmaceutice"
-                                   formControlName="dataSistarii">
-                            <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
-                            <mat-datepicker touchUi #picker5></mat-datepicker>
+                            <input type="text" matInput placeholder="Taxa spre plata" required formControlName="tax">
+                            <span matSuffix class="grey-text">MDL &nbsp;</span>
                         </mat-form-field>
                     </div>
+                    <div *ngIf="rFormSubbmitted && !rForm.get('tax').valid">
+                        <small class="text-muted"><strong class="text-danger">Taxa trebuie introdusa</strong>
+                        </small>
+                    </div>
                 </div>
+
+
                 <div class="col-md-3">
                     <div class="md-form">
-                        <input id="motivulSistarii" mdbInputDirective type="text" class="form-control"
-                               formControlName="motivulSistarii">
-                        <label for="motivulSistarii">Motivul sistării</label>
+                        <mat-checkbox id="taxPaid" formControlName="taxPaid">Achitat </mat-checkbox>
+
+                    </div>
+                </div>
+
+
+                <div class="col-md-3">
+                    <div class="md-form">
+                        <input id="mnrIntrareCPCD" mdbInputDirective type="text" class="form-control"
+                               formControlName="CPCDNrdeintrare">
+                        <label for="mnrIntrareCPCD">Nr. de intrare a răspunsului CPCD</label>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -200,25 +265,39 @@
                         </mat-form-field>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="md-form">
-                        <mat-form-field class="w-100">
-                            <mat-select placeholder="Metoda anunţării CPCD" formControlName="CPCDMethod">
-                                <mat-option *ngFor="let x of cpcd" [value]="x.value">{{ x.viewValue }}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
+                <div class="col">
+                        <div class="md-form-modified">
+                            <ng-select [items]="announces"
+                                       bindLabel="description"
+                                       placeholder = "Metoda"
+                                       formControlName="CPCDMethod"
+
+                            >
+                            </ng-select>
+                        </div>
                 </div>
-                <div class="col-md-3" *ngIf="selectCpCD === 'eMail'" formControlName="CPCDEmail">
+                <div class="col-md-3" *ngIf="!rForm.get('CPCDMethod').value" >
+                </div>
+                <div class="col-md-3" *ngIf="rForm.get('CPCDMethod').value && rForm.get('CPCDMethod').value.code === 'email'" >
                     <div class="md-form">
-                        <input id="email1" mdbInputDirective type="text" class="form-control">
+                        <input id="email1" mdbInputDirective type="text" class="form-control" formControlName="CPCDEmail">
                         <label for="email1">Email</label>
                     </div>
                 </div>
-                <div class="col-md-3" *ngIf="selectCpCD === 'phone'" formControlName="CPCDPhone">
+                <div class="col-md-3" *ngIf="rForm.get('CPCDMethod').value && rForm.get('CPCDMethod').value.code === 'phone'" >
                     <div class="md-form">
-                        <input id="telefon1" mdbInputDirective type="text" class="form-control">
+                        <input id="telefon1" mdbInputDirective type="text" class="form-control" formControlName="CPCDPhone">
                         <label for="telefon1">Telefon</label>
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-3">
+                    <div class="md-form">
+                        <input id="nrRasASP" mdbInputDirective type="text" class="form-control"
+                               formControlName="ASPNrdeintrare">
+                        <label for="nrRasASP">Nr. de intrare a răspunsului ASP</label>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -232,59 +311,33 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="md-form">
-                        <mat-form-field class="w-100">
-                            <mat-select placeholder="Metoda anunţării ASP" formControlName="ASPMethod">
-                                <mat-option *ngFor="let x of cpcd" [value]="x.value">{{ x.viewValue }}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
+                    <div class="md-form-modified">
+                        <ng-select [items]="announces"
+                                   bindLabel="description"
+                                   placeholder = "Metoda"
+                                   formControlName="ASPMethod">
+                        </ng-select>
                     </div>
                 </div>
-                <div class="col-md-3" *ngIf="selectAsp === 'phone'" formControlName="ASPEmail">
+                <div class="col-md-3" *ngIf="!rForm.get('ASPMethod')" >
+                </div>
+                <div class="col-md-3" *ngIf="rForm.get('ASPMethod').value && rForm.get('ASPMethod').value.code === 'email'" >
                     <div class="md-form">
-                        <input id="email" mdbInputDirective type="text" class="form-control">
+                        <input id="email" mdbInputDirective type="text" class="form-control" formControlName="ASPEmail">
                         <label for="email">Email</label>
                     </div>
                 </div>
-                <div class="col-md-3" *ngIf="selectAsp === 'eMail'" formControlName="ASPPhone">
+                <div class="col-md-3" *ngIf="rForm.get('ASPMethod').value && rForm.get('ASPMethod').value.code === 'phone'" >
                     <div class="md-form">
-                        <input id="telefon" mdbInputDirective type="text" class="form-control">
+                        <input id="telefon" mdbInputDirective type="text" class="form-control" formControlName="ASPPhone">
                         <label for="telefon">Telefon</label>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="md-form">
-                        <input id="mnrIntrareCPCD" mdbInputDirective type="text" class="form-control"
-                               formControlName="CPCDNrdeintrare">
-                        <label for="mnrIntrareCPCD">MNr. de intrare a răspunsului CPCD</label>
-                    </div>
-                </div>
-                <!--  <div class="col-md-6">
-                      <div class="md-form">
-                          <mat-form-field class="w-100">
-                              <input matInput [matDatepicker]="picker9" placeholder="Data anunţării CPCD" formControlName="CPCDDate">
-                              <mat-datepicker-toggle matSuffix [for]="picker9"></mat-datepicker-toggle>
-                              <mat-datepicker touchUi #picker9></mat-datepicker>
-                          </mat-form-field>
-                      </div>
-                  </div>-->
-                <div class="col-md-3">
-                    <div class="md-form">
-                        <input id="nrRasASP" mdbInputDirective type="text" class="form-control"
-                               formControlName="ASPNrdeintrare">
-                        <label for="nrRasASP">Nr. de intrare a răspunsului ASP</label>
-                    </div>
-                </div>
-                <!--   <div class="col-md-6">
-                       <div class="md-form">
-                           <mat-form-field class="w-100">
-                               <input matInput [matDatepicker]="picker8" placeholder="Data anunţării ASP">
-                               <mat-datepicker-toggle matSuffix [for]="picker8"></mat-datepicker-toggle>
-                               <mat-datepicker touchUi #picker8></mat-datepicker>
-                           </mat-form-field>
-                       </div>
-                   </div>-->
+
+
             </div>
+            <hr>
+            <!--<h5 class="text-center font-weight-bold">Persoana de contact</h5>
             <hr>
             <div class="row">
                 <div class="col-md-3">
@@ -294,15 +347,6 @@
                         <label for="persLic">Persoana căruia sa eliberat licenţa </label>
                     </div>
                 </div>
-                <!--   <div class="col-md-6">
-                       <div class="md-form">
-                           <mat-form-field class="w-100">
-                               <input matInput [matDatepicker]="picker10" placeholder="Data eliberării licenţei" formControlName="MandatedReleaseDate">
-                               <mat-datepicker-toggle matSuffix [for]="picker10"></mat-datepicker-toggle>
-                               <mat-datepicker touchUi #picker10></mat-datepicker>
-                           </mat-form-field>
-                       </div>
-                   </div>-->
                 <div class="col-md-3">
                     <div class="md-form">
                         <input id="nrProcurii" mdbInputDirective type="text" class="form-control"
@@ -320,6 +364,10 @@
                         </mat-form-field>
                     </div>
                 </div>
+            </div>-->
+            <div class="text-center">
+                <button type="submit" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Confirmare
+                </button>
             </div>
         </section>
     </form>
@@ -741,8 +789,8 @@
              </div>
          </div>
      </section>-->
-    <div class="text-center">
+   <!-- <div class="text-center">
         <button type="submit" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Confirmare
         </button>
-    </div>
+    </div>-->
 </div>

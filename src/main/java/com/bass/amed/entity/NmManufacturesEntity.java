@@ -11,7 +11,7 @@ public class NmManufacturesEntity
     private String description;
     private String longDescription;
     private String idno;
-    private Integer countryId;
+    private NmCountriesEntity country;
     private Byte authorizationHolder;
     private String address;
 
@@ -75,17 +75,18 @@ public class NmManufacturesEntity
         this.idno = idno;
     }
 
-    @Basic
-    @Column(name = "country_id")
-    public Integer getCountryId()
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE} )
+    @JoinColumn( name = "country_id" )
+    public NmCountriesEntity getCountry()
     {
-        return countryId;
+        return country;
     }
 
-    public void setCountryId(Integer countryId)
+    public void setCountry(NmCountriesEntity country)
     {
-        this.countryId = countryId;
+        this.country = country;
     }
+
 
     @Basic
     @Column(name = "authorization_holder")
@@ -109,20 +110,6 @@ public class NmManufacturesEntity
     public void setAddress(String address)
     {
         this.address = address;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (code != null ? code.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (longDescription != null ? longDescription.hashCode() : 0);
-        result = 31 * result + (idno != null ? idno.hashCode() : 0);
-        result = 31 * result + (countryId != null ? countryId.hashCode() : 0);
-        result = 31 * result + (authorizationHolder != null ? authorizationHolder.hashCode() : 0);
-        result = 31 * result + (address != null ? address.hashCode() : 0);
-        return result;
     }
 
     @Override
@@ -159,7 +146,7 @@ public class NmManufacturesEntity
         {
             return false;
         }
-        if (countryId != null ? !countryId.equals(that.countryId) : that.countryId != null)
+        if (country != null ? !country.equals(that.country) : that.country != null)
         {
             return false;
         }
@@ -167,11 +154,20 @@ public class NmManufacturesEntity
         {
             return false;
         }
-        if (address != null ? !address.equals(that.address) : that.address != null)
-        {
-            return false;
-        }
+        return address != null ? address.equals(that.address) : that.address == null;
+    }
 
-        return true;
+    @Override
+    public int hashCode()
+    {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (code != null ? code.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (longDescription != null ? longDescription.hashCode() : 0);
+        result = 31 * result + (idno != null ? idno.hashCode() : 0);
+        result = 31 * result + (country != null ? country.hashCode() : 0);
+        result = 31 * result + (authorizationHolder != null ? authorizationHolder.hashCode() : 0);
+        result = 31 * result + (address != null ? address.hashCode() : 0);
+        return result;
     }
 }

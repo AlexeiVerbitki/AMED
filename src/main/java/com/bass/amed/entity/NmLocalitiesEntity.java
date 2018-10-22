@@ -48,7 +48,7 @@ public class NmLocalitiesEntity
     }
 
     @Basic
-    @Column(name = "state_id")
+    @Column(name = "stateId")
     public Integer getStateId()
     {
         return stateId;
@@ -65,7 +65,6 @@ public class NmLocalitiesEntity
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (code != null ? code.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (stateId != null ? stateId.hashCode() : 0);
         return result;
     }
 
@@ -92,10 +91,6 @@ public class NmLocalitiesEntity
             return false;
         }
         if (description != null ? !description.equals(that.description) : that.description != null)
-        {
-            return false;
-        }
-        if (stateId != null ? !stateId.equals(that.stateId) : that.stateId != null)
         {
             return false;
         }

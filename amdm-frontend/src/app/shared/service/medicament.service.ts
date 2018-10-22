@@ -11,8 +11,20 @@ export class MedicamentService {
     let Params = new HttpParams();
     Params = Params.set('companyId', companyId);
 
-    return this.http.get<Medicament[]>('/api/company-medicaments', { params: Params});
+    return this.http.get<Medicament[]>('/api/medicaments/company-medicaments', { params: Params});
   }
 
-  addMedicament() { }
+  getMedicamentNamesList(partialName: string) : Observable<any[]> {
+      let Params = new HttpParams();
+      Params = Params.set('partialName', partialName);
+
+      return this.http.get<any[]>('/api/medicaments/search-medicament-names-by-name', {params: Params});
+  }
+
+    getMedicamentById(id: string ) : Observable<any> {
+        let Params = new HttpParams();
+        Params = Params.set('id', id);
+
+        return this.http.get<any>('/api/medicaments/search-medicament-by-id', {params: Params});
+    }
 }

@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class NmMedicamentGroupEntity
 {
     private Integer id;
-    private Integer code;
+    private String code;
     private String description;
 
     @Id
@@ -24,12 +24,12 @@ public class NmMedicamentGroupEntity
 
     @Basic
     @Column(name = "code")
-    public Integer getCode()
+    public String getCode()
     {
         return code;
     }
 
-    public void setCode(Integer code)
+    public void setCode(String code)
     {
         this.code = code;
     }

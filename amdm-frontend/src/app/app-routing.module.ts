@@ -2,14 +2,15 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {NotFoundComponent} from './not-found/not-found.component';
 import {LoginComponent} from './login/login.component';
-import {ModuleComponent} from "./module/module.component";
+import {ModuleComponent} from "./all-modules/module.component";
 import {HomepageComponent} from "./homepage/homepage.component";
 import {TaskComponent} from "./task/task.component";
 import {AdministrationComponent} from "./administration/administration.component";
 import {HistoryComponent} from "./history/history.component";
 import {MainDashboardComponent} from "./dashboard/main-dashboard.component";
 import {ModuleDashboardComponent} from "./dashboard/module-dashboard.component";
-import {CerereSolicAutorComponent} from "./all-modules/module-7/cerere-solic-autor/cerere-solic-autor.component";
+import {AuthGuard} from "./shared/auth-guard/auth.guard";
+import {AdminDashboardComponent} from "./dashboard/admin-dashboard.component";
 
 const routes: Routes = [
     {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -54,7 +55,7 @@ const routes: Routes = [
                         loadChildren: '../app/all-modules/module-7/drug-control.module#DrugControlModule'
                     },
                     {
-                        path: 'module/medicament-destruction.module',
+                        path: 'module/medicament-destruction',
                         loadChildren: '../app/all-modules/module-8/medicament-destruction.module#MedicamentDestructionModule'
                     },
                     {
@@ -65,8 +66,23 @@ const routes: Routes = [
             },
             {path: 'task', component: TaskComponent},
             {path: 'history', component: HistoryComponent},
-            {path: 'administration', component: AdministrationComponent}
-        ]
+            {
+                path: '', component: AdminDashboardComponent,
+                children: [
+                    {path: '', redirectTo: 'admin', pathMatch: 'full'},
+                    {path: 'admin', component: AdministrationComponent},
+                    {
+                        path: 'admin/authorization-comment',
+                        loadChildren: '../app/administration/authorization-comment/authorization-comment-module.module#AuthorizationCommentModuleModule'
+                    },
+                    {
+                        path: 'admin/medicament-registration',
+                        loadChildren: '../app/all-modules/module-1/medicament-registration.module#MedicamentRegistrationModule'
+                    },
+                ],
+            },
+
+        ], canActivate: [AuthGuard]
     },
     {path: '**', component: NotFoundComponent},
 ];

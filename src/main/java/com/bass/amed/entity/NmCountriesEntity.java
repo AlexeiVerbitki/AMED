@@ -9,7 +9,7 @@ public class NmCountriesEntity
     private Integer id;
     private String code;
     private String description;
-    private Integer groupId;
+    private NmCountryGroupEntity group;
 
     @Id
     @Column(name = "id")
@@ -47,26 +47,16 @@ public class NmCountriesEntity
         this.description = description;
     }
 
-    @Basic
-    @Column(name = "group_id")
-    public Integer getGroupId()
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE} )
+    @JoinColumn( name = "group_id" )
+    public NmCountryGroupEntity getGroup()
     {
-        return groupId;
+        return group;
     }
 
-    public void setGroupId(Integer groupId)
+    public void setGroup(NmCountryGroupEntity group)
     {
-        this.groupId = groupId;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (code != null ? code.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (groupId != null ? groupId.hashCode() : 0);
-        return result;
+        this.group = group;
     }
 
     @Override
@@ -95,11 +85,16 @@ public class NmCountriesEntity
         {
             return false;
         }
-        if (groupId != null ? !groupId.equals(that.groupId) : that.groupId != null)
-        {
-            return false;
-        }
+        return group != null ? group.equals(that.group) : that.group == null;
+    }
 
-        return true;
+    @Override
+    public int hashCode()
+    {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (code != null ? code.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (group != null ? group.hashCode() : 0);
+        return result;
     }
 }

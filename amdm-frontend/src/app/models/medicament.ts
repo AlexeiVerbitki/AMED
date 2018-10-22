@@ -1,6 +1,9 @@
+import {UnitOfMeasure} from "./unitOfMeasure";
+
 export class Medicament {
   name: string;
   id: number;
-  dose: string;
+  code: string;
+  unitsOfMeasurement: UnitOfMeasure;
   quantity: number;
 }

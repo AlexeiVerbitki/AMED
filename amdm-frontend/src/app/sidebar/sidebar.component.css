@@ -58,6 +58,7 @@
 
 .sidebar .sidebar-menu ul li a{
   color: #fff;
+  display: inherit;
 }
 
 .sidebar .sidebar-menu ul li a:hover{

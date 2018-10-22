@@ -7,8 +7,12 @@ import {PriceRegMedComponent} from './price-reg-med/price-reg-med.component';
 import {MDBBootstrapModule} from "angular-bootstrap-md";
 import {MaterialSharedModule} from "../../material-shared.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {DocumentModule} from '../../document/document.module';
+import { NgSelectModule } from '@ng-select/ng-select';
+import {ReferencePriceComponent} from "./reference-price/reference-price.component";
 
 @NgModule({
+    entryComponents: [ReferencePriceComponent],
     imports: [
         CommonModule,
         PriceRoutingModule,
@@ -16,9 +20,13 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
         ReactiveFormsModule,
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
+        DocumentModule,
+        NgSelectModule
+
     ],
     schemas: [],
-    declarations: [PriceRegMedComponent, PriceEvaluateMedComponent]
+    declarations: [PriceRegMedComponent, PriceEvaluateMedComponent, ReferencePriceComponent]
+
 })
 export class PriceModule {
 }

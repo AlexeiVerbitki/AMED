@@ -14,14 +14,11 @@ public class LicensesEntity
     private Integer id;
 
     @Basic
-    @Column(name = "object_address")
-    private String objectAddress; //???
-    @Basic
     @Column(name = "serial_nr")
-    private String serialNr; //???
+    private String serialNr;
     @Basic
     @Column(name = "nr")
-    private Integer nr;
+    private String nr;
     @Basic
     @Column(name = "release_date")
     private Date releaseDate;
@@ -36,45 +33,39 @@ public class LicensesEntity
     private String status;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
-    @JoinColumn(name = "license_req_type_id")
-    private LicenseRequestTypeEntity requestType;
-
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @JoinColumn(name = "cessation_reason_id")
     private LicenseCessationReasonsEntity cessationReasons;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
-    @JoinColumn(name = "nm_economic_agent_id")
-    private NmEconomicAgentsEntity economicAgent;
-
-    @Basic
-    @Column(name = "pharmacy_master")
-    private String pharmacyMaster;
-
-    @Basic
-    @Column(name = "option_type")
-    private String option;
-
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "resolution_id")
     private LicenseResolutionEntity resolution;
 
-    @OneToOne( fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @OneToOne( fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     @JoinColumn(name = "mandated_contact_id")
     private LicenseMandatedContactEntity mandatedContact;
 
-//    @OneToMany( fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST} )
-//    @JoinColumn( name = "license_id" )
-//    private Set<DocumentsEntity> documents;
-
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "LICENSE_DOCUMENTS", joinColumns = {
             @JoinColumn(name = "LICENSE_ID")}, inverseJoinColumns = {
             @JoinColumn(name = "DOCUMENT_ID")})
     private Set<DocumentsEntity> documents;
 
 
+    @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "license_id")
+    private Set<LicenseAddressesEntity> addresses;
+
+    @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "license_id")
+    private Set<LicenseCommisionResponseEntity> commisionResponses;
+
+    @Basic
+    @Column(name = "tax")
+    private Double tax;
+
+    @Basic
+    @Column(name = "tax_paid")
+    private Byte taxPaid;
 
     public Integer getId()
     {
@@ -84,16 +75,6 @@ public class LicensesEntity
     public void setId(Integer id)
     {
         this.id = id;
-    }
-
-    public String getObjectAddress()
-    {
-        return objectAddress;
-    }
-
-    public void setObjectAddress(String objectAddress)
-    {
-        this.objectAddress = objectAddress;
     }
 
     public String getSerialNr()
@@ -106,12 +87,12 @@ public class LicensesEntity
         this.serialNr = serialNr;
     }
 
-    public Integer getNr()
+    public String getNr()
     {
         return nr;
     }
 
-    public void setNr(Integer nr)
+    public void setNr(String nr)
     {
         this.nr = nr;
     }
@@ -156,16 +137,6 @@ public class LicensesEntity
         this.status = status;
     }
 
-    public LicenseRequestTypeEntity getRequestType()
-    {
-        return requestType;
-    }
-
-    public void setRequestType(LicenseRequestTypeEntity licenseRequestTypeEntity)
-    {
-        this.requestType = licenseRequestTypeEntity;
-    }
-
     public LicenseCessationReasonsEntity getCessationReasons()
     {
         return cessationReasons;
@@ -174,16 +145,6 @@ public class LicensesEntity
     public void setCessationReasons(LicenseCessationReasonsEntity cessationReasons)
     {
         this.cessationReasons = cessationReasons;
-    }
-
-    public NmEconomicAgentsEntity getEconomicAgent()
-    {
-        return economicAgent;
-    }
-
-    public void setEconomicAgent(NmEconomicAgentsEntity economicAgent)
-    {
-        this.economicAgent = economicAgent;
     }
 
     public LicenseResolutionEntity getResolution()
@@ -196,10 +157,6 @@ public class LicensesEntity
         this.resolution = resolution;
     }
 
-//    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
-//    @JoinColumn(name = "mandated_contact_id")
-//    @OneToOne(cascade = {CascadeType.ALL})
-//    @JoinColumn(name = "mandated_contact_id")
     public LicenseMandatedContactEntity getMandatedContact()
     {
         return mandatedContact;
@@ -208,16 +165,6 @@ public class LicensesEntity
     public void setMandatedContact(LicenseMandatedContactEntity mandatedContact)
     {
         this.mandatedContact = mandatedContact;
-    }
-
-    public String getPharmacyMaster()
-    {
-        return pharmacyMaster;
-    }
-
-    public void setPharmacyMaster(String pharmacyMaster)
-    {
-        this.pharmacyMaster = pharmacyMaster;
     }
 
     public Set<DocumentsEntity> getDocuments()
@@ -230,6 +177,26 @@ public class LicensesEntity
         this.documents = documents;
     }
 
+    public Set<LicenseAddressesEntity> getAddresses()
+    {
+        return addresses;
+    }
+
+    public void setAddresses(Set<LicenseAddressesEntity> addresses)
+    {
+        this.addresses = addresses;
+    }
+
+    public Set<LicenseCommisionResponseEntity> getCommisionResponses()
+    {
+        return commisionResponses;
+    }
+
+    public void setCommisionResponses(Set<LicenseCommisionResponseEntity> commisionResponses)
+    {
+        this.commisionResponses = commisionResponses;
+    }
+
     @Override
     public boolean equals(Object o)
     {
@@ -237,17 +204,13 @@ public class LicensesEntity
         if (o == null || getClass() != o.getClass()) return false;
         LicensesEntity that = (LicensesEntity) o;
         return id == that.id &&
-                Objects.equals(objectAddress, that.objectAddress) &&
                 Objects.equals(serialNr, that.serialNr) &&
                 Objects.equals(nr, that.nr) &&
                 Objects.equals(releaseDate, that.releaseDate) &&
                 Objects.equals(cessationDate, that.cessationDate) &&
                 Objects.equals(expirationDate, that.expirationDate) &&
                 Objects.equals(status, that.status) &&
-                Objects.equals(requestType, that.requestType) &&
                 Objects.equals(cessationReasons, that.cessationReasons) &&
-                Objects.equals(economicAgent, that.economicAgent) &&
-                Objects.equals(pharmacyMaster, that.pharmacyMaster) &&
                 Objects.equals(resolution, that.resolution) &&
                 Objects.equals(mandatedContact, that.mandatedContact) &&
                 Objects.equals(documents, that.documents);
@@ -256,7 +219,7 @@ public class LicensesEntity
     @Override
     public int hashCode()
     {
-        return Objects.hash(id, objectAddress, serialNr, nr, releaseDate, cessationDate, expirationDate, status, requestType, cessationReasons, economicAgent, pharmacyMaster, resolution, mandatedContact, documents);
+        return Objects.hash(id, serialNr, nr, releaseDate, cessationDate, expirationDate, status, cessationReasons, resolution, mandatedContact, documents);
     }
 
     @Override
@@ -264,7 +227,6 @@ public class LicensesEntity
     {
         return "LicensesEntity{" +
                 "id=" + id +
-                ", objectAddress='" + objectAddress + '\'' +
                 ", serialNr='" + serialNr + '\'' +
                 ", nr=" + nr +
                 ", releaseDate=" + releaseDate +
@@ -274,14 +236,24 @@ public class LicensesEntity
                 '}';
     }
 
-
-    public String getOption()
+    public Double getTax()
     {
-        return option;
+        return tax;
     }
 
-    public void setOption(String option)
+    public void setTax(Double tax)
     {
-        this.option = option;
+        this.tax = tax;
+    }
+
+
+    public Byte getTaxPaid()
+    {
+        return taxPaid;
+    }
+
+    public void setTaxPaid(Byte taxPaid)
+    {
+        this.taxPaid = taxPaid;
     }
 }

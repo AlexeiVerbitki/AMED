@@ -26,6 +26,7 @@ import {LicenseService} from "../../shared/service/license/license.service";
 	 DocumentComponent
     ]    ,
     providers: [UploadFileService, LicenseService
+
     ],
 })
 export class LicenseModule {

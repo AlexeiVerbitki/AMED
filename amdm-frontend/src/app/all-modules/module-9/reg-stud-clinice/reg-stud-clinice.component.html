@@ -1,56 +1,56 @@
 <div class="container-fluid sky z-depth-2">
   <h3 class="text-center my-3 font-weight-bold">Înregistrarea studiilor clinice</h3>
   <hr>
-  <table class="table table-widths text-center">
-    <thead class="black white-text">
-      <tr>
-        <th scope="col">Denumire</th>
-        <th scope="col">Format</th>
-        <th scope="col">Data incarcarii</th>
-        <th scope="col">Actiuni</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let x of cerere">
-        <th scope="row">{{ x.denumirea }}</th>
-        <td>{{ x.format }}</td>
-        <td>{{ x.dataIncarcarii }}</td>
-        <td>
-          <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect>View</button>
-          <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect>Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <hr>
-  <div class="row">
-    <div class="col-md-4">
-      <div class="md-form">
-        <input id="nrRegCerere" mdbInputDirective type="text" class="form-control">
-        <label for="nrRegCerere">Nr. de înregistrare a cererii
-          <span class="text-danger">*</span>
+  <form [formGroup]='dataForm'>
+    <div class="row">
+      <div class="col-lg-5">
+        <div class="md-form">
+          <input id="nrCererii" mdbInputDirective type="text" class="form-control" formControlName="nrCererii"
+                 [attr.disabled]="true">
+          <label for="nrCererii">Nr. cererii</label>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-lg-2 position-button mt-3">
+        <label class="btn btn-indigo btn-sm" for="incarcaraFisier">
+          <input id="incarcaraFisier" type="file" style="display:none;" (change)="onChange($event)" onclick="this.value=null;">
+          Incarca Cerere
         </label>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="md-form-modified">
-        <mat-form-field class="w-100">
-          <input matInput [matDatepicker]="picker" placeholder="Data de înregistrare a cererii">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker touchUi #picker></mat-datepicker>
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="md-form-modified">
-        <mat-form-field class="w-100">
-          <mat-select placeholder="Compania solicitant">
-            <mat-option *ngFor="let x of compSolicit" [value]="x.value">{{ x.viewValue }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
-  </div>
+  </form>
+  <hr>
+  <hr>
+  <table class="table table-widths text-center">
+    <thead class="black white-text">
+    <tr>
+      <th scope="col">Denumire</th>
+      <th scope="col">Format</th>
+      <th scope="col">Data incarcarii</th>
+      <th scope="col">Actiuni</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let x of cerere">
+      <th scope="row">{{ x.denumirea }}</th>
+      <td>{{ x.format }}</td>
+      <td>{{ x.dataIncarcarii }}</td>
+      <td>
+        <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect>View</button>
+        <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect>Delete</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
   <hr>
   <mat-radio-group [(ngModel)]="model">
     <div class="container">
@@ -121,130 +121,226 @@
     </div>
     <hr>
     <div class="row">
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="md-form">
           <input id="fazaStudClinic" mdbInputDirective type="text" class="form-control">
           <label for="fazaStudClinic">Faza Studiului clinic</label>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="md-form">
-          <input id="numEudraCtNr" mdbInputDirective type="text" class="form-control">
-          <label for="numEudraCtNr">Numărul Eudra CT nr.</label>
+          <input id="numEudraCTNr" mdbInputDirective type="text" class="form-control">
+          <label for="numEudraCTNr">Numărul Eudra CT nr.</label>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="md-form">
           <input id="codStud" mdbInputDirective type="text" class="form-control">
           <label for="codStud">Codul studiului</label>
         </div>
       </div>
-      <div class="col-md-3">
-        <div class="md-form">
-          <input id="titluStud" mdbInputDirective type="text" class="form-control">
-          <label for="titluStud">Titlul studiului</label>
-        </div>
-      </div>
-    </div>
-    <hr>
-    <div class="row">
-      <div class="col-12">
-        <div class="md-form">
-          <mat-form-field class="w-100">
-            <mat-select placeholder="Medicamentul de investigat" [(ngModel)]="medInvests">
-              <mat-option *ngFor="let x of medInvest" [value]="x.value">{{ x.viewValue }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="medInvests === 'doza'">
-        <div class="md-form">
-          <input id="doza" mdbInputDirective type="text" class="form-control">
-          <label for="doza">Doza</label>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="medInvests === 'forma'">
-        <div class="md-form">
-          <mat-form-field class="w-100">
-            <mat-select placeholder="Forma farmaceutică">
-              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="medInvests === 'calea'">
-        <div class="md-form">
-          <input id="caleaAdmin" mdbInputDirective type="text" class="form-control">
-          <label for="caleaAdmin">Calea de administrare</label>
-        </div>
-      </div>
-    </div>
-    <hr>
-    <div class="row">
       <div class="col-md-12">
         <div class="md-form">
-          <mat-form-field class="w-100">
-            <mat-select placeholder="Placebo" [(ngModel)]="placeBos">
-              <mat-option *ngFor="let x of placeBo" [value]="x.value">{{ x.viewValue }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="placeBos === 'doza'">
-        <div class="md-form">
-          <input id="doza" mdbInputDirective type="text" class="form-control">
-          <label for="doza">Doza</label>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="placeBos === 'forma'">
-        <div class="md-form">
-          <mat-form-field class="w-100">
-            <mat-select placeholder="Forma farmaceutică">
-              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="placeBos === 'calea'">
-        <div class="md-form">
-          <input id="caleaAdminis" mdbInputDirective type="text" class="form-control">
-          <label for="caleaAdminis">Calea de administrare</label>
+          <textarea type="text" id="titluStud" class="md-textarea form-control" mdbInputDirective rows="5"></textarea>
+          <label for="titluStud">Motivul întreruperii procedurii</label>
         </div>
       </div>
     </div>
     <hr>
+    <h5 class="text-center font-weight-bold">Medicamentul de investigat</h5>
+    <hr>
     <div class="row">
-      <div class="col-12">
-        <div class="md-form">
+      <div class="col-2">
+        <div class="md-form-modified">
           <mat-form-field class="w-100">
-            <mat-select placeholder="Produsul de referinţă" [(ngModel)]="prodRefs">
-              <mat-option *ngFor="let x of prodRef" [value]="x.value">{{ x.viewValue }}</mat-option>
+            <mat-select placeholder="Denumirea">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
       </div>
-      <div class="col-12" *ngIf="prodRefs === 'doza'">
-        <div class="md-form">
-          <input id="doza2" mdbInputDirective type="text" class="form-control">
-          <label for="doza2">Doza</label>
+      <div class="col-2">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Producătorul">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
       </div>
-      <div class="col-12" *ngIf="prodRefs === 'forma'">
-        <div class="md-form">
+      <div class="col-2">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Doza">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Grupa farmacoterapeutică	">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="md-form-modified">
           <mat-form-field class="w-100">
             <mat-select placeholder="Forma farmaceutică">
-              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
       </div>
-      <div class="col-12" *ngIf="prodRefs === 'calea'">
-        <div class="md-form">
-          <input id="caleaDeAdministrare" mdbInputDirective type="text" class="form-control">
-          <label for="caleaDeAdministrare">Calea de administrare</label>
+      <div class="col-2">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Calea de administrare">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
       </div>
     </div>
+    <hr>
+    <h5 class="text-center font-weight-bold">Produsul de referinţă</h5>
+    <hr>
+    <div class="row">
+      <div class="col">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Denumirea">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Producătorul">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Doza">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma farmaceutică">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Calea de administrare">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <h5 class="text-center font-weight-bold">Placebo</h5>
+    <hr>
+    <div class="row">
+      <div class="col-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Denumirea">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Doza">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma farmaceutică">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Calea de administrare">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <h5 class="text-center font-weight-bold">Lista de investigatori</h5>
+    <hr>
+    <div class="row">
+      <div class="col-md-5">
+        <div class="md-form">
+          <input id="title" mdbInputDirective type="text" class="form-control">
+          <label for="title">Titlu <span class="text-danger">*</span></label>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="md-form">
+          <input id="nameSurname" mdbInputDirective type="text" class="form-control">
+          <label for="nameSurname">Nume, Prenume <span class="text-danger">*</span></label>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="col-2">
+          <div class="md-form">
+            <div class="position-button">
+              <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Adaugare</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <table class="table table-widths text-center table-sm">
+      <thead class="black white-text">
+      <tr>
+        <th scope="col">Titlu</th>
+        <th scope="col">Numele, Prenumele</th>
+        <th scope="col">Actiuni</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let x of listDeInvestigatori">
+        <th scope="row">{{ x.title }}</th>
+        <td>{{ x.nameSurname }}</td>
+        <td>
+          <button class="btn btn-indigo waves-light btn-sm waves-light" mdbWavesEffect>Edit</button>
+          <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect>Delete</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
     <hr>
     <div class="row">
       <div class="col-md-4">
@@ -464,130 +560,226 @@
     </div>
     <hr>
     <div class="row">
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="md-form">
           <input id="fazaStudClinic" mdbInputDirective type="text" class="form-control">
           <label for="fazaStudClinic">Faza Studiului clinic</label>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="md-form">
           <input id="numEudraCT" mdbInputDirective type="text" class="form-control">
           <label for="numEudraCT">Numărul Eudra CT nr.</label>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="md-form">
           <input id="codStud" mdbInputDirective type="text" class="form-control">
           <label for="codStud">Codul studiului</label>
         </div>
       </div>
-      <div class="col-md-3">
-        <div class="md-form">
-          <input id="titluStud" mdbInputDirective type="text" class="form-control">
-          <label for="titluStud">Titlul studiului</label>
-        </div>
-      </div>
-    </div>
-    <hr>
-    <div class="row">
-      <div class="col-12">
-        <div class="md-form">
-          <mat-form-field class="w-100">
-            <mat-select placeholder="Medicamentul de investigat" [(ngModel)]="medInvests">
-              <mat-option *ngFor="let x of medInvest" [value]="x.value">{{ x.viewValue }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="medInvests === 'doza'">
-        <div class="md-form">
-          <input id="doza" mdbInputDirective type="text" class="form-control">
-          <label for="doza">Doza</label>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="medInvests === 'forma'">
-        <div class="md-form">
-          <mat-form-field class="w-100">
-            <mat-select placeholder="Forma farmaceutică">
-              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="medInvests === 'calea'">
-        <div class="md-form">
-          <input id="caleaAdmin" mdbInputDirective type="text" class="form-control">
-          <label for="caleaAdmin">Calea de administrare</label>
-        </div>
-      </div>
-    </div>
-    <hr>
-    <div class="row">
       <div class="col-md-12">
         <div class="md-form">
-          <mat-form-field class="w-100">
-            <mat-select placeholder="Placebo" [(ngModel)]="placeBos">
-              <mat-option *ngFor="let x of placeBo" [value]="x.value">{{ x.viewValue }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="placeBos === 'doza'">
-        <div class="md-form">
-          <input id="doza" mdbInputDirective type="text" class="form-control">
-          <label for="doza">Doza</label>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="placeBos === 'forma'">
-        <div class="md-form">
-          <mat-form-field class="w-100">
-            <mat-select placeholder="Forma farmaceutică">
-              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="placeBos === 'calea'">
-        <div class="md-form">
-          <input id="caleaAdmin" mdbInputDirective type="text" class="form-control">
-          <label for="caleaAdmin">Calea de administrare</label>
+          <textarea type="text" id="titluStud" class="md-textarea form-control" mdbInputDirective rows="5"></textarea>
+          <label for="titluStud">Motivul întreruperii procedurii</label>
         </div>
       </div>
     </div>
     <hr>
+    <h5 class="text-center font-weight-bold">Medicamentul de investigat</h5>
+    <hr>
     <div class="row">
-      <div class="col-12">
-        <div class="md-form">
+      <div class="col-2">
+        <div class="md-form-modified">
           <mat-form-field class="w-100">
-            <mat-select placeholder="Produsul de referinţă" [(ngModel)]="prodRefs">
-              <mat-option *ngFor="let x of prodRef" [value]="x.value">{{ x.viewValue }}</mat-option>
+            <mat-select placeholder="Denumirea">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
       </div>
-      <div class="col-12" *ngIf="prodRefs === 'doza'">
-        <div class="md-form">
-          <input id="doza" mdbInputDirective type="text" class="form-control">
-          <label for="doza">Doza</label>
+      <div class="col-2">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Producătorul">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
       </div>
-      <div class="col-12" *ngIf="prodRefs === 'forma'">
-        <div class="md-form">
+      <div class="col-2">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Doza">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Grupa farmacoterapeutică	">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="md-form-modified">
           <mat-form-field class="w-100">
             <mat-select placeholder="Forma farmaceutică">
-              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
       </div>
-      <div class="col-12" *ngIf="prodRefs === 'calea'">
-        <div class="md-form">
-          <input id="caleaAdmin" mdbInputDirective type="text" class="form-control">
-          <label for="caleaAdmin">Calea de administrare</label>
+      <div class="col-2">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Calea de administrare">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
       </div>
     </div>
+    <hr>
+    <h5 class="text-center font-weight-bold">Produsul de referinţă</h5>
+    <hr>
+    <div class="row">
+      <div class="col">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Denumirea">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Producătorul">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Doza">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma farmaceutică">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Calea de administrare">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <h5 class="text-center font-weight-bold">Placebo</h5>
+    <hr>
+    <div class="row">
+      <div class="col-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Denumirea">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Doza">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma farmaceutică">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Calea de administrare">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <h5 class="text-center font-weight-bold">Lista de investigatori</h5>
+    <hr>
+    <div class="row">
+      <div class="col-md-5">
+        <div class="md-form">
+          <input id="title" mdbInputDirective type="text" class="form-control">
+          <label for="title">Titlu <span class="text-danger">*</span></label>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="md-form">
+          <input id="nameSurname" mdbInputDirective type="text" class="form-control">
+          <label for="nameSurname">Nume, Prenume <span class="text-danger">*</span></label>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="col-2">
+          <div class="md-form">
+            <div class="position-button">
+              <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Adaugare</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <table class="table table-widths text-center table-sm">
+      <thead class="black white-text">
+      <tr>
+        <th scope="col">Titlu</th>
+        <th scope="col">Numele, Prenumele</th>
+        <th scope="col">Actiuni</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let x of listDeInvestigatori">
+        <th scope="row">{{ x.title }}</th>
+        <td>{{ x.nameSurname }}</td>
+        <td>
+          <button class="btn btn-indigo waves-light btn-sm waves-light" mdbWavesEffect>Edit</button>
+          <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect>Delete</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
     <hr>
     <div class="row">
       <div class="col-md-4">
@@ -807,130 +999,226 @@
     </div>
     <hr>
     <div class="row">
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="md-form">
           <input id="fazaStudClinic" mdbInputDirective type="text" class="form-control">
           <label for="fazaStudClinic">Faza Studiului clinic</label>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="md-form">
           <input id="numEudraCtNr" mdbInputDirective type="text" class="form-control">
           <label for="numEudraCtNr">Numărul Eudra CT nr.</label>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="md-form">
           <input id="codStud" mdbInputDirective type="text" class="form-control">
           <label for="codStud">Codul studiului</label>
         </div>
       </div>
-      <div class="col-md-3">
-        <div class="md-form">
-          <input id="titluStud" mdbInputDirective type="text" class="form-control">
-          <label for="titluStud">Titlul studiului</label>
-        </div>
-      </div>
-    </div>
-    <hr>
-    <div class="row">
-      <div class="col-12">
-        <div class="md-form">
-          <mat-form-field class="w-100">
-            <mat-select placeholder="Medicamentul de investigat" [(ngModel)]="medInvests">
-              <mat-option *ngFor="let x of medInvest" [value]="x.value">{{ x.viewValue }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="medInvests === 'doza'">
-        <div class="md-form">
-          <input id="doza" mdbInputDirective type="text" class="form-control">
-          <label for="doza">Doza</label>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="medInvests === 'forma'">
-        <div class="md-form">
-          <mat-form-field class="w-100">
-            <mat-select placeholder="Forma farmaceutică">
-              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="medInvests === 'calea'">
-        <div class="md-form">
-          <input id="caleaAdmin" mdbInputDirective type="text" class="form-control">
-          <label for="caleaAdmin">Calea de administrare</label>
-        </div>
-      </div>
-    </div>
-    <hr>
-    <div class="row">
       <div class="col-md-12">
         <div class="md-form">
-          <mat-form-field class="w-100">
-            <mat-select placeholder="Placebo" [(ngModel)]="placeBos">
-              <mat-option *ngFor="let x of placeBo" [value]="x.value">{{ x.viewValue }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="placeBos === 'doza'">
-        <div class="md-form">
-          <input id="doza" mdbInputDirective type="text" class="form-control">
-          <label for="doza">Doza</label>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="placeBos === 'forma'">
-        <div class="md-form">
-          <mat-form-field class="w-100">
-            <mat-select placeholder="Forma farmaceutică">
-              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="placeBos === 'calea'">
-        <div class="md-form">
-          <input id="caleaAdmin" mdbInputDirective type="text" class="form-control">
-          <label for="caleaAdmin">Calea de administrare</label>
+          <textarea type="text" id="titluStud" class="md-textarea form-control" mdbInputDirective rows="5"></textarea>
+          <label for="titluStud">Motivul întreruperii procedurii</label>
         </div>
       </div>
     </div>
     <hr>
+    <h5 class="text-center font-weight-bold">Medicamentul de investigat</h5>
+    <hr>
     <div class="row">
-      <div class="col-12">
-        <div class="md-form">
+      <div class="col-2">
+        <div class="md-form-modified">
           <mat-form-field class="w-100">
-            <mat-select placeholder="Produsul de referinţă" [(ngModel)]="prodRefs">
-              <mat-option *ngFor="let x of prodRef" [value]="x.value">{{ x.viewValue }}</mat-option>
+            <mat-select placeholder="Denumirea">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
       </div>
-      <div class="col-12" *ngIf="prodRefs === 'doza'">
-        <div class="md-form">
-          <input id="doza" mdbInputDirective type="text" class="form-control">
-          <label for="doza">Doza</label>
+      <div class="col-2">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Producătorul">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
       </div>
-      <div class="col-12" *ngIf="prodRefs === 'forma'">
-        <div class="md-form">
+      <div class="col-2">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Doza">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Grupa farmacoterapeutică	">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="md-form-modified">
           <mat-form-field class="w-100">
             <mat-select placeholder="Forma farmaceutică">
-              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
       </div>
-      <div class="col-12" *ngIf="prodRefs === 'calea'">
-        <div class="md-form">
-          <input id="caleaAdmin" mdbInputDirective type="text" class="form-control">
-          <label for="caleaAdmin">Calea de administrare</label>
+      <div class="col-2">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Calea de administrare">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
       </div>
     </div>
+    <hr>
+    <h5 class="text-center font-weight-bold">Produsul de referinţă</h5>
+    <hr>
+    <div class="row">
+      <div class="col">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Denumirea">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Producătorul">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Doza">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma farmaceutică">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Calea de administrare">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <h5 class="text-center font-weight-bold">Placebo</h5>
+    <hr>
+    <div class="row">
+      <div class="col-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Denumirea">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Doza">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma farmaceutică">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Calea de administrare">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <h5 class="text-center font-weight-bold">Lista de investigatori</h5>
+    <hr>
+    <div class="row">
+      <div class="col-md-5">
+        <div class="md-form">
+          <input id="title" mdbInputDirective type="text" class="form-control">
+          <label for="title">Titlu <span class="text-danger">*</span></label>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="md-form">
+          <input id="nameSurname" mdbInputDirective type="text" class="form-control">
+          <label for="nameSurname">Nume, Prenume <span class="text-danger">*</span></label>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="col-2">
+          <div class="md-form">
+            <div class="position-button">
+              <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Adaugare</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <table class="table table-widths text-center table-sm">
+      <thead class="black white-text">
+      <tr>
+        <th scope="col">Titlu</th>
+        <th scope="col">Numele, Prenumele</th>
+        <th scope="col">Actiuni</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let x of listDeInvestigatori">
+        <th scope="row">{{ x.title }}</th>
+        <td>{{ x.nameSurname }}</td>
+        <td>
+          <button class="btn btn-indigo waves-light btn-sm waves-light" mdbWavesEffect>Edit</button>
+          <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect>Delete</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
     <hr>
     <div class="row">
       <div class="col-md-4">
@@ -1150,130 +1438,226 @@
     </div>
     <hr>
     <div class="row">
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="md-form">
           <input id="fazaStudClinic" mdbInputDirective type="text" class="form-control">
           <label for="fazaStudClinic">Faza Studiului clinic</label>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="md-form">
           <input id="numEudraCTNr" mdbInputDirective type="text" class="form-control">
           <label for="numEudraCTNr">Numărul Eudra CT nr.</label>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="md-form">
           <input id="codStud" mdbInputDirective type="text" class="form-control">
           <label for="codStud">Codul studiului</label>
         </div>
       </div>
-      <div class="col-md-3">
-        <div class="md-form">
-          <input id="titluStud" mdbInputDirective type="text" class="form-control">
-          <label for="titluStud">Titlul studiului</label>
-        </div>
-      </div>
-    </div>
-    <hr>
-    <div class="row">
-      <div class="col-12">
-        <div class="md-form">
-          <mat-form-field class="w-100">
-            <mat-select placeholder="Medicamentul de investigat" [(ngModel)]="medInvests">
-              <mat-option *ngFor="let x of medInvest" [value]="x.value">{{ x.viewValue }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="medInvests === 'doza'">
-        <div class="md-form">
-          <input id="doza" mdbInputDirective type="text" class="form-control">
-          <label for="doza">Doza</label>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="medInvests === 'forma'">
-        <div class="md-form">
-          <mat-form-field class="w-100">
-            <mat-select placeholder="Forma farmaceutică">
-              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="medInvests === 'calea'">
-        <div class="md-form">
-          <input id="caleaAdmin" mdbInputDirective type="text" class="form-control">
-          <label for="caleaAdmin">Calea de administrare</label>
-        </div>
-      </div>
-    </div>
-    <hr>
-    <div class="row">
       <div class="col-md-12">
         <div class="md-form">
-          <mat-form-field class="w-100">
-            <mat-select placeholder="Placebo" [(ngModel)]="placeBos">
-              <mat-option *ngFor="let x of placeBo" [value]="x.value">{{ x.viewValue }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="placeBos === 'doza'">
-        <div class="md-form">
-          <input id="doza" mdbInputDirective type="text" class="form-control">
-          <label for="doza">Doza</label>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="placeBos === 'forma'">
-        <div class="md-form">
-          <mat-form-field class="w-100">
-            <mat-select placeholder="Forma farmaceutică">
-              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="col-12" *ngIf="placeBos === 'calea'">
-        <div class="md-form">
-          <input id="caleaAdmin" mdbInputDirective type="text" class="form-control">
-          <label for="caleaAdmin">Calea de administrare</label>
+          <textarea type="text" id="titluStud" class="md-textarea form-control" mdbInputDirective rows="5"></textarea>
+          <label for="titluStud">Motivul întreruperii procedurii</label>
         </div>
       </div>
     </div>
     <hr>
+    <h5 class="text-center font-weight-bold">Medicamentul de investigat</h5>
+    <hr>
     <div class="row">
-      <div class="col-12">
-        <div class="md-form">
+      <div class="col-2">
+        <div class="md-form-modified">
           <mat-form-field class="w-100">
-            <mat-select placeholder="Produsul de referinţă" [(ngModel)]="prodRefs">
-              <mat-option *ngFor="let x of prodRef" [value]="x.value">{{ x.viewValue }}</mat-option>
+            <mat-select placeholder="Denumirea">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
       </div>
-      <div class="col-12" *ngIf="prodRefs === 'doza'">
-        <div class="md-form">
-          <input id="doza" mdbInputDirective type="text" class="form-control">
-          <label for="doza">Doza</label>
+      <div class="col-2">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Producătorul">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
       </div>
-      <div class="col-12" *ngIf="prodRefs === 'forma'">
-        <div class="md-form">
+      <div class="col-2">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Doza">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Grupa farmacoterapeutică	">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="md-form-modified">
           <mat-form-field class="w-100">
             <mat-select placeholder="Forma farmaceutică">
-              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
       </div>
-      <div class="col-12" *ngIf="prodRefs === 'calea'">
-        <div class="md-form">
-          <input id="caleaAdmin" mdbInputDirective type="text" class="form-control">
-          <label for="caleaAdmin">Calea de administrare</label>
+      <div class="col-2">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Calea de administrare">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
       </div>
     </div>
+    <hr>
+    <h5 class="text-center font-weight-bold">Produsul de referinţă</h5>
+    <hr>
+    <div class="row">
+      <div class="col">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Denumirea">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Producătorul">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Doza">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma farmaceutică">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Calea de administrare">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <h5 class="text-center font-weight-bold">Placebo</h5>
+    <hr>
+    <div class="row">
+      <div class="col-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Denumirea">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Doza">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Forma farmaceutică">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Calea de administrare">
+              <mat-option *ngFor="let x of finalFC" [value]="x.value">{{ x.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <h5 class="text-center font-weight-bold">Lista de investigatori</h5>
+    <hr>
+    <div class="row">
+      <div class="col-md-5">
+        <div class="md-form">
+          <input id="title" mdbInputDirective type="text" class="form-control">
+          <label for="title">Titlu <span class="text-danger">*</span></label>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="md-form">
+          <input id="nameSurname" mdbInputDirective type="text" class="form-control">
+          <label for="nameSurname">Nume, Prenume <span class="text-danger">*</span></label>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="col-2">
+          <div class="md-form">
+            <div class="position-button">
+              <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Adaugare</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <table class="table table-widths text-center table-sm">
+      <thead class="black white-text">
+      <tr>
+        <th scope="col">Titlu</th>
+        <th scope="col">Numele, Prenumele</th>
+        <th scope="col">Actiuni</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let x of listDeInvestigatori">
+        <th scope="row">{{ x.title }}</th>
+        <td>{{ x.nameSurname }}</td>
+        <td>
+          <button class="btn btn-indigo waves-light btn-sm waves-light" mdbWavesEffect>Edit</button>
+          <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect>Delete</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
     <hr>
     <div class="row">
       <div class="col-md-4">
@@ -1445,6 +1829,145 @@
       </div>
     </div>
   </section>
+
+
+  <hr>
+  <h5 class="text-center font-weight-bold">Predarea Bon/bonuri de plata</h5>
+  <hr>
+  <div class="row">
+    <div class="col">
+      <div class="md-form">
+        <input id="bonNr" mdbInputDirective type="text" class="form-control">
+        <label for="bonNr">Bon nr.</label>
+      </div>
+    </div>
+    <div class="col">
+      <div class="md-form-modified">
+        <mat-form-field class="w-100">
+          <input matInput [matDatepicker]="bonNrData" placeholder="Data">
+          <mat-datepicker-toggle matSuffix [for]="bonNrData"></mat-datepicker-toggle>
+          <mat-datepicker touchUi #bonNrData></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col">
+      <div class="md-form">
+        <input id="motivulEmiterii" mdbInputDirective type="text" class="form-control">
+        <label for="motivulEmiterii">Motivul emiterii</label>
+      </div>
+    </div>
+    <div class="col">
+      <div class="md-form">
+        <input id="sumaBon" mdbInputDirective type="number" class="form-control">
+        <label for="sumaBon">Suma (lei)</label>
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="md-form">
+        <div class="position-button">
+          <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Adaugare</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <table class="table table-widths text-center table-sm">
+    <thead class="black white-text">
+    <tr>
+      <th scope="col">Bon nr.</th>
+      <th scope="col">Data</th>
+      <th scope="col">Motivul emiterii</th>
+      <th scope="col">Suma</th>
+      <th scope="col">Actiuni</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let x of bonNrs">
+      <th scope="row">{{ x.bonNr }}</th>
+      <td>{{ x.data | date: 'dd/mm/yyyy' }}</td>
+      <td>{{ x.motivulEmiterii }}</td>
+      <td>{{ x.suma }}</td>
+      <td>
+        <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect>Delete</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="alert alert-primary text-center w-100">Total spre plata : 1500 lei
+  </div>
+  <hr>
+  <h5 class="text-center font-weight-bold">Eliberarea plata/plati</h5>
+  <hr>
+  <div class="row">
+    <div class="col">
+      <div class="md-form">
+        <input id="ordNr" mdbInputDirective type="text" class="form-control">
+        <label for="ordNr">Ordin de plata nr.</label>
+      </div>
+    </div>
+    <div class="col">
+      <div class="md-form-modified">
+        <mat-form-field class="w-100">
+          <input matInput [matDatepicker]="ordNrData" placeholder="Data">
+          <mat-datepicker-toggle matSuffix [for]="ordNrData"></mat-datepicker-toggle>
+          <mat-datepicker touchUi #ordNrData></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col">
+      <div class="md-form">
+        <input id="inBaza" mdbInputDirective type="text" class="form-control">
+        <label for="inBaza">In baza</label>
+      </div>
+    </div>
+    <div class="col">
+      <div class="md-form">
+        <input id="sumaOrd" mdbInputDirective type="number" class="form-control">
+        <label for="sumaOrd">Suma (lei)</label>
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="md-form">
+        <div class="position-button">
+          <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Adaugare</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <table class="table table-widths text-center table-sm">
+    <thead class="black white-text">
+    <tr>
+      <th scope="col">Ordin de plata nr.</th>
+      <th scope="col">Data</th>
+      <th scope="col">In baza</th>
+      <th scope="col">Suma</th>
+      <th scope="col">Actiuni</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let x of bonNrs">
+      <th scope="row">{{ x.bonNr }}</th>
+      <td>{{ x.data | date: 'dd/mm/yyyy' }}</td>
+      <td>{{ x.motivulEmiterii }}</td>
+      <td>{{ x.suma }}</td>
+      <td>
+        <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect>Delete</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="alert alert-primary text-center w-100">Total spre plata : 1500 lei
+  </div>
+  <hr>
+  <h5 class="text-center font-weight-bold">Suma spre achitare</h5>
+  <hr>
+  <div class="row">
+    <div class="col-12">
+      <div class="alert alert-danger text-center">Total datorii: 1500 lei
+      </div>
+    </div>
+  </div>
+
+
   <div class="text-center">
     <button type="submit" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Inregistreaza
       notificare</button>

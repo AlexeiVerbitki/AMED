@@ -17,7 +17,7 @@ public class HandleCustomExceptions extends ResponseEntityExceptionHandler
     @ExceptionHandler(CustomException.class)
     public final ResponseEntity<String> handleCustomExceptions(CustomException e)
     {
-        logger.error(e.getMessage(), e);
+        LOGGER.error(e.getMessage(), e);
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-app-alert", e.getMessage());
 

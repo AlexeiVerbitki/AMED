@@ -9,7 +9,7 @@ public class NmActiveSubstancesEntity
     private Integer id;
     private String code;
     private String description;
-    private Integer manufactureId;
+    private NmManufacturesEntity manufacture;
     private Double quantity;
 
     @Id
@@ -48,16 +48,16 @@ public class NmActiveSubstancesEntity
         this.description = description;
     }
 
-    @Basic
-    @Column(name = "manufacture_id")
-    public Integer getManufactureId()
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
+    @JoinColumn( name = "manufacture_id" )
+    public NmManufacturesEntity getManufacture()
     {
-        return manufactureId;
+        return manufacture;
     }
 
-    public void setManufactureId(Integer manufactureId)
+    public void setManufacture(NmManufacturesEntity manufacture)
     {
-        this.manufactureId = manufactureId;
+        this.manufacture = manufacture;
     }
 
     @Basic
@@ -70,17 +70,6 @@ public class NmActiveSubstancesEntity
     public void setQuantity(Double quantity)
     {
         this.quantity = quantity;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (code != null ? code.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (manufactureId != null ? manufactureId.hashCode() : 0);
-        result = 31 * result + (quantity != null ? quantity.hashCode() : 0);
-        return result;
     }
 
     @Override
@@ -109,15 +98,21 @@ public class NmActiveSubstancesEntity
         {
             return false;
         }
-        if (manufactureId != null ? !manufactureId.equals(that.manufactureId) : that.manufactureId != null)
+        if (manufacture != null ? !manufacture.equals(that.manufacture) : that.manufacture != null)
         {
             return false;
         }
-        if (quantity != null ? !quantity.equals(that.quantity) : that.quantity != null)
-        {
-            return false;
-        }
+        return quantity != null ? quantity.equals(that.quantity) : that.quantity == null;
+    }
 
-        return true;
+    @Override
+    public int hashCode()
+    {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (code != null ? code.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (manufacture != null ? manufacture.hashCode() : 0);
+        result = 31 * result + (quantity != null ? quantity.hashCode() : 0);
+        return result;
     }
 }

@@ -8,19 +8,21 @@ import java.util.Objects;
 @Table(name = "license_resolution", schema = "amed", catalog = "")
 public class LicenseResolutionEntity
 {
-    private int id;
+    private Integer id;
     private String resolution;
     private Date date;
     private String reason;
+    private String pharmacyMaster;
 
     @Id
     @Column(name = "id")
-    public int getId()
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
+    public Integer getId()
     {
         return id;
     }
 
-    public void setId(int id)
+    public void setId(Integer id)
     {
         this.id = id;
     }
@@ -77,5 +79,17 @@ public class LicenseResolutionEntity
     public int hashCode()
     {
         return Objects.hash(id, resolution, date, reason);
+    }
+
+    @Basic
+    @Column(name = "pharmacy_master")
+    public String getPharmacyMaster()
+    {
+        return pharmacyMaster;
+    }
+
+    public void setPharmacyMaster(String pharmacyMaster)
+    {
+        this.pharmacyMaster = pharmacyMaster;
     }
 }

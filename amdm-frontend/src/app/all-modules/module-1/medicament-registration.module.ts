@@ -11,6 +11,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {DocumentComponent} from "../../document/document.component";
 import {UploadFileService} from "../../shared/service/upload/upload-file.service";
 import {RequestService} from "../../shared/service/request.service";
+import {NumberOnlyDirective} from "../../shared/directive/number-only.directive";
+import {PaymentComponent} from "../../payment/payment.component";
 
 @NgModule({
     imports: [
@@ -22,7 +24,7 @@ import {RequestService} from "../../shared/service/request.service";
         MaterialSharedModule.forRoot(),
     ],
     schemas: [],
-    declarations: [RegCerereComponent, EvaluarePrimaraComponent, SamsaComponent, DocumentComponent],
+    declarations: [RegCerereComponent, EvaluarePrimaraComponent, SamsaComponent, DocumentComponent,NumberOnlyDirective,PaymentComponent,],
     providers: [UploadFileService,RequestService]
 })
 export class MedicamentRegistrationModule {
