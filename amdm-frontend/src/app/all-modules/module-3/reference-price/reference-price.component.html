@@ -1,0 +1,40 @@
+<div class="row">
+  <div class="col-md-4">
+    <div class="md-form">
+      <input id="pretMed9Ref" mdbInputDirective type="number" class="form-control" min="0.1" step="0.1" [(ngModel)]="refPrice" (change)="onPriceChange($event)" >
+      <label for="pretMed9Ref">Preț de referință</label>
+      <!--<span class="text-danger">*</span>-->
+      <div *ngIf="formSubmitted && refPrice == undefined">
+        <small class="text-muted"><strong class="text-danger">Indicați prețul de referință</strong></small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="md-form-modified">
+      <ng-select class="w-100"
+                 [items]="currencies"
+                 [required]="false"
+                 [(ngModel)]="currency"
+                 bindLabel="shortDescription"
+                 placeholder="Valuta">
+      </ng-select>
+      <div *ngIf="formSubmitted && currency == undefined">
+        <small class="text-muted"><strong class="text-danger">Selectați valuta de referință</strong></small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="md-form-modified">
+      <ng-select class="w-100"
+                 [items]="countries"
+                 [required]="false"
+                 [(ngModel)]="country"
+                 bindLabel="description"
+                 placeholder="Țara de referință">
+      </ng-select>
+      <div *ngIf="formSubmitted && country == undefined">
+        <small class="text-muted"><strong class="text-danger">Selectați țara de referință</strong></small>
+      </div>
+    </div>
+  </div>
+</div>
