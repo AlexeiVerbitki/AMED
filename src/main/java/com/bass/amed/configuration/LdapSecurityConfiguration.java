@@ -72,20 +72,11 @@ public class LdapSecurityConfiguration extends WebSecurityConfigurerAdapter
                 //                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/authenticate").permitAll()
                 .antMatchers("/api/reset-password").permitAll()
-<<<<<<< .mine
-                .antMatchers("/api/**").permitAll()
-//                .hasAnyRole("TEST")
-                    .and().apply(securityConfigurerAdapter());
-||||||| .r303
-                .antMatchers("/api/**")
-                .hasAnyRole("TEST").and().apply(securityConfigurerAdapter());
-=======
                 //.anyRequest().authenticated()
                 .antMatchers("/api/**")
                 .permitAll()
 //                .hasAnyRole("TEST")
                 .and().apply(securityConfigurerAdapter());
->>>>>>> .r349
         //.hasAnyAuthority("ADMIN");
         //                .antMatchers("/actuator/**").hasAnyAuthority("ADMIN")
         //                .and( ).apply( securityConfigurerAdapter( ) );

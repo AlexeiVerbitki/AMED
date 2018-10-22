@@ -1,0 +1,11 @@
+.md-form-modified {
+    position      : relative;
+    margin-top    : 10px;
+    margin-bottom : 1.5rem;
+}
+
+.md-form-modified-select {
+    position: relative;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}

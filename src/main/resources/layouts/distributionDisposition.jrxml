@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e9d4d85f-13dd-47b0-b990-4ba038def0bf">
+	<property name="ireport.zoom" value="1.4641000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="sysDate" class="java.util.Date"/>
+	<field name="requestNumber" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="155" splitType="Stretch">
+			<staticText>
+				<reportElement x="186" y="33" width="151" height="40" uuid="9f67b6a3-9b4d-4a9d-bad6-78aaaf7b34ef"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[Report Nr. 1]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<staticText>
+				<reportElement x="194" y="37" width="61" height="38" uuid="59185dce-c054-472f-a7e8-b8752adde216"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[Data:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="255" y="37" width="159" height="38" uuid="cb93e169-c299-44ef-930f-ea961469ed84"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{sysDate})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="194" y="75" width="61" height="36" uuid="4cd27b54-e0bb-4e6a-b59b-e60cf7cbf204"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[Nr:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="255" y="75" width="159" height="36" uuid="8a215b53-7f65-48d3-9776-aadf0d90f421"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{requestNumber}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,784 +1,124 @@
-2018-10-12 15:29:26.222  INFO 6052 --- [http-nio-8443-exec-6] com.bass.amed.security.TokenProvider     : Expired JWT token.
-2018-10-12 15:29:26.228  INFO 6052 --- [http-nio-8443-exec-2] com.bass.amed.security.TokenProvider     : Expired JWT token.
-2018-10-12 15:29:26.224  INFO 6052 --- [http-nio-8443-exec-5] com.bass.amed.security.TokenProvider     : Expired JWT token.
-2018-10-12 15:29:26.252 DEBUG 6052 --- [http-nio-8443-exec-2] c.b.a.c.rest.AdministrationController    : Retrieve all active substances
-2018-10-12 15:29:26.253 DEBUG 6052 --- [http-nio-8443-exec-6] c.b.a.c.rest.AdministrationController    : Retrieve all pharmaceutical form types
-2018-10-12 15:29:26.385 DEBUG 6052 --- [http-nio-8443-exec-5] org.hibernate.SQL                        : select registrati0_.id as id1_69_0_, registrati0_.applicant_id as applican2_69_0_, registrati0_.clinical_trails_id as clinica13_69_0_, registrati0_.company_id as company14_69_0_, registrati0_.current_step as current_3_69_0_, registrati0_.end_date as end_date4_69_0_, registrati0_.import_id as import_i5_69_0_, registrati0_.license_id as license_6_69_0_, registrati0_.medicament_id as medicam15_69_0_, registrati0_.medicament_annihilation_id as medicame7_69_0_, registrati0_.medicament_control_committee_id as medicame8_69_0_, registrati0_.request_number as request_9_69_0_, registrati0_.start_date as start_d10_69_0_, registrati0_.tax_id as tax_id11_69_0_, registrati0_.tax_paid as tax_pai12_69_0_, registrati0_.type_id as type_id16_69_0_, clinicaltr1_.id as id1_2_1_, clinicaltr1_.approval_order as approval2_2_1_, clinicaltr1_.code as code3_2_1_, clinicaltr1_.etic_committee_opinion as etic_com4_2_1_, clinicaltr1_.EudraCT_nr as EudraCT_5_2_1_, clinicaltr1_.medical_institution as medical_6_2_1_, clinicaltr1_.medicament_committee_opinion as medicame7_2_1_, clinicaltr1_.opening_declaration_id as opening_8_2_1_, clinicaltr1_.pharmacovigilance as pharmaco9_2_1_, clinicaltr1_.phase as phase10_2_1_, clinicaltr1_.provenance_id as provena11_2_1_, clinicaltr1_.sponsor as sponsor12_2_1_, clinicaltr1_.status as status13_2_1_, clinicaltr1_.title as title14_2_1_, clinicaltr1_.treatment_id as treatme15_2_1_, clinicaltr1_.trial_population as trial_p16_2_1_, documents2_.CLINICAL_TRAILS_ID as CLINICAL1_72_2_, documentse3_.id as DOCUMENT2_72_2_, documentse3_.id as id1_5_3_, documentse3_.date as date2_5_3_, documentse3_.doc_type_id as doc_type3_5_3_, documentse3_.format as format4_5_3_, documentse3_.name as name5_5_3_, documentse3_.path as path6_5_3_, nmeconomic4_.id as id1_38_4_, nmeconomic4_.can_use_psychotropic_drugs as can_use_2_38_4_, nmeconomic4_.code as code3_38_4_, nmeconomic4_.contract_date as contract4_38_4_, nmeconomic4_.contract_number as contract5_38_4_, nmeconomic4_.director as director6_38_4_, nmeconomic4_.email as email7_38_4_, nmeconomic4_.filiala as filiala8_38_4_, nmeconomic4_.idno as idno9_38_4_, nmeconomic4_.lccm_name as lccm_na10_38_4_, nmeconomic4_.leader as leader11_38_4_, nmeconomic4_.legal_address as legal_a12_38_4_, nmeconomic4_.long_name as long_na13_38_4_, nmeconomic4_.name as name14_38_4_, nmeconomic4_.ocpo_code as ocpo_co15_38_4_, nmeconomic4_.parent_id as parent_16_38_4_, nmeconomic4_.registration_date as registr17_38_4_, nmeconomic4_.registration_number as registr18_38_4_, nmeconomic4_.statut as statut19_38_4_, nmeconomic4_.street as street20_38_4_, nmeconomic4_.tax_code as tax_cod21_38_4_, medicament5_.id as id1_18_5_, medicament5_.active_substance_id as active_s2_18_5_, medicament5_.administering_mode as administ3_18_5_, medicament5_.authorization_holder_id as authoriz4_18_5_, medicament5_.barcode as barcode5_18_5_, medicament5_.code as code6_18_5_, medicament5_.commercial_name as commerci7_18_5_, medicament5_.economic_agent_id as economi25_18_5_, medicament5_.country_id as country_8_18_5_, medicament5_.customs_code as customs_9_18_5_, medicament5_.dose as dose10_18_5_, medicament5_.expiration_date as expirat11_18_5_, medicament5_.group_id as group_i12_18_5_, medicament5_.international_name as interna13_18_5_, medicament5_.manufacture_id as manufac14_18_5_, medicament5_.name as name15_18_5_, medicament5_.pharmaceutical_form_id as pharmac26_18_5_, medicament5_.prescription as prescri16_18_5_, medicament5_.primare_package as primare17_18_5_, medicament5_.product_code as product18_18_5_, medicament5_.quantity as quantit19_18_5_, medicament5_.registration_date as registr20_18_5_, medicament5_.registration_number as registr21_18_5_, medicament5_.serial_nr as serial_22_18_5_, medicament5_.status as status23_18_5_, medicament5_.type_id as type_id24_18_5_, activesubs6_.medicament_id as medicame5_19_6_, activesubs6_.id as id1_19_6_, activesubs6_.id as id1_19_7_, activesubs6_.active_substance_id as active_s3_19_7_, activesubs6_.quantity as quantity2_19_7_, activesubs6_.units_of_measurement_id as units_of4_19_7_, nmeconomic7_.id as id1_38_8_, nmeconomic7_.can_use_psychotropic_drugs as can_use_2_38_8_, nmeconomic7_.code as code3_38_8_, nmeconomic7_.contract_date as contract4_38_8_, nmeconomic7_.contract_number as contract5_38_8_, nmeconomic7_.director as director6_38_8_, nmeconomic7_.email as email7_38_8_, nmeconomic7_.filiala as filiala8_38_8_, nmeconomic7_.idno as idno9_38_8_, nmeconomic7_.lccm_name as lccm_na10_38_8_, nmeconomic7_.leader as leader11_38_8_, nmeconomic7_.legal_address as legal_a12_38_8_, nmeconomic7_.long_name as long_na13_38_8_, nmeconomic7_.name as name14_38_8_, nmeconomic7_.ocpo_code as ocpo_co15_38_8_, nmeconomic7_.parent_id as parent_16_38_8_, nmeconomic7_.registration_date as registr17_38_8_, nmeconomic7_.registration_number as registr18_38_8_, nmeconomic7_.statut as statut19_38_8_, nmeconomic7_.street as street20_38_8_, nmeconomic7_.tax_code as tax_cod21_38_8_, documents8_.MEDICAMENT_ID as MEDICAME1_75_9_, documentse9_.id as DOCUMENT2_75_9_, documentse9_.id as id1_5_10_, documentse9_.date as date2_5_10_, documentse9_.doc_type_id as doc_type3_5_10_, documentse9_.format as format4_5_10_, documentse9_.name as name5_5_10_, documentse9_.path as path6_5_10_, nmpharmace10_.id as id1_52_11_, nmpharmace10_.code as code2_52_11_, nmpharmace10_.description as descript3_52_11_, nmpharmace10_.type_id as type_id4_52_11_, requesthis11_.registration_request_id as registra3_68_12_, requesthis11_.id as id1_68_12_, requesthis11_.id as id1_68_13_, requesthis11_.end_date as end_date2_68_13_, requesthis11_.registration_request_id as registra3_68_13_, requesthis11_.start_date as start_da4_68_13_, requesthis11_.step as step5_68_13_, requesthis11_.username as username6_68_13_, requesttyp12_.id as id1_70_14_, requesttyp12_.description as descript2_70_14_ from registration_requests registrati0_ left outer join clinical_trials clinicaltr1_ on registrati0_.clinical_trails_id=clinicaltr1_.id left outer join CLINICAL_TRAILS_DOCUMENTS documents2_ on clinicaltr1_.id=documents2_.CLINICAL_TRAILS_ID left outer join documents documentse3_ on documents2_.DOCUMENT_ID=documentse3_.id left outer join nm_economic_agents nmeconomic4_ on registrati0_.company_id=nmeconomic4_.id left outer join medicament medicament5_ on registrati0_.medicament_id=medicament5_.id left outer join medicament_active_substances activesubs6_ on medicament5_.id=activesubs6_.medicament_id left outer join nm_economic_agents nmeconomic7_ on medicament5_.economic_agent_id=nmeconomic7_.id left outer join MEDICAMENT_DOCUMENTS documents8_ on medicament5_.id=documents8_.MEDICAMENT_ID left outer join documents documentse9_ on documents8_.DOCUMENT_ID=documentse9_.id left outer join nm_pharmaceutical_forms nmpharmace10_ on medicament5_.pharmaceutical_form_id=nmpharmace10_.id left outer join registration_request_history requesthis11_ on registrati0_.id=requesthis11_.registration_request_id left outer join request_types requesttyp12_ on registrati0_.type_id=requesttyp12_.id where registrati0_.id=?
-2018-10-12 15:29:26.390 DEBUG 6052 --- [http-nio-8443-exec-2] org.hibernate.SQL                        : select nmactivesu0_.id as id1_22_, nmactivesu0_.code as code2_22_, nmactivesu0_.description as descript3_22_, nmactivesu0_.manufacture_id as manufact4_22_, nmactivesu0_.quantity as quantity5_22_ from nm_active_substances nmactivesu0_
-2018-10-12 15:29:26.390 DEBUG 6052 --- [http-nio-8443-exec-6] org.hibernate.SQL                        : select nmpharmace0_.id as id1_51_, nmpharmace0_.description as descript2_51_ from nm_pharmaceutical_form_types nmpharmace0_
-2018-10-12 15:29:26.392 TRACE 6052 --- [http-nio-8443-exec-2] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_22_] : [INTEGER]) - [1]
-2018-10-12 15:29:26.393 TRACE 6052 --- [http-nio-8443-exec-6] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_51_] : [INTEGER]) - [1]
-2018-10-12 15:29:26.394 TRACE 6052 --- [http-nio-8443-exec-2] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([code2_22_] : [VARCHAR]) - [000001577]
-2018-10-12 15:29:26.394 TRACE 6052 --- [http-nio-8443-exec-6] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([descript2_51_] : [VARCHAR]) - [Implanturi]
-2018-10-12 15:29:26.394 TRACE 6052 --- [http-nio-8443-exec-2] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([descript3_22_] : [VARCHAR]) - [acetat de deximelazona]
-2018-10-12 15:29:26.395 TRACE 6052 --- [http-nio-8443-exec-2] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([manufact4_22_] : [INTEGER]) - [1]
-2018-10-12 15:29:26.395 TRACE 6052 --- [http-nio-8443-exec-6] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_51_] : [INTEGER]) - [2]
-2018-10-12 15:29:26.395 TRACE 6052 --- [http-nio-8443-exec-6] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([descript2_51_] : [VARCHAR]) - [Preparate auriculare]
-2018-10-12 15:29:26.395 TRACE 6052 --- [http-nio-8443-exec-6] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_51_] : [INTEGER]) - [3]
-2018-10-12 15:29:26.395 TRACE 6052 --- [http-nio-8443-exec-6] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([descript2_51_] : [VARCHAR]) - [Preparate bucofaringiene]
-2018-10-12 15:29:26.397 TRACE 6052 --- [http-nio-8443-exec-5] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [INTEGER] - [100]
-2018-10-12 15:29:26.401 TRACE 6052 --- [http-nio-8443-exec-2] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([quantity5_22_] : [DOUBLE]) - [null]
-2018-10-12 15:29:26.402 TRACE 6052 --- [http-nio-8443-exec-2] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_22_] : [INTEGER]) - [2]
-2018-10-12 15:29:26.402 TRACE 6052 --- [http-nio-8443-exec-2] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([code2_22_] : [VARCHAR]) - [000001837]
-2018-10-12 15:29:26.402 TRACE 6052 --- [http-nio-8443-exec-2] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([descript3_22_] : [VARCHAR]) - [abacavir]
-2018-10-12 15:29:26.402 TRACE 6052 --- [http-nio-8443-exec-2] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([manufact4_22_] : [INTEGER]) - [1]
-2018-10-12 15:29:26.402 TRACE 6052 --- [http-nio-8443-exec-2] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([quantity5_22_] : [DOUBLE]) - [null]
-2018-10-12 15:29:26.416  WARN 6052 --- [http-nio-8443-exec-5] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 1054, SQLState: 42S22
-2018-10-12 15:29:26.417 ERROR 6052 --- [http-nio-8443-exec-5] o.h.engine.jdbc.spi.SqlExceptionHelper   : Unknown column 'registrati0_.applicant_id' in 'field list'
-2018-10-12 15:29:26.586 ERROR 6052 --- [http-nio-8443-exec-5] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is javax.persistence.PersistenceException: org.hibernate.exception.SQLGrammarException: could not extract ResultSet] with root cause
-
-com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Unknown column 'registrati0_.applicant_id' in 'field list'
-	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[na:1.8.0_144]
-	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) ~[na:1.8.0_144]
-	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[na:1.8.0_144]
-	at java.lang.reflect.Constructor.newInstance(Constructor.java:423) ~[na:1.8.0_144]
-	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.Util.getInstance(Util.java:408) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2486) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1858) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.PreparedStatement.executeQuery(PreparedStatement.java:1966) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeQuery(ProxyPreparedStatement.java:52) ~[HikariCP-2.7.9.jar:na]
-	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeQuery(HikariProxyPreparedStatement.java) ~[HikariCP-2.7.9.jar:na]
-	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.extract(ResultSetReturnImpl.java:60) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.getResultSet(AbstractLoadPlanBasedLoader.java:419) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.executeQueryStatement(AbstractLoadPlanBasedLoader.java:191) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.executeLoad(AbstractLoadPlanBasedLoader.java:121) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.executeLoad(AbstractLoadPlanBasedLoader.java:86) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.loader.entity.plan.AbstractLoadPlanBasedEntityLoader.load(AbstractLoadPlanBasedEntityLoader.java:167) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.persister.entity.AbstractEntityPersister.load(AbstractEntityPersister.java:4121) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.loadFromDatasource(DefaultLoadEventListener.java:508) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.doLoad(DefaultLoadEventListener.java:478) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.load(DefaultLoadEventListener.java:219) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.proxyOrLoad(DefaultLoadEventListener.java:278) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.doOnLoad(DefaultLoadEventListener.java:121) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.onLoad(DefaultLoadEventListener.java:89) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl.fireLoad(SessionImpl.java:1240) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl.access$1900(SessionImpl.java:204) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl$IdentifierLoadAccessImpl.doLoad(SessionImpl.java:2842) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl$IdentifierLoadAccessImpl.load(SessionImpl.java:2816) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl.find(SessionImpl.java:3445) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl.find(SessionImpl.java:3414) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_144]
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_144]
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_144]
-	at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_144]
-	at org.springframework.orm.jpa.ExtendedEntityManagerCreator$ExtendedEntityManagerInvocationHandler.invoke(ExtendedEntityManagerCreator.java:350) ~[spring-orm-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at com.sun.proxy.$Proxy94.find(Unknown Source) ~[na:na]
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_144]
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_144]
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_144]
-	at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_144]
-	at org.springframework.orm.jpa.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler.invoke(SharedEntityManagerCreator.java:305) ~[spring-orm-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at com.sun.proxy.$Proxy94.find(Unknown Source) ~[na:na]
-	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.findById(SimpleJpaRepository.java:235) ~[spring-data-jpa-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_144]
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_144]
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_144]
-	at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_144]
-	at org.springframework.data.repository.core.support.RepositoryComposition$RepositoryFragments.invoke(RepositoryComposition.java:377) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.data.repository.core.support.RepositoryComposition.invoke(RepositoryComposition.java:200) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.data.repository.core.support.RepositoryFactorySupport$ImplementationMethodExecutionInterceptor.invoke(RepositoryFactorySupport.java:629) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.data.repository.core.support.RepositoryFactorySupport$QueryExecutorMethodInterceptor.doInvoke(RepositoryFactorySupport.java:593) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.data.repository.core.support.RepositoryFactorySupport$QueryExecutorMethodInterceptor.invoke(RepositoryFactorySupport.java:578) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:59) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:294) ~[spring-tx-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:98) ~[spring-tx-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:139) ~[spring-tx-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:135) ~[spring-data-jpa-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:92) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.data.repository.core.support.SurroundingTransactionDetectorMethodInterceptor.invoke(SurroundingTransactionDetectorMethodInterceptor.java:61) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:212) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at com.sun.proxy.$Proxy115.findById(Unknown Source) ~[na:na]
-	at com.bass.amed.controller.rest.RequestController.getMedicamentRequestById(RequestController.java:35) ~[classes/:na]
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_144]
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_144]
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_144]
-	at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_144]
-	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:209) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:136) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:102) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:877) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:783) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:991) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:925) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:974) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:866) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:635) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:851) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:742) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52) ~[tomcat-embed-websocket-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at com.bass.amed.security.CustomHeaderFilter.doFilter(CustomHeaderFilter.java:29) ~[classes/:na]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:320) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:127) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:91) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:119) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:137) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:111) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:170) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at com.bass.amed.security.JWTFilter.doFilter(JWTFilter.java:35) ~[classes/:na]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:116) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:66) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:105) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:56) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:215) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:178) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:357) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:270) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.web.filter.HttpPutFormContentFilter.doFilterInternal(HttpPutFormContentFilter.java:109) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:93) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:200) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:198) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:496) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:140) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:81) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:342) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:803) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:790) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1468) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149) [na:1.8.0_144]
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624) [na:1.8.0_144]
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at java.lang.Thread.run(Thread.java:748) [na:1.8.0_144]
-
-2018-10-12 15:29:26.616  INFO 6052 --- [http-nio-8443-exec-5] com.bass.amed.security.TokenProvider     : Expired JWT token.
-2018-10-12 15:29:33.581  INFO 6052 --- [http-nio-8443-exec-8] com.bass.amed.security.TokenProvider     : Expired JWT token.
-2018-10-12 15:29:33.582 DEBUG 6052 --- [http-nio-8443-exec-8] c.b.a.c.rest.AdministrationController    : Retrieve all pharmaceutical form types
-2018-10-12 15:29:33.584  INFO 6052 --- [http-nio-8443-exec-9] com.bass.amed.security.TokenProvider     : Expired JWT token.
-2018-10-12 15:29:33.585 DEBUG 6052 --- [http-nio-8443-exec-8] org.hibernate.SQL                        : select nmpharmace0_.id as id1_51_, nmpharmace0_.description as descript2_51_ from nm_pharmaceutical_form_types nmpharmace0_
-2018-10-12 15:29:33.585 TRACE 6052 --- [http-nio-8443-exec-8] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_51_] : [INTEGER]) - [1]
-2018-10-12 15:29:33.585 TRACE 6052 --- [http-nio-8443-exec-8] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([descript2_51_] : [VARCHAR]) - [Implanturi]
-2018-10-12 15:29:33.585 TRACE 6052 --- [http-nio-8443-exec-8] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_51_] : [INTEGER]) - [2]
-2018-10-12 15:29:33.585 DEBUG 6052 --- [http-nio-8443-exec-9] c.b.a.c.rest.AdministrationController    : Retrieve all active substances
-2018-10-12 15:29:33.586 TRACE 6052 --- [http-nio-8443-exec-8] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([descript2_51_] : [VARCHAR]) - [Preparate auriculare]
-2018-10-12 15:29:33.587 TRACE 6052 --- [http-nio-8443-exec-8] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_51_] : [INTEGER]) - [3]
-2018-10-12 15:29:33.587 TRACE 6052 --- [http-nio-8443-exec-8] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([descript2_51_] : [VARCHAR]) - [Preparate bucofaringiene]
-2018-10-12 15:29:33.588 DEBUG 6052 --- [http-nio-8443-exec-9] org.hibernate.SQL                        : select nmactivesu0_.id as id1_22_, nmactivesu0_.code as code2_22_, nmactivesu0_.description as descript3_22_, nmactivesu0_.manufacture_id as manufact4_22_, nmactivesu0_.quantity as quantity5_22_ from nm_active_substances nmactivesu0_
-2018-10-12 15:29:33.589 TRACE 6052 --- [http-nio-8443-exec-9] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_22_] : [INTEGER]) - [1]
-2018-10-12 15:29:33.589 TRACE 6052 --- [http-nio-8443-exec-9] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([code2_22_] : [VARCHAR]) - [000001577]
-2018-10-12 15:29:33.589 TRACE 6052 --- [http-nio-8443-exec-9] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([descript3_22_] : [VARCHAR]) - [acetat de deximelazona]
-2018-10-12 15:29:33.590 TRACE 6052 --- [http-nio-8443-exec-9] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([manufact4_22_] : [INTEGER]) - [1]
-2018-10-12 15:29:33.590 TRACE 6052 --- [http-nio-8443-exec-9] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([quantity5_22_] : [DOUBLE]) - [null]
-2018-10-12 15:29:33.590 TRACE 6052 --- [http-nio-8443-exec-9] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_22_] : [INTEGER]) - [2]
-2018-10-12 15:29:33.590 TRACE 6052 --- [http-nio-8443-exec-9] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([code2_22_] : [VARCHAR]) - [000001837]
-2018-10-12 15:29:33.590 TRACE 6052 --- [http-nio-8443-exec-9] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([descript3_22_] : [VARCHAR]) - [abacavir]
-2018-10-12 15:29:33.590 TRACE 6052 --- [http-nio-8443-exec-9] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([manufact4_22_] : [INTEGER]) - [1]
-2018-10-12 15:29:33.590 TRACE 6052 --- [http-nio-8443-exec-9] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([quantity5_22_] : [DOUBLE]) - [null]
-2018-10-12 15:29:33.721  INFO 6052 --- [http-nio-8443-exec-10] com.bass.amed.security.TokenProvider     : Expired JWT token.
-2018-10-12 15:29:33.726 DEBUG 6052 --- [http-nio-8443-exec-10] org.hibernate.SQL                        : select registrati0_.id as id1_69_0_, registrati0_.applicant_id as applican2_69_0_, registrati0_.clinical_trails_id as clinica13_69_0_, registrati0_.company_id as company14_69_0_, registrati0_.current_step as current_3_69_0_, registrati0_.end_date as end_date4_69_0_, registrati0_.import_id as import_i5_69_0_, registrati0_.license_id as license_6_69_0_, registrati0_.medicament_id as medicam15_69_0_, registrati0_.medicament_annihilation_id as medicame7_69_0_, registrati0_.medicament_control_committee_id as medicame8_69_0_, registrati0_.request_number as request_9_69_0_, registrati0_.start_date as start_d10_69_0_, registrati0_.tax_id as tax_id11_69_0_, registrati0_.tax_paid as tax_pai12_69_0_, registrati0_.type_id as type_id16_69_0_, clinicaltr1_.id as id1_2_1_, clinicaltr1_.approval_order as approval2_2_1_, clinicaltr1_.code as code3_2_1_, clinicaltr1_.etic_committee_opinion as etic_com4_2_1_, clinicaltr1_.EudraCT_nr as EudraCT_5_2_1_, clinicaltr1_.medical_institution as medical_6_2_1_, clinicaltr1_.medicament_committee_opinion as medicame7_2_1_, clinicaltr1_.opening_declaration_id as opening_8_2_1_, clinicaltr1_.pharmacovigilance as pharmaco9_2_1_, clinicaltr1_.phase as phase10_2_1_, clinicaltr1_.provenance_id as provena11_2_1_, clinicaltr1_.sponsor as sponsor12_2_1_, clinicaltr1_.status as status13_2_1_, clinicaltr1_.title as title14_2_1_, clinicaltr1_.treatment_id as treatme15_2_1_, clinicaltr1_.trial_population as trial_p16_2_1_, documents2_.CLINICAL_TRAILS_ID as CLINICAL1_72_2_, documentse3_.id as DOCUMENT2_72_2_, documentse3_.id as id1_5_3_, documentse3_.date as date2_5_3_, documentse3_.doc_type_id as doc_type3_5_3_, documentse3_.format as format4_5_3_, documentse3_.name as name5_5_3_, documentse3_.path as path6_5_3_, nmeconomic4_.id as id1_38_4_, nmeconomic4_.can_use_psychotropic_drugs as can_use_2_38_4_, nmeconomic4_.code as code3_38_4_, nmeconomic4_.contract_date as contract4_38_4_, nmeconomic4_.contract_number as contract5_38_4_, nmeconomic4_.director as director6_38_4_, nmeconomic4_.email as email7_38_4_, nmeconomic4_.filiala as filiala8_38_4_, nmeconomic4_.idno as idno9_38_4_, nmeconomic4_.lccm_name as lccm_na10_38_4_, nmeconomic4_.leader as leader11_38_4_, nmeconomic4_.legal_address as legal_a12_38_4_, nmeconomic4_.long_name as long_na13_38_4_, nmeconomic4_.name as name14_38_4_, nmeconomic4_.ocpo_code as ocpo_co15_38_4_, nmeconomic4_.parent_id as parent_16_38_4_, nmeconomic4_.registration_date as registr17_38_4_, nmeconomic4_.registration_number as registr18_38_4_, nmeconomic4_.statut as statut19_38_4_, nmeconomic4_.street as street20_38_4_, nmeconomic4_.tax_code as tax_cod21_38_4_, medicament5_.id as id1_18_5_, medicament5_.active_substance_id as active_s2_18_5_, medicament5_.administering_mode as administ3_18_5_, medicament5_.authorization_holder_id as authoriz4_18_5_, medicament5_.barcode as barcode5_18_5_, medicament5_.code as code6_18_5_, medicament5_.commercial_name as commerci7_18_5_, medicament5_.economic_agent_id as economi25_18_5_, medicament5_.country_id as country_8_18_5_, medicament5_.customs_code as customs_9_18_5_, medicament5_.dose as dose10_18_5_, medicament5_.expiration_date as expirat11_18_5_, medicament5_.group_id as group_i12_18_5_, medicament5_.international_name as interna13_18_5_, medicament5_.manufacture_id as manufac14_18_5_, medicament5_.name as name15_18_5_, medicament5_.pharmaceutical_form_id as pharmac26_18_5_, medicament5_.prescription as prescri16_18_5_, medicament5_.primare_package as primare17_18_5_, medicament5_.product_code as product18_18_5_, medicament5_.quantity as quantit19_18_5_, medicament5_.registration_date as registr20_18_5_, medicament5_.registration_number as registr21_18_5_, medicament5_.serial_nr as serial_22_18_5_, medicament5_.status as status23_18_5_, medicament5_.type_id as type_id24_18_5_, activesubs6_.medicament_id as medicame5_19_6_, activesubs6_.id as id1_19_6_, activesubs6_.id as id1_19_7_, activesubs6_.active_substance_id as active_s3_19_7_, activesubs6_.quantity as quantity2_19_7_, activesubs6_.units_of_measurement_id as units_of4_19_7_, nmeconomic7_.id as id1_38_8_, nmeconomic7_.can_use_psychotropic_drugs as can_use_2_38_8_, nmeconomic7_.code as code3_38_8_, nmeconomic7_.contract_date as contract4_38_8_, nmeconomic7_.contract_number as contract5_38_8_, nmeconomic7_.director as director6_38_8_, nmeconomic7_.email as email7_38_8_, nmeconomic7_.filiala as filiala8_38_8_, nmeconomic7_.idno as idno9_38_8_, nmeconomic7_.lccm_name as lccm_na10_38_8_, nmeconomic7_.leader as leader11_38_8_, nmeconomic7_.legal_address as legal_a12_38_8_, nmeconomic7_.long_name as long_na13_38_8_, nmeconomic7_.name as name14_38_8_, nmeconomic7_.ocpo_code as ocpo_co15_38_8_, nmeconomic7_.parent_id as parent_16_38_8_, nmeconomic7_.registration_date as registr17_38_8_, nmeconomic7_.registration_number as registr18_38_8_, nmeconomic7_.statut as statut19_38_8_, nmeconomic7_.street as street20_38_8_, nmeconomic7_.tax_code as tax_cod21_38_8_, documents8_.MEDICAMENT_ID as MEDICAME1_75_9_, documentse9_.id as DOCUMENT2_75_9_, documentse9_.id as id1_5_10_, documentse9_.date as date2_5_10_, documentse9_.doc_type_id as doc_type3_5_10_, documentse9_.format as format4_5_10_, documentse9_.name as name5_5_10_, documentse9_.path as path6_5_10_, nmpharmace10_.id as id1_52_11_, nmpharmace10_.code as code2_52_11_, nmpharmace10_.description as descript3_52_11_, nmpharmace10_.type_id as type_id4_52_11_, requesthis11_.registration_request_id as registra3_68_12_, requesthis11_.id as id1_68_12_, requesthis11_.id as id1_68_13_, requesthis11_.end_date as end_date2_68_13_, requesthis11_.registration_request_id as registra3_68_13_, requesthis11_.start_date as start_da4_68_13_, requesthis11_.step as step5_68_13_, requesthis11_.username as username6_68_13_, requesttyp12_.id as id1_70_14_, requesttyp12_.description as descript2_70_14_ from registration_requests registrati0_ left outer join clinical_trials clinicaltr1_ on registrati0_.clinical_trails_id=clinicaltr1_.id left outer join CLINICAL_TRAILS_DOCUMENTS documents2_ on clinicaltr1_.id=documents2_.CLINICAL_TRAILS_ID left outer join documents documentse3_ on documents2_.DOCUMENT_ID=documentse3_.id left outer join nm_economic_agents nmeconomic4_ on registrati0_.company_id=nmeconomic4_.id left outer join medicament medicament5_ on registrati0_.medicament_id=medicament5_.id left outer join medicament_active_substances activesubs6_ on medicament5_.id=activesubs6_.medicament_id left outer join nm_economic_agents nmeconomic7_ on medicament5_.economic_agent_id=nmeconomic7_.id left outer join MEDICAMENT_DOCUMENTS documents8_ on medicament5_.id=documents8_.MEDICAMENT_ID left outer join documents documentse9_ on documents8_.DOCUMENT_ID=documentse9_.id left outer join nm_pharmaceutical_forms nmpharmace10_ on medicament5_.pharmaceutical_form_id=nmpharmace10_.id left outer join registration_request_history requesthis11_ on registrati0_.id=requesthis11_.registration_request_id left outer join request_types requesttyp12_ on registrati0_.type_id=requesttyp12_.id where registrati0_.id=?
-2018-10-12 15:29:33.729 TRACE 6052 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [INTEGER] - [200]
-2018-10-12 15:29:33.733  WARN 6052 --- [http-nio-8443-exec-10] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 1054, SQLState: 42S22
-2018-10-12 15:29:33.733 ERROR 6052 --- [http-nio-8443-exec-10] o.h.engine.jdbc.spi.SqlExceptionHelper   : Unknown column 'registrati0_.applicant_id' in 'field list'
-2018-10-12 15:29:33.738 ERROR 6052 --- [http-nio-8443-exec-10] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is javax.persistence.PersistenceException: org.hibernate.exception.SQLGrammarException: could not extract ResultSet] with root cause
-
-com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Unknown column 'registrati0_.applicant_id' in 'field list'
-	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[na:1.8.0_144]
-	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) ~[na:1.8.0_144]
-	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[na:1.8.0_144]
-	at java.lang.reflect.Constructor.newInstance(Constructor.java:423) ~[na:1.8.0_144]
-	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.Util.getInstance(Util.java:408) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2486) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1858) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.PreparedStatement.executeQuery(PreparedStatement.java:1966) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeQuery(ProxyPreparedStatement.java:52) ~[HikariCP-2.7.9.jar:na]
-	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeQuery(HikariProxyPreparedStatement.java) ~[HikariCP-2.7.9.jar:na]
-	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.extract(ResultSetReturnImpl.java:60) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.getResultSet(AbstractLoadPlanBasedLoader.java:419) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.executeQueryStatement(AbstractLoadPlanBasedLoader.java:191) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.executeLoad(AbstractLoadPlanBasedLoader.java:121) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.executeLoad(AbstractLoadPlanBasedLoader.java:86) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.loader.entity.plan.AbstractLoadPlanBasedEntityLoader.load(AbstractLoadPlanBasedEntityLoader.java:167) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.persister.entity.AbstractEntityPersister.load(AbstractEntityPersister.java:4121) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.loadFromDatasource(DefaultLoadEventListener.java:508) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.doLoad(DefaultLoadEventListener.java:478) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.load(DefaultLoadEventListener.java:219) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.proxyOrLoad(DefaultLoadEventListener.java:278) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.doOnLoad(DefaultLoadEventListener.java:121) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.onLoad(DefaultLoadEventListener.java:89) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl.fireLoad(SessionImpl.java:1240) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl.access$1900(SessionImpl.java:204) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl$IdentifierLoadAccessImpl.doLoad(SessionImpl.java:2842) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl$IdentifierLoadAccessImpl.load(SessionImpl.java:2816) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl.find(SessionImpl.java:3445) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl.find(SessionImpl.java:3414) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_144]
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_144]
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_144]
-	at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_144]
-	at org.springframework.orm.jpa.ExtendedEntityManagerCreator$ExtendedEntityManagerInvocationHandler.invoke(ExtendedEntityManagerCreator.java:350) ~[spring-orm-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at com.sun.proxy.$Proxy94.find(Unknown Source) ~[na:na]
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_144]
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_144]
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_144]
-	at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_144]
-	at org.springframework.orm.jpa.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler.invoke(SharedEntityManagerCreator.java:305) ~[spring-orm-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at com.sun.proxy.$Proxy94.find(Unknown Source) ~[na:na]
-	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.findById(SimpleJpaRepository.java:235) ~[spring-data-jpa-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_144]
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_144]
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_144]
-	at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_144]
-	at org.springframework.data.repository.core.support.RepositoryComposition$RepositoryFragments.invoke(RepositoryComposition.java:377) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.data.repository.core.support.RepositoryComposition.invoke(RepositoryComposition.java:200) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.data.repository.core.support.RepositoryFactorySupport$ImplementationMethodExecutionInterceptor.invoke(RepositoryFactorySupport.java:629) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.data.repository.core.support.RepositoryFactorySupport$QueryExecutorMethodInterceptor.doInvoke(RepositoryFactorySupport.java:593) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.data.repository.core.support.RepositoryFactorySupport$QueryExecutorMethodInterceptor.invoke(RepositoryFactorySupport.java:578) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:59) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:294) ~[spring-tx-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:98) ~[spring-tx-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:139) ~[spring-tx-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:135) ~[spring-data-jpa-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:92) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.data.repository.core.support.SurroundingTransactionDetectorMethodInterceptor.invoke(SurroundingTransactionDetectorMethodInterceptor.java:61) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:212) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at com.sun.proxy.$Proxy115.findById(Unknown Source) ~[na:na]
-	at com.bass.amed.controller.rest.RequestController.getMedicamentRequestById(RequestController.java:35) ~[classes/:na]
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_144]
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_144]
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_144]
-	at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_144]
-	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:209) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:136) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:102) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:877) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:783) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:991) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:925) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:974) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:866) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:635) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:851) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:742) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52) ~[tomcat-embed-websocket-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at com.bass.amed.security.CustomHeaderFilter.doFilter(CustomHeaderFilter.java:29) ~[classes/:na]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:320) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:127) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:91) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:119) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:137) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:111) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:170) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at com.bass.amed.security.JWTFilter.doFilter(JWTFilter.java:35) ~[classes/:na]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:116) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:66) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:105) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:56) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:215) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:178) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:357) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:270) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.web.filter.HttpPutFormContentFilter.doFilterInternal(HttpPutFormContentFilter.java:109) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:93) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:200) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:198) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:496) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:140) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:81) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:342) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:803) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:790) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1468) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149) [na:1.8.0_144]
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624) [na:1.8.0_144]
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at java.lang.Thread.run(Thread.java:748) [na:1.8.0_144]
-
-2018-10-12 15:29:33.750  INFO 6052 --- [http-nio-8443-exec-10] com.bass.amed.security.TokenProvider     : Expired JWT token.
-2018-10-12 15:29:46.210  INFO 6052 --- [http-nio-8443-exec-1] com.bass.amed.security.TokenProvider     : Expired JWT token.
-2018-10-12 15:29:46.211  INFO 6052 --- [http-nio-8443-exec-4] com.bass.amed.security.TokenProvider     : Expired JWT token.
-2018-10-12 15:29:46.211 DEBUG 6052 --- [http-nio-8443-exec-4] c.b.a.c.rest.AdministrationController    : Retrieve all active substances
-2018-10-12 15:29:46.211 DEBUG 6052 --- [http-nio-8443-exec-1] c.b.a.c.rest.AdministrationController    : Retrieve all pharmaceutical form types
-2018-10-12 15:29:46.213 DEBUG 6052 --- [http-nio-8443-exec-4] org.hibernate.SQL                        : select nmactivesu0_.id as id1_22_, nmactivesu0_.code as code2_22_, nmactivesu0_.description as descript3_22_, nmactivesu0_.manufacture_id as manufact4_22_, nmactivesu0_.quantity as quantity5_22_ from nm_active_substances nmactivesu0_
-2018-10-12 15:29:46.213 DEBUG 6052 --- [http-nio-8443-exec-1] org.hibernate.SQL                        : select nmpharmace0_.id as id1_51_, nmpharmace0_.description as descript2_51_ from nm_pharmaceutical_form_types nmpharmace0_
-2018-10-12 15:29:46.214 TRACE 6052 --- [http-nio-8443-exec-1] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_51_] : [INTEGER]) - [1]
-2018-10-12 15:29:46.214 TRACE 6052 --- [http-nio-8443-exec-4] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_22_] : [INTEGER]) - [1]
-2018-10-12 15:29:46.214 TRACE 6052 --- [http-nio-8443-exec-1] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([descript2_51_] : [VARCHAR]) - [Implanturi]
-2018-10-12 15:29:46.214 TRACE 6052 --- [http-nio-8443-exec-1] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_51_] : [INTEGER]) - [2]
-2018-10-12 15:29:46.214 TRACE 6052 --- [http-nio-8443-exec-4] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([code2_22_] : [VARCHAR]) - [000001577]
-2018-10-12 15:29:46.214 TRACE 6052 --- [http-nio-8443-exec-4] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([descript3_22_] : [VARCHAR]) - [acetat de deximelazona]
-2018-10-12 15:29:46.214 TRACE 6052 --- [http-nio-8443-exec-1] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([descript2_51_] : [VARCHAR]) - [Preparate auriculare]
-2018-10-12 15:29:46.215 TRACE 6052 --- [http-nio-8443-exec-4] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([manufact4_22_] : [INTEGER]) - [1]
-2018-10-12 15:29:46.215 TRACE 6052 --- [http-nio-8443-exec-1] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_51_] : [INTEGER]) - [3]
-2018-10-12 15:29:46.215 TRACE 6052 --- [http-nio-8443-exec-4] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([quantity5_22_] : [DOUBLE]) - [null]
-2018-10-12 15:29:46.215 TRACE 6052 --- [http-nio-8443-exec-1] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([descript2_51_] : [VARCHAR]) - [Preparate bucofaringiene]
-2018-10-12 15:29:46.215 TRACE 6052 --- [http-nio-8443-exec-4] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_22_] : [INTEGER]) - [2]
-2018-10-12 15:29:46.215 TRACE 6052 --- [http-nio-8443-exec-4] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([code2_22_] : [VARCHAR]) - [000001837]
-2018-10-12 15:29:46.215 TRACE 6052 --- [http-nio-8443-exec-4] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([descript3_22_] : [VARCHAR]) - [abacavir]
-2018-10-12 15:29:46.215 TRACE 6052 --- [http-nio-8443-exec-4] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([manufact4_22_] : [INTEGER]) - [1]
-2018-10-12 15:29:46.215 TRACE 6052 --- [http-nio-8443-exec-4] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([quantity5_22_] : [DOUBLE]) - [null]
-2018-10-12 15:29:46.341  INFO 6052 --- [http-nio-8443-exec-6] com.bass.amed.security.TokenProvider     : Expired JWT token.
-2018-10-12 15:29:46.343 DEBUG 6052 --- [http-nio-8443-exec-6] org.hibernate.SQL                        : select registrati0_.id as id1_69_0_, registrati0_.applicant_id as applican2_69_0_, registrati0_.clinical_trails_id as clinica13_69_0_, registrati0_.company_id as company14_69_0_, registrati0_.current_step as current_3_69_0_, registrati0_.end_date as end_date4_69_0_, registrati0_.import_id as import_i5_69_0_, registrati0_.license_id as license_6_69_0_, registrati0_.medicament_id as medicam15_69_0_, registrati0_.medicament_annihilation_id as medicame7_69_0_, registrati0_.medicament_control_committee_id as medicame8_69_0_, registrati0_.request_number as request_9_69_0_, registrati0_.start_date as start_d10_69_0_, registrati0_.tax_id as tax_id11_69_0_, registrati0_.tax_paid as tax_pai12_69_0_, registrati0_.type_id as type_id16_69_0_, clinicaltr1_.id as id1_2_1_, clinicaltr1_.approval_order as approval2_2_1_, clinicaltr1_.code as code3_2_1_, clinicaltr1_.etic_committee_opinion as etic_com4_2_1_, clinicaltr1_.EudraCT_nr as EudraCT_5_2_1_, clinicaltr1_.medical_institution as medical_6_2_1_, clinicaltr1_.medicament_committee_opinion as medicame7_2_1_, clinicaltr1_.opening_declaration_id as opening_8_2_1_, clinicaltr1_.pharmacovigilance as pharmaco9_2_1_, clinicaltr1_.phase as phase10_2_1_, clinicaltr1_.provenance_id as provena11_2_1_, clinicaltr1_.sponsor as sponsor12_2_1_, clinicaltr1_.status as status13_2_1_, clinicaltr1_.title as title14_2_1_, clinicaltr1_.treatment_id as treatme15_2_1_, clinicaltr1_.trial_population as trial_p16_2_1_, documents2_.CLINICAL_TRAILS_ID as CLINICAL1_72_2_, documentse3_.id as DOCUMENT2_72_2_, documentse3_.id as id1_5_3_, documentse3_.date as date2_5_3_, documentse3_.doc_type_id as doc_type3_5_3_, documentse3_.format as format4_5_3_, documentse3_.name as name5_5_3_, documentse3_.path as path6_5_3_, nmeconomic4_.id as id1_38_4_, nmeconomic4_.can_use_psychotropic_drugs as can_use_2_38_4_, nmeconomic4_.code as code3_38_4_, nmeconomic4_.contract_date as contract4_38_4_, nmeconomic4_.contract_number as contract5_38_4_, nmeconomic4_.director as director6_38_4_, nmeconomic4_.email as email7_38_4_, nmeconomic4_.filiala as filiala8_38_4_, nmeconomic4_.idno as idno9_38_4_, nmeconomic4_.lccm_name as lccm_na10_38_4_, nmeconomic4_.leader as leader11_38_4_, nmeconomic4_.legal_address as legal_a12_38_4_, nmeconomic4_.long_name as long_na13_38_4_, nmeconomic4_.name as name14_38_4_, nmeconomic4_.ocpo_code as ocpo_co15_38_4_, nmeconomic4_.parent_id as parent_16_38_4_, nmeconomic4_.registration_date as registr17_38_4_, nmeconomic4_.registration_number as registr18_38_4_, nmeconomic4_.statut as statut19_38_4_, nmeconomic4_.street as street20_38_4_, nmeconomic4_.tax_code as tax_cod21_38_4_, medicament5_.id as id1_18_5_, medicament5_.active_substance_id as active_s2_18_5_, medicament5_.administering_mode as administ3_18_5_, medicament5_.authorization_holder_id as authoriz4_18_5_, medicament5_.barcode as barcode5_18_5_, medicament5_.code as code6_18_5_, medicament5_.commercial_name as commerci7_18_5_, medicament5_.economic_agent_id as economi25_18_5_, medicament5_.country_id as country_8_18_5_, medicament5_.customs_code as customs_9_18_5_, medicament5_.dose as dose10_18_5_, medicament5_.expiration_date as expirat11_18_5_, medicament5_.group_id as group_i12_18_5_, medicament5_.international_name as interna13_18_5_, medicament5_.manufacture_id as manufac14_18_5_, medicament5_.name as name15_18_5_, medicament5_.pharmaceutical_form_id as pharmac26_18_5_, medicament5_.prescription as prescri16_18_5_, medicament5_.primare_package as primare17_18_5_, medicament5_.product_code as product18_18_5_, medicament5_.quantity as quantit19_18_5_, medicament5_.registration_date as registr20_18_5_, medicament5_.registration_number as registr21_18_5_, medicament5_.serial_nr as serial_22_18_5_, medicament5_.status as status23_18_5_, medicament5_.type_id as type_id24_18_5_, activesubs6_.medicament_id as medicame5_19_6_, activesubs6_.id as id1_19_6_, activesubs6_.id as id1_19_7_, activesubs6_.active_substance_id as active_s3_19_7_, activesubs6_.quantity as quantity2_19_7_, activesubs6_.units_of_measurement_id as units_of4_19_7_, nmeconomic7_.id as id1_38_8_, nmeconomic7_.can_use_psychotropic_drugs as can_use_2_38_8_, nmeconomic7_.code as code3_38_8_, nmeconomic7_.contract_date as contract4_38_8_, nmeconomic7_.contract_number as contract5_38_8_, nmeconomic7_.director as director6_38_8_, nmeconomic7_.email as email7_38_8_, nmeconomic7_.filiala as filiala8_38_8_, nmeconomic7_.idno as idno9_38_8_, nmeconomic7_.lccm_name as lccm_na10_38_8_, nmeconomic7_.leader as leader11_38_8_, nmeconomic7_.legal_address as legal_a12_38_8_, nmeconomic7_.long_name as long_na13_38_8_, nmeconomic7_.name as name14_38_8_, nmeconomic7_.ocpo_code as ocpo_co15_38_8_, nmeconomic7_.parent_id as parent_16_38_8_, nmeconomic7_.registration_date as registr17_38_8_, nmeconomic7_.registration_number as registr18_38_8_, nmeconomic7_.statut as statut19_38_8_, nmeconomic7_.street as street20_38_8_, nmeconomic7_.tax_code as tax_cod21_38_8_, documents8_.MEDICAMENT_ID as MEDICAME1_75_9_, documentse9_.id as DOCUMENT2_75_9_, documentse9_.id as id1_5_10_, documentse9_.date as date2_5_10_, documentse9_.doc_type_id as doc_type3_5_10_, documentse9_.format as format4_5_10_, documentse9_.name as name5_5_10_, documentse9_.path as path6_5_10_, nmpharmace10_.id as id1_52_11_, nmpharmace10_.code as code2_52_11_, nmpharmace10_.description as descript3_52_11_, nmpharmace10_.type_id as type_id4_52_11_, requesthis11_.registration_request_id as registra3_68_12_, requesthis11_.id as id1_68_12_, requesthis11_.id as id1_68_13_, requesthis11_.end_date as end_date2_68_13_, requesthis11_.registration_request_id as registra3_68_13_, requesthis11_.start_date as start_da4_68_13_, requesthis11_.step as step5_68_13_, requesthis11_.username as username6_68_13_, requesttyp12_.id as id1_70_14_, requesttyp12_.description as descript2_70_14_ from registration_requests registrati0_ left outer join clinical_trials clinicaltr1_ on registrati0_.clinical_trails_id=clinicaltr1_.id left outer join CLINICAL_TRAILS_DOCUMENTS documents2_ on clinicaltr1_.id=documents2_.CLINICAL_TRAILS_ID left outer join documents documentse3_ on documents2_.DOCUMENT_ID=documentse3_.id left outer join nm_economic_agents nmeconomic4_ on registrati0_.company_id=nmeconomic4_.id left outer join medicament medicament5_ on registrati0_.medicament_id=medicament5_.id left outer join medicament_active_substances activesubs6_ on medicament5_.id=activesubs6_.medicament_id left outer join nm_economic_agents nmeconomic7_ on medicament5_.economic_agent_id=nmeconomic7_.id left outer join MEDICAMENT_DOCUMENTS documents8_ on medicament5_.id=documents8_.MEDICAMENT_ID left outer join documents documentse9_ on documents8_.DOCUMENT_ID=documentse9_.id left outer join nm_pharmaceutical_forms nmpharmace10_ on medicament5_.pharmaceutical_form_id=nmpharmace10_.id left outer join registration_request_history requesthis11_ on registrati0_.id=requesthis11_.registration_request_id left outer join request_types requesttyp12_ on registrati0_.type_id=requesttyp12_.id where registrati0_.id=?
-2018-10-12 15:29:46.349 TRACE 6052 --- [http-nio-8443-exec-6] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [INTEGER] - [300]
-2018-10-12 15:29:46.351  WARN 6052 --- [http-nio-8443-exec-6] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 1054, SQLState: 42S22
-2018-10-12 15:29:46.351 ERROR 6052 --- [http-nio-8443-exec-6] o.h.engine.jdbc.spi.SqlExceptionHelper   : Unknown column 'registrati0_.applicant_id' in 'field list'
-2018-10-12 15:29:46.356 ERROR 6052 --- [http-nio-8443-exec-6] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is javax.persistence.PersistenceException: org.hibernate.exception.SQLGrammarException: could not extract ResultSet] with root cause
-
-com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Unknown column 'registrati0_.applicant_id' in 'field list'
-	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[na:1.8.0_144]
-	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) ~[na:1.8.0_144]
-	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[na:1.8.0_144]
-	at java.lang.reflect.Constructor.newInstance(Constructor.java:423) ~[na:1.8.0_144]
-	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.Util.getInstance(Util.java:408) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2486) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1858) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.PreparedStatement.executeQuery(PreparedStatement.java:1966) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeQuery(ProxyPreparedStatement.java:52) ~[HikariCP-2.7.9.jar:na]
-	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeQuery(HikariProxyPreparedStatement.java) ~[HikariCP-2.7.9.jar:na]
-	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.extract(ResultSetReturnImpl.java:60) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.getResultSet(AbstractLoadPlanBasedLoader.java:419) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.executeQueryStatement(AbstractLoadPlanBasedLoader.java:191) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.executeLoad(AbstractLoadPlanBasedLoader.java:121) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.executeLoad(AbstractLoadPlanBasedLoader.java:86) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.loader.entity.plan.AbstractLoadPlanBasedEntityLoader.load(AbstractLoadPlanBasedEntityLoader.java:167) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.persister.entity.AbstractEntityPersister.load(AbstractEntityPersister.java:4121) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.loadFromDatasource(DefaultLoadEventListener.java:508) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.doLoad(DefaultLoadEventListener.java:478) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.load(DefaultLoadEventListener.java:219) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.proxyOrLoad(DefaultLoadEventListener.java:278) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.doOnLoad(DefaultLoadEventListener.java:121) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.onLoad(DefaultLoadEventListener.java:89) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl.fireLoad(SessionImpl.java:1240) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl.access$1900(SessionImpl.java:204) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl$IdentifierLoadAccessImpl.doLoad(SessionImpl.java:2842) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl$IdentifierLoadAccessImpl.load(SessionImpl.java:2816) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl.find(SessionImpl.java:3445) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl.find(SessionImpl.java:3414) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_144]
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_144]
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_144]
-	at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_144]
-	at org.springframework.orm.jpa.ExtendedEntityManagerCreator$ExtendedEntityManagerInvocationHandler.invoke(ExtendedEntityManagerCreator.java:350) ~[spring-orm-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at com.sun.proxy.$Proxy94.find(Unknown Source) ~[na:na]
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_144]
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_144]
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_144]
-	at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_144]
-	at org.springframework.orm.jpa.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler.invoke(SharedEntityManagerCreator.java:305) ~[spring-orm-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at com.sun.proxy.$Proxy94.find(Unknown Source) ~[na:na]
-	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.findById(SimpleJpaRepository.java:235) ~[spring-data-jpa-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_144]
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_144]
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_144]
-	at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_144]
-	at org.springframework.data.repository.core.support.RepositoryComposition$RepositoryFragments.invoke(RepositoryComposition.java:377) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.data.repository.core.support.RepositoryComposition.invoke(RepositoryComposition.java:200) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.data.repository.core.support.RepositoryFactorySupport$ImplementationMethodExecutionInterceptor.invoke(RepositoryFactorySupport.java:629) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.data.repository.core.support.RepositoryFactorySupport$QueryExecutorMethodInterceptor.doInvoke(RepositoryFactorySupport.java:593) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.data.repository.core.support.RepositoryFactorySupport$QueryExecutorMethodInterceptor.invoke(RepositoryFactorySupport.java:578) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:59) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:294) ~[spring-tx-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:98) ~[spring-tx-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:139) ~[spring-tx-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:135) ~[spring-data-jpa-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:92) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.data.repository.core.support.SurroundingTransactionDetectorMethodInterceptor.invoke(SurroundingTransactionDetectorMethodInterceptor.java:61) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:212) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at com.sun.proxy.$Proxy115.findById(Unknown Source) ~[na:na]
-	at com.bass.amed.controller.rest.RequestController.getMedicamentRequestById(RequestController.java:35) ~[classes/:na]
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_144]
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_144]
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_144]
-	at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_144]
-	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:209) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:136) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:102) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:877) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:783) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:991) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:925) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:974) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:866) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:635) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:851) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:742) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52) ~[tomcat-embed-websocket-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at com.bass.amed.security.CustomHeaderFilter.doFilter(CustomHeaderFilter.java:29) ~[classes/:na]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:320) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:127) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:91) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:119) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:137) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:111) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:170) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at com.bass.amed.security.JWTFilter.doFilter(JWTFilter.java:35) ~[classes/:na]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:116) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:66) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:105) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:56) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:215) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:178) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:357) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:270) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.web.filter.HttpPutFormContentFilter.doFilterInternal(HttpPutFormContentFilter.java:109) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:93) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:200) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:198) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:496) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:140) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:81) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:342) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:803) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:790) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1468) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149) [na:1.8.0_144]
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624) [na:1.8.0_144]
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at java.lang.Thread.run(Thread.java:748) [na:1.8.0_144]
-
-2018-10-12 15:29:46.378  INFO 6052 --- [http-nio-8443-exec-6] com.bass.amed.security.TokenProvider     : Expired JWT token.
-2018-10-12 15:30:03.067  INFO 6052 --- [http-nio-8443-exec-5] com.bass.amed.security.TokenProvider     : Expired JWT token.
-2018-10-12 15:30:03.068  INFO 6052 --- [http-nio-8443-exec-7] com.bass.amed.security.TokenProvider     : Expired JWT token.
-2018-10-12 15:30:03.067  INFO 6052 --- [http-nio-8443-exec-2] com.bass.amed.security.TokenProvider     : Expired JWT token.
-2018-10-12 15:30:03.069 DEBUG 6052 --- [http-nio-8443-exec-5] c.b.a.c.rest.AdministrationController    : Retrieve all pharmaceutical form types
-2018-10-12 15:30:03.069 DEBUG 6052 --- [http-nio-8443-exec-7] c.b.a.c.rest.AdministrationController    : Retrieve all active substances
-2018-10-12 15:30:03.070 DEBUG 6052 --- [http-nio-8443-exec-7] org.hibernate.SQL                        : select nmactivesu0_.id as id1_22_, nmactivesu0_.code as code2_22_, nmactivesu0_.description as descript3_22_, nmactivesu0_.manufacture_id as manufact4_22_, nmactivesu0_.quantity as quantity5_22_ from nm_active_substances nmactivesu0_
-2018-10-12 15:30:03.071 DEBUG 6052 --- [http-nio-8443-exec-5] org.hibernate.SQL                        : select nmpharmace0_.id as id1_51_, nmpharmace0_.description as descript2_51_ from nm_pharmaceutical_form_types nmpharmace0_
-2018-10-12 15:30:03.070 DEBUG 6052 --- [http-nio-8443-exec-2] org.hibernate.SQL                        : select registrati0_.id as id1_69_0_, registrati0_.applicant_id as applican2_69_0_, registrati0_.clinical_trails_id as clinica13_69_0_, registrati0_.company_id as company14_69_0_, registrati0_.current_step as current_3_69_0_, registrati0_.end_date as end_date4_69_0_, registrati0_.import_id as import_i5_69_0_, registrati0_.license_id as license_6_69_0_, registrati0_.medicament_id as medicam15_69_0_, registrati0_.medicament_annihilation_id as medicame7_69_0_, registrati0_.medicament_control_committee_id as medicame8_69_0_, registrati0_.request_number as request_9_69_0_, registrati0_.start_date as start_d10_69_0_, registrati0_.tax_id as tax_id11_69_0_, registrati0_.tax_paid as tax_pai12_69_0_, registrati0_.type_id as type_id16_69_0_, clinicaltr1_.id as id1_2_1_, clinicaltr1_.approval_order as approval2_2_1_, clinicaltr1_.code as code3_2_1_, clinicaltr1_.etic_committee_opinion as etic_com4_2_1_, clinicaltr1_.EudraCT_nr as EudraCT_5_2_1_, clinicaltr1_.medical_institution as medical_6_2_1_, clinicaltr1_.medicament_committee_opinion as medicame7_2_1_, clinicaltr1_.opening_declaration_id as opening_8_2_1_, clinicaltr1_.pharmacovigilance as pharmaco9_2_1_, clinicaltr1_.phase as phase10_2_1_, clinicaltr1_.provenance_id as provena11_2_1_, clinicaltr1_.sponsor as sponsor12_2_1_, clinicaltr1_.status as status13_2_1_, clinicaltr1_.title as title14_2_1_, clinicaltr1_.treatment_id as treatme15_2_1_, clinicaltr1_.trial_population as trial_p16_2_1_, documents2_.CLINICAL_TRAILS_ID as CLINICAL1_72_2_, documentse3_.id as DOCUMENT2_72_2_, documentse3_.id as id1_5_3_, documentse3_.date as date2_5_3_, documentse3_.doc_type_id as doc_type3_5_3_, documentse3_.format as format4_5_3_, documentse3_.name as name5_5_3_, documentse3_.path as path6_5_3_, nmeconomic4_.id as id1_38_4_, nmeconomic4_.can_use_psychotropic_drugs as can_use_2_38_4_, nmeconomic4_.code as code3_38_4_, nmeconomic4_.contract_date as contract4_38_4_, nmeconomic4_.contract_number as contract5_38_4_, nmeconomic4_.director as director6_38_4_, nmeconomic4_.email as email7_38_4_, nmeconomic4_.filiala as filiala8_38_4_, nmeconomic4_.idno as idno9_38_4_, nmeconomic4_.lccm_name as lccm_na10_38_4_, nmeconomic4_.leader as leader11_38_4_, nmeconomic4_.legal_address as legal_a12_38_4_, nmeconomic4_.long_name as long_na13_38_4_, nmeconomic4_.name as name14_38_4_, nmeconomic4_.ocpo_code as ocpo_co15_38_4_, nmeconomic4_.parent_id as parent_16_38_4_, nmeconomic4_.registration_date as registr17_38_4_, nmeconomic4_.registration_number as registr18_38_4_, nmeconomic4_.statut as statut19_38_4_, nmeconomic4_.street as street20_38_4_, nmeconomic4_.tax_code as tax_cod21_38_4_, medicament5_.id as id1_18_5_, medicament5_.active_substance_id as active_s2_18_5_, medicament5_.administering_mode as administ3_18_5_, medicament5_.authorization_holder_id as authoriz4_18_5_, medicament5_.barcode as barcode5_18_5_, medicament5_.code as code6_18_5_, medicament5_.commercial_name as commerci7_18_5_, medicament5_.economic_agent_id as economi25_18_5_, medicament5_.country_id as country_8_18_5_, medicament5_.customs_code as customs_9_18_5_, medicament5_.dose as dose10_18_5_, medicament5_.expiration_date as expirat11_18_5_, medicament5_.group_id as group_i12_18_5_, medicament5_.international_name as interna13_18_5_, medicament5_.manufacture_id as manufac14_18_5_, medicament5_.name as name15_18_5_, medicament5_.pharmaceutical_form_id as pharmac26_18_5_, medicament5_.prescription as prescri16_18_5_, medicament5_.primare_package as primare17_18_5_, medicament5_.product_code as product18_18_5_, medicament5_.quantity as quantit19_18_5_, medicament5_.registration_date as registr20_18_5_, medicament5_.registration_number as registr21_18_5_, medicament5_.serial_nr as serial_22_18_5_, medicament5_.status as status23_18_5_, medicament5_.type_id as type_id24_18_5_, activesubs6_.medicament_id as medicame5_19_6_, activesubs6_.id as id1_19_6_, activesubs6_.id as id1_19_7_, activesubs6_.active_substance_id as active_s3_19_7_, activesubs6_.quantity as quantity2_19_7_, activesubs6_.units_of_measurement_id as units_of4_19_7_, nmeconomic7_.id as id1_38_8_, nmeconomic7_.can_use_psychotropic_drugs as can_use_2_38_8_, nmeconomic7_.code as code3_38_8_, nmeconomic7_.contract_date as contract4_38_8_, nmeconomic7_.contract_number as contract5_38_8_, nmeconomic7_.director as director6_38_8_, nmeconomic7_.email as email7_38_8_, nmeconomic7_.filiala as filiala8_38_8_, nmeconomic7_.idno as idno9_38_8_, nmeconomic7_.lccm_name as lccm_na10_38_8_, nmeconomic7_.leader as leader11_38_8_, nmeconomic7_.legal_address as legal_a12_38_8_, nmeconomic7_.long_name as long_na13_38_8_, nmeconomic7_.name as name14_38_8_, nmeconomic7_.ocpo_code as ocpo_co15_38_8_, nmeconomic7_.parent_id as parent_16_38_8_, nmeconomic7_.registration_date as registr17_38_8_, nmeconomic7_.registration_number as registr18_38_8_, nmeconomic7_.statut as statut19_38_8_, nmeconomic7_.street as street20_38_8_, nmeconomic7_.tax_code as tax_cod21_38_8_, documents8_.MEDICAMENT_ID as MEDICAME1_75_9_, documentse9_.id as DOCUMENT2_75_9_, documentse9_.id as id1_5_10_, documentse9_.date as date2_5_10_, documentse9_.doc_type_id as doc_type3_5_10_, documentse9_.format as format4_5_10_, documentse9_.name as name5_5_10_, documentse9_.path as path6_5_10_, nmpharmace10_.id as id1_52_11_, nmpharmace10_.code as code2_52_11_, nmpharmace10_.description as descript3_52_11_, nmpharmace10_.type_id as type_id4_52_11_, requesthis11_.registration_request_id as registra3_68_12_, requesthis11_.id as id1_68_12_, requesthis11_.id as id1_68_13_, requesthis11_.end_date as end_date2_68_13_, requesthis11_.registration_request_id as registra3_68_13_, requesthis11_.start_date as start_da4_68_13_, requesthis11_.step as step5_68_13_, requesthis11_.username as username6_68_13_, requesttyp12_.id as id1_70_14_, requesttyp12_.description as descript2_70_14_ from registration_requests registrati0_ left outer join clinical_trials clinicaltr1_ on registrati0_.clinical_trails_id=clinicaltr1_.id left outer join CLINICAL_TRAILS_DOCUMENTS documents2_ on clinicaltr1_.id=documents2_.CLINICAL_TRAILS_ID left outer join documents documentse3_ on documents2_.DOCUMENT_ID=documentse3_.id left outer join nm_economic_agents nmeconomic4_ on registrati0_.company_id=nmeconomic4_.id left outer join medicament medicament5_ on registrati0_.medicament_id=medicament5_.id left outer join medicament_active_substances activesubs6_ on medicament5_.id=activesubs6_.medicament_id left outer join nm_economic_agents nmeconomic7_ on medicament5_.economic_agent_id=nmeconomic7_.id left outer join MEDICAMENT_DOCUMENTS documents8_ on medicament5_.id=documents8_.MEDICAMENT_ID left outer join documents documentse9_ on documents8_.DOCUMENT_ID=documentse9_.id left outer join nm_pharmaceutical_forms nmpharmace10_ on medicament5_.pharmaceutical_form_id=nmpharmace10_.id left outer join registration_request_history requesthis11_ on registrati0_.id=requesthis11_.registration_request_id left outer join request_types requesttyp12_ on registrati0_.type_id=requesttyp12_.id where registrati0_.id=?
-2018-10-12 15:30:03.072 TRACE 6052 --- [http-nio-8443-exec-7] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_22_] : [INTEGER]) - [1]
-2018-10-12 15:30:03.072 TRACE 6052 --- [http-nio-8443-exec-5] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_51_] : [INTEGER]) - [1]
-2018-10-12 15:30:03.072 TRACE 6052 --- [http-nio-8443-exec-5] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([descript2_51_] : [VARCHAR]) - [Implanturi]
-2018-10-12 15:30:03.072 TRACE 6052 --- [http-nio-8443-exec-7] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([code2_22_] : [VARCHAR]) - [000001577]
-2018-10-12 15:30:03.072 TRACE 6052 --- [http-nio-8443-exec-5] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_51_] : [INTEGER]) - [2]
-2018-10-12 15:30:03.072 TRACE 6052 --- [http-nio-8443-exec-7] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([descript3_22_] : [VARCHAR]) - [acetat de deximelazona]
-2018-10-12 15:30:03.072 TRACE 6052 --- [http-nio-8443-exec-5] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([descript2_51_] : [VARCHAR]) - [Preparate auriculare]
-2018-10-12 15:30:03.072 TRACE 6052 --- [http-nio-8443-exec-7] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([manufact4_22_] : [INTEGER]) - [1]
-2018-10-12 15:30:03.072 TRACE 6052 --- [http-nio-8443-exec-5] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_51_] : [INTEGER]) - [3]
-2018-10-12 15:30:03.072 TRACE 6052 --- [http-nio-8443-exec-7] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([quantity5_22_] : [DOUBLE]) - [null]
-2018-10-12 15:30:03.072 TRACE 6052 --- [http-nio-8443-exec-5] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([descript2_51_] : [VARCHAR]) - [Preparate bucofaringiene]
-2018-10-12 15:30:03.072 TRACE 6052 --- [http-nio-8443-exec-7] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_22_] : [INTEGER]) - [2]
-2018-10-12 15:30:03.072 TRACE 6052 --- [http-nio-8443-exec-2] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [INTEGER] - [300]
-2018-10-12 15:30:03.073 TRACE 6052 --- [http-nio-8443-exec-7] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([code2_22_] : [VARCHAR]) - [000001837]
-2018-10-12 15:30:03.073 TRACE 6052 --- [http-nio-8443-exec-7] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([descript3_22_] : [VARCHAR]) - [abacavir]
-2018-10-12 15:30:03.073 TRACE 6052 --- [http-nio-8443-exec-7] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([manufact4_22_] : [INTEGER]) - [1]
-2018-10-12 15:30:03.073 TRACE 6052 --- [http-nio-8443-exec-7] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([quantity5_22_] : [DOUBLE]) - [null]
-2018-10-12 15:30:03.075  WARN 6052 --- [http-nio-8443-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 1054, SQLState: 42S22
-2018-10-12 15:30:03.075 ERROR 6052 --- [http-nio-8443-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : Unknown column 'registrati0_.applicant_id' in 'field list'
-2018-10-12 15:30:03.082 ERROR 6052 --- [http-nio-8443-exec-2] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is javax.persistence.PersistenceException: org.hibernate.exception.SQLGrammarException: could not extract ResultSet] with root cause
-
-com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Unknown column 'registrati0_.applicant_id' in 'field list'
-	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[na:1.8.0_144]
-	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) ~[na:1.8.0_144]
-	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[na:1.8.0_144]
-	at java.lang.reflect.Constructor.newInstance(Constructor.java:423) ~[na:1.8.0_144]
-	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.Util.getInstance(Util.java:408) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2486) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1858) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.mysql.jdbc.PreparedStatement.executeQuery(PreparedStatement.java:1966) ~[mysql-connector-java-5.1.46.jar:5.1.46]
-	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeQuery(ProxyPreparedStatement.java:52) ~[HikariCP-2.7.9.jar:na]
-	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeQuery(HikariProxyPreparedStatement.java) ~[HikariCP-2.7.9.jar:na]
-	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.extract(ResultSetReturnImpl.java:60) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.getResultSet(AbstractLoadPlanBasedLoader.java:419) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.executeQueryStatement(AbstractLoadPlanBasedLoader.java:191) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.executeLoad(AbstractLoadPlanBasedLoader.java:121) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.executeLoad(AbstractLoadPlanBasedLoader.java:86) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.loader.entity.plan.AbstractLoadPlanBasedEntityLoader.load(AbstractLoadPlanBasedEntityLoader.java:167) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.persister.entity.AbstractEntityPersister.load(AbstractEntityPersister.java:4121) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.loadFromDatasource(DefaultLoadEventListener.java:508) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.doLoad(DefaultLoadEventListener.java:478) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.load(DefaultLoadEventListener.java:219) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.proxyOrLoad(DefaultLoadEventListener.java:278) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.doOnLoad(DefaultLoadEventListener.java:121) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.event.internal.DefaultLoadEventListener.onLoad(DefaultLoadEventListener.java:89) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl.fireLoad(SessionImpl.java:1240) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl.access$1900(SessionImpl.java:204) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl$IdentifierLoadAccessImpl.doLoad(SessionImpl.java:2842) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl$IdentifierLoadAccessImpl.load(SessionImpl.java:2816) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl.find(SessionImpl.java:3445) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at org.hibernate.internal.SessionImpl.find(SessionImpl.java:3414) ~[hibernate-core-5.2.17.Final.jar:5.2.17.Final]
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_144]
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_144]
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_144]
-	at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_144]
-	at org.springframework.orm.jpa.ExtendedEntityManagerCreator$ExtendedEntityManagerInvocationHandler.invoke(ExtendedEntityManagerCreator.java:350) ~[spring-orm-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at com.sun.proxy.$Proxy94.find(Unknown Source) ~[na:na]
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_144]
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_144]
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_144]
-	at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_144]
-	at org.springframework.orm.jpa.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler.invoke(SharedEntityManagerCreator.java:305) ~[spring-orm-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at com.sun.proxy.$Proxy94.find(Unknown Source) ~[na:na]
-	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.findById(SimpleJpaRepository.java:235) ~[spring-data-jpa-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_144]
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_144]
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_144]
-	at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_144]
-	at org.springframework.data.repository.core.support.RepositoryComposition$RepositoryFragments.invoke(RepositoryComposition.java:377) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.data.repository.core.support.RepositoryComposition.invoke(RepositoryComposition.java:200) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.data.repository.core.support.RepositoryFactorySupport$ImplementationMethodExecutionInterceptor.invoke(RepositoryFactorySupport.java:629) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.data.repository.core.support.RepositoryFactorySupport$QueryExecutorMethodInterceptor.doInvoke(RepositoryFactorySupport.java:593) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.data.repository.core.support.RepositoryFactorySupport$QueryExecutorMethodInterceptor.invoke(RepositoryFactorySupport.java:578) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:59) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:294) ~[spring-tx-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:98) ~[spring-tx-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:139) ~[spring-tx-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:135) ~[spring-data-jpa-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:92) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.data.repository.core.support.SurroundingTransactionDetectorMethodInterceptor.invoke(SurroundingTransactionDetectorMethodInterceptor.java:61) ~[spring-data-commons-2.0.8.RELEASE.jar:2.0.8.RELEASE]
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:212) ~[spring-aop-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at com.sun.proxy.$Proxy115.findById(Unknown Source) ~[na:na]
-	at com.bass.amed.controller.rest.RequestController.getMedicamentRequestById(RequestController.java:35) ~[classes/:na]
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_144]
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_144]
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_144]
-	at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_144]
-	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:209) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:136) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:102) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:877) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:783) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:991) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:925) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:974) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:866) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:635) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:851) ~[spring-webmvc-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:742) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52) ~[tomcat-embed-websocket-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at com.bass.amed.security.CustomHeaderFilter.doFilter(CustomHeaderFilter.java:29) ~[classes/:na]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:320) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:127) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:91) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:119) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:137) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:111) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:170) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at com.bass.amed.security.JWTFilter.doFilter(JWTFilter.java:35) ~[classes/:na]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:116) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:66) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:105) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:56) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:215) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:178) ~[spring-security-web-5.0.6.RELEASE.jar:5.0.6.RELEASE]
-	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:357) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:270) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.web.filter.HttpPutFormContentFilter.doFilterInternal(HttpPutFormContentFilter.java:109) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:93) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:200) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) ~[spring-web-5.0.7.RELEASE.jar:5.0.7.RELEASE]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:198) ~[tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:496) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:140) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:81) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:342) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:803) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:790) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1468) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149) [na:1.8.0_144]
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624) [na:1.8.0_144]
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) [tomcat-embed-core-8.5.31.jar:8.5.31]
-	at java.lang.Thread.run(Thread.java:748) [na:1.8.0_144]
-
-2018-10-12 15:30:03.096  INFO 6052 --- [http-nio-8443-exec-2] com.bass.amed.security.TokenProvider     : Expired JWT token.
+2018-10-22 10:58:36.396  INFO 11952 --- [main] com.bass.amed.AmedApplication            : Starting AmedApplication on WINDOWS-QLR57QU with PID 11952 (D:\SVN\AMED\Source\amed\out\production\classes started by User in D:\SVN\AMED\Source\amed)
+2018-10-22 10:58:36.432 DEBUG 11952 --- [main] com.bass.amed.AmedApplication            : Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2018-10-22 10:58:36.433  INFO 11952 --- [main] com.bass.amed.AmedApplication            : No active profile set, falling back to default profiles: default
+2018-10-22 10:58:41.306 DEBUG 11952 --- [localhost-startStop-1] c.bass.amed.security.CustomHeaderFilter  : Initializing filter 'customHeaderFilter'
+2018-10-22 10:58:41.307 DEBUG 11952 --- [localhost-startStop-1] c.bass.amed.security.CustomHeaderFilter  : Filter 'customHeaderFilter' configured successfully
+2018-10-22 10:58:42.449 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration boolean -> org.hibernate.type.BooleanType@2e53b094
+2018-10-22 10:58:42.453 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration boolean -> org.hibernate.type.BooleanType@2e53b094
+2018-10-22 10:58:42.454 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Boolean -> org.hibernate.type.BooleanType@2e53b094
+2018-10-22 10:58:42.455 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration numeric_boolean -> org.hibernate.type.NumericBooleanType@33a3c44a
+2018-10-22 10:58:42.458 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration true_false -> org.hibernate.type.TrueFalseType@28501a4b
+2018-10-22 10:58:42.479 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration yes_no -> org.hibernate.type.YesNoType@341672e
+2018-10-22 10:58:42.483 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte -> org.hibernate.type.ByteType@fabb651
+2018-10-22 10:58:42.483 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte -> org.hibernate.type.ByteType@fabb651
+2018-10-22 10:58:42.483 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Byte -> org.hibernate.type.ByteType@fabb651
+2018-10-22 10:58:42.485 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration character -> org.hibernate.type.CharacterType@58496c97
+2018-10-22 10:58:42.487 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration char -> org.hibernate.type.CharacterType@58496c97
+2018-10-22 10:58:42.489 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Character -> org.hibernate.type.CharacterType@58496c97
+2018-10-22 10:58:42.493 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration short -> org.hibernate.type.ShortType@6ecab872
+2018-10-22 10:58:42.493 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration short -> org.hibernate.type.ShortType@6ecab872
+2018-10-22 10:58:42.493 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Short -> org.hibernate.type.ShortType@6ecab872
+2018-10-22 10:58:42.496 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration integer -> org.hibernate.type.IntegerType@3e3861d7
+2018-10-22 10:58:42.496 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration int -> org.hibernate.type.IntegerType@3e3861d7
+2018-10-22 10:58:42.496 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Integer -> org.hibernate.type.IntegerType@3e3861d7
+2018-10-22 10:58:42.499 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration long -> org.hibernate.type.LongType@47a7a101
+2018-10-22 10:58:42.499 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration long -> org.hibernate.type.LongType@47a7a101
+2018-10-22 10:58:42.499 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Long -> org.hibernate.type.LongType@47a7a101
+2018-10-22 10:58:42.503 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration float -> org.hibernate.type.FloatType@17a703f5
+2018-10-22 10:58:42.503 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration float -> org.hibernate.type.FloatType@17a703f5
+2018-10-22 10:58:42.503 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Float -> org.hibernate.type.FloatType@17a703f5
+2018-10-22 10:58:42.506 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration double -> org.hibernate.type.DoubleType@65f2f9b0
+2018-10-22 10:58:42.506 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration double -> org.hibernate.type.DoubleType@65f2f9b0
+2018-10-22 10:58:42.506 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Double -> org.hibernate.type.DoubleType@65f2f9b0
+2018-10-22 10:58:42.509 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration big_decimal -> org.hibernate.type.BigDecimalType@3f049056
+2018-10-22 10:58:42.509 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.math.BigDecimal -> org.hibernate.type.BigDecimalType@3f049056
+2018-10-22 10:58:42.511 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration big_integer -> org.hibernate.type.BigIntegerType@4d1f1ff5
+2018-10-22 10:58:42.511 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.math.BigInteger -> org.hibernate.type.BigIntegerType@4d1f1ff5
+2018-10-22 10:58:42.513 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration string -> org.hibernate.type.StringType@149debbb
+2018-10-22 10:58:42.513 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.String -> org.hibernate.type.StringType@149debbb
+2018-10-22 10:58:42.515 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration nstring -> org.hibernate.type.StringNVarcharType@e9dc4d0
+2018-10-22 10:58:42.517 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration ncharacter -> org.hibernate.type.CharacterNCharType@2e060819
+2018-10-22 10:58:42.534 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration url -> org.hibernate.type.UrlType@35cd68d4
+2018-10-22 10:58:42.534 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.net.URL -> org.hibernate.type.UrlType@35cd68d4
+2018-10-22 10:58:42.538 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration Duration -> org.hibernate.type.DurationType@5633dafd
+2018-10-22 10:58:42.539 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.Duration -> org.hibernate.type.DurationType@5633dafd
+2018-10-22 10:58:42.542 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration Instant -> org.hibernate.type.InstantType@408e96d9
+2018-10-22 10:58:42.542 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.Instant -> org.hibernate.type.InstantType@408e96d9
+2018-10-22 10:58:42.543 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalDateTime -> org.hibernate.type.LocalDateTimeType@602ae7b6
+2018-10-22 10:58:42.544 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalDateTime -> org.hibernate.type.LocalDateTimeType@602ae7b6
+2018-10-22 10:58:42.546 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalDate -> org.hibernate.type.LocalDateType@2c8662ac
+2018-10-22 10:58:42.546 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalDate -> org.hibernate.type.LocalDateType@2c8662ac
+2018-10-22 10:58:42.548 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalTime -> org.hibernate.type.LocalTimeType@ef1695a
+2018-10-22 10:58:42.549 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalTime -> org.hibernate.type.LocalTimeType@ef1695a
+2018-10-22 10:58:42.552 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetDateTime -> org.hibernate.type.OffsetDateTimeType@199bc830
+2018-10-22 10:58:42.552 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetDateTime -> org.hibernate.type.OffsetDateTimeType@199bc830
+2018-10-22 10:58:42.553 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetTime -> org.hibernate.type.OffsetTimeType@4d8286c4
+2018-10-22 10:58:42.554 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetTime -> org.hibernate.type.OffsetTimeType@4d8286c4
+2018-10-22 10:58:42.558 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration ZonedDateTime -> org.hibernate.type.ZonedDateTimeType@4d192aef
+2018-10-22 10:58:42.559 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.ZonedDateTime -> org.hibernate.type.ZonedDateTimeType@4d192aef
+2018-10-22 10:58:42.561 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration date -> org.hibernate.type.DateType@a518813
+2018-10-22 10:58:42.561 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Date -> org.hibernate.type.DateType@a518813
+2018-10-22 10:58:42.565 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration time -> org.hibernate.type.TimeType@1d75e7af
+2018-10-22 10:58:42.566 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Time -> org.hibernate.type.TimeType@1d75e7af
+2018-10-22 10:58:42.573 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration timestamp -> org.hibernate.type.TimestampType@3d5790ea
+2018-10-22 10:58:42.582 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Timestamp -> org.hibernate.type.TimestampType@3d5790ea
+2018-10-22 10:58:42.587 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Date -> org.hibernate.type.TimestampType@3d5790ea
+2018-10-22 10:58:42.591 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration dbtimestamp -> org.hibernate.type.DbTimestampType@57402ba1
+2018-10-22 10:58:42.593 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar -> org.hibernate.type.CalendarType@62573c86
+2018-10-22 10:58:42.593 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Calendar -> org.hibernate.type.CalendarType@62573c86
+2018-10-22 10:58:42.628 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.GregorianCalendar -> org.hibernate.type.CalendarType@62573c86
+2018-10-22 10:58:42.631 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar_date -> org.hibernate.type.CalendarDateType@10f19647
+2018-10-22 10:58:42.632 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration locale -> org.hibernate.type.LocaleType@75fa1be3
+2018-10-22 10:58:42.633 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Locale -> org.hibernate.type.LocaleType@75fa1be3
+2018-10-22 10:58:42.634 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration currency -> org.hibernate.type.CurrencyType@2d82408
+2018-10-22 10:58:42.634 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Currency -> org.hibernate.type.CurrencyType@2d82408
+2018-10-22 10:58:42.636 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration timezone -> org.hibernate.type.TimeZoneType@53ed09e8
+2018-10-22 10:58:42.636 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.TimeZone -> org.hibernate.type.TimeZoneType@53ed09e8
+2018-10-22 10:58:42.637 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration class -> org.hibernate.type.ClassType@8f2098e
+2018-10-22 10:58:42.638 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Class -> org.hibernate.type.ClassType@8f2098e
+2018-10-22 10:58:42.640 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration uuid-binary -> org.hibernate.type.UUIDBinaryType@7c8f9c2e
+2018-10-22 10:58:42.640 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.UUID -> org.hibernate.type.UUIDBinaryType@7c8f9c2e
+2018-10-22 10:58:42.641 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration uuid-char -> org.hibernate.type.UUIDCharType@10bea4
+2018-10-22 10:58:42.643 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration binary -> org.hibernate.type.BinaryType@3a543f31
+2018-10-22 10:58:42.643 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte[] -> org.hibernate.type.BinaryType@3a543f31
+2018-10-22 10:58:42.643 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration [B -> org.hibernate.type.BinaryType@3a543f31
+2018-10-22 10:58:42.645 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration wrapper-binary -> org.hibernate.type.WrapperBinaryType@ac20bb4
+2018-10-22 10:58:42.645 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration Byte[] -> org.hibernate.type.WrapperBinaryType@ac20bb4
+2018-10-22 10:58:42.645 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration [Ljava.lang.Byte; -> org.hibernate.type.WrapperBinaryType@ac20bb4
+2018-10-22 10:58:42.647 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration row_version -> org.hibernate.type.RowVersionType@6f139fc9
+2018-10-22 10:58:42.649 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration image -> org.hibernate.type.ImageType@6cd56321
+2018-10-22 10:58:42.652 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration characters -> org.hibernate.type.CharArrayType@20134094
+2018-10-22 10:58:42.653 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration char[] -> org.hibernate.type.CharArrayType@20134094
+2018-10-22 10:58:42.654 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration [C -> org.hibernate.type.CharArrayType@20134094
+2018-10-22 10:58:42.656 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration wrapper-characters -> org.hibernate.type.CharacterArrayType@64f1fd08
+2018-10-22 10:58:42.656 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration [Ljava.lang.Character; -> org.hibernate.type.CharacterArrayType@64f1fd08
+2018-10-22 10:58:42.656 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration Character[] -> org.hibernate.type.CharacterArrayType@64f1fd08
+2018-10-22 10:58:42.657 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration text -> org.hibernate.type.TextType@45e1aa48
+2018-10-22 10:58:42.728 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration ntext -> org.hibernate.type.NTextType@64469d8
+2018-10-22 10:58:42.740 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration blob -> org.hibernate.type.BlobType@1fde0371
+2018-10-22 10:58:42.740 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Blob -> org.hibernate.type.BlobType@1fde0371
+2018-10-22 10:58:42.741 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_blob -> org.hibernate.type.MaterializedBlobType@260a3a5e
+2018-10-22 10:58:42.748 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration clob -> org.hibernate.type.ClobType@61c42416
+2018-10-22 10:58:42.749 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Clob -> org.hibernate.type.ClobType@61c42416
+2018-10-22 10:58:42.758 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration nclob -> org.hibernate.type.NClobType@2a2843ec
+2018-10-22 10:58:42.758 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.NClob -> org.hibernate.type.NClobType@2a2843ec
+2018-10-22 10:58:42.759 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_clob -> org.hibernate.type.MaterializedClobType@36c0d0bd
+2018-10-22 10:58:42.760 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_nclob -> org.hibernate.type.MaterializedNClobType@382c90c2
+2018-10-22 10:58:42.767 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration serializable -> org.hibernate.type.SerializableType@2b289ac9
+2018-10-22 10:58:42.779 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration object -> org.hibernate.type.ObjectType@29f85fe1
+2018-10-22 10:58:42.779 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Object -> org.hibernate.type.ObjectType@29f85fe1
+2018-10-22 10:58:42.780 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_date -> org.hibernate.type.AdaptedImmutableType@72825400
+2018-10-22 10:58:42.812 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_time -> org.hibernate.type.AdaptedImmutableType@19ee1ae6
+2018-10-22 10:58:42.821 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_timestamp -> org.hibernate.type.AdaptedImmutableType@5f117b3d
+2018-10-22 10:58:42.823 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_dbtimestamp -> org.hibernate.type.AdaptedImmutableType@1174a305
+2018-10-22 10:58:42.823 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_calendar -> org.hibernate.type.AdaptedImmutableType@71b6d77f
+2018-10-22 10:58:42.823 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_calendar_date -> org.hibernate.type.AdaptedImmutableType@1866da85
+2018-10-22 10:58:42.823 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_binary -> org.hibernate.type.AdaptedImmutableType@4cfa8227
+2018-10-22 10:58:42.823 DEBUG 11952 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_serializable -> org.hibernate.type.AdaptedImmutableType@78226c36
+2018-10-22 10:58:44.066 TRACE 11952 --- [main] org.hibernate.type.TypeFactory           : Scoping types to session factory org.hibernate.internal.SessionFactoryImpl@3bec5821
+2018-10-22 10:58:47.310  INFO 11952 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/**', OPTIONS], []
+2018-10-22 10:58:47.310  INFO 11952 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/app/**/*.{js,html}'], []
+2018-10-22 10:58:47.311  INFO 11952 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/api/authenticate'], []
+2018-10-22 10:58:47.430  INFO 11952 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: org.springframework.security.web.util.matcher.AnyRequestMatcher@1, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@50ff7063, org.springframework.security.web.context.SecurityContextPersistenceFilter@1999149e, org.springframework.security.web.header.HeaderWriterFilter@18715bb, org.springframework.security.web.authentication.logout.LogoutFilter@368424db, com.bass.amed.security.JWTFilter@67a8bcbb, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@27896d3b, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@a826ff8, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@1bb96449, org.springframework.security.web.session.SessionManagementFilter@d62472f, org.springframework.security.web.access.ExceptionTranslationFilter@6e5f5478, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@5ab7ac02]
+2018-10-22 10:58:48.039  WARN 11952 --- [main] aWebConfiguration$JpaWebMvcConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2018-10-22 10:58:48.799  INFO 11952 --- [main] com.bass.amed.AmedApplication            : Started AmedApplication in 13.455 seconds (JVM running for 15.389)

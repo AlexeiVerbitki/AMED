@@ -1,0 +1,153 @@
+<h5 class="text-center font-weight-bold">Predare bonuri de plata</h5>
+<hr>
+<form [formGroup]="addReceiptForm">
+    <div class="row">
+        <div class="offset-4">
+        </div>
+        <div class="col-2">
+            <div class="md-form">
+                <input id="motivulEmiterii" mdbInputDirective type="text" class="form-control"
+                       formControlName="name">
+                <label for="motivulEmiterii">Motivul emiterii</label>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="md-form">
+                <input id="sumaBon" mdbInputDirective type="number" min="0" step=".01" class="form-control" formControlName="amount">
+                <label for="sumaBon">Suma (lei)</label>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="md-form">
+                <mat-checkbox formControlName="sP">Bon suplimentar</mat-checkbox>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="md-form">
+                <div class="position-button">
+                    <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
+                            mdbWavesEffect
+                            (click)="addReceipt()">Adaugare
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-widths text-center table-sm">
+        <thead class="black white-text">
+        <tr>
+            <th scope="col">Bon nr.</th>
+            <th scope="col">Data</th>
+            <th scope="col">Motivul emiterii</th>
+            <th scope="col">Suma</th>
+            <th scope="col">Bon Suplimentar</th>
+            <th scope="col">Actiuni</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let receipt of receiptsList">
+            <th scope="row">{{ receipt.receiptNumber }}</th>
+            <td>{{ receipt.date | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+            <td>{{ receipt.name }}</td>
+            <td>{{ receipt.amount }}</td>
+            <td>
+                <span *ngIf="receipt.sP === true"><i class="fa fa-check text-success"
+                                                                       aria-hidden="true"></i></span>
+                <span *ngIf="receipt.sP === false"><i class="fa fa-times text-danger"
+                                                                        aria-hidden="true"></i></span>
+            </td>
+            <td>
+                <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect
+                        (click)="deleteReceipt(receipt)">Delete
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="alert alert-primary text-center w-100">Spre plata : {{receiptTotal}} lei
+    </div>
+    <hr>
+</form>
+
+
+<h5 class="text-center font-weight-bold">Eliberare plati</h5>
+<hr>
+<div class="row" [formGroup]="addPaymentOrderForm">
+    <div class="col">
+        <div class="md-form">
+            <input id="ordNr" mdbInputDirective type="text" class="form-control" formControlName="nr">
+            <label for="ordNr">Ordin de plata nr.</label>
+        </div>
+    </div>
+    <div class="col">
+        <div class="md-form-modified-select">
+            <mat-form-field class="w-100">
+                <input matInput [matDatepicker]="ordNrData" placeholder="Data" formControlName="data">
+                <mat-datepicker-toggle matSuffix [for]="ordNrData"></mat-datepicker-toggle>
+                <mat-datepicker touchUi #ordNrData></mat-datepicker>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="col">
+        <div class="md-form">
+            <input id="inBaza" mdbInputDirective type="text" class="form-control" formControlName="basis">
+            <label for="inBaza">In baza</label>
+        </div>
+    </div>
+    <div class="col">
+        <div class="md-form">
+            <input id="sumaOrd" mdbInputDirective min="0" step=".01" type="number" class="form-control"
+                   formControlName="amount">
+            <label for="sumaOrd">Suma (lei)</label>
+        </div>
+    </div>
+    <div class="col-2">
+        <div class="md-form">
+            <div class="position-button">
+                <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
+                        mdbWavesEffect
+                        (click)="addPaymentOrder()">Adaugare
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<table class="table table-widths text-center table-sm">
+    <thead class="black white-text">
+    <tr>
+        <th scope="col">Ordin de plata nr.</th>
+        <th scope="col">Data</th>
+        <th scope="col">In baza</th>
+        <th scope="col">Suma</th>
+        <th scope="col">Actiuni</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let payOrder of paymentOrdersList">
+        <th scope="row">{{ payOrder.nr }}</th>
+        <td>{{ payOrder.data | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ payOrder.basis }}</td>
+        <td>{{ payOrder.amount }}</td>
+        <td>
+            <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect
+                    (click)="deletePaymentOrder(payOrder)">Delete
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div class="alert alert-primary text-center w-100">Achitat : {{paymentOrdersTotal}} lei</div>
+
+<div class="row">
+    <div class="col-12">
+        <div *ngIf="total < 0">
+            <div class="alert alert-danger text-center">Datorii: {{-total | number : '1.2-2'}} lei
+            </div>
+        </div>
+        <div *ngIf="total >= 0">
+            <div class="alert alert-success text-center">Total : {{total | number : '1.2-2'}} lei
+            </div>
+        </div>
+    </div>
+</div>
