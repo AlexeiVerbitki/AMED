@@ -112,4 +112,40 @@ import java.sql.Timestamp;
 	public void setInternationalMedicamentName(NmInternationalMedicamentNameEntity internationalMedicamentName) {
 		this.internationalMedicamentName = internationalMedicamentName;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ImportMedRegisteredEntity)) return false;
+
+		ImportMedRegisteredEntity that = (ImportMedRegisteredEntity) o;
+
+		if (id != null ? !id.equals(that.id) : that.id != null) return false;
+		if (code != null ? !code.equals(that.code) : that.code != null) return false;
+		if (name != null ? !name.equals(that.name) : that.name != null) return false;
+		if (pharmaceuticalForm != null ? !pharmaceuticalForm.equals(that.pharmaceuticalForm) : that.pharmaceuticalForm != null) return false;
+		if (dose != null ? !dose.equals(that.dose) : that.dose != null) return false;
+		if (unitsQuantityMeasurement != null ? !unitsQuantityMeasurement.equals(that.unitsQuantityMeasurement) : that.unitsQuantityMeasurement != null)
+			return false;
+		if (registrationNumber != null ? !registrationNumber.equals(that.registrationNumber) : that.registrationNumber != null) return false;
+		if (registrationDate != null ? !registrationDate.equals(that.registrationDate) : that.registrationDate != null) return false;
+		if (atcCode != null ? !atcCode.equals(that.atcCode) : that.atcCode != null) return false;
+		return internationalMedicamentName != null ? internationalMedicamentName.equals(
+				that.internationalMedicamentName) : that.internationalMedicamentName == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = id != null ? id.hashCode() : 0;
+		result = 31 * result + (code != null ? code.hashCode() : 0);
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		result = 31 * result + (pharmaceuticalForm != null ? pharmaceuticalForm.hashCode() : 0);
+		result = 31 * result + (dose != null ? dose.hashCode() : 0);
+		result = 31 * result + (unitsQuantityMeasurement != null ? unitsQuantityMeasurement.hashCode() : 0);
+		result = 31 * result + (registrationNumber != null ? registrationNumber.hashCode() : 0);
+		result = 31 * result + (registrationDate != null ? registrationDate.hashCode() : 0);
+		result = 31 * result + (atcCode != null ? atcCode.hashCode() : 0);
+		result = 31 * result + (internationalMedicamentName != null ? internationalMedicamentName.hashCode() : 0);
+		return result;
+	}
 }

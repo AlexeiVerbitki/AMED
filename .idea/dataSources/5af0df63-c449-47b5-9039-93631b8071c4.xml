@@ -2401,7 +2401,7 @@
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="552" parent="245" name="id_med_not_Registered">
+    <column id="552" parent="245" name="id_med_not_registered">
       <Position>2</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
@@ -2411,7 +2411,7 @@
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="554" parent="245" name="id_med_test">
+    <column id="554" parent="245" name="id_med_sampling">
       <Position>4</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
@@ -2431,13 +2431,13 @@
       <Unique>1</Unique>
     </index>
     <index id="558" parent="245" name="fk_import_not_registered">
-      <ColNames>id_med_not_Registered</ColNames>
+      <ColNames>id_med_not_registered</ColNames>
     </index>
     <index id="559" parent="245" name="fk_import_id_registered">
       <ColNames>id_med_registered</ColNames>
     </index>
     <index id="560" parent="245" name="fk_import_stuff_types_test">
-      <ColNames>id_med_test</ColNames>
+      <ColNames>id_med_sampling</ColNames>
     </index>
     <index id="561" parent="245" name="fk_import_stuff_types_ambalaj">
       <ColNames>id_ambalaj</ColNames>
@@ -2455,7 +2455,7 @@
       <UnderlyingIndexName>import_stuff_types_id_uindex</UnderlyingIndexName>
     </key>
     <foreign-key id="565" parent="245" name="fk_import_not_registered">
-      <ColNames>id_med_not_Registered</ColNames>
+      <ColNames>id_med_not_registered</ColNames>
       <RefSchemaName>amed</RefSchemaName>
       <RefTableName>import_med_not_registered</RefTableName>
       <RefColNames>id</RefColNames>
@@ -2467,7 +2467,7 @@
       <RefColNames>id</RefColNames>
     </foreign-key>
     <foreign-key id="567" parent="245" name="fk_import_stuff_types_test">
-      <ColNames>id_med_test</ColNames>
+      <ColNames>id_med_sampling</ColNames>
       <RefSchemaName>amed</RefSchemaName>
       <RefTableName>import_med_sampling</RefTableName>
       <RefColNames>id</RefColNames>
