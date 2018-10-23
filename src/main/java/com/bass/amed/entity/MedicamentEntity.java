@@ -72,37 +72,31 @@ public class MedicamentEntity
 
     @Basic
     @Column(name = "code", nullable = true, length = 10)
-    public String getCode()
-    {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(String code)
-    {
+    public void setCode(String code) {
         this.code = code;
     }
 
     @Basic
     @Column(name = "product_code", nullable = true, length = 10)
-    public String getProductCode()
-    {
+    public String getProductCode() {
         return productCode;
     }
 
-    public void setProductCode(String productCode)
-    {
+    public void setProductCode(String productCode) {
         this.productCode = productCode;
     }
 
     @Basic
     @Column(name = "customs_code", nullable = true, length = 5)
-    public String getCustomsCode()
-    {
+    public String getCustomsCode() {
         return customsCode;
     }
 
-    public void setCustomsCode(String customsCode)
-    {
+    public void setCustomsCode(String customsCode) {
         this.customsCode = customsCode;
     }
 
