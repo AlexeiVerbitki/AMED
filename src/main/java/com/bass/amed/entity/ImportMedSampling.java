@@ -3,7 +3,9 @@ package com.bass.amed.entity;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
-@Entity @Table(name = "import_med_registered", schema = "amed", catalog = "") public class ImportMedRegisteredEntity {
+@Entity
+@Table(name = "import_med_sampling", schema = "amed", catalog = "")
+public class ImportMedSampling {
 
 	private Integer                             id;
 	private Integer                             code;
@@ -15,6 +17,10 @@ import java.sql.Timestamp;
 	private Timestamp                           registrationDate;
 	private String                              atcCode;
 	private NmInternationalMedicamentNameEntity internationalMedicamentName;
+	private Integer                             receivedAmount;
+	private NmUnitsOfMeasurementEntity          receivedAmountUnitsQuantityMeasurement;
+	private Integer                             returnedAmount;
+	private NmUnitsOfMeasurementEntity          returnedAmountUnitsQuantityMeasurement;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -113,12 +119,52 @@ import java.sql.Timestamp;
 		this.internationalMedicamentName = internationalMedicamentName;
 	}
 
+	@Basic
+	@Column(name = "received_amount", nullable = true, length = 11)
+	public Integer getReceivedAmount() {
+		return receivedAmount;
+	}
+
+	public void setReceivedAmount(Integer receivedAmount) {
+		this.receivedAmount = receivedAmount;
+	}
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+	@JoinColumn(name = "received_unit_id")
+	public NmUnitsOfMeasurementEntity getReceivedAmountUnitsQuantityMeasurement() {
+		return receivedAmountUnitsQuantityMeasurement;
+	}
+
+	public void setReceivedAmountUnitsQuantityMeasurement(NmUnitsOfMeasurementEntity receivedAmountUnitsQuantityMeasurement) {
+		this.receivedAmountUnitsQuantityMeasurement = receivedAmountUnitsQuantityMeasurement;
+	}
+
+	@Basic
+	@Column(name = "returned_amount", nullable = true, length = 11)
+	public Integer getReturnedAmount() {
+		return returnedAmount;
+	}
+
+	public void setReturnedAmount(Integer returnedAmount) {
+		this.returnedAmount = returnedAmount;
+	}
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+	@JoinColumn(name = "returned_amount_id")
+	public NmUnitsOfMeasurementEntity getReturnedAmountUnitsQuantityMeasurement() {
+		return returnedAmountUnitsQuantityMeasurement;
+	}
+
+	public void setReturnedAmountUnitsQuantityMeasurement(NmUnitsOfMeasurementEntity returnedAmountUnitsQuantityMeasurement) {
+		this.returnedAmountUnitsQuantityMeasurement = returnedAmountUnitsQuantityMeasurement;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (!(o instanceof ImportMedRegisteredEntity)) return false;
+		if (!(o instanceof ImportMedSampling)) return false;
 
-		ImportMedRegisteredEntity that = (ImportMedRegisteredEntity) o;
+		ImportMedSampling that = (ImportMedSampling) o;
 
 		if (id != null ? !id.equals(that.id) : that.id != null) return false;
 		if (code != null ? !code.equals(that.code) : that.code != null) return false;
@@ -130,8 +176,14 @@ import java.sql.Timestamp;
 		if (registrationNumber != null ? !registrationNumber.equals(that.registrationNumber) : that.registrationNumber != null) return false;
 		if (registrationDate != null ? !registrationDate.equals(that.registrationDate) : that.registrationDate != null) return false;
 		if (atcCode != null ? !atcCode.equals(that.atcCode) : that.atcCode != null) return false;
-		return internationalMedicamentName != null ? internationalMedicamentName.equals(
-				that.internationalMedicamentName) : that.internationalMedicamentName == null;
+		if (internationalMedicamentName != null ? !internationalMedicamentName.equals(
+				that.internationalMedicamentName) : that.internationalMedicamentName != null) return false;
+		if (receivedAmount != null ? !receivedAmount.equals(that.receivedAmount) : that.receivedAmount != null) return false;
+		if (receivedAmountUnitsQuantityMeasurement != null ? !receivedAmountUnitsQuantityMeasurement.equals(
+				that.receivedAmountUnitsQuantityMeasurement) : that.receivedAmountUnitsQuantityMeasurement != null) return false;
+		if (returnedAmount != null ? !returnedAmount.equals(that.returnedAmount) : that.returnedAmount != null) return false;
+		return returnedAmountUnitsQuantityMeasurement != null ? returnedAmountUnitsQuantityMeasurement.equals(
+				that.returnedAmountUnitsQuantityMeasurement) : that.returnedAmountUnitsQuantityMeasurement == null;
 	}
 
 	@Override
@@ -146,6 +198,10 @@ import java.sql.Timestamp;
 		result = 31 * result + (registrationDate != null ? registrationDate.hashCode() : 0);
 		result = 31 * result + (atcCode != null ? atcCode.hashCode() : 0);
 		result = 31 * result + (internationalMedicamentName != null ? internationalMedicamentName.hashCode() : 0);
+		result = 31 * result + (receivedAmount != null ? receivedAmount.hashCode() : 0);
+		result = 31 * result + (receivedAmountUnitsQuantityMeasurement != null ? receivedAmountUnitsQuantityMeasurement.hashCode() : 0);
+		result = 31 * result + (returnedAmount != null ? returnedAmount.hashCode() : 0);
+		result = 31 * result + (returnedAmountUnitsQuantityMeasurement != null ? returnedAmountUnitsQuantityMeasurement.hashCode() : 0);
 		return result;
 	}
 }

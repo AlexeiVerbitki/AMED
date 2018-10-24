@@ -3,10 +3,11 @@ package com.bass.amed.entity;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
-@Entity @Table(name = "import_med_registered", schema = "amed", catalog = "") public class ImportMedRegisteredEntity {
+@Entity
+@Table(name = "import_med_not_registered", schema = "amed", catalog = "")
+public class ImportMedNotRegisteredEntity {
 
 	private Integer                             id;
-	private Integer                             code;
 	private String                              name;
 	private NmPharmaceuticalFormsEntity         pharmaceuticalForm;
 	private Double                              dose;
@@ -23,15 +24,6 @@ import java.sql.Timestamp;
 
 	public void setId(Integer id) { this.id = id; }
 
-	@Basic
-	@Column(name = "code", nullable = true, length = 11)
-	public Integer getCode() {
-		return code;
-	}
-
-	public void setCode(Integer code) {
-		this.code = code;
-	}
 
 	@Basic
 	@Column(name = "name", nullable = true, length = 200)
@@ -116,12 +108,11 @@ import java.sql.Timestamp;
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (!(o instanceof ImportMedRegisteredEntity)) return false;
+		if (!(o instanceof ImportMedNotRegisteredEntity)) return false;
 
-		ImportMedRegisteredEntity that = (ImportMedRegisteredEntity) o;
+		ImportMedNotRegisteredEntity that = (ImportMedNotRegisteredEntity) o;
 
 		if (id != null ? !id.equals(that.id) : that.id != null) return false;
-		if (code != null ? !code.equals(that.code) : that.code != null) return false;
 		if (name != null ? !name.equals(that.name) : that.name != null) return false;
 		if (pharmaceuticalForm != null ? !pharmaceuticalForm.equals(that.pharmaceuticalForm) : that.pharmaceuticalForm != null) return false;
 		if (dose != null ? !dose.equals(that.dose) : that.dose != null) return false;
@@ -137,7 +128,6 @@ import java.sql.Timestamp;
 	@Override
 	public int hashCode() {
 		int result = id != null ? id.hashCode() : 0;
-		result = 31 * result + (code != null ? code.hashCode() : 0);
 		result = 31 * result + (name != null ? name.hashCode() : 0);
 		result = 31 * result + (pharmaceuticalForm != null ? pharmaceuticalForm.hashCode() : 0);
 		result = 31 * result + (dose != null ? dose.hashCode() : 0);
