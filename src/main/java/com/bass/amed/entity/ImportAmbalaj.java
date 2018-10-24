@@ -6,8 +6,8 @@ import javax.persistence.*;
 @Table(name = "import_materia_prima", schema = "amed", catalog = "")
 public class ImportAmbalaj {
 
-	private Integer                             id;
-	private String                              name;
+	private Integer id;
+	private String  name;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

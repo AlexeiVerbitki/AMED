@@ -7,9 +7,9 @@ import java.sql.Timestamp;
 @Table(name = "import_materia_prima", schema = "amed", catalog = "")
 public class ImportMateriaPrima {
 
-	private Integer                             id;
-	private String                              name;
-	private String                              atcCode;
+	private Integer id;
+	private String  name;
+	private String  atcCode;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
