@@ -119,8 +119,7 @@ public class MedicamentEntity
         return internationalMedicamentName;
     }
 
-    public void setInternationalMedicamentName(NmInternationalMedicamentNameEntity internationalMedicamentName)
-    {
+    public void setInternationalMedicamentName(NmInternationalMedicamentNameEntity internationalMedicamentName) {
         this.internationalMedicamentName = internationalMedicamentName;
     }
 

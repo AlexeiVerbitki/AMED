@@ -1,26 +1,26 @@
 package com.bass.amed.entity;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "import_authorization", schema = "amed", catalog = "")
 public class ImportAuthorizationEntity
 {
-    private Integer id;
-    private Integer stuffType;
-    private Integer importerId;
-    private Integer sellerId;
-    private Integer producerId;
-    private Integer nr;
-    private Date startDate;
-    private Date endDate;
-    private Integer customsTransactionTypeId;
-    private Integer customCodeId;
-    private Integer sampling;
-    private Integer returnedQuantity;
-    private Integer customsDeclarationsNr;
-    private Date customsDeclarationDate;
+    private Integer   id;
+    private Integer   stuffType;
+    private Integer   importerId;
+    private Integer   sellerId;
+    private Integer   producerId;
+    private Integer   nr;
+    private Timestamp startDate;
+    private Timestamp endDate;
+    private Integer   customsTransactionTypeId;
+    private Integer   customCodeId;
+    private Integer   sampling;
+    private Integer   returnedQuantity;
+    private Integer   customsDeclarationsNr;
+    private Timestamp customsDeclarationDate;
 
     @Id
     @Column(name = "id")
@@ -96,24 +96,24 @@ public class ImportAuthorizationEntity
 
     @Basic
     @Column(name = "start_date")
-    public Date getStartDate()
+    public Timestamp getStartDate()
     {
         return startDate;
     }
 
-    public void setStartDate(Date startDate)
+    public void setStartDate(Timestamp startDate)
     {
         this.startDate = startDate;
     }
 
     @Basic
     @Column(name = "end_date")
-    public Date getEndDate()
+    public Timestamp getEndDate()
     {
         return endDate;
     }
 
-    public void setEndDate(Date endDate)
+    public void setEndDate(Timestamp endDate)
     {
         this.endDate = endDate;
     }
@@ -180,12 +180,12 @@ public class ImportAuthorizationEntity
 
     @Basic
     @Column(name = "customs_declaration_date")
-    public Date getCustomsDeclarationDate()
+    public Timestamp getCustomsDeclarationDate()
     {
         return customsDeclarationDate;
     }
 
-    public void setCustomsDeclarationDate(Date customsDeclarationDate)
+    public void setCustomsDeclarationDate(Timestamp customsDeclarationDate)
     {
         this.customsDeclarationDate = customsDeclarationDate;
     }

@@ -1,6 +1,8 @@
 package com.bass.amed.service.impl;
 
+import com.bass.amed.entity.ImportAuthorizationEntity;
 import com.bass.amed.entity.MedicamentEntity;
+import com.bass.amed.repository.ImportRepository;
 import com.bass.amed.repository.MedicamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,15 +10,16 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.beans.Transient;
 
-@Service public class ImportService {
+@Service
+public class ImportService {
 
 	@Autowired
-	MedicamentRepository medicamentRepository;
+	ImportRepository importRepository;
 
 	@Transactional
-	public MedicamentEntity saveImport(MedicamentEntity medicament)
+	public ImportAuthorizationEntity saveImport(ImportAuthorizationEntity importAuthorizationEntity)
 	{
-		return medicamentRepository.save(medicament);
+		return importRepository.save(importAuthorizationEntity);
 	}
 
 
