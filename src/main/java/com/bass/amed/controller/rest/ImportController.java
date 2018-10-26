@@ -51,6 +51,7 @@ public class ImportController
     {
         logger.debug("Save Import");
         importAuthorizationEntity.setStartDate(new Timestamp(new Date().getTime()));
+        importAuthorizationEntity.app
         importService.saveImport(importAuthorizationEntity);
         return new ResponseEntity<>(importAuthorizationEntity.getId(), HttpStatus.CREATED);
     }

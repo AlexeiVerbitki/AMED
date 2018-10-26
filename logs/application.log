@@ -1,244 +1,222 @@
-2018-10-23 09:43:00.129  INFO 21956 --- [main] com.bass.amed.AmedApplication            : Starting AmedApplication on WINDOWS-QLR57QU with PID 21956 (D:\SVN\AMED\Source\amed\out\production\classes started by User in D:\SVN\AMED\Source\amed)
-2018-10-23 09:43:00.142 DEBUG 21956 --- [main] com.bass.amed.AmedApplication            : Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
-2018-10-23 09:43:00.145  INFO 21956 --- [main] com.bass.amed.AmedApplication            : No active profile set, falling back to default profiles: default
-2018-10-23 09:43:04.893 DEBUG 21956 --- [localhost-startStop-1] c.bass.amed.security.CustomHeaderFilter  : Initializing filter 'customHeaderFilter'
-2018-10-23 09:43:04.894 DEBUG 21956 --- [localhost-startStop-1] c.bass.amed.security.CustomHeaderFilter  : Filter 'customHeaderFilter' configured successfully
-2018-10-23 09:43:05.626 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration boolean -> org.hibernate.type.BooleanType@21ae657b
-2018-10-23 09:43:05.627 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration boolean -> org.hibernate.type.BooleanType@21ae657b
-2018-10-23 09:43:05.627 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Boolean -> org.hibernate.type.BooleanType@21ae657b
-2018-10-23 09:43:05.629 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration numeric_boolean -> org.hibernate.type.NumericBooleanType@3ab35b9c
-2018-10-23 09:43:05.631 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration true_false -> org.hibernate.type.TrueFalseType@3aed69dd
-2018-10-23 09:43:05.632 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration yes_no -> org.hibernate.type.YesNoType@535a518c
-2018-10-23 09:43:05.635 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte -> org.hibernate.type.ByteType@1980a3f
-2018-10-23 09:43:05.635 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte -> org.hibernate.type.ByteType@1980a3f
-2018-10-23 09:43:05.636 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Byte -> org.hibernate.type.ByteType@1980a3f
-2018-10-23 09:43:05.638 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration character -> org.hibernate.type.CharacterType@7e34b127
-2018-10-23 09:43:05.638 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration char -> org.hibernate.type.CharacterType@7e34b127
-2018-10-23 09:43:05.638 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Character -> org.hibernate.type.CharacterType@7e34b127
-2018-10-23 09:43:05.640 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration short -> org.hibernate.type.ShortType@ac91282
-2018-10-23 09:43:05.641 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration short -> org.hibernate.type.ShortType@ac91282
-2018-10-23 09:43:05.641 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Short -> org.hibernate.type.ShortType@ac91282
-2018-10-23 09:43:05.643 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration integer -> org.hibernate.type.IntegerType@47829d6d
-2018-10-23 09:43:05.643 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration int -> org.hibernate.type.IntegerType@47829d6d
-2018-10-23 09:43:05.643 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Integer -> org.hibernate.type.IntegerType@47829d6d
-2018-10-23 09:43:05.646 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration long -> org.hibernate.type.LongType@23ad71bf
-2018-10-23 09:43:05.646 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration long -> org.hibernate.type.LongType@23ad71bf
-2018-10-23 09:43:05.647 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Long -> org.hibernate.type.LongType@23ad71bf
-2018-10-23 09:43:05.650 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration float -> org.hibernate.type.FloatType@fd413fb
-2018-10-23 09:43:05.650 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration float -> org.hibernate.type.FloatType@fd413fb
-2018-10-23 09:43:05.651 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Float -> org.hibernate.type.FloatType@fd413fb
-2018-10-23 09:43:05.654 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration double -> org.hibernate.type.DoubleType@4e3f2908
-2018-10-23 09:43:05.654 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration double -> org.hibernate.type.DoubleType@4e3f2908
-2018-10-23 09:43:05.654 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Double -> org.hibernate.type.DoubleType@4e3f2908
-2018-10-23 09:43:05.656 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration big_decimal -> org.hibernate.type.BigDecimalType@6fe595dc
-2018-10-23 09:43:05.657 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.math.BigDecimal -> org.hibernate.type.BigDecimalType@6fe595dc
-2018-10-23 09:43:05.658 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration big_integer -> org.hibernate.type.BigIntegerType@27fe059d
-2018-10-23 09:43:05.659 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.math.BigInteger -> org.hibernate.type.BigIntegerType@27fe059d
-2018-10-23 09:43:05.661 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration string -> org.hibernate.type.StringType@5f0bab7e
-2018-10-23 09:43:05.661 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.String -> org.hibernate.type.StringType@5f0bab7e
-2018-10-23 09:43:05.663 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration nstring -> org.hibernate.type.StringNVarcharType@5190010f
-2018-10-23 09:43:05.665 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration ncharacter -> org.hibernate.type.CharacterNCharType@384fda47
-2018-10-23 09:43:05.666 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration url -> org.hibernate.type.UrlType@30bf26df
-2018-10-23 09:43:05.667 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.net.URL -> org.hibernate.type.UrlType@30bf26df
-2018-10-23 09:43:05.668 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration Duration -> org.hibernate.type.DurationType@588545ac
-2018-10-23 09:43:05.668 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.Duration -> org.hibernate.type.DurationType@588545ac
-2018-10-23 09:43:05.671 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration Instant -> org.hibernate.type.InstantType@75fe1619
-2018-10-23 09:43:05.671 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.Instant -> org.hibernate.type.InstantType@75fe1619
-2018-10-23 09:43:05.673 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalDateTime -> org.hibernate.type.LocalDateTimeType@5042e3d0
-2018-10-23 09:43:05.673 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalDateTime -> org.hibernate.type.LocalDateTimeType@5042e3d0
-2018-10-23 09:43:05.676 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalDate -> org.hibernate.type.LocalDateType@3fe512d2
-2018-10-23 09:43:05.676 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalDate -> org.hibernate.type.LocalDateType@3fe512d2
-2018-10-23 09:43:05.678 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalTime -> org.hibernate.type.LocalTimeType@5a0e0886
-2018-10-23 09:43:05.678 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalTime -> org.hibernate.type.LocalTimeType@5a0e0886
-2018-10-23 09:43:05.680 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetDateTime -> org.hibernate.type.OffsetDateTimeType@122635ef
-2018-10-23 09:43:05.680 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetDateTime -> org.hibernate.type.OffsetDateTimeType@122635ef
-2018-10-23 09:43:05.681 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetTime -> org.hibernate.type.OffsetTimeType@262a1fad
-2018-10-23 09:43:05.682 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetTime -> org.hibernate.type.OffsetTimeType@262a1fad
-2018-10-23 09:43:05.685 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration ZonedDateTime -> org.hibernate.type.ZonedDateTimeType@3dc40ab9
-2018-10-23 09:43:05.685 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.ZonedDateTime -> org.hibernate.type.ZonedDateTimeType@3dc40ab9
-2018-10-23 09:43:05.689 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration date -> org.hibernate.type.DateType@13ed066e
-2018-10-23 09:43:05.689 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Date -> org.hibernate.type.DateType@13ed066e
-2018-10-23 09:43:05.691 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration time -> org.hibernate.type.TimeType@20801cbb
-2018-10-23 09:43:05.691 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Time -> org.hibernate.type.TimeType@20801cbb
-2018-10-23 09:43:05.693 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration timestamp -> org.hibernate.type.TimestampType@2b53840a
-2018-10-23 09:43:05.693 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Timestamp -> org.hibernate.type.TimestampType@2b53840a
-2018-10-23 09:43:05.694 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Date -> org.hibernate.type.TimestampType@2b53840a
-2018-10-23 09:43:05.695 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration dbtimestamp -> org.hibernate.type.DbTimestampType@64b0d1fa
-2018-10-23 09:43:05.697 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar -> org.hibernate.type.CalendarType@577536e0
-2018-10-23 09:43:05.697 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Calendar -> org.hibernate.type.CalendarType@577536e0
-2018-10-23 09:43:05.697 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.GregorianCalendar -> org.hibernate.type.CalendarType@577536e0
-2018-10-23 09:43:05.699 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar_date -> org.hibernate.type.CalendarDateType@718fd7c1
-2018-10-23 09:43:05.700 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration locale -> org.hibernate.type.LocaleType@61cda923
-2018-10-23 09:43:05.700 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Locale -> org.hibernate.type.LocaleType@61cda923
-2018-10-23 09:43:05.702 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration currency -> org.hibernate.type.CurrencyType@2c26ba07
-2018-10-23 09:43:05.702 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Currency -> org.hibernate.type.CurrencyType@2c26ba07
-2018-10-23 09:43:05.703 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration timezone -> org.hibernate.type.TimeZoneType@2c719bd4
-2018-10-23 09:43:05.704 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.TimeZone -> org.hibernate.type.TimeZoneType@2c719bd4
-2018-10-23 09:43:05.705 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration class -> org.hibernate.type.ClassType@44286963
-2018-10-23 09:43:05.705 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Class -> org.hibernate.type.ClassType@44286963
-2018-10-23 09:43:05.707 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration uuid-binary -> org.hibernate.type.UUIDBinaryType@7c90b7b7
-2018-10-23 09:43:05.707 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.UUID -> org.hibernate.type.UUIDBinaryType@7c90b7b7
-2018-10-23 09:43:05.708 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration uuid-char -> org.hibernate.type.UUIDCharType@235c997d
-2018-10-23 09:43:05.710 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration binary -> org.hibernate.type.BinaryType@40ed1802
-2018-10-23 09:43:05.710 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte[] -> org.hibernate.type.BinaryType@40ed1802
-2018-10-23 09:43:05.710 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration [B -> org.hibernate.type.BinaryType@40ed1802
-2018-10-23 09:43:05.712 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration wrapper-binary -> org.hibernate.type.WrapperBinaryType@776015fc
-2018-10-23 09:43:05.712 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration Byte[] -> org.hibernate.type.WrapperBinaryType@776015fc
-2018-10-23 09:43:05.712 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration [Ljava.lang.Byte; -> org.hibernate.type.WrapperBinaryType@776015fc
-2018-10-23 09:43:05.713 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration row_version -> org.hibernate.type.RowVersionType@17d2b075
-2018-10-23 09:43:05.715 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration image -> org.hibernate.type.ImageType@4db77402
-2018-10-23 09:43:05.716 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration characters -> org.hibernate.type.CharArrayType@4bb1b96b
-2018-10-23 09:43:05.716 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration char[] -> org.hibernate.type.CharArrayType@4bb1b96b
-2018-10-23 09:43:05.716 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration [C -> org.hibernate.type.CharArrayType@4bb1b96b
-2018-10-23 09:43:05.718 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration wrapper-characters -> org.hibernate.type.CharacterArrayType@7069f076
-2018-10-23 09:43:05.718 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration [Ljava.lang.Character; -> org.hibernate.type.CharacterArrayType@7069f076
-2018-10-23 09:43:05.718 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration Character[] -> org.hibernate.type.CharacterArrayType@7069f076
-2018-10-23 09:43:05.719 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration text -> org.hibernate.type.TextType@f5a7226
-2018-10-23 09:43:05.721 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration ntext -> org.hibernate.type.NTextType@62aeddc8
-2018-10-23 09:43:05.725 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration blob -> org.hibernate.type.BlobType@66e21568
-2018-10-23 09:43:05.725 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Blob -> org.hibernate.type.BlobType@66e21568
-2018-10-23 09:43:05.726 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_blob -> org.hibernate.type.MaterializedBlobType@543d5863
-2018-10-23 09:43:05.729 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration clob -> org.hibernate.type.ClobType@79a13920
-2018-10-23 09:43:05.729 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Clob -> org.hibernate.type.ClobType@79a13920
-2018-10-23 09:43:05.733 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration nclob -> org.hibernate.type.NClobType@55acec99
-2018-10-23 09:43:05.733 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.NClob -> org.hibernate.type.NClobType@55acec99
-2018-10-23 09:43:05.734 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_clob -> org.hibernate.type.MaterializedClobType@4d464510
-2018-10-23 09:43:05.735 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_nclob -> org.hibernate.type.MaterializedNClobType@401c4250
-2018-10-23 09:43:05.737 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration serializable -> org.hibernate.type.SerializableType@623e0631
-2018-10-23 09:43:05.740 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration object -> org.hibernate.type.ObjectType@18a096b5
-2018-10-23 09:43:05.741 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Object -> org.hibernate.type.ObjectType@18a096b5
-2018-10-23 09:43:05.742 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_date -> org.hibernate.type.AdaptedImmutableType@1b57c345
-2018-10-23 09:43:05.742 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_time -> org.hibernate.type.AdaptedImmutableType@6e02721d
-2018-10-23 09:43:05.742 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_timestamp -> org.hibernate.type.AdaptedImmutableType@902fdbe
-2018-10-23 09:43:05.742 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_dbtimestamp -> org.hibernate.type.AdaptedImmutableType@796d33eb
-2018-10-23 09:43:05.742 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_calendar -> org.hibernate.type.AdaptedImmutableType@5c059a68
-2018-10-23 09:43:05.742 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_calendar_date -> org.hibernate.type.AdaptedImmutableType@21ea996f
-2018-10-23 09:43:05.742 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_binary -> org.hibernate.type.AdaptedImmutableType@3f9b7fe1
-2018-10-23 09:43:05.742 DEBUG 21956 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_serializable -> org.hibernate.type.AdaptedImmutableType@2f79f192
-2018-10-23 09:43:06.640 TRACE 21956 --- [main] org.hibernate.type.TypeFactory           : Scoping types to session factory org.hibernate.internal.SessionFactoryImpl@58c42c8c
-2018-10-23 09:43:08.947  INFO 21956 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/**', OPTIONS], []
-2018-10-23 09:43:08.947  INFO 21956 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/app/**/*.{js,html}'], []
-2018-10-23 09:43:08.948  INFO 21956 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/api/authenticate'], []
-2018-10-23 09:43:09.161  INFO 21956 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: org.springframework.security.web.util.matcher.AnyRequestMatcher@1, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@8dbf0f2, org.springframework.security.web.context.SecurityContextPersistenceFilter@206bd7a0, org.springframework.security.web.header.HeaderWriterFilter@5dc9d25a, org.springframework.security.web.authentication.logout.LogoutFilter@6c225adb, com.bass.amed.security.JWTFilter@59d0fac9, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@73d8c8d7, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@350e3fb4, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@1d3546f9, org.springframework.security.web.session.SessionManagementFilter@6e6c8854, org.springframework.security.web.access.ExceptionTranslationFilter@7c871ce4, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@541897c6]
-2018-10-23 09:43:09.709  WARN 21956 --- [main] aWebConfiguration$JpaWebMvcConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2018-10-23 09:43:10.344  INFO 21956 --- [main] com.bass.amed.AmedApplication            : Started AmedApplication in 11.019 seconds (JVM running for 17.231)
-2018-10-23 10:20:34.123  INFO 20556 --- [main] com.bass.amed.AmedApplication            : Starting AmedApplication on WINDOWS-QLR57QU with PID 20556 (D:\SVN\AMED\Source\amed\out\production\classes started by User in D:\SVN\AMED\Source\amed)
-2018-10-23 10:20:34.129 DEBUG 20556 --- [main] com.bass.amed.AmedApplication            : Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
-2018-10-23 10:20:34.130  INFO 20556 --- [main] com.bass.amed.AmedApplication            : No active profile set, falling back to default profiles: default
-2018-10-23 10:20:38.375 DEBUG 20556 --- [localhost-startStop-1] c.bass.amed.security.CustomHeaderFilter  : Initializing filter 'customHeaderFilter'
-2018-10-23 10:20:38.376 DEBUG 20556 --- [localhost-startStop-1] c.bass.amed.security.CustomHeaderFilter  : Filter 'customHeaderFilter' configured successfully
-2018-10-23 10:20:39.281 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration boolean -> org.hibernate.type.BooleanType@19bedeb8
-2018-10-23 10:20:39.283 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration boolean -> org.hibernate.type.BooleanType@19bedeb8
-2018-10-23 10:20:39.283 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Boolean -> org.hibernate.type.BooleanType@19bedeb8
-2018-10-23 10:20:39.284 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration numeric_boolean -> org.hibernate.type.NumericBooleanType@566f1852
-2018-10-23 10:20:39.287 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration true_false -> org.hibernate.type.TrueFalseType@91da29b
-2018-10-23 10:20:39.289 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration yes_no -> org.hibernate.type.YesNoType@2349f14d
-2018-10-23 10:20:39.292 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte -> org.hibernate.type.ByteType@7ebe2e47
-2018-10-23 10:20:39.292 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte -> org.hibernate.type.ByteType@7ebe2e47
-2018-10-23 10:20:39.293 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Byte -> org.hibernate.type.ByteType@7ebe2e47
-2018-10-23 10:20:39.295 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration character -> org.hibernate.type.CharacterType@25f61c2c
-2018-10-23 10:20:39.295 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration char -> org.hibernate.type.CharacterType@25f61c2c
-2018-10-23 10:20:39.295 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Character -> org.hibernate.type.CharacterType@25f61c2c
-2018-10-23 10:20:39.298 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration short -> org.hibernate.type.ShortType@3f63a513
-2018-10-23 10:20:39.298 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration short -> org.hibernate.type.ShortType@3f63a513
-2018-10-23 10:20:39.298 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Short -> org.hibernate.type.ShortType@3f63a513
-2018-10-23 10:20:39.303 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration integer -> org.hibernate.type.IntegerType@7944b8b4
-2018-10-23 10:20:39.303 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration int -> org.hibernate.type.IntegerType@7944b8b4
-2018-10-23 10:20:39.303 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Integer -> org.hibernate.type.IntegerType@7944b8b4
-2018-10-23 10:20:39.306 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration long -> org.hibernate.type.LongType@3f6f3cc
-2018-10-23 10:20:39.306 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration long -> org.hibernate.type.LongType@3f6f3cc
-2018-10-23 10:20:39.307 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Long -> org.hibernate.type.LongType@3f6f3cc
-2018-10-23 10:20:39.312 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration float -> org.hibernate.type.FloatType@2839e3c8
-2018-10-23 10:20:39.312 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration float -> org.hibernate.type.FloatType@2839e3c8
-2018-10-23 10:20:39.312 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Float -> org.hibernate.type.FloatType@2839e3c8
-2018-10-23 10:20:39.315 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration double -> org.hibernate.type.DoubleType@423a0e1d
-2018-10-23 10:20:39.315 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration double -> org.hibernate.type.DoubleType@423a0e1d
-2018-10-23 10:20:39.315 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Double -> org.hibernate.type.DoubleType@423a0e1d
-2018-10-23 10:20:39.318 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration big_decimal -> org.hibernate.type.BigDecimalType@71aaf151
-2018-10-23 10:20:39.319 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.math.BigDecimal -> org.hibernate.type.BigDecimalType@71aaf151
-2018-10-23 10:20:39.320 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration big_integer -> org.hibernate.type.BigIntegerType@53940e2f
-2018-10-23 10:20:39.321 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.math.BigInteger -> org.hibernate.type.BigIntegerType@53940e2f
-2018-10-23 10:20:39.323 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration string -> org.hibernate.type.StringType@3281dfc2
-2018-10-23 10:20:39.323 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.String -> org.hibernate.type.StringType@3281dfc2
-2018-10-23 10:20:39.327 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration nstring -> org.hibernate.type.StringNVarcharType@4751e8b9
-2018-10-23 10:20:39.329 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration ncharacter -> org.hibernate.type.CharacterNCharType@494c8f29
-2018-10-23 10:20:39.331 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration url -> org.hibernate.type.UrlType@7792d851
-2018-10-23 10:20:39.331 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.net.URL -> org.hibernate.type.UrlType@7792d851
-2018-10-23 10:20:39.334 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration Duration -> org.hibernate.type.DurationType@574059d5
-2018-10-23 10:20:39.334 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.Duration -> org.hibernate.type.DurationType@574059d5
-2018-10-23 10:20:39.337 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration Instant -> org.hibernate.type.InstantType@3d620a1
-2018-10-23 10:20:39.337 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.Instant -> org.hibernate.type.InstantType@3d620a1
-2018-10-23 10:20:39.339 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalDateTime -> org.hibernate.type.LocalDateTimeType@4d7a64ca
-2018-10-23 10:20:39.339 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalDateTime -> org.hibernate.type.LocalDateTimeType@4d7a64ca
-2018-10-23 10:20:39.343 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalDate -> org.hibernate.type.LocalDateType@25a94b55
-2018-10-23 10:20:39.344 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalDate -> org.hibernate.type.LocalDateType@25a94b55
-2018-10-23 10:20:39.352 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalTime -> org.hibernate.type.LocalTimeType@4d09cade
-2018-10-23 10:20:39.352 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalTime -> org.hibernate.type.LocalTimeType@4d09cade
-2018-10-23 10:20:39.355 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetDateTime -> org.hibernate.type.OffsetDateTimeType@2a8a3ada
-2018-10-23 10:20:39.355 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetDateTime -> org.hibernate.type.OffsetDateTimeType@2a8a3ada
-2018-10-23 10:20:39.358 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetTime -> org.hibernate.type.OffsetTimeType@5482bcac
-2018-10-23 10:20:39.370 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetTime -> org.hibernate.type.OffsetTimeType@5482bcac
-2018-10-23 10:20:39.377 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration ZonedDateTime -> org.hibernate.type.ZonedDateTimeType@16a5c7e4
-2018-10-23 10:20:39.382 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.ZonedDateTime -> org.hibernate.type.ZonedDateTimeType@16a5c7e4
-2018-10-23 10:20:39.388 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration date -> org.hibernate.type.DateType@13bdf540
-2018-10-23 10:20:39.388 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Date -> org.hibernate.type.DateType@13bdf540
-2018-10-23 10:20:39.392 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration time -> org.hibernate.type.TimeType@34414ffc
-2018-10-23 10:20:39.392 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Time -> org.hibernate.type.TimeType@34414ffc
-2018-10-23 10:20:39.396 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration timestamp -> org.hibernate.type.TimestampType@6a32191e
-2018-10-23 10:20:39.397 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Timestamp -> org.hibernate.type.TimestampType@6a32191e
-2018-10-23 10:20:39.399 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Date -> org.hibernate.type.TimestampType@6a32191e
-2018-10-23 10:20:39.402 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration dbtimestamp -> org.hibernate.type.DbTimestampType@285583d4
-2018-10-23 10:20:39.406 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar -> org.hibernate.type.CalendarType@65ef48f2
-2018-10-23 10:20:39.406 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Calendar -> org.hibernate.type.CalendarType@65ef48f2
-2018-10-23 10:20:39.406 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.GregorianCalendar -> org.hibernate.type.CalendarType@65ef48f2
-2018-10-23 10:20:39.408 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar_date -> org.hibernate.type.CalendarDateType@9687f55
-2018-10-23 10:20:39.414 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration locale -> org.hibernate.type.LocaleType@4b8137c5
-2018-10-23 10:20:39.414 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Locale -> org.hibernate.type.LocaleType@4b8137c5
-2018-10-23 10:20:39.416 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration currency -> org.hibernate.type.CurrencyType@29896529
-2018-10-23 10:20:39.417 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Currency -> org.hibernate.type.CurrencyType@29896529
-2018-10-23 10:20:39.419 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration timezone -> org.hibernate.type.TimeZoneType@4cb957b8
-2018-10-23 10:20:39.420 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.TimeZone -> org.hibernate.type.TimeZoneType@4cb957b8
-2018-10-23 10:20:39.422 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration class -> org.hibernate.type.ClassType@79e7188e
-2018-10-23 10:20:39.422 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Class -> org.hibernate.type.ClassType@79e7188e
-2018-10-23 10:20:39.425 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration uuid-binary -> org.hibernate.type.UUIDBinaryType@46fb0c33
-2018-10-23 10:20:39.426 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.UUID -> org.hibernate.type.UUIDBinaryType@46fb0c33
-2018-10-23 10:20:39.426 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration uuid-char -> org.hibernate.type.UUIDCharType@5ff00507
-2018-10-23 10:20:39.430 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration binary -> org.hibernate.type.BinaryType@545b5ed0
-2018-10-23 10:20:39.430 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte[] -> org.hibernate.type.BinaryType@545b5ed0
-2018-10-23 10:20:39.430 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration [B -> org.hibernate.type.BinaryType@545b5ed0
-2018-10-23 10:20:39.432 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration wrapper-binary -> org.hibernate.type.WrapperBinaryType@cfd1075
-2018-10-23 10:20:39.432 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration Byte[] -> org.hibernate.type.WrapperBinaryType@cfd1075
-2018-10-23 10:20:39.432 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration [Ljava.lang.Byte; -> org.hibernate.type.WrapperBinaryType@cfd1075
-2018-10-23 10:20:39.434 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration row_version -> org.hibernate.type.RowVersionType@331ff3ac
-2018-10-23 10:20:39.436 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration image -> org.hibernate.type.ImageType@58324c9f
-2018-10-23 10:20:39.439 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration characters -> org.hibernate.type.CharArrayType@42507640
-2018-10-23 10:20:39.440 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration char[] -> org.hibernate.type.CharArrayType@42507640
-2018-10-23 10:20:39.441 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration [C -> org.hibernate.type.CharArrayType@42507640
-2018-10-23 10:20:39.443 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration wrapper-characters -> org.hibernate.type.CharacterArrayType@12f279b5
-2018-10-23 10:20:39.443 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration [Ljava.lang.Character; -> org.hibernate.type.CharacterArrayType@12f279b5
-2018-10-23 10:20:39.443 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration Character[] -> org.hibernate.type.CharacterArrayType@12f279b5
-2018-10-23 10:20:39.446 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration text -> org.hibernate.type.TextType@799f916e
-2018-10-23 10:20:39.449 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration ntext -> org.hibernate.type.NTextType@11c713b7
-2018-10-23 10:20:39.455 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration blob -> org.hibernate.type.BlobType@61a2aeb7
-2018-10-23 10:20:39.456 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Blob -> org.hibernate.type.BlobType@61a2aeb7
-2018-10-23 10:20:39.457 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_blob -> org.hibernate.type.MaterializedBlobType@62b09715
-2018-10-23 10:20:39.462 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration clob -> org.hibernate.type.ClobType@3bfae028
-2018-10-23 10:20:39.462 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Clob -> org.hibernate.type.ClobType@3bfae028
-2018-10-23 10:20:39.467 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration nclob -> org.hibernate.type.NClobType@64aeaf29
-2018-10-23 10:20:39.467 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.NClob -> org.hibernate.type.NClobType@64aeaf29
-2018-10-23 10:20:39.468 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_clob -> org.hibernate.type.MaterializedClobType@1e1232cf
-2018-10-23 10:20:39.469 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_nclob -> org.hibernate.type.MaterializedNClobType@64bebd55
-2018-10-23 10:20:39.472 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration serializable -> org.hibernate.type.SerializableType@15a3b42
-2018-10-23 10:20:39.489 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration object -> org.hibernate.type.ObjectType@2ba1209b
-2018-10-23 10:20:39.489 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Object -> org.hibernate.type.ObjectType@2ba1209b
-2018-10-23 10:20:39.490 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_date -> org.hibernate.type.AdaptedImmutableType@5f0bab7e
-2018-10-23 10:20:39.493 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_time -> org.hibernate.type.AdaptedImmutableType@3a7b2e2
-2018-10-23 10:20:39.507 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_timestamp -> org.hibernate.type.AdaptedImmutableType@337a6d30
-2018-10-23 10:20:39.507 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_dbtimestamp -> org.hibernate.type.AdaptedImmutableType@2921a36a
-2018-10-23 10:20:39.508 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_calendar -> org.hibernate.type.AdaptedImmutableType@2b73bd6b
-2018-10-23 10:20:39.509 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_calendar_date -> org.hibernate.type.AdaptedImmutableType@157d3a45
-2018-10-23 10:20:39.509 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_binary -> org.hibernate.type.AdaptedImmutableType@750ed637
-2018-10-23 10:20:39.509 DEBUG 20556 --- [main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_serializable -> org.hibernate.type.AdaptedImmutableType@5190010f
-2018-10-23 10:20:40.688  WARN 20556 --- [main] org.hibernate.mapping.RootClass          : HHH000038: Composite-id class does not override equals(): com.bass.amed.entity.ImportMedRegisteredEntity
-2018-10-23 10:20:40.688  WARN 20556 --- [main] org.hibernate.mapping.RootClass          : HHH000039: Composite-id class does not override hashCode(): com.bass.amed.entity.ImportMedRegisteredEntity
-2018-10-23 10:20:40.691  WARN 20556 --- [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'amedApplication': Unsatisfied dependency expressed through field 'scrRoleRepository'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'scrRoleRepository': Cannot create inner bean '(inner bean)#35a0e495' of type [org.springframework.orm.jpa.SharedEntityManagerCreator] while setting bean property 'entityManager'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name '(inner bean)#35a0e495': Cannot resolve reference to bean 'entityManagerFactory' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [com/bass/amed/configuration/DBConfiguration.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [javax.persistence.EntityManagerFactory]: Factory method 'entityManagerFactory' threw exception; nested exception is javax.persistence.PersistenceException: [PersistenceUnit: primary.datasource] Unable to build Hibernate SessionFactory; nested exception is org.hibernate.MappingException: Composite-id class must implement Serializable: com.bass.amed.entity.ImportMedRegisteredEntity
+2018-10-26 13:28:58.854  INFO 188 --- [http-nio-8443-exec-9] com.bass.amed.security.TokenProvider     : Expired JWT token.
+2018-10-26 13:28:58.854  INFO 188 --- [http-nio-8443-exec-10] com.bass.amed.security.TokenProvider     : Expired JWT token.
+2018-10-26 13:28:58.930 DEBUG 188 --- [http-nio-8443-exec-10] c.b.a.c.rest.AdministrationController    : Retrieve all economic agents
+2018-10-26 13:28:59.017 DEBUG 188 --- [http-nio-8443-exec-9] org.hibernate.SQL                        : insert into doc_numbers (code) values (?)
+2018-10-26 13:28:59.017 DEBUG 188 --- [http-nio-8443-exec-10] org.hibernate.SQL                        : select nmeconomic0_.id as id1_46_, nmeconomic0_.can_use_psychotropic_drugs as can_use_2_46_, nmeconomic0_.code as code3_46_, nmeconomic0_.contract_date as contract4_46_, nmeconomic0_.contract_number as contract5_46_, nmeconomic0_.director as director6_46_, nmeconomic0_.email as email7_46_, nmeconomic0_.filiala as filiala8_46_, nmeconomic0_.idno as idno9_46_, nmeconomic0_.lccm_name as lccm_na10_46_, nmeconomic0_.leader as leader11_46_, nmeconomic0_.legal_address as legal_a12_46_, nmeconomic0_.long_name as long_na13_46_, nmeconomic0_.name as name14_46_, nmeconomic0_.ocpo_code as ocpo_co15_46_, nmeconomic0_.parent_id as parent_16_46_, nmeconomic0_.registration_date as registr17_46_, nmeconomic0_.registration_number as registr18_46_, nmeconomic0_.statut as statut19_46_, nmeconomic0_.street as street20_46_, nmeconomic0_.tax_code as tax_cod21_46_ from nm_economic_agents nmeconomic0_
+2018-10-26 13:28:59.023 TRACE 188 --- [http-nio-8443-exec-9] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [A]
+2018-10-26 13:28:59.033 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_46_] : [INTEGER]) - [1]
+2018-10-26 13:28:59.043 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([can_use_2_46_] : [TINYINT]) - [null]
+2018-10-26 13:28:59.043 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([code3_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.044 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([contract4_46_] : [DATE]) - [null]
+2018-10-26 13:28:59.044 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([contract5_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.045 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([director6_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.045 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([email7_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.045 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([filiala8_46_] : [TINYINT]) - [null]
+2018-10-26 13:28:59.045 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([idno9_46_] : [VARCHAR]) - [4645645]
+2018-10-26 13:28:59.045 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([lccm_na10_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.045 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([leader11_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.045 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([legal_a12_46_] : [VARCHAR]) - [str.Mircesti]
+2018-10-26 13:28:59.045 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([long_na13_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.045 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([name14_46_] : [VARCHAR]) - [BASS]
+2018-10-26 13:28:59.045 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([ocpo_co15_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.045 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([parent_16_46_] : [INTEGER]) - [null]
+2018-10-26 13:28:59.045 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([registr17_46_] : [DATE]) - [null]
+2018-10-26 13:28:59.046 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([registr18_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.046 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([statut19_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.048 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([street20_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.048 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([tax_cod21_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.049 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_46_] : [INTEGER]) - [2]
+2018-10-26 13:28:59.049 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([can_use_2_46_] : [TINYINT]) - [null]
+2018-10-26 13:28:59.049 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([code3_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.049 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([contract4_46_] : [DATE]) - [null]
+2018-10-26 13:28:59.049 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([contract5_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.049 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([director6_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.049 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([email7_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.050 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([filiala8_46_] : [TINYINT]) - [null]
+2018-10-26 13:28:59.050 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([idno9_46_] : [VARCHAR]) - [5475675]
+2018-10-26 13:28:59.050 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([lccm_na10_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.050 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([leader11_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.050 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([legal_a12_46_] : [VARCHAR]) - [str.Mihail Eminovici]
+2018-10-26 13:28:59.050 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([long_na13_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.050 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([name14_46_] : [VARCHAR]) - [PETROM]
+2018-10-26 13:28:59.050 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([ocpo_co15_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.050 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([parent_16_46_] : [INTEGER]) - [null]
+2018-10-26 13:28:59.050 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([registr17_46_] : [DATE]) - [null]
+2018-10-26 13:28:59.050 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([registr18_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.050 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([statut19_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.051 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([street20_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.051 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([tax_cod21_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.051 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_46_] : [INTEGER]) - [3]
+2018-10-26 13:28:59.051 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([can_use_2_46_] : [TINYINT]) - [null]
+2018-10-26 13:28:59.051 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([code3_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.051 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([contract4_46_] : [DATE]) - [null]
+2018-10-26 13:28:59.051 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([contract5_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.051 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([director6_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.053 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([email7_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.053 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([filiala8_46_] : [TINYINT]) - [null]
+2018-10-26 13:28:59.053 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([idno9_46_] : [VARCHAR]) - [768978690879]
+2018-10-26 13:28:59.053 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([lccm_na10_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.053 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([leader11_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.053 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([legal_a12_46_] : [VARCHAR]) - [str. Igor Dodon]
+2018-10-26 13:28:59.053 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([long_na13_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.053 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([name14_46_] : [VARCHAR]) - [DAAC]
+2018-10-26 13:28:59.053 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([ocpo_co15_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.053 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([parent_16_46_] : [INTEGER]) - [null]
+2018-10-26 13:28:59.053 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([registr17_46_] : [DATE]) - [null]
+2018-10-26 13:28:59.053 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([registr18_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.053 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([statut19_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.053 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([street20_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.053 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([tax_cod21_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.054 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_46_] : [INTEGER]) - [4]
+2018-10-26 13:28:59.054 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([can_use_2_46_] : [TINYINT]) - [null]
+2018-10-26 13:28:59.054 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([code3_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.054 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([contract4_46_] : [DATE]) - [null]
+2018-10-26 13:28:59.054 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([contract5_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.054 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([director6_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.054 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([email7_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.054 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([filiala8_46_] : [TINYINT]) - [null]
+2018-10-26 13:28:59.055 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([idno9_46_] : [VARCHAR]) - [87908970]
+2018-10-26 13:28:59.055 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([lccm_na10_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.055 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([leader11_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.055 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([legal_a12_46_] : [VARCHAR]) - [str. Cusma lu Petrea]
+2018-10-26 13:28:59.055 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([long_na13_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.055 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([name14_46_] : [VARCHAR]) - [BMW]
+2018-10-26 13:28:59.056 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([ocpo_co15_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.056 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([parent_16_46_] : [INTEGER]) - [null]
+2018-10-26 13:28:59.056 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([registr17_46_] : [DATE]) - [null]
+2018-10-26 13:28:59.056 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([registr18_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.057 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([statut19_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.057 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([street20_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.058 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([tax_cod21_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.058 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_46_] : [INTEGER]) - [5]
+2018-10-26 13:28:59.058 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([can_use_2_46_] : [TINYINT]) - [null]
+2018-10-26 13:28:59.058 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([code3_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.058 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([contract4_46_] : [DATE]) - [null]
+2018-10-26 13:28:59.058 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([contract5_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.058 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([director6_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.058 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([email7_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.058 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([filiala8_46_] : [TINYINT]) - [null]
+2018-10-26 13:28:59.059 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([idno9_46_] : [VARCHAR]) - [87908970]
+2018-10-26 13:28:59.059 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([lccm_na10_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.059 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([leader11_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.059 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([legal_a12_46_] : [VARCHAR]) - [bul. Satana]
+2018-10-26 13:28:59.059 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([long_na13_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.059 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([name14_46_] : [VARCHAR]) - [Apple]
+2018-10-26 13:28:59.059 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([ocpo_co15_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.059 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([parent_16_46_] : [INTEGER]) - [null]
+2018-10-26 13:28:59.060 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([registr17_46_] : [DATE]) - [null]
+2018-10-26 13:28:59.060 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([registr18_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.060 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([statut19_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.060 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([street20_46_] : [VARCHAR]) - [null]
+2018-10-26 13:28:59.060 TRACE 188 --- [http-nio-8443-exec-10] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([tax_cod21_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.884  INFO 188 --- [http-nio-8443-exec-4] com.bass.amed.security.TokenProvider     : Expired JWT token.
+2018-10-26 13:29:26.887  INFO 188 --- [http-nio-8443-exec-3] com.bass.amed.security.TokenProvider     : Expired JWT token.
+2018-10-26 13:29:26.889 DEBUG 188 --- [http-nio-8443-exec-3] c.b.a.c.rest.AdministrationController    : Retrieve all economic agents
+2018-10-26 13:29:26.889 DEBUG 188 --- [http-nio-8443-exec-4] org.hibernate.SQL                        : insert into doc_numbers (code) values (?)
+2018-10-26 13:29:26.890 TRACE 188 --- [http-nio-8443-exec-4] o.h.type.descriptor.sql.BasicBinder      : binding parameter [1] as [VARCHAR] - [A]
+2018-10-26 13:29:26.893 DEBUG 188 --- [http-nio-8443-exec-3] org.hibernate.SQL                        : select nmeconomic0_.id as id1_46_, nmeconomic0_.can_use_psychotropic_drugs as can_use_2_46_, nmeconomic0_.code as code3_46_, nmeconomic0_.contract_date as contract4_46_, nmeconomic0_.contract_number as contract5_46_, nmeconomic0_.director as director6_46_, nmeconomic0_.email as email7_46_, nmeconomic0_.filiala as filiala8_46_, nmeconomic0_.idno as idno9_46_, nmeconomic0_.lccm_name as lccm_na10_46_, nmeconomic0_.leader as leader11_46_, nmeconomic0_.legal_address as legal_a12_46_, nmeconomic0_.long_name as long_na13_46_, nmeconomic0_.name as name14_46_, nmeconomic0_.ocpo_code as ocpo_co15_46_, nmeconomic0_.parent_id as parent_16_46_, nmeconomic0_.registration_date as registr17_46_, nmeconomic0_.registration_number as registr18_46_, nmeconomic0_.statut as statut19_46_, nmeconomic0_.street as street20_46_, nmeconomic0_.tax_code as tax_cod21_46_ from nm_economic_agents nmeconomic0_
+2018-10-26 13:29:26.895 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_46_] : [INTEGER]) - [1]
+2018-10-26 13:29:26.895 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([can_use_2_46_] : [TINYINT]) - [null]
+2018-10-26 13:29:26.895 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([code3_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.897 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([contract4_46_] : [DATE]) - [null]
+2018-10-26 13:29:26.897 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([contract5_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.897 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([director6_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.897 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([email7_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.897 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([filiala8_46_] : [TINYINT]) - [null]
+2018-10-26 13:29:26.897 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([idno9_46_] : [VARCHAR]) - [4645645]
+2018-10-26 13:29:26.897 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([lccm_na10_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.897 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([leader11_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.897 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([legal_a12_46_] : [VARCHAR]) - [str.Mircesti]
+2018-10-26 13:29:26.898 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([long_na13_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.898 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([name14_46_] : [VARCHAR]) - [BASS]
+2018-10-26 13:29:26.898 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([ocpo_co15_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.898 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([parent_16_46_] : [INTEGER]) - [null]
+2018-10-26 13:29:26.898 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([registr17_46_] : [DATE]) - [null]
+2018-10-26 13:29:26.898 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([registr18_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.898 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([statut19_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.898 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([street20_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.898 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([tax_cod21_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.898 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_46_] : [INTEGER]) - [2]
+2018-10-26 13:29:26.899 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([can_use_2_46_] : [TINYINT]) - [null]
+2018-10-26 13:29:26.899 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([code3_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.899 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([contract4_46_] : [DATE]) - [null]
+2018-10-26 13:29:26.899 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([contract5_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.899 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([director6_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.899 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([email7_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.900 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([filiala8_46_] : [TINYINT]) - [null]
+2018-10-26 13:29:26.900 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([idno9_46_] : [VARCHAR]) - [5475675]
+2018-10-26 13:29:26.900 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([lccm_na10_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.900 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([leader11_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.901 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([legal_a12_46_] : [VARCHAR]) - [str.Mihail Eminovici]
+2018-10-26 13:29:26.901 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([long_na13_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.901 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([name14_46_] : [VARCHAR]) - [PETROM]
+2018-10-26 13:29:26.901 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([ocpo_co15_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.903 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([parent_16_46_] : [INTEGER]) - [null]
+2018-10-26 13:29:26.903 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([registr17_46_] : [DATE]) - [null]
+2018-10-26 13:29:26.903 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([registr18_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.903 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([statut19_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.903 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([street20_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.903 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([tax_cod21_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.904 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_46_] : [INTEGER]) - [3]
+2018-10-26 13:29:26.904 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([can_use_2_46_] : [TINYINT]) - [null]
+2018-10-26 13:29:26.904 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([code3_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.904 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([contract4_46_] : [DATE]) - [null]
+2018-10-26 13:29:26.904 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([contract5_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.905 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([director6_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.905 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([email7_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.905 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([filiala8_46_] : [TINYINT]) - [null]
+2018-10-26 13:29:26.905 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([idno9_46_] : [VARCHAR]) - [768978690879]
+2018-10-26 13:29:26.905 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([lccm_na10_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.905 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([leader11_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.905 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([legal_a12_46_] : [VARCHAR]) - [str. Igor Dodon]
+2018-10-26 13:29:26.905 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([long_na13_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.906 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([name14_46_] : [VARCHAR]) - [DAAC]
+2018-10-26 13:29:26.906 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([ocpo_co15_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.906 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([parent_16_46_] : [INTEGER]) - [null]
+2018-10-26 13:29:26.906 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([registr17_46_] : [DATE]) - [null]
+2018-10-26 13:29:26.908 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([registr18_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.908 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([statut19_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.908 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([street20_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.908 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([tax_cod21_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.908 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_46_] : [INTEGER]) - [4]
+2018-10-26 13:29:26.908 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([can_use_2_46_] : [TINYINT]) - [null]
+2018-10-26 13:29:26.909 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([code3_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.909 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([contract4_46_] : [DATE]) - [null]
+2018-10-26 13:29:26.909 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([contract5_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.909 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([director6_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.909 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([email7_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.910 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([filiala8_46_] : [TINYINT]) - [null]
+2018-10-26 13:29:26.910 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([idno9_46_] : [VARCHAR]) - [87908970]
+2018-10-26 13:29:26.910 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([lccm_na10_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.910 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([leader11_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.910 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([legal_a12_46_] : [VARCHAR]) - [str. Cusma lu Petrea]
+2018-10-26 13:29:26.910 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([long_na13_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.910 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([name14_46_] : [VARCHAR]) - [BMW]
+2018-10-26 13:29:26.924 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([ocpo_co15_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.925 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([parent_16_46_] : [INTEGER]) - [null]
+2018-10-26 13:29:26.925 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([registr17_46_] : [DATE]) - [null]
+2018-10-26 13:29:26.925 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([registr18_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.925 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([statut19_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.925 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([street20_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.925 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([tax_cod21_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.926 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([id1_46_] : [INTEGER]) - [5]
+2018-10-26 13:29:26.926 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([can_use_2_46_] : [TINYINT]) - [null]
+2018-10-26 13:29:26.926 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([code3_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.926 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([contract4_46_] : [DATE]) - [null]
+2018-10-26 13:29:26.926 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([contract5_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.926 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([director6_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.927 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([email7_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.927 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([filiala8_46_] : [TINYINT]) - [null]
+2018-10-26 13:29:26.927 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([idno9_46_] : [VARCHAR]) - [87908970]
+2018-10-26 13:29:26.927 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([lccm_na10_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.927 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([leader11_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.927 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([legal_a12_46_] : [VARCHAR]) - [bul. Satana]
+2018-10-26 13:29:26.927 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([long_na13_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.927 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([name14_46_] : [VARCHAR]) - [Apple]
+2018-10-26 13:29:26.928 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([ocpo_co15_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.928 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([parent_16_46_] : [INTEGER]) - [null]
+2018-10-26 13:29:26.928 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([registr17_46_] : [DATE]) - [null]
+2018-10-26 13:29:26.928 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([registr18_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.928 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([statut19_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.928 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([street20_46_] : [VARCHAR]) - [null]
+2018-10-26 13:29:26.928 TRACE 188 --- [http-nio-8443-exec-3] o.h.type.descriptor.sql.BasicExtractor   : extracted value ([tax_cod21_46_] : [VARCHAR]) - [null]
