@@ -36,10 +36,9 @@ export class RegCerereComponent implements OnInit {
         'requestNumber': [null],
         'regDate':{disabled: true, value: new Date()},
         'startDate': [new Date()],
-        'endDate': [''],
         'currentStep' : ['R'],
         'company': ['', Validators.required],
-        'flowControl':['A', Validators.required],
+        'flowControl':['CLAP', Validators.required],
         'clinicalTrails': this.fb.group({
             'status' : ['P']
             }),
@@ -82,40 +81,38 @@ export class RegCerereComponent implements OnInit {
           return;
       }
 
+      let formModel = this.registerClinicalTrailForm.value;
 
-      var formModel = this.registerClinicalTrailForm.value;
-
-      if(formModel.flowControl === 'A')
+      if(formModel.flowControl === 'CLAP')
       {
-          this.registerClinicalTrailForm.get('type.id').setValue('3');
-          this.registerClinicalTrailForm.get('endDate').setValue(new Date());
+          formModel.type.id='3';
 
-          this.registerClinicalTrailForm.value.requestHistories = [{
-              startDate : this.registerClinicalTrailForm.get('startDate').value,
-              endDate : this.registerClinicalTrailForm.get('endDate').value,
+          formModel.requestHistories = [{
+              startDate : formModel.startDate,
+              endDate : new Date(),
               username : this.authService.getUserName(),
-              step : this.registerClinicalTrailForm.get('currentStep').value
+              step : formModel.currentStep
           }];
 
-          this.registerClinicalTrailForm.value.clinicalTrails.documents = this.docs;
-          console.log("regCerereObject", JSON.stringify(this.registerClinicalTrailForm.value));
+          formModel.clinicalTrails.documents = this.docs;
+          console.log("regCerereObject", JSON.stringify(formModel));
 
-          this.subscriptions.push(this.requestService.addClinicalTrailRequest(this.registerClinicalTrailForm.value).subscribe(data => {
+          this.subscriptions.push(this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
                     console.log("data from backend", data);
                   this.router.navigate(['/dashboard/module/clinic-studies/evaluate/'+data.body]);
               })
           );
       }
-      else if(formModel.flowControl === 'B')
+      else if(formModel.flowControl === 'CLPSC')
       {
           this.registerClinicalTrailForm.get('type.id').setValue('4')
           console.log('Going to -> Aprobarea amendamentelor la Protocoalele Studiilor Clinice la medicamente')
       }
-      else if(formModel.flowControl === 'C')
+      else if(formModel.flowControl === 'CLNP')
       {
           console.log('Going to -> Înregistrarea Notificărilor privind Protocolul studiului clinic cu medicamente')
       }
-      else if(formModel.flowControl === 'D')
+      else if(formModel.flowControl === 'CLISP')
       {
           console.log('Going to -> Înregistrarea informației privind siguranța produsului de investigație clinică')
       }

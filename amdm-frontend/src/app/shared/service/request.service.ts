@@ -25,4 +25,9 @@ export class RequestService{
     {
         return this.http.get('/api/load-clinical-trail-request', {params :{ id : id} });
     }
+
+    addPriceRequest(requestDetails: any): Observable<HttpResponse<any>> {
+        console.log(requestDetails);
+        return this.http.post<any>('/api/add-prices-request', requestDetails, {observe: 'response'});
+    }
 }

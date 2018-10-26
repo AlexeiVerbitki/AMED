@@ -7,10 +7,10 @@ import {CerereDubAutorActComponent} from "./cerere-dub-autor-act/cerere-dub-auto
 import {RegDrugControl} from "./reg-drug-control/reg-drug-control";
 
 const routes: Routes = [
-    {path: 'activity-authorization', component: CerereSolicAutorComponent},
+    {path: 'activity-authorization/:id', component: CerereSolicAutorComponent},
     {path: 'transfer-authorization', component: CerereImportExportComponent},
     {path: 'modify-authority', component: CerereModAutorActComponent},
-    {path: 'duplicate-authority', component: CerereDubAutorActComponent},
+    {path: 'duplicate-authority/:id', component: CerereDubAutorActComponent},
     {path: 'reg-drug-control', component: RegDrugControl},
 ];
 

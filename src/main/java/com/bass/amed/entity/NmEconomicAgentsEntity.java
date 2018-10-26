@@ -2,8 +2,6 @@ package com.bass.amed.entity;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Table(name = "nm_economic_agents", schema = "amed", catalog = "")

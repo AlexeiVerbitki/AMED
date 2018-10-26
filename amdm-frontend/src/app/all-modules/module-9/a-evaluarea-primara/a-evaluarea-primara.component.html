@@ -1,370 +1,359 @@
 <div class="container-fluid sky z-depth-2">
-  <h3 class="text-center my-3 font-weight-bold">Evaluarea primara</h3>
-  <hr>
-
-  <form [formGroup]='evaluateClinicalTrailForm'  #f="ngForm">
-    <div class="row">
-      <div class="col-md-4">
-        <div class="md-form">
-          <input id="regNr" mdbInputDirective type="text" class="form-control" formControlName="requestNumber" [attr.disabled]="true">
-          <label for="regNr">Nr. de înregistrare a cererii
-          </label>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="md-form">
-          <input id="regDate" mdbInputDirective type="text" class="form-control" formControlName="startDate"  [attr.disabled]="true">
-          <label for="regDate">Data de înregistrare a cererii
-          </label>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="md-form">
-          <input id="company" mdbInputDirective type="text" class="form-control"  value={{evaluateClinicalTrailForm.value.company.name}}  [attr.disabled]="true">
-          <label for="company">Compania solicitant
-          </label>
-        </div>
-      </div>
-    </div>
+    <h3 class="text-center my-3 font-weight-bold">Evaluarea primara</h3>
     <hr>
 
-    <app-document [documents]= "docs" [nrCerere]="evaluateClinicalTrailForm.get('requestNumber').value"></app-document>
-    <hr>
-
-      <div formGroupName="clinicalTrails">
-        <div class="col-md-12">
-          <div class="md-form">
-              <textarea type="text" id="titluStud" class="md-textarea form-control" mdbInputDirective rows="1" formControlName="title"></textarea>
-              <label for="titluStud">Titlul studiului</label>
-          </div>
-        </div>
-
-        <h5 class="text-center font-weight-bold">Tipul studiului clinic</h5>
-
+    <form [formGroup]='evaluateClinicalTrailForm' (ngSubmit)="onSubmit()" #f="ngForm">
         <div class="row">
-            <div class="col-md-6">
-              <div class="md-form">
-                  <div class="container">
-                      <mat-radio-group class="radio-btn-wrapper" formControlName="treatmentId">
-                          <div class="row">
-                              <div class="col-12">
-                                  <h5 class="text-center font-weight-bold">Tratament</h5>
-                                  <hr>
-                              </div>
-                              <div class="col-md-12">
-                                  <mat-radio-button name="prop1" value="1">Unicentric</mat-radio-button>
-                              </div>
-                              <div class="col-md-12">
-                                  <mat-radio-button name="prop2" value="2">Multicentric</mat-radio-button>
-                              </div>
-                          </div>
-                      </mat-radio-group>
-                  </div>
-              </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="regNr" mdbInputDirective type="text" class="form-control" formControlName="requestNumber">
+                    <label for="regNr">Nr. cererii
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="regDate" [matDatepicker]="picker" mdbInputDirective type="text" class="form-control"
+                           formControlName="startDate">
+                    <mat-datepicker touchUi #picker></mat-datepicker>
+                    <label for="regDate">Data
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="company" mdbInputDirective type="text" class="form-control"
+                           value={{evaluateClinicalTrailForm.value.company.name}} [attr.disabled]="true">
+                    <label for="company">Compania solicitant
+                    </label>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        <app-document [documents]="docs"
+                      [nrCerere]="evaluateClinicalTrailForm.get('requestNumber').value"></app-document>
+        <hr>
+
+        <mat-radio-group>
+            <div class="container">
+                <div class="row">
+                    <mat-radio-group class="radio-btn-wrapper"  value={{evaluateClinicalTrailForm.getRawValue().typeCode}} [disabled]="true">
+                        <div class="col-md-12">
+                            <mat-radio-button name="prop1" value="CLAP">Aprobarea Studiilor Clinice la medicamente</mat-radio-button>
+                        </div>
+                        <div class="col-md-12">
+                            <mat-radio-button name="prop2" value="CLPSC">Aprobarea amendamentelor la Protocoalele Studiilor Clinice la medicamente</mat-radio-button>
+                        </div>
+                        <div class="col-md-12">
+                            <mat-radio-button name="prop3" value="CLNP">Înregistrarea Notificărilor privind Protocolul studiului clinic cu medicamente</mat-radio-button>
+                        </div>
+                        <div class="col-md-12">
+                            <mat-radio-button name="prop4" value="CLISP">Înregistrarea informației privind siguranța produsului de investigație clinică</mat-radio-button>
+                        </div>
+                    </mat-radio-group>
+                </div>
+            </div>
+        </mat-radio-group>
+        <hr>
+
+        <div formGroupName="clinicalTrails">
+            <div class="col-md-12">
+                <div class="md-form">
+                    <textarea type="text" id="titluStud" class="md-textarea form-control" mdbInputDirective rows="1"
+                              formControlName="title"></textarea>
+                    <label for="titluStud">Titlul studiului</label>
+                </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="md-form">
-                    <div class="container">
-                        <mat-radio-group class="radio-btn-wrapper" formControlName="provenanceId">
-                            <div class="row">
-                                <div class="col-12">
-                                    <h5 class="text-center font-weight-bold">Proveniența</h5>
-                                    <hr>
-                                </div>
-                                <div class="col-md-12">
-                                    <mat-radio-button name="prop1" value="3">Național</mat-radio-button>
-                                </div>
-                                <div class="col-md-12">
-                                    <mat-radio-button name="prop2" value="4">Internațional</mat-radio-button>
-                                </div>
+            <h5 class="text-center font-weight-bold">Tipul studiului clinic</h5>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="md-form">
+                        <div class="container">
+                            <div class="col-md-12">
+                                <mat-radio-group class="adio-btn-wrapper" [value]="evaluateClinicalTrailForm.get('clinicalTrails').value.treatment.id" (change)="onTreatmentChange($event)">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h5 class="text-center font-weight-bold">Tratament</h5>
+                                            <hr>
+                                        </div>
+                                        <div class="col-12">
+                                            <mat-radio-button class="col-12" *ngFor="let treatment of treatmentList" [value]="treatment.id">{{treatment.description}}</mat-radio-button>
+                                        </div>
+                                    </div>
+                                </mat-radio-group>
                             </div>
-                        </mat-radio-group>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="md-form">
+                        <div class="container">
+                            <div class="col-md-12">
+                                <mat-radio-group class="adio-btn-wrapper" [value]="evaluateClinicalTrailForm.get('clinicalTrails').value.provenance.id" (change)="onProvenanceChange($event)">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h5 class="text-center font-weight-bold">Tratament</h5>
+                                            <hr>
+                                        </div>
+                                        <div class="col-12">
+                                            <mat-radio-button class="col-12" *ngFor="let provenance of provenanceList" [value]="provenance.id">{{provenance.description}}</mat-radio-button>
+                                        </div>
+                                    </div>
+                                </mat-radio-group>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+            <hr>
+
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="md-form">
+                        <input id="sponsoStudClinic" mdbInputDirective type="text" class="form-control"
+                               formControlName="sponsor">
+                        <label for="sponsoStudClinic">Sponsorul Studiului clinic</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="md-form">
+                        <input id="fazaStudClinic" mdbInputDirective type="text" class="form-control"
+                               formControlName="phase">
+                        <label for="fazaStudClinic">Faza Studiului clinic</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="md-form">
+                        <input id="numEudraCT" mdbInputDirective type="text" class="form-control"
+                               formControlName="eudraCtNr">
+                        <label for="numEudraCT">Numărul Eudra CT nr.</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="md-form">
+                        <input id="codStud" mdbInputDirective type="text" class="form-control" formControlName="code">
+                        <label for="codStud">Codul studiului</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="md-form">
+                        <input id="institutiaMedLocDesStudClinic" mdbInputDirective type="text" class="form-control"
+                               formControlName="medicalInstitution">
+                        <label for="institutiaMedLocDesStudClinic">Instituţia medicală / Locul desfăşurării studiului
+                            clinic</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="md-form">
+                        <input id="popStudClinicNumPacienti" mdbInputDirective type="number" class="form-control"
+                               formControlName="trialPopulation">
+                        <label for="popStudClinicNumPacienti">Populația studiului clinic / Numărul pacienţilor</label>
+                    </div>
+                </div>
+            </div>
+            <hr>
+
+            <!--<input type="text" matInput  [matAutocomplete]="auto" formControlName="searchField">-->
+            <!--<mat-autocomplete #auto="matAutocomplete">-->
+            <!--<mat-option *ngFor="let option of searches" [value]="option.name">{{ option.name }}</mat-option>-->
+            <!--</mat-autocomplete>-->
+
+
+            <div [formGroup]="medicamentForm">
+                <h5 class="text-center font-weight-bold">Medicamentul de investigat</h5>
+                <div class="row">
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput [matAutocomplete]="auto" placeholder="Nume medicament"
+                                       formControlName="searchField">
+                            </mat-form-field>
+                            <mat-autocomplete #auto="matAutocomplete">
+                                <mat-option (onSelectionChange)="onMedicamentsSearchSelect(option)"
+                                            *ngFor="let option of medicamentSearches" [value]="option.name">{{
+                                    option.name + ' _' }}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Producatorul" formControlName="producer">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Doza" formControlName="dose">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Grupa farmaceutica" formControlName="group">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Forma farmaceutică"
+                                       formControlName="pharmaceuticalForm">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Calea de administrare"
+                                       formControlName="administeringMode">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+
+            <div [formGroup]="referenceProductFormn">
+                <h5 class="text-center font-weight-bold">Produsul de referinţă</h5>
+                <div class="row">
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput [matAutocomplete]="auto2" placeholder="Nume medicament"
+                                       formControlName="searchField">
+                            </mat-form-field>
+                            <mat-autocomplete #auto2="matAutocomplete">
+                                <mat-option (onSelectionChange)="onReferenceProductSearchSelect(option)"
+                                            *ngFor="let option of referenceProductSearches" [value]="option.name">{{
+                                    option.name + 'hz' }}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Producatorul" formControlName="producer">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Doza" formControlName="dose">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Grupa farmaceutica" formControlName="group">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Forma farmaceutică"
+                                       formControlName="pharmaceuticalForm">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Calea de administrare"
+                                       formControlName="administeringMode">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+
+            <h5 class="text-center font-weight-bold">Lista de investigatori</h5>
+            <hr>
+            <div [formGroup]="addInvestigatorForm" class="row">
+                <div class="col-md-3">
+                    <div class="md-form">
+                        <input id="name" mdbInputDirective type="text" class="form-control" formControlName="firstName"
+                               required>
+                        <label for="name">Nume<span class="text-danger">*</span></label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="md-form">
+                        <input id="surname" mdbInputDirective type="text" class="form-control"
+                               formControlName="lastName" required>
+                        <label for="surname">Prenume<span class="text-danger">*</span></label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="md-form">
+                        <input id="title" mdbInputDirective type="text" class="form-control" formControlName="title"
+                               required>
+                        <label for="title">Titlu <span class="text-danger">*</span></label>
+                    </div>
+                </div>
+                <div class="offset-1 col-md-2">
+                    <div class="md-form">
+                        <div class="position-button">
+                            <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
+                                    mdbWavesEffect (click)="addInvestigator()">Adaugare
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div formGroupName="investigators">
+                <table class="table table-widths text-center">
+                    <thead class="black white-text">
+                    <tr>
+                        <th class="w-25" scope="col">Nume</th>
+                        <th class="w-25" scope="col">Prenume</th>
+                        <th class="w-25" scope="col">Titlu</th>
+                        <th class="w-25" scope="col">Actiuni</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let investigator of investigatorsList">
+                        <td>{{ investigator.firstName}}</td>
+                        <td>{{ investigator.lastName }}</td>
+                        <td> {{ investigator.title }}</td>
+                        <td>
+                            <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                    (click)="deleteInvestigator(investigator)" mdbWavesEffect>Delete
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+
+            <app-payment [receipts]="receiptsList" [paymentOrders]="paymentOrdersList" (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
+
         </div>
         <hr>
 
-
-        <div class="row">
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input id="sponsoStudClinic" mdbInputDirective type="text" class="form-control" formControlName="sponsor">
-                    <label for="sponsoStudClinic">Sponsorul Studiului clinic</label>
-                </div>
-            </div>
-          <div class="col-md-4">
-              <div class="md-form">
-                  <input id="fazaStudClinic" mdbInputDirective type="text" class="form-control" formControlName="phase">
-                  <label for="fazaStudClinic">Faza Studiului clinic</label>
-              </div>
-          </div>
-          <div class="col-md-4">
-              <div class="md-form">
-                  <input id="numEudraCT" mdbInputDirective type="text" class="form-control" formControlName="eudraCtNr">
-                  <label for="numEudraCT">Numărul Eudra CT nr.</label>
-              </div>
-          </div>
+        <div class="text-center">
+            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect type="submit" [disabled]="disabledState">
+                Urmatorul pas
+            </button>
         </div>
-
-        <div class="row">
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input id="codStud" mdbInputDirective type="text" class="form-control" formControlName="code">
-                    <label for="codStud">Codul studiului</label>
-                </div>
-            </div>
-          <div class="col-md-4">
-              <div class="md-form">
-                  <input id="institutiaMedLocDesStudClinic" mdbInputDirective type="text" class="form-control" formControlName="medicalInstitution">
-                  <label for="institutiaMedLocDesStudClinic">Instituţia medicală / Locul desfăşurării studiului clinic</label>
-              </div>
-          </div>
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input id="popStudClinicNumPacienti" mdbInputDirective type="number" class="form-control" formControlName="trialPopulation">
-                    <label for="popStudClinicNumPacienti">Populația studiului clinic / Numărul pacienţilor</label>
-                </div>
-            </div>
-        </div>
-      <hr>
-
-          <!--<input type="text" matInput  [matAutocomplete]="auto" formControlName="searchField">-->
-          <!--<mat-autocomplete #auto="matAutocomplete">-->
-              <!--<mat-option *ngFor="let option of searches" [value]="option.name">{{ option.name }}</mat-option>-->
-          <!--</mat-autocomplete>-->
-
-
-            <div formGroupName="medicament">
-              <h5 class="text-center font-weight-bold">Medicamentul de investigat</h5>
-              <div class="row">
-                  <div class="col-2">
-                      <div class="md-form-modified">
-                          <mat-form-field>
-                            <input type="text" matInput [matAutocomplete]="auto" placeholder="Nume medicament" formControlName="searchField">
-                          </mat-form-field>
-                          <mat-autocomplete #auto="matAutocomplete">
-                              <mat-option (onSelectionChange)="onMedicamentsSearchSelect(option)" *ngFor="let option of medicamentSearches" [value]="option.name" >{{ option.name + ' _' }}</mat-option>
-                          </mat-autocomplete>
-                      </div>
-                  </div>
-                  <div class="col-2">
-                      <div class="md-form-modified">
-                          <mat-form-field>
-                              <input type="text" matInput placeholder="Producatorul"  formControlName="producer">
-                          </mat-form-field>
-                      </div>
-                  </div>
-                  <div class="col-2">
-                      <div class="md-form-modified">
-                          <mat-form-field>
-                              <input type="text" matInput placeholder="Doza"  formControlName="dose">
-                          </mat-form-field>
-                      </div>
-                  </div>
-                  <div class="col-2">
-                      <div class="md-form-modified">
-                          <mat-form-field>
-                              <input type="text" matInput placeholder="Grupa farmaceutica"  formControlName="group">
-                          </mat-form-field>
-                      </div>
-                  </div>
-                  <div class="col-2">
-                      <div class="md-form-modified">
-                          <mat-form-field>
-                              <input type="text" matInput placeholder="Forma farmaceutică"  formControlName="pharmaceuticalForm">
-                          </mat-form-field>
-                      </div>
-                  </div>
-                  <div class="col-2">
-                      <div class="md-form-modified">
-                          <mat-form-field>
-                              <input type="text" matInput placeholder="Calea de administrare"  formControlName="administeringMode">
-                          </mat-form-field>
-                      </div>
-                  </div>
-              </div>
-              <hr>
-            </div>
-
-          <div formGroupName="referenceProduct">
-              <h5 class="text-center font-weight-bold">Produsul de referinţă</h5>
-              <div class="row">
-                  <div class="col-2">
-                      <div class="md-form-modified">
-                          <mat-form-field>
-                              <input type="text" matInput [matAutocomplete]="auto2" placeholder="Nume medicament" formControlName="searchField">
-                          </mat-form-field>
-                          <mat-autocomplete #auto2="matAutocomplete">
-                              <mat-option (onSelectionChange)="onReferenceProductSearchSelect(option)" *ngFor="let option of referenceProductSearches" [value]="option.name" >{{ option.name + 'hz' }}</mat-option>
-                          </mat-autocomplete>
-                      </div>
-                  </div>
-                  <div class="col-2">
-                      <div class="md-form-modified">
-                          <mat-form-field>
-                              <input type="text" matInput placeholder="Producatorul"  formControlName="producer">
-                          </mat-form-field>
-                      </div>
-                  </div>
-                  <div class="col-2">
-                      <div class="md-form-modified">
-                          <mat-form-field>
-                              <input type="text" matInput placeholder="Doza"  formControlName="dose">
-                          </mat-form-field>
-                      </div>
-                  </div>
-                  <div class="col-2">
-                      <div class="md-form-modified">
-                          <mat-form-field>
-                              <input type="text" matInput placeholder="Grupa farmaceutica"  formControlName="group">
-                          </mat-form-field>
-                      </div>
-                  </div>
-                  <div class="col-2">
-                      <div class="md-form-modified">
-                          <mat-form-field>
-                              <input type="text" matInput placeholder="Forma farmaceutică"  formControlName="pharmaceuticalForm">
-                          </mat-form-field>
-                      </div>
-                  </div>
-                  <div class="col-2">
-                      <div class="md-form-modified">
-                          <mat-form-field>
-                              <input type="text" matInput placeholder="Calea de administrare"  formControlName="administeringMode">
-                          </mat-form-field>
-                      </div>
-                  </div>
-              </div>
-              <hr>
-          </div>
-
-          <h5 class="text-center font-weight-bold">Lista de investigatori</h5>
-          <hr>
-          <div [formGroup]="addInvestigatorForm" class="row">
-              <div class="col-md-3">
-                  <div class="md-form">
-                      <input id="name" mdbInputDirective type="text" class="form-control" formControlName="firstName" required>
-                      <label for="name">Nume<span class="text-danger">*</span></label>
-                  </div>
-              </div>
-              <div class="col-md-3">
-                  <div class="md-form">
-                      <input id="surname" mdbInputDirective type="text" class="form-control" formControlName="lastName" required>
-                      <label for="surname">Prenume<span class="text-danger">*</span></label>
-                  </div>
-              </div>
-              <div class="col-md-3">
-                  <div class="md-form">
-                      <input id="title" mdbInputDirective type="text" class="form-control" formControlName="title" required>
-                      <label for="title">Titlu <span class="text-danger">*</span></label>
-                  </div>
-              </div>
-              <div class="offset-1 col-md-2">
-                  <div class="md-form">
-                      <div class="position-button">
-                        <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
-                                mdbWavesEffect (click)="addInvestigator()">Adaugare</button>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <div formGroupName="investigators">
-              <table class="table table-widths text-center">
-                  <thead class="black white-text">
-                      <tr>
-                          <th class="w-25" scope="col">Nume</th>
-                          <th class="w-25" scope="col">Prenume</th>
-                          <th class="w-25" scope="col">Titlu</th>
-                          <th class="w-25" scope="col">Actiuni</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr *ngFor="let investigator of investigatorsList">
-                          <td>{{ investigator.firstName}}</td>
-                          <td>{{ investigator.lastName }}</td>
-                          <td> {{ investigator.title }}</td>
-                          <td>
-                              <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="deleteInvestigator(investigator)" mdbWavesEffect>Delete</button>
-                          </td>
-                      </tr>
-                  </tbody>
-              </table>
-          </div>
-          <hr>
-
-        <h5 class="text-center font-weight-bold">Predarea Bon/bonuri de plata</h5>
-        <hr>
-          <div class="row" [formGroup]="addReceiptForm">
-              <div class="col">
-                  <!--<div class="md-form">-->
-                      <!--<input id="bonNr" mdbInputDirective type="text" class="form-control">-->
-                      <!--<label for="bonNr">Bon nr.</label>-->
-                  <!--</div>-->
-              </div>
-              <div class="col">
-                  <!--<div class="md-form-modified">-->
-                      <!--<mat-form-field class="w-100">-->
-                          <!--<input matInput [matDatepicker]="bonNrData" placeholder="Data">-->
-                          <!--<mat-datepicker-toggle matSuffix [for]="bonNrData"></mat-datepicker-toggle>-->
-                          <!--<mat-datepicker touchUi #bonNrData></mat-datepicker>-->
-                      <!--</mat-form-field>-->
-                  <!--</div>-->
-              </div>
-              <div class="col">
-                  <div class="md-form">
-                      <input id="motivulEmiterii" mdbInputDirective type="text" class="form-control" formControlName="name">
-                      <label for="motivulEmiterii">Motivul emiterii</label>
-                  </div>
-              </div>
-              <div class="col">
-                  <div class="md-form">
-                      <input id="sumaBon" mdbInputDirective type="number" class="form-control" formControlName="summ">
-                      <label for="sumaBon">Suma (lei)</label>
-                  </div>
-              </div>
-              <div class="col-2">
-                  <div class="md-form">
-                      <div class="position-button">
-                          <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                          (click)="addReceipt()">Adaugare</button>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <table class="table table-widths text-center table-sm">
-              <thead class="black white-text">
-              <tr>
-                  <th scope="col">Bon nr.</th>
-                  <th scope="col">Data</th>
-                  <th scope="col">Motivul emiterii</th>
-                  <th scope="col">Suma</th>
-                  <th scope="col">Actiuni</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr *ngFor="let receipt of receiptsList">
-                  <th scope="row">{{ receipt.id }}</th>
-                  <td>{{ receipt.emissionDate | date: 'dd/mm/yyyy' }}</td>
-                  <td>{{ receipt.name }}</td>
-                  <td>{{ receipt.summ }}</td>
-                  <td>
-                      <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect
-                              (click)="deleteReceipt(receipt)">Delete</button>
-                  </td>
-              </tr>
-              </tbody>
-          </table>
-          <div class="alert alert-primary text-center w-100">Total spre plata : 1500 lei
-          </div>
-          <hr>
-      </div>
-
-    <hr>
-
-
-  </form>
+    </form>
 
 
 </div>

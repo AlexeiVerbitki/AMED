@@ -7,6 +7,7 @@ import {AdministrationService} from "../../../shared/service/administration.serv
 import {LicenseService} from "../../../shared/service/license/license.service";
 import {ConfirmationDialogComponent} from "../../../confirmation-dialog/confirmation-dialog.component";
 import {MatDialog} from "@angular/material";
+import {AuthService} from "../../../shared/service/authetication.service";
 
 @Component({
     selector: 'app-evaluare-cerere-lic',
@@ -15,7 +16,6 @@ import {MatDialog} from "@angular/material";
 })
 export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
-    modelToSubmit: any = {};
     docs: Document [] = [];
     tipCerere: string;
     requestId: string;
@@ -23,15 +23,19 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
     localities: any[];
     objAddresses: any[] = [];
     announces: any[];
+    oldData : any;
 
     CPCDId: string;
     ASPId: string;
 
-    mFormSubbmitted : boolean = false;
     rFormSubbmitted : boolean = false;
     oFormSubbmitted : boolean = false;
 
     private subscriptions: Subscription[] = [];
+
+    //count time
+    startDate: Date;
+    endDate: Date;
 
     //Validations
     mForm: FormGroup;
@@ -43,10 +47,13 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
                 private fb: FormBuilder,
                 private administrationService: AdministrationService,
                 private licenseService: LicenseService,
-                public dialog: MatDialog) {
+                public dialog: MatDialog,
+                private  authService: AuthService) {
+
     }
 
     ngOnInit() {
+        this.startDate = new Date();
         this.initFormData();
 
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
@@ -55,7 +62,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
                 this.subscriptions.push(
                     this.licenseService.retrieveLicenseByRequestId(this.requestId).subscribe(data => {
-                            console.log('inome', data);
+                            this.oldData = data;
                             this.patchData(data);
 
                             this.subscriptions.push(
@@ -92,11 +99,15 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         this.mForm.get('nrCererii').patchValue(data.requestNumber);
         this.mForm.get('dataEliberarii').patchValue(new Date(data.startDate));
 
-        this.rForm.get('farmDir').patchValue(data.license.resolution.pharmacyMaster);
+        if (data.license.resolution)
+        {
+            this.rForm.get('farmDir').patchValue(data.license.resolution.pharmacyMaster);
 
-        this.rForm.get('decizieLuata').patchValue(data.license.resolution.resolution);
-        this.rForm.get('decisionDate').patchValue(data.license.resolution.date);
-        this.rForm.get('argumentDec').patchValue(data.license.resolution.reason);
+            this.rForm.get('decizieLuata').patchValue(data.license.resolution.resolution);
+            this.rForm.get('decisionDate').patchValue(data.license.resolution.date);
+            this.rForm.get('argumentDec').patchValue(data.license.resolution.reason);
+        }
+
 
         this.rForm.get('seriaLic').patchValue(data.license.serialNr);
         this.rForm.get('nrLic').patchValue(data.license.nr);
@@ -109,7 +120,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         this.docs.forEach(doc => doc.isOld = true);
 
 
-        if (data.license.commisionResponses.length > 0)
+        if (data.license.commisionResponses && data.license.commisionResponses.length > 0)
         {
             data.license.commisionResponses.forEach(csr => {
                 if (csr.organization === 'CPCD')
@@ -261,12 +272,44 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         }
 
         this.rFormSubbmitted = false;
+        let modelToSubmit = this.composeModel('E');
+
+        this.subscriptions.push(
+            this.licenseService.saveEvaluateLicense(modelToSubmit).subscribe(data => {
+                    this.router.navigate(['/dashboard/module']);
+                }
+            )
+        );
+
+    }
+
+    submitNextStep()
+    {
+        this.rFormSubbmitted = true;
+        if (!this.rForm.valid || this.docs.length==0 || this.objAddresses.length == 0)
+        {
+            return;
+        }
+
+        this.rFormSubbmitted = false;
+        let modelToSubmit = this.composeModel('I');
+
+        this.subscriptions.push(
+            this.licenseService.evaluateNextLicense(modelToSubmit).subscribe(data => {
+                    this.router.navigate(['/dashboard/module/license/issue', this.requestId]);
+                }
+            )
+        );
+
+    }
 
 
-        let modelToSubmit : any = {};
-        let licenseModel : any = {};
-        let resolution : any = {};
-        let commisionResponses : any[] = [];
+    private composeModel(currentStep : string) {
+        this.endDate = new Date();
+        let modelToSubmit: any = {};
+        let licenseModel: any = {};
+        let resolution: any = {};
+        let commisionResponses: any[] = [];
 
         modelToSubmit.id = this.requestId;
 
@@ -281,72 +324,95 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         licenseModel.serialNr = this.rForm.get('seriaLic').value;
         licenseModel.nr = this.rForm.get('nrLic').value;
         licenseModel.tax = this.rForm.get('tax').value;
-        if (this.rForm.get('taxPaid').value === true)
-        {
+        if (this.rForm.get('taxPaid').value === true) {
             licenseModel.taxPaid = 1;
         }
 
         licenseModel.addresses = this.objAddresses;
 
 
-        if (this.rForm.get('CPCDNrdeintrare').value)
-        {
-            let extraData : any;
-            if (this.rForm.get('CPCDMethod').value.code === 'email')
-            {
-                extraData =  this.rForm.get('CPCDEmail').value;
+        if (this.rForm.get('CPCDNrdeintrare').value) {
+            let extraData: any;
+            if (this.rForm.get('CPCDMethod').value.code === 'email') {
+                extraData = this.rForm.get('CPCDEmail').value;
             }
-            else{
-                extraData =  this.rForm.get('CPCDPhone').value;
+            else {
+                extraData = this.rForm.get('CPCDPhone').value;
             }
             commisionResponses.push({
                 id: this.CPCDId,
                 date: this.rForm.get('CPCDDate').value,
                 entryRspNumber: this.rForm.get('CPCDNrdeintrare').value,
-                organization : 'CPCD',
-                announcedMethods : this.rForm.get('CPCDMethod').value,
-                extraData : extraData
+                organization: 'CPCD',
+                announcedMethods: this.rForm.get('CPCDMethod').value,
+                extraData: extraData
             });
         }
-        if (this.rForm.get('ASPNrdeintrare').value)
-        {
-            let extraData : any;
-            if (this.rForm.get('ASPMethod').value.code === 'email')
-            {
-                extraData =  this.rForm.get('ASPEmail').value;
+        if (this.rForm.get('ASPNrdeintrare').value) {
+            let extraData: any;
+            if (this.rForm.get('ASPMethod').value.code === 'email') {
+                extraData = this.rForm.get('ASPEmail').value;
             }
-            else{
-                extraData =  this.rForm.get('ASPPhone').value;
+            else {
+                extraData = this.rForm.get('ASPPhone').value;
             }
             commisionResponses.push({
                 id: this.ASPId,
                 date: this.rForm.get('ASPDate').value,
                 entryRspNumber: this.rForm.get('ASPNrdeintrare').value,
-                organization : 'ASP',
-                announcedMethods : this.rForm.get('ASPMethod').value,
-                extraData : extraData
+                organization: 'ASP',
+                announcedMethods: this.rForm.get('ASPMethod').value,
+                extraData: extraData
             });
         }
 
+        modelToSubmit.requestHistories = [{
+            startDate: this.startDate,
+            endDate: this.endDate,
+            username: this.authService.getUserName(),
+            step: 'E'
+        }];
+
+        modelToSubmit.currentStep = currentStep;
 
         licenseModel.commisionResponses = commisionResponses;
 
         modelToSubmit.license = licenseModel;
-        console.log( licenseModel);
-
-
-        this.subscriptions.push(
-            this.licenseService.saveEvaluateLicense(modelToSubmit).subscribe(data => {
-                    // console.log('succes');
-                    // let result = data.body;
-                    this.router.navigate(['/dashboard/module']);
-                },
-                error => console.log(error)
-            )
-        );
-
+        return modelToSubmit;
     }
 
+    closePage()
+    {
+        this.router.navigate(['/dashboard/module']);
+    }
+
+    cancelRequest()
+    {
+        this.endDate = new Date();
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {message: 'Sunteti sigur ca doriti sa anulati aceasta cerere?', confirm: false}
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                let modelToSubmit: any = {};
+                modelToSubmit = this.oldData;
+                modelToSubmit.requestHistories = [{
+                    startDate: this.startDate,
+                    endDate: this.endDate,
+                    username: this.authService.getUserName(),
+                    step: 'E'
+                }];
+
+                this.subscriptions.push(
+                    this.licenseService.stopLicense(modelToSubmit).subscribe(data => {
+                            this.router.navigate(['/dashboard/module']);
+                        }
+                    )
+                );
+            }
+        });
+
+    }
 
     ngOnDestroy() {
         this.subscriptions.forEach(s => s.unsubscribe());

@@ -1,0 +1,195 @@
+<div class="container-fluid sky z-depth-2">
+    <h5 class="text-center font-weight-bold">Scopul cererii</h5>
+    <hr>
+
+    <form [formGroup]="mForm">
+        <div class="text-center">
+            <div class="container">
+                <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICEL'">Eliberarea licentei</h5>
+                <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICM'">Modificarea licentei</h5>
+                <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICD'">Eliberarea duplicatului</h5>
+            </div>
+        </div>
+        <hr>
+
+        <div class="row" *ngIf="tipCerere">
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="nrCererii" mdbInputDirective type="text" class="form-control"
+                           formControlName="nrCererii">
+                    <label for="nrCererii">Nr. cererii</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker2" placeholder="Data de inregistrare a cererii"
+                               id="dataEliberarii"
+                               formControlName="dataEliberarii">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker2></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <app-document *ngIf="tipCerere" [documents]="docs" [nrCerere]="mForm.get('nrCererii').value"></app-document>
+        <div *ngIf="rFormSubbmitted && docs.length==0">
+            <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
+        </div>
+
+    </form>
+
+    <hr>
+    <form [formGroup]="rForm" name="form" #f="ngForm">
+        <h5 class="text-center font-weight-bold">Persoana care a depus solicitarea</h5>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="persResDepCereriiFirstname" mdbInputDirective type="text" class="form-control"
+                           formControlName="persResDepCereriiFirstname">
+                    <label for="persResDepCereriiFirstname">Nume persoana responsabilă </label>
+
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="persResDepCereriiLastname" mdbInputDirective type="email" class="form-control"
+                           formControlName="persResDepCereriiLastname">
+                    <label for="persResDepCereriiLastname">Prenume persoana responsabilă</label>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="telefonContact" mdbInputDirective type="text" class="form-control"
+                           formControlName="telefonContact"
+                    >
+                    <label for="telefonContact">Telefon de contact </label>
+                </div>
+
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="emailContact" mdbInputDirective type="text" class="form-control"
+                           formControlName="emailContact">
+                    <label for="emailContact">Email de contact</label>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="nrProcurii1" mdbInputDirective type="text" class="form-control"
+                           formControlName="nrProcurii1">
+                    <label for="nrProcurii1">Nr. procurii</label>
+                </div>
+
+            </div>
+            <div class="col-md-4">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input id="dataProcurii1" matInput [matDatepicker]="picker3"
+                               placeholder="Data eliberării procurii" formControlName="dataProcurii1"
+                        >
+                        <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker3></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+
+        <hr>
+        <h5 class="text-center font-weight-bold">Persoana care primeste licenta</h5>
+            <mat-checkbox id="otherPerson" formControlName="otherPerson">Alta persoana</mat-checkbox>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="persResDepCereriiFirstnameRec" mdbInputDirective type="text" class="form-control"
+                           formControlName="persResDepCereriiFirstnameRec">
+                    <label for="persResDepCereriiFirstnameRec">Nume persoana responsabilă <span
+                            class="text-danger">*</span></label>
+
+                </div>
+                <div *ngIf="rFormSubbmitted && !rForm.get('persResDepCereriiFirstnameRec').valid">
+                    <small class="text-muted"><strong class="text-danger">Prenumele persoanei de contact trebuie
+                        introdus</strong>
+                    </small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="persResDepCereriiLastnameRec" mdbInputDirective type="email" class="form-control"
+                           formControlName="persResDepCereriiLastnameRec">
+                    <label for="persResDepCereriiLastnameRec">Prenume persoana responsabilă <span
+                            class="text-danger">*</span></label>
+
+                </div>
+                <div *ngIf="rFormSubbmitted && !rForm.get('persResDepCereriiLastnameRec').valid">
+                    <small class="text-muted"><strong class="text-danger">Numele persoanei de contact trebuie
+                        introdus</strong>
+                    </small>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="telefonContactRec" mdbInputDirective type="text" class="form-control"
+                           formControlName="telefonContactRec"
+                    >
+                    <label for="telefonContactRec">Telefon de contact <span class="text-danger">*</span> </label>
+                </div>
+                <div *ngIf="rFormSubbmitted && !rForm.get('telefonContactRec').valid">
+                    <small class="text-muted"><strong class="text-danger">Telefonul trebuie introdus</strong>
+                    </small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="emailContactRec" mdbInputDirective type="text" class="form-control"
+                           formControlName="emailContactRec">
+                    <label for="emailContactRec">Email de contact</label>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="nrProcurii1Rec" mdbInputDirective type="text" class="form-control"
+                           formControlName="nrProcurii1Rec">
+                    <label for="nrProcurii1Rec">Nr. procurii <span class="text-danger">*</span></label>
+                </div>
+                <div *ngIf="rFormSubbmitted && !rForm.get('nrProcurii1Rec').valid">
+                    <small class="text-muted"><strong class="text-danger">Numarul procurii trebuie introdus</strong>
+                    </small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input id="dataProcurii1Rec" matInput [matDatepicker]="picker2"
+                               placeholder="Data eliberării procurii" formControlName="dataProcurii1Rec"
+                        >
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker2></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div *ngIf="rFormSubbmitted && !rForm.get('dataProcurii1Rec').valid">
+                    <small class="text-muted"><strong class="text-danger">Data procurii trebuie introdusa</strong>
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button type="button" (click)="save()" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Confirmare
+            </button>
+            <button type="button" (click)="submitFinish()" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Finisare
+            </button>
+            <button type="button" (click)="closePage()" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Inchide pagina
+            </button>
+        </div>
+    </form>
+
+</div>

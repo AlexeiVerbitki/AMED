@@ -1,8 +1,12 @@
 package com.bass.amed.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "nm_units_of_measurement", schema = "amed", catalog = "")
 public class NmUnitsOfMeasurementEntity
 {

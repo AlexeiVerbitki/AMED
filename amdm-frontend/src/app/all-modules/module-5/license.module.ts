@@ -10,6 +10,7 @@ import {EvaluareCerereLicComponent} from "./evaluare-cerere-lic/evaluare-cerere-
 import {DocumentComponent} from "../../document/document.component";
 import {UploadFileService} from "../../shared/service/upload/upload-file.service";
 import {LicenseService} from "../../shared/service/license/license.service";
+import { EliberareCerereLicComponent } from './eliberare-cerere-lic/eliberare-cerere-lic.component';
 
 @NgModule({
     imports: [
@@ -23,7 +24,8 @@ import {LicenseService} from "../../shared/service/license/license.service";
     schemas: [],
     declarations: [RegMedCerereLicComponent,
         EvaluareCerereLicComponent,
-	 DocumentComponent
+	 DocumentComponent,
+	 EliberareCerereLicComponent
     ]    ,
     providers: [UploadFileService, LicenseService
 

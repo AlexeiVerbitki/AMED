@@ -19,10 +19,13 @@ export class DocumentComponent implements OnInit, OnDestroy {
     documentList: Document [];
     numarCerere: string;
     currentFile: any;
+    enableUploading: boolean = true;
     private subscriptions: Subscription[] = [];
     result: any;
     docForm: FormGroup;
     docTypes: any[];
+
+    disabled: boolean = false;
 
     constructor(public dialog: MatDialog, private uploadService: UploadFileService, private fb: FormBuilder,
                 private administrationService: AdministrationService) {
@@ -39,6 +42,16 @@ export class DocumentComponent implements OnInit, OnDestroy {
                 error => console.log(error)
             )
         );
+
+    }
+
+    @Input()
+    set canUpload(can: boolean) {
+        this.enableUploading = can;
+    }
+
+    get canUpload(): boolean {
+        return this.enableUploading;
     }
 
     get documents(): Document [] {
@@ -57,6 +70,15 @@ export class DocumentComponent implements OnInit, OnDestroy {
     @Input()
     set nrCerere(nrCerere: string) {
         this.numarCerere = nrCerere;
+    }
+
+    get isDisabled(): boolean {
+        return this.disabled;
+    }
+
+    @Input()
+    set isDisabled(disabled: boolean) {
+        this.disabled = disabled;
     }
 
     removeDocument(index) {

@@ -22,7 +22,7 @@
       </div>
     </div>
     <hr>
-    <app-document [documents]="documents"></app-document>
+    <app-document [documents]="documents" [nrCerere]="rForm.get('requestNumber').value"></app-document>
     <div *ngIf="formSubmitted && documents.length==0">
       <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
     </div>
@@ -31,16 +31,11 @@
 
       <div class="col-md-6" formGroupName="medicament">
         <div class="md-form-modified">
-          <mat-form-field class="w-100">
-            <mat-label>Compania solicitant <span class="text-danger">*</span></mat-label>
-            <input type="text" aria-label="Number" matInput
-                   formControlName="company" [matAutocomplete]="auto" (ngModelChange)="checkCompanyValue()">
-            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-              <mat-option *ngFor="let x of filteredOptions | async" [value]="x">
-                {{x.name}}
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
+          <ng-select id="company" name="company" [items]="companies"
+                     bindLabel="name"
+                     placeholder="Compania solicitant *"
+                     formControlName="company">
+          </ng-select>
           <div *ngIf="formSubmitted && rForm.get('medicament.company').invalid">
             <small class="text-muted"><strong class="text-danger">Compania solicitantă trebuie selectată</strong></small>
           </div>
@@ -67,20 +62,20 @@
             Inregistrare
           </h5>
           <hr>
-          <mat-radio-group formControlName="id">
+          <mat-radio-group formControlName="code">
             <div class="container">
               <div class="row">
                 <div class="col-md-12">
-                  <mat-radio-button name="prop1" value="1">Autorizatie de activitate</mat-radio-button>
+                  <mat-radio-button name="prop1" value="ATAC"><span class="cursor">Autorizatie de activitate</span></mat-radio-button>
                 </div>
                 <div class="col-md-12">
-                  <mat-radio-button name="prop2" value="2">Autorizatie de import/export</mat-radio-button>
+                  <mat-radio-button name="prop2" value="ATIE"><span class="cursor">Autorizatie de import/export</span></mat-radio-button>
                 </div>
                 <div class="col-md-12">
-                  <mat-radio-button name="prop3" value="3">Modificarea autorizaţiei de activitate cu precursori/psihotrope/stupefiante</mat-radio-button>
+                  <mat-radio-button name="prop3" value="MACPS"><span class="cursor">Modificarea autorizaţiei de activitate cu precursori/psihotrope/stupefiante</span></mat-radio-button>
                 </div>
                 <div class="col-md-12">
-                  <mat-radio-button name="prop4" value="4">Duplicatul autorizatiei de activitate cu precursori/psihotrope/stupefiante</mat-radio-button>
+                  <mat-radio-button name="prop4" value="DACPS"><span class="cursor">Duplicatul autorizatiei de activitate cu precursori/psihotrope/stupefiante</span></mat-radio-button>
                 </div>
               </div>
             </div>

@@ -19,6 +19,28 @@ export class LicenseService {
         return this.http.post<any>('/api/license/save-evaluation-license', model, {observe: 'response'});
     }
 
+    evaluateNextLicense (model : any): Observable<HttpResponse<any>>
+    {
+        return this.http.post<any>('/api/license/next-evaluation-license', model, {observe: 'response'});
+    }
+
+
+    stopLicense (model : any): Observable<HttpResponse<any>>
+    {
+        return this.http.post<any>('/api/license/stop-license', model, {observe: 'response'});
+    }
+
+    finishLicense (model : any): Observable<HttpResponse<any>>
+    {
+        return this.http.post<any>('/api/license/finish-license', model, {observe: 'response'});
+    }
+
+
+    confirmIssueLicense (model : any): Observable<HttpResponse<any>>
+    {
+        return this.http.post<any>('/api/license/confirm-issue-license', model, {observe: 'response'});
+    }
+
     retrieveAllRequestTypes(): Observable<any> {
         return this.http.get('/api/license/all-license-request-types');
     }

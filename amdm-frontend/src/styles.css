@@ -133,6 +133,16 @@ body {
   color: #757575;
 }
 
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  padding: 6px 0px;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.42857;
+}
+
 @media only screen and (min-width: 1439px) {
   .col-xxl-10 {
     -ms-flex: 0 0 83.333333%;

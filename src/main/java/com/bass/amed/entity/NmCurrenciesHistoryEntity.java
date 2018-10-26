@@ -1,6 +1,9 @@
 package com.bass.amed.entity;
 
+import com.bass.amed.projection.GetMinimalCurrencyProjection;
+
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.sql.Date;
 
 @Entity
@@ -9,15 +12,19 @@ public class NmCurrenciesHistoryEntity
 {
     private Integer id;
     private Date period;
-    private Integer value;
+    private String value;
     private Integer multiplicity;
-    private Integer currencyId;
+    private NmCurrenciesEntity currency;
 
     @Id
     @Column(name = "id")
     public Integer getId()
     {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setId(Integer id)
@@ -39,13 +46,12 @@ public class NmCurrenciesHistoryEntity
 
     @Basic
     @Column(name = "value")
-    public Integer getValue()
+    public String getValue()
     {
         return value;
     }
 
-    public void setValue(Integer value)
-    {
+    public void setValue(String value) {
         this.value = value;
     }
 
@@ -56,21 +62,21 @@ public class NmCurrenciesHistoryEntity
         return multiplicity;
     }
 
+//    @Basic
+//    @Column(name = "currency_id")
+//    public Integer getCurrencyId()
+//    {
+//        return currencyId;
+//    }
+//
+//    public void setCurrencyId(Integer currencyId)
+//    {
+//        this.currencyId = currencyId;
+//    }
+
     public void setMultiplicity(Integer multiplicity)
     {
         this.multiplicity = multiplicity;
-    }
-
-    @Basic
-    @Column(name = "currency_id")
-    public Integer getCurrencyId()
-    {
-        return currencyId;
-    }
-
-    public void setCurrencyId(Integer currencyId)
-    {
-        this.currencyId = currencyId;
     }
 
     @Override
@@ -80,7 +86,7 @@ public class NmCurrenciesHistoryEntity
         result = 31 * result + (period != null ? period.hashCode() : 0);
         result = 31 * result + (value != null ? value.hashCode() : 0);
         result = 31 * result + (multiplicity != null ? multiplicity.hashCode() : 0);
-        result = 31 * result + (currencyId != null ? currencyId.hashCode() : 0);
+        result = 31 * result + (currency != null ? currency.hashCode() : 0);
         return result;
     }
 
@@ -114,11 +120,21 @@ public class NmCurrenciesHistoryEntity
         {
             return false;
         }
-        if (currencyId != null ? !currencyId.equals(that.currencyId) : that.currencyId != null)
+        if (currency != null ? !currency.equals(that.currency) : that.currency != null)
         {
             return false;
         }
 
         return true;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "currency_id", referencedColumnName = "id")
+    public NmCurrenciesEntity getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(NmCurrenciesEntity currency) {
+        this.currency = currency;
     }
 }

@@ -22,6 +22,9 @@ public class LicenseMandatedContactEntity
     private String newMandatedNr;
     private Date newMandatedDate;
 //    private LicensesEntity licensesEntity;
+    private String newPhoneNumber;
+    private String newEmail;
+    private Integer registrationRequestId;
 
     @Id
     @Column(name = "id")
@@ -139,6 +142,17 @@ public class LicenseMandatedContactEntity
         return newMandatedNr;
     }
 
+//    @OneToOne( mappedBy = "mandatedContact")
+//    public LicensesEntity getLicensesEntity()
+//    {
+//        return licensesEntity;
+//    }
+//
+//    public void setLicensesEntity(LicensesEntity licensesEntity)
+//    {
+//        this.licensesEntity = licensesEntity;
+//    }
+
     public void setNewMandatedNr(String newMandatedNr)
     {
         this.newMandatedNr = newMandatedNr;
@@ -155,17 +169,6 @@ public class LicenseMandatedContactEntity
     {
         this.newMandatedDate = newMandatedDate;
     }
-
-//    @OneToOne( mappedBy = "mandatedContact")
-//    public LicensesEntity getLicensesEntity()
-//    {
-//        return licensesEntity;
-//    }
-//
-//    public void setLicensesEntity(LicensesEntity licensesEntity)
-//    {
-//        this.licensesEntity = licensesEntity;
-//    }
 
     @Override
     public boolean equals(Object o)
@@ -190,5 +193,41 @@ public class LicenseMandatedContactEntity
     public int hashCode()
     {
         return Objects.hash(id, phoneNumber, email, requestPersonFirstname, requestPersonLastname, requestMandateNr, requestMandateDate, newMandatedFirstname, newMandatedLastname, newMandatedNr, newMandatedDate);
+    }
+
+    @Basic
+    @Column(name = "new_phone_number")
+    public String getNewPhoneNumber()
+    {
+        return newPhoneNumber;
+    }
+
+    public void setNewPhoneNumber(String newPhoneNumber)
+    {
+        this.newPhoneNumber = newPhoneNumber;
+    }
+
+    @Basic
+    @Column(name = "new_email")
+    public String getNewEmail()
+    {
+        return newEmail;
+    }
+
+    public void setNewEmail(String newEmail)
+    {
+        this.newEmail = newEmail;
+    }
+
+    @Basic
+    @Column(name = "registration_request_id")
+    public Integer getRegistrationRequestId()
+    {
+        return registrationRequestId;
+    }
+
+    public void setRegistrationRequestId(Integer registrationRequestId)
+    {
+        this.registrationRequestId = registrationRequestId;
     }
 }

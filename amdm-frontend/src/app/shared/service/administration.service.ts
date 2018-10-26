@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpResponse} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {HttpClient, HttpParams, HttpResponse} from "@angular/common/http";
+import {from, Observable} from "rxjs";
 
 @Injectable()
 export class AdministrationService {
@@ -17,7 +17,7 @@ export class AdministrationService {
 
     // return companies with only id and name
     getAllCompaniesMinimal(): Observable<any> {
-        return this.http.get('/api/administration/all-companies-min', {});
+        return this.http.get('/api/administration/all-companies-details', {});
     }
 
     getAllStates(): Observable<any> {
@@ -56,6 +56,17 @@ export class AdministrationService {
         return this.http.get('/api/price/all-currencies-short');
     }
 
+    getCurrencyHistory(day: Date): Observable<any> {
+        let params : HttpParams;
+
+        if(day != undefined) {
+            params = new HttpParams();
+            params.append('from', day.getDay() + '-' + day.getMonth() + '-' + day.getFullYear());
+        }
+
+        return this.http.get('/api/price/today-currencies-short', { params: params });
+    }
+    
     generateReceiptNr(): Observable<any> {
         return this.http.get('/api/administration/generate-receipt-nr')
     }
@@ -70,5 +81,9 @@ export class AdministrationService {
 
     getAllInternationalNames(): Observable<any> {
         return this.http.get('/api/administration/all-international-names', {});
+    }
+
+    sendEmail(title: string,content:string,mailAddress:string): Observable<any> {
+        return this.http.get('/api/administration/send-email', {params: {title: title,content: content,mailAddress: mailAddress}});
     }
 }

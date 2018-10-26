@@ -1,0 +1,32 @@
+<div class="row">
+  <div class="col">
+    <div class="md-form">
+      <input id="pretMed9Ref" mdbInputDirective type="number" class="form-control" min="0.1" step="0.1" [(ngModel)]="price.value" (change)="onPriceChange($event)" >
+      <label for="pretMed9Ref">Prețul propus de solicitant<span class="text-danger">*</span></label>
+      <div *ngIf="formSubmitted && price.value == undefined">
+        <small class="text-muted"><strong class="text-danger">Indicați prețul solicitat</strong></small>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="md-form-modified">
+      <ng-select class="w-100"
+                 [items]="currencies"
+                 [required]="true"
+                 [(ngModel)]="price.currency"
+                 bindLabel="shortDescription"
+                 placeholder="Valuta">
+      </ng-select>
+      <div *ngIf="formSubmitted && price.currency == undefined">
+        <small class="text-muted"><strong class="text-danger">Selectați valuta</strong></small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-1">
+    <div class="mt-4">
+      <button type="button" class="btn btn-warning btn-circle" (click)="this.remove.emit(formNr)" ><i class="fa fa-times" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</div>
+

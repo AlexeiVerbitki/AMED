@@ -1,11 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {getCerere} from '../../../models/getCerere';
-import {Select} from '../../../models/select';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {Document} from "../../../models/document";
 import {Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {RequestService} from "../../../shared/service/request.service";
+import {ModalService} from "../../../shared/service/modal.service";
 
 @Component({
     selector: 'app-samsa',
@@ -19,21 +18,22 @@ export class SamsaComponent implements OnInit {
     sForm: FormGroup;
     company: any;
     formSubmitted: boolean;
-    activeSubstancesTable : any[];
+    activeSubstancesTable: any[];
 
     date: any = new FormControl({value: new Date(), disabled: true});
 
     constructor(private fb: FormBuilder,
                 private router: Router,
                 private requestService: RequestService,
+                private modalService: ModalService,
                 private activatedRoute: ActivatedRoute) {
         this.sForm = fb.group({
             'id': [],
             'data': {disabled: true, value: new Date()},
             'requestNumber': [null],
             'startDate': [],
-            'dataToSaveInStartDateRequestHistory': [''],
-            'currentStep': ['E'],
+            //'dataToSaveInStartDateRequestHistory': [''],
+            'currentStep': ['A'],
             'medicament':
                 fb.group({
                     'id': [],
@@ -82,6 +82,7 @@ export class SamsaComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.modalService.data.next('');
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
                 this.subscriptions.push(this.requestService.getMedicamentRequest(params['id']).subscribe(data => {
                         this.sForm.get('medicament.id').setValue(data.medicament.id);
@@ -91,6 +92,7 @@ export class SamsaComponent implements OnInit {
                         this.sForm.get('medicament.company').setValue(data.medicament.company);
                         this.sForm.get('medicament.companyValue').setValue(data.medicament.company.name);
                         this.sForm.get('company').setValue(data.medicament.company);
+                        this.sForm.get('medicament.id').setValue(data.medicament.id);
                         this.sForm.get('medicament.name').setValue(data.medicament.name);
                         this.sForm.get('medicament.documents').setValue(data.medicament.documents);
                         this.sForm.get('medicament.pharmaceuticalForm').setValue(data.medicament.pharmaceuticalForm.description);
@@ -118,21 +120,96 @@ export class SamsaComponent implements OnInit {
                         this.sForm.get('type').setValue(data.type);
                         this.sForm.get('requestHistories').setValue(data.requestHistories);
                         this.sForm.get('typeValue').setValue(data.type.code);
-                        var reqHist = data.requestHistories.reduce((p, n) => p.id < n.id ? p : n);
-                        this.sForm.get('dataToSaveInStartDateRequestHistory').setValue(reqHist.endDate);
+                        // var reqHist = data.requestHistories.reduce((p, n) => p.id < n.id ? p : n);
+                        // this.sForm.get('dataToSaveInStartDateRequestHistory').setValue(reqHist.endDate);
                         this.company = data.medicament.company;
                         this.documents = data.medicament.documents;
+                        this.documents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
                         this.activeSubstancesTable = data.medicament.activeSubstances;
                         let xs = this.documents;
                         xs = xs.map(x => {
                             x.isOld = true;
                             return x;
                         });
+                        if (data.currentStep == 'S') {
+                            this.modalService.data.next({
+                                modalType: 'WAITING',
+                                requestId: this.sForm.get('id').value,
+                                requestNumber: this.sForm.get('requestNumber').value
+                            });
+                        }
+                        if (data.currentStep == 'N') {
+                            console.log('ID 1='+this.sForm.get('id').value);
+                            this.modalService.data.next({
+                                modalType: 'NOTIFICATION',
+                                requestId: this.sForm.get('id').value,
+                                requestNumber: this.sForm.get('requestNumber').value
+                            });
+                        }
                     })
                 );
             })
         );
+    }
 
+    ngAfterViewInit(): void {
+        this.modalService.data.asObservable().subscribe(value => {
+            if (value != '' && (value.action == 'CLOSE_MODAL' || value.action == 'CLOSE_WAITING_MODAL')) {
+                this.sForm.get('data').setValue(new Date());
+                this.subscriptions.push(this.requestService.getMedicamentRequest(this.sForm.get('id').value).subscribe(data => {
+                    this.documents = data.medicament.documents;
+                    this.documents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+                    let xs = this.documents;
+                    xs = xs.map(x => {
+                        x.isOld = true;
+                        return x;
+                    });
+                    if (data.currentStep == 'S') {
+                        this.modalService.data.next({
+                            modalType: 'WAITING',
+                            requestId: this.sForm.get('id').value,
+                            requestNumber: this.sForm.get('requestNumber').value
+                        });
+                    }
+                    if (data.currentStep == 'N') {
+                        this.modalService.data.next({
+                            modalType: 'NOTIFICATION',
+                            requestId: this.sForm.get('id').value,
+                            requestNumber: this.sForm.get('requestNumber').value
+                        });
+                    }
+                }));
+            }
+        })
+    }
 
+    requestLaboratoryAnalysis() {
+
+    }
+
+    requestAdditionalData() {
+        this.modalService.data.next({
+                requestNumber: this.sForm.get('requestNumber').value,
+                requestId: this.sForm.get('id').value,
+                modalType: 'REQUEST_ADDITIONAL_DATA',
+                mainPageStartDate: this.sForm.get('data').value
+            }
+        );
+
+        // dialogRef.afterClosed().subscribe(result => {
+        //     this.subscriptions.push(this.requestService.getMedicamentRequest(this.sForm.get('id').value).subscribe(data => {
+        //         this.documents = data.medicament.documents;
+        //         this.documents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        //         let xs = this.documents;
+        //         xs = xs.map(x => {
+        //             x.isOld = true;
+        //             return x;
+        //         });
+        //         if(data.currentStep=='S')
+        //         {
+        //             this.modalService.data.next({modalType : 'WAITING'});
+        //         }
+        //     }));
+        // });
     }
 }

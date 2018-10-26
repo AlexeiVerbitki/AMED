@@ -6,7 +6,7 @@
             <div class="col-lg-5">
                 <div class="md-form">
                     <input id="nrCererii" mdbInputDirective type="text" class="form-control"
-                           formControlName="nrCerereInput" [attr.disabled]="true">
+                           formControlName="requestNumber" [attr.disabled]="true">
                     <label for="nrCererii">Nr. cererii</label>
                 </div>
             </div>
@@ -14,7 +14,7 @@
             <div class="col-lg-5">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
-                        <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="dataReg">
+                        <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="startDate">
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker touchUi #picker></mat-datepicker>
                     </mat-form-field>
@@ -22,14 +22,14 @@
             </div>
         </div>
         <hr>
-        <app-document [documents]="documents" ></app-document>
+        <app-document [documents]="documents" [nrCerere]="PriceRegForm.get('requestNumber').value"></app-document>
         <div *ngIf="formSubmitted && documents.length == 0">
             <small class="text-muted"><strong class="text-danger">Încărcați actele necesare înregistrării prețului la
                 medicament</strong></small>
         </div>
         <hr>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="md-form-modified">
                     <ng-select class="w-100"
                                [items]="companies"
@@ -47,18 +47,18 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
-                <div class="md-form-modified">
+            <div class="col-md-6">
+                <div class="md-form-modified" formGroupName="medicament">
                     <ng-select class="w-100"
                                [items]="companyMedicaments"
                                [required]="true"
                                (change)="onMedSelected($event)"
                                (clear)="onRemoveMed()"
-                               formControlName="medicament"
+                               formControlName="name"
                                bindLabel="name"
                                placeholder="Medicamentul">
                     </ng-select>
-                    <div *ngIf="formSubmitted && PriceRegForm.get('medicament').invalid">
+                    <div *ngIf="formSubmitted && PriceRegForm.get('medicament')['controls'].name.invalid">
                         <small class="text-muted"><strong class="text-danger">Selectați medicamentul companiei</strong>
                         </small>
                     </div>
@@ -66,41 +66,91 @@
             </div>
             <div class="col-md-4">
                 <div class="md-form">
-                    <input id="codMed" mdbInputDirective type="text" class="form-control" formControlName="medCode">
-                    <label for="codMed">Codul(rile) medicamentului</label>
+                    <input id="intName" mdbInputDirective type="text" class="form-control" [value]="internationalName" [attr.disabled]="true">
+                    <label for="intName">Denumirea Internațională</label>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="md-form">
-                    <input id="pretPropusSol" mdbInputDirective type="number" class="form-control" min="0.1" step="0.1"
-                           formControlName="proposedPrice">
-                    <label for="pretPropusSol">Prețul(rile) propus(e) de solicitant <span
-                            class="text-danger">*</span></label>
-                    <div *ngIf="formSubmitted && PriceRegForm.get('proposedPrice').invalid">
-                        <small class="text-muted"><strong class="text-danger">Indicați prețul solicitat</strong></small>
-                    </div>
+                    <input id="codMed" mdbInputDirective type="text" class="form-control" [value]="medCode" [attr.disabled]="true">
+                    <label for="codMed">Codul medicamentului</label>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="md-form">
-                    <input id="quantity" mdbInputDirective type="number" class="form-control" min="1"
-                           formControlName="quantity">
-                    <label for="quantity">Cantitatea <span class="text-danger">*</span></label>
-                    <div *ngIf="formSubmitted && PriceRegForm.get('quantity').invalid">
-                        <small class="text-muted"><strong class="text-danger">Indicați cantitatea de
-                            medicamente</strong></small>
-                    </div>
+                    <input id="valab" mdbInputDirective type="number" class="form-control" [value]="termsOfValidity" [attr.disabled]="true">
+                    <label for="valab">Termen de valabilitate </label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="dose" mdbInputDirective type="number" class="form-control" [value]="dose" [attr.disabled]="true">
+                    <label for="dose">Doza</label>
                 </div>
             </div>
             <div class="col-md-4">
+                <div class="md-form">
+                    <input id="sds" mdbInputDirective type="text" class="form-control" [value]="unitsOfMeasurement" [attr.disabled]="true">
+                    <label for="sds">Unitate de măsură</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="expiration" mdbInputDirective type="text" class="form-control" [value]="expirationDate" [attr.disabled]="true">
+                    <label for="expiration">Data expirării licenței</label>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <h5 class="text-center font-weight-bold">Divizare</h5>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="md-form">
+                    <input id="nrUnits" mdbInputDirective type="number" class="form-control" [value]="unitsQuantity" [attr.disabled]="true">
+                    <label for="volum">Număr de bucăți</label>
+                </div>
+            </div>
+            <div class="col-md-6">
                 <div class="md-form-modified">
                     <div class="md-form">
-                        <input id="unityOfMess" mdbInputDirective type="text" class="form-control"
-                               formControlName="unityOfMess">
-                        <label for="unityOfMess">Unitatea de măsură</label>
+                        <input id="unitsOfMeasurement" mdbInputDirective type="text" class="form-control"
+                               [value]="unitsQuantityMeasurement" [attr.disabled]="true">
+                        <label for="unitsOfMeasurement">Unitatea de măsură</label>
                     </div>
                 </div>
             </div>
+            <div class="col-md-6">
+                <div class="md-form">
+                    <input id="storageQuantity" mdbInputDirective type="number" class="form-control" [value]="storageQuantity" [attr.disabled]="true">
+                    <label for="storageQuantity">Cantitate stocare</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="md-form-modified">
+                    <div class="md-form">
+                        <input id="storageMeass" mdbInputDirective type="text" class="form-control"
+                               [value]="storageQuantityMeasurement" [attr.disabled]="true">
+                        <label for="storageMeass">Unitatea de măsură</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="md-form">
+                    <input id="volum" mdbInputDirective type="number" class="form-control" [value]="volumeProp" [attr.disabled]="true">
+                    <label for="volum">Volumul</label>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+        <h5 class="text-center font-weight-bold">Prețuri propuse</h5>
+        <template #proposedPriceContainer></template>
+        <div class="position-button">
+            <button (click)="addProposedPriceRow()" class="btn btn-mdb-color waves-light btn-sm btn-sm-bl"
+                    mdbWavesEffect>Adaugă preț propus
+            </button>
         </div>
         <hr>
         <h5 class="text-center font-weight-bold">Prețul medicamentului în 9 țări de referință</h5>
@@ -112,36 +162,31 @@
             </button>
         </div>
         <hr>
-        <h5 class="text-center font-weight-bold">Cursul Valutar al Băncii Naționale din Moldova</h5>
+        <h5 class="text-center font-weight-bold">Cursul Valutar al Băncii Naționale a Moldovei</h5>
         <div class="row">
             <div class="col-md-4">
                 <div class="md-form">
-                    <input id="usd2" mdbInputDirective type="number" class="form-control">
+                    <input id="usd2" mdbInputDirective type="text" class="form-control" [value]="currencyUSD" [attr.disabled]="true">
                     <label for="usd2">USD</label>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="md-form">
-                    <input id="eu2" mdbInputDirective type="number" class="form-control">
+                    <input id="eu2" mdbInputDirective type="number" class="form-control" [value]="currencyEUR" [attr.disabled]="true">
                     <label for="eu2">EU</label>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="md-form">
-                    <input id="rur2" mdbInputDirective type="number" class="form-control">
+                    <input id="rur2" mdbInputDirective type="number" class="form-control" [value]="currencyRUR" [attr.disabled]="true">
                     <label for="rur2">RUR</label>
                 </div>
             </div>
         </div>
-        <div class="position-button">
-            <button type="submit" class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Adauga unitate
-                de masura
-            </button>
-        </div>
         <hr>
         <div class="text-center">
-            <button type="submit" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                    (click)="nextStep()">Urmatorul pas
+            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
+                    (click)="nextStep()">Următorul pas
             </button>
         </div>
     </form>

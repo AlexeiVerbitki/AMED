@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import { NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 import {PriceRoutingModule} from './price-routing.module';
@@ -7,12 +7,14 @@ import {PriceRegMedComponent} from './price-reg-med/price-reg-med.component';
 import {MDBBootstrapModule} from "angular-bootstrap-md";
 import {MaterialSharedModule} from "../../material-shared.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {DocumentModule} from '../../document/document.module';
-import { NgSelectModule } from '@ng-select/ng-select';
 import {ReferencePriceComponent} from "./reference-price/reference-price.component";
+import { ProposedPriceComponent } from './proposed-price/proposed-price.component';
+import {RequestService} from "../../shared/service/request.service";
+import {UploadFileService} from "../../shared/service/upload/upload-file.service";
+import {DocumentComponent} from "../../document/document.component";
 
 @NgModule({
-    entryComponents: [ReferencePriceComponent],
+    entryComponents: [ReferencePriceComponent, ProposedPriceComponent],
     imports: [
         CommonModule,
         PriceRoutingModule,
@@ -20,12 +22,10 @@ import {ReferencePriceComponent} from "./reference-price/reference-price.compone
         ReactiveFormsModule,
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
-        DocumentModule,
-        NgSelectModule
-
     ],
     schemas: [],
-    declarations: [PriceRegMedComponent, PriceEvaluateMedComponent, ReferencePriceComponent]
+    declarations: [PriceRegMedComponent, PriceEvaluateMedComponent, ReferencePriceComponent, DocumentComponent, ProposedPriceComponent],
+    providers: [UploadFileService, RequestService],
 
 })
 export class PriceModule {

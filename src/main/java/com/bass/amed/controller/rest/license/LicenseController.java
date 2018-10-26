@@ -1,9 +1,11 @@
 package com.bass.amed.controller.rest.license;
 
+import com.bass.amed.common.Constants;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
 import com.bass.amed.service.LicenseRegistrationRequestService;
+import com.bass.amed.utils.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping( "/api/license" )
@@ -41,30 +44,91 @@ public class LicenseController
     @Autowired
     private LicenseRegistrationRequestService licenseRegistrationRequestService;
 
+    @Autowired
+    private EconomicAgentsRepository economicAgentsRepository;
+
     @RequestMapping(value = "/new-license", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Integer> saveNewLicense(@RequestBody RegistrationRequestsEntity request)
+    public ResponseEntity<Integer> nextNewLicense(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
         logger.debug("Add license" + request);
-        request.setCurrentStep("E");
-        RegistrationRequestHistoryEntity registrationRequestHistory = new RegistrationRequestHistoryEntity();
-        registrationRequestHistory.setStartDate(new Timestamp(new Date().getTime()));
-        registrationRequestHistory.setStep("E");
-        //TODO
-        registrationRequestHistory.setUsername("username");
-        request.getRequestHistories().add(registrationRequestHistory);
-        request.setStartDate(new Timestamp(new Date().getTime()));
+
+        Optional<NmEconomicAgentsEntity> eco = economicAgentsRepository.findById(request.getCompany().getId());
+
+        if (!eco.isPresent())
+        {
+            throw new CustomException("Economic agent not found" + request.getCompany().getId());
+        }
+
+        request.setCompany(eco.get());
+
         request.setType(requestTypeRepository.findByCode("LICEL").get());
+        request.getLicense().setStatus("A");
 
         requestRepository.save(request);
+
+        request.setCurrentStepLink(Constants.StepLink.MODULE + Constants.StepLink.LICENSE + "evaluate/" + request.getId());
+        requestRepository.save(request);
+
         return new ResponseEntity<>(request.getId(),HttpStatus.CREATED);
     }
+
 
     @RequestMapping(value = "/save-evaluation-license", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> saveEvaluationLicense(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
         logger.debug("Save evaluation license" + request);
 
-        licenseRegistrationRequestService.updateRegistrationLicense(request);
+        licenseRegistrationRequestService.updateRegistrationLicense(request, false);
+        return new ResponseEntity<>(request.getId(),HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/next-evaluation-license", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> nextEvaluationLicense(@RequestBody RegistrationRequestsEntity request) throws CustomException
+    {
+        logger.debug("Save evaluation license" + request);
+
+        licenseRegistrationRequestService.updateRegistrationLicense(request, true);
+        return new ResponseEntity<>(request.getId(),HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/finish-license", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> finishLicense(@RequestBody RegistrationRequestsEntity request) throws CustomException
+    {
+        logger.debug("Finish license" + request);
+
+        request.getLicense().setStatus("F");
+
+        request.setCurrentStep("I");
+        request.setEndDate(new Timestamp(new Date().getTime()));
+        request.setCurrentStepLink(Constants.StepLink.MODULE + Constants.StepLink.LICENSE + "issue/" + request.getId());
+
+        licenseRegistrationRequestService.finishLicense(request);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/confirm-issue-license", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> confirmIssueLicense(@RequestBody RegistrationRequestsEntity request) throws CustomException
+    {
+        logger.debug("Confirm issue license" + request);
+
+        request.getLicense().setStatus("A");
+        request.setCurrentStep("I");
+        request.setCurrentStepLink(Constants.StepLink.MODULE + Constants.StepLink.LICENSE + "issue/" + request.getId());
+
+        licenseRegistrationRequestService.finishLicense(request);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+
+    @RequestMapping(value = "/stop-license", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> stopLicense(@RequestBody RegistrationRequestsEntity request) throws CustomException
+    {
+        logger.debug("Cancel request license" + request);
+
+        licenseRegistrationRequestService.stopLicense(request);
         return new ResponseEntity<>(request.getId(),HttpStatus.OK);
     }
 

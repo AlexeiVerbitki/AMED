@@ -13,6 +13,7 @@ import {RegDrugControl} from "./reg-drug-control/reg-drug-control";
 import {UploadFileService} from "../../shared/service/upload/upload-file.service";
 import {RequestService} from "../../shared/service/request.service";
 import {DocumentModule} from "../../document/document.module";
+import {PaymentModule} from "../../payment/payment.module";
 
 @NgModule({
     imports: [
@@ -23,7 +24,8 @@ import {DocumentModule} from "../../document/document.module";
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
         CollapseModule,
-        DocumentModule
+        DocumentModule,
+        PaymentModule
     ],
     declarations: [CerereDubAutorActComponent, CerereImportExportComponent, CerereModAutorActComponent, CerereSolicAutorComponent, RegDrugControl],
     providers: [UploadFileService, RequestService]

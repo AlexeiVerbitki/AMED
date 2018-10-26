@@ -1,40 +1,49 @@
 <div class="row">
-  <div class="col-md-4">
+  <div class="col">
     <div class="md-form">
-      <input id="pretMed9Ref" mdbInputDirective type="number" class="form-control" min="0.1" step="0.1" [(ngModel)]="refPrice" (change)="onPriceChange($event)" >
+      <input id="pretMed9Ref" mdbInputDirective type="number" class="form-control" min="0.1" step="0.1" [(ngModel)]="refPrice.value" (change)="onPriceChange($event)" [disabled]="forEvaluation">
       <label for="pretMed9Ref">Preț de referință</label>
       <!--<span class="text-danger">*</span>-->
-      <div *ngIf="formSubmitted && refPrice == undefined">
+      <div *ngIf="formSubmitted && refPrice.value == undefined">
         <small class="text-muted"><strong class="text-danger">Indicați prețul de referință</strong></small>
       </div>
     </div>
   </div>
-  <div class="col-md-4">
+  <div class="col">
     <div class="md-form-modified">
       <ng-select class="w-100"
+                 [disabled]="forEvaluation"
                  [items]="currencies"
                  [required]="false"
-                 [(ngModel)]="currency"
+                 [(ngModel)]="refPrice.currency"
                  bindLabel="shortDescription"
                  placeholder="Valuta">
       </ng-select>
-      <div *ngIf="formSubmitted && currency == undefined">
+      <div *ngIf="formSubmitted && refPrice.currency == undefined">
         <small class="text-muted"><strong class="text-danger">Selectați valuta de referință</strong></small>
       </div>
     </div>
   </div>
-  <div class="col-md-4">
+  <div class="col">
     <div class="md-form-modified">
-      <ng-select class="w-100"
+      <ng-select #changeProp
+                 class="w-100"
+                 [disabled]="forEvaluation"
                  [items]="countries"
                  [required]="false"
-                 [(ngModel)]="country"
+                 [(ngModel)]="refPrice.country"
                  bindLabel="description"
                  placeholder="Țara de referință">
       </ng-select>
-      <div *ngIf="formSubmitted && country == undefined">
+      <div *ngIf="formSubmitted && refPrice.country == undefined">
         <small class="text-muted"><strong class="text-danger">Selectați țara de referință</strong></small>
       </div>
+    </div>
+  </div>
+  <div class="col-md-1" *ngIf="!forEvaluation">
+    <div class="mt-4">
+      <button type="button" class="btn btn-warning btn-circle" (click)="this.remove.emit(formNr)" ><i class="fa fa-times" aria-hidden="true"></i>
+      </button>
     </div>
   </div>
 </div>

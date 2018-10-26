@@ -44,6 +44,8 @@ public class MedicamentEntity
     private Set<MedicamentActiveSubstancesEntity> activeSubstances;
     private Set<PaymentOrdersEntity>              paymentOrders;
     private Set<ReceiptsEntity>                   receipts;
+    private Set<ReferencePricesEntity> referencePrices;
+    private Set<PricesEntity> prices;
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
@@ -56,6 +58,26 @@ public class MedicamentEntity
     public void setId(Integer id)
     {
         this.id = id;
+    }
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    @JoinColumn(name = "medicament_id")
+    public Set<ReferencePricesEntity> getReferencePrices() {
+        return referencePrices;
+    }
+
+    public void setReferencePrices(Set<ReferencePricesEntity> referencePrices) {
+        this.referencePrices = referencePrices;
+    }
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    @JoinColumn(name = "medicament_id")
+    public Set<PricesEntity> getPrices() {
+        return prices;
+    }
+
+    public void setPrices(Set<PricesEntity> prices) {
+        this.prices = prices;
     }
 
     @Basic

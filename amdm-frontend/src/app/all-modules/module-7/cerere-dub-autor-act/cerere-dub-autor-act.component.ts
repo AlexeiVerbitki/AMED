@@ -1,11 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Observable, Subscription} from "rxjs";
 import {AdministrationService} from "../../../shared/service/administration.service";
-import {map, startWith} from "rxjs/operators";
 import {AuthService} from "../../../shared/service/authetication.service";
 import {RequestService} from "../../../shared/service/request.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
+import {Document} from "../../../models/document";
+import {Subscription} from "rxjs";
+import {PaymentOrder} from "../../../models/paymentOrder";
+import {Receipt} from "../../../models/receipt";
+import {DocumentService} from "../../../shared/service/document.service";
 
 @Component({
   selector: 'app-cerere-dub-autor-act',
@@ -16,68 +19,87 @@ export class CerereDubAutorActComponent implements OnInit {
 
   cerereDupAutorForm: FormGroup;
   documents: Document [] = [];
+  docTypes: any[];
   formSubmitted: boolean;
   currentDate: Date;
   generatedDocNrSeq: number;
   private subscriptions: Subscription[] = [];
-  companies: any[];
-  filteredOptions: Observable<any[]>;
+  paymentOrdersList: PaymentOrder[] = [];
+  receiptsList: Receipt[] = [];
+  paymentTotal : number;
 
   constructor(private fb: FormBuilder, private administrationService: AdministrationService, private authService : AuthService,
-              private requestService : RequestService, private router: Router) {
+              private requestService : RequestService, private router: Router,  private activatedRoute: ActivatedRoute, private documentService: DocumentService) {
     this.cerereDupAutorForm = fb.group({
+        'id': [],
+        'data': {disabled: true, value: new Date()},
         'dataReg': {disabled: true, value: null},
         'currentStep' : ['R'],
         'startDate': [new Date()],
         'endDate': [''],
         'requestNumber': [null, Validators.required],
         'company' : [null, Validators.required],
-        'type':
+        'documents': [],
+        'medicament':
             fb.group({
-                'id' : ['9',Validators.required]}),
+                'id': [],
+                'name': ['', Validators.required],
+                'company': ['', Validators.required],
+                'companyValue': [''],
+                'documents': []
+            }),
+        'requestHistories': [],
+        'type': [],
+        'typeValue': {disabled: true, value: null}
     });
   }
 
   ngOnInit() {
 
+      this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
+              this.subscriptions.push(this.requestService.getMedicamentRequest(params['id']).subscribe(data => {
+                      this.cerereDupAutorForm.get('id').setValue(data.id);
+                      this.cerereDupAutorForm.get('medicament.name').setValue(data.medicament.name);
+                      this.cerereDupAutorForm.get('dataReg').setValue(data.startDate);
+                      this.cerereDupAutorForm.get('requestNumber').setValue(data.requestNumber);
+                      this.cerereDupAutorForm.get('company').setValue(data.medicament.company);
+                      this.cerereDupAutorForm.get('documents').setValue(data.medicament.documents);
+                      this.cerereDupAutorForm.get('medicament.documents').setValue(data.medicament.documents);
+                      this.cerereDupAutorForm.get('medicament.id').setValue(data.medicament.id);
+                      this.cerereDupAutorForm.get('medicament.company').setValue(data.medicament.company);
+                      this.cerereDupAutorForm.get('medicament.companyValue').setValue(data.medicament.company.name);
+                      this.cerereDupAutorForm.get('requestHistories').setValue(data.requestHistories);
+                      this.cerereDupAutorForm.get('type').setValue(data.type);
+                      this.cerereDupAutorForm.get('typeValue').setValue(data.type.code);
+                      this.documents = data.medicament.documents;
+                      this.documents.sort((a,b)=>new Date(a.date).getTime()-new Date(b.date).getTime());
+                      let xs = this.documents;
+                      xs = xs.map(x => {
+                          x.isOld = true;
+                          return x;
+                      });
+                  })
+              );
+          })
+      );
+
     this.currentDate = new Date();
-    this.cerereDupAutorForm.get('dataReg').setValue(this.currentDate);
 
     this.subscriptions.push(
-        this.administrationService.generateDocNr().subscribe(data => {
-          this.generatedDocNrSeq = data;
-          this.cerereDupAutorForm.get('requestNumber').setValue(this.generatedDocNrSeq);
-          },
+        this.administrationService.getAllDocTypes().subscribe(data => {
+            this.docTypes = data;
+            this.docTypes = this.docTypes.filter(r => r.category === 'DD');
+            },
             error => console.log(error)
         )
     );
-
-      this.subscriptions.push(
-          this.administrationService.getAllCompanies().subscribe(data => {
-                  this.companies = data;
-                  this.filteredOptions = this.cerereDupAutorForm.get('company').valueChanges
-                      .pipe(
-                          startWith<string | any>(''),
-                          map(value => typeof value === 'string' ? value : value.name),
-                          map(name => this._filter(name))
-                      );
-              },
-              error => console.log(error)
-          )
-      );
-  }
-
-  private _filter(name: string): any[] {
-    const filterValue = name.toLowerCase();
-
-    return this.companies.filter(option => option.name.toLowerCase().includes(filterValue));
   }
 
   saveRequest() {
 
       this.formSubmitted = true;
 
-      if (this.documents.length === 0 || !this.cerereDupAutorForm.get('company').valid) {
+      if (this.cerereDupAutorForm.invalid || this.paymentTotal<0) {
           return;
       }
 
@@ -87,16 +109,36 @@ export class CerereDubAutorActComponent implements OnInit {
       this.cerereDupAutorForm.get('company').setValue(this.cerereDupAutorForm.value.company);
 
       let modelToSubmit : any = this.cerereDupAutorForm.value;
-      modelToSubmit.requestHistories = [{startDate : this.cerereDupAutorForm.get('startDate').value, endDate : this.cerereDupAutorForm.get('endDate').value,
-          username : this.authService.getUserName(), step : 'R' }];
-      modelToSubmit.documents = this.documents;
+
+      modelToSubmit.requestHistories.push({
+          startDate: this.cerereDupAutorForm.get('data').value, endDate: new Date(),
+          username: this.authService.getUserName(), step: 'E'
+      });
+
+      modelToSubmit.medicament.paymentOrders = this.paymentOrdersList;
+      modelToSubmit.medicament.receipts = this.receiptsList;
 
       console.log(modelToSubmit);
 
-      this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
-              this.router.navigate(['dashboard/module']);
-          })
+      this.subscriptions.push(this.documentService.generateDistributionDisposition(this.cerereDupAutorForm.get('requestNumber').value).subscribe(res => {
+              modelToSubmit.medicament.documents.push({
+                  name: res.substring(res.lastIndexOf('/') + 1),
+                  docType : this.docTypes[0],
+                  date: new Date(),
+                  path: res
+              });
+
+              this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
+                      console.log("succes");
+                      this.router.navigate(['dashboard/module']);
+                  }, error => console.log(error))
+              );
+          }, error => console.log(error))
       );
-    
   }
+
+  paymentTotalUpdate(event) {
+      this.paymentTotal = event.valueOf();
+  }
+
 }

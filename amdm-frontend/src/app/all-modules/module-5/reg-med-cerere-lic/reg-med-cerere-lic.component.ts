@@ -1,53 +1,58 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Document} from "../../../models/document";
-import {Observable, Subscription} from "rxjs";
+import {Subscription} from "rxjs";
 import {AdministrationService} from "../../../shared/service/administration.service";
 import {LicenseService} from "../../../shared/service/license/license.service";
 import {Router} from "@angular/router";
 import {ConfirmationDialogComponent} from "../../../confirmation-dialog/confirmation-dialog.component";
 import {MatDialog} from "@angular/material";
+import {AuthService} from "../../../shared/service/authetication.service";
 
 @Component({
-  selector: 'app-reg-med-cerere-lic',
-  templateUrl: './reg-med-cerere-lic.component.html',
-  styleUrls: ['./reg-med-cerere-lic.component.css']
+    selector: 'app-reg-med-cerere-lic',
+    templateUrl: './reg-med-cerere-lic.component.html',
+    styleUrls: ['./reg-med-cerere-lic.component.css']
 })
 export class RegMedCerereLicComponent implements OnInit, OnDestroy {
 
-  companii: any[];
-  docs : Document [] = [];
-  tipCerere : string;
+    companii: any[];
+    docs: Document [] = [];
+    tipCerere: string;
 
-  private subscriptions: Subscription[] = [];
-  rFormSubbmitted : boolean = false;
+    private subscriptions: Subscription[] = [];
+    rFormSubbmitted: boolean = false;
 
-  //Validations
-  mForm: FormGroup;
-  rForm: FormGroup;
+    //count time
+    startDate: Date;
+    endDate: Date;
 
-  constructor(private router: Router,
-              private fb: FormBuilder,
-              private administrationService: AdministrationService,
-              private licenseService: LicenseService,
-              public dialog: MatDialog) {
+    //Validations
+    mForm: FormGroup;
+    rForm: FormGroup;
 
+    constructor(private router: Router,
+                private fb: FormBuilder,
+                private administrationService: AdministrationService,
+                private licenseService: LicenseService,
+                public dialog: MatDialog,
+                private authService: AuthService) {
 
-  }
+    }
 
-  ngOnInit() {
-      this.subscriptions.push(
-          this.administrationService.getAllCompanies().subscribe(data => {
-                  this.companii = data;
-              },
-              error => console.log(error)
-          )
-      );
+    ngOnInit() {
+        this.startDate = new Date();
+        this.subscriptions.push(
+            this.administrationService.getAllCompanies().subscribe(data => {
+                    this.companii = data;
+                }
+            )
+        );
 
-      this.initFormData();
+        this.initFormData();
 
-      this.onChanges();
-  }
+        this.onChanges();
+    }
 
     private initFormData() {
         this.rForm = this.fb.group({
@@ -75,21 +80,21 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
         this.mForm.get('dataEliberarii').setValue(new Date());
     }
 
-    submitNew(){
+    submitNew() {
         this.rFormSubbmitted = true;
 
-        if (!this.mForm.valid || !this.rForm.valid || this.docs.length==0)
-        {
-          return;
+        if (!this.mForm.valid || !this.rForm.valid || this.docs.length == 0) {
+            return;
         }
+
+        this.endDate = new Date();
 
         this.rFormSubbmitted = false;
 
-        let modelToSubmit : any = {};
-        let licenseModel : any = {};
-        let mandatedContact : any = {};
+        let modelToSubmit: any = {};
+        let licenseModel: any = {};
+        let mandatedContact: any = {};
         licenseModel.releaseDate = this.mForm.get('dataEliberarii').value;
-
 
 
         mandatedContact.requestPersonFirstname = this.rForm.get('persResDepCereriiFirstname').value;
@@ -104,17 +109,26 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
 
         modelToSubmit.license = licenseModel;
         modelToSubmit.requestNumber = this.mForm.get('nrCererii').value;
-        modelToSubmit.company = this.rForm.get('compGet').value;
+        modelToSubmit.company = {id : this.rForm.get('compGet').value.id};
 
-        console.log( licenseModel);
+
+        modelToSubmit.requestHistories = [{
+            startDate: this.startDate,
+            endDate: this.endDate,
+            username: this.authService.getUserName(),
+            step: 'R'
+        }];
+
+        modelToSubmit.currentStep = 'E';
+        modelToSubmit.startDate = this.startDate;
+
+        console.log('sfgs', modelToSubmit);
+
         this.subscriptions.push(
             this.licenseService.confirmRegisterLicense(modelToSubmit).subscribe(data => {
-                  // console.log('succes');
                     let result = data.body;
-                    console.log('sdf', result);
-                  this.router.navigate(['/dashboard/module/license/evaluate', result]);
-                },
-                error => console.log(error)
+                    this.router.navigate(['/dashboard/module/license/evaluate', result]);
+                }
             )
         );
     }
@@ -122,10 +136,12 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
     onChanges(): void {
         this.mForm.get('tipCerere').valueChanges.subscribe(val => {
             //Already set up
-            if (this.tipCerere && this.tipCerere !== val)
-            {
+            if (this.tipCerere && this.tipCerere !== val) {
                 const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-                    data: {message: 'Sunteti sigur ca doriti sa schimbati optiunea? Datele colectate vor fi pierdute.', confirm: false}
+                    data: {
+                        message: 'Sunteti sigur ca doriti sa schimbati optiunea? Datele colectate vor fi pierdute.',
+                        confirm: false
+                    }
                 });
                 dialogRef.afterClosed().subscribe(result => {
                     if (result) {
@@ -155,8 +171,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
         });
 
         this.rForm.get('compGet').valueChanges.subscribe(val => {
-            if (val)
-            {
+            if (val) {
                 this.rForm.get('adresa').setValue(val.legalAddress);
                 this.rForm.get('idno').setValue(val.idno);
             }
@@ -169,9 +184,9 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
     }
 
 
-  ngOnDestroy() {
-      this.subscriptions.forEach(s => s.unsubscribe());
-  }
+    ngOnDestroy() {
+        this.subscriptions.forEach(s => s.unsubscribe());
+    }
 
 
 }

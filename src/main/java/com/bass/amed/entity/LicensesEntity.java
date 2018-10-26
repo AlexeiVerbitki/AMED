@@ -32,6 +32,10 @@ public class LicensesEntity
     @Column(name = "status")
     private String status;
 
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
+    @JoinColumn( name = "ec_agent_id" )
+    private NmEconomicAgentsEntity economicAgent;
+
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @JoinColumn(name = "cessation_reason_id")
     private LicenseCessationReasonsEntity cessationReasons;
@@ -39,10 +43,6 @@ public class LicensesEntity
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "resolution_id")
     private LicenseResolutionEntity resolution;
-
-    @OneToOne( fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
-    @JoinColumn(name = "mandated_contact_id")
-    private LicenseMandatedContactEntity mandatedContact;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "LICENSE_DOCUMENTS", joinColumns = {
@@ -66,6 +66,11 @@ public class LicensesEntity
     @Basic
     @Column(name = "tax_paid")
     private Byte taxPaid;
+
+
+    @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "license_id")
+    private Set<LicenseMandatedContactEntity> licenseMandatedContacts;
 
     public Integer getId()
     {
@@ -157,16 +162,6 @@ public class LicensesEntity
         this.resolution = resolution;
     }
 
-    public LicenseMandatedContactEntity getMandatedContact()
-    {
-        return mandatedContact;
-    }
-
-    public void setMandatedContact(LicenseMandatedContactEntity mandatedContact)
-    {
-        this.mandatedContact = mandatedContact;
-    }
-
     public Set<DocumentsEntity> getDocuments()
     {
         return documents;
@@ -197,6 +192,26 @@ public class LicensesEntity
         this.commisionResponses = commisionResponses;
     }
 
+    public NmEconomicAgentsEntity getEconomicAgent()
+    {
+        return economicAgent;
+    }
+
+    public void setEconomicAgent(NmEconomicAgentsEntity economicAgent)
+    {
+        this.economicAgent = economicAgent;
+    }
+
+    public Set<LicenseMandatedContactEntity> getLicenseMandatedContacts()
+    {
+        return licenseMandatedContacts;
+    }
+
+    public void setLicenseMandatedContacts(Set<LicenseMandatedContactEntity> licenseMandatedContacts)
+    {
+        this.licenseMandatedContacts = licenseMandatedContacts;
+    }
+
     @Override
     public boolean equals(Object o)
     {
@@ -212,14 +227,13 @@ public class LicensesEntity
                 Objects.equals(status, that.status) &&
                 Objects.equals(cessationReasons, that.cessationReasons) &&
                 Objects.equals(resolution, that.resolution) &&
-                Objects.equals(mandatedContact, that.mandatedContact) &&
                 Objects.equals(documents, that.documents);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(id, serialNr, nr, releaseDate, cessationDate, expirationDate, status, cessationReasons, resolution, mandatedContact, documents);
+        return Objects.hash(id, serialNr, nr, releaseDate, cessationDate, expirationDate, status, cessationReasons, resolution, documents);
     }
 
     @Override

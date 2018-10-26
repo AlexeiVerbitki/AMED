@@ -19,9 +19,8 @@ import {AuthService} from "../../../shared/service/authetication.service";
 })
 export class RegDrugControl implements OnInit {
     documents: Document [] = [];
-    cereri: Cerere [] = [];
-    companii: any[];
-    primRep: string;
+    requests: Cerere [] = [];
+    companies: any[];
     rForm: FormGroup;
     dataForm: FormGroup;
     sysDate: string;
@@ -51,17 +50,17 @@ export class RegDrugControl implements OnInit {
                 fb.group({
                     'name' : ['',Validators.required],
                     'company' : ['',Validators.required],
-                    'status' : ['P'],
-                    'typeId' : ['1']
+                    'status' : ['P']
                 }),
             'company' : [''],
             'type':
                 fb.group({
-                    'id' : ['1',Validators.required]}),
+                    'code' : ['ATAC',Validators.required]}),
         });
     }
 
     ngOnInit() {
+
         this.currentDate = new Date();
 
         this.subscriptions.push(
@@ -75,7 +74,7 @@ export class RegDrugControl implements OnInit {
 
         this.subscriptions.push(
             this.administrationService.getAllCompanies().subscribe(data => {
-                    this.companii = data;
+                    this.companies = data;
                     this.filteredOptions = this.rForm.get('medicament.company').valueChanges
                         .pipe(
                             startWith<string | any>(''),
@@ -104,34 +103,13 @@ export class RegDrugControl implements OnInit {
             fileFormat = '*.' + fileName.substring(lastIndex + 1);
         }
         this.sysDate = `${this.currentDate.getDate()}.${this.currentDate.getMonth() + 1}.${this.currentDate.getFullYear()}`;
-        this.cereri.push({denumirea: fileName, format: fileFormat, dataIncarcarii: this.sysDate});
-    }
-
-    removeDocument(index) {
-        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-            data: {message: 'Sunteti sigur ca doriti sa stergeti acest document?', confirm: false}
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.cereri.splice(index, 1);
-            }
-        });
-    }
-
-    loadFile() {
-        saveAs(this.file, this.file.name);
-    }
-
-    checkCompanyValue() {
-        this.isWrongValueCompany = !this.companii.some(elem => {
-            return this.rForm.get('medicament.company').value == null ? true : elem.name === this.rForm.get('medicament.company').value.name;
-        });
+        this.requests.push({denumirea: fileName, format: fileFormat, dataIncarcarii: this.sysDate});
     }
 
     nextStep() {
         this.formSubmitted = true;
 
-        this.isWrongValueCompany = !this.companii.some(elem => {
+        this.isWrongValueCompany = !this.companies.some(elem => {
             return this.rForm.get('medicament.company').value == null ? true : elem.name === this.rForm.get('medicament.company').value.name;
         });
 
@@ -139,18 +117,12 @@ export class RegDrugControl implements OnInit {
             return;
         }
 
-        if(!this.rForm.get('medicament.company').valid || !this.rForm.get('type.id').valid || !this.rForm.get('medicament.name').valid)
+        if(!this.rForm.get('medicament.company').valid || !this.rForm.get('type.code').valid || !this.rForm.get('medicament.name').valid)
         {
             return;
         }
 
         this.formSubmitted = false;
-
-        // TODO save in DB values from form
-        // this.subscriptions.push(this.claimService.editClaim(this.model).subscribe(data => {
-        //     this.router.navigate(['/evaluate/initial']);
-        //   })
-        // );
 
         this.rForm.get('endDate').setValue(new Date());
         this.rForm.get('company').setValue(this.rForm.value.medicament.company);
@@ -159,28 +131,29 @@ export class RegDrugControl implements OnInit {
         modelToSubmit.requestHistories = [{startDate : this.rForm.get('startDate').value,endDate : this.rForm.get('endDate').value,
             username : this.authService.getUserName(), step : 'R' }];
         modelToSubmit.medicament.documents = this.documents;
+        modelToSubmit.medicament.registrationDate = new Date();
 
         console.log(modelToSubmit);
 
-        if(this.rForm.get('type.id').value === '1')
+        if(this.rForm.get('type.code').value === 'ATAC')
         {
-            this.model = 'dashboard/module/drug-control/activity-authorization';
+            this.model = 'dashboard/module/drug-control/activity-authorization/';
         }
-        else if(this.rForm.get('type.id').value === '2')
+        else if(this.rForm.get('type.code').value === 'ATIE')
         {
-            this.model='dashboard/module/drug-control/transfer-authorization';
+            this.model='dashboard/module/drug-control/transfer-authorization/';
         }
-        else if(this.rForm.get('type.id').value === '3')
+        else if(this.rForm.get('type.code').value === 'MACPS')
         {
-            this.model='dashboard/module/drug-control/modify-authority';
+            this.model='dashboard/module/drug-control/modify-authority/';
         }
-        else if(this.rForm.get('type.id').value === '4')
+        else if(this.rForm.get('type.code').value === 'DACPS')
         {
-            this.model='dashboard/module/drug-control/duplicate-authority';
+            this.model='dashboard/module/drug-control/duplicate-authority/';
         }
 
         this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
-                this.router.navigate([this.model]);
+                this.router.navigate([this.model + data.body]);
             })
         );
 
@@ -189,11 +162,7 @@ export class RegDrugControl implements OnInit {
     private _filter(name: string): any[] {
         const filterValue = name.toLowerCase();
 
-        return this.companii.filter(option => option.name.toLowerCase().includes(filterValue));
+        return this.companies.filter(option => option.name.toLowerCase().includes(filterValue));
     }
 
-    private saveToFileSystem(response: any, docName: string) {
-        const blob = new Blob([response]);
-        saveAs(blob, docName);
-    }
 }

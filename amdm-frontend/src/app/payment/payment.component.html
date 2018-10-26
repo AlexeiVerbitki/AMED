@@ -6,28 +6,25 @@
         </div>
         <div class="col-2">
             <div class="md-form">
-                <input id="motivulEmiterii" mdbInputDirective type="text" class="form-control"
-                       formControlName="name">
+                <input id="motivulEmiterii" mdbInputDirective type="text" class="form-control" formControlName="name" [attr.disabled]="isDisabled ? '' : null">
                 <label for="motivulEmiterii">Motivul emiterii</label>
             </div>
         </div>
         <div class="col-2">
             <div class="md-form">
-                <input id="sumaBon" mdbInputDirective type="number" min="0" step=".01" class="form-control" formControlName="amount">
+                <input id="sumaBon" mdbInputDirective type="number" min="0" step=".01" class="form-control" formControlName="amount" [attr.disabled]="isDisabled ? '' : null">
                 <label for="sumaBon">Suma (lei)</label>
             </div>
         </div>
         <div class="col-2">
             <div class="md-form">
-                <mat-checkbox formControlName="sP">Bon suplimentar</mat-checkbox>
+                <mat-checkbox formControlName="sP" [disabled]="isDisabled">Bon suplimentar</mat-checkbox>
             </div>
         </div>
         <div class="col-2">
             <div class="md-form">
                 <div class="position-button">
-                    <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
-                            mdbWavesEffect
-                            (click)="addReceipt()">Adaugare
+                    <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="addReceipt()" [attr.disabled]="isDisabled ? '' : null">Adaugare
                     </button>
                 </div>
             </div>
@@ -58,9 +55,7 @@
                                                                         aria-hidden="true"></i></span>
             </td>
             <td>
-                <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect
-                        (click)="deleteReceipt(receipt)">Delete
-                </button>
+                <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect (click)="deleteReceipt(receipt)" [attr.disabled]="isDisabled ? '' : null">Delete</button>
             </td>
         </tr>
         </tbody>
@@ -76,39 +71,35 @@
 <div class="row" [formGroup]="addPaymentOrderForm">
     <div class="col">
         <div class="md-form">
-            <input id="ordNr" mdbInputDirective type="text" class="form-control" formControlName="nr">
+            <input id="ordNr" mdbInputDirective type="text" class="form-control" formControlName="nr" [attr.disabled]="isDisabled ? '' : null">
             <label for="ordNr">Ordin de plata nr.</label>
         </div>
     </div>
     <div class="col">
         <div class="md-form-modified-select">
             <mat-form-field class="w-100">
-                <input matInput [matDatepicker]="ordNrData" placeholder="Data" formControlName="data">
-                <mat-datepicker-toggle matSuffix [for]="ordNrData"></mat-datepicker-toggle>
-                <mat-datepicker touchUi #ordNrData></mat-datepicker>
+                <input matInput [matDatepicker]="ordNrData" placeholder="Data" formControlName="data" [attr.disabled]="isDisabled ? '' : null">
+                <mat-datepicker-toggle matSuffix [for]="ordNrData" [disabled]=isDisabled></mat-datepicker-toggle>
+                <mat-datepicker touchUi #ordNrData [attr.disabled]="isDisabled ? '' : null"></mat-datepicker>
             </mat-form-field>
         </div>
     </div>
     <div class="col">
         <div class="md-form">
-            <input id="inBaza" mdbInputDirective type="text" class="form-control" formControlName="basis">
+            <input id="inBaza" mdbInputDirective type="text" class="form-control" formControlName="basis" [attr.disabled]="isDisabled ? '' : null">
             <label for="inBaza">In baza</label>
         </div>
     </div>
     <div class="col">
         <div class="md-form">
-            <input id="sumaOrd" mdbInputDirective min="0" step=".01" type="number" class="form-control"
-                   formControlName="amount">
+            <input id="sumaOrd" mdbInputDirective min="0" step=".01" type="number" class="form-control" formControlName="amount" [attr.disabled]="isDisabled ? '' : null">
             <label for="sumaOrd">Suma (lei)</label>
         </div>
     </div>
     <div class="col-2">
         <div class="md-form">
             <div class="position-button">
-                <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
-                        mdbWavesEffect
-                        (click)="addPaymentOrder()">Adaugare
-                </button>
+                <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="addPaymentOrder()" [attr.disabled]="isDisabled ? '' : null">Adaugare</button>
             </div>
         </div>
     </div>
@@ -130,9 +121,7 @@
         <td>{{ payOrder.basis }}</td>
         <td>{{ payOrder.amount }}</td>
         <td>
-            <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect
-                    (click)="deletePaymentOrder(payOrder)">Delete
-            </button>
+            <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect (click)="deletePaymentOrder(payOrder)" [attr.disabled]="isDisabled ? '' : null">Delete</button>
         </td>
     </tr>
     </tbody>
