@@ -1,6 +1,8 @@
 package com.bass.amed.repository;
 
 import com.bass.amed.entity.MedicamentEntity;
+import com.bass.amed.entity.NmEconomicAgentsEntity;
+import com.bass.amed.projection.MedicamentDetailsForPraceRegProjection;
 import com.bass.amed.projection.MedicamentNamesListProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,5 +17,6 @@ public interface MedicamentRepository extends JpaRepository<MedicamentEntity, In
 //    List<MedicamentEntity> findByEconomic(int companyId);
 
     List<MedicamentNamesListProjection> findByNameStartingWithIgnoreCase(String name);
-    List<MedicamentEntity> findAllByCompanyId(int companyId);
+    List<MedicamentDetailsForPraceRegProjection> findAllByCompany(NmEconomicAgentsEntity company);
+  //  List<MedicamentEntity> findAllByCompanyId(int companyId);
 }

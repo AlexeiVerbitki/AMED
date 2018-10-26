@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="requestAdditionalData" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="befc3360-be8d-41c0-81d0-2e7000b828a8">
+	<property name="ireport.zoom" value="1.771561000000001"/>
+	<property name="ireport.x" value="19"/>
+	<property name="ireport.y" value="0"/>
+	<field name="nrRequest" class="java.lang.String"/>
+	<field name="requestDate" class="java.util.Date"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<textField>
+				<reportElement x="123" y="19" width="100" height="20" uuid="6051ba04-aafc-4c13-ad58-32ac3f0f7790"/>
+				<textFieldExpression><![CDATA[$F{nrRequest}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="23" y="19" width="100" height="20" uuid="fafa086a-af04-4e45-aeff-5c0866730e76"/>
+				<text><![CDATA[Numar ordin]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="337" y="19" width="100" height="20" uuid="fdb32dd0-dbfa-422c-9bbb-e32be3a6df5a"/>
+				<text><![CDATA[Data]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="437" y="19" width="100" height="20" uuid="e7423d35-45b4-4335-8b83-6c176364d9a2"/>
+				<textFieldExpression><![CDATA[$F{requestDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="59" width="555" height="20" uuid="9424a6ec-f6f0-40a7-899d-d7d1445e13f4"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Ordin de intrerupere]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+</jasperReport>

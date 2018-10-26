@@ -11,6 +11,7 @@ public class DocumentsEntity
     private Timestamp date;
     private String name;
     private String path;
+    private String email;
     private NmDocumentTypesEntity docType;
 
     @Id
@@ -62,6 +63,18 @@ public class DocumentsEntity
         this.path = path;
     }
 
+    @Basic
+    @Column(name = "email")
+    public String getEmail()
+    {
+        return email;
+    }
+
+    public void setEmail(String email)
+    {
+        this.email = email;
+    }
+
     @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
     @JoinColumn( name = "doc_type_id" )
     public NmDocumentTypesEntity getDocType()
@@ -104,6 +117,10 @@ public class DocumentsEntity
         {
             return false;
         }
+        if (email != null ? !email.equals(that.email) : that.email != null)
+        {
+            return false;
+        }
         return docType != null ? docType.equals(that.docType) : that.docType == null;
     }
 
@@ -114,6 +131,7 @@ public class DocumentsEntity
         result = 31 * result + (date != null ? date.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (path != null ? path.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (docType != null ? docType.hashCode() : 0);
         return result;
     }

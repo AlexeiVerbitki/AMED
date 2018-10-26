@@ -13,6 +13,7 @@ public class ClinicalTrailsInvestigatorsEntity {
     private String title;
 
     @Id
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
     @Column(name = "id")
     public Integer getId() {
         return id;

@@ -23,6 +23,8 @@ export class PaymentComponent implements OnInit {
 
     total: number = 0;
 
+    disabled: boolean = false;
+
     constructor(private fb: FormBuilder,
                 private administrationService: AdministrationService) {
         this.addReceiptForm = this.fb.group({
@@ -53,6 +55,8 @@ export class PaymentComponent implements OnInit {
     @Input()
     set receipts(receiptList: Receipt []) {
         this.receiptsList = receiptList;
+        this.recalculateTotalReceipt();
+        this.recalculateTotalPaymentOrders();
     }
 
     get paymentOrders(): PaymentOrder [] {
@@ -62,9 +66,20 @@ export class PaymentComponent implements OnInit {
     @Input()
     set paymentOrders(paymentOrdersList: PaymentOrder []) {
         this.paymentOrdersList = paymentOrdersList;
+        this.recalculateTotalReceipt();
+        this.recalculateTotalPaymentOrders();
     }
 
     @Output() totalValueChanged = new EventEmitter();
+
+    get isDisabled(): boolean {
+        return this.disabled;
+    }
+
+    @Input()
+    set isDisabled(disabled: boolean) {
+        this.disabled = disabled;
+    }
 
     addReceipt() {
         if (this.addReceiptForm.invalid) {

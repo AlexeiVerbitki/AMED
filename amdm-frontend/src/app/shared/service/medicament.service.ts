@@ -11,7 +11,7 @@ export class MedicamentService {
     let Params = new HttpParams();
     Params = Params.set('companyId', companyId);
 
-    return this.http.get<Medicament[]>('/api/medicaments/company-medicaments', { params: Params});
+    return this.http.get<Medicament[]>('/api/medicaments/company-medicaments', { params: Params });//, responseType: 'text'});
   }
 
   getMedicamentNamesList(partialName: string) : Observable<any[]> {
@@ -26,5 +26,23 @@ export class MedicamentService {
         Params = Params.set('id', id);
 
         return this.http.get<any>('/api/medicaments/search-medicament-by-id', {params: Params});
+    }
+
+    saveRequest(doc: any,type:any) : Observable<any> {
+      if(type=='NOTIFICATION')
+      {
+          return this.http.post<any>('/api/medicaments/save-notification-letter', doc, {observe: 'response'});
+      }
+      else {
+          return this.http.post<any>('/api/medicaments/save-request-additional-data', doc, {observe: 'response'});
+      }
+    }
+
+    saveOrderInterrupt(doc: any) : Observable<any> {
+        return this.http.post<any>('/api/medicaments/save-order-interrupt', doc, {observe: 'response'});
+    }
+
+    answerReceivedRequestAdditionalData(doc: any) : Observable<any> {
+        return this.http.post<any>('/api/medicaments/answer-received-request-additional-data', doc, {observe: 'response'});
     }
 }

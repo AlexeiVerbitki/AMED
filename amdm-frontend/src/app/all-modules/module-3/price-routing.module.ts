@@ -5,7 +5,7 @@ import {PriceEvaluateMedComponent} from './price-evaluate-med/price-evaluate-med
 
 const routes: Routes = [
     { path: 'register', component: PriceRegMedComponent},
-    { path: 'evaluate', component: PriceEvaluateMedComponent},
+    { path: 'evaluate/:id', component: PriceEvaluateMedComponent},
 ];
 
 @NgModule({

@@ -3,6 +3,7 @@ package com.bass.amed.repository;
 import com.bass.amed.entity.NmCountriesEntity;
 import com.bass.amed.entity.NmEconomicAgentsEntity;
 import com.bass.amed.projection.GetMinimalCompanyProjection;
+import com.bass.amed.projection.LicenseCompanyProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -16,4 +17,8 @@ public interface EconomicAgentsRepository extends JpaRepository<NmEconomicAgents
     // OR
 
     List<GetMinimalCompanyProjection> findAllOnlyIdAndNamesBy();
+
+
+    @Query(value = "SELECT id, name, idno, legal_address FROM nm_economic_agents", nativeQuery = true)
+    List<LicenseCompanyProjection> getLicenseDetails();
 }

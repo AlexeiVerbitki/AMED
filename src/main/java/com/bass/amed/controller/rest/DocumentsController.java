@@ -1,9 +1,12 @@
 package com.bass.amed.controller.rest;
 
 import com.bass.amed.dto.DistributionDispositionDTO;
+import com.bass.amed.dto.RequestAdditionalDataDTO;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.service.GenerateDocNumberService;
 import com.bass.amed.service.StorageService;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,13 +55,7 @@ public class DocumentsController
     {
         logger.debug("Store file with name=" + file.getOriginalFilename());
         StringBuilder sb = new StringBuilder(folder);
-        sb.append("/");
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        Date date = new Date();
-        sb.append(sdf.format(date));
-        sb.append("/");
-        sb.append(nrCerere);
-        //        sb.append(date.getTime());
+        createRootPath(nrCerere,sb);
 
         storageService.store(sb.toString(), file);
         FileResult fr = new FileResult();
@@ -94,6 +91,16 @@ public class DocumentsController
         dataList.add(obj);
 
         StringBuilder sb = new StringBuilder(folder);
+        createRootPath(nrCerere, sb);
+        sb.append("Dispozitie de distribuire Nr " + nrDisposition+ ".pdf");
+
+        storageService.storePDFFile(dataList,sb.toString(),"classpath:..\\resources\\layouts\\distributionDisposition.jrxml");
+
+        return new ResponseEntity<>(sb.toString(), HttpStatus.OK);
+    }
+
+    private void createRootPath(String nrCerere, StringBuilder sb)
+    {
         sb.append("/");
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         Date date = new Date();
@@ -101,9 +108,146 @@ public class DocumentsController
         sb.append("/");
         sb.append(nrCerere);
         sb.append("/");
-        sb.append("Dispozitie de distribuire Nr." + nrDisposition+ ".pdf");
+    }
 
-        storageService.storePDFFile(dataList,sb.toString());
+    @RequestMapping(value = "/view-request-additional-data", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> viewRAD(@RequestParam(value = "nrDocument") String nrDocument,
+                                         @RequestParam(value = "content") String content,
+                                         @RequestParam(value = "title") String title,
+                                          @RequestParam(value = "type") String type
+                                          ) throws CustomException
+    {
+        byte[] bytes = null;
+        try
+        {
+            ResourceLoader resourceLoader = new DefaultResourceLoader();
+            String classPath = "";
+            if(type.equals("NOTIFICATION"))
+            {
+                classPath = "classpath:..\\resources\\layouts\\notificationLetter.jrxml";
+            }
+            else
+            {
+                classPath = "classpath:..\\resources\\layouts\\requestAdditionalData.jrxml";
+            }
+            Resource res = resourceLoader.getResource(classPath);
+            JasperReport report = JasperCompileManager.compileReport(new FileInputStream(res.getFile()));
+
+            List<RequestAdditionalDataDTO> dataList = fillRequestAdditionalDataDTO(nrDocument, content, title);
+
+            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(dataList);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, null, beanColDataSource);
+            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+        }
+        catch (Exception e)
+        {
+            throw new CustomException(e.getMessage());
+        }
+
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=request.pdf").body(bytes);
+    }
+
+    @RequestMapping(value = "/view-interrupt-order-of-medicament-registration", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> viewInterruptOrderMR(@RequestParam(value = "nrDocument") String nrDocument) throws CustomException
+    {
+        byte[] bytes = null;
+        try
+        {
+            ResourceLoader resourceLoader = new DefaultResourceLoader();
+            Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts\\interruptOrderOfMedicamentRegistration.jrxml");
+            JasperReport report = JasperCompileManager.compileReport(new FileInputStream(res.getFile()));
+
+            List<RequestAdditionalDataDTO> dataList = new ArrayList();
+            RequestAdditionalDataDTO obj = new RequestAdditionalDataDTO();
+            obj.setRequestDate(Calendar.getInstance().getTime());
+            obj.setNrRequest(nrDocument);
+            dataList.add(obj);
+
+            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(dataList);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, null, beanColDataSource);
+            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+        }
+        catch (Exception e)
+        {
+            throw new CustomException(e.getMessage());
+        }
+
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=interruptOrder.pdf").body(bytes);
+    }
+
+    private List<RequestAdditionalDataDTO> fillRequestAdditionalDataDTO(@RequestParam("nrDocument") String nrDocument, @RequestParam("content") String content, @RequestParam("title") String title)
+    {
+        List<RequestAdditionalDataDTO> dataList = new ArrayList();
+        RequestAdditionalDataDTO obj = new RequestAdditionalDataDTO();
+        obj.setRequestDate(Calendar.getInstance().getTime());
+        obj.setContent(content);
+        obj.setNrRequest(nrDocument);
+        obj.setTitle(title);
+        dataList.add(obj);
+        return dataList;
+    }
+
+    @RequestMapping(value = "/generate-request-additional-data", method = RequestMethod.GET)
+    public ResponseEntity<String> generateRequestAdditionalData(@RequestParam(value = "nrCerere") String nrCerere,
+                                                                @RequestParam(value = "nrDocument") String nrDocument,
+                                                                @RequestParam(value = "content") String content,
+                                                                @RequestParam(value = "title") String title,
+                                                                @RequestParam(value = "type") String type
+                                                               ) throws CustomException, IOException
+    {
+        logger.debug("Generate Request Additional Data");
+
+        ResourceLoader resourceLoader = new DefaultResourceLoader();
+        Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts");
+
+        List<RequestAdditionalDataDTO> dataList = fillRequestAdditionalDataDTO(nrDocument, content, title);
+
+        StringBuilder sb = new StringBuilder(folder);
+        createRootPath(nrCerere, sb);
+        if(type.equals("NOTIFICATION"))
+        {
+            sb.append("Scrisoare de informare Nr " + nrDocument + ".pdf");
+        }
+        else
+        {
+            sb.append("Scrisoare de solicitare date aditionale Nr " + nrDocument + ".pdf");
+        }
+
+        if(type.equals("NOTIFICATION"))
+        {
+            storageService.storePDFFile(dataList, sb.toString(), "classpath:..\\resources\\layouts\\notificationLetter.jrxml");
+        }
+        else
+        {
+            storageService.storePDFFile(dataList, sb.toString(), "classpath:..\\resources\\layouts\\requestAdditionalData.jrxml");
+        }
+
+        return new ResponseEntity<>(sb.toString(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/generate-interrupt-order-of-medicament-registration", method = RequestMethod.GET)
+    public ResponseEntity<String> generateInterruptOrderOfMR(@RequestParam(value = "nrCerere") String nrCerere,
+                                                                @RequestParam(value = "nrDocument") String nrDocument
+    ) throws CustomException, IOException
+    {
+        logger.debug("Generate Interrupt Order of MR");
+
+        ResourceLoader resourceLoader = new DefaultResourceLoader();
+        Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts");
+
+        List<RequestAdditionalDataDTO> dataList = new ArrayList();
+        RequestAdditionalDataDTO obj = new RequestAdditionalDataDTO();
+        obj.setRequestDate(Calendar.getInstance().getTime());
+        obj.setNrRequest(nrDocument);
+        dataList.add(obj);
+
+        StringBuilder sb = new StringBuilder(folder);
+        createRootPath(nrCerere, sb);
+        sb.append("Ordin de întrerupere a procedurii de înregistrare a medicamentului Nr " + nrDocument+ ".pdf");
+
+        storageService.storePDFFile(dataList,sb.toString(),"classpath:..\\resources\\layouts\\interruptOrderOfMedicamentRegistration.jrxml");
 
         return new ResponseEntity<>(sb.toString(), HttpStatus.OK);
     }

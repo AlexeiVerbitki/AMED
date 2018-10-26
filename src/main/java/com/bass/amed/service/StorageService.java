@@ -102,16 +102,23 @@ public class StorageService
         return file;
     }
 
-    public void storePDFFile(Collection<?> list, String fileName) throws CustomException
+    public void storePDFFile(Collection<?> list, String fileName, String classpath) throws CustomException
     {
         try
         {
             ResourceLoader resourceLoader = new DefaultResourceLoader();
-            Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts\\distributionDisposition.jrxml");
+            Resource res = resourceLoader.getResource(classpath);
             JasperReport report = JasperCompileManager.compileReport(new FileInputStream(res.getFile()));
             JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(list);
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, null, beanColDataSource);
+
+            //create folders
+            Path path = Paths.get(rootFolder + "/"+fileName.substring(0,fileName.lastIndexOf('/')));
+            if (!Files.exists(path)) {
+                Files.createDirectories(path);
+            }
+
             JasperExportManager.exportReportToPdfFile(jasperPrint, rootFolder + "/"+fileName);
         }
         catch (Exception e)

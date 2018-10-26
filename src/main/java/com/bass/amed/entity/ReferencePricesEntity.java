@@ -1,17 +1,21 @@
 package com.bass.amed.entity;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "reference_prices", schema = "amed", catalog = "")
 public class ReferencePricesEntity {
+
     private int id;
-    private int price;
+    private BigDecimal value;
     private NmCountriesEntity country;
     private NmCurrenciesEntity currency;
+    private Integer medicamentId;
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getId() {
         return id;
     }
@@ -21,13 +25,43 @@ public class ReferencePricesEntity {
     }
 
     @Basic
-    @Column(name = "price")
-    public int getPrice() {
-        return price;
+    @Column(name = "value")
+    public BigDecimal getValue() {
+        return value;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
+    public void setValue(BigDecimal value) {
+        this.value = value;
+    }
+
+    @OneToOne(fetch = FetchType.EAGER) //, cascade = CascadeType.DETACH)
+    @JoinColumn(name = "country_id", referencedColumnName = "id", nullable = false)
+    public NmCountriesEntity getCountry() {
+        return country;
+    }
+
+    public void setCountry(NmCountriesEntity country) {
+        this.country = country;
+    }
+
+    @OneToOne(fetch = FetchType.EAGER )//, cascade = CascadeType.DETACH)
+    @JoinColumn(name = "currency_id", referencedColumnName = "id", nullable = false)
+    public NmCurrenciesEntity getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(NmCurrenciesEntity currency) {
+        this.currency = currency;
+    }
+
+    @Basic
+    @Column(name = "medicament_id")
+    public Integer getMedicamentId() {
+        return medicamentId;
+    }
+
+    public void setMedicamentId(Integer medicamentId) {
+        this.medicamentId = medicamentId;
     }
 
     @Override
@@ -38,35 +72,17 @@ public class ReferencePricesEntity {
         ReferencePricesEntity that = (ReferencePricesEntity) o;
 
         if (id != that.id) return false;
-        if (price != that.price) return false;
-
-        return true;
+        if (value != null ? !value.equals(that.value) : that.value != null) return false;
+        if (country != null ? !country.equals(that.country) : that.country != null) return false;
+        return currency != null ? currency.equals(that.currency) : that.currency == null;
     }
 
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + price;
+        result = 31 * result + (value != null ? value.hashCode() : 0);
+        result = 31 * result + (country != null ? country.hashCode() : 0);
+        result = 31 * result + (currency != null ? currency.hashCode() : 0);
         return result;
-    }
-
-    @OneToOne
-    @JoinColumn(name = "country_id", referencedColumnName = "id", nullable = false)
-    public NmCountriesEntity getCountry() {
-        return country;
-    }
-
-    public void setCountry(NmCountriesEntity country) {
-        this.country = country;
-    }
-
-    @OneToOne
-    @JoinColumn(name = "currency_id", referencedColumnName = "id", nullable = false)
-    public NmCurrenciesEntity getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(NmCurrenciesEntity curreny) {
-        this.currency = curreny;
     }
 }

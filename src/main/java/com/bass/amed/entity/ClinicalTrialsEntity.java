@@ -9,15 +9,16 @@ import java.util.Set;
 public class ClinicalTrialsEntity
 {
     private Integer id;
-    private Integer treatmentId;
-    private Integer provenanceId;
+    private ClinicalTrialsTypesEntity treatment;
+    private ClinicalTrialsTypesEntity provenance;
     private String phase;
     private String eudraCtNr;
     private String code;
     private String title;
-    private Integer sponsor;
+    private String sponsor;
     private MedicamentEntity medicament;
-    private Integer medicalInstitution;
+    private MedicamentEntity referenceProduct;
+    private String medicalInstitution;
     private Integer trialPopulation;
     private String medicamentCommitteeOpinion;
     private String eticCommitteeOpinion;
@@ -28,6 +29,8 @@ public class ClinicalTrialsEntity
     private Set<DocumentsEntity> documents;
     private Set<ClinicalTrailsInvestigatorsEntity> investigators;
     private Set<ReceiptsEntity> receipts;
+    private Set<PaymentOrdersEntity> paymentOrders;
+
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
@@ -42,28 +45,22 @@ public class ClinicalTrialsEntity
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "treatment_id")
-    public Integer getTreatmentId()
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "treatment_id")
+    public ClinicalTrialsTypesEntity getTreatment() { return treatment; }
+
+    public void setTreatment(ClinicalTrialsTypesEntity treatment) { this.treatment = treatment;}
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "provenance_id")
+    public ClinicalTrialsTypesEntity getProvenance()
     {
-        return treatmentId;
+        return provenance;
     }
 
-    public void setTreatmentId(Integer treatmentId)
+    public void setProvenance(ClinicalTrialsTypesEntity provenance)
     {
-        this.treatmentId = treatmentId;
-    }
-
-    @Basic
-    @Column(name = "provenance_id")
-    public Integer getProvenanceId()
-    {
-        return provenanceId;
-    }
-
-    public void setProvenanceId(Integer provenanceId)
-    {
-        this.provenanceId = provenanceId;
+        this.provenance = provenance;
     }
 
     @Basic
@@ -116,12 +113,12 @@ public class ClinicalTrialsEntity
 
     @Basic
     @Column(name = "sponsor")
-    public Integer getSponsor()
+    public String getSponsor()
     {
         return sponsor;
     }
 
-    public void setSponsor(Integer sponsor)
+    public void setSponsor(String sponsor)
     {
         this.sponsor = sponsor;
     }
@@ -136,14 +133,24 @@ public class ClinicalTrialsEntity
         this.medicament = medicament;
     }
 
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE} )
+    @JoinColumn( name = "reference_product_id" )
+    public MedicamentEntity getReferenceProduct() {
+        return referenceProduct;
+    }
+
+    public void setReferenceProduct(MedicamentEntity referenceProduct) {
+        this.referenceProduct = referenceProduct;
+    }
+
     @Basic
     @Column(name = "medical_institution")
-    public Integer getMedicalInstitution()
+    public String getMedicalInstitution()
     {
         return medicalInstitution;
     }
 
-    public void setMedicalInstitution(Integer medicalInstitution)
+    public void setMedicalInstitution(String medicalInstitution)
     {
         this.medicalInstitution = medicalInstitution;
     }
@@ -269,8 +276,18 @@ public class ClinicalTrialsEntity
         this.receipts = receipts;
     }
 
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(name = "CLINICAL_TRAILS_PAYMENT_ORDERS", joinColumns = {
+            @JoinColumn(name = "CLINICAL_TRAIL_ID")}, inverseJoinColumns = {
+            @JoinColumn(name = "PAYMENT_ORDER_ID")
+    })
+    public Set<PaymentOrdersEntity> getPaymentOrders() {
+        return paymentOrders;
+    }
 
-
+    public void setPaymentOrders(Set<PaymentOrdersEntity> paymentOrders) {
+        this.paymentOrders = paymentOrders;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -278,14 +295,15 @@ public class ClinicalTrialsEntity
         if (o == null || getClass() != o.getClass()) return false;
         ClinicalTrialsEntity that = (ClinicalTrialsEntity) o;
         return Objects.equals(id, that.id) &&
-                Objects.equals(treatmentId, that.treatmentId) &&
-                Objects.equals(provenanceId, that.provenanceId) &&
+                Objects.equals(treatment, that.treatment) &&
+                Objects.equals(provenance, that.provenance) &&
                 Objects.equals(phase, that.phase) &&
                 Objects.equals(eudraCtNr, that.eudraCtNr) &&
                 Objects.equals(code, that.code) &&
                 Objects.equals(title, that.title) &&
                 Objects.equals(sponsor, that.sponsor) &&
                 Objects.equals(medicament, that.medicament) &&
+                Objects.equals(referenceProduct, that.referenceProduct) &&
                 Objects.equals(medicalInstitution, that.medicalInstitution) &&
                 Objects.equals(trialPopulation, that.trialPopulation) &&
                 Objects.equals(medicamentCommitteeOpinion, that.medicamentCommitteeOpinion) &&
@@ -294,12 +312,15 @@ public class ClinicalTrialsEntity
                 Objects.equals(pharmacovigilance, that.pharmacovigilance) &&
                 Objects.equals(openingDeclarationId, that.openingDeclarationId) &&
                 Objects.equals(status, that.status) &&
-                Objects.equals(documents, that.documents);
+                Objects.equals(documents, that.documents) &&
+                Objects.equals(investigators, that.investigators) &&
+                Objects.equals(receipts, that.receipts) &&
+                Objects.equals(paymentOrders, that.paymentOrders);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, treatmentId, provenanceId, phase, eudraCtNr, code, title, sponsor, medicament, medicalInstitution, trialPopulation, medicamentCommitteeOpinion, eticCommitteeOpinion, approvalOrder, pharmacovigilance, openingDeclarationId, status, documents);
+        return Objects.hash(id, treatment, provenance, phase, eudraCtNr, code, title, sponsor, medicament, referenceProduct, medicalInstitution, trialPopulation, medicamentCommitteeOpinion, eticCommitteeOpinion, approvalOrder, pharmacovigilance, openingDeclarationId, status, documents, investigators, receipts, paymentOrders);
     }
 }

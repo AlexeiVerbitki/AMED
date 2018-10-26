@@ -3,18 +3,14 @@
   <hr>
 
   <form [formGroup]='cerereDupAutorForm'>
-
-    <app-document [documents]= "documents" [nrCerere]="generatedDocNrSeq"></app-document>
-    <div *ngIf="formSubmitted && documents.length==0">
-      <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
-    </div>
+       <app-document [documents]="documents" [nrCerere]="cerereDupAutorForm.get('requestNumber').value"></app-document>
     <hr>
 
     <div class="row">
       <div class="col-md-6">
         <div class="md-form">
           <mat-form-field class="w-100">
-            <input matInput [matDatepicker]="picker" placeholder="Data" required formControlName="data" formControlName="dataReg">
+            <input matInput [matDatepicker]="picker" placeholder="Data" required formControlName="data">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker touchUi #picker></mat-datepicker>
           </mat-form-field>
@@ -31,17 +27,19 @@
       <hr>
       <div class="col-md-12">
         <div class="md-form-modified">
-          <ng-select id="company" name="company" [items]="companies"
-                     bindLabel="name"
-                     placeholder="Compania solicitant *"
-                     formControlName="company">
-          </ng-select>
-          <div *ngIf="formSubmitted && cerereDupAutorForm.get('company').invalid">
-            <small class="text-muted"><strong class="text-danger">Compania solicitantă trebuie selectată</strong></small>
+          <div class="md-form" formGroupName="medicament">
+            <input id="compSolicitant" mdbInputDirective type="text" class="form-control" formControlName="companyValue" [attr.disabled]="true">
+            <label for="compSolicitant">Compania solicitant</label>
           </div>
         </div>
       </div>
     </div>
+      <hr>
+      <app-payment [receipts]="receiptsList" [paymentOrders]="paymentOrdersList" (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
+      <div *ngIf="formSubmitted && paymentTotal<0">
+          <small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>
+      </div>
+      <hr>
     <div class="text-center">
       <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="saveRequest()">Inregistrare</button>
     </div>

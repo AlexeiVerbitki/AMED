@@ -11,6 +11,9 @@ import {UploadFileService} from "../../shared/service/upload/upload-file.service
 import { AEvaluareaPrimaraComponent } from './a-evaluarea-primara/a-evaluarea-primara.component';
 import {RequestService} from "../../shared/service/request.service";
 import {DocumentModule} from "../../document/document.module";
+import {PaymentModule} from "../../payment/payment.module";
+import { AAnalizaComponent } from './a-analiza/a-analiza.component';
+import {RequestAdditionalDataDialogComponent} from "../../dialog/request-additional-data-dialog/request-additional-data-dialog.component";
 
 @NgModule({
     imports: [
@@ -20,10 +23,11 @@ import {DocumentModule} from "../../document/document.module";
         ReactiveFormsModule,
         MaterialSharedModule.forRoot(),
         MDBBootstrapModule.forRoot(),
-        DocumentModule
+        DocumentModule,
+        PaymentModule
     ],
     schemas: [],
-    declarations: [RegStudCliniceComponent, RegCerereComponent, AEvaluareaPrimaraComponent],
+    declarations: [RegStudCliniceComponent, RegCerereComponent, AEvaluareaPrimaraComponent, AAnalizaComponent,RequestAdditionalDataDialogComponent],
 
     providers: [UploadFileService,RequestService],
 })

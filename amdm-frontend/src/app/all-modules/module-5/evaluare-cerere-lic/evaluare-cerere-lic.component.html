@@ -9,7 +9,6 @@
             <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICD'">Eliberarea duplicatului</h5>
         </div>
     </div>
-    <hr>
     <form [formGroup]="mForm">
         <hr>
         <div class="row">
@@ -40,7 +39,7 @@
 
     </form>
 
-    <form [formGroup]="rForm" (ngSubmit)="submit()">
+    <form [formGroup]="rForm" >
         <section *ngIf="tipCerere === 'LICEL'">
             <hr>
 <!--=====================================================================================================================================-->
@@ -366,7 +365,13 @@
                 </div>
             </div>-->
             <div class="text-center">
-                <button type="submit" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Confirmare
+                <button type="button" (click)="submit()" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Confirmare
+                </button>
+                <button type="button" (click)="submitNextStep()" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Urmatorul pas
+                </button>
+                <button type="button" (click)="cancelRequest()" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Anuleaza cererea
+                </button>
+                <button type="button" (click)="closePage()" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Inchide pagina
                 </button>
             </div>
         </section>

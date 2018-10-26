@@ -1,54 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e9d4d85f-13dd-47b0-b990-4ba038def0bf">
-	<property name="ireport.zoom" value="1.4641000000000006"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="999dde17-c597-4348-b714-8d29e08d96aa">
+	<property name="ireport.zoom" value="1.4641000000000008"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
-	<field name="sysDate" class="java.util.Date"/>
-	<field name="requestNumber" class="java.lang.String"/>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
+	<property name="ireport.y" value="48"/>
+	<field name="dispositionDate" class="java.util.Date"/>
+	<field name="nrDisposition" class="java.lang.String"/>
+	<field name="path" class="java.lang.String"/>
 	<title>
-		<band height="155" splitType="Stretch">
+		<band height="73" splitType="Stretch">
 			<staticText>
-				<reportElement x="186" y="33" width="151" height="40" uuid="9f67b6a3-9b4d-4a9d-bad6-78aaaf7b34ef"/>
+				<reportElement x="129" y="0" width="276" height="73" uuid="58f06993-4e21-4817-95fc-1fc0f93eb47b"/>
 				<textElement>
 					<font size="24"/>
 				</textElement>
-				<text><![CDATA[Report Nr. 1]]></text>
+				<text><![CDATA[Agenţia Medicamentului şi Dispozitivelor Medicale]]></text>
 			</staticText>
+			<image>
+				<reportElement x="28" y="1" width="92" height="72" uuid="8ec875e3-8cce-4d1e-ba01-8272dffb5509"/>
+				<imageExpression><![CDATA[$F{path}+"\\..\\icons\\logo.png"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<detail>
-		<band height="125" splitType="Stretch">
+		<band height="549" splitType="Stretch">
 			<staticText>
-				<reportElement x="194" y="37" width="61" height="38" uuid="59185dce-c054-472f-a7e8-b8752adde216"/>
+				<reportElement x="247" y="114" width="63" height="20" uuid="abe44fb0-df2a-492e-9497-cfbb5a1777ec"/>
 				<textElement>
-					<font size="24"/>
+					<font size="14" isBold="true"/>
 				</textElement>
+				<text><![CDATA[Dispozitie]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="28" y="182" width="27" height="20" uuid="d09c568f-cc64-4f90-b72b-adf105558016"/>
 				<text><![CDATA[Data:]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="255" y="37" width="159" height="38" uuid="cb93e169-c299-44ef-930f-ea961469ed84"/>
-				<textElement>
-					<font size="24"/>
-				</textElement>
-				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{sysDate})]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement x="194" y="75" width="61" height="36" uuid="4cd27b54-e0bb-4e6a-b59b-e60cf7cbf204"/>
+				<reportElement x="363" y="182" width="18" height="20" uuid="25b83585-1121-4570-b2bf-4d4fce6dfdbb"/>
+				<text><![CDATA[Nr.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="14" y="238" width="521" height="20" uuid="a709933f-67ed-4516-babd-7986ef4294fa"/>
 				<textElement>
-					<font size="24"/>
+					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Nr:]]></text>
+				<text><![CDATA[Cu privire la distribuirea Imunoglobulinei umane anti-Rhezus]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="14" y="268" width="531" height="114" uuid="97973b54-a364-4c75-9d04-b9e5db393fe2"/>
+				<text><![CDATA[Limba română Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolorum quia reiciendis cumque. Sunt consectetur beatae minus adipisci suscipit temporibus itaque blanditiis? Deleniti dolor cumque iusto, eligendi placeat quisquam. Praesentium inventore, maiores ea sint placeat reiciendis in dolores quibusdam. Esse tempore nisi dolores quasi omnis eos ipsa eligendi consectetur voluptas ut adipisci, exercitationem repellendus laborum unde totam tenetur voluptatibus ipsum voluptatum fugiat beatae quo illum provident! Libero deserunt cumque nobis itaque a doloremque! Mollitia, qui eos est animi placeat ipsum quod eaque ratione velit dolorum explicabo, suscipit nulla. Laudantium incidunt deserunt autem! Consequatur pariatur magnam, libero mollitia maxime, quod iusto quam nisi soluta eveniet neque? Enim impedit doloremque suscipit animi vel. A non porro ipsam molestiae deleniti voluptate debitis voluptas. Quisquam!]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="249" y="431" width="61" height="20" uuid="285a8962-a929-48ec-8e66-82486c7ad67f"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dispun:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="14" y="475" width="531" height="58" uuid="e4372c35-96fc-4730-869d-f31b81674eb0"/>
+				<text><![CDATA[	1. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Error quod modi, harum ipsam architecto delectus at labore, ipsum alias sapiente libero deleniti ut minus dolorem. Accusamus ipsam omnis odio odit vitae quibusdam in cumque quae quo quidem ullam, ipsum velit. Dolor vitae explicabo, unde, perspiciatis repudiandae distinctio incidunt pariatur recusandae laborum consequatur in tenetur itaque sed adipisci, dolorum autem amet.]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="255" y="75" width="159" height="36" uuid="8a215b53-7f65-48d3-9776-aadf0d90f421"/>
-				<textElement>
-					<font size="24"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{requestNumber}]]></textFieldExpression>
+				<reportElement x="381" y="182" width="100" height="20" uuid="85e25237-7b4f-4c69-8cab-70fdeeec173e"/>
+				<textFieldExpression><![CDATA[$F{nrDisposition}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="55" y="182" width="100" height="20" uuid="6778ec85-4868-4cc8-b4dd-45486c40c1c0"/>
+				<textFieldExpression><![CDATA[$F{dispositionDate}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
+	<pageFooter>
+		<band height="26" splitType="Stretch">
+			<staticText>
+				<reportElement x="40" y="0" width="67" height="20" uuid="1ad74720-3d15-4fd5-95bc-36e548b5355a"/>
+				<text><![CDATA[Viceministru]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="455" y="6" width="100" height="20" uuid="8e171876-3b3e-490b-bc81-7cbcd5f89635"/>
+				<text><![CDATA[Liliana IASAN]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
 </jasperReport>

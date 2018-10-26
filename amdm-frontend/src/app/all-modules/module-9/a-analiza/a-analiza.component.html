@@ -1,0 +1,348 @@
+<p>
+    a-analiza works!
+</p>
+
+<div class="container-fluid sky z-depth-2">
+    <h3 class="text-center my-3 font-weight-bold">Analiza dosarului</h3>
+    <hr>
+
+    <form [formGroup]='analyzeClinicalTrailForm' (ngSubmit)="onSubmit()" #f="ngForm">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="regNr" mdbInputDirective type="text" class="form-control"
+                           formControlName="requestNumber">
+                    <label for="regNr">Nr. de înregistrare a cererii
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="regDate" [matDatepicker]="picker" mdbInputDirective type="text" class="form-control"
+                           formControlName="startDate" [attr.disabled]="true">
+                    <mat-datepicker touchUi #picker></mat-datepicker>
+                    <label for="regDate">Data de înregistrare a cererii
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="company" mdbInputDirective type="text" class="form-control"
+                           value={{analyzeClinicalTrailForm.value.company.name}} [attr.disabled]="true">
+                    <label for="company">Compania solicitant
+                    </label>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        <app-document [documents]="docs" [isDisabled]="isWaitingStep"
+                      [nrCerere]="analyzeClinicalTrailForm.get('requestNumber').value"></app-document>
+        <hr>
+
+        <mat-radio-group>
+            <div class="container">
+                <div class="row">
+                    <mat-radio-group class="radio-btn-wrapper"
+                                     value={{analyzeClinicalTrailForm.getRawValue().typeCode}} [disabled]="true">
+                        <div class="col-md-12">
+                            <mat-radio-button name="prop1" value="CLAP">Aprobarea Studiilor Clinice la medicamente
+                            </mat-radio-button>
+                        </div>
+                        <div class="col-md-12">
+                            <mat-radio-button name="prop2" value="CLPSC">Aprobarea amendamentelor la Protocoalele
+                                Studiilor Clinice la medicamente
+                            </mat-radio-button>
+                        </div>
+                        <div class="col-md-12">
+                            <mat-radio-button name="prop3" value="CLNP">Înregistrarea Notificărilor privind Protocolul
+                                studiului clinic cu medicamente
+                            </mat-radio-button>
+                        </div>
+                        <div class="col-md-12">
+                            <mat-radio-button name="prop4" value="CLISP">Înregistrarea informației privind siguranța
+                                produsului de investigație clinică
+                            </mat-radio-button>
+                        </div>
+                    </mat-radio-group>
+                </div>
+            </div>
+        </mat-radio-group>
+        <hr>
+
+        <div formGroupName="clinicalTrails">
+            <div class="col-md-12">
+                <div class="md-form">
+                    <textarea type="text" id="titluStud" class="md-textarea form-control" mdbInputDirective rows="1" formControlName="title" [attr.disabled]="isWaitingStep ? '' : null"></textarea>
+                    <label for="titluStud">Titlul studiului</label>
+                </div>
+            </div>
+            <hr>
+
+            <h5 class="text-center font-weight-bold">Tipul studiului clinic</h5>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="md-form">
+                        <div class="container">
+                            <div class="col-md-12">
+                                <mat-radio-group class="adio-btn-wrapper" [value]="analyzeClinicalTrailForm.get('clinicalTrails').value.treatment.id" (change)="onTreatmentChange($event)" [disabled]="isWaitingStep">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h5 class="text-center font-weight-bold">Tratament</h5>
+                                            <hr>
+                                        </div>
+                                        <div class="col-12">
+                                            <mat-radio-button class="col-12" *ngFor="let treatment of treatmentList" [value]="treatment.id" >{{treatment.description}}</mat-radio-button>
+                                        </div>
+                                    </div>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="md-form">
+                        <div class="container">
+                            <div class="col-md-12">
+                                <mat-radio-group class="adio-btn-wrapper" [value]="analyzeClinicalTrailForm.get('clinicalTrails').value.provenance.id" (change)="onProvenanceChange($event)" [disabled]="isWaitingStep">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h5 class="text-center font-weight-bold">Tratament</h5>
+                                            <hr>
+                                        </div>
+                                        <div class="col-12">
+                                            <mat-radio-button class="col-12" *ngFor="let provenance of provenanceList" [value]="provenance.id">{{provenance.description}}</mat-radio-button>
+                                        </div>
+                                    </div>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="md-form">
+                        <input id="sponsoStudClinic" mdbInputDirective type="text" class="form-control" formControlName="sponsor" [attr.disabled]="isWaitingStep ? '' : null">
+                        <label for="sponsoStudClinic">Sponsorul Studiului clinic</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="md-form">
+                        <input id="fazaStudClinic" mdbInputDirective type="text" class="form-control" formControlName="phase" [attr.disabled]="isWaitingStep ? '' : null">
+                        <label for="fazaStudClinic">Faza Studiului clinic</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="md-form">
+                        <input id="numEudraCT" mdbInputDirective type="text" class="form-control" formControlName="eudraCtNr" [attr.disabled]="isWaitingStep ? '' : null">
+                        <label for="numEudraCT">Numărul Eudra CT nr.</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="md-form">
+                        <input id="codStud" mdbInputDirective type="text" class="form-control" formControlName="code" [attr.disabled]="isWaitingStep ? '' : null">
+                        <label for="codStud">Codul studiului</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="md-form">
+                        <input id="institutiaMedLocDesStudClinic" mdbInputDirective type="text" class="form-control" formControlName="medicalInstitution" [attr.disabled]="isWaitingStep ? '' : null">
+                        <label for="institutiaMedLocDesStudClinic">Instituţia medicală / Locul desfăşurării studiului clinic</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="md-form">
+                        <input id="popStudClinicNumPacienti" mdbInputDirective type="number" class="form-control" formControlName="trialPopulation" [attr.disabled]="isWaitingStep ? '' : null">
+                        <label for="popStudClinicNumPacienti">Populația studiului clinic / Numărul pacienţilor</label>
+                    </div>
+                </div>
+            </div>
+            <hr>
+
+            <div [formGroup]="medicamentForm">
+                <h5 class="text-center font-weight-bold">Medicamentul de investigat</h5>
+                <div class="row">
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput [matAutocomplete]="auto" placeholder="Nume medicament" formControlName="searchField" >
+                            </mat-form-field>
+                            <mat-autocomplete #auto="matAutocomplete">
+                                <mat-option (onSelectionChange)="onMedicamentsSearchSelect(option)"
+                                            *ngFor="let option of medicamentSearches" [value]="option.name">{{
+                                    option.name + ' _' }}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Producatorul" formControlName="producer">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Doza" formControlName="dose">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Grupa farmaceutica" formControlName="group">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Forma farmaceutică"
+                                       formControlName="pharmaceuticalForm">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Calea de administrare"
+                                       formControlName="administeringMode">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+
+            <div [formGroup]="referenceProductFormn">
+                <h5 class="text-center font-weight-bold">Produsul de referinţă</h5>
+                <div class="row">
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput [matAutocomplete]="auto2" placeholder="Nume medicament"
+                                       formControlName="searchField">
+                            </mat-form-field>
+                            <mat-autocomplete #auto2="matAutocomplete">
+                                <mat-option (onSelectionChange)="onReferenceProductSearchSelect(option)"
+                                            *ngFor="let option of referenceProductSearches" [value]="option.name">{{
+                                    option.name + 'hz' }}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Producatorul" formControlName="producer">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Doza" formControlName="dose">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Grupa farmaceutica" formControlName="group">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Forma farmaceutică"
+                                       formControlName="pharmaceuticalForm">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Calea de administrare"
+                                       formControlName="administeringMode">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+
+            <h5 class="text-center font-weight-bold">Lista de investigatori</h5>
+            <hr>
+            <div [formGroup]="addInvestigatorForm" class="row">
+                <div class="col-md-3">
+                    <div class="md-form">
+                        <input id="name" mdbInputDirective type="text" class="form-control" formControlName="firstName" required [attr.disabled]="isWaitingStep ? '' : null">
+                        <label for="name">Nume<span class="text-danger">*</span></label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="md-form">
+                        <input id="surname" mdbInputDirective type="text" class="form-control" formControlName="lastName" required [attr.disabled]="isWaitingStep ? '' : null">
+                        <label for="surname">Prenume<span class="text-danger">*</span></label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="md-form">
+                        <input id="title" mdbInputDirective type="text" class="form-control" formControlName="title" required [attr.disabled]="isWaitingStep ? '' : null">
+                        <label for="title">Titlu <span class="text-danger">*</span></label>
+                    </div>
+                </div>
+                <div class="offset-1 col-md-2">
+                    <div class="md-form">
+                        <div class="position-button">
+                            <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="addInvestigator()" [attr.disabled]="isWaitingStep ? '' : null">Adaugare
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div formGroupName="investigators">
+                <table class="table table-widths text-center">
+                    <thead class="black white-text">
+                    <tr>
+                        <th class="w-25" scope="col">Nume</th>
+                        <th class="w-25" scope="col">Prenume</th>
+                        <th class="w-25" scope="col">Titlu</th>
+                        <th class="w-25" scope="col">Actiuni</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let investigator of investigatorsList">
+                        <td>{{ investigator.firstName}}</td>
+                        <td>{{ investigator.lastName }}</td>
+                        <td> {{ investigator.title }}</td>
+                        <td>
+                            <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="deleteInvestigator(investigator)" mdbWavesEffect [attr.disabled]="isWaitingStep ? '' : null">Delete
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+
+            <app-payment [receipts]="receiptsList" [paymentOrders]="paymentOrdersList" [isDisabled]="isWaitingStep" (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
+
+
+            <button type="button" (click)="disableEnableForm()" mdbWavesEffect>Disable/Enable form</button>
+
+        </div>
+
+    </form>
+</div>

@@ -11,6 +11,7 @@ import {AuthService} from "../../../shared/service/authetication.service";
 import {DocumentService} from "../../../shared/service/document.service";
 import {PaymentOrder} from "../../../models/paymentOrder";
 import {Receipt} from "../../../models/receipt";
+import {ModalService} from "../../../shared/service/modal.service";
 
 @Component({
     selector: 'app-evaluare-primara',
@@ -52,6 +53,7 @@ export class EvaluarePrimaraComponent implements OnInit {
                 private administrationService: AdministrationService,
                 private documentService: DocumentService,
                 private authService: AuthService,
+                private modalService: ModalService,
                 private router: Router,
                 private activatedRoute: ActivatedRoute) {
         this.eForm = fb.group({
@@ -59,8 +61,8 @@ export class EvaluarePrimaraComponent implements OnInit {
             'data': {disabled: true, value: new Date()},
             'requestNumber': [null],
             'startDate': [],
-            'dataToSaveInStartDateRequestHistory': [''],
-            'currentStep': ['E'],
+          //  'dataToSaveInStartDateRequestHistory': [''],
+            'currentStep': ['A'],
             'medicament':
                 fb.group({
                     'id': [],
@@ -113,6 +115,7 @@ export class EvaluarePrimaraComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.modalService.data.next('');
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
                 this.subscriptions.push(this.requestService.getMedicamentRequest(params['id']).subscribe(data => {
                         this.eForm.get('medicament.id').setValue(data.medicament.id);
@@ -128,10 +131,11 @@ export class EvaluarePrimaraComponent implements OnInit {
                         this.eForm.get('type').setValue(data.type);
                         this.eForm.get('requestHistories').setValue(data.requestHistories);
                         this.eForm.get('typeValue').setValue(data.type.code);
-                        var reqHist = data.requestHistories.reduce((p, n) => p.id < n.id ? p : n);
-                        this.eForm.get('dataToSaveInStartDateRequestHistory').setValue(reqHist.endDate);
+                        // var reqHist = data.requestHistories.reduce((p, n) => p.id < n.id ? p : n);
+                        // this.eForm.get('dataToSaveInStartDateRequestHistory').setValue(reqHist.endDate);
                         this.company = data.medicament.company;
                         this.documents = data.medicament.documents;
+                        this.documents.sort((a,b)=>new Date(a.date).getTime()-new Date(b.date).getTime());
                         let xs = this.documents;
                         xs = xs.map(x => {
                             x.isOld = true;
@@ -263,7 +267,7 @@ export class EvaluarePrimaraComponent implements OnInit {
 
         let modelToSubmit: any = this.eForm.value;
         modelToSubmit.requestHistories.push({
-            startDate: this.eForm.get('dataToSaveInStartDateRequestHistory').value, endDate: new Date(),
+            startDate: this.eForm.get('data').value, endDate: new Date(),
             username: this.authService.getUserName(), step: 'E'
         });
 
