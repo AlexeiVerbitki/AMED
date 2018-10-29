@@ -4,9 +4,9 @@ import {FormControl} from '@angular/forms';
 import {Select} from '../../../models/select';
 
 @Component({
-selector: 'app-import-authorization-evaluate',
-templateUrl: './import-authorization-evaluate.component.html',
-styleUrls: ['./import-authorization-evaluate.component.css']
+  selector: 'app-import-authorization-evaluate',
+  templateUrl: './import-authorization-evaluate.component.html',
+  styleUrls: ['./import-authorization-evaluate.component.css']
 })
 export class ImportAuthorizationEvaluateComponent implements OnInit {
   date: any = new FormControl({value: new Date(), disabled: true});
@@ -40,6 +40,19 @@ export class ImportAuthorizationEvaluateComponent implements OnInit {
     {value: 'usd', viewValue: 'USD: Dolar American'},
     {value: 'RUR', viewValue: 'RUR: Rubla Ruseasca'},
   ];
+
+  public unitateDeMasura: Select[] = [
+    {value: 'g', viewValue: 'g'},
+    {value: 'mg', viewValue: 'mg'}
+  ];
+
+  public formaMedicamentoasa: Select[] = [
+    {value: 'forma-1', viewValue: 'Forma 1'},
+    {value: 'forma-2', viewValue: 'Forma 2'},
+    {value: 'forma-3', viewValue: 'Forma 3'},
+    {value: 'forma-4', viewValue: 'Forma 4'}
+  ]
+
   medReg = false;
   medUnreg = false;
   MatPrima = false;
