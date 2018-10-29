@@ -93,7 +93,7 @@ public class MedicamentController
         logger.debug("Save LaboratoryAnalysis");
         Optional<RegistrationRequestsEntity> regReqOpt = requestRepository.findById(documentDTO.getRequestId());
         RegistrationRequestsEntity registrationRequestsEntity = regReqOpt.get();
-        `registrationRequestsEntity`.setCurrentStep("L");
+        registrationRequestsEntity.setCurrentStep("L");
 
         fillHistoryDetails(documentDTO, registrationRequestsEntity, "L");
 

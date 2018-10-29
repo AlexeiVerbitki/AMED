@@ -4,9 +4,9 @@ import {FormControl} from '@angular/forms';
 import {Select} from '../../../models/select';
 
 @Component({
-  selector: 'app-import-authorization-evaluate',
-  templateUrl: './import-authorization-evaluate.component.html',
-  styleUrls: ['./import-authorization-evaluate.component.css']
+selector: 'app-import-authorization-evaluate',
+templateUrl: './import-authorization-evaluate.component.html',
+styleUrls: ['./import-authorization-evaluate.component.css']
 })
 export class ImportAuthorizationEvaluateComponent implements OnInit {
   date: any = new FormControl({value: new Date(), disabled: true});

@@ -5,8 +5,11 @@ import {ImportAuthorizationRoutingModule} from './import-authorization-routing.m
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MDBBootstrapModule} from "angular-bootstrap-md";
 import {MaterialSharedModule} from "../../material-shared.module";
-import {ImportAuthorizationEvaluateComponent} from "./import-authorization-evaluate/import-authorization-evaluate.component";
 import {ImportAuthorizationRequestComponent} from "./import-authorization-request/import-authorization-request.component";
+import {MedRegComponent} from './med-reg/med-reg.component';
+import {MedNeregComponent} from './med-nereg/med-nereg.component';
+import {MateriaPrimaComponent} from './materia-prima/materia-prima.component';
+import {AmbalajComponent} from './ambalaj/ambalaj.component';
 
 @NgModule({
     imports: [
@@ -17,7 +20,7 @@ import {ImportAuthorizationRequestComponent} from "./import-authorization-reques
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
     ],
-    declarations: [ImportAuthorizationEvaluateComponent,ImportAuthorizationRequestComponent]
+    declarations: [ImportAuthorizationRequestComponent, MedRegComponent, MedNeregComponent, MateriaPrimaComponent, AmbalajComponent]
 })
 export class ImportAuthorizationModule {
 }
