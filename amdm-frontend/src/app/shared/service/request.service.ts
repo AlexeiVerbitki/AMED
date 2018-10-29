@@ -37,4 +37,9 @@ export class RequestService{
     addMedicamentPayments(requestDetails: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/add-medicament-payments', requestDetails, {observe: 'response'});
     }
+
+    addImportRequest(requestDetails: any): Observable<HttpResponse<any>> {
+        console.log(requestDetails);
+        return this.http.post<any>('/api/add-import-request', requestDetails, {observe: 'response'});
+    }
 }
