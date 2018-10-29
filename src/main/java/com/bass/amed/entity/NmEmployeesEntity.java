@@ -23,7 +23,7 @@ public class NmEmployeesEntity
     private Date issueDate;
     private String function;
     private String scienceDegree;
-    private Integer professionId;
+    private NmProfessionsEntity profession;
     private Integer commissionOrder;
     private Byte chairmanOfExperts;
 
@@ -219,16 +219,16 @@ public class NmEmployeesEntity
         this.scienceDegree = scienceDegree;
     }
 
-    @Basic
-    @Column(name = "profession_id")
-    public Integer getProfessionId()
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
+    @JoinColumn( name = "profession_id" )
+    public NmProfessionsEntity getProfession()
     {
-        return professionId;
+        return profession;
     }
 
-    public void setProfessionId(Integer professionId)
+    public void setProfession(NmProfessionsEntity profession)
     {
-        this.professionId = professionId;
+        this.profession = profession;
     }
 
     @Basic
@@ -253,31 +253,6 @@ public class NmEmployeesEntity
     public void setChairmanOfExperts(Byte chairmanOfExperts)
     {
         this.chairmanOfExperts = chairmanOfExperts;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (code != null ? code.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (lastname != null ? lastname.hashCode() : 0);
-        result = 31 * result + (firstname != null ? firstname.hashCode() : 0);
-        result = 31 * result + (middlename != null ? middlename.hashCode() : 0);
-        result = 31 * result + (birthDate != null ? birthDate.hashCode() : 0);
-        result = 31 * result + (phonenumbers != null ? phonenumbers.hashCode() : 0);
-        result = 31 * result + (address != null ? address.hashCode() : 0);
-        result = 31 * result + (idnp != null ? idnp.hashCode() : 0);
-        result = 31 * result + (identificationDocumentTypeId != null ? identificationDocumentTypeId.hashCode() : 0);
-        result = 31 * result + (documentSeries != null ? documentSeries.hashCode() : 0);
-        result = 31 * result + (documentNumber != null ? documentNumber.hashCode() : 0);
-        result = 31 * result + (issueDate != null ? issueDate.hashCode() : 0);
-        result = 31 * result + (function != null ? function.hashCode() : 0);
-        result = 31 * result + (scienceDegree != null ? scienceDegree.hashCode() : 0);
-        result = 31 * result + (professionId != null ? professionId.hashCode() : 0);
-        result = 31 * result + (commissionOrder != null ? commissionOrder.hashCode() : 0);
-        result = 31 * result + (chairmanOfExperts != null ? chairmanOfExperts.hashCode() : 0);
-        return result;
     }
 
     @Override
@@ -358,7 +333,7 @@ public class NmEmployeesEntity
         {
             return false;
         }
-        if (professionId != null ? !professionId.equals(that.professionId) : that.professionId != null)
+        if (profession != null ? !profession.equals(that.profession) : that.profession != null)
         {
             return false;
         }
@@ -366,11 +341,31 @@ public class NmEmployeesEntity
         {
             return false;
         }
-        if (chairmanOfExperts != null ? !chairmanOfExperts.equals(that.chairmanOfExperts) : that.chairmanOfExperts != null)
-        {
-            return false;
-        }
+        return chairmanOfExperts != null ? chairmanOfExperts.equals(that.chairmanOfExperts) : that.chairmanOfExperts == null;
+    }
 
-        return true;
+    @Override
+    public int hashCode()
+    {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (code != null ? code.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (lastname != null ? lastname.hashCode() : 0);
+        result = 31 * result + (firstname != null ? firstname.hashCode() : 0);
+        result = 31 * result + (middlename != null ? middlename.hashCode() : 0);
+        result = 31 * result + (birthDate != null ? birthDate.hashCode() : 0);
+        result = 31 * result + (phonenumbers != null ? phonenumbers.hashCode() : 0);
+        result = 31 * result + (address != null ? address.hashCode() : 0);
+        result = 31 * result + (idnp != null ? idnp.hashCode() : 0);
+        result = 31 * result + (identificationDocumentTypeId != null ? identificationDocumentTypeId.hashCode() : 0);
+        result = 31 * result + (documentSeries != null ? documentSeries.hashCode() : 0);
+        result = 31 * result + (documentNumber != null ? documentNumber.hashCode() : 0);
+        result = 31 * result + (issueDate != null ? issueDate.hashCode() : 0);
+        result = 31 * result + (function != null ? function.hashCode() : 0);
+        result = 31 * result + (scienceDegree != null ? scienceDegree.hashCode() : 0);
+        result = 31 * result + (profession != null ? profession.hashCode() : 0);
+        result = 31 * result + (commissionOrder != null ? commissionOrder.hashCode() : 0);
+        result = 31 * result + (chairmanOfExperts != null ? chairmanOfExperts.hashCode() : 0);
+        return result;
     }
 }

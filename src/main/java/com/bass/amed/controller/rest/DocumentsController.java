@@ -122,20 +122,43 @@ public class DocumentsController
         {
             ResourceLoader resourceLoader = new DefaultResourceLoader();
             String classPath = "";
-            if(type.equals("NOTIFICATION"))
+            switch (type)
             {
-                classPath = "classpath:..\\resources\\layouts\\notificationLetter.jrxml";
+                case "NOTIFICATION" :  classPath = "classpath:..\\resources\\layouts\\notificationLetter.jrxml";  break;
+                case "REQUEST_ADDITIONAL_DATA" :  classPath = "classpath:..\\resources\\layouts\\requestAdditionalData.jrxml";  break;
+                case "LABORATORY_ANALYSIS" :  classPath = "classpath:..\\resources\\layouts\\laboratoryAnalysis.jrxml";  break;
             }
-            else
-            {
-                classPath = "classpath:..\\resources\\layouts\\requestAdditionalData.jrxml";
-            }
+
             Resource res = resourceLoader.getResource(classPath);
             JasperReport report = JasperCompileManager.compileReport(new FileInputStream(res.getFile()));
 
             List<RequestAdditionalDataDTO> dataList = fillRequestAdditionalDataDTO(nrDocument, content, title);
 
             JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(dataList);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, null, beanColDataSource);
+            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+        }
+        catch (Exception e)
+        {
+            throw new CustomException(e.getMessage());
+        }
+
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=request.pdf").body(bytes);
+    }
+
+    @RequestMapping(value = "/view-medicament-authorization-order", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> viewMedicamentAuthorizationOrder() throws CustomException
+    {
+        byte[] bytes = null;
+        try
+        {
+            ResourceLoader resourceLoader = new DefaultResourceLoader();
+
+            Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts\\medicamentAuthorizationOrder.jrxml");
+            JasperReport report = JasperCompileManager.compileReport(new FileInputStream(res.getFile()));
+
+            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(new ArrayList<>());
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, null, beanColDataSource);
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
         }
@@ -248,6 +271,23 @@ public class DocumentsController
         sb.append("Ordin de întrerupere a procedurii de înregistrare a medicamentului Nr " + nrDocument+ ".pdf");
 
         storageService.storePDFFile(dataList,sb.toString(),"classpath:..\\resources\\layouts\\interruptOrderOfMedicamentRegistration.jrxml");
+
+        return new ResponseEntity<>(sb.toString(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/generate-certificatul-de-autorizare", method = RequestMethod.GET)
+    public ResponseEntity<String> generateCerifiactulDeAutorizare(@RequestParam(value = "nrCerere") String nrCerere) throws CustomException
+    {
+        logger.debug("Generate certificatul de autorizare");
+
+        ResourceLoader resourceLoader = new DefaultResourceLoader();
+        Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts");
+
+        StringBuilder sb = new StringBuilder(folder);
+        createRootPath(nrCerere, sb);
+        sb.append("Certificatul de autorizare al medicamentului.pdf");
+
+        storageService.storePDFFile(new ArrayList<>(),sb.toString(),"classpath:..\\resources\\layouts\\medicamentAuthorizationCertificate.jrxml");
 
         return new ResponseEntity<>(sb.toString(), HttpStatus.OK);
     }

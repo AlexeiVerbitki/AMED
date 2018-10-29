@@ -18,7 +18,7 @@
         </div>
         <div class="col-2">
             <div class="md-form">
-                <mat-checkbox formControlName="sP" [disabled]="isDisabled">Bon suplimentar</mat-checkbox>
+                <mat-checkbox formControlName="sP" [attr.disabled]="isDisabled">Bon suplimentar</mat-checkbox>
             </div>
         </div>
         <div class="col-2">
@@ -79,7 +79,7 @@
         <div class="md-form-modified-select">
             <mat-form-field class="w-100">
                 <input matInput [matDatepicker]="ordNrData" placeholder="Data" formControlName="data" [attr.disabled]="isDisabled ? '' : null">
-                <mat-datepicker-toggle matSuffix [for]="ordNrData" [disabled]=isDisabled></mat-datepicker-toggle>
+                <mat-datepicker-toggle matSuffix [for]="ordNrData" [attr.disabled]=isDisabled></mat-datepicker-toggle>
                 <mat-datepicker touchUi #ordNrData [attr.disabled]="isDisabled ? '' : null"></mat-datepicker>
             </mat-form-field>
         </div>

@@ -80,23 +80,43 @@ public class MedicamentController
         RegistrationRequestsEntity registrationRequestsEntity = regReqOpt.get();
         registrationRequestsEntity.setCurrentStep("S");
 
+        fillHistoryDetails(documentDTO, registrationRequestsEntity, "S");
+
+        requestRepository.save(registrationRequestsEntity);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/save-laboratory-analysis", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> saveLaboratoryAnalysis(@RequestBody DocumentDTO documentDTO)
+    {
+        logger.debug("Save LaboratoryAnalysis");
+        Optional<RegistrationRequestsEntity> regReqOpt = requestRepository.findById(documentDTO.getRequestId());
+        RegistrationRequestsEntity registrationRequestsEntity = regReqOpt.get();
+        registrationRequestsEntity.setCurrentStep("L");
+
+        fillHistoryDetails(documentDTO, registrationRequestsEntity, "L");
+
+        requestRepository.save(registrationRequestsEntity);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private void fillHistoryDetails(@RequestBody DocumentDTO documentDTO, RegistrationRequestsEntity registrationRequestsEntity, String l)
+    {
         fillDocumentDetails(documentDTO, registrationRequestsEntity);
         RegistrationRequestHistoryEntity historyEntity = new RegistrationRequestHistoryEntity();
         historyEntity.setUsername(documentDTO.getUsername());
         historyEntity.setStep("A");
-        historyEntity.setStartDate(documentDTO.getMainPageStartDate());
+        historyEntity.setStartDate(documentDTO.getStartDate());
         Timestamp stepDate = new Timestamp(System.currentTimeMillis());
         historyEntity.setEndDate(stepDate);
         registrationRequestsEntity.getRequestHistories().add(historyEntity);
         historyEntity = new RegistrationRequestHistoryEntity();
         historyEntity.setUsername(documentDTO.getUsername());
-        historyEntity.setStep("S");
+        historyEntity.setStep(l);
         historyEntity.setStartDate(stepDate);
         registrationRequestsEntity.getRequestHistories().add(historyEntity);
-
-        requestRepository.save(registrationRequestsEntity);
-
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/save-notification-letter", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -105,11 +125,47 @@ public class MedicamentController
         logger.debug("Save notification letter");
         Optional<RegistrationRequestsEntity> regReqOpt = requestRepository.findById(documentDTO.getRequestId());
         RegistrationRequestsEntity registrationRequestsEntity = regReqOpt.get();
-        registrationRequestsEntity.setCurrentStep("C");
 
-        fillLastWaitingStep(documentDTO, registrationRequestsEntity,"S");
+        fillDocumentDetails(documentDTO, registrationRequestsEntity);
+
+        requestRepository.save(registrationRequestsEntity);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private void fillLastWaitingStep(@RequestBody DocumentDTO documentDTO, RegistrationRequestsEntity registrationRequestsEntity, Timestamp endDate)
+    {
+        Optional<RegistrationRequestHistoryEntity> registrationRequestHistoryEntityOpt =
+                registrationRequestsEntity.getRequestHistories().stream().max((x, y) -> (int) x.getStartDate().getTime() - (int) y.getStartDate().getTime());
+        RegistrationRequestHistoryEntity historyEntity = registrationRequestHistoryEntityOpt.get();
+        if (historyEntity.getEndDate() == null)
+        {
+            registrationRequestHistoryEntityOpt.get().setEndDate(endDate);
+        }
+        fillDocumentDetails(documentDTO, registrationRequestsEntity);
+    }
+
+    @RequestMapping(value = "/save-order-interrupt", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> saveOrderInterrupt(@RequestBody DocumentDTO documentDTO)
+    {
+        logger.debug("Save order interrupt");
+        Optional<RegistrationRequestsEntity> regReqOpt = requestRepository.findById(documentDTO.getRequestId());
+
+        RegistrationRequestsEntity registrationRequestsEntity = regReqOpt.get();
+        registrationRequestsEntity.setCurrentStep("C");
+        registrationRequestsEntity.setInterruptionReason(documentDTO.getInterruptionReason());
+
+        fillLastWaitingStep(documentDTO, registrationRequestsEntity, documentDTO.getStartDate());
 
         RegistrationRequestHistoryEntity historyEntity = new RegistrationRequestHistoryEntity();
+        historyEntity = new RegistrationRequestHistoryEntity();
+        historyEntity.setUsername(documentDTO.getUsername());
+        historyEntity.setStep("I");
+        historyEntity.setStartDate(documentDTO.getStartDate());
+        historyEntity.setEndDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
+        registrationRequestsEntity.getRequestHistories().add(historyEntity);
+
+        historyEntity = new RegistrationRequestHistoryEntity();
         historyEntity = new RegistrationRequestHistoryEntity();
         historyEntity.setUsername(documentDTO.getUsername());
         historyEntity.setStep("C");
@@ -121,41 +177,10 @@ public class MedicamentController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private void fillLastWaitingStep(@RequestBody DocumentDTO documentDTO, RegistrationRequestsEntity registrationRequestsEntity,String step)
-    {
-        Optional<RegistrationRequestHistoryEntity> registrationRequestHistoryEntityOpt =
-                registrationRequestsEntity.getRequestHistories().stream().filter(hist -> hist.getStep().equals(step)).max((x, y) -> (int) x.getStartDate().getTime() - (int) y.getStartDate().getTime());
-        registrationRequestHistoryEntityOpt.get().setEndDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
-        fillDocumentDetails(documentDTO, registrationRequestsEntity);
-    }
-
-    @RequestMapping(value = "/save-order-interrupt", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> saveOrderInterrupt(@RequestBody DocumentDTO documentDTO)
-    {
-        logger.debug("Save order interrupt");
-        Optional<RegistrationRequestsEntity> regReqOpt = requestRepository.findById(documentDTO.getRequestId());
-
-        RegistrationRequestsEntity registrationRequestsEntity = regReqOpt.get();
-        registrationRequestsEntity.setCurrentStep("N");
-
-        fillLastWaitingStep(documentDTO, registrationRequestsEntity,"S");
-
-        RegistrationRequestHistoryEntity historyEntity = new RegistrationRequestHistoryEntity();
-        historyEntity = new RegistrationRequestHistoryEntity();
-        historyEntity.setUsername(documentDTO.getUsername());
-        historyEntity.setStep("N");
-        historyEntity.setStartDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
-        registrationRequestsEntity.getRequestHistories().add(historyEntity);
-
-        requestRepository.save(registrationRequestsEntity);
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     private void fillDocumentDetails(@RequestBody DocumentDTO documentDTO, RegistrationRequestsEntity registrationRequestsEntity)
     {
         Optional<NmDocumentTypesEntity> docTypeEntity = documentTypeRepository.findByCategory(documentDTO.getDocType());
-        if(docTypeEntity.isPresent())
+        if (docTypeEntity.isPresent())
         {
             DocumentsEntity documentsEntity = new DocumentsEntity();
             documentsEntity.setDate(documentDTO.getDate());
@@ -177,7 +202,38 @@ public class MedicamentController
         RegistrationRequestsEntity registrationRequestsEntity = regReqOpt.get();
         registrationRequestsEntity.setCurrentStep("A");
 
-        fillLastWaitingStep(documentDTO, registrationRequestsEntity,"N");
+        if (documentDTO.getDocType() == null)
+        {
+            fillLastWaitingStep(documentDTO, registrationRequestsEntity, new Timestamp(Calendar.getInstance().getTime().getTime()));
+        }
+        else
+        {
+            Optional<RegistrationRequestHistoryEntity> registrationRequestHistoryEntityOpt =
+                    registrationRequestsEntity.getRequestHistories().stream().filter(hist -> hist.getStep().equals("L")).max((x, y) -> (int) x.getStartDate().getTime() - (int) y.getStartDate().getTime());
+            registrationRequestHistoryEntityOpt.get().setEndDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
+        }
+
+        requestRepository.save(registrationRequestsEntity);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/move-to-interrupt", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> moveToInterrupt(@RequestBody DocumentDTO documentDTO)
+    {
+        logger.debug("Move to interrupt from attempt answer page");
+
+        Optional<RegistrationRequestsEntity> regReqOpt = requestRepository.findById(documentDTO.getRequestId());
+        RegistrationRequestsEntity registrationRequestsEntity = regReqOpt.get();
+        registrationRequestsEntity.setCurrentStep("I");
+
+        Optional<RegistrationRequestHistoryEntity> registrationRequestHistoryEntityOpt =
+                registrationRequestsEntity.getRequestHistories().stream().max((x, y) -> (int) x.getStartDate().getTime() - (int) y.getStartDate().getTime());
+        RegistrationRequestHistoryEntity historyEntity = registrationRequestHistoryEntityOpt.get();
+        if (historyEntity.getEndDate() == null)
+        {
+            registrationRequestHistoryEntityOpt.get().setEndDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
+        }
 
         requestRepository.save(registrationRequestsEntity);
 

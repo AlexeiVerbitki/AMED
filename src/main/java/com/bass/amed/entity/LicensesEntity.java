@@ -51,6 +51,13 @@ public class LicensesEntity
     private Set<DocumentsEntity> documents;
 
 
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(name = "LICENSE_ACTIVITIES", joinColumns = {
+            @JoinColumn(name = "LICENSE_ID")}, inverseJoinColumns = {
+            @JoinColumn(name = "license_activity_type_id")})
+    private Set<LicenseActivityTypeEntity> activities;
+
+
     @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "license_id")
     private Set<LicenseAddressesEntity> addresses;
@@ -269,5 +276,16 @@ public class LicensesEntity
     public void setTaxPaid(Byte taxPaid)
     {
         this.taxPaid = taxPaid;
+    }
+
+
+    public Set<LicenseActivityTypeEntity> getActivities()
+    {
+        return activities;
+    }
+
+    public void setActivities(Set<LicenseActivityTypeEntity> activities)
+    {
+        this.activities = activities;
     }
 }

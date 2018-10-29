@@ -15,6 +15,9 @@ import {RequestAdditionalDataDialogComponent} from "../../dialog/request-additio
 import {WaitingResponseDialogComponent} from "../../dialog/waiting-response-dialog/waiting-response-dialog.component";
 import {DocumentModule} from "../../document/document.module";
 import {PaymentModule} from "../../payment/payment.module";
+import {ProcessInterruptionComponent} from "../../process-interruption/process-interruption.component";
+import { ExpertiComponent } from './experti/experti.component';
+import {ExpertComiteeModule} from "../../expert-comitee/expert-comitee.module";
 
 @NgModule({
     imports: [
@@ -26,9 +29,10 @@ import {PaymentModule} from "../../payment/payment.module";
         MaterialSharedModule.forRoot(),
         DocumentModule,
         PaymentModule,
+        ExpertComiteeModule
     ],
     schemas: [],
-    declarations: [RegCerereComponent, EvaluarePrimaraComponent, SamsaComponent, NumberOnlyDirective,RequestAdditionalDataDialogComponent,WaitingResponseDialogComponent],
+    declarations: [RegCerereComponent, EvaluarePrimaraComponent, SamsaComponent, NumberOnlyDirective,RequestAdditionalDataDialogComponent,WaitingResponseDialogComponent,ProcessInterruptionComponent, ExpertiComponent],
     providers: [UploadFileService,RequestService]
 })
 export class MedicamentRegistrationModule {

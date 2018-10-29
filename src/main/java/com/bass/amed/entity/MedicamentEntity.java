@@ -46,6 +46,7 @@ public class MedicamentEntity
     private Set<ReceiptsEntity>                   receipts;
     private Set<ReferencePricesEntity> referencePrices;
     private Set<PricesEntity> prices;
+    private MedicamentExpertsEntity experts;
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
@@ -485,6 +486,18 @@ public class MedicamentEntity
     public void setActiveSubstances(Set<MedicamentActiveSubstancesEntity> activeSubstances)
     {
         this.activeSubstances = activeSubstances;
+    }
+
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
+    @JoinColumn( name = "expert_id" )
+    public MedicamentExpertsEntity getExperts()
+    {
+        return experts;
+    }
+
+    public void setExperts(MedicamentExpertsEntity experts)
+    {
+        this.experts = experts;
     }
 
     @Override

@@ -4,4 +4,5 @@ export class Receipt {
     name : string;
     amount : number;
     sP: boolean;
+    isOld : boolean;
 }

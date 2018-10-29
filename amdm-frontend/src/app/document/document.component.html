@@ -1,3 +1,5 @@
+<h5 class="text-center font-weight-bold">Documente atasate</h5>
+<hr>
 <form [formGroup]='docForm' *ngIf="canUpload">
   <div class="row">
     <div class="offset-6"></div>
@@ -6,13 +8,13 @@
         <ng-select id="docType" name="docType" [items]="docTypes"
                    bindLabel="description"
                    placeholder="Tip document"
-                   formControlName="docType" >
+                   formControlName="docType">
         </ng-select>
       </div>
     </div>
     <div class="col-2 position-button mt-3">
       <label for="incarcaFisier" class="btn btn-indigo btn-sm">
-        <input id="incarcaFisier" type="file" style="display:none;" (click)="this.value=null;" (change)="addDocument($event)" [disabled]="this.docForm.get('docType').invalid || this.disabled"> Incarcă Document
+        <input id="incarcaFisier" type="file" style="display:none;" (click)="this.value=null;" (change)="addDocument($event)" [attr.disabled]="this.docForm.get('docType').invalid || this.disabled"> Incarcă Document
       </label>
     </div>
   </div>
@@ -33,7 +35,7 @@
     <td>{{ doc.date | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
     <td>
       <button type="button" class="btn btn-mdb-color btn-sm waves-light" (click)="loadFile(doc.path)" mdbWavesEffect>View</button>
-      <button type="button" *ngIf="!doc.isOld" class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeDocument(i)" mdbWavesEffect [disabled]="this.disabled">Delete</button>
+      <button type="button" *ngIf="!doc.isOld" class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeDocument(i)" mdbWavesEffect [attr.disabled]="this.disabled">Delete</button>
     </td>
   </tr>
   </tbody>

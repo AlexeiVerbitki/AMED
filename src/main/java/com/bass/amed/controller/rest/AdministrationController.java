@@ -57,6 +57,8 @@ public class AdministrationController {
     @Autowired
     private NmCountriesRepository nmCountriesRepository;
     @Autowired
+    private EmployeeRepository employeeRepository;
+    @Autowired
     MailSender mailSender;
 
     @RequestMapping(value = "/generate-doc-nr")
@@ -142,6 +144,13 @@ public class AdministrationController {
     {
         LOGGER.debug("Retrieve all international medicament names");
         return new ResponseEntity<>(internationalMedicamentNameRepository.findAll(), HttpStatus.OK);
+    }
+
+    @RequestMapping("/all-employees")
+    public ResponseEntity<List<NmEmployeesEntity>> retrieveAllEmployees()
+    {
+        LOGGER.debug("Retrieve all employees");
+        return new ResponseEntity<>(employeeRepository.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping("/all-medicament-types")

@@ -1,4 +1,4 @@
-<div class="container-fluid sky z-depth-2">
+primar<div class="container-fluid sky z-depth-2">
 	<form [formGroup]="eForm">
 		<h3 class="text-center my-3 font-weight-bold">Evaluare primara</h3>
 		<hr>
@@ -438,10 +438,11 @@
 		</div>
 		<hr>
 		<div class="text-center">
-			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Urmatorul
-				pas
-			</button>
-			<button class="btn btn-dark-red-color waves-light btn-sm waves-light" routerLink="/drugs/cancel" mdbWavesEffect>Intrerupere</button>
+			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="requestAdditionalData()">Solicitare date aditionale</button>
+			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="requestLaboratoryAnalysis()">Solicitare analiza laborator</button>
+			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>
+			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Urmatorul pas</button>
+			<button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>
 		</div>
 	</form>
 </div>

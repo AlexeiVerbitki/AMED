@@ -86,4 +86,8 @@ export class AdministrationService {
     sendEmail(title: string,content:string,mailAddress:string): Observable<any> {
         return this.http.get('/api/administration/send-email', {params: {title: title,content: content,mailAddress: mailAddress}});
     }
+
+    getAllEmployees(): Observable<any> {
+        return this.http.get('/api/administration/all-employees', {});
+    }
 }

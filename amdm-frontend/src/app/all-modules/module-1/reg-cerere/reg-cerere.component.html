@@ -31,16 +31,6 @@
 
               <div class="col-md-6" formGroupName="medicament">
                   <div class="md-form-modified">
-                        <!--<mat-form-field class="w-100">-->
-                            <!--<mat-label>Compania solicitant <span class="text-danger">*</span></mat-label>-->
-                            <!--<input type="text" aria-label="Number" matInput-->
-                                   <!--formControlName="company" [matAutocomplete]="auto" (ngModelChange)="checkCompanyValue()">-->
-                            <!--<mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">-->
-                                <!--<mat-option *ngFor="let x of filteredOptions | async" [value]="x">-->
-                                    <!--{{x.name}}-->
-                                <!--</mat-option>-->
-                            <!--</mat-autocomplete>-->
-                        <!--</mat-form-field>-->
                           <ng-select id="company" name="company" [items]="companii"
                                      bindLabel="name"
                                      placeholder="Compania solicitant *"
@@ -49,9 +39,6 @@
                         <div *ngIf="formSubmitted && rForm.get('medicament.company').invalid">
                           <small class="text-muted"><strong class="text-danger">Compania solicitantă trebuie selectată</strong></small>
                         </div>
-                        <!--<div *ngIf="formSubmitted && isWrongValueCompany && rForm.get('medicament.company').valid">-->
-                          <!--<small class="text-muted"><strong class="text-danger">Compania solicitantă este incorectă</strong></small>-->
-                        <!--</div>-->
                     </div>
                 </div>
                 <div class="col-md-6" formGroupName="medicament">

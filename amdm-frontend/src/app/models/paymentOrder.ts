@@ -4,4 +4,5 @@ export class PaymentOrder {
     data : any;
     basis : string;
     amount : number;
+    isOld : boolean;
 }

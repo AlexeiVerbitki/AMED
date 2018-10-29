@@ -23,9 +23,6 @@ export class EvaluarePrimaraComponent implements OnInit {
     eForm: FormGroup;
     documents: Document [] = [];
     company: any;
-    // isWrongValuePharmaceuticalFormType: boolean;
-    // isWrongValuePharmaceuticalForm: boolean;
-    // isWrongValueActiveSubstance: boolean;
     formSubmitted: boolean;
     isAddSubstancePressed: boolean;
     paymentTotal : number;
@@ -265,7 +262,7 @@ export class EvaluarePrimaraComponent implements OnInit {
 
         this.formSubmitted = false;
 
-        let modelToSubmit: any = this.eForm.value;
+        var modelToSubmit: any = this.eForm.value;
         modelToSubmit.requestHistories.push({
             startDate: this.eForm.get('data').value, endDate: new Date(),
             username: this.authService.getUserName(), step: 'E'
@@ -292,7 +289,6 @@ export class EvaluarePrimaraComponent implements OnInit {
                 });
 
                 this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
-                        console.log("succes");
                         this.router.navigate(['dashboard/module/medicament-registration/samsa/' + data.body]);
                     }, error => console.log(error))
                 );

@@ -39,6 +39,14 @@ export class DocumentService {
             });
     }
 
+    viewMedicamentAuthorizationOrder(): Observable<any> {
+        return this.http.get('/api/documents/view-medicament-authorization-order', {
+            params: {
+
+            }, responseType: 'blob'
+        });
+    }
+
     viewOrdinDeInrerupereAInregistrariiMedicamentului(nrDocument: any): Observable<any> {
         return this.http.get('/api/documents/view-interrupt-order-of-medicament-registration', {
             params: {
@@ -50,6 +58,13 @@ export class DocumentService {
     generateOrdinDeInrerupereAInregistrariiMedicamentului(nrDocument: any, nrCerere: any): Observable<any> {
         return this.http.get('/api/documents/generate-interrupt-order-of-medicament-registration', {
             params: {nrDocument: nrDocument, nrCerere: nrCerere},
+            responseType: 'text'
+        });
+    }
+
+    generateCertificatulDeAutorizare(nrCerere: any): Observable<any> {
+        return this.http.get('/api/documents/generate-certificatul-de-autorizare', {
+            params: {nrCerere : nrCerere},
             responseType: 'text'
         });
     }

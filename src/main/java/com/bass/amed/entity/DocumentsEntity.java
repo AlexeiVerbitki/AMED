@@ -13,6 +13,7 @@ public class DocumentsEntity
     private String path;
     private String email;
     private NmDocumentTypesEntity docType;
+    private Integer registrationRequestId;
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
@@ -134,5 +135,17 @@ public class DocumentsEntity
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (docType != null ? docType.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "registration_request_id")
+    public Integer getRegistrationRequestId()
+    {
+        return registrationRequestId;
+    }
+
+    public void setRegistrationRequestId(Integer registrationRequestId)
+    {
+        this.registrationRequestId = registrationRequestId;
     }
 }

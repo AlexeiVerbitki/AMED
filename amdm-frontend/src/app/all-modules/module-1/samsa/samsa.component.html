@@ -259,12 +259,16 @@
       </div>
     </div>
     <hr>
+    <app-payment [receipts]="receiptsList" [paymentOrders]="paymentOrdersList" (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
+      <div *ngIf="formSubmitted && paymentTotal<0">
+        <small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>
+      </div>
+    <hr>
     <div class="text-center">
-      <!--<button class="btn btn-dark-red-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="basicModal.show()">Anulare</button>-->
       <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="requestAdditionalData()">Solicitare date aditionale</button>
       <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="requestLaboratoryAnalysis()">Solicitare analiza laborator</button>
-      <button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Inregistrare</button>
-      <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect>Intrerupere</button>
+      <button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Urmatorul pas</button>
+      <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>
     </div>
   </form>
 </div>

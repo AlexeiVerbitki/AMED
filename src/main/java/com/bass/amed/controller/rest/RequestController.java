@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -43,13 +42,57 @@ public class RequestController
         logger.debug("Add medicament");
         Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(request.getType().getCode());
         request.getType().setId(type.get().getId());
-        if(request.getMedicament().getGroup()!=null && !request.getMedicament().getGroup().getCode().isEmpty())
+        if (request.getMedicament().getGroup() != null && !request.getMedicament().getGroup().getCode().isEmpty())
         {
             NmMedicamentGroupEntity nmMedicamentGroupEntity = medicamentGroupRepository.findByCode(request.getMedicament().getGroup().getCode());
             request.getMedicament().setGroup(nmMedicamentGroupEntity);
         }
         requestRepository.save(request);
         return new ResponseEntity<>(request.getId(), HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/add-medicament-history", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> saveMedicamentHistory(@RequestBody RegistrationRequestsEntity request) throws CustomException
+    {
+        logger.debug("Add medicament history");
+
+        Optional<RegistrationRequestsEntity> regOptional = requestRepository.findById(request.getId());
+        if (regOptional.isPresent())
+        {
+            RegistrationRequestsEntity registrationRequestsEntity = regOptional.get();
+            registrationRequestsEntity.setCurrentStep(request.getCurrentStep());
+            if(request.getMedicament()!=null && request.getMedicament().getExperts()!=null)
+            {
+                registrationRequestsEntity.getMedicament().setExperts(request.getMedicament().getExperts());
+            }
+            registrationRequestsEntity.getRequestHistories().add((RegistrationRequestHistoryEntity) request.getRequestHistories().toArray()[0]);
+            requestRepository.save(registrationRequestsEntity);
+            return new ResponseEntity<>(request.getId(), HttpStatus.OK);
+        }
+
+        throw new CustomException("Request was not found");
+    }
+
+    @RequestMapping(value = "/add-medicament-payments", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> saveMedicamentPayments(@RequestBody RegistrationRequestsEntity request) throws CustomException
+    {
+        logger.debug("Add medicament payments");
+
+        Optional<RegistrationRequestsEntity> regOptional = requestRepository.findById(request.getId());
+        if (regOptional.isPresent())
+        {
+            RegistrationRequestsEntity registrationRequestsEntity = regOptional.get();
+            registrationRequestsEntity.setCurrentStep(request.getCurrentStep());
+            registrationRequestsEntity.getRequestHistories().addAll(request.getRequestHistories());
+            registrationRequestsEntity.getMedicament().getReceipts().clear();
+            registrationRequestsEntity.getMedicament().getReceipts().addAll(request.getMedicament().getReceipts());
+            registrationRequestsEntity.getMedicament().getPaymentOrders().clear();
+            registrationRequestsEntity.getMedicament().getPaymentOrders().addAll(request.getMedicament().getPaymentOrders());
+            requestRepository.save(registrationRequestsEntity);
+            return new ResponseEntity<>(request.getId(), HttpStatus.OK);
+        }
+
+        throw new CustomException("Request was not found");
     }
 
     @RequestMapping(value = "/load-medicament-request", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
