@@ -1,0 +1,66 @@
+<div class="container-fluid sky z-depth-2">
+  <form [formGroup]='iForm'>
+    <h3 class="text-center my-3 font-weight-bold">Intrerupere proces</h3>
+    <hr>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="md-form">
+          <input id="nrCererii" mdbInputDirective type="text" class="form-control"
+                 formControlName="requestNumber" [attr.disabled]="true">
+          <label for="nrCererii">Nr. cererii</label>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <app-document [documents]="documents" [nrCerere]="iForm.get('requestNumber').value"></app-document>
+    <hr>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="compSolicitant" mdbInputDirective type="text" class="form-control" formControlName="companyValue" [attr.disabled]="true">
+          <label for="compSolicitant">Compania solicitant</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="med" mdbInputDirective type="text" class="form-control" formControlName="motiv">
+          <label for="med">Motiv
+            <span class="text-danger">*</span>
+          </label>
+        </div>
+        <div *ngIf="formSubmitted && iForm.get('motiv').invalid">
+          <small class="text-muted"><strong class="text-danger">Motivul trebuie selectat</strong></small>
+        </div>
+      </div>
+      <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="viewOrdin()" [disabled]="iForm.get('motiv').invalid">
+        Vizualizare ordin de itrerupere
+      </button>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="md-form">
+          <mat-checkbox formControlName="check">Scrisoarea de informare a fost expediata</mat-checkbox>
+        </div>
+        <div *ngIf="formSubmitted && iForm.get('check').value==false">
+          <small class="text-muted"><strong class="text-danger">Este nevoide de confirmat expdierea scrisorii de informare</strong></small>
+        </div>
+      </div>
+    </div>
+   <br><br>
+    <div class="text-center">
+      <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="requestNL()">Scrisoare de informare</button>
+      <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Intrerupere</button>
+    </div>
+  </form>
+</div>
+<app-request-additional-data-dialog></app-request-additional-data-dialog>
