@@ -10,9 +10,8 @@ public class DocumentDTO
     private String email;
     private String docType;
     private Integer requestId;
-    private Timestamp startDate;
+    private Timestamp mainPageStartDate;
     private String username;
-    private String interruptionReason;
 
     public String getUsername()
     {
@@ -84,24 +83,14 @@ public class DocumentDTO
         this.requestId = requestId;
     }
 
-    public Timestamp getStartDate()
+    public Timestamp getMainPageStartDate()
     {
-        return startDate;
+        return mainPageStartDate;
     }
 
-    public void setStartDate(Timestamp startDate)
+    public void setMainPageStartDate(Timestamp mainPageStartDate)
     {
-        this.startDate = startDate;
-    }
-
-    public String getInterruptionReason()
-    {
-        return interruptionReason;
-    }
-
-    public void setInterruptionReason(String interruptionReason)
-    {
-        this.interruptionReason = interruptionReason;
+        this.mainPageStartDate = mainPageStartDate;
     }
 
 }

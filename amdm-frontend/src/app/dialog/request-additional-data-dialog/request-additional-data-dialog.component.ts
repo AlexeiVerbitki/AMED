@@ -52,14 +52,13 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
             } else if (value != '' && value.modalType == 'NOTIFICATION') {
                 this.title = 'Detalii scrisoare de informare';
                 this.openModal(value);
-            } else if (value != '' && value.modalType == 'LABORATORY_ANALYSIS') {
-                this.title = 'Detalii scrisoare solicitare pentru desfasurarea analizei de laborator ';
-                this.openModal(value);
             }
         })
     }
 
     openModal(value: any) {
+        console.log(value.requestId);
+        console.log(value.id);
         this.dataDialog = value;
         this.reqForm.reset();
         this.subscriptions.push(
@@ -94,51 +93,6 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
         });
     }
 
-    getDocEntity(path: string): any {
-        var docName = '';
-        switch (this.dataDialog.modalType) {
-            case  'NOTIFICATION' : {
-                docName = 'Scrisoare de informare Nr ' + this.reqForm.get('docNumber').value + '.pdf';
-                break;
-            }
-            case  'LABORATORY_ANALYSIS' : {
-                docName = 'Scrisoare de solicitare desfasurare analize de laborator Nr ' + this.reqForm.get('docNumber').value + '.pdf';
-                break;
-            }
-            case  'REQUEST_ADDITIONAL_DATA' : {
-                docName = 'Scrisoare de solicitare date aditionale Nr ' + this.reqForm.get('docNumber').value + '.pdf';
-                break;
-            }
-        }
-        var docType = '';
-        switch (this.dataDialog.modalType) {
-            case  'NOTIFICATION' : {
-                docType = 'NL';
-                break;
-            }
-            case  'LABORATORY_ANALYSIS' : {
-                docType = 'LA';
-                break;
-            }
-            case  'REQUEST_ADDITIONAL_DATA' : {
-                docType = 'RA';
-                break;
-            }
-        }
-        var docEntity = {
-            date: new Date(),
-            name: docName,
-            path: path,
-            email: this.reqForm.get('email').value,
-            docType: docType,
-            requestId: this.dataDialog.requestId,
-            startDate: this.dataDialog.startDate,
-            username: this.authService.getUserName()
-        };
-
-        return docEntity;
-    }
-
     generateDoc() {
         this.subscriptions.push(this.documentService.generateRequestAdditionalData(this.reqForm.get('docNumber').value,
             this.dataDialog.requestNumber,
@@ -146,9 +100,26 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
             this.reqForm.get('title').value,
             this.dataDialog.modalType).subscribe(data => {
                 //register in db
-                this.subscriptions.push(this.medicamentService.saveRequest(this.getDocEntity(data), this.dataDialog.modalType).subscribe(data => {
+            console.log('ID '+this.dataDialog.requestId);
+                var docEntity = {
+                    date: new Date(),
+                    name: this.dataDialog.modalType != 'NOTIFICATION' ? 'Scrisoare de solicitare date aditionale Nr ' + this.reqForm.get('docNumber').value + '.pdf' :
+                        'Scrisoare de informare Nr ' + this.reqForm.get('docNumber').value + '.pdf',
+                    path: data,
+                    email: this.reqForm.get('email').value,
+                    docType: this.dataDialog.modalType != 'NOTIFICATION' ? 'RA' : 'NL',
+                    requestId: this.dataDialog.requestId,
+                    mainPageStartDate: this.dataDialog.mainPageStartDate,
+                    solictiationStartDate: this.dataDialog.solictiationStartDate,
+                    username: this.authService.getUserName()
+                };
+                this.subscriptions.push(this.medicamentService.saveRequest(docEntity, this.dataDialog.modalType).subscribe(data => {
                         this.modal.hide();
-                        this.modalService.data.next({action: 'CLOSE_MODAL'});
+                        if (this.dataDialog.modalType == 'NOTIFICATION') {
+                            this.router.navigate(['dashboard/module']);
+                        } else {
+                            this.modalService.data.next({action: 'CLOSE_MODAL'});
+                        }
                     }, error => console.log('Scrisoarea nu a putut fi salvata in baza de date.'))
                 );
             }, error => console.log('Scrisoarea nu a putut fi generata.'))
@@ -186,25 +157,9 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
 
     cancel(): void {
 
-        var message = '';
-        switch (this.dataDialog.modalType) {
-            case  'NOTIFICATION' : {
-                message = 'Scrisoarea de informare nu va fi inregistrata in sistem. Doriti sa inchideti aceasta pagina?';
-                break;
-            }
-            case  'LABORATORY_ANALYSIS' : {
-                message = 'Solicitarea nu va fi inregistrata in sistem. Doriti sa inchideti aceasta pagina?';
-                break;
-            }
-            case  'REQUEST_ADDITIONAL_DATA' : {
-                message = 'Scrisoarea de solicitare nu va fi inregistrata in sistem. Doriti sa inchideti aceasta pagina?';
-                break;
-            }
-        }
-
         const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
             data: {
-                message: message,
+                message: 'Scrisoarea de solicitare nu va fi inregistrata in sistem. Doriti sa inchideti aceasta pagina?',
                 confirm: false
             }
         });

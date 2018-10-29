@@ -1,49 +1,43 @@
 <div mdbModal #basicModal="mdbModal" class="modal fade right" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
      aria-hidden="true" [config]='{backdrop: true, ignoreBackdropClick: true, focus: true, keyboard: false}'>
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<!--<div class="modal-header">-->
-			<!--<button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">-->
-			<!--<span aria-hidden="true">×</span>-->
-			<!--</button>-->
-			<!--</div>-->
-			<div class="modal-body">
-				<form [formGroup]='waitingForm'>
-					<h5 class="text-center my-3 font-weight-bold">{{title}}</h5>
-					<mat-radio-group formControlName="code" *ngIf="modalType=='WAITING'">
-						<div class="container">
-							<div class="row">
-								<div class="col-12">
-									<mat-radio-button name="prop1" value="1">Raspuns primit</mat-radio-button>
-								</div>
-								<div class="col-6">
-									<mat-radio-button name="prop2" value="2">Intreruperea procedurii de înregistrare a medicamentului</mat-radio-button>
-								</div>
-							</div>
-						</div>
-					</mat-radio-group>
-					<div *ngIf="formSubmitted && waitingForm.get('code').invalid && modalType=='WAITING'">
-						<small class="text-muted"><strong class="text-danger">Selectati o optiune</strong></small>
-					</div>
-					<div class="row">
-						<span *ngIf=" modalType == 'WAITING_ANALYSIS'" class="col-md-1"></span>
-						<div *ngIf=" modalType == 'WAITING_ANALYSIS'" class="col-md-11">
-							<mat-checkbox formControlName="check">Rezultatul analizei primit</mat-checkbox>
-							<div *ngIf="formSubmitted && waitingForm.get('check').value!=true && modalType == 'WAITING_ANALYSIS'">
-								<small class="text-muted"><strong class="text-danger">Este nevoide de confirmat primirea raspunsului</strong></small>
-							</div>
-						</div>
-					</div>
-					<div class="text-center">
-						<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">
-							Ok
-						</button>
-						<button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="leaveProcess()">
-							Meniul principal
-						</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <!--<div class="modal-header">-->
+        <!--<button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">-->
+          <!--<span aria-hidden="true">×</span>-->
+        <!--</button>-->
+      <!--</div>-->
+      <div class="modal-body">
+        <form [formGroup]='waitingForm'>
+          <h5 class="text-center my-3 font-weight-bold">Se asteapta raspuns la scrisoarea de solicitare date aditionale</h5>
+          <mat-radio-group formControlName="code">
+            <div class="container">
+              <div class="row">
+                <div class="col-12">
+                  <mat-radio-button name="prop1" value="1">Raspuns primit</mat-radio-button>
+                </div>
+                <div class="col-6">
+                  <mat-radio-button name="prop2" value="2">Intreruperea procedurii de înregistrare a medicamentului</mat-radio-button>
+                  <!--<button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="viewOrdin()" [disabled]="waitingForm.get('code').value!=2">-->
+                    <!--Vizualizare ordin de itrerupere-->
+                  <!--</button>-->
+                </div>
+              </div>
+            </div>
+          </mat-radio-group>
+          <div *ngIf="formSubmitted && waitingForm.get('code').invalid">
+            <small class="text-muted"><strong class="text-danger">Selectati o optiune</strong></small>
+          </div>
+          <div class="text-center">
+            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">
+              Ok
+            </button>
+            <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="leaveProcess()">
+              Meniul principal
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div >
+</div >

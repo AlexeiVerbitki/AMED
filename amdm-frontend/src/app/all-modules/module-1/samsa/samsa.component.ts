@@ -5,11 +5,6 @@ import {Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {RequestService} from "../../../shared/service/request.service";
 import {ModalService} from "../../../shared/service/modal.service";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {PaymentOrder} from "../../../models/paymentOrder";
-import {Receipt} from "../../../models/receipt";
-import {ConfirmationDialogComponent} from "../../../confirmation-dialog/confirmation-dialog.component";
-import {MatDialog} from "@angular/material";
 
 @Component({
     selector: 'app-samsa',
@@ -24,9 +19,6 @@ export class SamsaComponent implements OnInit {
     company: any;
     formSubmitted: boolean;
     activeSubstancesTable: any[];
-    paymentOrdersList: PaymentOrder[] = [];
-    receiptsList: Receipt[] = [];
-    paymentTotal: number;
 
     date: any = new FormControl({value: new Date(), disabled: true});
 
@@ -34,8 +26,6 @@ export class SamsaComponent implements OnInit {
                 private router: Router,
                 private requestService: RequestService,
                 private modalService: ModalService,
-                private authService: AuthService,
-                public dialogConfirmation: MatDialog,
                 private activatedRoute: ActivatedRoute) {
         this.sForm = fb.group({
             'id': [],
@@ -43,7 +33,7 @@ export class SamsaComponent implements OnInit {
             'requestNumber': [null],
             'startDate': [],
             //'dataToSaveInStartDateRequestHistory': [''],
-            'currentStep': ['X'],
+            'currentStep': ['A'],
             'medicament':
                 fb.group({
                     'id': [],
@@ -134,22 +124,10 @@ export class SamsaComponent implements OnInit {
                         // this.sForm.get('dataToSaveInStartDateRequestHistory').setValue(reqHist.endDate);
                         this.company = data.medicament.company;
                         this.documents = data.medicament.documents;
-                        this.receiptsList = data.medicament.receipts;
-                        this.paymentOrdersList = data.medicament.paymentOrders;
                         this.documents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
                         this.activeSubstancesTable = data.medicament.activeSubstances;
                         let xs = this.documents;
                         xs = xs.map(x => {
-                            x.isOld = true;
-                            return x;
-                        });
-                        let xs2 = this.receiptsList;
-                        xs2 = xs2.map(x => {
-                            x.isOld = true;
-                            return x;
-                        });
-                        let xs3 = this.paymentOrdersList;
-                        xs3 = xs3.map(x => {
                             x.isOld = true;
                             return x;
                         });
@@ -160,9 +138,10 @@ export class SamsaComponent implements OnInit {
                                 requestNumber: this.sForm.get('requestNumber').value
                             });
                         }
-                        if (data.currentStep == 'L') {
+                        if (data.currentStep == 'N') {
+                            console.log('ID 1='+this.sForm.get('id').value);
                             this.modalService.data.next({
-                                modalType: 'WAITING_ANALYSIS',
+                                modalType: 'NOTIFICATION',
                                 requestId: this.sForm.get('id').value,
                                 requestNumber: this.sForm.get('requestNumber').value
                             });
@@ -192,9 +171,9 @@ export class SamsaComponent implements OnInit {
                             requestNumber: this.sForm.get('requestNumber').value
                         });
                     }
-                    if (data.currentStep == 'L') {
+                    if (data.currentStep == 'N') {
                         this.modalService.data.next({
-                            modalType: 'WAITING_ANALYSIS',
+                            modalType: 'NOTIFICATION',
                             requestId: this.sForm.get('id').value,
                             requestNumber: this.sForm.get('requestNumber').value
                         });
@@ -205,86 +184,32 @@ export class SamsaComponent implements OnInit {
     }
 
     requestLaboratoryAnalysis() {
-        this.modalService.data.next({
-                requestNumber: this.sForm.get('requestNumber').value,
-                requestId: this.sForm.get('id').value,
-                modalType: 'LABORATORY_ANALYSIS',
-                startDate: this.sForm.get('data').value
-            }
-        );
+
     }
 
     requestAdditionalData() {
-        console.log(this.sForm.get('data').value);
         this.modalService.data.next({
                 requestNumber: this.sForm.get('requestNumber').value,
                 requestId: this.sForm.get('id').value,
                 modalType: 'REQUEST_ADDITIONAL_DATA',
-                startDate: this.sForm.get('data').value
+                mainPageStartDate: this.sForm.get('data').value
             }
         );
-    }
 
-    interruptProcess() {
-        const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
-            data: {
-                message: 'Sunteti sigur(a)?',
-                confirm: false
-            }
-        });
-
-        dialogRef2.afterClosed().subscribe(result => {
-            if (result) {
-                var modelToSubmit = {requestHistories: [], currentStep: 'I', id: this.sForm.get('id').value};
-                modelToSubmit.requestHistories.push({
-                    startDate: this.sForm.get('data').value, endDate: new Date(),
-                    username: this.authService.getUserName(), step: 'A'
-                });
-
-                this.subscriptions.push(this.requestService.addMedicamentHistory(modelToSubmit).subscribe(data => {
-                        this.router.navigate(['dashboard/module/medicament-registration/interrupt/' + this.sForm.get('id').value]);
-                    }, error => console.log(error))
-                );
-            }
-        });
-    }
-
-    paymentTotalUpdate(event) {
-        this.paymentTotal = event.valueOf();
-    }
-
-    nextStep() {
-        this.formSubmitted = true;
-
-        if (this.paymentTotal < 0) {
-            return;
-        }
-
-        this.formSubmitted = false;
-
-        const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
-            data: {
-                message: 'Sunteti sigur(a)?',
-                confirm: false
-            }
-        });
-
-        dialogRef2.afterClosed().subscribe(result => {
-            if (result) {
-                var modelToSubmit = {medicament :{paymentOrders: [],receipts: []}, currentStep: 'X', id: this.sForm.get('id').value, requestHistories : []};
-                modelToSubmit.medicament.paymentOrders = this.paymentOrdersList;
-                modelToSubmit.medicament.receipts = this.receiptsList;
-
-                modelToSubmit.requestHistories.push({
-                    startDate: this.sForm.get('data').value, endDate: new Date(),
-                    username: this.authService.getUserName(), step: 'A'
-                });
-
-                this.subscriptions.push(this.requestService.addMedicamentPayments(modelToSubmit).subscribe(data => {
-                        this.router.navigate(['dashboard/module/medicament-registration/expert/' + this.sForm.get('id').value]);
-                    }, error => console.log(error))
-                );
-            }
-        });
+        // dialogRef.afterClosed().subscribe(result => {
+        //     this.subscriptions.push(this.requestService.getMedicamentRequest(this.sForm.get('id').value).subscribe(data => {
+        //         this.documents = data.medicament.documents;
+        //         this.documents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        //         let xs = this.documents;
+        //         xs = xs.map(x => {
+        //             x.isOld = true;
+        //             return x;
+        //         });
+        //         if(data.currentStep=='S')
+        //         {
+        //             this.modalService.data.next({modalType : 'WAITING'});
+        //         }
+        //     }));
+        // });
     }
 }

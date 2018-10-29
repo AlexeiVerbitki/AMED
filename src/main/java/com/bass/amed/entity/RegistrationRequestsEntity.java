@@ -23,7 +23,7 @@ public class RegistrationRequestsEntity
     private ClinicalTrialsEntity clinicalTrails;
     private LicensesEntity license;
     private Set<RegistrationRequestHistoryEntity> requestHistories = new HashSet<>();
-    private String interruptionReason;
+    private String currentStepLink;
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
@@ -194,19 +194,6 @@ public class RegistrationRequestsEntity
         this.type = type;
     }
 
-
-    @Basic
-    @Column(name = "interruption_reason")
-    public String getInterruptionReason()
-    {
-        return interruptionReason;
-    }
-
-    public void setInterruptionReason(String interruptionReason)
-    {
-        this.interruptionReason = interruptionReason;
-    }
-
     @Override
     public boolean equals(Object o)
     {
@@ -289,5 +276,17 @@ public class RegistrationRequestsEntity
         result = 31 * result + (clinicalTrails != null ? clinicalTrails.hashCode() : 0);
         result = 31 * result + (requestHistories != null ? requestHistories.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "current_step_link")
+    public String getCurrentStepLink()
+    {
+        return currentStepLink;
+    }
+
+    public void setCurrentStepLink(String currentStepLink)
+    {
+        this.currentStepLink = currentStepLink;
     }
 }

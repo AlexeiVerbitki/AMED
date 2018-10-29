@@ -27,19 +27,7 @@ export class RequestService{
     }
 
     addPriceRequest(requestDetails: any): Observable<HttpResponse<any>> {
-        return this.http.post<any>('/api/add-prices-request', requestDetails, {observe: 'response'});
-    }
-
-    addMedicamentHistory(requestDetails: any): Observable<HttpResponse<any>> {
-        return this.http.post<any>('/api/add-medicament-history', requestDetails, {observe: 'response'});
-    }
-
-    addMedicamentPayments(requestDetails: any): Observable<HttpResponse<any>> {
-        return this.http.post<any>('/api/add-medicament-payments', requestDetails, {observe: 'response'});
-    }
-
-    addImportRequest(requestDetails: any): Observable<HttpResponse<any>> {
         console.log(requestDetails);
-        return this.http.post<any>('/api/add-import-request', requestDetails, {observe: 'response'});
+        return this.http.post<any>('/api/add-prices-request', requestDetails, {observe: 'response'});
     }
 }
