@@ -4,7 +4,6 @@ import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.projection.GetCountriesMinimalProjection;
 import com.bass.amed.projection.GetMinimalCompanyProjection;
-import com.bass.amed.projection.LicenseCompanyProjection;
 import com.bass.amed.repository.*;
 import com.bass.amed.service.GenerateDocNumberService;
 import com.bass.amed.service.GenerateReceiptNumberService;
@@ -80,12 +79,6 @@ public class AdministrationController {
         List<GetMinimalCompanyProjection> allCompanies = economicAgentsRepository.getMinimalDetails();
 
         return new ResponseEntity<>(allCompanies, HttpStatus.OK);
-    }
-
-    @RequestMapping("/all-companies-for-license")
-    public ResponseEntity<List<LicenseCompanyProjection>> retrieveAllLicenseCompanies() {
-        LOGGER.debug("Retrieve all license companies");
-        return new ResponseEntity<>(economicAgentsRepository.getLicenseDetails(), HttpStatus.OK);
     }
 
     @RequestMapping("/all-states")

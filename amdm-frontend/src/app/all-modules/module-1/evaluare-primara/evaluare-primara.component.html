@@ -1,4 +1,5 @@
-primar<div class="container-fluid sky z-depth-2">
+primar
+<div class="container-fluid sky z-depth-2">
 	<form [formGroup]="eForm">
 		<h3 class="text-center my-3 font-weight-bold">Evaluare primara</h3>
 		<hr>
@@ -195,9 +196,9 @@ primar<div class="container-fluid sky z-depth-2">
 				<td>{{ substance.activeSubstance.code }}</td>
 				<td>{{ substance.quantity }}</td>
 				<td>{{ substance.unitsOfMeasurement.description }}</td>
-				<td>{{ substance.manufacture.description }}</td>
-				<td>{{ substance.manufacture.country.description }}</td>
-				<td>{{ substance.manufacture.address }}</td>
+				<td>{{ substance.activeSubstance.manufacture.description }}</td>
+				<td>{{ substance.activeSubstance.manufacture.country.description }}</td>
+				<td>{{ substance.activeSubstance.manufacture.address }}</td>
 				<td>
 					<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeSubstance(i)" mdbWavesEffect>Delete</button>
 				</td>
@@ -437,9 +438,39 @@ primar<div class="container-fluid sky z-depth-2">
 			<small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>
 		</div>
 		<hr>
-		<div class="text-center">
+		<h5 class="text-center font-weight-bold">Documente de iesire</h5>
+		<hr>
+		<div class="position-button">
 			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="requestAdditionalData()">Solicitare date aditionale</button>
 			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="requestLaboratoryAnalysis()">Solicitare analiza laborator</button>
+		</div>
+		<table class="table table-widths-lg text-center">
+			<thead class="black white-text">
+			<tr>
+				<th scope="col">Denumirea</th>
+				<th scope="col">Numar</th>
+				<th scope="col">Status document</th>
+				<th scope="col">Status raspuns</th>
+				<th>Actiuni</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr *ngFor="let a of outDocuments">
+				<th scope="row">{{ a.name }}</th>
+				<th scope="row">{{ a.number }}</th>
+				<th scope="row">{{ a.status }}</th>
+				<th scope="row"><mat-checkbox *ngIf="a.docType.category=='RA' || a.docType.category=='LA'" #checkBoxResponse [checked]="a.responseReceived" (change)="checkResponseReceived(a,checkBoxResponse)">Raspuns primit</mat-checkbox></th>
+				<td>
+					<button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)">Vizualizare</button>
+					<button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && (a.docType.category=='RA' || a.docType.category=='LA')" class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)">Stergere</button>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		<div *ngIf="formSubmitted && !isResponseReceived">
+			<small class="text-muted"><strong class="text-danger">Exista documente fara raspuns</strong></small>
+		</div>
+		<div class="text-center">
 			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>
 			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Urmatorul pas</button>
 			<button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>

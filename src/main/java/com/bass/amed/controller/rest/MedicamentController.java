@@ -17,7 +17,6 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 
 @RestController
@@ -36,10 +35,13 @@ public class MedicamentController
     private DocumentTypeRepository documentTypeRepository;
     @Autowired
     private RequestRepository requestRepository;
+    @Autowired
+    private OutputDocumentsRepository outputDocumentsRepository;
 
 
     @RequestMapping("/company-medicaments")
-    public ResponseEntity<List<MedicamentDetailsForPraceRegProjection>> getCompanyMedicaments(@RequestParam(value = "companyId")Integer companyId) {
+    public ResponseEntity<List<MedicamentDetailsForPraceRegProjection>> getCompanyMedicaments(@RequestParam(value = "companyId") Integer companyId)
+    {
 
         logger.debug("Retrieve all medicaments of company");
         NmEconomicAgentsEntity company = economicAgentsRepository.findById(companyId).get();
@@ -83,7 +85,7 @@ public class MedicamentController
         fillDocumentDetails(documentDTO, registrationRequestsEntity);
         RegistrationRequestHistoryEntity historyEntity = new RegistrationRequestHistoryEntity();
         historyEntity.setUsername(documentDTO.getUsername());
-        historyEntity.setStep("A");
+        historyEntity.setStep("E");
         historyEntity.setStartDate(documentDTO.getMainPageStartDate());
         Timestamp stepDate = new Timestamp(System.currentTimeMillis());
         historyEntity.setEndDate(stepDate);
@@ -175,7 +177,7 @@ public class MedicamentController
 
         Optional<RegistrationRequestsEntity> regReqOpt = requestRepository.findById(documentDTO.getRequestId());
         RegistrationRequestsEntity registrationRequestsEntity = regReqOpt.get();
-        registrationRequestsEntity.setCurrentStep("A");
+        registrationRequestsEntity.setCurrentStep("E");
 
         fillLastWaitingStep(documentDTO, registrationRequestsEntity,"N");
 

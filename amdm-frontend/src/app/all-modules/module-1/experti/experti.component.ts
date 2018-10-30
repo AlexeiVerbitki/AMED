@@ -32,7 +32,6 @@ export class ExpertiComponent implements OnInit {
     modelToSubmit : any;
 
     constructor(private fb: FormBuilder,
-                private modalService: ModalService,
                 private authService: AuthService,
                 private requestService: RequestService,
                 public dialogConfirmation: MatDialog,
@@ -97,7 +96,6 @@ export class ExpertiComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.modalService.data.next('');
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
                 this.subscriptions.push(this.requestService.getMedicamentRequest(params['id']).subscribe(data => {
                     this.modelToSubmit = data;
@@ -197,39 +195,27 @@ export class ExpertiComponent implements OnInit {
 
         this.formSubmitted = false;
 
-        this.subscriptions.push(this.documentService.generateCertificatulDeAutorizare(this.expertForm.get('requestNumber').value).subscribe(data => {
+        var x  = this.modelToSubmit;
 
-            var x  = this.modelToSubmit;
+        x.currentStep = 'F';
+        x.endDate = new Date();
 
-            x.currentStep = 'F';
-            x.endDate = new Date();
+        x.requestHistories.push({
+            startDate: this.expertForm.get('data').value, endDate: new Date(),
+            username: this.authService.getUserName(), step: 'X'
+        });
 
-            x.requestHistories.push({
-                startDate: this.expertForm.get('data').value, endDate: new Date(),
-                username: this.authService.getUserName(), step: 'X'
-            });
+        x.requestHistories.push({
+            startDate: new Date(),
+            username: this.authService.getUserName(), step: 'F'
+        });
 
-            x.requestHistories.push({
-                startDate: new Date(),
-                username: this.authService.getUserName(), step: 'F'
-            });
+        x.medicament.experts = {chairman : this.expert.chairman, farmacolog : this.expert.farmacolog, farmacist :this.expert.farmacist,
+            medic :this.expert.medic, date : new Date(), comment : this.expert.comment, number : this.expert.comiteeNr};
 
-            x.medicament.documents.push({
-                name: data.substring(data.lastIndexOf('/') + 1),
-                docType : this.docTypes[0],
-                date: new Date(),
-                path: data
-            });
-
-            x.medicament.experts = {chairman : this.expert.chairman, farmacolog : this.expert.farmacolog, farmacist :this.expert.farmacist,
-                medic :this.expert.medic, date : new Date(), comment : this.expert.comment, number : this.expert.comiteeNr};
-
-                this.subscriptions.push(this.requestService.addMedicamentRequest(x).subscribe(data => {
-                        this.router.navigate(['dashboard/module']);
-                    }, error => console.log('Certificatul de autorizare nu a putut fi salvat in baza de date.'))
-                );
-
-            }, error => console.log('Certificatul de autorizare nu a putut fi generat.'))
+        this.subscriptions.push(this.requestService.addMedicamentRequest(x).subscribe(data => {
+                this.router.navigate(['dashboard/module']);
+            }, error => console.log('Certificatul de autorizare nu a putut fi salvat in baza de date.'))
         );
 
     }

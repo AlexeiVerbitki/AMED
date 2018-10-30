@@ -55,7 +55,7 @@ public class DocumentsController
     {
         logger.debug("Store file with name=" + file.getOriginalFilename());
         StringBuilder sb = new StringBuilder(folder);
-        createRootPath(nrCerere,sb);
+        createRootPath(nrCerere, sb);
 
         storageService.store(sb.toString(), file);
         FileResult fr = new FileResult();
@@ -74,30 +74,62 @@ public class DocumentsController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/generate-distribution-disposition", method = RequestMethod.GET)
-    public ResponseEntity<String> generateDistributionDisposition(@RequestParam(value = "nrCerere") String nrCerere) throws CustomException, IOException
+    @RequestMapping(value = "/view-distribution-disposition", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> viewDistributionDisposition(@RequestParam(value = "nrDoc") String nrDoc) throws CustomException
     {
-        logger.debug("Generate Distribution Disposition");
+        byte[] bytes = null;
+        try
+        {
+            ResourceLoader resourceLoader = new DefaultResourceLoader();
+            Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts");
+            String classPathWithoutJRXML = res.getFile().getAbsolutePath();
+            res = resourceLoader.getResource("classpath:..\\resources\\layouts\\distributionDisposition.jrxml");
+            JasperReport report = JasperCompileManager.compileReport(new FileInputStream(res.getFile()));
 
-        ResourceLoader resourceLoader = new DefaultResourceLoader();
-        Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts");
+            List<DistributionDispositionDTO> dataList = new ArrayList();
+            DistributionDispositionDTO obj = new DistributionDispositionDTO();
+            obj.setDispositionDate(Calendar.getInstance().getTime());
+            obj.setNrDisposition(nrDoc);
+            obj.setPath(classPathWithoutJRXML);
+            dataList.add(obj);
 
-        List<DistributionDispositionDTO> dataList = new ArrayList();
-        DistributionDispositionDTO obj = new DistributionDispositionDTO();
-        obj.setDispositionDate(Calendar.getInstance().getTime());
-        String nrDisposition=String.valueOf(generateDocNumberService.getDocumentNumber());
-        obj.setNrDisposition(nrDisposition);
-        obj.setPath(res.getFile().getAbsolutePath());
-        dataList.add(obj);
+            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(dataList);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, null, beanColDataSource);
+            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+        }
+        catch (Exception e)
+        {
+            throw new CustomException(e.getMessage());
+        }
 
-        StringBuilder sb = new StringBuilder(folder);
-        createRootPath(nrCerere, sb);
-        sb.append("Dispozitie de distribuire Nr " + nrDisposition+ ".pdf");
-
-        storageService.storePDFFile(dataList,sb.toString(),"classpath:..\\resources\\layouts\\distributionDisposition.jrxml");
-
-        return new ResponseEntity<>(sb.toString(), HttpStatus.OK);
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=dd.pdf").body(bytes);
     }
+
+        @RequestMapping(value = "/generate-distribution-disposition", method = RequestMethod.GET)
+        public ResponseEntity<String> generateDistributionDisposition(@RequestParam(value = "nrCerere") String nrCerere) throws CustomException, IOException
+        {
+            logger.debug("Generate Distribution Disposition");
+
+            ResourceLoader resourceLoader = new DefaultResourceLoader();
+            Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts");
+
+            List<DistributionDispositionDTO> dataList = new ArrayList();
+            DistributionDispositionDTO obj = new DistributionDispositionDTO();
+            obj.setDispositionDate(Calendar.getInstance().getTime());
+            String nrDisposition=String.valueOf(generateDocNumberService.getDocumentNumber());
+            obj.setNrDisposition(nrDisposition);
+            obj.setPath(res.getFile().getAbsolutePath());
+            dataList.add(obj);
+
+            StringBuilder sb = new StringBuilder(folder);
+            createRootPath(nrCerere, sb);
+            sb.append("Dispozitie de distribuire Nr " + nrDisposition+ ".pdf");
+
+            storageService.storePDFFile(dataList,sb.toString(),"classpath:..\\resources\\layouts\\distributionDisposition.jrxml");
+
+            return new ResponseEntity<>(sb.toString(), HttpStatus.OK);
+        }
 
     private void createRootPath(String nrCerere, StringBuilder sb)
     {
@@ -112,30 +144,59 @@ public class DocumentsController
 
     @RequestMapping(value = "/view-request-additional-data", method = RequestMethod.GET)
     public ResponseEntity<byte[]> viewRAD(@RequestParam(value = "nrDocument") String nrDocument,
-                                         @RequestParam(value = "content") String content,
-                                         @RequestParam(value = "title") String title,
+                                          @RequestParam(value = "content") String content,
+                                          @RequestParam(value = "title") String title,
                                           @RequestParam(value = "type") String type
-                                          ) throws CustomException
+    ) throws CustomException
     {
         byte[] bytes = null;
         try
         {
             ResourceLoader resourceLoader = new DefaultResourceLoader();
             String classPath = "";
-            if(type.equals("NOTIFICATION"))
+            switch (type)
             {
-                classPath = "classpath:..\\resources\\layouts\\notificationLetter.jrxml";
+                case "NOTIFICATION":
+                    classPath = "classpath:..\\resources\\layouts\\notificationLetter.jrxml";
+                    break;
+                case "RA":
+                    classPath = "classpath:..\\resources\\layouts\\requestAdditionalData.jrxml";
+                    break;
+                case "LA":
+                    classPath = "classpath:..\\resources\\layouts\\laboratoryAnalysis.jrxml";
+                    break;
             }
-            else
-            {
-                classPath = "classpath:..\\resources\\layouts\\requestAdditionalData.jrxml";
-            }
+
             Resource res = resourceLoader.getResource(classPath);
             JasperReport report = JasperCompileManager.compileReport(new FileInputStream(res.getFile()));
 
             List<RequestAdditionalDataDTO> dataList = fillRequestAdditionalDataDTO(nrDocument, content, title);
 
             JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(dataList);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, null, beanColDataSource);
+            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+        }
+        catch (Exception e)
+        {
+            throw new CustomException(e.getMessage());
+        }
+
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=request.pdf").body(bytes);
+    }
+
+    @RequestMapping(value = "/view-medicament-authorization-order", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> viewMedicamentAuthorizationOrder() throws CustomException
+    {
+        byte[] bytes = null;
+        try
+        {
+            ResourceLoader resourceLoader = new DefaultResourceLoader();
+
+            Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts\\medicamentAuthorizationOrder.jrxml");
+            JasperReport report = JasperCompileManager.compileReport(new FileInputStream(res.getFile()));
+
+            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(new ArrayList<>());
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, null, beanColDataSource);
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
         }
@@ -189,68 +250,85 @@ public class DocumentsController
         return dataList;
     }
 
-    @RequestMapping(value = "/generate-request-additional-data", method = RequestMethod.GET)
-    public ResponseEntity<String> generateRequestAdditionalData(@RequestParam(value = "nrCerere") String nrCerere,
-                                                                @RequestParam(value = "nrDocument") String nrDocument,
-                                                                @RequestParam(value = "content") String content,
-                                                                @RequestParam(value = "title") String title,
-                                                                @RequestParam(value = "type") String type
-                                                               ) throws CustomException, IOException
-    {
-        logger.debug("Generate Request Additional Data");
-
-        ResourceLoader resourceLoader = new DefaultResourceLoader();
-        Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts");
-
-        List<RequestAdditionalDataDTO> dataList = fillRequestAdditionalDataDTO(nrDocument, content, title);
-
-        StringBuilder sb = new StringBuilder(folder);
-        createRootPath(nrCerere, sb);
-        if(type.equals("NOTIFICATION"))
-        {
-            sb.append("Scrisoare de informare Nr " + nrDocument + ".pdf");
-        }
-        else
-        {
-            sb.append("Scrisoare de solicitare date aditionale Nr " + nrDocument + ".pdf");
-        }
-
-        if(type.equals("NOTIFICATION"))
-        {
-            storageService.storePDFFile(dataList, sb.toString(), "classpath:..\\resources\\layouts\\notificationLetter.jrxml");
-        }
-        else
-        {
-            storageService.storePDFFile(dataList, sb.toString(), "classpath:..\\resources\\layouts\\requestAdditionalData.jrxml");
-        }
-
-        return new ResponseEntity<>(sb.toString(), HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/generate-interrupt-order-of-medicament-registration", method = RequestMethod.GET)
-    public ResponseEntity<String> generateInterruptOrderOfMR(@RequestParam(value = "nrCerere") String nrCerere,
-                                                                @RequestParam(value = "nrDocument") String nrDocument
-    ) throws CustomException, IOException
-    {
-        logger.debug("Generate Interrupt Order of MR");
-
-        ResourceLoader resourceLoader = new DefaultResourceLoader();
-        Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts");
-
-        List<RequestAdditionalDataDTO> dataList = new ArrayList();
-        RequestAdditionalDataDTO obj = new RequestAdditionalDataDTO();
-        obj.setRequestDate(Calendar.getInstance().getTime());
-        obj.setNrRequest(nrDocument);
-        dataList.add(obj);
-
-        StringBuilder sb = new StringBuilder(folder);
-        createRootPath(nrCerere, sb);
-        sb.append("Ordin de întrerupere a procedurii de înregistrare a medicamentului Nr " + nrDocument+ ".pdf");
-
-        storageService.storePDFFile(dataList,sb.toString(),"classpath:..\\resources\\layouts\\interruptOrderOfMedicamentRegistration.jrxml");
-
-        return new ResponseEntity<>(sb.toString(), HttpStatus.OK);
-    }
+    //    @RequestMapping(value = "/generate-request-additional-data", method = RequestMethod.GET)
+    //    public ResponseEntity<String> generateRequestAdditionalData(@RequestParam(value = "nrCerere") String nrCerere,
+    //                                                                @RequestParam(value = "nrDocument") String nrDocument,
+    //                                                                @RequestParam(value = "content") String content,
+    //                                                                @RequestParam(value = "title") String title,
+    //                                                                @RequestParam(value = "type") String type
+    //                                                               ) throws CustomException, IOException
+    //    {
+    //        logger.debug("Generate Request Additional Data");
+    //
+    //        ResourceLoader resourceLoader = new DefaultResourceLoader();
+    //        Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts");
+    //
+    //        List<RequestAdditionalDataDTO> dataList = fillRequestAdditionalDataDTO(nrDocument, content, title);
+    //
+    //        StringBuilder sb = new StringBuilder(folder);
+    //        createRootPath(nrCerere, sb);
+    //        if(type.equals("NOTIFICATION"))
+    //        {
+    //            sb.append("Scrisoare de informare Nr " + nrDocument + ".pdf");
+    //        }
+    //        else
+    //        {
+    //            sb.append("Scrisoare de solicitare date aditionale Nr " + nrDocument + ".pdf");
+    //        }
+    //
+    //        if(type.equals("NOTIFICATION"))
+    //        {
+    //            storageService.storePDFFile(dataList, sb.toString(), "classpath:..\\resources\\layouts\\notificationLetter.jrxml");
+    //        }
+    //        else
+    //        {
+    //            storageService.storePDFFile(dataList, sb.toString(), "classpath:..\\resources\\layouts\\requestAdditionalData.jrxml");
+    //        }
+    //
+    //        return new ResponseEntity<>(sb.toString(), HttpStatus.OK);
+    //    }
+    //
+    //    @RequestMapping(value = "/generate-interrupt-order-of-medicament-registration", method = RequestMethod.GET)
+    //    public ResponseEntity<String> generateInterruptOrderOfMR(@RequestParam(value = "nrCerere") String nrCerere,
+    //                                                                @RequestParam(value = "nrDocument") String nrDocument
+    //    ) throws CustomException, IOException
+    //    {
+    //        logger.debug("Generate Interrupt Order of MR");
+    //
+    //        ResourceLoader resourceLoader = new DefaultResourceLoader();
+    //        Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts");
+    //
+    //        List<RequestAdditionalDataDTO> dataList = new ArrayList();
+    //        RequestAdditionalDataDTO obj = new RequestAdditionalDataDTO();
+    //        obj.setRequestDate(Calendar.getInstance().getTime());
+    //        obj.setNrRequest(nrDocument);
+    //        dataList.add(obj);
+    //
+    //        StringBuilder sb = new StringBuilder(folder);
+    //        createRootPath(nrCerere, sb);
+    //        sb.append("Ordin de întrerupere a procedurii de înregistrare a medicamentului Nr " + nrDocument+ ".pdf");
+    //
+    //        storageService.storePDFFile(dataList,sb.toString(),"classpath:..\\resources\\layouts\\interruptOrderOfMedicamentRegistration.jrxml");
+    //
+    //        return new ResponseEntity<>(sb.toString(), HttpStatus.OK);
+    //    }
+    //
+    //    @RequestMapping(value = "/generate-certificatul-de-autorizare", method = RequestMethod.GET)
+    //    public ResponseEntity<String> generateCerifiactulDeAutorizare(@RequestParam(value = "nrCerere") String nrCerere) throws CustomException
+    //    {
+    //        logger.debug("Generate certificatul de autorizare");
+    //
+    //        ResourceLoader resourceLoader = new DefaultResourceLoader();
+    //        Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts");
+    //
+    //        StringBuilder sb = new StringBuilder(folder);
+    //        createRootPath(nrCerere, sb);
+    //        sb.append("Certificatul de autorizare al medicamentului.pdf");
+    //
+    //        storageService.storePDFFile(new ArrayList<>(),sb.toString(),"classpath:..\\resources\\layouts\\medicamentAuthorizationCertificate.jrxml");
+    //
+    //        return new ResponseEntity<>(sb.toString(), HttpStatus.OK);
+    //    }
 
     @RequestMapping(value = "/view-document", method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> generateBon(@RequestParam(value = "relativePath") String relativePath, HttpServletRequest request) throws FileNotFoundException
@@ -277,7 +355,7 @@ public class DocumentsController
         if (contentType == null)
         {
             contentType = "application/octet-stream";
-        }       
+        }
 
         return ResponseEntity.ok().headers(headers).contentType(MediaType.parseMediaType(contentType)).body(isr);
     }

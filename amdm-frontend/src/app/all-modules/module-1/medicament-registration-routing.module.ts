@@ -9,7 +9,6 @@ import {ExpertiComponent} from "./experti/experti.component";
 const routes: Routes = [
     { path: 'register', component: RegCerereComponent},
     { path: 'evaluate/:id', component: EvaluarePrimaraComponent},
-    { path: 'samsa/:id', component: SamsaComponent},
     { path: 'interrupt/:id', component: ProcessInterruptionComponent},
     { path: 'expert/:id', component: ExpertiComponent}
 ];

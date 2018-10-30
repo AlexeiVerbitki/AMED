@@ -12,9 +12,11 @@ import {UploadFileService} from "../../shared/service/upload/upload-file.service
 import {RequestService} from "../../shared/service/request.service";
 import {NumberOnlyDirective} from "../../shared/directive/number-only.directive";
 import {RequestAdditionalDataDialogComponent} from "../../dialog/request-additional-data-dialog/request-additional-data-dialog.component";
-import {WaitingResponseDialogComponent} from "../../dialog/waiting-response-dialog/waiting-response-dialog.component";
 import {DocumentModule} from "../../document/document.module";
 import {PaymentModule} from "../../payment/payment.module";
+import {ProcessInterruptionComponent} from "../../process-interruption/process-interruption.component";
+import { ExpertiComponent } from './experti/experti.component';
+import {ExpertComiteeModule} from "../../expert-comitee/expert-comitee.module";
 
 @NgModule({
     imports: [
@@ -26,9 +28,13 @@ import {PaymentModule} from "../../payment/payment.module";
         MaterialSharedModule.forRoot(),
         DocumentModule,
         PaymentModule,
+        ExpertComiteeModule
     ],
     schemas: [],
-    declarations: [RegCerereComponent, EvaluarePrimaraComponent, SamsaComponent, NumberOnlyDirective,RequestAdditionalDataDialogComponent,WaitingResponseDialogComponent],
+    entryComponents: [
+        RequestAdditionalDataDialogComponent
+    ],
+    declarations: [RegCerereComponent, EvaluarePrimaraComponent, SamsaComponent, NumberOnlyDirective,RequestAdditionalDataDialogComponent,ProcessInterruptionComponent, ExpertiComponent],
     providers: [UploadFileService,RequestService]
 })
 export class MedicamentRegistrationModule {

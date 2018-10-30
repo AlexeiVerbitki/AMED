@@ -32,7 +32,6 @@ export class RegCerereComponent implements OnInit {
     constructor(private fb: FormBuilder, public dialog: MatDialog, private router: Router,
                 private requestService: RequestService,
                 private authService: AuthService,
-                private modalService: ModalService,
                 private administrationService: AdministrationService) {
         this.rForm = fb.group({
             'data': {disabled: true, value: new Date()},
@@ -54,7 +53,6 @@ export class RegCerereComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.modalService.data.next('');
         this.subscriptions.push(
             this.administrationService.generateDocNr().subscribe(data => {
                     this.generatedDocNrSeq = data;
@@ -88,7 +86,7 @@ export class RegCerereComponent implements OnInit {
 
         this.rForm.get('company').setValue(this.rForm.value.medicament.company);
 
-        let modelToSubmit: any = this.rForm.value;
+        var modelToSubmit: any = this.rForm.value;
         modelToSubmit.requestHistories = [{
             startDate: this.rForm.get('startDate').value, endDate: new Date(),
             username: this.authService.getUserName(), step: 'R'

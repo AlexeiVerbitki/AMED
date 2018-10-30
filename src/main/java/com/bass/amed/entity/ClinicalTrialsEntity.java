@@ -18,7 +18,6 @@ public class ClinicalTrialsEntity
     private String sponsor;
     private MedicamentEntity medicament;
     private MedicamentEntity referenceProduct;
-    private String medicalInstitution;
     private Integer trialPopulation;
     private String medicamentCommitteeOpinion;
     private String eticCommitteeOpinion;
@@ -27,9 +26,10 @@ public class ClinicalTrialsEntity
     private Integer openingDeclarationId;
     private String status;
     private Set<DocumentsEntity> documents;
-    private Set<ClinicalTrailsInvestigatorsEntity> investigators;
+    private Set<NmInvestigatorsEntity> investigators;
     private Set<ReceiptsEntity> receipts;
     private Set<PaymentOrdersEntity> paymentOrders;
+    private Set<NmMedicalInstitutionsEntity> medicalInstitutions;
 
 
     @Id
@@ -123,7 +123,7 @@ public class ClinicalTrialsEntity
         this.sponsor = sponsor;
     }
 
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE} )
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
     @JoinColumn( name = "medicament_id" )
     public MedicamentEntity getMedicament() {
         return medicament;
@@ -133,7 +133,7 @@ public class ClinicalTrialsEntity
         this.medicament = medicament;
     }
 
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE} )
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
     @JoinColumn( name = "reference_product_id" )
     public MedicamentEntity getReferenceProduct() {
         return referenceProduct;
@@ -141,18 +141,6 @@ public class ClinicalTrialsEntity
 
     public void setReferenceProduct(MedicamentEntity referenceProduct) {
         this.referenceProduct = referenceProduct;
-    }
-
-    @Basic
-    @Column(name = "medical_institution")
-    public String getMedicalInstitution()
-    {
-        return medicalInstitution;
-    }
-
-    public void setMedicalInstitution(String medicalInstitution)
-    {
-        this.medicalInstitution = medicalInstitution;
     }
 
     @Basic
@@ -254,20 +242,21 @@ public class ClinicalTrialsEntity
     }
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "CLINICAL_TRAILS_ID")
-    public Set<ClinicalTrailsInvestigatorsEntity> getInvestigators() {
+    @JoinTable(name = "CLINICAL_TRAILS_INVESTIGATORS", joinColumns = {
+            @JoinColumn(name = "CLINICAL_TRAILS_ID")}, inverseJoinColumns = {
+            @JoinColumn(name = "NM_INVESTIGATORS_ID")})
+    public Set<NmInvestigatorsEntity> getInvestigators() {
         return investigators;
     }
 
-    public void setInvestigators(Set<ClinicalTrailsInvestigatorsEntity> investigators) {
+    public void setInvestigators(Set<NmInvestigatorsEntity> investigators) {
         this.investigators = investigators;
     }
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "CLINICAL_TRAILS_RECEIPTS", joinColumns = {
             @JoinColumn(name = "CLINICAL_TRAIL_ID")}, inverseJoinColumns = {
-            @JoinColumn(name = "RECEIPT_ID")
-    })
+            @JoinColumn(name = "RECEIPT_ID")})
     public Set<ReceiptsEntity> getReceipts() {
         return receipts;
     }
@@ -279,14 +268,25 @@ public class ClinicalTrialsEntity
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "CLINICAL_TRAILS_PAYMENT_ORDERS", joinColumns = {
             @JoinColumn(name = "CLINICAL_TRAIL_ID")}, inverseJoinColumns = {
-            @JoinColumn(name = "PAYMENT_ORDER_ID")
-    })
+            @JoinColumn(name = "PAYMENT_ORDER_ID")})
     public Set<PaymentOrdersEntity> getPaymentOrders() {
         return paymentOrders;
     }
 
     public void setPaymentOrders(Set<PaymentOrdersEntity> paymentOrders) {
         this.paymentOrders = paymentOrders;
+    }
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(name = "CLINICAL_TRIALS_MEDICAL_INSTITUTIONS", joinColumns = {
+            @JoinColumn(name = "CLINICAL_TRIALS_ID")}, inverseJoinColumns = {
+            @JoinColumn(name = "MEDICAL_INSTITUTIONS_ID")})
+    public Set<NmMedicalInstitutionsEntity> getMedicalInstitutions() {
+        return medicalInstitutions;
+    }
+
+    public void setMedicalInstitutions(Set<NmMedicalInstitutionsEntity> medicalInstitutions) {
+        this.medicalInstitutions = medicalInstitutions;
     }
 
     @Override
@@ -304,7 +304,6 @@ public class ClinicalTrialsEntity
                 Objects.equals(sponsor, that.sponsor) &&
                 Objects.equals(medicament, that.medicament) &&
                 Objects.equals(referenceProduct, that.referenceProduct) &&
-                Objects.equals(medicalInstitution, that.medicalInstitution) &&
                 Objects.equals(trialPopulation, that.trialPopulation) &&
                 Objects.equals(medicamentCommitteeOpinion, that.medicamentCommitteeOpinion) &&
                 Objects.equals(eticCommitteeOpinion, that.eticCommitteeOpinion) &&
@@ -315,12 +314,13 @@ public class ClinicalTrialsEntity
                 Objects.equals(documents, that.documents) &&
                 Objects.equals(investigators, that.investigators) &&
                 Objects.equals(receipts, that.receipts) &&
-                Objects.equals(paymentOrders, that.paymentOrders);
+                Objects.equals(paymentOrders, that.paymentOrders) &&
+                Objects.equals(medicalInstitutions, that.medicalInstitutions);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, treatment, provenance, phase, eudraCtNr, code, title, sponsor, medicament, referenceProduct, medicalInstitution, trialPopulation, medicamentCommitteeOpinion, eticCommitteeOpinion, approvalOrder, pharmacovigilance, openingDeclarationId, status, documents, investigators, receipts, paymentOrders);
+        return Objects.hash(id, treatment, provenance, phase, eudraCtNr, code, title, sponsor, medicament, referenceProduct, trialPopulation, medicamentCommitteeOpinion, eticCommitteeOpinion, approvalOrder, pharmacovigilance, openingDeclarationId, status, documents, investigators, receipts, paymentOrders, medicalInstitutions);
     }
 }

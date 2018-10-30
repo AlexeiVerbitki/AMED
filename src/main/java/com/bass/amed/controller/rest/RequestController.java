@@ -3,6 +3,7 @@ package com.bass.amed.controller.rest;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
+import com.bass.amed.service.GenerateDocNumberService;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -24,6 +27,8 @@ public class RequestController
 {
     private static final Logger logger = LoggerFactory.getLogger(RequestController.class);
 
+    @Autowired
+    private GenerateDocNumberService generateDocNumberService;
     @Autowired
     private RequestRepository requestRepository;
     @Autowired
@@ -36,6 +41,8 @@ public class RequestController
     private PriceRepository priceRepository;
     @Autowired
     private ReferencePriceRepository referencePriceRepository;
+    @Autowired
+    private DocumentTypeRepository documentTypeRepository;
 
     @RequestMapping(value = "/add-medicament-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> saveMedicamentRequest(@RequestBody RegistrationRequestsEntity request) throws CustomException
@@ -43,13 +50,33 @@ public class RequestController
         logger.debug("Add medicament");
         Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(request.getType().getCode());
         request.getType().setId(type.get().getId());
-        if (request.getMedicament().getGroup() != null && !request.getMedicament().getGroup().getCode().isEmpty())
+        if (request.getMedicament().getGroup() != null && request.getMedicament().getGroup().getCode()!=null && !request.getMedicament().getGroup().getCode().isEmpty())
         {
             NmMedicamentGroupEntity nmMedicamentGroupEntity = medicamentGroupRepository.findByCode(request.getMedicament().getGroup().getCode());
             request.getMedicament().setGroup(nmMedicamentGroupEntity);
         }
+        else
+        {
+            request.getMedicament().setGroup(null);
+        }
+        addDDDocument(request);
         requestRepository.save(request);
         return new ResponseEntity<>(request.getId(), HttpStatus.CREATED);
+    }
+
+    private void addDDDocument(@RequestBody RegistrationRequestsEntity request)
+    {
+        if (request.getMedicament() != null && request.getMedicament().getOutputDocuments() == null)
+        {
+            request.getMedicament().setOutputDocuments(new HashSet<>());
+            Optional<NmDocumentTypesEntity> nmMedicamentTypeEntity = documentTypeRepository.findByCategory("DD");
+            OutputDocumentsEntity outputDocumentsEntity = new OutputDocumentsEntity();
+            outputDocumentsEntity.setDocType(nmMedicamentTypeEntity.get());
+            outputDocumentsEntity.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
+            outputDocumentsEntity.setName("Dispozitie de distribuire");
+            outputDocumentsEntity.setNumber(String.valueOf(generateDocNumberService.getDocumentNumber()));
+            request.getMedicament().getOutputDocuments().add(outputDocumentsEntity);
+        }
     }
 
     @RequestMapping(value = "/add-medicament-history", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -62,7 +89,7 @@ public class RequestController
         {
             RegistrationRequestsEntity registrationRequestsEntity = regOptional.get();
             registrationRequestsEntity.setCurrentStep(request.getCurrentStep());
-            if(request.getMedicament()!=null && request.getMedicament().getExperts()!=null)
+            if (request.getMedicament() != null && request.getMedicament().getExperts() != null)
             {
                 registrationRequestsEntity.getMedicament().setExperts(request.getMedicament().getExperts());
             }
@@ -108,16 +135,18 @@ public class RequestController
     }
 
     @PostMapping(value = "/add-clinical-trail-request")
-    public ResponseEntity<Integer>saveClinicalTrailRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException
+    public ResponseEntity<Integer> saveClinicalTrailRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException
     {
         requestRepository.save(requests);
         return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/load-clinical-trail-request")
-    public ResponseEntity<RegistrationRequestsEntity> getClinicalTrailById(@RequestParam(value = "id") Integer id) throws CustomException {
+    public ResponseEntity<RegistrationRequestsEntity> getClinicalTrailById(@RequestParam(value = "id") Integer id) throws CustomException
+    {
         Optional<RegistrationRequestsEntity> regOptional = requestRepository.findById(id);
-        if (!regOptional.isPresent()) {
+        if (!regOptional.isPresent())
+        {
             throw new CustomException("Inregistrarea nu a fost gasita");
         }
         RegistrationRequestsEntity rrE = regOptional.get();

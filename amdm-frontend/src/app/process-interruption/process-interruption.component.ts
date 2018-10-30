@@ -113,31 +113,31 @@ export class ProcessInterruptionComponent implements OnInit {
         }
 
         this.formSubmitted = false;
-        this.generateOrderAndSaveInDB();
+        //this.generateOrderAndSaveInDB();
     }
 
-    generateOrderAndSaveInDB() {
-        this.subscriptions.push(this.documentService.generateOrdinDeInrerupereAInregistrariiMedicamentului(this.generatedDocNrSeq, this.iForm.get('requestNumber').value).subscribe(data => {
-                //register in db
-                var docEntity = {
-                    date: new Date(),
-                    name: 'Ordin de întrerupere a procedurii de înregistrare a medicamentului Nr ' + this.generatedDocNrSeq + '.pdf',
-                    path: data,
-                    docType: 'OI',
-                    requestId: this.iForm.get('id').value,
-                    username: this.authService.getUserName(),
-                    interruptionReason: this.iForm.get('motiv').value,
-                    startDate: this.iForm.get('data').value
-                };
-
-                this.subscriptions.push(this.medicamentService.saveOrderInterrupt(docEntity).subscribe(data => {
-                        this.router.navigate(['dashboard/module']);
-                    }, error => console.log('Ordinul de inrerurpere nu a putut fi salvat in baza de date.'))
-                );
-
-            }, error => console.log('Ordinul de inrerurpere nu a putut fi generat.'))
-        );
-    }
+    // generateOrderAndSaveInDB() {
+    //     this.subscriptions.push(this.documentService.generateOrdinDeInrerupereAInregistrariiMedicamentului(this.generatedDocNrSeq, this.iForm.get('requestNumber').value).subscribe(data => {
+    //             //register in db
+    //             var docEntity = {
+    //                 date: new Date(),
+    //                 name: 'Ordin de întrerupere a procedurii de înregistrare a medicamentului Nr ' + this.generatedDocNrSeq + '.pdf',
+    //                 path: data,
+    //                 docType: 'OI',
+    //                 requestId: this.iForm.get('id').value,
+    //                 username: this.authService.getUserName(),
+    //                 interruptionReason: this.iForm.get('motiv').value,
+    //                 startDate: this.iForm.get('data').value
+    //             };
+    //
+    //             this.subscriptions.push(this.medicamentService.saveOrderInterrupt(docEntity).subscribe(data => {
+    //                     this.router.navigate(['dashboard/module']);
+    //                 }, error => console.log('Ordinul de inrerurpere nu a putut fi salvat in baza de date.'))
+    //             );
+    //
+    //         }, error => console.log('Ordinul de inrerurpere nu a putut fi generat.'))
+    //     );
+    // }
 
     requestNL() {
         this.modalService.data.next({

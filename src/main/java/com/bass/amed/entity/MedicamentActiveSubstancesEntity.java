@@ -24,7 +24,7 @@ public class MedicamentActiveSubstancesEntity
         this.id = id;
     }
 
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE} )
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
     @JoinColumn( name = "active_substance_id" )
     public NmActiveSubstancesEntity getActiveSubstance()
     {
@@ -48,7 +48,7 @@ public class MedicamentActiveSubstancesEntity
         this.quantity = quantity;
     }
 
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE} )
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
     @JoinColumn( name = "units_of_measurement_id" )
     public NmUnitsOfMeasurementEntity getUnitsOfMeasurement()
     {
