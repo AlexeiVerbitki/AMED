@@ -11,7 +11,6 @@ import java.sql.Timestamp;
 	private Double                              dose;
 	private NmUnitsOfMeasurementEntity          unitsQuantityMeasurement;
 	private Integer                             quantity;
-	private Integer                             medType;
 	private Boolean                             approved;
 	private Timestamp                           expirationDate;
 	private Double                              summ;
