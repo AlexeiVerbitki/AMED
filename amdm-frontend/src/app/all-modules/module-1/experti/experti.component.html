@@ -92,7 +92,7 @@
       <tbody>
       <tr *ngFor="let substance of activeSubstancesTable;let i = index">
         <th scope="row">{{ substance.activeSubstance.description }}</th>
-        <td>{{ substance.activeSubstance.code }}</td>
+        <td>{{ substance.activeSubstance.codeAmed }}</td>
         <td>{{ substance.quantity }}</td>
         <td>{{ substance.unitsOfMeasurement.description }}</td>
         <td>{{ substance.activeSubstance.manufacture.description }}</td>
@@ -127,7 +127,7 @@
       </div>
       <div class="col-md-4">
         <div class="md-form">
-          <input id="codMed" mdbInputDirective numberOnly type="text" class="form-control" formControlName="code" [attr.disabled]="true">
+          <input id="codMed" mdbInputDirective numberOnly type="text" class="form-control" formControlName="codeAmed" [attr.disabled]="true">
           <label for="codMed">Codul medicamentului</label>
         </div>
       </div>
@@ -183,7 +183,7 @@
           <h5 class="text-center font-weight-bold">Grupa medicament</h5>
           <hr>
           <div class="container">
-            <mat-radio-group formControlName="code">
+            <mat-radio-group formControlName="codeAmed">
               <div class="row">
                 <div class="col-12">
                   <mat-radio-button name="prop1" value="VIT">Vital</mat-radio-button>

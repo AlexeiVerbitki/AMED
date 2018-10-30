@@ -277,13 +277,13 @@
                 </div>
                 <div class="col-md-3" *ngIf="!rForm.get('CPCDMethod').value" >
                 </div>
-                <div class="col-md-3" *ngIf="rForm.get('CPCDMethod').value && rForm.get('CPCDMethod').value.code === 'email'" >
+                <div class="col-md-3" *ngIf="rForm.get('CPCDMethod').value && rForm.get('CPCDMethod').value.codeAmed === 'email'" >
                     <div class="md-form">
                         <input id="email1" mdbInputDirective type="text" class="form-control" formControlName="CPCDEmail">
                         <label for="email1">Email</label>
                     </div>
                 </div>
-                <div class="col-md-3" *ngIf="rForm.get('CPCDMethod').value && rForm.get('CPCDMethod').value.code === 'phone'" >
+                <div class="col-md-3" *ngIf="rForm.get('CPCDMethod').value && rForm.get('CPCDMethod').value.codeAmed === 'phone'" >
                     <div class="md-form">
                         <input id="telefon1" mdbInputDirective type="text" class="form-control" formControlName="CPCDPhone">
                         <label for="telefon1">Telefon</label>
@@ -320,13 +320,13 @@
                 </div>
                 <div class="col-md-3" *ngIf="!rForm.get('ASPMethod')" >
                 </div>
-                <div class="col-md-3" *ngIf="rForm.get('ASPMethod').value && rForm.get('ASPMethod').value.code === 'email'" >
+                <div class="col-md-3" *ngIf="rForm.get('ASPMethod').value && rForm.get('ASPMethod').value.codeAmed === 'email'" >
                     <div class="md-form">
                         <input id="email" mdbInputDirective type="text" class="form-control" formControlName="ASPEmail">
                         <label for="email">Email</label>
                     </div>
                 </div>
-                <div class="col-md-3" *ngIf="rForm.get('ASPMethod').value && rForm.get('ASPMethod').value.code === 'phone'" >
+                <div class="col-md-3" *ngIf="rForm.get('ASPMethod').value && rForm.get('ASPMethod').value.codeAmed === 'phone'" >
                     <div class="md-form">
                         <input id="telefon" mdbInputDirective type="text" class="form-control" formControlName="ASPPhone">
                         <label for="telefon">Telefon</label>

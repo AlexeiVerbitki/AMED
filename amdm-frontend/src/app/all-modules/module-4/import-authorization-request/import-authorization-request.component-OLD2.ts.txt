@@ -61,7 +61,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
             //TODO
             'type':
                 fb.group({
-                    'code': ['MEDP', Validators.required]
+                    'codeAmed': ['MEDP', Validators.required]
                 }),
 ||||||| .r390
             'compGet': [null, Validators.required],

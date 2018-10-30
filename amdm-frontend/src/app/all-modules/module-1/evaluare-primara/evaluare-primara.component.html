@@ -193,7 +193,7 @@ primar
 			<tbody>
 			<tr *ngFor="let substance of activeSubstancesTable;let i = index">
 				<th scope="row">{{ substance.activeSubstance.description }}</th>
-				<td>{{ substance.activeSubstance.code }}</td>
+				<td>{{ substance.activeSubstance.codeAmed }}</td>
 				<td>{{ substance.quantity }}</td>
 				<td>{{ substance.unitsOfMeasurement.description }}</td>
 				<td>{{ substance.activeSubstance.manufacture.description }}</td>
@@ -249,10 +249,10 @@ primar
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="codMed" mdbInputDirective numberOnly type="text" class="form-control" formControlName="code">
+					<input id="codMed" mdbInputDirective numberOnly type="text" class="form-control" formControlName="codeAmed">
 					<label for="codMed">Codul medicamentului <span class="text-danger">*</span></label>
 				</div>
-				<div *ngIf="formSubmitted && eForm.get('medicament.code').invalid">
+				<div *ngIf="formSubmitted && eForm.get('medicament.codeAmed').invalid">
 					<small class="text-muted"><strong class="text-danger">Codul medicamentului trebuie introdus</strong></small>
 				</div>
 			</div>
@@ -335,7 +335,7 @@ primar
 					<h5 class="text-center font-weight-bold">Grupa medicament</h5>
 					<hr>
 					<div class="container">
-						<mat-radio-group formControlName="code">
+						<mat-radio-group formControlName="codeAmed">
 							<div class="row">
 								<div class="col-12">
 									<mat-radio-button name="prop1" value="VIT">Vital</mat-radio-button>
@@ -350,7 +350,7 @@ primar
 						</mat-radio-group>
 					</div>
 					<br/>
-					<div *ngIf="formSubmitted && eForm.get('medicament.group.code').invalid">
+					<div *ngIf="formSubmitted && eForm.get('medicament.group.codeAmed').invalid">
 						<small class="text-muted"><strong class="text-danger">Grupa medicament trebuie selectata</strong></small>
 					</div>
 				</div>
