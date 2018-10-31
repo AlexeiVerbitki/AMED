@@ -105,7 +105,7 @@ import java.sql.Timestamp;
 	}
 
 	@Basic
-	@Column(name = "expiration_date", nullable = true, length = 11)
+	@Column(name = "expiration_date", nullable = true)
 	public Timestamp getExpirationDate() {
 		return expirationDate;
 	}
@@ -165,7 +165,7 @@ import java.sql.Timestamp;
 	}
 
 	@Basic
-	@Column(name = "registration_date", nullable = true, length = 11)
+	@Column(name = "registration_date", nullable = true)
 	public Timestamp getRegistrationDate() {
 		return registrationDate;
 	}
