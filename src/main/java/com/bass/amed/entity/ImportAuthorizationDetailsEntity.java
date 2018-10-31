@@ -64,5 +64,174 @@ import java.sql.Timestamp;
 		this.pharmaceuticalForm = pharmaceuticalForm;
 	}
 
+	@Basic
+	@Column(name = "dose", nullable = true, length = 11)
+	public Double getDose() {
+		return dose;
+	}
 
+	public void setDose(Double dose) {
+		this.dose = dose;
+	}
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+	@JoinColumn(name = "unit_measurement_id")
+	public NmUnitsOfMeasurementEntity getUnitsQuantityMeasurement() {
+		return unitsQuantityMeasurement;
+	}
+
+	public void setUnitsQuantityMeasurement(NmUnitsOfMeasurementEntity unitsQuantityMeasurement) {
+		this.unitsQuantityMeasurement = unitsQuantityMeasurement;
+	}
+
+	@Basic
+	@Column(name = "quantity", nullable = true, length = 11)
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+
+	@Basic
+	@Column(name = "approved", nullable = true)
+	public Boolean getApproved() {
+		return approved;
+	}
+
+	public void setApproved(Boolean approved) {
+		this.approved = approved;
+	}
+
+	@Basic
+	@Column(name = "expiration_date", nullable = true, length = 11)
+	public Timestamp getExpirationDate() {
+		return expirationDate;
+	}
+
+	public void setExpirationDate(Timestamp expirationDate) {
+		this.expirationDate = expirationDate;
+	}
+
+	@Basic
+	@Column(name = "summ", nullable = true, length = 11)
+	public Double getSumm() {
+		return summ;
+	}
+
+	public void setSumm(Double summ) {
+		this.summ = summ;
+	}
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+	@JoinColumn(name = "international_name_id")
+	public NmInternationalMedicamentNameEntity getInternationalMedicamentName() {
+		return internationalMedicamentName;
+	}
+
+	public void setInternationalMedicamentName(NmInternationalMedicamentNameEntity internationalMedicamentName) {
+		this.internationalMedicamentName = internationalMedicamentName;
+	}
+
+	@Basic
+	@Column(name = "atc_code", nullable = true, length = 11)
+	public String getAtcCode() {
+		return atcCode;
+	}
+
+	public void setAtcCode(String atcCode) {
+		this.atcCode = atcCode;
+	}
+
+	@Basic
+	@Column(name = "returned_amount", nullable = true, length = 11)
+	public Integer getReturnedAmount() {
+		return returnedAmount;
+	}
+
+	public void setReturnedAmount(Integer returnedAmount) {
+		this.returnedAmount = returnedAmount;
+	}
+
+	@Basic
+	@Column(name = "received_amount", nullable = true, length = 11)
+	public Integer getReceivedAmount() {
+		return receivedAmount;
+	}
+
+	public void setReceivedAmount(Integer receivedAmount) {
+		this.receivedAmount = receivedAmount;
+	}
+
+	@Basic
+	@Column(name = "registration_date", nullable = true, length = 11)
+	public Timestamp getRegistrationDate() {
+		return registrationDate;
+	}
+
+	public void setRegistrationDate(Timestamp registrationDate) {
+		this.registrationDate = registrationDate;
+	}
+
+	@Basic
+	@Column(name = "registration_number", nullable = true, length = 11)
+	public Integer getRegistrationNumber() {
+		return registrationNumber;
+	}
+
+	public void setRegistrationNumber(Integer registrationNumber) {
+		this.registrationNumber = registrationNumber;
+	}
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+	@JoinColumn(name = "currency_id")
+	public NmCurrenciesEntity getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(NmCurrenciesEntity currency) {
+		this.currency = currency;
+	}
+
+	@Basic
+	@Column(name = "price", nullable = true, length = 11)
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+	@JoinColumn(name = "import_authorization_id")
+	public ImportAuthorizationEntity getImportAuthorization() {
+		return importAuthorization;
+	}
+
+
+	public void setImportAuthorization(ImportAuthorizationEntity importAuthorization) {
+		this.importAuthorization = importAuthorization;
+	}
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+	@JoinColumn(name = "producer_id")
+	public NmManufacturesEntity getProducer() {
+		return producer;
+	}
+
+	public void setProducer(NmManufacturesEntity producer) {
+		this.producer = producer;
+	}
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+	@JoinColumn(name = "customs_code_id")
+	public NmCustomsCodesEntity getCustomsCode() {
+		return customsCode;
+	}
+
+	public void setCustomsCode(NmCustomsCodesEntity customsCode) {
+		this.customsCode = customsCode;
+	}
 }
