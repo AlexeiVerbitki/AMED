@@ -238,4 +238,63 @@ import java.util.List;
 	public void setImportAuthorizationDetailsEntityList(List<ImportAuthorizationDetailsEntity> importAuthorizationDetailsEntityList) {
 		this.importAuthorizationDetailsEntityList = importAuthorizationDetailsEntityList;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ImportAuthorizationEntity)) return false;
+
+		ImportAuthorizationEntity that = (ImportAuthorizationEntity) o;
+
+		if (id != null ? !id.equals(that.id) : that.id != null) return false;
+		if (applicationRegistrationNumber != null ? !applicationRegistrationNumber.equals(
+				that.applicationRegistrationNumber) : that.applicationRegistrationNumber != null) return false;
+		if (applicationDate != null ? !applicationDate.equals(that.applicationDate) : that.applicationDate != null) return false;
+		if (applicant != null ? !applicant.equals(that.applicant) : that.applicant != null) return false;
+		if (seller != null ? !seller.equals(that.seller) : that.seller != null) return false;
+		if (basisForImport != null ? !basisForImport.equals(that.basisForImport) : that.basisForImport != null) return false;
+		if (importer != null ? !importer.equals(that.importer) : that.importer != null) return false;
+		if (conditionsAndSpecification != null ? !conditionsAndSpecification.equals(that.conditionsAndSpecification) : that.conditionsAndSpecification != null)
+			return false;
+		if (quantity != null ? !quantity.equals(that.quantity) : that.quantity != null) return false;
+		if (price != null ? !price.equals(that.price) : that.price != null) return false;
+		if (currency != null ? !currency.equals(that.currency) : that.currency != null) return false;
+		if (summ != null ? !summ.equals(that.summ) : that.summ != null) return false;
+		if (producer != null ? !producer.equals(that.producer) : that.producer != null) return false;
+		if (customsDeclarationDate != null ? !customsDeclarationDate.equals(that.customsDeclarationDate) : that.customsDeclarationDate != null) return false;
+		if (expirationDate != null ? !expirationDate.equals(that.expirationDate) : that.expirationDate != null) return false;
+		if (customsCode != null ? !customsCode.equals(that.customsCode) : that.customsCode != null) return false;
+		if (customsNumber != null ? !customsNumber.equals(that.customsNumber) : that.customsNumber != null) return false;
+		if (customsTransactionType != null ? !customsTransactionType.equals(that.customsTransactionType) : that.customsTransactionType != null) return false;
+		if (authorizationsNumber != null ? !authorizationsNumber.equals(that.authorizationsNumber) : that.authorizationsNumber != null) return false;
+		if (medType != null ? !medType.equals(that.medType) : that.medType != null) return false;
+		return importAuthorizationDetailsEntityList != null ? importAuthorizationDetailsEntityList.equals(
+				that.importAuthorizationDetailsEntityList) : that.importAuthorizationDetailsEntityList == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = id != null ? id.hashCode() : 0;
+		result = 31 * result + (applicationRegistrationNumber != null ? applicationRegistrationNumber.hashCode() : 0);
+		result = 31 * result + (applicationDate != null ? applicationDate.hashCode() : 0);
+		result = 31 * result + (applicant != null ? applicant.hashCode() : 0);
+		result = 31 * result + (seller != null ? seller.hashCode() : 0);
+		result = 31 * result + (basisForImport != null ? basisForImport.hashCode() : 0);
+		result = 31 * result + (importer != null ? importer.hashCode() : 0);
+		result = 31 * result + (conditionsAndSpecification != null ? conditionsAndSpecification.hashCode() : 0);
+		result = 31 * result + (quantity != null ? quantity.hashCode() : 0);
+		result = 31 * result + (price != null ? price.hashCode() : 0);
+		result = 31 * result + (currency != null ? currency.hashCode() : 0);
+		result = 31 * result + (summ != null ? summ.hashCode() : 0);
+		result = 31 * result + (producer != null ? producer.hashCode() : 0);
+		result = 31 * result + (customsDeclarationDate != null ? customsDeclarationDate.hashCode() : 0);
+		result = 31 * result + (expirationDate != null ? expirationDate.hashCode() : 0);
+		result = 31 * result + (customsCode != null ? customsCode.hashCode() : 0);
+		result = 31 * result + (customsNumber != null ? customsNumber.hashCode() : 0);
+		result = 31 * result + (customsTransactionType != null ? customsTransactionType.hashCode() : 0);
+		result = 31 * result + (authorizationsNumber != null ? authorizationsNumber.hashCode() : 0);
+		result = 31 * result + (medType != null ? medType.hashCode() : 0);
+		result = 31 * result + (importAuthorizationDetailsEntityList != null ? importAuthorizationDetailsEntityList.hashCode() : 0);
+		return result;
+	}
 }
