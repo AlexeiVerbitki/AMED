@@ -229,7 +229,8 @@ import java.util.List;
 		this.medType = medType;
 	}
 
-	@OneToOne
+	@OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+	@JoinColumn(name = "import_authorization_id")
 	public List<ImportAuthorizationDetailsEntity> getImportAuthorizationDetailsEntityList() {
 		return importAuthorizationDetailsEntityList;
 	}
