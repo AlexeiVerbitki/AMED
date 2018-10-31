@@ -180,6 +180,7 @@ public class RequestController
     @PostMapping(value = "/add-import-request")
     public ResponseEntity<Integer> saveImportRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException
     {
+	    LOGGER.debug("add new Import request");
         requestRepository.save(requests);
         return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
     }
