@@ -17,15 +17,19 @@ export class ErrorInterceptor implements HttpInterceptor {
         return next.handle(request)
             .pipe(
                 catchError((error: HttpErrorResponse) => {
+                    console.log('Error from interceptor', error);
                     if (error.status === 401) {
+                        if (this.router.url === '/login') {
+                            return throwError(this.getErrorMessage(error));
+                        }
                         this.authService.logout();
                         // location.reload(true);
                         this.router.navigateByUrl('/login', {preserveQueryParams: true});
-                        return;
+                        return throwError(error.message);
                     }
                     let errMsg = '';
                     if (error.status === 404) {
-                        errMsg = 'No such method on the server'
+                        errMsg = 'No such method on the server';
                     } else if (error.status === 405) {
                         errMsg = 'Http method not allowed !!! (GET,POST,DELETE,UPDATE...)';
                     }
@@ -35,8 +39,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                     } else {  // Server Side Error
                         errMsg = this.getErrorMessage(error); //`Server error Code: ${error.status},  Message: ${error.message}`;
                     }
-                    console.log('Interceptor error: ', error);
-                    this.errorHandlerService.error.next(errMsg);
+                    this.errorHandlerService.showError(errMsg);
                     return throwError(errMsg);
                 })
             )
@@ -47,7 +50,8 @@ export class ErrorInterceptor implements HttpInterceptor {
         if (error.headers.get('X-app-alert') && error.headers.get('X-app-alert').length > 0) {
             errMsg = error.headers.get('X-app-alert');
         } else {
-            errMsg = 'Error message: ' + error.message!!! + '\n Error error: ' + error.error.error;
+            errMsg = 'Erroare interna, apelati administratorul';
+            // errMsg = 'Error message: ' + error.message!!! + '\n Error error: ' + error.error.error;
         }
         return errMsg;
     }

@@ -1,65 +1,118 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
-import {FormBuilder, FormGroup} from '@angular/forms';
-
-export interface TaskTable {
-  id: number;
-  requestNumber: number;
-  username: string;
-  startDate: Date;
-  endDate: Date;
-  step: string;
-  status: string;
-
-}
-
-const ELEMENT_DATA: TaskTable[] = [
-  { id: 1, requestNumber: 32321, username: 'Jora Cardan', startDate: new Date(), endDate: new Date(), step: 'Step 1', status: 'In garaj' },
-  { id: 2, requestNumber: 5, username: 'Vasilisa Prekrasnaya', startDate: new Date(), endDate: new Date(), step: 'Step 2', status: 'In beci' },
-  { id: 3, requestNumber: 1234, username: 'Ghita Boamba', startDate: new Date(), endDate: new Date(), step: 'Step 3', status: 'In podval' },
-  { id: 4, requestNumber: 4, username: 'Vanea Djedai', startDate: new Date(), endDate: new Date(), step: 'Step 4', status: 'In pod' },
-  { id: 5, requestNumber: 69, username: 'Vlad Mutu', startDate: new Date(), endDate: new Date(), step: 'Step 5', status: 'In canalizare' },
-  { id: 6, requestNumber: 898, username: 'Zina Magaz', startDate: new Date(), endDate: new Date(), step: 'Step 6', status: 'In bordei' },
-  { id: 7, requestNumber: 777, username: 'Tolea Krasavcik', startDate: new Date(), endDate: new Date(), step: 'Step 7', status: 'In soba' },
-
-];
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Subscription} from "rxjs";
+import {TaskService} from "../shared/service/task.service";
 
 @Component({
-  selector: 'app-task',
-  templateUrl: './task.component.html',
-  styleUrls: ['./task.component.css']
+    selector: 'app-task',
+    templateUrl: './task.component.html',
+    styleUrls: ['./task.component.css']
 })
-export class TaskComponent implements OnInit {
+export class TaskComponent implements OnInit, OnDestroy {
+    taskForm: FormGroup;
 
-  taskForm: FormGroup;
+    requests: any[];
+    requestTypes: any[];
+    steps: any[];
 
-  displayedColumns: any[] = ['id', 'requestNumber', 'username', 'startDate', 'endDate', 'step', 'status'];
-  dataSource = new MatTableDataSource<TaskTable>(ELEMENT_DATA);
+    displayedColumns: any[] = ['requestNumber','processName','requestType', 'username', 'startDate', 'endDate', 'step'];
+    dataSource = new MatTableDataSource<any>();
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild('taskForm') taskFormElem: ElementRef;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+    private subscriptions: Subscription[] = [];
 
-  constructor(private fb: FormBuilder) {
-    this.taskForm = fb.group({
-      'requestNumber': [null],
-      'stapan': [null],
-      'startDate': [null],
-      'endDate': [null],
-      'step': [null],
-      'status': [null],
-  });
-  }
-  ngOnInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
-
-  applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+    constructor(private fb: FormBuilder, private taskService: TaskService) {
+        this.taskForm = fb.group({
+            'requestNumber': [null, {validators: Validators.required}],
+            'request': [null],
+            'requestType': [null],
+            'assignedPerson': [null],
+            'startDate': [null],
+            'endDate': [null],
+            'step': [null],
+        });
     }
-  }
+
+    ngOnInit() {
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+
+        this.subscriptions.push(this.taskService.getRequestNames().subscribe(data => {
+            this.requests = data;
+        }));
+
+        this.taskForm.get('requestNumber').valueChanges.subscribe(val => {
+            this.disabledElements(val);
+
+        });
+    }
+
+    private disabledElements(val) {
+        if (val) {
+            this.taskForm.get('request').disable();
+            this.taskForm.get('requestType').disable();
+            this.taskForm.get('assignedPerson').disable();
+            this.taskForm.get('startDate').disable();
+            this.taskForm.get('endDate').disable();
+            this.taskForm.get('step').disable();
+        } else {
+            this.taskForm.get('request').enable();
+            this.taskForm.get('requestType').enable();
+            this.taskForm.get('assignedPerson').enable();
+            this.taskForm.get('startDate').enable();
+            this.taskForm.get('endDate').enable();
+            this.taskForm.get('step').enable();
+
+        }
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(s => s.unsubscribe());
+    }
+
+    applyFilter(filterValue: string) {
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+
+        if (this.dataSource.paginator) {
+            this.dataSource.paginator.firstPage();
+        }
+    }
+
+    retrieveRequestTypes() {
+        this.taskForm.get('requestType').setValue(null);
+        this.requestTypes = null;
+        if (!this.taskForm.get('request').value) {
+            return;
+        }
+
+        this.subscriptions.push(this.taskService.getRequestTypes(this.taskForm.get('request').value.id).subscribe(data => {
+            this.requestTypes = data;
+        }));
+    }
+
+    retrieveRequestTypeSteps() {
+
+        this.taskForm.get('step').setValue(null);
+        this.steps = null;
+        if (!this.taskForm.get('requestType').value || this.taskForm.get('requestType').value.id == null) {
+            return;
+        }
+
+        this.subscriptions.push(this.taskService.getRequestTypeSteps(this.taskForm.get('requestType').value.id).subscribe(data => {
+            this.steps = data;
+        }))
+    }
+
+    findTasks() {
+
+        // this.requestNumber.nativeElement.focus();
+        console.log(this.taskFormElem.nativeElement);
+        this.subscriptions.push(this.taskService.getTasksByFilter(this.taskForm.value).subscribe(data => {
+            console.log(data);
+        }))
+    }
 
 }

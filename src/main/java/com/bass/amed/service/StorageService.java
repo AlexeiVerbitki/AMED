@@ -26,7 +26,7 @@ import java.util.Comparator;
 public class StorageService
 {
 
-    private static final Logger logger = LoggerFactory.getLogger(StorageService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StorageService.class);
 
     @Value("${root.location.folder}")
     private String rootFolder;
@@ -58,7 +58,7 @@ public class StorageService
         }
         catch (Exception e)
         {
-            logger.warn(e.getMessage(), e);
+            LOGGER.warn(e.getMessage(), e);
         }
     }
 
@@ -72,7 +72,7 @@ public class StorageService
         }
         catch(IOException e)
         {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
             throw new CustomException(e.getMessage());
         }
 

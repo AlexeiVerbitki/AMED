@@ -5,6 +5,7 @@ import com.bass.amed.dto.ScrUserDTO;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.security.JWTConfigurer;
 import com.bass.amed.security.TokenProvider;
+import com.bass.amed.utils.LdapErrorMappingUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ import org.springframework.security.ldap.LdapUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.directory.DirContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -46,10 +48,10 @@ public class AutheticationJWTController
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<JWTToken> authenticate(@Valid @RequestBody ScrUserDTO scrUserDTO) throws CustomException
+    public ResponseEntity<JWTToken> authenticate(HttpServletRequest request, @Valid @RequestBody ScrUserDTO scrUserDTO) throws CustomException
     {
-
         LOGGER.debug("Try to authenticate user" + scrUserDTO.getUsername());
+        LOGGER.debug("ip address: " + request.getRemoteAddr());
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(scrUserDTO.getUsername(), scrUserDTO.getPassword());
         Authentication authentication;
@@ -62,7 +64,7 @@ public class AutheticationJWTController
         catch (RuntimeException ce)
         {
             LOGGER.error(ce.getMessage(), ce);
-            throw new CustomException(ce.getMessage());
+            throw new CustomException(LdapErrorMappingUtils.getLdapAuthErrorMessage(ce.getMessage()), HttpStatus.UNAUTHORIZED);
         }
 
         String jwt = tokenProvider.createToken(authentication);

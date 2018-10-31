@@ -8,7 +8,7 @@ export class ServerUrlInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (request.url.startsWith('/api')) {
       const url = 'http://localhost:8443';
-      // const url1 = 'http://localhost:8443';
+      // const url1 = 'http://192.168.14.23:8443';
       request = request.clone({
         url: url + request.url
       });

@@ -9,9 +9,10 @@ public class RequestTypesEntity
     private Integer id;
     private String description;
     private String code;
+    private Integer processId;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     public Integer getId()
     {
         return id;
@@ -23,7 +24,7 @@ public class RequestTypesEntity
     }
 
     @Basic
-    @Column(name = "description")
+    @Column(name = "description", nullable = false, length = 100)
     public String getDescription()
     {
         return description;
@@ -69,7 +70,7 @@ public class RequestTypesEntity
     }
 
     @Basic
-    @Column(name = "code")
+    @Column(name = "code", nullable = true, length = 5)
     public String getCode()
     {
         return code;
@@ -78,5 +79,17 @@ public class RequestTypesEntity
     public void setCode(String code)
     {
         this.code = code;
+    }
+
+    @Basic
+    @Column(name = "process_id", nullable = true)
+    public Integer getProcessId()
+    {
+        return processId;
+    }
+
+    public void setProcessId(Integer processId)
+    {
+        this.processId = processId;
     }
 }

@@ -36,9 +36,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                     this.router.navigate(['/dashboard']);
                 },
                 error => {
-                    console.log('Login error  ', this.error);
-                    console.log('Login error  ', error);
-                    this.error = error.error;
+                    this.error = error;
                 }));
     }
 

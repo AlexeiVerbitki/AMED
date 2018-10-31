@@ -1,9 +1,8 @@
-<div class="container z-depth-2 sky">
+<div class="container-fluid z-depth-2 sky">
     <div class="table-width">
       <div class="text-right">
         <mat-form-field class="w-50">
-          <mat-icon matPrefix class="pr-search">search</mat-icon>
-          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter" class="w-50">
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" class="w-50">
         </mat-form-field>
       </div>
       <hr>

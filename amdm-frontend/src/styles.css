@@ -143,6 +143,109 @@ body {
   line-height: 1.42857;
 }
 
+.drop-zone {
+  webkit-box-shadow: 0 5px 11px 0 rgba(0, 0, 0, .18), 0 4px 15px 0 rgba(0, 0, 0, .15)!important;
+  box-shadow: 0 5px 11px 0 rgba(0, 0, 0, .18), 0 4px 15px 0 rgba(0, 0, 0, .15)!important;
+  border: 1px solid rgba(0, 0, 0, .4)!important;
+}
+.body-loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index:9999;
+  width: 100%;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.35);
+}
+.loader {
+  position: absolute;
+  top:50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+  width: 250px;
+}
+
+.loader:before {
+  content: '';
+  display: block;
+  padding-top: 100%;
+}
+
+.circular {
+  animation: rotate 2s linear infinite;
+  height: 100%;
+  transform-origin: center center;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.path {
+  stroke-dasharray: 1, 200;
+  stroke-dashoffset: 0;
+  animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
+  stroke-linecap: round;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35px;
+  }
+  100% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124px;
+  }
+}
+
+@keyframes color {
+  100%, 0% {
+    stroke: #4285F5;
+  }
+  40% {
+    stroke: #EA4436;
+  }
+  66% {
+    stroke: #FBBD06;
+  }
+  80%, 90% {
+    stroke: #34A952;
+  }
+}
+
+@-webkit-keyframes fade-out {
+  from {
+    opacity: 1
+  }
+  to {
+    opacity: 0
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1
+  }
+  to {
+    opacity: 0
+  }
+}
 @media only screen and (min-width: 1439px) {
   .col-xxl-10 {
     -ms-flex: 0 0 83.333333%;
@@ -214,3 +317,7 @@ body {
   }
 }
 
+.mat-form-field.mat-form-field-invalid .mat-form-field-ripple, .mat-form-field.mat-form-field-invalid .mat-form-field-ripple.mat-accent {
+  background-color: #f44336;
+  border: 1px solid #f44336;
+}

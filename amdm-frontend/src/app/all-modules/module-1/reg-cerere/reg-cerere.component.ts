@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
@@ -10,14 +10,17 @@ import {Router} from '@angular/router';
 import {Document} from "../../../models/document";
 import {RequestService} from "../../../shared/service/request.service";
 import {AuthService} from "../../../shared/service/authetication.service";
+import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
 import {ModalService} from "../../../shared/service/modal.service";
+import {LoaderService} from "../../../shared/service/loader.service";
 
 @Component({
     selector: 'app-reg-cerere',
     templateUrl: './reg-cerere.component.html',
     styleUrls: ['./reg-cerere.component.css']
 })
-export class RegCerereComponent implements OnInit {
+
+export class RegCerereComponent implements OnInit, OnDestroy {
 
     documents: Document [] = [];
     companii: any[];
@@ -32,7 +35,9 @@ export class RegCerereComponent implements OnInit {
     constructor(private fb: FormBuilder, public dialog: MatDialog, private router: Router,
                 private requestService: RequestService,
                 private authService: AuthService,
-                private administrationService: AdministrationService) {
+                private administrationService: AdministrationService,
+                private errorHandlerService: ErrorHandlerService,
+                private loadingService: LoaderService) {
         this.rForm = fb.group({
             'data': {disabled: true, value: new Date()},
             'requestNumber': [null],
@@ -71,14 +76,12 @@ export class RegCerereComponent implements OnInit {
         );
     }
 
-    // displayFn(user?: any): string | undefined {
-    //     return user ? user.name : undefined;
-    // }
-
     nextStep() {
-        this.formSubmitted = true;
+        this.loadingService.show();
 
+        this.formSubmitted = true;
         if (this.documents.length === 0 || !this.rForm.valid) {
+            this.loadingService.hide();
             return;
         }
 
@@ -95,9 +98,15 @@ export class RegCerereComponent implements OnInit {
         modelToSubmit.medicament.registrationDate = new Date();
 
         this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
+            this.loadingService.hide();
                 this.router.navigate(['dashboard/module/medicament-registration/evaluate/' + data.body]);
+
             })
         );
     }
 
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(s => s.unsubscribe());
+
+    }
 }

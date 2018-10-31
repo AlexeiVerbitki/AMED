@@ -1,58 +1,60 @@
 <div class="container-fluid sky z-depth-2">
-    <form [formGroup]='rForm'>
-    <h3 class="text-center my-3 font-weight-bold">Inregistrare cerere</h3>
-    <hr>
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="md-form">
-                        <input id="nrCererii" mdbInputDirective type="text" class="form-control"
-                               formControlName="requestNumber" [attr.disabled]="true">
-                        <label for="nrCererii">Nr. cererii</label>
-                    </div>
-                </div>
+	<form [formGroup]='rForm'>
+		<h3 class="text-center my-3 font-weight-bold">Inregistrare cerere</h3>
+		<hr>
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="md-form">
+					<input id="nrCererii" mdbInputDirective type="text" class="form-control"
+					       formControlName="requestNumber" [attr.disabled]="true">
+					<label for="nrCererii">Nr. cererii</label>
+				</div>
+			</div>
 
-                <div class="col-lg-6">
-                    <div class="md-form-modified">
-                        <mat-form-field class="w-100">
-                            <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data">
-                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                            <mat-datepicker touchUi #picker></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                </div>
-            </div>
-    <hr>
-    <app-document [documents]="documents" [nrCerere]="rForm.get('requestNumber').value"></app-document>
-    <div *ngIf="formSubmitted && documents.length==0">
-        <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
-    </div>
-    <hr>
-        <div class="row">
+			<div class="col-lg-6">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data">
+						<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #picker></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+		</div>
+		<hr>
+		<app-document [documents]="documents" [nrCerere]="rForm.get('requestNumber').value"></app-document>
+		<div *ngIf="formSubmitted && documents.length==0">
+			<small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
+		</div>
+		<hr>
+		<div class="row">
 
               <div class="col-md-6" formGroupName="medicament">
                   <div class="md-form-modified">
-                          <ng-select id="company" name="company" [items]="companii"
-                                     bindLabel="name"
-                                     placeholder="Compania solicitant *"
-                                     formControlName="company">
-                          </ng-select>
-                        <div *ngIf="formSubmitted && rForm.get('medicament.company').invalid">
-                          <small class="text-muted"><strong class="text-danger">Compania solicitantă trebuie selectată</strong></small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6" formGroupName="medicament">
-                    <div class="md-form">
-                        <input id="med" mdbInputDirective type="text" class="form-control" formControlName="name">
-                        <label for="med">Medicamentul
-                            <span class="text-danger">*</span>
-                        </label>
-                        <div *ngIf="formSubmitted && rForm.get('medicament.name').invalid">
-                          <small class="text-muted"><strong class="text-danger">Medicamentul trebuie introdus</strong></small>
-                        </div>
-                    </div>
-                </div>
+					<ng-select id="company" name="company" [items]="companii"
+					           bindLabel="name"
+					           placeholder="Compania solicitant"
+					           formControlName="company"
+					           required="true">
+					</ng-select>
+					<div *ngIf="formSubmitted && rForm.get('medicament.company').invalid">
+						<small class="text-muted"><strong class="text-danger">Compania solicitantă trebuie selectată</strong></small>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6" formGroupName="medicament">
+				<div class="md-form">
+					<input id="med" mdbInputDirective type="text" class="form-control" formControlName="name">
+					<label for="med">Medicamentul
+						<span class="text-danger">*</span>
+					</label>
+					<div *ngIf="formSubmitted && rForm.get('medicament.name').invalid">
+						<small class="text-muted"><strong class="text-danger">Medicamentul trebuie introdus</strong></small>
+					</div>
+				</div>
+			</div>
 
+<<<<<<< .mine
             <div class="col-md-12" formGroupName="type">
                 <div class="md-form">
                     <h5 class="text-center font-weight-bold">
@@ -87,5 +89,76 @@
             </button>
         </div>
     </form>
+||||||| .r396
+            <div class="col-md-12" formGroupName="type">
+                <div class="md-form">
+                    <h5 class="text-center font-weight-bold">
+                        Inregistrare
+                    </h5>
+                    <hr>
+                    <mat-radio-group formControlName="code">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12">
+                                    <mat-radio-button name="prop1" value="MEDP">Primară</mat-radio-button>
+                                </div>
+                                <div class="col-12">
+                                    <mat-radio-button name="prop2" value="MEDR">Repetată</mat-radio-button>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-radio-group>
+                </div>
+            </div>
+            <div class="text-center w-100 mt-3">
+                <div class="alert alert-primary">
+                    <span>Nr. de inregistrare a cererii: </span>
+                    <strong>{{generatedDocNrSeq}}</strong>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="text-center">
+            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">
+                Urmatorul pas
+            </button>
+        </div>
+    </form>
+=======
+			<div class="col-md-12" formGroupName="type">
+				<div class="md-form">
+					<h5 class="text-center font-weight-bold">
+						Inregistrare
+					</h5>
+					<hr>
+					<mat-radio-group formControlName="code">
+						<div class="container">
+							<div class="row">
+								<div class="col-12">
+									<mat-radio-button name="prop1" value="MEDP">Primară</mat-radio-button>
+								</div>
+								<div class="col-12">
+									<mat-radio-button name="prop2" value="MEDR">Repetată</mat-radio-button>
+								</div>
+							</div>
+						</div>
+					</mat-radio-group>
+				</div>
+			</div>
+			<div class="text-center w-100 mt-3">
+				<div class="alert alert-primary">
+					<span>Nr. de inregistrare a cererii: </span>
+					<strong>{{generatedDocNrSeq}}</strong>
+				</div>
+			</div>
+		</div>
+		<hr>
+		<div class="text-center">
+			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">
+				Urmatorul pas
+			</button>
+		</div>
+	</form>
+>>>>>>> .r400
 </div>
 

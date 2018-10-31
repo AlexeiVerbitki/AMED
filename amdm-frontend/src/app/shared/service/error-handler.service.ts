@@ -11,6 +11,10 @@ export class ErrorHandlerService implements OnInit, OnDestroy {
         this.error = new BehaviorSubject<string>('');
     }
 
+    showError(errorMessage: string) {
+        this.error.next(errorMessage);
+    }
+
     ngOnDestroy(): void {
     }
 

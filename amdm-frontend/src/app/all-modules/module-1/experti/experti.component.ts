@@ -161,16 +161,16 @@ export class ExpertiComponent implements OnInit {
     viewDoc() {
         this.formSubmitted = true;
         if (!this.expert || !this.expert.chairman) {
-            this.errorHandlerService.error.next('Presedintele comisiei trebuie selectat');
+            this.errorHandlerService.showError('Presedintele comisiei trebuie selectat');
             return;
         } else if (!this.expert.farmacolog) {
-            this.errorHandlerService.error.next('Farmacologul trebuie selectat');
+            this.errorHandlerService.showError('Farmacologul trebuie selectat');
             return;
         } else if (!this.expert.farmacist) {
-            this.errorHandlerService.error.next('Farmacistul trebuie selectat');
+            this.errorHandlerService.showError('Farmacistul trebuie selectat');
             return;
         } else if (!this.expert.medic) {
-            this.errorHandlerService.error.next('Medicul trebuie selectat');
+            this.errorHandlerService.showError('Medicul trebuie selectat');
             return;
         }
         this.formSubmitted = false;

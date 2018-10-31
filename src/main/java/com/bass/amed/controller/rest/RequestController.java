@@ -25,7 +25,7 @@ import java.util.Set;
 @RequestMapping("/api")
 public class RequestController
 {
-    private static final Logger logger = LoggerFactory.getLogger(RequestController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RequestController.class);
 
     @Autowired
     private GenerateDocNumberService generateDocNumberService;
@@ -47,10 +47,10 @@ public class RequestController
     @RequestMapping(value = "/add-medicament-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> saveMedicamentRequest(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
-        logger.debug("Add medicament");
+        LOGGER.debug("Add medicament");
         Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(request.getType().getCode());
         request.getType().setId(type.get().getId());
-        if (request.getMedicament().getGroup() != null && request.getMedicament().getGroup().getCode()!=null && !request.getMedicament().getGroup().getCode().isEmpty())
+        if (request.getMedicament().getGroup() != null && request.getMedicament().getGroup().getCode() != null && !request.getMedicament().getGroup().getCode().isEmpty())
         {
             NmMedicamentGroupEntity nmMedicamentGroupEntity = medicamentGroupRepository.findByCode(request.getMedicament().getGroup().getCode());
             request.getMedicament().setGroup(nmMedicamentGroupEntity);
@@ -82,7 +82,7 @@ public class RequestController
     @RequestMapping(value = "/add-medicament-history", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> saveMedicamentHistory(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
-        logger.debug("Add medicament history");
+        LOGGER.debug("Add medicament history");
 
         Optional<RegistrationRequestsEntity> regOptional = requestRepository.findById(request.getId());
         if (regOptional.isPresent())
@@ -104,7 +104,7 @@ public class RequestController
     @RequestMapping(value = "/add-medicament-payments", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> saveMedicamentPayments(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
-        logger.debug("Add medicament payments");
+        LOGGER.debug("Add medicament payments");
 
         Optional<RegistrationRequestsEntity> regOptional = requestRepository.findById(request.getId());
         if (regOptional.isPresent())
@@ -161,7 +161,7 @@ public class RequestController
     @RequestMapping(value = "/add-prices-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> savePricesRequest(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
-        logger.debug("add new prices request");
+        LOGGER.debug("add new prices request");
         Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(request.getType().getCode());
         request.setType(type.get());
 

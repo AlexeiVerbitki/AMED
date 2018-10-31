@@ -5,7 +5,6 @@ import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
 import com.bass.amed.service.LicenseRegistrationRequestService;
-import com.bass.amed.utils.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -32,7 +32,7 @@ import {ErrorInterceptor} from "./shared/interceptor/error.interceptor";
 import {ErrorResponseHandlerComponent} from "./server-response-handler/error-response-handler.component";
 import {ErrorHandlerService} from "./shared/service/error-handler.service";
 import {AdminDashboardComponent} from "./dashboard/admin-dashboard.component";
-import {DocumentComponent} from "./document/document.component";
+import {GestDocComponent} from "./document-management/gest-doc/gest-doc.component";
 
 const interceptors = [{
     provide: HTTP_INTERCEPTORS,
@@ -68,6 +68,7 @@ const interceptors = [{
         ModuleComponent,
         AdministrationComponent,
         ErrorResponseHandlerComponent,
+        GestDocComponent
     ],
     imports: [
         BrowserAnimationsModule,

@@ -19,7 +19,6 @@ public class RegistrationRequestsEntity
     private String currentStep;
     private RequestTypesEntity type;
     private Integer medicamentAnnihilationId;
-    private Integer medicamentControlCommitteeId;
     private ClinicalTrialsEntity clinicalTrails;
     private LicensesEntity license;
     private Set<RegistrationRequestHistoryEntity> requestHistories = new HashSet<>();
@@ -120,18 +119,6 @@ public class RegistrationRequestsEntity
     public void setMedicamentAnnihilationId(Integer medicamentAnnihilationId)
     {
         this.medicamentAnnihilationId = medicamentAnnihilationId;
-    }
-
-    @Basic
-    @Column(name = "medicament_control_committee_id")
-    public Integer getMedicamentControlCommitteeId()
-    {
-        return medicamentControlCommitteeId;
-    }
-
-    public void setMedicamentControlCommitteeId(Integer medicamentControlCommitteeId)
-    {
-        this.medicamentControlCommitteeId = medicamentControlCommitteeId;
     }
 
     @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE,CascadeType.PERSIST } )
@@ -248,10 +235,6 @@ public class RegistrationRequestsEntity
         {
             return false;
         }
-        if (medicamentControlCommitteeId != null ? !medicamentControlCommitteeId.equals(that.medicamentControlCommitteeId) : that.medicamentControlCommitteeId != null)
-        {
-            return false;
-        }
         if (clinicalTrails != null ? !clinicalTrails.equals(that.clinicalTrails) : that.clinicalTrails != null)
         {
             return false;
@@ -272,7 +255,6 @@ public class RegistrationRequestsEntity
         result = 31 * result + (currentStep != null ? currentStep.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (medicamentAnnihilationId != null ? medicamentAnnihilationId.hashCode() : 0);
-        result = 31 * result + (medicamentControlCommitteeId != null ? medicamentControlCommitteeId.hashCode() : 0);
         result = 31 * result + (clinicalTrails != null ? clinicalTrails.hashCode() : 0);
         result = 31 * result + (requestHistories != null ? requestHistories.hashCode() : 0);
         return result;

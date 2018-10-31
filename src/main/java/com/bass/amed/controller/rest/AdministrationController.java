@@ -24,7 +24,8 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/administration")
-public class AdministrationController {
+public class AdministrationController
+{
     private static final Logger LOGGER = LoggerFactory.getLogger(AdministrationController.class);
 
     @Autowired
@@ -61,12 +62,14 @@ public class AdministrationController {
     MailSender mailSender;
 
     @RequestMapping(value = "/generate-doc-nr")
-    public ResponseEntity<Integer> generateDocNr() {
+    public ResponseEntity<Integer> generateDocNr()
+    {
         return new ResponseEntity<>(generateDocNumberService.getDocumentNumber(), HttpStatus.OK);
     }
 
     @GetMapping("/all-companies")
-    public ResponseEntity<List<NmEconomicAgentsEntity>> retrieveAllEconomicAgents() {
+    public ResponseEntity<List<NmEconomicAgentsEntity>> retrieveAllEconomicAgents()
+    {
         LOGGER.debug("Retrieve all economic agents");
         List<NmEconomicAgentsEntity> allCompanies = economicAgentsRepository.findAll();
 
@@ -74,7 +77,8 @@ public class AdministrationController {
     }
 
     @GetMapping("/all-companies-details")
-    public ResponseEntity<List<GetMinimalCompanyProjection>> retrieveAllEconomicAgentsDetails() {
+    public ResponseEntity<List<GetMinimalCompanyProjection>> retrieveAllEconomicAgentsDetails()
+    {
         LOGGER.debug("Retrieve all economic agents");
         List<GetMinimalCompanyProjection> allCompanies = economicAgentsRepository.getMinimalDetails();
 
@@ -82,25 +86,29 @@ public class AdministrationController {
     }
 
     @RequestMapping("/all-states")
-    public ResponseEntity<List<NmStatesEntity>> retrieveAllStates() {
+    public ResponseEntity<List<NmStatesEntity>> retrieveAllStates()
+    {
         LOGGER.debug("Retrieve all states");
         return new ResponseEntity<>(nmStatesRepository.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping("/all-localities-by-state")
-    public ResponseEntity<Set<NmLocalitiesEntity>> retrieveLocalitiesByState(@RequestParam(value = "stateId") String stateIso) {
+    public ResponseEntity<Set<NmLocalitiesEntity>> retrieveLocalitiesByState(@RequestParam(value = "stateId") String stateIso)
+    {
         LOGGER.debug("Retrieve localities by state" + stateIso);
         return new ResponseEntity<>(nmLocalitiesRepository.findByStateId(Integer.valueOf(stateIso)), HttpStatus.OK);
     }
 
     @RequestMapping("/all-pharamceutical-form-types")
-    public ResponseEntity<List<NmPharmaceuticalFormTypesEntity>> retrieveAllPharmaceuticalFormTypes() {
+    public ResponseEntity<List<NmPharmaceuticalFormTypesEntity>> retrieveAllPharmaceuticalFormTypes()
+    {
         LOGGER.debug("Retrieve all pharmaceutical form types");
         return new ResponseEntity<>(pharmaceuticalFormTypesRepository.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping("/all-pharamceutical-forms")
-    public ResponseEntity<List<NmPharmaceuticalFormsEntity>> retrieveAllPharmaceuticalFormsByTypeId(@RequestParam(value = "typeId") Integer typeId) {
+    public ResponseEntity<List<NmPharmaceuticalFormsEntity>> retrieveAllPharmaceuticalFormsByTypeId(@RequestParam(value = "typeId") Integer typeId)
+    {
         LOGGER.debug("Retrieve all pharmaceutical forms by type");
         NmPharmaceuticalFormTypesEntity typesEntity = new NmPharmaceuticalFormTypesEntity();
         typesEntity.setId(typeId);
@@ -115,7 +123,8 @@ public class AdministrationController {
     }
 
     @RequestMapping("/all-active-substances")
-    public ResponseEntity<List<NmActiveSubstancesEntity>> retrieveAllActiveSubstances() {
+    public ResponseEntity<List<NmActiveSubstancesEntity>> retrieveAllActiveSubstances()
+    {
         LOGGER.debug("Retrieve all active substances");
         return new ResponseEntity<>(activeSubstancesRepository.findAll(), HttpStatus.OK);
     }
@@ -128,7 +137,8 @@ public class AdministrationController {
     }
 
     @RequestMapping(value = "/generate-receipt-nr")
-    public ResponseEntity<Integer> generateReceiptNr() {
+    public ResponseEntity<Integer> generateReceiptNr()
+    {
         return new ResponseEntity<>(generateReceiptNumberService.getReceiptNr(), HttpStatus.OK);
     }
 

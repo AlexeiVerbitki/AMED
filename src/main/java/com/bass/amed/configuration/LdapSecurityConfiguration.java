@@ -51,7 +51,7 @@ public class LdapSecurityConfiguration extends WebSecurityConfigurerAdapter
 
     @Override
     public void configure(WebSecurity web)
-    {//antMatchers("/api/authenticate").and().removeConfigurer(JWTFilter.class).
+    {
         web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**").antMatchers("/app/**/*.{js,html}").antMatchers("/api/authenticate");
     }
 
@@ -66,8 +66,6 @@ public class LdapSecurityConfiguration extends WebSecurityConfigurerAdapter
                 .and().frameOptions().sameOrigin().httpStrictTransportSecurity().disable()
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                //                .and().addFilterBefore(new CustomHeaderFilter(), JWTFilter.class)
-                //                .authorizeRequests().antMatchers("/").permitAll()
                 .and().authorizeRequests()
                 //                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/authenticate").permitAll()
@@ -75,7 +73,7 @@ public class LdapSecurityConfiguration extends WebSecurityConfigurerAdapter
                 //.anyRequest().authenticated()
                 .antMatchers("/api/**")
                 .permitAll()
-//                .hasAnyRole("TEST")
+                //                .hasAnyRole("TEST")
                 .and().apply(securityConfigurerAdapter());
         //.hasAnyAuthority("ADMIN");
         //                .antMatchers("/actuator/**").hasAnyAuthority("ADMIN")

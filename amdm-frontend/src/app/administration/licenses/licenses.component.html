@@ -1,9 +1,8 @@
-<div class="container z-depth-2 sky">
+<div class="container-fluid z-depth-2 sky">
     <div class="table-width">
       <div class="text-right">
         <mat-form-field class="w-50">
-          <mat-icon matPrefix class="pr-search">search</mat-icon>
-          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter" class="w-50">
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" class="w-50">
         </mat-form-field>
       </div>
       <hr>
@@ -88,8 +87,8 @@
           </div>
   
           <div class="md-form mb-5">
-            <input id="serial_nr1" type="number" class="form-control" mdbInputDirective [formControl]="seriaNrEdit">
-            <label for="serial_nr1"  data-error="wrong" data-success="right">Seria licentei</label>
+            <input id="seria_nr" type="number" class="form-control" mdbInputDirective [formControl]="seriaNrEdit">
+            <label for="serial_nr"  data-error="wrong" data-success="right">Seria licentei</label>
           </div>
   
           <div class="md-form mb-5">
@@ -132,7 +131,7 @@
   </div>
   
   
-  <div mdbModal #add="mdbModal" class="modal fade top" id="frameModalTop1" tabindex="-1" role="dialog" aria-labelledby="addLabel"
+  <div mdbModal #add="mdbModal" class="modal fade top" id="frameModalTop" tabindex="-1" role="dialog" aria-labelledby="addLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-notify modal-success" role="document">
       <!--Content-->
@@ -150,18 +149,18 @@
         <div class="modal-body">
   
             <div class="md-form mb-5">
-              <input id="object_address1" type="text" class="form-control" mdbInputDirective [formControl]="objectAddressAdd">
-              <label for="object_address1"  data-error="wrong" data-success="right">Adresa obiectului licentierii</label>
+              <input id="object_address" type="text" class="form-control" mdbInputDirective [formControl]="objectAddressAdd">
+              <label for="object_address"  data-error="wrong" data-success="right">Adresa obiectului licentierii</label>
             </div>
     
             <div class="md-form mb-5">
-              <input id="seria_nr1" type="number" class="form-control" mdbInputDirective [formControl]="seriaNrAdd">
-              <label for="seria_nr1"  data-error="wrong" data-success="right">Seria licentei</label>
+              <input id="seria_nr" type="number" class="form-control" mdbInputDirective [formControl]="seriaNrAdd">
+              <label for="seria_nr"  data-error="wrong" data-success="right">Seria licentei</label>
             </div>
     
             <div class="md-form mb-5">
-              <input id="nr1" type="number" class="form-control" mdbInputDirective [formControl]="nrAdd">
-              <label for="nr1"  data-error="wrong" data-success="right">Nr.</label>
+              <input id="nr" type="number" class="form-control" mdbInputDirective [formControl]="nrAdd">
+              <label for="nr"  data-error="wrong" data-success="right">Nr.</label>
             </div>
     
             <div class="md-form mb-5">
@@ -181,8 +180,8 @@
               </div>
     
             <div class="md-form mb-5">
-              <input id="cessation_reason_id1" type="number" class="form-control" mdbInputDirective [formControl]="cessationReasonIdAdd">
-              <label for="cessation_reason_id1"  data-error="wrong" data-success="right">Cessation Reason ID</label>
+              <input id="cessation_reason_id" type="number" class="form-control" mdbInputDirective [formControl]="cessationReasonIdAdd">
+              <label for="cessation_reason_id"  data-error="wrong" data-success="right">Cessation Reason ID</label>
             </div>
   
     

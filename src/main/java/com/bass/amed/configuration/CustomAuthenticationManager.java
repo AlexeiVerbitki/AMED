@@ -3,8 +3,6 @@ package com.bass.amed.configuration;
 import com.bass.amed.entity.ScrAuthorityEntity;
 import com.bass.amed.entity.ScrRoleEntity;
 import com.bass.amed.entity.ScrUserEntity;
-import com.bass.amed.repository.ScrAuthorityRepository;
-import com.bass.amed.repository.ScrRoleRepository;
 import com.bass.amed.repository.SrcUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,18 +36,14 @@ public class CustomAuthenticationManager implements AuthenticationManager
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomAuthenticationManager.class);
     private final SrcUserRepository srcUserRepository;
-    private final ScrRoleRepository scrRoleRepository;
-    private final ScrAuthorityRepository scrAuthorityRepository;
     private final LdapContextSource ldapContextSource;
     LdapAuthenticationProvider provider = null;
 
 
-    public CustomAuthenticationManager(SrcUserRepository srcUserRepository, LdapContextSource ldapContextSource, ScrRoleRepository scrRoleRepository, ScrAuthorityRepository scrAuthorityRepository)
+    public CustomAuthenticationManager(SrcUserRepository srcUserRepository, LdapContextSource ldapContextSource)
     {
         this.srcUserRepository = srcUserRepository;
         this.ldapContextSource = ldapContextSource;
-        this.scrRoleRepository = scrRoleRepository;
-        this.scrAuthorityRepository = scrAuthorityRepository;
     }
 
     @Override
@@ -100,14 +94,9 @@ public class CustomAuthenticationManager implements AuthenticationManager
                     throw new UsernameNotFoundException("Nu s-a gasit nici un role p/u utilizatorul: " + username);
                 }
 
-/*
-                ScrRoleEntity scrRoleEntity =
-                        scrRoleRepository.findById(user.getSrcRole().getId()).orElseThrow(() -> new UsernameNotFoundException("Nu s-a gasit nici un role p/u utilizatorul: " + username));
-*/
-
                 if (srcRole.getAuthorities().isEmpty())
                 {
-                    throw new UsernameNotFoundException("Nu aveti autoritati pentru rolu " + srcRole.getDescription());
+                    throw new UsernameNotFoundException("Rolul: " + srcRole.getDescription() + ",  nu aveti autoritati");
                 }
 
                 LdapUserDetailsImpl.Essence essence = new LdapUserDetailsImpl.Essence();

@@ -34,3 +34,8 @@ table {
     margin-top    : 10px;
     margin-bottom : 1.5rem;
 }
+
+.btn-large {
+    padding-left: 75px !important;
+    padding-right: 75px !important;
+}
