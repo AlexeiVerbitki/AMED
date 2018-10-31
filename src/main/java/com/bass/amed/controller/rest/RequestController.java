@@ -176,4 +176,23 @@ public class RequestController
 
         return new ResponseEntity<>(request.getId(), HttpStatus.CREATED);
     }
+
+    @PostMapping(value = "/add-import-request")
+    public ResponseEntity<Integer> saveImportRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException
+    {
+        requestRepository.save(requests);
+        return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/load-import-request", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RegistrationRequestsEntity> getImportById(@RequestParam(value = "id") Integer id) throws CustomException
+    {
+        Optional<RegistrationRequestsEntity> regOptional = requestRepository.findById(id);
+        if (regOptional.isPresent())
+        {
+            return new ResponseEntity<>(regOptional.get(), HttpStatus.OK);
+        }
+        throw new CustomException("Import request was not found");
+    }
+
 }
