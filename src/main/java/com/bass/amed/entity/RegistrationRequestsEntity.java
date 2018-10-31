@@ -9,20 +9,21 @@ import java.util.Set;
 @Table(name = "registration_requests", schema = "amed", catalog = "")
 public class RegistrationRequestsEntity
 {
-    private Integer id;
-    private String requestNumber;
-    private Timestamp startDate;
-    private Timestamp endDate;
-    private MedicamentEntity medicament;
-    private NmEconomicAgentsEntity company;
-    private Integer importId;
-    private String currentStep;
-    private RequestTypesEntity type;
-    private Integer medicamentAnnihilationId;
-    private ClinicalTrialsEntity clinicalTrails;
-    private LicensesEntity license;
+    private Integer                               id;
+    private String                                requestNumber;
+    private Timestamp                             startDate;
+    private Timestamp                             endDate;
+    private MedicamentEntity                      medicament;
+    private NmEconomicAgentsEntity                company;
+    private ImportAuthorizationEntity             importAuthorizationEntity;
+    private String                                currentStep;
+    private RequestTypesEntity                    type;
+    private Integer                               medicamentAnnihilationId;
+    private ClinicalTrialsEntity                  clinicalTrails;
+    private LicensesEntity                        license;
     private Set<RegistrationRequestHistoryEntity> requestHistories = new HashSet<>();
-    private String currentStepLink;
+    private String                                currentStepLink;
+
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
@@ -87,14 +88,14 @@ public class RegistrationRequestsEntity
 
     @Basic
     @Column(name = "import_id")
-    public Integer getImportId()
+    public ImportAuthorizationEntity getImportAuthorizationEntity()
     {
-        return importId;
+        return importAuthorizationEntity;
     }
 
-    public void setImportId(Integer importId)
+    public void setImportAuthorizationEntity(ImportAuthorizationEntity importAuthorizationEntity)
     {
-        this.importId = importId;
+        this.importAuthorizationEntity = importAuthorizationEntity;
     }
 
     @Basic
@@ -219,7 +220,7 @@ public class RegistrationRequestsEntity
         {
             return false;
         }
-        if (importId != null ? !importId.equals(that.importId) : that.importId != null)
+        if (importAuthorizationEntity != null ? !importAuthorizationEntity.equals(that.importAuthorizationEntity) : that.importAuthorizationEntity != null)
         {
             return false;
         }
@@ -251,7 +252,7 @@ public class RegistrationRequestsEntity
         result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
         result = 31 * result + (medicament != null ? medicament.hashCode() : 0);
         result = 31 * result + (company != null ? company.hashCode() : 0);
-        result = 31 * result + (importId != null ? importId.hashCode() : 0);
+        result = 31 * result + (importAuthorizationEntity != null ? importAuthorizationEntity.hashCode() : 0);
         result = 31 * result + (currentStep != null ? currentStep.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (medicamentAnnihilationId != null ? medicamentAnnihilationId.hashCode() : 0);
