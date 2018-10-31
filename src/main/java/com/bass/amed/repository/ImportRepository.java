@@ -11,7 +11,13 @@ import java.util.List;
 public interface ImportRepository extends JpaRepository<ImportAuthorizationEntity, Integer> {
 
     @Query(value = "SELECT * FROM import_authorization m WHERE application_registration_number = ?1", nativeQuery = true)
-    List<ImportAuthorizationEntity> getImportByRegistrationNumber(int registrationNumber);
+    List<ImportAuthorizationEntity> getImportByRegistrationNumber(String registrationNumber);
+
+    @Query(value = "SELECT * FROM import_authorization m WHERE authorization_number = ?1", nativeQuery = true)
+    List<ImportAuthorizationEntity> getImportByAuthoriztionNumber(String authorizationNUmber);
+
+    @Query(value = "SELECT * FROM import_authorization m WHERE id = ?1", nativeQuery = true)
+    List<ImportAuthorizationEntity> getImportById(int id);
 
 
 //    List<MedicamentEntity> findByEconomic(int companyId);
