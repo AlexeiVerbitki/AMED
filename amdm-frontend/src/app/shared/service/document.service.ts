@@ -41,10 +41,18 @@ export class DocumentService {
             });
     }
 
-    viewMedicamentAuthorizationOrder(): Observable<any> {
+    viewMedicamentAuthorizationOrder(docNr : any): Observable<any> {
         return this.http.get('/api/documents/view-medicament-authorization-order', {
             params: {
+                nrDocument : docNr
+            }, responseType: 'blob'
+        });
+    }
 
+    viewMedicamentAuthorizationCertificate(docNr : any): Observable<any> {
+        return this.http.get('/api/documents/view-medicament-authorization-certificate', {
+            params: {
+                nrDocument : docNr
             }, responseType: 'blob'
         });
     }

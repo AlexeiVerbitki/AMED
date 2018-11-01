@@ -1,12 +1,8 @@
-<p>
-    a-analiza works!
-</p>
-
 <div class="container-fluid sky z-depth-2">
     <h3 class="text-center my-3 font-weight-bold">Analiza dosarului</h3>
     <hr>
 
-    <form [formGroup]='analyzeClinicalTrailForm' (ngSubmit)="onSubmit()" #f="ngForm">
+    <form [formGroup]='analyzeClinicalTrailForm' #f="ngForm">
         <div class="row">
             <div class="col-md-4">
                 <div class="md-form">
@@ -36,44 +32,84 @@
         </div>
         <hr>
 
-        <app-document [documents]="docs" [isDisabled]="isWaitingStep"
-                      [nrCerere]="analyzeClinicalTrailForm.get('requestNumber').value"></app-document>
-        <hr>
-
         <mat-radio-group>
             <div class="container">
                 <div class="row">
-                    <mat-radio-group class="radio-btn-wrapper"
-                                     value={{analyzeClinicalTrailForm.getRawValue().typeCode}} [disabled]="true">
-                        <div class="col-md-12">
+
+                    <div class="offset-4"></div>
+                    <div class="col-4">
+                        <mat-radio-group class="radio-btn-wrapper"
+                                         value={{analyzeClinicalTrailForm.getRawValue().typeCode}} [disabled]="true">
                             <mat-radio-button name="prop1" value="CLAP">Aprobarea Studiilor Clinice la medicamente
                             </mat-radio-button>
-                        </div>
-                        <div class="col-md-12">
-                            <mat-radio-button name="prop2" value="CLPSC">Aprobarea amendamentelor la Protocoalele
-                                Studiilor Clinice la medicamente
-                            </mat-radio-button>
-                        </div>
-                        <div class="col-md-12">
-                            <mat-radio-button name="prop3" value="CLNP">Înregistrarea Notificărilor privind Protocolul
-                                studiului clinic cu medicamente
-                            </mat-radio-button>
-                        </div>
-                        <div class="col-md-12">
-                            <mat-radio-button name="prop4" value="CLISP">Înregistrarea informației privind siguranța
-                                produsului de investigație clinică
-                            </mat-radio-button>
-                        </div>
-                    </mat-radio-group>
+                        </mat-radio-group>
+                    </div>
+                    <div class="offset-4"></div>
                 </div>
             </div>
         </mat-radio-group>
         <hr>
 
+        <app-document [documents]="docs" [isDisabled]="isWaitingStep.value"
+                      [nrCerere]="analyzeClinicalTrailForm.get('requestNumber').value"></app-document>
+        <hr>
+
+        <h5 class="text-center font-weight-bold">Documente de iesire</h5>
+        <hr>
+        <div class="position-button">
+            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="requestAdditionalData()">Solicitare date aditionale</button>
+        </div>
+        <table class="table table-widths-lg text-center">
+            <thead class="black white-text">
+            <tr>
+                <th scope="col">Denumirea</th>
+                <th scope="col">Numar</th>
+                <th scope="col">Status document</th>
+                <th scope="col">Status raspuns</th>
+                <th>Actiuni</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let doc of outDocuments">
+                <th scope="row">{{ doc.name }}</th>
+                <th scope="row">{{ doc.number }}</th>
+                <th scope="row">{{ doc.status }}</th>
+                <th scope="row"><mat-checkbox *ngIf="doc.docType.category=='RA'" #checkBoxResponse [checked]="doc.responseReceived" (change)="checkResponseReceived(doc,checkBoxResponse)">Raspuns primit</mat-checkbox></th>
+                <td>
+                    <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(doc)">Vizualizare</button>
+                    <button *ngIf="doc.status=='Nu este atasat' && doc.responseReceived==false && (doc.docType.category=='RA')" class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(doc)">Stergere</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <hr>
+
+        <!--<div class="row">-->
+            <!--<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect-->
+                    <!--(click)="requestAdditionalData()">Solicitare date aditionale-->
+            <!--</button>-->
+        <!--</div>-->
+        <!--<div class="row">-->
+            <!--<table class="table table-widths text-center">-->
+                <!--<thead class="black white-text">-->
+                <!--<tr>-->
+                    <!--<th class="w-25" scope="col">Nr. scrisoare</th>-->
+                    <!--<th class="w-25" scope="col">Data creare</th>-->
+                    <!--<th class="w-25" scope="col">Titlu</th>-->
+                    <!--<th class="w-25" scope="col">E-mail</th>-->
+                <!--</tr>-->
+                <!--</thead>-->
+                <!--<tbody>-->
+                <!--</tbody>-->
+            <!--</table>-->
+        <!--</div>-->
+        <!--<hr>-->
+
         <div formGroupName="clinicalTrails">
             <div class="col-md-12">
                 <div class="md-form">
-                    <textarea type="text" id="titluStud" class="md-textarea form-control" mdbInputDirective rows="1" formControlName="title" [attr.disabled]="isWaitingStep ? '' : null"></textarea>
+                    <textarea type="text" id="titluStud" class="md-textarea form-control" mdbInputDirective rows="1"
+                              formControlName="title"></textarea>
                     <label for="titluStud">Titlul studiului</label>
                 </div>
             </div>
@@ -86,14 +122,18 @@
                     <div class="md-form">
                         <div class="container">
                             <div class="col-md-12">
-                                <mat-radio-group class="adio-btn-wrapper" [value]="analyzeClinicalTrailForm.get('clinicalTrails').value.treatment.id" (change)="onTreatmentChange($event)" [disabled]="isWaitingStep">
+                                <mat-radio-group class="adio-btn-wrapper"
+                                                 [value]="analyzeClinicalTrailForm.get('clinicalTrails').value.treatment.id"
+                                                 (change)="onTreatmentChange($event)" [disabled]="isWaitingStep.value">
                                     <div class="row">
                                         <div class="col-12">
                                             <h5 class="text-center font-weight-bold">Tratament</h5>
                                             <hr>
                                         </div>
                                         <div class="col-12">
-                                            <mat-radio-button class="col-12" *ngFor="let treatment of treatmentList" [value]="treatment.id" >{{treatment.description}}</mat-radio-button>
+                                            <mat-radio-button class="col-12" *ngFor="let treatment of treatmentList"
+                                                              [value]="treatment.id">{{treatment.description}}
+                                            </mat-radio-button>
                                         </div>
                                     </div>
                                 </mat-radio-group>
@@ -106,14 +146,18 @@
                     <div class="md-form">
                         <div class="container">
                             <div class="col-md-12">
-                                <mat-radio-group class="adio-btn-wrapper" [value]="analyzeClinicalTrailForm.get('clinicalTrails').value.provenance.id" (change)="onProvenanceChange($event)" [disabled]="isWaitingStep">
+                                <mat-radio-group class="adio-btn-wrapper"
+                                                 [value]="analyzeClinicalTrailForm.get('clinicalTrails').value.provenance.id"
+                                                 (change)="onProvenanceChange($event)" [disabled]="isWaitingStep.value">
                                     <div class="row">
                                         <div class="col-12">
                                             <h5 class="text-center font-weight-bold">Tratament</h5>
                                             <hr>
                                         </div>
                                         <div class="col-12">
-                                            <mat-radio-button class="col-12" *ngFor="let provenance of provenanceList" [value]="provenance.id">{{provenance.description}}</mat-radio-button>
+                                            <mat-radio-button class="col-12" *ngFor="let provenance of provenanceList"
+                                                              [value]="provenance.id">{{provenance.description}}
+                                            </mat-radio-button>
                                         </div>
                                     </div>
                                 </mat-radio-group>
@@ -127,19 +171,22 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="md-form">
-                        <input id="sponsoStudClinic" mdbInputDirective type="text" class="form-control" formControlName="sponsor" [attr.disabled]="isWaitingStep ? '' : null">
+                        <input id="sponsoStudClinic" mdbInputDirective type="text" class="form-control"
+                               formControlName="sponsor">
                         <label for="sponsoStudClinic">Sponsorul Studiului clinic</label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="md-form">
-                        <input id="fazaStudClinic" mdbInputDirective type="text" class="form-control" formControlName="phase" [attr.disabled]="isWaitingStep ? '' : null">
+                        <input id="fazaStudClinic" mdbInputDirective type="text" class="form-control"
+                               formControlName="phase">
                         <label for="fazaStudClinic">Faza Studiului clinic</label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="md-form">
-                        <input id="numEudraCT" mdbInputDirective type="text" class="form-control" formControlName="eudraCtNr" [attr.disabled]="isWaitingStep ? '' : null">
+                        <input id="numEudraCT" mdbInputDirective type="text" class="form-control"
+                               formControlName="eudraCtNr">
                         <label for="numEudraCT">Numărul Eudra CT nr.</label>
                     </div>
                 </div>
@@ -148,22 +195,65 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="md-form">
-                        <input id="codStud" mdbInputDirective type="text" class="form-control" formControlName="codeAmed" [attr.disabled]="isWaitingStep ? '' : null">
+                        <input id="codStud" mdbInputDirective type="text" class="form-control" formControlName="code">
                         <label for="codStud">Codul studiului</label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="md-form">
-                        <input id="institutiaMedLocDesStudClinic" mdbInputDirective type="text" class="form-control" formControlName="medicalInstitution" [attr.disabled]="isWaitingStep ? '' : null">
-                        <label for="institutiaMedLocDesStudClinic">Instituţia medicală / Locul desfăşurării studiului clinic</label>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="md-form">
-                        <input id="popStudClinicNumPacienti" mdbInputDirective type="number" class="form-control" formControlName="trialPopulation" [attr.disabled]="isWaitingStep ? '' : null">
+                        <input id="popStudClinicNumPacienti" mdbInputDirective type="number" class="form-control"
+                               formControlName="trialPopulation">
                         <label for="popStudClinicNumPacienti">Populația studiului clinic / Numărul pacienţilor</label>
                     </div>
                 </div>
+            </div>
+            <hr>
+
+            <h5 class="text-center font-weight-bold">Instituţii medicale / Locul desfăşurării studiului</h5>
+            <hr>
+            <div class="row">
+                <div class="col-10">
+                    <div class="md-form-modified" [formGroup]="addMediacalInstitutionForm">
+                        <ng-select id="allMediacalInstitutions" name="allMediacalInstitutions" [items]="allMediacalInstitutionsList"
+                                   bindLabel="name"
+                                   placeholder="Instituţia medicala"
+                                   formControlName="medicalInstitution"
+                                   required="true">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="md-form-modified mt-3">
+                        <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
+                                mdbWavesEffect (click)="addMedicalInstitution()">Adaugare
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div formGroupName="medicalInstitutions">
+                <table class="table table-widths text-center">
+                    <thead class="black white-text">
+                    <tr>
+                        <th class="w-25" scope="col">Codul IMS</th>
+                        <th class="w-25" scope="col">Denumire</th>
+                        <th class="w-25" scope="col">Adresa</th>
+                        <th class="w-25" scope="col">Actiuni</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let institution of mediacalInstitutionsList">
+                        <td>{{ institution.codIms}}</td>
+                        <td>{{ institution.name }}</td>
+                        <td> {{ institution.address }}</td>
+                        <td>
+                            <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                    (click)="deleteMedicalInstitution(institution)" mdbWavesEffect>Delete
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
             <hr>
 
@@ -173,7 +263,8 @@
                     <div class="col-2">
                         <div class="md-form-modified">
                             <mat-form-field>
-                                <input type="text" matInput [matAutocomplete]="auto" placeholder="Nume medicament" formControlName="searchField" >
+                                <input type="text" matInput [matAutocomplete]="auto" placeholder="Nume medicament"
+                                       formControlName="searchField">
                             </mat-form-field>
                             <mat-autocomplete #auto="matAutocomplete">
                                 <mat-option (onSelectionChange)="onMedicamentsSearchSelect(option)"
@@ -284,34 +375,26 @@
 
             <h5 class="text-center font-weight-bold">Lista de investigatori</h5>
             <hr>
-            <div [formGroup]="addInvestigatorForm" class="row">
-                <div class="col-md-3">
-                    <div class="md-form">
-                        <input id="name" mdbInputDirective type="text" class="form-control" formControlName="firstName" required [attr.disabled]="isWaitingStep ? '' : null">
-                        <label for="name">Nume<span class="text-danger">*</span></label>
+            <div class="row">
+                <div class="col-10">
+                    <div class="md-form-modified" [formGroup]="addInvestigatorForm">
+                        <ng-select id="allInvestigators" name="allInvestigators" [items]="allInvestigatorsList"
+                                   bindLabel="description"
+                                   placeholder="Investigator"
+                                   formControlName="investigator"
+                                   required="true">
+                        </ng-select>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="md-form">
-                        <input id="surname" mdbInputDirective type="text" class="form-control" formControlName="lastName" required [attr.disabled]="isWaitingStep ? '' : null">
-                        <label for="surname">Prenume<span class="text-danger">*</span></label>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="md-form">
-                        <input id="title" mdbInputDirective type="text" class="form-control" formControlName="title" required [attr.disabled]="isWaitingStep ? '' : null">
-                        <label for="title">Titlu <span class="text-danger">*</span></label>
-                    </div>
-                </div>
-                <div class="offset-1 col-md-2">
-                    <div class="md-form">
-                        <div class="position-button">
-                            <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="addInvestigator()" [attr.disabled]="isWaitingStep ? '' : null">Adaugare
-                            </button>
-                        </div>
+                <div class="col-2">
+                    <div class="md-form-modified mt-3">
+                        <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
+                                mdbWavesEffect (click)="addInvestigator()">Adaugare
+                        </button>
                     </div>
                 </div>
             </div>
+            <hr>
             <div formGroupName="investigators">
                 <table class="table table-widths text-center">
                     <thead class="black white-text">
@@ -328,7 +411,8 @@
                         <td>{{ investigator.lastName }}</td>
                         <td> {{ investigator.title }}</td>
                         <td>
-                            <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="deleteInvestigator(investigator)" mdbWavesEffect [attr.disabled]="isWaitingStep ? '' : null">Delete
+                            <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                    (click)="deleteInvestigator(investigator)" mdbWavesEffect>Delete
                             </button>
                         </td>
                     </tr>
@@ -337,12 +421,20 @@
             </div>
             <hr>
 
-            <app-payment [receipts]="receiptsList" [paymentOrders]="paymentOrdersList" [isDisabled]="isWaitingStep" (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
+            <app-payment [receipts]="receiptsList" [paymentOrders]="paymentOrdersList"
+                         [isDisabled]="isWaitingStep.value"
+                         (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
 
 
-            <button type="button" (click)="disableEnableForm()" mdbWavesEffect>Disable/Enable form</button>
-
+            <button type="button" (click)="disableEnableForm()" mdbWavesEffect hidden="true">Disable/Enable form</button>
         </div>
 
     </form>
+
+    <div class="text-center">
+        <button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>
+        <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="onSubmit()" [disabled]=this.disabledState>Urmatorul pas</button>
+        <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>
+    </div>
+
 </div>

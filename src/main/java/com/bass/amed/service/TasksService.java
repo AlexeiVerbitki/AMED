@@ -1,7 +1,7 @@
 package com.bass.amed.service;
 
 import com.bass.amed.dto.TasksDTO;
-import com.bass.amed.projection.TaskProjection;
+import com.bass.amed.projection.TaskDetailsProjectionDTO;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,48 +11,47 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
-import java.util.ArrayList;
+import java.text.ParseException;
 import java.util.List;
 
 @Service
 public class TasksService
 {
-    private final static String TASK_QUERY = "SELECT RR.ID,\n" +
-            "       RR.REQUEST_NUMBER  as requestNumber,\n" +
-            "       RR.START_DATE      as startDate,\n" +
-            "       RR.END_DATE        as endDate,\n" +
-            "       PN.DESCRIPTION     as processName,\n" +
-            "       RT.DESCRIPTION     as requestType,\n" +
-            "       RRS.DESCRIPTION    as step,\n" +
-            "       RRS.NAVIGATION_URL as navigationUrl,\n" +
-            "       RRH.USERNAME       as username\n" +
-            "FROM REGISTRATION_REQUESTS RR,\n" +
-            "     REQUEST_TYPES RT,\n" +
-            "     PROCESS_NAMES PN,\n" +
-            "     REGISTRATION_REQUEST_STEPS RRS,\n" +
-            "     REGISTRATION_REQUEST_HISTORY RRH\n" +
-            "WHERE RR.TYPE_ID = RT.ID\n" +
-            "  AND RT.PROCESS_ID = PN.ID\n" +
-            "  AND RT.ID = RRS.REQUEST_TYPE_ID\n" +
-            "  AND RR.CURRENT_STEP = RRS.CODE\n" +
-            "  AND RR.ID = RRH.REGISTRATION_REQUEST_ID\n" +
-            "  AND RR.CURRENT_STEP = RRH.STEP";
+    private final static String TASK_QUERY = "SELECT new com.bass.amed.projection.TaskDetailsProjectionDTO( " +
+            "RR.id as id," +
+            "       RR.requestNumber  as requestNumber," +
+            "       RR.startDate      as startDate," +
+            "       RR.endDate        as endDate," +
+            "       PN.description    as processName," +
+            "       RT.description    as requestType," +
+            "       RRS.description   as step," +
+            "       RRS.navigationUrl as navigationUrl," +
+            "       RR.assignedUser   as assignedUser) " +
+            "FROM RegistrationRequestsEntity RR, " +
+            "  RequestTypesEntity RT, " +
+            "  ProcessNamesEntity PN ," +
+            "  RegistrationRequestStepsEntity RRS " +
+            "WHERE RR.type.id = RT.id" +
+            "  AND RT.processId = PN.id" +
+            "  AND RT.id = RRS.requestTypeId" +
+            "  AND RR.currentStep = RRS.code";
     private static final Logger LOGGER = LoggerFactory.getLogger(TasksService.class);
     @Autowired
     private EntityManagerFactory entityManagerFactory;
 
-    public List<TaskProjection> retreiveTaskByFilter(TasksDTO filter)
+    public List<TaskDetailsProjectionDTO> retreiveTaskByFilter(TasksDTO filter) throws ParseException
     {
         EntityManager em = null;
-        List<TaskProjection> taskProjections = new ArrayList<>();
+        List<TaskDetailsProjectionDTO> taskDetails;
         try
         {
             em = entityManagerFactory.createEntityManager();
             em.getTransaction().begin();
 
-            Query query = em.createNamedQuery(createQuery(filter), TaskProjection.class);
+            Query query = em.createQuery(createQuery(filter), TaskDetailsProjectionDTO.class);
+            updateQueryWithValues(filter, query);
 
-            taskProjections = query.getResultList();
+            taskDetails = query.getResultList();
             em.getTransaction().commit();
         }
         catch (Exception e)
@@ -63,7 +62,7 @@ public class TasksService
             }
             LOGGER.info(e.getMessage());
             LOGGER.debug(e.getMessage());
-            return taskProjections;
+            throw e;
         }
 
         finally
@@ -71,7 +70,7 @@ public class TasksService
             em.close();
         }
 
-        return taskProjections;
+        return taskDetails;
     }
 
     private String createQuery(TasksDTO filter)
@@ -80,41 +79,78 @@ public class TasksService
 
         if (Strings.isNotEmpty(filter.getRequestNumber()))
         {
-            stringBuilder.append(" AND RR.REQUEST_NUMBER = :requestNumber;");  // 104457
+            stringBuilder.append(" AND RR.requestNumber = :requestNumber");  // 104457
             return stringBuilder.toString();
         }
 
-        if (Strings.isNotEmpty(filter.getAssignedPerson()))
-        {
-            stringBuilder.append(" AND RR.REQUEST_NUMBER = :requestNumber");
-        }
 
         if (filter.getRequest() != null)
         {
-            stringBuilder.append(" AND RR.REQUEST_NUMBER = :requestNumber");
+            stringBuilder.append(" AND PN.id = :processId");
         }
 
         if (filter.getRequestType() != null)
         {
-            stringBuilder.append(" AND RR.REQUEST_NUMBER = :requestNumber");
+            stringBuilder.append(" AND RT.id = :requestTypeId");
         }
 
         if (filter.getStep() != null)
         {
-            stringBuilder.append(" AND RR.REQUEST_NUMBER = :requestNumber");
+            stringBuilder.append(" AND RRS.id = :registrationRequestStepId");
         }
 
+        if (Strings.isNotEmpty(filter.getAssignedPerson()))
+        {
+            stringBuilder.append(" AND RR.assignedUser like  (:assignedUser)");
+        }
         if (filter.getStartDate() != null)
         {
-            stringBuilder.append(" AND RR.START_DATE = :startDate");
+            stringBuilder.append(" AND RR.startDate >= :startDate");
         }
 
         if (filter.getEndDate() != null)
         {
-            stringBuilder.append(" AND RR.END_DATE = :endDate");
+            stringBuilder.append(" AND RR.endDate <= :endDate");
         }
 
-
         return stringBuilder.toString();
+    }
+
+    private void updateQueryWithValues(TasksDTO filter, Query query)
+    {
+        if (Strings.isNotEmpty(filter.getRequestNumber()))
+        {
+            query.setParameter("requestNumber", filter.getRequestNumber());
+            return;
+        }
+
+        if (filter.getRequest() != null)
+        {
+            query.setParameter("processId", filter.getRequest().getId());
+        }
+
+        if (filter.getRequestType() != null)
+        {
+            query.setParameter("requestTypeId", filter.getRequestType().getId());
+        }
+
+        if (filter.getStep() != null)
+        {
+            query.setParameter("registrationRequestStepId", filter.getStep().getId());
+        }
+
+        if (Strings.isNotEmpty(filter.getAssignedPerson()))
+        {
+            query.setParameter("assignedUser", "%" + filter.getAssignedPerson() + "%");
+        }
+        if (filter.getStartDate() != null)
+        {
+            query.setParameter("startDate", filter.getStartDate());
+        }
+
+        if (filter.getEndDate() != null)
+        {
+            query.setParameter("endDate", filter.getEndDate());
+        }
     }
 }

@@ -24,6 +24,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
     objAddresses: any[] = [];
     announces: any[];
     oldData : any;
+    activities: any[];
 
     CPCDId: string;
     ASPId: string;
@@ -40,6 +41,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
     //Validations
     mForm: FormGroup;
     rForm: FormGroup;
+    backupForm: FormGroup;
     oForm: FormGroup;
 
     constructor(private router: Router,
@@ -67,14 +69,18 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
                             this.subscriptions.push(
                                 this.administrationService.getAllStates().subscribe(data => {
-                                        console.log('all states', data);
                                         this.states = data;
-                                    },
-                                    error => console.log(error)
+                                    }
                                 )
                             );
-                        },
-                        error => console.log(error)
+
+                        this.subscriptions.push(
+                            this.licenseService.loadActivities().subscribe(data => {
+                                    this.activities = data;
+                                }
+                            )
+                        );
+                        }
                     )
                 );
 
@@ -119,6 +125,8 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         this.docs = data.license.documents;
         this.docs.forEach(doc => doc.isOld = true);
 
+        this.rForm.get('licenseActivities').patchValue(data.license.activities);
+
 
         if (data.license.commisionResponses && data.license.commisionResponses.length > 0)
         {
@@ -153,6 +161,14 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
                 }
             })
         }
+
+        if (this.tipCerere === 'LICD')
+        {
+            this.rForm.disable();
+            this.oForm.disable();
+        }
+        
+        this.backupForm = this.rForm;
     }
 
     private initFormData() {
@@ -181,6 +197,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
             'MandatedReleaseName': '',
             'MandatedReleaseNr': '',
             'MandatedReleaseDate': '',
+            'licenseActivities': [null, Validators.required],
 
         });
 
@@ -266,7 +283,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
     submit()
     {
         this.rFormSubbmitted = true;
-        if (!this.rForm.valid || this.docs.length==0 || this.objAddresses.length == 0)
+        if (this.tipCerere !== 'LICD' && (!this.rForm.valid || this.docs.length==0 || this.objAddresses.length == 0))
         {
             return;
         }
@@ -286,7 +303,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
     submitNextStep()
     {
         this.rFormSubbmitted = true;
-        if (!this.rForm.valid || this.docs.length==0 || this.objAddresses.length == 0)
+        if (this.tipCerere !== 'LICD' && (!this.rForm.valid || this.docs.length==0 || this.objAddresses.length == 0))
         {
             return;
         }
@@ -329,6 +346,9 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         }
 
         licenseModel.addresses = this.objAddresses;
+        console.log('dfg', this.rForm);
+        console.log('dfgsdf', this.rForm.get('licenseActivities'));
+        licenseModel.activities = this.rForm.get('licenseActivities').value;
 
 
         if (this.rForm.get('CPCDNrdeintrare').value) {
@@ -376,6 +396,8 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         modelToSubmit.currentStep = currentStep;
 
         licenseModel.commisionResponses = commisionResponses;
+
+
 
         modelToSubmit.license = licenseModel;
         return modelToSubmit;

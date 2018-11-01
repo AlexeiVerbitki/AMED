@@ -12,6 +12,17 @@ public class ReferencePricesEntity {
     private NmCountriesEntity country;
     private NmCurrenciesEntity currency;
     private Integer medicamentId;
+    private PriceTypesEntity type;
+
+    @OneToOne(fetch = FetchType.EAGER )//, cascade = CascadeType.DETACH)
+    @JoinColumn(name = "type_id", referencedColumnName = "id", nullable = false)
+    public PriceTypesEntity getType() {
+        return type;
+    }
+
+    public void setType(PriceTypesEntity typeId) {
+        this.type = typeId;
+    }
 
     @Id
     @Column(name = "id")
@@ -74,7 +85,9 @@ public class ReferencePricesEntity {
         if (id != that.id) return false;
         if (value != null ? !value.equals(that.value) : that.value != null) return false;
         if (country != null ? !country.equals(that.country) : that.country != null) return false;
-        return currency != null ? currency.equals(that.currency) : that.currency == null;
+        if (currency != null ? !currency.equals(that.currency) : that.currency != null) return false;
+        if (medicamentId != null ? !medicamentId.equals(that.medicamentId) : that.medicamentId != null) return false;
+        return type != null ? type.equals(that.type) : that.type == null;
     }
 
     @Override
@@ -83,6 +96,8 @@ public class ReferencePricesEntity {
         result = 31 * result + (value != null ? value.hashCode() : 0);
         result = 31 * result + (country != null ? country.hashCode() : 0);
         result = 31 * result + (currency != null ? currency.hashCode() : 0);
+        result = 31 * result + (medicamentId != null ? medicamentId.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
         return result;
     }
 }

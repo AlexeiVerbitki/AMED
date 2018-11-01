@@ -60,6 +60,10 @@ public class AdministrationController
     private EmployeeRepository employeeRepository;
     @Autowired
     MailSender mailSender;
+    @Autowired
+    InvestigatorRepository investigatorRepository;
+    @Autowired
+    MedicalInstitutionsRepository medicalInstitutionsRepository;
 
     @RequestMapping(value = "/generate-doc-nr")
     public ResponseEntity<Integer> generateDocNr()
@@ -194,5 +198,19 @@ public class AdministrationController
             throw new CustomException("Could not send message" + e.getMessage());
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping("/all-investigators")
+    public ResponseEntity<List<NmInvestigatorsEntity>> retrieveAllInvestigators()
+    {
+        LOGGER.debug("Retrieve all investigators");
+        return new ResponseEntity<>(investigatorRepository.findAll(), HttpStatus.OK);
+    }
+
+    @RequestMapping("/all-medical-institutions")
+    public ResponseEntity<List<NmMedicalInstitutionsEntity>> retrieveMedicalInstitutions()
+    {
+        LOGGER.debug("Retrieve all investigators");
+        return new ResponseEntity<>(medicalInstitutionsRepository.findAll(), HttpStatus.OK);
     }
 }

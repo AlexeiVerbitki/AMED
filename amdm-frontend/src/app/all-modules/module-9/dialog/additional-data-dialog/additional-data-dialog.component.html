@@ -1,0 +1,67 @@
+<div mat-dialog-content>
+        <form [formGroup]='reqForm'>
+          <h3 class="text-center my-3 font-weight-bold">{{title}}</h3>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="md-form">
+                <input id="nrCererii" mdbInputDirective type="text" class="form-control" formControlName="docNumber" [attr.disabled]="true">
+                <label for="nrCererii">Nr. scrisoare</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="md-form-modified">
+                <mat-form-field class="w-100">
+                  <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker touchUi #picker></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="md-form">
+                <input id="titlu" mdbInputDirective type="text" class="form-control" formControlName="title">
+                <label for="titlu">Titlu</label>
+              </div>
+              <div *ngIf="(isSendEmail || isRegisterDoc) && reqForm.get('title').hasError('required')">
+                <small class="text-muted"><strong class="text-danger">Titlul trebuie introdus</strong></small>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="md-form">
+                <textarea type="text" id="content" class="md-textarea form-control" mdbInputDirective formControlName="content"></textarea>
+                <label for="content">Continut</label>
+              </div>
+              <div *ngIf="(isSendEmail || isRegisterDoc) && reqForm.get('content').hasError('required')">
+                <small class="text-muted"><strong class="text-danger">Continutul trebuie introdus</strong></small>
+              </div>
+            </div>
+          </div>
+          <!--<div class="row">-->
+            <!--<div class="col-md-12">-->
+              <!--<div class="md-form">-->
+                <!--<input id="email" mdbInputDirective type="text" class="form-control" formControlName="email">-->
+                <!--<label for="email">Poșta electronică</label>-->
+              <!--</div>-->
+              <!--<div *ngIf="isSendEmail && reqForm.get('email').hasError('required')">-->
+                <!--<small class="text-muted"><strong class="text-danger">Poșta electronică trebuie introdusa</strong></small>-->
+              <!--</div>-->
+              <!--<div *ngIf="isSendEmail && reqForm.get('email').hasError('email')">-->
+                <!--<small class="text-muted"><strong class="text-danger">Poșta electronică este invalida</strong></small>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</div>-->
+        </form>
+        <div class="text-center">
+          <div mat-dialog-actions>
+            <button class="btn btn-primary btn-sm-bl btn-sm" (click)="view()">Vizualizare</button>
+            <!--<button class="btn btn-primary btn-sm-bl btn-sm" (click)="sendMail()">Expediere prin posta electronica</button>-->
+            <button class="btn btn-dark-green-color btn-sm-bl btn-sm" (click)="ok()">Salvare</button>
+            <button class="btn btn-danger btn-sm-bl btn-sm" (click)="cancel()">Inchidere</button>
+          </div>
+        </div>
+</div>
+

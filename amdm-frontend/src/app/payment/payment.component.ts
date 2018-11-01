@@ -32,7 +32,7 @@ export class PaymentComponent implements OnInit {
             'date': [''],
             'name': ['', Validators.required],
             'amount': [, Validators.required],
-            'sP': [false]
+            'sP': [{value:false, disabled : this.disabled} ]
         });
 
         this.addPaymentOrderForm = this.fb.group({
@@ -78,6 +78,13 @@ export class PaymentComponent implements OnInit {
 
     @Input()
     set isDisabled(disabled: boolean) {
+        for(var control in this.addReceiptForm.controls){
+            disabled ? this.addReceiptForm.controls[control].disable() : this.addReceiptForm.controls[control].enable();
+        }
+
+        for(var control in this.addPaymentOrderForm.controls){
+            disabled ? this.addPaymentOrderForm.controls[control].disable() : this.addPaymentOrderForm.controls[control].enable();
+        }
         this.disabled = disabled;
     }
 

@@ -1,0 +1,354 @@
+import {Component, OnInit} from '@angular/core';
+import {Subscription} from "rxjs";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {Document} from "../../../models/document";
+import {ModalService} from "../../../shared/service/modal.service";
+import {ActivatedRoute, Router} from "@angular/router";
+import {RequestService} from "../../../shared/service/request.service";
+import {DocumentService} from "../../../shared/service/document.service";
+import {AdministrationService} from "../../../shared/service/administration.service";
+import {AuthService} from "../../../shared/service/authetication.service";
+import {MedicamentService} from "../../../shared/service/medicament.service";
+import {ConfirmationDialogComponent} from "../../../confirmation-dialog/confirmation-dialog.component";
+import {MatDialog} from "@angular/material";
+import {RequestAdditionalDataDialogComponent} from "../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component";
+import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
+import {TaskService} from "../../../shared/service/task.service";
+import {LoaderService} from "../../../shared/service/loader.service";
+
+@Component({
+    selector: 'app-process-interruption',
+    templateUrl: './process-interruption.component.html',
+    styleUrls: ['./process-interruption.component.css']
+})
+export class ProcessInterruptionComponent implements OnInit {
+    private subscriptions: Subscription[] = [];
+    iForm: FormGroup;
+    documents: Document [] = [];
+    company: any;
+    formSubmitted: boolean;
+    generatedDocNrSeq: string;
+    outputDocuments: any[] = [];
+    initialData: any;
+    docTypes: any[];
+    isNonAttachedDocuments: boolean = false;
+
+    constructor(private fb: FormBuilder,
+                private modalService: ModalService,
+                private router: Router,
+                private documentService: DocumentService,
+                private administrationService: AdministrationService,
+                private medicamentService: MedicamentService,
+                private requestService: RequestService,
+                private errorHandlerService: ErrorHandlerService,
+                private taskService: TaskService,
+                private loadingService: LoaderService,
+                public dialogConfirmation: MatDialog,
+                private authService: AuthService,
+                private activatedRoute: ActivatedRoute) {
+        this.iForm = fb.group({
+            'id': [],
+            'data': {disabled: true, value: new Date()},
+            'requestNumber': [null],
+            'startDate': [],
+            'currentStep': ['A'],
+            'company': [''],
+            'companyValue': [''],
+            'medValue': [''],
+            'motiv': ['', Validators.required],
+            'requestHistories': ['']
+        });
+    }
+
+    ngOnInit() {
+        this.modalService.data.next('');
+        this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
+                this.subscriptions.push(this.requestService.getMedicamentRequest(params['id']).subscribe(data => {
+                        this.initialData = Object.assign({}, data);
+                        this.iForm.get('id').setValue(data.id);
+                        this.iForm.get('requestNumber').setValue(data.requestNumber);
+                        this.iForm.get('company').setValue(data.medicament.company);
+                        this.iForm.get('companyValue').setValue(data.medicament.company.name);
+                        this.iForm.get('medValue').setValue(data.medicament.name);
+                        this.iForm.get('requestHistories').setValue(data.requestHistories);
+                        this.documents = data.medicament.documents;
+                        this.outputDocuments = data.medicament.outputDocuments;
+                        this.checkOutputDocumentsStatus();
+                        this.documents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+                        let xs = this.documents;
+                        xs = xs.map(x => {
+                            x.isOld = true;
+                            return x;
+                        });
+                    })
+                );
+            })
+        );
+
+        this.subscriptions.push(
+            this.administrationService.generateDocNr().subscribe(data => {
+                    this.generatedDocNrSeq = data;
+                },
+                error => console.log(error)
+            )
+        );
+
+        this.subscriptions.push(
+            this.taskService.getRequestStepByIdAndCode('1', 'I').subscribe(step => {
+                    this.subscriptions.push(
+                        this.administrationService.getAllDocTypes().subscribe(data => {
+                                this.docTypes = data;
+                                this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
+                            },
+                            error => console.log(error)
+                        )
+                    );
+                },
+                error => console.log(error)
+            )
+        );
+    }
+
+    ngAfterViewInit(): void {
+        this.modalService.data.asObservable().subscribe(value => {
+            if (value != '' && (value.action == 'CLOSE_MODAL' || value.action == 'CLOSE_WAITING_MODAL')) {
+                this.iForm.get('data').setValue(new Date());
+                this.subscriptions.push(this.requestService.getMedicamentRequest(this.iForm.get('id').value).subscribe(data => {
+                    this.documents = data.medicament.documents;
+                    this.documents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+                    let xs = this.documents;
+                    xs = xs.map(x => {
+                        x.isOld = true;
+                        return x;
+                    });
+                }));
+            }
+        })
+    }
+
+    viewOrdin() {
+        this.subscriptions.push(this.documentService.viewOrdinDeInrerupereAInregistrariiMedicamentului(this.generatedDocNrSeq).subscribe(data => {
+                let file = new Blob([data], {type: 'application/pdf'});
+                var fileURL = URL.createObjectURL(file);
+                window.open(fileURL);
+            }, error => {
+                console.log('error ', error);
+            }
+            )
+        );
+    }
+
+    interrupt() {
+
+        this.formSubmitted = true;
+
+        let isFormInvalid = false;
+        let isOutputDocInvalid = false;
+
+        if (this.iForm.get('motiv').invalid) {
+            isFormInvalid = true;
+        }
+
+        for (let entry of this.outputDocuments) {
+            if (entry.status == 'Nu este atasat' && (entry.docType.category=='OI' || entry.docType.category=='NL')) {
+                this.isNonAttachedDocuments = true;
+                isOutputDocInvalid = true;
+            }
+        }
+
+        if (!isOutputDocInvalid) {
+            this.isNonAttachedDocuments = false;
+        }
+
+        if (isOutputDocInvalid || isFormInvalid) {
+            return;
+        }
+
+        this.formSubmitted = false;
+
+        const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur(a)?',
+                confirm: false
+            }
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result) {
+                this.loadingService.show();
+                this.subscriptions.push(this.medicamentService.interruptProcess({
+                        username: this.authService.getUserName(),
+                        reason: this.iForm.get('motiv').value,
+                        requestId: this.iForm.get('id').value,
+                        startDate: this.iForm.get('data').value
+                    }).subscribe(data => {
+                        this.loadingService.hide();
+                        this.router.navigate(['dashboard/module']);
+                    }, error =>   this.loadingService.hide())
+                );
+            }
+        });
+    }
+
+    requestNL() {
+
+        this.formSubmitted = true;
+
+        if (this.iForm.get('motiv').invalid) {
+            return;
+        }
+
+        this.formSubmitted = false;
+
+        const dialogRef2 = this.dialogConfirmation.open(RequestAdditionalDataDialogComponent, {
+            data: {
+                requestNumber: this.iForm.get('requestNumber').value,
+                requestId: this.iForm.get('id').value,
+                modalType: 'NOTIFICATION',
+                startDate: this.iForm.get('data').value
+            },
+            hasBackdrop: false
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result.success) {
+                this.outputDocuments.push(result);
+                this.initialData.medicament.outputDocument = this.outputDocuments;
+                this.subscriptions.push(this.requestService.addMedicamentRequest(this.initialData).subscribe(data => {
+                        this.outputDocuments = data.body.medicament.outputDocuments;
+                        this.checkOutputDocumentsStatus();
+                    }, error => console.log(error))
+                );
+            }
+        });
+    }
+
+    viewDoc(document: any) {
+
+        this.formSubmitted = true;
+
+        if (this.iForm.get('motiv').invalid) {
+            return;
+        }
+
+        this.formSubmitted = false;
+
+        if (document.docType.category == 'NL') {
+            this.subscriptions.push(this.documentService.viewRequest(document.number,
+                document.content,
+                document.title,
+                document.docType.category).subscribe(data => {
+                    let file = new Blob([data], {type: 'application/pdf'});
+                    var fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                }, error => {
+                    console.log('error ', error);
+                }
+                )
+            );
+        } else {
+            this.subscriptions.push(this.documentService.viewOrdinDeInrerupereAInregistrariiMedicamentului(document.number).subscribe(data => {
+                    let file = new Blob([data], {type: 'application/pdf'});
+                    var fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                }, error => {
+                    console.log('error ', error);
+                }
+                )
+            );
+        }
+    }
+
+    remove(doc: any) {
+        const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur(a)?',
+                confirm: false
+            }
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result) {
+
+                this.outputDocuments.forEach((item, index) => {
+                    if (item === doc) this.outputDocuments.splice(index, 1);
+                });
+                this.initialData.medicament.outputDocuments = this.outputDocuments;
+
+                this.subscriptions.push(this.requestService.addMedicamentRequest(this.initialData).subscribe(data => {
+                        this.outputDocuments = data.body.medicament.outputDocuments;
+                        this.checkOutputDocumentsStatus();
+                    }, error => console.log(error))
+                );
+            }
+        });
+    }
+
+    checkOutputDocumentsStatus()
+    {
+        for (let entry of this.outputDocuments) {
+            var isMatch = this.documents.some(elem => {
+                return (elem.docType.category == entry.docType.category && elem.number==entry.number ) ? true : false;
+            });
+            if (isMatch) {
+                entry.status = 'Atasat';
+            } else {
+                entry.status = 'Nu este atasat';
+            }
+        }
+    }
+
+    isDisabledNLButton(): boolean {
+        return this.outputDocuments.some(elem => {
+            return elem.docType.category == 'NL' ? true : false;
+        });
+    }
+
+    back() {
+
+        const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur(a)? Ordinul de intrerupere si scrisorea de informare vor fi sterse.',
+                confirm: false
+            }
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result) {
+                this.loadingService.show();
+                this.outputDocuments.forEach((item, index) => {
+                    if (item.docType.category === 'NL' || item.docType.category === 'OI') this.outputDocuments.splice(index, 1);
+                });
+                this.initialData.medicament.outputDocuments = this.outputDocuments;
+
+                this.documents.forEach((item, index) => {
+                    if (item.docType.category === 'NL' || item.docType.category === 'OI') this.documents.splice(index, 1);
+                });
+                this.initialData.medicament.outputDocuments = this.outputDocuments;
+                this.initialData.medicament.documents = this.documents;
+
+                this.initialData.requestHistories.push({
+                    startDate: this.iForm.get('data').value, endDate: new Date(),
+                    username: this.authService.getUserName(), step: 'I'
+                });
+
+                this.subscriptions.push(this.requestService.addMedicamentRequest(this.initialData).subscribe(data => {
+                        this.loadingService.hide();
+                        var reqHist = this.initialData.requestHistories.reduce((p, n) => p.id > n.id ? p : n);
+                        if (reqHist.step == 'E') {
+                            this.router.navigate(['dashboard/module/medicament-registration/evaluate/' + this.initialData.id]);
+                        } else {
+                            this.router.navigate(['dashboard/module/medicament-registration/expert/' + this.initialData.id]);
+                        }
+                    }, error =>   this.loadingService.hide())
+                );
+            }
+        });
+
+    }
+
+    documentAdded(event) {
+        this.formSubmitted = false;
+        this.checkOutputDocumentsStatus();
+    }
+}

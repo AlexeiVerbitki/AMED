@@ -20,6 +20,7 @@ public interface MedicamentDetailsForPraceRegProjection {
     Integer getStorageQuantity();
     Integer getUnitsQuantity();
     String getVolume();
+    NmMedicamentTypeEntity getMedicamentType();
     Set<PricesEntity> getPrices();
     Set<ReferencePricesEntity> getReferencePrices();
     Set<DocumentsEntity> getDocuments();

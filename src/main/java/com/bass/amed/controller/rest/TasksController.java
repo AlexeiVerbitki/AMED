@@ -1,5 +1,6 @@
 package com.bass.amed.controller.rest;
 
+import com.bass.amed.projection.TaskDetailsProjectionDTO;
 import com.bass.amed.dto.TasksDTO;
 import com.bass.amed.entity.ProcessNamesEntity;
 import com.bass.amed.entity.RegistrationRequestStepsEntity;
@@ -8,6 +9,7 @@ import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.ProcessNamesRepository;
 import com.bass.amed.repository.RegistrationRequestStepRepository;
 import com.bass.amed.repository.RequestTypeRepository;
+import com.bass.amed.service.TasksService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +32,8 @@ public class TasksController
     RequestTypeRepository requestTypeRepository;
     @Autowired
     RegistrationRequestStepRepository registrationRequestStepRepository;
+    @Autowired
+    TasksService tasksService;
 
     @GetMapping(value = "/request-names")
     public ResponseEntity<List<ProcessNamesEntity>> getRequestNames()
@@ -54,16 +59,23 @@ public class TasksController
         return new ResponseEntity<>(requestTypesStepEntityList.orElseThrow(() -> new CustomException("Request was not found")), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/get-filtered-tasks")
-    public ResponseEntity<String> getTasksByFilter(@RequestBody TasksDTO filter)
+    @GetMapping(value = "/request-step-by-id-and-code")
+    public ResponseEntity<RegistrationRequestStepsEntity> getRegistrationRequestStepByIdAndCode(@RequestParam(value = "id") Integer id,
+                                                                                                  @RequestParam(value = "code") String code) throws CustomException
     {
+        LOGGER.debug("Get process step by id and code");
+        Optional<RegistrationRequestStepsEntity> requestTypesStepEntityList = registrationRequestStepRepository.findOneByRequestTypeIdAndCode(id,code);
+        return new ResponseEntity<>(requestTypesStepEntityList.orElseThrow(() -> new CustomException("Request was not found")), HttpStatus.OK);
+    }
 
-        if (filter.getId() != null)
-        {
-
-        }
+    @PostMapping(value = "/get-filtered-tasks")
+    public ResponseEntity<List<TaskDetailsProjectionDTO>> getTasksByFilter(@RequestBody TasksDTO filter) throws ParseException
+    {
         System.out.println(filter);
-        return new ResponseEntity<>("", HttpStatus.OK);
+
+        List<TaskDetailsProjectionDTO> taskProjections = tasksService.retreiveTaskByFilter(filter);
+
+        return new ResponseEntity<>(taskProjections, HttpStatus.OK);
     }
 
 }

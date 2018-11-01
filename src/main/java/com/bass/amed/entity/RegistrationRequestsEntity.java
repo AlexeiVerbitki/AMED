@@ -23,6 +23,8 @@ public class RegistrationRequestsEntity
     private LicensesEntity                        license;
     private Set<RegistrationRequestHistoryEntity> requestHistories = new HashSet<>();
     private String                                currentStepLink;
+    private String initiator;
+    private String assignedUser;
 
 
     @Id
@@ -182,6 +184,30 @@ public class RegistrationRequestsEntity
         this.type = type;
     }
 
+    @Basic
+    @Column(name = "initiator")
+    public String getInitiator()
+    {
+        return initiator;
+    }
+
+    public void setInitiator(String initiator)
+    {
+        this.initiator = initiator;
+    }
+
+    @Basic
+    @Column(name = "assigned_user")
+    public String getAssignedUser()
+    {
+        return assignedUser;
+    }
+
+    public void setAssignedUser(String assignedUser)
+    {
+        this.assignedUser = assignedUser;
+    }
+
     @Override
     public boolean equals(Object o)
     {
@@ -240,7 +266,23 @@ public class RegistrationRequestsEntity
         {
             return false;
         }
-        return requestHistories != null ? requestHistories.equals(that.requestHistories) : that.requestHistories == null;
+        if (license != null ? !license.equals(that.license) : that.license != null)
+        {
+            return false;
+        }
+        if (requestHistories != null ? !requestHistories.equals(that.requestHistories) : that.requestHistories != null)
+        {
+            return false;
+        }
+//        if (interruptionReason != null ? !interruptionReason.equals(that.interruptionReason) : that.interruptionReason != null)
+//        {
+//            return false;
+//        }
+        if (initiator != null ? !initiator.equals(that.initiator) : that.initiator != null)
+        {
+            return false;
+        }
+        return assignedUser != null ? assignedUser.equals(that.assignedUser) : that.assignedUser == null;
     }
 
     @Override
@@ -257,7 +299,11 @@ public class RegistrationRequestsEntity
         result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (medicamentAnnihilationId != null ? medicamentAnnihilationId.hashCode() : 0);
         result = 31 * result + (clinicalTrails != null ? clinicalTrails.hashCode() : 0);
+        result = 31 * result + (license != null ? license.hashCode() : 0);
         result = 31 * result + (requestHistories != null ? requestHistories.hashCode() : 0);
+//        result = 31 * result + (interruptionReason != null ? interruptionReason.hashCode() : 0);
+        result = 31 * result + (initiator != null ? initiator.hashCode() : 0);
+        result = 31 * result + (assignedUser != null ? assignedUser.hashCode() : 0);
         return result;
     }
 

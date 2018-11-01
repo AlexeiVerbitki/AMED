@@ -1,11 +1,9 @@
 import {
     Component,
-    ComponentFactory, ComponentFactoryResolver,
-    ComponentRef,
+    ComponentFactoryResolver,
     OnDestroy,
     OnInit,
     ViewChild,
-    ViewContainerRef
 } from '@angular/core';
 import {FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
 import {DocIesire} from '../../../models/docIesire';
@@ -15,8 +13,21 @@ import {ActivatedRoute} from "@angular/router";
 import {RequestService} from "../../../shared/service/request.service";
 import {Company} from "../../../models/company";
 import {PricesRegService} from "../../../shared/service/reg-prices.service";
-import {ReferencePriceComponent} from "../reference-price/reference-price.component";
 import {Price} from "../../../models/price";
+import {ModalDirective} from "angular-bootstrap-md";
+import {ModalService} from "../../../shared/service/modal.service";
+import {Country} from "../../../models/country";
+
+enum PriceReferenceType {
+    OriginCountry = 3 ,
+    ReferenceCountry = 4,
+    OtherCountriesCatalog = 5
+
+}
+enum MedicamentType {
+    Original = 2 ,
+    Generic = 3
+}
 
 @Component({
   selector: 'app-price-evaluate-med',
@@ -31,19 +42,23 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
     private subscriptions: Subscription[] = [];
     documents: Document [] = [];
     company: Company;
-    requestNumber: number;
     currencyUSD:                string = '';
     currencyEUR:                string = '';
     currencyRUR:                string = '';
-    today: Date = new Date();
+    PriceRefType = PriceReferenceType;
 
     PriceRegForm: FormGroup;
     expirationReasons: any[] = [];
     selectedReason: any;
-    expirationDate: Date;
 
     proposedPrices: any[] = [];
     selectedPrice : any = {};
+    refPrices:      Price[] = [];
+    minRefPrices:   any[] = [];
+    minOtherCountriesCatPrices:   any[] = [];
+    priceTypes: any[];
+    MedType = MedicamentType;
+    medicamentType: number;
 
       docIesire: DocIesire[] = [
         {denumire: 'Ordin de inregistrare a pretului', statut: 'Generat', status: true},
@@ -56,22 +71,22 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         {description: 'Respinge', id: 2}
     ];
 
+    avgCurrencies: any[] = [];
 
-    @ViewChild("priceReferenceContainer", { read: ViewContainerRef }) priceReferenceContainer;
-    priceReferenceComponentRef: ComponentRef<ReferencePriceComponent> [] = [];
-    componentFactory: ComponentFactory<ReferencePriceComponent> = this.resolver.resolveComponentFactory(ReferencePriceComponent);
+    @ViewChild('basicModal') modal: ModalDirective;
 
   constructor(private fb: FormBuilder,
               private activatedRoute: ActivatedRoute,
               private priceService: PricesRegService,
               private requestService: RequestService,
-              private resolver: ComponentFactoryResolver) {
+              private resolver: ComponentFactoryResolver,
+              private modalService: ModalService) {
 
       this.PriceRegForm = fb.group({
           'id': [],
           'data': {disabled: true, value: new Date()},
           'requestNumber': [null],
-          'startDate': [],
+          'startDate': {disabled: true, value: new Date()},
           'dataToSaveInStartDateRequestHistory': [''],
           'currentStep': ['E'],
           'evaluation':  fb.group({
@@ -85,6 +100,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                   'id': [],
                   'name': ['', Validators.required],
                   'registrationDate': [],
+                  'expirationDate': [],
                   'companyValue': [''],
                   'pharmaceuticalForm': [null, Validators.required],
                   'dose': [null, Validators.required],
@@ -127,29 +143,41 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
+      this.subscriptions.push(this.priceService.getPrevMonthAVGCurrencies().subscribe(data =>{
+          this.avgCurrencies = data;
+          console.log(this.avgCurrencies);
+      }));
+
+      this.subscriptions.push(
+          this.priceService.getAllPriceTypes().subscribe(priceTypes => {
+                  this.priceTypes = priceTypes;
+                  // for(let p of this.priceTypes) {
+                  //     if(p.description == 'În țara de origine') {
+                  //         this.OriginCountryPriceTypeId = p.id;
+                  //         break;
+                  //     }
+                  // }
+              },
+              error => console.log(error)
+          ));
+
 
       this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
               this.subscriptions.push(this.requestService.getMedicamentRequest(params['id']).subscribe(data => {
-                      this.requestNumber = data.requestNumber;
+                      if(data.currentStep != 'R'){
+                          alert('Procesul a fost finisat deja');
+                      }
 
                       if(data.medicament.prices != undefined) {
                           data.medicament.prices.forEach(price => this.proposedPrices = [...this.proposedPrices, {id: price.id, description: price.value + " " + price.currency.shortDescription}]);
                           data.medicament.prices[0].documents.forEach(doc => this.documents.push(doc));
                       }
 
-                      if(data.medicament.referencePrices != undefined) {
-                          let refPrices: Price[] = data.medicament.referencePrices;
-                          if (refPrices != undefined && refPrices.length > 0) {
-                              refPrices.forEach(value => {
-                                  this.addReferencePriceRow();
-                                  this.priceReferenceComponentRef[this.priceRefIndex - 1].instance.refPrice = value
-                              })
-                          }
-                      }
+                  console.log(data.medicament.referencePrices);
+                      this.initRefPrices(data.medicament.referencePrices);
 
                       this.PriceRegForm.get('company').setValue(data.medicament.company);
                       this.PriceRegForm.get('id').setValue(data.id);
-                      this.PriceRegForm.get('startDate').setValue(data.startDate);
                       this.PriceRegForm.get('requestNumber').setValue(data.requestNumber);
                       this.PriceRegForm.get('type').setValue(data.type);
                       this.PriceRegForm.get('requestHistories').setValue(data.requestHistories);
@@ -170,16 +198,23 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                       this.PriceRegForm.get('medicament.storageQuantity').setValue(data.medicament.storageQuantity);
                       this.PriceRegForm.get('medicament.storageQuantityMeasurementName').setValue(data.medicament.storageQuantityMeasurement.description);
                       this.PriceRegForm.get('medicament.unitsQuantityMeasurementName').setValue(data.medicament.unitsQuantityMeasurement.description);
+                      this.PriceRegForm.get('medicament.medicamentType').setValue(data.medicament.medicamentType.code);
+                      this.PriceRegForm.get('startDate').setValue(new Date(data.startDate));
 
-                      // let expirationDate: Date = data.medicament.expirationDate;
-                      // if(expirationDate != undefined) {
-                      //     let d: Date = new Date(expirationDate);
-                      //     let expirationDate = d.getDay() + '/' +  d.getMonth() + '/' +  d.getFullYear();
-                      //     this.PriceRegForm.get('medicament.expirationDate').setValue(expirationDate);
+                      let expDate: Date = new Date();
+                      expDate.setFullYear(expDate.getFullYear() + 1);
+                      this.PriceRegForm.get('evaluation.expirationDate').setValue(expDate);
+                      // let beginDate: Date = data.startDate;
+                      // if(beginDate != undefined) {
+                      //     let d: Date = new Date(beginDate);
+                      //     let begDateString = d.getDay() + '/' +  d.getMonth() + '/' +  d.getFullYear();
+                      //     this.PriceRegForm.get('startDate').setValue(d);
                       // }
 
-                      var reqHist = data.requestHistories.reduce((p, n) => p.id < n.id ? p : n);
-                      this.PriceRegForm.get('dataToSaveInStartDateRequestHistory').setValue(reqHist.endDate);
+                      if(data.requestHistories != undefined && data.requestHistories.length > 0) {
+                          var reqHist = data.requestHistories.reduce((p, n) => p.id < n.id ? p : n);
+                          this.PriceRegForm.get('dataToSaveInStartDateRequestHistory').setValue(reqHist.endDate);
+                      }
                       let xs = this.documents;
                       xs = xs.map(x => {
                           x.isOld = true;
@@ -213,16 +248,9 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
           this.priceService.getPriceExpirationReasons().subscribe(reasons => {
                   this.expirationReasons = reasons;
               },
-              error => {console.log(error); alert(error);}
+              error => console.log(error)
           ));
   }
-
-    priceRefIndex: number = 0;
-    addReferencePriceRow() {
-        this.priceReferenceComponentRef[this.priceRefIndex] = this.priceReferenceContainer.createComponent(this.componentFactory);
-        this.priceReferenceComponentRef[this.priceRefIndex].instance.forEvaluation = true;
-        this.priceReferenceComponentRef[this.priceRefIndex++].instance.formNr = this.priceRefIndex;
-    }
 
     onPriceSelected($event) {
         this.selectedPrice = $event;
@@ -233,7 +261,113 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         this.selectedReason = $event;
     }
 
-    nextStep() {
+
+    initRefPrices(referencePrices?: Price[]) {
+
+        if(referencePrices != undefined) {
+            this.refPrices = referencePrices;
+            if (this.refPrices != undefined &&this.refPrices.length > 0) {
+                this.refPrices.forEach(refPrice => {
+
+                    for(let avgCur of this.avgCurrencies) {
+                        if(avgCur.currency.id == refPrice.currency.id) {
+                            refPrice['xchRateRef'] =  avgCur.value;
+                            refPrice['xchRateRefVal'] =  avgCur.value * +refPrice.value;
+                            break;
+                        }
+                    }
+
+                    if(!refPrice.hasOwnProperty('xchRateRef')){ // this is fucking Moldo Leu
+                        refPrice['xchRateRef'] =  1;
+                        refPrice['xchRateRefVal'] = refPrice.value;
+                    }
+
+                    for(let avgCur of this.avgCurrencies) {
+
+                        if (avgCur.currency.code == 'EUR') {
+                            refPrice['xchRateEur'] =  avgCur.value;
+                            refPrice['xchRateEurVal'] = refPrice['xchRateRefVal'] / avgCur.value;
+
+                        } else if (avgCur.currency.code == 'USD') {
+                            refPrice['xchRateUsd'] = avgCur.value;
+                            refPrice['xchRateUsdVal'] = refPrice['xchRateRefVal'] / avgCur.value;
+
+                        }
+                    }
+                });
+            }
+
+            this.initAverageMinPrice(this.minRefPrices, PriceReferenceType.ReferenceCountry);
+            this.initAverageMinPrice(this.minOtherCountriesCatPrices, PriceReferenceType.OtherCountriesCatalog);
+        }
+    }
+
+    initAverageMinPrice(array: any[], type: PriceReferenceType) {
+        this.refPrices.sort((a, b) => {
+            if(a['xchRateRefVal'] < b['xchRateRefVal']) {
+                return -1;
+            } else if (a['xchRateRefVal'] > b['xchRateRefVal']){
+                return 1;
+            }
+            return 0;
+        });
+
+        array.push(...this.refPrices.filter(value => value.type.id == type).slice(0,3));
+        let avgMinPrice: Price = new Price();
+        avgMinPrice.country = new Country();
+        avgMinPrice.country.description = 'Prețul Mediu';
+        avgMinPrice['xchRateRefVal'] = 0;
+        avgMinPrice['xchRateUsdVal'] = 0;
+        avgMinPrice['xchRateEurVal'] = 0;
+
+        array.forEach(price => {
+            avgMinPrice['xchRateRefVal'] += price['xchRateRefVal'];
+            avgMinPrice['xchRateUsdVal'] += price['xchRateUsdVal'];
+            avgMinPrice['xchRateEurVal'] += price['xchRateEurVal'];
+        });
+
+        avgMinPrice['xchRateRefVal'] /= array.length;
+        avgMinPrice['xchRateUsdVal'] /= array.length;
+        avgMinPrice['xchRateEurVal'] /= array.length;
+
+        array.push(avgMinPrice);
+    }
+
+
+    save() {
+
+       // this.modalService.data.next({modalType : 'WAITING'});
+
+        // this.modalService.data.next({
+        //         requestNumber: 105440,
+        //         requestId: 299,
+        //         modalType: 'REQUEST_ADDITIONAL_DATA',
+        //         mainPageStartDate: new Date()
+        //     }
+        // );
+
+
+        // let dialogRef = this.dialogConfirmation.open(ModalInfoLetterComponent);
+
+        // infoLetterDialog.afterClosed().subscribe(result => {
+        //     if (result) {
+        //         // if (this.waitingForm.get('code').value == '1') {
+        //         //     var docEntity = {
+        //         //         requestId: this.requestId
+        //         //     };
+        //         //     this.subscriptions.push(this.medicamentService.answerReceivedRequestAdditionalData(docEntity).subscribe(data => {
+        //         //             this.modal.hide();
+        //         //             this.modalService.data.next({action: 'CLOSE_MODAL'});
+        //         //         }, error => console.log('Raspuns primit nu a fost inregistrat in baza de date'))
+        //         //     );
+        //         } else {
+        //             //this.generateOrderAndSaveInDB();
+        //             //navigate dsfsdf
+        //         }
+        // });
+
+      //  infoLetterDialog.close('!!!');
+
         this.formSubmitted = true;
 
         if (this.PriceRegForm.invalid) {
@@ -245,7 +379,6 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.subscriptions.forEach(value => value.unsubscribe());
-        this.priceReferenceComponentRef.forEach(row => row.destroy());
     }
 
 }

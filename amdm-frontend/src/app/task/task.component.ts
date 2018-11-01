@@ -1,30 +1,30 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from "rxjs";
 import {TaskService} from "../shared/service/task.service";
+import {Router} from "@angular/router";
+import {LoaderService} from "../shared/service/loader.service";
 
 @Component({
     selector: 'app-task',
     templateUrl: './task.component.html',
     styleUrls: ['./task.component.css']
 })
-export class TaskComponent implements OnInit, OnDestroy {
+export class TaskComponent implements OnInit, AfterViewInit, OnDestroy {
     taskForm: FormGroup;
-
     requests: any[];
     requestTypes: any[];
     steps: any[];
 
-    displayedColumns: any[] = ['requestNumber','processName','requestType', 'username', 'startDate', 'endDate', 'step'];
+    displayedColumns: any[] = ['requestNumber', 'processName', 'requestType', 'username', 'startDate', 'endDate', 'step'];
     dataSource = new MatTableDataSource<any>();
+    row: any;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
-    @ViewChild('taskForm') taskFormElem: ElementRef;
-
     private subscriptions: Subscription[] = [];
 
-    constructor(private fb: FormBuilder, private taskService: TaskService) {
+    constructor(private fb: FormBuilder, private route: Router, private taskService: TaskService, private loaderService: LoaderService) {
         this.taskForm = fb.group({
             'requestNumber': [null, {validators: Validators.required}],
             'request': [null],
@@ -36,10 +36,13 @@ export class TaskComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnInit() {
+    ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
+        this.dataSource.paginator._intl.itemsPerPageLabel = "Prorcese pe pagina: ";
         this.dataSource.sort = this.sort;
+    }
 
+    ngOnInit() {
         this.subscriptions.push(this.taskService.getRequestNames().subscribe(data => {
             this.requests = data;
         }));
@@ -48,25 +51,6 @@ export class TaskComponent implements OnInit, OnDestroy {
             this.disabledElements(val);
 
         });
-    }
-
-    private disabledElements(val) {
-        if (val) {
-            this.taskForm.get('request').disable();
-            this.taskForm.get('requestType').disable();
-            this.taskForm.get('assignedPerson').disable();
-            this.taskForm.get('startDate').disable();
-            this.taskForm.get('endDate').disable();
-            this.taskForm.get('step').disable();
-        } else {
-            this.taskForm.get('request').enable();
-            this.taskForm.get('requestType').enable();
-            this.taskForm.get('assignedPerson').enable();
-            this.taskForm.get('startDate').enable();
-            this.taskForm.get('endDate').enable();
-            this.taskForm.get('step').enable();
-
-        }
     }
 
     ngOnDestroy(): void {
@@ -109,10 +93,33 @@ export class TaskComponent implements OnInit, OnDestroy {
     findTasks() {
 
         // this.requestNumber.nativeElement.focus();
-        console.log(this.taskFormElem.nativeElement);
         this.subscriptions.push(this.taskService.getTasksByFilter(this.taskForm.value).subscribe(data => {
-            console.log(data);
+            this.dataSource.data = data.body;
         }))
+    }
+
+    navigateToUrl(rowDetails: any) {
+        const urlToNavigate = rowDetails.navigationUrl + rowDetails.id
+        this.route.navigate([urlToNavigate]);
+    }
+
+    private disabledElements(val) {
+        if (val) {
+            this.taskForm.get('request').disable();
+            this.taskForm.get('requestType').disable();
+            this.taskForm.get('assignedPerson').disable();
+            this.taskForm.get('startDate').disable();
+            this.taskForm.get('endDate').disable();
+            this.taskForm.get('step').disable();
+        } else {
+            this.taskForm.get('request').enable();
+            this.taskForm.get('requestType').enable();
+            this.taskForm.get('assignedPerson').enable();
+            this.taskForm.get('startDate').enable();
+            this.taskForm.get('endDate').enable();
+            this.taskForm.get('step').enable();
+
+        }
     }
 
 }

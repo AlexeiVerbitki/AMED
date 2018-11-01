@@ -45,7 +45,7 @@ public class RequestController
     private DocumentTypeRepository documentTypeRepository;
 
     @RequestMapping(value = "/add-medicament-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Integer> saveMedicamentRequest(@RequestBody RegistrationRequestsEntity request) throws CustomException
+    public ResponseEntity<RegistrationRequestsEntity> saveMedicamentRequest(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
         LOGGER.debug("Add medicament");
         Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(request.getType().getCode());
@@ -61,7 +61,7 @@ public class RequestController
         }
         addDDDocument(request);
         requestRepository.save(request);
-        return new ResponseEntity<>(request.getId(), HttpStatus.CREATED);
+        return new ResponseEntity<>(request, HttpStatus.CREATED);
     }
 
     private void addDDDocument(@RequestBody RegistrationRequestsEntity request)
@@ -74,6 +74,20 @@ public class RequestController
             outputDocumentsEntity.setDocType(nmMedicamentTypeEntity.get());
             outputDocumentsEntity.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
             outputDocumentsEntity.setName("Dispozitie de distribuire");
+            outputDocumentsEntity.setNumber(String.valueOf(generateDocNumberService.getDocumentNumber()));
+            request.getMedicament().getOutputDocuments().add(outputDocumentsEntity);
+        }
+    }
+
+    private void addInterruptionOrder(RegistrationRequestsEntity request)
+    {
+        if (request.getMedicament() != null && request.getMedicament().getOutputDocuments() != null && !request.getMedicament().getOutputDocuments().stream().anyMatch(d -> d.getDocType().getCategory().equals("OI")))
+        {
+            Optional<NmDocumentTypesEntity> nmMedicamentTypeEntity = documentTypeRepository.findByCategory("OI");
+            OutputDocumentsEntity outputDocumentsEntity = new OutputDocumentsEntity();
+            outputDocumentsEntity.setDocType(nmMedicamentTypeEntity.get());
+            outputDocumentsEntity.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
+            outputDocumentsEntity.setName("Ordin de intrerupere");
             outputDocumentsEntity.setNumber(String.valueOf(generateDocNumberService.getDocumentNumber()));
             request.getMedicament().getOutputDocuments().add(outputDocumentsEntity);
         }
@@ -94,6 +108,7 @@ public class RequestController
                 registrationRequestsEntity.getMedicament().setExperts(request.getMedicament().getExperts());
             }
             registrationRequestsEntity.getRequestHistories().add((RegistrationRequestHistoryEntity) request.getRequestHistories().toArray()[0]);
+            addInterruptionOrder(registrationRequestsEntity);
             requestRepository.save(registrationRequestsEntity);
             return new ResponseEntity<>(request.getId(), HttpStatus.OK);
         }
@@ -137,8 +152,24 @@ public class RequestController
     @PostMapping(value = "/add-clinical-trail-request")
     public ResponseEntity<Integer> saveClinicalTrailRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException
     {
+        addDDClinicalTrailsDocument(requests);
         requestRepository.save(requests);
         return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
+    }
+
+    private void addDDClinicalTrailsDocument(@RequestBody RegistrationRequestsEntity request)
+    {
+        if (request.getClinicalTrails() != null && request.getClinicalTrails().getOutputDocuments() == null)
+        {
+            request.getClinicalTrails().setOutputDocuments(new HashSet<>());
+            Optional<NmDocumentTypesEntity> nmDocumentTypeEntity = documentTypeRepository.findByCategory("DD");
+            OutputDocumentsEntity outputDocumentsEntity = new OutputDocumentsEntity();
+            outputDocumentsEntity.setDocType(nmDocumentTypeEntity.get());
+            outputDocumentsEntity.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
+            outputDocumentsEntity.setName("Dispozitie de distribuire");
+            outputDocumentsEntity.setNumber(String.valueOf(generateDocNumberService.getDocumentNumber()));
+            request.getClinicalTrails().getOutputDocuments().add(outputDocumentsEntity);
+        }
     }
 
     @GetMapping(value = "/load-clinical-trail-request")
@@ -180,7 +211,7 @@ public class RequestController
     @PostMapping(value = "/add-import-request")
     public ResponseEntity<Integer> saveImportRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException
     {
-	    LOGGER.debug("add new Import request");
+        LOGGER.debug("add new Import request");
         requestRepository.save(requests);
         return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
     }
@@ -195,5 +226,4 @@ public class RequestController
         }
         throw new CustomException("Import request was not found");
     }
-
 }

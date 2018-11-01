@@ -57,5 +57,13 @@ export class PricesRegService {
     getPriceExpirationReasons(): Observable<any> {
         return this.http.get('/api/price/all-price-expiration-reasons');
     }
+
+    getAllPriceTypes(): Observable<any> {
+        return this.http.get('/api/price/all-price-types');
+    }
+
+    getPrevMonthAVGCurrencies(): Observable<any> {
+      return this.administrationService.getPrevMonthAVGCurrencies();
+    }
 }
 

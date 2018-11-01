@@ -5,7 +5,7 @@ export class Medicament {
   name: string;
   id: number;
   code: string;
-  internationalMedicamentName: string;
+  internationalMedicamentName: any;
   termsOfValidity: number;
   unitsOfMeasurement: UnitOfMeasure;  // for dose
   dose: number;
@@ -17,4 +17,5 @@ export class Medicament {
   prices: Price[];
   referencePrices: Price[];
   volume: number;
+  medicamentType: any;
 }

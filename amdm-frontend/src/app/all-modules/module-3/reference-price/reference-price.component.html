@@ -14,7 +14,7 @@
       <ng-select class="w-100"
                  [disabled]="forEvaluation"
                  [items]="currencies"
-                 [required]="false"
+                 [required]="true"
                  [(ngModel)]="refPrice.currency"
                  bindLabel="shortDescription"
                  placeholder="Valuta">
@@ -30,7 +30,7 @@
                  class="w-100"
                  [disabled]="forEvaluation"
                  [items]="countries"
-                 [required]="false"
+                 [required]="true"
                  [(ngModel)]="refPrice.country"
                  bindLabel="description"
                  placeholder="Țara de referință">
@@ -40,7 +40,22 @@
       </div>
     </div>
   </div>
-  <div class="col-md-1" *ngIf="!forEvaluation">
+  <div class="col">
+    <div class="md-form-modified">
+      <ng-select class="w-100"
+                 [disabled]="forEvaluation"
+                 [items]="types"
+                 [required]="true"
+                 [(ngModel)]="refPrice.type"
+                 bindLabel="description"
+                 placeholder="Tipul">
+      </ng-select>
+      <div *ngIf="formSubmitted && refPrice.type == undefined">
+        <small class="text-muted"><strong class="text-danger">Selectați tipul prețului</strong></small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-1" *ngIf="!forEvaluation && canRemove">
     <div class="mt-4">
       <button type="button" class="btn btn-warning btn-circle" (click)="this.remove.emit(formNr)" ><i class="fa fa-times" aria-hidden="true"></i>
       </button>

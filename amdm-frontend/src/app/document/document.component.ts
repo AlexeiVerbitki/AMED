@@ -1,49 +1,59 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Document} from "../models/document";
 import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-dialog.component";
 import {MatDialog} from "@angular/material";
 import {Subscription} from "rxjs";
-import {HttpEventType, HttpResponse} from "@angular/common/http";
+import {HttpResponse} from "@angular/common/http";
 import {UploadFileService} from "../shared/service/upload/upload-file.service";
 import {saveAs} from "file-saver";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AdministrationService} from "../shared/service/administration.service";
+import {ErrorHandlerService} from "../shared/service/error-handler.service";
 
 @Component({
-  selector: 'app-document',
-  templateUrl: './document.component.html',
-  styleUrls: ['./document.component.css']
+    selector: 'app-document',
+    templateUrl: './document.component.html',
+    styleUrls: ['./document.component.css']
 })
 export class DocumentComponent implements OnInit, OnDestroy {
 
     documentList: Document [];
     numarCerere: string;
-    currentFile: any;
     enableUploading: boolean = true;
     private subscriptions: Subscription[] = [];
     result: any;
     docForm: FormGroup;
     docTypes: any[];
+    formSubmitted: boolean;
 
     disabled: boolean = false;
 
+    @ViewChild('incarcaFisier')
+    incarcaFisierVariable: ElementRef;
+
     constructor(public dialog: MatDialog, private uploadService: UploadFileService, private fb: FormBuilder,
+               private errorHandlerService : ErrorHandlerService,
                 private administrationService: AdministrationService) {
         this.docForm = fb.group({
-            'docType': [null, Validators.required]
+            'docType': [null, Validators.required],
+            'nrDoc': [null, Validators.required]
         });
     }
 
     ngOnInit() {
-        this.subscriptions.push(
-            this.administrationService.getAllDocTypes().subscribe(data => {
-                    this.docTypes = data;
-                },
-                error => console.log(error)
-            )
-        );
+        if(!this.docTypes || this.docTypes.length==0) {
+            this.subscriptions.push(
+                this.administrationService.getAllDocTypes().subscribe(data => {
+                        this.docTypes = data;
+                    },
+                    error => console.log(error)
+                )
+            );
+        }
 
     }
+
+    @Output() documentAdded = new EventEmitter();
 
     @Input()
     set canUpload(can: boolean) {
@@ -63,7 +73,7 @@ export class DocumentComponent implements OnInit, OnDestroy {
         this.documentList = docList;
     }
 
-    get nrCerere(): string  {
+    get nrCerere(): string {
         return this.numarCerere;
     }
 
@@ -79,6 +89,15 @@ export class DocumentComponent implements OnInit, OnDestroy {
     @Input()
     set isDisabled(disabled: boolean) {
         this.disabled = disabled;
+    }
+
+    get dcTypes(): any[] {
+        return this.docTypes;
+    }
+
+    @Input()
+    set dcTypes(docTypes: any[]) {
+        this.docTypes = docTypes;
     }
 
     removeDocument(index) {
@@ -99,28 +118,38 @@ export class DocumentComponent implements OnInit, OnDestroy {
         });
     }
 
-    loadFile(path :string) {
+    loadFile(path: string) {
         this.subscriptions.push(this.uploadService.loadFile(path).subscribe(data => {
-                this.saveToFileSystem(data,path.substring(path.lastIndexOf('/') + 1));
+                this.saveToFileSystem(data, path.substring(path.lastIndexOf('/') + 1));
             },
 
             error => {
-            console.log(error);
+                console.log(error);
             }
             )
         );
     }
 
-    private saveToFileSystem(response: any,docName:string) {
+    private saveToFileSystem(response: any, docName: string) {
         const blob = new Blob([response]);
         saveAs(blob, docName);
     }
 
+    checkFields(): boolean {
+        this.formSubmitted = true;
+
+        if (this.docForm.get('docType').invalid || (this.docForm.get('nrDoc').invalid && this.docForm.get('docType').value.needDocNr)) {
+            return false;
+        }
+
+        this.formSubmitted = false;
+        return true;
+    }
 
     addDocument(event) {
 
-        if (this.documents.find(d => d.name === event.srcElement.files[0].name) ||  this.docForm.get('docType').invalid)
-        {
+        if (this.documents.find(d => d.name === event.srcElement.files[0].name)) {
+            this.errorHandlerService.showError('Document cu acest nume a fost deja atasat.');
             return;
         }
 
@@ -133,13 +162,17 @@ export class DocumentComponent implements OnInit, OnDestroy {
                     let fileName = this.result.path.substring(indexForName + 1);
 
                     this.documents.push({
-                        id : null,
+                        id: null,
                         name: fileName,
-                        docType : this.docForm.get('docType').value,
+                        docType: this.docForm.get('docType').value,
                         date: new Date(),
                         path: this.result.path,
-                        isOld: false});
-                        this.docForm.get('docType').setValue(null);
+                        isOld: false,
+                        number: this.docForm.get('nrDoc').value
+                    });
+                    this.docForm.get('docType').setValue(null);
+                    this.docForm.get('nrDoc').setValue(null);
+                    this.documentAdded.emit(true);
                 }
             },
             error => {
@@ -149,10 +182,13 @@ export class DocumentComponent implements OnInit, OnDestroy {
         );
     }
 
-
+    reset() {
+        this.incarcaFisierVariable.nativeElement.value = "";
+    }
 
     ngOnDestroy() {
         this.subscriptions.forEach(s => s.unsubscribe());
     }
+
 
 }

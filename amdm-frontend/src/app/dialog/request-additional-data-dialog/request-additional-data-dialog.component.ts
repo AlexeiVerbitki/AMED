@@ -7,6 +7,7 @@ import {ConfirmationDialogComponent} from "../../confirmation-dialog/confirmatio
 import {DocumentService} from "../../shared/service/document.service";
 import {MedicamentService} from "../../shared/service/medicament.service";
 import {AuthService} from "../../shared/service/authetication.service";
+import {LoaderService} from "../../shared/service/loader.service";
 
 @Component({
     selector: 'app-request-additional-data-dialog',
@@ -18,15 +19,12 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
     private subscriptions: Subscription[] = [];
     isRegisterDoc: boolean;
     docTypes: any[];
-    docTypeLA: any[];
-    docTypeRA: any[];
-    //   @ViewChild('basicModal') modal: ModalDirective;
-    //  dataDialog: any;
     title: string = 'Detalii scrisoare de solicitare date aditionale';
 
     constructor(private fb: FormBuilder, private administrationService: AdministrationService,
                 private documentService: DocumentService,
                 private medicamentService: MedicamentService,
+                private loadingService: LoaderService,
                 private authService: AuthService,
                 public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) public dataDialog: any,
@@ -57,8 +55,6 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
         this.subscriptions.push(
             this.administrationService.getAllDocTypes().subscribe(data => {
                     this.docTypes = data;
-                    this.docTypeLA = this.docTypes.filter(r => r.category == 'LA');
-                    this.docTypeRA = this.docTypes.filter(r => r.category == 'RA');
                 },
                 error => console.log(error)
             )
@@ -176,25 +172,43 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
     //     );
     // }
 
-    // view() {
-    //     this.isRegisterDoc = true;
-    //     if (this.reqForm.get('title').invalid || this.reqForm.get('content').invalid) {
-    //         return;
-    //     }
-    //     this.isRegisterDoc = false;
-    //     this.subscriptions.push(this.documentService.viewRequest(this.reqForm.get('docNumber').value,
-    //         this.reqForm.get('content').value,
-    //         this.reqForm.get('title').value,
-    //         this.dataDialog.modalType).subscribe(data => {
-    //             let file = new Blob([data], {type: 'application/pdf'});
-    //             var fileURL = URL.createObjectURL(file);
-    //             window.open(fileURL);
-    //         }, error => {
-    //             console.log('error ', error);
-    //         }
-    //         )
-    //     );
-    // }
+    view() {
+        this.isRegisterDoc = true;
+        if (this.reqForm.get('title').invalid || this.reqForm.get('content').invalid) {
+            return;
+        }
+        this.isRegisterDoc = false;
+
+        this.loadingService.show();
+        var docType = '';
+        switch (this.dataDialog.modalType) {
+            case  'NOTIFICATION' : {
+                docType = 'NL';
+                break;
+            }
+            case  'LABORATORY_ANALYSIS' : {
+                docType = 'LA';
+                break;
+            }
+            case  'REQUEST_ADDITIONAL_DATA' : {
+                docType = 'RA';
+                break;
+            }
+        }
+        this.subscriptions.push(this.documentService.viewRequest(this.reqForm.get('docNumber').value,
+            this.reqForm.get('content').value,
+            this.reqForm.get('title').value,
+            docType).subscribe(data => {
+                let file = new Blob([data], {type: 'application/pdf'});
+                var fileURL = URL.createObjectURL(file);
+                window.open(fileURL);
+                this.loadingService.hide();
+            }, error => {
+                this.loadingService.hide();
+            }
+            )
+        );
+    }
 
     ok() {
         this.isRegisterDoc = true;
@@ -206,13 +220,24 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
         var response = {};
         switch (this.dataDialog.modalType) {
             case  'NOTIFICATION' : {
+                response = {
+                    success: true,
+                    name: 'Scrisoare de informare',
+                    docType: this.docTypes.find(r => r.category == 'NL'),
+                    status: 'Nu este atasat',
+                    number: this.reqForm.get('docNumber').value,
+                    title: this.reqForm.get('title').value,
+                    content: this.reqForm.get('content').value,
+                    date: new Date(),
+                    responseReceived : false
+                };
                 break;
             }
             case  'LABORATORY_ANALYSIS' : {
                 response = {
                     success: true,
                     name: 'Scrisoare de solicitare desfasurare analize de laborator',
-                    docType: this.docTypeLA[0],
+                    docType: this.docTypes.find(r => r.category == 'LA'),
                     status: 'Nu este atasat',
                     number: this.reqForm.get('docNumber').value,
                     title: this.reqForm.get('title').value,
@@ -226,7 +251,7 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
                 response = {
                     success: true,
                     name: 'Scrisoare de solicitare date aditionale',
-                    docType: this.docTypeRA[0],
+                    docType: this.docTypes.find(r => r.category == 'RA'),
                     status: 'Nu este atasat',
                     number: this.reqForm.get('docNumber').value,
                     title: this.reqForm.get('title').value,

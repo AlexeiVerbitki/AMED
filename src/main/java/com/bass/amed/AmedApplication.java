@@ -1,30 +1,24 @@
 package com.bass.amed;
 
-import com.bass.amed.entity.*;
-import com.bass.amed.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 @SpringBootApplication
-public class AmedApplication implements CommandLineRunner {
-    @Autowired
-    private ScrRoleRepository scrRoleRepository;
+public class AmedApplication implements CommandLineRunner
+{
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         SpringApplication app = new SpringApplication(AmedApplication.class);
         app.setBannerMode(Banner.Mode.OFF);
         app.run(args);
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) throws Exception
+    {
 
     }
 }

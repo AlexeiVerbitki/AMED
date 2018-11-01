@@ -156,7 +156,7 @@ public class DocumentsController
             String classPath = "";
             switch (type)
             {
-                case "NOTIFICATION":
+                case "NL":
                     classPath = "classpath:..\\resources\\layouts\\notificationLetter.jrxml";
                     break;
                 case "RA":
@@ -186,7 +186,7 @@ public class DocumentsController
     }
 
     @RequestMapping(value = "/view-medicament-authorization-order", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> viewMedicamentAuthorizationOrder() throws CustomException
+    public ResponseEntity<byte[]> viewMedicamentAuthorizationOrder(@RequestParam(value = "nrDocument") String nrDocument) throws CustomException
     {
         byte[] bytes = null;
         try
@@ -196,7 +196,47 @@ public class DocumentsController
             Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts\\medicamentAuthorizationOrder.jrxml");
             JasperReport report = JasperCompileManager.compileReport(new FileInputStream(res.getFile()));
 
-            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(new ArrayList<>());
+            List<DistributionDispositionDTO> dataList = new ArrayList();
+            DistributionDispositionDTO obj = new DistributionDispositionDTO();
+            obj.setDispositionDate(Calendar.getInstance().getTime());
+            obj.setNrDisposition(nrDocument);
+            obj.setPath(res.getFile().getAbsolutePath());
+            dataList.add(obj);
+
+            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(dataList);
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, null, beanColDataSource);
+            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+        }
+        catch (Exception e)
+        {
+            throw new CustomException(e.getMessage());
+        }
+
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=request.pdf").body(bytes);
+    }
+
+    @RequestMapping(value = "/view-medicament-authorization-certificate", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> viewMedicamentAuthorizationCertificate(@RequestParam(value = "nrDocument") String nrDocument) throws CustomException
+    {
+        byte[] bytes = null;
+        try
+        {
+            ResourceLoader resourceLoader = new DefaultResourceLoader();
+
+            Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts\\medicamentAuthorizationCertificate.jrxml");
+            JasperReport report = JasperCompileManager.compileReport(new FileInputStream(res.getFile()));
+
+            List<DistributionDispositionDTO> dataList = new ArrayList();
+            DistributionDispositionDTO obj = new DistributionDispositionDTO();
+            obj.setDispositionDate(Calendar.getInstance().getTime());
+            obj.setNrDisposition(nrDocument);
+            obj.setPath(res.getFile().getAbsolutePath());
+            dataList.add(obj);
+
+            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(dataList);
+
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, null, beanColDataSource);
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
         }

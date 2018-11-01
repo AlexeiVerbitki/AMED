@@ -101,17 +101,17 @@ public class OutputDocumentsEntity
         this.docType = docType;
     }
 
-    @Basic
-    @Column(name = "response_received")
-    public boolean isResponseReceived()
-    {
-        return responseReceived;
-    }
-
-    public void setResponseReceived(boolean responseReceived)
-    {
-        this.responseReceived = responseReceived;
-    }
+//    @Basic
+//    @Column(name = "response_received")
+//    public boolean isResponseReceived()
+//    {
+//        return responseReceived;
+//    }
+//
+//    public void setResponseReceived(boolean responseReceived)
+//    {
+//        this.responseReceived = responseReceived;
+//    }
 
     @Override
     public boolean equals(Object o)
@@ -168,7 +168,7 @@ public class OutputDocumentsEntity
         result = 31 * result + (title != null ? title.hashCode() : 0);
         result = 31 * result + (content != null ? content.hashCode() : 0);
         result = 31 * result + (docType != null ? docType.hashCode() : 0);
-        result = 31 * result + (responseReceived ? 1 : 0);
+//        result = 31 * result + (responseReceived ? 1 : 0);
         return result;
     }
 }

@@ -9,44 +9,45 @@ import java.util.Set;
 @Table(name = "medicament", schema = "amed", catalog = "")
 public class MedicamentEntity
 {
-    private Integer                               id;
-    private String                                name;
-    private String                                code;
-    private String                                productCode;
-    private String                                customsCode;
-    private String                                barcode;
-    private NmInternationalMedicamentNameEntity   internationalMedicamentName;
-    private String                                commercialName;
-    private Integer                               countryId;
-    private NmManufacturesEntity                  manufacture;
-    private Integer                               registrationNumber;
-    private Timestamp                             registrationDate;
-    private Date                                  expirationDate;
-    private Double                                dose;
-    private NmPharmaceuticalFormsEntity           pharmaceuticalForm;
-    private NmManufacturesEntity                  authorizationHolder;
-    private NmMedicamentTypeEntity                medicamentType;
-    private NmMedicamentGroupEntity               group;
-    private Byte                                  prescription;
-    private String                                serialNr;
-    private String                                primarePackage;
-    private String                                administeringMode;
-    private NmEconomicAgentsEntity                company;
-    private String                                status;
-    private NmUnitsOfMeasurementEntity            unitsOfMeasurement;
-    private String                                volume;
-    private Integer                               termsOfValidity;
-    private Integer                               unitsQuantity;
-    private NmUnitsOfMeasurementEntity            unitsQuantityMeasurement;
-    private Integer                               storageQuantity;
-    private NmUnitsOfMeasurementEntity            storageQuantityMeasurement;
-    private Set<DocumentsEntity>                  documents;
+    private Integer id;
+    private String name;
+    private String code;
+    private String productCode;
+    private String customsCode;
+    private String barcode;
+    private NmInternationalMedicamentNameEntity internationalMedicamentName;
+    private String commercialName;
+    private Integer countryId;
+    private NmManufacturesEntity manufacture;
+    private Integer registrationNumber;
+    private Timestamp registrationDate;
+    private Date expirationDate;
+    private Double dose;
+    private NmPharmaceuticalFormsEntity pharmaceuticalForm;
+    private NmManufacturesEntity authorizationHolder;
+    private NmMedicamentTypeEntity medicamentType;
+    private NmMedicamentGroupEntity group;
+    private Byte prescription;
+    private String serialNr;
+    private String primarePackage;
+    private String administeringMode;
+    private NmEconomicAgentsEntity company;
+    private String status;
+    private NmUnitsOfMeasurementEntity unitsOfMeasurement;
+    private String volume;
+    private Integer termsOfValidity;
+    private Integer unitsQuantity;
+    private NmUnitsOfMeasurementEntity unitsQuantityMeasurement;
+    private Integer storageQuantity;
+    private NmUnitsOfMeasurementEntity storageQuantityMeasurement;
+    private Set<DocumentsEntity> documents;
     private Set<OutputDocumentsEntity> outputDocuments;
     private Set<MedicamentActiveSubstancesEntity> activeSubstances;
-    private Set<PaymentOrdersEntity>              paymentOrders;
-    private Set<ReceiptsEntity>                   receipts;
+    private Set<PaymentOrdersEntity> paymentOrders;
+    private Set<ReceiptsEntity> receipts;
     private Set<ReferencePricesEntity> referencePrices;
     private Set<PricesEntity> prices;
+    private MedicamentExpertsEntity experts;
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
@@ -95,31 +96,37 @@ public class MedicamentEntity
 
     @Basic
     @Column(name = "code", nullable = true, length = 10)
-    public String getCode() {
+    public String getCode()
+    {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(String code)
+    {
         this.code = code;
     }
 
     @Basic
     @Column(name = "product_code", nullable = true, length = 10)
-    public String getProductCode() {
+    public String getProductCode()
+    {
         return productCode;
     }
 
-    public void setProductCode(String productCode) {
+    public void setProductCode(String productCode)
+    {
         this.productCode = productCode;
     }
 
     @Basic
     @Column(name = "customs_code", nullable = true, length = 5)
-    public String getCustomsCode() {
+    public String getCustomsCode()
+    {
         return customsCode;
     }
 
-    public void setCustomsCode(String customsCode) {
+    public void setCustomsCode(String customsCode)
+    {
         this.customsCode = customsCode;
     }
 
@@ -142,7 +149,8 @@ public class MedicamentEntity
         return internationalMedicamentName;
     }
 
-    public void setInternationalMedicamentName(NmInternationalMedicamentNameEntity internationalMedicamentName) {
+    public void setInternationalMedicamentName(NmInternationalMedicamentNameEntity internationalMedicamentName)
+    {
         this.internationalMedicamentName = internationalMedicamentName;
     }
 
@@ -500,6 +508,18 @@ public class MedicamentEntity
     public void setActiveSubstances(Set<MedicamentActiveSubstancesEntity> activeSubstances)
     {
         this.activeSubstances = activeSubstances;
+    }
+
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
+    @JoinColumn( name = "expert_id" )
+    public MedicamentExpertsEntity getExperts()
+    {
+        return experts;
+    }
+
+    public void setExperts(MedicamentExpertsEntity experts)
+    {
+        this.experts = experts;
     }
 
     @Override

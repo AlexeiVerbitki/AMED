@@ -4,7 +4,6 @@ import {CommonModule} from '@angular/common';
 import {MedicamentRegistrationRoutingModule} from './medicament-registration-routing.module';
 import {RegCerereComponent} from "./reg-cerere/reg-cerere.component";
 import {EvaluarePrimaraComponent} from "./evaluare-primara/evaluare-primara.component";
-import {SamsaComponent} from "./samsa/samsa.component";
 import {MDBBootstrapModule} from "angular-bootstrap-md";
 import {MaterialSharedModule} from "../../material-shared.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -14,7 +13,7 @@ import {NumberOnlyDirective} from "../../shared/directive/number-only.directive"
 import {RequestAdditionalDataDialogComponent} from "../../dialog/request-additional-data-dialog/request-additional-data-dialog.component";
 import {DocumentModule} from "../../document/document.module";
 import {PaymentModule} from "../../payment/payment.module";
-import {ProcessInterruptionComponent} from "../../process-interruption/process-interruption.component";
+import {ProcessInterruptionComponent} from "./process-interruption/process-interruption.component";
 import { ExpertiComponent } from './experti/experti.component';
 import {ExpertComiteeModule} from "../../expert-comitee/expert-comitee.module";
 
@@ -34,7 +33,7 @@ import {ExpertComiteeModule} from "../../expert-comitee/expert-comitee.module";
     entryComponents: [
         RequestAdditionalDataDialogComponent
     ],
-    declarations: [RegCerereComponent, EvaluarePrimaraComponent, SamsaComponent, NumberOnlyDirective,RequestAdditionalDataDialogComponent,ProcessInterruptionComponent, ExpertiComponent],
+    declarations: [RegCerereComponent, EvaluarePrimaraComponent, NumberOnlyDirective,RequestAdditionalDataDialogComponent,ProcessInterruptionComponent, ExpertiComponent],
     providers: [UploadFileService,RequestService]
 })
 export class MedicamentRegistrationModule {

@@ -22,12 +22,8 @@
             </div>
         </div>
         <hr>
-        <app-document [documents]="documents" [nrCerere]="PriceRegForm.get('requestNumber').value"></app-document>
-        <div *ngIf="formSubmitted && documents.length == 0">
-            <small class="text-muted"><strong class="text-danger">Încărcați actele necesare înregistrării prețului la
-                medicament</strong></small>
-        </div>
-        <hr>
+        <h5 class="text-center font-weight-bold">Selectarea Medicamentului</h5>
+
         <div class="row">
             <div class="col-md-6">
                 <div class="md-form-modified">
@@ -64,7 +60,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4" formGroupName="medicament">
                 <div class="md-form">
                     <input id="intName" mdbInputDirective type="text" class="form-control" [value]="internationalName" [attr.disabled]="true">
                     <label for="intName">Denumirea Internațională</label>
@@ -104,7 +100,7 @@
             </div>
         </div>
         <hr>
-        <h5 class="text-center font-weight-bold">Divizare</h5>
+        <h5 class="text-center font-weight-bold">Divizarea Medicamentului</h5>
         <div class="row">
             <div class="col-md-6">
                 <div class="md-form">
@@ -152,41 +148,36 @@
                     mdbWavesEffect>Adaugă preț propus
             </button>
         </div>
-        <hr>
-        <h5 class="text-center font-weight-bold">Prețul medicamentului în 9 țări de referință</h5>
-        <template #priceReferenceContainer></template>
-        <div class="position-button">
-            <button (click)="addReferencePriceRow()" class="btn btn-mdb-color waves-light btn-sm btn-sm-bl"
-                    mdbWavesEffect>Adaugă preț de
-                referință
-            </button>
+        <div *ngIf="formSubmitted && proposedPriceComponentRef.length == 0">
+            <small class="text-muted"><strong class="text-danger">Introduceți variantele de prețuri</strong></small>
         </div>
+
+        <div [hidden]="medicamentType == undefined || medicamentType == MedType.Original">
+            <hr>
+            <h5 class="text-center font-weight-bold">Medicamentul dat este unul <font color="red">GENERIC</font>. Indicați prețul acestuia în 9 țări de referință </h5>
+            <template #priceReferenceContainer></template>
+            <div>
+                <div class="position-button" >
+                    <button (click)="addReferencePriceRow()" class="btn btn-mdb-color waves-light btn-sm btn-sm-bl"
+                            mdbWavesEffect>Adaugă preț de referință
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="medicamentType == MedType.Original && formSubmitted && priceReferenceComponentRef.length == 0">
+            <small class="text-muted"><strong class="text-danger">Introduceți prețurile de referință</strong></small>
+        </div>
+
         <hr>
-        <h5 class="text-center font-weight-bold">Cursul Valutar al Băncii Naționale a Moldovei</h5>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input id="usd2" mdbInputDirective type="text" class="form-control" [value]="currencyUSD" [attr.disabled]="true">
-                    <label for="usd2">USD</label>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input id="eu2" mdbInputDirective type="number" class="form-control" [value]="currencyEUR" [attr.disabled]="true">
-                    <label for="eu2">EU</label>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input id="rur2" mdbInputDirective type="number" class="form-control" [value]="currencyRUR" [attr.disabled]="true">
-                    <label for="rur2">RUR</label>
-                </div>
-            </div>
+        <app-document [documents]="documents" [nrCerere]="PriceRegForm.get('requestNumber').value"></app-document>
+        <div *ngIf="formSubmitted && documents.length == 0">
+            <small class="text-muted"><strong class="text-danger">Încărcați actele necesare înregistrării prețului la
+                medicament</strong></small>
         </div>
         <hr>
         <div class="text-center">
             <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                    (click)="nextStep()">Următorul pas
+                    (click)="nextStep()">Salvează cererea
             </button>
         </div>
     </form>

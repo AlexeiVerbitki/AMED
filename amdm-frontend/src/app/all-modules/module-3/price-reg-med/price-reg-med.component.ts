@@ -29,6 +29,11 @@ enum PriceRowType {
     Reference = 2
 }
 
+enum MedicamentType {
+    Original = 2 ,
+    Generic = 3
+}
+
 
 @Component({
   selector: 'app-price-reg-med',
@@ -47,10 +52,16 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
       companies: Company[] = [];
       countries: Country[] = [];
       currencies: Currency[] = [];
+      priceTypes: any[];
       companyMedicaments: Medicament[];
       formSubmitted: boolean;
 
+      OriginCountryPriceTypeId: number;
+
+      startRecDate: Date = new Date();
+
       @ViewChild("priceReferenceContainer", { read: ViewContainerRef }) priceReferenceContainer;
+
       @ViewChild("proposedPriceContainer", { read: ViewContainerRef }) proposedPriceContainer;
 
       priceReferenceComponentRef: ComponentRef<ReferencePriceComponent> [] = [];
@@ -76,6 +87,8 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
     storageQuantity:            number;
     volumeProp:                 number;
     unitsQuantity:              number;
+    medicamentType:             MedicamentType = MedicamentType.Generic;
+    MedType = MedicamentType;
 
   constructor(private fb: FormBuilder,
               public dialog: MatDialog,
@@ -90,6 +103,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
             currentStep:        ['R'],
             medicament:     fb.group({
                                 name:                    [null, Validators.required],
+                                internationalName:       [null, Validators.required],
                                 storageQuantity:         [null, Validators.required],
                             }),
             type:
@@ -127,7 +141,20 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
           this.priceService.getCurrenciesShort().subscribe(currenciesData => {
                   this.currencies = currenciesData;
               },
-              error => {console.log(error); alert(error);}
+              error => console.log(error)
+          ));
+
+      this.subscriptions.push(
+          this.priceService.getAllPriceTypes().subscribe(priceTypes => {
+                  this.priceTypes = priceTypes;
+                  for(let p of this.priceTypes) {
+                      if(p.description == 'În țara de origine') {
+                          this.OriginCountryPriceTypeId = p.id;
+                          break;
+                      }
+                  }
+              },
+              error => console.log(error)
           ));
 
       this.subscriptions.push(
@@ -152,6 +179,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
             this.priceReferenceComponentRef[this.priceRefIndex] = this.priceReferenceContainer.createComponent(this.componentFactory);
             this.priceReferenceComponentRef[this.priceRefIndex].instance.countries = this.countries;
             this.priceReferenceComponentRef[this.priceRefIndex].instance.formNr = this.priceRefIndex;
+            this.priceReferenceComponentRef[this.priceRefIndex].instance.types = this.priceTypes;
             this.priceReferenceComponentRef[this.priceRefIndex].instance.remove.subscribe(event => this.removePriceRow(event, PriceRowType.Reference));
             this.priceReferenceComponentRef[this.priceRefIndex++].instance.currencies = this.currencies;
         }
@@ -187,6 +215,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
   }
 
   private onMedSelected(newMed: Medicament) {
+      console.log(newMed);
       if(newMed == undefined) return;
       this.onRemoveMed();
 
@@ -205,8 +234,9 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
       let refPrices: Price[] = newMed.referencePrices;
       if (refPrices != undefined && refPrices.length > 0) {
           refPrices.forEach(value => {
+              // if(value.type == 3) { // 3 - pret in tara de origine 4 - pret in tara de referinta
               this.addReferencePriceRow();
-              this.priceReferenceComponentRef[this.priceRefIndex - 1].instance.refPrice = value
+              this.priceReferenceComponentRef[this.priceRefIndex - 1].instance.refPrice = value;
           })
       }
 
@@ -230,6 +260,11 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
           this.internationalName = internationalName.description;
       }
 
+      let medType: any = newMed.medicamentType;
+      if(medType != undefined) {
+          this.medicamentType = (<MedicamentType>medType.code);
+      }
+
       let expDate: Date = newMed.expirationDate;
       if(expDate != undefined) {
           let d: Date = new Date(expDate);
@@ -251,6 +286,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
       this.unitsQuantityMeasurement = '';
       this.internationalName = '';
       this.storageQuantityMeasurement = '';
+      this.medicamentType = undefined;
       this.dose = undefined;
       this.expirationDate = '';
       this.termsOfValidity = undefined;
@@ -293,9 +329,16 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
         this.priceReferenceComponentRef.forEach(form => form.instance.formSubmitted = true);
         this.proposedPriceComponentRef.forEach(form => form.instance.formSubmitted = true);
 
+        let isGeneric: boolean = this.medicamentType != undefined && this.medicamentType == MedicamentType.Generic;
+
+        let dfdf: boolean = (!isGeneric || (isGeneric && this.priceReferenceComponentRef.length > 0));
+
         let canSave: boolean = this.documents.length > 0 &&
             this.PriceRegForm.get('company').valid &&
-            this.PriceRegForm.get('medicament')['controls'].name.valid;
+            this.PriceRegForm.get('medicament')['controls'].name.valid &&
+            this.proposedPriceRefIndex > 0 && (!isGeneric || (isGeneric && this.priceReferenceComponentRef.length > 0))
+
+
 
         if(!canSave)
         {
@@ -306,12 +349,10 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
         this.proposedPriceComponentRef.forEach(form => form.instance.formSubmitted = false);
         this.formSubmitted = false;
 
-        this.PriceRegForm.get('medicament')['controls'].company = this.PriceRegForm.get('company').value;
-
         let priceModel : any = this.PriceRegForm.value;
         priceModel.requestHistories = [
             {
-                startDate : this.PriceRegForm.get('startDate').value,
+                startDate : this.startRecDate,
                 endDate: new Date(),
                 username : this.priceService.getUsername(),
                 step : 'R'
@@ -320,7 +361,6 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
         priceModel.requestNumber = this.PriceRegForm.get('requestNumber').value;
         priceModel.medicament = priceModel.medicament.name;
         priceModel.medicament.storageQuantity = this.PriceRegForm.get('medicament')['controls'].storageQuantity.value;
-        priceModel.medicament.documents = this.documents;
 
         let prices : Price[] = [], refPrices: Price[] = [];
         this.proposedPriceComponentRef.forEach(value => {

@@ -13,14 +13,14 @@
         <hr>
 
         <div class="row" *ngIf="tipCerere">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="md-form">
                     <input id="nrCererii" mdbInputDirective type="text" class="form-control"
                            formControlName="nrCererii">
                     <label for="nrCererii">Nr. cererii</label>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="picker2" placeholder="Data de inregistrare a cererii"

@@ -1,4 +1,3 @@
-primar
 <div class="container-fluid sky z-depth-2">
 	<form [formGroup]="eForm">
 		<h3 class="text-center my-3 font-weight-bold">Evaluare primara</h3>
@@ -21,7 +20,7 @@ primar
 			</div>
 		</div>
 		<hr>
-		<app-document [documents]="documents" [nrCerere]="eForm.get('requestNumber').value"></app-document>
+		<app-document [documents]="documents" [nrCerere]="eForm.get('requestNumber').value" [dcTypes]="docTypes" (documentAdded)="documentAdded($event)"></app-document>
 		<hr>
 		<div class="row">
 			<div class="col-md-6">
@@ -459,7 +458,7 @@ primar
 				<th scope="row">{{ a.name }}</th>
 				<th scope="row">{{ a.number }}</th>
 				<th scope="row">{{ a.status }}</th>
-				<th scope="row"><mat-checkbox *ngIf="a.docType.category=='RA' || a.docType.category=='LA'" #checkBoxResponse [checked]="a.responseReceived" (change)="checkResponseReceived(a,checkBoxResponse)">Raspuns primit</mat-checkbox></th>
+				<th scope="row"><mat-checkbox *ngIf="a.docType && (a.docType.category=='RA' || a.docType.category=='LA')" #checkBoxResponse [checked]="a.responseReceived" (change)="checkResponseReceived(a,checkBoxResponse)">Raspuns primit</mat-checkbox></th>
 				<td>
 					<button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)">Vizualizare</button>
 					<button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && (a.docType.category=='RA' || a.docType.category=='LA')" class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)">Stergere</button>
@@ -469,6 +468,9 @@ primar
 		</table>
 		<div *ngIf="formSubmitted && !isResponseReceived">
 			<small class="text-muted"><strong class="text-danger">Exista documente fara raspuns</strong></small>
+		</div>
+		<div *ngIf="formSubmitted && isNonAttachedDocuments">
+			<small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong></small>
 		</div>
 		<div class="text-center">
 			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>

@@ -41,6 +41,17 @@ export class LicenseService {
         return this.http.post<any>('/api/license/confirm-issue-license', model, {observe: 'response'});
     }
 
+
+    confirmModifyLicense (model : any): Observable<HttpResponse<any>>
+    {
+        return this.http.post<any>('/api/license/confirm-modify-license', model, {observe: 'response'});
+    }
+
+    confirmDuplicateLicense (model : any): Observable<HttpResponse<any>>
+    {
+        return this.http.post<any>('/api/license/confirm-duplicate-license', model, {observe: 'response'});
+    }
+
     retrieveAllRequestTypes(): Observable<any> {
         return this.http.get('/api/license/all-license-request-types');
     }
@@ -49,8 +60,16 @@ export class LicenseService {
         return this.http.get('/api/license/retrieve-license-by-request-id', {params :{ id : id} });
     }
 
+    retrieveLicenseByEconomicAgentId(id: string): Observable<any> {
+        return this.http.get('/api/license/retrieve-license-by-economic-agent-id', {params :{ id : id} });
+    }
+
     loadAnnounces(): Observable<any> {
         return this.http.get('/api/license/retrieve-announce-methods');
+    }
+
+    loadActivities(): Observable<any> {
+        return this.http.get('/api/license/retrieve-activities');
     }
 
 }

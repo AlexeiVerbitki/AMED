@@ -9,6 +9,7 @@ public class NmDocumentTypesEntity
     private Integer id;
     private String description;
     private String category;
+    private boolean needDocNr;
 
 
     @Id
@@ -47,6 +48,18 @@ public class NmDocumentTypesEntity
         this.category = category;
     }
 
+    @Basic
+    @Column(name = "need_doc_nr")
+    public boolean isNeedDocNr()
+    {
+        return needDocNr;
+    }
+
+    public void setNeedDocNr(boolean needDocNr)
+    {
+        this.needDocNr = needDocNr;
+    }
+
     @Override
     public boolean equals(Object o)
     {
@@ -61,6 +74,10 @@ public class NmDocumentTypesEntity
 
         NmDocumentTypesEntity that = (NmDocumentTypesEntity) o;
 
+        if (needDocNr != that.needDocNr)
+        {
+            return false;
+        }
         if (id != null ? !id.equals(that.id) : that.id != null)
         {
             return false;
@@ -78,6 +95,7 @@ public class NmDocumentTypesEntity
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (category != null ? category.hashCode() : 0);
+        result = 31 * result + (needDocNr ? 1 : 0);
         return result;
     }
 }

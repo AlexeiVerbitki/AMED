@@ -18,6 +18,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class LicenseRegistrationRequestService
 {
     @Autowired
@@ -49,6 +50,40 @@ public class LicenseRegistrationRequestService
         );
         rrE.setCompany((NmEconomicAgentsEntity) Hibernate.unproxy(re.get().getCompany()));
         return rrE;
+    }
+
+
+    public void saveNewLicense(RegistrationRequestsEntity request) throws CustomException
+    {
+        EntityManager em = null;
+        try
+        {
+            em = entityManagerFactory.createEntityManager();
+            em.getTransaction().begin();
+
+
+            em.persist(request);
+
+            for (LicenseMandatedContactEntity lmce : request.getLicense().getLicenseMandatedContacts())
+            {
+                lmce.setRegistrationRequestId(request.getId());
+                em.merge(lmce);
+            }
+
+            em.getTransaction().commit();
+
+        }
+        catch (Exception e){
+            if (em != null)
+            {
+                em.getTransaction().rollback();
+            }
+            throw new CustomException(e.getMessage(), e);
+        }
+        finally
+        {
+            em.close();
+        }
     }
 
     public void updateRegistrationLicense(RegistrationRequestsEntity request, boolean next) throws CustomException
@@ -113,6 +148,11 @@ public class LicenseRegistrationRequestService
             }
 
             r.getRequestHistories().add(new ArrayList<>(request.getRequestHistories()).get(0));
+
+
+            //Update activities
+            r.getLicense().getActivities().clear();
+            r.getLicense().getActivities().addAll(request.getLicense().getActivities());
 
             if (next)
             {

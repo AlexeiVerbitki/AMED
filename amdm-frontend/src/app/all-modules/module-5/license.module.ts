@@ -11,6 +11,7 @@ import {DocumentComponent} from "../../document/document.component";
 import {UploadFileService} from "../../shared/service/upload/upload-file.service";
 import {LicenseService} from "../../shared/service/license/license.service";
 import { EliberareCerereLicComponent } from './eliberare-cerere-lic/eliberare-cerere-lic.component';
+import {DocumentModule} from "../../document/document.module";
 
 @NgModule({
     imports: [
@@ -20,11 +21,11 @@ import { EliberareCerereLicComponent } from './eliberare-cerere-lic/eliberare-ce
         ReactiveFormsModule,
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
+        DocumentModule
     ],
     schemas: [],
     declarations: [RegMedCerereLicComponent,
         EvaluareCerereLicComponent,
-	 DocumentComponent,
 	 EliberareCerereLicComponent
     ]    ,
     providers: [UploadFileService, LicenseService

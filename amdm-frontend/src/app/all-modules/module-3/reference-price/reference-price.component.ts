@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Country} from "../../../models/country";
 import {Currency} from "../../../models/currency";
 import {Price} from "../../../models/price";
@@ -16,14 +16,21 @@ export class ReferencePriceComponent implements OnInit {
     forEvaluation: boolean = false;
     refPrice: Price = new Price();
 
+    @Input()
+    canRemove: boolean = true;
+
     @Output()
     public remove: EventEmitter<number> = new EventEmitter();
 
 
     formSubmitted: boolean = false;
 
+    @Input()
     countries: Country[] = [];
+    @Input()
     currencies: Currency[] = [];
+    @Input()
+    types: any[] = [];
 
     onPriceChange($event) {
        // alert($event.target.value);

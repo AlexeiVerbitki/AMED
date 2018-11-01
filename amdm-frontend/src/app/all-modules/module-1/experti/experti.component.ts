@@ -2,17 +2,17 @@ import {Component, OnInit} from '@angular/core';
 import {Subscription} from "rxjs";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {Document} from "../../../models/document";
-import {ModalService} from "../../../shared/service/modal.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {RequestService} from "../../../shared/service/request.service";
 import {Expert} from "../../../models/expert";
 import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
 import {DocumentService} from "../../../shared/service/document.service";
-import {MedicamentService} from "../../../shared/service/medicament.service";
 import {AuthService} from "../../../shared/service/authetication.service";
 import {AdministrationService} from "../../../shared/service/administration.service";
 import {ConfirmationDialogComponent} from "../../../confirmation-dialog/confirmation-dialog.component";
 import {MatDialog} from "@angular/material";
+import {TaskService} from "../../../shared/service/task.service";
+import {LoaderService} from "../../../shared/service/loader.service";
 
 @Component({
     selector: 'app-experti',
@@ -25,11 +25,12 @@ export class ExpertiComponent implements OnInit {
     documents: Document [] = [];
     activeSubstancesTable: any[];
     company: any;
-    outDocuments: any[] = [{name: 'Ordinul de autorizare a medicamentului'}];
+    outputDocuments: any[] = [];
     formSubmitted: boolean;
     expert: Expert = new Expert();
     docTypes: any[];
-    modelToSubmit : any;
+    modelToSubmit: any;
+    isNonAttachedDocuments: boolean = false;
 
     constructor(private fb: FormBuilder,
                 private authService: AuthService,
@@ -38,6 +39,8 @@ export class ExpertiComponent implements OnInit {
                 private administrationService: AdministrationService,
                 private router: Router,
                 private errorHandlerService: ErrorHandlerService,
+                private taskService: TaskService,
+                private loadingService: LoaderService,
                 private documentService: DocumentService,
                 private activatedRoute: ActivatedRoute) {
         this.expertForm = fb.group({
@@ -98,7 +101,9 @@ export class ExpertiComponent implements OnInit {
     ngOnInit() {
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
                 this.subscriptions.push(this.requestService.getMedicamentRequest(params['id']).subscribe(data => {
-                    this.modelToSubmit = data;
+                        this.modelToSubmit = Object.assign({}, data);
+                        this.outputDocuments = data.medicament.outputDocuments;
+                        this.checkOutputDocumentsStatus();
                         this.expertForm.get('medicament.id').setValue(data.medicament.id);
                         this.expertForm.get('id').setValue(data.id);
                         this.expertForm.get('startDate').setValue(data.startDate);
@@ -149,53 +154,87 @@ export class ExpertiComponent implements OnInit {
         );
 
         this.subscriptions.push(
-            this.administrationService.getAllDocTypes().subscribe(data => {
-                    this.docTypes = data;
-                    this.docTypes = this.docTypes.filter(r => r.category === 'CA');
+            this.taskService.getRequestStepByIdAndCode('1', 'X').subscribe(step => {
+                    this.subscriptions.push(
+                        this.administrationService.getAllDocTypes().subscribe(data => {
+                                this.docTypes = data;
+                                this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
+                            },
+                            error => console.log(error)
+                        )
+                    );
                 },
                 error => console.log(error)
             )
         );
     }
 
-    viewDoc() {
+    viewDoc(document: any) {
         this.formSubmitted = true;
-        if (!this.expert || !this.expert.chairman) {
-            this.errorHandlerService.showError('Presedintele comisiei trebuie selectat');
-            return;
-        } else if (!this.expert.farmacolog) {
-            this.errorHandlerService.showError('Farmacologul trebuie selectat');
-            return;
-        } else if (!this.expert.farmacist) {
-            this.errorHandlerService.showError('Farmacistul trebuie selectat');
-            return;
-        } else if (!this.expert.medic) {
-            this.errorHandlerService.showError('Medicul trebuie selectat');
-            return;
+        if (!this.expert || !this.expert.chairman || !this.expert.farmacolog || !this.expert.farmacist || !this.expert.medic) {
+            this.errorHandlerService.showError('Membrii comisiei trebuiesc completati');
         }
         this.formSubmitted = false;
-        this.subscriptions.push(this.documentService.viewMedicamentAuthorizationOrder().subscribe(data => {
-                let file = new Blob([data], {type: 'application/pdf'});
-                var fileURL = URL.createObjectURL(file);
-                window.open(fileURL);
-            }, error => {
-                console.log('error ', error);
-            }
-            )
-        );
+
+        if (document.docType.category == 'OA') {
+            this.subscriptions.push(this.documentService.viewMedicamentAuthorizationOrder(document.number).subscribe(data => {
+                    let file = new Blob([data], {type: 'application/pdf'});
+                    var fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                }, error => {
+                    console.log('error ', error);
+                }
+                )
+            );
+        } else {
+            this.subscriptions.push(this.documentService.viewMedicamentAuthorizationCertificate(document.number).subscribe(data => {
+                    let file = new Blob([data], {type: 'application/pdf'});
+                    var fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                }, error => {
+                    console.log('error ', error);
+                }
+                )
+            );
+        }
     }
 
 
     nextStep() {
         this.formSubmitted = true;
 
+        let isFormInvalid = false;
+        let isOutputDocInvalid = false;
+
         if (!this.expert || !this.expert.medic || !this.expert.farmacist || !this.expert.farmacolog || !this.expert.chairman) {
+            isFormInvalid = true;
+        }
+
+        for (let entry of this.outputDocuments) {
+            if (entry.status == 'Nu este atasat') {
+                this.isNonAttachedDocuments = true;
+                isOutputDocInvalid = true;
+            }
+        }
+
+        if (!isOutputDocInvalid) {
+            this.isNonAttachedDocuments = false;
+        }
+
+        if (isFormInvalid) {
+            this.errorHandlerService.showError('Membrii comisiei trebuiesc completati.');
+        } else if (this.isNonAttachedDocuments) {
+            this.errorHandlerService.showError('Exista documente care nu au fost atasate.');
+        }
+
+        if (isOutputDocInvalid || isFormInvalid) {
             return;
         }
 
+        this.loadingService.show();
         this.formSubmitted = false;
 
-        var x  = this.modelToSubmit;
+        var x = this.modelToSubmit;
 
         x.currentStep = 'F';
         x.endDate = new Date();
@@ -210,18 +249,28 @@ export class ExpertiComponent implements OnInit {
             username: this.authService.getUserName(), step: 'F'
         });
 
-        x.medicament.experts = {chairman : this.expert.chairman, farmacolog : this.expert.farmacolog, farmacist :this.expert.farmacist,
-            medic :this.expert.medic, date : new Date(), comment : this.expert.comment, number : this.expert.comiteeNr};
+        x.medicament.status = 'F';
+
+        x.medicament.experts = {
+            chairman: this.expert.chairman, farmacolog: this.expert.farmacolog, farmacist: this.expert.farmacist,
+            medic: this.expert.medic, date: new Date(), comment: this.expert.comment, number: this.expert.comiteeNr
+        };
+        x.medicament.outputDocuments = this.outputDocuments;
 
         this.subscriptions.push(this.requestService.addMedicamentRequest(x).subscribe(data => {
+                this.loadingService.hide();
                 this.router.navigate(['dashboard/module']);
-            }, error => console.log('Certificatul de autorizare nu a putut fi salvat in baza de date.'))
+            }, error =>   this.loadingService.hide())
         );
 
     }
 
-    interruptProcess()
-    {
+    documentAdded(event) {
+        this.formSubmitted = false;
+        this.checkOutputDocumentsStatus();
+    }
+
+    interruptProcess() {
         this.formSubmitted = true;
 
         if (!this.expert || !this.expert.medic || !this.expert.farmacist || !this.expert.farmacolog || !this.expert.chairman) {
@@ -239,20 +288,48 @@ export class ExpertiComponent implements OnInit {
 
         dialogRef2.afterClosed().subscribe(result => {
             if (result) {
-                var modelToSubmit = {requestHistories: [], currentStep: 'I', id: this.expertForm.get('id').value, medicament : {experts : {}}};
+                this.loadingService.show();
+                var modelToSubmit = {
+                    requestHistories: [],
+                    currentStep: 'I',
+                    id: this.expertForm.get('id').value,
+                    medicament: {experts: {}}
+                };
                 modelToSubmit.requestHistories.push({
                     startDate: this.expertForm.get('data').value, endDate: new Date(),
                     username: this.authService.getUserName(), step: 'X'
                 });
 
-                modelToSubmit.medicament.experts = {chairman : this.expert.chairman, farmacolog : this.expert.farmacolog, farmacist :this.expert.farmacist,
-                    medic :this.expert.medic, date : new Date(), comment : this.expert.comment, number : this.expert.comiteeNr};
+                modelToSubmit.medicament.experts = {
+                    chairman: this.expert.chairman,
+                    farmacolog: this.expert.farmacolog,
+                    farmacist: this.expert.farmacist,
+                    medic: this.expert.medic,
+                    date: new Date(),
+                    comment: this.expert.comment,
+                    number: this.expert.comiteeNr
+                };
 
                 this.subscriptions.push(this.requestService.addMedicamentHistory(modelToSubmit).subscribe(data => {
+                        this.loadingService.hide();
                         this.router.navigate(['dashboard/module/medicament-registration/interrupt/' + this.expertForm.get('id').value]);
-                    }, error => console.log(error))
+                    }, error => this.loadingService.hide())
                 );
             }
         });
+    }
+
+    checkOutputDocumentsStatus()
+    {
+        for (let entry of this.outputDocuments) {
+            var isMatch = this.documents.some(elem => {
+                return (elem.docType.category == entry.docType.category && elem.number==entry.number ) ? true : false;
+            });
+            if (isMatch) {
+                entry.status = 'Atasat';
+            } else {
+                entry.status = 'Nu este atasat';
+            }
+        }
     }
 }

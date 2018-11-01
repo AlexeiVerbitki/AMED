@@ -1,7 +1,7 @@
 <div class="container-fluid sky z-depth-2">
 	<h3 class="text-center my-1 font-weight-bold">Managementul task-lor</h3>
 	<hr>
-	<form [formGroup]='taskForm' #taskFormElem>
+	<form [formGroup]='taskForm'>
 		<div class="row">
 			<div class="col-3">
 				<div class="md-form">
@@ -47,7 +47,7 @@
 			<div class="col-3">
 				<div class="md-form-modified">
 					<mat-form-field class="w-100">
-						<input matInput [matDatepicker]="startDate" placeholder="Start Date" formControlName="startDate">
+						<input matInput [matDatepicker]="startDate" placeholder="Start date" formControlName="startDate">
 						<mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
 						<mat-datepicker touchUi #startDate></mat-datepicker>
 					</mat-form-field>
@@ -56,7 +56,7 @@
 			<div class="col-3">
 				<div class="md-form-modified">
 					<mat-form-field class="w-100">
-						<input matInput [matDatepicker]="endDate" placeholder="End Date" formControlName="endDate">
+						<input matInput [matDatepicker]="endDate"  placeholder="End date" formControlName="endDate">
 						<mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
 						<mat-datepicker touchUi #endDate></mat-datepicker>
 					</mat-form-field>
@@ -77,11 +77,13 @@
 		</div>
 		<div class="example-container">
 			<table mat-table [dataSource]="dataSource" matSort>
-
-
 				<ng-container matColumnDef="requestNumber">
-					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Request Number</th>
-					<td mat-cell *matCellDef="let element"> {{element.requestNumber}} </td>
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Numar cerere</th>
+					<td mat-cell *matCellDef="let element">
+						<a title="Deschide proces" (click)="navigateToUrl(element)">
+							{{element.requestNumber}}
+						</a>
+					</td>
 				</ng-container>
 
 				<ng-container matColumnDef="processName">
@@ -101,12 +103,12 @@
 
 				<ng-container matColumnDef="startDate">
 					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Start date</th>
-					<td mat-cell *matCellDef="let element"> {{element.startDate | date: 'dd/mm/yyyy'}} </td>
+					<td mat-cell *matCellDef="let element"> {{element.startDate | date: 'dd/MM/yyyy'}} </td>
 				</ng-container>
 
 				<ng-container matColumnDef="endDate">
 					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> End date</th>
-					<td mat-cell *matCellDef="let element"> {{element.endDate | date: 'dd/mm/yyyy'}} </td>
+					<td mat-cell *matCellDef="let element"> {{element.endDate | date: 'dd/MM/yyyy'}} </td>
 				</ng-container>
 
 				<ng-container matColumnDef="step">
@@ -117,8 +119,7 @@
 				<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
 				<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 			</table>
+			<mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
 		</div>
-
-		<mat-paginator [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
 	</div>
 </div>

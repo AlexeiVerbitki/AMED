@@ -22,7 +22,7 @@
 			</div>
 		</div>
 		<hr>
-		<app-document [documents]="documents" [nrCerere]="rForm.get('requestNumber').value"></app-document>
+		<app-document [documents]="documents" [nrCerere]="rForm.get('requestNumber').value" [dcTypes]="docTypes"></app-document>
 		<div *ngIf="formSubmitted && documents.length==0">
 			<small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
 		</div>
@@ -145,12 +145,12 @@
 					</mat-radio-group>
 				</div>
 			</div>
-			<div class="text-center w-100 mt-3">
-				<div class="alert alert-primary">
-					<span>Nr. de inregistrare a cererii: </span>
-					<strong>{{generatedDocNrSeq}}</strong>
-				</div>
-			</div>
+			<!--<div class="text-center w-100 mt-3">-->
+				<!--<div class="alert alert-primary">-->
+					<!--<span>Nr. de inregistrare a cererii: </span>-->
+					<!--<strong>{{generatedDocNrSeq}}</strong>-->
+				<!--</div>-->
+			<!--</div>-->
 		</div>
 		<hr>
 		<div class="text-center">

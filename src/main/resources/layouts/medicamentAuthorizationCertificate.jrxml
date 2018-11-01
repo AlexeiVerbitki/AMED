@@ -4,6 +4,7 @@
 	<property name="ireport.zoom" value="1.4641000000000008"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="48"/>
+	<field name="nrDisposition" class="java.lang.String"/>
 	<title>
 		<band height="73" splitType="Stretch">
 			<staticText>
@@ -54,6 +55,10 @@
 				<reportElement x="14" y="475" width="531" height="58" uuid="e4372c35-96fc-4730-869d-f31b81674eb0"/>
 				<text><![CDATA[	1. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Error quod modi, harum ipsam architecto delectus at labore, ipsum alias sapiente libero deleniti ut minus dolorem. Accusamus ipsam omnis odio odit vitae quibusdam in cumque quae quo quidem ullam, ipsum velit. Dolor vitae explicabo, unde, perspiciatis repudiandae distinctio incidunt pariatur recusandae laborum consequatur in tenetur itaque sed adipisci, dolorum autem amet.]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="55" y="182" width="100" height="20" uuid="876cef69-be55-41ed-b242-7aba5da23b13"/>
+				<textFieldExpression><![CDATA[$F{nrDisposition}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<pageFooter>

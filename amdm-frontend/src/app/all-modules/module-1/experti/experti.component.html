@@ -21,7 +21,7 @@
     </div>
     <hr>
     <app-expert-comitee [expert]="expert" [formSubmitted]="formSubmitted"></app-expert-comitee>
-    <app-document [documents]="documents" [nrCerere]="expertForm.get('requestNumber').value"></app-document>
+    <app-document [documents]="documents" [nrCerere]="expertForm.get('requestNumber').value" [dcTypes]="docTypes" (documentAdded)="documentAdded($event)"></app-document>
     <hr>
     <h5 class="text-center font-weight-bold">Detalii medicament</h5>
     <div class="row">
@@ -267,18 +267,25 @@
       <thead class="black white-text">
       <tr>
         <th scope="col">Denumirea</th>
+        <th scope="col">Numar</th>
+        <th scope="col">Status document</th>
         <th>Actiuni</th>
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let a of outDocuments">
-        <th scope="row">{{ a.name }}</th>
-        <td>
-          <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc()">Vizualizare</button>
+      <tr *ngFor="let a of outputDocuments">
+        <th scope="row" *ngIf="a.docType && (a.docType.category=='OA' || a.docType.category=='CA')">{{ a.name }}</th>
+        <th scope="row" *ngIf="a.docType && (a.docType.category=='OA' || a.docType.category=='CA')">{{ a.number }}</th>
+        <th scope="row" *ngIf="a.docType && (a.docType.category=='OA' || a.docType.category=='CA')">{{ a.status }}</th>
+        <td *ngIf="a.docType && (a.docType.category=='OA' || a.docType.category=='CA')">
+          <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)">Vizualizare</button>
         </td>
       </tr>
       </tbody>
     </table>
+    <div *ngIf="formSubmitted && isNonAttachedDocuments">
+      <small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong></small>
+    </div>
     <div class="text-center">
       <button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Finisare</button>
       <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>

@@ -2,11 +2,12 @@
     <h3 class="text-center my-3 font-weight-bold">Evaluarea primara</h3>
     <hr>
 
-    <form [formGroup]='evaluateClinicalTrailForm' (ngSubmit)="onSubmit()" #f="ngForm">
+    <form [formGroup]='evaluateClinicalTrailForm' #f="ngForm">
         <div class="row">
             <div class="col-md-4">
                 <div class="md-form">
-                    <input id="regNr" mdbInputDirective type="text" class="form-control" formControlName="requestNumber">
+                    <input id="regNr" mdbInputDirective type="text" class="form-control"
+                           formControlName="requestNumber">
                     <label for="regNr">Nr. cererii
                     </label>
                 </div>
@@ -38,20 +39,15 @@
         <mat-radio-group>
             <div class="container">
                 <div class="row">
-                    <mat-radio-group class="radio-btn-wrapper"  value={{evaluateClinicalTrailForm.getRawValue().typeCode}} [disabled]="true">
-                        <div class="col-md-12">
-                            <mat-radio-button name="prop1" value="CLAP">Aprobarea Studiilor Clinice la medicamente</mat-radio-button>
-                        </div>
-                        <div class="col-md-12">
-                            <mat-radio-button name="prop2" value="CLPSC">Aprobarea amendamentelor la Protocoalele Studiilor Clinice la medicamente</mat-radio-button>
-                        </div>
-                        <div class="col-md-12">
-                            <mat-radio-button name="prop3" value="CLNP">Înregistrarea Notificărilor privind Protocolul studiului clinic cu medicamente</mat-radio-button>
-                        </div>
-                        <div class="col-md-12">
-                            <mat-radio-button name="prop4" value="CLISP">Înregistrarea informației privind siguranța produsului de investigație clinică</mat-radio-button>
-                        </div>
-                    </mat-radio-group>
+                    <div class="offset-4"></div>
+                    <div class="col-4">
+                        <mat-radio-group class="radio-btn-wrapper"
+                                         value={{evaluateClinicalTrailForm.getRawValue().typeCode}} [disabled]="true">
+                            <mat-radio-button name="prop1" value="CLAP">Aprobarea Studiilor Clinice la medicamente
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                    <div class="offset-4"></div>
                 </div>
             </div>
         </mat-radio-group>
@@ -73,14 +69,18 @@
                     <div class="md-form">
                         <div class="container">
                             <div class="col-md-12">
-                                <mat-radio-group class="adio-btn-wrapper" [value]="evaluateClinicalTrailForm.get('clinicalTrails').value.treatment.id" (change)="onTreatmentChange($event)">
+                                <mat-radio-group class="adio-btn-wrapper"
+                                                 [value]="evaluateClinicalTrailForm.get('clinicalTrails').value.treatment.id"
+                                                 (change)="onTreatmentChange($event)">
                                     <div class="row">
                                         <div class="col-12">
                                             <h5 class="text-center font-weight-bold">Tratament</h5>
                                             <hr>
                                         </div>
                                         <div class="col-12">
-                                            <mat-radio-button class="col-12" *ngFor="let treatment of treatmentList" [value]="treatment.id">{{treatment.description}}</mat-radio-button>
+                                            <mat-radio-button class="col-12" *ngFor="let treatment of treatmentList"
+                                                              [value]="treatment.id">{{treatment.description}}
+                                            </mat-radio-button>
                                         </div>
                                     </div>
                                 </mat-radio-group>
@@ -93,14 +93,18 @@
                     <div class="md-form">
                         <div class="container">
                             <div class="col-md-12">
-                                <mat-radio-group class="adio-btn-wrapper" [value]="evaluateClinicalTrailForm.get('clinicalTrails').value.provenance.id" (change)="onProvenanceChange($event)">
+                                <mat-radio-group class="adio-btn-wrapper"
+                                                 [value]="evaluateClinicalTrailForm.get('clinicalTrails').value.provenance.id"
+                                                 (change)="onProvenanceChange($event)">
                                     <div class="row">
                                         <div class="col-12">
                                             <h5 class="text-center font-weight-bold">Tratament</h5>
                                             <hr>
                                         </div>
                                         <div class="col-12">
-                                            <mat-radio-button class="col-12" *ngFor="let provenance of provenanceList" [value]="provenance.id">{{provenance.description}}</mat-radio-button>
+                                            <mat-radio-button class="col-12" *ngFor="let provenance of provenanceList"
+                                                              [value]="provenance.id">{{provenance.description}}
+                                            </mat-radio-button>
                                         </div>
                                     </div>
                                 </mat-radio-group>
@@ -145,14 +149,6 @@
                 </div>
                 <div class="col-md-4">
                     <div class="md-form">
-                        <input id="institutiaMedLocDesStudClinic" mdbInputDirective type="text" class="form-control"
-                               formControlName="medicalInstitution">
-                        <label for="institutiaMedLocDesStudClinic">Instituţia medicală / Locul desfăşurării studiului
-                            clinic</label>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="md-form">
                         <input id="popStudClinicNumPacienti" mdbInputDirective type="number" class="form-control"
                                formControlName="trialPopulation">
                         <label for="popStudClinicNumPacienti">Populația studiului clinic / Numărul pacienţilor</label>
@@ -161,10 +157,53 @@
             </div>
             <hr>
 
-            <!--<input type="text" matInput  [matAutocomplete]="auto" formControlName="searchField">-->
-            <!--<mat-autocomplete #auto="matAutocomplete">-->
-            <!--<mat-option *ngFor="let option of searches" [value]="option.name">{{ option.name }}</mat-option>-->
-            <!--</mat-autocomplete>-->
+            <h5 class="text-center font-weight-bold">Instituţii medicale / Locul desfăşurării studiului</h5>
+            <hr>
+            <div class="row">
+                <div class="col-10">
+                    <div class="md-form-modified" [formGroup]="addMediacalInstitutionForm">
+                        <ng-select id="allMediacalInstitutions" name="allMediacalInstitutions" [items]="allMediacalInstitutionsList"
+                                   bindLabel="name"
+                                   placeholder="Instituţia medicala"
+                                   formControlName="medicalInstitution"
+                                   required="true">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="md-form-modified mt-3">
+                        <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
+                                mdbWavesEffect (click)="addMedicalInstitution()">Adaugare
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div formGroupName="medicalInstitutions">
+                <table class="table table-widths text-center">
+                    <thead class="black white-text">
+                    <tr>
+                        <th class="w-25" scope="col">Codul IMS</th>
+                        <th class="w-25" scope="col">Denumire</th>
+                        <th class="w-25" scope="col">Adresa</th>
+                        <th class="w-25" scope="col">Actiuni</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let institution of mediacalInstitutionsList">
+                        <td>{{ institution.codIms}}</td>
+                        <td>{{ institution.name }}</td>
+                        <td> {{ institution.address }}</td>
+                        <td>
+                            <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                    (click)="deleteMedicalInstitution(institution)" mdbWavesEffect>Delete
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
 
 
             <div [formGroup]="medicamentForm">
@@ -283,40 +322,30 @@
                 <hr>
             </div>
 
+
+
             <h5 class="text-center font-weight-bold">Lista de investigatori</h5>
             <hr>
-            <div [formGroup]="addInvestigatorForm" class="row">
-                <div class="col-md-3">
-                    <div class="md-form">
-                        <input id="name" mdbInputDirective type="text" class="form-control" formControlName="firstName"
-                               required>
-                        <label for="name">Nume<span class="text-danger">*</span></label>
+            <div class="row">
+                <div class="col-10">
+                    <div class="md-form-modified" [formGroup]="addInvestigatorForm">
+                        <ng-select id="allInvestigators" name="allInvestigators" [items]="allInvestigatorsList"
+                                   bindLabel="description"
+                                   placeholder="Investigator"
+                                   formControlName="investigator"
+                                   required="true">
+                        </ng-select>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="md-form">
-                        <input id="surname" mdbInputDirective type="text" class="form-control"
-                               formControlName="lastName" required>
-                        <label for="surname">Prenume<span class="text-danger">*</span></label>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="md-form">
-                        <input id="title" mdbInputDirective type="text" class="form-control" formControlName="title"
-                               required>
-                        <label for="title">Titlu <span class="text-danger">*</span></label>
-                    </div>
-                </div>
-                <div class="offset-1 col-md-2">
-                    <div class="md-form">
-                        <div class="position-button">
-                            <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
-                                    mdbWavesEffect (click)="addInvestigator()">Adaugare
-                            </button>
-                        </div>
+                <div class="col-2">
+                    <div class="md-form-modified mt-3">
+                        <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
+                                mdbWavesEffect (click)="addInvestigator()">Adaugare
+                        </button>
                     </div>
                 </div>
             </div>
+            <hr>
             <div formGroupName="investigators">
                 <table class="table table-widths text-center">
                     <thead class="black white-text">
@@ -343,17 +372,21 @@
             </div>
             <hr>
 
-            <app-payment [receipts]="receiptsList" [paymentOrders]="paymentOrdersList" (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
+            <app-payment [receipts]="receiptsList" [paymentOrders]="paymentOrdersList"
+                         (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
 
         </div>
         <hr>
-
-        <div class="text-center">
-            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect type="submit" [disabled]="disabledState">
-                Urmatorul pas
-            </button>
-        </div>
     </form>
 
-
+    <div class="text-center">
+        <button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date
+        </button>
+        <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="onSubmit()"
+                [disabled]=this.disabledState>Urmatorul pas
+        </button>
+        <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>
+    </div>
 </div>
+
+

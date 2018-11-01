@@ -46,6 +46,12 @@ public class LicenseController
     @Autowired
     private EconomicAgentsRepository economicAgentsRepository;
 
+    @Autowired
+    private LicenseActivityTypeRepository licenseActivityTypeRepository;
+
+    @Autowired
+    private LicenseMandatedContactRepository licenseMandatedContactRepository;
+
     @RequestMapping(value = "/new-license", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> nextNewLicense(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
@@ -63,7 +69,12 @@ public class LicenseController
         request.setType(requestTypeRepository.findByCode("LICEL").get());
         request.getLicense().setStatus("A");
 
-        requestRepository.save(request);
+//        requestRepository.save(request);
+
+
+        licenseRegistrationRequestService.saveNewLicense(request);
+
+
 
         request.setCurrentStepLink(Constants.StepLink.MODULE + Constants.StepLink.LICENSE + "evaluate/" + request.getId());
         requestRepository.save(request);
@@ -151,5 +162,12 @@ public class LicenseController
     {
         logger.debug("Retrieve announce metthods");
         return new ResponseEntity<>(licenseAnnounceMethodsRepository.findAll(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/retrieve-activities", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<LicenseActivityTypeEntity>> loadActivities()
+    {
+        logger.debug("Retrieve all activities");
+        return new ResponseEntity<>(licenseActivityTypeRepository.findAll(), HttpStatus.OK);
     }
 }

@@ -5,7 +5,7 @@ import com.bass.amed.entity.RegistrationRequestStepsEntity;
 import com.bass.amed.entity.RequestTypesEntity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class TasksDTO implements Serializable
 {
@@ -14,8 +14,8 @@ public class TasksDTO implements Serializable
     private ProcessNamesEntity request;
     private RequestTypesEntity requestType;
     private String assignedPerson;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private Date startDate;
+    private Date endDate;
     private RegistrationRequestStepsEntity step;
 
     public Integer getId()
@@ -79,22 +79,22 @@ public class TasksDTO implements Serializable
         this.step = step;
     }
 
-    public LocalDateTime getStartDate()
+    public Date getStartDate()
     {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate)
+    public void setStartDate(Date startDate)
     {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDate()
+    public Date getEndDate()
     {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime endDate)
+    public void setEndDate(Date endDate)
     {
         this.endDate = endDate;
     }

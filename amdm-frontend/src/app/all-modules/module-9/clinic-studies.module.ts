@@ -13,10 +13,14 @@ import {RequestService} from "../../shared/service/request.service";
 import {DocumentModule} from "../../document/document.module";
 import {PaymentModule} from "../../payment/payment.module";
 import { AAnalizaComponent } from './a-analiza/a-analiza.component';
-import {RequestAdditionalDataDialogComponent} from "../../dialog/request-additional-data-dialog/request-additional-data-dialog.component";
+import {AdditionalDataDialogComponent} from "./dialog/additional-data-dialog/additional-data-dialog.component";
+import { AIntrerupereComponent } from './a-intrerupere/a-intrerupere.component';
+import { AAprobareComponent } from './a-aprobare/a-aprobare.component';
+import { MatDialogModule } from '@angular/material';
 
 @NgModule({
     imports: [
+        MatDialogModule,
         CommonModule,
         ClinicStudiesRoutingModule,
         FormsModule,
@@ -27,7 +31,10 @@ import {RequestAdditionalDataDialogComponent} from "../../dialog/request-additio
         PaymentModule
     ],
     schemas: [],
-    declarations: [RegStudCliniceComponent, RegCerereComponent, AEvaluareaPrimaraComponent, AAnalizaComponent,RequestAdditionalDataDialogComponent],
+    entryComponents: [
+        AdditionalDataDialogComponent
+    ],
+    declarations: [RegStudCliniceComponent, RegCerereComponent, AEvaluareaPrimaraComponent, AAnalizaComponent, AdditionalDataDialogComponent, AIntrerupereComponent, AAprobareComponent],
 
     providers: [UploadFileService,RequestService],
 })

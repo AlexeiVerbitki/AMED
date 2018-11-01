@@ -25,13 +25,13 @@
         <hr>
 
         <div class="row" *ngIf="tipCerere">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="md-form">
                     <input id="nrCererii" mdbInputDirective type="text" class="form-control" formControlName="nrCererii">
                     <label for="nrCererii">Nr. cererii</label>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="picker2" placeholder="Data de inregistrare a cererii" id="dataEliberarii"
@@ -51,9 +51,11 @@
     </form>
 
     <form [formGroup]="rForm" name="form"  #f="ngForm">
-        <section *ngIf="tipCerere === 'LICEL'">
+        <section *ngIf="tipCerere">
             <hr>
-            <h5 class="text-center font-weight-bold">Eliberarea licentei</h5>
+            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICEL'">Eliberarea licentei</h5>
+            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICM'">Modificarea licentei</h5>
+            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICD'">Eliberarea duplicatului licentei</h5>
             <hr>
 
             <hr>
@@ -65,6 +67,7 @@
                                    placeholder = "Companii"
                                    formControlName="compGet"
                                    [required]="true"
+
                         >
                         </ng-select>
                     </div>
@@ -87,6 +90,44 @@
                         <label for="idno">IDNO</label>
                     </div>
                 </div>
+
+                <!--For Modification and duplicate-->
+                <div class="col-md-12" *ngIf="(tipCerere === 'LICM' || tipCerere === 'LICD') && companyLicenseNotFound === true">
+                    <div class="md-form-modified">
+                            <strong class="text-danger">Nu a fost gasita nici o licenta pentru compania selectata</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-4" *ngIf="(tipCerere === 'LICM' || tipCerere === 'LICD')">
+                    <div class="md-form">
+                        <input id="seria" mdbInputDirective type="text" class="form-control" formControlName="seria"
+                        >
+                        <label for="seria">Seria Licentei</label>
+                    </div>
+                </div>
+                <div class="col-md-4" *ngIf="(tipCerere === 'LICM' || tipCerere === 'LICD')">
+                    <div class="md-form">
+                        <input id="nrLic" mdbInputDirective type="text" class="form-control" formControlName="nrLic"
+                        >
+                        <label for="nrLic">Numarul licentei</label>
+                    </div>
+                </div>
+                <div class="col-md-4" *ngIf="(tipCerere === 'LICM' || tipCerere === 'LICD')">
+                    <div class="md-form-modified">
+                        <mat-form-field class="w-100">
+                            <input id="dataEliberariiLic" matInput [matDatepicker]="picker9"
+                                   placeholder="Data eliberării licentei" formControlName="dataEliberariiLic"
+                            >
+                            <mat-datepicker-toggle matSuffix [for]="picker9"></mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker9></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+
+
+
+
                 <div class="col-md-4">
                     <div class="md-form">
                         <input id="persResDepCereriiFirstname" mdbInputDirective type="text" class="form-control"
@@ -161,245 +202,9 @@
             </div>
 
             <div class="text-center">
-                <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="submitNew()">Next Step
+                <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="submitNew()">Urmatorul pas
                 </button>
             </div>
         </section>
-
-
     </form>
-    <!-- <section *ngIf="model.tipCerere === 'MOD'">
-       <hr>
-       <h5 class="text-center font-weight-bold">Modificarea licentei</h5>
-       <hr>
-         <div class="row">
-           <div class="col-md-4">
-             <div class="md-form">
-               <input id="adresaobcLic" mdbInputDirective type="text" class="form-control">
-               <label for="adresaobcLic">Adresa obiectului licenţierii</label>
-             </div>
-           </div>
-           <div class="col-md-4">
-             <div class="md-form">
-               <input id="farmDir" mdbInputDirective type="text" class="form-control">
-               <label for="farmDir">Farmacist diriginte</label>
-             </div>
-           </div>
-           <div class="col-md-4">
-             <div class="md-form">
-               <input id="decLuata" mdbInputDirective type="text" class="form-control">
-               <label for="decLuata">Decizia luată</label>
-             </div>
-           </div>
-           <div class="col-md-5">
-             <div class="md-form">
-               <mat-form-field class="w-100">
-                 <input matInput [matDatepicker]="picker2" placeholder="Data deciziei">
-                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                 <mat-datepicker touchUi #picker2></mat-datepicker>
-               </mat-form-field>
-             </div>
-           </div>
-           <div class="col-md-5">
-             <div class="md-form">
-               <mat-form-field class="w-100">
-                 <mat-select placeholder="Argumentarea deciziei">
-                   <mat-option *ngFor="let x of compania" [value]="x.value">{{ x.viewValue }}</mat-option>
-                 </mat-select>
-               </mat-form-field>
-             </div>
-           </div>
-           <div class="col-md-2">
-             <div class="md-form">
-               <mat-checkbox [(ngModel)]="taxa" name="taxa" class="mt-3">Taxa</mat-checkbox>
-             </div>
-           </div>
-         </div>
-       <hr>
-       <h5 class="text-center font-weight-bold">Licenţa</h5>
-       <hr>
-         <div class="row">
-           <div class="col-md-4">
-             <div class="md-form">
-               <input id="seria" mdbInputDirective type="text" class="form-control">
-               <label for="seria">Seria</label>
-             </div>
-           </div>
-           <div class="col-md-4">
-             <div class="md-form">
-               <input id="nr" mdbInputDirective type="text" class="form-control">
-               <label for="nr">Nr.</label>
-             </div>
-           </div>
-           <div class="col-md-4">
-             <div class="md-form">
-               <mat-form-field class="w-100">
-                 <input matInput [matDatepicker]="picker3" placeholder="Data eliberării licenţei">
-                 <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
-                 <mat-datepicker touchUi #picker3></mat-datepicker>
-               </mat-form-field>
-             </div>
-           </div>
-         </div>
-       <hr>
-         <div class="row">
-           <div class="col-md-6">
-             <div class="md-form">
-               <mat-form-field class="w-100">
-                 <input matInput [matDatepicker]="picker4" placeholder="Data sistării activităţii farmaceutice">
-                 <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
-                 <mat-datepicker touchUi #picker4></mat-datepicker>
-               </mat-form-field>
-             </div>
-           </div>
-           <div class="col-md-6">
-             <div class="md-form">
-               <input id="motSistarii" mdbInputDirective type="text" class="form-control">
-               <label for="motSistarii">Motivul sistării</label>
-             </div>
-           </div>
-         </div>
-       <hr>
-       <h5 class="text-center font-weight-bold">CPCD</h5>
-       <hr>
-         <div class="row">
-           <div class="col-md-6">
-             <div class="md-form">
-               <mat-form-field class="w-100">
-                 <input matInput [matDatepicker]="picker5" placeholder="Data anunţării">
-                 <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
-                 <mat-datepicker touchUi #picker5></mat-datepicker>
-               </mat-form-field>
-             </div>
-           </div>
-           <div class="col-md-6">
-             <div class="md-form">
-               <mat-form-field class="w-100">
-                 <mat-select placeholder="Metoda anunţării" [(ngModel)]="selectCPCD" name="selectCPD">
-                   <mat-option *ngFor="let x of cpcd" [value]="x.value">{{ x.viewValue }}</mat-option>
-                 </mat-select>
-               </mat-form-field>
-             </div>
-           </div>
-           <div class="col-md-12" *ngIf="selectCPCD === 'Email'">
-             <div class="md-form">
-               <input id="email1" mdbInputDirective type="text" class="form-control">
-               <label for="email1">Email</label>
-             </div>
-           </div>
-           <div class="col-md-12" *ngIf="selectCPCD === 'phone'">
-             <div class="md-form">
-               <input id="telefon1" mdbInputDirective type="text" class="form-control">
-               <label for="telefon1">Telefon</label>
-             </div>
-           </div>
-           <div class="col-md-6">
-             <div class="md-form">
-               <input id="nrIntrareRas1" mdbInputDirective type="text" class="form-control">
-               <label for="nrIntrareRas1">Nr. de intrare a răspunsului</label>
-             </div>
-           </div>
-           <div class="col-md-6">
-             <div class="md-form">
-               <mat-form-field class="w-100">
-                 <input matInput [matDatepicker]="picker7" placeholder="Data de intrare a răspunsului">
-                 <mat-datepicker-toggle matSuffix [for]="picker7"></mat-datepicker-toggle>
-                 <mat-datepicker touchUi #picker7></mat-datepicker>
-               </mat-form-field>
-             </div>
-           </div>
-         </div>
-       <hr>
-       <h5 class="text-center font-weight-bold">ASP</h5>
-       <hr>
-         <div class="row">
-           <div class="col-md-6">
-             <div class="md-form">
-               <mat-form-field class="w-100">
-                 <input matInput [matDatepicker]="picker6" placeholder="Data anunţării">
-                 <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
-                 <mat-datepicker touchUi #picker6></mat-datepicker>
-               </mat-form-field>
-           </div>
-           <div class="col-md-6">
-             <div class="md-form">
-               <mat-form-field class="w-100">
-                 <mat-select placeholder="Metoda anunţării" [(ngModel)]="selectASP" name="selectASP">
-                   <mat-option *ngFor="let x of asp" [value]="x.value">{{ x.viewValue }}</mat-option>
-                 </mat-select>
-               </mat-form-field>
-             </div>
-           </div>
-           <div class="col-md-12" *ngIf="selectASP === 'Email'">
-             <div class="md-form">
-               <input id="email" mdbInputDirective type="text" class="form-control">
-               <label for="email">Email</label>
-             </div>
-           </div>
-           <div class="col-md-12" *ngIf="selectASP === 'phone'">
-             <div class="md-form">
-               <input id="telefon" mdbInputDirective type="text" class="form-control">
-               <label for="telefon">Telefon</label>
-             </div>
-           </div>
-           <div class="col-md-6">
-             <div class="md-form">
-               <input id="nrIntrareRas" mdbInputDirective type="text" class="form-control">
-               <label for="nrIntrareRas">Nr. de intrare a răspunsului</label>
-             </div>
-           </div>
-           <div class="col-md-6">
-             <div class="md-form">
-               <mat-form-field class="w-100">
-                 <input matInput [matDatepicker]="picker8" placeholder="Data de intrare a răspunsului">
-                 <mat-datepicker-toggle matSuffix [for]="picker8"></mat-datepicker-toggle>
-                 <mat-datepicker touchUi #picker8></mat-datepicker>
-               </mat-form-field>
-             </div>
-           </div>
-         </div>
-       </div>
-     </section>
-     <section *ngIf="model.tipCerere === 'DUP'">
-       <hr>
-       <h5 class="text-center font-weight-bold">Eliberarea duplicatului</h5>
-       <hr>
-       <div class="container">
-         <div class="row">
-           <div class="col-md-6">
-             <div class="md-form">
-               <input id="persElibLic" mdbInputDirective type="text" class="form-control">
-               <label for="persElibLic">Persoana căruia sa eliberat licenţa</label>
-             </div>
-           </div>
-           <div class="col-md-6">
-             <div class="md-form">
-               <mat-form-field class="w-100">
-                 <input matInput [matDatepicker]="picker9" placeholder="Data eliberării licenţei">
-                 <mat-datepicker-toggle matSuffix [for]="picker9"></mat-datepicker-toggle>
-                 <mat-datepicker touchUi #picker9></mat-datepicker>
-               </mat-form-field>
-             </div>
-           </div>
-           <div class="col-md-6">
-             <div class="md-form">
-               <input id="nrProcurii" mdbInputDirective type="text" class="form-control">
-               <label for="nrProcurii">Nr. procurii</label>
-             </div>
-           </div>
-           <div class="col-md-6">
-             <div class="md-form">
-               <mat-form-field class="w-100">
-                 <input matInput [matDatepicker]="picker10" placeholder="Data eliberării procurii">
-                 <mat-datepicker-toggle matSuffix [for]="picker10"></mat-datepicker-toggle>
-                 <mat-datepicker touchUi #picker10></mat-datepicker>
-               </mat-form-field>
-             </div>
-           </div>
-         </div>
-       </div>
-       <hr>
-     </section>-->
-
-
 </div>

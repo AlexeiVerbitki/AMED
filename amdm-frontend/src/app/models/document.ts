@@ -5,4 +5,5 @@ export class Document {
   path: string;
   docType: any;
   isOld: boolean;
+  number :  string;
 }

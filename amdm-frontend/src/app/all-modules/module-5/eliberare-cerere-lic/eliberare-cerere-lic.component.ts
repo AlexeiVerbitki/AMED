@@ -94,32 +94,43 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
     private patchData(data) {
         this.mForm.get('nrCererii').patchValue(data.requestNumber);
         this.mForm.get('dataEliberarii').patchValue(new Date(data.startDate));
+        let mandatedContact : any;
+        let mandatedContacts : any [] = data.license.licenseMandatedContacts;
 
-        this.rForm.get('telefonContact').patchValue(data.license.mandatedContact.phoneNumber);
-        this.rForm.get('emailContact').patchValue(data.license.mandatedContact.email);
-        this.rForm.get('persResDepCereriiFirstname').patchValue(data.license.mandatedContact.requestPersonFirstname);
-        this.rForm.get('persResDepCereriiLastname').patchValue(data.license.mandatedContact.requestPersonLastname);
-        this.rForm.get('nrProcurii1').patchValue(data.license.mandatedContact.requestMandateNr);
-        this.rForm.get('dataProcurii1').patchValue(data.license.mandatedContact.requestMandateDate);
+        console.log('gdf', mandatedContacts);
 
-        if (data.license.mandatedContact.requestPersonLastname)
+        mandatedContact = mandatedContacts.find(mc => mc.registrationRequestId === data.id);
+
+        console.log('gdf', mandatedContact);
+
+
+        this.rForm.get('telefonContact').patchValue(mandatedContact.phoneNumber);
+        this.rForm.get('emailContact').patchValue(mandatedContact.email);
+        this.rForm.get('persResDepCereriiFirstname').patchValue(mandatedContact.requestPersonFirstname);
+        this.rForm.get('persResDepCereriiLastname').patchValue(mandatedContact.requestPersonLastname);
+        this.rForm.get('nrProcurii1').patchValue(mandatedContact.requestMandateNr);
+        this.rForm.get('dataProcurii1').patchValue(mandatedContact.requestMandateDate);
+
+        if (mandatedContact.newMandatedLastname !== null)
         {
-            this.rForm.get('telefonContactRec').patchValue(data.license.mandatedContact.newPhoneNumber);
-            this.rForm.get('emailContactRec').patchValue(data.license.mandatedContact.newEmail);
-            this.rForm.get('persResDepCereriiFirstnameRec').patchValue(data.license.mandatedContact.newMandatedFirstname);
-            this.rForm.get('persResDepCereriiLastnameRec').patchValue(data.license.mandatedContact.newMandatedLastname);
-            this.rForm.get('nrProcurii1Rec').patchValue(data.license.mandatedContact.newMandatedNr);
-            this.rForm.get('dataProcurii1Rec').patchValue(data.license.mandatedContact.newMandatedDate);
+            this.rForm.get('telefonContactRec').patchValue(mandatedContact.newPhoneNumber);
+            this.rForm.get('emailContactRec').patchValue(mandatedContact.newEmail);
+            this.rForm.get('persResDepCereriiFirstnameRec').patchValue(mandatedContact.newMandatedFirstname);
+            this.rForm.get('persResDepCereriiLastnameRec').patchValue(mandatedContact.newMandatedLastname);
+            this.rForm.get('nrProcurii1Rec').patchValue(mandatedContact.newMandatedNr);
+            this.rForm.get('dataProcurii1Rec').patchValue(mandatedContact.newMandatedDate);
 
             this.rForm.get('otherPerson').patchValue(true);
         }
         else {
-            this.rForm.get('telefonContactRec').patchValue(data.license.mandatedContact.phoneNumber);
-            this.rForm.get('emailContactRec').patchValue(data.license.mandatedContact.email);
-            this.rForm.get('persResDepCereriiFirstnameRec').patchValue(data.license.mandatedContact.requestPersonFirstname);
-            this.rForm.get('persResDepCereriiLastnameRec').patchValue(data.license.mandatedContact.requestPersonLastname);
-            this.rForm.get('nrProcurii1Rec').patchValue(data.license.mandatedContact.requestMandateNr);
-            this.rForm.get('dataProcurii1Rec').patchValue(data.license.mandatedContact.requestMandateDate);
+            this.rForm.get('telefonContactRec').patchValue(mandatedContact.phoneNumber);
+            this.rForm.get('emailContactRec').patchValue(mandatedContact.email);
+            this.rForm.get('persResDepCereriiFirstnameRec').patchValue(mandatedContact.requestPersonFirstname);
+            this.rForm.get('persResDepCereriiLastnameRec').patchValue(mandatedContact.requestPersonLastname);
+            this.rForm.get('nrProcurii1Rec').patchValue(mandatedContact.requestMandateNr);
+            this.rForm.get('dataProcurii1Rec').patchValue(mandatedContact.requestMandateDate);
+
+            this.rForm.get('otherPerson').patchValue(false);
         }
 
 
@@ -157,10 +168,14 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
         this.endDate = new Date();
         let modelToSubmit: any = {};
         let mandatedContact: any = {};
+        let mandatedContacts: any[];
+
+        modelToSubmit = this.oldData;
 
         //Selected another person to receive license
         if (this.rForm.get('otherPerson') && this.rForm.get('otherPerson').value === true) {
-            mandatedContact = this.oldData.license.mandatedContact;
+            mandatedContacts = this.oldData.license.licenseMandatedContacts;
+            mandatedContact = mandatedContacts.find(mc => mc.registrationRequestId === this.oldData.id);
 
             mandatedContact.newMandatedFirstname = this.rForm.get('persResDepCereriiFirstnameRec').value;
             mandatedContact.newMandatedLastname = this.rForm.get('persResDepCereriiLastnameRec').value;
@@ -168,12 +183,11 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
             mandatedContact.newEmail = this.rForm.get('emailContactRec').value;
             mandatedContact.newMandatedNr = this.rForm.get('nrProcurii1Rec').value;
             mandatedContact.newMandatedDate = this.rForm.get('dataProcurii1Rec').value;
+
+            mandatedContacts.push(mandatedContact);
+            modelToSubmit.license.licenseMandatedContacts = mandatedContacts;
         }
 
-
-
-        modelToSubmit = this.oldData;
-        modelToSubmit.license.mandatedContact = mandatedContact;
         modelToSubmit.license.documents = this.docs;
 
         modelToSubmit.license.status = status;
@@ -190,13 +204,18 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
 
     onChanges(): void {
         this.rForm.get('otherPerson').valueChanges.subscribe(val => {
+            let mandatedContact : any;
+            let mandatedContacts : any [] = this.oldData.license.licenseMandatedContacts;
+
+            mandatedContact = mandatedContacts.find(mc => mc.registrationRequestId === this.oldData.id);
+
             if (this.rForm.get('otherPerson').value === true) {
-                this.rForm.get('telefonContactRec').setValue(this.oldData.license.mandatedContact.newPhoneNumber);
-                this.rForm.get('emailContactRec').setValue(this.oldData.license.mandatedContact.newEmail);
-                this.rForm.get('persResDepCereriiFirstnameRec').setValue(this.oldData.license.mandatedContact.newMandatedFirstname);
-                this.rForm.get('persResDepCereriiLastnameRec').setValue(this.oldData.license.mandatedContact.newMandatedLastname);
-                this.rForm.get('nrProcurii1Rec').setValue(this.oldData.license.mandatedContact.newMandatedNr);
-                this.rForm.get('dataProcurii1Rec').setValue(this.oldData.license.mandatedContact.newMandatedDate);
+                this.rForm.get('telefonContactRec').setValue(mandatedContact.newPhoneNumber);
+                this.rForm.get('emailContactRec').setValue(mandatedContact.newEmail);
+                this.rForm.get('persResDepCereriiFirstnameRec').setValue(mandatedContact.newMandatedFirstname);
+                this.rForm.get('persResDepCereriiLastnameRec').setValue(mandatedContact.newMandatedLastname);
+                this.rForm.get('nrProcurii1Rec').setValue(mandatedContact.newMandatedNr);
+                this.rForm.get('dataProcurii1Rec').setValue(mandatedContact.newMandatedDate);
 
                 this.rForm.get('telefonContactRec').enable();
                 this.rForm.get('emailContactRec').enable();
@@ -207,12 +226,12 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
             }
             else
             {
-                this.rForm.get('telefonContactRec').patchValue(this.oldData.license.mandatedContact.phoneNumber);
-                this.rForm.get('emailContactRec').patchValue(this.oldData.license.mandatedContact.email);
-                this.rForm.get('persResDepCereriiFirstnameRec').patchValue(this.oldData.license.mandatedContact.requestPersonFirstname);
-                this.rForm.get('persResDepCereriiLastnameRec').patchValue(this.oldData.license.mandatedContact.requestPersonLastname);
-                this.rForm.get('nrProcurii1Rec').patchValue(this.oldData.license.mandatedContact.requestMandateNr);
-                this.rForm.get('dataProcurii1Rec').patchValue(this.oldData.license.mandatedContact.requestMandateDate);
+                this.rForm.get('telefonContactRec').patchValue(mandatedContact.phoneNumber);
+                this.rForm.get('emailContactRec').patchValue(mandatedContact.email);
+                this.rForm.get('persResDepCereriiFirstnameRec').patchValue(mandatedContact.requestPersonFirstname);
+                this.rForm.get('persResDepCereriiLastnameRec').patchValue(mandatedContact.requestPersonLastname);
+                this.rForm.get('nrProcurii1Rec').patchValue(mandatedContact.requestMandateNr);
+                this.rForm.get('dataProcurii1Rec').patchValue(mandatedContact.requestMandateDate);
 
                 this.rForm.get('telefonContactRec').disable();
                 this.rForm.get('emailContactRec').disable();

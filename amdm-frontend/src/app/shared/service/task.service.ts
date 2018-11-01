@@ -26,4 +26,8 @@ export class TaskService {
     getTasksByFilter(request: any): Observable<any> {
         return this.http.post<any>('/api/tasks/get-filtered-tasks', request, {observe: 'response'});
     }
+
+    getRequestStepByIdAndCode(requestTypeId: string,code : string): Observable<any> {
+        return this.http.get('/api/tasks/request-step-by-id-and-code', {params: {id: requestTypeId, code : code}});
+    }
 }

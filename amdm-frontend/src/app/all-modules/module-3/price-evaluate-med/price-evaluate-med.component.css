@@ -4,3 +4,12 @@
   margin-top: 10px;
   margin-bottom: 1.5rem;
 }
+
+.alert-currency {
+  color: #0c5460;
+  background-image: linear-gradient(40deg, #a8edea, #fed6e3);
+}
+
+th {
+  font-weight: bold;
+}

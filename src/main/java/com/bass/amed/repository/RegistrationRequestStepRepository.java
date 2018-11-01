@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface RegistrationRequestStepRepository extends JpaRepository<RegistrationRequestStepsEntity, Integer>
 {
     Optional<List<RegistrationRequestStepsEntity>> findByRequestTypeId(Integer id);
+    Optional<RegistrationRequestStepsEntity> findOneByRequestTypeIdAndCode(Integer id,String code);
 }

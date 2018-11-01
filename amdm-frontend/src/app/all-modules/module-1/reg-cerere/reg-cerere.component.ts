@@ -13,6 +13,7 @@ import {AuthService} from "../../../shared/service/authetication.service";
 import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
 import {ModalService} from "../../../shared/service/modal.service";
 import {LoaderService} from "../../../shared/service/loader.service";
+import {TaskService} from "../../../shared/service/task.service";
 
 @Component({
     selector: 'app-reg-cerere',
@@ -25,6 +26,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
     documents: Document [] = [];
     companii: any[];
     rForm: FormGroup;
+    docTypes : any[];
 
     generatedDocNrSeq: number;
     //filteredOptions: Observable<any[]>;
@@ -36,6 +38,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                 private requestService: RequestService,
                 private authService: AuthService,
                 private administrationService: AdministrationService,
+                private taskService: TaskService,
                 private errorHandlerService: ErrorHandlerService,
                 private loadingService: LoaderService) {
         this.rForm = fb.group({
@@ -74,19 +77,34 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                 error => console.log(error)
             )
         );
+
+        this.subscriptions.push(
+            this.taskService.getRequestStepByIdAndCode('1','R').subscribe(step => {
+                    this.subscriptions.push(
+                        this.administrationService.getAllDocTypes().subscribe(data => {
+                                this.docTypes = data;
+                                this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
+                            },
+                            error => console.log(error)
+                        )
+                    );
+                },
+                error => console.log(error)
+            )
+        );
     }
 
     nextStep() {
-        this.loadingService.show();
+
 
         this.formSubmitted = true;
         if (this.documents.length === 0 || !this.rForm.valid) {
-            this.loadingService.hide();
             return;
         }
 
         this.formSubmitted = false;
 
+        this.loadingService.show();
         this.rForm.get('company').setValue(this.rForm.value.medicament.company);
 
         var modelToSubmit: any = this.rForm.value;
@@ -99,9 +117,8 @@ export class RegCerereComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
             this.loadingService.hide();
-                this.router.navigate(['dashboard/module/medicament-registration/evaluate/' + data.body]);
-
-            })
+                this.router.navigate(['dashboard/module/medicament-registration/evaluate/' + data.body.id]);
+            }, error => this.loadingService.hide() )
         );
     }
 

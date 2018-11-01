@@ -12,10 +12,11 @@ public class RegistrationRequestHistoryEntity
     private Timestamp endDate;
     private String username;
     private String step;
+    private Integer registrationRequestId;
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     public Integer getId()
     {
         return id;
@@ -27,7 +28,7 @@ public class RegistrationRequestHistoryEntity
     }
 
     @Basic
-    @Column(name = "start_date")
+    @Column(name = "start_date", nullable = true)
     public Timestamp getStartDate()
     {
         return startDate;
@@ -39,7 +40,7 @@ public class RegistrationRequestHistoryEntity
     }
 
     @Basic
-    @Column(name = "end_date")
+    @Column(name = "end_date", nullable = true)
     public Timestamp getEndDate()
     {
         return endDate;
@@ -51,7 +52,7 @@ public class RegistrationRequestHistoryEntity
     }
 
     @Basic
-    @Column(name = "username")
+    @Column(name = "username", nullable = true, length = 100)
     public String getUsername()
     {
         return username;
@@ -63,7 +64,7 @@ public class RegistrationRequestHistoryEntity
     }
 
     @Basic
-    @Column(name = "step")
+    @Column(name = "step", nullable = true, length = 2)
     public String getStep()
     {
         return step;
@@ -81,7 +82,7 @@ public class RegistrationRequestHistoryEntity
         {
             return true;
         }
-        if (o == null || getClass() != o.getClass())
+        if (!(o instanceof RegistrationRequestHistoryEntity))
         {
             return false;
         }
@@ -104,7 +105,11 @@ public class RegistrationRequestHistoryEntity
         {
             return false;
         }
-        return step != null ? step.equals(that.step) : that.step == null;
+        if (step != null ? !step.equals(that.step) : that.step != null)
+        {
+            return false;
+        }
+        return registrationRequestId != null ? registrationRequestId.equals(that.registrationRequestId) : that.registrationRequestId == null;
     }
 
     @Override
@@ -115,6 +120,19 @@ public class RegistrationRequestHistoryEntity
         result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
         result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (step != null ? step.hashCode() : 0);
+        result = 31 * result + (registrationRequestId != null ? registrationRequestId.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "registration_request_id", nullable = true)
+    public Integer getRegistrationRequestId()
+    {
+        return registrationRequestId;
+    }
+
+    public void setRegistrationRequestId(Integer registrationRequestId)
+    {
+        this.registrationRequestId = registrationRequestId;
     }
 }
