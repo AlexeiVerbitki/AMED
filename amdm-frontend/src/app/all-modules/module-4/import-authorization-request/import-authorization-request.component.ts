@@ -9,8 +9,8 @@ import {map, startWith} from "rxjs/operators";
 import {ConfirmationDialogComponent} from "../../../confirmation-dialog/confirmation-dialog.component";
 import {saveAs} from 'file-saver';
 import {Document} from "../../../models/document";
-import {RequestService} from "../../../shared/service/request.service";
 import {AuthService} from "../../../shared/service/authetication.service";
+import {RequestService} from "../../../shared/service/request.service";
 
 
 
@@ -23,7 +23,7 @@ import {AuthService} from "../../../shared/service/authetication.service";
 export class ImportAuthorizationRequestComponent implements OnInit {
     documents: Document [] = [];
     cereri: Cerere [] = [];
-    companii: any[];
+    // companii: any[];
     primRep: string;
     rForm: FormGroup;
     medReg: FormGroup;
@@ -32,9 +32,9 @@ export class ImportAuthorizationRequestComponent implements OnInit {
     currentDate: Date;
     file: any;
     generatedDocNrSeq: number;
-    filteredOptions: Observable<any[]>;
+    // filteredOptions: Observable<any[]>;
     formSubmitted: boolean;
-    isWrongValueCompany: boolean;
+    // isWrongValueCompany: boolean;
     private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder, public dialog: MatDialog, private router: Router,
@@ -42,13 +42,13 @@ export class ImportAuthorizationRequestComponent implements OnInit {
                 private authService: AuthService,
                 private administrationService: AdministrationService) {
         this.rForm = fb.group({
-            'data': {disabled: true, value: new Date()},
-            'requestNumber': [null],
-            'startDate': [new Date()],
-            'currentStep': ['E'],
+
             'radioButton': [null, Validators.required],
         });
         this.dataForm = fb.group({
+            'requestNumber': [null],
+            'startDate': [new Date()],
+            'currentStep': ['E'],
             'data': {disabled: true, value: null},
             'nrCererii': [null, Validators.required]
         });
@@ -119,11 +119,11 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         saveAs(this.file, this.file.name);
     }
 
-    chekCompanyValue() {
-        this.isWrongValueCompany = !this.companii.some(elem => {
-            return this.rForm.get('compGet').value == null ? true : elem.name === this.rForm.get('compGet').value.name;
-        });
-    }
+    // chekCompanyValue() {
+    //     this.isWrongValueCompany = !this.companii.some(elem => {
+    //         return this.rForm.get('compGet').value == null ? true : elem.name === this.rForm.get('compGet').value.name;
+    //     });
+    // }
 
     nextStep() {
 
@@ -143,6 +143,13 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         }];
         modelToSubmit.medicament.documents = this.documents;
         modelToSubmit.medicament.registrationDate = new Date();
+
+        // switch(this.rForm.get('radioButton').value){
+        //     case "1":{this.router.navigate(['dashboard/module/import-authorization/registered-medicament'])   ; break;}
+        //     case "2":{this.router.navigate(['dashboard/module/import-authorization/unregistered-medicament']) ; break;}
+        //     case "3":{this.router.navigate(['dashboard/module/import-authorization/materia-prima'])           ; break;}
+        //     case "4":{this.router.navigate(['dashboard/module/import-authorization/ambalaj'])                 ; break;}
+        // }
 
         this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
             switch(this.rForm.get('radioButton').value){

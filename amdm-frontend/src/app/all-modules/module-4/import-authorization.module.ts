@@ -11,6 +11,10 @@ import { MedRegComponent } from './med-reg/med-reg.component';
 import { MedNeregComponent } from './med-nereg/med-nereg.component';
 import { MateriaPrimaComponent } from './materia-prima/materia-prima.component';
 import { AmbalajComponent } from './ambalaj/ambalaj.component';
+import {RegCerereComponent} from "../module-1/reg-cerere/reg-cerere.component";
+import {ProcessInterruptionComponent} from "../module-1/process-interruption/process-interruption.component";
+import {UploadFileService} from "../../shared/service/upload/upload-file.service";
+import {RequestService} from "../../shared/service/request.service";
 
 @NgModule({
     imports: [
@@ -19,9 +23,11 @@ import { AmbalajComponent } from './ambalaj/ambalaj.component';
         FormsModule,
         ReactiveFormsModule,
         MDBBootstrapModule.forRoot(),
+
         MaterialSharedModule.forRoot(),
     ],
-    declarations: [ImportAuthorizationEvaluateComponent,ImportAuthorizationRequestComponent, MedRegComponent, MedNeregComponent, MateriaPrimaComponent, AmbalajComponent]
+    declarations: [ImportAuthorizationEvaluateComponent,ImportAuthorizationRequestComponent, MedRegComponent, MedNeregComponent, MateriaPrimaComponent, AmbalajComponent, ],
+    providers: [UploadFileService,RequestService]
 })
 export class ImportAuthorizationModule {
 }
