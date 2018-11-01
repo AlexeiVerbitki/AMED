@@ -76,7 +76,7 @@ public class LicenseController
 
 
 
-        request.setCurrentStepLink(Constants.StepLink.MODULE + Constants.StepLink.LICENSE + "evaluate/" + request.getId());
+        request.setCurrentStep(Constants.StepLink.MODULE + Constants.StepLink.LICENSE + "evaluate/" + request.getId());
         requestRepository.save(request);
 
         return new ResponseEntity<>(request.getId(),HttpStatus.CREATED);
@@ -111,7 +111,7 @@ public class LicenseController
 
         request.setCurrentStep("I");
         request.setEndDate(new Timestamp(new Date().getTime()));
-        request.setCurrentStepLink(Constants.StepLink.MODULE + Constants.StepLink.LICENSE + "issue/" + request.getId());
+        request.setCurrentStep(Constants.StepLink.MODULE + Constants.StepLink.LICENSE + "issue/" + request.getId());
 
         licenseRegistrationRequestService.finishLicense(request);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -125,7 +125,7 @@ public class LicenseController
 
         request.getLicense().setStatus("A");
         request.setCurrentStep("I");
-        request.setCurrentStepLink(Constants.StepLink.MODULE + Constants.StepLink.LICENSE + "issue/" + request.getId());
+        request.setCurrentStep(Constants.StepLink.MODULE + Constants.StepLink.LICENSE + "issue/" + request.getId());
 
         licenseRegistrationRequestService.finishLicense(request);
         return new ResponseEntity<>(HttpStatus.OK);

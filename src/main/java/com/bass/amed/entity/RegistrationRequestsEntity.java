@@ -22,10 +22,9 @@ public class RegistrationRequestsEntity
     private ClinicalTrialsEntity                  clinicalTrails;
     private LicensesEntity                        license;
     private Set<RegistrationRequestHistoryEntity> requestHistories = new HashSet<>();
-    private String                                currentStepLink;
-    private String initiator;
-    private String assignedUser;
-
+    private String                                interruptionReason;
+    private String                                initiator;
+    private String                                assignedUser;
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
@@ -184,6 +183,19 @@ public class RegistrationRequestsEntity
         this.type = type;
     }
 
+
+    @Basic
+    @Column(name = "interruption_reason")
+    public String getInterruptionReason()
+    {
+        return interruptionReason;
+    }
+
+    public void setInterruptionReason(String interruptionReason)
+    {
+        this.interruptionReason = interruptionReason;
+    }
+
     @Basic
     @Column(name = "initiator")
     public String getInitiator()
@@ -274,10 +286,10 @@ public class RegistrationRequestsEntity
         {
             return false;
         }
-//        if (interruptionReason != null ? !interruptionReason.equals(that.interruptionReason) : that.interruptionReason != null)
-//        {
-//            return false;
-//        }
+        if (interruptionReason != null ? !interruptionReason.equals(that.interruptionReason) : that.interruptionReason != null)
+        {
+            return false;
+        }
         if (initiator != null ? !initiator.equals(that.initiator) : that.initiator != null)
         {
             return false;
@@ -301,21 +313,9 @@ public class RegistrationRequestsEntity
         result = 31 * result + (clinicalTrails != null ? clinicalTrails.hashCode() : 0);
         result = 31 * result + (license != null ? license.hashCode() : 0);
         result = 31 * result + (requestHistories != null ? requestHistories.hashCode() : 0);
-//        result = 31 * result + (interruptionReason != null ? interruptionReason.hashCode() : 0);
+        result = 31 * result + (interruptionReason != null ? interruptionReason.hashCode() : 0);
         result = 31 * result + (initiator != null ? initiator.hashCode() : 0);
         result = 31 * result + (assignedUser != null ? assignedUser.hashCode() : 0);
         return result;
-    }
-
-    @Basic
-    @Column(name = "current_step_link")
-    public String getCurrentStepLink()
-    {
-        return currentStepLink;
-    }
-
-    public void setCurrentStepLink(String currentStepLink)
-    {
-        this.currentStepLink = currentStepLink;
     }
 }

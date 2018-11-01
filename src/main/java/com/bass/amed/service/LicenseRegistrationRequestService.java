@@ -157,7 +157,6 @@ public class LicenseRegistrationRequestService
             if (next)
             {
                 r.setCurrentStep("I");
-                r.setCurrentStepLink(Constants.StepLink.MODULE + Constants.StepLink.LICENSE + "issue/" + r.getId());
 
             }
 
@@ -198,15 +197,16 @@ public class LicenseRegistrationRequestService
 
 
             //Update mandated contact
-            if (request.getLicense().getMandatedContact().getNewMandatedLastname() != null)
+            LicenseMandatedContactEntity lme = new ArrayList<>(request.getLicense().getLicenseMandatedContacts()).get(0);
+            if (lme.getNewMandatedLastname() != null)
             {
-                LicenseMandatedContactEntity lm = em.find(LicenseMandatedContactEntity.class, r.getLicense().getMandatedContact().getId());
-                lm.setNewPhoneNumber(request.getLicense().getMandatedContact().getNewPhoneNumber());
-                lm.setNewEmail(request.getLicense().getMandatedContact().getNewEmail());
-                lm.setNewMandatedFirstname(request.getLicense().getMandatedContact().getNewMandatedFirstname());
-                lm.setNewMandatedLastname(request.getLicense().getMandatedContact().getNewMandatedLastname());
-                lm.setNewMandatedNr(request.getLicense().getMandatedContact().getNewMandatedNr());
-                lm.setNewMandatedDate(request.getLicense().getMandatedContact().getNewMandatedDate());
+                LicenseMandatedContactEntity lm = em.find(LicenseMandatedContactEntity.class, lme.getId());
+                lm.setNewPhoneNumber(lme.getNewPhoneNumber());
+                lm.setNewEmail(lme.getNewEmail());
+                lm.setNewMandatedFirstname(lme.getNewMandatedFirstname());
+                lm.setNewMandatedLastname(lme.getNewMandatedLastname());
+                lm.setNewMandatedNr(lme.getNewMandatedNr());
+                lm.setNewMandatedDate(lme.getNewMandatedDate());
 
                 em.merge(lm);
             }
@@ -215,7 +215,6 @@ public class LicenseRegistrationRequestService
             r.setEndDate(request.getEndDate());
             r.getLicense().setStatus(request.getLicense().getStatus());
             r.setCurrentStep(request.getCurrentStep());
-            r.setCurrentStepLink(request.getCurrentStepLink());
 
             em.merge(r);
 
@@ -249,10 +248,55 @@ public class LicenseRegistrationRequestService
             r.getRequestHistories().add(new ArrayList<>(request.getRequestHistories()).get(0));
             r.setEndDate(new Timestamp(new Date().getTime()));
             r.getLicense().setStatus("C");
-            r.setCurrentStepLink(null);
 
             em.merge(r);
 
+            em.getTransaction().commit();
+
+        }
+        catch (Exception e){
+            if (em != null)
+            {
+                em.getTransaction().rollback();
+            }
+            throw new CustomException(e.getMessage(), e);
+        }
+        finally
+        {
+            em.close();
+        }
+    }
+
+
+
+    public void updateModifyLicense(RegistrationRequestsEntity request) throws CustomException
+    {
+        EntityManager em = null;
+        try
+        {
+            em = entityManagerFactory.createEntityManager();
+            em.getTransaction().begin();
+            LicensesEntity originalLicense = request.getLicense();
+            LicensesEntity le = em.find(LicensesEntity.class, originalLicense.getId());
+            request.setLicense(le);
+
+            //New request
+            em.persist(request);
+
+            //Update license
+            Set<DocumentsEntity> dSet = originalLicense.getDocuments().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
+
+            if (!dSet.isEmpty()){
+                le.getDocuments().addAll(dSet);
+            }
+
+
+            //Mandated contact
+            LicenseMandatedContactEntity mandatedContact = new ArrayList<>(originalLicense.getLicenseMandatedContacts()).get(0);
+            mandatedContact.setRegistrationRequestId(request.getId());
+            le.getLicenseMandatedContacts().add(mandatedContact);
+
+            em.merge(le);
             em.getTransaction().commit();
 
         }
