@@ -143,7 +143,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
     // }
 
     nextStep() {
-
+        this.router.navigate(['dashboard/module/import-authorization/ambalaj'   ]) ;
         // alert(this.rForm.get('startDate').value);
         // alert(this.generatedDocNrSeq);
         // alert(this.documents.values());

@@ -9,22 +9,22 @@ import java.util.Set;
 @Table(name = "registration_requests", schema = "amed", catalog = "")
 public class RegistrationRequestsEntity
 {
-    private Integer id;
-    private String requestNumber;
-    private Timestamp startDate;
-    private Timestamp endDate;
-    private MedicamentEntity medicament;
-    private NmEconomicAgentsEntity company;
-    private Integer importId;
-    private String currentStep;
-    private RequestTypesEntity type;
-    private ClinicalTrialsEntity clinicalTrails;
-    private LicensesEntity license;
-    private MedicamentAnnihilationEntity medicamentAnnihilation;
+    private Integer                               id;
+    private String                                requestNumber;
+    private Timestamp                             startDate;
+    private Timestamp                             endDate;
+    private MedicamentEntity                      medicament;
+    private NmEconomicAgentsEntity                company;
+    private ImportAuthorizationEntity             importAuthorizationEntity;
+    private String                                currentStep;
+    private RequestTypesEntity                    type;
+    private ClinicalTrialsEntity                  clinicalTrails;
+    private LicensesEntity                        license;
+    private MedicamentAnnihilationEntity          medicamentAnnihilation;
     private Set<RegistrationRequestHistoryEntity> requestHistories = new HashSet<>();
-    private String interruptionReason;
-    private String initiator;
-    private String assignedUser;
+    private String                                interruptionReason;
+    private String                                initiator;
+    private String                                assignedUser;
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
@@ -87,16 +87,16 @@ public class RegistrationRequestsEntity
         this.company = company;
     }
 
-    @Basic
-    @Column(name = "import_id")
-    public Integer getImportId()
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
+    @JoinColumn( name = "import_id" )
+    public ImportAuthorizationEntity getImportAuthorizationEntity()
     {
-        return importId;
+        return importAuthorizationEntity;
     }
 
-    public void setImportId(Integer importId)
+    public void setImportAuthorizationEntity(ImportAuthorizationEntity importAuthorizationEntity)
     {
-        this.importId = importId;
+        this.importAuthorizationEntity = importAuthorizationEntity;
     }
 
     @Basic
@@ -258,7 +258,7 @@ public class RegistrationRequestsEntity
         {
             return false;
         }
-        if (importId != null ? !importId.equals(that.importId) : that.importId != null)
+        if (importAuthorizationEntity != null ? !importAuthorizationEntity.equals(that.importAuthorizationEntity) : that.importAuthorizationEntity != null)
         {
             return false;
         }
@@ -302,7 +302,7 @@ public class RegistrationRequestsEntity
         result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
         result = 31 * result + (medicament != null ? medicament.hashCode() : 0);
         result = 31 * result + (company != null ? company.hashCode() : 0);
-        result = 31 * result + (importId != null ? importId.hashCode() : 0);
+        result = 31 * result + (importAuthorizationEntity != null ? importAuthorizationEntity.hashCode() : 0);
         result = 31 * result + (currentStep != null ? currentStep.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (clinicalTrails != null ? clinicalTrails.hashCode() : 0);
