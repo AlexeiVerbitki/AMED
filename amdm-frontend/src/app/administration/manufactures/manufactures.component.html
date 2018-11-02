@@ -13,9 +13,9 @@
           <td mat-cell *matCellDef="let element"> {{element.id}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="codeAmed">
+        <ng-container matColumnDef="code">
           <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Code </th>
-          <td mat-cell *matCellDef="let element"> {{element.codeAmed}} </td>
+          <td mat-cell *matCellDef="let element"> {{element.code}} </td>
         </ng-container>
 
         <ng-container matColumnDef="description">
@@ -87,8 +87,8 @@
       <div class="modal-body">
 
         <div class="md-form mb-5">
-          <input id="codeAmed" type="text" class="form-control" mdbInputDirective [formControl]="codeEdit">
-          <label for="codeAmed" data-error="wrong" data-success="right">Code</label>
+          <input id="code" type="text" class="form-control" mdbInputDirective [formControl]="codeEdit">
+          <label for="code" data-error="wrong" data-success="right">Code</label>
         </div>
 
         <div class="md-form mb-5">
@@ -152,8 +152,8 @@
       <div class="modal-body">
 
         <div class="md-form mb-5">
-          <input id="codeAmed" type="text" class="form-control" mdbInputDirective [formControl]="codeAdd">
-          <label for="codeAmed" data-error="wrong" data-success="right">Code</label>
+          <input id="code" type="text" class="form-control" mdbInputDirective [formControl]="codeAdd">
+          <label for="code" data-error="wrong" data-success="right">Code</label>
         </div>
 
         <div class="md-form mb-5">

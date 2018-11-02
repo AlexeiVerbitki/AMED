@@ -18,8 +18,10 @@ export declare class ComponentLoader<T> {
     private _posService;
     onBeforeShow: EventEmitter<any>;
     onShown: EventEmitter<any>;
+    shown: EventEmitter<any>;
     onBeforeHide: EventEmitter<any>;
     onHidden: EventEmitter<any>;
+    hidden: EventEmitter<any>;
     instance: T;
     _componentRef: ComponentRef<T> | any;
     private _providers;

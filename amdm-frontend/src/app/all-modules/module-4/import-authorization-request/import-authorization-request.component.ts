@@ -65,8 +65,8 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
 
         this.subscriptions.push(
-            // this.administrationService.generateDocNr().subscribe(data => {
-            this.administrationService.generateRandomDocNr().subscribe(data => {
+            this.administrationService.generateDocNr().subscribe(data => {
+            // this.administrationService.generateRandomDocNr().subscribe(data => {
                     this.generatedDocNrSeq = data;
                     this.dataForm.get('nrCererii').setValue(this.generatedDocNrSeq);
 

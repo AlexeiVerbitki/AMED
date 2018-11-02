@@ -44,12 +44,12 @@ public class JWTFilter extends GenericFilterBean
             Authentication authentication = this.tokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+        filterChain.doFilter(servletRequest, servletResponse);
 //        else
 //        {
 //            httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
 //            httpServletResponse.sendError(HttpStatus.UNAUTHORIZED.value(), "Invalid Token");
 //        }
-        filterChain.doFilter(servletRequest, servletResponse);
 
     }
 

@@ -65,6 +65,7 @@ public class LicenseController
         }
 
         request.setCompany(eco.get());
+        request.getLicense().setEconomicAgent(eco.get());
 
         request.setType(requestTypeRepository.findByCode("LICEL").get());
         request.getLicense().setStatus("A");
@@ -74,10 +75,6 @@ public class LicenseController
 
         licenseRegistrationRequestService.saveNewLicense(request);
 
-
-
-        request.setCurrentStep(Constants.StepLink.MODULE + Constants.StepLink.LICENSE + "evaluate/" + request.getId());
-        requestRepository.save(request);
 
         return new ResponseEntity<>(request.getId(),HttpStatus.CREATED);
     }
@@ -111,7 +108,6 @@ public class LicenseController
 
         request.setCurrentStep("I");
         request.setEndDate(new Timestamp(new Date().getTime()));
-        request.setCurrentStep(Constants.StepLink.MODULE + Constants.StepLink.LICENSE + "issue/" + request.getId());
 
         licenseRegistrationRequestService.finishLicense(request);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -125,7 +121,6 @@ public class LicenseController
 
         request.getLicense().setStatus("A");
         request.setCurrentStep("I");
-        request.setCurrentStep(Constants.StepLink.MODULE + Constants.StepLink.LICENSE + "issue/" + request.getId());
 
         licenseRegistrationRequestService.finishLicense(request);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -142,6 +137,30 @@ public class LicenseController
         return new ResponseEntity<>(request.getId(),HttpStatus.OK);
     }
 
+
+    @RequestMapping(value = "/confirm-modify-license", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> confirmModifyLicense(@RequestBody RegistrationRequestsEntity request) throws CustomException
+    {
+        logger.debug("Confirm modify license" + request);
+
+        request.setType(requestTypeRepository.findByCode("LICM").get());
+
+        licenseRegistrationRequestService.updateModifyLicense(request);
+        return new ResponseEntity<>(request.getId(),HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/confirm-duplicate-license", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> confirmDuplicateLicense(@RequestBody RegistrationRequestsEntity request) throws CustomException
+    {
+        logger.debug("Confirm duplicate license" + request);
+
+        request.setType(requestTypeRepository.findByCode("LICD").get());
+
+        licenseRegistrationRequestService.updateModifyLicense(request);
+        return new ResponseEntity<>(request.getId(),HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/all-license-request-types", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<LicenseRequestTypeEntity>> loadRequestTypes()
     {
@@ -155,6 +174,19 @@ public class LicenseController
         logger.debug("Retrieve license by request id", id);
         RegistrationRequestsEntity r = licenseRegistrationRequestService.findLicenseRegistrationById(Integer.valueOf(id));
         return new ResponseEntity<>(r, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/retrieve-license-by-economic-agent-id", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<LicensesEntity> loadLicenseByCompany(@RequestParam("id") String economicAgentId) throws  CustomException
+    {
+        logger.debug("Retrieve license by company id id", economicAgentId);
+        Optional<LicensesEntity> r = licensesRepository.getLicenseByCompanyId(Integer.valueOf(economicAgentId));
+
+        if (!r.isPresent())
+        {
+            throw new CustomException("License could not be found by company");
+        }
+        return new ResponseEntity<>(r.get(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/retrieve-announce-methods", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
