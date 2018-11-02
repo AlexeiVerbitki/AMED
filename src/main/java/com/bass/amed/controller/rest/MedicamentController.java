@@ -67,6 +67,14 @@ public class MedicamentController
         return new ResponseEntity<>(medicamentRepository.findByNameStartingWithIgnoreCase(partialName), HttpStatus.OK);
     }
 
+
+    @RequestMapping("/search-medicament-names-by-name-or-code")
+    public ResponseEntity<List<MedicamentNamesListProjection>> getAllMedicamentNamesByNameAndCode(String partialName)
+    {
+        logger.debug("Retrieve medicament names list by name");
+        return new ResponseEntity<>(medicamentRepository.getMedicamentsByNameAndCode( partialName, partialName, "F"), HttpStatus.OK);
+    }
+
     @RequestMapping("/search-medicament-by-id")
     public ResponseEntity<MedicamentEntity> getMedicamentById(Integer id)
     {

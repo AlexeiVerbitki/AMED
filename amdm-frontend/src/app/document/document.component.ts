@@ -20,19 +20,18 @@ export class DocumentComponent implements OnInit, OnDestroy {
     documentList: Document [];
     numarCerere: string;
     enableUploading: boolean = true;
-    private subscriptions: Subscription[] = [];
     result: any;
     docForm: FormGroup;
     docTypes: any[];
     formSubmitted: boolean;
-
     disabled: boolean = false;
-
     @ViewChild('incarcaFisier')
     incarcaFisierVariable: ElementRef;
+    @Output() documentAdded = new EventEmitter();
+    private subscriptions: Subscription[] = [];
 
     constructor(public dialog: MatDialog, private uploadService: UploadFileService, private fb: FormBuilder,
-               private errorHandlerService : ErrorHandlerService,
+                private errorHandlerService: ErrorHandlerService,
                 private administrationService: AdministrationService) {
         this.docForm = fb.group({
             'docType': [null, Validators.required],
@@ -40,28 +39,13 @@ export class DocumentComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnInit() {
-        if(!this.docTypes || this.docTypes.length==0) {
-            this.subscriptions.push(
-                this.administrationService.getAllDocTypes().subscribe(data => {
-                        this.docTypes = data;
-                    },
-                    error => console.log(error)
-                )
-            );
-        }
-
+    get canUpload(): boolean {
+        return this.enableUploading;
     }
-
-    @Output() documentAdded = new EventEmitter();
 
     @Input()
     set canUpload(can: boolean) {
         this.enableUploading = can;
-    }
-
-    get canUpload(): boolean {
-        return this.enableUploading;
     }
 
     get documents(): Document [] {
@@ -100,6 +84,19 @@ export class DocumentComponent implements OnInit, OnDestroy {
         this.docTypes = docTypes;
     }
 
+    ngOnInit() {
+        if (!this.docTypes || this.docTypes.length == 0) {
+            this.subscriptions.push(
+                this.administrationService.getAllDocTypes().subscribe(data => {
+                        this.docTypes = data;
+                    },
+                    error => console.log(error)
+                )
+            );
+        }
+
+    }
+
     removeDocument(index) {
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             data: {message: 'Sunteti sigur ca doriti sa stergeti acest document?', confirm: false}
@@ -130,11 +127,6 @@ export class DocumentComponent implements OnInit, OnDestroy {
         );
     }
 
-    private saveToFileSystem(response: any, docName: string) {
-        const blob = new Blob([response]);
-        saveAs(blob, docName);
-    }
-
     checkFields(): boolean {
         this.formSubmitted = true;
 
@@ -157,7 +149,7 @@ export class DocumentComponent implements OnInit, OnDestroy {
                 if (event instanceof HttpResponse) {
                     this.result = event.body;
                     const indexForName = this.result.path.lastIndexOf('/');
-                    const indexForFormat = this.result.path.lastIndexOf('.');
+                    // const indexForFormat = this.result.path.lastIndexOf('.');
 
                     let fileName = this.result.path.substring(indexForName + 1);
 
@@ -188,6 +180,11 @@ export class DocumentComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.subscriptions.forEach(s => s.unsubscribe());
+    }
+
+    private saveToFileSystem(response: any, docName: string) {
+        const blob = new Blob([response]);
+        saveAs(blob, docName);
     }
 
 

@@ -100,7 +100,9 @@ export class TaskComponent implements OnInit, AfterViewInit, OnDestroy {
 
     navigateToUrl(rowDetails: any) {
         const urlToNavigate = rowDetails.navigationUrl + rowDetails.id
-        this.route.navigate([urlToNavigate]);
+        if (urlToNavigate !== '') {
+            this.route.navigate([urlToNavigate]);
+        }
     }
 
     private disabledElements(val) {

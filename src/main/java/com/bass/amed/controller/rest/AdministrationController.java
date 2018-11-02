@@ -71,6 +71,12 @@ public class AdministrationController
         return new ResponseEntity<>(generateDocNumberService.getDocumentNumber(), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/generate-doc-nr-random")
+    public ResponseEntity<Integer> generateRandomNr()
+    {
+        return new ResponseEntity<>(generateDocNumberService.getRandomNumber(), HttpStatus.OK);
+    }
+
     @GetMapping("/all-companies")
     public ResponseEntity<List<NmEconomicAgentsEntity>> retrieveAllEconomicAgents()
     {

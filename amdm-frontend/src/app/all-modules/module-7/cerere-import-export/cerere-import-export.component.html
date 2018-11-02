@@ -1,39 +1,17 @@
 <div class="container sky z-depth-2">
   <h3 class="text-center my-3 font-weight-bold">Cerere de autorizare a importului/exportului precursorilor/psihotropelor/stupefiantelor</h3>
+
   <hr>
-  <table class="table table-widths text-center">
-    <thead class="black white-text">
-      <tr>
-        <th scope="col">Denumire</th>
-        <th scope="col">Format</th>
-        <th scope="col">Data incarcarii</th>
-        <th scope="col">Actiuni</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let x of cerere">
-        <th scope="row">{{ x.denumirea }}</th>
-        <td>{{ x.format }}</td>
-        <td>{{ x.dataIncarcarii }}</td>
-        <td>
-          <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect>View</button>
-          <button class="btn btn-dark-red-color waves-light btn-sm waves-light" mdbWavesEffect>Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="col position-button">
-    <label for="incarcaFisier" class="btn btn-indigo btn-sm">
-      <input id="incarcaFisier" type="file" style="display:none;"> Incarca Fisier
-    </label>
-  </div>
-  <hr>
-  <form [formGroup]='zForm'>
+  <form [formGroup]='cerereImpExpForm'>
+
+    <app-document [documents]="documents" [nrCerere]="cerereImpExpForm.get('requestNumber').value"></app-document>
+    <hr>
+
     <div class="row">
       <div class="col-md-4">
         <div class="md-form">
           <mat-form-field class="w-100">
-            <input matInput [matDatepicker]="picker" placeholder="Data inregistrarii" required formControlName="dataReg">
+            <input matInput [matDatepicker]="picker" placeholder="Data inregistrarii" required formControlName="data">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker touchUi #picker></mat-datepicker>
           </mat-form-field>
@@ -41,7 +19,7 @@
       </div>
       <div class="col-md-4">
         <div class="md-form">
-          <input id="nrReg" mdbInputDirective type="text" class="form-control" formControlName="nrReg">
+          <input id="nrReg" mdbInputDirective type="text" class="form-control" formControlName="requestNumber" [attr.disabled]="true">
           <label for="nrReg">Nr. de inregistrare a cererii
             <span class="text-danger">*</span>
           </label>
@@ -49,123 +27,138 @@
       </div>
       <div class="col-md-4">
         <div class="md-form">
-          <input id="compSolicitant" mdbInputDirective type="text" class="form-control" formControlName="compSolicitant">
-          <label for="compSolicitant">Compania-solicitant
-            <span class="text-danger">*</span>
-          </label>
+          <div class="md-form" formGroupName="medicament">
+            <input id="compSolicitant" mdbInputDirective type="text" class="form-control" formControlName="companyValue" [attr.disabled]="true">
+            <label for="compSolicitant">Compania solicitant</label>
+          </div>
         </div>
       </div>
       <div class="col-md-4">
         <div class="md-form">
           <mat-form-field class="w-100">
-            <mat-select placeholder="Tipul autorizarii" formControlName="tipulAutorizarii">
-              <mat-option *ngFor="let x of tipulAutorizarii" [value]="x.value">{{ x.viewValue }}</mat-option>
+            <mat-select placeholder="Tipul autorizarii" >
+              <mat-option *ngFor="let x of authorizationTypes" [value]="x.value">{{ x.viewValue }}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="md-form">
-          <mat-form-field class="w-100">
-            <mat-select placeholder="Tipul medicamentului" formControlName="tipMed">
-              <mat-option *ngFor="let x of tipMed" [value]="x.value">{{ x.viewValue }}</mat-option>
-            </mat-select>
-          </mat-form-field>
+        <div class="md-form" formGroupName="medicament">
+          <ng-select class="w-100"
+                     [items]="medicamentTypes"
+                     bindLabel="description"
+                     formControlName="medicamentType"
+                     placeholder="Tipul medicamentului">
+          </ng-select>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="md-form">
-          <mat-form-field class="w-100">
-            <mat-select placeholder="Codul medicamentului" formControlName="codMed">
-              <mat-option *ngFor="let x of codMed" [value]="x.value">{{ x.viewValue }}</mat-option>
-            </mat-select>
-          </mat-form-field>
+        <div class="md-form" formGroupName="medicament">
+          <ng-select class="w-100"
+                     [items]="medicamentGroups"
+                     bindLabel="description"
+                     formControlName="group"
+                     placeholder="Codul medicamentului">
+          </ng-select>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="md-form">
-          <input id="denumire" mdbInputDirective type="text" class="form-control" formControlName="denumire">
+        <div class="md-form" formGroupName="medicament">
+          <input id="denumire" mdbInputDirective type="text" class="form-control" formControlName="name">
           <label for="denumire">Denumirea medicamentului
             <span class="text-danger">*</span>
           </label>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="md-form">
-          <input id="cantitateMed" mdbInputDirective type="text" class="form-control" formControlName="cantitateMed">
+        <div class="md-form" formGroupName="medicament">
+          <input id="cantitateMed" mdbInputDirective type="text" class="form-control" formControlName="unitsQuantity">
           <label for="cantitateMed">Cantitatea medicamentului
             <span class="text-danger">*</span>
           </label>
+          <div *ngIf="formSubmitted && cerereImpExpForm.get('medicament.unitsQuantity').invalid">
+            <small class="text-muted"><strong class="text-danger">Cantitatea medicamentului trebuie introdusa</strong></small>
+          </div>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="md-form">
-          <mat-form-field class="w-100">
-            <mat-select placeholder="Forma" formControlName="forma">
-              <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
-            </mat-select>
-          </mat-form-field>
+        <div class="md-form" formGroupName="medicament">
+          <ng-select class="w-100"
+                     [items]="pharmaceuticalForms"
+                     bindLabel="description"
+                     formControlName="pharmaceuticalForm"
+                     placeholder="Forma *">
+          </ng-select>
+          <div *ngIf="formSubmitted && cerereImpExpForm.get('medicament.pharmaceuticalForm').invalid">
+            <small class="text-muted"><strong class="text-danger">Forma trebuie selectata</strong></small>
+          </div>
         </div>
       </div>
       <div class="col-md-6">
         <div class="row">
           <div class="col-9">
-            <div class="md-form">
-              <input id="dose" mdbInputDirective type="text" class="form-control" formControlName="dose">
-              <label for="dose">Doza
+            <div class="md-form" formGroupName="medicament">
+              <input id="doza" mdbInputDirective type="text" class="form-control" formControlName="dose">
+              <label for="doza">Doza
                 <span class="text-danger">*</span>
               </label>
+              <div *ngIf="formSubmitted && cerereImpExpForm.get('medicament.dose').invalid">
+                <small class="text-muted"><strong class="text-danger">Doza trebuie introdusa</strong></small>
+              </div>
             </div>
           </div>
           <div class="col-3">
-            <div class="md-form">
-              <mat-form-field class="w-100">
-                <mat-select placeholder="Volum" formControlName="volum1">
-                  <mat-option *ngFor="let x of volum" [value]="x.value">{{ x.viewValue }}</mat-option>
-                </mat-select>
-              </mat-form-field>
+            <div class="md-form" formGroupName="medicament">
+              <ng-select class="w-100"
+                         [items]="unitsOfMeasurement"
+                         bindLabel="description"
+                         formControlName="unitsOfMeasurement"
+                         placeholder="Volum *">
+              </ng-select>
+              <div *ngIf="formSubmitted && cerereImpExpForm.get('medicament.unitsOfMeasurement').invalid">
+                <small class="text-muted"><strong class="text-danger">Unitatea de masura trebuie selectata</strong></small>
+              </div>
             </div>
           </div>
         </div>
       </div>
       <div class="col-md-6">
-        <div class="md-form">
-          <input id="seria" mdbInputDirective type="text" class="form-control" formControlName="seria">
+        <div class="md-form" formGroupName="medicament">
+          <input id="seria" mdbInputDirective type="text" class="form-control" formControlName="serialNr">
           <label for="seria">Seria
             <span class="text-danger">*</span>
           </label>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="md-form">
-          <mat-form-field class="w-100">
-            <mat-select placeholder="Substanta activa" formControlName="subsActiva">
-              <mat-option *ngFor="let x of subsActiva" [value]="x.value">{{ x.viewValue }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="row">
-          <div class="col-9">
-            <div class="md-form">
-              <input id="cantSubsActive" mdbInputDirective type="text" class="form-control" formControlName="cantSubsActive">
-              <label for="cantSubsActive">Cantitatea substanței active
-                <span class="text-danger">*</span>
-              </label>
-            </div>
-          </div>
-          <div class="col-3">
-            <div class="md-form">
-              <mat-form-field class="w-100">
-                <mat-select placeholder="Volum" formControlName="volum2">
-                  <mat-option *ngFor="let x of volum" [value]="x.value">{{ x.viewValue }}</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
+          <div *ngIf="formSubmitted && cerereImpExpForm.get('medicament.serialNr').invalid">
+            <small class="text-muted"><strong class="text-danger">Seria trebuie introdusa</strong></small>
           </div>
         </div>
       </div>
+    </div>
+    <h5 class="text-center font-weight-bold">Substante active</h5>
+    <table class="table table-widths text-center">
+      <thead class="black white-text">
+      <tr>
+        <th scope="col">Denumire</th>
+        <th scope="col">Cantitate</th>
+        <th scope="col">Unitate de masură</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let substance of activeSubstancesTable;let i = index">
+        <th scope="row">{{ substance.activeSubstance.description }}</th>
+        <td>{{ substance.quantity }}</td>
+        <td>{{ substance.unitsOfMeasurement.description }}</td>
+      </tr>
+      </tbody>
+    </table>
+    <hr>
+    <app-payment [receipts]="receiptsList" [paymentOrders]="paymentOrdersList" (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
+    <div *ngIf="formSubmitted && paymentTotal<0">
+      <small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>
+    </div>
+    <hr>
+    <div class="text-center">
+      <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="saveRequest()">Inregistrare</button>
     </div>
   </form>
 </div>

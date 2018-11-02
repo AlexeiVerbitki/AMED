@@ -22,6 +22,13 @@ export class MedicamentService {
         return this.http.get<any[]>('/api/medicaments/search-medicament-names-by-name', {params: Params});
     }
 
+    getMedicamentNamesAndCodeList(partialName: string): Observable<any[]> {
+        let Params = new HttpParams();
+        Params = Params.set('partialName', partialName);
+
+        return this.http.get<any[]>('/api/medicaments/search-medicament-names-by-name-or-code', {params: Params});
+    }
+
     getMedicamentById(id: string): Observable<any> {
         let Params = new HttpParams();
         Params = Params.set('id', id);

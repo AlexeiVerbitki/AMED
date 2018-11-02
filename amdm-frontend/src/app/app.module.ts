@@ -33,7 +33,6 @@ import {ErrorResponseHandlerComponent} from "./server-response-handler/error-res
 import {ErrorHandlerService} from "./shared/service/error-handler.service";
 import {AdminDashboardComponent} from "./dashboard/admin-dashboard.component";
 import {GestDocComponent} from "./document-management/gest-doc/gest-doc.component";
-import {MAT_DATE_FORMATS, MAT_DATE_LOCALE} from "@angular/material";
 
 const interceptors = [{
     provide: HTTP_INTERCEPTORS,
@@ -69,7 +68,7 @@ const interceptors = [{
         ModuleComponent,
         AdministrationComponent,
         ErrorResponseHandlerComponent,
-        GestDocComponent
+        GestDocComponent,
     ],
     imports: [
         BrowserAnimationsModule,
@@ -86,8 +85,6 @@ const interceptors = [{
         ConfirmationDialogComponent
     ],
     providers: [AuthService, AdministrationService, ErrorHandlerService, interceptors,
-        // {provide: MAT_DATE_LOCALE, useValue: 'ro-Ro'},
-        // {provide: MAT_DATE_FORMATS, useValue: "YYYY/MM/DD"}
     ],
     bootstrap: [AppComponent]
 })

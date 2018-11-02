@@ -8,8 +8,8 @@ import {RegDrugControl} from "./reg-drug-control/reg-drug-control";
 
 const routes: Routes = [
     {path: 'activity-authorization/:id', component: CerereSolicAutorComponent},
-    {path: 'transfer-authorization', component: CerereImportExportComponent},
-    {path: 'modify-authority', component: CerereModAutorActComponent},
+    {path: 'transfer-authorization/:id', component: CerereImportExportComponent},
+    {path: 'modify-authority/:id', component: CerereModAutorActComponent},
     {path: 'duplicate-authority/:id', component: CerereDubAutorActComponent},
     {path: 'reg-drug-control', component: RegDrugControl},
 ];

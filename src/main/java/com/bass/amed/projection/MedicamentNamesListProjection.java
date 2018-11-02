@@ -4,4 +4,5 @@ public interface MedicamentNamesListProjection {
 
     Integer getId();
     String getName();
+    String getCode();
 }

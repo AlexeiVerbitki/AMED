@@ -88,9 +88,9 @@ public class AutheticationJWTController
             String filterStr = new EqualsFilter("userPrincipalName", "dumitru.ginu@bass.md").encode();
 
             contextSource.setUserDn("dumitru.ginu@bass.md");
-            contextSource.setPassword("Mind2Mind");
+            contextSource.setPassword("parola treb pusa");
 
-            boolean authed = ldapTemplate.authenticate("OU=BASS", filterStr, "Mind2Mind");
+            boolean authed = ldapTemplate.authenticate("OU=BASS", filterStr, "parola treb pusa");
             System.out.println("Authenticated: " + authed);
             System.out.println(filterStr);
 

@@ -1,13 +1,14 @@
 <div class="container-fluid sky z-depth-2">
   <h3 class="text-center my-3 font-weight-bold">Inregistrare cerere</h3>
   <hr>
-  <form [formGroup]='dataForm'>
+  <!--<form [formGroup]='dataForm'>-->
+  <form [formGroup]='rForm'>
     <div class="row">
       <div class="col-lg-5">
         <div class="md-form">
           <input id="nrCererii" mdbInputDirective type="text" class="form-control" formControlName="nrCererii"
             [attr.disabled]="true">
-          <label for="nrCererii">Nr. cererii</label>
+          <label for="nrCererii">Nr. cererii   {{generatedDocNrSeq2}}</label>
         </div>
       </div>
 
@@ -27,7 +28,7 @@
         </label>
       </div>
     </div>
-  </form>
+  <!--</form>-->
   <hr>
   <table class="table table-widths text-center">
     <thead class="black white-text">
@@ -52,7 +53,7 @@
     </tbody>
   </table>
   <hr>
-  <form [formGroup]='rForm'>
+  <!--<form [formGroup]='rForm'>-->
     <mat-radio-group formControlName="radioButton">
       <div class="container">
         <div class="row">

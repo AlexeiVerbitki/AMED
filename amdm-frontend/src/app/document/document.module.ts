@@ -15,6 +15,6 @@ import {MDBBootstrapModule} from "angular-bootstrap-md";
   ],
   declarations: [DocumentComponent],
   exports: [DocumentComponent, CommonModule, FormsModule],
-    providers: [UploadFileService]
+  providers: [UploadFileService]
 })
 export class DocumentModule { }

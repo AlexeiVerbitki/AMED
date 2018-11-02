@@ -32,6 +32,8 @@ export class ImportAuthorizationRequestComponent implements OnInit {
     currentDate: Date;
     file: any;
     generatedDocNrSeq: number;
+    generatedDocNrSeq2: number;
+
     // filteredOptions: Observable<any[]>;
     formSubmitted: boolean;
     // isWrongValueCompany: boolean;
@@ -42,15 +44,15 @@ export class ImportAuthorizationRequestComponent implements OnInit {
                 private authService: AuthService,
                 private administrationService: AdministrationService) {
         this.rForm = fb.group({
-
-            'radioButton': [null, Validators.required],
-        });
-        this.dataForm = fb.group({
             'requestNumber': [null],
             'startDate': [new Date()],
             'currentStep': ['E'],
-            'data': {disabled: true, value: null},
-            'nrCererii': [null, Validators.required]
+            'data': {disabled: true, value: new Date()},
+            'nrCererii': [null, Validators.required, ],
+            'radioButton': [null, Validators.required],
+        });
+        this.dataForm = fb.group({
+
         });
 
         this.medReg = fb.group({
@@ -61,10 +63,13 @@ export class ImportAuthorizationRequestComponent implements OnInit {
     ngOnInit() {
         this.currentDate = new Date();
 
+
         this.subscriptions.push(
-            this.administrationService.generateDocNr().subscribe(data => {
+            // this.administrationService.generateDocNr().subscribe(data => {
+            this.administrationService.generateRandomDocNr().subscribe(data => {
                     this.generatedDocNrSeq = data;
                     this.dataForm.get('nrCererii').setValue(this.generatedDocNrSeq);
+
                 },
                 error => console.log(error)
             )
@@ -127,7 +132,8 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
     nextStep() {
 
-        alert(this.rForm.get('radioButton').value);
+        alert(this.rForm.get('startDate').value);
+        alert(this.generatedDocNrSeq);
         alert(this.documents.values());
 
         this.formSubmitted = true;

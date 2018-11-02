@@ -1,197 +1,178 @@
 <div class="container-fluid sky z-depth-2">
-  <h3 class="text-center my-3 font-weight-bold">Inregistrarea cererii de nimicire a medicamentelor</h3>
-  <hr>
-  <form [formGroup]='dataForm'>
-    <div class="row">
-      <div class="col-lg-5">
-        <div class="md-form">
-          <input id="nrCererii" mdbInputDirective type="text" class="form-control" formControlName="nrCererii"
-            [attr.disabled]="true">
-          <label for="nrCererii">Nr. cererii</label>
-        </div>
-      </div>
+    <h3 class="text-center my-3 font-weight-bold">Inregistrarea cererii de nimicire a medicamentelor</h3>
+    <hr>
 
-      <div class="col-lg-5">
-        <div class="md-form-modified">
-          <mat-form-field class="w-100">
-            <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker touchUi #picker></mat-datepicker>
-          </mat-form-field>
+    <form [formGroup]="mForm">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="nrCererii" mdbInputDirective type="text" class="form-control"
+                           formControlName="nrCererii">
+                    <label for="nrCererii">Nr. cererii</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker2" placeholder="Data de inregistrare a cererii"
+                               id="dataEliberarii"
+                               formControlName="dataEliberarii">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker2></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form-modified-select">
+                    <ng-select class="custom" [items]="companii"
+                               bindLabel="name"
+                               placeholder="Companii"
+                               formControlName="company"
+                               [required]="true"
+                    >
+                    </ng-select>
+                </div>
+                <div *ngIf="mFormSubbmitted && !mForm.get('company').valid">
+                    <small class="text-muted"><strong class="text-danger">Agentul economic trebuie introdus</strong>
+                    </small>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="col-lg-2 position-button mt-3">
-        <label class="btn btn-indigo btn-sm" for="incarcaraFisier">
-          <input id="incarcaraFisier" type="file" style="display:none;" (change)="onChange($event)" onclick="this.value=null;">
-          Incarca Cerere
-        </label>
-      </div>
-    </div>
-  </form>
-  <hr>
-  <table class="table table-widths-lg text-center">
-    <thead class="black white-text">
-      <tr>
-        <th scope="col">Denumire</th>
-        <th scope="col">Format</th>
-        <th scope="col">Data incarcarii</th>
-        <th scope="col">Actiuni</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let x of cerere">
-        <th scope="row">{{ x.denumirea }}</th>
-        <td>{{ x.format }}</td>
-        <td>{{ x.dataIncarcarii }}</td>
-        <td>
-          <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect>View</button>
-          <button class="btn btn-dark-red-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Stergere</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <hr>
-  <div class="row">
-    <div class="col-4">
-      <div class="md-form">
-        <input id="compSolicitant" mdbInputDirective type="text" class="form-control">
-        <label for="compSolicitant">Compania solicitant
-          <span class="text-danger">*</span>
-        </label>
-      </div>
-    </div>
-    <div class="col-4">
-      <div class="md-form">
-        <input id="med" mdbInputDirective type="text" class="form-control">
-        <label for="med">Medicamentul
-          <span class="text-danger">*</span>
-        </label>
-      </div>
-    </div>
-    <div class="offset-1 col-3">
-      <div class="md-form">
-        <mat-radio-group [(ngModel)]="model3">
-          <div class="row">
-            <div class="col">
-              <mat-radio-button name="prop1" value="A2">Primară</mat-radio-button>
-            </div>
-            <div class="col">
-              <mat-radio-button name="prop2" value="B2">Repetată</mat-radio-button>
-            </div>
-          </div>
-        </mat-radio-group>
-      </div>
-    </div>
-  </div>
-  <hr>
-  <h5 class="text-center font-weight-bold">Medicamentele de nimicit</h5>
-  <hr>
-  <div class="row">
-    <div class="col-md-3">
-      <div class="md-form">
-        <input id="denumire" mdbInputDirective type="text" class="form-control">
-        <label for="denumire">Denumirea
-          <span class="text-danger">*</span>
-        </label>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="md-form-modified">
-        <mat-form-field class="w-100">
-          <mat-select placeholder="Forma farmaceutică">
-            <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="md-form">
-        <input id="dose" mdbInputDirective type="text" class="form-control">
-        <label for="dose">Doza
-        </label>
-      </div>
-    </div>
-    <div class="col-3">
-      <div class="md-form-modified">
-        <mat-form-field class="w-100">
-          <mat-select placeholder="mg">
-            <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="md-form-modified">
-        <mat-form-field class="w-100">
-          <mat-select placeholder="Ambalaj primar">
-            <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="md-form">
-        <input id="seria" mdbInputDirective type="text" class="form-control">
-        <label for="seria">Seria
-        </label>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="md-form">
-        <input id="quantity" mdbInputDirective type="text" class="form-control">
-        <label for="quantity">Cantitatea
-        </label>
-      </div>
-    </div>
-    <div class="col-3">
-      <div class="md-form-modified">
-        <mat-form-field class="w-100">
-          <mat-select placeholder="grame">
-            <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
 
-    <div class="col-md-5">
-      <div class="md-form">
-        <mat-form-field class="w-100">
-          <mat-select placeholder="Cauza inutilitatii">
-            <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
+        <app-document [documents]="docs" [nrCerere]="mForm.get('nrCererii').value"></app-document>
+        <div *ngIf="rFormSubbmitted && docs.length==0">
+            <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
+        </div>
+
+    </form>
+
+
+    <h3 class="text-center my-3 font-weight-bold">Colectare date</h3>
+    <hr>
+    <form [formGroup]="rForm">
+        <div class="row">
+
+            <div class="col-md-4">
+                <div class="md-form-modified-select">
+                    <ng-select class="custom" [items]="medicamente | async"
+                               bindLabel="name"
+                               placeholder="Medicamente"
+                               formControlName="medicaments"
+                               [required]="true"
+                               [typeahead]="medInputs"
+                               [loading]="medLoading"
+                    >
+                        <ng-template ng-option-tmp let-item="item">
+                            {{item.name}} <br />
+                            <small>{{item.code}}</small>
+                        </ng-template>
+                    </ng-select>
+                </div>
+                <div *ngIf="rFormSubbmitted && !rForm.get('medicaments').valid">
+                    <small class="text-muted"><strong class="text-danger">Medicamentul trebuie introdus</strong>
+                    </small>
+                </div>
+            </div>
+
+
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="forma" mdbInputDirective type="text" class="form-control" formControlName="forma"
+                    >
+                    <label for="forma">Forma</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="doza" mdbInputDirective type="text" class="form-control" formControlName="doza"
+                    >
+                    <label for="doza">Doza</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="ambalajPrimar" mdbInputDirective type="text" class="form-control"
+                           formControlName="ambalajPrimar"
+                    >
+                    <label for="ambalajPrimar">Ambalaj primar</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="seria" mdbInputDirective type="text" class="form-control" formControlName="seria"
+                    >
+                    <label for="seria">Seria</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="quantity" mdbInputDirective type="text" class="form-control"
+                           formControlName="quantity"
+                    >
+                    <label for="quantity">Cantitatea</label>
+                </div>
+                <div *ngIf="rFormSubbmitted && !rForm.get('quantity').valid">
+                    <small class="text-muted"><strong class="text-danger">Cantitatea trebuie introdusa</strong>
+                    </small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="reasonDestroy" mdbInputDirective type="text" class="form-control"
+                           formControlName="reasonDestroy"
+                    >
+                    <label for="quantity">Cantitatea</label>
+                </div>
+                <div *ngIf="rFormSubbmitted && !rForm.get('reasonDestroy').valid">
+                    <small class="text-muted"><strong class="text-danger">Cauza inutilitatii trebuie introdusa</strong>
+                    </small>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="text-center">
+                    <div class="md-form">
+                        <button type="button" class="btn btn-indigo waves-light btn-sm btn-sm-bl" mdbWavesEffect
+                                (click)="addNewMedicament()">Adauga
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <hr>
+    <table class="table table-widths text-center">
+        <thead class="black white-text">
+        <tr>
+            <th scope="col">Medicament</th>
+            <th scope="col">Cantitatea</th>
+            <th scope="col">Actiuni</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let meds of medicamentsToDestroy;let i = index">
+            <th scope="row">{{ meds.medicamentName }}</th>
+            <td>{{ meds.quantity }}</td>
+            <td>
+                <button class="btn btn-dark-red-color waves-light btn-sm waves-light" type="button"
+                        (click)="removeMedicamentToDestroy(i)" mdbWavesEffect>Sterge
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div *ngIf="fFormSubbmitted && medicamentsToDestroy.length==0">
+        <small class="text-muted"><strong class="text-danger">Nici un medicament pentru nimicire nu a fost
+            adaugat</strong></small>
     </div>
-    <div class="col-md-5">
-      <div class="md-form">
-        <mat-form-field class="w-100">
-          <mat-select placeholder="Metoda de nimicire">
-            <mat-option *ngFor="let x of forma" [value]="x.value">{{ x.viewValue }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="col-md-2">
-      <div class="md-form">
-        <button class="mt-3 btn btn-dark-red-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Sterge din lista</button>
-      </div>
-    </div>
-  </div>
-  <div class="position-button">
-    <button class="mt-3 btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Adauga medicament nou</button>
-  </div>
-  <hr>
-  <div class="row">
-    <div class="col-md-12">
-      <div class="md-form">
-        <textarea id="nota" type="text" class="md-textarea form-control" mdbInputDirective></textarea>
-        <label for="nota">Nota</label>
-      </div>
-    </div>
-  </div>
-  <div class="text-center">
-    <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Confirmare
-      cerere</button>
-    <button type="button" class="btn btn-dark-red-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Anulare</button>
-  </div>
+    <hr>
+
+     <div class="text-center">
+         <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
+                 (click)="submitNew()">Next Step
+         </button>
+     </div>
+
+
 </div>

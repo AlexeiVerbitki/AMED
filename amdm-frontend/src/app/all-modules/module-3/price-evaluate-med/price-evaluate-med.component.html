@@ -1,19 +1,29 @@
 <div class="container-fluid sky z-depth-2">
     <h3 class="text-center my-3 font-weight-bold">Evaluarea cererii de inregistrare a pretului la medicamente</h3>
     <hr>
-    <h5 class="text-center font-weight-bold">Documente incarcate</h5>
-    <hr>
-    <div class="col-lg-5">
-        <div class="md-form">
-            <input id="nrCererii" mdbInputDirective type="text" class="form-control"
-                   [value]="requestNumber" [attr.disabled]="true">
-            <label for="nrCererii">Numarul cererii</label>
+
+    <form [formGroup]='PriceRegForm'>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="md-form">
+                <input id="nrCererii" mdbInputDirective type="text" class="form-control" formControlName="requestNumber" [attr.disabled]="true">
+                <label for="nrCererii">Numarul cererii</label>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="md-form-modified">
+                <mat-form-field class="w-100">
+                    <input matInput [matDatepicker]="picker" placeholder="din data" formControlName="startDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker touchUi #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
         </div>
     </div>
+
     <app-document [canUpload]="false" [documents]="documents" [nrCerere]="PriceRegForm.get('requestNumber').value"></app-document>
 
     <hr>
-    <form [formGroup]='PriceRegForm'>
         <div class="row" formGroupName="medicament">
             <div class="col-md-4">
                 <div class="md-form">
@@ -116,38 +126,168 @@
                 </div>
             </div>
         </div>
-
         <hr>
-        <h5 class="text-center font-weight-bold">Prețul medicamentului în 9 țări de referință</h5>
-        <template #priceReferenceContainer></template>
-        <hr>
-
-
-        <h5 class="text-center font-weight-bold">Cursul Valutar al Băncii Naționale a Moldovei pentru {{today | date: 'dd/MM/yyyy'}}</h5>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input id="usd2" mdbInputDirective type="text" class="form-control" [value]="currencyUSD"
-                           [attr.disabled]="true">
-                    <label for="usd2">USD</label>
+        <h5 class="text-center font-weight-bold mt-4 mb-4">Rata medie a BNM pentru luna precedentă evaluării dosarului</h5>
+        <div class="container ">
+            <div class="row" *ngFor="let avgCur of avgCurrencies">
+                <div class="offset-2"></div>
+                <div class="col-8">
+                    <div class="row text-center font-weight-bold alert alert-currency">
+                        <div class="col">{{'1 ' + avgCur?.currency?.shortDescription}}</div>
+                        <div class="col-2">=</div>
+                        <div class="col">{{avgCur?.value + ' MDL'}}</div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input id="eu2" mdbInputDirective type="number" class="form-control" [value]="currencyEUR"
-                           [attr.disabled]="true">
-                    <label for="eu2">EU</label>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input id="rur2" mdbInputDirective type="number" class="form-control" [value]="currencyRUR"
-                           [attr.disabled]="true">
-                    <label for="rur2">RUR</label>
-                </div>
+                <div class="offset-2"></div>
             </div>
         </div>
         <hr>
+
+        <div *ngIf="this.PriceRegForm.get('medicament')['controls'].medicamentType.value == MedType.Generic">
+            <div>
+                <h5 class="text-center font-weight-bold mt-4 mb-4">Prețul medicamentului în 9 țări de referință</h5>
+                <table mdbTable bordered="true" striped="true" hover="true" small="true" class="mt-4 mb-4 text-center">
+                    <thead class="black white-text">
+                    <tr>
+                        <th scope="col">Țara de referință</th>
+                        <th>Valuta ţării de referinţă</th>
+                        <th>Preţ</th>
+                        <th>Rata de schimb (valuta ţării de referinta/MDL)</th>
+                        <th>MDL</th>
+                        <th>Rata de schimb (EUR/lei)</th>
+                        <th>EUR</th>
+                        <th>Rata de schimb (USD/lei)</th>
+                        <th>USD</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr mdbTableCol *ngFor="let el of refPrices">
+                        <ng-container *ngIf="el.type.id == PriceRefType.ReferenceCountry">
+                            <td scope="row">{{el.country?.description}}</td>
+                            <td>{{el.currency?.shortDescription}}</td>
+                            <td>{{el.value | number:'1.4'}}</td>
+                            <td>{{el?.xchRateRef | number:'1.4'}}</td>
+                            <td>{{el?.xchRateRefVal | number:'1.4'}}</td>
+                            <td>{{el?.xchRateEur | number:'1.4'}}</td>
+                            <td>{{el?.xchRateEurVal | number:'1.4'}}</td>
+                            <td>{{el?.xchRateUsd | number:'1.4'}}</td>
+                            <td>{{el?.xchRateUsdVal | number:'1.4'}}</td>
+                        </ng-container>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h5 class="text-center font-weight-bold mt-4 mb-4">Media celor mai mici prețuri în țările de referință</h5>
+            <table mdbTable bordered="true" striped="true" hover="true" small="true" class="mt-4 mb-4 text-center">
+                <thead class="black white-text">
+                <tr>
+                    <th scope="col">Cele mai mici 3 prețuri</th>
+                    <th>MDL</th>
+                    <th>EUR</th>
+                    <th>USD</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr mdbTableCol *ngFor="let el of minRefPrices">
+                    <td scope="row">{{el.country?.description}}</td>
+                    <td>{{el?.xchRateRefVal | number:'1.4'}}</td>
+                    <td>{{el?.xchRateEurVal | number:'1.4'}}</td>
+                    <td>{{el?.xchRateUsdVal | number:'1.4'}}</td>
+                </tr>
+                </tbody>
+            </table>
+            <hr>
+
+            <div>
+                <h5 class="text-center font-weight-bold mt-4 mb-4">Prețul medicamentului în țara de origine</h5>
+                <table mdbTable bordered="true" striped="true" hover="true" small="true" class="mt-4 mb-4 text-center">
+                    <thead class="black white-text">
+                    <tr>
+                        <th scope="col">Țara de origine</th>
+                        <th>Valuta ţării de referinţă</th>
+                        <th>Preţ</th>
+                        <th>Rata de schimb (valuta ţării de referinta/MDL)</th>
+                        <th>MDL</th>
+                        <th>Rata de schimb (EUR/lei)</th>
+                        <th>EUR</th>
+                        <th>Rata de schimb (USD/lei)</th>
+                        <th>USD</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr mdbTableCol *ngFor="let el of refPrices">
+                        <ng-container *ngIf="el.type.id == PriceRefType.OriginCountry">
+                            <td scope="row">{{el.country?.description}}</td>
+                            <td>{{el.currency?.shortDescription}}</td>
+                            <td>{{el.value | number:'1.4'}}</td>
+                            <td>{{el?.xchRateRef | number:'1.4'}}</td>
+                            <td>{{el?.xchRateRefVal | number:'1.4'}}</td>
+                            <td>{{el?.xchRateEur | number:'1.4'}}</td>
+                            <td>{{el?.xchRateEurVal | number:'1.4'}}</td>
+                            <td>{{el?.xchRateUsd | number:'1.4'}}</td>
+                            <td>{{el?.xchRateUsdVal | number:'1.4'}}</td>
+                        </ng-container>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div>
+                <h5 class="text-center font-weight-bold mt-4 mb-4">Prețul medicamentului în cataloagele în care medicamentul este plasat pe piaţă</h5>
+                <table mdbTable bordered="true" striped="true" hover="true" small="true" class="mt-4 mb-4 text-center">
+                    <thead class="black white-text">
+                    <tr>
+                        <th scope="col">Țara</th>
+                        <th>Valuta ţării de referinţă</th>
+                        <th>Preţ</th>
+                        <th>Rata de schimb (valuta ţării de referinta/MDL)</th>
+                        <th>MDL</th>
+                        <th>Rata de schimb (EUR/lei)</th>
+                        <th>EUR</th>
+                        <th>Rata de schimb (USD/lei)</th>
+                        <th>USD</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr mdbTableCol *ngFor="let el of refPrices">
+                        <ng-container *ngIf="el.type.id == PriceRefType.OtherCountriesCatalog">
+                            <td scope="row">{{el.country?.description}}</td>
+                            <td>{{el.currency?.shortDescription}}</td>
+                            <td>{{el.value | number:'1.4'}}</td>
+                            <td>{{el?.xchRateRef | number:'1.4'}}</td>
+                            <td>{{el?.xchRateRefVal | number:'1.4'}}</td>
+                            <td>{{el?.xchRateEur | number:'1.4'}}</td>
+                            <td>{{el?.xchRateEurVal | number:'1.4'}}</td>
+                            <td>{{el?.xchRateUsd | number:'1.4'}}</td>
+                            <td>{{el?.xchRateUsdVal | number:'1.4'}}</td>
+                        </ng-container>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h5 class="text-center font-weight-bold mt-4 mb-4">Media celor mai mici preţuri de pe cataloagele în care medicamentul este plasat pe piaţă</h5>
+            <table mdbTable bordered="true" striped="true" hover="true" small="true" class="mt-4 mb-4 text-center">
+                <thead class="black white-text">
+                <tr>
+                    <th scope="col">Cele mai mici 3 prețuri</th>
+                    <th>MDL</th>
+                    <th>EUR</th>
+                    <th>USD</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr mdbTableCol *ngFor="let el of minOtherCountriesCatPrices">
+                    <td scope="row">{{el.country?.description}}</td>
+                    <td>{{el?.xchRateRefVal | number:'1.4'}}</td>
+                    <td>{{el?.xchRateEurVal | number:'1.4'}}</td>
+                    <td>{{el?.xchRateUsdVal | number:'1.4'}}</td>
+                </tr>
+                </tbody>
+            </table>
+            <hr>
+        </div>
 
 
         <div class="row" formGroupName="evaluation">
@@ -174,7 +314,7 @@
                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                         <mat-datepicker touchUi #picker2></mat-datepicker>
                     </mat-form-field>
-                    <div *ngIf="formSubmitted && expirationDate == undefined">
+                    <div *ngIf="formSubmitted && PriceRegForm.get('evaluation.expirationDate') == undefined">
                         <small class="text-muted"><strong class="text-danger">Indicați data expirării prețului</strong>
                         </small>
                     </div>
@@ -233,9 +373,6 @@
                 <td>{{ a.statut }}</td>
                 <td>
                     <button class="btn btn-default btn-sm waves-light" mdbWavesEffect>Generare</button>
-                    <button [disabled]=a.status class="btn btn-mdb-color waves-light btn-sm waves-light" mdbWavesEffect>
-                        Vizualizare
-                    </button>
                 </td>
             </tr>
             </tbody>
@@ -245,8 +382,7 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="md-form">
-                    <input id="ordAprobPret" mdbInputDirective type="text" class="form-control" value="AB123"
-                           formControlName="ordAprobPret">
+                    <input id="ordAprobPret" mdbInputDirective type="text" class="form-control" value="AB123">
                     <label for="ordAprobPret">Ordin de aprobare a pretului</label>
                 </div>
             </div>
@@ -267,8 +403,7 @@
             </div>
             <div class="col">
                 <div class="md-form">
-                    <textarea id="note" type="text" class="md-textarea form-control" mdbInputDirective
-                              formControlName="note"></textarea>
+                    <textarea id="note" type="text" class="md-textarea form-control" mdbInputDirective></textarea>
                     <label for="note" for="note">Notă (Textul notificării sau scrisorii de însoțire pentru agentul
                         economic)</label>
                 </div>
@@ -276,9 +411,8 @@
         </div>
         <hr>
         <div class="text-center">
-            <button class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect>Inapoi la pasul de inregistrare
-            </button>
-            <button class="btn btn-mdb-color waves-light btn-sm waves-light" mdbWavesEffect (click)="nextStep()">Urmatorul pas</button>
+            <button class="btn btn-mdb-color waves-light btn-sm waves-light"  mdbWavesEffect (click)="save()">Salvează rezultatele evaluării</button>
         </div>
     </form>
 </div>
+<!--<app-request-additional-data-dialog></app-request-additional-data-dialog>-->

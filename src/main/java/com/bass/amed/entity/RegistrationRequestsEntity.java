@@ -9,22 +9,22 @@ import java.util.Set;
 @Table(name = "registration_requests", schema = "amed", catalog = "")
 public class RegistrationRequestsEntity
 {
-    private Integer                               id;
-    private String                                requestNumber;
-    private Timestamp                             startDate;
-    private Timestamp                             endDate;
-    private MedicamentEntity                      medicament;
-    private NmEconomicAgentsEntity                company;
-    private ImportAuthorizationEntity             importAuthorizationEntity;
-    private String                                currentStep;
-    private RequestTypesEntity                    type;
-    private Integer                               medicamentAnnihilationId;
-    private ClinicalTrialsEntity                  clinicalTrails;
-    private LicensesEntity                        license;
+    private Integer id;
+    private String requestNumber;
+    private Timestamp startDate;
+    private Timestamp endDate;
+    private MedicamentEntity medicament;
+    private NmEconomicAgentsEntity company;
+    private Integer importId;
+    private String currentStep;
+    private RequestTypesEntity type;
+    private ClinicalTrialsEntity clinicalTrails;
+    private LicensesEntity license;
+    private MedicamentAnnihilationEntity medicamentAnnihilation;
     private Set<RegistrationRequestHistoryEntity> requestHistories = new HashSet<>();
-    private String                                interruptionReason;
-    private String                                initiator;
-    private String                                assignedUser;
+    private String interruptionReason;
+    private String initiator;
+    private String assignedUser;
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
@@ -89,14 +89,14 @@ public class RegistrationRequestsEntity
 
     @Basic
     @Column(name = "import_id")
-    public ImportAuthorizationEntity getImportAuthorizationEntity()
+    public Integer getImportId()
     {
-        return importAuthorizationEntity;
+        return importId;
     }
 
-    public void setImportAuthorizationEntity(ImportAuthorizationEntity importAuthorizationEntity)
+    public void setImportId(Integer importId)
     {
-        this.importAuthorizationEntity = importAuthorizationEntity;
+        this.importId = importId;
     }
 
     @Basic
@@ -109,18 +109,6 @@ public class RegistrationRequestsEntity
     public void setCurrentStep(String currentStep)
     {
         this.currentStep = currentStep;
-    }
-
-    @Basic
-    @Column(name = "medicament_annihilation_id")
-    public Integer getMedicamentAnnihilationId()
-    {
-        return medicamentAnnihilationId;
-    }
-
-    public void setMedicamentAnnihilationId(Integer medicamentAnnihilationId)
-    {
-        this.medicamentAnnihilationId = medicamentAnnihilationId;
     }
 
     @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE,CascadeType.PERSIST } )
@@ -157,6 +145,18 @@ public class RegistrationRequestsEntity
     public void setLicense(LicensesEntity license)
     {
         this.license = license;
+    }
+
+    @OneToOne( fetch = FetchType.LAZY, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
+    @JoinColumn( name = "medicament_annihilation_id" )
+    public MedicamentAnnihilationEntity getMedicamentAnnihilation()
+    {
+        return medicamentAnnihilation;
+    }
+
+    public void setMedicamentAnnihilation(MedicamentAnnihilationEntity medicamentAnnihilation)
+    {
+        this.medicamentAnnihilation = medicamentAnnihilation;
     }
 
     @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST} )
@@ -258,7 +258,7 @@ public class RegistrationRequestsEntity
         {
             return false;
         }
-        if (importAuthorizationEntity != null ? !importAuthorizationEntity.equals(that.importAuthorizationEntity) : that.importAuthorizationEntity != null)
+        if (importId != null ? !importId.equals(that.importId) : that.importId != null)
         {
             return false;
         }
@@ -267,10 +267,6 @@ public class RegistrationRequestsEntity
             return false;
         }
         if (type != null ? !type.equals(that.type) : that.type != null)
-        {
-            return false;
-        }
-        if (medicamentAnnihilationId != null ? !medicamentAnnihilationId.equals(that.medicamentAnnihilationId) : that.medicamentAnnihilationId != null)
         {
             return false;
         }
@@ -306,10 +302,9 @@ public class RegistrationRequestsEntity
         result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
         result = 31 * result + (medicament != null ? medicament.hashCode() : 0);
         result = 31 * result + (company != null ? company.hashCode() : 0);
-        result = 31 * result + (importAuthorizationEntity != null ? importAuthorizationEntity.hashCode() : 0);
+        result = 31 * result + (importId != null ? importId.hashCode() : 0);
         result = 31 * result + (currentStep != null ? currentStep.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (medicamentAnnihilationId != null ? medicamentAnnihilationId.hashCode() : 0);
         result = 31 * result + (clinicalTrails != null ? clinicalTrails.hashCode() : 0);
         result = 31 * result + (license != null ? license.hashCode() : 0);
         result = 31 * result + (requestHistories != null ? requestHistories.hashCode() : 0);

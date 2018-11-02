@@ -11,6 +11,10 @@ export class AdministrationService {
         return this.http.get('/api/administration/generate-doc-nr', {});
     }
 
+    generateRandomDocNr(): Observable<any> {
+        return this.http.get('/api/administration/generate-doc-nr-random', {});
+    }
+
     getAllCompanies(): Observable<any> {
         return this.http.get('/api/administration/all-companies', {});
     }

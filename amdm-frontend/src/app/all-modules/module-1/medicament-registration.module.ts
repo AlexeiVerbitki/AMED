@@ -14,7 +14,7 @@ import {RequestAdditionalDataDialogComponent} from "../../dialog/request-additio
 import {DocumentModule} from "../../document/document.module";
 import {PaymentModule} from "../../payment/payment.module";
 import {ProcessInterruptionComponent} from "./process-interruption/process-interruption.component";
-import { ExpertiComponent } from './experti/experti.component';
+import {ExpertiComponent} from './experti/experti.component';
 import {ExpertComiteeModule} from "../../expert-comitee/expert-comitee.module";
 
 @NgModule({

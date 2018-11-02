@@ -1,55 +1,55 @@
 <h5 class="text-center font-weight-bold">Documente atasate</h5>
 <hr>
 <form [formGroup]='docForm' *ngIf="canUpload">
-  <div class="row">
-    <div class="col-6">
-      <div class="md-form-modified">
-        <ng-select id="docType" name="docType" [items]="docTypes"
-                   bindLabel="description"
-                   placeholder="Tip document"
-                   formControlName="docType">
-        </ng-select>
-        <div *ngIf="formSubmitted && docForm.get('docType').invalid">
-          <small class="text-muted"><strong class="text-danger">Tip document trebuie selectat</strong></small>
-        </div>
-      </div>
-    </div>
-    <div class="col-4">
-      <div class="md-form">
-        <input id="nrDocInvisibil" *ngIf="!this.docForm.get('docType').value || !this.docForm.get('docType').value.needDocNr" style="display:none;" mdbInputDirective type="text">
-        <input id="nrDoc" *ngIf="this.docForm.get('docType').value && this.docForm.get('docType').value.needDocNr" mdbInputDirective type="text" class="form-control" formControlName="nrDoc">
-        <label for="nrDoc" *ngIf="this.docForm.get('docType').value && this.docForm.get('docType').value.needDocNr">Numar document</label>
-      </div>
-      <div *ngIf="formSubmitted && docForm.get('nrDoc').invalid && docForm.get('docType').value && docForm.get('docType').value.needDocNr">
-        <small class="text-muted"><strong class="text-danger">Numar document trebuie introdus</strong></small>
-      </div>
-    </div>
-    <div class="col-2 position-button mt-4">
-        <button type="button" class="btn btn-indigo btn-sm waves-light" (click)="checkFields() ? incarcaFisier.click() : ''" mdbWavesEffect>Incarcă Document</button>
-        <input id="incarcaFisier" #incarcaFisier type="file" style="display:none;" (click)="reset()" (change)="addDocument($event);" attr.disabled="this.disabled">
-    </div>
-  </div>
+	<div class="row">
+		<div class="col-6">
+			<div class="md-form-modified">
+				<ng-select id="docType" name="docType" [items]="docTypes"
+				           bindLabel="description"
+				           placeholder="Tip document"
+				           formControlName="docType">
+				</ng-select>
+				<div *ngIf="formSubmitted && docForm.get('docType').invalid">
+					<small class="text-muted"><strong class="text-danger">Tip document trebuie selectat</strong></small>
+				</div>
+			</div>
+		</div>
+		<div class="col-4">
+			<div class="md-form">
+				<input id="nrDocInvisibil" *ngIf="!this.docForm.get('docType').value || !this.docForm.get('docType').value.needDocNr" style="display:none;" mdbInputDirective type="text">
+				<input id="nrDoc" *ngIf="this.docForm.get('docType').value && this.docForm.get('docType').value.needDocNr" mdbInputDirective type="text" class="form-control" formControlName="nrDoc">
+				<label for="nrDoc" *ngIf="this.docForm.get('docType').value && this.docForm.get('docType').value.needDocNr">Numar document</label>
+			</div>
+			<div *ngIf="formSubmitted && docForm.get('nrDoc').invalid && docForm.get('docType').value && docForm.get('docType').value.needDocNr">
+				<small class="text-muted"><strong class="text-danger">Numar document trebuie introdus</strong></small>
+			</div>
+		</div>
+		<div class="col-2 position-button mt-4">
+			<button type="button" class="btn btn-indigo btn-sm waves-light" (click)="checkFields() ? incarcaFisier.click() : ''" mdbWavesEffect>Incarcă Document</button>
+			<input id="incarcaFisier" #incarcaFisier type="file" style="display:none;" (click)="reset()" (change)="addDocument($event);" attr.disabled="this.disabled">
+		</div>
+	</div>
 </form>
 <table class="table table-widths text-center">
-  <thead class="black white-text">
-  <tr>
-    <th scope="col">Denumire</th>
-    <th scope="col">Tip document</th>
-    <th scope="col">Numar document</th>
-    <th scope="col">Data incarcarii</th>
-    <th scope="col">Actiuni</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let doc of documents;let i = index">
-    <th scope="row">{{ doc.name }}</th>
-    <td>{{ doc.docType.description }}</td>
-    <td>{{ doc.number }}</td>
-    <td>{{ doc.date | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
-    <td>
-      <button type="button" class="btn btn-mdb-color btn-sm waves-light" (click)="loadFile(doc.path)" mdbWavesEffect>View</button>
-      <button type="button" *ngIf="!doc.isOld" class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeDocument(i)" mdbWavesEffect attr.disabled="this.disabled">Delete</button>
-    </td>
-  </tr>
-  </tbody>
+	<thead class="black white-text">
+	<tr>
+		<th scope="col">Denumire</th>
+		<th scope="col">Tip document</th>
+		<th scope="col">Numar document</th>
+		<th scope="col">Data incarcarii</th>
+		<th scope="col">Actiuni</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr *ngFor="let doc of documents;let i = index">
+		<th scope="row">{{ doc.name }}</th>
+		<td>{{ doc.docType.description }}</td>
+		<td>{{ doc.number }}</td>
+		<td>{{ doc.date | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+		<td>
+			<button type="button" class="btn btn-mdb-color btn-sm waves-light" (click)="loadFile(doc.path)" mdbWavesEffect>View</button>
+			<button type="button" *ngIf="!doc.isOld" class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeDocument(i)" mdbWavesEffect attr.disabled="this.disabled">Delete</button>
+		</td>
+	</tr>
+	</tbody>
 </table>

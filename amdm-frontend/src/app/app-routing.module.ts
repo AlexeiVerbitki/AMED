@@ -63,6 +63,10 @@ const routes: Routes = [
                         path: 'module/clinic-studies',
                         loadChildren: '../app/all-modules/module-9/clinic-studies.module#ClinicStudiesModule'
                     },
+                    {
+                        path: 'module/documents',
+                        loadChildren: '../app/all-modules/module-10/doc-flow.module#DocFlowModule'
+                    },
                 ],
             },
             {path: 'task', component: TaskComponent},

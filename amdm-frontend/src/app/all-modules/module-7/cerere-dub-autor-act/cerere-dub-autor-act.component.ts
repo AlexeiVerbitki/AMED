@@ -34,7 +34,7 @@ export class CerereDubAutorActComponent implements OnInit {
         'id': [],
         'data': {disabled: true, value: new Date()},
         'dataReg': {disabled: true, value: null},
-        'currentStep' : ['R'],
+        'currentStep' : ['E'],
         'startDate': [new Date()],
         'endDate': [''],
         'requestNumber': [null, Validators.required],

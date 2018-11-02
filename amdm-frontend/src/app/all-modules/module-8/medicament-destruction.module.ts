@@ -15,6 +15,10 @@ import {DrugsFinalDestroyComponent} from "./drugs-final-destroy/drugs-final-dest
 import {DrugsPackComponent} from "./drugs-pack/drugs-pack.component";
 import {DrugsMeasureComponent} from './drugs-measure/drugs-measure.component';
 import {DrugsFormComponent} from "./drugs-form/drugs-form.component";
+import {UploadFileService} from "../../shared/service/upload/upload-file.service";
+import {MedicamentService} from "../../shared/service/medicament.service";
+import {DocumentModule} from "../../document/document.module";
+import {AnnihilationService} from "../../shared/service/annihilation/annihilation.service";
 
 @NgModule({
     imports: [
@@ -24,10 +28,13 @@ import {DrugsFormComponent} from "./drugs-form/drugs-form.component";
         ReactiveFormsModule,
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
+        DocumentModule
     ],
     declarations: [AddMemberComponent, DrugsCauseFutilityComponent, DrugsConfirmDestroyComponent, DrugsDestroyComponent,
         DrugsDestroyDemandComponent, DrugsDestroyRegisterComponent, DrugsFinalDestroyComponent, DrugsFormComponent,
-        DrugsMeasureComponent, DrugsPackComponent]
+        DrugsMeasureComponent, DrugsPackComponent],
+    providers: [UploadFileService,MedicamentService, AnnihilationService
+    ],
 })
 export class MedicamentDestructionModule {
 }
