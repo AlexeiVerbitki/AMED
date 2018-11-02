@@ -72,7 +72,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
             this.administrationService.generateDocNr().subscribe(data => {
             // this.administrationService.generateRandomDocNr().subscribe(data => {
                     this.generatedDocNrSeq = data;
-                    this.rForm.get('nrCererii').setValue(this.generatedDocNrSeq);
+                    this.rForm.get('nrCererii').setValue(data);
 
 
                 },
@@ -103,7 +103,6 @@ export class ImportAuthorizationRequestComponent implements OnInit {
             )
         );
 
-        this.dataForm.get('data').setValue(this.currentDate);
     }
 
     displayFn(user?: any): string | undefined {
@@ -159,13 +158,14 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
         // this.loadingService.show();
 
+
         var modelToSubmit: any = this.rForm.value;
         modelToSubmit.requestHistories = [{
             startDate: this.rForm.get('startDate').value, endDate: new Date(),
             username: this.authService.getUserName(), step: 'R'
         }];
-        modelToSubmit.medicament.documents = this.documents;
-        modelToSubmit.medicament.registrationDate = new Date();
+        modelToSubmit.documents = this.documents;
+        modelToSubmit.registrationDate = new Date();
 
         // switch(this.rForm.get('radioButton').value){
         //     case "1":{this.router.navigate(['dashboard/module/import-authorization/registered-medicament'])   ; break;}
@@ -176,10 +176,10 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
         this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
             switch(this.rForm.get('radioButton').value){
-                case "1":{this.router.navigate(['dashboard/module/import-authorization/registered-medicament'])  + data.body ; break;}
-                case "2":{this.router.navigate(['dashboard/module/import-authorization/unregistered-medicament'])+ data.body ; break;}
-                case "3":{this.router.navigate(['dashboard/module/import-authorization/materia-prima'])          + data.body ; break;}
-                case "4":{this.router.navigate(['dashboard/module/import-authorization/ambalaj'])                + data.body ; break;}
+                case "1":{this.router.navigate(['dashboard/module/import-authorization/registered-medicament'  + data.body ]) ; break;}
+                case "2":{this.router.navigate(['dashboard/module/import-authorization/unregistered-medicament'+ data.body ]) ; break;}
+                case "3":{this.router.navigate(['dashboard/module/import-authorization/materia-prima'          + data.body ]) ; break;}
+                case "4":{this.router.navigate(['dashboard/module/import-authorization/ambalaj'                + data.body ]) ; break;}
             }
             this.loadingService.hide();
                 // this.router.navigate(['dashboard/module/medicament-registration/evaluate/' + data.body]);
