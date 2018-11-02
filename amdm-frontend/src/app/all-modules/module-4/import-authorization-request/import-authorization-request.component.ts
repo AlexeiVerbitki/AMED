@@ -48,7 +48,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
             'startDate': [new Date()],
             'currentStep': ['E'],
             'data': {disabled: true, value: new Date()},
-            'nrCererii': [null, Validators.required, ],
+            'nrCererii': [null],
             'radioButton': [null, Validators.required],
         });
         this.dataForm = fb.group({
@@ -68,7 +68,8 @@ export class ImportAuthorizationRequestComponent implements OnInit {
             this.administrationService.generateDocNr().subscribe(data => {
             // this.administrationService.generateRandomDocNr().subscribe(data => {
                     this.generatedDocNrSeq = data;
-                    this.dataForm.get('nrCererii').setValue(this.generatedDocNrSeq);
+                    this.rForm.get('nrCererii').setValue(this.generatedDocNrSeq);
+
 
                 },
                 error => console.log(error)
