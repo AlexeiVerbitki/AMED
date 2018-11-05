@@ -44,99 +44,99 @@ public class RequestController
     @Autowired
     private DocumentTypeRepository documentTypeRepository;
 
-    @RequestMapping(value = "/add-medicament-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RegistrationRequestsEntity> saveMedicamentRequest(@RequestBody RegistrationRequestsEntity request) throws CustomException
-    {
-        LOGGER.debug("Add medicament");
-        Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(request.getType().getCode());
-        request.getType().setId(type.get().getId());
-        if (request.getMedicament().getGroup() != null && request.getMedicament().getGroup().getCode() != null && !request.getMedicament().getGroup().getCode().isEmpty())
-        {
-            NmMedicamentGroupEntity nmMedicamentGroupEntity = medicamentGroupRepository.findByCode(request.getMedicament().getGroup().getCode());
-            request.getMedicament().setGroup(nmMedicamentGroupEntity);
-        }
-        else
-        {
-            request.getMedicament().setGroup(null);
-        }
-        addDDDocument(request);
-        requestRepository.save(request);
-        return new ResponseEntity<>(request, HttpStatus.CREATED);
-    }
+//    @RequestMapping(value = "/add-medicament-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<RegistrationRequestsEntity> saveMedicamentRequest(@RequestBody RegistrationRequestsEntity request) throws CustomException
+//    {
+//        LOGGER.debug("Add medicament");
+//        Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(request.getType().getCode());
+//        request.getType().setId(type.get().getId());
+//        if (request.getMedicament().getGroup() != null && request.getMedicament().getGroup().getCode() != null && !request.getMedicament().getGroup().getCode().isEmpty())
+//        {
+//            NmMedicamentGroupEntity nmMedicamentGroupEntity = medicamentGroupRepository.findByCode(request.getMedicament().getGroup().getCode());
+//            request.getMedicament().setGroup(nmMedicamentGroupEntity);
+//        }
+//        else
+//        {
+//            request.getMedicament().setGroup(null);
+//        }
+//        addDDDocument(request);
+//        requestRepository.save(request);
+//        return new ResponseEntity<>(request, HttpStatus.CREATED);
+//    }
 
-    private void addDDDocument(@RequestBody RegistrationRequestsEntity request)
-    {
-        if (request.getMedicament() != null && request.getMedicament().getOutputDocuments() == null)
-        {
-            request.getMedicament().setOutputDocuments(new HashSet<>());
-            Optional<NmDocumentTypesEntity> nmMedicamentTypeEntity = documentTypeRepository.findByCategory("DD");
-            OutputDocumentsEntity outputDocumentsEntity = new OutputDocumentsEntity();
-            outputDocumentsEntity.setDocType(nmMedicamentTypeEntity.get());
-            outputDocumentsEntity.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
-            outputDocumentsEntity.setName("Dispozitie de distribuire");
-            outputDocumentsEntity.setNumber(String.valueOf(generateDocNumberService.getDocumentNumber()));
-            request.getMedicament().getOutputDocuments().add(outputDocumentsEntity);
-        }
-    }
+//    private void addDDDocument(@RequestBody RegistrationRequestsEntity request)
+//    {
+//        if (request.getMedicament() != null && request.getMedicament().getOutputDocuments() == null)
+//        {
+//            request.getMedicament().setOutputDocuments(new HashSet<>());
+//            Optional<NmDocumentTypesEntity> nmMedicamentTypeEntity = documentTypeRepository.findByCategory("DD");
+//            OutputDocumentsEntity outputDocumentsEntity = new OutputDocumentsEntity();
+//            outputDocumentsEntity.setDocType(nmMedicamentTypeEntity.get());
+//            outputDocumentsEntity.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
+//            outputDocumentsEntity.setName("Dispozitie de distribuire");
+//            outputDocumentsEntity.setNumber(String.valueOf(generateDocNumberService.getDocumentNumber()));
+//            request.getMedicament().getOutputDocuments().add(outputDocumentsEntity);
+//        }
+//    }
 
-    private void addInterruptionOrder(RegistrationRequestsEntity request)
-    {
-        if (request.getMedicament() != null && request.getMedicament().getOutputDocuments() != null && !request.getMedicament().getOutputDocuments().stream().anyMatch(d -> d.getDocType().getCategory().equals("OI")))
-        {
-            Optional<NmDocumentTypesEntity> nmMedicamentTypeEntity = documentTypeRepository.findByCategory("OI");
-            OutputDocumentsEntity outputDocumentsEntity = new OutputDocumentsEntity();
-            outputDocumentsEntity.setDocType(nmMedicamentTypeEntity.get());
-            outputDocumentsEntity.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
-            outputDocumentsEntity.setName("Ordin de intrerupere");
-            outputDocumentsEntity.setNumber(String.valueOf(generateDocNumberService.getDocumentNumber()));
-            request.getMedicament().getOutputDocuments().add(outputDocumentsEntity);
-        }
-    }
-
-    @RequestMapping(value = "/add-medicament-history", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Integer> saveMedicamentHistory(@RequestBody RegistrationRequestsEntity request) throws CustomException
-    {
-        LOGGER.debug("Add medicament history");
-
-        Optional<RegistrationRequestsEntity> regOptional = requestRepository.findById(request.getId());
-        if (regOptional.isPresent())
-        {
-            RegistrationRequestsEntity registrationRequestsEntity = regOptional.get();
-            registrationRequestsEntity.setCurrentStep(request.getCurrentStep());
-            if (request.getMedicament() != null && request.getMedicament().getExperts() != null)
-            {
-                registrationRequestsEntity.getMedicament().setExperts(request.getMedicament().getExperts());
-            }
-            registrationRequestsEntity.getRequestHistories().add((RegistrationRequestHistoryEntity) request.getRequestHistories().toArray()[0]);
-            addInterruptionOrder(registrationRequestsEntity);
-            requestRepository.save(registrationRequestsEntity);
-            return new ResponseEntity<>(request.getId(), HttpStatus.OK);
-        }
-
-        throw new CustomException("Request was not found");
-    }
-
-    @RequestMapping(value = "/add-medicament-payments", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Integer> saveMedicamentPayments(@RequestBody RegistrationRequestsEntity request) throws CustomException
-    {
-        LOGGER.debug("Add medicament payments");
-
-        Optional<RegistrationRequestsEntity> regOptional = requestRepository.findById(request.getId());
-        if (regOptional.isPresent())
-        {
-            RegistrationRequestsEntity registrationRequestsEntity = regOptional.get();
-            registrationRequestsEntity.setCurrentStep(request.getCurrentStep());
-            registrationRequestsEntity.getRequestHistories().addAll(request.getRequestHistories());
-            registrationRequestsEntity.getMedicament().getReceipts().clear();
-            registrationRequestsEntity.getMedicament().getReceipts().addAll(request.getMedicament().getReceipts());
-            registrationRequestsEntity.getMedicament().getPaymentOrders().clear();
-            registrationRequestsEntity.getMedicament().getPaymentOrders().addAll(request.getMedicament().getPaymentOrders());
-            requestRepository.save(registrationRequestsEntity);
-            return new ResponseEntity<>(request.getId(), HttpStatus.OK);
-        }
-
-        throw new CustomException("Request was not found");
-    }
+//    private void addInterruptionOrder(RegistrationRequestsEntity request)
+//    {
+//        if (request.getMedicament() != null && request.getMedicament().getOutputDocuments() != null && !request.getMedicament().getOutputDocuments().stream().anyMatch(d -> d.getDocType().getCategory().equals("OI")))
+//        {
+//            Optional<NmDocumentTypesEntity> nmMedicamentTypeEntity = documentTypeRepository.findByCategory("OI");
+//            OutputDocumentsEntity outputDocumentsEntity = new OutputDocumentsEntity();
+//            outputDocumentsEntity.setDocType(nmMedicamentTypeEntity.get());
+//            outputDocumentsEntity.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
+//            outputDocumentsEntity.setName("Ordin de intrerupere");
+//            outputDocumentsEntity.setNumber(String.valueOf(generateDocNumberService.getDocumentNumber()));
+//            request.getMedicament().getOutputDocuments().add(outputDocumentsEntity);
+//        }
+//    }
+//
+//    @RequestMapping(value = "/add-medicament-history", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<Integer> saveMedicamentHistory(@RequestBody RegistrationRequestsEntity request) throws CustomException
+//    {
+//        LOGGER.debug("Add medicament history");
+//
+//        Optional<RegistrationRequestsEntity> regOptional = requestRepository.findById(request.getId());
+//        if (regOptional.isPresent())
+//        {
+//            RegistrationRequestsEntity registrationRequestsEntity = regOptional.get();
+//            registrationRequestsEntity.setCurrentStep(request.getCurrentStep());
+//            if (request.getMedicament() != null && request.getMedicament().getExperts() != null)
+//            {
+//                registrationRequestsEntity.getMedicament().setExperts(request.getMedicament().getExperts());
+//            }
+//            registrationRequestsEntity.getRequestHistories().add((RegistrationRequestHistoryEntity) request.getRequestHistories().toArray()[0]);
+//            addInterruptionOrder(registrationRequestsEntity);
+//            requestRepository.save(registrationRequestsEntity);
+//            return new ResponseEntity<>(request.getId(), HttpStatus.OK);
+//        }
+//
+//        throw new CustomException("Request was not found");
+//    }
+//
+//    @RequestMapping(value = "/add-medicament-payments", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<Integer> saveMedicamentPayments(@RequestBody RegistrationRequestsEntity request) throws CustomException
+//    {
+//        LOGGER.debug("Add medicament payments");
+//
+//        Optional<RegistrationRequestsEntity> regOptional = requestRepository.findById(request.getId());
+//        if (regOptional.isPresent())
+//        {
+//            RegistrationRequestsEntity registrationRequestsEntity = regOptional.get();
+//            registrationRequestsEntity.setCurrentStep(request.getCurrentStep());
+//            registrationRequestsEntity.getRequestHistories().addAll(request.getRequestHistories());
+//            registrationRequestsEntity.getMedicament().getReceipts().clear();
+//            registrationRequestsEntity.getMedicament().getReceipts().addAll(request.getMedicament().getReceipts());
+//            registrationRequestsEntity.getMedicament().getPaymentOrders().clear();
+//            registrationRequestsEntity.getMedicament().getPaymentOrders().addAll(request.getMedicament().getPaymentOrders());
+//            requestRepository.save(registrationRequestsEntity);
+//            return new ResponseEntity<>(request.getId(), HttpStatus.OK);
+//        }
+//
+//        throw new CustomException("Request was not found");
+//    }
 
     @RequestMapping(value = "/load-medicament-request", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RegistrationRequestsEntity> getMedicamentRequestById(@RequestParam(value = "id") Integer id) throws CustomException
@@ -188,32 +188,59 @@ public class RequestController
     }
 
 
-    @Transactional(propagation = Propagation.REQUIRED)
-    @RequestMapping(value = "/add-prices-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Integer> savePricesRequest(@RequestBody RegistrationRequestsEntity request) throws CustomException
-    {
-        LOGGER.debug("add new prices request");
-        Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(request.getType().getCode());
-        request.setType(type.get());
+//    @Transactional(propagation = Propagation.REQUIRED)
+//    @RequestMapping(value = "/add-prices-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<Integer> savePricesRequest(@RequestBody RegistrationRequestsEntity request) throws CustomException
+//    {
+//        LOGGER.debug("add new prices request");
+//        Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(request.getType().getCode());
+//        request.setType(type.get());
+//
+//        Set<PricesEntity> prices = request.getMedicament().getPrices();
+//        Set<ReferencePricesEntity> referencePrices = request.getMedicament().getReferencePrices();
+//
+//        request.setMedicament(medicamentRepository.findById(request.getMedicament().getId()).get());
+//
+//        requestRepository.save(request);
+//        priceRepository.saveAll(prices);
+//        referencePriceRepository.saveAll(referencePrices);
+//
+//        return new ResponseEntity<>(request.getId(), HttpStatus.CREATED);
+//    }
 
-        Set<PricesEntity> prices = request.getMedicament().getPrices();
-        Set<ReferencePricesEntity> referencePrices = request.getMedicament().getReferencePrices();
+//    @PostMapping(value = "/add-import-request")
+//    public ResponseEntity<Integer> saveImportRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException
+//    {
+//        LOGGER.debug("add new Import request");
+//        requestRepository.save(requests);
+//        return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
+//    }
 
-        request.setMedicament(medicamentRepository.findById(request.getMedicament().getId()).get());
-
-        requestRepository.save(request);
-        priceRepository.saveAll(prices);
-        referencePriceRepository.saveAll(referencePrices);
-
-        return new ResponseEntity<>(request.getId(), HttpStatus.CREATED);
-    }
-
-    @PostMapping(value = "/add-import-request")
-    public ResponseEntity<Integer> saveImportRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException
+    @RequestMapping(value = "/add-import-request",  produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RegistrationRequestsEntity> saveImportRequest(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
         LOGGER.debug("add new Import request");
-        requestRepository.save(requests);
-        return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
+//        Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(request.getType().getCode());
+//        request.getType().setId(type.get().getId());
+//        if (request.getMedicament().getGroup() != null && request.getMedicament().getGroup().getCode() != null && !request.getMedicament().getGroup().getCode().isEmpty())
+//        {
+//            NmMedicamentGroupEntity nmMedicamentGroupEntity = medicamentGroupRepository.findByCode(request.getMedicament().getGroup().getCode());
+//            request.getMedicament().setGroup(nmMedicamentGroupEntity);
+//        }
+//        else
+//        {
+//            request.getMedicament().setGroup(null);
+//        }
+//        addDDDocument(request);
+        requestRepository.save(request);
+        return new ResponseEntity<>(request, HttpStatus.CREATED);
+    }
+
+    @PostMapping(value = "/add-import-request-test")
+    public ResponseEntity<Integer> saveImportRequestTest(@RequestBody RegistrationRequestsEntity requests) throws CustomException
+    {
+
+        return new ResponseEntity<>(0, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/load-import-request", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

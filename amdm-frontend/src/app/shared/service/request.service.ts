@@ -37,7 +37,7 @@ export class RequestService {
     }
 
     addImportRequest(requestDetails: any): Observable<HttpResponse<any>> {
-        console.log(requestDetails);
+        // console.log(requestDetails);
         return this.http.post<any>('/api/add-import-request', requestDetails, {observe: 'response'});
     }
 }

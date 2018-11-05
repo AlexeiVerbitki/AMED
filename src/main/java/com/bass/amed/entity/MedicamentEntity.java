@@ -31,7 +31,6 @@ public class MedicamentEntity
     private String serialNr;
     private String primarePackage;
     private String administeringMode;
-    private NmEconomicAgentsEntity company;
     private String status;
     private NmUnitsOfMeasurementEntity unitsOfMeasurement;
     private String volume;
@@ -334,17 +333,7 @@ public class MedicamentEntity
         this.administeringMode = administeringMode;
     }
 
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
-    @JoinColumn( name = "economic_agent_id" )
-    public NmEconomicAgentsEntity getCompany()
-    {
-        return company;
-    }
 
-    public void setCompany(NmEconomicAgentsEntity company)
-    {
-        this.company = company;
-    }
 
     @Basic
     @Column(name = "status", nullable = true, length = 1)
@@ -624,10 +613,6 @@ public class MedicamentEntity
         {
             return false;
         }
-        if (company != null ? !company.equals(that.company) : that.company != null)
-        {
-            return false;
-        }
         if (status != null ? !status.equals(that.status) : that.status != null)
         {
             return false;
@@ -692,7 +677,6 @@ public class MedicamentEntity
         result = 31 * result + (serialNr != null ? serialNr.hashCode() : 0);
         result = 31 * result + (primarePackage != null ? primarePackage.hashCode() : 0);
         result = 31 * result + (administeringMode != null ? administeringMode.hashCode() : 0);
-        result = 31 * result + (company != null ? company.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (unitsOfMeasurement != null ? unitsOfMeasurement.hashCode() : 0);
         result = 31 * result + (volume != null ? volume.hashCode() : 0);
