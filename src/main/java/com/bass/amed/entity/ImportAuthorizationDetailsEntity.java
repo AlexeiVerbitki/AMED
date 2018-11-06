@@ -215,7 +215,7 @@ import java.sql.Timestamp;
 	}
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
-	@JoinColumn(name = "customs_code_id")
+	@JoinColumn(name = "custom_code_id")
 	public NmCustomsCodesEntity getCustomsCode() {
 		return customsCode;
 	}

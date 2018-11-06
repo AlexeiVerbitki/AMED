@@ -281,7 +281,7 @@ public class RequestController {
     @PostMapping(value = "/add-import-request")
     public ResponseEntity<Integer> saveImportRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
         if (requests.getImportAuthorizationEntity() == null) {
-            throw new CustomException("Request was not found");
+            throw new CustomException("/add-import-request Request was not found");
         }
 //        addDDImportTrailsDocument(requests);
         requestRepository.save(requests);

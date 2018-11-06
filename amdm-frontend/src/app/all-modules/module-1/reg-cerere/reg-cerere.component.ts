@@ -101,6 +101,7 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
     nextStep() {
 
 
+
         this.formSubmitted = true;
         if (this.documents.length === 0 || !this.rForm.valid) {
             return;
@@ -111,15 +112,17 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
         this.loadingService.show();
         this.rForm.get('company').setValue(this.rForm.value.medicament.company);
 
-        var modelToSubmit: any = this.rForm.value;
-        modelToSubmit.requestHistories = [{
-            startDate: this.rForm.get('startDate').value, endDate: new Date(),
-            username: this.authService.getUserName(), step: 'R'
+        let formModel: any = this.rForm.value;
+        formModel.requestHistories = [{
+            startDate: this.rForm.get('startDate').value,
+            endDate: new Date(),
+            username: this.authService.getUserName(),
+            step: 'E'
         }];
-        modelToSubmit.medicament.documents = this.documents;
-        modelToSubmit.medicament.registrationDate = new Date();
+        formModel.medicament.documents = this.documents;
+        formModel.medicament.registrationDate = new Date();
 
-        this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
+        this.subscriptions.push(this.requestService.addMedicamentRequest(formModel).subscribe(data => {
                 this.loadingService.hide();
                 this.router.navigate(['dashboard/module/medicament-registration/evaluate/' + data.body.id]);
             }, error => this.loadingService.hide())

@@ -26,23 +26,22 @@ import {ErrorHandlerService} from "../../../shared/service/error-handler.service
 export class ImportAuthorizationRequestComponent implements OnInit {
 
     generatedDocNrSeq: number;
-    documents: Document [] = [];
-    cereri: Cerere [] = [];
-    // companii: any[];
-    // primRep: string;
     rForm: FormGroup;
-    // medReg: FormGroup;
+    solicitantCompanyList: Observable<any[]>;
+    formSubmitted: boolean;
+    docs: Document [] = [];
+    docTypes : any[];
+
+    cereri: Cerere [] = [];
     dataForm: FormGroup;
     sysDate: string;
     currentDate: Date;
     file: any;
 
-    docTypes : any[];
-    solicitantCompanyList: Observable<any[]>;
 
-    // filteredOptions: Observable<any[]>;
-    formSubmitted: boolean;
-    // isWrongValueCompany: boolean;
+
+
+
     private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder,
@@ -59,8 +58,19 @@ export class ImportAuthorizationRequestComponent implements OnInit {
             'startDate': [new Date()],
             'currentStep': ['R'],
             'company': ['', Validators.required],
+            'initiator':[null],
+            'assignedUser':[null],
             'data': {disabled: true, value: new Date()},
-            'radioButton': [null, Validators.required],
+            'importType': [null, Validators.required],
+            'type':
+                this.fb.group({
+                    'id': ['']
+                }),
+            'importAuthorizationEntity':
+                fb.group({
+                    'company': [null, Validators.required],
+                    'medType': [null]
+                }),
 
         });
         this.dataForm = fb.group({});
@@ -85,16 +95,9 @@ export class ImportAuthorizationRequestComponent implements OnInit {
             )
         );
 
-        // this.subscriptions.push(
-        //     this.administrationService.getAllCompanies().subscribe(data => {
-        //             this.companii = data;
-        //         },
-        //         error => console.log(error)
-        //     )
-        // );
 
         this.subscriptions.push(
-            this.taskService.getRequestStepByIdAndCode('1','R').subscribe(step => {
+            this.taskService.getRequestStepByIdAndCode('3','R').subscribe(step => {
                     this.subscriptions.push(
                         this.administrationService.getAllDocTypes().subscribe(data => {
                                 this.docTypes = data;
@@ -150,9 +153,6 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         );
     }
 
-    displayFn(user?: any): string | undefined {
-        return user ? user.name : undefined;
-    }
 
     onChange(event) {
         this.file = event.srcElement.files[0];
@@ -192,35 +192,45 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         // alert(this.rForm.get('startDate').value);
         // alert(this.generatedDocNrSeq);
         // alert(this.documents.values());
-
-        this.formSubmitted = true;
-
-        if (this.documents.length != 0 || !this.rForm.valid) {
-            return;
-        }
-
-        this.formSubmitted = false;
-
-        // this.loadingService.show();
-
-
-        var modelToSubmit: any = this.rForm.value;
-        modelToSubmit.requestHistories = [{
-            startDate: this.rForm.get('startDate').value, endDate: new Date(),
-            username: this.authService.getUserName(), step: 'R'
-        }];
-        modelToSubmit.documents = this.documents;
-        modelToSubmit.registrationDate = new Date();
-
-        // switch(this.rForm.get('radioButton').value){
-        //     case "1":{this.router.navigate(['dashboard/module/import-authorization/registered-medicament'])   ; break;}
-        //     case "2":{this.router.navigate(['dashboard/module/import-authorization/unregistered-medicament']) ; break;}
-        //     case "3":{this.router.navigate(['dashboard/module/import-authorization/materia-prima'])           ; break;}
-        //     case "4":{this.router.navigate(['dashboard/module/import-authorization/ambalaj'])                 ; break;}
+        // if (this.rForm.invalid) {
+        //     alert('Invalid Form data!!')
+        //     return;
+        // }
+        // this.formSubmitted = true;
+        //
+        // if (this.docs.length != 0 || !this.rForm.valid) {
+        //     return;
         // }
 
-        this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
-            switch(this.rForm.get('radioButton').value){
+        // this.formSubmitted = false;
+        
+
+
+        let formModel: any = this.rForm.value;
+
+        this.loadingService.show();
+
+        formModel.type.id = '4';
+        formModel.requestHistories = [{
+            // startDate: this.rForm.get('startDate').value,
+            startDate: formModel.startDate,
+            endDate: new Date(),
+            username: this.authService.getUserName(),
+            step: formModel.currentStep
+        }];
+
+        let medType = this.rForm.get('importType').value
+        this.rForm.get('importAuthorizationEntity.medType').setValue(medType);
+
+        formModel.importAuthorizationEntity.documents = this.docs;
+        formModel.currentStep='E';
+        formModel.initiator = this.authService.getUserName();
+        formModel.assignedUser = this.authService.getUserName();
+
+
+
+        this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
+            switch(this.rForm.get('importType').value){
                 case "1":{this.router.navigate(['dashboard/module/import-authorization/registered-medicament'  + data.body.id ]) ; break;}
                 case "2":{this.router.navigate(['dashboard/module/import-authorization/unregistered-medicament'+ data.body.id ]) ; break;}
                 case "3":{this.router.navigate(['dashboard/module/import-authorization/materia-prima'          + data.body.id ]) ; break;}
