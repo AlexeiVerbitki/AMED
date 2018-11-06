@@ -220,6 +220,8 @@ public class RequestController
     public ResponseEntity<RegistrationRequestsEntity> saveImportRequest(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
         LOGGER.debug("add new Import request");
+
+
 //        Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(request.getType().getCode());
 //        request.getType().setId(type.get().getId());
 //        if (request.getMedicament().getGroup() != null && request.getMedicament().getGroup().getCode() != null && !request.getMedicament().getGroup().getCode().isEmpty())
@@ -236,11 +238,11 @@ public class RequestController
         return new ResponseEntity<>(request, HttpStatus.CREATED);
     }
 
-    @PostMapping(value = "/add-import-request-test")
+    @GetMapping(value = "/add-import-request-test")
     public ResponseEntity<Integer> saveImportRequestTest(@RequestBody RegistrationRequestsEntity requests) throws CustomException
     {
 
-        return new ResponseEntity<>(0, HttpStatus.CREATED);
+        return new ResponseEntity<>(1111, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/load-import-request", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

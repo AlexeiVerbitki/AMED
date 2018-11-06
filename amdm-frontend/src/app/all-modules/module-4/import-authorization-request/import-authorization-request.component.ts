@@ -175,10 +175,10 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
         this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
             switch(this.rForm.get('radioButton').value){
-                case "1":{this.router.navigate(['dashboard/module/import-authorization/registered-medicament'  + data.body ]) ; break;}
-                case "2":{this.router.navigate(['dashboard/module/import-authorization/unregistered-medicament'+ data.body ]) ; break;}
-                case "3":{this.router.navigate(['dashboard/module/import-authorization/materia-prima'          + data.body ]) ; break;}
-                case "4":{this.router.navigate(['dashboard/module/import-authorization/ambalaj'                + data.body ]) ; break;}
+                case "1":{this.router.navigate(['dashboard/module/import-authorization/registered-medicament'  + data.body.id ]) ; break;}
+                case "2":{this.router.navigate(['dashboard/module/import-authorization/unregistered-medicament'+ data.body.id ]) ; break;}
+                case "3":{this.router.navigate(['dashboard/module/import-authorization/materia-prima'          + data.body.id ]) ; break;}
+                case "4":{this.router.navigate(['dashboard/module/import-authorization/ambalaj'                + data.body.id ]) ; break;}
             }
             this.loadingService.hide();
                 // this.router.navigate(['dashboard/module/medicament-registration/evaluate/' + data.body]);
