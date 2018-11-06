@@ -206,9 +206,11 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         // this.formSubmitted = false;
 
         this.medType = this.rForm.get('importType').value
-        this.rForm.get('importAuthorizationEntity.medType').setValue(this.medType);
+        // this.rForm.get('importAuthorizationEntity.medType').setValue(this.medType);
+
 
         let formModel: any = this.rForm.value;
+        formModel.importAuthorizationEntity.medType = this.medType;
 
         this.loadingService.show();
 
