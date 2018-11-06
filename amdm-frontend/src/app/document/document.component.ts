@@ -43,6 +43,8 @@ export class DocumentComponent implements OnInit, OnDestroy {
         return this.enableUploading;
     }
 
+    @Output() documentRemoved = new EventEmitter();
+
     @Input()
     set canUpload(can: boolean) {
         this.enableUploading = can;
@@ -105,6 +107,7 @@ export class DocumentComponent implements OnInit, OnDestroy {
             if (result) {
                 this.subscriptions.push(this.uploadService.removeFileFromStorage(this.documents[index].path).subscribe(data => {
                         this.documents.splice(index, 1);
+                        this.documentRemoved.emit(true);
                     },
                     error => {
                         console.log(error);

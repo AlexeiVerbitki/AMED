@@ -7,6 +7,8 @@ import {Router} from "@angular/router";
 import {Document} from "../../../models/document";
 import {AuthService} from "../../../shared/service/authetication.service";
 import {RequestService} from "../../../shared/service/request.service";
+import {TaskService} from "../../../shared/service/task.service";
+import {LoaderService} from "../../../shared/service/loader.service";
 
 @Component({
     selector: 'app-reg-cerere',
@@ -21,23 +23,26 @@ export class RegCerereComponent implements OnInit, OnDestroy {
     solicitantCompanyList: Observable<any[]>;
     private submitted: boolean = false;
     docs: Document [] = [];
-    currentDate: Date;
+    docTypes : any[];
 
     constructor(private fb: FormBuilder,
                 private dialog: MatDialog,
                 private requestService: RequestService,
                 private router: Router,
                 private authService: AuthService,
-                private administrationService: AdministrationService) {
+                private administrationService: AdministrationService,
+                private taskService: TaskService,
+                private loadingService: LoaderService) {
     }
 
     ngOnInit() {
         this.registerClinicalTrailForm = this.fb.group({
             'requestNumber': [null],
-            'regDate': {disabled: true, value: new Date()},
             'startDate': [new Date()],
             'currentStep': ['R'],
             'company': ['', Validators.required],
+            'initiator':[null],
+            'assignedUser':[null],
             'flowControl': ['CLAP', Validators.required],
             'clinicalTrails': this.fb.group({
                 'status': ['P']
@@ -48,9 +53,28 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                 })
         });
 
-        this.currentDate = new Date();
         this.loadSolicitantCompanyList();
         this.generateDocNr();
+        this.loadDocTypes();
+    }
+
+    loadDocTypes(){
+        this.subscriptions.push(
+            this.taskService.getRequestStepByIdAndCode('3','R').subscribe(step => {
+                    //console.log('getRequestStepByIdAndCode', step);
+                    this.subscriptions.push(
+                        this.administrationService.getAllDocTypes().subscribe(data => {
+                            //console.log('getAllDocTypes', data);
+                                this.docTypes = data;
+                                this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
+                            },
+                            error => console.log(error)
+                        )
+                    );
+                },
+                error => console.log(error)
+            )
+        );
     }
 
     loadSolicitantCompanyList() {
@@ -80,8 +104,9 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             alert('Invalid Form!!')
             return;
         }
-
         let formModel = this.registerClinicalTrailForm.value;
+
+        this.loadingService.show();
 
         if (formModel.flowControl === 'CLAP') {
             formModel.type.id = '3';
@@ -94,13 +119,18 @@ export class RegCerereComponent implements OnInit, OnDestroy {
 
             formModel.clinicalTrails.documents = this.docs;
             formModel.currentStep='E';
+            formModel.initiator = this.authService.getUserName();
+            formModel.assignedUser = this.authService.getUserName();
 
-            console.log("regCerereObject", formModel);
-            console.log("regCerereJSON", JSON.stringify(formModel));
+            // console.log("regCerereObject", formModel);
+            // console.log("regCerereJSON", JSON.stringify(formModel));
 
             this.subscriptions.push(this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
-                    console.log("data from backend", data);
                     this.router.navigate(['/dashboard/module/clinic-studies/evaluate/' + data.body]);
+                    this.loadingService.hide();
+                },error => {
+                    this.loadingService.hide();
+                    console.log(error)
                 })
             );
         }
@@ -120,7 +150,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.subscriptions.forEach(subsriptions=>subsriptions.unsubscribe());
+        this.subscriptions.forEach(subsription=>subsription.unsubscribe());
     }
 
 }

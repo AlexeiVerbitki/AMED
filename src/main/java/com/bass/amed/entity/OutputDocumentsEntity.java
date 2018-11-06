@@ -101,17 +101,17 @@ public class OutputDocumentsEntity
         this.docType = docType;
     }
 
-//    @Basic
-//    @Column(name = "response_received")
-//    public boolean isResponseReceived()
-//    {
-//        return responseReceived;
-//    }
-//
-//    public void setResponseReceived(boolean responseReceived)
-//    {
-//        this.responseReceived = responseReceived;
-//    }
+    @Basic
+    @Column(name = "response_received")
+    public boolean isResponseReceived()
+    {
+        return responseReceived;
+    }
+
+    public void setResponseReceived(boolean responseReceived)
+    {
+        this.responseReceived = responseReceived;
+    }
 
     @Override
     public boolean equals(Object o)

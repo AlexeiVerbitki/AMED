@@ -22,7 +22,6 @@ import java.sql.Timestamp;
 	private Integer                             registrationNumber;
 	private NmCurrenciesEntity                  currency;
 	private Double                              price;
-	private ImportAuthorizationEntity           importAuthorization;
 	private NmManufacturesEntity                producer;
 	private NmCustomsCodesEntity                customsCode;
 	private String                              name;
@@ -204,16 +203,6 @@ import java.sql.Timestamp;
 		this.price = price;
 	}
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
-	@JoinColumn(name = "import_authorization_id")
-	public ImportAuthorizationEntity getImportAuthorization() {
-		return importAuthorization;
-	}
-
-
-	public void setImportAuthorization(ImportAuthorizationEntity importAuthorization) {
-		this.importAuthorization = importAuthorization;
-	}
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
 	@JoinColumn(name = "producer_id")
@@ -261,7 +250,6 @@ import java.sql.Timestamp;
 		if (registrationNumber != null ? !registrationNumber.equals(that.registrationNumber) : that.registrationNumber != null) return false;
 		if (currency != null ? !currency.equals(that.currency) : that.currency != null) return false;
 		if (price != null ? !price.equals(that.price) : that.price != null) return false;
-		if (importAuthorization != null ? !importAuthorization.equals(that.importAuthorization) : that.importAuthorization != null) return false;
 		if (producer != null ? !producer.equals(that.producer) : that.producer != null) return false;
 		if (customsCode != null ? !customsCode.equals(that.customsCode) : that.customsCode != null) return false;
 		return name != null ? name.equals(that.name) : that.name == null;
@@ -286,7 +274,6 @@ import java.sql.Timestamp;
 		result = 31 * result + (registrationNumber != null ? registrationNumber.hashCode() : 0);
 		result = 31 * result + (currency != null ? currency.hashCode() : 0);
 		result = 31 * result + (price != null ? price.hashCode() : 0);
-		result = 31 * result + (importAuthorization != null ? importAuthorization.hashCode() : 0);
 		result = 31 * result + (producer != null ? producer.hashCode() : 0);
 		result = 31 * result + (customsCode != null ? customsCode.hashCode() : 0);
 		result = 31 * result + (name != null ? name.hashCode() : 0);

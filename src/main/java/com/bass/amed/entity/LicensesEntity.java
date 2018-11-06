@@ -66,18 +66,28 @@ public class LicensesEntity
     @JoinColumn(name = "license_id")
     private Set<LicenseCommisionResponseEntity> commisionResponses;
 
-    @Basic
-    @Column(name = "tax")
-    private Double tax;
+    @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "license_id")
+    private Set<LicenseMandatedContactEntity> licenseMandatedContacts;
 
-    @Basic
-    @Column(name = "tax_paid")
-    private Byte taxPaid;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    @JoinTable(name = "license_payments_orders", joinColumns = {
+            @JoinColumn(name = "license_id")}, inverseJoinColumns = {
+            @JoinColumn(name = "payment_order_id")})
+    private Set<PaymentOrdersEntity> paymentOrders;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    @JoinTable(name = "license_receipts", joinColumns = {
+            @JoinColumn(name = "license_id")}, inverseJoinColumns = {
+            @JoinColumn(name = "receipt_id")})
+    private Set<ReceiptsEntity> receipts;
 
 
     @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "license_id")
-    private Set<LicenseMandatedContactEntity> licenseMandatedContacts;
+    private Set<LicenseAgentPharmaceutistEntity> agentPharmaceutist;
+
 
     public Integer getId()
     {
@@ -257,28 +267,6 @@ public class LicensesEntity
                 '}';
     }
 
-    public Double getTax()
-    {
-        return tax;
-    }
-
-    public void setTax(Double tax)
-    {
-        this.tax = tax;
-    }
-
-
-    public Byte getTaxPaid()
-    {
-        return taxPaid;
-    }
-
-    public void setTaxPaid(Byte taxPaid)
-    {
-        this.taxPaid = taxPaid;
-    }
-
-
     public Set<LicenseActivityTypeEntity> getActivities()
     {
         return activities;
@@ -287,5 +275,35 @@ public class LicensesEntity
     public void setActivities(Set<LicenseActivityTypeEntity> activities)
     {
         this.activities = activities;
+    }
+
+    public Set<PaymentOrdersEntity> getPaymentOrders()
+    {
+        return paymentOrders;
+    }
+
+    public void setPaymentOrders(Set<PaymentOrdersEntity> paymentOrders)
+    {
+        this.paymentOrders = paymentOrders;
+    }
+
+    public Set<ReceiptsEntity> getReceipts()
+    {
+        return receipts;
+    }
+
+    public void setReceipts(Set<ReceiptsEntity> receipts)
+    {
+        this.receipts = receipts;
+    }
+
+    public Set<LicenseAgentPharmaceutistEntity> getAgentPharmaceutist()
+    {
+        return agentPharmaceutist;
+    }
+
+    public void setAgentPharmaceutist(Set<LicenseAgentPharmaceutistEntity> agentPharmaceutist)
+    {
+        this.agentPharmaceutist = agentPharmaceutist;
     }
 }

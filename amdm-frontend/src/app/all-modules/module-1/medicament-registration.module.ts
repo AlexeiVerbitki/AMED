@@ -16,6 +16,7 @@ import {PaymentModule} from "../../payment/payment.module";
 import {ProcessInterruptionComponent} from "./process-interruption/process-interruption.component";
 import {ExpertiComponent} from './experti/experti.component';
 import {ExpertComiteeModule} from "../../expert-comitee/expert-comitee.module";
+import {CanDeactivateGuard} from "../../shared/auth-guard/can-deactivate-guard.service";
 
 @NgModule({
     imports: [
@@ -27,14 +28,15 @@ import {ExpertComiteeModule} from "../../expert-comitee/expert-comitee.module";
         MaterialSharedModule.forRoot(),
         DocumentModule,
         PaymentModule,
-        ExpertComiteeModule
+        ExpertComiteeModule,
+
     ],
     schemas: [],
     entryComponents: [
         RequestAdditionalDataDialogComponent
     ],
     declarations: [RegCerereComponent, EvaluarePrimaraComponent, NumberOnlyDirective,RequestAdditionalDataDialogComponent,ProcessInterruptionComponent, ExpertiComponent],
-    providers: [UploadFileService,RequestService]
+    providers: [UploadFileService,RequestService, CanDeactivateGuard]
 })
 export class MedicamentRegistrationModule {
 }

@@ -20,6 +20,10 @@ export class RequestService {
         return this.http.post<any>('/api/add-clinical-trail-request', requestDetails, {observe: 'response'});
     }
 
+    addOutputDocumentRequest(requestDetails: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/add-output-document-request', requestDetails, {observe: 'response'});
+    }
+
     getClinicalTrailRequest(id: string): Observable<any> {
         return this.http.get('/api/load-clinical-trail-request', {params: {id: id}});
     }

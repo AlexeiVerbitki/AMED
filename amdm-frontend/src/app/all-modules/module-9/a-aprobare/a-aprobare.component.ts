@@ -1,45 +1,82 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from "rxjs/index";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validator, Validators} from "@angular/forms";
 import {Document} from "../../../models/document";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {RequestService} from "../../../shared/service/request.service";
+import {TaskService} from "../../../shared/service/task.service";
+import {AdministrationService} from "../../../shared/service/administration.service";
+import {AuthService} from "../../../shared/service/authetication.service";
+import {LoaderService} from "../../../shared/service/loader.service";
+import {ConfirmationDialogComponent} from "../../../confirmation-dialog/confirmation-dialog.component";
+import {MatDialog} from "@angular/material";
 
 @Component({
     selector: 'app-a-aprobare',
     templateUrl: './a-aprobare.component.html',
     styleUrls: ['./a-aprobare.component.css']
 })
-export class AAprobareComponent implements OnInit {
+export class AAprobareComponent implements OnInit, OnDestroy {
     private subscriptions: Subscription[] = [];
     approveClinicalTrailForm: FormGroup;
     protected docs: Document[] = [];
+    docTypes: any[];
+    outDocuments: any[] = [];
 
     constructor(private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
-                private requestService : RequestService) {
+                private requestService: RequestService,
+                private taskService: TaskService,
+                private administrationService: AdministrationService,
+                private authService: AuthService,
+                private router: Router,
+                private loadingService: LoaderService,
+                public dialogConfirmation: MatDialog) {
 
     }
 
     ngOnInit() {
         this.approveClinicalTrailForm = this.fb.group({
-            'id':[''],
-            'requestNumber': [{value:'', disabled:true}],
-            'startDate': [{value:'', disabled:true}],
+            'id': [''],
+            'requestNumber': [{value: '', disabled: true}],
+            'startDate': [{value: '', disabled: true}],
+            'endDate': [''],
             'company': [''],
-            'currentStep' : ['E'],
-            'type':[],
+            'currentStep': ['E'],
+            'type': [],
             'typeCode': [''],
             'requestHistories': [],
-            'clinicalTrails': undefined
+            'initiator':[null],
+            'assignedUser':[null],
+            'clinicalTrails': undefined,
+            'status':[undefined, Validators.required]
         });
         this.initPage();
+        this.loadDocTypes();
+
     }
 
-    initPage(){
+    loadDocTypes() {
+        this.subscriptions.push(
+            this.taskService.getRequestStepByIdAndCode('3', 'AP').subscribe(step => {
+                    this.subscriptions.push(
+                        this.administrationService.getAllDocTypes().subscribe(data => {
+                                this.docTypes = data;
+                                this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
+                            },
+                            error => console.log(error)
+                        )
+                    );
+                },
+                error => console.log(error)
+            )
+        );
+    }
+
+    initPage() {
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
             this.subscriptions.push(this.requestService.getClinicalTrailRequest(params['id']).subscribe(data => {
-                    console.log('clinicalTrailsData',data);
+                    console.log('clinicalTrailsData', data);
 
                     this.approveClinicalTrailForm.get('id').setValue(data.id);
                     this.approveClinicalTrailForm.get('requestNumber').setValue(data.requestNumber);
@@ -47,14 +84,15 @@ export class AAprobareComponent implements OnInit {
                     this.approveClinicalTrailForm.get('company').setValue(data.company);
                     this.approveClinicalTrailForm.get('type').setValue(data.type);
                     this.approveClinicalTrailForm.get('typeCode').setValue(data.type.code);
+                    this.approveClinicalTrailForm.get('initiator').setValue(data.initiator);
 
-                    data.requestHistories.sort((one,two)=> (one.id > two.id ? 1 : -1));
+                    data.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
                     this.approveClinicalTrailForm.get('requestHistories').setValue(data.requestHistories);
 
                     this.approveClinicalTrailForm.get('clinicalTrails').setValue(data.clinicalTrails);
-                    console.log('clinicalTrailsForm', this.approveClinicalTrailForm);
 
                     this.docs = data.clinicalTrails.documents;
+                    this.outDocuments = data.clinicalTrails.outputDocuments;
                 },
                 error => console.log(error)
             ))
@@ -62,11 +100,83 @@ export class AAprobareComponent implements OnInit {
     }
 
     onSubmit() {
+        let formModel = this.approveClinicalTrailForm.getRawValue();
+
+        console.log(formModel.status);
+        if(formModel.status === '0'){
+            console.log(formModel);
+            this.loadingService.show();
+
+            formModel.currentStep = 'F';
+            formModel.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
+            formModel.requestHistories.push({
+                startDate: formModel.requestHistories[formModel.requestHistories.length - 1].endDate,
+                endDate: new Date(),
+                username: this.authService.getUserName(),
+                step: 'AP'
+            });
+            formModel.clinicalTrails.documents = this.docs;
+
+            console.log("evaluareaPrimaraObjectLet", JSON.stringify(formModel));
+
+            formModel.currentStep = 'F';
+            formModel.endDate = new Date();
+            formModel.assignedUser = this.authService.getUserName();
+            this.subscriptions.push(
+                this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
+                    this.router.navigate(['dashboard/module']);
+                    this.loadingService.hide();
+                }, error => {
+                    this.loadingService.hide();
+                    console.log(error)
+                })
+            )
+        }
+        else if(formModel.status === '1') {
+            const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
+                data: {
+                    message: 'Sunteti sigur(a)?',
+                    confirm: false
+                }
+            });
+
+            dialogRef2.afterClosed().subscribe(result => {
+                console.log('result', result);
+                if (result) {
+                    this.loadingService.show();
+                    let formModel = this.approveClinicalTrailForm.getRawValue();
+                    formModel.currentStep = 'C';
+                    formModel.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
+                    formModel.requestHistories.push({
+                        startDate: formModel.requestHistories[formModel.requestHistories.length - 1].endDate,
+                        endDate: new Date(),
+                        username: this.authService.getUserName(),
+                        step: 'AP'
+                    });
+
+                    formModel.assignedUser = this.authService.getUserName();
+                    this.subscriptions.push(
+                        this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
+                            this.loadingService.hide();
+                            this.router.navigate(['/dashboard/module/clinic-studies/interrupt/' + data.body]);
+                        }, error => {
+                            this.loadingService.hide();
+                            console.log(error)
+                        })
+                    )
+                }
+            });
+        }
+    }
+
+    interruptProcess() {
 
     }
 
-    interruptProcess(){
-
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(subscription => {
+            subscription.unsubscribe();
+        })
     }
 
 }

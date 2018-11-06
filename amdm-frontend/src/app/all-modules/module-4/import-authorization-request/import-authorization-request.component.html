@@ -4,7 +4,7 @@
   <!--<form [formGroup]='dataForm'>-->
   <form [formGroup]='rForm'>
     <div class="row">
-      <div class="col-lg-5">
+      <div class="col-lg-4">
         <div class="md-form">
           <input id="requestNumber" mdbInputDirective type="text" class="form-control"
                  formControlName="requestNumber" [attr.disabled]="true">
@@ -12,7 +12,7 @@
         </div>
       </div>
 
-      <div class="col-lg-5">
+      <div class="col-lg-4">
         <div class="md-form-modified">
           <mat-form-field class="w-100">
             <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data">
@@ -21,6 +21,18 @@
           </mat-form-field>
         </div>
       </div>
+        <div class="col-md-4">
+            <div class="md-form-modified">
+                <mat-form-field class="w-100">
+                    <mat-select id="solicitantCompany"  placeholder="Compania solicitant" formControlName="company">
+                        <mat-option *ngFor="let solicitantCompany of solicitantCompanyList" [value]="solicitantCompany">{{ solicitantCompany.name }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+
+
       <div class="col-lg-2 position-button mt-3">
         <label class="btn btn-indigo btn-sm" for="incarcaraFisier">
           <input id="incarcaraFisier" type="file" style="display:none;" (change)="onChange($event)" onclick="this.value=null;">

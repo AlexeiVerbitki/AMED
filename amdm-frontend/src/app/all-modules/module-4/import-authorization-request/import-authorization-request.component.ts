@@ -24,6 +24,8 @@ import {ErrorHandlerService} from "../../../shared/service/error-handler.service
     styleUrls: ['./import-authorization-request.component.css']
 })
 export class ImportAuthorizationRequestComponent implements OnInit {
+
+    generatedDocNrSeq: number;
     documents: Document [] = [];
     cereri: Cerere [] = [];
     // companii: any[];
@@ -34,16 +36,19 @@ export class ImportAuthorizationRequestComponent implements OnInit {
     sysDate: string;
     currentDate: Date;
     file: any;
-    generatedDocNrSeq: number;
+
     docTypes : any[];
+    solicitantCompanyList: Observable<any[]>;
 
     // filteredOptions: Observable<any[]>;
     formSubmitted: boolean;
     // isWrongValueCompany: boolean;
     private subscriptions: Subscription[] = [];
 
-    constructor(private fb: FormBuilder, public dialog: MatDialog, private router: Router,
+    constructor(private fb: FormBuilder,
+                public dialog: MatDialog,
                 private requestService: RequestService,
+                private router: Router,
                 private authService: AuthService,
                 private administrationService: AdministrationService,
                 private taskService: TaskService,
@@ -52,16 +57,17 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         this.rForm = fb.group({
             'requestNumber': [null],
             'startDate': [new Date()],
-            'currentStep': ['E'],
+            'currentStep': ['R'],
+            'company': ['', Validators.required],
             'data': {disabled: true, value: new Date()},
             'radioButton': [null, Validators.required],
-            'company': ['test'],
+
         });
         this.dataForm = fb.group({});
 
-        // this.medReg = fb.group({
-        //
-        // });
+        this.loadSolicitantCompanyList();
+        this.generateDocNr();
+        this.loadDocTypes();
     }
 
     ngOnInit() {
@@ -102,6 +108,46 @@ export class ImportAuthorizationRequestComponent implements OnInit {
             )
         );
 
+    }
+
+    loadDocTypes(){
+        this.subscriptions.push(
+            this.taskService.getRequestStepByIdAndCode('3','R').subscribe(step => {
+                    //console.log('getRequestStepByIdAndCode', step);
+                    this.subscriptions.push(
+                        this.administrationService.getAllDocTypes().subscribe(data => {
+                                //console.log('getAllDocTypes', data);
+                                this.docTypes = data;
+                                this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
+                            },
+                            error => console.log(error)
+                        )
+                    );
+                },
+                error => console.log(error)
+            )
+        );
+    }
+
+    loadSolicitantCompanyList() {
+        this.subscriptions.push(
+            this.administrationService.getAllCompanies().subscribe(data => {
+                    this.solicitantCompanyList = data;
+                },
+                error => console.log(error)
+            )
+        )
+    }
+
+    generateDocNr() {
+        this.subscriptions.push(
+            this.administrationService.generateDocNr().subscribe(data => {
+                    this.generatedDocNrSeq = data;
+                    this.rForm.get('requestNumber').setValue(this.generatedDocNrSeq);
+                },
+                error => console.log(error)
+            )
+        );
     }
 
     displayFn(user?: any): string | undefined {
@@ -185,40 +231,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
             }, error => this.loadingService.hide())
         );
 
-
-
-
-
-        // this.isWrongValueCompany = !this.companii.some(elem => {
-        //     return this.rForm.get('compGet').value == null ? true : elem.name === this.rForm.get('compGet').value.name;
-        // });
-        //
-        // if (!this.rForm.controls['compGet'].valid || !this.rForm.controls['primRep'].valid || !this.rForm.controls['med'].valid
-        //     || this.cereri.length === 0 || this.isWrongValueCompany) {
-        //     return;
-        // }
-
-
-
-
-
-
-
-        // TODO save in DB values from form
-        // this.subscriptions.push(this.claimService.editClaim(this.model).subscribe(data => {
-        //     this.router.navigate(['/evaluate/initial']);
-        //   })
-        // );
     }
 
-    // private _filter(name: string): any[] {
-    //     const filterValue = name.toLowerCase();
-    //
-    //     return this.companii.filter(option => option.name.toLowerCase().includes(filterValue));
-    // }
-    //
-    // private saveToFileSystem(response: any, docName: string) {
-    //     const blob = new Blob([response]);
-    //     saveAs(blob, docName);
-    // }
+
 }

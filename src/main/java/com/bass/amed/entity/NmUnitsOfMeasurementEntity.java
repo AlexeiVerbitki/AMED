@@ -3,7 +3,6 @@ package com.bass.amed.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -13,6 +12,7 @@ public class NmUnitsOfMeasurementEntity
     private Integer id;
     private String code;
     private String description;
+    private String category;
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
@@ -51,13 +51,16 @@ public class NmUnitsOfMeasurementEntity
         this.description = description;
     }
 
-    @Override
-    public int hashCode()
+    @Basic
+    @Column(name = "category")
+    public String getCategory()
     {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (code != null ? code.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        return result;
+        return category;
+    }
+
+    public void setCategory(String category)
+    {
+        this.category = category;
     }
 
     @Override
@@ -86,7 +89,16 @@ public class NmUnitsOfMeasurementEntity
         {
             return false;
         }
+        return category != null ? category.equals(that.category) : that.category == null;
+    }
 
-        return true;
+    @Override
+    public int hashCode()
+    {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (code != null ? code.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (category != null ? category.hashCode() : 0);
+        return result;
     }
 }

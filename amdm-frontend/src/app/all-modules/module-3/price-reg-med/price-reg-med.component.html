@@ -3,7 +3,7 @@
     <hr>
     <form [formGroup]='PriceRegForm'>
         <div class="row">
-            <div class="col-lg-5">
+            <div class="col-lg-6">
                 <div class="md-form">
                     <input id="nrCererii" mdbInputDirective type="text" class="form-control"
                            formControlName="requestNumber" [attr.disabled]="true">
@@ -11,7 +11,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-5">
+            <div class="col-lg-6">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="startDate">
@@ -25,7 +25,7 @@
         <h5 class="text-center font-weight-bold">Selectarea Medicamentului</h5>
 
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="md-form-modified">
                     <ng-select class="w-100"
                                [items]="companies"
@@ -43,24 +43,36 @@
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="md-form-modified" formGroupName="medicament">
-                    <ng-select class="w-100"
-                               [items]="companyMedicaments"
-                               [required]="true"
-                               (change)="onMedSelected($event)"
-                               (clear)="onRemoveMed()"
-                               formControlName="name"
-                               bindLabel="name"
-                               placeholder="Medicamentul">
-                    </ng-select>
-                    <div *ngIf="formSubmitted && PriceRegForm.get('medicament')['controls'].name.invalid">
+            <div class="col-md-4">
+                <div class="md-form-modified">
+                    <div class="md-form-modified-select">
+                        <ng-select class="custom" [items]="companyMedicaments | async"
+                                   bindLabel="name"
+                                   placeholder="Medicamentul"
+                                   formControlName="medicament"
+                                   (change)="getMedicaments($event)"
+                                   [required]="true"
+                                   [typeahead]="medInputs"
+                                   [loading]="medLoading" >
+                            <ng-template ng-option-tmp let-item="item">
+                                {{item.name}} <br />
+                                <small>{{item.code}}</small>
+                            </ng-template>
+                        </ng-select>
+                    </div>
+                    <div *ngIf="formSubmitted && PriceRegForm.get('pricesMedicament')['controls'].name.invalid">
                         <small class="text-muted"><strong class="text-danger">Selectați medicamentul companiei</strong>
                         </small>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4" formGroupName="medicament">
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="typeMed" mdbInputDirective type="text" class="form-control" [value]="medicamentType.description" [attr.disabled]="true">
+                    <label for="typeMed">Tipul medicamentului</label>
+                </div>
+            </div>
+            <div class="col-md-4">
                 <div class="md-form">
                     <input id="intName" mdbInputDirective type="text" class="form-control" [value]="internationalName" [attr.disabled]="true">
                     <label for="intName">Denumirea Internațională</label>
@@ -75,7 +87,7 @@
             <div class="col-md-4">
                 <div class="md-form">
                     <input id="valab" mdbInputDirective type="number" class="form-control" [value]="termsOfValidity" [attr.disabled]="true">
-                    <label for="valab">Termen de valabilitate </label>
+                    <label for="valab">Termen de valabilitate (luni)</label>
                 </div>
             </div>
         </div>
@@ -152,7 +164,7 @@
             <small class="text-muted"><strong class="text-danger">Introduceți variantele de prețuri</strong></small>
         </div>
 
-        <div [hidden]="medicamentType == undefined || medicamentType == MedType.Original">
+        <div [hidden]="medicamentType == undefined || medicamentType.code == MedType.Original">
             <hr>
             <h5 class="text-center font-weight-bold">Medicamentul dat este unul <font color="red">GENERIC</font>. Indicați prețul acestuia în 9 țări de referință </h5>
             <template #priceReferenceContainer></template>
@@ -164,7 +176,7 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="medicamentType == MedType.Original && formSubmitted && priceReferenceComponentRef.length == 0">
+        <div *ngIf="medicamentType == MedType.Generic && formSubmitted && priceReferenceComponentRef.length == 0">
             <small class="text-muted"><strong class="text-danger">Introduceți prețurile de referință</strong></small>
         </div>
 

@@ -46,7 +46,7 @@ public class MedicamentController
 //        logger.debug("Retrieve all medicaments of company");
 //        NmEconomicAgentsEntity company = economicAgentsRepository.findById(companyId).get();
 //
-//        List<MedicamentDetailsForPraceRegProjection> meds = medicamentRepository.findAllByCompany(company);
+//        List<MedicamentDetailsForPraceRegProjection> meds = medicamentRepository.findAllByCompanyAndStatus(company, "F");
 //
 //        return new ResponseEntity<>(meds, HttpStatus.OK);
 //    }
@@ -54,18 +54,16 @@ public class MedicamentController
     @RequestMapping("/company-all-medicaments")
     public ResponseEntity<List<MedicamentEntity>> getAllMedicaments()
     {
-
-
         logger.debug("Retrieve all medicaments");
         return new ResponseEntity<>(medicamentRepository.findAll(), HttpStatus.OK);
     }
 
-//    @RequestMapping("/search-medicament-names-by-name")
-//    public ResponseEntity<List<MedicamentNamesListProjection>> getAllMedicamentNamesByName(String partialName)
-//    {
-//        logger.debug("Retrieve medicament names list by name");
-//        return new ResponseEntity<>(medicamentRepository.findByNameStartingWithIgnoreCase(partialName), HttpStatus.OK);
-//    }
+    @RequestMapping("/search-medicament-names-by-name")
+    public ResponseEntity<List<MedicamentNamesListProjection>> getAllMedicamentNamesByName(String partialName)
+    {
+        logger.debug("Retrieve medicament names list by name");
+        return new ResponseEntity<>(medicamentRepository.findByNameStartingWithIgnoreCase(partialName), HttpStatus.OK);
+    }
 
 
     @RequestMapping("/search-medicament-names-by-name-or-code")

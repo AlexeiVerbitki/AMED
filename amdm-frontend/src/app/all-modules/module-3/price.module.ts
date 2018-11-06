@@ -16,7 +16,7 @@ import {RequestAdditionalDataDialogComponent} from "../../dialog/request-additio
 import {MatDialogModule} from "@angular/material";
 
 @NgModule({
-    entryComponents: [ReferencePriceComponent, ProposedPriceComponent],
+    entryComponents: [ReferencePriceComponent, ProposedPriceComponent, RequestAdditionalDataDialogComponent],
     imports: [
         CommonModule,
         PriceRoutingModule,

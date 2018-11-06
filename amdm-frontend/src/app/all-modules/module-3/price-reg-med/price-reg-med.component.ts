@@ -8,12 +8,11 @@ import {
     ViewContainerRef
 } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Subscription} from 'rxjs';
+import {Observable, Subject, Subscription} from 'rxjs';
 import {Company} from '../../../models/company';
 import {Medicament} from '../../../models/medicament';
 import {Document} from '../../../models/document';
 import {MatDialog} from '@angular/material';
-import {PricesRegService} from '../../../shared/service/reg-prices.service';
 import {saveAs} from 'file-saver';
 import {ReferencePriceComponent} from "../reference-price/reference-price.component";
 import {Country} from "../../../models/country";
@@ -21,7 +20,10 @@ import {Currency} from "../../../models/currency";
 import {ProposedPriceComponent} from "../proposed-price/proposed-price.component";
 import {UnitOfMeasure} from "../../../models/unitOfMeasure";
 import {Price} from "../../../models/price";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
+import {LoaderService} from "../../../shared/service/loader.service";
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
+import {PriceService} from "../../../shared/service/prices.service";
 
 
 enum PriceRowType {
@@ -30,6 +32,7 @@ enum PriceRowType {
 }
 
 enum MedicamentType {
+    Drug = 1,
     Original = 2 ,
     Generic = 3
 }
@@ -39,7 +42,7 @@ enum MedicamentType {
   selector: 'app-price-reg-med',
   templateUrl: './price-reg-med.component.html',
   styleUrls: ['./price-reg-med.component.css'],
-  providers: [PricesRegService]
+  providers: [PriceService]
 })
 export class PriceRegMedComponent implements OnInit, OnDestroy {
 
@@ -53,7 +56,11 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
       countries: Country[] = [];
       currencies: Currency[] = [];
       priceTypes: any[];
-      companyMedicaments: Medicament[];
+
+      companyMedicaments: Observable<any[]>;
+      medInputs = new Subject<string>();
+      medLoading = false;
+
       formSubmitted: boolean;
 
       OriginCountryPriceTypeId: number;
@@ -73,9 +80,6 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
       componentFactory: ComponentFactory<ReferencePriceComponent> = this.resolver.resolveComponentFactory(ReferencePriceComponent);
       propPriceComponentFactory: ComponentFactory<ProposedPriceComponent> = this.resolver.resolveComponentFactory(ProposedPriceComponent);
 
-    currencyUSD:                string = '';
-    currencyEUR:                string = '';
-    currencyRUR:                string = '';
     medCode:                    string = '';
     internationalName:          string = '';
     termsOfValidity:            number;
@@ -87,25 +91,33 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
     storageQuantity:            number;
     volumeProp:                 number;
     unitsQuantity:              number;
-    medicamentType:             MedicamentType = MedicamentType.Generic;
+    medicamentType:             any = {code:MedicamentType.Generic, description: 'Generic'};
     MedType = MedicamentType;
+
+    updateRouteId: string;
 
   constructor(private fb: FormBuilder,
               public dialog: MatDialog,
-              private priceService: PricesRegService,
+              private priceService: PriceService,
               private router: Router,
-              private resolver: ComponentFactoryResolver) {
+              private route: ActivatedRoute,
+              private resolver: ComponentFactoryResolver,
+              private loadingService: LoaderService) {
+
+          this.subscriptions.push(
+          this.route.params.subscribe(params => {
+              if (params['id']) {
+                  this.updateRouteId = params.id;
+              }
+          }));
 
         this.PriceRegForm = fb.group({
+            id:                 [null],
             requestNumber:      {disabled: true, value: null},
             startDate:          {disabled: false, value: new Date()},
             company:            [null, Validators.required],
             currentStep:        ['R'],
-            medicament:     fb.group({
-                                name:                    [null, Validators.required],
-                                internationalName:       [null, Validators.required],
-                                storageQuantity:         [null, Validators.required],
-                            }),
+            medicament:     [null, Validators.required],
             type:
                 fb.group({
                     code: ['PMED', Validators.required]
@@ -114,21 +126,12 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-        this.subscriptions.push(
-          this.priceService.generateDocNumber().subscribe(generatedNumber => {
-              this.generatedDocNrSeq = generatedNumber;
-              this.PriceRegForm.get('requestNumber').setValue(this.generatedDocNrSeq);
-            },
-            error => {console.log(error); alert(error);}
-          )
-        );
-
-        this.subscriptions.push(
+      this.subscriptions.push(
           this.priceService.getCompanies().subscribe(companiesData => {
-              this.companies = companiesData;
-            },
-            error => {console.log(error); alert(error);}
-        ));
+                  this.companies = companiesData;
+              },
+              error => {console.log(error); alert(error);}
+          ));
 
       this.subscriptions.push(
           this.priceService.getCountries().subscribe(countriesData => {
@@ -157,20 +160,69 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
               error => console.log(error)
           ));
 
-      this.subscriptions.push(
-          this.priceService.getTodayCurrency().subscribe(currenciesData => {
-                currenciesData.forEach(az => {
-                    if(az.currency.code === 'EUR') {
-                        this.currencyEUR = az.value;
-                    } else if (az.currency.code === 'SUA') {
-                        this.currencyUSD = az.value;
-                    } else if (az.currency.code === 'RUB') {
-                        this.currencyRUR = az.value;
-                    }
-                })
-              },
-              error => console.log(error)
-          ));
+      this.companyMedicaments =
+          this.medInputs.pipe(
+              filter((result: string) => {
+                  if (result && result.length > 2) return true;
+              }),
+              debounceTime(400),
+              distinctUntilChanged(),
+              tap((val: string) => {
+                  this.medLoading = true;
+
+              }),
+              flatMap(term =>
+
+                  this.priceService.getMedicamentNamesAndCodeList(term).pipe(
+                      tap(() => this.medLoading = false)
+                  )
+              )
+          );
+
+      // this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
+      //
+      // }));
+
+      // this.subscriptions.push(
+      //     this.priceService.getTodayCurrency().subscribe(currenciesData => {
+      //           currenciesData.forEach(az => {
+      //               if(az.currency.code === 'EUR') {
+      //                   this.currencyEUR = az.value;
+      //               } else if (az.currency.code === 'SUA') {
+      //                   this.currencyUSD = az.value;
+      //               } else if (az.currency.code === 'RUB') {
+      //                   this.currencyRUR = az.value;
+      //               }
+      //           })
+      //         },
+      //         error => console.log(error)
+      //     ));
+
+      if(this.updateRouteId != undefined) {
+          this.subscriptions.push(
+              this.priceService.getPricesRequest(this.updateRouteId).subscribe(request => {
+                  console.log('requewst', JSON.stringify(request));
+                  this.generatedDocNrSeq = request.requestNumber;
+                  this.PriceRegForm.get('id').setValue(request.id);
+                  this.PriceRegForm.get('requestNumber').setValue(this.generatedDocNrSeq);
+                  this.PriceRegForm.get('company').setValue(request.company);
+                  this.PriceRegForm.get('medicament').setValue(request.pricesRequest.medicament);
+                  this.onMedSelected(request.pricesRequest.medicament);
+                  this.initPrices(request.pricesRequest);
+
+                  this.documents = [];
+                  request.pricesRequest.documents.forEach(doc => this.documents.push(doc));
+          }));
+      } else {
+          this.subscriptions.push(
+              this.priceService.generateDocNumber().subscribe(generatedNumber => {
+                      this.generatedDocNrSeq = generatedNumber;
+                      this.PriceRegForm.get('requestNumber').setValue(this.generatedDocNrSeq);
+                  },
+                  error => {console.log(error); alert(error);}
+              )
+          );
+      }
   }
 
 
@@ -210,16 +262,13 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
 
 
   private onCompanySelected(event) {
-      this.onRemoveMed();
-      this.getMedicaments(event.id);
+      // this.onRemoveMed();
+      // this.getMedicaments(event.id);
   }
 
-  private onMedSelected(newMed: Medicament) {
-      console.log(newMed);
-      if(newMed == undefined) return;
-      this.onRemoveMed();
 
-      this.medCode = newMed.code;
+  private initPrices(newMed: any) {
+      if(!newMed) return;
 
       let prices: Price[] = newMed.prices;
       if(prices != undefined && prices.length > 0) {
@@ -227,8 +276,6 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
               this.addProposedPriceRow();
               this.proposedPriceComponentRef[this.proposedPriceRefIndex - 1].instance.price = value
           });
-          this.documents = [];
-          prices[0].documents.forEach(doc => this.documents.push(doc));
       }
 
       let refPrices: Price[] = newMed.referencePrices;
@@ -239,6 +286,14 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
               this.priceReferenceComponentRef[this.priceRefIndex - 1].instance.refPrice = value;
           })
       }
+  }
+
+  private onMedSelected(newMed: Medicament) {
+      console.log(newMed);
+      if(newMed == undefined) return;
+      this.onRemoveMed();
+
+      this.medCode = newMed.code;
 
       let unitsOfMess: UnitOfMeasure = newMed.unitsOfMeasurement;
       if (unitsOfMess != undefined) {
@@ -260,10 +315,10 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
           this.internationalName = internationalName.description;
       }
 
-      let medType: any = newMed.medicamentType;
-      if(medType != undefined) {
-          this.medicamentType = (<MedicamentType>medType.code);
-      }
+      this.medicamentType = newMed.medicamentType;
+      // if(medType != undefined) {
+      //     this.medicamentType = (<MedicamentType>medType.code);
+      // }
 
       let expDate: Date = newMed.expirationDate;
       if(expDate != undefined) {
@@ -280,7 +335,6 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
 
 
   private onRemoveMed() {
-      this.PriceRegForm.get('medicament')['controls'].storageQuantity.reset();
       this.medCode = '';
       this.unitsOfMeasurement = '';
       this.unitsQuantityMeasurement = '';
@@ -303,45 +357,51 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
 
 
   private onRemoveCompany() {
-      this.PriceRegForm.get('medicament')['controls'].name.reset();
-      this.onRemoveMed();
-      this.companyMedicaments = [];
+      // this.PriceRegForm.get('medicament')['controls'].name.reset();
+      // this.onRemoveMed();
+    //  this.companyMedicaments = [];
   }
 
-  private getMedicaments(id) {
-      this.PriceRegForm.get('medicament')['controls'].name.reset();
-    if (id !== undefined) {
-      if (this.getMedSubscr !== undefined) {
-          this.getMedSubscr.unsubscribe();
-      }
+    private getMedicaments($event) {
+      let id = $event.id;
+      //  this.PriceRegForm.get('medicament')['controls'].name.reset();
+        if (id !== undefined) {
+            if (this.getMedSubscr !== undefined) {
+                this.getMedSubscr.unsubscribe();
+            }
 
-      this.getMedSubscr = this.priceService.getCompanyMedicaments(id).subscribe(
-              medicaments =>  {
-                  this.companyMedicaments = medicaments;
-              }, error1 => alert(error1.toString())
-          );
+            this.getMedSubscr = this.priceService.getMedicamentById(id).subscribe(
+                medicament => {
+                    this.onMedSelected(medicament);
+                }, error1 => alert(error1.toString())
+            );
+
+            // this.getMedSubscr = this.priceService.getCompanyMedicaments(id).subscribe(
+            //     medicaments => {
+            //         //  this.companyMedicaments = medicaments;
+            //     }, error1 => alert(error1.toString())
+            // );
+        }
     }
-  }
 
 
     nextStep() {
+        this.loadingService.show();
         this.formSubmitted = true;
         this.priceReferenceComponentRef.forEach(form => form.instance.formSubmitted = true);
         this.proposedPriceComponentRef.forEach(form => form.instance.formSubmitted = true);
 
-        let isGeneric: boolean = this.medicamentType != undefined && this.medicamentType == MedicamentType.Generic;
-
-        let dfdf: boolean = (!isGeneric || (isGeneric && this.priceReferenceComponentRef.length > 0));
+        let isGeneric: boolean = this.medicamentType != undefined && this.medicamentType.code == MedicamentType.Generic;
 
         let canSave: boolean = this.documents.length > 0 &&
             this.PriceRegForm.get('company').valid &&
-            this.PriceRegForm.get('medicament')['controls'].name.valid &&
+            this.PriceRegForm.get('medicament').valid &&
             this.proposedPriceRefIndex > 0 && (!isGeneric || (isGeneric && this.priceReferenceComponentRef.length > 0))
-
 
 
         if(!canSave)
         {
+            this.loadingService.hide();
             return;
         }
 
@@ -359,26 +419,28 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
             }];
 
         priceModel.requestNumber = this.PriceRegForm.get('requestNumber').value;
-        priceModel.medicament = priceModel.medicament.name;
-        priceModel.medicament.storageQuantity = this.PriceRegForm.get('medicament')['controls'].storageQuantity.value;
+        priceModel.pricesRequest = {};
+        priceModel.pricesRequest.medicament = priceModel.medicament;
+        priceModel.pricesMedicament = undefined;
+        priceModel.pricesRequest.documents = this.documents;
 
         let prices : Price[] = [], refPrices: Price[] = [];
         this.proposedPriceComponentRef.forEach(value => {
-            value.instance.price.documents = this.documents;
-            value.instance.price.medicamentId = priceModel.medicament.id;
             value.instance.price.type = {id: 1};
             prices.push(value.instance.price);
         });
         this.priceReferenceComponentRef.forEach(value => {
-            value.instance.refPrice.medicamentId = priceModel.medicament.id;
             refPrices.push(value.instance.refPrice);
         });
-        priceModel.medicament.prices = prices;
-        priceModel.medicament.referencePrices = refPrices;
+
+        priceModel.pricesRequest.prices = prices;
+        priceModel.pricesRequest.referencePrices = refPrices;
+
 
         this.subscriptions.push(this.priceService.savePrice(priceModel).subscribe(data => {
                 this.router.navigate(['dashboard/module/price/evaluate/' + data.body]);
-            }, error1 => alert(error1))
+                this.loadingService.hide();
+            }, error1 => {alert(error1);  this.loadingService.hide();})
         );
         return false;
     }

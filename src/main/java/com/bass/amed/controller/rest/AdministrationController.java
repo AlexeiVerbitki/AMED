@@ -64,6 +64,8 @@ public class AdministrationController
     InvestigatorRepository investigatorRepository;
     @Autowired
     MedicalInstitutionsRepository medicalInstitutionsRepository;
+    @Autowired
+    ServiceChargesRepository serviceChargesRepositorys;
 
     @RequestMapping(value = "/generate-doc-nr")
     public ResponseEntity<Integer> generateDocNr()
@@ -138,6 +140,13 @@ public class AdministrationController
     {
         LOGGER.debug("Retrieve all units of measurement");
         return new ResponseEntity<>(unitsOfMeasurementRepository.findAll(), HttpStatus.OK);
+    }
+
+    @RequestMapping("/all-service-charges")
+    public ResponseEntity<List<ServiceChargesEntity>> retrieveAllServiceCharges()
+    {
+        LOGGER.debug("Retrieve service charges");
+        return new ResponseEntity<>(serviceChargesRepositorys.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/generate-receipt-nr")

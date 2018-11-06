@@ -15,6 +15,7 @@ public class MedicamentExpertsEntity
     private Timestamp date;
     private String comment;
     private String number;
+    private Integer status;
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
@@ -102,6 +103,18 @@ public class MedicamentExpertsEntity
     }
 
     @Basic
+    @Column(name = "status")
+    public Integer getStatus()
+    {
+        return status;
+    }
+
+    public void setStatus(Integer status)
+    {
+        this.status = status;
+    }
+
+    @Basic
     @Column(name = "number")
     public String getNumber()
     {
@@ -155,7 +168,11 @@ public class MedicamentExpertsEntity
         {
             return false;
         }
-        return number != null ? number.equals(that.number) : that.number == null;
+        if (number != null ? !number.equals(that.number) : that.number != null)
+        {
+            return false;
+        }
+        return status != null ? status.equals(that.status) : that.status == null;
     }
 
     @Override
@@ -169,6 +186,7 @@ public class MedicamentExpertsEntity
         result = 31 * result + (date != null ? date.hashCode() : 0);
         result = 31 * result + (comment != null ? comment.hashCode() : 0);
         result = 31 * result + (number != null ? number.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
         return result;
     }
 }

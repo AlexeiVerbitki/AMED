@@ -9,24 +9,23 @@ import java.util.Set;
 @Table(name = "registration_requests", schema = "amed", catalog = "")
 public class RegistrationRequestsEntity
 {
-    private Integer id;
-    private String requestNumber;
-    private Timestamp startDate;
-    private Timestamp endDate;
-    private NmEconomicAgentsEntity company;
-    private Integer importId;
-    private String currentStep;
-    private RequestTypesEntity type;
-    private ClinicalTrialsEntity clinicalTrails;
-    private LicensesEntity license;
-    private MedicamentEntity pricesMedicament;
-    private MedicamentAnnihilationEntity medicamentAnnihilation;
+    private Integer                               id;
+    private String                                requestNumber;
+    private Timestamp                             startDate;
+    private Timestamp                             endDate;
+    private NmEconomicAgentsEntity                company;
+    private ImportAuthorizationEntity             importAuthorizationEntity;
+    private String                                currentStep;
+    private RequestTypesEntity                    type;
+    private ClinicalTrialsEntity                  clinicalTrails;
+    private LicensesEntity                        license;
+    private PricesRequestsEntity                  pricesRequest;
+    private MedicamentAnnihilationEntity          medicamentAnnihilation;
     private Set<RegistrationRequestHistoryEntity> requestHistories = new HashSet<>();
-    private Set<MedicamentEntity> medicaments;
-    private Set<OutputDocumentsEntity> outputDocuments;
-    private Set<DocumentsEntity> documents;
-    private String interruptionReason;
-    private String initiator;
+    private Set<MedicamentEntity>                 medicaments;
+    private Set<OutputDocumentsEntity>            outputDocuments;
+    private String                                interruptionReason;
+    private String                                initiator;
     private String assignedUser;
     private String medicamentName;
 
@@ -91,16 +90,16 @@ public class RegistrationRequestsEntity
         this.company = company;
     }
 
-    @Basic
-    @Column(name = "import_id")
-    public Integer getImportId()
+	@OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
+	@JoinColumn( name = "import_id" )
+    public ImportAuthorizationEntity getImportAuthorizationEntity()
     {
-        return importId;
+        return importAuthorizationEntity;
     }
 
-    public void setImportId(Integer importId)
+    public void setImportAuthorizationEntity(ImportAuthorizationEntity importAuthorizationEntity)
     {
-        this.importId = importId;
+        this.importAuthorizationEntity = importAuthorizationEntity;
     }
 
     @Basic
@@ -116,15 +115,13 @@ public class RegistrationRequestsEntity
     }
 
     @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
-    @JoinColumn( name = "prices_medicament_id" )
-    public MedicamentEntity getPricesMedicament()
-    {
-        return pricesMedicament;
+    @JoinColumn( name = "prices_request_id" )
+    public PricesRequestsEntity getPricesRequest() {
+        return pricesRequest;
     }
 
-    public void setPricesMedicament(MedicamentEntity pricesMedicament)
-    {
-        this.pricesMedicament = pricesMedicament;
+    public void setPricesRequest(PricesRequestsEntity pricesRequest) {
+        this.pricesRequest = pricesRequest;
     }
 
     @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
@@ -199,18 +196,6 @@ public class RegistrationRequestsEntity
         this.outputDocuments = outputDocuments;
     }
 
-    @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST} )
-    @JoinColumn( name = "registration_request_id" )
-    public Set<DocumentsEntity> getDocuments()
-    {
-        return documents;
-    }
-
-    public void setDocuments(Set<DocumentsEntity> documents)
-    {
-        this.documents = documents;
-    }
-
     @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
     @JoinColumn( name = "type_id" )
     public RequestTypesEntity getType()
@@ -273,108 +258,53 @@ public class RegistrationRequestsEntity
     }
 
     @Override
-    public boolean equals(Object o)
-    {
-        if (this == o)
-        {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass())
-        {
-            return false;
-        }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
         RegistrationRequestsEntity that = (RegistrationRequestsEntity) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null)
-        {
-            return false;
-        }
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (requestNumber != null ? !requestNumber.equals(that.requestNumber) : that.requestNumber != null)
-        {
             return false;
-        }
-        if (startDate != null ? !startDate.equals(that.startDate) : that.startDate != null)
-        {
-            return false;
-        }
-        if (endDate != null ? !endDate.equals(that.endDate) : that.endDate != null)
-        {
-            return false;
-        }
-        if (company != null ? !company.equals(that.company) : that.company != null)
-        {
-            return false;
-        }
-        if (importId != null ? !importId.equals(that.importId) : that.importId != null)
-        {
-            return false;
-        }
-        if (currentStep != null ? !currentStep.equals(that.currentStep) : that.currentStep != null)
-        {
-            return false;
-        }
-        if (type != null ? !type.equals(that.type) : that.type != null)
-        {
-            return false;
-        }
+        if (startDate != null ? !startDate.equals(that.startDate) : that.startDate != null) return false;
+        if (endDate != null ? !endDate.equals(that.endDate) : that.endDate != null) return false;
+        if (company != null ? !company.equals(that.company) : that.company != null) return false;
+        if (importAuthorizationEntity != null ? !importAuthorizationEntity.equals(that.importAuthorizationEntity) : that.importAuthorizationEntity != null) return false;
+        if (currentStep != null ? !currentStep.equals(that.currentStep) : that.currentStep != null) return false;
+        if (type != null ? !type.equals(that.type) : that.type != null) return false;
         if (clinicalTrails != null ? !clinicalTrails.equals(that.clinicalTrails) : that.clinicalTrails != null)
-        {
             return false;
-        }
-        if (license != null ? !license.equals(that.license) : that.license != null)
-        {
+        if (license != null ? !license.equals(that.license) : that.license != null) return false;
+        if (pricesRequest != null ? !pricesRequest.equals(that.pricesRequest) : that.pricesRequest != null)
             return false;
-        }
-        if (pricesMedicament != null ? !pricesMedicament.equals(that.pricesMedicament) : that.pricesMedicament != null)
-        {
-            return false;
-        }
         if (medicamentAnnihilation != null ? !medicamentAnnihilation.equals(that.medicamentAnnihilation) : that.medicamentAnnihilation != null)
-        {
             return false;
-        }
         if (requestHistories != null ? !requestHistories.equals(that.requestHistories) : that.requestHistories != null)
-        {
             return false;
-        }
-        if (medicaments != null ? !medicaments.equals(that.medicaments) : that.medicaments != null)
-        {
-            return false;
-        }
+        if (medicaments != null ? !medicaments.equals(that.medicaments) : that.medicaments != null) return false;
         if (outputDocuments != null ? !outputDocuments.equals(that.outputDocuments) : that.outputDocuments != null)
-        {
             return false;
-        }
         if (interruptionReason != null ? !interruptionReason.equals(that.interruptionReason) : that.interruptionReason != null)
-        {
             return false;
-        }
-        if (initiator != null ? !initiator.equals(that.initiator) : that.initiator != null)
-        {
-            return false;
-        }
-        if (assignedUser != null ? !assignedUser.equals(that.assignedUser) : that.assignedUser != null)
-        {
-            return false;
-        }
+        if (initiator != null ? !initiator.equals(that.initiator) : that.initiator != null) return false;
+        if (assignedUser != null ? !assignedUser.equals(that.assignedUser) : that.assignedUser != null) return false;
         return medicamentName != null ? medicamentName.equals(that.medicamentName) : that.medicamentName == null;
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (requestNumber != null ? requestNumber.hashCode() : 0);
         result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
         result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
         result = 31 * result + (company != null ? company.hashCode() : 0);
-        result = 31 * result + (importId != null ? importId.hashCode() : 0);
+        result = 31 * result + (importAuthorizationEntity != null ? importAuthorizationEntity.hashCode() : 0);
         result = 31 * result + (currentStep != null ? currentStep.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (clinicalTrails != null ? clinicalTrails.hashCode() : 0);
         result = 31 * result + (license != null ? license.hashCode() : 0);
-        result = 31 * result + (pricesMedicament != null ? pricesMedicament.hashCode() : 0);
+        result = 31 * result + (pricesRequest != null ? pricesRequest.hashCode() : 0);
         result = 31 * result + (medicamentAnnihilation != null ? medicamentAnnihilation.hashCode() : 0);
         result = 31 * result + (requestHistories != null ? requestHistories.hashCode() : 0);
         result = 31 * result + (medicaments != null ? medicaments.hashCode() : 0);
@@ -384,5 +314,30 @@ public class RegistrationRequestsEntity
         result = 31 * result + (assignedUser != null ? assignedUser.hashCode() : 0);
         result = 31 * result + (medicamentName != null ? medicamentName.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "RegistrationRequestsEntity{" +
+               "id=" + id +
+               ", requestNumber='" + requestNumber + '\'' +
+               ", startDate=" + startDate +
+               ", endDate=" + endDate +
+               ", company=" + company +
+               ", importAuthorizationEntity=" + importAuthorizationEntity +
+               ", currentStep='" + currentStep + '\'' +
+               ", type=" + type +
+               ", clinicalTrails=" + clinicalTrails +
+               ", license=" + license +
+               ", pricesRequest=" + pricesRequest +
+               ", medicamentAnnihilation=" + medicamentAnnihilation +
+               ", requestHistories=" + requestHistories +
+               ", medicaments=" + medicaments +
+               ", outputDocuments=" + outputDocuments +
+               ", interruptionReason='" + interruptionReason + '\'' +
+               ", initiator='" + initiator + '\'' +
+               ", assignedUser='" + assignedUser + '\'' +
+               ", medicamentName='" + medicamentName + '\'' +
+               '}';
     }
 }

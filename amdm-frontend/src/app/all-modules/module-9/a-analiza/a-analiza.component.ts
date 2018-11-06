@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Document} from "../../../models/document";
 import {BehaviorSubject, Subscription} from "rxjs/index";
 import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
@@ -14,17 +14,21 @@ import {ConfirmationDialogComponent} from "../../../confirmation-dialog/confirma
 import {DocumentService} from "../../../shared/service/document.service";
 import {AdditionalDataDialogComponent} from "../dialog/additional-data-dialog/additional-data-dialog.component";
 import {AuthService} from "../../../shared/service/authetication.service";
+import {TaskService} from "../../../shared/service/task.service";
+import {LoaderService} from "../../../shared/service/loader.service";
+import {subscriptionLogsToBeFn} from "rxjs/internal/testing/TestScheduler";
 
 @Component({
     selector: 'app-a-analiza',
     templateUrl: './a-analiza.component.html',
     styleUrls: ['./a-analiza.component.css']
 })
-export class AAnalizaComponent implements OnInit {
+export class AAnalizaComponent implements OnInit, OnDestroy {
 
     private subscriptions: Subscription[] = [];
     analyzeClinicalTrailForm: FormGroup;
     protected docs: Document[] = [];
+    docTypes: any[];
 
     //Treatments
     treatmentId: number;
@@ -65,8 +69,6 @@ export class AAnalizaComponent implements OnInit {
     initialData: any;
     outDocuments: any[] = [];
 
-    disabledState: boolean = false;
-
     constructor(private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
                 private medicamentService: MedicamentService,
@@ -76,7 +78,9 @@ export class AAnalizaComponent implements OnInit {
                 private documentService: DocumentService,
                 private requestService: RequestService,
                 private authService: AuthService,
-                private router: Router) {
+                private router: Router,
+                private taskService: TaskService,
+                private loadingService: LoaderService) {
 
     }
 
@@ -90,6 +94,8 @@ export class AAnalizaComponent implements OnInit {
             'type': [],
             'typeCode': [''],
             'requestHistories': [],
+            'initiator':[null],
+            'assignedUser':[null],
             'clinicalTrails': this.fb.group({
                 'id': [''],
                 'documents': [],
@@ -127,7 +133,7 @@ export class AAnalizaComponent implements OnInit {
         });
 
         this.referenceProductFormn = this.fb.group({
-            'searchField': [''],
+            'searchField': [{value: '', disabled: true}],
             'producer': [{value: '', disabled: true}],
             'dose': [{value: '', disabled: true}],
             'group': [{value: '', disabled: true}],
@@ -147,7 +153,26 @@ export class AAnalizaComponent implements OnInit {
 
         this.initPage();
         this.disableEnablePage();
+        this.loadDocTypes();
+    }
 
+    loadDocTypes(){
+        this.subscriptions.push(
+            this.taskService.getRequestStepByIdAndCode('3','A').subscribe(step => {
+                    console.log('getRequestStepByIdAndCode', step);
+                    this.subscriptions.push(
+                        this.administrationService.getAllDocTypes().subscribe(data => {
+                                console.log('getAllDocTypes', data);
+                                this.docTypes = data;
+                                this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
+                            },
+                            error => console.log(error)
+                        )
+                    );
+                },
+                error => console.log(error)
+            )
+        );
     }
 
     disableEnablePage() {
@@ -177,6 +202,7 @@ export class AAnalizaComponent implements OnInit {
                     this.analyzeClinicalTrailForm.get('company').setValue(data.company);
                     this.analyzeClinicalTrailForm.get('type').setValue(data.type);
                     this.analyzeClinicalTrailForm.get('typeCode').setValue(data.type.code);
+                    this.analyzeClinicalTrailForm.get('initiator').setValue(data.initiator);
 
                     data.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
 
@@ -194,6 +220,11 @@ export class AAnalizaComponent implements OnInit {
                     if (data.clinicalTrails.medicament !== null) {
                         this.medicamentForm.get('searchField').setValue(data.clinicalTrails.medicament.name);
                         this.fillMedicamentData(data.clinicalTrails.medicament);
+                    }
+
+                    if (data.clinicalTrails.referenceProduct !== null) {
+                        this.referenceProductFormn.get('searchField').setValue(data.clinicalTrails.referenceProduct.name);
+                        this.fillReferenceProductData(data.clinicalTrails.referenceProduct);
                     }
 
                     this.investigatorsList = data.clinicalTrails.investigators;
@@ -337,8 +368,12 @@ export class AAnalizaComponent implements OnInit {
 
         dialogRef2.afterClosed().subscribe(result => {
             if (result.success) {
+                result.docType = this.docTypes.find(doc=>doc.category==='SL');
+                console.log('find doc type', result.docType);
                 this.initialData.clinicalTrails.outputDocuments.push(result);
-                this.subscriptions.push(this.requestService.addClinicalTrailRequest(this.initialData).subscribe(data => {
+                this.subscriptions.push(this.requestService.addOutputDocumentRequest(this.initialData).subscribe(data => {
+                    console.log('outDocuments', data);
+                    //this.outDocuments = data.body.clinicalTrails.outputDocuments;
                     }, error => console.log(error))
                 );
             }
@@ -360,11 +395,11 @@ export class AAnalizaComponent implements OnInit {
         dialogRef2.afterClosed().subscribe(result => {
             if (result) {
 
-                this.initialData.medicament.outputDocuments.forEach((item, index) => {
-                    if (item === doc) this.initialData.medicament.outputDocuments.splice(index, 1);
+                this.initialData.clinicalTrails.outputDocuments.forEach((item, index) => {
+                    if (item === doc) this.initialData.clinicalTrails.outputDocuments.splice(index, 1);
                 });
 
-                this.subscriptions.push(this.requestService.addMedicamentRequest(this.initialData).subscribe(data => {
+                this.subscriptions.push(this.requestService.addClinicalTrailRequest(this.initialData).subscribe(data => {
                     }, error => console.log(error))
                 );
             }
@@ -386,7 +421,7 @@ export class AAnalizaComponent implements OnInit {
                 }
                 )
             );
-        } else {
+        } else if(document.docType.category == 'DD'){
             this.subscriptions.push(this.documentService.viewDD(document.number).subscribe(data => {
                     let file = new Blob([data], {type: 'application/pdf'});
                     var fileURL = URL.createObjectURL(file);
@@ -400,19 +435,21 @@ export class AAnalizaComponent implements OnInit {
     }
 
     save() {
-        this.disabledState = true;
+        this.loadingService.show();
         let formModel = this.analyzeClinicalTrailForm.getRawValue();
         formModel.currentStep = 'A';
         formModel.clinicalTrails.documents = this.docs;
         formModel.clinicalTrails.investigators = this.investigatorsList;
         formModel.clinicalTrails.medicalInstitutions = this.mediacalInstitutionsList;
 
+        formModel.assignedUser = this.authService.getUserName();
         console.log("Save data", formModel);
         this.subscriptions.push(
             this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
-                this.disabledState = false;
+                this.loadingService.hide();
+                this.router.navigate(['dashboard/module']);
             }, error => {
-                this.disabledState = false;
+                this.loadingService.hide();
                 console.log(error)
             })
         )
@@ -427,6 +464,8 @@ export class AAnalizaComponent implements OnInit {
             console.log("Not submitted data", formModel);
             return;
         }
+
+        this.loadingService.show();
 
         formModel.currentStep = 'AP';
         formModel.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
@@ -443,17 +482,16 @@ export class AAnalizaComponent implements OnInit {
         formModel.clinicalTrails.receipts = this.receiptsList;
         formModel.clinicalTrails.paymentOrders = this.paymentOrdersList;
 
-        this.disabledState = true;
-
         console.log("evaluareaPrimaraObjectLet", JSON.stringify(formModel));
 
         formModel.currentStep = 'AP';
+        formModel.assignedUser = this.authService.getUserName();
         this.subscriptions.push(
             this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
-                this.disabledState = true;
                 this.router.navigate(['/dashboard/module/clinic-studies/approval/' + data.body]);
+                this.loadingService.hide();
             }, error => {
-                this.disabledState = false;
+                this.loadingService.hide();
                 console.log(error)
             })
         )
@@ -470,6 +508,7 @@ export class AAnalizaComponent implements OnInit {
         dialogRef2.afterClosed().subscribe(result => {
             console.log('result', result);
             if (result) {
+                this.loadingService.show();
                 let formModel = this.analyzeClinicalTrailForm.getRawValue();
                 formModel.currentStep = 'C';
                 formModel.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
@@ -482,9 +521,9 @@ export class AAnalizaComponent implements OnInit {
                 this.subscriptions.push(
                     this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
                         this.router.navigate(['/dashboard/module/clinic-studies/interrupt/' + data.body]);
-                        this.disabledState = false;
+                        this.loadingService.hide();
                     }, error => {
-                        this.disabledState = false;
+                        this.loadingService.hide();
                         console.log(error)
                     })
                 )
@@ -494,6 +533,10 @@ export class AAnalizaComponent implements OnInit {
 
     disableEnableForm() {
         this.isWaitingStep.next(!this.isWaitingStep.value);
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(subscriotion => subscriotion.unsubscribe());
     }
 
 }

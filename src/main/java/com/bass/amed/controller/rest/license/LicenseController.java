@@ -180,13 +180,13 @@ public class LicenseController
     public ResponseEntity<LicensesEntity> loadLicenseByCompany(@RequestParam("id") String economicAgentId) throws  CustomException
     {
         logger.debug("Retrieve license by company id id", economicAgentId);
-        Optional<LicensesEntity> r = licensesRepository.getLicenseByCompanyId(Integer.valueOf(economicAgentId));
+        Optional<LicensesEntity> r = licensesRepository.getActiveLicenseByCompanyId(Integer.valueOf(economicAgentId), new Date());
 
-        if (!r.isPresent())
-        {
-            throw new CustomException("License could not be found by company");
-        }
-        return new ResponseEntity<>(r.get(), HttpStatus.OK);
+//        if (!r.isPresent())
+//        {
+//            throw new CustomException("License could not be found by company");
+//        }
+        return new ResponseEntity<>(r.isPresent() ? r.get() : null, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/retrieve-announce-methods", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -15,6 +15,8 @@ import {MatDialog, MatRadioChange} from "@angular/material";
 import {MatRadioButton} from "@angular/material/radio";
 import {DocumentService} from "../../../shared/service/document.service";
 import {ConfirmationDialogComponent} from "../../../confirmation-dialog/confirmation-dialog.component";
+import {TaskService} from "../../../shared/service/task.service";
+import {LoaderService} from "../../../shared/service/loader.service";
 
 @Component({
     selector: 'app-a-evaluarea-primara',
@@ -27,6 +29,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
     private subscriptions: Subscription[] = [];
     evaluateClinicalTrailForm: FormGroup;
     docs: Document[] = [];
+    docTypes: any[];
 
     //Treatments
     treatmentId: number;
@@ -63,10 +66,6 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
     paymentOrdersList: PaymentOrder[] = [];
     paymentTotal: number = 0;
 
-    docTypes: any[];
-
-    disabledState: boolean = false;
-
 
     constructor(private fb: FormBuilder,
                 private requestService: RequestService,
@@ -76,7 +75,9 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
                 private documentService: DocumentService,
                 private administrationService: AdministrationService,
                 private authService: AuthService,
-                public dialogConfirmation: MatDialog) {
+                public dialogConfirmation: MatDialog,
+                private taskService: TaskService,
+                private loadingService: LoaderService) {
 
     }
 
@@ -84,10 +85,12 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         this.evaluateClinicalTrailForm = this.fb.group({
             'id': [''],
             'requestNumber': {value: '', disabled: true},
-            'startDate': {value: new Date(), disabled: true},
+            'startDate': {value:'', disabled: true},
             'company': [''],
             'type': [''],
             'typeCode': [''],
+            'initiator':[null],
+            'assignedUser':[null],
             'clinicalTrails': this.fb.group({
                 'id': [''],
                 'documents': [],
@@ -149,17 +152,26 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         this.controlReferenceProductSearch();
         this.cleanMedicamentFormGroup();
         this.cleanReferenceProductFormGroup();
+        this.loadDocTypes();
+    }
 
-
+    loadDocTypes(){
         this.subscriptions.push(
-            this.administrationService.getAllDocTypes().subscribe(data => {
-                    this.docTypes = data;
-                    this.docTypes = this.docTypes.filter(r => r.category === 'DD');
+            this.taskService.getRequestStepByIdAndCode('3','E').subscribe(step => {
+                    console.log('getRequestStepByIdAndCode', step);
+                    this.subscriptions.push(
+                        this.administrationService.getAllDocTypes().subscribe(data => {
+                                console.log('getAllDocTypes', data);
+                                this.docTypes = data;
+                                this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
+                            },
+                            error => console.log(error)
+                        )
+                    );
                 },
                 error => console.log(error)
             )
         );
-
     }
 
     initPage() {
@@ -169,9 +181,11 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
 
                     this.evaluateClinicalTrailForm.get('id').setValue(data.id);
                     this.evaluateClinicalTrailForm.get('requestNumber').setValue(data.requestNumber);
+                    this.evaluateClinicalTrailForm.get('startDate').setValue(new Date(data.startDate));
                     this.evaluateClinicalTrailForm.get('company').setValue(data.company);
                     this.evaluateClinicalTrailForm.get('type').setValue(data.type);
                     this.evaluateClinicalTrailForm.get('typeCode').setValue(data.type.code);
+                    this.evaluateClinicalTrailForm.get('initiator').setValue(data.initiator);
                     this.evaluateClinicalTrailForm.get('requestHistories').setValue(data.requestHistories);
 
 
@@ -395,19 +409,21 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
     }
 
     save() {
-        this.disabledState = true;
+        this.loadingService.show();
         let formModel = this.evaluateClinicalTrailForm.getRawValue();
         formModel.currentStep = 'E';
         formModel.clinicalTrails.documents = this.docs;
         formModel.clinicalTrails.investigators = this.investigatorsList;
         formModel.clinicalTrails.medicalInstitutions = this.mediacalInstitutionsList;
 
+        formModel.assignedUser = this.authService.getUserName();
         console.log("Save data", formModel);
         this.subscriptions.push(
             this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
-                this.disabledState = false;
+                this.loadingService.hide();
+                this.router.navigate(['dashboard/module']);
             }, error => {
-                this.disabledState = false;
+                this.loadingService.hide();
                 console.log(error)
             })
         )
@@ -424,6 +440,8 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
             return;
         }
 
+        this.loadingService.show();
+
         formModel.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
         formModel.requestHistories.push({
             startDate: formModel.requestHistories[formModel.requestHistories.length - 1].endDate,
@@ -437,18 +455,18 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
 
         formModel.clinicalTrails.receipts = this.receiptsList;
         formModel.clinicalTrails.paymentOrders = this.paymentOrdersList;
-
-        this.disabledState = true;
-
+        formModel.assignedUser = this.authService.getUserName();
         console.log("evaluareaPrimaraObjectLet", JSON.stringify(formModel));
 
         formModel.currentStep = 'A';
         this.subscriptions.push(
             this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
-                this.disabledState = true;
                 this.router.navigate(['/dashboard/module/clinic-studies/analize/' + data.body]);
-
-            }, error => console.log(error))
+                this.loadingService.hide();
+            }, error => {
+                this.loadingService.hide();
+                console.log(error)
+            })
         )
     }
 
@@ -461,17 +479,27 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         });
 
         dialogRef2.afterClosed().subscribe(result => {
+            console.log('result', result);
             if (result) {
-                /*var modelToSubmit = {requestHistories: [], currentStep: 'I', id: this.evaluateClinicalTrailForm.get('id').value};
-                modelToSubmit.requestHistories.push({
-                    startDate: this.evaluateClinicalTrailForm.get('data').value, endDate: new Date(),
-                    username: this.authService.getUserName(), step: 'E'
+                this.loadingService.show();
+                let formModel = this.evaluateClinicalTrailForm.getRawValue();
+                formModel.currentStep = 'C';
+                formModel.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
+                formModel.requestHistories.push({
+                    startDate: formModel.requestHistories[formModel.requestHistories.length - 1].endDate,
+                    endDate: new Date(),
+                    username: this.authService.getUserName(),
+                    step: 'E'
                 });
-
-                this.subscriptions.push(this.requestService.addMedicamentHistory(modelToSubmit).subscribe(data => {
-                        this.router.navigate(['dashboard/module/medicament-registration/interrupt/' + this.evaluateClinicalTrailForm.get('id').value]);
-                    }, error => console.log(error))
-                );*/
+                this.subscriptions.push(
+                    this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
+                        this.router.navigate(['/dashboard/module/clinic-studies/interrupt/' + data.body]);
+                        this.loadingService.hide();
+                    }, error => {
+                        this.loadingService.hide();
+                        console.log(error)
+                    })
+                )
             }
         });
     }

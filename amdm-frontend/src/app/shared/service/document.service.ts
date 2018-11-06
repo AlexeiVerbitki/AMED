@@ -65,6 +65,10 @@ export class DocumentService {
         });
     }
 
+    getDocumentTypes(): Observable<any> {
+        return this.http.get('/api/documents/get-document-types');
+    }
+
     // generateOrdinDeInrerupereAInregistrariiMedicamentului(nrDocument: any, nrCerere: any): Observable<any> {
     //     return this.http.get('/api/documents/generate-interrupt-order-of-medicament-registration', {
     //         params: {nrDocument: nrDocument, nrCerere: nrCerere},

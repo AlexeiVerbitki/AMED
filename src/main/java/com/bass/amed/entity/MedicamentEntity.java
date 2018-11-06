@@ -34,18 +34,14 @@ public class MedicamentEntity
     private String status;
     private NmUnitsOfMeasurementEntity unitsOfMeasurement;
     private String volume;
+    private NmUnitsOfMeasurementEntity volumeQuantityMeasurement;
     private Integer termsOfValidity;
     private Integer unitsQuantity;
     private NmUnitsOfMeasurementEntity unitsQuantityMeasurement;
     private Integer storageQuantity;
     private NmUnitsOfMeasurementEntity storageQuantityMeasurement;
     private Set<DocumentsEntity> documents;
-    private Set<OutputDocumentsEntity> outputDocuments;
     private Set<MedicamentActiveSubstancesEntity> activeSubstances;
-    private Set<PaymentOrdersEntity> paymentOrders;
-    private Set<ReceiptsEntity> receipts;
-    private Set<ReferencePricesEntity> referencePrices;
-    private Set<PricesEntity> prices;
     private MedicamentExpertsEntity experts;
 
     @Id
@@ -59,26 +55,6 @@ public class MedicamentEntity
     public void setId(Integer id)
     {
         this.id = id;
-    }
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
-    @JoinColumn(name = "medicament_id")
-    public Set<ReferencePricesEntity> getReferencePrices() {
-        return referencePrices;
-    }
-
-    public void setReferencePrices(Set<ReferencePricesEntity> referencePrices) {
-        this.referencePrices = referencePrices;
-    }
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
-    @JoinColumn(name = "medicament_id")
-    public Set<PricesEntity> getPrices() {
-        return prices;
-    }
-
-    public void setPrices(Set<PricesEntity> prices) {
-        this.prices = prices;
     }
 
     @Basic
@@ -333,8 +309,6 @@ public class MedicamentEntity
         this.administeringMode = administeringMode;
     }
 
-
-
     @Basic
     @Column(name = "status", nullable = true, length = 1)
     public String getStatus()
@@ -407,6 +381,18 @@ public class MedicamentEntity
         this.unitsQuantityMeasurement = unitsQuantityMeasurement;
     }
 
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
+    @JoinColumn( name = "volume_unit_measurement_id" )
+    public NmUnitsOfMeasurementEntity getVolumeQuantityMeasurement()
+    {
+        return volumeQuantityMeasurement;
+    }
+
+    public void setVolumeQuantityMeasurement(NmUnitsOfMeasurementEntity volumeQuantityMeasurement)
+    {
+        this.volumeQuantityMeasurement = volumeQuantityMeasurement;
+    }
+
     @Basic
     @Column(name = "storage_quantity")
     public Integer getStorageQuantity()
@@ -431,7 +417,7 @@ public class MedicamentEntity
         this.storageQuantityMeasurement = storageQuantityMeasurement;
     }
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
     @JoinTable(name = "MEDICAMENT_DOCUMENTS", joinColumns = {
             @JoinColumn(name = "MEDICAMENT_ID")}, inverseJoinColumns = {
             @JoinColumn(name = "DOCUMENT_ID")})
@@ -443,48 +429,6 @@ public class MedicamentEntity
     public void setDocuments(Set<DocumentsEntity> documents)
     {
         this.documents = documents;
-    }
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
-    @JoinTable(name = "MEDICAMENT_OUTPUT_DOCUMENTS", joinColumns = {
-            @JoinColumn(name = "MEDICAMENT_ID")}, inverseJoinColumns = {
-            @JoinColumn(name = "DOCUMENT_ID")})
-    public Set<OutputDocumentsEntity> getOutputDocuments()
-    {
-        return outputDocuments;
-    }
-
-    public void setOutputDocuments(Set<OutputDocumentsEntity> outputDocuments)
-    {
-        this.outputDocuments = outputDocuments;
-    }
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
-    @JoinTable(name = "MEDICAMENT_PAYMENT_ORDERS", joinColumns = {
-            @JoinColumn(name = "MEDICAMENT_ID")}, inverseJoinColumns = {
-            @JoinColumn(name = "PAYMENT_ORDER_ID")})
-    public Set<PaymentOrdersEntity> getPaymentOrders()
-    {
-        return paymentOrders;
-    }
-
-    public void setPaymentOrders(Set<PaymentOrdersEntity> paymentOrders)
-    {
-        this.paymentOrders = paymentOrders;
-    }
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
-    @JoinTable(name = "MEDICAMENT_RECEIPTS", joinColumns = {
-            @JoinColumn(name = "MEDICAMENT_ID")}, inverseJoinColumns = {
-            @JoinColumn(name = "RECEIPT_ID")})
-    public Set<ReceiptsEntity> getReceipts()
-    {
-        return receipts;
-    }
-
-    public void setReceipts(Set<ReceiptsEntity> receipts)
-    {
-        this.receipts = receipts;
     }
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})

@@ -1,119 +1,96 @@
-<div class="container sky z-depth-2">
-  <h3 class="text-center my-3 font-weight-bold">Adaugare document</h3>
-  <hr>
+<div class="container-fluid sky z-depth-2">
   <form [formGroup]='rForm'>
+    <h3 class="text-center my-3 font-weight-bold">Inregistrare cerere</h3>
+    <hr>
     <div class="row">
-      <div class="col-md-6 col-lg-4">
+      <div class="col-lg-6">
         <div class="md-form">
-          <input mdbInputDirective type="text" id="expeditor"  class="form-control" formControlName="expeditor">
-          <label for="expeditor">Expeditor</label>
+          <input id="nrCererii" mdbInputDirective type="text" class="form-control" formControlName="requestNumber"
+            [attr.disabled]="true">
+          <label for="nrCererii">Nr. cererii</label>
         </div>
       </div>
-      <div class="col-md-6 col-lg-4">
-        <div class="md-form">
-          <input mdbInputDirective type="text" id="destinatar"  class="form-control" formControlName="destinatar">
-          <label for="destinatar">Destinatar</label>
+      <div class="col-lg-6">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker></mat-datepicker>
+          </mat-form-field>
         </div>
       </div>
-      <div class="col-md-6 col-lg-4">
+    </div>
+    <hr>
+    <app-document [documents]="documents" [nrCerere]="rForm.get('requestNumber').value" [dcTypes]="docTypes"></app-document>
+    <div *ngIf="formSubmitted && documents.length==0">
+      <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
+    </div>
+    <hr>
+    <div class="row" formGroupName="docReg">
+      <div class="col-md-6">
+        <div class="md-form-modified">
+          <ng-select id="expeditor" name="expeditor" [items]="expeditori" bindLabel="name" placeholder="Expeditor"
+            formControlName="expeditor" required="true">
+          </ng-select>
+          <div *ngIf="formSubmitted && rForm.get('docReg.expeditor').invalid">
+            <small class="text-muted"><strong class="text-danger">Error</strong></small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form-modified">
+          <ng-select id="destinatar" name="destinatar" [items]="destinatari" bindLabel="name" placeholder="Destinatar"
+            formControlName="destinatar" required="true">
+          </ng-select>
+          <div *ngIf="formSubmitted && rForm.get('docReg.destinatar').invalid">
+            <small class="text-muted"><strong class="text-danger">Error</strong></small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
         <div class="md-form">
-          <input mdbInputDirective type="text" id="problematica"  class="form-control" formControlName="problematica">
+          <textarea type="text" id="problematica" class="md-textarea form-control" mdbInputDirective></textarea>
           <label for="problematica">Problematica</label>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="md-form-modified">
+          <ng-select id="termenDeExecutare" name="termenDeExecutare" [items]="termenDeExecutari" bindLabel="name" placeholder="Termen de executare"
+            formControlName="termenDeExecutare" required="true">
+          </ng-select>
+          <div *ngIf="formSubmitted && rForm.get('docReg.termenDeExecutare').invalid">
+            <small class="text-muted"><strong class="text-danger">Error</strong></small>
+          </div>
         </div>
       </div>
     </div>
     <div class="row">
-      <div class="col-md-6 col-lg-4">
+      <div class="col-md-12" formGroupName="type">
         <div class="md-form">
-          <input mdbInputDirective type="text" id="termenDeExecutare"  class="form-control" formControlName="termenDeExecutare">
-          <label for="termenDeExecutare">Termen de executare</label>
+          <h5 class="text-center font-weight-bold">
+            Inregistrare
+          </h5>
+          <hr>
+          <mat-radio-group formControlName="code">
+            <div class="container">
+              <div class="row">
+                <div class="col-12">
+                  <mat-radio-button name="prop1" value="MEDP">Primară</mat-radio-button>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop2" value="MEDR">Repetată</mat-radio-button>
+                </div>
+              </div>
+            </div>
+          </mat-radio-group>
         </div>
-      </div>
-      <div class="col-md-6 col-lg-4">
-        <div class="md-form">
-          <input mdbInputDirective type="text" id="dataPrimirii"  class="form-control" formControlName="dataPrimirii">
-          <label for="dataPrimirii">Data primirii</label>
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-4">
-        <div class="md-form">
-          <input mdbInputDirective type="text" id="tipulDocumentului"  class="form-control" formControlName="tipulDocumentului">
-          <label for="tipulDocumentului">Tipul documentului</label>
-        </div>
-      </div>
-      <div class="col position-button">
-        <label for="incarcaFisier" class="btn btn-indigo btn-sm">
-          <input type="file" style="display:none;" id="incarcaFisier"> Incarca Fisier
-        </label>
       </div>
     </div>
     <hr>
     <div class="text-center">
-      <button type="submit" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect  [disabled]="!rForm.valid" (click)="addForm()">Adaugare</button>
-      <button type="button" class="btn btn-dark-red-color waves-light btn-sm btn-sm-bl" mdbWavesEffect  (click)="cancel()">Anulare</button>
+      <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">
+        Urmatorul pas
+      </button>
     </div>
   </form>
-</div>
-
-<div class="alerts-position">
-  <div *ngIf="rForm.controls['expeditor'].touched && !rForm.controls['expeditor'].valid">
-    <div *ngIf="!rForm.controls['expeditor'].errors.valid" class="alert alert-danger alert-dismissible fade show animated fadeIn"
-         role="alert">
-      In campul
-      <strong>Expeditor</strong> este necesar de introdus date
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-  </div>
-  <div *ngIf="rForm.controls['destinatar'].touched && !rForm.controls['destinatar'].valid">
-    <div *ngIf="!rForm.controls['destinatar'].errors.valid" class="alert alert-danger alert-dismissible fade show animated fadeIn"
-         role="alert">
-      In campul
-      <strong>Destinatar</strong> este necesar de introdus date
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-  </div>
-  <div *ngIf="rForm.controls['problematica'].touched && !rForm.controls['problematica'].valid">
-    <div *ngIf="!rForm.controls['problematica'].errors.valid" class="alert alert-danger alert-dismissible fade show animated fadeIn"
-         role="alert">
-      In campul
-      <strong>Problematica</strong> este necesar de introdus date
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-  </div>
-  <div *ngIf="rForm.controls['termenDeExecutare'].touched && !rForm.controls['termenDeExecutare'].valid">
-    <div *ngIf="!rForm.controls['termenDeExecutare'].errors.valid" class="alert alert-danger alert-dismissible fade show animated fadeIn"
-         role="alert">
-      In campul
-      <strong>Termen de executare</strong> este necesar de introdus date
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-  </div>
-  <div *ngIf="rForm.controls['dataPrimirii'].touched && !rForm.controls['dataPrimirii'].valid">
-    <div *ngIf="!rForm.controls['dataPrimirii'].errors.valid" class="alert alert-danger alert-dismissible fade show animated fadeIn"
-         role="alert">
-      In campul
-      <strong>Data primirii</strong> este necesar de introdus date
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-  </div>
-  <div *ngIf="rForm.controls['tipulDocumentului'].touched && !rForm.controls['tipulDocumentului'].valid">
-    <div *ngIf="!rForm.controls['tipulDocumentului'].errors.valid" class="alert alert-danger alert-dismissible fade show animated fadeIn"
-         role="alert">
-      In campul
-      <strong>Tipul documentului</strong> este necesar de introdus date
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-  </div>
 </div>

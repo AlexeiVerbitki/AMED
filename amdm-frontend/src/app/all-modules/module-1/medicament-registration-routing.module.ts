@@ -4,13 +4,14 @@ import {EvaluarePrimaraComponent} from "./evaluare-primara/evaluare-primara.comp
 import {RegCerereComponent} from "./reg-cerere/reg-cerere.component";
 import {ProcessInterruptionComponent} from "./process-interruption/process-interruption.component";
 import {ExpertiComponent} from "./experti/experti.component";
+import {CanDeactivateGuard} from "../../shared/auth-guard/can-deactivate-guard.service";
 
 const routes: Routes = [
-    { path: 'register', component: RegCerereComponent},
-    { path: 'evaluate/:id', component: EvaluarePrimaraComponent},
-    { path: 'interrupt/:id', component: ProcessInterruptionComponent},
-    { path: 'expert/:id', component: ExpertiComponent}
-];
+    { path: 'register', component: RegCerereComponent,  canDeactivate: [CanDeactivateGuard]},
+    { path: 'evaluate/:id', component: EvaluarePrimaraComponent,  canDeactivate: [CanDeactivateGuard]},
+    { path: 'interrupt/:id', component: ProcessInterruptionComponent,  canDeactivate: [CanDeactivateGuard]},
+    { path: 'expert/:id', component: ExpertiComponent,  canDeactivate: [CanDeactivateGuard]}
+] ;
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

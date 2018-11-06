@@ -122,12 +122,12 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
 
         this.mForm = this.fb.group({
             'nrCererii': [{value: null, disabled: true}, Validators.required],
-            'dataEliberarii': [{value: null, disabled: true}],
+            'dataCererii': [{value: null, disabled: true}],
             'company': [null, Validators.required],
 
         });
 
-        this.mForm.get('dataEliberarii').setValue(new Date());
+        this.mForm.get('dataCererii').setValue(new Date());
     }
 
 
@@ -198,7 +198,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
             this.annihilationService.confirmRegisterAnnihilation(modelToSubmit).subscribe(data => {
                     let result = data.body;
-                    // this.router.navigate(['/dashboard/module/license/evaluate', result]);
+                    this.router.navigate(['/dashboard/module/medicament-destruction/evaluate', result]);
                 }
             )
         );

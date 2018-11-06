@@ -51,7 +51,7 @@
 
         </div>
 
-        <app-document [documents]="docs"
+        <app-document [documents]="docs" [dcTypes]="docTypes"
                       [nrCerere]="approveClinicalTrailForm.get('requestNumber').value"></app-document>
         <hr>
 
@@ -63,7 +63,6 @@
                 <th scope="col">Denumirea</th>
                 <th scope="col">Numar</th>
                 <th scope="col">Status document</th>
-                <th scope="col">Status raspuns</th>
                 <th>Actiuni</th>
             </tr>
             </thead>
@@ -72,7 +71,6 @@
                 <th scope="row">{{ doc.name }}</th>
                 <th scope="row">{{ doc.number }}</th>
                 <th scope="row">{{ doc.status }}</th>
-                <th scope="row"><mat-checkbox *ngIf="doc.docType.category=='RA'" #checkBoxResponse [checked]="doc.responseReceived" (change)="checkResponseReceived(doc,checkBoxResponse)">Raspuns primit</mat-checkbox></th>
                 <td>
                     <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(doc)">Vizualizare</button>
                     <button *ngIf="doc.status=='Nu este atasat' && doc.responseReceived==false && (doc.docType.category=='RA')" class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(doc)">Stergere</button>
@@ -82,13 +80,27 @@
         </table>
         <hr>
 
-
+        <hr>
+        <mat-radio-group formControlName="status">
+            <div class="container">
+                <div class="row">
+                    <div class="offset-3">
+                    </div>
+                    <div class="col-5">
+                        <mat-radio-button name="prop1" value="0">Acceptată</mat-radio-button>
+                    </div>
+                    <div class="col-4">
+                        <mat-radio-button name="prop2" value="1">Respinsă</mat-radio-button>
+                    </div>
+                </div>
+            </div>
+        </mat-radio-group>
+        <hr>
 
 
     </form>
 
     <div class="text-center">
         <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="onSubmit()">Finisare</button>
-        <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>
     </div>
 </div>

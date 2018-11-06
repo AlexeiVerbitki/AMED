@@ -9,7 +9,7 @@ public class ReceiptsEntity {
     private Integer id;
     private String receiptNumber;
     private Timestamp date;
-    private String name;
+    private ServiceChargesEntity serviceCharge;
     private Double amount;
     private Boolean sP;
 
@@ -46,14 +46,16 @@ public class ReceiptsEntity {
         this.date = date;
     }
 
-    @Basic
-    @Column(name = "name")
-    public String getName() {
-        return name;
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
+    @JoinColumn( name = "service_charge_id" )
+    public ServiceChargesEntity getServiceCharge()
+    {
+        return serviceCharge;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setServiceCharge(ServiceChargesEntity serviceCharge)
+    {
+        this.serviceCharge = serviceCharge;
     }
 
     @Basic
@@ -104,7 +106,7 @@ public class ReceiptsEntity {
         {
             return false;
         }
-        if (name != null ? !name.equals(that.name) : that.name != null)
+        if (serviceCharge != null ? !serviceCharge.equals(that.serviceCharge) : that.serviceCharge != null)
         {
             return false;
         }
@@ -121,7 +123,7 @@ public class ReceiptsEntity {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (receiptNumber != null ? receiptNumber.hashCode() : 0);
         result = 31 * result + (date != null ? date.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (serviceCharge != null ? serviceCharge.hashCode() : 0);
         result = 31 * result + (amount != null ? amount.hashCode() : 0);
         result = 31 * result + (sP != null ? sP.hashCode() : 0);
         return result;

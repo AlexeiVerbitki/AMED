@@ -5,6 +5,7 @@ import {PriceEvaluateMedComponent} from './price-evaluate-med/price-evaluate-med
 
 const routes: Routes = [
     { path: 'register', component: PriceRegMedComponent},
+    { path: 'register/:id', component: PriceRegMedComponent},
     { path: 'evaluate/:id', component: PriceEvaluateMedComponent},
 ];
 

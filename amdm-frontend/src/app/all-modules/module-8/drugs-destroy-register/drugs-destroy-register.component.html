@@ -15,8 +15,8 @@
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="picker2" placeholder="Data de inregistrare a cererii"
-                               id="dataEliberarii"
-                               formControlName="dataEliberarii">
+                               id="dataCererii"
+                               formControlName="dataCererii">
                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                         <mat-datepicker touchUi #picker2></mat-datepicker>
                     </mat-form-field>
@@ -55,16 +55,16 @@
             <div class="col-md-4">
                 <div class="md-form-modified-select">
                     <ng-select class="custom" [items]="medicamente | async"
-                               bindLabel="name"
-                               placeholder="Medicamente"
-                               formControlName="medicaments"
-                               [required]="true"
-                               [typeahead]="medInputs"
-                               [loading]="medLoading"
+                                   bindLabel="name"
+                                   placeholder="Medicamente"
+                                   formControlName="medicaments"
+                                   [required]="true"
+                                   [typeahead]="medInputs"
+                                   [loading]="medLoading"
                     >
                         <ng-template ng-option-tmp let-item="item">
-                            {{item.name}} <br />
-                            <small>{{item.code}}</small>
+                            <div>{{item.name}}  </div>
+                            <small class="form-text text-muted">{{item.code}}</small>
                         </ng-template>
                     </ng-select>
                 </div>
@@ -109,7 +109,7 @@
                     <input id="quantity" mdbInputDirective type="text" class="form-control"
                            formControlName="quantity"
                     >
-                    <label for="quantity">Cantitatea</label>
+                    <label for="quantity">Cantitatea<span class="text-danger">*</span></label>
                 </div>
                 <div *ngIf="rFormSubbmitted && !rForm.get('quantity').valid">
                     <small class="text-muted"><strong class="text-danger">Cantitatea trebuie introdusa</strong>
@@ -121,7 +121,7 @@
                     <input id="reasonDestroy" mdbInputDirective type="text" class="form-control"
                            formControlName="reasonDestroy"
                     >
-                    <label for="quantity">Cantitatea</label>
+                    <label for="quantity">Cauza inutilitatii<span class="text-danger">*</span></label>
                 </div>
                 <div *ngIf="rFormSubbmitted && !rForm.get('reasonDestroy').valid">
                     <small class="text-muted"><strong class="text-danger">Cauza inutilitatii trebuie introdusa</strong>
@@ -147,6 +147,7 @@
         <tr>
             <th scope="col">Medicament</th>
             <th scope="col">Cantitatea</th>
+            <th scope="col">Cauza distrugerii</th>
             <th scope="col">Actiuni</th>
         </tr>
         </thead>
@@ -154,6 +155,7 @@
         <tr *ngFor="let meds of medicamentsToDestroy;let i = index">
             <th scope="row">{{ meds.medicamentName }}</th>
             <td>{{ meds.quantity }}</td>
+            <td>{{ meds.uselessReason }}</td>
             <td>
                 <button class="btn btn-dark-red-color waves-light btn-sm waves-light" type="button"
                         (click)="removeMedicamentToDestroy(i)" mdbWavesEffect>Sterge
@@ -170,7 +172,7 @@
 
      <div class="text-center">
          <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                 (click)="submitNew()">Next Step
+                 (click)="submitNew()">Urmatorul pas
          </button>
      </div>
 

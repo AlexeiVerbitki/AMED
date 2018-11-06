@@ -77,12 +77,12 @@ const interceptors = [{
         FormsModule,
         ReactiveFormsModule,
         MDBBootstrapModule.forRoot(),
-        MaterialSharedModule.forRoot()
+        MaterialSharedModule.forRoot(),
 
     ],
     schemas: [],
     entryComponents: [
-        ConfirmationDialogComponent
+        ConfirmationDialogComponent,
     ],
     providers: [AuthService, AdministrationService, ErrorHandlerService, interceptors,
     ],

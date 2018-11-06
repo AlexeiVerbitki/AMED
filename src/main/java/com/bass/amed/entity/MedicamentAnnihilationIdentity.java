@@ -34,6 +34,15 @@ public class MedicamentAnnihilationIdentity implements Serializable
         this.medicamentAnnihilationId = medicamentAnnihilationId;
     }
 
+    public MedicamentAnnihilationIdentity()
+    {
+    }
+
+    public MedicamentAnnihilationIdentity(Integer medicamentId, Integer medicamentAnnihilationId)
+    {
+        this.medicamentId = medicamentId;
+        this.medicamentAnnihilationId = medicamentAnnihilationId;
+    }
 
     @Override
     public boolean equals(Object o)

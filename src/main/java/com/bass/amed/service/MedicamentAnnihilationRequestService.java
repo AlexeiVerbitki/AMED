@@ -2,6 +2,8 @@ package com.bass.amed.service;
 
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
+import com.bass.amed.repository.MedicamentAnnihilationMedsRepository;
+import com.bass.amed.repository.MedicamentRepository;
 import com.bass.amed.repository.RequestRepository;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class MedicamentAnnihilationRequestService
 {
     @Autowired
@@ -23,6 +27,12 @@ public class MedicamentAnnihilationRequestService
 
     @Autowired
     private EntityManagerFactory entityManagerFactory;
+
+    @Autowired
+    private MedicamentAnnihilationMedsRepository medicamentAnnihilationMedsRepository;
+
+    @Autowired
+    private MedicamentRepository medicamentRepository;
 
     @Transactional(readOnly = true)
     public RegistrationRequestsEntity findMedAnnihilationRegistrationById(Integer id) throws CustomException
@@ -39,6 +49,11 @@ public class MedicamentAnnihilationRequestService
         }
         RegistrationRequestsEntity rrE = re.get();
         rrE.setMedicamentAnnihilation((MedicamentAnnihilationEntity) Hibernate.unproxy(re.get().getMedicamentAnnihilation()));
+
+        rrE.getMedicamentAnnihilation().setMedicamentsMedicamentAnnihilationMeds(medicamentAnnihilationMedsRepository.findByMedicamentAnnihilationId(rrE.getMedicamentAnnihilation().getId()));
+
+        rrE.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds().forEach(ma -> ma.setMedicamentName(medicamentRepository.findById(ma.getMedicamentId()).get().getName()));
+
         return rrE;
     }
 
@@ -58,6 +73,71 @@ public class MedicamentAnnihilationRequestService
                 mm.setMedicamentAnnihilationId(request.getMedicamentAnnihilation().getId());
                 em.persist(mm);
             }
+
+            em.getTransaction().commit();
+
+        }
+        catch (Exception e){
+            if (em != null)
+            {
+                em.getTransaction().rollback();
+            }
+            throw new CustomException(e.getMessage(), e);
+        }
+        finally
+        {
+            em.close();
+        }
+    }
+
+
+    @Transactional
+    public void updateAnnihilation(RegistrationRequestsEntity request, boolean next) throws CustomException
+    {
+        EntityManager em = null;
+        try
+        {
+            em = entityManagerFactory.createEntityManager();
+            em.getTransaction().begin();
+            RegistrationRequestsEntity r = em.find(RegistrationRequestsEntity.class, request.getId());
+
+            for (MedicamentAnnihilationMedsEntity mm : request.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds())
+            {
+                MedicamentAnnihilationMedsEntity mam = em.find(MedicamentAnnihilationMedsEntity.class, new MedicamentAnnihilationIdentity(mm.getMedicamentId(), mm.getMedicamentAnnihilationId()));
+                mam.setDestructionMethod(mm.getDestructionMethod());
+
+                em.persist(mam);
+            }
+
+            r.getRequestHistories().add(new ArrayList<>(request.getRequestHistories()).get(0));
+
+            //Update documents
+            Set<DocumentsEntity> dSet = request.getMedicamentAnnihilation().getDocuments().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
+
+            if (!dSet.isEmpty()){
+                r.getMedicamentAnnihilation().getDocuments().addAll(dSet);
+            }
+
+            //Update receipts
+            Set<ReceiptsEntity> rSet = request.getMedicamentAnnihilation().getReceipts().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
+
+            if (!rSet.isEmpty()){
+                r.getMedicamentAnnihilation().getReceipts().addAll(rSet);
+            }
+
+            //Update payments
+            Set<PaymentOrdersEntity> pSet = request.getMedicamentAnnihilation().getPaymentOrders().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
+
+            if (!pSet.isEmpty()){
+                r.getMedicamentAnnihilation().getPaymentOrders().addAll(pSet);
+            }
+
+            if(next)
+            {
+                r.setCurrentStep("N");
+            }
+
+            em.merge(r);
 
             em.getTransaction().commit();
 

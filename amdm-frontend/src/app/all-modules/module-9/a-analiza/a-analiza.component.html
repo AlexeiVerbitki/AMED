@@ -51,7 +51,7 @@
         <hr>
 
         <app-document [documents]="docs" [isDisabled]="isWaitingStep.value"
-                      [nrCerere]="analyzeClinicalTrailForm.get('requestNumber').value"></app-document>
+                      [nrCerere]="analyzeClinicalTrailForm.get('requestNumber').value" [dcTypes]="docTypes"></app-document>
         <hr>
 
         <h5 class="text-center font-weight-bold">Documente de iesire</h5>
@@ -65,7 +65,6 @@
                 <th scope="col">Denumirea</th>
                 <th scope="col">Numar</th>
                 <th scope="col">Status document</th>
-                <th scope="col">Status raspuns</th>
                 <th>Actiuni</th>
             </tr>
             </thead>
@@ -74,10 +73,10 @@
                 <th scope="row">{{ doc.name }}</th>
                 <th scope="row">{{ doc.number }}</th>
                 <th scope="row">{{ doc.status }}</th>
-                <th scope="row"><mat-checkbox *ngIf="doc.docType.category=='RA'" #checkBoxResponse [checked]="doc.responseReceived" (change)="checkResponseReceived(doc,checkBoxResponse)">Raspuns primit</mat-checkbox></th>
+                <!--<th scope="row"><mat-checkbox *ngIf="doc.docType.category=='RA'" #checkBoxResponse [checked]="doc.responseReceived" (change)="checkResponseReceived(doc,checkBoxResponse)">Raspuns primit</mat-checkbox></th>-->
                 <td>
                     <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(doc)">Vizualizare</button>
-                    <button *ngIf="doc.status=='Nu este atasat' && doc.responseReceived==false && (doc.docType.category=='RA')" class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(doc)">Stergere</button>
+                    <button class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(doc)">Stergere</button>
                 </td>
             </tr>
             </tbody>

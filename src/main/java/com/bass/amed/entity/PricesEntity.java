@@ -3,20 +3,17 @@ package com.bass.amed.entity;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.Set;
 
 @Entity
 @Table(name = "prices", schema = "amed", catalog = "")
 public class PricesEntity
 {
     private Integer id;
-    private String description;
     private BigDecimal value;
-    private Integer medicamentId;
     private PriceTypesEntity type;
     private NmCurrenciesEntity currency;
-    private Set<DocumentsEntity> documents;
     private Timestamp expirationDate;
+    private Integer requestId;
     private PriceExpirationReasonsEntity expirationReason;
 
     @Basic
@@ -37,6 +34,16 @@ public class PricesEntity
 
     public void setExpirationReason(PriceExpirationReasonsEntity expirationReason) {
         this.expirationReason = expirationReason;
+    }
+
+    @Basic //, cascade = CascadeType.DETACH)
+    @Column(name = "price_request_id")
+    public Integer getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(Integer requestId) {
+        this.requestId = requestId;
     }
 
     @Basic
@@ -69,19 +76,6 @@ public class PricesEntity
         this.currency = currency;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinTable(name = "PRICES_DOCUMENTS", joinColumns = {
-            @JoinColumn(name = "PRICE_ID")}, inverseJoinColumns = {
-            @JoinColumn(name = "DOCUMENT_ID")})
-    public Set<DocumentsEntity> getDocuments()
-    {
-        return documents;
-    }
-    public void setDocuments(Set<DocumentsEntity> documents)
-    {
-        this.documents = documents;
-    }
-
     @Id
     @Column(name = "id")
     @GeneratedValue( strategy = GenerationType.IDENTITY )
@@ -95,30 +89,6 @@ public class PricesEntity
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "description")
-    public String getDescription()
-    {
-        return description;
-    }
-
-    public void setDescription(String description)
-    {
-        this.description = description;
-    }
-
-    @Basic
-    @Column(name = "medicament_id")
-    public Integer getMedicamentId()
-    {
-        return medicamentId;
-    }
-
-    public void setMedicamentId(Integer medicamentId)
-    {
-        this.medicamentId = medicamentId;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -127,23 +97,24 @@ public class PricesEntity
         PricesEntity that = (PricesEntity) o;
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (value != null ? !value.equals(that.value) : that.value != null) return false;
-        if (medicamentId != null ? !medicamentId.equals(that.medicamentId) : that.medicamentId != null) return false;
         if (type != null ? !type.equals(that.type) : that.type != null) return false;
         if (currency != null ? !currency.equals(that.currency) : that.currency != null) return false;
-        return documents != null ? documents.equals(that.documents) : that.documents == null;
+        if (expirationDate != null ? !expirationDate.equals(that.expirationDate) : that.expirationDate != null)
+            return false;
+        if (requestId != null ? !requestId.equals(that.requestId) : that.requestId != null) return false;
+        return expirationReason != null ? expirationReason.equals(that.expirationReason) : that.expirationReason == null;
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (value != null ? value.hashCode() : 0);
-        result = 31 * result + (medicamentId != null ? medicamentId.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (currency != null ? currency.hashCode() : 0);
-        result = 31 * result + (documents != null ? documents.hashCode() : 0);
+        result = 31 * result + (expirationDate != null ? expirationDate.hashCode() : 0);
+        result = 31 * result + (requestId != null ? requestId.hashCode() : 0);
+        result = 31 * result + (expirationReason != null ? expirationReason.hashCode() : 0);
         return result;
     }
 
@@ -151,12 +122,12 @@ public class PricesEntity
     public String toString() {
         return "PricesEntity{" +
                 "id=" + id +
-                ", description='" + description + '\'' +
                 ", value=" + value +
-                ", medicamentId=" + medicamentId +
                 ", type=" + type +
                 ", currency=" + currency +
-                ", documents=" + documents +
+                ", expirationDate=" + expirationDate +
+                ", requestId=" + requestId +
+                ", expirationReason=" + expirationReason +
                 '}';
     }
 }

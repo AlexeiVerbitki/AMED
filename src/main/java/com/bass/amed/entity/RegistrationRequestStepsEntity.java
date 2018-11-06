@@ -1,136 +1,104 @@
 package com.bass.amed.entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "registration_request_steps", schema = "amed", catalog = "")
-public class RegistrationRequestStepsEntity
-{
+public class RegistrationRequestStepsEntity {
     private Integer id;
     private String code;
     private String description;
     private Integer requestTypeId;
     private String navigationUrl;
     private String availableDocTypes;
+    private String outputDocTypes;
 
     @Id
     @Column(name = "id", nullable = false)
-    public Integer getId()
-    {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id)
-    {
+    public void setId(Integer id) {
         this.id = id;
     }
 
     @Basic
     @Column(name = "code", nullable = false, length = 3)
-    public String getCode()
-    {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(String code)
-    {
+    public void setCode(String code) {
         this.code = code;
     }
 
     @Basic
     @Column(name = "description", nullable = false, length = 100)
-    public String getDescription()
-    {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description)
-    {
+    public void setDescription(String description) {
         this.description = description;
     }
 
     @Basic
     @Column(name = "request_type_id", nullable = false)
-    public Integer getRequestTypeId()
-    {
+    public Integer getRequestTypeId() {
         return requestTypeId;
     }
 
-    public void setRequestTypeId(Integer requestTypeId)
-    {
+    public void setRequestTypeId(Integer requestTypeId) {
         this.requestTypeId = requestTypeId;
     }
 
     @Basic
     @Column(name = "navigation_url", nullable = true, length = 100)
-    public String getNavigationUrl()
-    {
+    public String getNavigationUrl() {
         return navigationUrl;
     }
 
-    public void setNavigationUrl(String navigationUrl)
-    {
+    public void setNavigationUrl(String navigationUrl) {
         this.navigationUrl = navigationUrl;
     }
 
     @Basic
     @Column(name = "available_doc_types", nullable = true, length = 200)
-    public String getAvailableDocTypes()
-    {
+    public String getAvailableDocTypes() {
         return availableDocTypes;
     }
 
-    public void setAvailableDocTypes(String availableDocTypes)
-    {
+    public void setAvailableDocTypes(String availableDocTypes) {
         this.availableDocTypes = availableDocTypes;
     }
 
-    @Override
-    public boolean equals(Object o)
-    {
-        if (this == o)
-        {
-            return true;
-        }
-        if (!(o instanceof RegistrationRequestStepsEntity))
-        {
-            return false;
-        }
+    @Basic
+    @Column(name = "output_doc_types", nullable = true, length = 200)
+    public String getOutputDocTypes() { return outputDocTypes; }
 
-        RegistrationRequestStepsEntity that = (RegistrationRequestStepsEntity) o;
-
-        if (!id.equals(that.id))
-        {
-            return false;
-        }
-        if (!code.equals(that.code))
-        {
-            return false;
-        }
-        if (!description.equals(that.description))
-        {
-            return false;
-        }
-        if (!requestTypeId.equals(that.requestTypeId))
-        {
-            return false;
-        }
-        if (!navigationUrl.equals(that.navigationUrl))
-        {
-            return false;
-        }
-        return availableDocTypes.equals(that.availableDocTypes);
+    public void setOutputDocTypes(String outputDocTypes) {
+        this.outputDocTypes = outputDocTypes;
     }
 
     @Override
-    public int hashCode()
-    {
-        int result = id.hashCode();
-        result = 31 * result + code.hashCode();
-        result = 31 * result + description.hashCode();
-        result = 31 * result + requestTypeId.hashCode();
-        result = 31 * result + navigationUrl.hashCode();
-        result = 31 * result + availableDocTypes.hashCode();
-        return result;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RegistrationRequestStepsEntity that = (RegistrationRequestStepsEntity) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(code, that.code) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(requestTypeId, that.requestTypeId) &&
+                Objects.equals(navigationUrl, that.navigationUrl) &&
+                Objects.equals(availableDocTypes, that.availableDocTypes) &&
+                Objects.equals(outputDocTypes, that.outputDocTypes);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, code, description, requestTypeId, navigationUrl, availableDocTypes, outputDocTypes);
     }
 }

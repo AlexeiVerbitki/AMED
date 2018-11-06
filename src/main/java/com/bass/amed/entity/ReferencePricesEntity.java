@@ -11,7 +11,7 @@ public class ReferencePricesEntity {
     private BigDecimal value;
     private NmCountriesEntity country;
     private NmCurrenciesEntity currency;
-    private Integer medicamentId;
+    private Integer requestId;
     private PriceTypesEntity type;
 
     @OneToOne(fetch = FetchType.EAGER )//, cascade = CascadeType.DETACH)
@@ -65,39 +65,14 @@ public class ReferencePricesEntity {
         this.currency = currency;
     }
 
-    @Basic
-    @Column(name = "medicament_id")
-    public Integer getMedicamentId() {
-        return medicamentId;
+    @Basic //, cascade = CascadeType.DETACH)
+    @Column(name = "price_request_id")
+    public Integer getRequestId() {
+        return requestId;
     }
 
-    public void setMedicamentId(Integer medicamentId) {
-        this.medicamentId = medicamentId;
+    public void setRequestId(Integer requestId) {
+        this.requestId = requestId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ReferencePricesEntity that = (ReferencePricesEntity) o;
-
-        if (id != that.id) return false;
-        if (value != null ? !value.equals(that.value) : that.value != null) return false;
-        if (country != null ? !country.equals(that.country) : that.country != null) return false;
-        if (currency != null ? !currency.equals(that.currency) : that.currency != null) return false;
-        if (medicamentId != null ? !medicamentId.equals(that.medicamentId) : that.medicamentId != null) return false;
-        return type != null ? type.equals(that.type) : that.type == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + (value != null ? value.hashCode() : 0);
-        result = 31 * result + (country != null ? country.hashCode() : 0);
-        result = 31 * result + (currency != null ? currency.hashCode() : 0);
-        result = 31 * result + (medicamentId != null ? medicamentId.hashCode() : 0);
-        result = 31 * result + (type != null ? type.hashCode() : 0);
-        return result;
-    }
 }

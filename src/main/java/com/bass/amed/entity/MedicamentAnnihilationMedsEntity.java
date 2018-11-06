@@ -26,6 +26,9 @@ public class MedicamentAnnihilationMedsEntity
     @Column(name="destruction_method")
     private String destructionMethod;
 
+    @Transient
+    private String medicamentName;
+
     public Double getQuantity()
     {
         return quantity;
@@ -76,6 +79,16 @@ public class MedicamentAnnihilationMedsEntity
         this.destructionMethod = destructionMethod;
     }
 
+    public String getMedicamentName()
+    {
+        return medicamentName;
+    }
+
+    public void setMedicamentName(String medicamentName)
+    {
+        this.medicamentName = medicamentName;
+    }
+
     @Override
     public boolean equals(Object o)
     {
@@ -86,12 +99,13 @@ public class MedicamentAnnihilationMedsEntity
                 Objects.equals(medicamentAnnihilationId, that.medicamentAnnihilationId) &&
                 Objects.equals(quantity, that.quantity) &&
                 Objects.equals(uselessReason, that.uselessReason) &&
-                Objects.equals(destructionMethod, that.destructionMethod);
+                Objects.equals(destructionMethod, that.destructionMethod) &&
+                Objects.equals(medicamentName, that.medicamentName);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(medicamentId, medicamentAnnihilationId, quantity, uselessReason, destructionMethod);
+        return Objects.hash(medicamentId, medicamentAnnihilationId, quantity, uselessReason, destructionMethod, medicamentName);
     }
 }

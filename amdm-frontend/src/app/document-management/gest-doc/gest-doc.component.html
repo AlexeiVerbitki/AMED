@@ -1,53 +1,128 @@
 <div class="container-fluid sky z-depth-2">
-	<h3 class="text-center my-3 font-weight-bold">Gestionarea documentelor</h3>
-	<form class="form-group row">
-		<div class="col-12 col-md-9 mt-2">
-			<input class="form-control" type="search" placeholder="Search" aria-label="Search">
-		</div>
-		<div class="col-12 col-md-3 position-button text-center">
-			<button class="btn btn-indigo waves-light btn-md-bl" mdbWavesEffect type="submit">Search</button>
+	<h3 class="text-center my-1 font-weight-bold">Gestiunea documente</h3>
+	<hr>
+	<form [formGroup]='taskForm'>
+		<div class="row">
+			<div class="col-3">
+				<div class="md-form">
+					<input id="requestNumber" mdbInputDirective type="number" class="form-control" formControlName="nrDocumentului">
+					<label for="requestNumber">Nr. documentului</label>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input matInput [matDatepicker]="dataDoc" placeholder="Data" formControlName="dataDoc">
+						<mat-datepicker-toggle matSuffix [for]="dataDoc"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #dataDoc></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="md-form-modified">
+					<ng-select id="expeditor" name="expeditor" [items]="expeditors"
+					           bindLabel="description"
+					           placeholder="Expeditor"
+					           (ngModelChange)="retrieveRequestTypes();"
+					           formControlName="expeditor">
+					</ng-select>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="md-form-modified">
+					<ng-select id="destinatar" name="destinatar" [items]="destinatars"
+					           bindLabel="description"
+					           placeholder="Destinatar"
+					           (ngModelChange)="retrieveRequestTypeSteps();"
+					           formControlName="destinatar">
+					</ng-select>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="md-form-modified">
+					<ng-select id="termenDeExecutare" name="termenDeExecutare" [items]="termenDeExecutares"
+					           bindLabel="description"
+					           placeholder="Termen de executare"
+					           formControlName="termenDeExecutare">
+					</ng-select>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="md-form-modified">
+					<ng-select id="tipDoc" name="tipDoc" [items]="tipDocs"
+					           bindLabel="description"
+					           placeholder="Tipul documentului"
+					           formControlName="tipDoc">
+					</ng-select>
+				</div>
+			</div>
+			<div class="col-3">
+					<div class="md-form-modified">
+						<mat-form-field class="w-100">
+							<input matInput [matDatepicker]="dataPrimirii" placeholder="Data primirii" formControlName="dataPrimirii">
+							<mat-datepicker-toggle matSuffix [for]="dataPrimirii"></mat-datepicker-toggle>
+							<mat-datepicker touchUi #dataPrimirii></mat-datepicker>
+						</mat-form-field>
+					</div>
+				</div>
+			<div class="col-3">
+				<div class="md-form-modified text-center">
+					<button type="button" class="btn btn-indigo waves-light btn-large" mdbWavesEffect (click)="findTasks();">Cauta</button>
+				</div>
+			</div>
 		</div>
 	</form>
-	<hr>
-	<!--Table-->
-	<table class="table table-widths">
+	<div class="table-width">
+		<div class="text-right">
+			<mat-form-field class="w-25">
+				<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtru" class="w-25">
+			</mat-form-field>
+		</div>
+		<div class="example-container">
+			<table mat-table [dataSource]="dataSource" matSort>
+				<ng-container matColumnDef="requestNumber">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Numar cerere</th>
+					<td mat-cell *matCellDef="let element">
+						<a title="Deschide proces" (click)="navigateToUrl(element)">
+							{{element.requestNumber}}
+						</a>
+					</td>
+				</ng-container>
 
-		<!--Table head-->
-		<thead class="table-bg">
-		<tr class="text-white">
-			<th>Nr. document</th>
-			<th>Data</th>
-			<th>Expeditor</th>
-			<th>Destinatar</th>
-			<th>Problematica</th>
-			<th>Termen de executare</th>
-			<th>Data primirii</th>
-			<th>Tipul documentului</th>
-			<th>Fisier</th>
-		</tr>
-		</thead>
-		<!--Table head-->
+				<ng-container matColumnDef="processName">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Nume cerere</th>
+					<td mat-cell *matCellDef="let element"> {{element.processName}} </td>
+				</ng-container>
 
-		<!--Table body-->
-		<tbody>
-		<tr *ngFor="let doc of docs">
-			<th scope="row">{{ doc.nrDoc }}</th>
-			<td>{{ doc.data }}</td>
-			<td>{{ doc.expeditor }}</td>
-			<td>{{ doc.destinatar }}</td>
-			<td>{{ doc.problematica }}</td>
-			<td>{{ doc.termenDeExecutare }}</td>
-			<td>{{ doc.dataPrimirii }}</td>
-			<td>{{ doc.tipDoc }}</td>
-			<td>{{ doc.fisier }}</td>
-		</tr>
-		</tbody>
-		<!--Table body-->
-	</table>
-	<!--Table-->
-	<div class="position-button my-3">
-		<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect routerLink="/doc/add">Adaugare</button>
-		<button class="btn btn-dark-red-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Stergere</button>
-		<button class="btn btn-violet-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Descarcare</button>
+				<ng-container matColumnDef="requestType">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Tip cerere</th>
+					<td mat-cell *matCellDef="let element"> {{element.requestType}} </td>
+				</ng-container>
+
+				<ng-container matColumnDef="username">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Username</th>
+					<td mat-cell *matCellDef="let element"> {{element.username}} </td>
+				</ng-container>
+
+				<ng-container matColumnDef="startDate">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Start date</th>
+					<td mat-cell *matCellDef="let element"> {{element.startDate | date: 'dd/MM/yyyy'}} </td>
+				</ng-container>
+
+				<ng-container matColumnDef="endDate">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> End date</th>
+					<td mat-cell *matCellDef="let element"> {{element.endDate | date: 'dd/MM/yyyy'}} </td>
+				</ng-container>
+
+				<ng-container matColumnDef="step">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Step</th>
+					<td mat-cell *matCellDef="let element"> {{element.step}} </td>
+				</ng-container>
+
+				<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+				<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+			</table>
+			<mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+		</div>
 	</div>
 </div>

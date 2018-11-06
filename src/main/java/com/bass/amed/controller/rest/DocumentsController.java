@@ -2,7 +2,9 @@ package com.bass.amed.controller.rest;
 
 import com.bass.amed.dto.DistributionDispositionDTO;
 import com.bass.amed.dto.RequestAdditionalDataDTO;
+import com.bass.amed.entity.NmDocumentTypesEntity;
 import com.bass.amed.exception.CustomException;
+import com.bass.amed.repository.DocumentTypeRepository;
 import com.bass.amed.service.GenerateDocNumberService;
 import com.bass.amed.service.StorageService;
 import net.sf.jasperreports.engine.*;
@@ -19,10 +21,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,6 +45,8 @@ public class DocumentsController
     private StorageService storageService;
     @Autowired
     private GenerateDocNumberService generateDocNumberService;
+    @Autowired
+    private DocumentTypeRepository documentTypeRepository;
 
     @Value("${final.documents.folder}")
     private String folder;
@@ -159,7 +160,7 @@ public class DocumentsController
                 case "NL":
                     classPath = "classpath:..\\resources\\layouts\\notificationLetter.jrxml";
                     break;
-                case "RA":
+                case "SL":
                     classPath = "classpath:..\\resources\\layouts\\requestAdditionalData.jrxml";
                     break;
                 case "LA":
@@ -400,7 +401,6 @@ public class DocumentsController
         return ResponseEntity.ok().headers(headers).contentType(MediaType.parseMediaType(contentType)).body(isr);
     }
 
-
     static class FileResult
     {
 
@@ -416,6 +416,13 @@ public class DocumentsController
             this.path = path;
             return this;
         }
+    }
+
+
+    @GetMapping(value = "/get-document-types")
+    public ResponseEntity<List<NmDocumentTypesEntity>> getDocumentTypes()
+    {
+        return new ResponseEntity<>(documentTypeRepository.findAll(), HttpStatus.OK);
     }
 
 }

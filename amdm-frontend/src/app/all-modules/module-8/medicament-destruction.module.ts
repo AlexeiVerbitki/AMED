@@ -5,20 +5,13 @@ import {MedicamentDestructionRoutingModule} from './medicament-destruction-routi
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MDBBootstrapModule} from "angular-bootstrap-md";
 import {MaterialSharedModule} from "../../material-shared.module";
-import {AddMemberComponent} from "./add-member/add-member.component";
-import {DrugsCauseFutilityComponent} from "./drugs-cause-futility/drugs-cause-futility.component";
-import {DrugsConfirmDestroyComponent} from "./drugs-confirm-destroy/drugs-confirm-destroy.component";
-import {DrugsDestroyComponent} from "./drugs-destroy/drugs-destroy.component";
-import {DrugsDestroyDemandComponent} from "./drugs-destroy-demand/drugs-destroy-demand.component";
 import {DrugsDestroyRegisterComponent} from "./drugs-destroy-register/drugs-destroy-register.component";
-import {DrugsFinalDestroyComponent} from "./drugs-final-destroy/drugs-final-destroy.component";
-import {DrugsPackComponent} from "./drugs-pack/drugs-pack.component";
-import {DrugsMeasureComponent} from './drugs-measure/drugs-measure.component';
-import {DrugsFormComponent} from "./drugs-form/drugs-form.component";
 import {UploadFileService} from "../../shared/service/upload/upload-file.service";
 import {MedicamentService} from "../../shared/service/medicament.service";
 import {DocumentModule} from "../../document/document.module";
 import {AnnihilationService} from "../../shared/service/annihilation/annihilation.service";
+import { DrugsDestroyEvaluateComponent } from './drugs-destroy-evaluate/drugs-destroy-evaluate.component';
+import {PaymentModule} from "../../payment/payment.module";
 
 @NgModule({
     imports: [
@@ -28,11 +21,10 @@ import {AnnihilationService} from "../../shared/service/annihilation/annihilatio
         ReactiveFormsModule,
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
-        DocumentModule
+        DocumentModule,
+        PaymentModule
     ],
-    declarations: [AddMemberComponent, DrugsCauseFutilityComponent, DrugsConfirmDestroyComponent, DrugsDestroyComponent,
-        DrugsDestroyDemandComponent, DrugsDestroyRegisterComponent, DrugsFinalDestroyComponent, DrugsFormComponent,
-        DrugsMeasureComponent, DrugsPackComponent],
+    declarations: [ DrugsDestroyRegisterComponent, DrugsDestroyEvaluateComponent],
     providers: [UploadFileService,MedicamentService, AnnihilationService
     ],
 })

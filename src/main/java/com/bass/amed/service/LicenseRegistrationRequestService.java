@@ -116,14 +116,27 @@ public class LicenseRegistrationRequestService
 
             r.getLicense().setSerialNr(request.getLicense().getSerialNr());
             r.getLicense().setNr(request.getLicense().getNr());
-            r.getLicense().setTax(request.getLicense().getTax());
-            r.getLicense().setTaxPaid(request.getLicense().getTaxPaid());
 
             //Update documents
             Set<DocumentsEntity> dSet = request.getLicense().getDocuments().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
 
             if (!dSet.isEmpty()){
                 r.getLicense().getDocuments().addAll(dSet);
+            }
+
+
+            //Update receipts
+            Set<ReceiptsEntity> rSet = request.getLicense().getReceipts().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
+
+            if (!rSet.isEmpty()){
+                r.getLicense().getReceipts().addAll(rSet);
+            }
+
+            //Update payments
+            Set<PaymentOrdersEntity> pSet = request.getLicense().getPaymentOrders().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
+
+            if (!pSet.isEmpty()){
+                r.getLicense().getPaymentOrders().addAll(pSet);
             }
 
             //Update commision response
