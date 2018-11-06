@@ -69,7 +69,6 @@ export class ImportAuthorizationRequestComponent implements OnInit {
                 }),
             'importAuthorizationEntity':
                 fb.group({
-                    'company': [null, Validators.required],
                     'medType': [null]
                 }),
 
@@ -193,10 +192,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         // alert(this.rForm.get('startDate').value);
         // alert(this.generatedDocNrSeq);
         // alert(this.documents.values());
-        // if (this.rForm.invalid) {
-        //     alert('Invalid Form data!!')
-        //     return;
-        // }
+
         // this.formSubmitted = true;
         //
         // if (this.docs.length != 0 || !this.rForm.valid) {
@@ -204,6 +200,13 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         // }
 
         // this.formSubmitted = false;
+
+        console.log(this.rForm)
+        console.log(this.rForm.status)
+        if (this.docs.length != 0 || this.rForm.invalid ) {
+            alert('No Documents attached or Invalid Form data!!')
+            return;
+        }
 
         this.medType = this.rForm.get('importType').value
         // this.rForm.get('importAuthorizationEntity.medType').setValue(this.medType);
@@ -243,6 +246,8 @@ export class ImportAuthorizationRequestComponent implements OnInit {
                 // this.router.navigate(['dashboard/module/medicament-registration/evaluate/' + data.body]);
             }, error => this.loadingService.hide())
         );
+
+
 
     }
 
