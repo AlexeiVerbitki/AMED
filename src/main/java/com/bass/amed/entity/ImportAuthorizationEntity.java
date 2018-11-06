@@ -200,7 +200,7 @@ import java.util.List;
 	}
 
 	@Basic
-	@Column(name = "customs_declaration_nr", nullable = true, length = 10)
+	@Column(name = "customs_declarations_nr", nullable = true, length = 10)
 	public Integer getCustomsNumber() {
 		return customsNumber;
 	}

@@ -37,6 +37,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
     sysDate: string;
     currentDate: Date;
     file: any;
+    medType: any;
 
 
 
@@ -203,8 +204,9 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         // }
 
         // this.formSubmitted = false;
-        
 
+        this.medType = this.rForm.get('importType').value
+        this.rForm.get('importAuthorizationEntity.medType').setValue(this.medType);
 
         let formModel: any = this.rForm.value;
 
@@ -219,8 +221,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
             step: formModel.currentStep
         }];
 
-        let medType = this.rForm.get('importType').value
-        this.rForm.get('importAuthorizationEntity.medType').setValue(medType);
+
 
         formModel.importAuthorizationEntity.documents = this.docs;
         formModel.currentStep='E';
@@ -231,10 +232,10 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
         this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
             switch(this.rForm.get('importType').value){
-                case "1":{this.router.navigate(['dashboard/module/import-authorization/registered-medicament'  + data.body.id ]) ; break;}
-                case "2":{this.router.navigate(['dashboard/module/import-authorization/unregistered-medicament'+ data.body.id ]) ; break;}
-                case "3":{this.router.navigate(['dashboard/module/import-authorization/materia-prima'          + data.body.id ]) ; break;}
-                case "4":{this.router.navigate(['dashboard/module/import-authorization/ambalaj'                + data.body.id ]) ; break;}
+                case "1":{this.router.navigate(['dashboard/module/import-authorization/registered-medicament'  ]) ; break;}
+                case "2":{this.router.navigate(['dashboard/module/import-authorization/unregistered-medicament']) ; break;}
+                case "3":{this.router.navigate(['dashboard/module/import-authorization/materia-prima'          ]) ; break;}
+                case "4":{this.router.navigate(['dashboard/module/import-authorization/ambalaj'                ]) ; break;}
             }
             this.loadingService.hide();
                 // this.router.navigate(['dashboard/module/medicament-registration/evaluate/' + data.body]);
