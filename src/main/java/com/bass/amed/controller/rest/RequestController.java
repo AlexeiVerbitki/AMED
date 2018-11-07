@@ -283,33 +283,33 @@ public class RequestController {
         if (requests.getImportAuthorizationEntity() == null) {
             throw new CustomException("/add-import-request Request was not found");
         }
-//        addDDImportTrailsDocument(requests);
+        addDDImportDocument(requests);
         requestRepository.save(requests);
         return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
     }
 
-//    private void addDDImportTrailsDocument(@RequestBody RegistrationRequestsEntity request) {
-//        Optional<RegistrationRequestStepsEntity> requestTypesStepEntityList = registrationRequestStepRepository.findOneByRequestTypeIdAndCode(3, request.getCurrentStep());
-//        if(requestTypesStepEntityList.isPresent()){
-//            RegistrationRequestStepsEntity entity = requestTypesStepEntityList.get();
-//            if(request.getClinicalTrails().getOutputDocuments()==null){
-//                request.getClinicalTrails().setOutputDocuments(new HashSet<>());
-//            }
-//
-//            String[] docTypes = entity.getOutputDocTypes() == null ? new String[0] : entity.getOutputDocTypes().split(",");
-//
-//            for (String docType : docTypes) {
-//                Optional<NmDocumentTypesEntity> nmDocumentTypeEntity = documentTypeRepository.findByCategory(docType);
-//                if(nmDocumentTypeEntity.isPresent()){
-//                    OutputDocumentsEntity outputDocumentsEntity = new OutputDocumentsEntity();
-//                    outputDocumentsEntity.setDocType(nmDocumentTypeEntity.get());
-//                    outputDocumentsEntity.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
-//                    outputDocumentsEntity.setName(nmDocumentTypeEntity.get().getDescription());
-//                    outputDocumentsEntity.setNumber(docType+"-" + request.getRequestNumber());
-//                    request.getClinicalTrails().getOutputDocuments().add(outputDocumentsEntity);
-//                }
-//            }
-//        }
-//    }
+    private void addDDImportDocument(@RequestBody RegistrationRequestsEntity request) {
+        Optional<RegistrationRequestStepsEntity> requestTypesStepEntityList = registrationRequestStepRepository.findOneByRequestTypeIdAndCode(3, request.getCurrentStep());
+        if(requestTypesStepEntityList.isPresent()){
+            RegistrationRequestStepsEntity entity = requestTypesStepEntityList.get();
+            if(request.getOutputDocuments()==null){
+                request.setOutputDocuments(new HashSet<>());
+            }
+
+            String[] docTypes = entity.getOutputDocTypes() == null ? new String[0] : entity.getOutputDocTypes().split(",");
+
+            for (String docType : docTypes) {
+                Optional<NmDocumentTypesEntity> nmDocumentTypeEntity = documentTypeRepository.findByCategory(docType);
+                if(nmDocumentTypeEntity.isPresent()){
+                    OutputDocumentsEntity outputDocumentsEntity = new OutputDocumentsEntity();
+                    outputDocumentsEntity.setDocType(nmDocumentTypeEntity.get());
+                    outputDocumentsEntity.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
+                    outputDocumentsEntity.setName(nmDocumentTypeEntity.get().getDescription());
+                    outputDocumentsEntity.setNumber(docType+"-" + request.getRequestNumber());
+                    request.getOutputDocuments().add(outputDocumentsEntity);
+                }
+            }
+        }
+    }
 
 }
