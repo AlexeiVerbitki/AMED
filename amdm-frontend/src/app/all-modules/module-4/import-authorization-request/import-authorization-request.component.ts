@@ -154,56 +154,39 @@ export class ImportAuthorizationRequestComponent implements OnInit {
     }
 
 
-    onChange(event) {
-        this.file = event.srcElement.files[0];
-        const fileName = this.file.name;
-        const lastIndex = fileName.lastIndexOf('.');
-        let fileFormat = '';
-        if (lastIndex !== -1) {
-            fileFormat = '*.' + fileName.substring(lastIndex + 1);
-        }
-        this.sysDate = `${this.currentDate.getDate()}.${this.currentDate.getMonth() + 1}.${this.currentDate.getFullYear()}`;
-        this.cereri.push({denumirea: fileName, format: fileFormat, dataIncarcarii: this.sysDate});
-    }
-
-    removeDocument(index) {
-        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-            data: {message: 'Sunteti sigur ca doriti sa stergeti acest document?', confirm: false}
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.cereri.splice(index, 1);
-            }
-        });
-    }
-
-    loadFile() {
-        saveAs(this.file, this.file.name);
-    }
-
-    // chekCompanyValue() {
-    //     this.isWrongValueCompany = !this.companii.some(elem => {
-    //         return this.rForm.get('compGet').value == null ? true : elem.name === this.rForm.get('compGet').value.name;
+    // onChange(event) {
+    //     this.file = event.srcElement.files[0];
+    //     const fileName = this.file.name;
+    //     const lastIndex = fileName.lastIndexOf('.');
+    //     let fileFormat = '';
+    //     if (lastIndex !== -1) {
+    //         fileFormat = '*.' + fileName.substring(lastIndex + 1);
+    //     }
+    //     this.sysDate = `${this.currentDate.getDate()}.${this.currentDate.getMonth() + 1}.${this.currentDate.getFullYear()}`;
+    //     this.cereri.push({denumirea: fileName, format: fileFormat, dataIncarcarii: this.sysDate});
+    // }
+    //
+    // removeDocument(index) {
+    //     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+    //         data: {message: 'Sunteti sigur ca doriti sa stergeti acest document?', confirm: false}
+    //     });
+    //     dialogRef.afterClosed().subscribe(result => {
+    //         if (result) {
+    //             this.cereri.splice(index, 1);
+    //         }
     //     });
     // }
+    //
+    // loadFile() {
+    //     saveAs(this.file, this.file.name);
+    // }
+
 
     nextStep() {
-        // this.router.navigate(['dashboard/module/import-authorization/ambalaj'   ]) ;
-        // alert(this.rForm.get('startDate').value);
-        // alert(this.generatedDocNrSeq);
-        // alert(this.documents.values());
-
-        // this.formSubmitted = true;
-        //
-        // if (this.docs.length != 0 || !this.rForm.valid) {
-        //     return;
-        // }
-
-        // this.formSubmitted = false;
 
         console.log(this.rForm)
         console.log(this.rForm.status)
-        if (this.docs.length != 0 || this.rForm.invalid ) {
+        if (this.docs.length == 0 || this.rForm.invalid ) {
             alert('No Documents attached or Invalid Form data!!')
             return;
         }

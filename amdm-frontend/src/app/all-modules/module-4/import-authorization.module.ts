@@ -5,6 +5,7 @@ import {ImportAuthorizationRoutingModule} from './import-authorization-routing.m
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MDBBootstrapModule} from "angular-bootstrap-md";
 import {MaterialSharedModule} from "../../material-shared.module";
+import {DocumentComponent} from "../../document/document.component";
 import {ImportAuthorizationEvaluateComponent} from "./import-authorization-evaluate/import-authorization-evaluate.component";
 import {ImportAuthorizationRequestComponent} from "./import-authorization-request/import-authorization-request.component";
 import { MedRegComponent } from './med-reg/med-reg.component';
@@ -15,7 +16,8 @@ import {RegCerereComponent} from "../module-1/reg-cerere/reg-cerere.component";
 import {ProcessInterruptionComponent} from "../module-1/process-interruption/process-interruption.component";
 import {UploadFileService} from "../../shared/service/upload/upload-file.service";
 import {RequestService} from "../../shared/service/request.service";
-import {DocumentComponent} from "../../document/document.component";
+import {DocumentModule} from "../../document/document.module";
+
 
 @NgModule({
     imports: [
@@ -23,10 +25,11 @@ import {DocumentComponent} from "../../document/document.component";
         ImportAuthorizationRoutingModule,
         FormsModule,
         ReactiveFormsModule,
+        DocumentModule,
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
     ],
-    declarations: [ImportAuthorizationEvaluateComponent,ImportAuthorizationRequestComponent, MedRegComponent, MedNeregComponent, MateriaPrimaComponent, AmbalajComponent, DocumentComponent ],
+    declarations: [ImportAuthorizationEvaluateComponent,ImportAuthorizationRequestComponent, MedRegComponent, MedNeregComponent, MateriaPrimaComponent, AmbalajComponent],
     providers: [UploadFileService,RequestService]
 })
 export class ImportAuthorizationModule {
