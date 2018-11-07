@@ -9,6 +9,7 @@ import { AdministrationService } from "../../../shared/service/administration.se
 import { map, startWith } from "rxjs/operators";
 import { ConfirmationDialogComponent } from "../../../confirmation-dialog/confirmation-dialog.component";
 import { saveAs } from 'file-saver';
+import {Document} from "../../../models/document";
 
 export interface PeriodicElement {
   name: string;
@@ -27,7 +28,7 @@ export class AmbalajComponent implements OnInit {
   cereri: Cerere[] = [];
   companii: any[];
   primRep: string;
-  rForm: FormGroup;
+  ambalajForm: FormGroup;
   dataForm: FormGroup;
   sysDate: string;
   currentDate: Date;
@@ -37,10 +38,56 @@ export class AmbalajComponent implements OnInit {
   formSubmitted: boolean;
   isWrongValueCompany: boolean;
   private subscriptions: Subscription[] = [];
-  constructor(private fb: FormBuilder, public dialog: MatDialog, private router: Router,
-    private administrationService: AdministrationService) {
+  docs: Document [] = [];
 
-    this.rForm = fb.group({
+
+  constructor(private fb: FormBuilder,
+              public dialog: MatDialog,
+              private router: Router,
+              private administrationService: AdministrationService) {
+
+    this.ambalajForm = fb.group({
+        'requestNumber': [null],
+        'startDate': [new Date()],
+        'currentStep': ['R'],
+        'company': ['', Validators.required],
+        'initiator':[null],
+        'assignedUser':[null],
+        'data': {disabled: true, value: new Date()},
+        'importType': [null, Validators.required],
+        'type':
+            this.fb.group({
+                'id': ['']
+            }),
+        'importAuthorizationEntity':
+            fb.group({
+                'id;': [],
+                'applicationRegistrationNumber': [],
+                'applicationDate': [ new Date()],
+                'applicant': ['', Validators.required],
+                'seller': ['', Validators.required],
+                'basisForImport': [],
+                'importer': ['', Validators.required],
+                'conditionsAndSpecification': [''],
+                'producer': ['', Validators.required],
+
+                //TODO to be deleted
+                'quantity': [''],
+
+                'price': ['', Validators.required],
+                'currency': ['', Validators.required],
+                'summ': ['', Validators.required],
+                'customsDeclarationDate': [''],
+                'expirationDate': [],
+                'customsCode': [],
+                'customsNumber': [],
+                'customsTransactionType': [],
+                'authorizationsNumber': [],
+                'medType': [],
+                'importAuthorizationDetailsEntityList': [],
+
+            }),
+        //=====================
       'compGet': [null, Validators.required],
       'seller': [null, Validators.required],
       'sellerTaraAdresa': [null, Validators.required],
@@ -77,7 +124,7 @@ export class AmbalajComponent implements OnInit {
     this.subscriptions.push(
       this.administrationService.getAllCompanies().subscribe(data => {
         this.companii = data;
-        this.filteredOptions = this.rForm.controls['compGet'].valueChanges
+        this.filteredOptions = this.ambalajForm.controls['compGet'].valueChanges
           .pipe(
             startWith<string | any>(''),
             // map(value => this._filter(value.viewValue))
@@ -125,7 +172,7 @@ export class AmbalajComponent implements OnInit {
 
   chekCompanyValue() {
     this.isWrongValueCompany = !this.companii.some(elem => {
-      return this.rForm.get('compGet').value == null ? true : elem.name === this.rForm.get('compGet').value.name;
+      return this.ambalajForm .get('compGet').value == null ? true : elem.name === this.ambalajForm.get('compGet').value.name;
     });
   }
 
@@ -133,10 +180,10 @@ export class AmbalajComponent implements OnInit {
     this.formSubmitted = true;
 
     this.isWrongValueCompany = !this.companii.some(elem => {
-      return this.rForm.get('compGet').value == null ? true : elem.name === this.rForm.get('compGet').value.name;
+      return this.ambalajForm.get('compGet').value == null ? true : elem.name === this.ambalajForm.get('compGet').value.name;
     });
 
-    if (!this.rForm.controls['compGet'].valid || !this.rForm.controls['primRep'].valid || !this.rForm.controls['med'].valid
+    if (!this.ambalajForm.controls['compGet'].valid || !this.ambalajForm.controls['primRep'].valid || !this.ambalajForm.controls['med'].valid
       || this.cereri.length === 0 || this.isWrongValueCompany) {
       return;
     }

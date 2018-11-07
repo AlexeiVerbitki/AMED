@@ -52,14 +52,14 @@
     </tbody>
   </table>
   <hr>
-  <form [formGroup]='rForm'>
+  <form [formGroup]="ambalajForm">
     <div class="row">
       <div class="col-md-4">
         <div class="md-form-modified">
           <mat-form-field class="w-100">
             <mat-label>Compania solicitant <span class="text-danger">*</span></mat-label>
-            <input type="text" aria-label="Number" [formControl]="rForm.controls['compGet']" matInput formControlName="compGet"
-              [matAutocomplete]="auto" (ngModelChange)="checkCompanyValue()">
+            <input type="text" aria-label="Number" [formControl]="ambalajForm.controls['compGet']" matInput formControlName="compGet"
+                   [matAutocomplete]="auto" (ngModelChange)="checkCompanyValue()">
             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
               <mat-option *ngFor="let x of filteredOptions | async" [value]="x">
                 {{x.name}}
@@ -187,8 +187,8 @@
         </div>
         <div class="col-md-4">
           <div class="md-form">
-            <input id="volumTotal" mdbInputDirective type="text" class="form-control">
-            <label for="volumTotal">Valuta</label>
+            <input id="valuta" mdbInputDirective type="text" class="form-control">
+            <label for="valuta">Valuta</label>
           </div>
         </div>
         <div class="col-md-4">

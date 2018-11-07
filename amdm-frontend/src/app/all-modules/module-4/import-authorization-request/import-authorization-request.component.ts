@@ -24,7 +24,7 @@ import {ErrorHandlerService} from "../../../shared/service/error-handler.service
     styleUrls: ['./import-authorization-request.component.css']
 })
 export class ImportAuthorizationRequestComponent implements OnInit {
-
+    requestNumber
     generatedDocNrSeq: number;
     rForm: FormGroup;
     solicitantCompanyList: Observable<any[]>;
