@@ -15,6 +15,7 @@ import {RegCerereComponent} from "../module-1/reg-cerere/reg-cerere.component";
 import {ProcessInterruptionComponent} from "../module-1/process-interruption/process-interruption.component";
 import {UploadFileService} from "../../shared/service/upload/upload-file.service";
 import {RequestService} from "../../shared/service/request.service";
+import {DocumentComponent} from "../../document/document.component";
 
 @NgModule({
     imports: [
@@ -23,10 +24,9 @@ import {RequestService} from "../../shared/service/request.service";
         FormsModule,
         ReactiveFormsModule,
         MDBBootstrapModule.forRoot(),
-
         MaterialSharedModule.forRoot(),
     ],
-    declarations: [ImportAuthorizationEvaluateComponent,ImportAuthorizationRequestComponent, MedRegComponent, MedNeregComponent, MateriaPrimaComponent, AmbalajComponent, ],
+    declarations: [ImportAuthorizationEvaluateComponent,ImportAuthorizationRequestComponent, MedRegComponent, MedNeregComponent, MateriaPrimaComponent, AmbalajComponent, DocumentComponent ],
     providers: [UploadFileService,RequestService]
 })
 export class ImportAuthorizationModule {

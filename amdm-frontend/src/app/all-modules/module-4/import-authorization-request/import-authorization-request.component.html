@@ -1,93 +1,63 @@
 <div class="container-fluid sky z-depth-2">
-  <h3 class="text-center my-3 font-weight-bold">Inregistrare cerere</h3>
-  <hr>
-  <!--<form [formGroup]='dataForm'>-->
-  <form [formGroup]='rForm'>
-    <div class="row">
-      <div class="col-lg-4">
-        <div class="md-form">
-          <input id="requestNumber" mdbInputDirective type="text" class="form-control"
-                 formControlName="requestNumber" [attr.disabled]="true">
-          <label for="requestNumber">Nr. cererii   </label>
-        </div>
-      </div>
-
-      <div class="col-lg-4">
-        <div class="md-form-modified">
-          <mat-form-field class="w-100">
-            <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker touchUi #picker></mat-datepicker>
-          </mat-form-field>
-        </div>
-      </div>
-        <div class="col-md-4">
-            <div class="md-form-modified">
-                <mat-form-field class="w-100">
-                    <mat-select id="solicitantCompany"  placeholder="Compania solicitant" formControlName="company">
-                        <mat-option *ngFor="let solicitantCompany of solicitantCompanyList" [value]="solicitantCompany">{{ solicitantCompany.name }}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-        </div>
-
-
-
-      <div class="col-lg-2 position-button mt-3">
-        <label class="btn btn-indigo btn-sm" for="incarcaraFisier">
-          <input id="incarcaraFisier" type="file" style="display:none;" (change)="onChange($event)" onclick="this.value=null;">
-          Incarca Cerere
-        </label>
-      </div>
-    </div>
-  <!--</form>-->
-  <hr>
-  <table class="table table-widths text-center">
-    <thead class="black white-text">
-      <tr>
-        <th scope="col">Denumire</th>
-        <th scope="col">Format</th>
-        <th scope="col">Data incarcarii</th>
-        <th scope="col">Actiuni</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let x of cereri; let i = index">
-        <th scope="row">{{ x.denumirea }}</th>
-        <td>{{ x.format }}</td>
-        <td>{{ x.dataIncarcarii }}</td>
-        <td>
-          <button class="btn btn-mdb-color btn-sm waves-light" (click)="loadFile()" mdbWavesEffect>Vizualizare</button>
-          <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeDocument(i)"
-            mdbWavesEffect>Stergere</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <hr>
-  <!--<form [formGroup]='rForm'>-->
-    <mat-radio-group formControlName="importType">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <mat-radio-button value="1">Medicament inregistrat</mat-radio-button>
-          </div>
-          <div class="col-12">
-            <mat-radio-button value="2">Medicamentul neinregistrat</mat-radio-button>
-          </div>
-          <div class="col-12">
-            <mat-radio-button value="3">Materia primă</mat-radio-button>
-          </div>
-          <div class="col-12">
-            <mat-radio-button value="4">Ambalajul pentru producerea medicamentelor</mat-radio-button>
-          </div>
-        </div>
-      </div>
-    </mat-radio-group>
+    <h3 class="text-center my-3 font-weight-bold">Inregistrare cerere</h3>
     <hr>
-    <div class="text-center">
-      <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Urmatorul
-        pas</button>
-    </div>
-  </form>
+    <form [formGroup]='rForm'>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="md-form">
+                    <input id="requestNumber" mdbInputDirective type="text" class="form-control"
+                           formControlName="requestNumber" [attr.disabled]="true">
+                    <label for="requestNumber">Nr. cererii </label>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <mat-select id="solicitantCompany" placeholder="Compania solicitant" formControlName="company">
+                            <mat-option *ngFor="let solicitantCompany of solicitantCompanyList" [value]="solicitantCompany">{{ solicitantCompany.name }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+
+        </div>
+        <app-document [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypes]="docTypes"></app-document>
+        <hr>
+
+        <mat-radio-group formControlName="importType">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <mat-radio-button value="1">Medicament inregistrat</mat-radio-button>
+                    </div>
+                    <div class="col-12">
+                        <mat-radio-button value="2">Medicamentul neinregistrat</mat-radio-button>
+                    </div>
+                    <div class="col-12">
+                        <mat-radio-button value="3">Materia primă</mat-radio-button>
+                    </div>
+                    <div class="col-12">
+                        <mat-radio-button value="4">Ambalajul pentru producerea medicamentelor</mat-radio-button>
+                    </div>
+                </div>
+            </div>
+        </mat-radio-group>
+        <hr>
+        <div class="text-center">
+            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Urmatorul
+                pas
+            </button>
+        </div>
+
+    </form>
 </div>
