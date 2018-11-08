@@ -189,16 +189,6 @@ import java.util.List;
 		this.expirationDate = expirationDate;
 	}
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
-	@JoinColumn(name = "custom_code_id")
-	public NmCustomsCodesEntity getCustomsCode() {
-		return customsCode;
-	}
-
-	public void setCustomsCode(NmCustomsCodesEntity customsCode) {
-		this.customsCode = customsCode;
-	}
-
 	@Basic
 	@Column(name = "customs_declarations_nr", nullable = true, length = 10)
 	public Integer getCustomsNumber() {

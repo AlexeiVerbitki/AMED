@@ -87,7 +87,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         this.subscriptions.push(
             this.administrationService.generateDocNr().subscribe(data => {
                     this.generatedDocNrSeq = data;
-                    this.rForm.get('requestNumber').setValue(this.generatedDocNrSeq);
+                    this.rForm.get( 'requestNumber').setValue(this.generatedDocNrSeq);
 
 
                 },
@@ -191,7 +191,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
             return;
         }
 
-        this.medType = this.rForm.get('importType').value
+        this.medType = this.rForm.get('importTypeForm').value
         // this.rForm.get('importAuthorizationEntity.medType').setValue(this.medType);
 
 
@@ -219,7 +219,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
 
         this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
-            switch(this.rForm.get('importType').value){
+            switch(this.rForm.get('importTypeForm').value){
                 case "1":{this.router.navigate(['dashboard/module/import-authorization/registered-medicament'  ]) ; break;}
                 case "2":{this.router.navigate(['dashboard/module/import-authorization/unregistered-medicament']) ; break;}
                 case "3":{this.router.navigate(['dashboard/module/import-authorization/materia-prima'          ]) ; break;}
