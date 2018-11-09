@@ -1,5 +1,5 @@
 import { Cerere } from './../../../models/cerere';
-import { Validators } from '@angular/forms';
+import {FormArray, Validators} from '@angular/forms';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Observable, Subscription } from "rxjs";
@@ -10,6 +10,7 @@ import { map, startWith } from "rxjs/operators";
 import { ConfirmationDialogComponent } from "../../../confirmation-dialog/confirmation-dialog.component";
 import { saveAs } from 'file-saver';
 import {Document} from "../../../models/document";
+import {log} from "util";
 
 export interface PeriodicElement {
   name: string;
@@ -29,7 +30,8 @@ export class AmbalajComponent implements OnInit {
   companii: any[];
   primRep: string;
   evaluateImportForm: FormGroup;
-  importTypeForm: FormGroup;
+  // importTypeForm: FormGroup;
+  testForm: FormGroup;
   sysDate: string;
   currentDate: Date;
   file: any;
@@ -41,6 +43,9 @@ export class AmbalajComponent implements OnInit {
   docs: Document [] = [];
 
   solicitantCompanyList: Observable<any[]>;
+  totalSum :number;
+
+
 
 
   constructor(private fb: FormBuilder,
@@ -49,59 +54,75 @@ export class AmbalajComponent implements OnInit {
               private administrationService: AdministrationService) {
 
     this.evaluateImportForm = fb.group({
-        'requestNumber': [null],
-        'startDate': [new Date()],
+
+
         'currentStep': ['R'],
-        'company': ['', Validators.required],
+
         'initiator':[null],
         'assignedUser':[null],
-        'data': {disabled: true, value: new Date()},
-        'importType': [null, Validators.required],
-        'applicationRegistrationNumber': [],
-        'applicationDate': [ new Date()],
-        'applicant': ['', Validators.required],
-        'seller': ['', Validators.required], // Tara si adresa lui e deja in baza
-        'basisForImport': [],
-        'importer': ['', Validators.required], // Tara si adresa lui e deja in baza
-        'conditionsAndSpecification': [''],
         'type':
             this.fb.group({
                 'id': ['']
             }),
         'importAuthorizationEntity':
             fb.group({
+                'requestNumber': [null],
+                'startDate': [new Date()],
+                'company': ['', Validators.required],
                 'id;': [],
-                'producer': ['', Validators.required],
-
-                //TODO to be deleted
-                'quantity': [''],
-                'name': [''],
-                'price': ['', Validators.required],
-                'currency': ['', Validators.required],
-                'summ': ['', Validators.required],
-                'customsDeclarationDate': [''],
-                'expirationDate': [],
-                'customsNumber': [],
-                'customsTransactionType': [],
-                'authorizationsNumber': [], // inca nu exista la pasul acesta
+                'importType': [null, Validators.required],
+                'applicationRegistrationNumber': [],
+                'applicationDate': [ new Date()],
+                'applicant': ['', Validators.required],
+                'seller': ['', Validators.required], // Tara si adresa lui e deja in baza
+                'basisForImport': [],
+                'importer': ['', Validators.required], // Tara si adresa lui e deja in baza
+                'conditionsAndSpecification': [''],
                 'medType': [],
-                'importAuthorizationDetailsEntityList': [],
+
+
+                // //TODO
+                // 'name': [''],
+                // 'quantity': [''],
+                // 'price': ['', Validators.required],
+                // 'currency': ['', Validators.required],
+                // 'summ': ['', Validators.required],
+                // 'producer': [''],
+                // 'expirationDate': [],
+                //
+                // 'customsDeclarationDate': [''],
+                // 'customsNumber': [],
+                // 'customsTransactionType': [],
+                //
+                'importAuthorizationDetailsEntityList': this.fb.array([]),
+
+                'authorizationsNumber': [], // inca nu exista la pasul acesta
 
             }),
 
     });
 
-    this.importTypeForm = fb.group({
-      'customsCode': [''],
-      'name': [null, Validators.required],
-      'quantity': [''],
-      'price': [''],
-      'currency': [''],
-      'summ': [''],
-      'producer': [''],
-      'expirationDate': [''],
-
-    });
+      this.testForm = this.fb.group({
+          'customsCode': [],
+          'name': [],
+          'quantity': [],
+          'price': [],
+          'currency': [],
+          'summ': [],
+          'producer': [],
+          'expirationDate': [],
+      })
+    // this.importTypeForm = fb.group({
+    //   'customsCode': [''],
+    //   'name': [null, Validators.required],
+    //   'quantity': [''],
+    //   'price': [0],
+    //   'currency': [''],
+    //   'summ': [0],
+    //   'producer': [''],
+    //   'expirationDate': [''],
+    //
+    // });
   }
 
   ngOnInit() {
@@ -110,7 +131,7 @@ export class AmbalajComponent implements OnInit {
     this.subscriptions.push(
       this.administrationService.generateDocNr().subscribe(data => {
         this.generatedDocNrSeq = data;
-        this.importTypeForm.get('nrCererii').setValue(this.generatedDocNrSeq);
+        this.evaluateImportForm.get('importAuthorizationEntity.requestNumber').setValue(this.generatedDocNrSeq);
       },
         error => console.log(error)
       )
@@ -118,9 +139,39 @@ export class AmbalajComponent implements OnInit {
 
 
 
-    this.importTypeForm.get('data').setValue(this.currentDate);
     this.loadSolicitantCompanyList();
+    // this.getSumm();
   }
+    get importTypeForms() {
+        return this.evaluateImportForm.get('importAuthorizationDetailsEntityList') as FormArray
+    }
+
+    addImportTypeForm() {
+        console.log("before");
+
+        const importTypeForm = this.fb.group({
+            'customsCode': [],
+            'name': [],
+            'quantity': [],
+            'price': [],
+            'currency': [],
+            'summ': [],
+            'producer': [],
+            'expirationDate': [],
+        })
+
+        alert(importTypeForm.value)
+        this.importTypeForms.push(importTypeForm);
+        console.log("after")
+        console.log(importTypeForm)
+    }
+
+
+    deleteImportTypeForm(i) {
+        this.importTypeForms.removeAt(i)
+    }
+
+    //=============================
 
     loadSolicitantCompanyList() {
         this.subscriptions.push(
@@ -131,6 +182,7 @@ export class AmbalajComponent implements OnInit {
             )
         )
     }
+
 
   // onChange(event) {
   //   this.file = event.srcElement.files[0];
@@ -159,7 +211,10 @@ export class AmbalajComponent implements OnInit {
   //   saveAs(this.file, this.file.name);
   // }
 
-
+getSumm(){
+    this.totalSum = this.evaluateImportForm.get('price').value* this.evaluateImportForm.get('quantity').value;
+    this.evaluateImportForm.get('summ').setValue(this.totalSum);
+}
   nextStep() {
       let formModel = this.evaluateImportForm.getRawValue();
       console.log(formModel);
