@@ -64,8 +64,7 @@ export class AmbalajComponent implements OnInit {
             this.fb.group({
                 'id': ['']
             }),
-        'importAuthorizationEntity':
-            fb.group({
+        'importAuthorizationEntity': fb.group({
                 'requestNumber': [null],
                 'startDate': [new Date()],
                 'company': ['', Validators.required],
@@ -102,16 +101,7 @@ export class AmbalajComponent implements OnInit {
 
     });
 
-      this.testForm = this.fb.group({
-          'customsCode': [],
-          'name': [],
-          'quantity': [],
-          'price': [],
-          'currency': [],
-          'summ': [],
-          'producer': [],
-          'expirationDate': [],
-      })
+
     // this.importTypeForm = fb.group({
     //   'customsCode': [''],
     //   'name': [null, Validators.required],
@@ -132,6 +122,7 @@ export class AmbalajComponent implements OnInit {
       this.administrationService.generateDocNr().subscribe(data => {
         this.generatedDocNrSeq = data;
         this.evaluateImportForm.get('importAuthorizationEntity.requestNumber').setValue(this.generatedDocNrSeq);
+
       },
         error => console.log(error)
       )
@@ -140,6 +131,18 @@ export class AmbalajComponent implements OnInit {
 
 
     this.loadSolicitantCompanyList();
+
+      this.testForm = this.fb.group({
+          'customsCode': ['customsCode'],
+          'name': ['name'],
+          'quantity': ['quantity'],
+          'price': ['price'],
+          'currency': ['currency'],
+          'summ': ['summ'],
+          'producer': ['producer'],
+          'expirationDate': ['expirationDate'],
+      })
+      this.importTypeForms.push(this.testForm);
     // this.getSumm();
   }
     get importTypeForms() {

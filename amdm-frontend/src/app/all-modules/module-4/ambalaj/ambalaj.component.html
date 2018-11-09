@@ -142,7 +142,7 @@
                     <h5 class="text-center font-weight-bold">Informația despre ambalaj</h5>
                     <hr>
                     <div class="row" formArrayName="importAuthorizationDetailsEntityList">
-                        <div *ngFor="let importTypeForm of importAuthorizationDetailsEntityList; let i=index" [formGroupName]="i">
+                        <div *ngFor="let importTypeForm of importTypeForms.controls; let i=index" [formGroupName]="i">
                             <div class="col-md-4">
                                 <div class="md-form">
                                     <input id="customsNumber" mdbInputDirective type="text" class="form-control"
