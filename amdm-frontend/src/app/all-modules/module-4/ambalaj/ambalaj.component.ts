@@ -143,7 +143,7 @@ export class AmbalajComponent implements OnInit {
     // this.getSumm();
   }
     get importTypeForms() {
-        return this.evaluateImportForm.get('importAuthorizationDetailsEntityList') as FormArray
+        return this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList') as FormArray
     }
 
     addImportTypeForm() {
@@ -163,7 +163,8 @@ export class AmbalajComponent implements OnInit {
         alert(importTypeForm.value)
         this.importTypeForms.push(importTypeForm);
         console.log("after")
-        console.log(importTypeForm)
+        console.log(importTypeForm.value)
+        console.log(this.importTypeForms.value)
     }
 
 
