@@ -44,4 +44,7 @@ export class RequestService {
         // console.log(requestDetails);
         return this.http.post<any>('/api/add-import-request', requestDetails, {observe: 'response'});
     }
+    getImportRequest(id: string): Observable<any> {
+        return this.http.get('/api/load-import-request', {params: {id: id}});
+    }
 }

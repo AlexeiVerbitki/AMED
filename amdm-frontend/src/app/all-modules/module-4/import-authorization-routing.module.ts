@@ -8,10 +8,10 @@ import {NgModule} from "@angular/core";
 
 const routes: Routes = [
     {path: 'register', component: ImportAuthorizationRequestComponent},
-    {path: 'registered-medicament', component: MedRegComponent},
-    {path: 'unregistered-medicament', component: MedNeregComponent},
-    {path: 'materia-prima', component: MateriaPrimaComponent},
-    {path: 'ambalaj', component: AmbalajComponent},
+    {path: 'registered-medicament/:id', component: MedRegComponent},
+    {path: 'unregistered-medicament/:id', component: MedNeregComponent},
+    {path: 'materia-prima/:id', component: MateriaPrimaComponent},
+    {path: 'ambalaj/:id', component: AmbalajComponent},
 ];
 
 @NgModule({

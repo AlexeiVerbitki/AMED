@@ -4,13 +4,13 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Observable, Subscription } from "rxjs";
 import { MatDialog } from "@angular/material";
-import { Router } from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import { AdministrationService } from "../../../shared/service/administration.service";
 import { map, startWith } from "rxjs/operators";
 import { ConfirmationDialogComponent } from "../../../confirmation-dialog/confirmation-dialog.component";
 import { saveAs } from 'file-saver';
 import {Document} from "../../../models/document";
-import {log} from "util";
+import {RequestService} from "../../../shared/service/request.service";
 
 export interface PeriodicElement {
   name: string;
@@ -42,22 +42,23 @@ export class AmbalajComponent implements OnInit {
   private subscriptions: Subscription[] = [];
   docs: Document [] = [];
 
+
   solicitantCompanyList: Observable<any[]>;
-  totalSum :number;
+  summ : any;
 
 
 
 
   constructor(private fb: FormBuilder,
+              private requestService: RequestService,
               public dialog: MatDialog,
               private router: Router,
+              private activatedRoute: ActivatedRoute,
               private administrationService: AdministrationService) {
 
     this.evaluateImportForm = fb.group({
-
-
+        'id': [''],
         'currentStep': ['R'],
-
         'initiator':[null],
         'assignedUser':[null],
         'type':
@@ -79,20 +80,6 @@ export class AmbalajComponent implements OnInit {
                 'conditionsAndSpecification': [''],
                 'medType': [],
 
-
-                // //TODO
-                // 'name': [''],
-                // 'quantity': [''],
-                // 'price': ['', Validators.required],
-                // 'currency': ['', Validators.required],
-                // 'summ': ['', Validators.required],
-                // 'producer': [''],
-                // 'expirationDate': [],
-                //
-                // 'customsDeclarationDate': [''],
-                // 'customsNumber': [],
-                // 'customsTransactionType': [],
-                //
                 'importAuthorizationDetailsEntityList': this.fb.array([]),
 
                 'authorizationsNumber': [], // inca nu exista la pasul acesta
@@ -102,48 +89,70 @@ export class AmbalajComponent implements OnInit {
     });
 
 
-    // this.importTypeForm = fb.group({
-    //   'customsCode': [''],
-    //   'name': [null, Validators.required],
-    //   'quantity': [''],
-    //   'price': [0],
-    //   'currency': [''],
-    //   'summ': [0],
-    //   'producer': [''],
-    //   'expirationDate': [''],
-    //
-    // });
   }
 
   ngOnInit() {
     this.currentDate = new Date();
 
-    this.subscriptions.push(
-      this.administrationService.generateDocNr().subscribe(data => {
-        this.generatedDocNrSeq = data;
-        this.evaluateImportForm.get('importAuthorizationEntity.requestNumber').setValue(this.generatedDocNrSeq);
+    // this.subscriptions.push(
+    //   this.administrationService.generateDocNr().subscribe(data => {
+    //     this.generatedDocNrSeq = data;
+    //     this.evaluateImportForm.get('importAuthorizationEntity.requestNumber').setValue(this.generatedDocNrSeq);
+    //
+    //   },
+    //     error => console.log(error)
+    //   )
+    // );
 
-      },
-        error => console.log(error)
-      )
-    );
+
+
+    // this.loadSolicitantCompanyList();
+
+      this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
+          this.subscriptions.push(this.requestService.getImportRequest(params['id']).subscribe(data => {
+                  console.log('Import data',data);
+                  alert(params['id'])
+
+                  this.evaluateImportForm.get('id').setValue(data.id);
+                  this.evaluateImportForm.get('initiator').setValue(data.initiator);
+                  this.evaluateImportForm.get('assignedUser').setValue(data.assignedUser);
+                  this.evaluateImportForm.get('importAuthorizationEntity.requestNumber').setValue(data.requestNumber);
+                  this.evaluateImportForm.get('startDate').setValue(new Date(data.startDate));
+                  this.evaluateImportForm.get('company').setValue(data.company);
+                  this.evaluateImportForm.get('type').setValue(data.type);
+                  this.evaluateImportForm.get('requestHistories').setValue(data.requestHistories);
+
+
+                  // this.evaluateClinicalTrailForm.get('clinicalTrails').setValue(data.clinicalTrails);
+                  //
+                  // this.evaluateClinicalTrailForm.get('clinicalTrails.medicalInstitutions').setValue(
+                  //     data.medicalInstitution == null ? [] :  data.clinicalTrails.medicalInstitutions);
+                  // this.evaluateClinicalTrailForm.get('clinicalTrails.treatment').setValue(
+                  //     data.clinicalTrails.treatment == null ? this.treatmentList[0] : data.clinicalTrails.treatment);
+                  // this.evaluateClinicalTrailForm.get('clinicalTrails.provenance').setValue(
+                  //     data.clinicalTrails.provenance == null ? this.provenanceList[0] : data.clinicalTrails.provenance);
+                  //
+                  // if (data.clinicalTrails.medicament !== null) {
+                  //     this.medicamentForm.get('searchField').setValue(data.clinicalTrails.medicament.name);
+                  //     this.fillMedicamentData(data.clinicalTrails.medicament);
+                  // }
+                  //
+                  // if (data.clinicalTrails.referenceProduct !== null) {
+                  //     this.referenceProductFormn.get('searchField').setValue(data.clinicalTrails.referenceProduct.name);
+                  //     this.fillReferenceProductData(data.clinicalTrails.referenceProduct);
+                  // }
+
+                  this.docs = data.clinicalTrails.documents;
+                  this.docs.forEach(doc => doc.isOld = true);
+
+
+              },
+              error => console.log(error)
+          ))
+      }))
 
 
 
-    this.loadSolicitantCompanyList();
-
-      this.testForm = this.fb.group({
-          'customsCode': ['customsCode'],
-          'name': ['name'],
-          'quantity': ['quantity'],
-          'price': ['price'],
-          'currency': ['currency'],
-          'summ': ['summ'],
-          'producer': ['producer'],
-          'expirationDate': ['expirationDate'],
-      })
-      this.importTypeForms.push(this.testForm);
-    // this.getSumm();
   }
     get importTypeForms() {
         return this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList') as FormArray
@@ -153,21 +162,24 @@ export class AmbalajComponent implements OnInit {
         console.log("before");
 
         const importTypeForm = this.fb.group({
-            'customsCode': [],
-            'name': [],
-            'quantity': [],
-            'price': [],
-            'currency': [],
-            'summ': [],
-            'producer': [],
-            'expirationDate': [],
+            customsCode: [],
+            name: [],
+            quantity: [],
+            price: [''],
+            currency: [],
+            summ: [],
+
+            producer: [],
+            expirationDate: [],
+
         })
 
-        alert(importTypeForm.value)
+        // alert(importTypeForm.value)
         this.importTypeForms.push(importTypeForm);
         console.log("after")
         console.log(importTypeForm.value)
         console.log(this.importTypeForms.value)
+
     }
 
 
@@ -215,10 +227,9 @@ export class AmbalajComponent implements OnInit {
   //   saveAs(this.file, this.file.name);
   // }
 
-getSumm(){
-    this.totalSum = this.evaluateImportForm.get('price').value* this.evaluateImportForm.get('quantity').value;
-    this.evaluateImportForm.get('summ').setValue(this.totalSum);
-}
+
+
+
   nextStep() {
       let formModel = this.evaluateImportForm.getRawValue();
       console.log(formModel);

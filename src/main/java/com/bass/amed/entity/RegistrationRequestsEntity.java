@@ -115,7 +115,7 @@ public class RegistrationRequestsEntity
     }
 
     @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
-    @JoinColumn( name = "prices_request_id" )
+    @JoinColumn( name = "prices_id" )
     public PricesRequestsEntity getPricesRequest() {
         return pricesRequest;
     }

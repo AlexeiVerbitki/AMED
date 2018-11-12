@@ -186,12 +186,12 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
         console.log(this.rForm)
         console.log(this.rForm.status)
-        if (this.docs.length == 0 || this.rForm.invalid ) {
+        if (/*this.docs.length == 0 ||*/ this.rForm.invalid ) {
             alert('No Documents attached or Invalid Form data!!')
             return;
         }
 
-        this.medType = this.rForm.get('importTypeForm').value
+        this.medType = this.rForm.get('importType').value
         // this.rForm.get('importAuthorizationEntity.medType').setValue(this.medType);
 
 
@@ -220,10 +220,10 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
         this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
             switch(this.rForm.get('importTypeForm').value){
-                case "1":{this.router.navigate(['dashboard/module/import-authorization/registered-medicament'  ]) ; break;}
-                case "2":{this.router.navigate(['dashboard/module/import-authorization/unregistered-medicament']) ; break;}
-                case "3":{this.router.navigate(['dashboard/module/import-authorization/materia-prima'          ]) ; break;}
-                case "4":{this.router.navigate(['dashboard/module/import-authorization/ambalaj'                ]) ; break;}
+                case "1":{this.router.navigate(['dashboard/module/import-authorization/registered-medicament/'  +data.body]) ; break;}
+                case "2":{this.router.navigate(['dashboard/module/import-authorization/unregistered-medicament/'+data.body]) ; break;}
+                case "3":{this.router.navigate(['dashboard/module/import-authorization/materia-prima/'          +data.body]) ; break;}
+                case "4":{this.router.navigate(['dashboard/module/import-authorization/ambalaj/'                +data.body]) ; break;}
             }
             this.loadingService.hide();
                 // this.router.navigate(['dashboard/module/medicament-registration/evaluate/' + data.body]);

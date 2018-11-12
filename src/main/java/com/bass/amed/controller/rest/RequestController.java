@@ -164,47 +164,47 @@ public class RequestController {
         if (requests.getClinicalTrails() == null) {
             throw new CustomException("Request was not found");
         }
-        addDDClinicalTrailsDocument(requests);
+//        addDDClinicalTrailsDocument(requests);
         requestRepository.save(requests);
         return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
     }
 
-    private void addDDClinicalTrailsDocument(@RequestBody RegistrationRequestsEntity request) {
-        Optional<RegistrationRequestStepsEntity> requestTypesStepEntityList = registrationRequestStepRepository.findOneByRequestTypeIdAndCode(3, request.getCurrentStep());
-        if(requestTypesStepEntityList.isPresent()){
-            RegistrationRequestStepsEntity entity = requestTypesStepEntityList.get();
-            if(request.getClinicalTrails().getOutputDocuments()==null){
-                request.getClinicalTrails().setOutputDocuments(new HashSet<>());
-            }
+//    private void addDDClinicalTrailsDocument(@RequestBody RegistrationRequestsEntity request) {
+//        Optional<RegistrationRequestStepsEntity> requestTypesStepEntityList = registrationRequestStepRepository.findOneByRequestTypeIdAndCode(3, request.getCurrentStep());
+//        if(requestTypesStepEntityList.isPresent()){
+//            RegistrationRequestStepsEntity entity = requestTypesStepEntityList.get();
+//            if(request.getClinicalTrails().getOutputDocuments()==null){
+//                request.getClinicalTrails().setOutputDocuments(new HashSet<>());
+//            }
+//
+//            String[] docTypes = entity.getOutputDocTypes() == null ? new String[0] : entity.getOutputDocTypes().split(",");
+//
+//            for (String docType : docTypes) {
+//                Optional<NmDocumentTypesEntity> nmDocumentTypeEntity = documentTypeRepository.findByCategory(docType);
+//                if(nmDocumentTypeEntity.isPresent()){
+//                    OutputDocumentsEntity outputDocumentsEntity = new OutputDocumentsEntity();
+//                    outputDocumentsEntity.setDocType(nmDocumentTypeEntity.get());
+//                    outputDocumentsEntity.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
+//                    outputDocumentsEntity.setName(nmDocumentTypeEntity.get().getDescription());
+//                    outputDocumentsEntity.setNumber(docType+"-" + request.getRequestNumber());
+//                    request.getClinicalTrails().getOutputDocuments().add(outputDocumentsEntity);
+//                }
+//            }
+//        }
+//    }
 
-            String[] docTypes = entity.getOutputDocTypes() == null ? new String[0] : entity.getOutputDocTypes().split(",");
-
-            for (String docType : docTypes) {
-                Optional<NmDocumentTypesEntity> nmDocumentTypeEntity = documentTypeRepository.findByCategory(docType);
-                if(nmDocumentTypeEntity.isPresent()){
-                    OutputDocumentsEntity outputDocumentsEntity = new OutputDocumentsEntity();
-                    outputDocumentsEntity.setDocType(nmDocumentTypeEntity.get());
-                    outputDocumentsEntity.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
-                    outputDocumentsEntity.setName(nmDocumentTypeEntity.get().getDescription());
-                    outputDocumentsEntity.setNumber(docType+"-" + request.getRequestNumber());
-                    request.getClinicalTrails().getOutputDocuments().add(outputDocumentsEntity);
-                }
-            }
-        }
-    }
-
-    @PostMapping(value = "/add-output-document-request")
-    public ResponseEntity<Integer> saveOutputDocumentRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
-        requests.getClinicalTrails().getOutputDocuments().forEach(doc -> {
-            if (doc.getId() == null) {
-                Optional<NmDocumentTypesEntity> nmDocumentTypeEntity = documentTypeRepository.findByCategory(doc.getDocType().getCategory());
-                doc.setDocType(nmDocumentTypeEntity.get());
-            }
-        });
-
-        requestRepository.save(requests);
-        return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
-    }
+//    @PostMapping(value = "/add-output-document-request")
+//    public ResponseEntity<Integer> saveOutputDocumentRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
+//        requests.getClinicalTrails().getOutputDocuments().forEach(doc -> {
+//            if (doc.getId() == null) {
+//                Optional<NmDocumentTypesEntity> nmDocumentTypeEntity = documentTypeRepository.findByCategory(doc.getDocType().getCategory());
+//                doc.setDocType(nmDocumentTypeEntity.get());
+//            }
+//        });
+//
+//        requestRepository.save(requests);
+//        return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
+//    }
 
     @GetMapping(value = "/load-clinical-trail-request")
     public ResponseEntity<RegistrationRequestsEntity> getClinicalTrailById(@RequestParam(value = "id") Integer id) throws CustomException {
@@ -286,6 +286,20 @@ public class RequestController {
         addDDImportDocument(requests);
         requestRepository.save(requests);
         return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
+    }
+
+
+    @GetMapping(value = "/load-import-request")
+    public ResponseEntity<RegistrationRequestsEntity> getImportById(@RequestParam(value = "id") Integer id) throws CustomException {
+        Optional<RegistrationRequestsEntity> regOptional = requestRepository.findById(id);
+        if (!regOptional.isPresent()) {
+            throw new CustomException("Inregistrarea de Import nu a fost gasita");
+        }
+        RegistrationRequestsEntity rrE = regOptional.get();
+//        rrE.setClinicalTrails((ClinicalTrialsEntity) Hibernate.unproxy(regOptional.get().getClinicalTrails()));
+//        rrE.setCompany((NmEconomicAgentsEntity) Hibernate.unproxy(regOptional.get().getCompany()));
+
+        return new ResponseEntity<>(rrE, HttpStatus.OK);
     }
 
     private void addDDImportDocument(@RequestBody RegistrationRequestsEntity request) {

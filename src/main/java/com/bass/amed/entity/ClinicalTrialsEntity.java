@@ -232,19 +232,19 @@ public class ClinicalTrialsEntity
         this.status = status;
     }
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinTable(name = "CLINICAL_TRAILS_DOCUMENTS", joinColumns = {
-            @JoinColumn(name = "CLINICAL_TRAILS_ID")}, inverseJoinColumns = {
-            @JoinColumn(name = "DOCUMENT_ID")})
-    public Set<DocumentsEntity> getDocuments()
-    {
-        return documents;
-    }
-
-    public void setDocuments(Set<DocumentsEntity> documents)
-    {
-        this.documents = documents;
-    }
+//    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+//    @JoinTable(name = "CLINICAL_TRAILS_DOCUMENTS", joinColumns = {
+//            @JoinColumn(name = "CLINICAL_TRAILS_ID")}, inverseJoinColumns = {
+//            @JoinColumn(name = "DOCUMENT_ID")})
+//    public Set<DocumentsEntity> getDocuments()
+//    {
+//        return documents;
+//    }
+//
+//    public void setDocuments(Set<DocumentsEntity> documents)
+//    {
+//        this.documents = documents;
+//    }
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "CLINICAL_TRAILS_INVESTIGATORS", joinColumns = {
@@ -302,19 +302,19 @@ public class ClinicalTrialsEntity
         this.medicalInstitutions = medicalInstitutions;
     }
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
-    @JoinTable(name = "CLINICAL_TRAILS_OUTPUT_DOCUMENTS", joinColumns = {
-            @JoinColumn(name = "CLINICAL_TRAILS_ID")}, inverseJoinColumns = {
-            @JoinColumn(name = "OUTPUT_DOCUMENTS_ID")})
-    public Set<OutputDocumentsEntity> getOutputDocuments()
-    {
-        return outputDocuments;
-    }
-
-    public void setOutputDocuments(Set<OutputDocumentsEntity> outputDocuments)
-    {
-        this.outputDocuments = outputDocuments;
-    }
+//    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+//    @JoinTable(name = "CLINICAL_TRAILS_OUTPUT_DOCUMENTS", joinColumns = {
+//            @JoinColumn(name = "CLINICAL_TRAILS_ID")}, inverseJoinColumns = {
+//            @JoinColumn(name = "OUTPUT_DOCUMENTS_ID")})
+//    public Set<OutputDocumentsEntity> getOutputDocuments()
+//    {
+//        return outputDocuments;
+//    }
+//
+//    public void setOutputDocuments(Set<OutputDocumentsEntity> outputDocuments)
+//    {
+//        this.outputDocuments = outputDocuments;
+//    }
 
     @Override
     public int hashCode()
