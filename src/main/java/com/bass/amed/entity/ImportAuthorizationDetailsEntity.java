@@ -3,8 +3,7 @@ package com.bass.amed.entity;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
-@Entity @Table(name = "import_authorization_details", schema = "amed", catalog = "") public class ImportAuthorizationDetailsEntity {
-
+@Entity @Table(name = "import_authorization_details"/*, schema = "amed", catalog = ""*/) public class ImportAuthorizationDetailsEntity {
 	private Integer                             id;
 	private Integer                             codeAmed;
 	private NmPharmaceuticalFormsEntity         pharmaceuticalForm;

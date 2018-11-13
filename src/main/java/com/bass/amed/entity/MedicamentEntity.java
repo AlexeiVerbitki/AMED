@@ -417,19 +417,19 @@ public class MedicamentEntity
         this.storageQuantityMeasurement = storageQuantityMeasurement;
     }
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
-    @JoinTable(name = "MEDICAMENT_DOCUMENTS", joinColumns = {
-            @JoinColumn(name = "MEDICAMENT_ID")}, inverseJoinColumns = {
-            @JoinColumn(name = "DOCUMENT_ID")})
-    public Set<DocumentsEntity> getDocuments()
-    {
-        return documents;
-    }
-
-    public void setDocuments(Set<DocumentsEntity> documents)
-    {
-        this.documents = documents;
-    }
+//    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+//    @JoinTable(name = "MEDICAMENT_DOCUMENTS", joinColumns = {
+//            @JoinColumn(name = "MEDICAMENT_ID")}, inverseJoinColumns = {
+//            @JoinColumn(name = "DOCUMENT_ID")})
+//    public Set<DocumentsEntity> getDocuments()
+//    {
+//        return documents;
+//    }
+//
+//    public void setDocuments(Set<DocumentsEntity> documents)
+//    {
+//        this.documents = documents;
+//    }
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
     @JoinColumn(name = "medicament_id")

@@ -260,33 +260,33 @@ public class ClinicalTrialsEntity
         this.investigators = investigators;
     }
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinTable(name = "CLINICAL_TRAILS_RECEIPTS", joinColumns = {
-            @JoinColumn(name = "CLINICAL_TRAIL_ID")}, inverseJoinColumns = {
-            @JoinColumn(name = "RECEIPT_ID")})
-    public Set<ReceiptsEntity> getReceipts()
-    {
-        return receipts;
-    }
+//    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+//    @JoinTable(name = "CLINICAL_TRAILS_RECEIPTS", joinColumns = {
+//            @JoinColumn(name = "CLINICAL_TRAIL_ID")}, inverseJoinColumns = {
+//            @JoinColumn(name = "RECEIPT_ID")})
+//    public Set<ReceiptsEntity> getReceipts()
+//    {
+//        return receipts;
+//    }
+//
+//    public void setReceipts(Set<ReceiptsEntity> receipts)
+//    {
+//        this.receipts = receipts;
+//    }
 
-    public void setReceipts(Set<ReceiptsEntity> receipts)
-    {
-        this.receipts = receipts;
-    }
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinTable(name = "CLINICAL_TRAILS_PAYMENT_ORDERS", joinColumns = {
-            @JoinColumn(name = "CLINICAL_TRAIL_ID")}, inverseJoinColumns = {
-            @JoinColumn(name = "PAYMENT_ORDER_ID")})
-    public Set<PaymentOrdersEntity> getPaymentOrders()
-    {
-        return paymentOrders;
-    }
-
-    public void setPaymentOrders(Set<PaymentOrdersEntity> paymentOrders)
-    {
-        this.paymentOrders = paymentOrders;
-    }
+//    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+//    @JoinTable(name = "CLINICAL_TRAILS_PAYMENT_ORDERS", joinColumns = {
+//            @JoinColumn(name = "CLINICAL_TRAIL_ID")}, inverseJoinColumns = {
+//            @JoinColumn(name = "PAYMENT_ORDER_ID")})
+//    public Set<PaymentOrdersEntity> getPaymentOrders()
+//    {
+//        return paymentOrders;
+//    }
+//
+//    public void setPaymentOrders(Set<PaymentOrdersEntity> paymentOrders)
+//    {
+//        this.paymentOrders = paymentOrders;
+//    }
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "CLINICAL_TRIALS_MEDICAL_INSTITUTIONS", joinColumns = {
