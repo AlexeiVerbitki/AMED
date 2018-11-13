@@ -15,6 +15,8 @@ import {AuthService} from "../../../shared/service/authetication.service";
 import {PaymentOrder} from "../../../models/paymentOrder";
 import {Receipt} from "../../../models/receipt";
 import {DocumentService} from "../../../shared/service/document.service";
+import {LoaderService} from "../../../shared/service/loader.service";
+import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
 
 @Component({
   selector: 'app-cerere-import-export',
@@ -41,6 +43,9 @@ export class CerereImportExportComponent implements OnInit {
   receiptsList: Receipt[] = [];
   docTypes: any[];
   activeSubstancesTable: any[] = [];
+  initialData: any;
+  divisions: any[] = [];
+  //outDocuments: any[] = [];
 
   authorizationTypes: Select[] = [
     {value: 'none', viewValue: '(None)'},
@@ -51,21 +56,22 @@ export class CerereImportExportComponent implements OnInit {
     constructor(private fb: FormBuilder, private administrationService: AdministrationService, private medicamentService: MedicamentService,
               private medicamentTypeService: MedicamentTypeService, private medicamentGroupService: MedicamentGroupService,
               private pharmaceuticalFormsService: PharmaceuticalFormsService, private activatedRoute: ActivatedRoute, private router: Router,
-              private requestService : RequestService, private authService : AuthService, private documentService: DocumentService) {
+              private requestService : RequestService, private authService : AuthService, private documentService: DocumentService, private loadingService: LoaderService) {
     this.cerereImpExpForm = fb.group({
         'id': [],
         'data': {disabled: true, value: new Date()},
         'startDate': [],
         'requestNumber': [null, Validators.required],
         'company': [''],
+        'companyValue': [],
         'currentStep' : ['E'],
         'documents': [],
+        'medicamentName' : [],
+        'medicaments': [[]],
         'medicament':
             fb.group({
                 'id': [],
                 'name': ['', Validators.required],
-                'company': ['', Validators.required],
-                'companyValue': [''],
                 'pharmaceuticalForm': [null, Validators.required],
                 'documents': [],
                 'unitsQuantity': [null, Validators.required],
@@ -79,9 +85,7 @@ export class CerereImportExportComponent implements OnInit {
         'requestHistories': [],
         'type': [],
         'typeValue': {disabled: true, value: null},
-        //'activeSubstance': [],
-        //'activeSubstanceQuantity': [null],
-        //'activeSubstanceUnit': [null]
+
     });
   }
 
@@ -89,29 +93,44 @@ export class CerereImportExportComponent implements OnInit {
 
       this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
               this.subscriptions.push(this.requestService.getMedicamentRequest(params['id']).subscribe(data => {
+                      this.initialData = Object.assign({}, data);
+                      this.initialData.medicaments = Object.assign([], data.medicaments);
                       this.cerereImpExpForm.get('id').setValue(data.id);
-                      this.cerereImpExpForm.get('medicament.id').setValue(data.medicament.id);
-                      this.cerereImpExpForm.get('medicament.name').setValue(data.medicament.name);
+                      this.cerereImpExpForm.get('medicament.name').setValue(data.medicamentName);
+                      this.cerereImpExpForm.get('medicamentName').setValue(data.medicamentName);
                       this.cerereImpExpForm.get('startDate').setValue(data.startDate);
                       this.cerereImpExpForm.get('requestNumber').setValue(data.requestNumber);
-                      this.cerereImpExpForm.get('medicament.documents').setValue(data.medicament.documents);
-                      this.cerereImpExpForm.get('medicament.company').setValue(data.medicament.company);
-                      this.cerereImpExpForm.get('medicament.companyValue').setValue(data.medicament.company.name);
                       this.cerereImpExpForm.get('requestHistories').setValue(data.requestHistories);
                       this.cerereImpExpForm.get('type').setValue(data.type);
                       this.cerereImpExpForm.get('typeValue').setValue(data.type.code);
-                      this.cerereImpExpForm.get('company').setValue(data.medicament.company);
-                      this.cerereImpExpForm.get('medicament.unitsQuantity').setValue(data.medicament.unitsQuantity);
-                      this.cerereImpExpForm.get('medicament.dose').setValue(data.medicament.dose);
-                      this.cerereImpExpForm.get('medicament.serialNr').setValue(data.medicament.serialNr);
-                      this.cerereImpExpForm.get('medicament.medicamentType').setValue(data.medicament.medicamentType);
-                      this.cerereImpExpForm.get('medicament.group').setValue(data.medicament.group);
-                      this.cerereImpExpForm.get('medicament.pharmaceuticalForm').setValue(data.medicament.pharmaceuticalForm);
-                      this.cerereImpExpForm.get('medicament.unitsOfMeasurement').setValue(data.medicament.unitsOfMeasurement);
-                      this.cerereImpExpForm.get('medicament.activeSubstances').setValue(data.medicament.activeSubstances);
-                      this.documents = data.medicament.documents;
+                      this.cerereImpExpForm.get('company').setValue(data.company);
+                      this.cerereImpExpForm.get('companyValue').setValue(data.company.name);
+                      if (data.medicaments && data.medicaments.length!=0) {
+                         this.initialData.medicaments.activeSubstances = Object.assign([], data.medicaments[0].activeSubstances);
+
+                         for (let entry of data.medicaments) {
+                             this.divisions.push({
+                                 unitsQuantity: entry.unitsQuantity,
+                                 unitsQuantityMeasurement: entry.unitsQuantityMeasurement,
+                                 storageQuantity: entry.storageQuantity,
+                                 storageQuantityMeasurement: entry.storageQuantityMeasurement
+                            });
+                      }
+
+                      this.cerereImpExpForm.get('medicament.dose').setValue(data.medicaments[0].dose);
+                      this.cerereImpExpForm.get('medicament.termsOfValidity').setValue(data.medicaments[0].termsOfValidity);
+                      this.cerereImpExpForm.get('medicament.volume').setValue(data.medicaments[0].volume);
+                      if (data.medicaments[0].group) {
+                          this.cerereImpExpForm.get('medicament.group.code').setValue(data.medicaments[0].group.code);
+                      }
+                      if (data.medicaments[0].prescription!=undefined && data.medicaments[0].prescription!=null) {
+                          this.cerereImpExpForm.get('medicament.prescription').setValue(data.medicaments[0].prescription.toString());
+                      }
+                      this.activeSubstancesTable = data.medicaments[0].activeSubstances;
+                      }
+                      this.documents = data.documents;
+                      //this.outDocuments = data.outputDocuments;
                       this.documents.sort((a,b)=>new Date(a.date).getTime()-new Date(b.date).getTime());
-                      this.activeSubstancesTable = data.medicament.activeSubstances;
                       let xs = this.documents;
                       xs = xs.map(x => {
                           x.isOld = true;
@@ -212,8 +231,21 @@ export class CerereImportExportComponent implements OnInit {
           username: this.authService.getUserName(), step: 'E'
       });
 
-      modelToSubmit.medicament.paymentOrders = this.paymentOrdersList;
-      modelToSubmit.medicament.receipts = this.receiptsList;
+      for (let division of this.divisions) {
+          let medicamentToSubmit: any;
+          medicamentToSubmit = Object.assign({}, this.cerereImpExpForm.get('medicament').value);
+          medicamentToSubmit.activeSubstances = this.activeSubstancesTable;
+          medicamentToSubmit.unitsQuantity = division.unitsQuantity;
+          medicamentToSubmit.unitsQuantityMeasurement = division.unitsQuantityMeasurement;
+          medicamentToSubmit.storageQuantity = division.storageQuantity;
+          medicamentToSubmit.storageQuantityMeasurement = division.storageQuantityMeasurement;
+          modelToSubmit.medicaments.push(medicamentToSubmit);
+      }
+
+      modelToSubmit.paymentOrders = this.paymentOrdersList;
+      modelToSubmit.receipts = this.receiptsList;
+      modelToSubmit.documents = this.documents;
+      //modelToSubmit.outputDocuments = this.outDocuments;
 
       console.log(modelToSubmit);
 
@@ -227,5 +259,40 @@ export class CerereImportExportComponent implements OnInit {
   paymentTotalUpdate(event) {
         this.paymentTotal = event.valueOf();
   }
+
+  checkResponseReceived(doc: any, value: any) {
+        doc.responseReceived = value.checked;
+    }
+
+    viewDoc(document: any) {
+        this.loadingService.show();
+        if (document.docType.category == 'SR' || document.docType.category == 'AP') {
+            this.subscriptions.push(this.documentService.viewRequest(document.number,
+                document.content,
+                document.title,
+                document.docType.category).subscribe(data => {
+                    let file = new Blob([data], {type: 'application/pdf'});
+                    var fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.loadingService.hide();
+                }, error => {
+                    this.loadingService.hide();
+                }
+                )
+            );
+        } else {
+            this.subscriptions.push(this.documentService.viewDD(document.number).subscribe(data => {
+                    let file = new Blob([data], {type: 'application/pdf'});
+                    var fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.loadingService.hide();
+                }, error => {
+                    this.loadingService.hide();
+                }
+                )
+            );
+        }
+    }
+
 
 }

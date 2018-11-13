@@ -12,7 +12,7 @@ public class LicenseResolutionEntity
     private String resolution;
     private Date date;
     private String reason;
-    private String pharmacyMaster;
+    private Integer registrationId;
 
     @Id
     @Column(name = "id")
@@ -82,14 +82,14 @@ public class LicenseResolutionEntity
     }
 
     @Basic
-    @Column(name = "pharmacy_master")
-    public String getPharmacyMaster()
+    @Column(name = "registration_id")
+    public Integer getRegistrationId()
     {
-        return pharmacyMaster;
+        return registrationId;
     }
 
-    public void setPharmacyMaster(String pharmacyMaster)
+    public void setRegistrationId(Integer registrationId)
     {
-        this.pharmacyMaster = pharmacyMaster;
+        this.registrationId = registrationId;
     }
 }

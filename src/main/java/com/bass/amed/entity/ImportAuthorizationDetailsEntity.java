@@ -33,7 +33,7 @@ import java.sql.Timestamp;
 	public void setId(Integer id) { this.id = id; }
 
 	@Basic
-	@Column(name = "codeAmed", nullable = true, length = 11)
+	@Column(name = "code_amed", nullable = true, length = 11)
 	public Integer getCodeAmed() {
 		return codeAmed;
 	}
@@ -193,7 +193,7 @@ import java.sql.Timestamp;
 	}
 
 	@Basic
-	@Column(name = "price", nullable = true, length = 11)
+	@Column(name = "price_id", nullable = true, length = 11)
 	public Double getPrice() {
 		return price;
 	}
@@ -214,7 +214,7 @@ import java.sql.Timestamp;
 	}
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
-	@JoinColumn(name = "custom_code_id")
+	@JoinColumn(name = "customs_code_id")
 	public NmCustomsCodesEntity getCustomsCode() {
 		return customsCode;
 	}

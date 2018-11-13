@@ -44,7 +44,6 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
     //Validations
     mForm: FormGroup;
     rForm: FormGroup;
-    items: FormArray;
 
 
     constructor(private router: Router,
@@ -98,27 +97,6 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
             'company': [{value: null, disabled: true}, Validators.required],
         });
 
-
-       /* this.rForm = this.fb.group({
-           'items' : this.fb.array([
-               {}
-           ])
-        });*/
-    }
-
-
-    createMedList(): void {
-        this.items = this.rForm.get('items') as FormArray;
-        this.medicamentsToDestroy.forEach(mtd => {
-                this.items.push(this.fb.group({
-                    id: mtd.id,
-                    medicamentName: mtd.medicamentName,
-                    quantity: mtd.quantity,
-                    uselessReason: mtd.uselessReason,
-                    destructionMethod: mtd.destructionMethod
-                }))
-            }
-        );
     }
 
     onChanges(): void {
@@ -191,13 +169,28 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
 
     submit()
     {
+        this.rFormSubbmitted = true;
+        if (this.docs.length==0 || !this.checkAllDocumentsWasAttached())
+        {
+            return;
+        }
 
+        this.rFormSubbmitted = false;
+        let modelToSubmit = this.composeModel('A');
+
+        this.subscriptions.push(
+            this.annihilationService.confirmEvaluateAnnihilation(modelToSubmit).subscribe(data => {
+                    let result = data.body;
+                    this.router.navigate(['/dashboard/module/medicament-destruction/actual', result]);
+                }
+            )
+        );
     }
 
     confirm()
     {
         this.rFormSubbmitted = true;
-        if (this.docs.length==0 || !this.checkAllDocumentsWasAttached())
+        if (this.docs.length==0)
         {
             return;
         }
@@ -241,6 +234,7 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
         }];
 
         modelToSubmit.currentStep = currentStep;
+        modelToSubmit.assignedUser = this.authService.getUserName();
 
         modelToSubmit.medicamentAnnihilation = annihilationModel;
         return modelToSubmit;

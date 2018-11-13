@@ -1,7 +1,6 @@
 package com.bass.amed.entity;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.util.*;
 
 @Entity
@@ -40,8 +39,11 @@ public class LicensesEntity
     @JoinColumn(name = "cessation_reason_id")
     private LicenseCessationReasonsEntity cessationReasons;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "resolution_id")
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "license_id")
+    private Set<LicenseResolutionEntity> resolutions;
+
+    @Transient
     private LicenseResolutionEntity resolution;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
@@ -87,6 +89,10 @@ public class LicensesEntity
     @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "license_id")
     private Set<LicenseAgentPharmaceutistEntity> agentPharmaceutist;
+
+    @Transient
+    private LicenseAgentPharmaceutistEntity selectedPharmaceutist;
+
 
 
     public Integer getId()
@@ -305,5 +311,25 @@ public class LicensesEntity
     public void setAgentPharmaceutist(Set<LicenseAgentPharmaceutistEntity> agentPharmaceutist)
     {
         this.agentPharmaceutist = agentPharmaceutist;
+    }
+
+    public LicenseAgentPharmaceutistEntity getSelectedPharmaceutist()
+    {
+        return selectedPharmaceutist;
+    }
+
+    public void setSelectedPharmaceutist(LicenseAgentPharmaceutistEntity selectedPharmaceutist)
+    {
+        this.selectedPharmaceutist = selectedPharmaceutist;
+    }
+
+    public Set<LicenseResolutionEntity> getResolutions()
+    {
+        return resolutions;
+    }
+
+    public void setResolutions(Set<LicenseResolutionEntity> resolutions)
+    {
+        this.resolutions = resolutions;
     }
 }

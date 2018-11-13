@@ -6,7 +6,7 @@ import {MatDialog} from "@angular/material";
 import {Router} from "@angular/router";
 import {AdministrationService} from "../../../shared/service/administration.service";
 import {map, startWith} from "rxjs/operators";
-import {ConfirmationDialogComponent} from "../../../confirmation-dialog/confirmation-dialog.component";
+import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
 import {saveAs} from 'file-saver';
 
 @Component({

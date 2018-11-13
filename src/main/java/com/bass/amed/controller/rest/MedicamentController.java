@@ -1,9 +1,11 @@
 package com.bass.amed.controller.rest;
 
 import com.bass.amed.dto.InterruptDetailsDTO;
-import com.bass.amed.entity.*;
-import com.bass.amed.projection.MedicamentDetailsForPraceRegProjection;
+import com.bass.amed.entity.MedicamentEntity;
+import com.bass.amed.entity.RegistrationRequestHistoryEntity;
+import com.bass.amed.entity.RegistrationRequestsEntity;
 import com.bass.amed.projection.MedicamentNamesListProjection;
+import com.bass.amed.projection.MedicamentRegisterNumberProjection;
 import com.bass.amed.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,10 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,18 +44,6 @@ public class MedicamentController
     @Autowired
     private OutputDocumentsRepository outputDocumentsRepository;
 
-
-//    @RequestMapping("/company-medicaments")
-//    public ResponseEntity<List<MedicamentDetailsForPraceRegProjection>> getCompanyMedicaments(@RequestParam(value = "companyId") Integer companyId)
-//    {
-//
-//        logger.debug("Retrieve all medicaments of company");
-//        NmEconomicAgentsEntity company = economicAgentsRepository.findById(companyId).get();
-//
-//        List<MedicamentDetailsForPraceRegProjection> meds = medicamentRepository.findAllByCompanyAndStatus(company, "F");
-//
-//        return new ResponseEntity<>(meds, HttpStatus.OK);
-//    }
 
     @RequestMapping("/company-all-medicaments")
     public ResponseEntity<List<MedicamentEntity>> getAllMedicaments()
@@ -80,6 +74,13 @@ public class MedicamentController
         return new ResponseEntity<>(medicamentRepository.findById(id).get(), HttpStatus.OK);
     }
 
+    @RequestMapping("/search-medicaments-by-register-number")
+    public ResponseEntity<List<MedicamentRegisterNumberProjection>> getMedicamentsByRegisterNumber(Integer registerNumber)
+    {
+        logger.debug("Retrieve medicaments by register number");
+        return new ResponseEntity<>(medicamentRepository.findDistinctByRegistrationNumber(registerNumber), HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/interrupt-process", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> interruptProcess(@RequestBody InterruptDetailsDTO interruptDetailsDTO)
     {
@@ -88,6 +89,7 @@ public class MedicamentController
 
         RegistrationRequestsEntity registrationRequestsEntity = regReqOpt.get();
         registrationRequestsEntity.setCurrentStep("C");
+        registrationRequestsEntity.setAssignedUser(interruptDetailsDTO.getUsername());
         registrationRequestsEntity.setInterruptionReason(interruptDetailsDTO.getReason());
 
         RegistrationRequestHistoryEntity historyEntity = new RegistrationRequestHistoryEntity();
@@ -104,6 +106,8 @@ public class MedicamentController
         historyEntity.setStep("C");
         historyEntity.setStartDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
         registrationRequestsEntity.getRequestHistories().add(historyEntity);
+
+        registrationRequestsEntity.setEndDate(new Timestamp(new Date().getTime()));
 
         requestRepository.save(registrationRequestsEntity);
 

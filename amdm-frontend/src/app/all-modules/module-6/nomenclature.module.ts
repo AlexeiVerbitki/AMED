@@ -9,6 +9,7 @@ import {CatalogPriceDrugsComponent} from "./catalog-price-drugs/catalog-price-dr
 import {ClasifyDrugsComponent} from "./clasify-drugs/clasify-drugs.component";
 import {ClasifyEconomicsAgencyComponent} from "./clasify-economics-agency/clasify-economics-agency.component";
 import {NomenclatorDrugsComponent} from "./nomenclator-drugs/nomenclator-drugs.component";
+import { NomenclatorRootComponent } from './nomenclator-root/nomenclator-root.component';
 
 @NgModule({
     imports: [
@@ -19,7 +20,7 @@ import {NomenclatorDrugsComponent} from "./nomenclator-drugs/nomenclator-drugs.c
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
     ],
-    declarations: [CatalogPriceDrugsComponent,ClasifyDrugsComponent,ClasifyEconomicsAgencyComponent,NomenclatorDrugsComponent]
+    declarations: [NomenclatorRootComponent,CatalogPriceDrugsComponent,ClasifyDrugsComponent,ClasifyEconomicsAgencyComponent,NomenclatorDrugsComponent, NomenclatorRootComponent]
 })
 export class NomenclatureModule {
 }

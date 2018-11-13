@@ -22,7 +22,7 @@
       </div>
     </div>
     <hr>
-    <app-document [documents]="documents" [nrCerere]="iForm.get('requestNumber').value" [dcTypes]="docTypes" (documentAdded)="documentAdded($event)"></app-document>
+    <app-document [documents]="documents" [nrCerere]="iForm.get('requestNumber').value" [dcTypes]="docTypes" (documentModified)="documentModified($event)"></app-document>
     <hr>
     <div class="row">
       <div class="col-md-6">
@@ -73,9 +73,9 @@
       </tr>
       </tbody>
     </table>
-    <div *ngIf="formSubmitted && isNonAttachedDocuments">
-      <small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong></small>
-    </div>
+    <!--<div *ngIf="formSubmitted && isNonAttachedDocuments">-->
+      <!--<small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong></small>-->
+    <!--</div>-->
     <div class="text-center">
       <button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="back()">Inapoi</button>
       <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interrupt()">Intrerupere</button>

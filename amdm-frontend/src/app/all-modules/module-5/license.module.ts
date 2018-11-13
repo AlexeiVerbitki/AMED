@@ -7,11 +7,12 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MaterialSharedModule} from "../../material-shared.module";
 import {RegMedCerereLicComponent} from "./reg-med-cerere-lic/reg-med-cerere-lic.component";
 import {EvaluareCerereLicComponent} from "./evaluare-cerere-lic/evaluare-cerere-lic.component";
-import {DocumentComponent} from "../../document/document.component";
 import {UploadFileService} from "../../shared/service/upload/upload-file.service";
 import {LicenseService} from "../../shared/service/license/license.service";
 import { EliberareCerereLicComponent } from './eliberare-cerere-lic/eliberare-cerere-lic.component';
 import {DocumentModule} from "../../document/document.module";
+import {ErrorHandlerService} from "../../shared/service/error-handler.service";
+import {PaymentModule} from "../../payment/payment.module";
 
 @NgModule({
     imports: [
@@ -21,15 +22,15 @@ import {DocumentModule} from "../../document/document.module";
         ReactiveFormsModule,
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
-        DocumentModule
+        DocumentModule,
+        PaymentModule
     ],
     schemas: [],
     declarations: [RegMedCerereLicComponent,
         EvaluareCerereLicComponent,
 	 EliberareCerereLicComponent
     ]    ,
-    providers: [UploadFileService, LicenseService
-
+    providers: [UploadFileService, LicenseService,
     ],
 })
 export class LicenseModule {

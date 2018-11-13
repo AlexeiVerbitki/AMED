@@ -11,6 +11,7 @@ public class LicenseAgentPharmaceutistEntity
     private Integer id;
     private Timestamp insertionDate;
     private Timestamp selectionDate;
+    private String fullName;
 
     @Id
     @Column(name = "id")
@@ -64,5 +65,17 @@ public class LicenseAgentPharmaceutistEntity
     public int hashCode()
     {
         return Objects.hash(id, insertionDate, selectionDate);
+    }
+
+    @Basic
+    @Column(name = "full_name")
+    public String getFullName()
+    {
+        return fullName;
+    }
+
+    public void setFullName(String fullName)
+    {
+        this.fullName = fullName;
     }
 }

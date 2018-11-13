@@ -11,7 +11,7 @@ public class ReferencePricesEntity {
     private BigDecimal value;
     private NmCountriesEntity country;
     private NmCurrenciesEntity currency;
-    private Integer requestId;
+    private Integer priceId;
     private PriceTypesEntity type;
 
     @OneToOne(fetch = FetchType.EAGER )//, cascade = CascadeType.DETACH)
@@ -66,13 +66,13 @@ public class ReferencePricesEntity {
     }
 
     @Basic //, cascade = CascadeType.DETACH)
-    @Column(name = "price_request_id")
-    public Integer getRequestId() {
-        return requestId;
+    @Column(name = "price_id")
+    public Integer getPriceId() {
+        return priceId;
     }
 
-    public void setRequestId(Integer requestId) {
-        this.requestId = requestId;
+    public void setPriceId(Integer requestId) {
+        this.priceId = requestId;
     }
 
 }

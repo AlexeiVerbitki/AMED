@@ -16,7 +16,6 @@ public class MedicamentEntity
     private String customsCode;
     private String barcode;
     private NmInternationalMedicamentNameEntity internationalMedicamentName;
-    private String commercialName;
     private Integer countryId;
     private NmManufacturesEntity manufacture;
     private Integer registrationNumber;
@@ -37,11 +36,11 @@ public class MedicamentEntity
     private NmUnitsOfMeasurementEntity volumeQuantityMeasurement;
     private Integer termsOfValidity;
     private Integer unitsQuantity;
-    private NmUnitsOfMeasurementEntity unitsQuantityMeasurement;
+    private NmMedicamentFormsEntity unitsQuantityMeasurement;
     private Integer storageQuantity;
-    private NmUnitsOfMeasurementEntity storageQuantityMeasurement;
-    private Set<DocumentsEntity> documents;
+    private NmMedicamentFormsEntity storageQuantityMeasurement;
     private Set<MedicamentActiveSubstancesEntity> activeSubstances;
+    private Set<MedicamentHistoryEntity> medicamentHistory;
     private MedicamentExpertsEntity experts;
 
     @Id
@@ -127,18 +126,6 @@ public class MedicamentEntity
     public void setInternationalMedicamentName(NmInternationalMedicamentNameEntity internationalMedicamentName)
     {
         this.internationalMedicamentName = internationalMedicamentName;
-    }
-
-    @Basic
-    @Column(name = "commercial_name", nullable = true, length = 100)
-    public String getCommercialName()
-    {
-        return commercialName;
-    }
-
-    public void setCommercialName(String commercialName)
-    {
-        this.commercialName = commercialName;
     }
 
     @Basic
@@ -371,12 +358,12 @@ public class MedicamentEntity
 
     @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
     @JoinColumn( name = "units_quantity_unit_measurement_id" )
-    public NmUnitsOfMeasurementEntity getUnitsQuantityMeasurement()
+    public NmMedicamentFormsEntity getUnitsQuantityMeasurement()
     {
         return unitsQuantityMeasurement;
     }
 
-    public void setUnitsQuantityMeasurement(NmUnitsOfMeasurementEntity unitsQuantityMeasurement)
+    public void setUnitsQuantityMeasurement(NmMedicamentFormsEntity unitsQuantityMeasurement)
     {
         this.unitsQuantityMeasurement = unitsQuantityMeasurement;
     }
@@ -407,31 +394,17 @@ public class MedicamentEntity
 
     @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
     @JoinColumn( name = "storage_quantity_unit_measurement_id" )
-    public NmUnitsOfMeasurementEntity getStorageQuantityMeasurement()
+    public NmMedicamentFormsEntity getStorageQuantityMeasurement()
     {
         return storageQuantityMeasurement;
     }
 
-    public void setStorageQuantityMeasurement(NmUnitsOfMeasurementEntity storageQuantityMeasurement)
+    public void setStorageQuantityMeasurement(NmMedicamentFormsEntity storageQuantityMeasurement)
     {
         this.storageQuantityMeasurement = storageQuantityMeasurement;
     }
 
-//    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
-//    @JoinTable(name = "MEDICAMENT_DOCUMENTS", joinColumns = {
-//            @JoinColumn(name = "MEDICAMENT_ID")}, inverseJoinColumns = {
-//            @JoinColumn(name = "DOCUMENT_ID")})
-//    public Set<DocumentsEntity> getDocuments()
-//    {
-//        return documents;
-//    }
-//
-//    public void setDocuments(Set<DocumentsEntity> documents)
-//    {
-//        this.documents = documents;
-//    }
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST}, orphanRemoval = true)
     @JoinColumn(name = "medicament_id")
     public Set<MedicamentActiveSubstancesEntity> getActiveSubstances()
     {
@@ -441,6 +414,18 @@ public class MedicamentEntity
     public void setActiveSubstances(Set<MedicamentActiveSubstancesEntity> activeSubstances)
     {
         this.activeSubstances = activeSubstances;
+    }
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    @JoinColumn(name = "registration_number")
+    public Set<MedicamentHistoryEntity> getMedicamentHistory()
+    {
+        return medicamentHistory;
+    }
+
+    public void setMedicamentHistory(Set<MedicamentHistoryEntity> medicamentHistory)
+    {
+        this.medicamentHistory = medicamentHistory;
     }
 
     @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
@@ -494,10 +479,6 @@ public class MedicamentEntity
             return false;
         }
         if (internationalMedicamentName != null ? !internationalMedicamentName.equals(that.internationalMedicamentName) : that.internationalMedicamentName != null)
-        {
-            return false;
-        }
-        if (commercialName != null ? !commercialName.equals(that.commercialName) : that.commercialName != null)
         {
             return false;
         }
@@ -569,6 +550,10 @@ public class MedicamentEntity
         {
             return false;
         }
+        if (volumeQuantityMeasurement != null ? !volumeQuantityMeasurement.equals(that.volumeQuantityMeasurement) : that.volumeQuantityMeasurement != null)
+        {
+            return false;
+        }
         if (termsOfValidity != null ? !termsOfValidity.equals(that.termsOfValidity) : that.termsOfValidity != null)
         {
             return false;
@@ -589,11 +574,15 @@ public class MedicamentEntity
         {
             return false;
         }
-        if (documents != null ? !documents.equals(that.documents) : that.documents != null)
+        if (activeSubstances != null ? !activeSubstances.equals(that.activeSubstances) : that.activeSubstances != null)
         {
             return false;
         }
-        return activeSubstances != null ? activeSubstances.equals(that.activeSubstances) : that.activeSubstances == null;
+        if (medicamentHistory != null ? !medicamentHistory.equals(that.medicamentHistory) : that.medicamentHistory != null)
+        {
+            return false;
+        }
+        return experts != null ? experts.equals(that.experts) : that.experts == null;
     }
 
     @Override
@@ -606,7 +595,6 @@ public class MedicamentEntity
         result = 31 * result + (customsCode != null ? customsCode.hashCode() : 0);
         result = 31 * result + (barcode != null ? barcode.hashCode() : 0);
         result = 31 * result + (internationalMedicamentName != null ? internationalMedicamentName.hashCode() : 0);
-        result = 31 * result + (commercialName != null ? commercialName.hashCode() : 0);
         result = 31 * result + (countryId != null ? countryId.hashCode() : 0);
         result = 31 * result + (manufacture != null ? manufacture.hashCode() : 0);
         result = 31 * result + (registrationNumber != null ? registrationNumber.hashCode() : 0);
@@ -624,13 +612,15 @@ public class MedicamentEntity
         result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (unitsOfMeasurement != null ? unitsOfMeasurement.hashCode() : 0);
         result = 31 * result + (volume != null ? volume.hashCode() : 0);
+        result = 31 * result + (volumeQuantityMeasurement != null ? volumeQuantityMeasurement.hashCode() : 0);
         result = 31 * result + (termsOfValidity != null ? termsOfValidity.hashCode() : 0);
         result = 31 * result + (unitsQuantity != null ? unitsQuantity.hashCode() : 0);
         result = 31 * result + (unitsQuantityMeasurement != null ? unitsQuantityMeasurement.hashCode() : 0);
         result = 31 * result + (storageQuantity != null ? storageQuantity.hashCode() : 0);
         result = 31 * result + (storageQuantityMeasurement != null ? storageQuantityMeasurement.hashCode() : 0);
-        result = 31 * result + (documents != null ? documents.hashCode() : 0);
         result = 31 * result + (activeSubstances != null ? activeSubstances.hashCode() : 0);
+        result = 31 * result + (medicamentHistory != null ? medicamentHistory.hashCode() : 0);
+        result = 31 * result + (experts != null ? experts.hashCode() : 0);
         return result;
     }
 }

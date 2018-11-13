@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AdministrationService} from "../shared/service/administration.service";
 import {Receipt} from "../models/receipt";
 import {PaymentOrder} from "../models/paymentOrder";
+import {Subscription} from "rxjs";
 
 @Component({
     selector: 'app-payment',
@@ -12,6 +13,7 @@ import {PaymentOrder} from "../models/paymentOrder";
 export class PaymentComponent implements OnInit {
 
     //Receipt controls
+    private subscriptions: Subscription[] = [];
     addReceiptForm: FormGroup;
     receiptsList: Receipt[] = [];
     receiptTotal: number = 0;
@@ -25,12 +27,14 @@ export class PaymentComponent implements OnInit {
 
     disabled: boolean = false;
 
+    serviceCharges: any[];
+
     constructor(private fb: FormBuilder,
                 private administrationService: AdministrationService) {
         this.addReceiptForm = this.fb.group({
             'receiptNumber': [''],
             'date': [''],
-            'name': ['', Validators.required],
+            'serviceCharge': ['', Validators.required],
             'amount': [, Validators.required],
             'sP': [{value:false, disabled : this.disabled} ]
         });
@@ -46,6 +50,14 @@ export class PaymentComponent implements OnInit {
     ngOnInit() {
         this.recalculateTotalReceipt();
         this.recalculateTotalPaymentOrders();
+
+        this.subscriptions.push(
+            this.administrationService.getAllServiceCharges().subscribe(data => {
+                    this.serviceCharges = data;
+                },
+                error => console.log(error)
+            )
+        );
     }
 
     get receipts(): Receipt [] {
@@ -149,6 +161,13 @@ export class PaymentComponent implements OnInit {
     private recalculateTotal(){
         this.total = this.paymentOrdersTotal - this.receiptTotal;
         this.totalValueChanged.emit(this.total);
+    }
+
+    checkAmount()
+    {
+        if(this.addReceiptForm.get('serviceCharge').value) {
+            this.addReceiptForm.get('amount').setValue(this.addReceiptForm.get('serviceCharge').value.amount);
+        }
     }
 
 }

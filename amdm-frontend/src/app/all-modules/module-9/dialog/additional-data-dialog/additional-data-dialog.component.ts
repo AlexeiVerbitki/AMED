@@ -5,7 +5,7 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
 import {AdministrationService} from "../../../../shared/service/administration.service";
 import {DocumentService} from "../../../../shared/service/document.service";
 import {AuthService} from "../../../../shared/service/authetication.service";
-import {ConfirmationDialogComponent} from "../../../../confirmation-dialog/confirmation-dialog.component";
+import {ConfirmationDialogComponent} from "../../../../dialog/confirmation-dialog.component";
 import {LoaderService} from "../../../../shared/service/loader.service";
 
 @Component({
@@ -21,7 +21,8 @@ export class AdditionalDataDialogComponent implements OnInit {
     docTypeRA: any[];
     title: string = 'Detalii scrisoare de solicitare date aditionale';
 
-    constructor(private fb: FormBuilder, private administrationService: AdministrationService,
+    constructor(private fb: FormBuilder,
+                private administrationService: AdministrationService,
                 private documentService: DocumentService,
                 private authService: AuthService,
                 public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
@@ -30,29 +31,18 @@ export class AdditionalDataDialogComponent implements OnInit {
                 private loadingService: LoaderService,) {
     }
 
+
+
     ngOnInit() {
         this.reqForm = this.fb.group({
             'data': {disabled: true, value: new Date()},
-            'docNumber': [null],
+            'docNumber': {disabled: true, value: this.dataDialog.requestNumber},
             'title': [null, Validators.required],
             'content': [null, Validators.required],
             'email': [null, [Validators.required, Validators.email]]
         });
 
-        this.subscriptions.push(
-            this.administrationService.generateDocNr().subscribe(data => {
-                    this.reqForm.get('docNumber').setValue(data);
-                },
-                error => console.log(error)
-            )
-        );
-
-        console.log('modalType',this.dataDialog.modalType);
-        if (this.dataDialog.modalType == 'NOTIFICATION') {
-            this.title = 'Detalii scrisoare de informare';
-        } else if (this.dataDialog.modalType == 'LABORATORY_ANALYSIS') {
-            this.title = 'Detalii scrisoare solicitare pentru desfasurarea analizei de laborator ';
-        }
+        console.log('dataDialog',this.dataDialog);
 
         this.subscriptions.push(
             this.administrationService.getAllDocTypes().subscribe(data => {

@@ -6,38 +6,44 @@
         <!--importTypeForms: {{importTypeForm.value | json}}-->
 
         <form [formGroup]="evaluateImportForm">
-            <div formGroupName="importAuthorizationEntity">
-                <div class="row">
-                    <div class="col-lg-4">
-                        <div class="md-form">
-                            <input id="requestNumber" mdbInputDirective type="text" class="form-control" formControlName="requestNumber"
-                                   [attr.disabled]="true">
-                            <label for="requestNumber">Nr. cererii</label>
-                        </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="md-form">
+                        <input id="requestNumber" mdbInputDirective type="text" class="form-control" formControlName="requestNumber"
+                               [attr.disabled]="true">
+                        <label for="requestNumber">Nr. cererii</label>
                     </div>
-
-                    <div class="col-lg-4">
-                        <div class="md-form-modified">
-                            <mat-form-field class="w-100">
-                                <input matInput [matDatepicker]="picker" placeholder="Data"
-                                       formControlName="startDate">
-                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                <mat-datepicker touchUi #picker></mat-datepicker>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="md-form-modified">
-                            <mat-form-field class="w-100">
-                                <mat-select id="solicitantCompany" placeholder="Compania solicitant"
-                                            formControlName="company">
-                                    <mat-option *ngFor="let solicitantCompany of solicitantCompanyList" [value]="solicitantCompany">{{ solicitantCompany.name }}</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </div>
-
                 </div>
+
+                <div class="col-lg-4">
+                    <div class="md-form-modified">
+                        <mat-form-field class="w-100">
+                            <input matInput [matDatepicker]="picker" placeholder="Data"
+                                   formControlName="startDate" >
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="md-form">
+                        <!--<mat-form-field class="w-100">-->
+                            <!--<mat-select id="solicitantCompany" placeholder="Compania solicitant"-->
+                                        <!--formControlName="company">-->
+                                <!--<mat-option *ngFor="let solicitantCompany of solicitantCompanyList" [value]="solicitantCompany">{{ solicitantCompany.name }}</mat-option>-->
+                            <!--</mat-select>-->
+                        <!--</mat-form-field>-->
+                        <input id="company" mdbInputDirective type="text" class="form-control"
+                               value={{evaluateImportForm.value.company.name}} [attr.disabled]="true">
+                        <label for="company">Compania solicitant
+                        </label>
+                        <!--value={{evaluateImportForm.value.company.name}}-->
+                    </div>
+                </div>
+
+            </div>
+            <div formGroupName="importAuthorizationEntity">
+
 
                 <hr>
                 <table class="table text-center">
@@ -74,14 +80,26 @@
                 <div class="row">
 
 
+                    <!--<div class="col-md-4">-->
+                        <!--<div class="md-form">-->
+                            <!--<input id="seller" mdbInputDirective type="text" class="form-control" formControlName="seller">-->
+                            <!--<label for="seller">Vînzător-->
+                                <!--<span class="text-danger">*</span>-->
+                            <!--</label>-->
+                        <!--</div>-->
+                    <!--</div>-->
                     <div class="col-md-4">
-                        <div class="md-form">
-                            <input id="seller" mdbInputDirective type="text" class="form-control" formControlName="seller">
-                            <label for="seller">Vînzător
-                                <span class="text-danger">*</span>
-                            </label>
+                        <div class="md-form-modified">
+                            <mat-form-field class="w-100">
+                                <mat-select id="seller" placeholder="Vînzător"
+                                            formControlName="seller">
+                                    <mat-option *ngFor="let solicitantCompany of solicitantCompanyList" [value]="solicitantCompany">{{ solicitantCompany.name }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
                         </div>
                     </div>
+
+
                     <!--<div class="col-md-4">-->
                     <!--<div class="md-form">-->
                     <!--<input id="sellerTaraAdresa" mdbInputDirective type="text" class="form-control" formControlName="sellerTaraAdresa">-->
@@ -99,11 +117,13 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="md-form">
-                            <input id="importer" mdbInputDirective type="text" class="form-control" formControlName="importer">
-                            <label for="importer">Importator
-                                <span class="text-danger">*</span>
-                            </label>
+                        <div class="md-form-modified">
+                            <mat-form-field class="w-100">
+                                <mat-select id="importer" placeholder="Importator"
+                                            formControlName="importer">
+                                    <mat-option *ngFor="let solicitantCompany of solicitantCompanyList" [value]="solicitantCompany">{{ solicitantCompany.name }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
                         </div>
                     </div>
                     <!--<div class="col-md-4">-->
@@ -187,13 +207,23 @@
                                     </div>
                                 </div>
 
-                                <div class="col-6">
-                                    <div class="md-form">
-                                        <input id="producer" mdbInputDirective type="text" class="form-control"
-                                               formControlName="producer">
-                                        <label for="producer">Firma producătoare
-                                            <span class="text-danger">*</span>
-                                        </label>
+                                <!--<div class="col-6">-->
+                                    <!--<div class="md-form">-->
+                                        <!--<input id="producer" mdbInputDirective type="text" class="form-control"-->
+                                               <!--formControlName="producer">-->
+                                        <!--<label for="producer">Firma producătoare-->
+                                            <!--<span class="text-danger">*</span>-->
+                                        <!--</label>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <div class="col-md-4">
+                                    <div class="md-form-modified">
+                                        <mat-form-field class="w-100">
+                                            <mat-select id="producer" placeholder="Firma producătoare"
+                                                        formControlName="producer">
+                                                <mat-option *ngFor="let solicitantCompany of solicitantCompanyList" [value]="solicitantCompany">{{ solicitantCompany.name }}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
                                     </div>
                                 </div>
                                 <!--<div class="col-md-4">

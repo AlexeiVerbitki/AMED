@@ -3,6 +3,7 @@ package com.bass.amed.service;
 import com.bass.amed.common.Constants;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
+import com.bass.amed.repository.LicenseResolutionRepository;
 import com.bass.amed.repository.NmStatesRepository;
 import com.bass.amed.repository.RequestRepository;
 import com.bass.amed.utils.SecurityUtils;
@@ -30,6 +31,9 @@ public class LicenseRegistrationRequestService
     @Autowired
     private NmStatesRepository statesRepository;
 
+    @Autowired
+    private LicenseResolutionRepository licenseResolutionRepository;
+
     @Transactional(readOnly = true)
     public RegistrationRequestsEntity findLicenseRegistrationById(Integer id) throws CustomException
     {
@@ -49,6 +53,22 @@ public class LicenseRegistrationRequestService
                 addr -> addr.setState(statesRepository.findById(addr.getLocality().getStateId()).get())
         );
         rrE.setCompany((NmEconomicAgentsEntity) Hibernate.unproxy(re.get().getCompany()));
+
+        if (rrE.getLicense().getAgentPharmaceutist() != null && !rrE.getLicense().getAgentPharmaceutist().isEmpty())
+        {
+            rrE.getLicense().setSelectedPharmaceutist(rrE.getLicense().getAgentPharmaceutist().stream().filter(af -> af.getSelectionDate() != null).max(Comparator.comparing(LicenseAgentPharmaceutistEntity::getSelectionDate)).get());
+        }
+
+
+        if (rrE.getLicense().getResolutions() != null && !rrE.getLicense().getResolutions().isEmpty())
+        {
+            Optional<LicenseResolutionEntity> first = rrE.getLicense().getResolutions().stream().filter(r -> r.getRegistrationId().equals(rrE.getId())).findFirst();
+            if (first.isPresent())
+            {
+                rrE.getLicense().setResolution(first.get());
+            }
+        }
+
         return rrE;
     }
 
@@ -101,12 +121,13 @@ public class LicenseRegistrationRequestService
             //Update resolution
             if (r.getLicense().getResolution() == null)
             {
-                r.getLicense().setResolution(request.getLicense().getResolution());
+                LicenseResolutionEntity resolutionAng = request.getLicense().getResolution();
+                resolutionAng.setRegistrationId(r.getId());
+                r.getLicense().getResolutions().add(resolutionAng);
             }
             else {
                 LicenseResolutionEntity lre = em.find(LicenseResolutionEntity.class, r.getLicense().getResolution().getId());
                 lre.setDate(request.getLicense().getResolution().getDate());
-                lre.setPharmacyMaster(request.getLicense().getResolution().getPharmacyMaster());
                 lre.setReason(request.getLicense().getResolution().getReason());
                 lre.setResolution(request.getLicense().getResolution().getResolution());
 
@@ -137,6 +158,24 @@ public class LicenseRegistrationRequestService
 
             if (!pSet.isEmpty()){
                 r.getLicense().getPaymentOrders().addAll(pSet);
+            }
+
+            //Update farmacisti
+            Set<LicenseAgentPharmaceutistEntity> fSet = request.getLicense().getAgentPharmaceutist().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
+
+            if (!fSet.isEmpty()){
+                r.getLicense().getAgentPharmaceutist().addAll(fSet);
+            }
+
+            for (LicenseAgentPharmaceutistEntity lap : request.getLicense().getAgentPharmaceutist())
+            {
+                if (lap.getId() != null)
+                {
+                    LicenseAgentPharmaceutistEntity lTmp = em.find(LicenseAgentPharmaceutistEntity.class, lap.getId());
+                    lTmp.setSelectionDate(lap.getSelectionDate());
+
+                    em.merge(lTmp);
+                }
             }
 
             //Update commision response
@@ -227,6 +266,14 @@ public class LicenseRegistrationRequestService
             r.getRequestHistories().add(new ArrayList<>(request.getRequestHistories()).get(0));
             r.setEndDate(request.getEndDate());
             r.getLicense().setStatus(request.getLicense().getStatus());
+            Date releaseDate = new Date();
+            r.getLicense().setReleaseDate(releaseDate);
+
+            Calendar c = Calendar.getInstance();
+            c.setTime(releaseDate);
+            c.add(Calendar.YEAR, 5);
+
+            r.getLicense().setExpirationDate(c.getTime());
             r.setCurrentStep(request.getCurrentStep());
 
             em.merge(r);
@@ -260,7 +307,12 @@ public class LicenseRegistrationRequestService
 
             r.getRequestHistories().add(new ArrayList<>(request.getRequestHistories()).get(0));
             r.setEndDate(new Timestamp(new Date().getTime()));
-            r.getLicense().setStatus("C");
+            if (r.getType().getCode().equals("LICEL"))
+            {
+                r.getLicense().setStatus("C");
+            }
+
+            r.setCurrentStep("C");
 
             em.merge(r);
 

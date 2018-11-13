@@ -24,7 +24,7 @@
                 <input id="titlu" mdbInputDirective type="text" class="form-control" formControlName="title">
                 <label for="titlu">Titlu</label>
               </div>
-              <div *ngIf="(isSendEmail || isRegisterDoc) && reqForm.get('title').hasError('required')">
+              <div *ngIf="(isRegisterDoc) && reqForm.get('title').hasError('required')">
                 <small class="text-muted"><strong class="text-danger">Titlul trebuie introdus</strong></small>
               </div>
             </div>
@@ -35,7 +35,7 @@
                 <textarea type="text" id="content" class="md-textarea form-control" mdbInputDirective formControlName="content"></textarea>
                 <label for="content">Continut</label>
               </div>
-              <div *ngIf="(isSendEmail || isRegisterDoc) && reqForm.get('content').hasError('required')">
+              <div *ngIf="(isRegisterDoc) && reqForm.get('content').hasError('required')">
                 <small class="text-muted"><strong class="text-danger">Continutul trebuie introdus</strong></small>
               </div>
             </div>

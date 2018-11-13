@@ -17,9 +17,8 @@ label.required:not(:empty):after,
     padding-top: 45px;
 }
 
-
 .md-form-modified {
     position: relative;
     margin-top: 10px;
     margin-bottom: 1.5rem;
-  }
+}

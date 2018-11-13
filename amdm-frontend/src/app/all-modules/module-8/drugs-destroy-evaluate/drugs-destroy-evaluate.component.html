@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <app-document [documents]="docs" [nrCerere]="mForm.get('nrCererii').value" (documentAdded)="documentAdded($event)" (documentRemoved)="documentAdded($event)" ></app-document>
+        <app-document [documents]="docs" [nrCerere]="mForm.get('nrCererii').value" (documentModified)="documentAdded($event)"></app-document>
         <div *ngIf="rFormSubbmitted && docs.length==0">
             <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
         </div>
@@ -39,9 +39,9 @@
     </form>
 
 
-    <h3 class="text-center my-3 font-weight-bold">Lista medicamentelor pentru distrugere</h3>
-    <hr>
 
+    <hr>
+    <h3 class="text-center my-3 font-weight-bold">Lista medicamentelor pentru distrugere</h3>
     <hr>
   <!--  <form [formGroup]="rForm">-->
         <table class="table table-widths text-center">

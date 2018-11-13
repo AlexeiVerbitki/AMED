@@ -10,7 +10,6 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {UploadFileService} from "../../shared/service/upload/upload-file.service";
 import {RequestService} from "../../shared/service/request.service";
 import {NumberOnlyDirective} from "../../shared/directive/number-only.directive";
-import {RequestAdditionalDataDialogComponent} from "../../dialog/request-additional-data-dialog/request-additional-data-dialog.component";
 import {DocumentModule} from "../../document/document.module";
 import {PaymentModule} from "../../payment/payment.module";
 import {ProcessInterruptionComponent} from "./process-interruption/process-interruption.component";
@@ -32,10 +31,7 @@ import {CanDeactivateGuard} from "../../shared/auth-guard/can-deactivate-guard.s
 
     ],
     schemas: [],
-    entryComponents: [
-        RequestAdditionalDataDialogComponent
-    ],
-    declarations: [RegCerereComponent, EvaluarePrimaraComponent, NumberOnlyDirective,RequestAdditionalDataDialogComponent,ProcessInterruptionComponent, ExpertiComponent],
+    declarations: [RegCerereComponent, EvaluarePrimaraComponent, ProcessInterruptionComponent, ExpertiComponent],
     providers: [UploadFileService,RequestService, CanDeactivateGuard]
 })
 export class MedicamentRegistrationModule {

@@ -12,9 +12,18 @@ export class RequestService {
         return this.http.post<any>('/api/add-medicament-request', requestDetails, {observe: 'response'});
     }
 
+    addMedicamentHistoryRequest(requestDetails: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/add-medicament-history-request', requestDetails, {observe: 'response'});
+    }
+
     getMedicamentRequest(id: string): Observable<any> {
         return this.http.get('/api/load-medicament-request', {params: {id: id}});
     }
+
+    saveClinicalTrailRequest(requestDetails: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/save-clinical-trail-request', requestDetails, {observe: 'response'});
+    }
+
 
     addClinicalTrailRequest(requestDetails: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/add-clinical-trail-request', requestDetails, {observe: 'response'});
@@ -32,12 +41,9 @@ export class RequestService {
         return this.http.post<any>('/api/add-prices-request', requestDetails, {observe: 'response'});
     }
 
+    //used for interrupt process
     addMedicamentHistory(requestDetails: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/add-medicament-history', requestDetails, {observe: 'response'});
-    }
-
-    addMedicamentPayments(requestDetails: any): Observable<HttpResponse<any>> {
-        return this.http.post<any>('/api/add-medicament-payments', requestDetails, {observe: 'response'});
     }
 
     addImportRequest(requestDetails: any): Observable<HttpResponse<any>> {

@@ -24,12 +24,18 @@
             </div>
             <div class="col-md-4">
                 <div class="md-form-modified-select">
-                    <ng-select class="custom" [items]="companii"
+                    <ng-select class="custom" [items]="companii | async"
                                bindLabel="name"
                                placeholder="Companii"
                                formControlName="company"
                                [required]="true"
+                               [loading]="loadingCompany"
+                               [typeahead]="companyInputs"
                     >
+                        <ng-template ng-option-tmp let-item="item">
+                            {{item.name}} <br />
+                            <small class="form-text text-muted">{{item.idno}}</small>
+                        </ng-template>
                     </ng-select>
                 </div>
                 <div *ngIf="mFormSubbmitted && !mForm.get('company').valid">

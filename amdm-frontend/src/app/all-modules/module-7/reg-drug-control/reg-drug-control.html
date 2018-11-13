@@ -22,36 +22,46 @@
       </div>
     </div>
     <hr>
-    <app-document [documents]="documents" [nrCerere]="rForm.get('requestNumber').value"></app-document>
+    <app-document [documents]="documents" [nrCerere]="rForm.get('requestNumber').value" [dcTypes]="docTypes"></app-document>
     <div *ngIf="formSubmitted && documents.length==0">
       <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
     </div>
     <hr>
     <div class="row">
 
-      <div class="col-md-6" formGroupName="medicament">
+      <div class="col-md-6" >
         <div class="md-form-modified">
           <ng-select id="company" name="company" [items]="companies"
                      bindLabel="name"
                      placeholder="Compania solicitant *"
                      formControlName="company">
           </ng-select>
-          <div *ngIf="formSubmitted && rForm.get('medicament.company').invalid">
+          <div *ngIf="formSubmitted && rForm.get('company').invalid">
             <small class="text-muted"><strong class="text-danger">Compania solicitantă trebuie selectată</strong></small>
           </div>
-          <div *ngIf="formSubmitted && isWrongValueCompany && rForm.get('medicament.company').valid">
+          <div *ngIf="formSubmitted && isWrongValueCompany && rForm.get('company').valid">
             <small class="text-muted"><strong class="text-danger">Compania solicitantă este incorectă</strong></small>
           </div>
         </div>
       </div>
       <div class="col-md-6" formGroupName="medicament">
         <div class="md-form">
-          <input id="med" mdbInputDirective type="text" class="form-control" formControlName="name">
-          <label for="med">Medicamentul
-            <span class="text-danger">*</span>
-          </label>
-          <div *ngIf="formSubmitted && rForm.get('medicament.name').invalid">
-            <small class="text-muted"><strong class="text-danger">Medicamentul trebuie introdus</strong></small>
+          <ng-select class="custom" [items]="medicamente | async"
+                     bindLabel="name"
+                     placeholder="Medicamente"
+                     formControlName="name"
+                     [required]="true"
+                     [typeahead]="medInputs"
+                     [loading]="medLoading"
+          >
+            <ng-template ng-option-tmp let-item="item">
+              {{item.name}} <br />
+              <small>{{item.code}}</small>
+            </ng-template>
+          </ng-select>
+          <div *ngIf="formSubmitted && !rForm.get('medicament.name').valid">
+            <small class="text-muted"><strong class="text-danger">Medicamentul trebuie selectat</strong>
+            </small>
           </div>
         </div>
       </div>

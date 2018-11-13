@@ -16,6 +16,10 @@ export class GestDocComponent {
   requests: any[];
   requestTypes: any[];
   steps: any[];
+    expeditors : any[];
+    destinatars : any[];
+    termenDeExecutares : any[];
+    tipDocs : any[];
 
   displayedColumns: any[] = ['requestNumber', 'processName', 'requestType', 'username', 'startDate', 'endDate', 'step'];
   dataSource = new MatTableDataSource<any>();

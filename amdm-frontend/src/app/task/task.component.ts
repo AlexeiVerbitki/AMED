@@ -24,7 +24,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild(MatSort) sort: MatSort;
     private subscriptions: Subscription[] = [];
 
-    constructor(private fb: FormBuilder, private route: Router, private taskService: TaskService, private loaderService: LoaderService) {
+    constructor(private fb: FormBuilder, private route: Router, private taskService: TaskService) {
         this.taskForm = fb.group({
             'requestNumber': [null, {validators: Validators.required}],
             'request': [null],
@@ -103,6 +103,10 @@ export class TaskComponent implements OnInit, AfterViewInit, OnDestroy {
         if (urlToNavigate !== '') {
             this.route.navigate([urlToNavigate]);
         }
+    }
+
+    isLink(rowDetails: any): boolean {
+        return rowDetails.navigationUrl !== '';
     }
 
     private disabledElements(val) {

@@ -64,6 +64,8 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
     MedType = MedicamentType;
     needSelectPrice: boolean = false;
 
+    priceRequestId: number;
+
     requiredOutputDocs: any[] = [];
     medicamentType: any = {code:MedicamentType.Generic, description: 'Generic'};
 
@@ -88,6 +90,8 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
           'id': [],
           'data': {disabled: true, value: new Date()},
           'requestNumber': [null],
+          'initiator':          [null],
+          'assignedUser':       [null],
           'startDate': {disabled: true, value: new Date()},
           'dataToSaveInStartDateRequestHistory': [''],
           'currentStep': ['E'],
@@ -97,34 +101,42 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
               'selectedReason': [null, Validators.required],
               'decision': [null, Validators.required],
           }),
-          'pricesMedicament':
-              fb.group({
-                  'id': [],
-                  'name': ['', Validators.required],
-                  'registrationDate': [],
-                  'expirationDate': [],
-                  'pharmaceuticalForm': [null, Validators.required],
-                  'dose': [null, Validators.required],
-                  'unitsOfMeasurementDesc': [null, Validators.required],
-                  'internationalMedicamentName': [null, Validators.required],
-                  'volume': [null],
-                  'termsOfValidity': [null, Validators.required],
-                  'code': [null, Validators.required],
-                  'storageQuantityMeasurementName': [null, Validators.required],
-                  'storageQuantity': [null, Validators.required],
-                  'unitsQuantityMeasurementName': [null, Validators.required],
-                  'unitsQuantity': [null, Validators.required],
-                  'prescription': [null, Validators.required],
-                  'authorizationHolder': [null, Validators.required],
-                  'manufactureName': [null],
-                  'documents': [],
-                  'status': ['P'],
-                  'group':
+          // 'pricesRequest':
+          //     fb.group({
+          //         'id':             [null, Validators.required],
+          //         'documents':      [],
+          //         'referencePrices':[],
+          //         'prices':         [],
+                  'medicament':
                       fb.group({
-                              'code': ['', Validators.required]
-                          }
-                      )
-              }),
+                          'id': [],
+                          'name': ['', Validators.required],
+                          'registrationDate': [],
+                          'expirationDate': [],
+                          'pharmaceuticalForm': [null, Validators.required],
+                          'dose': [null, Validators.required],
+                          'unitsOfMeasurementDesc': [null, Validators.required],
+                          'internationalMedicamentName': [null, Validators.required],
+                          'volume': [null],
+                          'volumeQuantityMeasurementName': [null],
+                          'termsOfValidity': [null, Validators.required],
+                          'code': [null, Validators.required],
+                          'storageQuantityMeasurementName': [null, Validators.required],
+                          'storageQuantity': [null, Validators.required],
+                          'unitsQuantityMeasurementName': [null, Validators.required],
+                          'unitsQuantity': [null, Validators.required],
+                          'prescription': [null, Validators.required],
+                          'authorizationHolder': [null, Validators.required],
+                          'manufactureName': [null],
+                          'documents': [],
+                          'status': ['P'],
+                          'group':
+                              fb.group({
+                                      'code': ['', Validators.required]
+                                  }
+                              )
+                      }),
+              // }),
           'company': fb.group({
               'id': [],
               'name': ['', Validators.required],
@@ -171,17 +183,24 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                           console.log('Procesul a fost finisat deja');
                       }
 
-                      if(data.prices != undefined) {
-                          data.prices.forEach(price => this.formatedProposedPrices = [...this.formatedProposedPrices, {id: price.id, description: price.value + " " + price.currency.shortDescription}]);
-                          data.prices[0].documents.forEach(doc => {
-                              this.documents.push(doc);
-
-                          });
-                          this.proposedPrices = data.prices;
+                      if(data.pricesRequest){
+                          this.priceRequestId = data.pricesRequest.id;
                       }
 
-             //         this.initRefPrices(data.pricesMedicament.referencePrices);
+                      if(data.pricesRequest.prices != undefined) {
+                          data.pricesRequest.prices.forEach(price => this.formatedProposedPrices = [...this.formatedProposedPrices, {id: price.id, description: price.value + " " + price.currency.shortDescription}]);
 
+                          this.proposedPrices = data.pricesRequest.prices;
+                      }
+
+                      data.pricesRequest.documents.forEach(doc => {
+                          this.documents.push(doc);
+
+                      });
+
+                      this.initRefPrices(data.pricesRequest.referencePrices);
+
+                      this.medicamentType = data.pricesRequest.medicament.medicamentType;
                       this.PriceRegForm.get('company.name').setValue(data.company.name);
                       this.PriceRegForm.get('company.id').setValue(data.company.id);
                       this.PriceRegForm.get('id').setValue(data.id);
@@ -189,23 +208,23 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                       this.PriceRegForm.get('type').setValue(data.type);
                       this.PriceRegForm.get('requestHistories').setValue(data.requestHistories);
                       this.PriceRegForm.get('typeValue').setValue(data.type.code);
-                      this.PriceRegForm.get('pricesMedicament.id').setValue(data.pricesMedicament.id);
-                      this.PriceRegForm.get('pricesMedicament.internationalMedicamentName').setValue(data.pricesMedicament.internationalMedicamentName.description);
-                      this.PriceRegForm.get('pricesMedicament.code').setValue(data.pricesMedicament.code);
-                      this.PriceRegForm.get('pricesMedicament.manufactureName').setValue(data.pricesMedicament.manufacture.description);
-                      this.PriceRegForm.get('pricesMedicament.name').setValue(data.pricesMedicament.name);
-                      this.PriceRegForm.get('pricesMedicament.termsOfValidity').setValue(data.pricesMedicament.termsOfValidity);
-                      this.PriceRegForm.get('pricesMedicament.dose').setValue(data.pricesMedicament.dose);
-                      this.PriceRegForm.get('pricesMedicament.unitsOfMeasurementDesc').setValue(data.pricesMedicament.unitsOfMeasurement.description);
-                      this.PriceRegForm.get('pricesMedicament.documents').setValue(data.pricesMedicament.documents);
-                      this.PriceRegForm.get('pricesMedicament.registrationDate').setValue(data.pricesMedicament.registrationDate);
-                      this.PriceRegForm.get('pricesMedicament.volume').setValue(data.pricesMedicament.volume);
-                      this.PriceRegForm.get('pricesMedicament.unitsQuantity').setValue(data.pricesMedicament.unitsQuantity);
-                      this.PriceRegForm.get('pricesMedicament.storageQuantity').setValue(data.pricesMedicament.storageQuantity);
-                      this.PriceRegForm.get('pricesMedicament.storageQuantityMeasurementName').setValue(data.pricesMedicament.storageQuantityMeasurement.description);
-                      this.PriceRegForm.get('pricesMedicament.unitsQuantityMeasurementName').setValue(data.pricesMedicament.unitsQuantityMeasurement.description);
-                      this.medicamentType = data.pricesMedicament.medicamentType;
-                      this.PriceRegForm.get('pricesMedicament.expirationDate').setValue(data.pricesMedicament.expirationDate);
+                      this.PriceRegForm.get('medicament.id').setValue(data.pricesRequest.medicament.id);
+                      this.PriceRegForm.get('medicament.internationalMedicamentName').setValue(data.pricesRequest.medicament.internationalMedicamentName ? data.pricesRequest.medicament.internationalMedicamentName.description : undefined);
+                      this.PriceRegForm.get('medicament.code').setValue(data.pricesRequest.medicament.code);
+                      this.PriceRegForm.get('medicament.manufactureName').setValue(data.pricesRequest.medicament.manufacture ? data.pricesRequest.medicament.manufacture.description : undefined);
+                      this.PriceRegForm.get('medicament.name').setValue(data.pricesRequest.medicament.name);
+                      this.PriceRegForm.get('medicament.termsOfValidity').setValue(data.pricesRequest.medicament.termsOfValidity);
+                      this.PriceRegForm.get('medicament.dose').setValue(data.pricesRequest.medicament.dose);
+                      this.PriceRegForm.get('medicament.unitsOfMeasurementDesc').setValue(data.pricesRequest.medicament.unitsOfMeasurement?data.pricesRequest.medicament.unitsOfMeasurement.description:undefined);
+                      this.PriceRegForm.get('medicament.documents').setValue(data.pricesRequest.medicament.documents);
+                      this.PriceRegForm.get('medicament.registrationDate').setValue(data.pricesRequest.medicament.registrationDate);
+                      this.PriceRegForm.get('medicament.volume').setValue(data.pricesRequest.medicament.volume);
+                      this.PriceRegForm.get('medicament.unitsQuantity').setValue(data.pricesRequest.medicament.unitsQuantity);
+                      this.PriceRegForm.get('medicament.storageQuantity').setValue(data.pricesRequest.medicament.storageQuantity);
+                      this.PriceRegForm.get('medicament.storageQuantityMeasurementName').setValue(data.pricesRequest.medicament.storageQuantityMeasurement ? data.pricesRequest.medicament.storageQuantityMeasurement.description:undefined);
+                      this.PriceRegForm.get('medicament.volumeQuantityMeasurementName').setValue(data.pricesRequest.medicament.volumeQuantityMeasurement ? data.pricesRequest.medicament.volumeQuantityMeasurement.description:undefined);
+                      this.PriceRegForm.get('medicament.unitsQuantityMeasurementName').setValue(data.pricesRequest.medicament.unitsQuantityMeasurement?data.pricesRequest.medicament.unitsQuantityMeasurement.description:undefined);
+                      this.PriceRegForm.get('medicament.expirationDate').setValue(data.pricesRequest.medicament.expirationDate);
                       this.PriceRegForm.get('startDate').setValue(new Date(data.startDate));
                       this.initOutputDocs(data.outputDocuments);
 
@@ -246,16 +265,19 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
     }
 
     documentAdded($event) {
+
        this.outputDocuments.forEach(outDoc => {
-           if(outDoc.status == "Nu este atasat") {
-               for(let doc of this.documents){
-                   if (doc.docType.description == outDoc.description) {
-                       outDoc.number = doc.number;
-                       outDoc.status = "Atasat";
-                       break;
-                   }
+           outDoc.number = undefined;
+           outDoc.status = "Nu este atasat";
+
+           for(let doc of this.documents){
+               if (doc.docType.description == outDoc.description) {
+                   outDoc.number = doc.number;
+                   outDoc.status = "Atasat";
+                   break;
                }
            }
+
        });
     }
 
@@ -351,27 +373,27 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
 
 
     viewDoc(document: any) {
-        if (document.docType.category == 'OA') {
-            // this.subscriptions.push(this.documentService.viewMedicamentAuthorizationOrder(document.number).subscribe(data => {
-            //         let file = new Blob([data], {type: 'application/pdf'});
-            //         var fileURL = URL.createObjectURL(file);
-            //         window.open(fileURL);
-            //     }, error => {
-            //         console.log('error ', error);
-            //     }
-            //     )
-            // );
-        } else {
-            // this.subscriptions.push(this.documentService.viewMedicamentAuthorizationCertificate(document.number).subscribe(data => {
-            //         let file = new Blob([data], {type: 'application/pdf'});
-            //         var fileURL = URL.createObjectURL(file);
-            //         window.open(fileURL);
-            //     }, error => {
-            //         console.log('error ', error);
-            //     }
-            //     )
-            // );
-        }
+        // if (document.docType.category == 'OA') {
+        //     this.subscriptions.push(this.documentService.viewMedicamentAuthorizationOrder(document.number).subscribe(data => {
+        //             let file = new Blob([data], {type: 'application/pdf'});
+        //             var fileURL = URL.createObjectURL(file);
+        //             window.open(fileURL);
+        //         }, error => {
+        //             console.log('error ', error);
+        //         }
+        //         )
+        //     );
+        // } else {
+        //     this.subscriptions.push(this.documentService.viewMedicamentAuthorizationCertificate(document.number).subscribe(data => {
+        //             let file = new Blob([data], {type: 'application/pdf'});
+        //             var fileURL = URL.createObjectURL(file);
+        //             window.open(fileURL);
+        //         }, error => {
+        //             console.log('error ', error);
+        //         }
+        //         )
+        //     );
+        // }
     }
 
 
@@ -394,17 +416,18 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
 
         this.formSubmitted = false;
 
-        let priceModel : any = {};// = this.PriceRegForm.value;
+        let priceModel : any = {};//this.PriceRegForm.value;
         priceModel.id = this.PriceRegForm.get('id').value;
         priceModel.requestNumber = this.PriceRegForm.get('requestNumber').value;
-        priceModel.currentStep = this.PriceRegForm.get('currentStep').value;
-        priceModel.company = this.PriceRegForm.get('company').value;
-        priceModel.type = {code: "PMED"};//this.PriceRegForm.get('type').value;
-        priceModel.pricesMedicament = {}//this.PriceRegForm.get('pricesMedicament').value;
-        priceModel.pricesMedicament.id = this.PriceRegForm.get('pricesMedicament')['controls'].id.value;
-        priceModel.requestHistories = this.PriceRegForm.get('requestHistories').value;
+        priceModel.initiator = this.PriceRegForm.get('initiator').value;
         priceModel.startDate = this.PriceRegForm.get('startDate').value;
-         priceModel.endDate = new Date();
+        priceModel.company = this.PriceRegForm.get('company').value;
+        priceModel.currentStep = this.PriceRegForm.get('currentStep').value;
+        priceModel.type = this.PriceRegForm.get('type').value;
+        priceModel.endDate = new Date();
+        priceModel.currentStep = 'E';
+        priceModel.assignedUser = this.priceService.getUsername();
+        priceModel.requestHistories = this.PriceRegForm.get('requestHistories').value;
 
         priceModel.requestHistories.push(
             {
@@ -419,16 +442,23 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
 
             for(let p of this.proposedPrices) {
                 if(selectedPrice.value.id == p.id) {
-                    p.type = acceptType; // pretul a fost acceptat
+                    p.type = acceptType;
                     p.expirationDate = expDate.value;
                     p.expirationReason = this.expirationReasons[0];
                 }
-
-                p.documents = [...p.documents, ...this.documents];
             }
         }
 
-        priceModel.pricesMedicament.prices = this.proposedPrices;
+        this.loadingService.hide();
+
+        priceModel.pricesRequest = {
+            id: this.priceRequestId,
+            medicament: {id: this.PriceRegForm.get('medicament')['controls'].id.value},
+            documents: this.documents,
+            prices: this.proposedPrices,
+            referencePrices: this.refPrices,
+        }
+
         console.log('priceModel:', JSON.stringify(priceModel));
 
         this.subscriptions.push(this.priceService.savePrice(priceModel).subscribe(data => {

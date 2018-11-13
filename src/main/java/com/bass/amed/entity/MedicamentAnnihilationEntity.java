@@ -17,6 +17,7 @@ public class MedicamentAnnihilationEntity
     private List<MedicamentAnnihilationMedsEntity> medicamentsMedicamentAnnihilationMeds;
     private String status;
     private Set<DocumentsEntity> documents;
+    private Set<AnnihilationCommisionsEntity> commisions;
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
@@ -109,6 +110,20 @@ public class MedicamentAnnihilationEntity
         this.documents = documents;
     }
 
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(name = "med_annihilation_commisions", joinColumns = {
+            @JoinColumn(name = "med_annihilation_id")}, inverseJoinColumns = {
+            @JoinColumn(name = "annihilation_commision_id")})
+    public Set<AnnihilationCommisionsEntity> getCommisions()
+    {
+        return commisions;
+    }
+
+    public void setCommisions(Set<AnnihilationCommisionsEntity> commisions)
+    {
+        this.commisions = commisions;
+    }
 
     @Override
     public boolean equals(Object o)

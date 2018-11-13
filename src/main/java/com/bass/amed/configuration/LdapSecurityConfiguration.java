@@ -2,6 +2,7 @@ package com.bass.amed.configuration;
 
 import com.bass.amed.security.CustomHeaderFilter;
 import com.bass.amed.security.JWTConfigurer;
+import com.bass.amed.security.JWTFilter;
 import com.bass.amed.security.TokenProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+
+import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
@@ -58,22 +61,18 @@ public class LdapSecurityConfiguration extends WebSecurityConfigurerAdapter
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception
     {
-        //        httpSecurity.httpBasic().and().authorizeRequests().anyRequest().authenticated().and().csrf().disable();
-
-
         httpSecurity.csrf().disable()
                 .headers().xssProtection().block(true)
                 .and().frameOptions().sameOrigin().httpStrictTransportSecurity().disable()
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().authorizeRequests()
-                //                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .and().exceptionHandling().authenticationEntryPoint((req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Invalid token"))
+                .and().authorizeRequests().antMatchers("/").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/authenticate").permitAll()
                 .antMatchers("/api/reset-password").permitAll()
-                //.anyRequest().authenticated()
-                .antMatchers("/api/**")
-                .permitAll()
-                //                .hasAnyRole("TEST")
+                .antMatchers("/api/**").permitAll()
+//                .hasAnyRole("TEST")
                 .and().apply(securityConfigurerAdapter());
         //.hasAnyAuthority("ADMIN");
         //                .antMatchers("/actuator/**").hasAnyAuthority("ADMIN")
@@ -96,6 +95,12 @@ public class LdapSecurityConfiguration extends WebSecurityConfigurerAdapter
         contextSource.afterPropertiesSet(); //needed otherwise you will have a NullPointerException in spring
 
         return contextSource;
+    }
+
+    @Bean
+    public JWTFilter jwtAuthFilter() throws Exception
+    {
+        return new JWTFilter(getTokenProvider());
     }
 
     @Bean

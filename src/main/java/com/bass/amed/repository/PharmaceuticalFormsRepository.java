@@ -9,4 +9,6 @@ import java.util.List;
 public interface PharmaceuticalFormsRepository  extends JpaRepository<NmPharmaceuticalFormsEntity, Integer>
 {
     List<NmPharmaceuticalFormsEntity> findByType(NmPharmaceuticalFormTypesEntity type);
+
+    List<NmPharmaceuticalFormsEntity> findByDescriptionStartingWithIgnoreCase(String partialDescr);
 }

@@ -1,7 +1,5 @@
 package com.bass.amed.entity;
 
-import sun.plugin.util.UserProfile;
-
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;

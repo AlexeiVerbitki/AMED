@@ -4,9 +4,14 @@ buildscript {
     }
     repositories {
         mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2"
+        }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "com.moowork.gradle:gradle-node-plugin:1.2.0"
+
     }
 }
 
@@ -14,6 +19,8 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: "com.moowork.node"
+
 
 group = 'com.bass'
 version = '1.0'
@@ -41,3 +48,19 @@ dependencies {
 
     runtime('org.springframework.boot:spring-boot-starter-tomcat')
 }
+
+node {
+//    version = '8.9.4'
+//    download = false
+    nodeModulesDir = file("amdm-frontend")
+}
+
+task buildProd(type: NpmTask, dependsOn: 'npmInstall') {
+    group = 'build'
+    description = 'Compile client side folder for production'
+    args = ['run', 'build']
+    
+}
+bootRun.dependsOn(npm_install)
+
+jar.dependsOn(buildProd)

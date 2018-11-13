@@ -9,7 +9,6 @@ public class NmActiveSubstancesEntity
     private Integer id;
     private String code;
     private String description;
-    private NmManufacturesEntity manufacture;
     private Double quantity;
 
     @Id
@@ -46,18 +45,6 @@ public class NmActiveSubstancesEntity
     public void setDescription(String description)
     {
         this.description = description;
-    }
-
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
-    @JoinColumn( name = "manufacture_id" )
-    public NmManufacturesEntity getManufacture()
-    {
-        return manufacture;
-    }
-
-    public void setManufacture(NmManufacturesEntity manufacture)
-    {
-        this.manufacture = manufacture;
     }
 
     @Basic
@@ -98,10 +85,6 @@ public class NmActiveSubstancesEntity
         {
             return false;
         }
-        if (manufacture != null ? !manufacture.equals(that.manufacture) : that.manufacture != null)
-        {
-            return false;
-        }
         return quantity != null ? quantity.equals(that.quantity) : that.quantity == null;
     }
 
@@ -111,7 +94,6 @@ public class NmActiveSubstancesEntity
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (code != null ? code.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (manufacture != null ? manufacture.hashCode() : 0);
         result = 31 * result + (quantity != null ? quantity.hashCode() : 0);
         return result;
     }

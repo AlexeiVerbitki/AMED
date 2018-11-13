@@ -13,7 +13,8 @@ export class Medicament {
   unitsQuantity: number;
   unitsQuantityMeasurement: UnitOfMeasure; // for units
   storageQuantity: number;
-  storageQuantityMeasurement: UnitOfMeasure; // for storage;
+  storageQuantityMeasurement: UnitOfMeasure; // for storage
+  volumeQuantityMeasurement: UnitOfMeasure; // for volume;
   prices: Price[];
   referencePrices: Price[];
   volume: number;

@@ -5,4 +5,5 @@ export class Expert {
     farmacist?: any;
     medic?: any;
     comment? : string;
+    status? : number;
 }

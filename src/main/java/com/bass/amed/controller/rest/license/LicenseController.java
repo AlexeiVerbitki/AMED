@@ -106,7 +106,7 @@ public class LicenseController
 
         request.getLicense().setStatus("F");
 
-        request.setCurrentStep("I");
+        request.setCurrentStep("F");
         request.setEndDate(new Timestamp(new Date().getTime()));
 
         licenseRegistrationRequestService.finishLicense(request);

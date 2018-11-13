@@ -18,6 +18,8 @@ export class ExpertComiteeComponent implements OnInit {
     medics: any[];
     expertObj: Expert = new Expert();
     isFormSubmitted : boolean;
+    typeObj : any;
+    title : any = 'Cerere inregistrare medicament';
 
     constructor(private fb: FormBuilder,
                 private administrationService: AdministrationService) {
@@ -28,11 +30,17 @@ export class ExpertComiteeComponent implements OnInit {
             'farmacolog': [null,Validators.required],
             'farmacist': [null,Validators.required],
             'medic': [null,Validators.required],
-            'comment': [null]
+            'comment': [null],
+            'status': [null,Validators.required]
         });
     }
 
     ngOnInit() {
+
+        if(this.typeObj == 'POST_AUTHORIZATION')
+        {
+            this.title = 'Modificare postautorizare medicament';
+        }
 
         this.subscriptions.push(
             this.administrationService.getAllEmployees().subscribe(data => {
@@ -60,6 +68,15 @@ export class ExpertComiteeComponent implements OnInit {
 
     }
 
+    get type(): string {
+        return this.typeObj;
+    }
+
+    @Input()
+    set type(type: string) {
+        this.typeObj = type;
+    }
+
     checkChairman()
     {
         this.expertObj.chairman =this.expertForm.get('chairman').value;
@@ -83,6 +100,11 @@ export class ExpertComiteeComponent implements OnInit {
     checkComment()
     {
         this.expertObj.comment=this.expertForm.get('comment').value;
+    }
+
+    checkStatus()
+    {
+        this.expertObj.status=this.expertForm.get('status').value;
     }
 
     get expert(): Expert {

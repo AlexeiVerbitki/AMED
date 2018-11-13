@@ -1,10 +1,10 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 import {MatDialog} from '@angular/material';
 import {saveAs} from 'file-saver';
-import {Observable, Subscription} from 'rxjs';
+import {Observable, Subject, Subscription} from 'rxjs';
 import {AdministrationService} from '../../../shared/service/administration.service';
 import {Router} from '@angular/router';
 import {Document} from "../../../models/document";
@@ -14,7 +14,8 @@ import {ErrorHandlerService} from "../../../shared/service/error-handler.service
 import {LoaderService} from "../../../shared/service/loader.service";
 import {TaskService} from "../../../shared/service/task.service";
 import {CanModuleDeactivate} from "../../../shared/auth-guard/can-deactivate-guard.service";
-import {ConfirmationDialogComponent} from "../../../confirmation-dialog/confirmation-dialog.component";
+import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
 
 @Component({
     selector: 'app-reg-cerere',
@@ -25,15 +26,15 @@ import {ConfirmationDialogComponent} from "../../../confirmation-dialog/confirma
 export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivate  {
 
     documents: Document [] = [];
-    companii: any[];
+    companii: Observable<any[]>;
     rForm: FormGroup;
     docTypes: any[];
 
     generatedDocNrSeq: number;
-    //filteredOptions: Observable<any[]>;
     formSubmitted: boolean;
-    //isWrongValueCompany: boolean;
     private subscriptions: Subscription[] = [];
+    loadingCompany : boolean = false;
+    companyInputs = new Subject<string>();
 
     constructor(private fb: FormBuilder,
                 private router: Router,
@@ -50,13 +51,10 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
             'requestNumber': [null],
             'startDate': [new Date()],
             'currentStep': ['E'],
-            'medicament':
-                fb.group({
-                    'name': ['', Validators.required],
-                    'company': [null, Validators.required],
-                    'status': ['P']
-                }),
-            'company': [''],
+            'medicamentName': [null, Validators.required],
+            'company': [null],
+            'initiator': [''],
+            'assignedUser': [''],
             'type':
                 fb.group({
                     'code': ['MEDP', Validators.required]
@@ -74,13 +72,24 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
             )
         );
 
-        this.subscriptions.push(
-            this.administrationService.getAllCompanies().subscribe(data => {
-                    this.companii = data;
-                },
-                error => console.log(error)
-            )
-        );
+        this.companii =
+            this.companyInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) return true;
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingCompany = true;
+
+                }),
+                flatMap(term =>
+
+                    this.administrationService.getCompanyNamesAndIdnoList(term).pipe(
+                        tap(() => this.loadingCompany = false)
+                    )
+                )
+            );
 
         this.subscriptions.push(
             this.taskService.getRequestStepByIdAndCode('1', 'R').subscribe(step => {
@@ -101,28 +110,27 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
     nextStep() {
 
 
-
         this.formSubmitted = true;
-        if (this.documents.length === 0 || !this.rForm.valid) {
+        if (!this.rForm.valid) {
             return;
         }
 
         this.formSubmitted = false;
 
         this.loadingService.show();
-        this.rForm.get('company').setValue(this.rForm.value.medicament.company);
 
-        let formModel: any = this.rForm.value;
-        formModel.requestHistories = [{
-            startDate: this.rForm.get('startDate').value,
-            endDate: new Date(),
-            username: this.authService.getUserName(),
-            step: 'E'
+        var useranameDB = this.authService.getUserName()
+
+        var modelToSubmit: any = this.rForm.value;
+        modelToSubmit.requestHistories = [{
+            startDate: this.rForm.get('startDate').value, endDate: new Date(),
+            username: useranameDB, step: 'R'
         }];
-        formModel.medicament.documents = this.documents;
-        formModel.medicament.registrationDate = new Date();
+        modelToSubmit.initiator = useranameDB;
+        modelToSubmit.assignedUser = useranameDB;
+        modelToSubmit.documents = this.documents;
 
-        this.subscriptions.push(this.requestService.addMedicamentRequest(formModel).subscribe(data => {
+        this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
                 this.loadingService.hide();
                 this.router.navigate(['dashboard/module/medicament-registration/evaluate/' + data.body.id]);
             }, error => this.loadingService.hide())
@@ -136,19 +144,19 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
 
     canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
 
-        console.log('form details: ', this.rForm);
-        if(!this.rForm.dirty){
-            return true;
-        }
-        const dialogRef = this.dialogConfirmation.open(ConfirmationDialogComponent, {
-            data: {
-                title: 'test',
-                message: 'Toate datele colectate nu vor fi salvate, sunteti sigur(a)?',
-                confirm: false,
-            }
-        });
-
-        return dialogRef.afterClosed();
+        // if(!this.rForm.dirty){
+        //     return true;
+        // }
+        // const dialogRef = this.dialogConfirmation.open(ConfirmationDialogComponent, {
+        //     data: {
+        //         message: 'Toate datele colectate nu vor fi salvate, sunteti sigur(a)?',
+        //         confirm: false,
+        //     size: 'sm',
+        //     }
+        // });
+        //
+        // return dialogRef.afterClosed();
+        return true;
 
     }
 }

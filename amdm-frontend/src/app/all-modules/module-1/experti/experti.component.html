@@ -21,12 +21,12 @@
     </div>
     <hr>
     <app-expert-comitee [expert]="expert" [formSubmitted]="formSubmitted"></app-expert-comitee>
-    <app-document [documents]="documents" [nrCerere]="expertForm.get('requestNumber').value" [dcTypes]="docTypes" (documentAdded)="documentAdded($event)"></app-document>
+    <app-document [documents]="documents" [nrCerere]="expertForm.get('requestNumber').value" [dcTypes]="docTypes" (documentModified)="documentModified($event)"></app-document>
     <hr>
     <h5 class="text-center font-weight-bold">Detalii medicament</h5>
     <div class="row">
       <div class="col-md-6">
-        <div class="md-form" formGroupName="medicament">
+        <div class="md-form">
           <input id="compSolicitant" mdbInputDirective type="text" class="form-control" formControlName="companyValue" [attr.disabled]="true">
           <label for="compSolicitant">Compania solicitant</label>
         </div>
@@ -34,7 +34,7 @@
       <div class="col-md-6">
         <div class="md-form" formGroupName="medicament">
           <input id="med" mdbInputDirective type="text" class="form-control" formControlName="name" [attr.disabled]="true">
-          <label for="med">Medicamentul</label>
+          <label for="med">Denumire comerciala medicament</label>
         </div>
       </div>
       <div class="col-md-12">
@@ -95,9 +95,9 @@
         <td>{{ substance.activeSubstance.code }}</td>
         <td>{{ substance.quantity }}</td>
         <td>{{ substance.unitsOfMeasurement.description }}</td>
-        <td>{{ substance.activeSubstance.manufacture.description }}</td>
-        <td>{{ substance.activeSubstance.manufacture.country.description }}</td>
-        <td>{{ substance.activeSubstance.manufacture.address }}</td>
+        <td>{{ substance.manufacture.description }}</td>
+        <td>{{ substance.manufacture.country.description }}</td>
+        <td>{{ substance.manufacture.address }}</td>
       </tr>
       </tbody>
     </table>
@@ -114,7 +114,19 @@
       <div class="col-md-6">
         <div class="md-form">
           <input id="unitsOfMeasurement" mdbInputDirective type="text" class="form-control" formControlName="unitsOfMeasurement" [attr.disabled]="true">
-          <label for="med">Unitate de masura</label>
+          <label for="med">Unitate de masura (doza)</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="volum" mdbInputDirective type="text" class="form-control" formControlName="volume" [attr.disabled]="true">
+          <label for="volum">Volumul</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="volumeQuantityMeasurement" mdbInputDirective type="text" class="form-control" formControlName="volumeQuantityMeasurement" [attr.disabled]="true">
+          <label for="med">Unitate de masura (volum)</label>
         </div>
       </div>
     </div>
@@ -127,17 +139,11 @@
       </div>
       <div class="col-md-4">
         <div class="md-form">
-          <input id="codMed" mdbInputDirective numberOnly type="text" class="form-control" formControlName="code" [attr.disabled]="true">
-          <label for="codMed">Codul medicamentului</label>
+          <input id="termenVal" mdbInputDirective type="text" class="form-control" formControlName="termsOfValidity" [attr.disabled]="true">
+          <label for="termenVal">Termen de valabilitate (luni)</label>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="md-form">
-          <input id="termenVal" mdbInputDirective type="text" class="form-control" formControlName="termsOfValidity" [attr.disabled]="true">
-          <label for="termenVal">Termen de valabilitate</label>
-        </div>
-      </div>
-      <div class="col-md-12">
         <div class="md-form">
           <input id="medType" mdbInputDirective type="text" class="form-control" formControlName="medicamentType" [attr.disabled]="true">
           <label for="termenVal">Clasificarea medicamentului</label>
@@ -145,38 +151,24 @@
       </div>
     </div>
     <h5 class="text-center font-weight-bold">Divizare</h5>
-    <div class="row" formGroupName="medicament">
-      <div class="col-md-6">
-        <div class="md-form">
-          <input id="nrUnits" mdbInputDirective type="text" class="form-control" formControlName="unitsQuantity" [attr.disabled]="true">
-          <label for="termenVal">Numar de bucati</label>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="md-form">
-          <input id="unitsQuantityMeasurement" mdbInputDirective type="text" class="form-control" formControlName="unitsQuantityMeasurement" [attr.disabled]="true">
-          <label for="termenVal">Unitate de masura</label>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="md-form">
-          <input id="storageQuantity" mdbInputDirective type="text" class="form-control" formControlName="storageQuantity" [attr.disabled]="true">
-          <label for="termenVal">Cantitate stocare</label>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="md-form">
-          <input id="storageQuantityMeasurement" mdbInputDirective type="text" class="form-control" formControlName="storageQuantityMeasurement" [attr.disabled]="true">
-          <label for="termenVal">Unitate de masura</label>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="md-form">
-          <input id="volum" mdbInputDirective type="text" class="form-control" formControlName="volume" [attr.disabled]="true">
-          <label for="volum">Volumul</label>
-        </div>
-      </div>
-    </div>
+    <table class="table table-widths text-center">
+      <thead class="black white-text">
+      <tr>
+        <th scope="col">Numar de bucati</th>
+        <th scope="col">Unitate de masura (bucati)</th>
+        <th scope="col">Cantitate stocare</th>
+        <th scope="col">Unitate de masura (stocare)</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let division of divisions;let i = index">
+        <td>{{ division.unitsQuantity }}</td>
+        <td>{{ division.unitsQuantityMeasurement.description }}</td>
+        <td>{{ division.storageQuantity }}</td>
+        <td>{{ division.storageQuantityMeasurement.description }}</td>
+      </tr>
+      </tbody>
+    </table>
     <div class="row" formGroupName="medicament">
       <div class="col-md-6">
         <div class="md-form" formGroupName="group">
@@ -224,7 +216,7 @@
       <div class="col-md-4">
         <div class="md-form">
           <input id="authorizationHolder" mdbInputDirective type="text" class="form-control" formControlName="authorizationHolder" [attr.disabled]="true">
-          <label for="volum">Deţinătorul autorizaţiei de producere</label>
+          <label for="authorizationHolder">Deţinătorul autorizaţiei de producere</label>
         </div>
       </div>
       <div class="col-md-4">
@@ -244,7 +236,7 @@
       <div class="col-md-4">
         <div class="md-form">
           <input id="manufacture" mdbInputDirective type="text" class="form-control" formControlName="manufacture" [attr.disabled]="true">
-          <label for="volum">Producătorul produsului finit</label>
+          <label for="manufacture">Producătorul produsului finit</label>
         </div>
       </div>
       <div class="col-md-4">
@@ -260,35 +252,36 @@
         </div>
       </div>
     </div>
-    <hr>
-    <h5 class="text-center font-weight-bold">Documente de iesire</h5>
-    <hr>
-    <table class="table table-widths-lg text-center">
-      <thead class="black white-text">
-      <tr>
-        <th scope="col">Denumirea</th>
-        <th scope="col">Numar</th>
-        <th scope="col">Status document</th>
-        <th>Actiuni</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let a of outputDocuments">
-        <th scope="row" *ngIf="a.docType && (a.docType.category=='OA' || a.docType.category=='CA')">{{ a.name }}</th>
-        <th scope="row" *ngIf="a.docType && (a.docType.category=='OA' || a.docType.category=='CA')">{{ a.number }}</th>
-        <th scope="row" *ngIf="a.docType && (a.docType.category=='OA' || a.docType.category=='CA')">{{ a.status }}</th>
-        <td *ngIf="a.docType && (a.docType.category=='OA' || a.docType.category=='CA')">
-          <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)">Vizualizare</button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-    <div *ngIf="formSubmitted && isNonAttachedDocuments">
-      <small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong></small>
-    </div>
+	  <hr>
+	  <h5 class="text-center font-weight-bold">Documente de iesire</h5>
+	  <hr>
+	  <table class="table table-widths-lg text-center">
+		  <thead class="black white-text">
+		  <tr>
+			  <th scope="col">Denumirea</th>
+			  <th scope="col">Numar</th>
+			  <th scope="col">Status document</th>
+			  <th>Actiuni</th>
+		  </tr>
+		  </thead>
+		  <tbody>
+		  <tr *ngFor="let a of outputDocuments">
+			  <th scope="row" *ngIf="a.docType && (a.docType.category=='OA' || a.docType.category=='CA')">{{ a.name }}</th>
+			  <th scope="row" *ngIf="a.docType && (a.docType.category=='OA' || a.docType.category=='CA')">{{ a.number }}</th>
+			  <th scope="row" *ngIf="a.docType && (a.docType.category=='OA' || a.docType.category=='CA')">{{ a.status }}</th>
+			  <td *ngIf="a.docType && (a.docType.category=='OA' || a.docType.category=='CA')">
+				  <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)">Vizualizare</button>
+			  </td>
+		  </tr>
+		  </tbody>
+	  </table>
+	  <!--<div *ngIf="formSubmitted && isNonAttachedDocuments">-->
+		  <!--<small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong></small>-->
+	  <!--</div>-->
+	  <hr>
     <div class="text-center">
-      <button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Finisare</button>
-      <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>
+      <button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="finish()">Finisare</button>
+      <!--<button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>-->
     </div>
   </form>
 </div>

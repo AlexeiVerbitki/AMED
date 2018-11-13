@@ -22,10 +22,6 @@
             </div>
         </div>
 
-        <app-document [canUpload]="true" [documents]="documents" (documentAdded)="documentAdded($event)"
-                      [nrCerere]="PriceRegForm.get('requestNumber').value"></app-document>
-
-        <hr>
         <div class="row">
             <div class="col-md-4" formGroupName="company">
                 <div class="md-form">
@@ -35,7 +31,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4" formGroupName="pricesMedicament">
+            <div class="col-md-4" formGroupName="medicament">
                 <div class="md-form">
                     <input id="medName" mdbInputDirective type="text" class="form-control" formControlName="name"
                            [attr.disabled]="true">
@@ -43,7 +39,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4" formGroupName="pricesMedicament">
+            <div class="col-md-4" formGroupName="medicament">
                 <div class="md-form">
                     <input id="prod" mdbInputDirective type="text" class="form-control" [attr.disabled]="true"
                            formControlName="manufactureName">
@@ -52,7 +48,7 @@
             </div>
         </div>
 
-        <div class="row" formGroupName="pricesMedicament">
+        <div class="row" formGroupName="medicament">
             <div class="col-md-4">
                 <div class="md-form">
                     <input id="intName" mdbInputDirective type="text" class="form-control" [attr.disabled]="true"
@@ -76,7 +72,7 @@
             </div>
         </div>
 
-        <div class="row" formGroupName="pricesMedicament">
+        <div class="row" formGroupName="medicament">
             <div class="col-md-4">
                 <div class="md-form">
                     <input id="dose" mdbInputDirective type="number" class="form-control" formControlName="dose"
@@ -86,9 +82,9 @@
             </div>
             <div class="col-md-4">
                 <div class="md-form">
-                    <input id="sds" mdbInputDirective type="text" class="form-control"
+                    <input id="medd" mdbInputDirective type="text" class="form-control"
                            formControlName="unitsOfMeasurementDesc"  [attr.disabled]="true">
-                    <label for="sds">Unitate de măsură</label>
+                    <label for="medd">Unitate de măsură (doza)</label>
                 </div>
             </div>
             <div class="col-md-4">
@@ -99,52 +95,62 @@
                 </div>
             </div>
         </div>
-        <hr>
+        <div class="row" formGroupName="medicament">
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="volum" mdbInputDirective type="number" class="form-control" formControlName="volume"
+                           [attr.disabled]="true">
+                    <label for="volum">Volumul</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="volMes" mdbInputDirective type="text" class="form-control"
+                           formControlName="volumeQuantityMeasurementName"  [attr.disabled]="true">
+                    <label for="volMes">Unitate de măsură (volum)</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="typeMed" mdbInputDirective type="text" class="form-control" [value]="medicamentType.description" [attr.disabled]="true">
+                    <label for="typeMed">Tipul medicamentului</label>
+                </div>
+            </div>
+        </div>
+
         <h5 class="text-center font-weight-bold">Divizare</h5>
-        <div class="row" formGroupName="pricesMedicament">
-            <div class="col-md-5">
+        <div class="row" formGroupName="medicament">
+            <div class="col-md-6">
                 <div class="md-form">
                     <input id="nrUnits" mdbInputDirective type="number" class="form-control"
                            formControlName="unitsQuantity"  [attr.disabled]="true">
                     <label for="nrUnits">Număr de bucăți</label>
                 </div>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-6">
                 <div class="md-form-modified">
                     <div class="md-form">
                         <input id="unitsOfMeasurement" mdbInputDirective type="text" class="form-control"
                                formControlName="unitsQuantityMeasurementName" [attr.disabled]="true">
-                        <label for="unitsOfMeasurement">Unitatea de măsură</label>
+                        <label for="unitsOfMeasurement">Unitatea de măsură (bucăți)</label>
                     </div>
                 </div>
             </div>
-            <div class="col-md-2">
-                <div class="md-form">
-                    <input id="typeMed" mdbInputDirective type="text" class="form-control" [value]="medicamentType.description" [attr.disabled]="true">
-                    <label for="typeMed">Tipul medicamentului</label>
-                </div>
-            </div>
-            <div class="col-md-5">
+
+            <div class="col-md-6">
                 <div class="md-form">
                     <input id="storageQuantity" mdbInputDirective type="number" class="form-control"
                            formControlName="storageQuantity" [attr.disabled]="true">
                     <label for="storageQuantity">Cantitate stocare</label>
                 </div>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-6">
                 <div class="md-form-modified">
                     <div class="md-form">
                         <input id="storageMeass" mdbInputDirective type="text" class="form-control"
                                formControlName="storageQuantityMeasurementName" [attr.disabled]="true">
-                        <label for="storageMeass">Unitatea de măsură</label>
+                        <label for="storageMeass">Unitatea de măsură (stocare)</label>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="md-form">
-                    <input id="volum" mdbInputDirective type="number" class="form-control" formControlName="volume"
-                           [attr.disabled]="true">
-                    <label for="volum">Volumul</label>
                 </div>
             </div>
         </div>
@@ -379,7 +385,11 @@
         </div>
 
         <hr>
-        <h5 class="text-center font-weight-bold">Documente de iesire</h5>
+        <app-document [canUpload]="true" [documents]="documents" (documentModified)="documentAdded($event)"
+                      [nrCerere]="PriceRegForm.get('requestNumber').value"></app-document>
+
+
+        <h5 class="text-center font-weight-bold">Documente necesare</h5>
 
         <!--<div class="row">
             <div class="col-md-3">
@@ -411,6 +421,7 @@
                 </div>
             </div>
         </div>-->
+        <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="sendInfoLetter()">Scrisoare de informare</button>
         <table class="table table-widths-lg text-center">
             <thead class="black white-text">
             <tr>
@@ -426,7 +437,7 @@
                 <th scope="row">{{ a.number }}</th>
                 <th scope="row">{{ a.status }}</th>
                 <td>
-                    <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)">Vizualizare</button>
+                    <button class="btn btn-default btn-sm waves-light" mdbWavesEffect [disabled]="true" (click)="viewDoc(a)">Generare</button>
                 </td>
             </tr>
             </tbody>
@@ -438,7 +449,6 @@
 
         <div class="text-center">
             <button class="btn btn-mdb-color waves-light btn-sm waves-light" mdbWavesEffect (click)="save()">Salvează rezultatele evaluării</button>
-             <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="sendInfoLetter()">Scrisoare de informare</button>
         </div>
     </form>
 </div>

@@ -3,11 +3,12 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Subscription} from "rxjs";
 import {AdministrationService} from "../../shared/service/administration.service";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
-import {ConfirmationDialogComponent} from "../../confirmation-dialog/confirmation-dialog.component";
+import {ConfirmationDialogComponent} from "../confirmation-dialog.component";
 import {DocumentService} from "../../shared/service/document.service";
 import {MedicamentService} from "../../shared/service/medicament.service";
 import {AuthService} from "../../shared/service/authetication.service";
 import {LoaderService} from "../../shared/service/loader.service";
+import {DatePipe} from "@angular/common";
 
 @Component({
     selector: 'app-request-additional-data-dialog',
@@ -39,17 +40,16 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.subscriptions.push(
-            this.administrationService.generateDocNr().subscribe(data => {
-                    this.reqForm.get('docNumber').setValue(data);
-                },
-                error => console.log(error)
-            )
-        );
+
+        var datePipe = new DatePipe("en-US");
+        this.reqForm.get('docNumber').setValue('SL-'+this.dataDialog.requestNumber+'-'+this.dataDialog.nrOrdDoc+'-'+datePipe.transform(new Date(), 'dd/MM/yyyy'));
+
         if (this.dataDialog.modalType == 'NOTIFICATION') {
             this.title = 'Detalii scrisoare de informare';
+            this.reqForm.get('docNumber').setValue('NL-'+this.dataDialog.requestNumber+'-'+datePipe.transform(new Date(), 'dd/MM/yyyy'));
         } else if (this.dataDialog.modalType == 'LABORATORY_ANALYSIS') {
             this.title = 'Detalii scrisoare solicitare pentru desfasurarea analizei de laborator ';
+            this.reqForm.get('docNumber').setValue('LA-'+this.dataDialog.requestNumber+'-'+this.dataDialog.nrOrdDoc+'-'+datePipe.transform(new Date(), 'dd/MM/yyyy'));
         }
 
         this.subscriptions.push(
@@ -60,56 +60,6 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
             )
         );
     }
-
-    // ngAfterViewInit(): void {
-    //     this.modalService.data.asObservable().subscribe(value => {
-    //         if (value != '' && value.modalType == 'REQUEST_ADDITIONAL_DATA') {
-    //             this.modalService.data.next('');
-    //             this.openModal(value);
-    //         } else if (value != '' && value.modalType == 'NOTIFICATION') {
-    //             this.title = 'Detalii scrisoare de informare';
-    //             this.openModal(value);
-    //         } else if (value != '' && value.modalType == 'LABORATORY_ANALYSIS') {
-    //             this.title = 'Detalii scrisoare solicitare pentru desfasurarea analizei de laborator ';
-    //             this.openModal(value);
-    //         }
-    //     })
-    // }
-
-    // openModal(value: any) {
-    //     this.dataDialog = value;
-    //     this.reqForm.reset();
-    //     this.subscriptions.push(
-    //         this.administrationService.generateDocNr().subscribe(data => {
-    //                 this.reqForm.get('docNumber').setValue(data);
-    //             },
-    //             error => console.log(error)
-    //         )
-    //     );
-    //     this.reqForm.get('data').setValue(new Date());
-    //    // this.modal.show();
-    // }
-
-    // sendMail() {
-    //     this.isSendEmail = true;
-    //     if (this.reqForm.get('title').invalid || this.reqForm.get('content').invalid || this.reqForm.get('email').invalid) {
-    //         return;
-    //     }
-    //     this.isSendEmail = false;
-    //     const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
-    //         data: {message: 'Sunteti sigur(a)?', confirm: false}
-    //     });
-    //     dialogRef2.afterClosed().subscribe(result => {
-    //         if (result) {
-    //             //send email
-    //             this.subscriptions.push(this.administrationService.sendEmail(this.reqForm.get('title').value, this.reqForm.get('content').value, this.reqForm.get('email').value).subscribe(data => {
-    //                     //generate doc
-    //                     this.generateDoc();
-    //                 }, error => console.log('Scrisoarea nu a putut fi expediata.'))
-    //             );
-    //         }
-    //     });
-    // }
 
     getDocEntity(path: string): any {
         var docName = '';
@@ -138,7 +88,7 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
                 break;
             }
             case  'REQUEST_ADDITIONAL_DATA' : {
-                docType = 'RA';
+                docType = 'SL';
                 break;
             }
         }
@@ -191,7 +141,7 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
                 break;
             }
             case  'REQUEST_ADDITIONAL_DATA' : {
-                docType = 'RA';
+                docType = 'SL';
                 break;
             }
         }
@@ -251,7 +201,7 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
                 response = {
                     success: true,
                     name: 'Scrisoare de solicitare date aditionale',
-                    docType: this.docTypes.find(r => r.category == 'RA'),
+                    docType: this.docTypes.find(r => r.category == 'SL'),
                     status: 'Nu este atasat',
                     number: this.reqForm.get('docNumber').value,
                     title: this.reqForm.get('title').value,
@@ -262,7 +212,6 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
                 break;
             }
         }
-
         this.dialogRef.close(response);
     }
 

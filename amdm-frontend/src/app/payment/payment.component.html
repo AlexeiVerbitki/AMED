@@ -2,17 +2,19 @@
 <hr>
 <form [formGroup]="addReceiptForm">
     <div class="row">
-        <div class="offset-4">
-        </div>
-        <div class="col-2">
-            <div class="md-form">
-                <input id="motivulEmiterii" mdbInputDirective type="text" class="form-control" formControlName="name" [attr.disabled]="isDisabled ? '' : null">
-                <label for="motivulEmiterii">Motivul emiterii</label>
+        <div class="col-md-4">
+            <div class="md-form-modified">
+                <ng-select id="serviceCharge" name="serviceCharge" [items]="serviceCharges"
+                           bindLabel="description"
+                           placeholder="Taxa de acordare servicii *"
+                           (ngModelChange)="checkAmount();"
+                           formControlName="serviceCharge">
+                </ng-select>
             </div>
         </div>
-        <div class="col-2">
+        <div class="col-4">
             <div class="md-form">
-                <input id="sumaBon" mdbInputDirective type="number" min="0" step=".01" class="form-control" formControlName="amount" [attr.disabled]="isDisabled ? '' : null">
+                <input id="sumaBon" mdbInputDirective type="number" min="0" step=".01" class="form-control" formControlName="amount" [attr.disabled]="true">
                 <label for="sumaBon">Suma (lei)</label>
             </div>
         </div>
@@ -36,7 +38,7 @@
         <tr>
             <th scope="col">Bon nr.</th>
             <th scope="col">Data</th>
-            <th scope="col">Motivul emiterii</th>
+            <th scope="col">Taxa</th>
             <th scope="col">Suma</th>
             <th scope="col">Bon Suplimentar</th>
             <th scope="col">Actiuni</th>
@@ -46,7 +48,7 @@
         <tr *ngFor="let receipt of receiptsList">
             <th scope="row">{{ receipt.receiptNumber }}</th>
             <td>{{ receipt.date | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
-            <td>{{ receipt.name }}</td>
+            <td>{{ receipt.serviceCharge.description }}</td>
             <td>{{ receipt.amount }}</td>
             <td>
                 <span *ngIf="receipt.sP === true"><i class="fa fa-check text-success"

@@ -10,6 +10,7 @@ public class MedicamentActiveSubstancesEntity
     private NmActiveSubstancesEntity activeSubstance;
     private Double quantity;
     private NmUnitsOfMeasurementEntity unitsOfMeasurement;
+    private NmManufacturesEntity manufacture;
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
@@ -60,6 +61,18 @@ public class MedicamentActiveSubstancesEntity
         this.unitsOfMeasurement = unitsOfMeasurement;
     }
 
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
+    @JoinColumn( name = "manufacture_id" )
+    public NmManufacturesEntity getManufacture()
+    {
+        return manufacture;
+    }
+
+    public void setManufacture(NmManufacturesEntity manufacture)
+    {
+        this.manufacture = manufacture;
+    }
+
     @Override
     public boolean equals(Object o)
     {
@@ -86,7 +99,11 @@ public class MedicamentActiveSubstancesEntity
         {
             return false;
         }
-        return unitsOfMeasurement != null ? unitsOfMeasurement.equals(that.unitsOfMeasurement) : that.unitsOfMeasurement == null;
+        if (unitsOfMeasurement != null ? !unitsOfMeasurement.equals(that.unitsOfMeasurement) : that.unitsOfMeasurement != null)
+        {
+            return false;
+        }
+        return manufacture != null ? manufacture.equals(that.manufacture) : that.manufacture == null;
     }
 
     @Override
@@ -96,6 +113,7 @@ public class MedicamentActiveSubstancesEntity
         result = 31 * result + (activeSubstance != null ? activeSubstance.hashCode() : 0);
         result = 31 * result + (quantity != null ? quantity.hashCode() : 0);
         result = 31 * result + (unitsOfMeasurement != null ? unitsOfMeasurement.hashCode() : 0);
+        result = 31 * result + (manufacture != null ? manufacture.hashCode() : 0);
         return result;
     }
 }

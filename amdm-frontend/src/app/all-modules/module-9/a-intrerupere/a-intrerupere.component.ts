@@ -49,6 +49,7 @@ export class AIntrerupereComponent implements OnInit, OnDestroy {
     initPage() {
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
             this.subscriptions.push(this.requestService.getClinicalTrailRequest(params['id']).subscribe(data => {
+                    console.log('data', data);
                     this.cancelClinicalTrailForm.get('id').setValue(data.id);
                     this.cancelClinicalTrailForm.get('requestNumber').setValue(data.requestNumber);
                     this.cancelClinicalTrailForm.get('startDate').setValue(new Date(data.startDate));
@@ -63,8 +64,8 @@ export class AIntrerupereComponent implements OnInit, OnDestroy {
 
                     console.log('clinicalTrailsData', this.cancelClinicalTrailForm);
 
-                    this.docs = data.clinicalTrails.documents;
-                    this.outDocuments = data.clinicalTrails.outputDocuments;
+                    this.docs = data.documents;
+                    this.outDocuments = data.outputDocuments;
                 },
                 error => console.log(error)
             ))
@@ -90,11 +91,11 @@ export class AIntrerupereComponent implements OnInit, OnDestroy {
             username: this.authService.getUserName(),
             step: 'C'
         });
-        formModel.clinicalTrails.documents = this.docs;
+        formModel.documents = this.docs;
 
         console.log("evaluareaPrimaraObjectLet", JSON.stringify(formModel));
 
-        formModel.currentStep = 'AP';
+        formModel.currentStep = 'C';
         formModel.assignedUser = this.authService.getUserName();
         formModel.endDate = new Date();
         this.subscriptions.push(

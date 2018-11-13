@@ -1,7 +1,8 @@
 package com.bass.amed.security;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.bass.amed.controller.rest.AutheticationJWTController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -23,6 +24,7 @@ import java.io.IOException;
  */
 public class JWTFilter extends GenericFilterBean
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger(JWTFilter.class);
 
     private TokenProvider tokenProvider;
 
@@ -43,13 +45,10 @@ public class JWTFilter extends GenericFilterBean
         {
             Authentication authentication = this.tokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
         }
+
         filterChain.doFilter(servletRequest, servletResponse);
-//        else
-//        {
-//            httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
-//            httpServletResponse.sendError(HttpStatus.UNAUTHORIZED.value(), "Invalid Token");
-//        }
 
     }
 

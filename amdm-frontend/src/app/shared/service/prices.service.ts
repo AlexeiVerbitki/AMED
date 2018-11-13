@@ -37,10 +37,6 @@ export class PriceService {
         return this.administrationService.generateDocNr();
     }
 
-    getCompanyMedicaments(companyId): Observable<Medicament[]> {
-        return this.medicamentService.getCompanyMedicaments(companyId);
-    }
-
     getCountries(): Observable<Country[]> {
         return this.administrationService.getCountries();
     }
@@ -75,6 +71,10 @@ export class PriceService {
 
     getMedicamentNamesAndCodeList(term): Observable<any[]> {
         return this.medicamentService.getMedicamentNamesAndCodeList(term);
+    }
+
+    getCompanyNamesAndIdnoList(partialName: string): Observable<any[]> {
+        return this.administrationService.getCompanyNamesAndIdnoList(partialName);
     }
 
     getDocumentTypes(): Observable<any> {

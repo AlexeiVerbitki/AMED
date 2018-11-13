@@ -80,9 +80,12 @@
 				<ng-container matColumnDef="requestNumber">
 					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Numar cerere</th>
 					<td mat-cell *matCellDef="let element">
-						<a title="Deschide proces" (click)="navigateToUrl(element)">
+						<a title="Deschide proces" (click)="navigateToUrl(element)" *ngIf="isLink(element)">
 							{{element.requestNumber}}
 						</a>
+						<i class="font-weight-bold" title="Deschide proces" *ngIf="!isLink(element)">
+							{{element.requestNumber}}
+						</i>
 					</td>
 				</ng-container>
 

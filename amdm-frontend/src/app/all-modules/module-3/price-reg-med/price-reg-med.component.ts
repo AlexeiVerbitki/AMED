@@ -52,7 +52,11 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
       private subscriptions: Subscription[] = [];
       private getMedSubscr: Subscription;
       private generatedDocNrSeq: any;
-      companies: Company[] = [];
+
+      companies: Observable<any[]>;
+      loadingCompany : boolean = false;
+      companyInputs = new Subject<string>();
+
       countries: Country[] = [];
       currencies: Currency[] = [];
       priceTypes: any[];
@@ -88,8 +92,10 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
     unitsOfMeasurement:         string = '';
     unitsQuantityMeasurement:   string = '';
     storageQuantityMeasurement: string = '';
+    volumeQuantityMeasurement: string = '';
     storageQuantity:            number;
     volumeProp:                 number;
+    pricesRequestId:            number;
     unitsQuantity:              number;
     medicamentType:             any = {code:MedicamentType.Generic, description: 'Generic'};
     MedType = MedicamentType;
@@ -113,11 +119,14 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
 
         this.PriceRegForm = fb.group({
             id:                 [null],
+            initiator:          [null],
+            assignedUser:       [null],
             requestNumber:      {disabled: true, value: null},
             startDate:          {disabled: false, value: new Date()},
             company:            [null, Validators.required],
             currentStep:        ['R'],
-            medicament:     [null, Validators.required],
+            medicament:         [null, Validators.required],
+            requestHistories:   [],
             type:
                 fb.group({
                     code: ['PMED', Validators.required]
@@ -126,12 +135,31 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-      this.subscriptions.push(
-          this.priceService.getCompanies().subscribe(companiesData => {
-                  this.companies = companiesData;
-              },
-              error => {console.log(error); alert(error);}
-          ));
+      // this.subscriptions.push(
+      //     this.priceService.getCompanies().subscribe(companiesData => {
+      //             this.companies = companiesData;
+      //         },
+      //         error => {console.log(error); alert(error);}
+      //     ));
+
+      this.companies =
+          this.companyInputs.pipe(
+              filter((result: string) => {
+                  if (result && result.length > 2) return true;
+              }),
+              debounceTime(400),
+              distinctUntilChanged(),
+              tap((val: string) => {
+                  this.loadingCompany = true;
+
+              }),
+              flatMap(term =>
+
+                  this.priceService.getCompanyNamesAndIdnoList(term).pipe(
+                      tap(() => this.loadingCompany = false)
+                  )
+              )
+          );
 
       this.subscriptions.push(
           this.priceService.getCountries().subscribe(countriesData => {
@@ -203,10 +231,13 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
               this.priceService.getPricesRequest(this.updateRouteId).subscribe(request => {
                   console.log('requewst', JSON.stringify(request));
                   this.generatedDocNrSeq = request.requestNumber;
+                  this.pricesRequestId = request.pricesRequest.id;
                   this.PriceRegForm.get('id').setValue(request.id);
                   this.PriceRegForm.get('requestNumber').setValue(this.generatedDocNrSeq);
                   this.PriceRegForm.get('company').setValue(request.company);
                   this.PriceRegForm.get('medicament').setValue(request.pricesRequest.medicament);
+                  this.PriceRegForm.get('initiator').setValue(request.initiator);
+                  this.PriceRegForm.get('requestHistories').setValue(request.requestHistories);
                   this.onMedSelected(request.pricesRequest.medicament);
                   this.initPrices(request.pricesRequest);
 
@@ -310,6 +341,11 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
           this.storageQuantityMeasurement = storageQuantityMeas.description;
       }
 
+      let volumeQuantityMeas: UnitOfMeasure = newMed.volumeQuantityMeasurement;
+      if(storageQuantityMeas != undefined) {
+          this.volumeQuantityMeasurement = volumeQuantityMeas.description;
+      }
+
       let internationalName: any = newMed.internationalMedicamentName;
       if(internationalName != undefined) {
           this.internationalName = internationalName.description;
@@ -340,6 +376,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
       this.unitsQuantityMeasurement = '';
       this.internationalName = '';
       this.storageQuantityMeasurement = '';
+      this.volumeQuantityMeasurement = '';
       this.medicamentType = undefined;
       this.dose = undefined;
       this.expirationDate = '';
@@ -363,6 +400,12 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
   }
 
     private getMedicaments($event) {
+
+      if(!$event)
+      {
+          return;
+      }
+
       let id = $event.id;
       //  this.PriceRegForm.get('medicament')['controls'].name.reset();
         if (id !== undefined) {
@@ -410,16 +453,22 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
         this.formSubmitted = false;
 
         let priceModel : any = this.PriceRegForm.value;
-        priceModel.requestHistories = [
+        if(!priceModel.requestHistories) {
+            priceModel.requestHistories = [];
+        }
+        priceModel.requestHistories.push(
             {
                 startDate : this.startRecDate,
                 endDate: new Date(),
                 username : this.priceService.getUsername(),
                 step : 'R'
-            }];
+            });
 
         priceModel.requestNumber = this.PriceRegForm.get('requestNumber').value;
         priceModel.pricesRequest = {};
+        if(this.pricesRequestId != undefined) {
+            priceModel.pricesRequest.id = this.pricesRequestId;
+        }
         priceModel.pricesRequest.medicament = priceModel.medicament;
         priceModel.pricesMedicament = undefined;
         priceModel.pricesRequest.documents = this.documents;
@@ -435,6 +484,11 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
 
         priceModel.pricesRequest.prices = prices;
         priceModel.pricesRequest.referencePrices = refPrices;
+
+        if(priceModel.initiator == undefined) {
+            priceModel.initiator = this.priceService.getUsername();
+        }
+        priceModel.assignedUser = this.priceService.getUsername();
 
 
         this.subscriptions.push(this.priceService.savePrice(priceModel).subscribe(data => {

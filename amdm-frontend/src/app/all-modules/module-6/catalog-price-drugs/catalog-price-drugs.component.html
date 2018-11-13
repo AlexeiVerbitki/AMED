@@ -1,131 +1,182 @@
-<div class="container-fluid z-depth-2 sky">
-
-  <nav>
-    <ul>
-      <li [routerLinkActive]="['active']"><a routerLink="/dashboard/module/nomenclature/price-catalog">Nomenclatorul medicamentului</a></li>
-      <li [routerLinkActive]="['active']"><a routerLink="/dashboard/module/nomenclature/medicament-classifier">Clasificatorul medicamentului</a></li>
-      <li [routerLinkActive]="['active']"><a routerLink="/dashboard/module/nomenclature/economic-agents-classifier">Catalogul national de preturi de producator la medicamente</a></li>
-      <li [routerLinkActive]="['active']"><a routerLink="/dashboard/module/nomenclature/medicament-nomenclature">Clasificatorul agentilor economici cu gen de activitate farmaceutica</a></li>
-    </ul>
-  </nav>
-
-  <div class="table-width">
-    <div class="text-right">
-      <mat-form-field class="w-50">
-        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" class="w-50">
-      </mat-form-field>
-    </div>
-    <hr>
+<div class="table-width">
     <div class="example-container">
-      <table mat-table [dataSource]="dataSource" matSort>
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> ID </th>
-          <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-        </ng-container>
-
+      <table mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="codMedicament">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Codul medicamentului </th>
-          <td mat-cell *matCellDef="let element"> {{element.codMedicament}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="codVamal">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Codul vamal </th>
-          <td mat-cell *matCellDef="let element"> {{element.codVamal}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="denumireComerciala">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Denumirea comerciala </th>
-          <td mat-cell *matCellDef="let element"> {{element.denumireComerciala}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="formaFarmaceutica">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Forma farmaceutica </th>
-          <td mat-cell *matCellDef="let element"> {{element.formaFarmaceutica}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="dozaConcentratia">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Doza, concentratia </th>
-          <td mat-cell *matCellDef="let element"> {{element.dozaConcentratia}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="volum">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Volum </th>
-          <td mat-cell *matCellDef="let element"> {{element.volum}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="divizarea">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Divizarea </th>
-          <td mat-cell *matCellDef="let element"> {{element.divizarea}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="tara">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Tara </th>
-          <td mat-cell *matCellDef="let element"> {{element.tara}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="firmaProducatoare">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Firma producatoare </th>
-          <td mat-cell *matCellDef="let element"> {{element.firmaProducatoare}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="nrDeInregistrare">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Nr. de inregistrare </th>
-          <td mat-cell *matCellDef="let element"> {{element.nrDeInregistrare}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="dataDeInregistrare">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Data de inregistrare </th>
-          <td mat-cell *matCellDef="let element"> {{element.dataDeInregistrare | date: 'dd/MM/yyyy'}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="codulATC">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Codul ATC </th>
-          <td mat-cell *matCellDef="let element"> {{element.codulATC}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="denumireaComunaInternationala">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Denumirea comuna
-            internationala </th>
-          <td mat-cell *matCellDef="let element"> {{element.denumireaComunaInternationala}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="termenulDeValabilitate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Termenul de valabilitate </th>
-          <td mat-cell *matCellDef="let element"> {{element.termenulDeValabilitate}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="codulDeBare">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Codul de bare </th>
-          <td mat-cell *matCellDef="let element"> {{element.codulDeBare}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="pretDeProducatorMDL">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Pret de producator (MDL) </th>
-          <td mat-cell *matCellDef="let element"> {{element.pretDeProducatorMDL}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="pretDeProducatorValuta">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Pret de producator (Valuta)
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter" [ngStyle]="{'width': '152px'}">
+              <mat-label>Codul medicamentului</mat-label>
+              <input matInput [formControl]="codMedicamentFilter" dividerColor="primary">
+            </mat-form-field>
           </th>
-          <td mat-cell *matCellDef="let element"> {{element.pretDeProducatorValuta}} </td>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.codMedicament}}" placement="top">{{x.codMedicament}}</td>
         </ng-container>
-
+        <ng-container matColumnDef="codVamal">
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter" [ngStyle]="{'width': '85px'}">
+              <mat-label>Codul vamal</mat-label>
+              <input matInput [formControl]="codVamalFilter">
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.codVamal}}" placement="top">{{x.codVamal}}</td>
+        </ng-container>
+        <ng-container matColumnDef="denumireComerciala">
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter" [ngStyle]="{'width': '152px'}">
+              <mat-label>Denumirea comerciala</mat-label>
+              <input matInput [formControl]="denumireComercialaFilter">
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.denumireComerciala}}" placement="top">{{x.denumireComerciala}}</td>
+        </ng-container>
+        <ng-container matColumnDef="formaFarmaceutica">
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter" [ngStyle]="{'width': '138px'}">
+              <mat-label>Forma farmaceutica</mat-label>
+              <input matInput [formControl]="formaFarmaceuticaFilter">
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.formaFarmaceutica}}" placement="top">{{x.formaFarmaceutica}}</td>
+        </ng-container>
+        <ng-container matColumnDef="dozaConcentratia">
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter" [ngStyle]="{'width': '127px'}">
+              <mat-label>Doza, concentratia</mat-label>
+              <input matInput [formControl]="dozaConcentratiaFilter">
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let x"  mdbTooltip="{{x.dozaConcentratia}}" placement="top">{{x.dozaConcentratia}}</td>
+        </ng-container>
+        <ng-container matColumnDef="volum">
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter" [ngStyle]="{'width': '47px'}">
+              <mat-label>Volum</mat-label>
+              <input matInput [formControl]="volumFilter">
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.volum}}" placement="top">{{x.volum}}</td>
+        </ng-container>
+        <ng-container matColumnDef="divizarea">
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter" [ngStyle]="{'width': '62px'}">
+              <mat-label>Divizarea</mat-label>
+              <input matInput [formControl]="divizareaFilter">
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.divizarea}}" placement="top">{{x.divizarea}}</td>
+        </ng-container>
+        <ng-container matColumnDef="tara">
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter" [ngStyle]="{'width': '33px'}">
+              <mat-label>Tara</mat-label>
+              <input matInput [formControl]="taraFilter">
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.tara}}" placement="top">{{x.tara}}</td>
+        </ng-container>
+        <ng-container matColumnDef="firmaProducatoare">
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter" [ngStyle]="{'width': '132px'}">
+              <mat-label>Firma producatoare </mat-label>
+              <input matInput [formControl]="firmaProducatoareFilter">
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.firmaProducatoare}}" placement="top">{{x.firmaProducatoare}}</td>
+        </ng-container>
+        <ng-container matColumnDef="nrDeInregistrare">
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter" [ngStyle]="{'width': '120px'}">
+              <mat-label>Nr. de inregistrare</mat-label>
+              <input matInput [formControl]="nrDeInregistrareFilter">
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.nrDeInregistrare}}" placement="top">{{x.nrDeInregistrare}}</td>
+        </ng-container>
+        <ng-container matColumnDef="dataDeInregistrare">
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter" [ngStyle]="{'width': '132px'}">
+              <mat-label>Data de inregistrare</mat-label>
+              <input matInput [formControl]="dataDeInregistrareFilter">
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.dataDeInregistrare | date: 'dd/MM/yyyy'}}" placement="top">{{x.dataDeInregistrare | date: 'dd/MM/yyyy'}}</td>
+        </ng-container>
+        <ng-container matColumnDef="codulATC">
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter" [ngStyle]="{'width': '70px'}">
+              <mat-label>Codul ATC </mat-label>
+              <input matInput [formControl]="codulATCFilter">
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.codulATC}}" placement="top">{{x.codulATC}}</td>
+        </ng-container>
+        <ng-container matColumnDef="denumireaComunaInternationala">
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter" [ngStyle]="{'width': '226px'}">
+              <mat-label>Denumirea comuna
+                internationala </mat-label>
+              <input matInput [formControl]="denumireaComunaInternationalaFilter">
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.denumireaComunaInternationala}}" placement="top">{{x.denumireaComunaInternationala}}</td>
+        </ng-container>
+        <ng-container matColumnDef="termenulDeValabilitate">
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter" [ngStyle]="{'width': '160px'}">
+              <mat-label>Termenul de valabilitate</mat-label>
+              <input matInput [formControl]="termenulDeValabilitateFilter">
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.termenulDeValabilitate}}" placement="top">{{x.termenulDeValabilitate}}</td>
+        </ng-container>
+        <ng-container matColumnDef="codulDeBare">
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter" [ngStyle]="{'width': '93px'}">
+              <mat-label>Codul de bare</mat-label>
+              <input matInput [formControl]="codulDeBareFilter">
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.codulDeBare}}" placement="top">{{x.codulDeBare}}</td>
+        </ng-container>
+        <ng-container matColumnDef="pretDeProducatorMDL">
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter" [ngStyle]="{'width': '153px'}">
+              <mat-label>Pret de la producator (MDL)</mat-label>
+              <input matInput [formControl]="pretDeProducatorMDLFilter">
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.pretDeProducatorMDL}}" placement="top">{{x.pretDeProducatorMDL}}</td>
+        </ng-container>
+        <ng-container matColumnDef="pretDeProducatorValuta">
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter" [ngStyle]="{'width': '162px'}">
+              <mat-label>Pret de la producator (Valuta)</mat-label>
+              <input matInput [formControl]="pretDeProducatorValutaFilter">
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.pretDeProducatorValuta}}" placement="top">{{x.pretDeProducatorValuta}}</td>
+        </ng-container>
         <ng-container matColumnDef="valuta">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Valuta </th>
-          <td mat-cell *matCellDef="let element"> {{element.valuta}} </td>
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter" [ngStyle]="{'width': '44px'}">
+              <mat-label>Valuta</mat-label>
+              <input matInput [formControl]="valutaFilter">
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.valuta}}" placement="top">{{x.valuta}}</td>
         </ng-container>
-
         <ng-container matColumnDef="nrSiDataOrdinuluiDeAprobareAPretului">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Nr. si data ordinului de
-            aprobare a pretului </th>
-          <td mat-cell *matCellDef="let element"> {{element.nrSiDataOrdinuluiDeAprobareAPretului}} </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-    </div>
-
-    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
-  </div>
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter" [ngStyle]="{'width': '280px'}">
+              <mat-label>Nr. si data ordinului de
+                aprobare a pretului</mat-label>
+              <input matInput [formControl]="nrSiDataOrdinuluiDeAprobareAPretuluiFilter">
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.nrSiDataOrdinuluiDeAprobareAPretului}}" placement="top">{{x.nrSiDataOrdinuluiDeAprobareAPretului}}</td>
+        </ng-container> -->
+			<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+			<tr mat-row *matRowDef="let x; columns: columnsToDisplay"></tr>
+		</table>
+		<mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
+	</div>
 </div>

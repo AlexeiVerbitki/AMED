@@ -23,11 +23,18 @@
       </div>
       <div class="col-md-4">
         <div class="md-form-modified">
-          <mat-form-field class="w-100">
-            <mat-select id="solicitantCompany"  placeholder="Compania solicitant" formControlName="company">
-              <mat-option *ngFor="let solicitantCompany of solicitantCompanyList" [value]="solicitantCompany">{{ solicitantCompany.name }}</mat-option>
-            </mat-select>
-          </mat-form-field>
+          <ng-select [items]="companii | async"
+                     bindLabel="name"
+                     placeholder="Compania solicitant"
+                     formControlName="company"
+                     [loading]="loadingCompany"
+                     [typeahead]="companyInputs"
+                     required="true">
+            <ng-template ng-option-tmp let-item="item">
+              {{item.name}} <br />
+              <small class="form-text text-muted">{{item.idno}}</small>
+            </ng-template>
+          </ng-select>
         </div>
       </div>
     </div>

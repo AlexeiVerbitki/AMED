@@ -7,7 +7,7 @@ import { MatDialog } from "@angular/material";
 import {ActivatedRoute, Router} from "@angular/router";
 import { AdministrationService } from "../../../shared/service/administration.service";
 import { map, startWith } from "rxjs/operators";
-import { ConfirmationDialogComponent } from "../../../confirmation-dialog/confirmation-dialog.component";
+import { ConfirmationDialogComponent } from "../../../dialog/confirmation-dialog.component";
 import { saveAs } from 'file-saver';
 import {Document} from "../../../models/document";
 import {RequestService} from "../../../shared/service/request.service";
@@ -58,6 +58,9 @@ export class AmbalajComponent implements OnInit {
 
     this.evaluateImportForm = fb.group({
         'id': [''],
+        'requestNumber': [null],
+        'startDate': [new Date()],
+        'company': ['', Validators.required],
         'currentStep': ['R'],
         'initiator':[null],
         'assignedUser':[null],
@@ -66,9 +69,9 @@ export class AmbalajComponent implements OnInit {
                 'id': ['']
             }),
         'importAuthorizationEntity': fb.group({
-                'requestNumber': [null],
-                'startDate': [new Date()],
-                'company': ['', Validators.required],
+                // 'requestNumber': {value: '', disabled: true},
+                // 'startDate': {value: '', disabled: true},
+                // 'company': {value: '', disabled: true},
                 'id;': [],
                 'importType': [null, Validators.required],
                 'applicationRegistrationNumber': [],
@@ -93,6 +96,7 @@ export class AmbalajComponent implements OnInit {
 
   ngOnInit() {
     this.currentDate = new Date();
+    this.loadSolicitantCompanyList();
 
     // this.subscriptions.push(
     //   this.administrationService.generateDocNr().subscribe(data => {
@@ -111,16 +115,18 @@ export class AmbalajComponent implements OnInit {
       this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
           this.subscriptions.push(this.requestService.getImportRequest(params['id']).subscribe(data => {
                   console.log('Import data',data);
-                  alert(params['id'])
+                  // alert(params['id'])
+                  // alert(data.startDate)
+                  // alert(data.company)
 
                   this.evaluateImportForm.get('id').setValue(data.id);
                   this.evaluateImportForm.get('initiator').setValue(data.initiator);
                   this.evaluateImportForm.get('assignedUser').setValue(data.assignedUser);
-                  this.evaluateImportForm.get('importAuthorizationEntity.requestNumber').setValue(data.requestNumber);
+                  this.evaluateImportForm.get('requestNumber').setValue(data.requestNumber);
                   this.evaluateImportForm.get('startDate').setValue(new Date(data.startDate));
                   this.evaluateImportForm.get('company').setValue(data.company);
-                  this.evaluateImportForm.get('type').setValue(data.type);
-                  this.evaluateImportForm.get('requestHistories').setValue(data.requestHistories);
+                  // this.evaluateImportForm.get('type').setValue(data.type);
+                  // this.evaluateImportForm.get('requestHistories').setValue(data.requestHistories);
 
 
                   // this.evaluateClinicalTrailForm.get('clinicalTrails').setValue(data.clinicalTrails);
@@ -142,8 +148,8 @@ export class AmbalajComponent implements OnInit {
                   //     this.fillReferenceProductData(data.clinicalTrails.referenceProduct);
                   // }
 
-                  this.docs = data.clinicalTrails.documents;
-                  this.docs.forEach(doc => doc.isOld = true);
+                  // this.docs = data.clinicalTrails.documents;
+                  // this.docs.forEach(doc => doc.isOld = true);
 
 
               },

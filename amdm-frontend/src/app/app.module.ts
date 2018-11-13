@@ -18,7 +18,7 @@ import {MainDashboardComponent} from './dashboard/main-dashboard.component';
 import {AuthService} from './shared/service/authetication.service';
 import {ServerUrlInterceptor} from './shared/interceptor/server-url.interceptor';
 import {AdministrationService} from './shared/service/administration.service';
-import {ConfirmationDialogComponent} from "./confirmation-dialog/confirmation-dialog.component";
+import {ConfirmationDialogComponent} from "./dialog/confirmation-dialog.component";
 import {TaskComponent} from './task/task.component';
 import {HistoryComponent} from './history/history.component';
 import {ModuleComponent} from "./all-modules/module.component";
@@ -33,6 +33,8 @@ import {ErrorResponseHandlerComponent} from "./server-response-handler/error-res
 import {ErrorHandlerService} from "./shared/service/error-handler.service";
 import {AdminDashboardComponent} from "./dashboard/admin-dashboard.component";
 import {GestDocComponent} from "./document-management/gest-doc/gest-doc.component";
+import {NumberOnlyDirective} from "./shared/directive/number-only.directive";
+import {RequestAdditionalDataDialogComponent} from "./dialog/request-additional-data-dialog/request-additional-data-dialog.component";
 
 const interceptors = [{
     provide: HTTP_INTERCEPTORS,
@@ -68,7 +70,9 @@ const interceptors = [{
         ModuleComponent,
         AdministrationComponent,
         ErrorResponseHandlerComponent,
+        RequestAdditionalDataDialogComponent,
         GestDocComponent,
+        NumberOnlyDirective
     ],
     imports: [
         BrowserAnimationsModule,
@@ -82,7 +86,7 @@ const interceptors = [{
     ],
     schemas: [],
     entryComponents: [
-        ConfirmationDialogComponent,
+        ConfirmationDialogComponent,RequestAdditionalDataDialogComponent
     ],
     providers: [AuthService, AdministrationService, ErrorHandlerService, interceptors,
     ],

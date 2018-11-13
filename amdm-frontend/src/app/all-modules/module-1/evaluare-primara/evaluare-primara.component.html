@@ -20,11 +20,11 @@
 			</div>
 		</div>
 		<hr>
-		<app-document [documents]="documents" [nrCerere]="eForm.get('requestNumber').value" [dcTypes]="docTypes" (documentAdded)="documentAdded($event)"></app-document>
+		<app-document [documents]="documents" [nrCerere]="eForm.get('requestNumber').value" [dcTypes]="docTypes" (documentModified)="documentModified($event)"></app-document>
 		<hr>
 		<div class="row">
 			<div class="col-md-6">
-				<div class="md-form" formGroupName="medicament">
+				<div class="md-form">
 					<input id="compSolicitant" mdbInputDirective type="text" class="form-control" formControlName="companyValue" [attr.disabled]="true">
 					<label for="compSolicitant">Compania solicitant</label>
 				</div>
@@ -32,7 +32,7 @@
 			<div class="col-md-6">
 				<div class="md-form" formGroupName="medicament">
 					<input id="med" mdbInputDirective type="text" class="form-control" formControlName="name" [attr.disabled]="true">
-					<label for="med">Medicamentul</label>
+					<label for="med">Denumire comerciala medicament</label>
 				</div>
 			</div>
 			<div class="col-md-12">
@@ -142,7 +142,7 @@
 			</div>
 			<div class="col-md-6">
 				<div class="md-form-modified">
-					<ng-select id="activeSubstanceUnit" name="activeSubstanceUnit" [items]="unitsOfMeasurement"
+					<ng-select id="activeSubstanceUnit" name="activeSubstanceUnit" [items]="activeSubstanceUnitsOfMeasurement"
 					           bindLabel="description"
 					           placeholder="Unitate de masură *"
 					           formControlName="activeSubstanceUnit">
@@ -155,9 +155,16 @@
 		</div>
 		<div class="row">
 			<div class="col-md-4">
-				<div class="md-form">
-					<input id="proSubsActiv" mdbInputDirective type="text" formControlName="manufactureSA" class="form-control" [attr.disabled]="true">
-					<label for="taraProSubsActiv">Producător</label>
+				<div class="md-form-modified">
+					<ng-select id="proSubsActiv" name="proSubsActiv" [items]="manufactures"
+					           bindLabel="description"
+					           placeholder="Producător *"
+					           (ngModelChange)="checkActiveSubstanceManufacture()"
+					           formControlName="manufactureSA">
+					</ng-select>
+					<div *ngIf="isAddSubstancePressed && (eForm.get('manufactureSA').value==null || eForm.get('manufactureSA').value.toString().length==0)">
+						<small class="text-muted"><strong class="text-danger">Producatorul trebuie selectat</strong></small>
+					</div>
 				</div>
 			</div>
 			<div class="col-md-4">
@@ -195,11 +202,11 @@
 				<td>{{ substance.activeSubstance.code }}</td>
 				<td>{{ substance.quantity }}</td>
 				<td>{{ substance.unitsOfMeasurement.description }}</td>
-				<td>{{ substance.activeSubstance.manufacture.description }}</td>
-				<td>{{ substance.activeSubstance.manufacture.country.description }}</td>
-				<td>{{ substance.activeSubstance.manufacture.address }}</td>
+				<td>{{ substance.manufacture.description }}</td>
+				<td>{{ substance.manufacture.country.description }}</td>
+				<td>{{ substance.manufacture.address }}</td>
 				<td>
-					<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeSubstance(i)" mdbWavesEffect>Delete</button>
+					<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeSubstance(i)" mdbWavesEffect>Stergere</button>
 				</td>
 			</tr>
 			</tbody>
@@ -215,21 +222,30 @@
 				<div class="md-form">
 					<input id="dose" mdbInputDirective min="0" step=".01" type="number" class="form-control" formControlName="dose">
 					<label for="dose">Doza <span class="text-danger">*</span></label>
-					<div *ngIf="formSubmitted && eForm.get('medicament.dose').invalid">
-						<small class="text-muted"><strong class="text-danger">Doza trebuie introdusa</strong></small>
-					</div>
 				</div>
 			</div>
 			<div class="col-md-6">
 				<div class="md-form-modified">
 					<ng-select id="medUnit" name="medUnit" [items]="unitsOfMeasurement"
 					           bindLabel="description"
-					           placeholder="Unitate de masura *"
+					           placeholder="Unitate de masura (doza) *"
 					           formControlName="unitsOfMeasurement">
 					</ng-select>
-					<div *ngIf="formSubmitted && eForm.get('medicament.unitsOfMeasurement').invalid">
-						<small class="text-muted"><strong class="text-danger">Unitatea de masura trebuie selectata</strong></small>
-					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="md-form">
+					<input id="volum" mdbInputDirective type="text" class="form-control" formControlName="volume">
+					<label for="volum">Volum </label>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="md-form-modified">
+					<ng-select id="volumUnit" name="medUnit" [items]="volumeUnitsOfMeasurement"
+					           bindLabel="description"
+					           placeholder="Unitate de masura (volum) *"
+					           formControlName="volumeQuantityMeasurement">
+					</ng-select>
 				</div>
 			</div>
 		</div>
@@ -248,23 +264,14 @@
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="codMed" mdbInputDirective numberOnly type="text" class="form-control" formControlName="code">
-					<label for="codMed">Codul medicamentului <span class="text-danger">*</span></label>
-				</div>
-				<div *ngIf="formSubmitted && eForm.get('medicament.code').invalid">
-					<small class="text-muted"><strong class="text-danger">Codul medicamentului trebuie introdus</strong></small>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="md-form">
 					<input id="termenVal" mdbInputDirective type="number" class="form-control" formControlName="termsOfValidity">
-					<label for="termenVal">Termen de valabilitate <span class="text-danger">*</span></label>
+					<label for="termenVal">Termen de valabilitate (luni) <span class="text-danger">*</span></label>
 				</div>
 				<div *ngIf="formSubmitted && eForm.get('medicament.termsOfValidity').invalid">
 					<small class="text-muted"><strong class="text-danger">Termenul de valabilitate trebuie introdus</strong></small>
 				</div>
 			</div>
-			<div class="col-md-12">
+			<div class="col-md-4">
 				<div class="md-form-modified">
 					<ng-select id="medType" name="medType" [items]="medicamentTypes"
 					           bindLabel="description"
@@ -282,20 +289,20 @@
 			<div class="col-md-6">
 				<div class="md-form">
 					<input id="nrUnits" mdbInputDirective type="number" class="form-control" formControlName="unitsQuantity">
-					<label for="volum">Numar de bucati</label>
+					<label for="nrUnits">Numar de bucati</label>
 				</div>
-				<div *ngIf="formSubmitted && eForm.get('medicament.unitsQuantity').invalid">
+				<div *ngIf="isAddDivision && eForm.get('medicament.unitsQuantity').invalid">
 					<small class="text-muted"><strong class="text-danger">Numar de bucati trebuie introdus</strong></small>
 				</div>
 			</div>
 			<div class="col-md-6">
 				<div class="md-form-modified">
-					<ng-select id="unitsQuantityMeasurement" name="unitsQuantityMeasurement" [items]="unitsOfMeasurement"
+					<ng-select id="unitsQuantityMeasurement" name="unitsQuantityMeasurement" [items]="unitsQuantityMeasurement"
 					           bindLabel="description"
-					           placeholder="Unitate de masura *"
+					           placeholder="Unitate de masura (bucati) *"
 					           formControlName="unitsQuantityMeasurement">
 					</ng-select>
-					<div *ngIf="formSubmitted && eForm.get('medicament.unitsQuantityMeasurement').invalid">
+					<div *ngIf="isAddDivision && eForm.get('medicament.unitsQuantityMeasurement').invalid">
 						<small class="text-muted"><strong class="text-danger">Unitatea de masura trebuie selectata</strong></small>
 					</div>
 				</div>
@@ -303,31 +310,54 @@
 			<div class="col-md-6">
 				<div class="md-form">
 					<input id="storageQuantity" mdbInputDirective type="number" class="form-control" formControlName="storageQuantity">
-					<label for="volum">Cantitate stocare</label>
+					<label for="storageQuantity">Cantitate stocare</label>
 				</div>
-				<div *ngIf="formSubmitted && eForm.get('medicament.storageQuantity').invalid">
+				<div *ngIf="isAddDivision && eForm.get('medicament.storageQuantity').invalid">
 					<small class="text-muted"><strong class="text-danger">Cantitate stocare trebuie introdusa</strong></small>
 				</div>
 			</div>
 			<div class="col-md-6">
 				<div class="md-form-modified">
-					<ng-select id="storageQuantityMeasurement" name="storageQuantityMeasurement" [items]="unitsOfMeasurement"
+					<ng-select id="storageQuantityMeasurement" name="storageQuantityMeasurement" [items]="storageUnitsOfMeasurement"
 					           bindLabel="description"
-					           placeholder="Unitate de masura *"
+					           placeholder="Unitate de masura (stocare) *"
 					           formControlName="storageQuantityMeasurement">
 					</ng-select>
-					<div *ngIf="formSubmitted && eForm.get('medicament.unitsQuantityMeasurement').invalid">
+					<div *ngIf="isAddDivision && eForm.get('medicament.unitsQuantityMeasurement').invalid">
 						<small class="text-muted"><strong class="text-danger">Unitatea de masura trebuie selectata</strong></small>
 					</div>
 				</div>
 			</div>
-			<div class="col-md-6">
-				<div class="md-form">
-					<input id="volum" mdbInputDirective type="text" class="form-control" formControlName="volume">
-					<label for="volum">Volumul</label>
-				</div>
-			</div>
 		</div>
+		<div class="position-button">
+			<button class="btn btn-indigo btn-sm" mdbWavesEffect (click)="addDivision()">Adaugă divizarea</button>
+		</div>
+		<table class="table table-widths text-center">
+			<thead class="black white-text">
+			<tr>
+				<th scope="col">Numar de bucati</th>
+				<th scope="col">Unitate de masura (bucati)</th>
+				<th scope="col">Cantitate stocare</th>
+				<th scope="col">Unitate de masura (stocare)</th>
+				<th scope="col">Actiuni</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr *ngFor="let division of divisions;let i = index">
+				<td>{{ division.unitsQuantity }}</td>
+				<td>{{ division.unitsQuantityMeasurement.description }}</td>
+				<td>{{ division.storageQuantity }}</td>
+				<td>{{ division.storageQuantityMeasurement.description }}</td>
+				<td>
+					<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeDivision(i)" mdbWavesEffect>Stergere</button>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		<div *ngIf="formSubmitted && divisions.length==0">
+			<small class="text-muted"><strong class="text-danger">Nici o divizare nu a fost adaugata</strong></small>
+		</div>
+		<hr/>
 		<div class="row" formGroupName="medicament">
 			<div class="col-md-6">
 				<div class="md-form" formGroupName="group">
@@ -409,7 +439,7 @@
 				<div class="md-form-modified">
 					<ng-select id="denumireaProdFinit" name="denumireaProdFinit" [items]="manufactures"
 					           bindLabel="description"
-					           placeholder="Producătorul produsului finit *"
+					           placeholder="Producătorul produsului finit "
 					           (ngModelChange)="fillManufactureDetails()"
 					           formControlName="manufacture">
 					</ng-select>
@@ -458,20 +488,21 @@
 				<th scope="row">{{ a.name }}</th>
 				<th scope="row">{{ a.number }}</th>
 				<th scope="row">{{ a.status }}</th>
-				<th scope="row"><mat-checkbox *ngIf="a.docType && (a.docType.category=='RA' || a.docType.category=='LA')" #checkBoxResponse [checked]="a.responseReceived" (change)="checkResponseReceived(a,checkBoxResponse)">Raspuns primit</mat-checkbox></th>
+				<th scope="row"><mat-checkbox *ngIf="a.docType && (a.docType.category=='SL' || a.docType.category=='LA')" #checkBoxResponse [checked]="a.responseReceived" (change)="checkResponseReceived(a,checkBoxResponse)">Raspuns primit</mat-checkbox></th>
 				<td>
 					<button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)">Vizualizare</button>
-					<button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && (a.docType.category=='RA' || a.docType.category=='LA')" class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)">Stergere</button>
+					<button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && (a.docType.category=='SL' || a.docType.category=='LA')" class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)">Stergere</button>
 				</td>
 			</tr>
 			</tbody>
 		</table>
-		<div *ngIf="formSubmitted && !isResponseReceived">
-			<small class="text-muted"><strong class="text-danger">Exista documente fara raspuns</strong></small>
-		</div>
-		<div *ngIf="formSubmitted && isNonAttachedDocuments">
-			<small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong></small>
-		</div>
+		<!--<div *ngIf="formSubmitted && !isResponseReceived">-->
+			<!--<small class="text-muted"><strong class="text-danger">Exista documente fara raspuns</strong></small>-->
+		<!--</div>-->
+		<!--<div *ngIf="formSubmitted && isNonAttachedDocuments">-->
+			<!--<small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong></small>-->
+		<!--</div>-->
+		<hr>
 		<div class="text-center">
 			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>
 			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Urmatorul pas</button>

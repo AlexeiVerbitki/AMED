@@ -8,19 +8,12 @@ export class MedicamentService {
     constructor(private http: HttpClient) {
     }
 
-    getCompanyMedicaments(companyId): Observable<Medicament[]> {
-        let Params = new HttpParams();
-        Params = Params.set('companyId', companyId);
-
-        return this.http.get<Medicament[]>('/api/medicaments/company-medicaments', {params: Params});//, responseType: 'text'});
-    }
-
-    getMedicamentNamesList(partialName: string): Observable<any[]> {
-        let Params = new HttpParams();
-        Params = Params.set('partialName', partialName);
-
-        return this.http.get<any[]>('/api/medicaments/search-medicament-names-by-name', {params: Params});
-    }
+    // getMedicamentNamesList(partialName: string): Observable<any[]> {
+    //     let Params = new HttpParams();
+    //     Params = Params.set('partialName', partialName);
+    //
+    //     return this.http.get<any[]>('/api/medicaments/search-medicament-names-by-name', {params: Params});
+    // }
 
     getMedicamentNamesAndCodeList(partialName: string): Observable<any[]> {
         let Params = new HttpParams();
@@ -38,6 +31,12 @@ export class MedicamentService {
 
     interruptProcess(details: any): Observable<any> {
         return this.http.post<any>('/api/medicaments/interrupt-process', details, {observe: 'response'});
+    }
+
+    getMedicamentByRegisterNumber(registerNumber: any): Observable<any> {
+        let Params = new HttpParams();
+        Params = Params.set('registerNumber', registerNumber);
+        return this.http.get<any>('/api/medicaments/search-medicaments-by-register-number',{params: Params});
     }
 
 }

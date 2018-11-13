@@ -11,23 +11,23 @@ import {ReferencePriceComponent} from "./reference-price/reference-price.compone
 import { ProposedPriceComponent } from './proposed-price/proposed-price.component';
 import {RequestService} from "../../shared/service/request.service";
 import {UploadFileService} from "../../shared/service/upload/upload-file.service";
-import {DocumentComponent} from "../../document/document.component";
-import {RequestAdditionalDataDialogComponent} from "../../dialog/request-additional-data-dialog/request-additional-data-dialog.component";
 import {MatDialogModule} from "@angular/material";
+import {DocumentModule} from "../../document/document.module";
 
 @NgModule({
-    entryComponents: [ReferencePriceComponent, ProposedPriceComponent, RequestAdditionalDataDialogComponent],
+    entryComponents: [ReferencePriceComponent, ProposedPriceComponent],
     imports: [
         CommonModule,
         PriceRoutingModule,
         FormsModule,
         MatDialogModule ,
         ReactiveFormsModule,
+        DocumentModule,
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
     ],
     schemas: [],
-    declarations: [PriceRegMedComponent, PriceEvaluateMedComponent, ReferencePriceComponent, DocumentComponent, ProposedPriceComponent,RequestAdditionalDataDialogComponent],
+    declarations: [PriceRegMedComponent, PriceEvaluateMedComponent, ReferencePriceComponent, ProposedPriceComponent],
     providers: [UploadFileService, RequestService],
 
 })

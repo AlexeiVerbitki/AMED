@@ -12,6 +12,7 @@ import {DocumentModule} from "../../document/document.module";
 import {AnnihilationService} from "../../shared/service/annihilation/annihilation.service";
 import { DrugsDestroyEvaluateComponent } from './drugs-destroy-evaluate/drugs-destroy-evaluate.component';
 import {PaymentModule} from "../../payment/payment.module";
+import { DrugsDestroyActualComponent } from './drugs-destroy-actual/drugs-destroy-actual.component';
 
 @NgModule({
     imports: [
@@ -24,7 +25,7 @@ import {PaymentModule} from "../../payment/payment.module";
         DocumentModule,
         PaymentModule
     ],
-    declarations: [ DrugsDestroyRegisterComponent, DrugsDestroyEvaluateComponent],
+    declarations: [ DrugsDestroyRegisterComponent, DrugsDestroyEvaluateComponent, DrugsDestroyActualComponent],
     providers: [UploadFileService,MedicamentService, AnnihilationService
     ],
 })

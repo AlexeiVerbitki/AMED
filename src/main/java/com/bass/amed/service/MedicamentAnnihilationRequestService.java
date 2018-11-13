@@ -12,10 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.sql.Timestamp;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -92,7 +90,7 @@ public class MedicamentAnnihilationRequestService
 
 
     @Transactional
-    public void updateAnnihilation(RegistrationRequestsEntity request, boolean next) throws CustomException
+    public void updateAnnihilation(RegistrationRequestsEntity request) throws CustomException
     {
         EntityManager em = null;
         try
@@ -132,10 +130,67 @@ public class MedicamentAnnihilationRequestService
                 r.getMedicamentAnnihilation().getPaymentOrders().addAll(pSet);
             }
 
-            if(next)
+
+            //Update commisions
+            r.getMedicamentAnnihilation().getCommisions().clear();
+            r.getMedicamentAnnihilation().getCommisions().addAll(request.getMedicamentAnnihilation().getCommisions());
+
+            r.getMedicamentAnnihilation().setNote(request.getMedicamentAnnihilation().getNote());
+
+            r.setCurrentStep(request.getCurrentStep());
+            r.setAssignedUser(request.getAssignedUser());
+
+            em.merge(r);
+
+            em.getTransaction().commit();
+
+        }
+        catch (Exception e){
+            if (em != null)
             {
-                r.setCurrentStep("N");
+                em.getTransaction().rollback();
             }
+            throw new CustomException(e.getMessage(), e);
+        }
+        finally
+        {
+            em.close();
+        }
+    }
+
+
+    @Transactional
+    public void finishAnnihilation(RegistrationRequestsEntity request) throws CustomException
+    {
+        EntityManager em = null;
+        try
+        {
+            em = entityManagerFactory.createEntityManager();
+            em.getTransaction().begin();
+            RegistrationRequestsEntity r = em.find(RegistrationRequestsEntity.class, request.getId());
+
+            r.getRequestHistories().add(new ArrayList<>(request.getRequestHistories()).get(0));
+
+            //Update documents
+            Set<DocumentsEntity> dSet = request.getMedicamentAnnihilation().getDocuments().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
+
+            if (!dSet.isEmpty()){
+                r.getMedicamentAnnihilation().getDocuments().addAll(dSet);
+            }
+
+            r.setCurrentStep(request.getCurrentStep());
+            r.setAssignedUser(request.getAssignedUser());
+
+            r.getMedicamentAnnihilation().setStatus("F");
+
+            r.setEndDate(new Timestamp( new Date().getTime()));
+
+
+            //Update commisions
+            r.getMedicamentAnnihilation().getCommisions().clear();
+            r.getMedicamentAnnihilation().getCommisions().addAll(request.getMedicamentAnnihilation().getCommisions());
+
+            r.getMedicamentAnnihilation().setNote(request.getMedicamentAnnihilation().getNote());
 
             em.merge(r);
 

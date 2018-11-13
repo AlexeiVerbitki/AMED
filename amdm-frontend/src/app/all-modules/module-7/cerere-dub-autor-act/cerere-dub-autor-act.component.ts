@@ -39,15 +39,9 @@ export class CerereDubAutorActComponent implements OnInit {
         'endDate': [''],
         'requestNumber': [null, Validators.required],
         'company' : [null, Validators.required],
+        'companyValue': [''],
         'documents': [],
-        'medicament':
-            fb.group({
-                'id': [],
-                'name': ['', Validators.required],
-                'company': ['', Validators.required],
-                'companyValue': [''],
-                'documents': []
-            }),
+        'medicaments': [[]],
         'requestHistories': [],
         'type': [],
         'typeValue': {disabled: true, value: null}
@@ -59,19 +53,15 @@ export class CerereDubAutorActComponent implements OnInit {
       this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
               this.subscriptions.push(this.requestService.getMedicamentRequest(params['id']).subscribe(data => {
                       this.cerereDupAutorForm.get('id').setValue(data.id);
-                      this.cerereDupAutorForm.get('medicament.name').setValue(data.medicament.name);
                       this.cerereDupAutorForm.get('dataReg').setValue(data.startDate);
                       this.cerereDupAutorForm.get('requestNumber').setValue(data.requestNumber);
-                      this.cerereDupAutorForm.get('company').setValue(data.medicament.company);
-                      this.cerereDupAutorForm.get('documents').setValue(data.medicament.documents);
-                      this.cerereDupAutorForm.get('medicament.documents').setValue(data.medicament.documents);
-                      this.cerereDupAutorForm.get('medicament.id').setValue(data.medicament.id);
-                      this.cerereDupAutorForm.get('medicament.company').setValue(data.medicament.company);
-                      this.cerereDupAutorForm.get('medicament.companyValue').setValue(data.medicament.company.name);
+                      this.cerereDupAutorForm.get('company').setValue(data.company);
+                      this.cerereDupAutorForm.get('companyValue').setValue(data.company.name);
                       this.cerereDupAutorForm.get('requestHistories').setValue(data.requestHistories);
                       this.cerereDupAutorForm.get('type').setValue(data.type);
                       this.cerereDupAutorForm.get('typeValue').setValue(data.type.code);
-                      this.documents = data.medicament.documents;
+                      this.cerereDupAutorForm.get('medicaments').setValue(data.medicaments);
+                      this.documents = data.documents;
                       this.documents.sort((a,b)=>new Date(a.date).getTime()-new Date(b.date).getTime());
                       let xs = this.documents;
                       xs = xs.map(x => {
@@ -115,24 +105,14 @@ export class CerereDubAutorActComponent implements OnInit {
           username: this.authService.getUserName(), step: 'E'
       });
 
-      modelToSubmit.medicament.paymentOrders = this.paymentOrdersList;
-      modelToSubmit.medicament.receipts = this.receiptsList;
+      modelToSubmit.paymentOrders = this.paymentOrdersList;
+      modelToSubmit.receipts = this.receiptsList;
+      modelToSubmit.documents = this.documents;
 
       console.log(modelToSubmit);
 
-      this.subscriptions.push(this.documentService.generateDistributionDisposition(this.cerereDupAutorForm.get('requestNumber').value).subscribe(res => {
-              modelToSubmit.medicament.documents.push({
-                  name: res.substring(res.lastIndexOf('/') + 1),
-                  docType : this.docTypes[0],
-                  date: new Date(),
-                  path: res
-              });
-
-              this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
-                      console.log("succes");
-                      this.router.navigate(['dashboard/module']);
-                  }, error => console.log(error))
-              );
+      this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
+              this.router.navigate(['dashboard/module']);
           }, error => console.log(error))
       );
   }

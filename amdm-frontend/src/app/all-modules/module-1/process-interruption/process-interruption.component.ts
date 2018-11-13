@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Subscription} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Document} from "../../../models/document";
 import {ModalService} from "../../../shared/service/modal.service";
@@ -9,7 +9,7 @@ import {DocumentService} from "../../../shared/service/document.service";
 import {AdministrationService} from "../../../shared/service/administration.service";
 import {AuthService} from "../../../shared/service/authetication.service";
 import {MedicamentService} from "../../../shared/service/medicament.service";
-import {ConfirmationDialogComponent} from "../../../confirmation-dialog/confirmation-dialog.component";
+import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
 import {MatDialog} from "@angular/material";
 import {RequestAdditionalDataDialogComponent} from "../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component";
 import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
@@ -52,6 +52,8 @@ export class ProcessInterruptionComponent implements OnInit {
             'requestNumber': [null],
             'startDate': [],
             'currentStep': ['A'],
+            'initiator': [''],
+            'assignedUser': [''],
             'company': [''],
             'companyValue': [''],
             'medValue': [''],
@@ -66,13 +68,14 @@ export class ProcessInterruptionComponent implements OnInit {
                 this.subscriptions.push(this.requestService.getMedicamentRequest(params['id']).subscribe(data => {
                         this.initialData = Object.assign({}, data);
                         this.iForm.get('id').setValue(data.id);
+                        this.iForm.get('initiator').setValue(data.initiator);
                         this.iForm.get('requestNumber').setValue(data.requestNumber);
-                        this.iForm.get('company').setValue(data.medicament.company);
-                        this.iForm.get('companyValue').setValue(data.medicament.company.name);
-                        this.iForm.get('medValue').setValue(data.medicament.name);
+                        this.iForm.get('company').setValue(data.company);
+                        this.iForm.get('companyValue').setValue(data.company.name);
+                        this.iForm.get('medValue').setValue(data.medicamentName);
                         this.iForm.get('requestHistories').setValue(data.requestHistories);
-                        this.documents = data.medicament.documents;
-                        this.outputDocuments = data.medicament.outputDocuments;
+                        this.documents = data.documents;
+                        this.outputDocuments = data.outputDocuments;
                         this.checkOutputDocumentsStatus();
                         this.documents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
                         let xs = this.documents;
@@ -114,7 +117,7 @@ export class ProcessInterruptionComponent implements OnInit {
             if (value != '' && (value.action == 'CLOSE_MODAL' || value.action == 'CLOSE_WAITING_MODAL')) {
                 this.iForm.get('data').setValue(new Date());
                 this.subscriptions.push(this.requestService.getMedicamentRequest(this.iForm.get('id').value).subscribe(data => {
-                    this.documents = data.medicament.documents;
+                    this.documents = data.documents;
                     this.documents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
                     let xs = this.documents;
                     xs = xs.map(x => {
@@ -149,16 +152,16 @@ export class ProcessInterruptionComponent implements OnInit {
             isFormInvalid = true;
         }
 
-        for (let entry of this.outputDocuments) {
-            if (entry.status == 'Nu este atasat' && (entry.docType.category=='OI' || entry.docType.category=='NL')) {
-                this.isNonAttachedDocuments = true;
-                isOutputDocInvalid = true;
-            }
-        }
-
-        if (!isOutputDocInvalid) {
-            this.isNonAttachedDocuments = false;
-        }
+        // for (let entry of this.outputDocuments) {
+        //     if (entry.status == 'Nu este atasat' && (entry.docType.category=='OI' || entry.docType.category=='NL')) {
+        //         this.isNonAttachedDocuments = true;
+        //         isOutputDocInvalid = true;
+        //     }
+        // }
+        //
+        // if (!isOutputDocInvalid) {
+        //     this.isNonAttachedDocuments = false;
+        // }
 
         if (isOutputDocInvalid || isFormInvalid) {
             return;
@@ -213,9 +216,9 @@ export class ProcessInterruptionComponent implements OnInit {
         dialogRef2.afterClosed().subscribe(result => {
             if (result.success) {
                 this.outputDocuments.push(result);
-                this.initialData.medicament.outputDocument = this.outputDocuments;
+                this.initialData.outputDocument = this.outputDocuments;
                 this.subscriptions.push(this.requestService.addMedicamentRequest(this.initialData).subscribe(data => {
-                        this.outputDocuments = data.body.medicament.outputDocuments;
+                        this.outputDocuments = data.body.outputDocuments;
                         this.checkOutputDocumentsStatus();
                     }, error => console.log(error))
                 );
@@ -273,10 +276,10 @@ export class ProcessInterruptionComponent implements OnInit {
                 this.outputDocuments.forEach((item, index) => {
                     if (item === doc) this.outputDocuments.splice(index, 1);
                 });
-                this.initialData.medicament.outputDocuments = this.outputDocuments;
+                this.initialData.outputDocuments = this.outputDocuments;
 
                 this.subscriptions.push(this.requestService.addMedicamentRequest(this.initialData).subscribe(data => {
-                        this.outputDocuments = data.body.medicament.outputDocuments;
+                        this.outputDocuments = data.body.outputDocuments;
                         this.checkOutputDocumentsStatus();
                     }, error => console.log(error))
                 );
@@ -319,13 +322,15 @@ export class ProcessInterruptionComponent implements OnInit {
                 this.outputDocuments.forEach((item, index) => {
                     if (item.docType.category === 'NL' || item.docType.category === 'OI') this.outputDocuments.splice(index, 1);
                 });
-                this.initialData.medicament.outputDocuments = this.outputDocuments;
+                this.initialData.outputDocuments = this.outputDocuments;
 
                 this.documents.forEach((item, index) => {
                     if (item.docType.category === 'NL' || item.docType.category === 'OI') this.documents.splice(index, 1);
                 });
-                this.initialData.medicament.outputDocuments = this.outputDocuments;
-                this.initialData.medicament.documents = this.documents;
+                this.initialData.outputDocuments = this.outputDocuments;
+                this.initialData.documents = this.documents;
+
+                var reqHist = this.initialData.requestHistories.reduce((p, n) => p.id > n.id ? p : n);
 
                 this.initialData.requestHistories.push({
                     startDate: this.iForm.get('data').value, endDate: new Date(),
@@ -334,7 +339,6 @@ export class ProcessInterruptionComponent implements OnInit {
 
                 this.subscriptions.push(this.requestService.addMedicamentRequest(this.initialData).subscribe(data => {
                         this.loadingService.hide();
-                        var reqHist = this.initialData.requestHistories.reduce((p, n) => p.id > n.id ? p : n);
                         if (reqHist.step == 'E') {
                             this.router.navigate(['dashboard/module/medicament-registration/evaluate/' + this.initialData.id]);
                         } else {
@@ -347,8 +351,25 @@ export class ProcessInterruptionComponent implements OnInit {
 
     }
 
-    documentAdded(event) {
+    documentModified(event) {
         this.formSubmitted = false;
         this.checkOutputDocumentsStatus();
+    }
+
+    canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
+
+        // if(!this.rForm.dirty){
+        //     return true;
+        // }
+        // const dialogRef = this.dialogConfirmation.open(ConfirmationDialogComponent, {
+        //     data: {
+        //         message: 'Toate datele colectate nu vor fi salvate, sunteti sigur(a)?',
+        //         confirm: false,
+        //     }
+        // });
+        //
+        // return dialogRef.afterClosed();
+        return true;
+
     }
 }

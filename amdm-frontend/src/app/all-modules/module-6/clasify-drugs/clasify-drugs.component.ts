@@ -1,67 +1,385 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
-
-
-
-export interface PriceCatalog {
-  id: number;
-  codMedicament: string;
-  codVamal: string;
-  denumireComerciala: string;
-  formaFarmaceutica: string;
-  dozaConcentratia: string;
-  volum: string;
-  divizarea: string;
-  tara: string;
-  firmaProducatoare: string;
-  nrDeInregistrare: string;
-  dataDeInregistrare: Date;
-  codulATC: string;
-  denumireaComunaInternationala: string;
-  termenulDeValabilitate: string;
-  codulDeBare: string;
-}
-
-
-const ELEMENT_DATA: PriceCatalog[] = [
-  { id: 1, codMedicament: 'CM112345', codVamal: 'CV112345', denumireComerciala: 'DM112345', formaFarmaceutica: 'FM123445', dozaConcentratia: '100ml', volum: '5g', divizarea: 'Divizare', tara: 'Moldova', firmaProducatoare: 'Zaporojie pikinez', nrDeInregistrare: 'Nr112345', dataDeInregistrare: new Date(), codulATC: 'CATC112345', denumireaComunaInternationala: 'DCI1', termenulDeValabilitate: '24 luni', codulDeBare: 'CB112345' },
-  { id: 2, codMedicament: 'CM212345', codVamal: 'CV212345', denumireComerciala: 'DM212345', formaFarmaceutica: 'FM2123445', dozaConcentratia: '100ml', volum: '5g', divizarea: 'Divizare', tara: 'Moldova', firmaProducatoare: 'Zaporojie pikinez', nrDeInregistrare: 'Nr212345', dataDeInregistrare: new Date(), codulATC: 'CATC212345', denumireaComunaInternationala: 'DCI2', termenulDeValabilitate: '24 luni', codulDeBare: 'CB212345' },
-  { id: 1, codMedicament: 'CM312345', codVamal: 'CV312345', denumireComerciala: 'DM312345', formaFarmaceutica: 'FM3123445', dozaConcentratia: '100ml', volum: '5g', divizarea: 'Divizare', tara: 'Moldova', firmaProducatoare: 'Zaporojie pikinez', nrDeInregistrare: 'Nr312345', dataDeInregistrare: new Date(), codulATC: 'CATC312345', denumireaComunaInternationala: 'DCI3', termenulDeValabilitate: '24 luni', codulDeBare: 'CB312345' },
-  { id: 1, codMedicament: 'CM412345', codVamal: 'CV412345', denumireComerciala: 'DM412345', formaFarmaceutica: 'FM4123445', dozaConcentratia: '100ml', volum: '5g', divizarea: 'Divizare', tara: 'Moldova', firmaProducatoare: 'Zaporojie pikinez', nrDeInregistrare: 'Nr412345', dataDeInregistrare: new Date(), codulATC: 'CATC412345', denumireaComunaInternationala: 'DCI4', termenulDeValabilitate: '24 luni', codulDeBare: 'CB412345' },
-  { id: 1, codMedicament: 'CM512345', codVamal: 'CV512345', denumireComerciala: 'DM512345', formaFarmaceutica: 'FM5123445', dozaConcentratia: '100ml', volum: '5g', divizarea: 'Divizare', tara: 'Moldova', firmaProducatoare: 'Zaporojie pikinez', nrDeInregistrare: 'Nr512345', dataDeInregistrare: new Date(), codulATC: 'CATC512345', denumireaComunaInternationala: 'DCI5', termenulDeValabilitate: '24 luni', codulDeBare: 'CB512345' },
-  { id: 1, codMedicament: 'CM612345', codVamal: 'CV612345', denumireComerciala: 'DM612345', formaFarmaceutica: 'FM6123445', dozaConcentratia: '100ml', volum: '5g', divizarea: 'Divizare', tara: 'Moldova', firmaProducatoare: 'Zaporojie pikinez', nrDeInregistrare: 'Nr612345', dataDeInregistrare: new Date(), codulATC: 'CATC612345', denumireaComunaInternationala: 'DCI6', termenulDeValabilitate: '24 luni', codulDeBare: 'CB612345' },
-  { id: 1, codMedicament: 'CM712345', codVamal: 'CV712345', denumireComerciala: 'DM712345', formaFarmaceutica: 'FM7123445', dozaConcentratia: '100ml', volum: '5g', divizarea: 'Divizare', tara: 'Moldova', firmaProducatoare: 'Zaporojie pikinez', nrDeInregistrare: 'Nr712345', dataDeInregistrare: new Date(), codulATC: 'CATC712345', denumireaComunaInternationala: 'DCI7', termenulDeValabilitate: '24 luni', codulDeBare: 'CB712345' },
-  { id: 1, codMedicament: 'CM812345', codVamal: 'CV812345', denumireComerciala: 'DM812345', formaFarmaceutica: 'FM8123445', dozaConcentratia: '100ml', volum: '5g', divizarea: 'Divizare', tara: 'Moldova', firmaProducatoare: 'Zaporojie pikinez', nrDeInregistrare: 'Nr812345', dataDeInregistrare: new Date(), codulATC: 'CATC812345', denumireaComunaInternationala: 'DCI8', termenulDeValabilitate: '24 luni', codulDeBare: 'CB812345' },
-  { id: 1, codMedicament: 'CM912345', codVamal: 'CV912345', denumireComerciala: 'DM912345', formaFarmaceutica: 'FM9123445', dozaConcentratia: '100ml', volum: '5g', divizarea: 'Divizare', tara: 'Moldova', firmaProducatoare: 'Zaporojie pikinez', nrDeInregistrare: 'Nr912345', dataDeInregistrare: new Date(), codulATC: 'CATC912345', denumireaComunaInternationala: 'DCI1', termenulDeValabilitate: '24 luni', codulDeBare: 'CB912345' },
-  { id: 1, codMedicament: 'CM1012345', codVamal: 'CV12345', denumireComerciala: 'DM1012345', formaFarmaceutica: 'FM10123445', dozaConcentratia: '100ml', volum: '5g', divizarea: 'Divizare', tara: 'Moldova', firmaProducatoare: 'Zaporojie pikinez', nrDeInregistrare: 'Nr1012345', dataDeInregistrare: new Date(), codulATC: 'CATC1012345', denumireaComunaInternationala: 'DCI1', termenulDeValabilitate: '24 luni', codulDeBare: 'CB1012345' },
-];
+import { FormControl } from '@angular/forms';
+import {AfterViewChecked, AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { MatTableDataSource, MatPaginator } from '@angular/material';
 
 @Component({
   selector: 'app-clasify-drugs',
   templateUrl: './clasify-drugs.component.html',
-  styleUrls: ['./clasify-drugs.component.css']
+  styleUrls: ['../nomenclator.component.css']
 })
 
-export class ClasifyDrugsComponent implements OnInit {
+export class ClasifyDrugsComponent implements OnInit, OnDestroy {
+    ngOnDestroy(): void {
+        console.log('clasificator onDestroy');
+    }
 
-  displayedColumns: any[] = ['id', 'codMedicament', 'codVamal', 'denumireComerciala', 'formaFarmaceutica', 'dozaConcentratia', 'volum', 'divizarea', 'tara', 'firmaProducatoare', 'nrDeInregistrare', 'dataDeInregistrare', 'codulATC', 'denumireaComunaInternationala', 'termenulDeValabilitate', 'codulDeBare'];
-  dataSource = new MatTableDataSource<PriceCatalog>(ELEMENT_DATA);
+
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+
+  clasifyDrugsTable = [
+    {
+      codMedicament: 'Cl1231', 
+      codVamal: 'CV112345', 
+      denumireComerciala: 'DM112345', 
+      formaFarmaceutica: 'FM123445', 
+      dozaConcentratia: '100ml', 
+      volum: '5g', 
+      divizarea: 'Divizare', 
+      tara: 'MD', 
+      firmaProducatoare: 'Zaporojie pikinez', 
+      nrDeInregistrare: 'Nr112345', 
+      dataDeInregistrare: new Date(), 
+      codulATC: 'CATC112345', 
+      denumireaComunaInternationala: 'DCI1', 
+      termenulDeValabilitate: '24 luni', 
+      codulDeBare: 'CB112345' 
+    },
+    {
+      codMedicament: 'Cl1231', 
+      codVamal: 'CV112345', 
+      denumireComerciala: 'DM112345', 
+      formaFarmaceutica: 'FM123445', 
+      dozaConcentratia: '100ml', 
+      volum: '5g', 
+      divizarea: 'Divizare', 
+      tara: 'MD', 
+      firmaProducatoare: 'Zaporojie pikinez', 
+      nrDeInregistrare: 'Nr112345', 
+      dataDeInregistrare: new Date(), 
+      codulATC: 'CATC112345', 
+      denumireaComunaInternationala: 'DCI1', 
+      termenulDeValabilitate: '24 luni', 
+      codulDeBare: 'CB112345' 
+    },
+    {
+      codMedicament: 'Cl1231', 
+      codVamal: 'CV112345', 
+      denumireComerciala: 'DM112345', 
+      formaFarmaceutica: 'FM123445', 
+      dozaConcentratia: '100ml', 
+      volum: '5g', 
+      divizarea: 'Divizare', 
+      tara: 'MD', 
+      firmaProducatoare: 'Zaporojie pikinez', 
+      nrDeInregistrare: 'Nr112345', 
+      dataDeInregistrare: new Date(), 
+      codulATC: 'CATC112345', 
+      denumireaComunaInternationala: 'DCI1', 
+      termenulDeValabilitate: '24 luni', 
+      codulDeBare: 'CB112345' 
+    },
+    {
+      codMedicament: 'Cl1231', 
+      codVamal: 'CV112345', 
+      denumireComerciala: 'DM112345', 
+      formaFarmaceutica: 'FM123445', 
+      dozaConcentratia: '100ml', 
+      volum: '5g', 
+      divizarea: 'Divizare', 
+      tara: 'MD', 
+      firmaProducatoare: 'Zaporojie pikinez', 
+      nrDeInregistrare: 'Nr112345', 
+      dataDeInregistrare: new Date(), 
+      codulATC: 'CATC112345', 
+      denumireaComunaInternationala: 'DCI1', 
+      termenulDeValabilitate: '24 luni', 
+      codulDeBare: 'CB112345' 
+    },
+    {
+      codMedicament: 'Cl1231', 
+      codVamal: 'CV112345', 
+      denumireComerciala: 'DM112345', 
+      formaFarmaceutica: 'FM123445', 
+      dozaConcentratia: '100ml', 
+      volum: '5g', 
+      divizarea: 'Divizare', 
+      tara: 'MD', 
+      firmaProducatoare: 'Zaporojie pikinez', 
+      nrDeInregistrare: 'Nr112345', 
+      dataDeInregistrare: new Date(), 
+      codulATC: 'CATC112345', 
+      denumireaComunaInternationala: 'DCI1', 
+      termenulDeValabilitate: '24 luni', 
+      codulDeBare: 'CB112345' 
+    },
+    {
+      codMedicament: 'Cl1231', 
+      codVamal: 'CV112345', 
+      denumireComerciala: 'DM112345', 
+      formaFarmaceutica: 'FM123445', 
+      dozaConcentratia: '100ml', 
+      volum: '5g', 
+      divizarea: 'Divizare', 
+      tara: 'MD', 
+      firmaProducatoare: 'Zaporojie pikinez', 
+      nrDeInregistrare: 'Nr112345', 
+      dataDeInregistrare: new Date(), 
+      codulATC: 'CATC112345', 
+      denumireaComunaInternationala: 'DCI1', 
+      termenulDeValabilitate: '24 luni', 
+      codulDeBare: 'CB112345' 
+    },
+    {
+      codMedicament: 'Cl1231', 
+      codVamal: 'CV112345', 
+      denumireComerciala: 'DM112345', 
+      formaFarmaceutica: 'FM123445', 
+      dozaConcentratia: '100ml', 
+      volum: '5g', 
+      divizarea: 'Divizare', 
+      tara: 'MD', 
+      firmaProducatoare: 'Zaporojie pikinez', 
+      nrDeInregistrare: 'Nr112345', 
+      dataDeInregistrare: new Date(), 
+      codulATC: 'CATC112345', 
+      denumireaComunaInternationala: 'DCI1', 
+      termenulDeValabilitate: '24 luni', 
+      codulDeBare: 'CB112345' 
+    },
+    {
+      codMedicament: 'Cl1231', 
+      codVamal: 'CV112345', 
+      denumireComerciala: 'DM112345', 
+      formaFarmaceutica: 'FM123445', 
+      dozaConcentratia: '100ml', 
+      volum: '5g', 
+      divizarea: 'Divizare', 
+      tara: 'MD', 
+      firmaProducatoare: 'Zaporojie pikinez', 
+      nrDeInregistrare: 'Nr112345', 
+      dataDeInregistrare: new Date(), 
+      codulATC: 'CATC112345', 
+      denumireaComunaInternationala: 'DCI1', 
+      termenulDeValabilitate: '24 luni', 
+      codulDeBare: 'CB112345' 
+    },
+    {
+      codMedicament: 'CM212345', 
+      codVamal: 'CV212345', 
+      denumireComerciala: 'DM212345', 
+      formaFarmaceutica: 'FM223445', 
+      dozaConcentratia: '100ml', 
+      volum: '5g', 
+      divizarea: 'Divizare', 
+      tara: 'MD', 
+      firmaProducatoare: 'Zaporojie pikinez', 
+      nrDeInregistrare: 'Nr212345', 
+      dataDeInregistrare: new Date(), 
+      codulATC: 'CATC212345', 
+      denumireaComunaInternationala: 'DCI2', 
+      termenulDeValabilitate: '24 luni', 
+      codulDeBare: 'CB212345' 
+    },
+    {
+      codMedicament: 'CM312345', 
+      codVamal: 'CV312345', 
+      denumireComerciala: 'DM312345', 
+      formaFarmaceutica: 'F3123445', 
+      dozaConcentratia: '100ml', 
+      volum: '5g', 
+      divizarea: 'Divizare', 
+      tara: 'MD', 
+      firmaProducatoare: 'Zaporojie pikinez', 
+      nrDeInregistrare: 'Nr312345', 
+      dataDeInregistrare: new Date(), 
+      codulATC: 'CATC312345', 
+      denumireaComunaInternationala: 'DCI3', 
+      termenulDeValabilitate: '24 luni', 
+      codulDeBare: 'CB312345' 
+    },
+    {
+      codMedicament: 'CM412345', 
+      codVamal: 'CV412345', 
+      denumireComerciala: 'DM412345', 
+      formaFarmaceutica: 'F4123445', 
+      dozaConcentratia: '100ml', 
+      volum: '5g', 
+      divizarea: 'Divizare', 
+      tara: 'MD', 
+      firmaProducatoare: 'Zaporojie pikinez', 
+      nrDeInregistrare: 'Nr412345', 
+      dataDeInregistrare: new Date(), 
+      codulATC: 'CATC412345', 
+      denumireaComunaInternationala: 'DCI4', 
+      termenulDeValabilitate: '24 luni', 
+      codulDeBare: 'CB412345' 
+    }
+  ];
+
+  codMedicamentFilter = new FormControl('');
+  codVamalFilter = new FormControl('');
+  denumireComercialaFilter = new FormControl('');
+  formaFarmaceuticaFilter = new FormControl('');
+  dozaConcentratiaFilter = new FormControl(''); 
+  volumFilter = new FormControl(''); 
+  divizareaFilter = new FormControl('');
+  taraFilter = new FormControl('');
+  firmaProducatoareFilter = new FormControl('');
+  nrDeInregistrareFilter = new FormControl('');
+  dataDeInregistrareFilter = new FormControl(''); 
+  codulATCFilter = new FormControl('');
+  denumireaComunaInternationalaFilter = new FormControl('');
+  termenulDeValabilitateFilter = new FormControl(''); 
+  codulDeBareFilter = new FormControl(''); 
+  dataSource = new MatTableDataSource();
+
+  columnsToDisplay = ['codMedicament', 'codVamal', 'denumireComerciala', 'formaFarmaceutica', 'dozaConcentratia', 'volum', 'divizarea', 'tara', 'firmaProducatoare', 'nrDeInregistrare', 'dataDeInregistrare', 'codulATC', 'denumireaComunaInternationala', 'termenulDeValabilitate', 'codulDeBare'];
+
+  filterValues = {
+    codMedicament: '', 
+    codVamal: '',
+    denumireComerciala: '',
+    formaFarmaceutica: '',
+    dozaConcentratia: '',
+    volum: '',
+    divizarea: '',
+    tara: '',
+    firmaProducatoare: '',
+    nrDeInregistrare: '',
+    dataDeInregistrare: '',
+    codulATC: '',
+    denumireaComunaInternationala: '',
+    termenulDeValabilitate: '',
+    codulDeBare: ''
+  };
 
   constructor() {
+    this.dataSource.data = this.clasifyDrugsTable;
+    this.dataSource.filterPredicate = this.createFilter();
   }
+
   ngOnInit() {
+      console.log('init clasificator');
     this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+
+    this.codMedicamentFilter.valueChanges
+      .subscribe(
+        codMedicament => {
+          this.filterValues.codMedicament = codMedicament;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      )
+    this.codVamalFilter.valueChanges
+      .subscribe(
+        codVamal => {
+          this.filterValues.codVamal = codVamal;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      )
+    this.denumireComercialaFilter.valueChanges
+      .subscribe(
+        denumireComerciala => {
+          this.filterValues.denumireComerciala = denumireComerciala;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      )
+    this.formaFarmaceuticaFilter.valueChanges
+      .subscribe(
+        formaFarmaceutica => {
+          this.filterValues.formaFarmaceutica = formaFarmaceutica;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      )
+    this.dozaConcentratiaFilter.valueChanges
+      .subscribe(
+        dozaConcentratia => {
+          this.filterValues.dozaConcentratia = dozaConcentratia;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      )
+    this.volumFilter.valueChanges
+      .subscribe(
+        volum => {
+          this.filterValues.volum = volum;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      )
+    this.divizareaFilter.valueChanges
+      .subscribe(
+        divizarea => {
+          this.filterValues.divizarea = divizarea;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      )
+    this.taraFilter.valueChanges
+      .subscribe(
+        tara => {
+          this.filterValues.tara = tara;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      )
+    this.firmaProducatoareFilter.valueChanges
+      .subscribe(
+        firmaProducatoare => {
+          this.filterValues.firmaProducatoare = firmaProducatoare;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      )
+    this.nrDeInregistrareFilter.valueChanges
+      .subscribe(
+        nrDeInregistrare => {
+          this.filterValues.nrDeInregistrare = nrDeInregistrare;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      )
+    this.dataDeInregistrareFilter.valueChanges
+      .subscribe(
+        dataDeInregistrare => {
+          this.filterValues.dataDeInregistrare = dataDeInregistrare;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      )
+    this.codulATCFilter.valueChanges
+      .subscribe(
+        codulATC => {
+          this.filterValues.codulATC = codulATC;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      )
+    this.denumireaComunaInternationalaFilter.valueChanges
+      .subscribe(
+        denumireaComunaInternationala => {
+          this.filterValues.denumireaComunaInternationala = denumireaComunaInternationala;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      )
+    this.termenulDeValabilitateFilter.valueChanges
+      .subscribe(
+        termenulDeValabilitate => {
+          this.filterValues.termenulDeValabilitate = termenulDeValabilitate;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      )
+    this.codulDeBareFilter.valueChanges
+      .subscribe(
+        codulDeBare => {
+          this.filterValues.codulDeBare = codulDeBare;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      )
   }
 
-  applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+  createFilter(): (data: any, filter: string) => boolean {
+    let filterFunction = function (data, filter): boolean {
+      let searchTerms = JSON.parse(filter);
+      return data.codMedicament.toString().toLowerCase().indexOf(searchTerms.codMedicament) !== -1
+        && data.codVamal.toLowerCase().indexOf(searchTerms.codVamal) !== -1
+        && data.denumireComerciala.toLowerCase().indexOf(searchTerms.denumireComerciala) !== -1
+        && data.formaFarmaceutica.toLowerCase().indexOf(searchTerms.formaFarmaceutica) !== -1
+        && data.dozaConcentratia.toLowerCase().indexOf(searchTerms.dozaConcentratia) !== -1
+        && data.volum.toLowerCase().indexOf(searchTerms.volum) !== -1
+        && data.divizarea.toLowerCase().indexOf(searchTerms.divizarea) !== -1
+        && data.tara.toLowerCase().indexOf(searchTerms.tara) !== -1
+        && data.firmaProducatoare.toLowerCase().indexOf(searchTerms.firmaProducatoare) !== -1
+        && data.nrDeInregistrare.toLowerCase().indexOf(searchTerms.nrDeInregistrare) !== -1
+        // && data.dataDeInregistrare.toLowerCase().indexOf(searchTerms.dataDeInregistrare) !== -1
+        && data.codulATC.toLowerCase().indexOf(searchTerms.codulATC) !== -1
+        && data.denumireaComunaInternationala.toLowerCase().indexOf(searchTerms.denumireaComunaInternationala) !== -1
+        && data.termenulDeValabilitate.toLowerCase().indexOf(searchTerms.termenulDeValabilitate) !== -1
+        && data.codulDeBare.toLowerCase().indexOf(searchTerms.codulDeBare) !== -1
     }
+    return filterFunction;
   }
+
 }

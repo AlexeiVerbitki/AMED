@@ -84,8 +84,8 @@ public class DocumentsController
             ResourceLoader resourceLoader = new DefaultResourceLoader();
             Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts");
             String classPathWithoutJRXML = res.getFile().getAbsolutePath();
-            res = resourceLoader.getResource("classpath:..\\resources\\layouts\\distributionDisposition.jrxml");
-            JasperReport report = JasperCompileManager.compileReport(new FileInputStream(res.getFile()));
+            res = resourceLoader.getResource("layouts\\distributionDisposition.jrxml");
+            JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
 
             List<DistributionDispositionDTO> dataList = new ArrayList();
             DistributionDispositionDTO obj = new DistributionDispositionDTO();
@@ -107,30 +107,30 @@ public class DocumentsController
                 .header("Content-Disposition", "inline; filename=dd.pdf").body(bytes);
     }
 
-        @RequestMapping(value = "/generate-distribution-disposition", method = RequestMethod.GET)
-        public ResponseEntity<String> generateDistributionDisposition(@RequestParam(value = "nrCerere") String nrCerere) throws CustomException, IOException
-        {
-            logger.debug("Generate Distribution Disposition");
+    @RequestMapping(value = "/generate-distribution-disposition", method = RequestMethod.GET)
+    public ResponseEntity<String> generateDistributionDisposition(@RequestParam(value = "nrCerere") String nrCerere) throws CustomException, IOException
+    {
+        logger.debug("Generate Distribution Disposition");
 
-            ResourceLoader resourceLoader = new DefaultResourceLoader();
-            Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts");
+        ResourceLoader resourceLoader = new DefaultResourceLoader();
+        Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts");
 
-            List<DistributionDispositionDTO> dataList = new ArrayList();
-            DistributionDispositionDTO obj = new DistributionDispositionDTO();
-            obj.setDispositionDate(Calendar.getInstance().getTime());
-            String nrDisposition=String.valueOf(generateDocNumberService.getDocumentNumber());
-            obj.setNrDisposition(nrDisposition);
-            obj.setPath(res.getFile().getAbsolutePath());
-            dataList.add(obj);
+        List<DistributionDispositionDTO> dataList = new ArrayList();
+        DistributionDispositionDTO obj = new DistributionDispositionDTO();
+        obj.setDispositionDate(Calendar.getInstance().getTime());
+        String nrDisposition = String.valueOf(generateDocNumberService.getDocumentNumber());
+        obj.setNrDisposition(nrDisposition);
+        obj.setPath(res.getFile().getAbsolutePath());
+        dataList.add(obj);
 
-            StringBuilder sb = new StringBuilder(folder);
-            createRootPath(nrCerere, sb);
-            sb.append("Dispozitie de distribuire Nr " + nrDisposition+ ".pdf");
+        StringBuilder sb = new StringBuilder(folder);
+        createRootPath(nrCerere, sb);
+        sb.append("Dispozitie de distribuire Nr " + nrDisposition + ".pdf");
 
-            storageService.storePDFFile(dataList,sb.toString(),"classpath:..\\resources\\layouts\\distributionDisposition.jrxml");
+        storageService.storePDFFile(dataList, sb.toString(), "classpath:..\\resources\\layouts\\distributionDisposition.jrxml");
 
-            return new ResponseEntity<>(sb.toString(), HttpStatus.OK);
-        }
+        return new ResponseEntity<>(sb.toString(), HttpStatus.OK);
+    }
 
     private void createRootPath(String nrCerere, StringBuilder sb)
     {
@@ -158,18 +158,18 @@ public class DocumentsController
             switch (type)
             {
                 case "NL":
-                    classPath = "classpath:..\\resources\\layouts\\notificationLetter.jrxml";
+                    classPath = "layouts\\notificationLetter.jrxml";
                     break;
                 case "SL":
-                    classPath = "classpath:..\\resources\\layouts\\requestAdditionalData.jrxml";
+                    classPath = "layouts\\requestAdditionalData.jrxml";
                     break;
                 case "LA":
-                    classPath = "classpath:..\\resources\\layouts\\laboratoryAnalysis.jrxml";
+                    classPath = "layouts\\laboratoryAnalysis.jrxml";
                     break;
             }
 
             Resource res = resourceLoader.getResource(classPath);
-            JasperReport report = JasperCompileManager.compileReport(new FileInputStream(res.getFile()));
+            JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
 
             List<RequestAdditionalDataDTO> dataList = fillRequestAdditionalDataDTO(nrDocument, content, title);
 
@@ -194,8 +194,8 @@ public class DocumentsController
         {
             ResourceLoader resourceLoader = new DefaultResourceLoader();
 
-            Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts\\medicamentAuthorizationOrder.jrxml");
-            JasperReport report = JasperCompileManager.compileReport(new FileInputStream(res.getFile()));
+            Resource res = resourceLoader.getResource("layouts\\medicamentAuthorizationOrder.jrxml");
+            JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
 
             List<DistributionDispositionDTO> dataList = new ArrayList();
             DistributionDispositionDTO obj = new DistributionDispositionDTO();
@@ -257,8 +257,8 @@ public class DocumentsController
         try
         {
             ResourceLoader resourceLoader = new DefaultResourceLoader();
-            Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts\\interruptOrderOfMedicamentRegistration.jrxml");
-            JasperReport report = JasperCompileManager.compileReport(new FileInputStream(res.getFile()));
+            Resource res = resourceLoader.getResource("layouts\\interruptOrderOfMedicamentRegistration.jrxml");
+            JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
 
             List<RequestAdditionalDataDTO> dataList = new ArrayList();
             RequestAdditionalDataDTO obj = new RequestAdditionalDataDTO();
@@ -401,6 +401,12 @@ public class DocumentsController
         return ResponseEntity.ok().headers(headers).contentType(MediaType.parseMediaType(contentType)).body(isr);
     }
 
+    @GetMapping(value = "/get-document-types")
+    public ResponseEntity<List<NmDocumentTypesEntity>> getDocumentTypes()
+    {
+        return new ResponseEntity<>(documentTypeRepository.findAll(), HttpStatus.OK);
+    }
+
     static class FileResult
     {
 
@@ -416,13 +422,6 @@ public class DocumentsController
             this.path = path;
             return this;
         }
-    }
-
-
-    @GetMapping(value = "/get-document-types")
-    public ResponseEntity<List<NmDocumentTypesEntity>> getDocumentTypes()
-    {
-        return new ResponseEntity<>(documentTypeRepository.findAll(), HttpStatus.OK);
     }
 
 }

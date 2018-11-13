@@ -8,7 +8,7 @@ import {TaskService} from "../../../shared/service/task.service";
 import {AdministrationService} from "../../../shared/service/administration.service";
 import {AuthService} from "../../../shared/service/authetication.service";
 import {LoaderService} from "../../../shared/service/loader.service";
-import {ConfirmationDialogComponent} from "../../../confirmation-dialog/confirmation-dialog.component";
+import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
 import {MatDialog} from "@angular/material";
 
 @Component({
@@ -42,12 +42,15 @@ export class AAprobareComponent implements OnInit, OnDestroy {
             'startDate': [{value: '', disabled: true}],
             'endDate': [''],
             'company': [''],
-            'currentStep': ['E'],
+            'currentStep': [''],
             'type': [],
             'typeCode': [''],
             'requestHistories': [],
             'initiator':[null],
             'assignedUser':[null],
+            'outputDocuments': [],
+            'receipts': [],
+            'paymentOrders': [],
             'clinicalTrails': undefined,
             'status':[undefined, Validators.required]
         });
@@ -85,14 +88,16 @@ export class AAprobareComponent implements OnInit, OnDestroy {
                     this.approveClinicalTrailForm.get('type').setValue(data.type);
                     this.approveClinicalTrailForm.get('typeCode').setValue(data.type.code);
                     this.approveClinicalTrailForm.get('initiator').setValue(data.initiator);
+                    this.approveClinicalTrailForm.get('receipts').setValue(data.receipts);
+                    this.approveClinicalTrailForm.get('paymentOrders').setValue(data.paymentOrders);
 
                     data.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
                     this.approveClinicalTrailForm.get('requestHistories').setValue(data.requestHistories);
 
                     this.approveClinicalTrailForm.get('clinicalTrails').setValue(data.clinicalTrails);
 
-                    this.docs = data.clinicalTrails.documents;
-                    this.outDocuments = data.clinicalTrails.outputDocuments;
+                    this.docs = data.documents;
+                    this.outDocuments = data.outputDocuments;
                 },
                 error => console.log(error)
             ))
@@ -115,13 +120,16 @@ export class AAprobareComponent implements OnInit, OnDestroy {
                 username: this.authService.getUserName(),
                 step: 'AP'
             });
-            formModel.clinicalTrails.documents = this.docs;
+            formModel.documents = this.docs;
 
             console.log("evaluareaPrimaraObjectLet", JSON.stringify(formModel));
 
             formModel.currentStep = 'F';
             formModel.endDate = new Date();
             formModel.assignedUser = this.authService.getUserName();
+
+            formModel.clinicalTrails.status = 'F';
+            console.log('formModel',formModel);
             this.subscriptions.push(
                 this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
                     this.router.navigate(['dashboard/module']);
@@ -145,7 +153,7 @@ export class AAprobareComponent implements OnInit, OnDestroy {
                 if (result) {
                     this.loadingService.show();
                     let formModel = this.approveClinicalTrailForm.getRawValue();
-                    formModel.currentStep = 'C';
+                    formModel.currentStep = 'I';
                     formModel.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
                     formModel.requestHistories.push({
                         startDate: formModel.requestHistories[formModel.requestHistories.length - 1].endDate,
@@ -155,6 +163,7 @@ export class AAprobareComponent implements OnInit, OnDestroy {
                     });
 
                     formModel.assignedUser = this.authService.getUserName();
+                    formModel.documents = this.docs;
                     this.subscriptions.push(
                         this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
                             this.loadingService.hide();

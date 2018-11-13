@@ -7,6 +7,8 @@ import {AdministrationService} from "../../../shared/service/administration.serv
 import {LicenseService} from "../../../shared/service/license/license.service";
 import {MatDialog} from "@angular/material";
 import {AuthService} from "../../../shared/service/authetication.service";
+import {LoaderService} from "../../../shared/service/loader.service";
+import {DocumentService} from "../../../shared/service/document.service";
 
 @Component({
     selector: 'app-eliberare-cerere-lic',
@@ -24,6 +26,9 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
     startDate : Date;
     endDate : Date;
 
+
+    outDocuments: any[] = [];
+
     rFormSubbmitted: boolean = false;
 
     //Validations
@@ -37,7 +42,9 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
                 private licenseService: LicenseService,
                 public dialog: MatDialog,
                 private activatedRoute: ActivatedRoute,
-                private authService: AuthService) {
+                private authService: AuthService,
+                private loadingService: LoaderService,
+                private documentService: DocumentService) {
     }
 
     ngOnInit() {
@@ -139,12 +146,19 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
         this.docs = data.license.documents;
         this.docs.forEach(doc => doc.isOld = true);
 
+        this.refreshOutputDocuments();
+
     }
 
 
     save() {
         this.rFormSubbmitted = true;
         if (!this.rForm.valid || this.docs.length==0 )
+        {
+            return;
+        }
+
+        if (!this.checkAllDocumentsWasAttached())
         {
             return;
         }
@@ -199,6 +213,9 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
             step: 'I'
         }];
 
+
+        modelToSubmit.assignedUser = this.authService.getUserName();
+
         return modelToSubmit;
     }
 
@@ -241,6 +258,8 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
                 this.rForm.get('dataProcurii1Rec').disable();
             }
         });
+
+
     }
 
     closePage()
@@ -256,6 +275,11 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
             return;
         }
 
+        if (!this.checkAllDocumentsWasAttached())
+        {
+            return;
+        }
+
         this.rFormSubbmitted = false;
         let modelToSubmit = this.composeModel('F');
 
@@ -266,6 +290,68 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
             )
         );
 
+    }
+
+
+
+    private refreshOutputDocuments() {
+        this.outDocuments = [];
+
+        let outDocument = {
+            name: 'Licenta',
+            number: '',
+            status: this.getOutputDocStatus()
+        };
+
+        this.outDocuments.push(outDocument);
+    }
+
+
+    documentAdded(event) {
+        this.refreshOutputDocuments();
+    }
+
+    viewDoc(document: any) {
+        this.loadingService.show();
+        this.subscriptions.push(this.documentService.viewDD(document.number).subscribe(data => {
+                let file = new Blob([data], {type: 'application/pdf'});
+                var fileURL = URL.createObjectURL(file);
+                window.open(fileURL);
+                this.loadingService.hide();
+            }, error => {
+                this.loadingService.hide();
+            }
+            )
+        );
+    }
+
+    checkAllDocumentsWasAttached(): boolean
+    {
+        return !this.outDocuments.find(od => od.status.mode === 'N');
+    }
+
+    getOutputDocStatus(): any
+    {
+        let result;
+        result = this.docs.find( doc =>
+        {
+            if (doc.docType.category === 'LI')
+            {
+                return true;
+            }
+        });
+        if (result)
+        {
+            return {
+                mode : 'A',
+                description : 'Atasat'
+            };
+        }
+
+        return {
+            mode : 'N',
+            description : 'Nu este atasat'
+        };
     }
 
 

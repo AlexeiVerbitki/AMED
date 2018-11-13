@@ -10,7 +10,7 @@ import {PaymentOrder} from "../../../models/paymentOrder";
 import {Receipt} from "../../../models/receipt";
 import {ModalService} from "../../../shared/service/modal.service";
 import {AdministrationService} from "../../../shared/service/administration.service";
-import {ConfirmationDialogComponent} from "../../../confirmation-dialog/confirmation-dialog.component";
+import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
 import {DocumentService} from "../../../shared/service/document.service";
 import {AdditionalDataDialogComponent} from "../dialog/additional-data-dialog/additional-data-dialog.component";
 import {AuthService} from "../../../shared/service/authetication.service";
@@ -96,9 +96,11 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             'requestHistories': [],
             'initiator':[null],
             'assignedUser':[null],
+            'receipts': [],
+            'paymentOrders': [],
+            'outputDocuments': [],
             'clinicalTrails': this.fb.group({
                 'id': [''],
-                'documents': [],
                 'title': [{value: '', disabled: this.isWaitingStep}],
                 'treatment': ['', Validators.required],
                 'provenance': ['', Validators.required],
@@ -112,14 +114,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                 'referenceProduct': [],
                 'investigators': [],
                 'status': ['P'],
-                'receipts': [],
-                'paymentOrders': [],
-                'medicamentCommitteeOpinion': [],
-                'eticCommitteeOpinion': [],
-                'approvalOrder': [],
                 'pharmacovigilance': [],
-                'openingDeclarationId': [],
-                'outputDocuments': []
             })
         });
 
@@ -203,6 +198,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                     this.analyzeClinicalTrailForm.get('type').setValue(data.type);
                     this.analyzeClinicalTrailForm.get('typeCode').setValue(data.type.code);
                     this.analyzeClinicalTrailForm.get('initiator').setValue(data.initiator);
+                    this.analyzeClinicalTrailForm.get('outputDocuments').setValue(data.outputDocuments);
 
                     data.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
 
@@ -214,7 +210,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                     this.analyzeClinicalTrailForm.get('clinicalTrails.provenance').setValue(
                         data.clinicalTrails.provenance == null ? this.provenanceList[0] : data.clinicalTrails.provenance);
 
-                    this.docs = data.clinicalTrails.documents;
+                    this.docs = data.documents;
                     //this.docs.forEach(doc => doc.isOld = true);
 
                     if (data.clinicalTrails.medicament !== null) {
@@ -229,9 +225,9 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
                     this.investigatorsList = data.clinicalTrails.investigators;
                     this.mediacalInstitutionsList = data.clinicalTrails.medicalInstitutions;
-                    this.receiptsList = data.clinicalTrails.receipts;
-                    this.paymentOrdersList = data.clinicalTrails.paymentOrders;
-                    this.outDocuments = data.clinicalTrails.outputDocuments;
+                    this.receiptsList = data.receipts;
+                    this.paymentOrdersList = data.paymentOrders;
+                    this.outDocuments = data.outputDocuments;
 
                     this.loadInvestigatorsList();
                     this.loadMedicalInstitutionsList();
@@ -318,11 +314,13 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
     }
 
     fillMedicamentData(data: any) {
-        this.medicamentForm.get('producer').setValue(data.manufacture === null ? '' : data.manufacture.longDescription);
-        this.medicamentForm.get('dose').setValue('250Mg');
-        this.medicamentForm.get('group').setValue('antiinflamatoare');
-        this.medicamentForm.get('pharmaceuticalForm').setValue('comprimate ');
-        this.medicamentForm.get('administeringMode').setValue('oral ');
+        this.medicamentForm.get('producer').setValue(data.manufacture === null ? 'Un producatr' : data.manufacture.longDescription);
+        let doze = data.dose === null ? '' : data.dose;
+        let unitOfMeasure = data.unitsOfMeasurement === null ? '' : data.unitsOfMeasurement.description;
+        this.medicamentForm.get('dose').setValue(doze + unitOfMeasure);
+        this.medicamentForm.get('group').setValue(data.group === null ? '' : data.group.description === null ? '' : data.group.description);
+        this.medicamentForm.get('pharmaceuticalForm').setValue(data.pharmaceuticalForm === null ? '' : data.pharmaceuticalForm.description);
+        this.medicamentForm.get('administeringMode').setValue(data.administeringMode === null ? 'O cale de administrare' : data.administeringMode);
         this.analyzeClinicalTrailForm.get('clinicalTrails.medicament').setValue(data);
     }
 
@@ -343,11 +341,13 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
     }
 
     fillReferenceProductData(data: any) {
-        this.referenceProductFormn.get('producer').setValue(data.manufacture === null ? '' : data.manufacture.longDescription);
-        this.referenceProductFormn.get('dose').setValue('250Mg');
-        this.referenceProductFormn.get('group').setValue('antiinflamatoare');
-        this.referenceProductFormn.get('pharmaceuticalForm').setValue('comprimate ');
-        this.referenceProductFormn.get('administeringMode').setValue('oral ');
+        this.referenceProductFormn.get('producer').setValue(data.manufacture === null ? 'Un producatr' : data.manufacture.longDescription);
+        let doze = data.dose === null ? '' : data.dose;
+        let unitOfMeasure = data.unitsOfMeasurement === null ? '' : data.unitsOfMeasurement.description;
+        this.referenceProductFormn.get('dose').setValue(doze + unitOfMeasure);
+        this.referenceProductFormn.get('group').setValue(data.group === null ? '' : data.group.description === null ? '' : data.group.description);
+        this.referenceProductFormn.get('pharmaceuticalForm').setValue(data.pharmaceuticalForm === null ? '' : data.pharmaceuticalForm.description);
+        this.referenceProductFormn.get('administeringMode').setValue(data.administeringMode === null ? 'O cale de administrare' : data.administeringMode);
         this.analyzeClinicalTrailForm.get('clinicalTrails.referenceProduct').setValue(data);
     }
 
@@ -358,7 +358,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
     requestAdditionalData() {
         const dialogRef2 = this.dialogConfirmation.open(AdditionalDataDialogComponent, {
             data: {
-                requestNumber: this.analyzeClinicalTrailForm.get('requestNumber').value,
+                requestNumber: 'SL-' + this.analyzeClinicalTrailForm.get('requestNumber').value,
                 requestId: this.analyzeClinicalTrailForm.get('id').value,
                 modalType: 'REQUEST_ADDITIONAL_DATA',
                 startDate: this.analyzeClinicalTrailForm.get('startDate').value
@@ -370,7 +370,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             if (result.success) {
                 result.docType = this.docTypes.find(doc=>doc.category==='SL');
                 console.log('find doc type', result.docType);
-                this.initialData.clinicalTrails.outputDocuments.push(result);
+                this.initialData.outputDocuments.push(result);
                 this.subscriptions.push(this.requestService.addOutputDocumentRequest(this.initialData).subscribe(data => {
                     console.log('outDocuments', data);
                     //this.outDocuments = data.body.clinicalTrails.outputDocuments;
@@ -395,11 +395,14 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         dialogRef2.afterClosed().subscribe(result => {
             if (result) {
 
-                this.initialData.clinicalTrails.outputDocuments.forEach((item, index) => {
-                    if (item === doc) this.initialData.clinicalTrails.outputDocuments.splice(index, 1);
+                console.log('this.analyzeClinicalTrailForm.getRawValue().outputDocuments', this.analyzeClinicalTrailForm.getRawValue());
+                console.log('this.initialData.', this.initialData);
+
+                this.initialData.outputDocuments.forEach((item, index) => {
+                    if (item === doc) this.initialData.outputDocuments.splice(index, 1);
                 });
 
-                this.subscriptions.push(this.requestService.addClinicalTrailRequest(this.initialData).subscribe(data => {
+                this.subscriptions.push(this.requestService.saveClinicalTrailRequest(this.initialData).subscribe(data => {
                     }, error => console.log(error))
                 );
             }
@@ -438,14 +441,18 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         this.loadingService.show();
         let formModel = this.analyzeClinicalTrailForm.getRawValue();
         formModel.currentStep = 'A';
-        formModel.clinicalTrails.documents = this.docs;
+        formModel.documents = this.docs;
+        formModel.outputDocuments = this.outDocuments;
+
+        formModel.receipts = this.receiptsList;
+        formModel.paymentOrders = this.paymentOrdersList;
         formModel.clinicalTrails.investigators = this.investigatorsList;
         formModel.clinicalTrails.medicalInstitutions = this.mediacalInstitutionsList;
 
         formModel.assignedUser = this.authService.getUserName();
         console.log("Save data", formModel);
         this.subscriptions.push(
-            this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
+            this.requestService.saveClinicalTrailRequest(formModel).subscribe(data => {
                 this.loadingService.hide();
                 this.router.navigate(['dashboard/module']);
             }, error => {
@@ -475,12 +482,11 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             username: this.authService.getUserName(),
             step: 'A'
         });
-        formModel.clinicalTrails.documents = this.docs;
+        formModel.documents = this.docs;
+        formModel.receipts = this.receiptsList;
+        formModel.paymentOrders = this.paymentOrdersList;
         formModel.clinicalTrails.investigators = this.investigatorsList;
         formModel.clinicalTrails.medicalInstitutions = this.mediacalInstitutionsList;
-
-        formModel.clinicalTrails.receipts = this.receiptsList;
-        formModel.clinicalTrails.paymentOrders = this.paymentOrdersList;
 
         console.log("evaluareaPrimaraObjectLet", JSON.stringify(formModel));
 
@@ -510,7 +516,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             if (result) {
                 this.loadingService.show();
                 let formModel = this.analyzeClinicalTrailForm.getRawValue();
-                formModel.currentStep = 'C';
+                formModel.currentStep = 'I';
                 formModel.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
                 formModel.requestHistories.push({
                     startDate: formModel.requestHistories[formModel.requestHistories.length - 1].endDate,
@@ -518,6 +524,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                     username: this.authService.getUserName(),
                     step: 'A'
                 });
+                formModel.documents = this.docs;
                 this.subscriptions.push(
                     this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
                         this.router.navigate(['/dashboard/module/clinic-studies/interrupt/' + data.body]);

@@ -5,9 +5,13 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AdministrationService} from "../../../shared/service/administration.service";
 import {LicenseService} from "../../../shared/service/license/license.service";
-import {ConfirmationDialogComponent} from "../../../confirmation-dialog/confirmation-dialog.component";
+import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
 import {MatDialog} from "@angular/material";
 import {AuthService} from "../../../shared/service/authetication.service";
+import {PaymentOrder} from "../../../models/paymentOrder";
+import {Receipt} from "../../../models/receipt";
+import {LoaderService} from "../../../shared/service/loader.service";
+import {DocumentService} from "../../../shared/service/document.service";
 
 @Component({
     selector: 'app-evaluare-cerere-lic',
@@ -23,20 +27,31 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
     localities: any[];
     objAddresses: any[] = [];
     announces: any[];
-    oldData : any;
+    oldData: any;
     activities: any[];
+
+    farmacisti: any[] = [];
+
+    outDocuments: any[] = [];
 
     CPCDId: string;
     ASPId: string;
 
-    rFormSubbmitted : boolean = false;
-    oFormSubbmitted : boolean = false;
+    rFormSubbmitted: boolean = false;
+    oFormSubbmitted: boolean = false;
+
+    nextSubmit: boolean = false;
 
     private subscriptions: Subscription[] = [];
 
     //count time
     startDate: Date;
     endDate: Date;
+
+
+    paymentTotal: number;
+    paymentOrdersList: PaymentOrder[] = [];
+    receiptsList: Receipt[] = [];
 
     //Validations
     mForm: FormGroup;
@@ -50,7 +65,9 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
                 private administrationService: AdministrationService,
                 private licenseService: LicenseService,
                 public dialog: MatDialog,
-                private  authService: AuthService) {
+                private  authService: AuthService,
+                private loadingService: LoaderService,
+                private documentService: DocumentService) {
 
     }
 
@@ -74,12 +91,14 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
                                 )
                             );
 
-                        this.subscriptions.push(
-                            this.licenseService.loadActivities().subscribe(data => {
-                                    this.activities = data;
-                                }
-                            )
-                        );
+                            this.subscriptions.push(
+                                this.licenseService.loadActivities().subscribe(data => {
+                                        this.activities = data;
+                                    }
+                                )
+                            );
+
+
                         }
                     )
                 );
@@ -105,10 +124,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         this.mForm.get('nrCererii').patchValue(data.requestNumber);
         this.mForm.get('dataEliberarii').patchValue(new Date(data.startDate));
 
-        if (data.license.resolution)
-        {
-            this.rForm.get('farmDir').patchValue(data.license.resolution.pharmacyMaster);
-
+        if (data.license.resolution) {
             this.rForm.get('decizieLuata').patchValue(data.license.resolution.resolution);
             this.rForm.get('decisionDate').patchValue(data.license.resolution.date);
             this.rForm.get('argumentDec').patchValue(data.license.resolution.reason);
@@ -117,8 +133,6 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
         this.rForm.get('seriaLic').patchValue(data.license.serialNr);
         this.rForm.get('nrLic').patchValue(data.license.nr);
-        this.rForm.get('tax').patchValue(data.license.tax);
-        this.rForm.get('taxPaid').patchValue(data.license.taxPaid);
 
         this.objAddresses = data.license.addresses;
         this.tipCerere = data.type.code;
@@ -127,32 +141,30 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
         this.rForm.get('licenseActivities').patchValue(data.license.activities);
 
+        this.rForm.get('farmDir').patchValue(data.license.selectedPharmaceutist);
 
-        if (data.license.commisionResponses && data.license.commisionResponses.length > 0)
-        {
+        this.farmacisti  =  data.license.agentPharmaceutist;
+
+        if (data.license.commisionResponses && data.license.commisionResponses.length > 0) {
             data.license.commisionResponses.forEach(csr => {
-                if (csr.organization === 'CPCD')
-                {
+                if (csr.organization === 'CPCD') {
                     this.CPCDId = csr.id;
                     this.rForm.get('CPCDNrdeintrare').patchValue(csr.entryRspNumber);
                     this.rForm.get('CPCDDate').patchValue(csr.date);
                     this.rForm.get('CPCDMethod').patchValue(csr.announcedMethods);
-                    if (csr.announcedMethods.code === 'email')
-                    {
+                    if (csr.announcedMethods.code === 'email') {
                         this.rForm.get('CPCDEmail').patchValue(csr.extraData);
                     }
                     else {
                         this.rForm.get('CPCDPhone').patchValue(csr.extraData);
                     }
                 }
-                if (csr.organization === 'ASP')
-                {
+                if (csr.organization === 'ASP') {
                     this.ASPId = csr.id;
                     this.rForm.get('ASPNrdeintrare').patchValue(csr.entryRspNumber);
                     this.rForm.get('ASPDate').patchValue(csr.date);
                     this.rForm.get('ASPMethod').patchValue(csr.announcedMethods);
-                    if (csr.announcedMethods.code === 'email')
-                    {
+                    if (csr.announcedMethods.code === 'email') {
                         this.rForm.get('ASPEmail').patchValue(csr.extraData);
                     }
                     else {
@@ -162,12 +174,33 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
             })
         }
 
-        if (this.tipCerere === 'LICD')
-        {
+        if (this.tipCerere === 'LICD') {
             this.rForm.disable();
             this.oForm.disable();
         }
-        
+
+        if (this.tipCerere === 'LICM') {
+            this.rForm.get('seriaLic').disable();
+            this.rForm.get('nrLic').disable();
+        }
+
+        this.receiptsList = data.license.receipts;
+        this.paymentOrdersList = data.license.paymentOrders;
+
+        let xs2 = this.receiptsList;
+        xs2 = xs2.map(x => {
+            x.isOld = true;
+            return x;
+        });
+        let xs3 = this.paymentOrdersList;
+        xs3 = xs3.map(x => {
+            x.isOld = true;
+            return x;
+        });
+
+
+        this.refreshOutputDocuments();
+
         this.backupForm = this.rForm;
     }
 
@@ -178,8 +211,6 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
             'decisionDate': [null, Validators.required],
             'seriaLic': [null, Validators.required],
             'nrLic': [null, Validators.required],
-            'tax': [null, Validators.required],
-            'taxPaid': '',
             'argumentDec': '',
             'releaseDate': '',
             'dataSistarii': '',
@@ -223,7 +254,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
     onChanges(): void {
         this.oForm.get('region').valueChanges.subscribe(val => {
             if (this.oForm.get('region') && this.oForm.get('region').value) {
-                console.log('region',this.oForm.get('region'));
+                console.log('region', this.oForm.get('region'));
                 this.subscriptions.push(
                     this.administrationService.getLocalitiesByState(this.oForm.get('region').value.id).subscribe(data => {
                             this.localities = data;
@@ -234,6 +265,17 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
                 );
             }
         });
+
+        this.rForm.get('farmDir').valueChanges.subscribe(val => {
+            if (val)
+            {
+                val.selectionDate = new Date();
+                if (!this.farmacisti.includes(val))
+                {
+                    this.farmacisti.push(val);
+                }
+            }
+        });
     }
 
     addNewObjAddres() {
@@ -242,8 +284,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
             this.objAddresses = [];
         }
 
-        if (!this.oForm.valid)
-        {
+        if (!this.oForm.valid) {
             return;
         }
 
@@ -252,7 +293,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         this.objAddresses.push(
             {
                 companyType: this.oForm.get('tipIntreprindere').value,
-                locality : this.oForm.get('locality').value,
+                locality: this.oForm.get('locality').value,
                 state: this.oForm.get('region').value,
                 street: this.oForm.get('street').value,
                 building: this.oForm.get('blocul').value
@@ -274,19 +315,24 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.objAddresses.splice(index,1);
+                this.objAddresses.splice(index, 1);
             }
         });
     }
 
 
-    submit()
-    {
+    submit() {
         this.rFormSubbmitted = true;
-        if (this.tipCerere !== 'LICD' && (!this.rForm.valid || this.docs.length==0 || this.objAddresses.length == 0))
+        this.nextSubmit = true;
+        if (this.tipCerere !== 'LICD' && (!this.rForm.valid || this.docs.length == 0 || this.objAddresses.length == 0)) {
+            return;
+        }
+
+        if (!this.checkAllDocumentsWasAttached())
         {
             return;
         }
+
 
         this.rFormSubbmitted = false;
         let modelToSubmit = this.composeModel('E');
@@ -300,10 +346,18 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
     }
 
-    submitNextStep()
-    {
+    submitNextStep() {
         this.rFormSubbmitted = true;
-        if (this.tipCerere !== 'LICD' && (!this.rForm.valid || this.docs.length==0 || this.objAddresses.length == 0))
+        this.nextSubmit = true;
+        if (this.tipCerere !== 'LICD' && (!this.rForm.valid || this.docs.length == 0 || this.objAddresses.length == 0)) {
+            return;
+        }
+
+        if (this.paymentTotal < 0) {
+            return;
+        }
+
+        if (!this.checkAllDocumentsWasAttached())
         {
             return;
         }
@@ -321,7 +375,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
     }
 
 
-    private composeModel(currentStep : string) {
+    private composeModel(currentStep: string) {
         this.endDate = new Date();
         let modelToSubmit: any = {};
         let licenseModel: any = {};
@@ -335,20 +389,22 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         resolution.resolution = this.rForm.get('decizieLuata').value;
         resolution.date = this.rForm.get('decisionDate').value;
         resolution.reason = this.rForm.get('argumentDec').value;
-        resolution.pharmacyMaster = this.rForm.get('farmDir').value;
+        // resolution.pharmacyMaster = this.rForm.get('farmDir').value;
+
+        console.log('dfgd', this.farmacisti);
+
+        licenseModel.agentPharmaceutist = this.farmacisti;
+
 
         licenseModel.resolution = resolution;
         licenseModel.serialNr = this.rForm.get('seriaLic').value;
         licenseModel.nr = this.rForm.get('nrLic').value;
-        licenseModel.tax = this.rForm.get('tax').value;
-        if (this.rForm.get('taxPaid').value === true) {
-            licenseModel.taxPaid = 1;
-        }
 
         licenseModel.addresses = this.objAddresses;
-        console.log('dfg', this.rForm);
-        console.log('dfgsdf', this.rForm.get('licenseActivities'));
         licenseModel.activities = this.rForm.get('licenseActivities').value;
+
+        licenseModel.paymentOrders = this.paymentOrdersList;
+        licenseModel.receipts = this.receiptsList;
 
 
         if (this.rForm.get('CPCDNrdeintrare').value) {
@@ -395,21 +451,21 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
         modelToSubmit.currentStep = currentStep;
 
+        modelToSubmit.assignedUser = this.authService.getUserName();
+
         licenseModel.commisionResponses = commisionResponses;
 
 
-
         modelToSubmit.license = licenseModel;
+
         return modelToSubmit;
     }
 
-    closePage()
-    {
+    closePage() {
         this.router.navigate(['/dashboard/module']);
     }
 
-    cancelRequest()
-    {
+    cancelRequest() {
         this.endDate = new Date();
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             data: {message: 'Sunteti sigur ca doriti sa anulati aceasta cerere?', confirm: false}
@@ -422,8 +478,10 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
                     startDate: this.startDate,
                     endDate: this.endDate,
                     username: this.authService.getUserName(),
-                    step: 'E'
+                    step: 'C'
                 }];
+
+                modelToSubmit.assignedUser = this.authService.getUserName();
 
                 this.subscriptions.push(
                     this.licenseService.stopLicense(modelToSubmit).subscribe(data => {
@@ -434,6 +492,80 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
             }
         });
 
+    }
+
+    addTagPromise(term: string) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve({ fullName: term, selectionDate: new Date(), insertionDate : new Date() });
+            }, 500);
+
+
+        });
+    }
+
+    paymentTotalUpdate(event) {
+        this.paymentTotal = event.valueOf();
+    }
+
+    private refreshOutputDocuments() {
+        this.outDocuments = [];
+
+        let outDocument = {
+            name: 'Scrisoare de informare',
+            number: 'NL-' + this.oldData.requestNumber,
+            status: this.getOutputDocStatus()
+        };
+
+        this.outDocuments.push(outDocument);
+    }
+
+
+    documentAdded(event) {
+        this.refreshOutputDocuments();
+    }
+
+    viewDoc(document: any) {
+        this.loadingService.show();
+        this.subscriptions.push(this.documentService.viewDD(document.number).subscribe(data => {
+                let file = new Blob([data], {type: 'application/pdf'});
+                var fileURL = URL.createObjectURL(file);
+                window.open(fileURL);
+                this.loadingService.hide();
+            }, error => {
+                this.loadingService.hide();
+            }
+            )
+        );
+    }
+
+    checkAllDocumentsWasAttached(): boolean
+    {
+        return !this.outDocuments.find(od => od.status.mode === 'N');
+    }
+
+    getOutputDocStatus(): any
+    {
+        let result;
+        result = this.docs.find( doc =>
+        {
+            if (doc.docType.category === 'NL' && doc.number === 'NL-' + this.oldData.requestNumber)
+            {
+                return true;
+            }
+        });
+        if (result)
+        {
+            return {
+                mode : 'A',
+                description : 'Atasat'
+            };
+        }
+
+        return {
+            mode : 'N',
+            description : 'Nu este atasat'
+        };
     }
 
     ngOnDestroy() {

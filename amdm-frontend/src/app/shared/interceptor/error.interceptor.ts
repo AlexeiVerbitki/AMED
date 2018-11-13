@@ -20,11 +20,13 @@ export class ErrorInterceptor implements HttpInterceptor {
                     console.log('Error from interceptor', error);
                     if (error.status === 401) {
                         if (this.router.url === '/login') {
+                            console.log('1');
                             return throwError(this.getErrorMessage(error));
                         }
+                        console.log('2');
                         this.authService.logout();
                         // location.reload(true);
-                        this.router.navigateByUrl('/login', {preserveQueryParams: true});
+                        this.router.navigateByUrl('/', {preserveQueryParams: true});
                         return throwError(error.message);
                     }
                     let errMsg = '';
@@ -42,12 +44,13 @@ export class ErrorInterceptor implements HttpInterceptor {
                     this.errorHandlerService.showError(errMsg);
                     return throwError(errMsg);
                 })
-            )
+            );
     }
 
     getErrorMessage(error: HttpErrorResponse): string {
         let errMsg = '';
         if (error.headers.get('X-app-alert') && error.headers.get('X-app-alert').length > 0) {
+
             errMsg = error.headers.get('X-app-alert');
         } else {
             errMsg = 'Erroare interna, apelati administratorul';

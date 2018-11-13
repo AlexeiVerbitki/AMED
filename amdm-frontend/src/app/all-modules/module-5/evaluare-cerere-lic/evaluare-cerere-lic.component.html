@@ -32,17 +32,52 @@
         </div>
 
 
-        <app-document [documents]="docs" [nrCerere]="mForm.get('nrCererii').value"></app-document>
+        <app-document [documents]="docs" [nrCerere]="mForm.get('nrCererii').value" (documentModified)="documentAdded($event)"></app-document>
         <div *ngIf="rFormSubbmitted && docs.length==0">
             <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
         </div>
 
     </form>
 
-    <form [formGroup]="rForm" >
+    <form [formGroup]="rForm">
         <section *ngIf="tipCerere">
             <hr>
-<!--=====================================================================================================================================-->
+            <h5 class="text-center font-weight-bold">Detalii personal</h5>
+            <hr>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="md-form-modified-select">
+                        <ng-select class="custom" [items]="farmacisti"
+                                   [addTag]="addTagPromise"
+                                   bindLabel="fullName"
+                                   placeholder="Farmacist diriginte"
+                                   formControlName="farmDir"
+                                   [required]="true"
+                                   [hideSelected]="true"
+
+                        >
+                            <ng-template ng-tag-tmp let-search="searchTerm">
+                                <b>Adauga farmacist diriginte</b>: {{search}}
+                            </ng-template>
+                            <ng-template ng-option-tmp let-item="item">
+                                <div>{{item.fullName}}</div>
+                                <small class="form-text text-muted">{{item.selectionDate| date: 'dd/MM/yyyy
+                                    HH:mm:ss'}}
+                                </small>
+                            </ng-template>
+                        </ng-select>
+                    </div>
+                    <div *ngIf="rFormSubbmitted && !rForm.get('farmDir').valid">
+                        <small class="text-muted"><strong class="text-danger">Farmacistul trebuie introdus</strong>
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+
+            <hr>
+            <!--=====================================================================================================================================-->
             <h5 class="text-center font-weight-bold">Obiectele adresarii</h5>
             <hr>
             <form [formGroup]="oForm">
@@ -61,14 +96,13 @@
                     </div>
 
 
-
                     <div class="col">
                         <div class="md-form-modified-select">
-                            <ng-select class="custom"  [items]="states"
+                            <ng-select class="custom" [items]="states"
                                        bindLabel="description"
-                                        placeholder = "Regiunea"
+                                       placeholder="Regiunea"
                                        formControlName="region"
-                                       >
+                            >
                             </ng-select>
                         </div>
                         <div *ngIf="oFormSubbmitted && !oForm.get('region').valid">
@@ -78,9 +112,9 @@
                     </div>
                     <div class="col">
                         <div class="md-form-modified-select">
-                            <ng-select class="custom"  [items]="localities"
+                            <ng-select class="custom" [items]="localities"
                                        bindLabel="description"
-                                       placeholder = "Localitate"
+                                       placeholder="Localitate"
                                        formControlName="locality"
                             >
                             </ng-select>
@@ -147,55 +181,8 @@
             </div>
             <hr>
 
-            <h5 class="text-center font-weight-bold">Decizia</h5>
-            <hr>
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="md-form">
-                        <input id="farmDir" mdbInputDirective type="text" class="form-control"
-                               formControlName="farmDir">
-                        <label for="farmDir">Farmacist diriginte (cu istoria)<span class="text-danger"> * </span></label>
-                    </div>
-                    <div *ngIf="rFormSubbmitted && !rForm.get('farmDir').valid">
-                        <small class="text-muted"><strong class="text-danger">Farmacistul trebuie introdus</strong>
-                        </small>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="md-form">
-                        <input id="decizieLuata" mdbInputDirective type="text" class="form-control"
-                               formControlName="decizieLuata">
-                        <label for="decizieLuata">Decizia luată <span class="text-danger"> * </span></label>
-                    </div>
-                    <div *ngIf="rFormSubbmitted && !rForm.get('decizieLuata').valid">
-                        <small class="text-muted"><strong class="text-danger">Decizia trebuie introdusa</strong>
-                        </small>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="md-form-modified-select">
-                        <mat-form-field class="w-100">
-                            <input matInput [matDatepicker]="picker2" placeholder="Data deciziei"
-                                   formControlName="decisionDate">
-                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                            <mat-datepicker touchUi #picker2></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                    <div *ngIf="rFormSubbmitted && !rForm.get('decisionDate').valid">
-                        <small class="text-muted"><strong class="text-danger">Data deciziei trebuie introdusa</strong>
-                        </small>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="md-form">
-                        <input id="argumentDec" mdbInputDirective type="text" class="form-control"
-                               formControlName="argumentDec">
-                        <label for="argumentDec">Argumentarea deciziei</label>
-                    </div>
-                </div>
-            </div>
-            <hr>
-<!--=====================================================================================================================================-->
+
+            <!--=====================================================================================================================================-->
             <h5 class="text-center font-weight-bold">Date generale</h5>
             <hr>
             <div class="row">
@@ -205,7 +192,7 @@
                         <div class="md-form-modified-select">
                             <ng-select [items]="activities"
                                        bindLabel="description"
-                                       placeholder = "Tipuri de activitate"
+                                       placeholder="Tipuri de activitate"
                                        formControlName="licenseActivities"
                                        [multiple]="true"
                                        [required]="true"
@@ -213,7 +200,8 @@
                             </ng-select>
                         </div>
                         <div *ngIf="rFormSubbmitted && !rForm.get('licenseActivities').valid">
-                            <small class="text-muted"><strong class="text-danger">Trebuie de ales cel putin un gen de activitate</strong>
+                            <small class="text-muted"><strong class="text-danger">Trebuie de ales cel putin un gen de
+                                activitate</strong>
                             </small>
                         </div>
                     </div>
@@ -244,29 +232,6 @@
                     </div>
                 </div>
 
-
-                <div class="col-6">
-                    <div class="md-form-modified-select">
-                        <mat-form-field class="w-100">
-                            <input type="text" matInput placeholder="Taxa spre plata" required formControlName="tax">
-                            <span matSuffix class="grey-text">MDL &nbsp;</span>
-                        </mat-form-field>
-                    </div>
-                    <div *ngIf="rFormSubbmitted && !rForm.get('tax').valid">
-                        <small class="text-muted"><strong class="text-danger">Taxa trebuie introdusa</strong>
-                        </small>
-                    </div>
-                </div>
-
-
-                <div class="col-md-6">
-                    <div class="md-form">
-                        <mat-checkbox id="taxPaid" formControlName="taxPaid">Achitat </mat-checkbox>
-
-                    </div>
-                </div>
-
-
                 <div class="col-md-3">
                     <div class="md-form">
                         <input id="mnrIntrareCPCD" mdbInputDirective type="text" class="form-control"
@@ -284,32 +249,35 @@
                         </mat-form-field>
                     </div>
                 </div>
-                <div class="col">
-                        <div class="md-form-modified">
-                            <ng-select [items]="announces"
-                                       bindLabel="description"
-                                       placeholder = "Metoda"
-                                       formControlName="CPCDMethod"
+                <div class="col-3">
+                    <div class="md-form-modified">
+                        <ng-select [items]="announces"
+                                   bindLabel="description"
+                                   placeholder="Metoda"
+                                   formControlName="CPCDMethod"
 
-                            >
-                            </ng-select>
-                        </div>
+                        >
+                        </ng-select>
+                    </div>
                 </div>
-                <div class="col-md-3" *ngIf="!rForm.get('CPCDMethod').value" >
+                <div class="col-md-3" *ngIf="!rForm.get('CPCDMethod').value">
                 </div>
-                <div class="col-md-3" *ngIf="rForm.get('CPCDMethod').value && rForm.get('CPCDMethod').value.code === 'email'" >
+                <div class="col-md-3"
+                     *ngIf="rForm.get('CPCDMethod').value && rForm.get('CPCDMethod').value.code === 'email'">
                     <div class="md-form">
-                        <input id="email1" mdbInputDirective type="text" class="form-control" formControlName="CPCDEmail">
+                        <input id="email1" mdbInputDirective type="text" class="form-control"
+                               formControlName="CPCDEmail">
                         <label for="email1">Email</label>
                     </div>
                 </div>
-                <div class="col-md-3" *ngIf="rForm.get('CPCDMethod').value && rForm.get('CPCDMethod').value.code === 'phone'" >
+                <div class="col-md-3"
+                     *ngIf="rForm.get('CPCDMethod').value && rForm.get('CPCDMethod').value.code === 'phone'">
                     <div class="md-form">
-                        <input id="telefon1" mdbInputDirective type="text" class="form-control" formControlName="CPCDPhone">
+                        <input id="telefon1" mdbInputDirective type="text" class="form-control"
+                               formControlName="CPCDPhone">
                         <label for="telefon1">Telefon</label>
                     </div>
                 </div>
-
 
 
                 <div class="col-md-3">
@@ -329,26 +297,29 @@
                         </mat-form-field>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-3">
                     <div class="md-form-modified">
                         <ng-select [items]="announces"
                                    bindLabel="description"
-                                   placeholder = "Metoda"
+                                   placeholder="Metoda"
                                    formControlName="ASPMethod">
                         </ng-select>
                     </div>
                 </div>
-                <div class="col-md-3" *ngIf="!rForm.get('ASPMethod')" >
+                <div class="col-md-3" *ngIf="!rForm.get('ASPMethod')">
                 </div>
-                <div class="col-md-3" *ngIf="rForm.get('ASPMethod').value && rForm.get('ASPMethod').value.code === 'email'" >
+                <div class="col-md-3"
+                     *ngIf="rForm.get('ASPMethod').value && rForm.get('ASPMethod').value.code === 'email'">
                     <div class="md-form">
                         <input id="email" mdbInputDirective type="text" class="form-control" formControlName="ASPEmail">
                         <label for="email">Email</label>
                     </div>
                 </div>
-                <div class="col-md-3" *ngIf="rForm.get('ASPMethod').value && rForm.get('ASPMethod').value.code === 'phone'" >
+                <div class="col-md-3"
+                     *ngIf="rForm.get('ASPMethod').value && rForm.get('ASPMethod').value.code === 'phone'">
                     <div class="md-form">
-                        <input id="telefon" mdbInputDirective type="text" class="form-control" formControlName="ASPPhone">
+                        <input id="telefon" mdbInputDirective type="text" class="form-control"
+                               formControlName="ASPPhone">
                         <label for="telefon">Telefon</label>
                     </div>
                 </div>
@@ -356,15 +327,128 @@
 
             </div>
             <hr>
+            <h5 class="text-center font-weight-bold">Decizia</h5>
+            <hr>
+            <div class="row">
+                <div class="offset-2 col-4 mt-6">
+                    <div class="md-form-modified">
+
+                        <mat-radio-group formControlName="decizieLuata">
+                            <div class="container">
+                                <div class="row">
+                                    <!--<div class="offset-2"></div>-->
+                                    <div class="col-12">
+                                        <mat-radio-button name="prop1" value="1">Acceptare</mat-radio-button>
+                                    </div>
+                                    <div class="col-12">
+                                        <mat-radio-button name="prop2" value="0">Refuz</mat-radio-button>
+                                    </div>
+                                    <!--<div class="offset-2"></div>-->
+                                </div>
+                                <div *ngIf="rFormSubbmitted && !rForm.get('decizieLuata').valid">
+                                    <small class="text-muted"><strong class="text-danger">Decizia trebuie
+                                        introdusa</strong>
+                                    </small>
+                                </div>
+                            </div>
+                        </mat-radio-group>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mt-2">
+                        <div class="md-form-modified">
+                            <mat-form-field class="w-100">
+                                <input matInput [matDatepicker]="picker2" placeholder="Data deciziei"
+                                       formControlName="decisionDate">
+                                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                <mat-datepicker touchUi #picker2></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div *ngIf="rFormSubbmitted && !rForm.get('decisionDate').valid">
+                        <small class="text-muted"><strong class="text-danger">Data deciziei trebuie introdusa</strong>
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="md-form">
+                        <textarea type="text" id="argumentDec" class="md-textarea form-control" mdbInputDirective rows="2" formControlName="argumentDec"></textarea>
+                        <label for="argumentDec">Argumentarea deciziei</label>
+                    </div>
+                </div>
+            </div>
+
+            <!--<div class="row">-->
+                <!-- <div class="col-md-3">
+                     <div class="md-form">
+                         <input id="decizieLuata" mdbInputDirective type="text" class="form-control"
+                                formControlName="decizieLuata">
+                         <label for="decizieLuata">Decizia luată <span class="text-danger"> * </span></label>
+                     </div>
+                     <div *ngIf="rFormSubbmitted && !rForm.get('decizieLuata').valid">
+                         <small class="text-muted"><strong class="text-danger">Decizia trebuie introdusa</strong>
+                         </small>
+                     </div>
+                 </div>-->
+
+                <!--<div class="col-md-3">-->
+                    <!--<div class="md-form">-->
+                        <!--<input id="argumentDec" mdbInputDirective type="text" class="form-control"-->
+                               <!--formControlName="argumentDec">-->
+                        <!--<label for="argumentDec">Argumentarea deciziei</label>-->
+                    <!--</div>-->
+                <!--</div>-->
+
+            <!--</div>-->
+
+            <hr>
+
+
+            <app-payment [receipts]="receiptsList" [paymentOrders]="paymentOrdersList"
+                         (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
+            <div *ngIf="rFormSubbmitted && nextSubmit && paymentTotal < 0">
+                <small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>
+            </div>
+            <hr>
+
+            <hr>
+            <h5 class="text-center font-weight-bold">Documente de iesire</h5>
+            <hr>
+
+            <table class="table table-widths-lg text-center">
+                <thead class="black white-text">
+                <tr>
+                    <th scope="col">Denumirea</th>
+                    <th scope="col">Numar</th>
+                    <th scope="col">Status document</th>
+                    <th>Actiuni</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let a of outDocuments">
+                    <th scope="row">{{ a.name }}</th>
+                    <th scope="row">{{ a.number }}</th>
+                    <th scope="row">{{ a.status ? a.status.description : ''}}</th>
+                    <td>
+                        <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)">Vizualizare</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div *ngIf="rFormSubbmitted && !checkAllDocumentsWasAttached()">
+                <small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong></small>
+            </div>
+
 
             <div class="text-center">
-                <button type="button" (click)="submit()" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Confirmare
+                <button type="button" (click)="submit()" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
+                        mdbWavesEffect>Salvare date
                 </button>
-                <button type="button" (click)="submitNextStep()" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Urmatorul pas
+                <button type="button" (click)="submitNextStep()"
+                        class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect [disabled]="rForm.get('decizieLuata').value !== '1'" >Urmatorul pas
                 </button>
-                <button type="button" (click)="cancelRequest()" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Anuleaza cererea
-                </button>
-                <button type="button" (click)="closePage()" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Inchide pagina
+                <button type="button" (click)="cancelRequest()"
+                        class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect [disabled]="rForm.get('decizieLuata').value !== '0'" > Intrerupere proces
                 </button>
             </div>
         </section>

@@ -1,6 +1,6 @@
 import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Document} from "../models/document";
-import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-dialog.component";
+import {ConfirmationDialogComponent} from "../dialog/confirmation-dialog.component";
 import {MatDialog} from "@angular/material";
 import {Subscription} from "rxjs";
 import {HttpResponse} from "@angular/common/http";
@@ -27,7 +27,7 @@ export class DocumentComponent implements OnInit, OnDestroy {
     disabled: boolean = false;
     @ViewChild('incarcaFisier')
     incarcaFisierVariable: ElementRef;
-    @Output() documentAdded = new EventEmitter();
+    @Output() documentModified = new EventEmitter();
     private subscriptions: Subscription[] = [];
 
     constructor(public dialog: MatDialog, private uploadService: UploadFileService, private fb: FormBuilder,
@@ -42,8 +42,6 @@ export class DocumentComponent implements OnInit, OnDestroy {
     get canUpload(): boolean {
         return this.enableUploading;
     }
-
-    @Output() documentRemoved = new EventEmitter();
 
     @Input()
     set canUpload(can: boolean) {
@@ -107,7 +105,7 @@ export class DocumentComponent implements OnInit, OnDestroy {
             if (result) {
                 this.subscriptions.push(this.uploadService.removeFileFromStorage(this.documents[index].path).subscribe(data => {
                         this.documents.splice(index, 1);
-                        this.documentRemoved.emit(true);
+                        this.documentModified.emit(true);
                     },
                     error => {
                         console.log(error);
@@ -143,8 +141,17 @@ export class DocumentComponent implements OnInit, OnDestroy {
 
     addDocument(event) {
 
-        if (this.documents.find(d => d.name === event.srcElement.files[0].name)) {
+        if (this.documents && this.documents.find(d => d.name === event.srcElement.files[0].name)) {
             this.errorHandlerService.showError('Document cu acest nume a fost deja atasat.');
+            return;
+        }
+
+        var allowedExtensions =
+            ["jpg","jpeg","png","jfif","bmp","svg","pdf"];
+        var fileExtension = event.srcElement.files[0].name.split('.').pop();
+
+        if(allowedExtensions.indexOf(fileExtension.toLowerCase()) <= -1) {
+            this.errorHandlerService.showError('Nu se permite atasarea documentelor cu aceasta extensie. Extensiile permise: '+allowedExtensions);
             return;
         }
 
@@ -167,7 +174,7 @@ export class DocumentComponent implements OnInit, OnDestroy {
                     });
                     this.docForm.get('docType').setValue(null);
                     this.docForm.get('nrDoc').setValue(null);
-                    this.documentAdded.emit(true);
+                    this.documentModified.emit(true);
                 }
             },
             error => {

@@ -1,7 +1,7 @@
 export class Receipt {
     receiptNumber : string;
     date : any;
-    name : string;
+    serviceCharge : any;
     amount : number;
     sP: boolean;
     isOld : boolean;

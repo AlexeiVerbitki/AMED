@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Observable, Subscription} from "rxjs/index";
+import {Observable, Subject, Subscription} from "rxjs/index";
 import {AdministrationService} from "../../../shared/service/administration.service";
 import {MatDialog} from "@angular/material";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
@@ -9,6 +9,7 @@ import {AuthService} from "../../../shared/service/authetication.service";
 import {RequestService} from "../../../shared/service/request.service";
 import {TaskService} from "../../../shared/service/task.service";
 import {LoaderService} from "../../../shared/service/loader.service";
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
 
 @Component({
     selector: 'app-reg-cerere',
@@ -20,10 +21,12 @@ export class RegCerereComponent implements OnInit, OnDestroy {
     generatedDocNrSeq: number;
     registerClinicalTrailForm: FormGroup;
     private subscriptions: Subscription[] = [];
-    solicitantCompanyList: Observable<any[]>;
-    private submitted: boolean = false;
     docs: Document [] = [];
     docTypes : any[];
+
+    companii: Observable<any[]>;
+    loadingCompany : boolean = false;
+    protected companyInputs = new Subject<string>();
 
     constructor(private fb: FormBuilder,
                 private dialog: MatDialog,
@@ -53,9 +56,27 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                 })
         });
 
-        this.loadSolicitantCompanyList();
         this.generateDocNr();
         this.loadDocTypes();
+
+        this.companii =
+            this.companyInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) return true;
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingCompany = true;
+
+                }),
+                flatMap(term =>
+
+                    this.administrationService.getCompanyNamesAndIdnoList(term).pipe(
+                        tap(() => this.loadingCompany = false)
+                    )
+                )
+            );
     }
 
     loadDocTypes(){
@@ -75,16 +96,6 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                 error => console.log(error)
             )
         );
-    }
-
-    loadSolicitantCompanyList() {
-        this.subscriptions.push(
-            this.administrationService.getAllCompanies().subscribe(data => {
-                    this.solicitantCompanyList = data;
-                },
-                error => console.log(error)
-            )
-        )
     }
 
     generateDocNr() {
@@ -117,12 +128,12 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                 step: formModel.currentStep
             }];
 
-            formModel.clinicalTrails.documents = this.docs;
+            formModel.documents = this.docs;
             formModel.currentStep='E';
             formModel.initiator = this.authService.getUserName();
             formModel.assignedUser = this.authService.getUserName();
 
-            // console.log("regCerereObject", formModel);
+            console.log("formModel", formModel);
             // console.log("regCerereJSON", JSON.stringify(formModel));
 
             this.subscriptions.push(this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {

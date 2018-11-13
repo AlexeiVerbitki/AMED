@@ -65,20 +65,20 @@
       <div class="modal-body">
 
         <div class="md-form mb-4">
-          <input type="number" id="medicament_id" class="form-control" mdbInputDirective [formControl]="medicamentIdEdit">
+          <input type="number" id="medicament_id" class="form-control" mdbInputDirective>
           <label for="medicament_id" data-error="wrong" data-success="right">Medicament ID</label>
         </div>
 
         <div class="md-form mb-4">
-          <input type="text" id="distribution_mandate_nr" class="form-control" mdbInputDirective [formControl]="distributionMandateNrEdit">
+          <input type="text" id="distribution_mandate_nr" class="form-control" mdbInputDirective>
           <label for="distribution_mandate_nr" data-error="wrong" data-success="right">Distribution Mandat ID</label>
         </div>
 
         <div class="md-form mb-4">
           <mat-form-field class="w-100">
-            <input matInput [matDatepicker]="picker" placeholder="Distribution mandat Date" [formControl]="distributionMandateDateEdit">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
+            <input matInput [matDatepicker]="picker3" placeholder="Distribution mandat Date">
+            <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+            <mat-datepicker #picker3></mat-datepicker>
           </mat-form-field>
         </div>
 
@@ -112,18 +112,18 @@
       <div class="modal-body">
 
         <div class="md-form mb-4">
-          <input type="number" id="medicament_id" class="form-control" mdbInputDirective [formControl]="medicamentIdAdd">
+          <input type="number" id="medicament_id" class="form-control" mdbInputDirective>
           <label for="medicament_id" data-error="wrong" data-success="right">Medicament ID</label>
         </div>
 
         <div class="md-form mb-4">
-          <input type="text" id="distribution_mandate_nr" class="form-control" mdbInputDirective [formControl]="distributionMandateNrAdd">
+          <input type="text" id="distribution_mandate_nr" class="form-control" mdbInputDirective>
           <label for="distribution_mandate_nr" data-error="wrong" data-success="right">Distribution Mandat ID</label>
         </div>
 
         <div class="md-form mb-4">
           <mat-form-field class="w-100">
-            <input matInput [matDatepicker]="picker2" placeholder="Distribution mandat Date" [formControl]="distributionMandateDateAdd">
+            <input matInput [matDatepicker]="picker2" placeholder="Distribution mandat Date">
             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
             <mat-datepicker #picker2></mat-datepicker>
           </mat-form-field>

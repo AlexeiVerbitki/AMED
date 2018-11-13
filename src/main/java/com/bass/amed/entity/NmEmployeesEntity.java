@@ -26,6 +26,7 @@ public class NmEmployeesEntity
     private NmProfessionsEntity profession;
     private Integer commissionOrder;
     private Byte chairmanOfExperts;
+    private String email;
 
     @Id
     @Column(name = "id")
@@ -255,6 +256,16 @@ public class NmEmployeesEntity
         this.chairmanOfExperts = chairmanOfExperts;
     }
 
+    @Basic
+    @Column(name = "email")
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public boolean equals(Object o)
     {
@@ -341,6 +352,10 @@ public class NmEmployeesEntity
         {
             return false;
         }
+        if (email != null ? !email.equals(that.email) : that.email != null)
+        {
+            return false;
+        }
         return chairmanOfExperts != null ? chairmanOfExperts.equals(that.chairmanOfExperts) : that.chairmanOfExperts == null;
     }
 
@@ -366,6 +381,7 @@ public class NmEmployeesEntity
         result = 31 * result + (profession != null ? profession.hashCode() : 0);
         result = 31 * result + (commissionOrder != null ? commissionOrder.hashCode() : 0);
         result = 31 * result + (chairmanOfExperts != null ? chairmanOfExperts.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
         return result;
     }
 }

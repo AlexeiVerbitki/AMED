@@ -1,9 +1,11 @@
 package com.bass.amed.controller.rest.annihilation;
 
 import com.bass.amed.controller.rest.license.LicenseController;
+import com.bass.amed.entity.AnnihilationCommisionsEntity;
 import com.bass.amed.entity.NmEconomicAgentsEntity;
 import com.bass.amed.entity.RegistrationRequestsEntity;
 import com.bass.amed.exception.CustomException;
+import com.bass.amed.repository.AnnihilationCommisionRepository;
 import com.bass.amed.repository.EconomicAgentsRepository;
 import com.bass.amed.repository.RequestRepository;
 import com.bass.amed.repository.RequestTypeRepository;
@@ -16,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -35,6 +38,9 @@ public class MedAnnihilationController
 
     @Autowired
     private MedicamentAnnihilationRequestService medicamentAnnihilationRequestService;
+
+    @Autowired
+    private AnnihilationCommisionRepository annihilationRepository;
 
 
     @RequestMapping(value = "/new-annihilation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -65,7 +71,7 @@ public class MedAnnihilationController
     public ResponseEntity<Integer> confirmEvaluateAnnihilation(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
         LOGGER.debug("Confirm annihilation" + request);
-        medicamentAnnihilationRequestService.updateAnnihilation(request, false);
+        medicamentAnnihilationRequestService.updateAnnihilation(request);
 
         return new ResponseEntity<>(request.getId(), HttpStatus.CREATED);
     }
@@ -75,7 +81,16 @@ public class MedAnnihilationController
     public ResponseEntity<Integer> nextEvaluateAnnihilation(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
         LOGGER.debug("Next evaluate annihilation" + request);
-        medicamentAnnihilationRequestService.updateAnnihilation(request, true);
+        medicamentAnnihilationRequestService.updateAnnihilation(request);
+
+        return new ResponseEntity<>(request.getId(), HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/finish-annihilation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> finishAnnihilation(@RequestBody RegistrationRequestsEntity request) throws CustomException
+    {
+        LOGGER.debug("Finish annihilation" + request);
+        medicamentAnnihilationRequestService.finishAnnihilation(request);
 
         return new ResponseEntity<>(request.getId(), HttpStatus.CREATED);
     }
@@ -87,5 +102,12 @@ public class MedAnnihilationController
         LOGGER.debug("Retrieve license by request id", id);
         RegistrationRequestsEntity r = medicamentAnnihilationRequestService.findMedAnnihilationRegistrationById(Integer.valueOf(id));
         return new ResponseEntity<>(r, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/retrieve-all-commisions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<AnnihilationCommisionsEntity>> loadAllCommisions()
+    {
+        LOGGER.debug("Retrieve all commisions");
+        return new ResponseEntity<>(annihilationRepository.findAll(), HttpStatus.OK);
     }
 }

@@ -1,13 +1,15 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Document} from "../../../models/document";
-import {Subscription} from "rxjs";
+import {Observable, Subject, Subscription} from "rxjs";
 import {AdministrationService} from "../../../shared/service/administration.service";
 import {LicenseService} from "../../../shared/service/license/license.service";
 import {Router} from "@angular/router";
-import {ConfirmationDialogComponent} from "../../../confirmation-dialog/confirmation-dialog.component";
+import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
 import {MatDialog} from "@angular/material";
 import {AuthService} from "../../../shared/service/authetication.service";
+import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
 
 @Component({
     selector: 'app-reg-med-cerere-lic',
@@ -16,14 +18,17 @@ import {AuthService} from "../../../shared/service/authetication.service";
 })
 export class RegMedCerereLicComponent implements OnInit, OnDestroy {
 
-    companii: any[];
+    companii: Observable<any[]>;
+    loadingCompany : boolean = false;
+    companyInputs = new Subject<string>();
+
     docs: Document [] = [];
     tipCerere: string;
 
     private subscriptions: Subscription[] = [];
     rFormSubbmitted: boolean = false;
     companyLicenseNotFound = false;
-    oldLicense : any;
+    oldLicense: any;
 
     //count time
     startDate: Date;
@@ -38,18 +43,32 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
                 private administrationService: AdministrationService,
                 private licenseService: LicenseService,
                 public dialog: MatDialog,
-                private authService: AuthService) {
+                private authService: AuthService,
+                private errorHandlerService: ErrorHandlerService) {
 
     }
 
     ngOnInit() {
         this.startDate = new Date();
-        this.subscriptions.push(
-            this.administrationService.getAllCompanies().subscribe(data => {
-                    this.companii = data;
-                }
-            )
-        );
+
+        this.companii =
+            this.companyInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) return true;
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingCompany = true;
+
+                }),
+                flatMap(term =>
+
+                    this.administrationService.getCompanyNamesAndIdnoList(term).pipe(
+                        tap(() => this.loadingCompany = false)
+                    )
+                )
+            );
 
         this.initFormData();
 
@@ -61,8 +80,8 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
             'compGet': [null, Validators.required],
             'adresa': [{value: null, disabled: true}],
             'idno': [{value: null, disabled: true}],
-            'telefonContact': [null, Validators.required],
-            'emailContact': '',
+            'telefonContact': [null, [Validators.required, Validators.maxLength(9), Validators.pattern('[0-9]+')]],
+            'emailContact': [null, Validators.email],
             'persResDepCereriiFirstname': [null, Validators.required],
             'persResDepCereriiLastname': [null, Validators.required],
             'nrProcurii1': [null, Validators.required],
@@ -77,12 +96,12 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
         this.mForm = this.fb.group({
             'tipCerere': [{value: null}],
             'nrCererii': [{value: null, disabled: true}, Validators.required],
-            'dataEliberarii': [{value: null, disabled: true}]
+            'dataCerere': [{value: null, disabled: true}]
 
 
         });
 
-        this.mForm.get('dataEliberarii').setValue(new Date());
+        this.mForm.get('dataCerere').setValue(new Date());
     }
 
     submitNew() {
@@ -92,8 +111,10 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
             return;
         }
 
-        if ((this.tipCerere === 'LICM' || this.tipCerere === 'LICD') && this.companyLicenseNotFound === true)
-        {
+        if (this.tipCerere === 'LICEL' && this.oldLicense) {
+            return;
+        }
+        else if ((this.tipCerere === 'LICM' || this.tipCerere === 'LICD') && this.companyLicenseNotFound) {
             return;
         }
 
@@ -105,7 +126,6 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
         let licenseModel: any = {};
         let mandatedContact: any = {};
         let licenseMandatedContacts: any[] = [];
-        licenseModel.releaseDate = this.mForm.get('dataEliberarii').value;
 
 
         mandatedContact.requestPersonFirstname = this.rForm.get('persResDepCereriiFirstname').value;
@@ -119,14 +139,13 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
 
         licenseModel.documents = this.docs;
 
-        if (this.tipCerere === 'LICM' || this.tipCerere === 'LICD')
-        {
+        if (this.tipCerere === 'LICM' || this.tipCerere === 'LICD') {
             licenseModel.id = this.oldLicense.id;
         }
 
         modelToSubmit.license = licenseModel;
         modelToSubmit.requestNumber = this.mForm.get('nrCererii').value;
-        modelToSubmit.company = {id : this.rForm.get('compGet').value.id};
+        modelToSubmit.company = {id: this.rForm.get('compGet').value.id};
 
 
         modelToSubmit.requestHistories = [{
@@ -138,11 +157,12 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
 
         modelToSubmit.currentStep = 'E';
         modelToSubmit.startDate = this.startDate;
+        modelToSubmit.initiator = this.authService.getUserName();
+        modelToSubmit.assignedUser = this.authService.getUserName();
 
         console.log('mdl', modelToSubmit);
 
-        if (this.tipCerere === 'LICEL')
-        {
+        if (this.tipCerere === 'LICEL') {
             this.subscriptions.push(
                 this.licenseService.confirmRegisterLicense(modelToSubmit).subscribe(data => {
                         let result = data.body;
@@ -151,8 +171,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
                 )
             );
         }
-        else if (this.tipCerere === 'LICM')
-        {
+        else if (this.tipCerere === 'LICM') {
             this.subscriptions.push(
                 this.licenseService.confirmModifyLicense(modelToSubmit).subscribe(data => {
                         let result = data.body;
@@ -161,8 +180,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
                 )
             );
         }
-        else if (this.tipCerere === 'LICD')
-        {
+        else if (this.tipCerere === 'LICD') {
             this.subscriptions.push(
                 this.licenseService.confirmDuplicateLicense(modelToSubmit).subscribe(data => {
                         let result = data.body;
@@ -190,6 +208,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
                         this.subscriptions.push(
                             this.administrationService.generateDocNr().subscribe(data => {
                                     this.mForm.get('nrCererii').setValue(data);
+                                    this.rForm.reset();
                                 }
                             )
                         );
@@ -211,37 +230,37 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
         });
 
         this.rForm.get('compGet').valueChanges.subscribe(val => {
+            this.oldLicense = null;
             if (val) {
                 this.rForm.get('adresa').setValue(val.legalAddress);
                 this.rForm.get('idno').setValue(val.idno);
 
-                if (this.tipCerere === 'LICM' || this.tipCerere === 'LICD')
-                {
-                    this.companyLicenseNotFound = false;
-                    this.subscriptions.push(
-                        this.licenseService.retrieveLicenseByEconomicAgentId(val.id).subscribe(data => {
+                this.companyLicenseNotFound = false;
+                this.subscriptions.push(
+                    this.licenseService.retrieveLicenseByEconomicAgentId(val.id).subscribe(data => {
+                            if (data) {
+                                console.log('sdfs', data);
                                 this.oldLicense = data;
                                 this.rForm.get('seria').setValue(data.serialNr);
                                 this.rForm.get('nrLic').setValue(data.nr);
-                                this.rForm.get('dataEliberariiLic').setValue(data.releaseDate);
-                            },
-                            error => {
+                                this.rForm.get('dataEliberariiLic').setValue(new Date(data.releaseDate));
+                            }
+                            else {
                                 this.companyLicenseNotFound = true;
                                 this.rForm.get('seria').setValue(null);
                                 this.rForm.get('nrLic').setValue(null);
                                 this.rForm.get('dataEliberariiLic').setValue(null);
-                                this.docs = null;
                             }
-                        )
-                    );
+                        }
+                    )
+                );
 
-                }
+
             }
             else {
                 this.rForm.get('adresa').setValue(null);
                 this.rForm.get('idno').setValue(null);
-                if (this.tipCerere === 'LICM' || this.tipCerere === 'LICD')
-                {
+                if (this.tipCerere === 'LICM' || this.tipCerere === 'LICD') {
                     this.rForm.get('seria').setValue(null);
                     this.rForm.get('nrLic').setValue(null);
                     this.rForm.get('dataEliberariiLic').setValue(null);

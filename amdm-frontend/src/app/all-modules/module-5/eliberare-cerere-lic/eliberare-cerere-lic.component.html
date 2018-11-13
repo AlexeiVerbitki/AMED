@@ -33,7 +33,7 @@
             </div>
         </div>
 
-        <app-document *ngIf="tipCerere" [documents]="docs" [nrCerere]="mForm.get('nrCererii').value"></app-document>
+        <app-document *ngIf="tipCerere" [documents]="docs" [nrCerere]="mForm.get('nrCererii').value" (documentModified)="documentAdded($event)"></app-document>
         <div *ngIf="rFormSubbmitted && docs.length==0">
             <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
         </div>
@@ -182,12 +182,39 @@
             </div>
         </div>
 
+
+        <hr>
+        <h5 class="text-center font-weight-bold">Documente de iesire</h5>
+        <hr>
+
+        <table class="table table-widths-lg text-center">
+            <thead class="black white-text">
+            <tr>
+                <th scope="col">Denumirea</th>
+                <th scope="col">Numar</th>
+                <th scope="col">Status document</th>
+                <th>Actiuni</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let a of outDocuments">
+                <th scope="row">{{ a.name }}</th>
+                <th scope="row">{{ a.number }}</th>
+                <th scope="row">{{ a.status ? a.status.description : ''}}</th>
+                <td>
+                    <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)">Vizualizare</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div *ngIf="rFormSubbmitted && !checkAllDocumentsWasAttached()">
+            <small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong></small>
+        </div>
+
         <div class="text-center">
-            <button type="button" (click)="save()" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Confirmare
+            <button type="button" (click)="save()" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Salvare date
             </button>
             <button type="button" (click)="submitFinish()" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Finisare
-            </button>
-            <button type="button" (click)="closePage()" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Inchide pagina
             </button>
         </div>
     </form>

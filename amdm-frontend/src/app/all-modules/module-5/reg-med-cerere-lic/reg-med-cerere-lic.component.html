@@ -34,8 +34,8 @@
             <div class="col-md-6">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
-                        <input matInput [matDatepicker]="picker2" placeholder="Data de inregistrare a cererii" id="dataEliberarii"
-                               formControlName="dataEliberarii">
+                        <input matInput [matDatepicker]="picker2" placeholder="Data de inregistrare a cererii" id="dataCerere"
+                               formControlName="dataCerere">
                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                         <mat-datepicker touchUi #picker2></mat-datepicker>
                     </mat-form-field>
@@ -44,7 +44,7 @@
         </div>
 
         <app-document *ngIf="tipCerere" [documents]="docs" [nrCerere]="mForm.get('nrCererii').value"></app-document>
-        <div *ngIf="rFormSubbmitted && docs.length==0">
+        <div *ngIf="rFormSubbmitted && docs && docs.length==0">
             <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
         </div>
 
@@ -62,13 +62,18 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="md-form-modified-select">
-                        <ng-select class="custom"  [items]="companii"
+                        <ng-select class="custom"  [items]="companii | async"
                                    bindLabel="name"
                                    placeholder = "Companii"
                                    formControlName="compGet"
                                    [required]="true"
-
+                                   [loading]="loadingCompany"
+                                   [typeahead]="companyInputs"
                         >
+                            <ng-template ng-option-tmp let-item="item">
+                                {{item.name}} <br />
+                                <small class="form-text text-muted">{{item.idno}}</small>
+                            </ng-template>
                         </ng-select>
                     </div>
                     <div *ngIf="rFormSubbmitted && !rForm.get('compGet').valid">
@@ -95,6 +100,12 @@
                 <div class="col-md-12" *ngIf="(tipCerere === 'LICM' || tipCerere === 'LICD') && companyLicenseNotFound === true">
                     <div class="md-form-modified">
                             <strong class="text-danger">Nu a fost gasita nici o licenta pentru compania selectata</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-12" *ngIf="tipCerere === 'LICEL' && oldLicense">
+                    <div class="md-form-modified">
+                        <strong class="text-danger">Aceasta companie deja are o licenta activa cu nr= {{oldLicense.nr}}</strong>
                     </div>
                 </div>
 
@@ -142,7 +153,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="md-form">
-                        <input id="persResDepCereriiLastname" mdbInputDirective type="email" class="form-control"
+                        <input id="persResDepCereriiLastname" mdbInputDirective type="text" class="form-control"
                                formControlName="persResDepCereriiLastname">
                         <label for="persResDepCereriiLastname">Prenume persoana responsabilă <span class="text-danger">*</span></label>
 
@@ -156,20 +167,24 @@
                 <div class="col-md-4">
                     <div class="md-form">
                         <input id="telefonContact" mdbInputDirective type="text" class="form-control"
-                               formControlName="telefonContact"
+                               formControlName="telefonContact" maxlength="9"
                                >
                         <label for="telefonContact">Telefon de contact <span class="text-danger">*</span> </label>
                     </div>
                     <div *ngIf="rFormSubbmitted && !rForm.get('telefonContact').valid">
-                        <small class="text-muted"><strong class="text-danger">Telefonul trebuie introdus</strong>
+                        <small class="text-muted"><strong class="text-danger">Telefonul trebuie introdus sau nu este valid.</strong>
                         </small>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="md-form">
-                        <input id="emailContact" mdbInputDirective type="text" class="form-control"
+                        <input id="emailContact" mdbInputDirective type="email" class="form-control"
                                formControlName="emailContact" >
                         <label for="emailContact">Email de contact</label>
+                    </div>
+                    <div *ngIf="rFormSubbmitted && !rForm.get('emailContact').valid">
+                        <small class="text-muted"><strong class="text-danger">Email ul nu este valid.</strong>
+                        </small>
                     </div>
                 </div>
 

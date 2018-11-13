@@ -25,16 +25,23 @@
         <h5 class="text-center font-weight-bold">Selectarea Medicamentului</h5>
 
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="md-form-modified">
                     <ng-select class="w-100"
-                               [items]="companies"
+                               [items]="companies | async"
                                [required]="true"
                                formControlName="company"
                                bindLabel="name"
                                placeholder="Compania solicitant "
+                               [typeahead]="companyInputs"
+                               [loading]="loadingCompany"
+                               required="true"
                                (change)="onCompanySelected($event)"
                                (clear)="onRemoveCompany()">
+                        <ng-template ng-option-tmp let-item="item">
+                            {{item.name}} <br />
+                            <small class="form-text text-muted">{{item.idno}}</small>
+                        </ng-template>
                     </ng-select>
                     <div *ngIf="formSubmitted && PriceRegForm.get('company').invalid">
                         <small class="text-muted"><strong class="text-danger">Selectați compania solicitantă</strong>
@@ -43,7 +50,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="md-form-modified">
                     <div class="md-form-modified-select">
                         <ng-select class="custom" [items]="companyMedicaments | async"
@@ -66,12 +73,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input id="typeMed" mdbInputDirective type="text" class="form-control" [value]="medicamentType.description" [attr.disabled]="true">
-                    <label for="typeMed">Tipul medicamentului</label>
-                </div>
-            </div>
+
             <div class="col-md-4">
                 <div class="md-form">
                     <input id="intName" mdbInputDirective type="text" class="form-control" [value]="internationalName" [attr.disabled]="true">
@@ -101,7 +103,7 @@
             <div class="col-md-4">
                 <div class="md-form">
                     <input id="sds" mdbInputDirective type="text" class="form-control" [value]="unitsOfMeasurement" [attr.disabled]="true">
-                    <label for="sds">Unitate de măsură</label>
+                    <label for="sds">Unitate de măsură (doza)</label>
                 </div>
             </div>
             <div class="col-md-4">
@@ -111,7 +113,28 @@
                 </div>
             </div>
         </div>
-        <hr>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="volum" mdbInputDirective type="number" class="form-control" [value]="volumeProp" [attr.disabled]="true">
+                    <label for="volum">Volumul</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="volmess" mdbInputDirective type="text" class="form-control" [value]="volumeQuantityMeasurement" [attr.disabled]="true">
+                    <label for="volmess">Unitate de măsură (volum)</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="typeMed" mdbInputDirective type="text" class="form-control" [value]="medicamentType.description" [attr.disabled]="true">
+                    <label for="typeMed">Tipul medicamentului</label>
+                </div>
+            </div>
+        </div>
+
         <h5 class="text-center font-weight-bold">Divizarea Medicamentului</h5>
         <div class="row">
             <div class="col-md-6">
@@ -125,7 +148,7 @@
                     <div class="md-form">
                         <input id="unitsOfMeasurement" mdbInputDirective type="text" class="form-control"
                                [value]="unitsQuantityMeasurement" [attr.disabled]="true">
-                        <label for="unitsOfMeasurement">Unitatea de măsură</label>
+                        <label for="unitsOfMeasurement">Unitatea de măsură (bucăți)</label>
                     </div>
                 </div>
             </div>
@@ -140,16 +163,11 @@
                     <div class="md-form">
                         <input id="storageMeass" mdbInputDirective type="text" class="form-control"
                                [value]="storageQuantityMeasurement" [attr.disabled]="true">
-                        <label for="storageMeass">Unitatea de măsură</label>
+                        <label for="storageMeass">Unitatea de măsură (stocare)</label>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="md-form">
-                    <input id="volum" mdbInputDirective type="number" class="form-control" [value]="volumeProp" [attr.disabled]="true">
-                    <label for="volum">Volumul</label>
-                </div>
-            </div>
+
         </div>
 
         <hr>

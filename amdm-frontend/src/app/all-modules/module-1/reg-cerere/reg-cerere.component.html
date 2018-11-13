@@ -23,32 +23,38 @@
 		</div>
 		<hr>
 		<app-document [documents]="documents" [nrCerere]="rForm.get('requestNumber').value" [dcTypes]="docTypes"></app-document>
-		<div *ngIf="formSubmitted && documents.length==0">
-			<small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
-		</div>
+		<!--<div *ngIf="formSubmitted && documents.length==0">-->
+			<!--<small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>-->
+		<!--</div>-->
 		<hr>
 		<div class="row">
 
-              <div class="col-md-6" formGroupName="medicament">
+              <div class="col-md-6">
                   <div class="md-form-modified">
-					<ng-select id="company" name="company" [items]="companii"
-					           bindLabel="name"
-					           placeholder="Compania solicitant"
-					           formControlName="company"
-					           required="true">
-					</ng-select>
-					<div *ngIf="formSubmitted && rForm.get('medicament.company').invalid">
+	                <ng-select [items]="companii | async"
+	                           bindLabel="name"
+	                           placeholder="Compania solicitant"
+	                           formControlName="company"
+	                           [loading]="loadingCompany"
+	                           [typeahead]="companyInputs"
+	                           required="true">
+		                  <ng-template ng-option-tmp let-item="item">
+			                  {{item.name}} <br />
+			                  <small class="form-text text-muted">{{item.idno}}</small>
+		                  </ng-template>
+	                  </ng-select>
+					<div *ngIf="formSubmitted && rForm.get('company').invalid">
 						<small class="text-muted"><strong class="text-danger">Compania solicitantă trebuie selectată</strong></small>
 					</div>
 				</div>
 			</div>
-			<div class="col-md-6" formGroupName="medicament">
+			<div class="col-md-6">
 				<div class="md-form">
-					<input id="med" mdbInputDirective type="text" class="form-control" formControlName="name">
-					<label for="med">Medicamentul
+					<input id="med" mdbInputDirective type="text" class="form-control" formControlName="medicamentName">
+					<label for="med">Denumire comerciala medicament
 						<span class="text-danger">*</span>
 					</label>
-					<div *ngIf="formSubmitted && rForm.get('medicament.name').invalid">
+					<div *ngIf="formSubmitted && rForm.get('medicamentName').invalid">
 						<small class="text-muted"><strong class="text-danger">Medicamentul trebuie introdus</strong></small>
 					</div>
 				</div>
@@ -74,12 +80,6 @@
 					</mat-radio-group>
 				</div>
 			</div>
-			<!--<div class="text-center w-100 mt-3">-->
-				<!--<div class="alert alert-primary">-->
-					<!--<span>Nr. de inregistrare a cererii: </span>-->
-					<!--<strong>{{generatedDocNrSeq}}</strong>-->
-				<!--</div>-->
-			<!--</div>-->
 		</div>
 		<hr>
 		<div class="text-center">

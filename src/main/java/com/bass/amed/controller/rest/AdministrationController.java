@@ -24,8 +24,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/administration")
-public class AdministrationController
-{
+public class AdministrationController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdministrationController.class);
 
     @Autowired
@@ -66,25 +65,32 @@ public class AdministrationController
     MedicalInstitutionsRepository medicalInstitutionsRepository;
     @Autowired
     ServiceChargesRepository serviceChargesRepositorys;
+    @Autowired
+    MedicamentFormsRepository medicamentFormsRepository;
+    @Autowired
+    NmAtcCodesRepository nmAtcCodesRepository;
 
     @RequestMapping(value = "/generate-doc-nr")
-    public ResponseEntity<Integer> generateDocNr()
-    {
+    public ResponseEntity<Integer> generateDocNr() {
         return new ResponseEntity<>(generateDocNumberService.getDocumentNumber(), HttpStatus.OK);
     }
 
     @GetMapping("/all-companies")
-    public ResponseEntity<List<NmEconomicAgentsEntity>> retrieveAllEconomicAgents()
-    {
+    public ResponseEntity<List<NmEconomicAgentsEntity>> retrieveAllEconomicAgents() {
         LOGGER.debug("Retrieve all economic agents");
         List<NmEconomicAgentsEntity> allCompanies = economicAgentsRepository.findAll();
 
         return new ResponseEntity<>(allCompanies, HttpStatus.OK);
     }
 
+    @RequestMapping("/search-companies-by-name-or-idno")
+    public ResponseEntity<List<NmEconomicAgentsEntity>> getCompaniesByNameAndIdno(String partialName) {
+        LOGGER.debug("Retrieve companies by name or idno");
+        return new ResponseEntity<>(economicAgentsRepository.getCompaniesByNameAndIdno(partialName, partialName), HttpStatus.OK);
+    }
+
     @GetMapping("/all-companies-details")
-    public ResponseEntity<List<GetMinimalCompanyProjection>> retrieveAllEconomicAgentsDetails()
-    {
+    public ResponseEntity<List<GetMinimalCompanyProjection>> retrieveAllEconomicAgentsDetails() {
         LOGGER.debug("Retrieve all economic agents");
         List<GetMinimalCompanyProjection> allCompanies = economicAgentsRepository.getMinimalDetails();
 
@@ -92,33 +98,35 @@ public class AdministrationController
     }
 
     @RequestMapping("/all-states")
-    public ResponseEntity<List<NmStatesEntity>> retrieveAllStates()
-    {
+    public ResponseEntity<List<NmStatesEntity>> retrieveAllStates() {
         LOGGER.debug("Retrieve all states");
         return new ResponseEntity<>(nmStatesRepository.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping("/all-localities-by-state")
-    public ResponseEntity<Set<NmLocalitiesEntity>> retrieveLocalitiesByState(@RequestParam(value = "stateId") String stateIso)
-    {
+    public ResponseEntity<Set<NmLocalitiesEntity>> retrieveLocalitiesByState(@RequestParam(value = "stateId") String stateIso) {
         LOGGER.debug("Retrieve localities by state" + stateIso);
         return new ResponseEntity<>(nmLocalitiesRepository.findByStateId(Integer.valueOf(stateIso)), HttpStatus.OK);
     }
 
     @RequestMapping("/all-pharamceutical-form-types")
-    public ResponseEntity<List<NmPharmaceuticalFormTypesEntity>> retrieveAllPharmaceuticalFormTypes()
-    {
+    public ResponseEntity<List<NmPharmaceuticalFormTypesEntity>> retrieveAllPharmaceuticalFormTypes() {
         LOGGER.debug("Retrieve all pharmaceutical form types");
         return new ResponseEntity<>(pharmaceuticalFormTypesRepository.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping("/all-pharamceutical-forms")
-    public ResponseEntity<List<NmPharmaceuticalFormsEntity>> retrieveAllPharmaceuticalFormsByTypeId(@RequestParam(value = "typeId") Integer typeId)
-    {
+    public ResponseEntity<List<NmPharmaceuticalFormsEntity>> retrieveAllPharmaceuticalFormsByTypeId(@RequestParam(value = "typeId") Integer typeId) {
         LOGGER.debug("Retrieve all pharmaceutical forms by type");
         NmPharmaceuticalFormTypesEntity typesEntity = new NmPharmaceuticalFormTypesEntity();
         typesEntity.setId(typeId);
         return new ResponseEntity<>(pharmaceuticalFormsRepository.findByType(typesEntity), HttpStatus.OK);
+    }
+
+    @RequestMapping("/search-pharamceutical-forms-by-descr")
+    public ResponseEntity<List<NmPharmaceuticalFormsEntity>> getPharmaceuticalFormsByDesc(String partialDescr) {
+        LOGGER.debug("Retrieve all pharmaceutical forms by name " + partialDescr);
+        return new ResponseEntity<>(pharmaceuticalFormsRepository.findByDescriptionStartingWithIgnoreCase(partialDescr), HttpStatus.OK);
     }
 
 
@@ -129,60 +137,70 @@ public class AdministrationController
     }
 
     @RequestMapping("/all-active-substances")
-    public ResponseEntity<List<NmActiveSubstancesEntity>> retrieveAllActiveSubstances()
-    {
+    public ResponseEntity<List<NmActiveSubstancesEntity>> retrieveAllActiveSubstances() {
         LOGGER.debug("Retrieve all active substances");
         return new ResponseEntity<>(activeSubstancesRepository.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping("/all-units-of-measurement")
-    public ResponseEntity<List<NmUnitsOfMeasurementEntity>> retrieveAllUnitsOfMeasurement()
-    {
+    public ResponseEntity<List<NmUnitsOfMeasurementEntity>> retrieveAllUnitsOfMeasurement() {
         LOGGER.debug("Retrieve all units of measurement");
         return new ResponseEntity<>(unitsOfMeasurementRepository.findAll(), HttpStatus.OK);
     }
 
+    @RequestMapping("/all-medicament-forms")
+    public ResponseEntity<List<NmMedicamentFormsEntity>> retrieveAllMedicamentForms() {
+        LOGGER.debug("Retrieve all medicament forms");
+        return new ResponseEntity<>(medicamentFormsRepository.findAll(), HttpStatus.OK);
+    }
+
     @RequestMapping("/all-service-charges")
-    public ResponseEntity<List<ServiceChargesEntity>> retrieveAllServiceCharges()
-    {
+    public ResponseEntity<List<ServiceChargesEntity>> retrieveAllServiceCharges() {
         LOGGER.debug("Retrieve service charges");
         return new ResponseEntity<>(serviceChargesRepositorys.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/generate-receipt-nr")
-    public ResponseEntity<Integer> generateReceiptNr()
-    {
+    public ResponseEntity<Integer> generateReceiptNr() {
         return new ResponseEntity<>(generateReceiptNumberService.getReceiptNr(), HttpStatus.OK);
     }
 
     @RequestMapping("/all-international-names")
-    public ResponseEntity<List<NmInternationalMedicamentNameEntity>> retrieveAllInternationalNames()
-    {
+    public ResponseEntity<List<NmInternationalMedicamentNameEntity>> retrieveAllInternationalNames() {
         LOGGER.debug("Retrieve all international medicament names");
         return new ResponseEntity<>(internationalMedicamentNameRepository.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping("/all-employees")
-    public ResponseEntity<List<NmEmployeesEntity>> retrieveAllEmployees()
-    {
+    public ResponseEntity<List<NmEmployeesEntity>> retrieveAllEmployees() {
         LOGGER.debug("Retrieve all employees");
         return new ResponseEntity<>(employeeRepository.findAll(), HttpStatus.OK);
     }
 
+    @RequestMapping("/employee-by-id")
+    public ResponseEntity<NmEmployeesEntity> retrieveEmployeeById(String id) {
+        LOGGER.debug("Retrieve employee by id" + id);
+        return new ResponseEntity<>(employeeRepository.findById(Integer.valueOf(id)).get(), HttpStatus.OK);
+    }
+
     @RequestMapping("/all-medicament-types")
-    public ResponseEntity<List<NmMedicamentTypeEntity>> retrieveAllMedicamentTypes()
-    {
+    public ResponseEntity<List<NmMedicamentTypeEntity>> retrieveAllMedicamentTypes() {
         LOGGER.debug("Retrieve all medicament types");
         return new ResponseEntity<>(medicamentTypeRepository.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping("/all-manufactures")
-    public ResponseEntity<List<NmManufacturesEntity>> retrieveAllManufactures()
-    {
+    public ResponseEntity<List<NmManufacturesEntity>> retrieveAllManufactures() {
         LOGGER.debug("Retrieve all manufactures");
         return new ResponseEntity<>(manufactureRepository.findAll(), HttpStatus.OK);
     }
-    
+
+    @RequestMapping("/search-manufactures-by-name")
+    public ResponseEntity<List<NmManufacturesEntity>> getManufacturesByName(String partialName) {
+        LOGGER.debug("Retrieve manufacturers by name");
+        return new ResponseEntity<>(manufactureRepository.findByDescriptionStartingWithIgnoreCase(partialName), HttpStatus.OK);
+    }
+
     @GetMapping("/countries")
     public ResponseEntity<List<GetCountriesMinimalProjection>> retrieveCountries() {
         LOGGER.debug("Retrieve all Countries");
@@ -190,9 +208,8 @@ public class AdministrationController
     }
 
     @RequestMapping("/send-email")
-    public ResponseEntity<Void> sendEmail(@RequestParam(value = "title") String title,@RequestParam(value = "content") String content,
-                                          @RequestParam(value = "mailAddress") String mailAddress) throws CustomException
-    {
+    public ResponseEntity<Void> sendEmail(@RequestParam(value = "title") String title, @RequestParam(value = "content") String content,
+                                          @RequestParam(value = "mailAddress") String mailAddress) throws CustomException {
         LOGGER.debug("send email");
         SimpleMailMessage message = new SimpleMailMessage();
         message.setSubject(title);
@@ -201,25 +218,27 @@ public class AdministrationController
 
         try {
             mailSender.send(message);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new CustomException("Could not send message" + e.getMessage());
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping("/all-investigators")
-    public ResponseEntity<List<NmInvestigatorsEntity>> retrieveAllInvestigators()
-    {
+    public ResponseEntity<List<NmInvestigatorsEntity>> retrieveAllInvestigators() {
         LOGGER.debug("Retrieve all investigators");
         return new ResponseEntity<>(investigatorRepository.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping("/all-medical-institutions")
-    public ResponseEntity<List<NmMedicalInstitutionsEntity>> retrieveMedicalInstitutions()
-    {
+    public ResponseEntity<List<NmMedicalInstitutionsEntity>> retrieveMedicalInstitutions() {
         LOGGER.debug("Retrieve all investigators");
         return new ResponseEntity<>(medicalInstitutionsRepository.findAll(), HttpStatus.OK);
+    }
+
+    @RequestMapping("/all-atc-codes-by-code")
+    public ResponseEntity<List<NmAtcCodesEntity>> retrieveAtcCodeByCode(String partialCode) {
+        LOGGER.debug("Retrieve all ATC codes by code " + partialCode);
+        return new ResponseEntity<>(nmAtcCodesRepository.findByCodeStartingWithIgnoreCase(partialCode), HttpStatus.OK);
     }
 }

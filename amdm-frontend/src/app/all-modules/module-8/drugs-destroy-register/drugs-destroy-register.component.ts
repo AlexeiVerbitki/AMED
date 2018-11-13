@@ -7,7 +7,7 @@ import {LicenseService} from "../../../shared/service/license/license.service";
 import {MatDialog} from "@angular/material";
 import {AuthService} from "../../../shared/service/authetication.service";
 import {Document} from "../../../models/document";
-import {ConfirmationDialogComponent} from "../../../confirmation-dialog/confirmation-dialog.component";
+import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
 import {catchError, debounceTime, distinctUntilChanged, filter, flatMap, map, switchMap, tap} from "rxjs/operators";
 import {MedicamentService} from "../../../shared/service/medicament.service";
 import {AnnihilationService} from "../../../shared/service/annihilation/annihilation.service";
@@ -19,7 +19,9 @@ import {AnnihilationService} from "../../../shared/service/annihilation/annihila
 })
 export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
 
-    companii: any[];
+    companii: Observable<any[]>;
+    loadingCompany : boolean = false;
+    companyInputs = new Subject<string>();
     private subscriptions: Subscription[] = [];
     docs: Document [] = [];
     rFormSubbmitted: boolean = false;
@@ -64,13 +66,6 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
             )
         );
 
-        this.subscriptions.push(
-            this.administrationService.getAllCompaniesMinimal().subscribe(data => {
-                    this.companii = data;
-                }
-            )
-        );
-
         this.medicamente =
             this.medInputs.pipe(
                 filter((result: string) => {
@@ -86,6 +81,26 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
 
                     this.medicamentService.getMedicamentNamesAndCodeList(term).pipe(
                         tap(() => this.medLoading = false)
+                    )
+                )
+            );
+
+
+        this.companii =
+            this.companyInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) return true;
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingCompany = true;
+
+                }),
+                flatMap(term =>
+
+                    this.administrationService.getCompanyNamesAndIdnoList(term).pipe(
+                        tap(() => this.loadingCompany = false)
                     )
                 )
             );
@@ -193,6 +208,8 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
 
         modelToSubmit.currentStep = 'E';
         modelToSubmit.startDate = this.startDate;
+        modelToSubmit.initiator = this.authService.getUserName();
+        modelToSubmit.assignedUser = this.authService.getUserName();
 
 
         this.subscriptions.push(
