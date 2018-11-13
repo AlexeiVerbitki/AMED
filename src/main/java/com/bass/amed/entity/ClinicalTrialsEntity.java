@@ -125,7 +125,7 @@ public class ClinicalTrialsEntity {
         this.referenceProduct = referenceProduct;
     }
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "placebo_id")
     public ImportMedNotRegisteredEntity getPlacebo() {
         return placebo;

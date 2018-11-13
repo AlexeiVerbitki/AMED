@@ -378,8 +378,49 @@
                         </div>
                     </div>
                 </div>
-                <hr>
             </div>
+            <hr>
+
+            <div [formGroup]="placeboFormn">
+                <h5 class="text-center font-weight-bold">Placebo</h5>
+                <div class="row">
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Nume" formControlName="name">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="number" matInput placeholder="Doza" formControlName="dose">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <ng-select [items]="measureUnitsPlacebo"
+                                       bindLabel="description"
+                                       placeholder="Unitati de masura"
+                                       formControlName="volumeQuantityMeasurement">
+                                <ng-template ng-option-tmp let-item="item">
+                                    {{item.description}}
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Calea de administrae" formControlName="administratingMode">
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <hr>
 
 
             <h5 class="text-center font-weight-bold">Lista de investigatori</h5>

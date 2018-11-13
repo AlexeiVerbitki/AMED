@@ -51,13 +51,16 @@
         <hr>
 
         <app-document [documents]="docs" [isDisabled]="isWaitingStep.value"
-                      [nrCerere]="analyzeClinicalTrailForm.get('requestNumber').value" [dcTypes]="docTypes"></app-document>
+                      [nrCerere]="analyzeClinicalTrailForm.get('requestNumber').value"
+                      [dcTypes]="docTypes"></app-document>
         <hr>
 
         <h5 class="text-center font-weight-bold">Documente de iesire</h5>
         <hr>
         <div class="position-button">
-            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="requestAdditionalData()">Solicitare date aditionale</button>
+            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
+                    (click)="requestAdditionalData()">Solicitare date aditionale
+            </button>
         </div>
         <table class="table table-widths-lg text-center">
             <thead class="black white-text">
@@ -75,34 +78,17 @@
                 <th scope="row">{{ doc.status }}</th>
                 <!--<th scope="row"><mat-checkbox *ngIf="doc.docType.category=='RA'" #checkBoxResponse [checked]="doc.responseReceived" (change)="checkResponseReceived(doc,checkBoxResponse)">Raspuns primit</mat-checkbox></th>-->
                 <td>
-                    <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(doc)">Vizualizare</button>
-                    <button class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(doc)">Stergere</button>
+                    <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(doc)">
+                        Vizualizare
+                    </button>
+                    <button class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(doc)">
+                        Stergere
+                    </button>
                 </td>
             </tr>
             </tbody>
         </table>
         <hr>
-
-        <!--<div class="row">-->
-            <!--<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect-->
-                    <!--(click)="requestAdditionalData()">Solicitare date aditionale-->
-            <!--</button>-->
-        <!--</div>-->
-        <!--<div class="row">-->
-            <!--<table class="table table-widths text-center">-->
-                <!--<thead class="black white-text">-->
-                <!--<tr>-->
-                    <!--<th class="w-25" scope="col">Nr. scrisoare</th>-->
-                    <!--<th class="w-25" scope="col">Data creare</th>-->
-                    <!--<th class="w-25" scope="col">Titlu</th>-->
-                    <!--<th class="w-25" scope="col">E-mail</th>-->
-                <!--</tr>-->
-                <!--</thead>-->
-                <!--<tbody>-->
-                <!--</tbody>-->
-            <!--</table>-->
-        <!--</div>-->
-        <!--<hr>-->
 
         <div formGroupName="clinicalTrails">
             <div class="col-md-12">
@@ -213,7 +199,8 @@
             <div class="row">
                 <div class="col-10">
                     <div class="md-form-modified" [formGroup]="addMediacalInstitutionForm">
-                        <ng-select id="allMediacalInstitutions" name="allMediacalInstitutions" [items]="allMediacalInstitutionsList"
+                        <ng-select id="allMediacalInstitutions" name="allMediacalInstitutions"
+                                   [items]="allMediacalInstitutionsList"
                                    bindLabel="name"
                                    placeholder="Instituţia medicala"
                                    formControlName="medicalInstitution"
@@ -262,42 +249,36 @@
                     <div class="col-2">
                         <div class="md-form-modified">
                             <mat-form-field>
-                                <input type="text" matInput [matAutocomplete]="auto" placeholder="Nume medicament"
-                                       formControlName="searchField">
+                                <input type="text" matInput placeholder="Nume" formControlName="name">
                             </mat-form-field>
-                            <mat-autocomplete #auto="matAutocomplete">
-                                <mat-option (onSelectionChange)="onMedicamentsSearchSelect(option)"
-                                            *ngFor="let option of medicamentSearches" [value]="option.name">{{
-                                    option.name + ' _' }}
-                                </mat-option>
-                            </mat-autocomplete>
                         </div>
                     </div>
                     <div class="col-2">
                         <div class="md-form-modified">
                             <mat-form-field>
-                                <input type="text" matInput placeholder="Producatorul" formControlName="producer">
+                                <input type="text" matInput placeholder="Producatorul" formControlName="manufacture">
                             </mat-form-field>
                         </div>
                     </div>
-                    <div class="col-2">
+                    <div class="col-1">
                         <div class="md-form-modified">
                             <mat-form-field>
                                 <input type="text" matInput placeholder="Doza" formControlName="dose">
                             </mat-form-field>
                         </div>
                     </div>
-                    <div class="col-2">
+                    <div class="col-1">
                         <div class="md-form-modified">
                             <mat-form-field>
-                                <input type="text" matInput placeholder="Grupa farmaceutica" formControlName="group">
+                                <input type="text" matInput placeholder="Unitati de masura"
+                                       formControlName="volumeQuantityMeasurement">
                             </mat-form-field>
                         </div>
                     </div>
                     <div class="col-2">
                         <div class="md-form-modified">
                             <mat-form-field>
-                                <input type="text" matInput placeholder="Forma farmaceutică"
+                                <input type="text" matInput placeholder="Forma farmaceutica"
                                        formControlName="pharmaceuticalForm">
                             </mat-form-field>
                         </div>
@@ -305,8 +286,16 @@
                     <div class="col-2">
                         <div class="md-form-modified">
                             <mat-form-field>
+                                <input type="text" matInput placeholder="Forma farmaceutica"
+                                       formControlName="atcCode">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
                                 <input type="text" matInput placeholder="Calea de administrare"
-                                       formControlName="administeringMode">
+                                       formControlName="administratingMode">
                             </mat-form-field>
                         </div>
                     </div>
@@ -315,26 +304,75 @@
             </div>
 
             <div [formGroup]="referenceProductFormn">
-                <h5 class="text-center font-weight-bold">Produsul de referinţă</h5>
+                <h5 class="text-center font-weight-bold">Produs de referinta</h5>
                 <div class="row">
                     <div class="col-2">
                         <div class="md-form-modified">
                             <mat-form-field>
-                                <input type="text" matInput [matAutocomplete]="auto2" placeholder="Nume medicament"
-                                       formControlName="searchField">
+                                <input type="text" matInput placeholder="Nume" formControlName="name">
                             </mat-form-field>
-                            <mat-autocomplete #auto2="matAutocomplete">
-                                <mat-option (onSelectionChange)="onReferenceProductSearchSelect(option)"
-                                            *ngFor="let option of referenceProductSearches" [value]="option.name">{{
-                                    option.name + 'hz' }}
-                                </mat-option>
-                            </mat-autocomplete>
                         </div>
                     </div>
                     <div class="col-2">
                         <div class="md-form-modified">
                             <mat-form-field>
-                                <input type="text" matInput placeholder="Producatorul" formControlName="producer">
+                                <input type="text" matInput placeholder="Producatorul"
+                                       formControlName="manufacture">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Doza" formControlName="dose">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Unitati de masura"
+                                       formControlName="volumeQuantityMeasurement">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="col-2">
+                            <div class="md-form-modified">
+                                <mat-form-field>
+                                    <input type="text" matInput placeholder="Forma farmaceutica"
+                                           formControlName="pharmaceuticalForm">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Forma farmaceutica"
+                                       formControlName="atcCode">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Calea de administrare"
+                                       formControlName="administratingMode">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+
+            <div [formGroup]="placeboFormn">
+                <h5 class="text-center font-weight-bold">Produs de referinta</h5>
+                <div class="row">
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Nume" formControlName="name">
                             </mat-form-field>
                         </div>
                     </div>
@@ -345,18 +383,11 @@
                             </mat-form-field>
                         </div>
                     </div>
-                    <div class="col-2">
+                    <div class="col-1">
                         <div class="md-form-modified">
                             <mat-form-field>
-                                <input type="text" matInput placeholder="Grupa farmaceutica" formControlName="group">
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <div class="col-2">
-                        <div class="md-form-modified">
-                            <mat-form-field>
-                                <input type="text" matInput placeholder="Forma farmaceutică"
-                                       formControlName="pharmaceuticalForm">
+                                <input type="text" matInput placeholder="Unitati de masura"
+                                       formControlName="volumeQuantityMeasurement">
                             </mat-form-field>
                         </div>
                     </div>
@@ -364,11 +395,12 @@
                         <div class="md-form-modified">
                             <mat-form-field>
                                 <input type="text" matInput placeholder="Calea de administrare"
-                                       formControlName="administeringMode">
+                                       formControlName="administratingMode">
                             </mat-form-field>
                         </div>
                     </div>
                 </div>
+
                 <hr>
             </div>
 
@@ -425,15 +457,21 @@
                          (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
 
 
-            <button type="button" (click)="disableEnableForm()" mdbWavesEffect hidden="true">Disable/Enable form</button>
+            <button type="button" (click)="disableEnableForm()" mdbWavesEffect hidden="true">Disable/Enable form
+            </button>
         </div>
 
     </form>
 
     <div class="text-center">
-        <button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>
-        <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="onSubmit()" [disabled]=this.disabledState>Urmatorul pas</button>
-        <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>
+        <button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date
+        </button>
+        <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="onSubmit()"
+                [disabled]=this.disabledState>Urmatorul pas
+        </button>
+        <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">
+            Intrerupere
+        </button>
     </div>
 
 </div>

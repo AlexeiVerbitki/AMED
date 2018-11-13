@@ -16,7 +16,6 @@ import {AdditionalDataDialogComponent} from "../dialog/additional-data-dialog/ad
 import {AuthService} from "../../../shared/service/authetication.service";
 import {TaskService} from "../../../shared/service/task.service";
 import {LoaderService} from "../../../shared/service/loader.service";
-import {subscriptionLogsToBeFn} from "rxjs/internal/testing/TestScheduler";
 
 @Component({
     selector: 'app-a-analiza',
@@ -47,9 +46,9 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
     isWaitingStep: BehaviorSubject<boolean>;
 
     medicamentForm: FormGroup;
-    medicamentSearches: any[] = [];
     referenceProductFormn: FormGroup;
-    referenceProductSearches: any[] = [];
+    placeboFormn: FormGroup;
+
 
     //MediacalInstitutions controls
     addMediacalInstitutionForm: FormGroup;
@@ -94,8 +93,8 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             'type': [],
             'typeCode': [''],
             'requestHistories': [],
-            'initiator':[null],
-            'assignedUser':[null],
+            'initiator': [null],
+            'assignedUser': [null],
             'receipts': [],
             'paymentOrders': [],
             'outputDocuments': [],
@@ -115,25 +114,50 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                 'investigators': [],
                 'status': ['P'],
                 'pharmacovigilance': [],
+                'placebo': []
             })
         });
 
         this.medicamentForm = this.fb.group({
-            'searchField': [{value: '', disabled: true}],
-            'producer': [{value: '', disabled: true}],
-            'dose': [{value: '', disabled: true}],
-            'group': [{value: '', disabled: true}],
-            'pharmaceuticalForm': [{value: '', disabled: true}],
-            'administeringMode': [{value: '', disabled: true}],
+            'id': [null],
+            'name': [{value: null, disabled: true}],
+            'registrationNumber': [null],
+            'registrationDate': [new Date()],
+            'internationalMedicamentName': [null],
+            'manufacture': [{value: null, disabled: true}],
+            'dose': [{value: null, disabled: true}],
+            'volumeQuantityMeasurement': [{value: null, disabled: true}],
+            'pharmaceuticalForm': [{value: null, disabled: true}],
+            'atcCode': [{value: null, disabled: true}],
+            'administratingMode': [{value: null, disabled: true}]
         });
 
         this.referenceProductFormn = this.fb.group({
-            'searchField': [{value: '', disabled: true}],
-            'producer': [{value: '', disabled: true}],
-            'dose': [{value: '', disabled: true}],
-            'group': [{value: '', disabled: true}],
-            'pharmaceuticalForm': [{value: '', disabled: true}],
-            'administeringMode': [{value: '', disabled: true}],
+            'id': [null],
+            'name': [{value: null, disabled: true}],
+            'registrationNumber': [null],
+            'registrationDate': [new Date()],
+            'internationalMedicamentName': [null],
+            'manufacture': [{value: null, disabled: true}],
+            'dose': [{value: null, disabled: true}],
+            'volumeQuantityMeasurement': [{value: null, disabled: true}],
+            'pharmaceuticalForm': [{value: null, disabled: true}],
+            'atcCode': [{value: null, disabled: true}],
+            'administratingMode': [{value: null, disabled: true}]
+        });
+
+        this.placeboFormn = this.fb.group({
+            'id': [null],
+            'name': [{value: null, disabled: true}],
+            'registrationNumber': [null],
+            'registrationDate': [new Date()],
+            'internationalMedicamentName': [null],
+            'manufacture': [{value: null, disabled: true}],
+            'dose': [{value: null, disabled: true}],
+            'volumeQuantityMeasurement': [{value: null, disabled: true}],
+            'pharmaceuticalForm': [{value: null, disabled: true}],
+            'atcCode': [{value: null, disabled: true}],
+            'administratingMode': [{value: null, disabled: true}]
         });
 
         this.addInvestigatorForm = this.fb.group({
@@ -151,13 +175,11 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         this.loadDocTypes();
     }
 
-    loadDocTypes(){
+    loadDocTypes() {
         this.subscriptions.push(
-            this.taskService.getRequestStepByIdAndCode('3','A').subscribe(step => {
-                    console.log('getRequestStepByIdAndCode', step);
+            this.taskService.getRequestStepByIdAndCode('3', 'A').subscribe(step => {
                     this.subscriptions.push(
                         this.administrationService.getAllDocTypes().subscribe(data => {
-                                console.log('getAllDocTypes', data);
                                 this.docTypes = data;
                                 this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
                             },
@@ -189,8 +211,6 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
             this.subscriptions.push(this.requestService.getClinicalTrailRequest(params['id']).subscribe(data => {
                     this.initialData = data;
-                    console.log('clinicalTrails', data);
-
                     this.analyzeClinicalTrailForm.get('id').setValue(data.id);
                     this.analyzeClinicalTrailForm.get('requestNumber').setValue(data.requestNumber);
                     this.analyzeClinicalTrailForm.get('startDate').setValue(new Date(data.startDate));
@@ -214,13 +234,24 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                     //this.docs.forEach(doc => doc.isOld = true);
 
                     if (data.clinicalTrails.medicament !== null) {
-                        this.medicamentForm.get('searchField').setValue(data.clinicalTrails.medicament.name);
-                        this.fillMedicamentData(data.clinicalTrails.medicament);
+                        this.medicamentForm.setValue(data.clinicalTrails.medicament);
+                        this.medicamentForm.get('manufacture').setValue(data.clinicalTrails.medicament.manufacture.description);
+                        this.medicamentForm.get('volumeQuantityMeasurement').setValue(data.clinicalTrails.medicament.volumeQuantityMeasurement.description);
+                        this.medicamentForm.get('pharmaceuticalForm').setValue(data.clinicalTrails.medicament.pharmaceuticalForm.description);
+                        this.medicamentForm.get('atcCode').setValue(data.clinicalTrails.medicament.atcCode.description);
                     }
 
                     if (data.clinicalTrails.referenceProduct !== null) {
-                        this.referenceProductFormn.get('searchField').setValue(data.clinicalTrails.referenceProduct.name);
-                        this.fillReferenceProductData(data.clinicalTrails.referenceProduct);
+                        this.referenceProductFormn.setValue(data.clinicalTrails.referenceProduct);
+                        this.referenceProductFormn.get('manufacture').setValue(data.clinicalTrails.referenceProduct.manufacture.description);
+                        this.referenceProductFormn.get('volumeQuantityMeasurement').setValue(data.clinicalTrails.referenceProduct.volumeQuantityMeasurement.description);
+                        this.referenceProductFormn.get('pharmaceuticalForm').setValue(data.clinicalTrails.referenceProduct.pharmaceuticalForm.description);
+                        this.referenceProductFormn.get('atcCode').setValue(data.clinicalTrails.referenceProduct.atcCode.description);
+                    }
+
+                    if (data.clinicalTrails.placebo !== null) {
+                        this.placeboFormn.setValue(data.clinicalTrails.placebo);
+                        this.placeboFormn.get('volumeQuantityMeasurement').setValue(data.clinicalTrails.placebo.volumeQuantityMeasurement.description);
                     }
 
                     this.investigatorsList = data.clinicalTrails.investigators;
@@ -231,8 +262,6 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
                     this.loadInvestigatorsList();
                     this.loadMedicalInstitutionsList();
-
-                    console.log('clinicalTrailsForm', this.analyzeClinicalTrailForm);
                 },
                 error => console.log(error)
             ))
@@ -313,44 +342,6 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         this.analyzeClinicalTrailForm.get('clinicalTrails.provenance').setValue(this.provenanceList[mrChange.value - 3]);
     }
 
-    fillMedicamentData(data: any) {
-        this.medicamentForm.get('producer').setValue(data.manufacture === null ? 'Un producatr' : data.manufacture.longDescription);
-        let doze = data.dose === null ? '' : data.dose;
-        let unitOfMeasure = data.unitsOfMeasurement === null ? '' : data.unitsOfMeasurement.description;
-        this.medicamentForm.get('dose').setValue(doze + unitOfMeasure);
-        this.medicamentForm.get('group').setValue(data.group === null ? '' : data.group.description === null ? '' : data.group.description);
-        this.medicamentForm.get('pharmaceuticalForm').setValue(data.pharmaceuticalForm === null ? '' : data.pharmaceuticalForm.description);
-        this.medicamentForm.get('administeringMode').setValue(data.administeringMode === null ? 'O cale de administrare' : data.administeringMode);
-        this.analyzeClinicalTrailForm.get('clinicalTrails.medicament').setValue(data);
-    }
-
-    onMedicamentsSearchSelect(option) {
-        this.subscriptions.push(this.medicamentService.getMedicamentById(option.id).subscribe(data => {
-                this.fillMedicamentData(data);
-            },
-            error => console.log(error)
-        ))
-    }
-
-    onReferenceProductSearchSelect(option) {
-        this.subscriptions.push(this.medicamentService.getMedicamentById(option.id).subscribe(data => {
-                this.fillReferenceProductData(data);
-            },
-            error => console.log(error)
-        ))
-    }
-
-    fillReferenceProductData(data: any) {
-        this.referenceProductFormn.get('producer').setValue(data.manufacture === null ? 'Un producatr' : data.manufacture.longDescription);
-        let doze = data.dose === null ? '' : data.dose;
-        let unitOfMeasure = data.unitsOfMeasurement === null ? '' : data.unitsOfMeasurement.description;
-        this.referenceProductFormn.get('dose').setValue(doze + unitOfMeasure);
-        this.referenceProductFormn.get('group').setValue(data.group === null ? '' : data.group.description === null ? '' : data.group.description);
-        this.referenceProductFormn.get('pharmaceuticalForm').setValue(data.pharmaceuticalForm === null ? '' : data.pharmaceuticalForm.description);
-        this.referenceProductFormn.get('administeringMode').setValue(data.administeringMode === null ? 'O cale de administrare' : data.administeringMode);
-        this.analyzeClinicalTrailForm.get('clinicalTrails.referenceProduct').setValue(data);
-    }
-
     paymentTotalUpdate(event) {
         this.paymentTotal = event.valueOf();
     }
@@ -368,12 +359,12 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
         dialogRef2.afterClosed().subscribe(result => {
             if (result.success) {
-                result.docType = this.docTypes.find(doc=>doc.category==='SL');
+                result.docType = this.docTypes.find(doc => doc.category === 'SL');
                 console.log('find doc type', result.docType);
                 this.initialData.outputDocuments.push(result);
                 this.subscriptions.push(this.requestService.addOutputDocumentRequest(this.initialData).subscribe(data => {
-                    console.log('outDocuments', data);
-                    //this.outDocuments = data.body.clinicalTrails.outputDocuments;
+                        console.log('outDocuments', data);
+                        //this.outDocuments = data.body.clinicalTrails.outputDocuments;
                     }, error => console.log(error))
                 );
             }
@@ -424,7 +415,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                 }
                 )
             );
-        } else if(document.docType.category == 'DD'){
+        } else if (document.docType.category == 'DD') {
             this.subscriptions.push(this.documentService.viewDD(document.number).subscribe(data => {
                     let file = new Blob([data], {type: 'application/pdf'});
                     var fileURL = URL.createObjectURL(file);

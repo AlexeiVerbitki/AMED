@@ -135,8 +135,6 @@ public class MedicamentAnnihilationRequestService
             r.getMedicamentAnnihilation().getCommisions().clear();
             r.getMedicamentAnnihilation().getCommisions().addAll(request.getMedicamentAnnihilation().getCommisions());
 
-            r.getMedicamentAnnihilation().setNote(request.getMedicamentAnnihilation().getNote());
-
             r.setCurrentStep(request.getCurrentStep());
             r.setAssignedUser(request.getAssignedUser());
 
@@ -189,8 +187,6 @@ public class MedicamentAnnihilationRequestService
             //Update commisions
             r.getMedicamentAnnihilation().getCommisions().clear();
             r.getMedicamentAnnihilation().getCommisions().addAll(request.getMedicamentAnnihilation().getCommisions());
-
-            r.getMedicamentAnnihilation().setNote(request.getMedicamentAnnihilation().getNote());
 
             em.merge(r);
 

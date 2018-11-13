@@ -80,14 +80,6 @@
                 <div class="row">
 
 
-                    <!--<div class="col-md-4">-->
-                        <!--<div class="md-form">-->
-                            <!--<input id="seller" mdbInputDirective type="text" class="form-control" formControlName="seller">-->
-                            <!--<label for="seller">Vînzător-->
-                                <!--<span class="text-danger">*</span>-->
-                            <!--</label>-->
-                        <!--</div>-->
-                    <!--</div>-->
                     <div class="col-md-4">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
@@ -100,14 +92,15 @@
                     </div>
 
 
-                    <!--<div class="col-md-4">-->
-                    <!--<div class="md-form">-->
-                    <!--<input id="sellerTaraAdresa" mdbInputDirective type="text" class="form-control" formControlName="sellerTaraAdresa">-->
-                    <!--<label for="sellerTaraAdresa">Ţara şi adresa vînzătorului-->
-                    <!--<span class="text-danger">*</span>-->
-                    <!--</label>-->
-                    <!--</div>-->
-                    <!--</div>-->
+                    <div class="col-md-4">
+                        <div class="md-form">
+                            <input id="sellerTaraAdresa" mdbInputDirective type="text" class="form-control"
+                            value={{evaluateImportForm.value.company.name}} [attr.disabled]="true">
+                            <label for="sellerTaraAdresa">Ţara şi adresa vînzătorului
+                                <span class="text-danger">*</span>
+                            </label>
+                        </div>
+                    </div>
                     <div class="col-md-4">
                         <div class="md-form">
                             <input id="basisForImport" mdbInputDirective type="text" class="form-control" formControlName="basisForImport">

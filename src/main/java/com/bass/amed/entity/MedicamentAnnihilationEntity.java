@@ -11,7 +11,6 @@ import java.util.Set;
 public class MedicamentAnnihilationEntity
 {
     private Integer id;
-    private String note;
     private Set<PaymentOrdersEntity> paymentOrders;
     private Set<ReceiptsEntity> receipts;
     private List<MedicamentAnnihilationMedsEntity> medicamentsMedicamentAnnihilationMeds;
@@ -31,19 +30,6 @@ public class MedicamentAnnihilationEntity
     {
         this.id = id;
     }
-
-    @Basic
-    @Column(name = "note")
-    public String getNote()
-    {
-        return note;
-    }
-
-    public void setNote(String note)
-    {
-        this.note = note;
-    }
-
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
     @JoinTable(name = "medicament_annihilation_payment_orders", joinColumns = {
@@ -132,7 +118,6 @@ public class MedicamentAnnihilationEntity
         if (o == null || getClass() != o.getClass()) return false;
         MedicamentAnnihilationEntity that = (MedicamentAnnihilationEntity) o;
         return Objects.equals(id, that.id) &&
-                Objects.equals(note, that.note) &&
                 Objects.equals(paymentOrders, that.paymentOrders) &&
                 Objects.equals(receipts, that.receipts) &&
                 Objects.equals(medicamentsMedicamentAnnihilationMeds, that.medicamentsMedicamentAnnihilationMeds) &&
@@ -143,6 +128,6 @@ public class MedicamentAnnihilationEntity
     @Override
     public int hashCode()
     {
-        return Objects.hash(id, note, paymentOrders, receipts, medicamentsMedicamentAnnihilationMeds, status, documents);
+        return Objects.hash(id, paymentOrders, receipts, medicamentsMedicamentAnnihilationMeds, status, documents);
     }
 }

@@ -15,7 +15,6 @@ import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.c
 import {TaskService} from "../../../shared/service/task.service";
 import {LoaderService} from "../../../shared/service/loader.service";
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
-import {NotregisteredmedService} from "../../../shared/service/notregisteredmed.service";
 
 @Component({
     selector: 'app-a-evaluarea-primara',
@@ -61,12 +60,15 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
 
     medicamentForm: FormGroup;
     referenceProductFormn: FormGroup;
+    placeboFormn: FormGroup;
 
     protected manufacturers: Observable<any[]>;
     protected loadingManufacturer: boolean = false;
     protected manufacturerInputs = new Subject<string>();
 
     protected measureUnits: any[] = [];
+    protected measureUnitsRfPr: any[] = [];
+    protected measureUnitsPlacebo: any[] = [];
     protected loadingMeasureUnits: boolean = false;
 
     protected farmForms: Observable<any[]>;
@@ -81,7 +83,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
     protected loadingManufacturerRfPr: boolean = false;
     protected manufacturerInputsRfPr = new Subject<string>();
 
-    protected measureUnitsRfPr: any[] = [];
+
 
     protected farmFormsRfPr: Observable<any[]>;
     protected loadingFarmFormsRfPr: boolean = false;
@@ -155,6 +157,20 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         }),
 
         this.referenceProductFormn = this.fb.group({
+            'id': [null],
+            'name': [null,  Validators.required],
+            'registrationNumber': [null],
+            'registrationDate': [new Date()],
+            'internationalMedicamentName': [null],
+            'manufacture': [null, Validators.required],
+            'dose':[null, Validators.required],
+            'volumeQuantityMeasurement': [null,  Validators.required],
+            'pharmaceuticalForm': [null,  Validators.required],
+            'atcCode':[null,  Validators.required],
+            'administratingMode':[null,  Validators.required]
+        }),
+
+        this.placeboFormn = this.fb.group({
             'id': [null],
             'name': [null,  Validators.required],
             'registrationNumber': [null],
@@ -305,6 +321,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
             this.administrationService.getAllUnitsOfMeasurement().subscribe(data => {
                 this.measureUnits = data;
                 this.measureUnitsRfPr = data;
+                this.measureUnitsPlacebo = data;
                 this.loadingMeasureUnits = false;
             }, error => console.log(error))
         );
@@ -378,6 +395,10 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
 
                     if (data.clinicalTrails.referenceProduct !== null) {
                         this.referenceProductFormn.setValue(data.clinicalTrails.referenceProduct);
+                    }
+
+                    if (data.clinicalTrails.placebo !== null) {
+                        this.placeboFormn.setValue(data.clinicalTrails.placebo);
                     }
 
                     this.investigatorsList = data.clinicalTrails.investigators;
@@ -491,6 +512,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
 
         formModel.clinicalTrails.medicament = this.medicamentForm.value;
         formModel.clinicalTrails.referenceProduct = this.referenceProductFormn.value;
+        formModel.clinicalTrails.placebo = this.placeboFormn.value;
 
         formModel.assignedUser = this.authService.getUserName();
         console.log("Save data", formModel);
@@ -526,6 +548,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
 
         formModel.clinicalTrails.medicament = this.medicamentForm.value;
         formModel.clinicalTrails.referenceProduct = this.referenceProductFormn.value;
+        formModel.clinicalTrails.placebo = this.placeboFormn.value;
 
         formModel.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
         formModel.requestHistories.push({
