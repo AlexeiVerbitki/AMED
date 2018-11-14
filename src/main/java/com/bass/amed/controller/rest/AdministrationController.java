@@ -69,6 +69,8 @@ public class AdministrationController {
     MedicamentFormsRepository medicamentFormsRepository;
     @Autowired
     NmAtcCodesRepository nmAtcCodesRepository;
+    @Autowired
+    ClinicalTrialsRepository clinicalTrialsRepository;
 
     @RequestMapping(value = "/generate-doc-nr")
     public ResponseEntity<Integer> generateDocNr() {
@@ -240,5 +242,11 @@ public class AdministrationController {
     public ResponseEntity<List<NmAtcCodesEntity>> retrieveAtcCodeByCode(String partialCode) {
         LOGGER.debug("Retrieve all ATC codes by code " + partialCode);
         return new ResponseEntity<>(nmAtcCodesRepository.findByCodeStartingWithIgnoreCase(partialCode), HttpStatus.OK);
+    }
+
+    @RequestMapping("/all-clinical-trails-by-cod-or-eudra")
+    public ResponseEntity<List<ClinicalTrialsEntity>> getClinicalTrailByCodeAndEudra(String partialCode) {
+        LOGGER.debug("Retrieve clinical trails by code or eudra" + partialCode);
+        return new ResponseEntity<>(clinicalTrialsRepository.getClinicalTrailByCodeOrEudra(partialCode, partialCode), HttpStatus.OK);
     }
 }

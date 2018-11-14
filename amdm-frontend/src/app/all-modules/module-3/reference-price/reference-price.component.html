@@ -16,6 +16,7 @@
                  [items]="currencies"
                  [required]="true"
                  [(ngModel)]="refPrice.currency"
+                 (change)="this.change.emit('currency')"
                  bindLabel="shortDescription"
                  placeholder="Valuta">
       </ng-select>
@@ -32,6 +33,7 @@
                  [items]="countries"
                  [required]="true"
                  [(ngModel)]="refPrice.country"
+                 (change)="this.change.emit('country')"
                  bindLabel="description"
                  placeholder="Țara de referință">
       </ng-select>
@@ -47,6 +49,7 @@
                  [items]="types"
                  [required]="true"
                  [(ngModel)]="refPrice.type"
+                 (change)="this.change.emit('type')"
                  bindLabel="description"
                  placeholder="Tipul">
       </ng-select>

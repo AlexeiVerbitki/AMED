@@ -1,35 +1,19 @@
 import {
     Component,
-    ComponentFactory,
-    ComponentFactoryResolver, ComponentRef, EventEmitter,
+    ComponentFactoryResolver,
     OnDestroy,
-    OnInit,
-    ViewChild,
-    ViewContainerRef
+    OnInit, ViewChild,
 } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Observable, Subject, Subscription} from 'rxjs';
-import {Company} from '../../../models/company';
-import {Medicament} from '../../../models/medicament';
+import {FormBuilder, FormControl, Validators} from '@angular/forms';
+import { Subscription} from 'rxjs';
 import {Document} from '../../../models/document';
-import {MatDialog} from '@angular/material';
+import {MatDialog, MatTabGroup} from '@angular/material';
 import {saveAs} from 'file-saver';
-import {ReferencePriceComponent} from "../reference-price/reference-price.component";
-import {Country} from "../../../models/country";
-import {Currency} from "../../../models/currency";
-import {ProposedPriceComponent} from "../proposed-price/proposed-price.component";
-import {UnitOfMeasure} from "../../../models/unitOfMeasure";
-import {Price} from "../../../models/price";
 import {ActivatedRoute, Router} from "@angular/router";
 import {LoaderService} from "../../../shared/service/loader.service";
-import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
 import {PriceService} from "../../../shared/service/prices.service";
+import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
 
-
-enum PriceRowType {
-    Proposed = 1 ,
-    Reference = 2
-}
 
 enum MedicamentType {
     Drug = 1,
@@ -46,59 +30,30 @@ enum MedicamentType {
 })
 export class PriceRegMedComponent implements OnInit, OnDestroy {
 
-      MAX_REFERENCE_PRICES: number = 9;
-      PriceRegForm: FormGroup;
+      requestNumber: number;
       documents: Document[] = [];
       private subscriptions: Subscription[] = [];
       private getMedSubscr: Subscription;
       private generatedDocNrSeq: any;
 
-      companies: Observable<any[]>;
-      loadingCompany : boolean = false;
-      companyInputs = new Subject<string>();
-
-      countries: Country[] = [];
-      currencies: Currency[] = [];
-      priceTypes: any[];
-
-      companyMedicaments: Observable<any[]>;
-      medInputs = new Subject<string>();
-      medLoading = false;
+      requests: any[] = [];
 
       formSubmitted: boolean;
 
-      OriginCountryPriceTypeId: number;
+      color = 'green';
 
+      @ViewChild('tabGroup') private tabGroup: MatTabGroup;
       startRecDate: Date = new Date();
 
-      @ViewChild("priceReferenceContainer", { read: ViewContainerRef }) priceReferenceContainer;
+    tabs = ['Medicamentul 1'];
+    selected = new FormControl(0);
 
-      @ViewChild("proposedPriceContainer", { read: ViewContainerRef }) proposedPriceContainer;
 
-      priceReferenceComponentRef: ComponentRef<ReferencePriceComponent> [] = [];
-      proposedPriceComponentRef: ComponentRef<ProposedPriceComponent> [] = [];
-
-      proposedPriceRefIndex: number = 0;
-      priceRefIndex: number = 0;
-
-      componentFactory: ComponentFactory<ReferencePriceComponent> = this.resolver.resolveComponentFactory(ReferencePriceComponent);
-      propPriceComponentFactory: ComponentFactory<ProposedPriceComponent> = this.resolver.resolveComponentFactory(ProposedPriceComponent);
-
-    medCode:                    string = '';
-    internationalName:          string = '';
-    termsOfValidity:            number;
-    dose:                       number;
-    expirationDate:             string = '';
-    unitsOfMeasurement:         string = '';
-    unitsQuantityMeasurement:   string = '';
-    storageQuantityMeasurement: string = '';
-    volumeQuantityMeasurement: string = '';
-    storageQuantity:            number;
-    volumeProp:                 number;
-    pricesRequestId:            number;
-    unitsQuantity:              number;
-    medicamentType:             any = {code:MedicamentType.Generic, description: 'Generic'};
-    MedType = MedicamentType;
+    mandatoryDocuments: any[] = [{
+        description: 'Cerere',
+        number: undefined,
+        status: "Nu este atasat"
+    }];
 
     updateRouteId: string;
 
@@ -116,130 +71,25 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
                   this.updateRouteId = params.id;
               }
           }));
-
-        this.PriceRegForm = fb.group({
-            id:                 [null],
-            initiator:          [null],
-            assignedUser:       [null],
-            requestNumber:      {disabled: true, value: null},
-            startDate:          {disabled: false, value: new Date()},
-            company:            [null, Validators.required],
-            currentStep:        ['R'],
-            medicament:         [null, Validators.required],
-            requestHistories:   [],
-            type:
-                fb.group({
-                    code: ['PMED', Validators.required]
-                }),
-        });
   }
 
   ngOnInit() {
-      // this.subscriptions.push(
-      //     this.priceService.getCompanies().subscribe(companiesData => {
-      //             this.companies = companiesData;
-      //         },
-      //         error => {console.log(error); alert(error);}
-      //     ));
 
-      this.companies =
-          this.companyInputs.pipe(
-              filter((result: string) => {
-                  if (result && result.length > 2) return true;
-              }),
-              debounceTime(400),
-              distinctUntilChanged(),
-              tap((val: string) => {
-                  this.loadingCompany = true;
-
-              }),
-              flatMap(term =>
-
-                  this.priceService.getCompanyNamesAndIdnoList(term).pipe(
-                      tap(() => this.loadingCompany = false)
-                  )
-              )
-          );
-
-      this.subscriptions.push(
-          this.priceService.getCountries().subscribe(countriesData => {
-                  this.countries = countriesData;
-              },
-              error => console.log(error)
-          ));
-
-      this.subscriptions.push(
-          this.priceService.getCurrenciesShort().subscribe(currenciesData => {
-                  this.currencies = currenciesData;
-              },
-              error => console.log(error)
-          ));
-
-      this.subscriptions.push(
-          this.priceService.getAllPriceTypes().subscribe(priceTypes => {
-                  this.priceTypes = priceTypes;
-                  for(let p of this.priceTypes) {
-                      if(p.description == 'În țara de origine') {
-                          this.OriginCountryPriceTypeId = p.id;
-                          break;
-                      }
-                  }
-              },
-              error => console.log(error)
-          ));
-
-      this.companyMedicaments =
-          this.medInputs.pipe(
-              filter((result: string) => {
-                  if (result && result.length > 2) return true;
-              }),
-              debounceTime(400),
-              distinctUntilChanged(),
-              tap((val: string) => {
-                  this.medLoading = true;
-
-              }),
-              flatMap(term =>
-
-                  this.priceService.getMedicamentNamesAndCodeList(term).pipe(
-                      tap(() => this.medLoading = false)
-                  )
-              )
-          );
-
-      // this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
-      //
-      // }));
-
-      // this.subscriptions.push(
-      //     this.priceService.getTodayCurrency().subscribe(currenciesData => {
-      //           currenciesData.forEach(az => {
-      //               if(az.currency.code === 'EUR') {
-      //                   this.currencyEUR = az.value;
-      //               } else if (az.currency.code === 'SUA') {
-      //                   this.currencyUSD = az.value;
-      //               } else if (az.currency.code === 'RUB') {
-      //                   this.currencyRUR = az.value;
-      //               }
-      //           })
-      //         },
-      //         error => console.log(error)
-      //     ));
 
       if(this.updateRouteId != undefined) {
           this.subscriptions.push(
               this.priceService.getPricesRequest(this.updateRouteId).subscribe(request => {
                   console.log('requewst', JSON.stringify(request));
                   this.generatedDocNrSeq = request.requestNumber;
-                  this.pricesRequestId = request.pricesRequest.id;
-                  this.PriceRegForm.get('id').setValue(request.id);
-                  this.PriceRegForm.get('requestNumber').setValue(this.generatedDocNrSeq);
-                  this.PriceRegForm.get('company').setValue(request.company);
-                  this.PriceRegForm.get('medicament').setValue(request.pricesRequest.medicament);
-                  this.PriceRegForm.get('initiator').setValue(request.initiator);
-                  this.PriceRegForm.get('requestHistories').setValue(request.requestHistories);
-                  this.onMedSelected(request.pricesRequest.medicament);
-                  this.initPrices(request.pricesRequest);
+                  // this.pricesRequestId = request.pricesRequest.id;
+                  // this.PriceRegForm.get('id').setValue(request.id);
+                  // this.PriceRegForm.get('requestNumber').setValue(this.generatedDocNrSeq);
+                  // this.PriceRegForm.get('company').setValue(request.company);
+                  // this.PriceRegForm.get('medicament').setValue(request.pricesRequest.medicament);
+                  // this.PriceRegForm.get('initiator').setValue(request.initiator);
+                  // this.PriceRegForm.get('requestHistories').setValue(request.requestHistories);
+                  // this.onMedSelected(request.pricesRequest.medicament);
+                  // this.initPrices(request.pricesRequest);
 
                   this.documents = [];
                   request.pricesRequest.documents.forEach(doc => this.documents.push(doc));
@@ -248,7 +98,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
           this.subscriptions.push(
               this.priceService.generateDocNumber().subscribe(generatedNumber => {
                       this.generatedDocNrSeq = generatedNumber;
-                      this.PriceRegForm.get('requestNumber').setValue(this.generatedDocNrSeq);
+                      this.requestNumber = this.generatedDocNrSeq;
                   },
                   error => {console.log(error); alert(error);}
               )
@@ -257,244 +107,112 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
   }
 
 
-    addReferencePriceRow() {
-        if (this.priceReferenceComponentRef.length < this.MAX_REFERENCE_PRICES) {
-            this.priceReferenceComponentRef[this.priceRefIndex] = this.priceReferenceContainer.createComponent(this.componentFactory);
-            this.priceReferenceComponentRef[this.priceRefIndex].instance.countries = this.countries;
-            this.priceReferenceComponentRef[this.priceRefIndex].instance.formNr = this.priceRefIndex;
-            this.priceReferenceComponentRef[this.priceRefIndex].instance.types = this.priceTypes;
-            this.priceReferenceComponentRef[this.priceRefIndex].instance.remove.subscribe(event => this.removePriceRow(event, PriceRowType.Reference));
-            this.priceReferenceComponentRef[this.priceRefIndex++].instance.currencies = this.currencies;
-        }
-    }
+    documentAdded($event) {
 
-    addProposedPriceRow() {
-        this.proposedPriceComponentRef[this.proposedPriceRefIndex] = this.proposedPriceContainer.createComponent(this.propPriceComponentFactory);
-        this.proposedPriceComponentRef[this.proposedPriceRefIndex].instance.formNr = this.proposedPriceRefIndex;
-        this.proposedPriceComponentRef[this.proposedPriceRefIndex].instance.remove.subscribe(event => this.removePriceRow(event, PriceRowType.Proposed));
-        this.proposedPriceComponentRef[this.proposedPriceRefIndex++].instance.currencies = this.currencies;
-    }
+      console.log('documentAdded', $event);
+      console.log('documents', this.documents);
 
-    removePriceRow(rowNr, rowType: PriceRowType) {
-      let newIndex : number = 0;
-
-        if(rowType === PriceRowType.Proposed) {
-            this.proposedPriceComponentRef[rowNr].destroy();
-            this.proposedPriceComponentRef.splice(rowNr, 1);
-            this.proposedPriceComponentRef.forEach(value => value.instance.formNr = newIndex++);
-            this.proposedPriceRefIndex--;
-        } else if (rowType === PriceRowType.Reference) {
-            this.priceReferenceComponentRef[rowNr].destroy();
-            this.priceReferenceComponentRef.splice(rowNr, 1);
-            this.priceReferenceComponentRef.forEach(value => value.instance.formNr = newIndex++);
-            this.priceRefIndex--;
-        }
-    }
-
-
-  private onCompanySelected(event) {
-      // this.onRemoveMed();
-      // this.getMedicaments(event.id);
-  }
-
-
-  private initPrices(newMed: any) {
-      if(!newMed) return;
-
-      let prices: Price[] = newMed.prices;
-      if(prices != undefined && prices.length > 0) {
-          prices.forEach(value => {
-              this.addProposedPriceRow();
-              this.proposedPriceComponentRef[this.proposedPriceRefIndex - 1].instance.price = value
-          });
-      }
-
-      let refPrices: Price[] = newMed.referencePrices;
-      if (refPrices != undefined && refPrices.length > 0) {
-          refPrices.forEach(value => {
-              // if(value.type == 3) { // 3 - pret in tara de origine 4 - pret in tara de referinta
-              this.addReferencePriceRow();
-              this.priceReferenceComponentRef[this.priceRefIndex - 1].instance.refPrice = value;
-          })
-      }
-  }
-
-  private onMedSelected(newMed: Medicament) {
-      console.log(newMed);
-      if(newMed == undefined) return;
-      this.onRemoveMed();
-
-      this.medCode = newMed.code;
-
-      let unitsOfMess: UnitOfMeasure = newMed.unitsOfMeasurement;
-      if (unitsOfMess != undefined) {
-          this.unitsOfMeasurement = unitsOfMess.description;
-      }
-
-      let unitQuantityMeas: UnitOfMeasure = newMed.unitsQuantityMeasurement;
-      if(unitQuantityMeas != undefined) {
-          this.unitsQuantityMeasurement = unitQuantityMeas.description;
-      }
-
-      let storageQuantityMeas: UnitOfMeasure = newMed.storageQuantityMeasurement;
-      if(storageQuantityMeas != undefined) {
-          this.storageQuantityMeasurement = storageQuantityMeas.description;
-      }
-
-      let volumeQuantityMeas: UnitOfMeasure = newMed.volumeQuantityMeasurement;
-      if(storageQuantityMeas != undefined) {
-          this.volumeQuantityMeasurement = volumeQuantityMeas.description;
-      }
-
-      let internationalName: any = newMed.internationalMedicamentName;
-      if(internationalName != undefined) {
-          this.internationalName = internationalName.description;
-      }
-
-      this.medicamentType = newMed.medicamentType;
-      // if(medType != undefined) {
-      //     this.medicamentType = (<MedicamentType>medType.code);
-      // }
-
-      let expDate: Date = newMed.expirationDate;
-      if(expDate != undefined) {
-          let d: Date = new Date(expDate);
-          this.expirationDate = d.getDay() + '/' +  d.getMonth() + '/' +  d.getFullYear();
-      }
-
-      this.dose = newMed.dose;
-      this.termsOfValidity = newMed.termsOfValidity;
-      this.storageQuantity = newMed.storageQuantity;
-      this.unitsQuantity = newMed.unitsQuantity;
-      this.volumeProp = newMed.volume;
-  }
-
-
-  private onRemoveMed() {
-      this.medCode = '';
-      this.unitsOfMeasurement = '';
-      this.unitsQuantityMeasurement = '';
-      this.internationalName = '';
-      this.storageQuantityMeasurement = '';
-      this.volumeQuantityMeasurement = '';
-      this.medicamentType = undefined;
-      this.dose = undefined;
-      this.expirationDate = '';
-      this.termsOfValidity = undefined;
-      this.storageQuantity = undefined;
-      this.unitsQuantity = undefined;
-      this.volumeProp = undefined;
-      this.proposedPriceComponentRef.forEach(value => value.destroy());
-      this.priceReferenceComponentRef.forEach(value => value.destroy());
-      this.proposedPriceComponentRef = [];
-      this.priceReferenceComponentRef = [];
-      this.proposedPriceRefIndex = 0;
-      this.priceRefIndex = 0;
-  }
-
-
-  private onRemoveCompany() {
-      // this.PriceRegForm.get('medicament')['controls'].name.reset();
-      // this.onRemoveMed();
-    //  this.companyMedicaments = [];
-  }
-
-    private getMedicaments($event) {
-
-      if(!$event)
-      {
-          return;
-      }
-
-      let id = $event.id;
-      //  this.PriceRegForm.get('medicament')['controls'].name.reset();
-        if (id !== undefined) {
-            if (this.getMedSubscr !== undefined) {
-                this.getMedSubscr.unsubscribe();
-            }
-
-            this.getMedSubscr = this.priceService.getMedicamentById(id).subscribe(
-                medicament => {
-                    this.onMedSelected(medicament);
-                }, error1 => alert(error1.toString())
-            );
-
-            // this.getMedSubscr = this.priceService.getCompanyMedicaments(id).subscribe(
-            //     medicaments => {
-            //         //  this.companyMedicaments = medicaments;
-            //     }, error1 => alert(error1.toString())
-            // );
-        }
+      this.documents.forEach(addedDoc => {
+          // this.mandatoryDocuments.splice( this.mandatoryDocuments.indexOf('foo'), 1 );
+          for(var i = 0; i < this.mandatoryDocuments.length; i++) {
+              if(this.mandatoryDocuments[i].number == addedDoc.number && this.mandatoryDocuments[i].description == addedDoc.docType.description) {
+                  this.mandatoryDocuments.splice(i, 1);
+                  break;
+              }
+          }
+      });
     }
 
 
     nextStep() {
         this.loadingService.show();
         this.formSubmitted = true;
-        this.priceReferenceComponentRef.forEach(form => form.instance.formSubmitted = true);
-        this.proposedPriceComponentRef.forEach(form => form.instance.formSubmitted = true);
-
-        let isGeneric: boolean = this.medicamentType != undefined && this.medicamentType.code == MedicamentType.Generic;
 
         let canSave: boolean = this.documents.length > 0 &&
-            this.PriceRegForm.get('company').valid &&
-            this.PriceRegForm.get('medicament').valid &&
-            this.proposedPriceRefIndex > 0 && (!isGeneric || (isGeneric && this.priceReferenceComponentRef.length > 0))
-
+            (this.requests.length == this.tabs.length &&
+            this.requests.every(value => value.valid)) && this.mandatoryDocuments.length == 0;
 
         if(!canSave)
         {
             this.loadingService.hide();
+
+            for(let i = 0; i < this.tabs.length; i++) {
+                let r = this.requests[i];
+                if(r == undefined || r.valid == undefined || !r.valid) {
+                    this.selected.setValue(i);
+                }
+            }
+
             return;
         }
 
-        this.priceReferenceComponentRef.forEach(form => form.instance.formSubmitted = false);
-        this.proposedPriceComponentRef.forEach(form => form.instance.formSubmitted = false);
         this.formSubmitted = false;
 
-        let priceModel : any = this.PriceRegForm.value;
-        if(!priceModel.requestHistories) {
-            priceModel.requestHistories = [];
-        }
-        priceModel.requestHistories.push(
-            {
-                startDate : this.startRecDate,
-                endDate: new Date(),
-                username : this.priceService.getUsername(),
-                step : 'R'
+        let user: string = this.priceService.getUsername();
+
+        let requestHistory: any = {
+            startDate : this.startRecDate,
+            endDate: new Date(),
+            username : user,
+            step : 'R'
+        };
+
+        let priceModels: any[] = [];
+
+        this.requests.forEach(req => {
+            let documents: Document[] = [];
+
+            this.documents.forEach(doc =>{
+                if(doc.docType.description == 'Anexa 1 la ordinul de înregistrare a prețului' && doc.number != req.requestNumber){
+                    return true;
+                }
+                documents.push(doc);
             });
 
-        priceModel.requestNumber = this.PriceRegForm.get('requestNumber').value;
-        priceModel.pricesRequest = {};
-        if(this.pricesRequestId != undefined) {
-            priceModel.pricesRequest.id = this.pricesRequestId;
-        }
-        priceModel.pricesRequest.medicament = priceModel.medicament;
-        priceModel.pricesMedicament = undefined;
-        priceModel.pricesRequest.documents = this.documents;
-
-        let prices : Price[] = [], refPrices: Price[] = [];
-        this.proposedPriceComponentRef.forEach(value => {
-            value.instance.price.type = {id: 1};
-            prices.push(value.instance.price);
+            priceModels.push({
+                requestNumber: req.requestNumber,
+                initiator: user,
+                assignedUser: user,
+                startDate: this.startRecDate,
+                endDate: new Date(),
+                requestHistories: [requestHistory],
+                company: req.company,
+                documents: documents,
+                currentStep: 'R',
+                type:{ code: 'PMED' },
+                price: {
+                    value: req.price,
+                    currency: req.currency,
+                    medicament: req.medicament,
+                    referencePrices: req.referencePrices,
+                    folderNr: this.requestNumber,
+                    type: {id: 1}
+                },
+            })
         });
-        this.priceReferenceComponentRef.forEach(value => {
-            refPrices.push(value.instance.refPrice);
-        });
 
-        priceModel.pricesRequest.prices = prices;
-        priceModel.pricesRequest.referencePrices = refPrices;
-
-        if(priceModel.initiator == undefined) {
-            priceModel.initiator = this.priceService.getUsername();
-        }
-        priceModel.assignedUser = this.priceService.getUsername();
-
-
-        this.subscriptions.push(this.priceService.savePrice(priceModel).subscribe(data => {
-                this.router.navigate(['dashboard/module/price/evaluate/' + data.body]);
+        this.subscriptions.push(this.priceService.savePrice(priceModels).subscribe(data => {
+                if (!data.body) {
+                    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+                        data: {
+                            message: 'A apărut o eroare. Nu s-au putut salva careva prețuri.',
+                            confirm: false
+                        }
+                    });
+                    dialogRef.afterClosed().subscribe(result => {
+                        // if(result) {
+                        this.router.navigate(['dashboard/homepage']);
+                        // }
+                    });
+                } else {
+                    this.router.navigate(['dashboard/homepage']);
+                }
+                // this.router.navigate(['dashboard/module/price/evaluate/' + data.body]);
                 this.loadingService.hide();
-            }, error1 => {alert(error1);  this.loadingService.hide();})
+            }, error1 => {
+                alert(error1);
+                this.loadingService.hide();
+            })
         );
         return false;
     }
@@ -502,8 +220,6 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
       this.subscriptions.forEach(value => value.unsubscribe());
-      this.priceReferenceComponentRef.forEach(row => row.destroy());
-      this.proposedPriceComponentRef.forEach(row => row.destroy());
   }
 
     // ngAfterContentInit() {
@@ -511,7 +227,46 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
     //     // this.footer now points to the instance of `FooterComponent`
     // }
     //
-    // ngAfterViewInit() {
-    //     alert('ngAfterViewInit');
-    // }
+    ngAfterViewInit() {
+        console.log('ngAfterViewInit', this.tabGroup);
+        // this.subscriptions.push(this.tabGroup.selectedIndexChange.subscribe(index => console.log("selectedIndexChange", index)));
+        this.subscriptions.push(this.tabGroup.selectedIndexChange.subscribe(index => console.log("selectedIndexChange", index)));
+    }
+
+    onFormChange($event) {
+      if($event.index != undefined) {
+          this.requests[$event.index] = $event;
+
+          let mandatoryDocAddedToList: boolean = this.mandatoryDocuments.some(value => value.number == $event.requestNumber);
+          if(!mandatoryDocAddedToList) {
+              this.mandatoryDocuments.push({
+                  description: 'Anexa 1 la ordinul de înregistrare a prețului',
+                  number: $event.requestNumber,
+                  status: "Nu este atasat"
+              });
+          }
+
+          console.log('requests', this.requests);
+      }
+    }
+
+
+    addTab() {
+        this.tabs.push('Medicamentul ' + (this.tabs.length + 1));
+        this.selected.setValue(this.tabs.length - 1);
+    }
+
+    removeTab(index: number) {
+        let reqNr = this.requests[index].requestNumber;
+        if(reqNr != undefined) {
+            for(let i = 0; i < this.mandatoryDocuments.length; i++){
+                if(this.mandatoryDocuments[i].number == reqNr) {
+                    this.mandatoryDocuments.splice(i, 1);
+                    break;
+                }
+            }
+        }
+        this.requests.splice(index, 1);
+        this.tabs.splice(index, 1);
+    }
 }

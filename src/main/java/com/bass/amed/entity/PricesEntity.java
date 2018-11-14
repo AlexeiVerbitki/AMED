@@ -15,10 +15,9 @@ public class PricesEntity
     private NmCurrenciesEntity currency;
     private Timestamp expirationDate;
     private PriceExpirationReasonsEntity expirationReason;
-
     private Set<ReferencePricesEntity> referencePrices;
     private MedicamentEntity medicament;
-    private Set<DocumentsEntity> documents;
+    private String folderNr;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "medicament_id")
@@ -31,21 +30,6 @@ public class PricesEntity
     {
         this.medicament = medicamentId;
     }
-
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinTable(name = "PRICES_DOCUMENTS", joinColumns = {
-            @JoinColumn(name = "PRICE_ID")}, inverseJoinColumns = {
-            @JoinColumn(name = "DOCUMENT_ID")})
-    public Set<DocumentsEntity> getDocuments()
-    {
-        return documents;
-    }
-    public void setDocuments(Set<DocumentsEntity> documents)
-    {
-        this.documents = documents;
-    }
-
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "price_id")
@@ -75,6 +59,16 @@ public class PricesEntity
 
     public void setExpirationReason(PriceExpirationReasonsEntity expirationReason) {
         this.expirationReason = expirationReason;
+    }
+
+    @Basic
+    @Column(name = "folderNr")
+    public String getFolderNr() {
+        return folderNr;
+    }
+
+    public void setFolderNr(String folderNr) {
+        this.folderNr = folderNr;
     }
 
     @Basic
@@ -137,8 +131,7 @@ public class PricesEntity
             return false;
         if (referencePrices != null ? !referencePrices.equals(that.referencePrices) : that.referencePrices != null)
             return false;
-        if (medicament != null ? !medicament.equals(that.medicament) : that.medicament != null) return false;
-        return documents != null ? documents.equals(that.documents) : that.documents == null;
+        return medicament != null ? medicament.equals(that.medicament) : that.medicament == null;
     }
 
     @Override
@@ -151,7 +144,6 @@ public class PricesEntity
         result = 31 * result + (expirationReason != null ? expirationReason.hashCode() : 0);
         result = 31 * result + (referencePrices != null ? referencePrices.hashCode() : 0);
         result = 31 * result + (medicament != null ? medicament.hashCode() : 0);
-        result = 31 * result + (documents != null ? documents.hashCode() : 0);
         return result;
     }
 
@@ -166,7 +158,6 @@ public class PricesEntity
                 ", expirationReason=" + expirationReason +
                 ", referencePrices=" + referencePrices +
                 ", medicament=" + medicament +
-                ", documents=" + documents +
                 '}';
     }
 }

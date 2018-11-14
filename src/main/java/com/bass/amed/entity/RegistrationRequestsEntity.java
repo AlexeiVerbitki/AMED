@@ -119,7 +119,7 @@ public class RegistrationRequestsEntity
         this.currentStep = currentStep;
     }
 
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
+    @OneToOne( fetch = FetchType.LAZY, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
     @JoinColumn( name = "price_id" )
     public PricesEntity getPrice() {
         return price;

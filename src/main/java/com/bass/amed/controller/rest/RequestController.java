@@ -291,15 +291,22 @@ public class RequestController
 
 
     @RequestMapping(value = "/add-prices-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Integer> savePricesRequest(@RequestBody RegistrationRequestsEntity request)
+    public ResponseEntity<Boolean> savePricesRequests(@RequestBody List<RegistrationRequestsEntity> requests)
     {
+        LOGGER.debug("add new prices requests");
+        requests.forEach(r -> {
+            Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(r.getType().getCode());
+            r.setType(type.get());
+        });
 
-        LOGGER.debug("add new prices request");
-        Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(request.getType().getCode());
-        request.setType(type.get());
-        requestRepository.save(request);
+        requestRepository.saveAll(requests);
 
-        return new ResponseEntity<>(request.getId(), HttpStatus.CREATED);
+        boolean saved = true;
+        for(RegistrationRequestsEntity r : requests) {
+            saved &= r.getId() != null;
+        }
+
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/load-prices-request", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -318,7 +325,7 @@ public class RequestController
 
             if(pricesRequest != null) {
 
-                final Set<DocumentsEntity> docs = pricesRequest.getDocuments();
+                final Set<DocumentsEntity> docs = null;//pricesRequest.getDocuments();
 
                 outputDocTypes.forEach(docType -> {
                     OutputDocumentsEntity outDoc = new OutputDocumentsEntity();

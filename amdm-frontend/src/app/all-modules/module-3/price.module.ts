@@ -8,14 +8,14 @@ import {MDBBootstrapModule} from "angular-bootstrap-md";
 import {MaterialSharedModule} from "../../material-shared.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ReferencePriceComponent} from "./reference-price/reference-price.component";
-import { ProposedPriceComponent } from './proposed-price/proposed-price.component';
 import {RequestService} from "../../shared/service/request.service";
 import {UploadFileService} from "../../shared/service/upload/upload-file.service";
 import {MatDialogModule} from "@angular/material";
 import {DocumentModule} from "../../document/document.module";
+import {OneMedPriceComponent} from "./one-med-price/one-med-price.component";
 
 @NgModule({
-    entryComponents: [ReferencePriceComponent, ProposedPriceComponent],
+    entryComponents: [ReferencePriceComponent],
     imports: [
         CommonModule,
         PriceRoutingModule,
@@ -27,7 +27,7 @@ import {DocumentModule} from "../../document/document.module";
         MaterialSharedModule.forRoot(),
     ],
     schemas: [],
-    declarations: [PriceRegMedComponent, PriceEvaluateMedComponent, ReferencePriceComponent, ProposedPriceComponent],
+    declarations: [PriceRegMedComponent, OneMedPriceComponent, PriceEvaluateMedComponent, ReferencePriceComponent],
     providers: [UploadFileService, RequestService],
 
 })

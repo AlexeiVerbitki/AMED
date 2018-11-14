@@ -22,7 +22,10 @@ export class ReferencePriceComponent implements OnInit {
     @Output()
     public remove: EventEmitter<number> = new EventEmitter();
 
+    @Output()
+    public change: EventEmitter<any> = new EventEmitter();
 
+    @Input()
     formSubmitted: boolean = false;
 
     @Input()
@@ -33,6 +36,7 @@ export class ReferencePriceComponent implements OnInit {
     types: any[] = [];
 
     onPriceChange($event) {
+        this.change.emit('price');
        // alert($event.target.value);
     }
 

@@ -11,22 +11,36 @@ import {TaskService} from "../../../shared/service/task.service";
 import {LoaderService} from "../../../shared/service/loader.service";
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
 
+enum Pages {
+    CLAP = '3',
+    CLPSC = '4',
+    CLNP = '5',
+    CLISP = '6'
+}
+
+
 @Component({
     selector: 'app-reg-cerere',
     templateUrl: './reg-cerere.component.html',
     styleUrls: ['./reg-cerere.component.css']
 })
+
 export class RegCerereComponent implements OnInit, OnDestroy {
 
+    Pages: typeof Pages = Pages;
     generatedDocNrSeq: number;
     registerClinicalTrailForm: FormGroup;
     private subscriptions: Subscription[] = [];
     docs: Document [] = [];
-    docTypes : any[];
+    docTypes: any[] = [];
 
     companii: Observable<any[]>;
-    loadingCompany : boolean = false;
+    loadingCompany: boolean = false;
     protected companyInputs = new Subject<string>();
+
+    clinicalTrails: Observable<any[]>;
+    loadingClinicalTrail: boolean = false;
+    protected clinicalTrailInputs = new Subject<string>();
 
     constructor(private fb: FormBuilder,
                 private dialog: MatDialog,
@@ -44,9 +58,9 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             'startDate': [new Date()],
             'currentStep': ['R'],
             'company': ['', Validators.required],
-            'initiator':[null],
-            'assignedUser':[null],
-            'flowControl': ['CLAP', Validators.required],
+            'initiator': [null],
+            'assignedUser': [null],
+            'flowControl': [null, Validators.required],
             'clinicalTrails': this.fb.group({
                 'status': ['P']
             }),
@@ -57,8 +71,68 @@ export class RegCerereComponent implements OnInit, OnDestroy {
         });
 
         this.generateDocNr();
-        this.loadDocTypes();
+        this.loadEconomicAgents();
+        this.catchFlowControl();
+        this.loadClinicalTrails();
 
+        console.log('this.registerClinicalTrailForm.get(\'flowControl\')', this.registerClinicalTrailForm.get('flowControl'));
+    }
+
+    loadClinicalTrails() {
+        this.clinicalTrails =
+            this.clinicalTrailInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) return true;
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingClinicalTrail = true;
+
+                }),
+                flatMap(term =>
+
+                    this.administrationService.getClinicalTrailsCodAndEudra(term).pipe(
+                        tap(() => this.loadingClinicalTrail = false)
+                    )
+                )
+            );
+    }
+
+    catchFlowControl() {
+        this.registerClinicalTrailForm.get('flowControl');
+        this.subscriptions.push(
+            this.registerClinicalTrailForm.get('flowControl').valueChanges.subscribe(changedValue=>{
+                console.log('Pages[changedValue]',Pages[changedValue]);
+                this.loadDocTypes(Pages[changedValue]);
+            })
+        )
+    }
+
+    loadDocTypes(stepId:string) {
+        this.subscriptions.push(
+            this.taskService.getRequestStepByIdAndCode(stepId, 'R').subscribe(step => {
+                    console.log('getRequestStepByIdAndCode', step);
+                    this.subscriptions.push(
+                        this.administrationService.getAllDocTypes().subscribe(data => {
+                                //console.log('getAllDocTypes', data);
+                                if(step.availableDocTypes === null) {
+                                    return;
+                                }
+
+                                this.docTypes = data;
+                                this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
+                            },
+                            error => console.log(error)
+                        )
+                    );
+                },
+                error => console.log(error)
+            )
+        );
+    }
+
+    loadEconomicAgents() {
         this.companii =
             this.companyInputs.pipe(
                 filter((result: string) => {
@@ -77,25 +151,6 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                     )
                 )
             );
-    }
-
-    loadDocTypes(){
-        this.subscriptions.push(
-            this.taskService.getRequestStepByIdAndCode('3','R').subscribe(step => {
-                    //console.log('getRequestStepByIdAndCode', step);
-                    this.subscriptions.push(
-                        this.administrationService.getAllDocTypes().subscribe(data => {
-                            //console.log('getAllDocTypes', data);
-                                this.docTypes = data;
-                                this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
-                            },
-                            error => console.log(error)
-                        )
-                    );
-                },
-                error => console.log(error)
-            )
-        );
     }
 
     generateDocNr() {
@@ -129,7 +184,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             }];
 
             formModel.documents = this.docs;
-            formModel.currentStep='E';
+            formModel.currentStep = 'E';
             formModel.initiator = this.authService.getUserName();
             formModel.assignedUser = this.authService.getUserName();
 
@@ -139,7 +194,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             this.subscriptions.push(this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
                     this.router.navigate(['/dashboard/module/clinic-studies/evaluate/' + data.body]);
                     this.loadingService.hide();
-                },error => {
+                }, error => {
                     this.loadingService.hide();
                     console.log(error)
                 })
@@ -148,12 +203,18 @@ export class RegCerereComponent implements OnInit, OnDestroy {
         else if (formModel.flowControl === 'CLPSC') {
             this.registerClinicalTrailForm.get('type.id').setValue('4')
             console.log('Going to -> Aprobarea amendamentelor la Protocoalele Studiilor Clinice la medicamente')
+
+            console.log(Pages.CLAP);
+
+            this.loadingService.hide();
         }
         else if (formModel.flowControl === 'CLNP') {
             console.log('Going to -> Înregistrarea Notificărilor privind Protocolul studiului clinic cu medicamente')
+            this.loadingService.hide();
         }
         else if (formModel.flowControl === 'CLISP') {
             console.log('Going to -> Înregistrarea informației privind siguranța produsului de investigație clinică')
+            this.loadingService.hide();
         }
         else {
             console.log('Going to -> HZ')
@@ -161,7 +222,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.subscriptions.forEach(subsription=>subsription.unsubscribe());
+        this.subscriptions.forEach(subsription => subsription.unsubscribe());
     }
 
 }

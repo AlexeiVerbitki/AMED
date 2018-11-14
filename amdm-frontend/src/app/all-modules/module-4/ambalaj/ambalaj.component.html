@@ -95,7 +95,8 @@
                     <div class="col-md-4">
                         <div class="md-form">
                             <input id="sellerTaraAdresa" mdbInputDirective type="text" class="form-control"
-                            value={{evaluateImportForm.value.company.name}} [attr.disabled]="true">
+                            value={{evaluateImportForm.value.company.country}} [attr.disabled]="true"
+                            value={{evaluateImportForm.value.company.legalAddress}} [attr.disabled]="true">
                             <label for="sellerTaraAdresa">Ţara şi adresa vînzătorului
                                 <span class="text-danger">*</span>
                             </label>

@@ -150,4 +150,11 @@ export class AdministrationService {
 
         return this.http.get('/api/administration/all-atc-codes-by-code', {params: Params});
     }
+
+    getClinicalTrailsCodAndEudra(partialCode: string): Observable<any[]>{
+        let Params = new HttpParams();
+        Params = Params.set('partialCode', partialCode);
+
+        return this.http.get<any[]>('/api/administration/all-clinical-trails-by-cod-or-eudra', {params: Params});
+    }
 }

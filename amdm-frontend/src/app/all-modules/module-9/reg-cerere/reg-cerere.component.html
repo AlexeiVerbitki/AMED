@@ -1,83 +1,118 @@
 <div class="container-fluid sky z-depth-2">
-  <h3 class="text-center my-3 font-weight-bold">Înregistrarea studiilor clinice</h3>
-  <hr>
+    <h3 class="text-center my-3 font-weight-bold">Înregistrarea studiilor clinice</h3>
+    <hr>
 
-  <form [formGroup]="registerClinicalTrailForm" (ngSubmit)="onSubmit()" #f="ngForm">
-    <div class="row">
-      <div class="col-md-4">
-        <div class="md-form">
-          <input id="regNr" mdbInputDirective type="text" class="form-control" formControlName="requestNumber" required>
-          <label for="regNr">Nr. de înregistrare a cererii
-            <span class="text-danger">*</span>
-          </label>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="md-form-modified">
-          <mat-form-field class="w-100">
-            <input matInput [matDatepicker]="picker" placeholder="Data de înregistrare a cererii" formControlName="startDate">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker touchUi #picker></mat-datepicker>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="md-form-modified">
-          <ng-select [items]="companii | async"
-                     bindLabel="name"
-                     placeholder="Compania solicitant"
-                     formControlName="company"
-                     [loading]="loadingCompany"
-                     [typeahead]="companyInputs"
-                     required="true">
-            <ng-template ng-option-tmp let-item="item">
-              {{item.name}} <br />
-              <small class="form-text text-muted">{{item.idno}}</small>
-            </ng-template>
-          </ng-select>
-        </div>
-      </div>
-    </div>
-
-  <app-document [documents]= "docs" [nrCerere]="generatedDocNrSeq" [dcTypes]="docTypes"></app-document>
-  <hr>
-
-    <mat-radio-group>
-      <div class="container">
+    <form [formGroup]="registerClinicalTrailForm" (ngSubmit)="onSubmit()" #f="ngForm">
         <div class="row">
-          <mat-radio-group class="radio-btn-wrapper" formControlName="flowControl">
-            <div class="col-md-12">
-              <mat-radio-button name="prop1" value="CLAP">Aprobarea Studiilor Clinice la medicamente</mat-radio-button>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="regNr" mdbInputDirective type="text" class="form-control" formControlName="requestNumber"
+                           required>
+                    <label for="regNr">Nr. de înregistrare a cererii
+                        <span class="text-danger">*</span>
+                    </label>
+                </div>
             </div>
-            <div class="col-md-12">
-              <mat-radio-button name="prop2" value="CLPSC">Aprobarea amendamentelor la Protocoalele Studiilor Clinice la medicamente</mat-radio-button>
+            <div class="col-md-4">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker" placeholder="Data de înregistrare a cererii"
+                               formControlName="startDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
             </div>
-            <div class="col-md-12">
-              <mat-radio-button name="prop3" value="CLNP">Înregistrarea Notificărilor privind Protocolul studiului clinic cu medicamente</mat-radio-button>
+            <div class="col-md-4">
+                <div class="md-form-modified">
+                    <ng-select [items]="companii | async"
+                               bindLabel="name"
+                               placeholder="Compania solicitant"
+                               formControlName="company"
+                               [loading]="loadingCompany"
+                               [typeahead]="companyInputs"
+                               required="true">
+                        <ng-template ng-option-tmp let-item="item">
+                            {{item.name}} <br/>
+                            <small class="form-text text-muted">{{item.idno}}</small>
+                        </ng-template>
+                    </ng-select>
+                </div>
             </div>
-            <div class="col-md-12">
-              <mat-radio-button name="prop4" value="CLISP">Înregistrarea informației privind siguranța produsului de investigație clinică</mat-radio-button>
-            </div>
-          </mat-radio-group>
         </div>
-      </div>
-    </mat-radio-group>
 
-    <div class="text-center w-100 mt-3">
-      <div class="alert alert-primary">
-        <span>Nr. de inregistrare a cererii: </span>
-        <strong>{{generatedDocNrSeq}}</strong>
-      </div>
-    </div>
-
-    <div class="text-center">
-      <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect type="submit">
-        Urmatorul pas
-      </button>
-    </div>
-  </form>
-  <hr>
+        <div *ngIf="registerClinicalTrailForm.value.flowControl !== null">
+            <app-document [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypes]="docTypes"></app-document>
+        </div>
+        <hr>
 
 
+        <div *ngIf="registerClinicalTrailForm.value.flowControl === 'CLPSC'">
+            <h5 class="text-center font-weight-bold">Cautare studiu</h5>
+            <div class="row">
 
-</div>div
+                <div class="col-md-4">
+                    <div class="md-form-modified">
+                        <ng-select [items]="clinicalTrails | async"
+                                   bindLabel="code"
+                                   placeholder="Cod studiu / Eudra CT"
+                                   formControlName="company"
+                                   [loading]="loadingClinicalTrail"
+                                   [typeahead]="clinicalTrailInputs"
+                                   required="true">
+                            <ng-template ng-option-tmp let-item="item">
+                                {{item.code}} <br/>
+                                <small class="form-text text-muted">{{item.eudraCtNr}}</small>
+                            </ng-template>
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+            <hr>
+        </div>
+
+        <mat-radio-group>
+            <div class="container">
+                <div class="row">
+                    <mat-radio-group class="radio-btn-wrapper" formControlName="flowControl">
+                        <div class="col-md-12">
+                            <mat-radio-button name="prop1" value="CLAP">Aprobarea Studiilor Clinice la medicamente
+                            </mat-radio-button>
+                        </div>
+                        <div class="col-md-12">
+                            <mat-radio-button name="prop2" value="CLPSC">Aprobarea amendamentelor la Protocoalele
+                                Studiilor Clinice la medicamente
+                            </mat-radio-button>
+                        </div>
+                        <div class="col-md-12">
+                            <mat-radio-button name="prop3" value="CLNP">Înregistrarea Notificărilor privind Protocolul
+                                studiului clinic cu medicamente
+                            </mat-radio-button>
+                        </div>
+                        <div class="col-md-12">
+                            <mat-radio-button name="prop4" value="CLISP">Înregistrarea informației privind siguranța
+                                produsului de investigație clinică
+                            </mat-radio-button>
+                        </div>
+                    </mat-radio-group>
+                </div>
+            </div>
+        </mat-radio-group>
+
+        <div class="text-center w-100 mt-3">
+            <div class="alert alert-primary">
+                <span>Nr. de inregistrare a cererii: </span>
+                <strong>{{generatedDocNrSeq}}</strong>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect type="submit">
+                Urmatorul pas
+            </button>
+        </div>
+    </form>
+    <hr>
+
+
+</div>

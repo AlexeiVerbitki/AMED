@@ -35,6 +35,7 @@ import {AdminDashboardComponent} from "./dashboard/admin-dashboard.component";
 import {GestDocComponent} from "./document-management/gest-doc/gest-doc.component";
 import {NumberOnlyDirective} from "./shared/directive/number-only.directive";
 import {RequestAdditionalDataDialogComponent} from "./dialog/request-additional-data-dialog/request-additional-data-dialog.component";
+import {PricesComponent} from "./prices/prices.component";
 
 const interceptors = [{
     provide: HTTP_INTERCEPTORS,
@@ -65,6 +66,7 @@ const interceptors = [{
         ModuleDashboardComponent,
         AdminDashboardComponent,
         ConfirmationDialogComponent,
+        PricesComponent,
         TaskComponent,
         HistoryComponent,
         ModuleComponent,

@@ -250,6 +250,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                     }
 
                     if (data.clinicalTrails.placebo !== null) {
+                        console.log('data.clinicalTrails.placebo',data.clinicalTrails.placebo);
                         this.placeboFormn.setValue(data.clinicalTrails.placebo);
                         this.placeboFormn.get('volumeQuantityMeasurement').setValue(data.clinicalTrails.placebo.volumeQuantityMeasurement.description);
                     }

@@ -2,7 +2,7 @@ import {Observable} from "rxjs";
 import {HttpClient, HttpResponse} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class RequestService {
 
     constructor(private http: HttpClient) {
@@ -37,8 +37,8 @@ export class RequestService {
         return this.http.get('/api/load-clinical-trail-request', {params: {id: id}});
     }
 
-    addPriceRequest(requestDetails: any): Observable<HttpResponse<any>> {
-        return this.http.post<any>('/api/add-prices-request', requestDetails, {observe: 'response'});
+    addPriceRequests(requests: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/add-prices-request', requests, {observe: 'response'});
     }
 
     //used for interrupt process

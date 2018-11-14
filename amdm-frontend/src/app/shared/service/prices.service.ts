@@ -4,7 +4,7 @@ import {CompanyService} from "./company.service";
 import {MedicamentService} from "./medicament.service";
 import {RequestService} from "./request.service";
 import {AuthService} from "./authetication.service";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Company} from "../../models/company";
 import {Medicament} from "../../models/medicament";
@@ -14,7 +14,9 @@ import {CurrencyHistory} from "../../models/currencyHistory";
 import {DocumentService} from "./document.service";
 
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class PriceService {
 
     constructor(private administrationService: AdministrationService,
@@ -50,7 +52,7 @@ export class PriceService {
     }
 
     savePrice(priceModel: any): Observable<any> {
-        return this.requestService.addPriceRequest(priceModel);
+        return this.requestService.addPriceRequests(priceModel);
     }
 
     getUsername(): string {
@@ -83,5 +85,15 @@ export class PriceService {
 
     getPricesRequest(id: string): Observable<any> {
         return this.http.get('/api/load-prices-request', {params: {id: id}});
+    }
+
+    getPricesByFilter(filter: any): Observable<any> {
+        const httpOptions = {
+          //  observe: 'response',
+            headers: new HttpHeaders({
+                'Access-Control-Allow-Origin':'*',
+            })
+        };
+        return this.http.post<any>('/api/price/by-filter', filter, {observe: 'response'});
     }
 }
