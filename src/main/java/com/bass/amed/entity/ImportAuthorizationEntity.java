@@ -11,7 +11,7 @@ import java.util.List;
 	private NmEconomicAgentsEntity                 applicant;
 	private NmManufacturesEntity                   seller;
 	private String                                 basisForImport;
-	private NmManufacturesEntity                   importer;
+	private NmEconomicAgentsEntity                 importer;
 	private String                                 conditionsAndSpecification;
 	private Integer                                quantity;
 	private Double                                 price;
@@ -101,11 +101,11 @@ import java.util.List;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
 	@JoinColumn(name = "importer_id")
-	public NmManufacturesEntity getImporter() {
+	public NmEconomicAgentsEntity getImporter() {
 		return importer;
 	}
 
-	public void setImporter(NmManufacturesEntity importer) {
+	public void setImporter(NmEconomicAgentsEntity importer) {
 		this.importer = importer;
 	}
 

@@ -82,24 +82,43 @@
 
                     <div class="col-md-4">
                         <div class="md-form-modified">
-                            <mat-form-field class="w-100">
-                                <mat-select id="seller" placeholder="Vînzător"
-                                            formControlName="seller">
-                                    <mat-option *ngFor="let solicitantCompany of solicitantCompanyList" [value]="solicitantCompany">{{ solicitantCompany.name }}</mat-option>
-                                </mat-select>
-                            </mat-form-field>
+                            <ng-select [items]="manufacturersRfPr | async"
+                                       bindLabel="description"
+                                       placeholder="Vînzător"
+                                       formControlName="seller"
+                                       [loading]="loadingManufacturerRfPr"
+                                       [typeahead]="manufacturerInputsRfPr"
+                                       required="true">
+                                <ng-template ng-option-tmp let-item="item">
+                                    {{item.description}}
+                                </ng-template>
+                            </ng-select>
                         </div>
                     </div>
 
 
                     <div class="col-md-4">
-                        <div class="md-form">
-                            <input id="sellerTaraAdresa" mdbInputDirective type="text" class="form-control"
-                            value={{evaluateImportForm.value.company.country}} [attr.disabled]="true"
-                            value={{evaluateImportForm.value.company.legalAddress}} [attr.disabled]="true">
-                            <label for="sellerTaraAdresa">Ţara şi adresa vînzătorului
-                                <span class="text-danger">*</span>
-                            </label>
+                        <div class="md-form-modified">
+                            <!--<ng-select [items]="manufacturersRfPr | async"-->
+                                       <!--bindLabel="description"-->
+                                       <!--placeholder="Ţara şi adresa vînzătorului"-->
+                                       <!--formControlName="seller"-->
+                                       <!--[loading]="loadingManufacturerRfPr"-->
+                                       <!--[typeahead]="manufacturerInputsRfPr"-->
+                                       <!--required="true">-->
+                                <!--<ng-template ng-option-tmp let-item="item">-->
+                                    <!--{{item.address}}-->
+                                <!--</ng-template>-->
+                            <!--</ng-select>-->
+
+
+                            <div class="md-form">
+
+                                <input  id="adresa" mdbInputDirective type="text" class="form-control"
+                                       [attr.disabled]="true" [value]="sellerAddress"> <!--{{sellerAddress.value}}-->
+
+                                <label for="adresa">Adresa</label>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -211,13 +230,26 @@
                                     <!--</div>-->
                                 <!--</div>-->
                                 <div class="col-md-4">
+                                    <!--<div class="md-form-modified">-->
+                                        <!--<mat-form-field class="w-100">-->
+                                            <!--<mat-select id="producer" placeholder="Firma producătoare"-->
+                                                        <!--formControlName="producer">-->
+                                                <!--<mat-option *ngFor="let solicitantCompany of solicitantCompanyList" [value]="solicitantCompany">{{ solicitantCompany.name }}</mat-option>-->
+                                            <!--</mat-select>-->
+                                        <!--</mat-form-field>-->
+                                    <!--</div>-->
                                     <div class="md-form-modified">
-                                        <mat-form-field class="w-100">
-                                            <mat-select id="producer" placeholder="Firma producătoare"
-                                                        formControlName="producer">
-                                                <mat-option *ngFor="let solicitantCompany of solicitantCompanyList" [value]="solicitantCompany">{{ solicitantCompany.name }}</mat-option>
-                                            </mat-select>
-                                        </mat-form-field>
+                                        <ng-select [items]="manufacturersRfPr | async"
+                                                   bindLabel="description"
+                                                   placeholder="Producatorul"
+                                                   formControlName="producer"
+                                                   [loading]="loadingManufacturerRfPr"
+                                                   [typeahead]="manufacturerInputsRfPr"
+                                                   required="true">
+                                            <ng-template ng-option-tmp let-item="item">
+                                                {{item.description}}
+                                            </ng-template>
+                                        </ng-select>
                                     </div>
                                 </div>
                                 <!--<div class="col-md-4">
