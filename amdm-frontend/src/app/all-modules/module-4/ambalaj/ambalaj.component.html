@@ -61,10 +61,8 @@
                         <td>{{ x.format }}</td>
                         <td>{{ x.dataIncarcarii }}</td>
                         <td>
-                            <button class="btn btn-mdb-color btn-sm waves-light" (click)="loadFile()" mdbWavesEffect>Vizualizare</button>
-                            <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeDocument(i)"
-                                    mdbWavesEffect>Stergere
-                            </button>
+                            <!--<button class="btn btn-mdb-color btn-sm waves-light" (click)="loadFile()" mdbWavesEffect>Vizualizare</button>-->
+                            <!--<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeDocument(i)" mdbWavesEffect>Stergere </button>-->
                         </td>
                     </tr>
                     </tbody>
@@ -117,7 +115,7 @@
                                 <input  id="adresa" mdbInputDirective type="text" class="form-control"
                                        [attr.disabled]="true" [value]="sellerAddress"> <!--{{sellerAddress.value}}-->
 
-                                <label for="adresa">Adresa</label>
+                                <label for="adresa">Adresa vînzătorului</label>
                             </div>
                         </div>
                     </div>
@@ -139,14 +137,14 @@
                             </mat-form-field>
                         </div>
                     </div>
-                    <!--<div class="col-md-4">-->
-                    <!--<div class="md-form">-->
-                    <!--<input id="importatorTaraAdresa" mdbInputDirective type="text" class="form-control" formControlName="importatorTaraAdresa">-->
-                    <!--<label for="importatorTaraAdresa">Ţara şi adresa importatorului-->
-                    <!--<span class="text-danger">*</span>-->
-                    <!--</label>-->
-                    <!--</div>-->
-                    <!--</div>-->
+                    <div class="col-md-4">
+                        <div class="md-form">
+                            <input id="importerAddress" mdbInputDirective type="text" class="form-control"[value]="importerAddress">  <!--formControlName="importerAddress"-->
+                            <label for="importerAddress">Ţara şi adresa importatorului
+                                <span class="text-danger">*</span>
+                            </label>
+                        </div>
+                    </div>
                     <div class="col-md-4">
                         <div class="md-form">
                             <input id="conditionsAndSpecification" mdbInputDirective type="text" class="form-control"
@@ -252,15 +250,16 @@
                                         </ng-select>
                                     </div>
                                 </div>
-                                <!--<div class="col-md-4">
+                                <div class="col-md-4">
                                     <div class="md-form">
-                                        <input id="producatorTaraAdresa" mdbInputDirective type="text" class="form-control" formControlName="producatorTaraAdresa">
-                                        <label for="producatorTaraAdresa">Ţara şi adresa producătorului materiei prime
+                                        <!--<input id="producerAddress" mdbInputDirective type="text" class="form-control" [value]="importTypeForms[i].producer.address">-->
+                                        <input id="producerAddress" mdbInputDirective type="text" class="form-control" [value]="importTypeForm.get('producer.address')">
+                                        <label for="producerAddress">Ţara şi adresa producătorului materiei prime
                                             <span class="text-danger">*</span>
                                         </label>
                                     </div>
-                                </div>-->
-                                <div class="col-6">
+                                </div>
+                                <div class="col-4">
                                     <div class="md-form-modified">
                                         <mat-form-field class="w-100">
                                             <input matInput [matDatepicker]="picker22" placeholder="Termen de valabilitate"

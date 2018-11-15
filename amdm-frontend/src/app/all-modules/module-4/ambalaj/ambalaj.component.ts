@@ -49,6 +49,8 @@ export class AmbalajComponent implements OnInit {
     protected manufacturerInputsRfPr = new Subject<string>();
 
     sellerAddress: any;
+    importerAddress: any;
+    producerAddress: any;
 
     solicitantCompanyList: Observable<any[]>;
     summ: any;
@@ -77,20 +79,20 @@ export class AmbalajComponent implements OnInit {
                 // 'requestNumber': {value: '', disabled: true},
                 // 'startDate': {value: '', disabled: true},
                 // 'company': {value: '', disabled: true},
-                'id;': [],
+                'id;': [''],
                 'importType': [null, Validators.required],
-                'applicationRegistrationNumber': [],
+                'applicationRegistrationNumber': [''],
                 'applicationDate': [new Date()],
                 'applicant': ['', Validators.required],
                 'seller': ['', Validators.required], // Tara si adresa lui e deja in baza
                 'basisForImport': [],
                 'importer': ['', Validators.required], // Tara si adresa lui e deja in baza
                 'conditionsAndSpecification': [''],
-                'medType': [],
+                'medType': [''],
 
-                'importAuthorizationDetailsEntityList': this.fb.array([]),
+                'importAuthorizationDetailsEntityList': this.fb.array(['']),
 
-                'authorizationsNumber': [], // inca nu exista la pasul acesta
+                'authorizationsNumber': [''], // inca nu exista la pasul acesta
 
             }),
 
@@ -102,8 +104,12 @@ export class AmbalajComponent implements OnInit {
     ngOnInit() {
         this.currentDate = new Date();
         this.sellerAddress='';
+        this.importerAddress='';
+        // this.producerAddress='';
+        // this.importTypeForms[0].producer.address='';
         this.loadSolicitantCompanyList();
         this.loadManufacturersRfPr();
+        // this.addImportTypeForm();
         this.onChanges();
 
 
@@ -130,13 +136,29 @@ export class AmbalajComponent implements OnInit {
     }
 
     onChanges(): void {
-        this.evaluateImportForm.get('importAuthorizationEntity.seller').valueChanges.subscribe(val=>{
-            if(val){
-                this.sellerAddress=val.address;
+        this.evaluateImportForm.get('importAuthorizationEntity.seller').valueChanges.subscribe(val => {
+            if (val) {
+                this.sellerAddress = val.address + ", " + val.country.description;
                 // this.evaluateImportForm.get('importAuthorizationEntity.adresa').setValue("test")
             }
-        })
+        });
+        this.evaluateImportForm.get('importAuthorizationEntity.importer').valueChanges.subscribe(val => {
+            if (val) {
+                this.importerAddress = val.legalAddress + ", Moldova";
+                // this.evaluateImportForm.get('importAuthorizationEntity.adresa').setValue("test")
+            }
+        });
     }
+
+    // getProducerAddress(index: number){
+    //     this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList['+index+'].producer').valueChanges.subscribe(val => {
+    //         if (val) {
+    //             this.producerAddress = val.address + ", " + val.country.description;
+    //             // this.evaluateImportForm.get('importAuthorizationEntity.adresa').setValue("test")
+    //         }
+    //     });
+    //
+    // }
 
     get importTypeForms() {
         return this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList') as FormArray
@@ -146,11 +168,11 @@ export class AmbalajComponent implements OnInit {
         console.log("before");
 
         const importTypeForm = this.fb.group({
-            customsCode: [],
-            name: [],
-            quantity: [],
+            customsCode: [''],
+            name: [''],
+            quantity: [''],
             price: [''],
-            currency: [],
+            currency: [''],
             summ: [],
 
             producer: [],
