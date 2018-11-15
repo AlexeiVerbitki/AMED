@@ -80,7 +80,7 @@
 
                     <div class="col-md-4">
                         <div class="md-form-modified">
-                            <ng-select [items]="manufacturersRfPr | async"
+                            <ng-select  [items]="manufacturersRfPr | async"
                                        bindLabel="description"
                                        placeholder="Vînzător"
                                        formControlName="seller"
@@ -236,7 +236,7 @@
                                             <!--</mat-select>-->
                                         <!--</mat-form-field>-->
                                     <!--</div>-->
-                                    <div class="md-form-modified">
+                                    <div class="md-form-modified" >
                                         <ng-select [items]="manufacturersRfPr | async"
                                                    bindLabel="description"
                                                    placeholder="Producatorul"
@@ -244,16 +244,20 @@
                                                    [loading]="loadingManufacturerRfPr"
                                                    [typeahead]="manufacturerInputsRfPr"
                                                    required="true">
-                                            <ng-template ng-option-tmp let-item="item">
-                                                {{item.description}}
+                                            <ng-template ng-option-tmp let-item="item" onchange="getProducerAddress(i)">
+                                                {{item.description}};
+
+
+
+
                                             </ng-template>
                                         </ng-select>
-                                    </div>
+                                    </div >
                                 </div>
                                 <div class="col-md-4">
                                     <div class="md-form">
                                         <!--<input id="producerAddress" mdbInputDirective type="text" class="form-control" [value]="importTypeForms[i].producer.address">-->
-                                        <input id="producerAddress" mdbInputDirective type="text" class="form-control" [value]="importTypeForm.get('producer.address')">
+                                        <input id="producerAddress" mdbInputDirective type="text" class="form-control" [value]="producerAddress"><!--[value]="importTypeForm[i].producer.address">-->
                                         <label for="producerAddress">Ţara şi adresa producătorului materiei prime
                                             <span class="text-danger">*</span>
                                         </label>
@@ -270,13 +274,13 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="text-right">
+                                <button class="btn btn-danger waves-light btn-md" (click)="deleteImportTypeForm(i)">Sterge</button>
+                                <button type="submit" class="btn btn-indigo waves-light btn-md" mdbWavesEffect (click)="addImportTypeForm()" (click)="getProducerAddress(i)">Adauga</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="text-right">
-                        <button class="btn btn-danger waves-light btn-md" (click)="deleteImportTypeForm(i)">Sterge</button>
-                        <button type="submit" class="btn btn-indigo waves-light btn-md" mdbWavesEffect (click)="addImportTypeForm()">Adauga</button>
-                    </div>
+
                     <hr>
                 </section>
                 <div class="text-center">

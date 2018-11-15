@@ -90,7 +90,7 @@ export class AmbalajComponent implements OnInit {
                 'conditionsAndSpecification': [''],
                 'medType': [''],
 
-                'importAuthorizationDetailsEntityList': this.fb.array(['']),
+                'importAuthorizationDetailsEntityList': this.fb.array([]),
 
                 'authorizationsNumber': [''], // inca nu exista la pasul acesta
 
@@ -104,13 +104,15 @@ export class AmbalajComponent implements OnInit {
     ngOnInit() {
         this.currentDate = new Date();
         this.sellerAddress='';
+        this.producerAddress='';
         this.importerAddress='';
         // this.producerAddress='';
         // this.importTypeForms[0].producer.address='';
         this.loadSolicitantCompanyList();
         this.loadManufacturersRfPr();
-        // this.addImportTypeForm();
+        this.addImportTypeForm();
         this.onChanges();
+
 
 
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
@@ -132,7 +134,7 @@ export class AmbalajComponent implements OnInit {
             ))
         }))
 
-
+        console.log("importTypeForms.value",this.importTypeForms.value)
     }
 
     onChanges(): void {
@@ -150,29 +152,30 @@ export class AmbalajComponent implements OnInit {
         });
     }
 
-    // getProducerAddress(index: number){
-    //     this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList['+index+'].producer').valueChanges.subscribe(val => {
-    //         if (val) {
-    //             this.producerAddress = val.address + ", " + val.country.description;
-    //             // this.evaluateImportForm.get('importAuthorizationEntity.adresa').setValue("test")
-    //         }
-    //     });
-    //
-    // }
+    getProducerAddress(index: number){
+        this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList').valueChanges.subscribe(val => {
+            console.log("val:", val)
+            console.log("index: ",index)
+            if (val) {
+                this.producerAddress = val[0].producer.address + ", " + val[0].producer.country.description;
+                console.log("producerAddress =",  this.producerAddress)               // this.evaluateImportForm.get('importAuthorizationEntity.adresa').setValue("test")
+            }
+        });
+
+    }
 
     get importTypeForms() {
         return this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList') as FormArray
     }
 
     addImportTypeForm() {
-        console.log("before");
 
         const importTypeForm = this.fb.group({
-            customsCode: [''],
-            name: [''],
-            quantity: [''],
-            price: [''],
-            currency: [''],
+            customsCode: [],
+            name: [],
+            quantity: [],
+            price: [],
+            currency: [],
             summ: [],
 
             producer: [],
@@ -182,9 +185,7 @@ export class AmbalajComponent implements OnInit {
 
         // alert(importTypeForm.value)
         this.importTypeForms.push(importTypeForm);
-        console.log("after")
-        console.log(importTypeForm.value)
-        console.log(this.importTypeForms.value)
+
 
     }
 
@@ -229,7 +230,8 @@ export class AmbalajComponent implements OnInit {
 
     nextStep() {
         let formModel = this.evaluateImportForm.getRawValue();
-        console.log(formModel);
+        console.log("importTypeForms.value: ",this.importTypeForms.value)
+        console.log("formModel", formModel.value);
     }
 
 

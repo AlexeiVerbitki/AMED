@@ -177,7 +177,7 @@ public class RegistrationRequestsEntity
         this.requestHistories = requestHistories;
     }
 
-    @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToMany( fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @JoinColumn( name = "request_id" )
     public Set<MedicamentEntity> getMedicaments()
     {
