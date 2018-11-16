@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Document} from "../../../models/document";
-import {Observable, Subject, Subscription} from "rxjs";
+import {Observable, of, Subject, Subscription} from "rxjs";
 import {AdministrationService} from "../../../shared/service/administration.service";
 import {LicenseService} from "../../../shared/service/license/license.service";
 import {Router} from "@angular/router";
@@ -9,7 +9,8 @@ import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.c
 import {MatDialog} from "@angular/material";
 import {AuthService} from "../../../shared/service/authetication.service";
 import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
-import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
+import {catchError, debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
+import {LocalityService} from "../../../shared/service/locality.service";
 
 @Component({
     selector: 'app-reg-med-cerere-lic',
@@ -42,6 +43,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
                 private fb: FormBuilder,
                 private administrationService: AdministrationService,
                 private licenseService: LicenseService,
+                private localityService: LocalityService,
                 public dialog: MatDialog,
                 private authService: AuthService,
                 private errorHandlerService: ErrorHandlerService) {
@@ -65,7 +67,12 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
                 flatMap(term =>
 
                     this.administrationService.getCompanyNamesAndIdnoList(term).pipe(
-                        tap(() => this.loadingCompany = false)
+                        tap(() => this.loadingCompany = false),
+                        catchError( () => {
+                            this.loadingCompany = false;
+                            return of([]);;
+                        })
+
                     )
                 )
             );
@@ -107,7 +114,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
     submitNew() {
         this.rFormSubbmitted = true;
 
-        if (!this.mForm.valid || !this.rForm.valid || this.docs.length == 0) {
+        if (!this.mForm.valid || !this.rForm.valid) {
             return;
         }
 
@@ -124,6 +131,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
 
         let modelToSubmit: any = {};
         let licenseModel: any = {};
+        let licenseDetail: any = {};
         let mandatedContact: any = {};
         let licenseMandatedContacts: any[] = [];
 
@@ -135,14 +143,15 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
         mandatedContact.phoneNumber = this.rForm.get('telefonContact').value;
         mandatedContact.email = this.rForm.get('emailContact').value;
         licenseMandatedContacts.push(mandatedContact);
-        licenseModel.licenseMandatedContacts = licenseMandatedContacts;
+        licenseDetail.licenseMandatedContacts = licenseMandatedContacts;
 
-        licenseModel.documents = this.docs;
+        licenseDetail.documents = this.docs;
 
         if (this.tipCerere === 'LICM' || this.tipCerere === 'LICD') {
             licenseModel.id = this.oldLicense.id;
         }
 
+        licenseModel.detail = licenseDetail;
         modelToSubmit.license = licenseModel;
         modelToSubmit.requestNumber = this.mForm.get('nrCererii').value;
         modelToSubmit.company = {id: this.rForm.get('compGet').value.id};
@@ -232,8 +241,18 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
         this.rForm.get('compGet').valueChanges.subscribe(val => {
             this.oldLicense = null;
             if (val) {
-                this.rForm.get('adresa').setValue(val.legalAddress);
                 this.rForm.get('idno').setValue(val.idno);
+                if (val.locality)
+                {
+                    this.subscriptions.push(this.localityService.loadLocalityDetails(val.locality.id).subscribe(data =>
+                        {
+                            console.log('sfsd', data);
+                            let addres = data.stateName + ' ,' + data.description + ' ,' + val.street;
+                            this.rForm.get('adresa').setValue(addres);
+
+                        }
+                    ));
+                }
 
                 this.companyLicenseNotFound = false;
                 this.subscriptions.push(

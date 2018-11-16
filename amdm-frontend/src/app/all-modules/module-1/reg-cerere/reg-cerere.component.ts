@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
@@ -14,7 +14,6 @@ import {ErrorHandlerService} from "../../../shared/service/error-handler.service
 import {LoaderService} from "../../../shared/service/loader.service";
 import {TaskService} from "../../../shared/service/task.service";
 import {CanModuleDeactivate} from "../../../shared/auth-guard/can-deactivate-guard.service";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
 
 @Component({

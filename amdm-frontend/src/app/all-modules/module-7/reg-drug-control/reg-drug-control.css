@@ -1,9 +1,20 @@
-.md-forms {
+.md-form {
     position: relative;
-    margin-top: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
+    margin-top: 14px !important;
+    margin-bottom: 5px !important;
+  }
+  
+  .md-form-modified {
+    position: relative;
+    margin-top: 0px;
+    margin-bottom: 5px !important;
+  }
+  
+  .md-form-modified-select {
+    position: relative;
+    margin-top: 0px;
+    margin-bottom: 5px !important;
+  }
 label.required:not(:empty):after,
 .field-header.required:after {
     content: " *";
@@ -16,11 +27,7 @@ label.required:not(:empty):after,
 .mt-4s {
     padding-top: 45px;
 }
-.md-form-modified {
-    position: relative;
-    margin-top: 10px;
-    margin-bottom: 1.5rem;
-  }
+
 .cursor {
     cursor: pointer;
 }

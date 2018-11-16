@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity
-@Table(name = "licenses", schema = "amed", catalog = "")
+@Table(name = "licenses", schema = "amed")
 public class LicensesEntity
 {
     @Id
@@ -23,7 +23,7 @@ public class LicensesEntity
     private Date releaseDate;
     @Basic
     @Column(name = "cessation_date")
-    private Date cessationDate; //???\
+    private Date cessationDate;
     @Basic
     @Column(name = "expiration_date")
     private Date expirationDate;
@@ -39,61 +39,16 @@ public class LicensesEntity
     @JoinColumn(name = "cessation_reason_id")
     private LicenseCessationReasonsEntity cessationReasons;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "license_id")
-    private Set<LicenseResolutionEntity> resolutions;
-
-    @Transient
-    private LicenseResolutionEntity resolution;
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinTable(name = "LICENSE_DOCUMENTS", joinColumns = {
-            @JoinColumn(name = "LICENSE_ID")}, inverseJoinColumns = {
-            @JoinColumn(name = "DOCUMENT_ID")})
-    private Set<DocumentsEntity> documents;
-
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinTable(name = "LICENSE_ACTIVITIES", joinColumns = {
-            @JoinColumn(name = "LICENSE_ID")}, inverseJoinColumns = {
-            @JoinColumn(name = "license_activity_type_id")})
-    private Set<LicenseActivityTypeEntity> activities;
-
-
     @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "license_id")
     private Set<LicenseAddressesEntity> addresses;
 
     @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "license_id")
-    private Set<LicenseCommisionResponseEntity> commisionResponses;
-
-    @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "license_id")
-    private Set<LicenseMandatedContactEntity> licenseMandatedContacts;
-
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
-    @JoinTable(name = "license_payments_orders", joinColumns = {
-            @JoinColumn(name = "license_id")}, inverseJoinColumns = {
-            @JoinColumn(name = "payment_order_id")})
-    private Set<PaymentOrdersEntity> paymentOrders;
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
-    @JoinTable(name = "license_receipts", joinColumns = {
-            @JoinColumn(name = "license_id")}, inverseJoinColumns = {
-            @JoinColumn(name = "receipt_id")})
-    private Set<ReceiptsEntity> receipts;
-
-
-    @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "license_id")
-    private Set<LicenseAgentPharmaceutistEntity> agentPharmaceutist;
+    private Set<LicenseDetailsEntity> details = new HashSet<>();
 
     @Transient
-    private LicenseAgentPharmaceutistEntity selectedPharmaceutist;
-
-
+    private LicenseDetailsEntity detail;
 
     public Integer getId()
     {
@@ -175,25 +130,16 @@ public class LicensesEntity
         this.cessationReasons = cessationReasons;
     }
 
-    public LicenseResolutionEntity getResolution()
+    public NmEconomicAgentsEntity getEconomicAgent()
     {
-        return resolution;
+        return economicAgent;
     }
 
-    public void setResolution(LicenseResolutionEntity resolution)
+    public void setEconomicAgent(NmEconomicAgentsEntity economicAgent)
     {
-        this.resolution = resolution;
+        this.economicAgent = economicAgent;
     }
 
-    public Set<DocumentsEntity> getDocuments()
-    {
-        return documents;
-    }
-
-    public void setDocuments(Set<DocumentsEntity> documents)
-    {
-        this.documents = documents;
-    }
 
     public Set<LicenseAddressesEntity> getAddresses()
     {
@@ -205,34 +151,24 @@ public class LicensesEntity
         this.addresses = addresses;
     }
 
-    public Set<LicenseCommisionResponseEntity> getCommisionResponses()
+    public Set<LicenseDetailsEntity> getDetails()
     {
-        return commisionResponses;
+        return details;
     }
 
-    public void setCommisionResponses(Set<LicenseCommisionResponseEntity> commisionResponses)
+    public void setDetails(Set<LicenseDetailsEntity> details)
     {
-        this.commisionResponses = commisionResponses;
+        this.details = details;
     }
 
-    public NmEconomicAgentsEntity getEconomicAgent()
+    public LicenseDetailsEntity getDetail()
     {
-        return economicAgent;
+        return detail;
     }
 
-    public void setEconomicAgent(NmEconomicAgentsEntity economicAgent)
+    public void setDetail(LicenseDetailsEntity detail)
     {
-        this.economicAgent = economicAgent;
-    }
-
-    public Set<LicenseMandatedContactEntity> getLicenseMandatedContacts()
-    {
-        return licenseMandatedContacts;
-    }
-
-    public void setLicenseMandatedContacts(Set<LicenseMandatedContactEntity> licenseMandatedContacts)
-    {
-        this.licenseMandatedContacts = licenseMandatedContacts;
+        this.detail = detail;
     }
 
     @Override
@@ -241,95 +177,21 @@ public class LicensesEntity
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LicensesEntity that = (LicensesEntity) o;
-        return id == that.id &&
+        return Objects.equals(id, that.id) &&
                 Objects.equals(serialNr, that.serialNr) &&
                 Objects.equals(nr, that.nr) &&
                 Objects.equals(releaseDate, that.releaseDate) &&
                 Objects.equals(cessationDate, that.cessationDate) &&
                 Objects.equals(expirationDate, that.expirationDate) &&
                 Objects.equals(status, that.status) &&
+                Objects.equals(economicAgent, that.economicAgent) &&
                 Objects.equals(cessationReasons, that.cessationReasons) &&
-                Objects.equals(resolution, that.resolution) &&
-                Objects.equals(documents, that.documents);
+                Objects.equals(addresses, that.addresses);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(id, serialNr, nr, releaseDate, cessationDate, expirationDate, status, cessationReasons, resolution, documents);
-    }
-
-    @Override
-    public String toString()
-    {
-        return "LicensesEntity{" +
-                "id=" + id +
-                ", serialNr='" + serialNr + '\'' +
-                ", nr=" + nr +
-                ", releaseDate=" + releaseDate +
-                ", cessationDate=" + cessationDate +
-                ", expirationDate=" + expirationDate +
-                ", status='" + status + '\'' +
-                '}';
-    }
-
-    public Set<LicenseActivityTypeEntity> getActivities()
-    {
-        return activities;
-    }
-
-    public void setActivities(Set<LicenseActivityTypeEntity> activities)
-    {
-        this.activities = activities;
-    }
-
-    public Set<PaymentOrdersEntity> getPaymentOrders()
-    {
-        return paymentOrders;
-    }
-
-    public void setPaymentOrders(Set<PaymentOrdersEntity> paymentOrders)
-    {
-        this.paymentOrders = paymentOrders;
-    }
-
-    public Set<ReceiptsEntity> getReceipts()
-    {
-        return receipts;
-    }
-
-    public void setReceipts(Set<ReceiptsEntity> receipts)
-    {
-        this.receipts = receipts;
-    }
-
-    public Set<LicenseAgentPharmaceutistEntity> getAgentPharmaceutist()
-    {
-        return agentPharmaceutist;
-    }
-
-    public void setAgentPharmaceutist(Set<LicenseAgentPharmaceutistEntity> agentPharmaceutist)
-    {
-        this.agentPharmaceutist = agentPharmaceutist;
-    }
-
-    public LicenseAgentPharmaceutistEntity getSelectedPharmaceutist()
-    {
-        return selectedPharmaceutist;
-    }
-
-    public void setSelectedPharmaceutist(LicenseAgentPharmaceutistEntity selectedPharmaceutist)
-    {
-        this.selectedPharmaceutist = selectedPharmaceutist;
-    }
-
-    public Set<LicenseResolutionEntity> getResolutions()
-    {
-        return resolutions;
-    }
-
-    public void setResolutions(Set<LicenseResolutionEntity> resolutions)
-    {
-        this.resolutions = resolutions;
+        return Objects.hash(id, serialNr, nr, releaseDate, cessationDate, expirationDate, status, economicAgent, cessationReasons, addresses);
     }
 }

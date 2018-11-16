@@ -184,8 +184,8 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
     nextStep() {
 
-        console.log(this.rForm)
-        console.log(this.rForm.status)
+        // console.log(this.rForm)
+        // console.log(this.rForm.status)
         if (/*this.docs.length == 0 ||*/ this.rForm.invalid ) {
             alert('No Documents attached or Invalid Form data!!')
             return;

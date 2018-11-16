@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "clinical_trials", schema = "amed", catalog = "")
+@Table(name = "clinical_trials", schema = "amed")
 public class ClinicalTrialsEntity {
     private Integer id;
     private ClinicalTrialsTypesEntity treatment;

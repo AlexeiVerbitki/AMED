@@ -21,6 +21,7 @@ public class DrugCheckDecisionsEntity
     private Date cpcdResponseDate;
 
     @Id
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
     @Column(name = "id")
     public Integer getId()
     {
@@ -240,11 +241,6 @@ public class DrugCheckDecisionsEntity
         {
             return false;
         }
-        if (cpcdResponseDate != null ? !cpcdResponseDate.equals(that.cpcdResponseDate) : that.cpcdResponseDate != null)
-        {
-            return false;
-        }
-
-        return true;
+        return cpcdResponseDate != null ? cpcdResponseDate.equals(that.cpcdResponseDate) : that.cpcdResponseDate == null;
     }
 }

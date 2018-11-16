@@ -85,10 +85,6 @@ public class RequestController
             for(MedicamentEntity med : medicamentEntities)
             {
                 MedicamentDivisionHistoryEntity medicamentDivisionHistoryEntity = new MedicamentDivisionHistoryEntity();
-                medicamentDivisionHistoryEntity.setStorageQuantity(med.getStorageQuantity());
-                medicamentDivisionHistoryEntity.setStorageQuantityMeasurement(med.getStorageQuantityMeasurement());
-                medicamentDivisionHistoryEntity.setUnitsQuantity(med.getUnitsQuantity());
-                medicamentDivisionHistoryEntity.setUnitsQuantityMeasurement(med.getUnitsQuantityMeasurement());
                 medicamentDivisionHistoryEntity.setOld(1);
                 medicamentHistoryEntity.getDivisionHistory().add(medicamentDivisionHistoryEntity);
             }
@@ -344,7 +340,6 @@ public class RequestController
         }
         throw new CustomException("Request was not found");
     }
-
     @PostMapping(value = "/add-import-request")
     public ResponseEntity<Integer> saveImportRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
         if (requests.getImportAuthorizationEntity() == null) {

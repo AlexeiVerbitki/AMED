@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Select} from '../../../models/select';
 import {Document} from "../../../models/document";
@@ -17,6 +17,9 @@ import {Receipt} from "../../../models/receipt";
 import {DocumentService} from "../../../shared/service/document.service";
 import {LoaderService} from "../../../shared/service/loader.service";
 import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
+import {MatDialog} from "@angular/material";
+import {TaskService} from "../../../shared/service/task.service";
+import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
 
 @Component({
   selector: 'app-cerere-import-export',
@@ -33,7 +36,6 @@ export class CerereImportExportComponent implements OnInit {
   generatedDocNrSeq: number;
   companies: any[];
   filteredOptions: Observable<any[]>;
-  isWrongValueCompany: boolean;
   medicamentTypes: any[];
   medicamentGroups: any[];
   pharmaceuticalForms: any[];
@@ -42,10 +44,15 @@ export class CerereImportExportComponent implements OnInit {
   paymentOrdersList: PaymentOrder[] = [];
   receiptsList: Receipt[] = [];
   docTypes: any[];
+  allDocTypes: any[];
   activeSubstancesTable: any[] = [];
   initialData: any;
   divisions: any[] = [];
-  //outDocuments: any[] = [];
+  outDocuments: any[] = [];
+  isNonAttachedDocuments: boolean = false;
+  isResponseReceived: boolean = false;
+  docTypesInitial: any[];
+  drugCheckDecisions: any[] = [];
 
   authorizationTypes: Select[] = [
     {value: 'none', viewValue: '(None)'},
@@ -54,9 +61,11 @@ export class CerereImportExportComponent implements OnInit {
   ];
 
     constructor(private fb: FormBuilder, private administrationService: AdministrationService, private medicamentService: MedicamentService,
-              private medicamentTypeService: MedicamentTypeService, private medicamentGroupService: MedicamentGroupService,
-              private pharmaceuticalFormsService: PharmaceuticalFormsService, private activatedRoute: ActivatedRoute, private router: Router,
-              private requestService : RequestService, private authService : AuthService, private documentService: DocumentService, private loadingService: LoaderService) {
+                private medicamentTypeService: MedicamentTypeService, private medicamentGroupService: MedicamentGroupService,
+                private pharmaceuticalFormsService: PharmaceuticalFormsService, private activatedRoute: ActivatedRoute, private router: Router,
+                private requestService : RequestService, private authService : AuthService,
+                private documentService: DocumentService, private loadingService: LoaderService, public dialogConfirmation: MatDialog,
+                private taskService: TaskService, private ref: ChangeDetectorRef, private errorHandlerService: ErrorHandlerService) {
     this.cerereImpExpForm = fb.group({
         'id': [],
         'data': {disabled: true, value: new Date()},
@@ -80,11 +89,19 @@ export class CerereImportExportComponent implements OnInit {
                 'serialNr': [null, Validators.required],
                 'medicamentType': [],
                 'activeSubstances': [],
-                'group': []
+                'group': [],
+                'status' : ['F']
             }),
+        'drugCheckDecision':
+            fb.group({
+                'protocolNr': [null, Validators.required],
+                'protocolDate': Date
+            }),
+        'drugCheckDecisions': [],
         'requestHistories': [],
         'type': [],
         'typeValue': {disabled: true, value: null},
+        'authorizationType': [null, Validators.required]
 
     });
   }
@@ -115,27 +132,30 @@ export class CerereImportExportComponent implements OnInit {
                                  storageQuantity: entry.storageQuantity,
                                  storageQuantityMeasurement: entry.storageQuantityMeasurement
                             });
-                      }
+                         }
 
-                      this.cerereImpExpForm.get('medicament.dose').setValue(data.medicaments[0].dose);
-                      this.cerereImpExpForm.get('medicament.termsOfValidity').setValue(data.medicaments[0].termsOfValidity);
-                      this.cerereImpExpForm.get('medicament.volume').setValue(data.medicaments[0].volume);
-                      if (data.medicaments[0].group) {
-                          this.cerereImpExpForm.get('medicament.group.code').setValue(data.medicaments[0].group.code);
-                      }
-                      if (data.medicaments[0].prescription!=undefined && data.medicaments[0].prescription!=null) {
-                          this.cerereImpExpForm.get('medicament.prescription').setValue(data.medicaments[0].prescription.toString());
-                      }
-                      this.activeSubstancesTable = data.medicaments[0].activeSubstances;
+                         this.cerereImpExpForm.get('medicament.dose').setValue(data.medicaments[0].dose);
+                         this.cerereImpExpForm.get('medicament.id').setValue(data.medicaments[0].id);
+                         // this.cerereImpExpForm.get('medicament.termsOfValidity').setValue(data.medicaments[0].termsOfValidity);
+                         // this.cerereImpExpForm.get('medicament.volume').setValue(data.medicaments[0].volume);
+                         // if (data.medicaments[0].group) {
+                         //    this.cerereImpExpForm.get('medicament.group.code').setValue(data.medicaments[0].group.code);
+                         // }
+                         // if (data.medicaments[0].prescription!=undefined && data.medicaments[0].prescription!=null) {
+                         //    this.cerereImpExpForm.get('medicament.prescription').setValue(data.medicaments[0].prescription.toString());
+                         // }
+                         this.activeSubstancesTable = data.medicaments[0].activeSubstances;
                       }
                       this.documents = data.documents;
-                      //this.outDocuments = data.outputDocuments;
+                      this.outDocuments = data.outputDocuments;
                       this.documents.sort((a,b)=>new Date(a.date).getTime()-new Date(b.date).getTime());
                       let xs = this.documents;
                       xs = xs.map(x => {
                           x.isOld = true;
                           return x;
                       });
+
+                      this.loadDocTypes();
                   })
               );
           })
@@ -196,15 +216,31 @@ export class CerereImportExportComponent implements OnInit {
           )
       );
 
-      this.subscriptions.push(
-          this.administrationService.getAllDocTypes().subscribe(data => {
-                  this.docTypes = data;
-                  this.docTypes = this.docTypes.filter(r => r.category === 'DD');
-              },
-              error => console.log(error)
-          )
-      );
+      this.onChanges();
   }
+
+  loadDocTypes() {
+
+        this.subscriptions.push(
+            this.taskService.getRequestStepByIdAndCode('11', 'E').subscribe(step => {
+                    this.subscriptions.push(
+                        this.administrationService.getAllDocTypes().subscribe(data => {
+                                this.allDocTypes = data;
+                                this.docTypesInitial = Object.assign([], data);
+                                this.allDocTypes = this.allDocTypes.filter(r => step.availableDocTypes.includes(r.category));
+                                this.docTypes = this.allDocTypes.filter(r => r.category === 'None');
+
+                                this.initOutputDocuments();
+                                this.checkOutputDocumentsStatus();
+                            },
+                            error => console.log(error)
+                        )
+                    );
+                },
+                error => console.log(error)
+            )
+        );
+    }
 
   private _filter(name: string): any[] {
     const filterValue = name.toLowerCase();
@@ -212,14 +248,134 @@ export class CerereImportExportComponent implements OnInit {
     return this.companies.filter(option => option.name.toLowerCase().includes(filterValue));
   }
 
+  private initOutputDocuments() {
+
+        let outDocumentSR = {
+            name: 'Scrisoare de refuz',
+            docType: this.docTypesInitial.find(r => r.category == 'SR'),
+            number: 'SR-' + this.cerereImpExpForm.get('requestNumber').value,
+            date: new Date()
+        };
+        this.outDocuments.push(outDocumentSR);
+
+        this.outDocuments = this.outDocuments.filter(r => r.category === 'SR');
+    }
+
+    onChanges(): void {
+        this.cerereImpExpForm.get('authorizationType').valueChanges.subscribe(val => {
+            this.outDocuments = [];
+           if(val.value == 'Import'){
+               this.initOutImportDocuments();
+          }
+           else if(val.value == 'Export'){
+               this.initOutExportDocuments();
+           }
+           else{
+               this.docTypes = this.allDocTypes.filter(r => r.category === 'SR');
+           }
+            let outDocumentSR = {
+                name: 'Scrisoare de refuz',
+                docType: this.docTypesInitial.find(r => r.category == 'SR'),
+                number: 'SR-' + this.cerereImpExpForm.get('requestNumber').value,
+                date: new Date()
+            };
+            this.outDocuments.push(outDocumentSR);
+            this.checkOutputDocumentsStatus();
+        });
+
+    }
+
+    initOutExportDocuments() {
+        let outDocumentEP = {
+            name: 'Autorizatia de export a precursorilor',
+            docType: this.docTypesInitial.find(r => r.category == 'EP'),
+            number: 'EP-' + this.cerereImpExpForm.get('requestNumber').value,
+            date: new Date()
+        };
+        this.outDocuments.push(outDocumentEP);
+
+        let outDocumentEH = {
+            name: 'Autorizatia de export a psihotropelor',
+            docType: this.docTypesInitial.find(r => r.category == 'EH'),
+            number: 'EH-' + this.cerereImpExpForm.get('requestNumber').value,
+            date: new Date()
+        };
+        this.outDocuments.push(outDocumentEH);
+
+        let outDocumentEF = {
+            name: 'Autorizatia de export a stupefiantelor',
+            docType: this.docTypesInitial.find(r => r.category == 'EF'),
+            number: 'EF-' + this.cerereImpExpForm.get('requestNumber').value,
+            date: new Date()
+        };
+        this.outDocuments.push(outDocumentEF);
+        this.docTypes = this.allDocTypes.filter(r => r.category === 'SR' || r.category === 'EP' || r.category === 'EH' || r.category === 'EF');
+    }
+
+    initOutImportDocuments() {
+        let outDocumentIP = {
+            name: 'Autorizatia de import a precursorilor',
+            docType: this.docTypesInitial.find(r => r.category == 'IP'),
+            number: 'IP-' + this.cerereImpExpForm.get('requestNumber').value,
+            date: new Date()
+        };
+        this.outDocuments.push(outDocumentIP);
+
+        let outDocumentIH = {
+            name: 'Autorizatia de import a psihotropelor',
+            docType: this.docTypesInitial.find(r => r.category == 'IH'),
+            number: 'IH-' + this.cerereImpExpForm.get('requestNumber').value,
+            date: new Date()
+        };
+        this.outDocuments.push(outDocumentIH);
+
+        let outDocumentIF = {
+            name: 'Autorizatia de import a stupefiantelor',
+            docType: this.docTypesInitial.find(r => r.category == 'IF'),
+            number: 'IF-' + this.cerereImpExpForm.get('requestNumber').value,
+            date: new Date()
+        };
+        this.outDocuments.push(outDocumentIF);
+        this.docTypes = this.allDocTypes.filter(r => r.category === 'SR' || r.category === 'IP' || r.category === 'IH' || r.category === 'IF');
+    }
+
   saveRequest() {
 
       this.formSubmitted = true;
+      let isFormInvalid = false;
+      this.isResponseReceived = false;
+      this.isNonAttachedDocuments = false;
 
       if (this.cerereImpExpForm.invalid || this.paymentTotal<0) {
+          isFormInvalid = true;
+      }
+
+      for (let entry of this.outDocuments) {
+
+          if (entry.responseReceived || entry.status == 'Atasat') {
+              this.isResponseReceived = true;
+              if (entry.status == 'Nu este atasat') {
+                  this.isNonAttachedDocuments = true;
+              }
+          }
+      }
+
+      if (isFormInvalid) {
+          this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
+      } else if (!this.isResponseReceived) {
+          this.errorHandlerService.showError('Nici un document pentru emitere nu a fost selectat.');
+          return;
+      }
+      else if (this.isNonAttachedDocuments && this.isResponseReceived) {
+          this.errorHandlerService.showError('Exista documente care nu au fost atasate.');
           return;
       }
 
+      if (isFormInvalid) {
+          return;
+      }
+
+      this.isResponseReceived = true;
       this.formSubmitted = false;
 
       this.cerereImpExpForm.get('company').setValue(this.cerereImpExpForm.value.company);
@@ -230,6 +386,15 @@ export class CerereImportExportComponent implements OnInit {
           startDate: this.cerereImpExpForm.get('data').value, endDate: new Date(),
           username: this.authService.getUserName(), step: 'E'
       });
+
+      let drugCheckDecision = {
+          id: null,
+          protocolNr: this.cerereImpExpForm.get('drugCheckDecision.protocolNr').value,
+          protocolDate: this.cerereImpExpForm.get('drugCheckDecision.protocolDate').value
+      };
+
+      this.drugCheckDecisions.push(drugCheckDecision);
+      modelToSubmit.drugCheckDecisions = this.drugCheckDecisions;
 
       for (let division of this.divisions) {
           let medicamentToSubmit: any;
@@ -245,7 +410,7 @@ export class CerereImportExportComponent implements OnInit {
       modelToSubmit.paymentOrders = this.paymentOrdersList;
       modelToSubmit.receipts = this.receiptsList;
       modelToSubmit.documents = this.documents;
-      //modelToSubmit.outputDocuments = this.outDocuments;
+      modelToSubmit.outputDocuments = this.outDocuments;
 
       console.log(modelToSubmit);
 
@@ -294,5 +459,74 @@ export class CerereImportExportComponent implements OnInit {
         }
     }
 
+    remove(doc: any) {
+        const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur(a)?',
+                confirm: false
+            }
+        });
 
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result) {
+                this.loadingService.show();
+                this.outDocuments.forEach((item, index) => {
+                    if (item === doc) this.outDocuments.splice(index, 1);
+                });
+                this.initialData.outputDocuments = this.outDocuments;
+
+                this.subscriptions.push(this.requestService.addMedicamentRequest(this.initialData).subscribe(data => {
+                        this.outDocuments = data.body.outputDocuments;
+                        this.checkOutputDocumentsStatus();
+                        this.loadingService.hide();
+                    }, error => this.loadingService.hide())
+                );
+            }
+        });
+    }
+
+    checkOutputDocumentsStatus() {
+        for (let entry of this.outDocuments) {
+            var isMatch = this.documents.some(elem => {
+                return (elem.docType.category == entry.docType.category && elem.number == entry.number) ? true : false;
+            });
+            if (isMatch) {
+                entry.status = 'Atasat';
+            } else {
+                entry.status = 'Nu este atasat';
+            }
+        }
+    }
+
+    documentModified(event) {
+        this.formSubmitted = false;
+        this.checkOutputDocumentsStatus();
+    }
+
+    interruptProcess() {
+        const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur(a)?',
+                confirm: false
+            }
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result) {
+                this.loadingService.show();
+                let usernameDB = this.authService.getUserName();
+                var modelToSubmit = {requestHistories: [], currentStep: 'I', id: this.cerereImpExpForm.get('id').value, assignedUser : usernameDB, initiator : this.authService.getUserName()};
+                modelToSubmit.requestHistories.push({
+                    startDate: this.cerereImpExpForm.get('data').value, endDate: new Date(),
+                    username: usernameDB, step: 'E'
+                });
+
+                this.subscriptions.push(this.requestService.addMedicamentHistory(modelToSubmit).subscribe(data => {
+                        this.loadingService.hide();
+                        this.router.navigate(['dashboard/module']);
+                    }, error => this.loadingService.hide())
+                );
+            }
+        });
+    }
 }

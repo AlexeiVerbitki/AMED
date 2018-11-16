@@ -12,6 +12,8 @@ import {Country} from "../../models/country";
 import {Currency} from "../../models/currency";
 import {CurrencyHistory} from "../../models/currencyHistory";
 import {DocumentService} from "./document.service";
+import {TaskService} from "./task.service";
+import {Price} from "../../models/price";
 
 
 @Injectable({
@@ -25,10 +27,19 @@ export class PriceService {
                 private requestService: RequestService,
                 private authService: AuthService,
                 private documentService: DocumentService,
+                private taskService: TaskService,
                 private http: HttpClient) {}
 
     getCompanies(): Observable<Company[]> {
         return this.administrationService.getAllCompaniesMinimal();
+    }
+
+    getRequestStepByIdAndCode(requestTypeId: string,code : string): Observable<any> {
+        return this.taskService.getRequestStepByIdAndCode(requestTypeId, code);
+    }
+
+    getAllDocTypes(): Observable<any> {
+        return this.administrationService.getAllDocTypes();
     }
 
     getMedicamentById(id: string): any {
@@ -65,6 +76,14 @@ export class PriceService {
 
     getAllPriceTypes(): Observable<any> {
         return this.http.get('/api/price/all-price-types');
+    }
+
+    getMedPrevPrices(medicamentId: string): Observable<any> {
+        return this.http.get('/api/price/med-prev-prices',  {params: {id: medicamentId}});
+    }
+
+    getRelatedMedicaments(internationalNameId: string): Observable<any> {
+        return this.http.get('/api/medicaments/related',  {params: {internationalNameId: internationalNameId}});
     }
 
     getPrevMonthAVGCurrencies(): Observable<any> {

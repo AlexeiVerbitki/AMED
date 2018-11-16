@@ -30,19 +30,17 @@ export interface PeriodicElement {
 export class AmbalajComponent implements OnInit {
     cereri: Cerere[] = [];
     companii: any[];
-    primRep: string;
     evaluateImportForm: FormGroup;
     // importTypeForm: FormGroup;
-    testForm: FormGroup;
-    sysDate: string;
     currentDate: Date;
     file: any;
     generatedDocNrSeq: number;
     filteredOptions: Observable<any[]>;
     formSubmitted: boolean;
-    isWrongValueCompany: boolean;
     private subscriptions: Subscription[] = [];
     docs: Document [] = [];
+
+    unitOfImportTable: any[] = [];
 
     protected manufacturersRfPr: Observable<any[]>;
     protected loadingManufacturerRfPr: boolean = false;
@@ -53,8 +51,11 @@ export class AmbalajComponent implements OnInit {
     producerAddress: any;
 
     solicitantCompanyList: Observable<any[]>;
-    summ: any;
+    unitSumm: any;
+    private unitOfImportPressed : boolean;
 
+    formModel: any;
+    valutaList: Observable<any[]>;
 
     constructor(private fb: FormBuilder,
                 private requestService: RequestService,
@@ -90,7 +91,19 @@ export class AmbalajComponent implements OnInit {
                 'conditionsAndSpecification': [''],
                 'medType': [''],
 
-                'importAuthorizationDetailsEntityList': this.fb.array([]),
+                // 'importAuthorizationDetailsEntityList': this.fb.array([]),
+                'importAuthorizationDetailsEntityList': this.fb.group({
+
+                    customsCode: [],
+                    name: [],
+                    quantity: [],
+                    price: [],
+                    currency: [],
+                    summ: [],
+                    producer: [],
+                    expirationDate: [],
+
+                }),
 
                 'authorizationsNumber': [''], // inca nu exista la pasul acesta
 
@@ -106,12 +119,14 @@ export class AmbalajComponent implements OnInit {
         this.sellerAddress='';
         this.producerAddress='';
         this.importerAddress='';
+        this.formSubmitted = false;
         // this.producerAddress='';
         // this.importTypeForms[0].producer.address='';
         this.loadSolicitantCompanyList();
         this.loadManufacturersRfPr();
-        this.addImportTypeForm();
+        // this.addImportTypeForm();
         this.onChanges();
+        this.loadCurrenciesShort();
 
 
 
@@ -144,12 +159,26 @@ export class AmbalajComponent implements OnInit {
                 // this.evaluateImportForm.get('importAuthorizationEntity.adresa').setValue("test")
             }
         });
-        this.evaluateImportForm.get('importAuthorizationEntity.importer').valueChanges.subscribe(val => {
+        this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.quantity').valueChanges.subscribe(val => {
             if (val) {
-                this.importerAddress = val.legalAddress + ", Moldova";
-                // this.evaluateImportForm.get('importAuthorizationEntity.adresa').setValue("test")
+                this.unitSumm = this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.quantity').value
+                    * this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.price').value;
+                this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.summ').setValue(this.unitSumm);
             }
         });
+        this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.price').valueChanges.subscribe(val => {
+            if (val) {
+                this.unitSumm = this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.quantity').value
+                    * this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.price').value;
+                this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.summ').setValue(this.unitSumm);
+            }
+        });
+        // this.evaluateImportForm.getthis.addImportTypeForm('importAuthorizationEntity.importer').valueChanges.subscribe(val => {
+        //     if (val) {
+        //         this.importerAddress = val.legalAddress + ", Moldova";
+        //         // this.evaluateImportForm.get('importAuthorizationEntity.adresa').setValue("test")
+        //     }
+        // });
     }
 
     getProducerAddress(index: number){
@@ -157,7 +186,7 @@ export class AmbalajComponent implements OnInit {
             console.log("val:", val)
             console.log("index: ",index)
             if (val) {
-                this.producerAddress = val[0].producer.address + ", " + val[0].producer.country.description;
+                this.producerAddress = val[index].producer.address + ", " + val[index].producer.country.description;
                 console.log("producerAddress =",  this.producerAddress)               // this.evaluateImportForm.get('importAuthorizationEntity.adresa').setValue("test")
             }
         });
@@ -168,33 +197,61 @@ export class AmbalajComponent implements OnInit {
         return this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList') as FormArray
     }
 
-    addImportTypeForm() {
+    addUnitOfImport() {
+        this.unitOfImportPressed = true;
 
-        const importTypeForm = this.fb.group({
-            customsCode: [],
-            name: [],
-            quantity: [],
-            price: [],
-            currency: [],
-            summ: [],
+        // if (this.evaluateImportForm.get('activeSubstance').value == null || this.evaluateImportForm.get('activeSubstance').value.toString().length == 0
+        //     || this.evaluateImportForm.get('activeSubstanceQuantity').value == null || this.evaluateImportForm.get('activeSubstanceQuantity').value.toString().length == 0
+        //     || this.evaluateImportForm.get('activeSubstanceUnit').value == null || this.evaluateImportForm.get('activeSubstanceUnit').value.toString().length == 0
+        //     || this.evaluateImportForm.get('manufactureSA').value == null || this.evaluateImportForm.get('manufactureSA').value.toString().length == 0) {
+        //     return;
+        // }
+        this.unitOfImportPressed = false;
 
-            producer: [],
-            expirationDate: [],
+        this.unitOfImportTable.push({
+            // unitOfImport: this.evaluateImportForm.get('activeSubstance').value,
+            // quantity: this.evaluateImportForm.get('activeSubstanceQuantity').value,
+            // unitsOfMeasurement: this.evaluateImportForm.get('activeSubstanceUnit').value,
+            // manufacture: this.evaluateImportForm.get('manufactureSA').value
 
-        })
+             customsCode:       this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.customsCode').value,
+             name:              this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.name').value,
+             quantity:          this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.quantity').value,
+             price:             this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.price').value,
+             currency:          this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.currency').value,
+             // summ:           this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.summ').value,
+             summ:              this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.quantity').value
+                              * this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.price').value,
+             producer:          this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.producer').value.description,
+             producerAddress:   this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.producer').value.address
+                              + ", "
+                              + this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.producer').value.country.description ,
+            expirationDate:     this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.expirationDate').value
+        });
 
-        // alert(importTypeForm.value)
-        this.importTypeForms.push(importTypeForm);
-
-
+        this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.customsCode').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.name').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.quantity').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.price').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.currency').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.summ').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.producer').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.expirationDate').setValue(null);
+        console.log("this.unitOfImportTable", this.unitOfImportTable)
     }
 
+    removeunitOfImport(index: number) {
 
-    deleteImportTypeForm(i) {
-        this.importTypeForms.removeAt(i)
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {message: 'Sunteti sigur ca doriti sa stergeti ?', confirm: false}
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.unitOfImportTable.splice(index, 1);
+            }
+        });
     }
-
-    //=============================
 
     loadSolicitantCompanyList() {
         this.subscriptions.push(
@@ -227,11 +284,45 @@ export class AmbalajComponent implements OnInit {
             );
     }
 
+    // loadCurrencies(){
+    //     this.manufacturersRfPr =
+    //         this.manufacturerInputsRfPr.pipe(
+    //             filter((result: string) => {
+    //                 if (result && result.length > 2) return true;
+    //             }),
+    //             debounceTime(400),
+    //             distinctUntilChanged(),
+    //             tap((val: string) => {
+    //                 this.loadingManufacturerRfPr = true;
+    //
+    //             }),
+    //             flatMap (term =>
+    //                 this.administrationService.getCurrenciesShort().pipe(
+    //                     tap(() => this.loadingManufacturerRfPr = false)
+    //                 )
+    //             )
+    //         );
+    // }
+    loadCurrenciesShort() {
+        this.subscriptions.push(
+            this.administrationService.getCurrenciesShort().subscribe(data => {
+                    this.valutaList = data;
+                },
+                error => console.log(error)
+            )
+        )
+    }
+
 
     nextStep() {
-        let formModel = this.evaluateImportForm.getRawValue();
-        console.log("importTypeForms.value: ",this.importTypeForms.value)
-        console.log("formModel", formModel.value);
+        this.formSubmitted = true;
+        // let formModel = this.evaluateImportForm.getRawValue();
+
+        this.formModel.importAuthorizationDetailsEntityList = this.unitOfImportTable;
+        this.formModel.nrCererii  = this.evaluateImportForm.get('requestNumber');
+        console.log("formModel", this.formModel);
+
+        this.formSubmitted = false;
     }
 
 

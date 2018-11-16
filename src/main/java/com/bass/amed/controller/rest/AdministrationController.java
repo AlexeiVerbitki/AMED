@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,8 +56,6 @@ public class AdministrationController {
     private NmCountriesRepository nmCountriesRepository;
     @Autowired
     private EmployeeRepository employeeRepository;
-    @Autowired
-    MailSender mailSender;
     @Autowired
     InvestigatorRepository investigatorRepository;
     @Autowired
@@ -219,7 +216,6 @@ public class AdministrationController {
         message.setTo(mailAddress);
 
         try {
-            mailSender.send(message);
         } catch (Exception e) {
             throw new CustomException("Could not send message" + e.getMessage());
         }

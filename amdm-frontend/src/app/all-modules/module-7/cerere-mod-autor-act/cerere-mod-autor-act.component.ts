@@ -52,7 +52,7 @@ export class CerereModAutorActComponent implements OnInit {
                 private loadingService: LoaderService,
                 private documentService: DocumentService,
                 public dialogConfirmation: MatDialog,
-                private taskService: TaskService, private errorHandlerService: ErrorHandlerService,
+                private taskService: TaskService, private errorHandlerService: ErrorHandlerService
     ) {
         this.cerereModAutorForm = fb.group({
             'id': [],
@@ -308,9 +308,11 @@ export class CerereModAutorActComponent implements OnInit {
             this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
         } else if (!this.isResponseReceived) {
             this.errorHandlerService.showError('Nici un document pentru emitere nu a fost selectat.');
+            return;
         }
         else if (this.isNonAttachedDocuments && this.isResponseReceived) {
             this.errorHandlerService.showError('Exista documente care nu au fost atasate.');
+            return;
         }
 
         if (isFormInvalid) {
@@ -427,5 +429,32 @@ export class CerereModAutorActComponent implements OnInit {
     documentModified(event) {
         this.formSubmitted = false;
         this.checkOutputDocumentsStatus();
+    }
+
+    interruptProcess() {
+        const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur(a)?',
+                confirm: false
+            }
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result) {
+                this.loadingService.show();
+                let usernameDB = this.authService.getUserName();
+                var modelToSubmit = {requestHistories: [], currentStep: 'I', id: this.cerereModAutorForm.get('id').value, assignedUser : usernameDB, initiator : this.authService.getUserName()};
+                modelToSubmit.requestHistories.push({
+                    startDate: this.cerereModAutorForm.get('data').value, endDate: new Date(),
+                    username: usernameDB, step: 'E'
+                });
+
+                this.subscriptions.push(this.requestService.addMedicamentHistory(modelToSubmit).subscribe(data => {
+                        this.loadingService.hide();
+                        this.router.navigate(['dashboard/module']);
+                    }, error => this.loadingService.hide())
+                );
+            }
+        });
     }
 }

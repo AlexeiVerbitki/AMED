@@ -6,6 +6,7 @@ import com.bass.amed.entity.ScrUserEntity;
 import com.bass.amed.repository.SrcUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.support.LdapContextSource;
@@ -39,6 +40,9 @@ public class CustomAuthenticationManager implements AuthenticationManager
     private final LdapContextSource ldapContextSource;
     LdapAuthenticationProvider provider = null;
 
+    @Value("${ldap.base_search_user}")
+    private String LDAP_BASE_USER_SEARCH;
+
 
     public CustomAuthenticationManager(SrcUserRepository srcUserRepository, LdapContextSource ldapContextSource)
     {
@@ -52,8 +56,6 @@ public class CustomAuthenticationManager implements AuthenticationManager
         LOGGER.debug("AUTHENTICATION Login: " + authentication.getName());
         LOGGER.debug("AUTHENTICATION Password: *************");
 
-        //        DirContext ctx = ldapContextSource.getContext(authentication.getPrincipal().toString(), authentication.getCredentials().toString());
-
         ldapContextSource.setUserDn(authentication.getPrincipal().toString());
         ldapContextSource.setPassword(authentication.getCredentials().toString());
         BindAuthenticator bindAuth = new BindAuthenticator(ldapContextSource);
@@ -62,7 +64,7 @@ public class CustomAuthenticationManager implements AuthenticationManager
         filter.and(new EqualsFilter("objectclass", "person"));
         filter.and(new EqualsFilter("userPrincipalName", authentication.getPrincipal().toString()));
 
-        FilterBasedLdapUserSearch userSearch = new FilterBasedLdapUserSearch("OU=DEV,OU=BASS", filter.encode(), ldapContextSource);
+        FilterBasedLdapUserSearch userSearch = new FilterBasedLdapUserSearch(LDAP_BASE_USER_SEARCH, filter.encode(),ldapContextSource);
         try
         {
             bindAuth.setUserSearch(userSearch);

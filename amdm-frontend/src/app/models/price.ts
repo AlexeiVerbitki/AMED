@@ -13,4 +13,7 @@ export class Price {
     medicamentId: number;
     expirationReason: any;
     expirationDate: Date;
+    orderApprovDate: Date;
+    revisionDate: Date;
+    mdlValue: string;
 }

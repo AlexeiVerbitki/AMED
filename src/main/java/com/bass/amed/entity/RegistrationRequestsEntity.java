@@ -95,8 +95,8 @@ public class RegistrationRequestsEntity
         this.company = company;
     }
 
-	@OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
-	@JoinColumn( name = "import_id" )
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
+    @JoinColumn( name = "import_id" )
     public ImportAuthorizationEntity getImportAuthorizationEntity()
     {
         return importAuthorizationEntity;

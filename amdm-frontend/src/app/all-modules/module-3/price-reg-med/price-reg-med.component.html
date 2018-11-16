@@ -63,8 +63,8 @@
         </tbody>
     </table>
     <hr>
-    <app-document [documents]="documents" [nrCerere]="requestNumber" (documentModified)="documentAdded($event)"></app-document>
-    <div *ngIf="formSubmitted && documents.length == 0">
+    <app-document [documents]="documents" [dcTypes]="docTypes" [nrCerere]="requestNumber" (documentModified)="documentAdded($event)"></app-document>
+    <div *ngIf="formSubmitted && mandatoryDocuments.length > 0">
         <small class="text-muted"><strong class="text-danger">Încărcați actele necesare înregistrării prețului la
             medicament</strong></small>
     </div>

@@ -1,15 +1,16 @@
-<div class="container sky z-depth-2">
+<div class="container-fluid sky z-depth-2">
   <h3 class="text-center my-3 font-weight-bold">Cerere de autorizare a importului/exportului precursorilor/psihotropelor/stupefiantelor</h3>
 
   <hr>
   <form [formGroup]='cerereImpExpForm'>
 
-    <app-document [documents]="documents" [nrCerere]="cerereImpExpForm.get('requestNumber').value"></app-document>
+    <app-document [documents]="documents" [nrCerere]="cerereImpExpForm.get('requestNumber').value" [dcTypes]="docTypes" (documentModified)="documentModified($event)"></app-document>
     <hr>
 
     <div class="row">
+
       <div class="col-md-4">
-        <div class="md-form">
+        <div class="md-form-modified">
           <mat-form-field class="w-100">
             <input matInput [matDatepicker]="picker" placeholder="Data inregistrarii" required formControlName="data">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -34,12 +35,13 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div class="md-form">
-          <mat-form-field class="w-100">
-            <mat-select placeholder="Tipul autorizarii" >
-              <mat-option *ngFor="let x of authorizationTypes" [value]="x.value">{{ x.viewValue }}</mat-option>
-            </mat-select>
-          </mat-form-field>
+        <div class="md-form" >
+          <ng-select class="custom"
+                     [items]="authorizationTypes"
+                     bindLabel="viewValue"
+                     formControlName="authorizationType"
+                     placeholder="Tipul autorizarii">
+          </ng-select>
         </div>
       </div>
       <div class="col-md-4">
@@ -82,7 +84,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div class="md-form" formGroupName="medicament">
+        <div class="md-form-modified" formGroupName="medicament">
           <ng-select class="w-100"
                      [items]="pharmaceuticalForms"
                      bindLabel="description"
@@ -108,7 +110,7 @@
             </div>
           </div>
           <div class="col-3">
-            <div class="md-form" formGroupName="medicament">
+            <div class="md-form-modified" formGroupName="medicament">
               <ng-select class="w-100"
                          [items]="unitsOfMeasurement"
                          bindLabel="description"
@@ -134,6 +136,37 @@
         </div>
       </div>
     </div>
+
+    <div class="col-md-6">
+      <div class="md-form" formGroupName="drugCheckDecision">
+        <input id="procesVerbal" mdbInputDirective type="text" class="form-control" formControlName="protocolNr">
+        <label for="procesVerbal">Numarul procesului verbal
+          <span class="text-danger">*</span>
+        </label>
+        <div *ngIf="formSubmitted && cerereImpExpForm.get('drugCheckDecision.protocolNr').invalid">
+          <small class="text-muted"><strong class="text-danger">Numarul procesului verbal trebuie introdus</strong></small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="md-form">
+        <mat-form-field class="w-100" formGroupName="drugCheckDecision">
+          <input matInput [matDatepicker]="pickerCPCAD" placeholder="Data procesului verbal a CPCAD" required formControlName="protocolDate">
+          <mat-datepicker-toggle matSuffix [for]="pickerCPCAD"></mat-datepicker-toggle>
+          <mat-datepicker touchUi #pickerCPCAD></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="md-form">
+        <input id="reason" mdbInputDirective type="text" class="form-control" >
+        <label for="reason">Motivul refuzului
+        </label>
+      </div>
+    </div>
+
+    <hr>
+
     <h5 class="text-center font-weight-bold">Substante active</h5>
     <table class="table table-widths text-center">
       <thead class="black white-text">
@@ -151,47 +184,49 @@
       </tr>
       </tbody>
     </table>
+
     <hr>
     <app-payment [receipts]="receiptsList" [paymentOrders]="paymentOrdersList" (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
     <div *ngIf="formSubmitted && paymentTotal<0">
       <small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>
     </div>
 
-    <!--<hr>-->
-    <!--<h5 class="text-center font-weight-bold">Documente de iesire</h5>-->
-    <!--<hr>-->
-    <!--<table class="table table-widths-lg text-center">-->
-      <!--<thead class="black white-text">-->
-      <!--<tr>-->
-        <!--<th scope="col">Denumirea</th>-->
-        <!--<th scope="col">Numar</th>-->
-        <!--<th scope="col">Statut document</th>-->
-        <!--<th scope="col">Statut emitere</th>-->
-        <!--<th>Actiuni</th>-->
-      <!--</tr>-->
-      <!--</thead>-->
-      <!--<tbody>-->
-      <!--<tr *ngFor="let a of outDocuments">-->
-        <!--<th scope="row">{{ a.name }}</th>-->
-        <!--<th scope="row">{{ a.number }}</th>-->
-        <!--<th scope="row">{{ a.status }}</th>-->
-        <!--<th scope="row"><mat-checkbox *ngIf="a.docType && (a.docType.category=='SR' || a.docType.category=='AP' || a.docType.category=='AH' || a.docType.category=='AF')" #checkBoxResponse [checked]="a.responseReceived || a.status=='Atasat'" (change)="checkResponseReceived(a,checkBoxResponse)" [disabled]="a.status=='Atasat'">Emitere document</mat-checkbox></th>-->
-        <!--<td>-->
-          <!--<button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)">Vizualizare</button>-->
-          <!--<button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && (a.docType.category=='SR' || a.docType.category=='AP' || a.docType.category=='AH' || a.docType.category=='AF')" class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)">Stergere</button>-->
-        <!--</td>-->
-      <!--</tr>-->
-      <!--</tbody>-->
-    <!--</table>-->
-    <!--<div *ngIf="formSubmitted && !isResponseReceived">-->
-      <!--<small class="text-muted"><strong class="text-danger">Nici un document pentru emitere nu a fost selectat</strong></small>-->
-    <!--</div>-->
-    <!--<div *ngIf="formSubmitted && isNonAttachedDocuments && isResponseReceived">-->
-      <!--<small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong></small>-->
-    <!--</div>-->
+    <hr>
+    <h5 class="text-center font-weight-bold">Documente de iesire</h5>
+    <hr>
+    <table class="table table-widths-lg text-center">
+      <thead class="black white-text">
+      <tr>
+        <th scope="col">Denumirea</th>
+        <th scope="col">Numar</th>
+        <th scope="col">Statut document</th>
+        <th scope="col">Statut emitere</th>
+        <th>Actiuni</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let a of outDocuments">
+        <th scope="row">{{ a.name }}</th>
+        <th scope="row">{{ a.number }}</th>
+        <th scope="row">{{ a.status }}</th>
+        <th scope="row"><mat-checkbox *ngIf="a.docType && (a.docType.category=='SR' || a.docType.category=='IP' || a.docType.category=='IH' || a.docType.category=='IF' || a.docType.category=='EP' || a.docType.category=='EH' || a.docType.category=='EF')" #checkBoxResponse [checked]="a.responseReceived || a.status=='Atasat'" (change)="checkResponseReceived(a,checkBoxResponse)" [disabled]="a.status=='Atasat'">Emitere document</mat-checkbox></th>
+        <td>
+          <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)">Vizualizare</button>
+          <button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && (a.docType.category=='SR' || a.docType.category=='IP' || a.docType.category=='IH' || a.docType.category=='IF' || a.docType.category=='EP' || a.docType.category=='EH' || a.docType.category=='EF')" class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)">Stergere</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div *ngIf="formSubmitted && !isResponseReceived">
+      <small class="text-muted"><strong class="text-danger">Nici un document pentru emitere nu a fost selectat</strong></small>
+    </div>
+    <div *ngIf="formSubmitted && isNonAttachedDocuments && isResponseReceived">
+      <small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong></small>
+    </div>
     <hr>
     <div class="text-center">
       <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="saveRequest()">Inregistrare</button>
+      <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>
     </div>
   </form>
 </div>

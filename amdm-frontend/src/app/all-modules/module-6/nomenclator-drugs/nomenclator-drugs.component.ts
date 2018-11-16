@@ -1,5 +1,5 @@
-import {FormControl} from '@angular/forms';
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 
 
@@ -10,23 +10,26 @@ import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 })
 export class NomenclatorDrugsComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
+
     clasifyDrugsTable = [
-    { denumireComerciala: 'DC12345', formaFarmaceutica: 'FM12345', doza: '100g', volum: '5ml', divizarea: 'D12321', dci: 'DCI12345', atc: 'ATC21321', termenDeValabilitate: '24 luni', nrDeInregistrare: 'NrReg123445', dataInregistrarii: new Date(), detinatorulCertificatuluiDeIntreg: 'DCReg12344', taraDetinatorului: 'JJ', statutDeEliberare: 'Activ', original: 'Shor Prime Entertaiment', informatiaDespreProducator: 'Li4no Shor o facut', instructiunea: 'A se utiliza cind trebuie otmaza', machetaAmbalajului: 'Shor Product' },
-    { denumireComerciala: 'DC12345', formaFarmaceutica: 'FM12345', doza: '100g', volum: '5ml', divizarea: 'D12321', dci: 'DCI12345', atc: 'ATC21321', termenDeValabilitate: '24 luni', nrDeInregistrare: 'NrReg123445', dataInregistrarii: new Date(), detinatorulCertificatuluiDeIntreg: 'DCReg12344', taraDetinatorului: 'JJ', statutDeEliberare: 'Activ', original: 'Shor Prime Entertaiment', informatiaDespreProducator: 'Li4no Shor o facut', instructiunea: 'A se utiliza cind trebuie otmaza', machetaAmbalajului: 'Shor Product' },
-    { denumireComerciala: 'DC12345', formaFarmaceutica: 'FM12345', doza: '100g', volum: '5ml', divizarea: 'D12321', dci: 'DCI12345', atc: 'ATC21321', termenDeValabilitate: '24 luni', nrDeInregistrare: 'NrReg123445', dataInregistrarii: new Date(), detinatorulCertificatuluiDeIntreg: 'DCReg12344', taraDetinatorului: 'JJ', statutDeEliberare: 'Activ', original: 'Shor Prime Entertaiment', informatiaDespreProducator: 'Li4no Shor o facut', instructiunea: 'A se utiliza cind trebuie otmaza', machetaAmbalajului: 'Shor Product' },
-    { denumireComerciala: 'DC12345', formaFarmaceutica: 'FM12345', doza: '100g', volum: '5ml', divizarea: 'D12321', dci: 'DCI12345', atc: 'ATC21321', termenDeValabilitate: '24 luni', nrDeInregistrare: 'NrReg123445', dataInregistrarii: new Date(), detinatorulCertificatuluiDeIntreg: 'DCReg12344', taraDetinatorului: 'JJ', statutDeEliberare: 'Activ', original: 'Shor Prime Entertaiment', informatiaDespreProducator: 'Li4no Shor o facut', instructiunea: 'A se utiliza cind trebuie otmaza', machetaAmbalajului: 'Shor Product' },
-    { denumireComerciala: 'DC12345', formaFarmaceutica: 'FM12345', doza: '100g', volum: '5ml', divizarea: 'D12321', dci: 'DCI12345', atc: 'ATC21321', termenDeValabilitate: '24 luni', nrDeInregistrare: 'NrReg123445', dataInregistrarii: new Date(), detinatorulCertificatuluiDeIntreg: 'DCReg12344', taraDetinatorului: 'JJ', statutDeEliberare: 'Activ', original: 'Shor Prime Entertaiment', informatiaDespreProducator: 'Li4no Shor o facut', instructiunea: 'A se utiliza cind trebuie otmaza', machetaAmbalajului: 'Shor Product' },
-    { denumireComerciala: 'DC12345', formaFarmaceutica: 'FM12345', doza: '100g', volum: '5ml', divizarea: 'D12321', dci: 'DCI12345', atc: 'ATC21321', termenDeValabilitate: '24 luni', nrDeInregistrare: 'NrReg123445', dataInregistrarii: new Date(), detinatorulCertificatuluiDeIntreg: 'DCReg12344', taraDetinatorului: 'JJ', statutDeEliberare: 'Activ', original: 'Shor Prime Entertaiment', informatiaDespreProducator: 'Li4no Shor o facut', instructiunea: 'A se utiliza cind trebuie otmaza', machetaAmbalajului: 'Shor Product' },
-    { denumireComerciala: 'DC12345', formaFarmaceutica: 'FM12345', doza: '100g', volum: '5ml', divizarea: 'D12321', dci: 'DCI12345', atc: 'ATC21321', termenDeValabilitate: '24 luni', nrDeInregistrare: 'NrReg123445', dataInregistrarii: new Date(), detinatorulCertificatuluiDeIntreg: 'DCReg12344', taraDetinatorului: 'JJ', statutDeEliberare: 'Activ', original: 'Shor Prime Entertaiment', informatiaDespreProducator: 'Li4no Shor o facut', instructiunea: 'A se utiliza cind trebuie otmaza', machetaAmbalajului: 'Shor Product' },
-    { denumireComerciala: 'DC12345', formaFarmaceutica: 'FM12345', doza: '100g', volum: '5ml', divizarea: 'D12321', dci: 'DCI12345', atc: 'ATC21321', termenDeValabilitate: '24 luni', nrDeInregistrare: 'NrReg123445', dataInregistrarii: new Date(), detinatorulCertificatuluiDeIntreg: 'DCReg12344', taraDetinatorului: 'JJ', statutDeEliberare: 'Activ', original: 'Shor Prime Entertaiment', informatiaDespreProducator: 'Li4no Shor o facut', instructiunea: 'A se utiliza cind trebuie otmaza', machetaAmbalajului: 'Shor Product' },
-    { denumireComerciala: 'DC12345', formaFarmaceutica: 'FM12345', doza: '100g', volum: '5ml', divizarea: 'D12321', dci: 'DCI12345', atc: 'ATC21321', termenDeValabilitate: '24 luni', nrDeInregistrare: 'NrReg123445', dataInregistrarii: new Date(), detinatorulCertificatuluiDeIntreg: 'DCReg12344', taraDetinatorului: 'JJ', statutDeEliberare: 'Activ', original: 'Shor Prime Entertaiment', informatiaDespreProducator: 'Li4no Shor o facut', instructiunea: 'A se utiliza cind trebuie otmaza', machetaAmbalajului: 'Shor Product' }
+        { codulMed: 'CM12345', codVamal: 'CV12345', denumireComerciala: 'DC12345', formaFarmaceutica: 'FM12345', doza: '100g', volum: '5ml', divizare: 'D12321', atc: 'ATC21321', termenDeValabilitate: '24 luni', nrDeInregistrare: 'NrReg123445', dataInregistrarii: new Date(), detinatorulCertificatuluiDeIntreg: 'DCReg12344', taraDetinatorului: 'JJ', statutDeEliberare: 'Activ', original: 'Shor Prime Entertaiment', informatiaDespreProducator: 'Li4no Shor o facut', instructiunea: 'A se utiliza cind trebuie otmaza', machetaAmbalajului: 'Shor Product', dci: 'DCI12345' },
+        { codulMed: 'CM12345', codVamal: 'CV12345', denumireComerciala: 'DC12345', formaFarmaceutica: 'FM12345', doza: '100g', volum: '5ml', divizare: 'D12321', atc: 'ATC21321', termenDeValabilitate: '24 luni', nrDeInregistrare: 'NrReg123445', dataInregistrarii: new Date(), detinatorulCertificatuluiDeIntreg: 'DCReg12344', taraDetinatorului: 'JJ', statutDeEliberare: 'Activ', original: 'Shor Prime Entertaiment', informatiaDespreProducator: 'Li4no Shor o facut', instructiunea: 'A se utiliza cind trebuie otmaza', machetaAmbalajului: 'Shor Product',dci: 'DCI12345' },
+        { codulMed: 'CM12345', codVamal: 'CV12345', denumireComerciala: 'DC12345', formaFarmaceutica: 'FM12345', doza: '100g', volum: '5ml', divizare: 'D12321',  atc: 'ATC21321', termenDeValabilitate: '24 luni', nrDeInregistrare: 'NrReg123445', dataInregistrarii: new Date(), detinatorulCertificatuluiDeIntreg: 'DCReg12344', taraDetinatorului: 'JJ', statutDeEliberare: 'Activ', original: 'Shor Prime Entertaiment', informatiaDespreProducator: 'Li4no Shor o facut', instructiunea: 'A se utiliza cind trebuie otmaza', machetaAmbalajului: 'Shor Product', dci: 'DCI12345' },
+        { codulMed: 'CM12345', codVamal: 'CV12345', denumireComerciala: 'DC12345', formaFarmaceutica: 'FM12345', doza: '100g', volum: '5ml', divizare: 'D12321', atc: 'ATC21321', termenDeValabilitate: '24 luni', nrDeInregistrare: 'NrReg123445', dataInregistrarii: new Date(), detinatorulCertificatuluiDeIntreg: 'DCReg12344', taraDetinatorului: 'JJ', statutDeEliberare: 'Activ', original: 'Shor Prime Entertaiment', informatiaDespreProducator: 'Li4no Shor o facut', instructiunea: 'A se utiliza cind trebuie otmaza', machetaAmbalajului: 'Shor Product', dci: 'DCI12345' },
+        { codulMed: 'CM12345', codVamal: 'CV12345', denumireComerciala: 'DC12345', formaFarmaceutica: 'FM12345', doza: '100g', volum: '5ml', divizare: 'D12321', atc: 'ATC21321', termenDeValabilitate: '24 luni', nrDeInregistrare: 'NrReg123445', dataInregistrarii: new Date(), detinatorulCertificatuluiDeIntreg: 'DCReg12344', taraDetinatorului: 'JJ', statutDeEliberare: 'Activ', original: 'Shor Prime Entertaiment', informatiaDespreProducator: 'Li4no Shor o facut', instructiunea: 'A se utiliza cind trebuie otmaza', machetaAmbalajului: 'Shor Product', dci: 'DCI12345' },
+        { codulMed: 'CM12345', codVamal: 'CV12345', denumireComerciala: 'DC12345', formaFarmaceutica: 'FM12345', doza: '100g', volum: '5ml', divizare: 'D12321', atc: 'ATC21321', termenDeValabilitate: '24 luni', nrDeInregistrare: 'NrReg123445', dataInregistrarii: new Date(), detinatorulCertificatuluiDeIntreg: 'DCReg12344', taraDetinatorului: 'JJ', statutDeEliberare: 'Activ', original: 'Shor Prime Entertaiment', informatiaDespreProducator: 'Li4no Shor o facut', instructiunea: 'A se utiliza cind trebuie otmaza', machetaAmbalajului: 'Shor Product', dci: 'DCI12345' },
+        { codulMed: 'CM12345', codVamal: 'CV12345', denumireComerciala: 'DC12345', formaFarmaceutica: 'FM12345', doza: '100g', volum: '5ml', divizare: 'D12321', atc: 'ATC21321', termenDeValabilitate: '24 luni', nrDeInregistrare: 'NrReg123445', dataInregistrarii: new Date(), detinatorulCertificatuluiDeIntreg: 'DCReg12344', taraDetinatorului: 'JJ', statutDeEliberare: 'Activ', original: 'Shor Prime Entertaiment', informatiaDespreProducator: 'Li4no Shor o facut', instructiunea: 'A se utiliza cind trebuie otmaza', machetaAmbalajului: 'Shor Product', dci: 'DCI12345' },
+        { codulMed: 'CM12345', codVamal: 'CV12345', denumireComerciala: 'DC12345', formaFarmaceutica: 'FM12345', doza: '100g', volum: '5ml', divizare: 'D12321', atc: 'ATC21321', termenDeValabilitate: '24 luni', nrDeInregistrare: 'NrReg123445', dataInregistrarii: new Date(), detinatorulCertificatuluiDeIntreg: 'DCReg12344', taraDetinatorului: 'JJ', statutDeEliberare: 'Activ', original: 'Shor Prime Entertaiment', informatiaDespreProducator: 'Li4no Shor o facut', instructiunea: 'A se utiliza cind trebuie otmaza', machetaAmbalajului: 'Shor Product', dci: 'DCI12345' },
+        { codulMed: 'CM12345', codVamal: 'CV12345', denumireComerciala: 'DC12345', formaFarmaceutica: 'FM12345', doza: '100g', volum: '5ml', divizare: 'D12321', atc: 'ATC21321', termenDeValabilitate: '24 luni', nrDeInregistrare: 'NrReg123445', dataInregistrarii: new Date(), detinatorulCertificatuluiDeIntreg: 'DCReg12344', taraDetinatorului: 'JJ', statutDeEliberare: 'Activ', original: 'Shor Prime Entertaiment', informatiaDespreProducator: 'Li4no Shor o facut', instructiunea: 'A se utiliza cind trebuie otmaza', machetaAmbalajului: 'Shor Product', dci: 'DCI12345' }
     ];
+
+    codulMedFilter = new FormControl('');
+    codVamalFilter = new FormControl('');
     denumireComercialaFilter = new FormControl('');
     formaFarmaceuticaFilter = new FormControl('');
     dozaFilter = new FormControl('');
     volumFilter = new FormControl('');
-    divizareaFilter = new FormControl('');
-    dciFilter = new FormControl('');
+    divizareFilter = new FormControl('');
     atcFilter = new FormControl('');
     termenDeValabilitateFilter = new FormControl('');
     nrDeInregistrareFilter = new FormControl('');
@@ -38,16 +41,20 @@ export class NomenclatorDrugsComponent implements OnInit, OnDestroy, AfterViewIn
     informatiaDespreProducatorFilter = new FormControl('');
     instructiuneaFilter = new FormControl('');
     machetaAmbalajuluiFilter = new FormControl('');
-    denumireaComunaInternationalaFilter = new FormControl('');
+    dciFilter = new FormControl('');
+
     dataSource = new MatTableDataSource();
-    columnsToDisplay = ['denumireComerciala', 'formaFarmaceutica', 'doza', 'volum', 'divizarea', 'dci', 'atc', 'termenDeValabilitate', 'nrDeInregistrare', 'dataInregistrarii', 'detinatorulCertificatuluiDeIntreg', 'taraDetinatorului', 'statutDeEliberare', 'original', 'informatiaDespreProducator', 'instructiunea', 'machetaAmbalajului', 'denumireaComunaInternationala'];
+    
+    columnsToDisplay = ['codulMed', 'codVamal','denumireComerciala', 'formaFarmaceutica', 'doza', 'volum', 'divizare', 'atc', 'termenDeValabilitate', 'nrDeInregistrare', 'dataInregistrarii', 'detinatorulCertificatuluiDeIntreg', 'taraDetinatorului', 'statutDeEliberare', 'original', 'informatiaDespreProducator', 'instructiunea', 'machetaAmbalajului', 'dci'];
+
     filterValues = {
+        codulMed: '',
+        codVamal: '',
         denumireComerciala: '',
         formaFarmaceutica: '',
         doza: '',
         volum: '',
-        divizarea: '',
-        dci: '',
+        divizare: '',
         atc: '',
         termenDeValabilitate: '',
         nrDeInregistrare: '',
@@ -59,7 +66,7 @@ export class NomenclatorDrugsComponent implements OnInit, OnDestroy, AfterViewIn
         informatiaDespreProducator: '',
         instructiunea: '',
         machetaAmbalajului: '',
-        denumireaComunaInternationala: '',
+        dci: ''
     };
 
     constructor() {
@@ -79,7 +86,21 @@ export class NomenclatorDrugsComponent implements OnInit, OnDestroy, AfterViewIn
         console.log('init drugs');
         this.dataSource.data = this.clasifyDrugsTable;
 
-        this.denumireComercialaFilter.valueChanges
+        this.codulMedFilter.valueChanges
+            .subscribe(
+                codulMed => {
+                    this.filterValues.codulMed = codulMed;
+                    this.dataSource.filter = JSON.stringify(this.filterValues);
+                }
+            );
+            this.codVamalFilter.valueChanges
+            .subscribe(
+                codVamal => {
+                    this.filterValues.codVamal = codVamal;
+                    this.dataSource.filter = JSON.stringify(this.filterValues);
+                }
+            );
+            this.denumireComercialaFilter.valueChanges
             .subscribe(
                 denumireComerciala => {
                     this.filterValues.denumireComerciala = denumireComerciala;
@@ -107,17 +128,10 @@ export class NomenclatorDrugsComponent implements OnInit, OnDestroy, AfterViewIn
                     this.dataSource.filter = JSON.stringify(this.filterValues);
                 }
             );
-        this.divizareaFilter.valueChanges
+        this.divizareFilter.valueChanges
             .subscribe(
-                divizarea => {
-                    this.filterValues.divizarea = divizarea;
-                    this.dataSource.filter = JSON.stringify(this.filterValues);
-                }
-            );
-        this.dciFilter.valueChanges
-            .subscribe(
-                dci => {
-                    this.filterValues.dci = dci;
+                divizare => {
+                    this.filterValues.divizare = divizare;
                     this.dataSource.filter = JSON.stringify(this.filterValues);
                 }
             );
@@ -198,11 +212,13 @@ export class NomenclatorDrugsComponent implements OnInit, OnDestroy, AfterViewIn
                     this.dataSource.filter = JSON.stringify(this.filterValues);
                 }
             );
-        this.denumireaComunaInternationalaFilter.valueChanges
-            .subscribe(denumireaComunaInternationala => {
-                this.filterValues.denumireaComunaInternationala = denumireaComunaInternationala;
-                this.dataSource.filter = JSON.stringify(this.filterValues);
-            });
+            this.dciFilter.valueChanges
+            .subscribe(
+                dci => {
+                    this.filterValues.dci = dci;
+                    this.dataSource.filter = JSON.stringify(this.filterValues);
+                }
+            );
     }
 
     createFilter(): (data: any, filter: string) => boolean {
@@ -212,8 +228,7 @@ export class NomenclatorDrugsComponent implements OnInit, OnDestroy, AfterViewIn
                 && data.formaFarmaceutica.toLowerCase().indexOf(searchTerms.formaFarmaceutica) !== -1
                 && data.doza.toLowerCase().indexOf(searchTerms.doza) !== -1
                 && data.volum.toLowerCase().indexOf(searchTerms.volum) !== -1
-                && data.divizarea.toLowerCase().indexOf(searchTerms.divizarea) !== -1
-                && data.dci.toLowerCase().indexOf(searchTerms.dci) !== -1
+                && data.divizare.toLowerCase().indexOf(searchTerms.divizare) !== -1
                 && data.atc.toLowerCase().indexOf(searchTerms.atc) !== -1
                 && data.termenDeValabilitate.toLowerCase().indexOf(searchTerms.termenDeValabilitate) !== -1
                 && data.nrDeInregistrare.toLowerCase().indexOf(searchTerms.nrDeInregistrare) !== -1
@@ -225,7 +240,7 @@ export class NomenclatorDrugsComponent implements OnInit, OnDestroy, AfterViewIn
                 && data.informatiaDespreProducator.toLowerCase().indexOf(searchTerms.informatiaDespreProducator) !== -1
                 && data.instructiunea.toLowerCase().indexOf(searchTerms.instructiunea) !== -1
                 && data.machetaAmbalajului.toLowerCase().indexOf(searchTerms.machetaAmbalajului) !== -1
-                && data.denumireaComunaInternationala.toLowerCase().indexOf(searchTerms.denumireaComunaInternationala) !== -1
+                && data.dci.toLowerCase().indexOf(searchTerms.dci) !== -1
 
         };
         return filterFunction;

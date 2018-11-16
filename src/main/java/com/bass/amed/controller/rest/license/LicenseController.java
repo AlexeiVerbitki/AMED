@@ -1,9 +1,12 @@
 package com.bass.amed.controller.rest.license;
 
-import com.bass.amed.common.Constants;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
+import com.bass.amed.repository.license.LicenseActivityTypeRepository;
+import com.bass.amed.repository.license.LicenseAnnounceMethodsRepository;
+import com.bass.amed.repository.license.LicenseMandatedContactRepository;
+import com.bass.amed.repository.license.LicensesRepository;
 import com.bass.amed.service.LicenseRegistrationRequestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +29,6 @@ public class LicenseController
 
     @Autowired
     private LicensesRepository licensesRepository;
-
-    @Autowired
-    private LicenseRequestTypeRepository licenseRequestTypeRepository;
 
     @Autowired
     private LicenseAnnounceMethodsRepository licenseAnnounceMethodsRepository;
@@ -159,13 +159,6 @@ public class LicenseController
 
         licenseRegistrationRequestService.updateModifyLicense(request);
         return new ResponseEntity<>(request.getId(),HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/all-license-request-types", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<LicenseRequestTypeEntity>> loadRequestTypes()
-    {
-        logger.debug("Retrieve all license request types");
-        return new ResponseEntity<>(licenseRequestTypeRepository.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/retrieve-license-by-request-id", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

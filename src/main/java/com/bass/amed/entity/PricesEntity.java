@@ -18,6 +18,39 @@ public class PricesEntity
     private Set<ReferencePricesEntity> referencePrices;
     private MedicamentEntity medicament;
     private String folderNr;
+    private Timestamp orderApprovDate;
+    private Timestamp revisionDate;
+    private BigDecimal mdlValue;
+
+    @Basic
+    @Column(name = "order_approv_date")
+    public Timestamp getOrderApprovDate() {
+        return orderApprovDate;
+    }
+
+    public void setOrderApprovDate(Timestamp orderApprovDate) {
+        this.orderApprovDate = orderApprovDate;
+    }
+
+    @Basic
+    @Column(name = "revision_date")
+    public Timestamp getRevisionDate() {
+        return revisionDate;
+    }
+
+    public void setRevisionDate(Timestamp revisionDate) {
+        this.revisionDate = revisionDate;
+    }
+
+    @Basic
+    @Column(name = "mdl_value")
+    public BigDecimal getMdlValue() {
+        return mdlValue;
+    }
+
+    public void setMdlValue(BigDecimal mdlValue) {
+        this.mdlValue = mdlValue;
+    }
 
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "medicament_id")
@@ -62,7 +95,7 @@ public class PricesEntity
     }
 
     @Basic
-    @Column(name = "folderNr")
+    @Column(name = "folder_nr")
     public String getFolderNr() {
         return folderNr;
     }

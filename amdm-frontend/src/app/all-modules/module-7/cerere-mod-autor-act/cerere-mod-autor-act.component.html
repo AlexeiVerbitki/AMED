@@ -1,16 +1,18 @@
-<div class="container sky z-depth-2">
-  <h3 class="text-center my-3 font-weight-bold">Cerere de modificare a autorizarii de activitate cu precursori/psihotrope/stupefiante</h3>
+<div class="container-fluid sky z-depth-2">
+  <h3 class="text-center my-3 font-weight-bold">Cerere de modificare a autorizarii de activitate cu
+    precursori/psihotrope/stupefiante</h3>
   <hr>
 
   <form [formGroup]='cerereModAutorForm'>
 
     <hr>
-    <app-document [documents]="documents" [nrCerere]="cerereModAutorForm.get('requestNumber').value" [dcTypes]="docTypes" (documentModified)="documentModified($event)"></app-document>
+    <app-document [documents]="documents" [nrCerere]="cerereModAutorForm.get('requestNumber').value" [dcTypes]="docTypes"
+      (documentModified)="documentModified($event)"></app-document>
     <hr>
 
     <div class="row">
       <div class="col-md-6">
-        <div class="md-form">
+        <div class="md-form-modified">
           <mat-form-field class="w-100">
             <input matInput [matDatepicker]="picker" placeholder="Data inregistrarii" required formControlName="data">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -20,7 +22,8 @@
       </div>
       <div class="col-md-6">
         <div class="md-form">
-          <input id="requestNumber" mdbInputDirective type="text" class="form-control" formControlName="requestNumber" [attr.disabled]="true">
+          <input id="requestNumber" mdbInputDirective type="text" class="form-control" formControlName="requestNumber"
+            [attr.disabled]="true">
           <label for="requestNumber">Nr. de inregistrare a cererii
             <span class="text-danger">*</span>
           </label>
@@ -30,116 +33,111 @@
       <div class="col-md-12">
         <div class="md-form">
           <div class="md-form">
-            <input id="compSolicitant" mdbInputDirective type="text" class="form-control" formControlName="companyValue" [attr.disabled]="true">
+            <input id="compSolicitant" mdbInputDirective type="text" class="form-control" formControlName="companyValue"
+              [attr.disabled]="true">
             <label for="compSolicitant">Compania solicitant</label>
           </div>
         </div>
-        <hr>
       </div>
     </div>
     <div class="text-center">
-      <button class="btn btn-primary btn-sm waves-light" mdbWavesEffect>Adresa solicitantului <i class="fa fa-sort" aria-hidden="true"></i></button>
+      <button class="btn btn-primary btn-sm waves-light" mdbWavesEffect data-toggle="collapse" data-target="#adresaSolicitantCollapse"
+        aria-expanded="false" aria-controls="adresaSolicitantCollapse">Adresa solicitantului <i class="fa fa-sort"
+          aria-hidden="true"></i></button>
     </div>
-    <div class="row">
-      <div class="col-md-4">
-        <div class="md-form" >
-          <ng-select class="custom"  [items]="states"
-                     bindLabel="description"
-                     placeholder = "Regiunea"
-                     formControlName="state"
-          >
-          </ng-select>
-        </div>
-        <div *ngIf="formSubmitted && cerereModAutorForm.get('state').invalid">
-          <small class="text-muted"><strong class="text-danger">Regiunea trebuie selectata</strong></small>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="md-form" >
-          <ng-select class="custom" [items]="localities"
-                     bindLabel="description"
-                     placeholder = "Localitate"
-                     formControlName="locality"
-          >
-          </ng-select>
-        </div>
-        <div *ngIf="formSubmitted && cerereModAutorForm.get('locality').invalid">
-          <small class="text-muted"><strong class="text-danger">Localitatea trebuie selectata</strong></small>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="md-form" >
-          <input id="strada" mdbInputDirective type="text" class="form-control" formControlName="street">
-          <label for="strada">Strada
-            <span class="text-danger">*</span>
-          </label>
-          <div *ngIf="formSubmitted && cerereModAutorForm.get('street').invalid">
-            <small class="text-muted"><strong class="text-danger">Strada trebuie introdusa</strong></small>
+    <div class="collapse" id="adresaSolicitantCollapse">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="md-form-modified">
+            <ng-select class="custom" [items]="states" bindLabel="description" placeholder="Regiunea" formControlName="state">
+            </ng-select>
+          </div>
+          <div *ngIf="formSubmitted && cerereModAutorForm.get('state').invalid">
+            <small class="text-muted"><strong class="text-danger">Regiunea trebuie selectata</strong></small>
           </div>
         </div>
-      </div>
-      <div class="col-md-8">
-        <div class="md-form">
-          <input id="address" mdbInputDirective type="text" class="form-control" formControlName="legalAddress">
-          <label for="address">Adresa legala
-            <span class="text-danger">*</span>
-          </label>
-          <div *ngIf="formSubmitted && cerereModAutorForm.get('legalAddress').invalid">
-            <small class="text-muted"><strong class="text-danger">Adresa trebuie introdusa</strong></small>
+        <div class="col-md-3">
+          <div class="md-form-modified">
+            <ng-select class="custom" [items]="localities" bindLabel="description" placeholder="Localitate"
+              formControlName="locality">
+            </ng-select>
+          </div>
+          <div *ngIf="formSubmitted && cerereModAutorForm.get('locality').invalid">
+            <small class="text-muted"><strong class="text-danger">Localitatea trebuie selectata</strong></small>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="md-form">
+            <input id="strada" mdbInputDirective type="text" class="form-control" formControlName="street">
+            <label for="strada">Strada
+              <span class="text-danger">*</span>
+            </label>
+            <div *ngIf="formSubmitted && cerereModAutorForm.get('street').invalid">
+              <small class="text-muted"><strong class="text-danger">Strada trebuie introdusa</strong></small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="md-form">
+            <input id="address" mdbInputDirective type="text" class="form-control" formControlName="legalAddress">
+            <label for="address">Adresa legala
+              <span class="text-danger">*</span>
+            </label>
+            <div *ngIf="formSubmitted && cerereModAutorForm.get('legalAddress').invalid">
+              <small class="text-muted"><strong class="text-danger">Adresa trebuie introdusa</strong></small>
+            </div>
           </div>
         </div>
       </div>
     </div>
     <hr>
     <h5 class="text-center font-weight-bold">Persoana responsabila</h5>
-    <hr>
     <div class="row">
       <div class="col-md-4">
         <div class="md-form" formGroupName="employee">
-          <input id="name" mdbInputDirective type="text" class="form-control" required formControlName="name" >
+          <input id="name" mdbInputDirective type="text" class="form-control" required formControlName="name">
           <label for="name">Nume
           </label>
         </div>
       </div>
       <div class="col-md-4">
         <div class="md-form" formGroupName="employee">
-          <input id="surname" mdbInputDirective type="text" class="form-control" required formControlName="lastname" >
+          <input id="surname" mdbInputDirective type="text" class="form-control" required formControlName="lastname">
           <label for="surname">Prenume
           </label>
         </div>
       </div>
       <div class="col-md-4">
         <div class="md-form" formGroupName="employee">
-          <input id="idnp" mdbInputDirective type="text" class="form-control" required formControlName="idnp" >
+          <input id="idnp" mdbInputDirective type="text" class="form-control" required formControlName="idnp">
           <label for="idnp">IDNP
           </label>
         </div>
       </div>
       <div class="col-md-8">
         <div class="md-form" formGroupName="employee">
-          <input id="phoneFix" mdbInputDirective type="text" class="form-control" formControlName="phonenumbers" >
+          <input id="phoneFix" mdbInputDirective type="text" class="form-control" formControlName="phonenumbers">
           <label for="phoneFix">Telefon:</label>
         </div>
       </div>
       <div class="col-md-4">
         <div class="md-form" formGroupName="employee">
-          <input id="email" mdbInputDirective type="email" class="form-control" formControlName="email" >
+          <input id="email" mdbInputDirective type="email" class="form-control" formControlName="email">
           <label for="email">Email
           </label>
         </div>
       </div>
     </div>
-    <hr>
     <div class="row">
       <div class="col-md-6">
-        <div class="md-form" >
-          <input id="med" mdbInputDirective type="text" class="form-control" formControlName="medicamentName" [attr.disabled]="true">
+        <div class="md-form">
+          <input id="med" mdbInputDirective type="text" class="form-control" formControlName="medicamentName"
+            [attr.disabled]="true">
           <label for="med">Medicamentul</label>
         </div>
-        <hr>
       </div>
       <div class="col-md-6">
-        <div class="md-form">
+        <div class="md-form-modified">
           <mat-form-field class="w-100">
             <input matInput [matDatepicker]="picker1" placeholder="Data expirarii" required formControlName="dataExp">
             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
@@ -151,6 +149,7 @@
         </div>
       </div>
     </div>
+    <hr>
     <app-payment [receipts]="receiptsList" [paymentOrders]="paymentOrdersList" (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
     <div *ngIf="formSubmitted && paymentTotal<0">
       <small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>
@@ -160,25 +159,30 @@
     <hr>
     <table class="table table-widths-lg text-center">
       <thead class="black white-text">
-      <tr>
-        <th scope="col">Denumirea</th>
-        <th scope="col">Numar</th>
-        <th scope="col">Statut document</th>
-        <th scope="col">Statut emitere</th>
-        <th>Actiuni</th>
-      </tr>
+        <tr>
+          <th scope="col">Denumirea</th>
+          <th scope="col">Numar</th>
+          <th scope="col">Statut document</th>
+          <th scope="col">Statut emitere</th>
+          <th>Actiuni</th>
+        </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let a of outDocuments">
-        <th scope="row">{{ a.name }}</th>
-        <th scope="row">{{ a.number }}</th>
-        <th scope="row">{{ a.status }}</th>
-        <th scope="row"><mat-checkbox *ngIf="a.docType && (a.docType.category=='SR' || a.docType.category=='AP' || a.docType.category=='AH' || a.docType.category=='AF')" #checkBoxResponse [checked]="a.responseReceived || a.status=='Atasat'" (change)="checkResponseReceived(a,checkBoxResponse)" [disabled]="a.status=='Atasat'">Emitere document</mat-checkbox></th>
-        <td>
-          <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)">Vizualizare</button>
-          <button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && (a.docType.category=='SR' || a.docType.category=='AP' || a.docType.category=='AH' || a.docType.category=='AF')" class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)">Stergere</button>
-        </td>
-      </tr>
+        <tr *ngFor="let a of outDocuments">
+          <th scope="row">{{ a.name }}</th>
+          <th scope="row">{{ a.number }}</th>
+          <th scope="row">{{ a.status }}</th>
+          <th scope="row">
+            <mat-checkbox *ngIf="a.docType && (a.docType.category=='SR' || a.docType.category=='AP' || a.docType.category=='AH' || a.docType.category=='AF')"
+              #checkBoxResponse [checked]="a.responseReceived || a.status=='Atasat'" (change)="checkResponseReceived(a,checkBoxResponse)"
+              [disabled]="a.status=='Atasat'">Emitere document</mat-checkbox>
+          </th>
+          <td>
+            <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)">Vizualizare</button>
+            <button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && (a.docType.category=='SR' || a.docType.category=='AP' || a.docType.category=='AH' || a.docType.category=='AF')"
+              class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)">Stergere</button>
+          </td>
+        </tr>
       </tbody>
     </table>
     <div *ngIf="formSubmitted && !isResponseReceived">
@@ -190,6 +194,7 @@
     <hr>
     <div class="text-center">
       <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="saveRequest()">Inregistrare</button>
+      <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>
     </div>
   </form>
   <hr>

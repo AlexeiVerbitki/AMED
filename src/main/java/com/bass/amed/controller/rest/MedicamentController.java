@@ -1,6 +1,7 @@
 package com.bass.amed.controller.rest;
 
 import com.bass.amed.dto.InterruptDetailsDTO;
+import com.bass.amed.dto.SimilarMedicamentDTO;
 import com.bass.amed.entity.MedicamentEntity;
 import com.bass.amed.entity.RegistrationRequestHistoryEntity;
 import com.bass.amed.entity.RegistrationRequestsEntity;
@@ -13,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -44,7 +42,6 @@ public class MedicamentController
     @Autowired
     private OutputDocumentsRepository outputDocumentsRepository;
 
-
     @RequestMapping("/company-all-medicaments")
     public ResponseEntity<List<MedicamentEntity>> getAllMedicaments()
     {
@@ -71,7 +68,8 @@ public class MedicamentController
     public ResponseEntity<MedicamentEntity> getMedicamentById(Integer id)
     {
         logger.debug("Retrieve medicament by id");
-        return new ResponseEntity<>(medicamentRepository.findById(id).get(), HttpStatus.OK);
+        MedicamentEntity m = medicamentRepository.findById(id).get();
+        return new ResponseEntity<>(m, HttpStatus.OK);
     }
 
     @RequestMapping("/search-medicaments-by-register-number")
@@ -79,6 +77,16 @@ public class MedicamentController
     {
         logger.debug("Retrieve medicaments by register number");
         return new ResponseEntity<>(medicamentRepository.findDistinctByRegistrationNumber(registerNumber), HttpStatus.OK);
+    }
+
+    @Autowired
+    SimilarMedicamentsRepository similarMedicamentsRepository;
+    @RequestMapping("/related")
+    public ResponseEntity<List<SimilarMedicamentDTO>> getSimilarMedicaments(@RequestParam(value = "internationalNameId", required = true) Integer internationalNameId)
+    {
+        logger.debug("getSimilarMedicaments");
+        List<SimilarMedicamentDTO> medicaments = similarMedicamentsRepository.getSimilarMedicaments(internationalNameId);
+        return new ResponseEntity<>(medicaments, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/interrupt-process", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -93,14 +101,12 @@ public class MedicamentController
         registrationRequestsEntity.setInterruptionReason(interruptDetailsDTO.getReason());
 
         RegistrationRequestHistoryEntity historyEntity = new RegistrationRequestHistoryEntity();
-        historyEntity = new RegistrationRequestHistoryEntity();
         historyEntity.setUsername(interruptDetailsDTO.getUsername());
         historyEntity.setStep("I");
         historyEntity.setStartDate(interruptDetailsDTO.getStartDate());
         historyEntity.setEndDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
         registrationRequestsEntity.getRequestHistories().add(historyEntity);
 
-        historyEntity = new RegistrationRequestHistoryEntity();
         historyEntity = new RegistrationRequestHistoryEntity();
         historyEntity.setUsername(interruptDetailsDTO.getUsername());
         historyEntity.setStep("C");

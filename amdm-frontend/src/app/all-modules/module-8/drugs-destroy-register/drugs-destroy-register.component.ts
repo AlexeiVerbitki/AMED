@@ -132,6 +132,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
             'seria': [{value: null, disabled: true}],
             'quantity': [null, Validators.required],
             'reasonDestroy': [null, Validators.required],
+            'note': '',
         });
 
 
@@ -178,6 +179,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
 
     submitNew() {
         this.fFormSubbmitted = true;
+        this.mFormSubbmitted = true;
 
         if (!this.mForm.valid || this.docs.length == 0) {
             return;
@@ -186,6 +188,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
         this.endDate = new Date();
 
         this.fFormSubbmitted = false;
+        this.mFormSubbmitted = false;
 
         let modelToSubmit: any = {};
         let annihilationModel: any = {};
@@ -245,7 +248,8 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
                 medicamentId: this.rForm.get('medicaments').value.id,
                 medicamentName: this.rForm.get('medicaments').value.name,
                 quantity : this.rForm.get('quantity').value,
-                uselessReason : this.rForm.get('reasonDestroy').value
+                uselessReason : this.rForm.get('reasonDestroy').value,
+                note : this.rForm.get('note').value
             }
         );
 
@@ -256,6 +260,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
         this.rForm.get('seria').setValue(null);
         this.rForm.get('quantity').setValue(null);
         this.rForm.get('reasonDestroy').setValue(null);
+        this.rForm.get('note').setValue(null);
     }
 
     removeMedicamentToDestroy(index) {

@@ -42,17 +42,14 @@ export class RegDocComponent implements OnInit {
             'requestNumber': [null],
             'startDate': [new Date()],
             'currentStep': ['E'],
-            'medicament':
+            'documentModuleDetails':
                 fb.group({
                     'name': ['', Validators.required],
                     'company': [null, Validators.required],
                     'status': ['P']
                 }),
             'company': [''],
-            'type':
-                fb.group({
-                    'code': ['MEDP', Validators.required]
-                }),
+
         });
     }
 
@@ -61,14 +58,6 @@ export class RegDocComponent implements OnInit {
             this.administrationService.generateDocNr().subscribe(data => {
                     this.generatedDocNrSeq = data;
                     this.rForm.get('requestNumber').setValue(this.generatedDocNrSeq);
-                },
-                error => console.log(error)
-            )
-        );
-
-        this.subscriptions.push(
-            this.administrationService.getAllCompanies().subscribe(data => {
-                    this.companii = data;
                 },
                 error => console.log(error)
             )

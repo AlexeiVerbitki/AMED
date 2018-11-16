@@ -48,12 +48,30 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
     tabs = ['Medicamentul 1'];
     selected = new FormControl(0);
 
+    docTypes : any[];
+    prevMonthAVGCurr : any[];
 
     mandatoryDocuments: any[] = [{
         description: 'Cerere',
         number: undefined,
         status: "Nu este atasat"
-    }];
+    },/* {
+        description: 'Declaraţie pe propria răspundere (Anexa 2)',
+        number: undefined,
+        status: "Nu este atasat"
+    }, {
+        description: 'Comparația prețului propus cu prețul de producător din țările de referință',
+        number: undefined,
+        status: "Nu este atasat"
+    }, {
+        description: 'Copia catalogului de preţuri din ţările de referinţă/origine/etc',
+        number: undefined,
+        status: "Nu este atasat"
+    }, {
+        description: 'Procură ce confirmă dreptul de înregistrare a preţului de producător',
+        number: undefined,
+        status: "Nu este atasat"
+    }*/];
 
     updateRouteId: string;
 
@@ -75,6 +93,8 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+      this.loadDocTypes();
+      this.getPrevMonthAVGCurrencies()
 
       if(this.updateRouteId != undefined) {
           this.subscriptions.push(
@@ -106,6 +126,38 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
       }
   }
 
+    getPrevMonthAVGCurrencies(){
+        this.subscriptions.push(this.priceService.getPrevMonthAVGCurrencies().subscribe(data =>{
+            this.prevMonthAVGCurr = data;
+
+
+            /* nonNullAVGCurrencyList.get().forEach(avgCur -> {
+                NmCurrenciesHistoryEntity elem = new NmCurrenciesHistoryEntity();
+                elem.setValue(avgCur.getAvgValue());
+                NmCurrenciesEntity currency = currencyRepository.findById(avgCur.getCurrencyId()).get();
+                elem.setCurrency(currency);
+                prevMonthAVGCurrenciesList.add(elem);
+            });*/
+        }));
+    }
+
+    loadDocTypes(){
+        this.subscriptions.push(
+            this.priceService.getRequestStepByIdAndCode('14','R').subscribe(step => {
+                    this.subscriptions.push(
+                        this.priceService.getAllDocTypes().subscribe(data => {
+                                //console.log('getAllDocTypes', data);
+                                this.docTypes = data;
+                                this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
+                            },
+                            error => console.log(error)
+                        )
+                    );
+                },
+                error => console.log(error)
+            )
+        );
+    }
 
     documentAdded($event) {
 
@@ -163,10 +215,16 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
             let documents: Document[] = [];
 
             this.documents.forEach(doc =>{
-                if(doc.docType.description == 'Anexa 1 la ordinul de înregistrare a prețului' && doc.number != req.requestNumber){
+                if(doc.docType.description == 'CERERE-TIP (Anexa 1)' && doc.number != req.requestNumber){
                     return true;
                 }
                 documents.push(doc);
+            });
+
+            this.prevMonthAVGCurr.forEach(cur => {
+                if(req.currency.id == cur.currency.id) {
+                    req.mdlValue = cur.value
+                }
             });
 
             priceModels.push({
@@ -186,6 +244,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
                     medicament: req.medicament,
                     referencePrices: req.referencePrices,
                     folderNr: this.requestNumber,
+                    mdlValue: req.mdlValue,
                     type: {id: 1}
                 },
             })
@@ -240,7 +299,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
           let mandatoryDocAddedToList: boolean = this.mandatoryDocuments.some(value => value.number == $event.requestNumber);
           if(!mandatoryDocAddedToList) {
               this.mandatoryDocuments.push({
-                  description: 'Anexa 1 la ordinul de înregistrare a prețului',
+                  description: 'CERERE-TIP (Anexa 1)',
                   number: $event.requestNumber,
                   status: "Nu este atasat"
               });

@@ -42,7 +42,7 @@ public class DBConfiguration
 
     @Primary
     @ConfigurationProperties(prefix = "primary.datasource")
-    @Bean(name = "primary")
+    @Bean(name = "primary", destroyMethod = "close")
     public HikariDataSource dataSource()
     {
         return DataSourceBuilder.create().type(HikariDataSource.class).build();

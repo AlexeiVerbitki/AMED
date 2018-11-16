@@ -35,7 +35,8 @@ export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
       pretDeProducatorMDL: 25,
       pretDeProducatorValuta: 75,
       valuta: 'Lei',
-      nrSiDataOrdinuluiDeAprobareAPretului: 'NDOApr12345'
+      nrOrdinuluiDeAprobareAPretului: 'Nr12345',
+      dataOrdinuluiDeAprobareAPretului: 'D12345'
 
     },
     {
@@ -57,7 +58,8 @@ export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
       pretDeProducatorMDL: 25,
       pretDeProducatorValuta: 75,
       valuta: 'Lei',
-      nrSiDataOrdinuluiDeAprobareAPretului: 'NDOApr12345'
+      nrOrdinuluiDeAprobareAPretului: 'Nr12345',
+      dataOrdinuluiDeAprobareAPretului: 'D12345'
     },
     {
       codMedicament: 'Cl1231',
@@ -78,7 +80,8 @@ export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
       pretDeProducatorMDL: 25,
       pretDeProducatorValuta: 75,
       valuta: 'Lei',
-      nrSiDataOrdinuluiDeAprobareAPretului: 'NDOApr12345'
+      nrOrdinuluiDeAprobareAPretului: 'Nr12345',
+      dataOrdinuluiDeAprobareAPretului: 'D12345'
     },
     {
       codMedicament: 'Cl1231',
@@ -99,7 +102,8 @@ export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
       pretDeProducatorMDL: 25,
       pretDeProducatorValuta: 75,
       valuta: 'Lei',
-      nrSiDataOrdinuluiDeAprobareAPretului: 'NDOApr12345'
+      nrOrdinuluiDeAprobareAPretului: 'Nr12345',
+      dataOrdinuluiDeAprobareAPretului: 'D12345'
     },
     {
       codMedicament: 'Cl1231',
@@ -120,7 +124,8 @@ export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
       pretDeProducatorMDL: 25,
       pretDeProducatorValuta: 75,
       valuta: 'Lei',
-      nrSiDataOrdinuluiDeAprobareAPretului: 'NDOApr12345'
+      nrOrdinuluiDeAprobareAPretului: 'Nr12345',
+      dataOrdinuluiDeAprobareAPretului: 'D12345'
     },
     {
       codMedicament: 'Cl1231',
@@ -141,7 +146,8 @@ export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
       pretDeProducatorMDL: 25,
       pretDeProducatorValuta: 75,
       valuta: 'Lei',
-      nrSiDataOrdinuluiDeAprobareAPretului: 'NDOApr12345'
+      nrOrdinuluiDeAprobareAPretului: 'Nr12345',
+      dataOrdinuluiDeAprobareAPretului: 'D12345'
     },
     {
       codMedicament: 'Cl1231',
@@ -162,7 +168,8 @@ export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
       pretDeProducatorMDL: 25,
       pretDeProducatorValuta: 75,
       valuta: 'Lei',
-      nrSiDataOrdinuluiDeAprobareAPretului: 'NDOApr12345'
+      nrOrdinuluiDeAprobareAPretului: 'Nr12345',
+      dataOrdinuluiDeAprobareAPretului: 'D12345'
     },
     {
       codMedicament: 'Cl1231',
@@ -183,7 +190,8 @@ export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
       pretDeProducatorMDL: 25,
       pretDeProducatorValuta: 75,
       valuta: 'Lei',
-      nrSiDataOrdinuluiDeAprobareAPretului: 'NDOApr12345'
+      nrOrdinuluiDeAprobareAPretului: 'Nr12345',
+      dataOrdinuluiDeAprobareAPretului: 'D12345'
     },
     {
       codMedicament: 'CM212345',
@@ -204,7 +212,8 @@ export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
       pretDeProducatorMDL: 25,
       pretDeProducatorValuta: 75,
       valuta: 'Lei',
-      nrSiDataOrdinuluiDeAprobareAPretului: 'NDOApr12345'
+      nrOrdinuluiDeAprobareAPretului: 'Nr12345',
+      dataOrdinuluiDeAprobareAPretului: 'D12345'
     },
     {
       codMedicament: 'CM312345',
@@ -225,7 +234,8 @@ export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
       pretDeProducatorMDL: 25,
       pretDeProducatorValuta: 75,
       valuta: 'Lei',
-      nrSiDataOrdinuluiDeAprobareAPretului: 'NDOApr12345'
+      nrOrdinuluiDeAprobareAPretului: 'Nr12345',
+      dataOrdinuluiDeAprobareAPretului: 'D12345'
     },
     {
       codMedicament: 'CM412345',
@@ -246,7 +256,8 @@ export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
       pretDeProducatorMDL: 25,
       pretDeProducatorValuta: 75,
       valuta: 'Lei',
-      nrSiDataOrdinuluiDeAprobareAPretului: 'NDOApr12345'
+      nrOrdinuluiDeAprobareAPretului: 'Nr12345',
+      dataOrdinuluiDeAprobareAPretului: 'D12345'
     }
   ];
 
@@ -268,11 +279,12 @@ export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
   pretDeProducatorMDLFilter = new FormControl('');
   pretDeProducatorValutaFilter = new FormControl('');
   valutaFilter = new FormControl('');
-  nrSiDataOrdinuluiDeAprobareAPretuluiFilter = new FormControl('');
+  nrOrdinuluiDeAprobareAPretuluiFilter = new FormControl('');
+  dataOrdinuluiDeAprobareAPretuluiFilter = new FormControl('');
 
   dataSource = new MatTableDataSource();
 
-  columnsToDisplay = ['codMedicament', 'codVamal', 'denumireComerciala', 'formaFarmaceutica', 'dozaConcentratia', 'volum', 'divizarea', 'tara', 'firmaProducatoare', 'nrDeInregistrare', 'dataDeInregistrare', 'codulATC', 'denumireaComunaInternationala', 'termenulDeValabilitate', 'codulDeBare', 'pretDeProducatorMDL', 'pretDeProducatorValuta', 'valuta', 'nrSiDataOrdinuluiDeAprobareAPretului'];
+  columnsToDisplay = ['codMedicament', 'codVamal', 'denumireComerciala', 'formaFarmaceutica', 'dozaConcentratia', 'volum', 'divizarea', 'tara', 'firmaProducatoare', 'nrDeInregistrare', 'dataDeInregistrare', 'codulATC', 'denumireaComunaInternationala', 'termenulDeValabilitate', 'codulDeBare', 'pretDeProducatorMDL', 'pretDeProducatorValuta', 'valuta', 'nrOrdinuluiDeAprobareAPretului', 'dataOrdinuluiDeAprobareAPretului'];
 
   filterValues = {
     codMedicament: '',
@@ -293,7 +305,8 @@ export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
     pretDeProducatorMDL: '',
     pretDeProducatorValuta: '',
     valuta: '',
-    nrSiDataOrdinuluiDeAprobareAPretului: ''
+    nrOrdinuluiDeAprobareAPretului: '',
+    dataOrdinuluiDeAprobareAPretului: ''
   };
 
   constructor() {
@@ -424,10 +437,17 @@ export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
           this.dataSource.filter = JSON.stringify(this.filterValues);
         }
       )
-    this.nrSiDataOrdinuluiDeAprobareAPretuluiFilter.valueChanges
+    this.nrOrdinuluiDeAprobareAPretuluiFilter.valueChanges
       .subscribe(
-        nrSiDataOrdinuluiDeAprobareAPretului => {
-          this.filterValues.nrSiDataOrdinuluiDeAprobareAPretului = nrSiDataOrdinuluiDeAprobareAPretului;
+        nrOrdinuluiDeAprobareAPretului => {
+          this.filterValues.nrOrdinuluiDeAprobareAPretului = nrOrdinuluiDeAprobareAPretului;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      )
+    this.dataOrdinuluiDeAprobareAPretuluiFilter.valueChanges
+      .subscribe(
+        dataOrdinuluiDeAprobareAPretului => {
+          this.filterValues.dataOrdinuluiDeAprobareAPretului = dataOrdinuluiDeAprobareAPretului;
           this.dataSource.filter = JSON.stringify(this.filterValues);
         }
       )
@@ -453,7 +473,8 @@ export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
         && data.pretDeProducatorMDL.toLowerCase().indexOf(searchTerms.pretDeProducatorMDL) !== -1
         && data.pretDeProducatorValuta.toLowerCase().indexOf(searchTerms.pretDeProducatorValuta) !== -1
         && data.valuta.toLowerCase().indexOf(searchTerms.valuta) !== -1
-        && data.nrSiDataOrdinuluiDeAprobareAPretului.toLowerCase().indexOf(searchTerms.nrSiDataOrdinuluiDeAprobareAPretului) !== -1
+        && data.nrOrdinuluiDeAprobareAPretului.toLowerCase().indexOf(searchTerms.nrOrdinuluiDeAprobareAPretului) !== -1
+        && data.dataOrdinuluiDeAprobareAPretului.toLowerCase().indexOf(searchTerms.dataOrdinuluiDeAprobareAPretului) !== -1
     }
     return filterFunction;
   }

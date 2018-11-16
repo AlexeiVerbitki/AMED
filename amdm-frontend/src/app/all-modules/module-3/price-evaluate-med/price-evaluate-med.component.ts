@@ -14,6 +14,7 @@ import {LoaderService} from "../../../shared/service/loader.service";
 import {RequestAdditionalDataDialogComponent} from "../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component";
 import {MatDialog} from "@angular/material";
 import {PriceService} from "../../../shared/service/prices.service";
+import {Medicament} from "../../../models/medicament";
 
 enum PriceReferenceType {
     OriginCountry = 3 ,
@@ -54,15 +55,22 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
     PriceRegForm: FormGroup;
     expirationReasons: any[] = [];
 
-    formatedProposedPrices: any[] = [];
     proposedPrices:      Price[] = [];
     selectedPrice : any = {};
     refPrices:      Price[] = [];
+    prevPrices:     Price[] = [];
+    relatedMeds:     any[] = [];
+    avgRelatedMeds:     number = 0;
     minRefPrices:   any[] = [];
+    dciAndOriginAvgs:   any[] = [];
     minOtherCountriesCatPrices:   any[] = [];
     priceTypes: any[];
     MedType = MedicamentType;
     needSelectPrice: boolean = false;
+
+    hasReferencePrices: boolean = false;
+    hasOriginCountryPrices: boolean = false;
+    hasOtherCountriesPrices: boolean = false;
 
     priceRequestId: number;
 
@@ -95,6 +103,13 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
           'startDate': {disabled: true, value: new Date()},
           'dataToSaveInStartDateRequestHistory': [''],
           'currentStep': ['E'],
+          'price': fb.group({
+              id: [null],
+              value: [null],
+              currency: [null],
+              folderNr: [null],
+              nationalPrice: [null],
+          }),
           'evaluation':  fb.group({
               'expirationDate': [null, Validators.required],
               'selectedPrice': [null, Validators.required],
@@ -115,16 +130,13 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                           'expirationDate': [],
                           'pharmaceuticalForm': [null, Validators.required],
                           'dose': [null, Validators.required],
+                          'division': [null, Validators.required],
                           'unitsOfMeasurementDesc': [null, Validators.required],
                           'internationalMedicamentName': [null, Validators.required],
                           'volume': [null],
                           'volumeQuantityMeasurementName': [null],
                           'termsOfValidity': [null, Validators.required],
                           'code': [null, Validators.required],
-                          'storageQuantityMeasurementName': [null, Validators.required],
-                          'storageQuantity': [null, Validators.required],
-                          'unitsQuantityMeasurementName': [null, Validators.required],
-                          'unitsQuantity': [null, Validators.required],
                           'prescription': [null, Validators.required],
                           'authorizationHolder': [null, Validators.required],
                           'manufactureName': [null],
@@ -148,37 +160,19 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-      this.subscriptions.push(this.priceService.getPrevMonthAVGCurrencies().subscribe(data =>{
-          this.avgCurrencies = data;
-          console.log(this.avgCurrencies);
-      }));
-
-      this.subscriptions.push(this.priceService.getDocumentTypes().subscribe(data =>{
-          data.forEach(type => {
-              if(this.priceModuleAvaibleDocTypes.includes(type.category)) {
-                  this.requiredOutputDocs.push(type);
-              }
-          });
-          console.log('DocTypes', this.requiredOutputDocs);
-      }));
-
-      this.subscriptions.push(
-          this.priceService.getAllPriceTypes().subscribe(priceTypes => {
-                  this.priceTypes = priceTypes;
-                  // for(let p of this.priceTypes) {
-                  //     if(p.description == 'În țara de origine') {
-                  //         this.OriginCountryPriceTypeId = p.id;
-                  //         break;
-                  //     }
-                  // }
-              },
-              error => console.log(error)
-          ));
-
+      this.getPrevMonthAVGCurrencies();
+      this.getDocumentsTypes();
+      this.getAllPricesTypes();
 
       this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
               this.subscriptions.push(this.priceService.getPricesRequest(params['id']).subscribe(data => {
                       console.log(data);
+
+                      if(data.price.medicament != undefined) {
+                          this.getMedPrevPrices(data.price);
+                          this.getRelatedDCIMedicamentsPrices(data.price.medicament.internationalMedicamentName.id, data.price.id);
+                      }
+
                       if(data.currentStep != 'R'){
                           console.log('Procesul a fost finisat deja');
                       }
@@ -187,20 +181,21 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                           this.priceRequestId = data.pricesRequest.id;
                       }
 
-                      if(data.pricesRequest.prices != undefined) {
-                          data.pricesRequest.prices.forEach(price => this.formatedProposedPrices = [...this.formatedProposedPrices, {id: price.id, description: price.value + " " + price.currency.shortDescription}]);
-
-                          this.proposedPrices = data.pricesRequest.prices;
+                      if(data.price != undefined) {
+                          this.PriceRegForm.get('price.value').setValue(data.price.value);
+                          this.PriceRegForm.get('price.currency').setValue(data.price.currency.description);
+                          this.PriceRegForm.get('price.folderNr').setValue(data.price.folderNr);
+                          this.convertToNationalCurrencyPrice()
                       }
 
-                      data.pricesRequest.documents.forEach(doc => {
+                      data.documents.forEach(doc => {
                           this.documents.push(doc);
 
                       });
 
-                      this.initRefPrices(data.pricesRequest.referencePrices);
+                      this.initRefPrices(data.price.referencePrices);
 
-                      this.medicamentType = data.pricesRequest.medicament.medicamentType;
+                      this.medicamentType = data.price.medicament.medicamentType;
                       this.PriceRegForm.get('company.name').setValue(data.company.name);
                       this.PriceRegForm.get('company.id').setValue(data.company.id);
                       this.PriceRegForm.get('id').setValue(data.id);
@@ -208,23 +203,20 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                       this.PriceRegForm.get('type').setValue(data.type);
                       this.PriceRegForm.get('requestHistories').setValue(data.requestHistories);
                       this.PriceRegForm.get('typeValue').setValue(data.type.code);
-                      this.PriceRegForm.get('medicament.id').setValue(data.pricesRequest.medicament.id);
-                      this.PriceRegForm.get('medicament.internationalMedicamentName').setValue(data.pricesRequest.medicament.internationalMedicamentName ? data.pricesRequest.medicament.internationalMedicamentName.description : undefined);
-                      this.PriceRegForm.get('medicament.code').setValue(data.pricesRequest.medicament.code);
-                      this.PriceRegForm.get('medicament.manufactureName').setValue(data.pricesRequest.medicament.manufacture ? data.pricesRequest.medicament.manufacture.description : undefined);
-                      this.PriceRegForm.get('medicament.name').setValue(data.pricesRequest.medicament.name);
-                      this.PriceRegForm.get('medicament.termsOfValidity').setValue(data.pricesRequest.medicament.termsOfValidity);
-                      this.PriceRegForm.get('medicament.dose').setValue(data.pricesRequest.medicament.dose);
-                      this.PriceRegForm.get('medicament.unitsOfMeasurementDesc').setValue(data.pricesRequest.medicament.unitsOfMeasurement?data.pricesRequest.medicament.unitsOfMeasurement.description:undefined);
-                      this.PriceRegForm.get('medicament.documents').setValue(data.pricesRequest.medicament.documents);
-                      this.PriceRegForm.get('medicament.registrationDate').setValue(data.pricesRequest.medicament.registrationDate);
-                      this.PriceRegForm.get('medicament.volume').setValue(data.pricesRequest.medicament.volume);
-                      this.PriceRegForm.get('medicament.unitsQuantity').setValue(data.pricesRequest.medicament.unitsQuantity);
-                      this.PriceRegForm.get('medicament.storageQuantity').setValue(data.pricesRequest.medicament.storageQuantity);
-                      this.PriceRegForm.get('medicament.storageQuantityMeasurementName').setValue(data.pricesRequest.medicament.storageQuantityMeasurement ? data.pricesRequest.medicament.storageQuantityMeasurement.description:undefined);
-                      this.PriceRegForm.get('medicament.volumeQuantityMeasurementName').setValue(data.pricesRequest.medicament.volumeQuantityMeasurement ? data.pricesRequest.medicament.volumeQuantityMeasurement.description:undefined);
-                      this.PriceRegForm.get('medicament.unitsQuantityMeasurementName').setValue(data.pricesRequest.medicament.unitsQuantityMeasurement?data.pricesRequest.medicament.unitsQuantityMeasurement.description:undefined);
-                      this.PriceRegForm.get('medicament.expirationDate').setValue(data.pricesRequest.medicament.expirationDate);
+                      this.PriceRegForm.get('medicament.id').setValue(data.price.medicament.id);
+                      this.PriceRegForm.get('medicament.internationalMedicamentName').setValue(data.price.medicament.internationalMedicamentName ? data.price.medicament.internationalMedicamentName.description : undefined);
+                      this.PriceRegForm.get('medicament.code').setValue(data.price.medicament.code);
+                      this.PriceRegForm.get('medicament.manufactureName').setValue(data.price.medicament.manufacture ? data.price.medicament.manufacture.description : undefined);
+                      this.PriceRegForm.get('medicament.name').setValue(data.price.medicament.name);
+                      this.PriceRegForm.get('medicament.termsOfValidity').setValue(data.price.medicament.termsOfValidity);
+                      this.PriceRegForm.get('medicament.dose').setValue(data.price.medicament.dose);
+                      this.PriceRegForm.get('medicament.division').setValue(data.price.medicament.division);
+                      this.PriceRegForm.get('medicament.unitsOfMeasurementDesc').setValue(data.price.medicament.unitsOfMeasurement?data.price.medicament.unitsOfMeasurement.description:undefined);
+                      this.PriceRegForm.get('medicament.documents').setValue(data.price.medicament.documents);
+                      this.PriceRegForm.get('medicament.registrationDate').setValue(data.price.medicament.registrationDate);
+                      this.PriceRegForm.get('medicament.volume').setValue(data.price.medicament.volume);
+                      this.PriceRegForm.get('medicament.volumeQuantityMeasurementName').setValue(data.price.medicament.volumeQuantityMeasurement ? data.price.medicament.volumeQuantityMeasurement.description:undefined);
+                      this.PriceRegForm.get('medicament.expirationDate').setValue(data.price.medicament.expirationDate);
                       this.PriceRegForm.get('startDate').setValue(new Date(data.startDate));
                       this.initOutputDocs(data.outputDocuments);
 
@@ -247,12 +239,106 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
           })
       );
 
-      this.subscriptions.push(
-          this.priceService.getPriceExpirationReasons().subscribe(reasons => {
-                  this.expirationReasons = reasons;
-              },
-              error => console.log(error)
-          ));
+      this.getPricesExpirationReasons();
+    }
+
+
+    getPrevMonthAVGCurrencies(){
+        this.subscriptions.push(this.priceService.getPrevMonthAVGCurrencies().subscribe(data =>{
+            this.avgCurrencies = data;
+            this.convertToNationalCurrencyPrice();
+        }));
+    }
+
+
+    getDocumentsTypes() {
+        this.subscriptions.push(this.priceService.getDocumentTypes().subscribe(data =>{
+            data.forEach(type => {
+                if(this.priceModuleAvaibleDocTypes.includes(type.category)) {
+                    this.requiredOutputDocs.push(type);
+                }
+            });
+            console.log('DocTypes', this.requiredOutputDocs);
+        }));
+    }
+
+    getAllPricesTypes(){
+        this.subscriptions.push(
+            this.priceService.getAllPriceTypes().subscribe(priceTypes => {
+                    this.priceTypes = priceTypes;
+                },
+                error => console.log(error)
+            ));
+    }
+
+    getPricesExpirationReasons(){
+        this.subscriptions.push(
+            this.priceService.getPriceExpirationReasons().subscribe(reasons => {
+                    this.expirationReasons = reasons;
+                },
+                error => console.log(error)
+            ));
+    }
+
+    getMedPrevPrices(price: any) {
+        this.subscriptions.push(
+            this.priceService.getMedPrevPrices(price.medicament.id).subscribe(prevPrices => {
+                    console.log('prev prices', prevPrices)
+                    for(let i = 0; i < prevPrices.length; i++) {
+                        if(prevPrices[i].id == price.id) {
+                            prevPrices.splice(i, 1);
+                            break;
+                        }
+                    }
+                    this.prevPrices = prevPrices;
+                },
+                error => console.log(error)
+            ));
+    }
+
+
+    getRelatedDCIMedicamentsPrices(internationalNameId: string, id: number) {
+        this.subscriptions.push(
+            this.priceService.getRelatedMedicaments(internationalNameId).subscribe(meds => {
+                    console.log('getRelatedMedicaments', meds)
+                    for(let i = 0; i < meds.length; i++) {
+                        if(meds[i].priceId == id) {
+                            meds.splice(i, 1);
+                            break;
+                        }
+                    }
+                    this.relatedMeds = meds;
+                    this.avgRelatedMeds = 0;
+                    this.relatedMeds.forEach(m => this.avgRelatedMeds += m.mdlValue?m.mdlValue:0);
+                    this.avgRelatedMeds /= this.relatedMeds.length;
+
+                    //------------------|AVG(ORIGIN , DCI)|--------------------
+                    let avgOriginCountry = 0, originPriceCount = 0;
+                    this.refPrices.forEach(p => {
+                        if(p.type.description == 'În țara de origine') {
+                            avgOriginCountry += +p.xchRateRefVal;
+                            originPriceCount++;
+                        }
+                    });
+                    if(originPriceCount > 0) {
+                        this.dciAndOriginAvgs.push({source: 'Media în țara de origine', avg: avgOriginCountry / originPriceCount});
+                    }
+
+                    this.dciAndOriginAvgs.push({source: 'Media DCI', avg: this.avgRelatedMeds});
+                    let avg = 0;
+                    this.dciAndOriginAvgs.forEach(v => avg += v.avg);
+                    avg /= this.dciAndOriginAvgs.length;
+                    this.dciAndOriginAvgs.push({source: 'Media', avg: avg});
+                },
+                error => console.log(error)
+            ));
+    }
+
+    convertToNationalCurrencyPrice(){
+        if(this.avgCurrencies != undefined && this.avgCurrencies.length > 0 && this.PriceRegForm.get('price.currency').value != undefined) {
+            let avgCur = this.avgCurrencies.find(cur => cur.currency.description == this.PriceRegForm.get('price.currency').value);
+            this.PriceRegForm.get('price.nationalPrice').setValue(avgCur?avgCur.value:undefined);
+        }
     }
 
     onDecisionChange($event) {
@@ -299,7 +385,6 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
       return this.outputDocuments.some(value => value.status == "Nu este atasat");
     }
 
-
     initRefPrices(referencePrices?: Price[]) {
 
         if(referencePrices != undefined) {
@@ -337,6 +422,10 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
 
             this.initAverageMinPrice(this.minRefPrices, PriceReferenceType.ReferenceCountry);
             this.initAverageMinPrice(this.minOtherCountriesCatPrices, PriceReferenceType.OtherCountriesCatalog);
+
+            this.hasReferencePrices = this.refPrices.some(p => p.type.description == 'În țara de referintă');
+            this.hasOriginCountryPrices = this.refPrices.some(p => p.type.description == 'În țara de origine');
+            this.hasOtherCountriesPrices = this.refPrices.some(p => p.type.description == 'În catalogul de piață a altor țări');
         }
     }
 

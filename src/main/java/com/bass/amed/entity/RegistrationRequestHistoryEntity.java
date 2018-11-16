@@ -1,10 +1,12 @@
 package com.bass.amed.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "registration_request_history", schema = "amed", catalog = "")
+@Table(name = "registration_request_history", schema = "amed")
 public class RegistrationRequestHistoryEntity
 {
     private Integer id;
@@ -13,6 +15,7 @@ public class RegistrationRequestHistoryEntity
     private String username;
     private String step;
     private Integer registrationRequestId;
+
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )

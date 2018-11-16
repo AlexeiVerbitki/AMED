@@ -4,6 +4,8 @@ import com.bass.amed.security.CustomHeaderFilter;
 import com.bass.amed.security.JWTConfigurer;
 import com.bass.amed.security.JWTFilter;
 import com.bass.amed.security.TokenProvider;
+import com.fasterxml.jackson.databind.Module;
+import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -66,7 +68,7 @@ public class LdapSecurityConfiguration extends WebSecurityConfigurerAdapter
                 .and().frameOptions().sameOrigin().httpStrictTransportSecurity().disable()
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().exceptionHandling().authenticationEntryPoint((req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Invalid token"))
+                .and().exceptionHandling().authenticationEntryPoint((req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token"))
                 .and().authorizeRequests().antMatchers("/").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/authenticate").permitAll()
@@ -121,5 +123,12 @@ public class LdapSecurityConfiguration extends WebSecurityConfigurerAdapter
         return new TokenProvider();
     }
 
+    @Bean
+    public Module hibernate5Module()
+    {
+        Hibernate5Module hibernate5Module = new Hibernate5Module();
+        hibernate5Module.disable(Hibernate5Module.Feature.USE_TRANSIENT_ANNOTATION);
+        return hibernate5Module;
+    }
 
 }

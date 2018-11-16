@@ -5,7 +5,7 @@ import java.sql.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "license_mandated_contact", schema = "amed", catalog = "")
+@Table(name = "license_mandated_contact", schema = "amed")
 public class LicenseMandatedContactEntity
 {
     private Integer id;
@@ -19,10 +19,8 @@ public class LicenseMandatedContactEntity
     private String newMandatedLastname;
     private String newMandatedNr;
     private Date newMandatedDate;
-//    private LicensesEntity licensesEntity;
     private String newPhoneNumber;
     private String newEmail;
-    private Integer registrationRequestId;
 
     @Id
     @Column(name = "id")
@@ -217,15 +215,4 @@ public class LicenseMandatedContactEntity
         this.newEmail = newEmail;
     }
 
-    @Basic
-    @Column(name = "registration_request_id")
-    public Integer getRegistrationRequestId()
-    {
-        return registrationRequestId;
-    }
-
-    public void setRegistrationRequestId(Integer registrationRequestId)
-    {
-        this.registrationRequestId = registrationRequestId;
-    }
 }

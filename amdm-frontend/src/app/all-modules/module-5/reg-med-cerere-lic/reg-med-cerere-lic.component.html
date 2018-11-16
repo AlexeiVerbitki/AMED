@@ -6,21 +6,32 @@
     <hr>
     <form [formGroup]="mForm">
         <mat-radio-group formControlName="tipCerere">
-            <div class="text-center">
+
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col">
                             <mat-radio-button name="prop1" value="LICEL">Eliberarea licentei</mat-radio-button>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col">
                             <mat-radio-button name="prop2" value="LICM">Modificarea licentei</mat-radio-button>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col">
                             <mat-radio-button name="prop3" value="LICD">Eliberarea duplicatului</mat-radio-button>
+                        </div>
+                        <div class="col">
+                            <mat-radio-button name="prop3" value="LICP">Prelungire</mat-radio-button>
+                        </div>
+                        <div class="col">
+                            <mat-radio-button name="prop3" value="LICS">Suspendare</mat-radio-button>
+                        </div>
+                        <div class="col">
+                            <mat-radio-button name="prop3" value="LICA">Anulare</mat-radio-button>
+                        </div>
+                        <div class="col">
+                            <mat-radio-button name="prop3" value="LICC">Cesionare</mat-radio-button>
                         </div>
                     </div>
                 </div>
-            </div>
         </mat-radio-group>
         <hr>
 
@@ -56,7 +67,10 @@
             <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICEL'">Eliberarea licentei</h5>
             <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICM'">Modificarea licentei</h5>
             <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICD'">Eliberarea duplicatului licentei</h5>
-            <hr>
+            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICP'">Prelungire</h5>
+            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICS'">Suspendare</h5>
+            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICA'">Anulare</h5>
+            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICT'">Preluare</h5>
 
             <hr>
             <div class="row">

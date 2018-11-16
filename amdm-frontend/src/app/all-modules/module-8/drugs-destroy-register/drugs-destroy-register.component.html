@@ -58,11 +58,11 @@
     <form [formGroup]="rForm">
         <div class="row">
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="md-form-modified-select">
                     <ng-select class="custom" [items]="medicamente | async"
                                    bindLabel="name"
-                                   placeholder="Medicamente"
+                                   placeholder="Medicament"
                                    formControlName="medicaments"
                                    [required]="true"
                                    [typeahead]="medInputs"
@@ -81,21 +81,21 @@
             </div>
 
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="md-form">
                     <input id="forma" mdbInputDirective type="text" class="form-control" formControlName="forma"
                     >
                     <label for="forma">Forma</label>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="md-form">
                     <input id="doza" mdbInputDirective type="text" class="form-control" formControlName="doza"
                     >
                     <label for="doza">Doza</label>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="md-form">
                     <input id="ambalajPrimar" mdbInputDirective type="text" class="form-control"
                            formControlName="ambalajPrimar"
@@ -103,14 +103,16 @@
                     <label for="ambalajPrimar">Ambalaj primar</label>
                 </div>
             </div>
-            <div class="col-md-4">
+        </div>
+        <div class="row">
+            <div class="col-md-3">
                 <div class="md-form">
                     <input id="seria" mdbInputDirective type="text" class="form-control" formControlName="seria"
                     >
                     <label for="seria">Seria</label>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="md-form">
                     <input id="quantity" mdbInputDirective type="text" class="form-control"
                            formControlName="quantity"
@@ -122,12 +124,12 @@
                     </small>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="md-form">
                     <input id="reasonDestroy" mdbInputDirective type="text" class="form-control"
                            formControlName="reasonDestroy"
                     >
-                    <label for="quantity">Cauza inutilitatii<span class="text-danger">*</span></label>
+                    <label for="reasonDestroy">Cauza inutilitatii<span class="text-danger">*</span></label>
                 </div>
                 <div *ngIf="rFormSubbmitted && !rForm.get('reasonDestroy').valid">
                     <small class="text-muted"><strong class="text-danger">Cauza inutilitatii trebuie introdusa</strong>
@@ -135,9 +137,18 @@
                 </div>
             </div>
 
+
+            <div class="col-md-10">
+                <div class="md-form">
+                <textarea type="text" id="note" class="md-textarea form-control" mdbInputDirective rows="2"
+                          formControlName="note"></textarea>
+                    <label for="note">Nota</label>
+                </div>
+            </div>
+
             <div class="col">
                 <div class="text-center">
-                    <div class="md-form">
+                    <div class="md-form mt-button">
                         <button type="button" class="btn btn-indigo waves-light btn-sm btn-sm-bl" mdbWavesEffect
                                 (click)="addNewMedicament()">Adauga
                         </button>

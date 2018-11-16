@@ -27,6 +27,7 @@ public class NmEconomicAgentsEntity {
     private String street;
     private String legalAddress;
     private String email;
+    private NmLocalitiesEntity locality;
 
 
     @Id
@@ -237,6 +238,18 @@ public class NmEconomicAgentsEntity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
+    @JoinColumn( name = "locality_id" )
+    public NmLocalitiesEntity getLocality()
+    {
+        return locality;
+    }
+
+    public void setLocality(NmLocalitiesEntity locality)
+    {
+        this.locality = locality;
     }
 
     @Override

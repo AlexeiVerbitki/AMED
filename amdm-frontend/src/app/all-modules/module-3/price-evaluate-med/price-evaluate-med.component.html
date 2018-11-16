@@ -4,14 +4,21 @@
 
     <form [formGroup]='PriceRegForm'>
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-4">
                 <div class="md-form">
                     <input id="nrCererii" mdbInputDirective type="text" class="form-control"
                            formControlName="requestNumber" [attr.disabled]="true">
                     <label for="nrCererii">Numarul cererii</label>
                 </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-4">
+                <div class="md-form" formGroupName="price">
+                    <input id="nrFolder" mdbInputDirective type="text" class="form-control"
+                           formControlName="folderNr" [attr.disabled]="true">
+                    <label for="nrFolder">Numarul dosarului</label>
+                </div>
+            </div>
+            <div class="col-lg-4">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="picker" placeholder="din data" formControlName="startDate">
@@ -75,7 +82,7 @@
         <div class="row" formGroupName="medicament">
             <div class="col-md-4">
                 <div class="md-form">
-                    <input id="dose" mdbInputDirective type="number" class="form-control" formControlName="dose"
+                    <input id="dose" mdbInputDirective type="text" class="form-control" formControlName="dose"
                            [attr.disabled]="true">
                     <label for="dose">Doza</label>
                 </div>
@@ -83,8 +90,8 @@
             <div class="col-md-4">
                 <div class="md-form">
                     <input id="medd" mdbInputDirective type="text" class="form-control"
-                           formControlName="unitsOfMeasurementDesc"  [attr.disabled]="true">
-                    <label for="medd">Unitate de măsură (doza)</label>
+                           formControlName="division"  [attr.disabled]="true">
+                    <label for="medd">Divizarea</label>
                 </div>
             </div>
             <div class="col-md-4">
@@ -118,42 +125,32 @@
             </div>
         </div>
 
-        <h5 class="text-center font-weight-bold">Divizare</h5>
-        <div class="row" formGroupName="medicament">
-            <div class="col-md-6">
+        <div class="row" formGroupName="price">
+            <div class="col-md-4">
                 <div class="md-form">
-                    <input id="nrUnits" mdbInputDirective type="number" class="form-control"
-                           formControlName="unitsQuantity"  [attr.disabled]="true">
-                    <label for="nrUnits">Număr de bucăți</label>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="md-form-modified">
-                    <div class="md-form">
-                        <input id="unitsOfMeasurement" mdbInputDirective type="text" class="form-control"
-                               formControlName="unitsQuantityMeasurementName" [attr.disabled]="true">
-                        <label for="unitsOfMeasurement">Unitatea de măsură (bucăți)</label>
-                    </div>
+                    <input id="price" mdbInputDirective type="number" class="form-control"
+                           formControlName="value" [attr.disabled]="true">
+                    <label for="price">Prețul propus</label>
                 </div>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-4" >
                 <div class="md-form">
-                    <input id="storageQuantity" mdbInputDirective type="number" class="form-control"
-                           formControlName="storageQuantity" [attr.disabled]="true">
-                    <label for="storageQuantity">Cantitate stocare</label>
+                    <input id="curr" mdbInputDirective type="text" class="form-control"
+                           formControlName="currency" [attr.disabled]="true">
+                    <label for="curr">Valuta propusă</label>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="md-form-modified">
-                    <div class="md-form">
-                        <input id="storageMeass" mdbInputDirective type="text" class="form-control"
-                               formControlName="storageQuantityMeasurementName" [attr.disabled]="true">
-                        <label for="storageMeass">Unitatea de măsură (stocare)</label>
-                    </div>
+
+            <div class="col-md-4" [hidden]="PriceRegForm.get('price.nationalPrice').value == undefined">
+                <div class="md-form">
+                    <input id="pmdl" mdbInputDirective type="text" class="form-control"
+                           formControlName="nationalPrice" [attr.disabled]="true">
+                    <label for="pmdl">Prețul în valută naționala (MDL)</label>
                 </div>
             </div>
         </div>
+
         <hr>
         <h5 class="text-center font-weight-bold mt-4 mb-4">Rata medie a BNM pentru luna precedentă evaluării
             dosarului</h5>
@@ -172,7 +169,7 @@
         </div>
         <hr>
 
-        <div *ngIf="medicamentType.code == MedType.Generic">
+            <!--<div [hidden]="!hasReferencePrices">-->
             <div>
                 <h5 class="text-center font-weight-bold mt-4 mb-4">Prețul medicamentului în 9 țări de referință</h5>
                 <table mdbTable bordered="true" striped="true" hover="true" small="true" class="mt-4 mb-4 text-center">
@@ -205,183 +202,205 @@
                     </tr>
                     </tbody>
                 </table>
-            </div>
 
-            <h5 class="text-center font-weight-bold mt-4 mb-4">Media celor mai mici prețuri în țările de referință</h5>
-            <table mdbTable bordered="true" striped="true" hover="true" small="true" class="mt-4 mb-4 text-center">
-                <thead class="black white-text">
-                <tr>
-                    <th scope="col">Cele mai mici 3 prețuri</th>
-                    <th>MDL</th>
-                    <th>EUR</th>
-                    <th>USD</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr mdbTableCol *ngFor="let el of minRefPrices">
-                    <td scope="row">{{el.country?.description}}</td>
-                    <td>{{el?.xchRateRefVal | number:'1.4'}}</td>
-                    <td>{{el?.xchRateEurVal | number:'1.4'}}</td>
-                    <td>{{el?.xchRateUsdVal | number:'1.4'}}</td>
-                </tr>
-                </tbody>
-            </table>
-
-            <div>
-                <h5 class="text-center font-weight-bold mt-4 mb-4">Prețul medicamentului în țara de origine</h5>
+                <h5 class="text-center font-weight-bold mt-4 mb-4">Media celor mai mici prețuri în țările de
+                    referință</h5>
                 <table mdbTable bordered="true" striped="true" hover="true" small="true" class="mt-4 mb-4 text-center">
                     <thead class="black white-text">
                     <tr>
-                        <th scope="col">Țara de origine</th>
-                        <th>Valuta ţării de referinţă</th>
-                        <th>Preţ</th>
-                        <th>Rata de schimb (valuta ţării de referinta/MDL)</th>
+                        <th scope="col">Cele mai mici 3 prețuri</th>
                         <th>MDL</th>
-                        <th>Rata de schimb (EUR/lei)</th>
                         <th>EUR</th>
-                        <th>Rata de schimb (USD/lei)</th>
                         <th>USD</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr mdbTableCol *ngFor="let el of refPrices">
-                        <ng-container *ngIf="el.type.id == PriceRefType.OriginCountry">
-                            <td scope="row">{{el.country?.description}}</td>
-                            <td>{{el.currency?.shortDescription}}</td>
-                            <td>{{el.value | number:'1.4'}}</td>
-                            <td>{{el?.xchRateRef | number:'1.4'}}</td>
-                            <td>{{el?.xchRateRefVal | number:'1.4'}}</td>
-                            <td>{{el?.xchRateEur | number:'1.4'}}</td>
-                            <td>{{el?.xchRateEurVal | number:'1.4'}}</td>
-                            <td>{{el?.xchRateUsd | number:'1.4'}}</td>
-                            <td>{{el?.xchRateUsdVal | number:'1.4'}}</td>
-                        </ng-container>
+                    <tr mdbTableCol *ngFor="let el of minRefPrices">
+                        <td scope="row">{{el.country?.description}}</td>
+                        <td>{{el?.xchRateRefVal | number:'1.4'}}</td>
+                        <td>{{el?.xchRateEurVal | number:'1.4'}}</td>
+                        <td>{{el?.xchRateUsdVal | number:'1.4'}}</td>
                     </tr>
                     </tbody>
                 </table>
             </div>
 
-            <div>
-                <h5 class="text-center font-weight-bold mt-4 mb-4">Prețul medicamentului în cataloagele în care
-                    medicamentul este plasat pe piaţă</h5>
-                <table mdbTable bordered="true" striped="true" hover="true" small="true" class="mt-4 mb-4 text-center">
-                    <thead class="black white-text">
-                    <tr>
-                        <th scope="col">Țara</th>
-                        <th>Valuta ţării de referinţă</th>
-                        <th>Preţ</th>
-                        <th>Rata de schimb (valuta ţării de referinta/MDL)</th>
-                        <th>MDL</th>
-                        <th>Rata de schimb (EUR/lei)</th>
-                        <th>EUR</th>
-                        <th>Rata de schimb (USD/lei)</th>
-                        <th>USD</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr mdbTableCol *ngFor="let el of refPrices">
-                        <ng-container *ngIf="el.type.id == PriceRefType.OtherCountriesCatalog">
-                            <td scope="row">{{el.country?.description}}</td>
-                            <td>{{el.currency?.shortDescription}}</td>
-                            <td>{{el.value | number:'1.4'}}</td>
-                            <td>{{el?.xchRateRef | number:'1.4'}}</td>
-                            <td>{{el?.xchRateRefVal | number:'1.4'}}</td>
-                            <td>{{el?.xchRateEur | number:'1.4'}}</td>
-                            <td>{{el?.xchRateEurVal | number:'1.4'}}</td>
-                            <td>{{el?.xchRateUsd | number:'1.4'}}</td>
-                            <td>{{el?.xchRateUsdVal | number:'1.4'}}</td>
-                        </ng-container>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <h5 class="text-center font-weight-bold mt-4 mb-4">Media celor mai mici preţuri de pe cataloagele în care
-                medicamentul este plasat pe piaţă</h5>
+        <!--<div [hidden]="prevPrices == undefined || prevPrices.length == 0">-->
+        <div>
+            <h5 class="text-center font-weight-bold mt-4 mb-4">Date despre înregistrările precedente</h5>
             <table mdbTable bordered="true" striped="true" hover="true" small="true" class="mt-4 mb-4 text-center">
                 <thead class="black white-text">
                 <tr>
-                    <th scope="col">Cele mai mici 3 prețuri</th>
+                    <th scope="col">Data aprobării ordinului</th>
+                    <th>Data revizuirii preţului</th>
                     <th>MDL</th>
-                    <th>EUR</th>
-                    <th>USD</th>
+                    <th>Valuta</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr mdbTableCol *ngFor="let el of minOtherCountriesCatPrices">
-                    <td scope="row">{{el.country?.description}}</td>
-                    <td>{{el?.xchRateRefVal | number:'1.4'}}</td>
-                    <td>{{el?.xchRateEurVal | number:'1.4'}}</td>
-                    <td>{{el?.xchRateUsdVal | number:'1.4'}}</td>
+                <tr mdbTableCol *ngFor="let el of prevPrices">
+                    <td scope="row">{{el.orderApprovDate | date: 'dd/MM/yyyy'}}</td>
+                    <td>{{el.revisionDate | date: 'dd/MM/yyyy'}}</td>
+                    <td>{{el.mdlValue | number:'1.4'}}</td>
+                    <td>{{el.value | number:'1.4'}} {{el.currency?.shortDescription}}</td>
                 </tr>
                 </tbody>
             </table>
         </div>
 
+            <!--<div [hidden]="!hasOriginCountryPrices">-->
+            <div>
+                <div>
+                    <h5 class="text-center font-weight-bold mt-4 mb-4">Prețul medicamentului în țara de origine</h5>
+                    <table mdbTable bordered="true" striped="true" hover="true" small="true"
+                           class="mt-4 mb-4 text-center">
+                        <thead class="black white-text">
+                        <tr>
+                            <th scope="col">Țara de origine</th>
+                            <th>Valuta ţării de referinţă</th>
+                            <th>Preţ</th>
+                            <th>Rata de schimb (valuta ţării de referinta/MDL)</th>
+                            <th>MDL</th>
+                            <th>Rata de schimb (EUR/lei)</th>
+                            <th>EUR</th>
+                            <th>Rata de schimb (USD/lei)</th>
+                            <th>USD</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr mdbTableCol *ngFor="let el of refPrices">
+                            <ng-container *ngIf="el.type.id == PriceRefType.OriginCountry">
+                                <td scope="row">{{el.country?.description}}</td>
+                                <td>{{el.currency?.shortDescription}}</td>
+                                <td>{{el.value | number:'1.4'}}</td>
+                                <td>{{el?.xchRateRef | number:'1.4'}}</td>
+                                <td>{{el?.xchRateRefVal | number:'1.4'}}</td>
+                                <td>{{el?.xchRateEur | number:'1.4'}}</td>
+                                <td>{{el?.xchRateEurVal | number:'1.4'}}</td>
+                                <td>{{el?.xchRateUsd | number:'1.4'}}</td>
+                                <td>{{el?.xchRateUsdVal | number:'1.4'}}</td>
+                            </ng-container>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-        <div class="row" formGroupName="evaluation">
-            <div class="col-md-4">
-                <div class="md-form">
-                    <ng-select class="w-100"
-                               [items]="decisions"
-                               [required]="false"
-                               formControlName="decision"
-                               bindLabel="description"
-                               (change)="onDecisionChange($event)"
-                               placeholder="Decizia luată în urma evaluării">
-                    </ng-select>
-                    <div *ngIf="formSubmitted && PriceRegForm.get('evaluation.decision').invalid">
-                        <small class="text-muted"><strong class="text-danger">Selectați decizia privind
-                            prețurile</strong>
-                        </small>
-                    </div>
+            <!--<div [hidden]="!hasOtherCountriesPrices">-->
+<div>
+            <div>
+                    <h5 class="text-center font-weight-bold mt-4 mb-4">Prețul medicamentului în cataloagele în care
+                        medicamentul este plasat pe piaţă</h5>
+                    <table mdbTable bordered="true" striped="true" hover="true" small="true"
+                           class="mt-4 mb-4 text-center">
+                        <thead class="black white-text">
+                        <tr>
+                            <th scope="col">Țara</th>
+                            <th>Valuta ţării de referinţă</th>
+                            <th>Preţ</th>
+                            <th>Rata de schimb (valuta ţării de referinta/MDL)</th>
+                            <th>MDL</th>
+                            <th>Rata de schimb (EUR/lei)</th>
+                            <th>EUR</th>
+                            <th>Rata de schimb (USD/lei)</th>
+                            <th>USD</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr mdbTableCol *ngFor="let el of refPrices">
+                            <ng-container *ngIf="el.type.id == PriceRefType.OtherCountriesCatalog">
+                                <td scope="row">{{el.country?.description}}</td>
+                                <td>{{el.currency?.shortDescription}}</td>
+                                <td>{{el.value | number:'1.4'}}</td>
+                                <td>{{el?.xchRateRef | number:'1.4'}}</td>
+                                <td>{{el?.xchRateRefVal | number:'1.4'}}</td>
+                                <td>{{el?.xchRateEur | number:'1.4'}}</td>
+                                <td>{{el?.xchRateEurVal | number:'1.4'}}</td>
+                                <td>{{el?.xchRateUsd | number:'1.4'}}</td>
+                                <td>{{el?.xchRateUsdVal | number:'1.4'}}</td>
+                            </ng-container>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
+
+                <h5 class="text-center font-weight-bold mt-4 mb-4">Media celor mai mici preţuri de pe cataloagele în
+                    care
+                    medicamentul este plasat pe piaţă</h5>
+                <table mdbTable bordered="true" striped="true" hover="true" small="true" class="mt-4 mb-4 text-center">
+                    <thead class="black white-text">
+                    <tr>
+                        <th scope="col">Cele mai mici 3 prețuri</th>
+                        <th>MDL</th>
+                        <th>EUR</th>
+                        <th>USD</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr mdbTableCol *ngFor="let el of minOtherCountriesCatPrices">
+                        <td scope="row">{{el.country?.description}}</td>
+                        <td>{{el?.xchRateRefVal | number:'1.4'}}</td>
+                        <td>{{el?.xchRateEurVal | number:'1.4'}}</td>
+                        <td>{{el?.xchRateUsdVal | number:'1.4'}}</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="col-md-4">
-                <div class="md-form">
-                    <ng-select class="w-100"
-                               [items]="formatedProposedPrices"
-                               [required]="false"
-                               formControlName="selectedPrice"
-                               bindLabel="description"
-                               placeholder="Selectați prețul potrivit din cele propuse">
-                    </ng-select>
-                    <div *ngIf="formSubmitted && needSelectPrice && PriceRegForm.get('evaluation.selectedPrice').invalid">
-                        <small class="text-muted"><strong class="text-danger">Selectați un preț pentru aprobare</strong>
-                        </small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="md-form">
-                    <mat-form-field class="w-100">
-                        <input matInput [matDatepicker]="picker2" placeholder="Data expirarii"
-                               formControlName="expirationDate">
-                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                        <mat-datepicker touchUi #picker2></mat-datepicker>
-                    </mat-form-field>
-                    <div *ngIf="formSubmitted && needSelectPrice && PriceRegForm.get('evaluation.expirationDate') == undefined">
-                        <small class="text-muted"><strong class="text-danger">Indicați data expirării prețului</strong>
-                        </small>
-                    </div>
-                </div>
-            </div>
-            <!--<div class="col-md-4">
-                <div class="md-form">
-                    <ng-select class="w-100"
-                               [items]="expirationReasons"
-                               [required]="false"
-                               formControlName="selectedReason"
-                               bindLabel="description"
-                               placeholder="Motivul expirării"
-                               (change)="onReasonSelected($event)">
-                    </ng-select>
-                    <div *ngIf="formSubmitted && PriceRegForm.get('evaluation.selectedReason').invalid">
-                        <small class="text-muted"><strong class="text-danger">Selectați motivul expirării prețului</strong>
-                        </small>
-                    </div>
-                </div>
-            </div>-->
+
+        <div>
+            <h5 class="text-center font-weight-bold mt-4 mb-4">Medicamente similare înregistrate în CNP conform denumirii comune internaţionale</h5>
+            <table mdbTable bordered="true" striped="true" hover="true" small="true" class="mt-4 mb-4 text-center">
+                <thead class="black white-text">
+                <tr>
+                    <th scope="col">Codul medicamentului</th>
+                    <th>Denumirea</th>
+                    <th>Forma farmaceutică</th>
+                    <th>Doza</th>
+                    <th>Divizarea</th>
+                    <th>Țara</th>
+                    <th>Producător</th>
+                    <th>Denumirea internațională</th>
+                    <th>MDL</th>
+                    <th>Valuta</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr mdbTableCol *ngFor="let m of relatedMeds">
+                    <td scope="row">{{m.code}}</td>
+                    <td>{{m.name}}</td>
+                    <td>{{m.pharmaceuticalForm}}</td>
+                    <td>{{m.dose}}</td>
+                    <td>{{m.division}}</td>
+                    <td>{{m.country}}</td>
+                    <td>{{m.manufacture}}</td>
+                    <td>{{m.internationalName}}</td>
+                    <td>{{m.mdlValue | number:'1.4'}}</td>
+                    <td>{{m.price | number:'1.4'}} {{m.currency}}</td>
+                </tr>
+                <tr mdbTableCol>
+                    <td scope="row" colspan="8">Media</td>
+                    <td>{{avgRelatedMeds | number:'1.4'}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <h5 class="text-center font-weight-bold mt-4 mb-4">Media preţului din ţara de origine şi medicamentele similare înregistrate în CNP conform DCI</h5>
+            <table mdbTable bordered="true" striped="true" hover="true" small="true" class="mt-4 mb-4 text-center">
+                <thead class="black white-text">
+                <tr>
+                    <th scope="col">Sursa</th>
+                    <th>Media MDL</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr mdbTableCol *ngFor="let m of dciAndOriginAvgs">
+                    <td scope="row">{{m.source}}</td>
+                    <td>{{m.avg | number:'1.4'}}</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
 
         <hr>
@@ -391,36 +410,6 @@
 
         <h5 class="text-center font-weight-bold">Documente necesare</h5>
 
-        <!--<div class="row">
-            <div class="col-md-3">
-                <div class="md-form">
-                    <input id="ordAprobPret" mdbInputDirective type="text" class="form-control" value="AB123">
-                    <label for="ordAprobPret">Ordin de aprobare a pretului</label>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="md-form-modified">
-                    <mat-form-field class="w-100">
-                        <input matInput [matDatepicker]="picker3" placeholder="Data emiterii ordinului">
-                        <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
-                        <mat-datepicker touchUi #picker3></mat-datepicker>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="md-form">
-                    <input id="anexa" mdbInputDirective type="text" class="form-control">
-                    <label for="anexa">Nr. Anexei pentru care a fost selectat documentul</label>
-                </div>
-            </div>
-            <div class="col">
-                <div class="md-form">
-                    <textarea id="note" type="text" class="md-textarea form-control" mdbInputDirective></textarea>
-                    <label for="note" for="note">Notă (Textul notificării sau scrisorii de însoțire pentru agentul
-                        economic)</label>
-                </div>
-            </div>
-        </div>-->
         <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="sendInfoLetter()">Scrisoare de informare</button>
         <table class="table table-widths-lg text-center">
             <thead class="black white-text">
@@ -445,6 +434,42 @@
         <div *ngIf="formSubmitted && this.hasUnloadedDocs()">
             <small class="text-muted"><strong class="text-danger">Încărcați toate documentele necesare</strong>
             </small>
+        </div>
+
+
+        <div class="row" >
+            <div class="col-md-6" formGroupName="evaluation">
+                <div class="md-form-modified">
+                    <ng-select class="w-100"
+                               [items]="decisions"
+                               [required]="false"
+                               formControlName="decision"
+                               bindLabel="description"
+                               (change)="onDecisionChange($event)"
+                               placeholder="Decizia luată în urma evaluării">
+                    </ng-select>
+                    <div *ngIf="formSubmitted && PriceRegForm.get('evaluation.decision').invalid">
+                        <small class="text-muted"><strong class="text-danger">Selectați decizia privind
+                            prețurile</strong>
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6" formGroupName="evaluation">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker2" placeholder="Data expirarii"
+                               formControlName="expirationDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker2></mat-datepicker>
+                    </mat-form-field>
+                    <div *ngIf="formSubmitted && needSelectPrice && PriceRegForm.get('evaluation.expirationDate') == undefined">
+                        <small class="text-muted"><strong class="text-danger">Indicați data expirării prețului</strong>
+                        </small>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="text-center">

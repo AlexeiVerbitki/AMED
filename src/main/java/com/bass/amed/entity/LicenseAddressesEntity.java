@@ -2,21 +2,46 @@ package com.bass.amed.entity;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
-@Table(name = "license_addresses", schema = "amed", catalog = "")
+@Table(name = "license_addresses", schema = "amed")
 public class LicenseAddressesEntity
 {
-    private Integer id;
-    private String companyType;
-    private String street;
-    private String building;
-    private NmLocalitiesEntity locality;
-    private NmStatesEntity state;
-
     @Id
     @Column(name = "id")
     @GeneratedValue( strategy = GenerationType.IDENTITY )
+    private Integer id;
+    @Basic
+    @Column(name = "company_type")
+    private String companyType;
+    @Basic
+    @Column(name = "street")
+    private String street;
+    @Basic
+    @Column(name = "building")
+    private String building;
+    @OneToOne( fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "locality_id")
+    private NmLocalitiesEntity locality;
+    @Transient
+    private NmStatesEntity state;
+
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(name = "LICENSE_ACTIVITIES", joinColumns = {
+            @JoinColumn(name = "license_addresse_id")}, inverseJoinColumns = {
+            @JoinColumn(name = "license_activity_type_id")})
+    private Set<LicenseActivityTypeEntity> activities;
+
+    @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "license_addres_id")
+    private Set<LicenseAgentPharmaceutistEntity> agentPharmaceutist;
+
+    @Transient
+    private LicenseAgentPharmaceutistEntity selectedPharmaceutist;
+
+
     public Integer getId()
     {
         return id;
@@ -27,8 +52,7 @@ public class LicenseAddressesEntity
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "company_type")
+
     public String getCompanyType()
     {
         return companyType;
@@ -39,8 +63,7 @@ public class LicenseAddressesEntity
         this.companyType = companyType;
     }
 
-    @Basic
-    @Column(name = "street")
+
     public String getStreet()
     {
         return street;
@@ -51,8 +74,7 @@ public class LicenseAddressesEntity
         this.street = street;
     }
 
-    @Basic
-    @Column(name = "building")
+
     public String getBuilding()
     {
         return building;
@@ -63,14 +85,13 @@ public class LicenseAddressesEntity
         this.building = building;
     }
 
-    @OneToOne( fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
-    @JoinColumn(name = "locality_id")
+
     public NmLocalitiesEntity getLocality()
     {
         return locality;
     }
 
-    @Transient
+
     public NmStatesEntity getState()
     {
         return state;
@@ -86,6 +107,37 @@ public class LicenseAddressesEntity
         this.locality = locality;
     }
 
+
+    public Set<LicenseActivityTypeEntity> getActivities()
+    {
+        return activities;
+    }
+
+    public void setActivities(Set<LicenseActivityTypeEntity> activities)
+    {
+        this.activities = activities;
+    }
+
+    public Set<LicenseAgentPharmaceutistEntity> getAgentPharmaceutist()
+    {
+        return agentPharmaceutist;
+    }
+
+    public void setAgentPharmaceutist(Set<LicenseAgentPharmaceutistEntity> agentPharmaceutist)
+    {
+        this.agentPharmaceutist = agentPharmaceutist;
+    }
+
+    public LicenseAgentPharmaceutistEntity getSelectedPharmaceutist()
+    {
+        return selectedPharmaceutist;
+    }
+
+    public void setSelectedPharmaceutist(LicenseAgentPharmaceutistEntity selectedPharmaceutist)
+    {
+        this.selectedPharmaceutist = selectedPharmaceutist;
+    }
+
     @Override
     public boolean equals(Object o)
     {
@@ -95,12 +147,17 @@ public class LicenseAddressesEntity
         return Objects.equals(id, that.id) &&
                 Objects.equals(companyType, that.companyType) &&
                 Objects.equals(street, that.street) &&
-                Objects.equals(building, that.building);
+                Objects.equals(building, that.building) &&
+                Objects.equals(locality, that.locality) &&
+                Objects.equals(state, that.state) &&
+                Objects.equals(activities, that.activities) &&
+                Objects.equals(agentPharmaceutist, that.agentPharmaceutist) &&
+                Objects.equals(selectedPharmaceutist, that.selectedPharmaceutist);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(id, companyType, street, building);
+        return Objects.hash(id, companyType, street, building, locality, state, activities, agentPharmaceutist, selectedPharmaceutist);
     }
 }

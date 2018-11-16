@@ -3,6 +3,7 @@ package com.bass.amed.entity;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -17,11 +18,11 @@ public class MedicamentEntity
     private String barcode;
     private NmInternationalMedicamentNameEntity internationalMedicamentName;
     private Integer countryId;
-    private NmManufacturesEntity manufacture;
+    private Set<MedicamentManufactureEntity> manufactures;
     private Integer registrationNumber;
     private Timestamp registrationDate;
     private Date expirationDate;
-    private Double dose;
+    private String dose;
     private NmPharmaceuticalFormsEntity pharmaceuticalForm;
     private NmManufacturesEntity authorizationHolder;
     private NmMedicamentTypeEntity medicamentType;
@@ -31,20 +32,18 @@ public class MedicamentEntity
     private String primarePackage;
     private String administeringMode;
     private String status;
-    private NmUnitsOfMeasurementEntity unitsOfMeasurement;
     private String volume;
     private NmUnitsOfMeasurementEntity volumeQuantityMeasurement;
     private Integer termsOfValidity;
-    private Integer unitsQuantity;
-    private NmMedicamentFormsEntity unitsQuantityMeasurement;
-    private Integer storageQuantity;
-    private NmMedicamentFormsEntity storageQuantityMeasurement;
-    private Set<MedicamentActiveSubstancesEntity> activeSubstances;
+    private Set<MedicamentActiveSubstancesEntity> activeSubstances = new HashSet<>();
     private Set<MedicamentHistoryEntity> medicamentHistory;
     private MedicamentExpertsEntity experts;
+    private String atcCode;
+    private String division;
+        private Integer requestId;
 
     @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId()
     {
@@ -66,6 +65,18 @@ public class MedicamentEntity
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    @Basic
+    @Column(name = "atc_code")
+    public String getAtcCode()
+    {
+        return atcCode;
+    }
+
+    public void setAtcCode(String atcCode)
+    {
+        this.atcCode = atcCode;
     }
 
     @Basic
@@ -116,8 +127,8 @@ public class MedicamentEntity
         this.barcode = barcode;
     }
 
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
-    @JoinColumn( name = "international_name_id" )
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "international_name_id")
     public NmInternationalMedicamentNameEntity getInternationalMedicamentName()
     {
         return internationalMedicamentName;
@@ -138,18 +149,6 @@ public class MedicamentEntity
     public void setCountryId(Integer countryId)
     {
         this.countryId = countryId;
-    }
-
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
-    @JoinColumn( name = "manufacture_id" )
-    public NmManufacturesEntity getManufacture()
-    {
-        return manufacture;
-    }
-
-    public void setManufacture(NmManufacturesEntity manufacture)
-    {
-        this.manufacture = manufacture;
     }
 
     @Basic
@@ -188,20 +187,8 @@ public class MedicamentEntity
         this.expirationDate = expirationDate;
     }
 
-    @Basic
-    @Column(name = "dose")
-    public Double getDose()
-    {
-        return dose;
-    }
-
-    public void setDose(Double dose)
-    {
-        this.dose = dose;
-    }
-
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
-    @JoinColumn( name = "pharmaceutical_form_id" )
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "pharmaceutical_form_id")
     public NmPharmaceuticalFormsEntity getPharmaceuticalForm()
     {
         return pharmaceuticalForm;
@@ -212,8 +199,8 @@ public class MedicamentEntity
         this.pharmaceuticalForm = pharmaceuticalForm;
     }
 
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
-    @JoinColumn( name = "authorization_holder_id" )
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "authorization_holder_id")
     public NmManufacturesEntity getAuthorizationHolder()
     {
         return authorizationHolder;
@@ -224,8 +211,8 @@ public class MedicamentEntity
         this.authorizationHolder = authorizationHolder;
     }
 
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
-    @JoinColumn( name = "type_id" )
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "type_id")
     public NmMedicamentTypeEntity getMedicamentType()
     {
         return medicamentType;
@@ -236,8 +223,8 @@ public class MedicamentEntity
         this.medicamentType = medicamentType;
     }
 
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
-    @JoinColumn( name = "group_id" )
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "group_id")
     public NmMedicamentGroupEntity getGroup()
     {
         return group;
@@ -308,18 +295,6 @@ public class MedicamentEntity
         this.status = status;
     }
 
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
-    @JoinColumn( name = "unit_measurement_id" )
-    public NmUnitsOfMeasurementEntity getUnitsOfMeasurement()
-    {
-        return unitsOfMeasurement;
-    }
-
-    public void setUnitsOfMeasurement(NmUnitsOfMeasurementEntity unitsOfMeasurement)
-    {
-        this.unitsOfMeasurement = unitsOfMeasurement;
-    }
-
     @Basic
     @Column(name = "volume")
     public String getVolume()
@@ -344,32 +319,8 @@ public class MedicamentEntity
         this.termsOfValidity = termsOfValidity;
     }
 
-    @Basic
-    @Column(name = "units_quantity")
-    public Integer getUnitsQuantity()
-    {
-        return unitsQuantity;
-    }
-
-    public void setUnitsQuantity(Integer unitsQuantity)
-    {
-        this.unitsQuantity = unitsQuantity;
-    }
-
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
-    @JoinColumn( name = "units_quantity_unit_measurement_id" )
-    public NmMedicamentFormsEntity getUnitsQuantityMeasurement()
-    {
-        return unitsQuantityMeasurement;
-    }
-
-    public void setUnitsQuantityMeasurement(NmMedicamentFormsEntity unitsQuantityMeasurement)
-    {
-        this.unitsQuantityMeasurement = unitsQuantityMeasurement;
-    }
-
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
-    @JoinColumn( name = "volume_unit_measurement_id" )
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "volume_unit_measurement_id")
     public NmUnitsOfMeasurementEntity getVolumeQuantityMeasurement()
     {
         return volumeQuantityMeasurement;
@@ -380,31 +331,7 @@ public class MedicamentEntity
         this.volumeQuantityMeasurement = volumeQuantityMeasurement;
     }
 
-    @Basic
-    @Column(name = "storage_quantity")
-    public Integer getStorageQuantity()
-    {
-        return storageQuantity;
-    }
-
-    public void setStorageQuantity(Integer storageQuantity)
-    {
-        this.storageQuantity = storageQuantity;
-    }
-
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
-    @JoinColumn( name = "storage_quantity_unit_measurement_id" )
-    public NmMedicamentFormsEntity getStorageQuantityMeasurement()
-    {
-        return storageQuantityMeasurement;
-    }
-
-    public void setStorageQuantityMeasurement(NmMedicamentFormsEntity storageQuantityMeasurement)
-    {
-        this.storageQuantityMeasurement = storageQuantityMeasurement;
-    }
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST}, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     @JoinColumn(name = "medicament_id")
     public Set<MedicamentActiveSubstancesEntity> getActiveSubstances()
     {
@@ -416,7 +343,7 @@ public class MedicamentEntity
         this.activeSubstances = activeSubstances;
     }
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "registration_number")
     public Set<MedicamentHistoryEntity> getMedicamentHistory()
     {
@@ -428,8 +355,8 @@ public class MedicamentEntity
         this.medicamentHistory = medicamentHistory;
     }
 
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
-    @JoinColumn( name = "expert_id" )
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "expert_id")
     public MedicamentExpertsEntity getExperts()
     {
         return experts;
@@ -438,6 +365,79 @@ public class MedicamentEntity
     public void setExperts(MedicamentExpertsEntity experts)
     {
         this.experts = experts;
+    }
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "medicament_id")
+    public Set<MedicamentManufactureEntity> getManufactures()
+    {
+        return manufactures;
+    }
+
+    public void setManufactures(Set<MedicamentManufactureEntity> manufactures)
+    {
+        this.manufactures = manufactures;
+    }
+
+    @Basic
+    @Column(name = "dose")
+    public String getDose()
+    {
+        return dose;
+    }
+
+    public void setDose(String dose)
+    {
+        this.dose = dose;
+    }
+
+    @Basic
+    @Column(name = "division")
+    public String getDivision()
+    {
+        return division;
+    }
+
+    public void setDivision(String division)
+    {
+        this.division = division;
+    }
+
+    public void assign(MedicamentHistoryEntity entity)
+    {
+        this.name = entity.getName();
+        this.atcCode = entity.getAtcCode();
+        this.productCode = entity.getProductCode();
+        this.customsCode = entity.getCustomsCode();
+        this.barcode = entity.getBarcode();
+        this.internationalMedicamentName = entity.getInternationalMedicamentName();
+        this.countryId = entity.getCountryId();
+        this.pharmaceuticalForm = entity.getPharmaceuticalForm();
+        this.authorizationHolder = entity.getAuthorizationHolder();
+        this.medicamentType = entity.getMedicamentType();
+        this.group = entity.getGroup();
+        this.prescription = entity.getPrescription();
+        this.serialNr = entity.getSerialNr();
+        this.primarePackage = entity.getPrimarePackage();
+        this.administeringMode = entity.getAdministeringMode();
+        this.volume = entity.getVolume();
+        this.volumeQuantityMeasurement = entity.getVolumeQuantityMeasurement();
+        this.termsOfValidity = entity.getTermsOfValidity();
+        this.dose = entity.getDose();
+        this.activeSubstances.clear();
+        for (MedicamentActiveSubstancesHistoryEntity medicamentActiveSubstancesHistoryEntity : entity.getActiveSubstancesHistory())
+        {
+            MedicamentActiveSubstancesEntity medicamentActiveSubstancesEntity = new MedicamentActiveSubstancesEntity();
+            medicamentActiveSubstancesEntity.assign(medicamentActiveSubstancesHistoryEntity);
+            this.activeSubstances.add(medicamentActiveSubstancesEntity);
+        }
+        this.manufactures.clear();
+        for (MedicamentManufactureHistoryEntity medicamentManufactureHistoryEntity : entity.getManufacturesHistory())
+        {
+            MedicamentManufactureEntity medicamentManufactureEntity = new MedicamentManufactureEntity();
+            medicamentManufactureEntity.assign(medicamentManufactureHistoryEntity);
+            this.manufactures.add(medicamentManufactureEntity);
+        }
     }
 
     @Override
@@ -486,7 +486,7 @@ public class MedicamentEntity
         {
             return false;
         }
-        if (manufacture != null ? !manufacture.equals(that.manufacture) : that.manufacture != null)
+        if (manufactures != null ? !manufactures.equals(that.manufactures) : that.manufactures != null)
         {
             return false;
         }
@@ -542,10 +542,6 @@ public class MedicamentEntity
         {
             return false;
         }
-        if (unitsOfMeasurement != null ? !unitsOfMeasurement.equals(that.unitsOfMeasurement) : that.unitsOfMeasurement != null)
-        {
-            return false;
-        }
         if (volume != null ? !volume.equals(that.volume) : that.volume != null)
         {
             return false;
@@ -558,22 +554,6 @@ public class MedicamentEntity
         {
             return false;
         }
-        if (unitsQuantity != null ? !unitsQuantity.equals(that.unitsQuantity) : that.unitsQuantity != null)
-        {
-            return false;
-        }
-        if (unitsQuantityMeasurement != null ? !unitsQuantityMeasurement.equals(that.unitsQuantityMeasurement) : that.unitsQuantityMeasurement != null)
-        {
-            return false;
-        }
-        if (storageQuantity != null ? !storageQuantity.equals(that.storageQuantity) : that.storageQuantity != null)
-        {
-            return false;
-        }
-        if (storageQuantityMeasurement != null ? !storageQuantityMeasurement.equals(that.storageQuantityMeasurement) : that.storageQuantityMeasurement != null)
-        {
-            return false;
-        }
         if (activeSubstances != null ? !activeSubstances.equals(that.activeSubstances) : that.activeSubstances != null)
         {
             return false;
@@ -582,7 +562,15 @@ public class MedicamentEntity
         {
             return false;
         }
-        return experts != null ? experts.equals(that.experts) : that.experts == null;
+        if (experts != null ? !experts.equals(that.experts) : that.experts != null)
+        {
+            return false;
+        }
+        if (atcCode != null ? !atcCode.equals(that.atcCode) : that.atcCode != null)
+        {
+            return false;
+        }
+        return division != null ? division.equals(that.division) : that.division == null;
     }
 
     @Override
@@ -596,7 +584,7 @@ public class MedicamentEntity
         result = 31 * result + (barcode != null ? barcode.hashCode() : 0);
         result = 31 * result + (internationalMedicamentName != null ? internationalMedicamentName.hashCode() : 0);
         result = 31 * result + (countryId != null ? countryId.hashCode() : 0);
-        result = 31 * result + (manufacture != null ? manufacture.hashCode() : 0);
+        result = 31 * result + (manufactures != null ? manufactures.hashCode() : 0);
         result = 31 * result + (registrationNumber != null ? registrationNumber.hashCode() : 0);
         result = 31 * result + (registrationDate != null ? registrationDate.hashCode() : 0);
         result = 31 * result + (expirationDate != null ? expirationDate.hashCode() : 0);
@@ -610,17 +598,14 @@ public class MedicamentEntity
         result = 31 * result + (primarePackage != null ? primarePackage.hashCode() : 0);
         result = 31 * result + (administeringMode != null ? administeringMode.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
-        result = 31 * result + (unitsOfMeasurement != null ? unitsOfMeasurement.hashCode() : 0);
         result = 31 * result + (volume != null ? volume.hashCode() : 0);
         result = 31 * result + (volumeQuantityMeasurement != null ? volumeQuantityMeasurement.hashCode() : 0);
         result = 31 * result + (termsOfValidity != null ? termsOfValidity.hashCode() : 0);
-        result = 31 * result + (unitsQuantity != null ? unitsQuantity.hashCode() : 0);
-        result = 31 * result + (unitsQuantityMeasurement != null ? unitsQuantityMeasurement.hashCode() : 0);
-        result = 31 * result + (storageQuantity != null ? storageQuantity.hashCode() : 0);
-        result = 31 * result + (storageQuantityMeasurement != null ? storageQuantityMeasurement.hashCode() : 0);
         result = 31 * result + (activeSubstances != null ? activeSubstances.hashCode() : 0);
         result = 31 * result + (medicamentHistory != null ? medicamentHistory.hashCode() : 0);
         result = 31 * result + (experts != null ? experts.hashCode() : 0);
+        result = 31 * result + (atcCode != null ? atcCode.hashCode() : 0);
+        result = 31 * result + (division != null ? division.hashCode() : 0);
         return result;
     }
 }

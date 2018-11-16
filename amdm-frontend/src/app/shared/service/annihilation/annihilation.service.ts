@@ -30,4 +30,12 @@ export class AnnihilationService {
     retrieveCommisions(): Observable<any> {
         return this.http.get('/api/annihilation/retrieve-all-commisions');
     }
+
+    viewActDeReceptie(object: any): Observable<any> {
+        return this.http.post('/api/annihilation/view-act-receptie', object,{ responseType: 'blob'});
+    }
+
+    viewProcesVerbal(object: any): Observable<any> {
+        return this.http.post('/api/annihilation/view-proces-verbal', object,{ responseType: 'blob'});
+    }
 }

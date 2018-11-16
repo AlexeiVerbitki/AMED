@@ -247,7 +247,7 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
 
     viewDoc(document: any) {
         this.loadingService.show();
-        this.subscriptions.push(this.documentService.viewDD(document.number).subscribe(data => {
+        this.subscriptions.push(this.annihilationService.viewActDeReceptie(this.composeModel('E')).subscribe(data => {
                 let file = new Blob([data], {type: 'application/pdf'});
                 var fileURL = URL.createObjectURL(file);
                 window.open(fileURL);

@@ -1,15 +1,17 @@
 package com.bass.amed.entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
-@Table(name = "nm_localities", schema = "amed", catalog = "")
+@Table(name = "nm_localities", schema = "amed")
 public class NmLocalitiesEntity
 {
     private Integer id;
     private String code;
     private String description;
     private Integer stateId;
+    private String stateName;
 
     @Id
     @Column(name = "id")
@@ -59,42 +61,33 @@ public class NmLocalitiesEntity
         this.stateId = stateId;
     }
 
-    @Override
-    public int hashCode()
+    @Transient
+    public String getStateName()
     {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (code != null ? code.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        return result;
+        return stateName;
+    }
+
+    public void setStateName(String stateName)
+    {
+        this.stateName = stateName;
     }
 
     @Override
     public boolean equals(Object o)
     {
-        if (this == o)
-        {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass())
-        {
-            return false;
-        }
-
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         NmLocalitiesEntity that = (NmLocalitiesEntity) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(code, that.code) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(stateId, that.stateId) &&
+                Objects.equals(stateName, that.stateName);
+    }
 
-        if (id != null ? !id.equals(that.id) : that.id != null)
-        {
-            return false;
-        }
-        if (code != null ? !code.equals(that.code) : that.code != null)
-        {
-            return false;
-        }
-        if (description != null ? !description.equals(that.description) : that.description != null)
-        {
-            return false;
-        }
-
-        return true;
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(id, code, description, stateId, stateName);
     }
 }

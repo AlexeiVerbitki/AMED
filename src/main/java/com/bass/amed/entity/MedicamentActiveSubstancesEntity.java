@@ -73,6 +73,14 @@ public class MedicamentActiveSubstancesEntity
         this.manufacture = manufacture;
     }
 
+    public void assign(MedicamentActiveSubstancesHistoryEntity entity)
+    {
+        this.activeSubstance = entity.getActiveSubstance();
+        this.quantity = entity.getQuantity();
+        this.unitsOfMeasurement = entity.getUnitsOfMeasurement();
+        this.manufacture = entity.getManufacture();
+    }
+
     @Override
     public boolean equals(Object o)
     {

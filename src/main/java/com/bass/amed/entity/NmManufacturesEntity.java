@@ -1,5 +1,8 @@
 package com.bass.amed.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 
 @Entity
@@ -77,6 +80,7 @@ public class NmManufacturesEntity
 
     @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE} )
     @JoinColumn( name = "country_id" )
+    @Fetch(FetchMode.JOIN)
     public NmCountriesEntity getCountry()
     {
         return country;

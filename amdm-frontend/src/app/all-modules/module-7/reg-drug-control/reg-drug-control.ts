@@ -60,7 +60,7 @@ export class RegDrugControl implements OnInit {
                 fb.group({
                     'id' : [],
                     'name' : ['',Validators.required],
-                    'code' : [],
+                    //'code' : [],
                     'status' : ['P']
             }),
             'medicamentName': [''],
@@ -183,30 +183,39 @@ export class RegDrugControl implements OnInit {
         modelToSubmit.assignedUser = useranameDB;
         modelToSubmit.documents = this.documents;
 
-        console.log(modelToSubmit);
+        this.subscriptions.push(
+            this.medicamentService.getMedicamentById(this.rForm.value.medicament.name.id).subscribe(data => {
+                    console.log('medd', data);
+                    data.id = null;
+                    data.status = 'P';
+                    console.log('medd', data);
+                    modelToSubmit.medicaments.push(data);
 
-        if(this.rForm.get('type.code').value === 'ATAC')
-        {
-            this.model = 'dashboard/module/drug-control/activity-authorization/';
+                console.log(modelToSubmit);
 
-        }
-        else if(this.rForm.get('type.code').value === 'ATIE')
-        {
-            this.model='dashboard/module/drug-control/transfer-authorization/';
-        }
-        else if(this.rForm.get('type.code').value === 'MACPS')
-        {
-            this.model='dashboard/module/drug-control/modify-authority/';
-        }
-        else if(this.rForm.get('type.code').value === 'DACPS')
-        {
-            this.model='dashboard/module/drug-control/duplicate-authority/';
-        }
+                if(this.rForm.get('type.code').value === 'ATAC')
+                {
+                    this.model = 'dashboard/module/drug-control/activity-authorization/';
+                }
+                else if(this.rForm.get('type.code').value === 'ATIE')
+                {
+                    this.model='dashboard/module/drug-control/transfer-authorization/';
+                }
+                else if(this.rForm.get('type.code').value === 'MACPS')
+                {
+                    this.model='dashboard/module/drug-control/modify-authority/';
+                }
+                else if(this.rForm.get('type.code').value === 'DACPS')
+                {
+                    this.model='dashboard/module/drug-control/duplicate-authority/';
+                }
+                    this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
+                        this.router.navigate([this.model + data.body.id]);
+                        })
+                    );
+                } )
 
-        this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
-                this.router.navigate([this.model + data.body.id]);
-            })
-        );
+            );
 
     }
 

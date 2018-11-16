@@ -121,8 +121,8 @@
         </ng-container>
         <ng-container matColumnDef="termenulDeValabilitate">
           <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
-            <mat-form-field class="filter" [ngStyle]="{'width': '160px'}">
-              <mat-label>Termenul de valabilitate</mat-label>
+            <mat-form-field class="filter" [ngStyle]="{'width': '128px'}">
+              <mat-label>Termen valabilitate</mat-label>
               <input matInput [formControl]="termenulDeValabilitateFilter">
             </mat-form-field>
           </th>
@@ -140,7 +140,7 @@
         <ng-container matColumnDef="pretDeProducatorMDL">
           <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
             <mat-form-field class="filter" [ngStyle]="{'width': '153px'}">
-              <mat-label>Pret de la producator (MDL)</mat-label>
+              <mat-label>Pret producator (MDL)</mat-label>
               <input matInput [formControl]="pretDeProducatorMDLFilter">
             </mat-form-field>
           </th>
@@ -148,8 +148,8 @@
         </ng-container>
         <ng-container matColumnDef="pretDeProducatorValuta">
           <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
-            <mat-form-field class="filter" [ngStyle]="{'width': '162px'}">
-              <mat-label>Pret de la producator (Valuta)</mat-label>
+            <mat-form-field class="filter" [ngStyle]="{'width': '110px'}">
+              <mat-label>Pret producator</mat-label>
               <input matInput [formControl]="pretDeProducatorValutaFilter">
             </mat-form-field>
           </th>
@@ -164,16 +164,27 @@
           </th>
           <td mat-cell *matCellDef="let x" mdbTooltip="{{x.valuta}}" placement="top">{{x.valuta}}</td>
         </ng-container>
-        <ng-container matColumnDef="nrSiDataOrdinuluiDeAprobareAPretului">
+        <ng-container matColumnDef="nrOrdinuluiDeAprobareAPretului">
           <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
-            <mat-form-field class="filter" [ngStyle]="{'width': '280px'}">
-              <mat-label>Nr. si data ordinului de
+            <mat-form-field class="filter" [ngStyle]="{'width': '230px'}">
+              <mat-label>Nr. ordinului de
                 aprobare a pretului</mat-label>
-              <input matInput [formControl]="nrSiDataOrdinuluiDeAprobareAPretuluiFilter">
+              <input matInput [formControl]="nrOrdinuluiDeAprobareAPretuluiFilter">
             </mat-form-field>
           </th>
-          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.nrSiDataOrdinuluiDeAprobareAPretului}}" placement="top">{{x.nrSiDataOrdinuluiDeAprobareAPretului}}</td>
-        </ng-container> -->
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.nrOrdinuluiDeAprobareAPretului}}" placement="top">{{x.nrOrdinuluiDeAprobareAPretului}}</td>
+        </ng-container> 
+        <ng-container matColumnDef="dataOrdinuluiDeAprobareAPretului">
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter" [ngStyle]="{'width': '242px'}">
+              <mat-label>Data ordinului de
+                aprobare a pretului</mat-label>
+              <input matInput [formControl]="dataOrdinuluiDeAprobareAPretuluiFilter">
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.dataOrdinuluiDeAprobareAPretului}}" placement="top">{{x.dataOrdinuluiDeAprobareAPretului}}</td>
+        </ng-container> 
+
 			<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
 			<tr mat-row *matRowDef="let x; columns: columnsToDisplay"></tr>
 		</table>

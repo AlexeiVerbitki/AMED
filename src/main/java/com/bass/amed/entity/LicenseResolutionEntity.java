@@ -5,14 +5,13 @@ import java.sql.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "license_resolution", schema = "amed", catalog = "")
+@Table(name = "license_resolution", schema = "amed")
 public class LicenseResolutionEntity
 {
     private Integer id;
     private String resolution;
     private Date date;
     private String reason;
-    private Integer registrationId;
 
     @Id
     @Column(name = "id")
@@ -79,17 +78,5 @@ public class LicenseResolutionEntity
     public int hashCode()
     {
         return Objects.hash(id, resolution, date, reason);
-    }
-
-    @Basic
-    @Column(name = "registration_id")
-    public Integer getRegistrationId()
-    {
-        return registrationId;
-    }
-
-    public void setRegistrationId(Integer registrationId)
-    {
-        this.registrationId = registrationId;
     }
 }

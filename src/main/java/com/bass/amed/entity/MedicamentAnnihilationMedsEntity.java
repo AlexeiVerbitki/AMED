@@ -26,6 +26,9 @@ public class MedicamentAnnihilationMedsEntity
     @Column(name="destruction_method")
     private String destructionMethod;
 
+    @Column(name="note")
+    private String note;
+
     @Transient
     private String medicamentName;
 
@@ -77,6 +80,17 @@ public class MedicamentAnnihilationMedsEntity
     public void setDestructionMethod(String destructionMethod)
     {
         this.destructionMethod = destructionMethod;
+    }
+
+
+    public String getNote()
+    {
+        return note;
+    }
+
+    public void setNote(String note)
+    {
+        this.note = note;
     }
 
     public String getMedicamentName()

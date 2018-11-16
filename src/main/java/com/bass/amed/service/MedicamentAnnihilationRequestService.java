@@ -2,7 +2,7 @@ package com.bass.amed.service;
 
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
-import com.bass.amed.repository.MedicamentAnnihilationMedsRepository;
+import com.bass.amed.repository.annihilation.MedicamentAnnihilationMedsRepository;
 import com.bass.amed.repository.MedicamentRepository;
 import com.bass.amed.repository.RequestRepository;
 import org.hibernate.Hibernate;
