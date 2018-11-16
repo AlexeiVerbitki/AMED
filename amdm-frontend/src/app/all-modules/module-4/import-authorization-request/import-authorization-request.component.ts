@@ -219,7 +219,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
 
         this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
-            switch(this.rForm.get('importTypeForm').value){
+            switch(this.rForm.get('importType').value){
                 case "1":{this.router.navigate(['dashboard/module/import-authorization/registered-medicament/'  +data.body]) ; break;}
                 case "2":{this.router.navigate(['dashboard/module/import-authorization/unregistered-medicament/'+data.body]) ; break;}
                 case "3":{this.router.navigate(['dashboard/module/import-authorization/materia-prima/'          +data.body]) ; break;}

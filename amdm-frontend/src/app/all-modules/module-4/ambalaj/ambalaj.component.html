@@ -219,7 +219,7 @@
                                         <mat-form-field class="w-100">
                                             <mat-select id="currency" placeholder="Valuta"
                                                         formControlName="currency">
-                                                <mat-option *ngFor="let valuta of valutaList" [value]="valuta">{{ valuta.description }}</mat-option>
+                                                <mat-option *ngFor="let valuta of valutaList" [value]="valuta">{{ valuta.shortDescription }}</mat-option>
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
@@ -318,7 +318,7 @@
                             <td>{{ unitOfImport.name }}</td>
                             <td>{{ unitOfImport.quantity }}</td>
                             <td>{{ unitOfImport.price }}</td>
-                            <td>{{ unitOfImport.currency.description }}</td>
+                            <td>{{ unitOfImport.currency.shortDescription }}</td>
                             <td>{{ unitOfImport.summ }}</td>
                             <td>{{ unitOfImport.producer }}</td>
                             <td>{{ unitOfImport.producerAddress }}</td>
@@ -330,7 +330,7 @@
                         </tbody>
                     </table>
                     <div *ngIf="formSubmitted && unitOfImportTable.length==0">
-                        <small class="text-muted"><strong class="text-danger">Nici o substanta activa nu a fost adaugata</strong></small>
+                        <small class="text-muted"><strong class="text-danger">Nici o unitate de import nu a fost adaugata</strong></small>
                     </div>
 
                     <hr>

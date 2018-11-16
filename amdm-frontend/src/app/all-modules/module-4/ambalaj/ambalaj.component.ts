@@ -318,9 +318,11 @@ export class AmbalajComponent implements OnInit {
         this.formSubmitted = true;
         // let formModel = this.evaluateImportForm.getRawValue();
 
-        this.formModel.importAuthorizationDetailsEntityList = this.unitOfImportTable;
-        this.formModel.nrCererii  = this.evaluateImportForm.get('requestNumber');
-        console.log("formModel", this.formModel);
+        // this.formModel.importAuthorizationDetailsEntityList = this.unitOfImportTable;
+        var modelToSubmit: any = this.evaluateImportForm.value;
+        modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
+        modelToSubmit.nrCererii  = this.evaluateImportForm.get('requestNumber');
+        console.log("formModel", modelToSubmit);
 
         this.formSubmitted = false;
     }
