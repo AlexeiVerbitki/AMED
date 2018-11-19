@@ -96,6 +96,7 @@
                                        required="true">
                                 <ng-template ng-option-tmp let-item="item">
                                     {{item.description}}
+                                    <small class="form-text text-muted">{{item.address}}, {{item.country.description}}</small>
                                 </ng-template>
                             </ng-select>
                         </div>
@@ -223,6 +224,10 @@
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
+                                    <!--<div *ngIf="!evaluateImportForm.get('currency').valid && !evaluateImportForm.get('currency') ">-->
+                                        <!--<small class="text-muted"><strong class="text-danger">Valuta trebuie introdusă</strong>-->
+                                        <!--</small>-->
+                                    <!--</div>-->
                                 </div>
                                 <div class="col-4">
                                     <div class="md-form">
@@ -260,7 +265,7 @@
                                                    [loading]="loadingManufacturerRfPr"
                                                    [typeahead]="manufacturerInputsRfPr"
                                                    required="true">
-                                            <ng-template ng-option-tmp let-item="item" onchange="getProducerAddress(i)">
+                                            <ng-template ng-option-tmp let-item="item">
                                                 {{item.description}};
                                                 <small class="form-text text-muted">{{item.address}}, {{item.country.description}}</small>
 
@@ -271,8 +276,8 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="md-form">
-                                        <!--<input id="producerAddress" mdbInputDirective type="text" class="form-control" [value]="importTypeForms[i].producer.address">-->
-                                        <input id="producerAddress" mdbInputDirective type="text" class="form-control" [value]="producerAddress">
+                                        <input id="producerAddress" mdbInputDirective type="text" class="form-control"
+                                               [value]="producerAddress" [attr.disabled]="true">
                                         <label for="producerAddress">Ţara şi adresa producătorului materiei prime
                                             <span class="text-danger">*</span>
                                         </label>

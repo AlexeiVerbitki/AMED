@@ -13,6 +13,8 @@ import {saveAs} from 'file-saver';
 import {Document} from "../../../models/document";
 import {RequestService} from "../../../shared/service/request.service";
 import {Subject} from "rxjs/index";
+import {LoaderService} from "../../../shared/service/loader.service";
+import {AuthService} from "../../../shared/service/authetication.service";
 
 export interface PeriodicElement {
     name: string;
@@ -62,6 +64,8 @@ export class AmbalajComponent implements OnInit {
                 public dialog: MatDialog,
                 private router: Router,
                 private activatedRoute: ActivatedRoute,
+                private loadingService: LoaderService,
+                private authService: AuthService,
                 private administrationService: AdministrationService) {
 
         this.evaluateImportForm = fb.group({
@@ -90,8 +94,6 @@ export class AmbalajComponent implements OnInit {
                 'importer': ['', Validators.required], // Tara si adresa lui e deja in baza
                 'conditionsAndSpecification': [''],
                 'medType': [''],
-
-                // 'importAuthorizationDetailsEntityList': this.fb.array([]),
                 'importAuthorizationDetailsEntityList': this.fb.group({
 
                     customsCode: [],
@@ -156,7 +158,11 @@ export class AmbalajComponent implements OnInit {
         this.evaluateImportForm.get('importAuthorizationEntity.seller').valueChanges.subscribe(val => {
             if (val) {
                 this.sellerAddress = val.address + ", " + val.country.description;
-                // this.evaluateImportForm.get('importAuthorizationEntity.adresa').setValue("test")
+            }
+        });
+        this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.producer').valueChanges.subscribe(val => {
+            if (val) {
+                this.producerAddress = val.address + ", " + val.country.description;
             }
         });
         this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.quantity').valueChanges.subscribe(val => {
@@ -181,17 +187,17 @@ export class AmbalajComponent implements OnInit {
         // });
     }
 
-    getProducerAddress(index: number){
-        this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList').valueChanges.subscribe(val => {
-            console.log("val:", val)
-            console.log("index: ",index)
-            if (val) {
-                this.producerAddress = val[index].producer.address + ", " + val[index].producer.country.description;
-                console.log("producerAddress =",  this.producerAddress)               // this.evaluateImportForm.get('importAuthorizationEntity.adresa').setValue("test")
-            }
-        });
-
-    }
+    // getProducerAddress(index: number){
+    //     this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList').valueChanges.subscribe(val => {
+    //         console.log("val:", val)
+    //         console.log("index: ",index)
+    //         if (val) {
+    //             this.producerAddress = val[index].producer.address + ", " + val[index].producer.country.description;
+    //             console.log("producerAddress =",  this.producerAddress)               // this.evaluateImportForm.get('importAuthorizationEntity.adresa').setValue("test")
+    //         }
+    //     });
+    //
+    // }
 
     get importTypeForms() {
         return this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList') as FormArray
@@ -219,7 +225,6 @@ export class AmbalajComponent implements OnInit {
              quantity:          this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.quantity').value,
              price:             this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.price').value,
              currency:          this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.currency').value,
-             // summ:           this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.summ').value,
              summ:              this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.quantity').value
                               * this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.price').value,
              producer:          this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.producer').value.description,
@@ -236,6 +241,7 @@ export class AmbalajComponent implements OnInit {
         this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.currency').setValue(null);
         this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.summ').setValue(null);
         this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.producer').setValue(null);
+        this.producerAddress=null;
         this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.expirationDate').setValue(null);
         console.log("this.unitOfImportTable", this.unitOfImportTable)
     }
@@ -284,25 +290,6 @@ export class AmbalajComponent implements OnInit {
             );
     }
 
-    // loadCurrencies(){
-    //     this.manufacturersRfPr =
-    //         this.manufacturerInputsRfPr.pipe(
-    //             filter((result: string) => {
-    //                 if (result && result.length > 2) return true;
-    //             }),
-    //             debounceTime(400),
-    //             distinctUntilChanged(),
-    //             tap((val: string) => {
-    //                 this.loadingManufacturerRfPr = true;
-    //
-    //             }),
-    //             flatMap (term =>
-    //                 this.administrationService.getCurrenciesShort().pipe(
-    //                     tap(() => this.loadingManufacturerRfPr = false)
-    //                 )
-    //             )
-    //         );
-    // }
     loadCurrenciesShort() {
         this.subscriptions.push(
             this.administrationService.getCurrenciesShort().subscribe(data => {
@@ -316,13 +303,63 @@ export class AmbalajComponent implements OnInit {
 
     nextStep() {
         this.formSubmitted = true;
-        // let formModel = this.evaluateImportForm.getRawValue();
-
+        let modelToSubmit = this.evaluateImportForm.getRawValue();
+        // let modelToSubmit: any ={};
+        this.loadingService.show();
         // this.formModel.importAuthorizationDetailsEntityList = this.unitOfImportTable;
-        var modelToSubmit: any = this.evaluateImportForm.value;
+
+        // var modelToSubmit: any = this.evaluateImportForm.value;
+        // let modelToSubmit: any = {};
+        // let modelToSubmit = Object.assign({} );
+        // modelToSubmit.requestNumber  = this.evaluateImportForm.get('requestNumber');
+
+        // let importAuthorizationEntity: any = {};
+        // importAuthorizationEntity.importAuthorizationEntityList = this.unitOfImportTable;
+        // console.log("importAuthorizationEntity.importAuthorizationEntityList",importAuthorizationEntity.importAuthorizationEntityList);
+        // modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = importAuthorizationEntity;
+
+
+        // modelToSubmit.requestHistories.push({
+        //     startDate: this.evaluateImportForm.get('data').value, endDate: new Date(),
+        //     username: this.authService.getUserName(), step: 'E'
+        // });
+
+        // for(let subst of this.unitOfImportTable)
+        // {
+        //     subst.id = null;
+        // }
+
+//         for (let division of this.unitOfImportTable) {
+//             let medicamentToSubmit: any;
+//             medicamentToSubmit = Object.assign({}, this.eForm.get('medicament').value);
+//             medicamentToSubmit.activeSubstances = this.activeSubstancesTable;
+//             medicamentToSubmit.unitsQuantity = division.unitsQuantity;
+//             medicamentToSubmit.unitsQuantityMeasurement = division.unitsQuantityMeasurement;
+//             medicamentToSubmit.storageQuantity = division.storageQuantity;
+//             medicamentToSubmit.storageQuantityMeasurement = division.storageQuantityMeasurement;
+//             modelToSubmit.medicaments.push(medicamentToSubmit);
+//             /* customsCode:
+//  name:
+//  quantity:
+//  price:
+//  currency:
+//  summ:
+//
+//  producer:
+//  producerAddress:
+//
+//
+// expirationDate:  */
+//         }
+
         modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
-        modelToSubmit.nrCererii  = this.evaluateImportForm.get('requestNumber');
-        console.log("formModel", modelToSubmit);
+        console.log("modelToSubmit", modelToSubmit);
+
+        this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
+                this.loadingService.hide();
+                this.router.navigate(['dashboard/module']);
+            }, error => this.loadingService.hide())
+        );
 
         this.formSubmitted = false;
     }

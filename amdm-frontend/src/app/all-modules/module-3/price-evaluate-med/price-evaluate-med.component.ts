@@ -316,7 +316,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                     let avgOriginCountry = 0, originPriceCount = 0;
                     this.refPrices.forEach(p => {
                         if(p.type.description == 'În țara de origine') {
-                            avgOriginCountry += +p.xchRateRefVal;
+                            // avgOriginCountry += +p.xchRateRefVal;
                             originPriceCount++;
                         }
                     });

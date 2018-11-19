@@ -41,14 +41,15 @@ export class RequestService {
         return this.http.post<any>('/api/add-prices-request', requests, {observe: 'response'});
     }
 
-    //used for interrupt process
+    //used for interrupt proces s
     addMedicamentHistory(requestDetails: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/add-medicament-history', requestDetails, {observe: 'response'});
     }
 
     addImportRequest(requestDetails: any): Observable<HttpResponse<any>> {
-        // console.log(requestDetails);
+        // console.log("requestDetails before sending ",requestDetails);
         return this.http.post<any>('/api/add-import-request', requestDetails, {observe: 'response'});
+
     }
     getImportRequest(id: string): Observable<any> {
         return this.http.get('/api/load-import-request', {params: {id: id}});

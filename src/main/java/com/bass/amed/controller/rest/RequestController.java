@@ -340,13 +340,19 @@ public class RequestController
         }
         throw new CustomException("Request was not found");
     }
-    @PostMapping(value = "/add-import-request")
+    @RequestMapping(value = "/add-import-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+//    @PostMapping(value = "/add-import-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> saveImportRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
+        LOGGER.debug("=====================\n=====================\nAdd Import\n=====================\n");
+        System.out.println("=====================\n=====================\nAdd Import\n=====================\n");
+
+
         if (requests.getImportAuthorizationEntity() == null) {
             throw new CustomException("/add-import-request Request was not found");
         }
-//        addDDImportDocument(requests);
+        addDDDocument(requests);
         requestRepository.save(requests);
+        LOGGER.debug("=====================\n=====================\nImport saved\n=====================\n");
         return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
     }
 
