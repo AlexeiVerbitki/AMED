@@ -31,9 +31,9 @@ public class LicensesEntity
     @Column(name = "status")
     private String status;
 
-//    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
-//    @JoinColumn( name = "ec_agent_id" )
-//    private NmEconomicAgentsEntity economicAgent;
+    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
+    @JoinColumn( name = "ec_agent_id" )
+    private NmEconomicAgentsEntity economicAgent;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @JoinColumn(name = "cessation_reason_id")
@@ -130,15 +130,15 @@ public class LicensesEntity
         this.cessationReasons = cessationReasons;
     }
 
-//    public NmEconomicAgentsEntity getEconomicAgent()
-//    {
-//        return economicAgent;
-//    }
-//
-//    public void setEconomicAgent(NmEconomicAgentsEntity economicAgent)
-//    {
-//        this.economicAgent = economicAgent;
-//    }
+    public NmEconomicAgentsEntity getEconomicAgent()
+    {
+        return economicAgent;
+    }
+
+    public void setEconomicAgent(NmEconomicAgentsEntity economicAgent)
+    {
+        this.economicAgent = economicAgent;
+    }
 
 
     public Set<LicenseAddressesEntity> getAddresses()
