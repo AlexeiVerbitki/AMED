@@ -1,0 +1,77 @@
+<div class="mat-dialog-content">
+  <form [formGroup]='aForm'>
+    <h3 class="text-center my-3 font-weight-bold">{{title}}</h3>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="md-form-modified">
+        <ng-select id="activeSubstances" name="activeSubstances" [items]="activeSubstances" bindLabel="description"
+                   placeholder="Denumire *" (ngModelChange)="checkActiveSubstanceValue()" formControlName="activeSubstance">
+        </ng-select>
+
+        <div *ngIf="formSubmitted && (aForm.get('activeSubstance').value==null || aForm.get('activeSubstance').value.toString().length==0)">
+          <small class="text-muted"><strong class="text-danger">Denumirea trebuie selectata</strong></small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="md-form">
+        <input id="codCas" mdbInputDirective type="text" class="form-control" [attr.disabled]="true" formControlName="activeSubstanceCode">
+        <label for="codCas">Cod CAS</label>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="md-form">
+        <input id="quantity" mdbInputDirective min="0" step=".01" type="number" class="form-control" formControlName="activeSubstanceQuantity">
+        <label for="quantity">Concentratie<span class="text-danger">*</span></label>
+        <div *ngIf="formSubmitted && (aForm.get('activeSubstanceQuantity').value==null || aForm.get('activeSubstanceQuantity').value.toString().length==0)">
+          <small class="text-muted"><strong class="text-danger">Cantitatea trebuie introdusa</strong></small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="md-form-modified">
+        <ng-select id="activeSubstanceUnit" name="activeSubstanceUnit" [items]="activeSubstanceUnitsOfMeasurement"
+                   bindLabel="description" placeholder="Unitate de masură *" formControlName="activeSubstanceUnit">
+        </ng-select>
+        <div *ngIf="formSubmitted && (aForm.get('activeSubstanceUnit').value==null || aForm.get('activeSubstanceUnit').value.toString().length==0)">
+          <small class="text-muted"><strong class="text-danger">Unitatea de masură trebuie selectata</strong></small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="md-form-modified">
+        <ng-select id="proSubsActiv" name="proSubsActiv" [items]="manufactures"
+                   bindLabel="description"
+                   placeholder="Producător *"
+                   (ngModelChange)="checkActiveSubstanceManufacture()"
+                   formControlName="manufactureSA">
+        </ng-select>
+        <div *ngIf="formSubmitted && (aForm.get('manufactureSA').value==null || aForm.get('manufactureSA').value.toString().length==0)">
+          <small class="text-muted"><strong class="text-danger">Producatorul trebuie selectat</strong></small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="md-form">
+        <input id="taraProSubsActiv" mdbInputDirective type="text" formControlName="manufactureCountrySA" class="form-control"
+               [attr.disabled]="true">
+        <label for="taraProSubsActiv">Ţară producător</label>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="md-form">
+        <input id="adresaProdSubsActive" mdbInputDirective type="text" formControlName="manufactureAddressSA" class="form-control"
+               [attr.disabled]="true">
+        <label for="adresaProdSubsActive">Adresă producător</label>
+      </div>
+    </div>
+  </div>
+  </form>
+  <div class="text-center">
+  <button class="btn btn-danger btn-sm waves-light" (click)="cancel()">Anulare</button>
+  <button *ngIf="!dataDialog" class="btn btn-dark-green-color btn-sm waves-light" (click)="add()">Adaugare</button>
+  <button *ngIf="dataDialog" class="btn btn-dark-green-color btn-sm waves-light" (click)="add()">Editare</button>
+  </div>
+</div>

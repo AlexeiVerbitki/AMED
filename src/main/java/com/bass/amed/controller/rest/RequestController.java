@@ -566,22 +566,23 @@ public class RequestController
     }
     @PostMapping(value = "/add-import-request")
     public ResponseEntity<Integer> saveImportRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
-        LOGGER.debug("=====================\n=====================\nAdd Import\n=====================\n");
+        LOGGER.debug("\n\n\n\n=====================\nAdd Import\n=====================\n\n\n");
 
 
         if (requests.getImportAuthorizationEntity() == null) {
             throw new CustomException("/add-import-request Request was not found");
         }
-        addDDDocument(requests);
         requestRepository.save(requests);
-        LOGGER.debug("=====================\n=====================\nImport saved\n=====================\n");
+        //TODO fix the docs
+//        addDDDocument(requests);
+        LOGGER.debug("\n\n\n\n=====================\nImport saved\n=====================\n\n\n");
         return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
     }
 
 
     @GetMapping(value = "/load-import-request")
     public ResponseEntity<RegistrationRequestsEntity> getImportById(@RequestParam(value = "id") Integer id) throws CustomException {
-        Optional<RegistrationRequestsEntity> regOptional = requestRepository.findById(id);
+        Optional<RegistrationRequestsEntity> regOptional = requestRepository.findImportAuthRequestById(id);
         if (!regOptional.isPresent()) {
             throw new CustomException("Inregistrarea de Import nu a fost gasita");
         }

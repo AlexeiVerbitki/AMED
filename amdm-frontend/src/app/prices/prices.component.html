@@ -1,0 +1,156 @@
+<div class="container-fluid sky z-depth-2">
+	<form [formGroup]='taskForm'>
+		<div class="row">
+			<div class="col-2">
+				<div class="md-form">
+					<input id="requestNumber" mdbInputDirective type="number" class="form-control"
+						   formControlName="requestNumber">
+					<label for="requestNumber">Numărul Înregistrării</label>
+				</div>
+			</div>
+			<div class="col-2">
+				<div class="md-form">
+					<input id="folderNr" mdbInputDirective type="number" class="form-control"
+						   formControlName="folderNr">
+					<label for="folderNr">Numărul Dosarului</label>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="md-form-modified">
+					<ng-select class="custom" [items]="companyMedicaments | async"
+							   bindLabel="name"
+							   placeholder="Medicamentul"
+							   formControlName="medicament"
+							   (change)="getMedicaments($event)"
+							   [required]="false"
+							   [typeahead]="medInputs"
+							   [loading]="medLoading">
+						<ng-template ng-option-tmp let-item="item">
+							{{item.name}} <br/>
+							<small>{{item.code}}</small>
+						</ng-template>
+					</ng-select>
+				</div>
+			</div>
+			<div class="col-2">
+				<div class="md-form-modified">
+					<ng-select id="type" name="medicamentType" [items]="medTypes"
+							   bindLabel="description"
+							   placeholder="Tipul Medicamentului"
+							   formControlName="medicamentType">
+					</ng-select>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="md-form-modified">
+					<ng-select id="step" name="step" [items]="steps"
+							   bindLabel="description"
+							   placeholder="Pasul"
+							   formControlName="currentStep">
+					</ng-select>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-3">
+				<div class="md-form-modified">
+					<ng-select id="priceType" name="priceType" [items]="priceTypes"
+							   bindLabel="description"
+							   placeholder="Tipul prețului"
+							   formControlName="priceType">
+					</ng-select>
+				</div>
+			</div>
+			<div class="col-4">
+				<div class="md-form">
+					<input id="assignedPerson" mdbInputDirective type="text" class="form-control" formControlName="assignedPerson">
+					<label for="assignedPerson">Persoana asignata</label>
+				</div>
+			</div>
+			<div class="col-2">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input matInput [matDatepicker]="startDate" placeholder="De la" formControlName="startDate">
+						<mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #startDate></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="col-2">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input matInput [matDatepicker]="endDate"  placeholder="Până la" formControlName="endDate">
+						<mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #endDate></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="col">
+				<div class="md-form-modified text-center mt-3">
+					<button type="button" class="btn btn-indigo waves-light btn-md btn-rounded-button z-depth-4" mdbWavesEffect (click)="getPrices();"><i class="fa fa-search fa-lg" aria-hidden="true"></i></button>
+					</div>
+			</div>
+		</div>
+	</form>
+	<div class="table-width">
+		<div class="example-container">
+			<table mat-table [dataSource]="dataSource" matSort>
+				<ng-container matColumnDef="requestNumber">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Numar cerere</th>
+					<td mat-cell *matCellDef="let element">
+						<a title="Deschide proces" (click)="navigateToUrl(element)" *ngIf="isLink(element)">
+							{{element.requestNumber}}
+						</a>
+						<i class="font-weight-bold" title="Deschide proces" *ngIf="!isLink(element)">
+							{{element.requestNumber}}
+						</i>
+					</td>
+				</ng-container>
+
+				<ng-container matColumnDef="folderNr">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Numarul Dosarului</th>
+					<td mat-cell *matCellDef="let element"> {{element.folderNr}} </td>
+				</ng-container>
+
+				<ng-container matColumnDef="medicament">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Medicament</th>
+					<td mat-cell *matCellDef="let element"> {{element.medicament}} </td>
+				</ng-container>
+
+                <ng-container matColumnDef="medicamentType">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Tip Medicament</th>
+					<td mat-cell *matCellDef="let element"> {{element.medicamentType}} </td>
+				</ng-container>
+
+				<ng-container matColumnDef="assignedPerson">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Persoana Asignată</th>
+					<td mat-cell *matCellDef="let element"> {{element.assignedPerson}} </td>
+				</ng-container>
+
+				<ng-container matColumnDef="priceType">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Tip Preț</th>
+					<td mat-cell *matCellDef="let element"> {{element.priceType}} </td>
+				</ng-container>
+
+				<ng-container matColumnDef="startDate">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Start date</th>
+					<td mat-cell *matCellDef="let element"> {{element.startDate | date: 'dd/MM/yyyy'}} </td>
+				</ng-container>
+
+				<ng-container matColumnDef="endDate">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> End date</th>
+					<td mat-cell *matCellDef="let element"> {{element.endDate | date: 'dd/MM/yyyy'}} </td>
+				</ng-container>
+
+				<ng-container matColumnDef="currentStep">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Pasul</th>
+					<td mat-cell *matCellDef="let element"> {{element.currentStep}} </td>
+				</ng-container>
+
+				<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+				<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+			</table>
+			<mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+		</div>
+	</div>
+</div>

@@ -31,9 +31,9 @@ public class LicensesEntity
     @Column(name = "status")
     private String status;
 
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
-    @JoinColumn( name = "ec_agent_id" )
-    private NmEconomicAgentsEntity economicAgent;
+//    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
+//    @JoinColumn( name = "ec_agent_id" )
+//    private NmEconomicAgentsEntity economicAgent;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @JoinColumn(name = "cessation_reason_id")
@@ -130,15 +130,15 @@ public class LicensesEntity
         this.cessationReasons = cessationReasons;
     }
 
-    public NmEconomicAgentsEntity getEconomicAgent()
-    {
-        return economicAgent;
-    }
-
-    public void setEconomicAgent(NmEconomicAgentsEntity economicAgent)
-    {
-        this.economicAgent = economicAgent;
-    }
+//    public NmEconomicAgentsEntity getEconomicAgent()
+//    {
+//        return economicAgent;
+//    }
+//
+//    public void setEconomicAgent(NmEconomicAgentsEntity economicAgent)
+//    {
+//        this.economicAgent = economicAgent;
+//    }
 
 
     public Set<LicenseAddressesEntity> getAddresses()
@@ -184,7 +184,7 @@ public class LicensesEntity
                 Objects.equals(cessationDate, that.cessationDate) &&
                 Objects.equals(expirationDate, that.expirationDate) &&
                 Objects.equals(status, that.status) &&
-                Objects.equals(economicAgent, that.economicAgent) &&
+//                Objects.equals(economicAgent, that.economicAgent) &&
                 Objects.equals(cessationReasons, that.cessationReasons) &&
                 Objects.equals(addresses, that.addresses);
     }
@@ -192,6 +192,6 @@ public class LicensesEntity
     @Override
     public int hashCode()
     {
-        return Objects.hash(id, serialNr, nr, releaseDate, cessationDate, expirationDate, status, economicAgent, cessationReasons, addresses);
+        return Objects.hash(id, serialNr, nr, releaseDate, cessationDate, expirationDate, status, /*economicAgent,*/ cessationReasons, addresses);
     }
 }

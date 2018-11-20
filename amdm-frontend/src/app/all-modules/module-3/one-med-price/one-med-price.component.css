@@ -1,0 +1,16 @@
+
+.md-form-modified {
+  position: relative;
+  margin-top: 10px;
+  margin-bottom: 1.5rem;
+}
+.example-input-label,
+.example-add-tab-button,
+.example-delete-tab-button {
+  margin: 8px;
+}
+/*.mat-tab-group {*/
+  /*padding: 10px 30px;*/
+  /*border: groove ;*/
+  /*border-radius: 10px 10px 10px 10px;*/
+/*}*/

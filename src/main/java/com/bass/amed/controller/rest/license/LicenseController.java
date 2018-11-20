@@ -65,7 +65,7 @@ public class LicenseController
         }
 
         request.setCompany(eco.get());
-        request.getLicense().setEconomicAgent(eco.get());
+//        request.getLicense().setEconomicAgent(eco.get());
 
         request.setType(requestTypeRepository.findByCode("LICEL").get());
         request.getLicense().setStatus("A");

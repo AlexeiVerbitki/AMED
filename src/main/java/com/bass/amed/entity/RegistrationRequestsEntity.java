@@ -95,7 +95,7 @@ public class RegistrationRequestsEntity
     @OneToMany( fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST} )
     @JoinColumn( name = "registration_request_id" )
     private Set<DrugCheckDecisionsEntity> drugCheckDecisions = new HashSet<>();
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "registrationRequestsEntity")
-    private DocumentModuleDetailsEntity documentModuleDetails;
+//    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "registrationRequestsEntity")
+//    private DocumentModuleDetailsEntity documentModuleDetails;
 
 }

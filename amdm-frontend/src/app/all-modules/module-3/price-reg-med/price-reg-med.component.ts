@@ -96,7 +96,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
                   // this.pricesRequestId = request.pricesRequest.id;
                   // this.PriceRegForm.get('id').setValue(request.id);
                   // this.PriceRegForm.get('requestNumber').setValue(this.generatedDocNrSeq);
-                  // this.PriceRegForm.get('company').setValue(request.company);
+                  // this.PriceRegForm.get('importer').setValue(request.importer);
                   // this.PriceRegForm.get('medicament').setValue(request.pricesRequest.medicament);
                   // this.PriceRegForm.get('initiator').setValue(request.initiator);
                   // this.PriceRegForm.get('requestHistories').setValue(request.requestHistories);

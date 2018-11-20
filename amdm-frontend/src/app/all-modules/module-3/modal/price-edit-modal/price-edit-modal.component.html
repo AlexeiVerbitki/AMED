@@ -1,0 +1,39 @@
+<h2 mat-dialog-title class="text-center alert alert-primary">{{title}}</h2>
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]='priceEntity'>
+        <div class="row my-4">
+            <div class="col-12">
+                <div class="md-form-modified">
+                    <ng-select class="w-100"
+                               [items]="countries"
+                               [required]="true"
+                               formControlName="country"
+                               bindLabel="description"
+                               placeholder="Țara">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="md-form-modified">
+                    <ng-select class="w-100"
+                               [items]="currencies"
+                               [required]="true"
+                               formControlName="currency"
+                               bindLabel="shortDescription"
+                               placeholder="Valuta">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="md-form">
+                    <input mdbInputDirective type="number" id="price" class="form-control"
+                           formControlName="price">
+                    <label for="price">Prețul<span class="text-danger">*</span></label>
+                </div>
+            </div>
+        </div>
+        </form>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+    <button class="btn btn-dark-green-color btn-sm waves-light" [disabled]="this.priceEntity.invalid" (click)="save()">Salvează</button>
+</mat-dialog-actions>

@@ -31,7 +31,7 @@ export interface PeriodicElement {
 })
 export class AmbalajComponent implements OnInit {
     cereri: Cerere[] = [];
-    companii: any[];
+    // importer: any[];
     evaluateImportForm: FormGroup;
     // importTypeForm: FormGroup;
     currentDate: Date;
@@ -48,6 +48,10 @@ export class AmbalajComponent implements OnInit {
     protected loadingManufacturerRfPr: boolean = false;
     protected manufacturerInputsRfPr = new Subject<string>();
 
+    importer: Observable<any[]>;
+    loadingCompany: boolean = false;
+    protected companyInputs = new Subject<string>();
+
     sellerAddress: any;
     importerAddress: any;
     producerAddress: any;
@@ -58,6 +62,8 @@ export class AmbalajComponent implements OnInit {
 
     formModel: any;
     valutaList: Observable<any[]>;
+
+    importData : any;
 
     constructor(private fb: FormBuilder,
                 private requestService: RequestService,
@@ -72,10 +78,12 @@ export class AmbalajComponent implements OnInit {
             'id': [''],
             'requestNumber': [null],
             'startDate': [new Date()],
-            'company': ['', Validators.required],
             'currentStep': ['R'],
+            'company': ['', Validators.required],
             'initiator': [null],
             'assignedUser': [null],
+            'data': {disabled: true, value: null},
+            'importType': [null, Validators.required],
             'type':
                 this.fb.group({
                     'id': ['']
@@ -83,15 +91,15 @@ export class AmbalajComponent implements OnInit {
             'importAuthorizationEntity': fb.group({
                 // 'requestNumber': {value: '', disabled: true},
                 // 'startDate': {value: '', disabled: true},
-                // 'company': {value: '', disabled: true},
+                // 'importer': {value: '', disabled: true},
                 'id;': [''],
                 'importType': [null, Validators.required],
                 'applicationRegistrationNumber': [''],
                 'applicationDate': [new Date()],
                 'applicant': ['', Validators.required],
-                'seller': ['', Validators.required], // Tara si adresa lui e deja in baza
+                'seller': [null, Validators.required], // Tara si adresa lui e deja in baza
                 'basisForImport': [],
-                'importer': ['', Validators.required], // Tara si adresa lui e deja in baza
+                'importer': [null, Validators.required], // Tara si adresa lui e deja in baza
                 'conditionsAndSpecification': [''],
                 'medType': [''],
                 'importAuthorizationDetailsEntityList': this.fb.group({
@@ -124,7 +132,8 @@ export class AmbalajComponent implements OnInit {
         this.formSubmitted = false;
         // this.producerAddress='';
         // this.importTypeForms[0].producer.address='';
-        this.loadSolicitantCompanyList();
+        // this.loadSolicitantCompanyList();
+        this.loadEconomicAgents();
         this.loadManufacturersRfPr();
         // this.addImportTypeForm();
         this.onChanges();
@@ -135,9 +144,10 @@ export class AmbalajComponent implements OnInit {
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
             this.subscriptions.push(this.requestService.getImportRequest(params['id']).subscribe(data => {
                     console.log('Import data', data);
+                    this.importData = data;
                     // alert(params['id'])
                     // alert(data.startDate)
-                    // alert(data.company)
+                    // alert(data.importer)
 
                     this.evaluateImportForm.get('id').setValue(data.id);
                     this.evaluateImportForm.get('initiator').setValue(data.initiator);
@@ -145,6 +155,8 @@ export class AmbalajComponent implements OnInit {
                     this.evaluateImportForm.get('requestNumber').setValue(data.requestNumber);
                     this.evaluateImportForm.get('startDate').setValue(new Date(data.startDate));
                     this.evaluateImportForm.get('company').setValue(data.company);
+                    // this.evaluateImportForm.get('data').setValue(data.data);
+                    // this.evaluateImportForm.get('importType').setValue(data.importType);
 
                 },
                 error => console.log(error)
@@ -163,6 +175,11 @@ export class AmbalajComponent implements OnInit {
         this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.producer').valueChanges.subscribe(val => {
             if (val) {
                 this.producerAddress = val.address + ", " + val.country.description;
+            }
+        });
+        this.evaluateImportForm.get('importAuthorizationEntity.importer').valueChanges.subscribe(val => {
+            if (val) {
+                this.importerAddress = val.legalAddress /*+ ", " + val.country.description*/;
             }
         });
         this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.quantity').valueChanges.subscribe(val => {
@@ -215,10 +232,6 @@ export class AmbalajComponent implements OnInit {
         this.unitOfImportPressed = false;
 
         this.unitOfImportTable.push({
-            // unitOfImport: this.evaluateImportForm.get('activeSubstance').value,
-            // quantity: this.evaluateImportForm.get('activeSubstanceQuantity').value,
-            // unitsOfMeasurement: this.evaluateImportForm.get('activeSubstanceUnit').value,
-            // manufacture: this.evaluateImportForm.get('manufactureSA').value
 
              customsCode:       this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.customsCode').value,
              name:              this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList.name').value,
@@ -259,14 +272,35 @@ export class AmbalajComponent implements OnInit {
         });
     }
 
-    loadSolicitantCompanyList() {
-        this.subscriptions.push(
-            this.administrationService.getAllCompanies().subscribe(data => {
-                    this.solicitantCompanyList = data;
-                },
-                error => console.log(error)
-            )
-        )
+    // loadSolicitantCompanyList() {
+    //     this.subscriptions.push(
+    //         this.administrationService.getAllCompanies().subscribe(data => {
+    //                 this.solicitantCompanyList = data;
+    //             },
+    //             error => console.log(error)
+    //         )
+    //     )
+    // }
+
+    loadEconomicAgents() {
+        this.importer =
+            this.companyInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) return true;
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingCompany = true;
+
+                }),
+                flatMap(term =>
+
+                    this.administrationService.getCompanyNamesAndIdnoList(term).pipe(
+                        tap(() => this.loadingCompany = false)
+                    )
+                )
+            );
     }
 
 
@@ -304,6 +338,7 @@ export class AmbalajComponent implements OnInit {
     nextStep() {
         this.formSubmitted = true;
         let modelToSubmit = this.evaluateImportForm.getRawValue();
+       // let modelToSubmit;
         // let modelToSubmit: any ={};
         this.loadingService.show();
         // this.formModel.importAuthorizationDetailsEntityList = this.unitOfImportTable;
@@ -353,9 +388,11 @@ export class AmbalajComponent implements OnInit {
 //         }
 
         // modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
-        console.log("modelToSubmit", modelToSubmit);
-
-        this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
+        // console.log("modelToSubmit", modelToSubmit);
+        console.log("modelToSubmit", this.importData);
+        // console.log("modelToSubmit", modelToSubmit);
+        this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {
+            console.log("addImportRequest(modelToSubmit).subscribe: ",data)
                 this.loadingService.hide();
                 this.router.navigate(['dashboard/module']);
             }, error => this.loadingService.hide())

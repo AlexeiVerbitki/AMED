@@ -1,0 +1,119 @@
+import { Component, Inject, OnInit } from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {AdministrationService} from "../../shared/service/administration.service";
+import {Subscription} from "rxjs";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+
+@Component({
+  selector: 'app-active-substance-dialog',
+  templateUrl: './active-substance-dialog.component.html',
+  styleUrls: ['./active-substance-dialog.component.css']
+})
+
+export class ActiveSubstanceDialogComponent implements OnInit {
+    private subscriptions: Subscription[] = [];
+    aForm: FormGroup;
+    title: string = 'Adaugare substanta activa';
+    activeSubstances: any[];
+    formSubmitted: boolean;
+    activeSubstanceUnitsOfMeasurement: any[];
+    manufactures: any[];
+
+    constructor(private administrationService: AdministrationService,
+                private fb: FormBuilder,
+                public dialogRef: MatDialogRef<ActiveSubstanceDialogComponent>,
+                @Inject(MAT_DIALOG_DATA) public dataDialog: any) {
+        this.aForm = fb.group({
+            'activeSubstance': [null, Validators.required],
+            'activeSubstanceCode': [null],
+            'activeSubstanceQuantity': [null,Validators.required],
+            'activeSubstanceUnit': [null,Validators.required],
+            'manufactureSA': [null,Validators.required],
+            'manufactureCountrySA': [null],
+            'manufactureAddressSA': [null],
+            'status' : [null]
+        });
+    }
+
+    ngOnInit() {
+
+        if(this.dataDialog) {
+            this.aForm.get('activeSubstanceQuantity').setValue(this.dataDialog.quantity);
+        }
+
+        this.subscriptions.push(
+            this.administrationService.getAllActiveSubstances().subscribe(data => {
+                    this.activeSubstances = data;
+                    if(this.dataDialog) {
+                        this.aForm.get('activeSubstance').setValue(this.activeSubstances.find(r => r.id === this.dataDialog.activeSubstance.id));
+                        this.aForm.get('activeSubstanceCode').setValue(this.aForm.get('activeSubstance').value.code);
+                    }
+                },
+                error => console.log(error)
+            )
+        );
+
+        this.subscriptions.push(
+            this.administrationService.getAllUnitsOfMeasurement().subscribe(data => {
+                    this.activeSubstanceUnitsOfMeasurement = data;
+                    if(this.dataDialog) {
+                        this.aForm.get('activeSubstanceUnit').setValue(this.activeSubstanceUnitsOfMeasurement.find(r => r.id === this.dataDialog.unitsOfMeasurement.id));
+                    }
+                },
+                error => console.log(error)
+            )
+        );
+
+        this.subscriptions.push(
+            this.administrationService.getAllManufactures().subscribe(data => {
+                    this.manufactures = data;
+                    if(this.dataDialog) {
+                        this.aForm.get('manufactureSA').setValue(this.manufactures.find(r => r.id === this.dataDialog.manufacture.id));
+                        this.aForm.get('manufactureCountrySA').setValue(this.aForm.get('manufactureSA').value.country.description);
+                        this.aForm.get('manufactureAddressSA').setValue(this.aForm.get('manufactureSA').value.address);
+                    }
+                },
+                error => console.log(error)
+            )
+        );
+    }
+
+    checkActiveSubstanceValue() {
+        if (this.aForm.get('activeSubstance').value == null) {
+            return;
+        }
+
+        this.aForm.get('activeSubstanceCode').setValue(this.aForm.get('activeSubstance').value.code);
+    }
+
+    add() {
+        this.formSubmitted = true;
+
+        if(this.aForm.invalid)
+        {
+            return;
+        }
+
+        this.formSubmitted = false;
+
+        this.aForm.get('status').setValue(true);
+        this.dialogRef.close(this.aForm.value);
+    }
+
+    cancel() {
+        this.aForm.get('status').setValue(false);
+        this.dialogRef.close(this.aForm.value);
+    }
+
+    checkActiveSubstanceManufacture()
+    {
+        if (this.aForm.get('manufactureSA').value == null) {
+            return;
+        }
+
+        this.aForm.get('manufactureCountrySA').setValue(this.aForm.get('manufactureSA').value.country.description);
+        this.aForm.get('manufactureAddressSA').setValue(this.aForm.get('manufactureSA').value.address);
+    }
+}
+
+

@@ -19,7 +19,7 @@
                     <div class="md-form-modified">
                         <mat-form-field class="w-100">
                             <input matInput [matDatepicker]="picker" placeholder="Data"
-                                   formControlName="startDate" >
+                                   formControlName="startDate">
                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                             <mat-datepicker touchUi #picker></mat-datepicker>
                         </mat-form-field>
@@ -27,17 +27,11 @@
                 </div>
                 <div class="col-md-4">
                     <div class="md-form">
-                        <!--<mat-form-field class="w-100">-->
-                            <!--<mat-select id="solicitantCompany" placeholder="Compania solicitant"-->
-                                        <!--formControlName="company">-->
-                                <!--<mat-option *ngFor="let solicitantCompany of solicitantCompanyList" [value]="solicitantCompany">{{ solicitantCompany.name }}</mat-option>-->
-                            <!--</mat-select>-->
-                        <!--</mat-form-field>-->
                         <input id="company" mdbInputDirective type="text" class="form-control"
                                value={{evaluateImportForm.value.company.name}} [attr.disabled]="true">
                         <label for="company">Compania solicitant
                         </label>
-                        <!--value={{evaluateImportForm.value.company.name}}-->
+                        <!--value={{evaluateImportForm.value.importer.name}}-->
                     </div>
                 </div>
 
@@ -50,44 +44,12 @@
 
 
             <div formGroupName="importAuthorizationEntity">
-
-
-                <!--<hr>-->
-                <!--<table class="table text-center">-->
-                    <!--<thead class="black white-text">-->
-                    <!--<tr>-->
-                        <!--<th scope="col">Denumire</th>-->
-                        <!--<th scope="col">Format</th>-->
-                        <!--<th scope="col">Data incarcarii</th>-->
-                        <!--<th scope="col">Actiuni</th>-->
-                    <!--</tr>-->
-                    <!--</thead>-->
-                    <!--<tbody>-->
-                    <!--<tr *ngFor="let x of cereri; let i = index">-->
-                        <!--<th scope="row">{{ x.denumirea }}</th>-->
-                        <!--<td>{{ x.format }}</td>-->
-                        <!--<td>{{ x.dataIncarcarii }}</td>-->
-                        <!--<td>-->
-                            <!--&lt;!&ndash;<button class="btn btn-mdb-color btn-sm waves-light" (click)="loadFile()" mdbWavesEffect>Vizualizare</button>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeDocument(i)" mdbWavesEffect>Stergere </button>&ndash;&gt;-->
-                        <!--</td>-->
-                    <!--</tr>-->
-                    <!--</tbody>-->
-                <!--</table>-->
-                <!--<hr>-->
-                <!--<div class="col-lg-2 position-button mt-3 text-right">-->
-                    <!--<label class="btn btn-indigo btn-sm" for="incarcaraFisier">-->
-                        <!--<input id="incarcaraFisier" type="file" style="display:none;" (change)="onChange($event)" onclick="this.value=null;">-->
-                        <!--Incarca Cerere-->
-                    <!--</label>-->
-                <!--</div>-->
-
                 <div class="row">
 
 
                     <div class="col-md-4">
                         <div class="md-form-modified">
-                            <ng-select  [items]="manufacturersRfPr | async"
+                            <ng-select [items]="manufacturersRfPr | async"
                                        bindLabel="description"
                                        placeholder="Vînzător"
                                        formControlName="seller"
@@ -105,24 +67,9 @@
 
                     <div class="col-md-4">
                         <div class="md-form-modified">
-                            <!--<ng-select [items]="manufacturersRfPr | async"-->
-                                       <!--bindLabel="description"-->
-                                       <!--placeholder="Ţara şi adresa vînzătorului"-->
-                                       <!--formControlName="seller"-->
-                                       <!--[loading]="loadingManufacturerRfPr"-->
-                                       <!--[typeahead]="manufacturerInputsRfPr"-->
-                                       <!--required="true">-->
-                                <!--<ng-template ng-option-tmp let-item="item">-->
-                                    <!--{{item.address}}-->
-                                <!--</ng-template>-->
-                            <!--</ng-select>-->
-
-
                             <div class="md-form">
-
-                                <input  id="adresa" mdbInputDirective type="text" class="form-control"
+                                <input id="adresa" mdbInputDirective type="text" class="form-control"
                                        [attr.disabled]="true" [value]="sellerAddress"> <!--{{sellerAddress.value}}-->
-
                                 <label for="adresa">Adresa vînzătorului</label>
                             </div>
                         </div>
@@ -137,17 +84,23 @@
                     </div>
                     <div class="col-md-4">
                         <div class="md-form-modified">
-                            <mat-form-field class="w-100">
-                                <mat-select id="importer" placeholder="Importator"
-                                            formControlName="importer">
-                                    <mat-option *ngFor="let solicitantCompany of solicitantCompanyList" [value]="solicitantCompany">{{ solicitantCompany.name }}</mat-option>
-                                </mat-select>
-                            </mat-form-field>
+                            <ng-select [items]="importer | async"
+                                       bindLabel="name"
+                                       placeholder="Importator"
+                                       formControlName="importer"
+                                       [loading]="loadingCompany"
+                                       [typeahead]="companyInputs"
+                                       required="true">
+                                <ng-template ng-option-tmp let-item="item">
+                                    {{item.name}} <br/>
+                                    <small class="form-text text-muted">{{item.idno}}</small>
+                                </ng-template>
+                            </ng-select>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="md-form">
-                            <input id="importerAddress" mdbInputDirective type="text" class="form-control"[value]="importerAddress">  <!--formControlName="importerAddress"-->
+                            <input id="importerAddress" mdbInputDirective type="text" class="form-control" [value]="importerAddress">  <!--formControlName="importerAddress"-->
                             <label for="importerAddress">Ţara şi adresa importatorului
                                 <span class="text-danger">*</span>
                             </label>
@@ -181,124 +134,124 @@
                     <hr>
                     <div formArrayName="importAuthorizationDetailsEntityList">
                         <!--<div *ngFor="let importTypeForm of importTypeForms.controls; let i=index" [formGroupName]="i">-->
-                            <div class="row">
-                                <div class="col-4">
-                                    <div class="md-form">
-                                        <input id="customsCode" mdbInputDirective type="text" class="form-control"
-                                               formControlName="customsCode">
-                                        <label for="customsCode">Codul vamal</label>
-                                    </div>
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="md-form">
+                                    <input id="customsCode" mdbInputDirective type="text" class="form-control"
+                                           formControlName="customsCode">
+                                    <label for="customsCode">Codul vamal</label>
                                 </div>
-                                <div class="col-4">
-                                    <div class="md-form">
-                                        <input id="name" mdbInputDirective type="text" class="form-control"
-                                               formControlName="name">
-                                        <label for="name">Denumirea materiei prime (DCI)</label>
-                                    </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="md-form">
+                                    <input id="name" mdbInputDirective type="text" class="form-control"
+                                           formControlName="name">
+                                    <label for="name">Denumirea materiei prime (DCI)</label>
                                 </div>
-                                <div class="col-4">
-                                    <div class="md-form">
-                                        <input id="quantity" mdbInputDirective type="number" class="form-control"
-                                               formControlName="quantity">
-                                        <label for="quantity">Cantitatea</label>
-                                    </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="md-form">
+                                    <input id="quantity" mdbInputDirective type="number" class="form-control"
+                                           formControlName="quantity">
+                                    <label for="quantity">Cantitatea</label>
                                 </div>
-                                <div class="col-4">
-                                    <div class="md-form">
-                                        <input id="price" mdbInputDirective type="number" class="form-control"
-                                               formControlName="price">
-                                        <label for="price">Pretul</label>
-                                    </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="md-form">
+                                    <input id="price" mdbInputDirective type="number" class="form-control"
+                                           formControlName="price">
+                                    <label for="price">Pretul</label>
                                 </div>
-                                <div class="col-4">
-                                    <!--<div class="md-form">-->
-                                        <!--<input id="valuta" mdbInputDirective type="text" class="form-control"-->
-                                               <!--formControlName="currency">-->
-                                        <!--<label for="valuta">Valuta</label>-->
-                                    <!--</div>-->
-                                    <div class="md-form-modified">
-                                        <mat-form-field class="w-100">
-                                            <mat-select id="currency" placeholder="Valuta"
-                                                        formControlName="currency">
-                                                <mat-option *ngFor="let valuta of valutaList" [value]="valuta">{{ valuta.shortDescription }}</mat-option>
-                                            </mat-select>
-                                        </mat-form-field>
-                                    </div>
-                                    <!--<div *ngIf="!evaluateImportForm.get('currency').valid && !evaluateImportForm.get('currency') ">-->
-                                        <!--<small class="text-muted"><strong class="text-danger">Valuta trebuie introdusă</strong>-->
-                                        <!--</small>-->
-                                    <!--</div>-->
-                                </div>
-                                <div class="col-4">
-                                    <div class="md-form">
-                                        <input id="summ" mdbInputDirective type="number" class="form-control"
-                                               [attr.disabled]="true"
-                                               formControlName="summ" >
-                                        <label for="summ">Suma</label>
-                                        <!--Suma: {{importTypeForms[i].price}}-->
-                                    </div>
-                                </div>
-
-                                <!--<div class="col-6">-->
-                                    <!--<div class="md-form">-->
-                                        <!--<input id="producer" mdbInputDirective type="text" class="form-control"-->
-                                               <!--formControlName="producer">-->
-                                        <!--<label for="producer">Firma producătoare-->
-                                            <!--<span class="text-danger">*</span>-->
-                                        <!--</label>-->
-                                    <!--</div>-->
+                            </div>
+                            <div class="col-4">
+                                <!--<div class="md-form">-->
+                                <!--<input id="valuta" mdbInputDirective type="text" class="form-control"-->
+                                <!--formControlName="currency">-->
+                                <!--<label for="valuta">Valuta</label>-->
                                 <!--</div>-->
-                                <div class="col-md-4">
-                                    <!--<div class="md-form-modified">-->
-                                        <!--<mat-form-field class="w-100">-->
-                                            <!--<mat-select id="producer" placeholder="Firma producătoare"-->
-                                                        <!--formControlName="producer">-->
-                                                <!--<mat-option *ngFor="let solicitantCompany of solicitantCompanyList" [value]="solicitantCompany">{{ solicitantCompany.name }}</mat-option>-->
-                                            <!--</mat-select>-->
-                                        <!--</mat-form-field>-->
-                                    <!--</div>-->
-                                    <div class="md-form-modified" >
-                                        <ng-select [items]="manufacturersRfPr | async"
-                                                   bindLabel="description"
-                                                   placeholder="Producatorul"
-                                                   formControlName="producer"
-                                                   [loading]="loadingManufacturerRfPr"
-                                                   [typeahead]="manufacturerInputsRfPr"
-                                                   required="true">
-                                            <ng-template ng-option-tmp let-item="item">
-                                                {{item.description}};
-                                                <small class="form-text text-muted">{{item.address}}, {{item.country.description}}</small>
-
-
-                                            </ng-template>
-                                        </ng-select>
-                                    </div >
+                                <div class="md-form-modified">
+                                    <mat-form-field class="w-100">
+                                        <mat-select id="currency" placeholder="Valuta"
+                                                    formControlName="currency">
+                                            <mat-option *ngFor="let valuta of valutaList" [value]="valuta">{{ valuta.shortDescription }}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="md-form">
-                                        <input id="producerAddress" mdbInputDirective type="text" class="form-control"
-                                               [value]="producerAddress" [attr.disabled]="true">
-                                        <label for="producerAddress">Ţara şi adresa producătorului materiei prime
-                                            <span class="text-danger">*</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="md-form-modified">
-                                        <mat-form-field class="w-100">
-                                            <input matInput [matDatepicker]="picker22" placeholder="Termen de valabilitate"
-                                                   formControlName="expirationDate">
-                                            <mat-datepicker-toggle matSuffix [for]="picker22"></mat-datepicker-toggle>
-                                            <mat-datepicker touchUi #picker22></mat-datepicker>
-                                        </mat-form-field>
-                                    </div>
+                                <!--<div *ngIf="!evaluateImportForm.get('currency').valid && !evaluateImportForm.get('currency') ">-->
+                                <!--<small class="text-muted"><strong class="text-danger">Valuta trebuie introdusă</strong>-->
+                                <!--</small>-->
+                                <!--</div>-->
+                            </div>
+                            <div class="col-4">
+                                <div class="md-form">
+                                    <input id="summ" mdbInputDirective type="number" class="form-control"
+                                           [attr.disabled]="true"
+                                           formControlName="summ">
+                                    <label for="summ">Suma</label>
+                                    <!--Suma: {{importTypeForms[i].price}}-->
                                 </div>
                             </div>
-                            <div class="text-right">
-                                <!--<button class="btn btn-danger waves-light btn-md" (click)="deleteImportTypeForm(i)">Sterge</button>-->
-                                <!--<button type="submit" class="btn btn-indigo waves-light btn-md" mdbWavesEffect (click)="addImportTypeForm()" (click)="getProducerAddress(i)">Adauga</button>-->
-                                <button type="submit" class="btn btn-indigo waves-light btn-md" mdbWavesEffect (click)="addUnitOfImport()">Adauga</button>
+
+                            <!--<div class="col-6">-->
+                            <!--<div class="md-form">-->
+                            <!--<input id="producer" mdbInputDirective type="text" class="form-control"-->
+                            <!--formControlName="producer">-->
+                            <!--<label for="producer">Firma producătoare-->
+                            <!--<span class="text-danger">*</span>-->
+                            <!--</label>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <div class="col-md-4">
+                                <!--<div class="md-form-modified">-->
+                                <!--<mat-form-field class="w-100">-->
+                                <!--<mat-select id="producer" placeholder="Firma producătoare"-->
+                                <!--formControlName="producer">-->
+                                <!--<mat-option *ngFor="let solicitantCompany of solicitantCompanyList" [value]="solicitantCompany">{{ solicitantCompany.name }}</mat-option>-->
+                                <!--</mat-select>-->
+                                <!--</mat-form-field>-->
+                                <!--</div>-->
+                                <div class="md-form-modified">
+                                    <ng-select [items]="manufacturersRfPr | async"
+                                               bindLabel="description"
+                                               placeholder="Producatorul"
+                                               formControlName="producer"
+                                               [loading]="loadingManufacturerRfPr"
+                                               [typeahead]="manufacturerInputsRfPr"
+                                               required="true">
+                                        <ng-template ng-option-tmp let-item="item">
+                                            {{item.description}};
+                                            <small class="form-text text-muted">{{item.address}}, {{item.country.description}}</small>
+
+
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
                             </div>
+                            <div class="col-md-4">
+                                <div class="md-form">
+                                    <input id="producerAddress" mdbInputDirective type="text" class="form-control"
+                                           [value]="producerAddress" [attr.disabled]="true">
+                                    <label for="producerAddress">Ţara şi adresa producătorului materiei prime
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="md-form-modified">
+                                    <mat-form-field class="w-100">
+                                        <input matInput [matDatepicker]="picker22" placeholder="Termen de valabilitate"
+                                               formControlName="expirationDate">
+                                        <mat-datepicker-toggle matSuffix [for]="picker22"></mat-datepicker-toggle>
+                                        <mat-datepicker touchUi #picker22></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <!--<button class="btn btn-danger waves-light btn-md" (click)="deleteImportTypeForm(i)">Sterge</button>-->
+                            <!--<button type="submit" class="btn btn-indigo waves-light btn-md" mdbWavesEffect (click)="addImportTypeForm()" (click)="getProducerAddress(i)">Adauga</button>-->
+                            <button type="submit" class="btn btn-indigo waves-light btn-md" mdbWavesEffect (click)="addUnitOfImport()">Adauga</button>
+                        </div>
                         <!--</div>-->
                     </div>
 

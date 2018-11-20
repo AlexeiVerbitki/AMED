@@ -1,0 +1,24 @@
+<div class="container-fluid sky z-depth-2">
+	<mat-tab-group>
+		<mat-tab label="Nomenclatorul medicamentului">
+			<ng-template matTabContent><br>
+				<app-nomenclator-drugs></app-nomenclator-drugs>
+			</ng-template>
+		</mat-tab>
+		<mat-tab label="Clasificatorul medicamentului">
+			<ng-template matTabContent><br>
+				<app-clasify-drugs></app-clasify-drugs>
+			</ng-template>
+		</mat-tab>
+		<mat-tab label="Catalogul național de prețuri de producător la medicamente">
+			<ng-template matTabContent><br>
+				<app-catalog-price-drugs></app-catalog-price-drugs>
+			</ng-template>
+		</mat-tab>
+		<mat-tab label="Clasificatorul agenților economici cu activitate farmaceutică">
+			<ng-template matTabContent><br>
+				<app-clasify-economics-agency></app-clasify-economics-agency>
+			</ng-template>
+		</mat-tab>
+	</mat-tab-group>
+</div>
