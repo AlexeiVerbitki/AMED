@@ -1,13 +1,16 @@
 package com.bass.amed.entity;
 
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
+@EqualsAndHashCode
 @Entity
-@Table(name = "medicament", schema = "amed", catalog = "")
+@Table(name = "medicament", schema = "amed")
 public class MedicamentEntity
 {
     private Integer id;
@@ -40,7 +43,8 @@ public class MedicamentEntity
     private MedicamentExpertsEntity experts;
     private String atcCode;
     private String division;
-        private Integer requestId;
+    private Integer requestId;
+    private MedicamentEntity originalMedicament;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,6 +69,18 @@ public class MedicamentEntity
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "original_medicament_id")
+    public MedicamentEntity getOriginalMedicament()
+    {
+        return originalMedicament;
+    }
+
+    public void setOriginalMedicament(MedicamentEntity originalMedicamentId)
+    {
+        this.originalMedicament = originalMedicamentId;
     }
 
     @Basic
@@ -438,174 +454,5 @@ public class MedicamentEntity
             medicamentManufactureEntity.assign(medicamentManufactureHistoryEntity);
             this.manufactures.add(medicamentManufactureEntity);
         }
-    }
-
-    @Override
-    public boolean equals(Object o)
-    {
-        if (this == o)
-        {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass())
-        {
-            return false;
-        }
-
-        MedicamentEntity that = (MedicamentEntity) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null)
-        {
-            return false;
-        }
-        if (name != null ? !name.equals(that.name) : that.name != null)
-        {
-            return false;
-        }
-        if (code != null ? !code.equals(that.code) : that.code != null)
-        {
-            return false;
-        }
-        if (productCode != null ? !productCode.equals(that.productCode) : that.productCode != null)
-        {
-            return false;
-        }
-        if (customsCode != null ? !customsCode.equals(that.customsCode) : that.customsCode != null)
-        {
-            return false;
-        }
-        if (barcode != null ? !barcode.equals(that.barcode) : that.barcode != null)
-        {
-            return false;
-        }
-        if (internationalMedicamentName != null ? !internationalMedicamentName.equals(that.internationalMedicamentName) : that.internationalMedicamentName != null)
-        {
-            return false;
-        }
-        if (countryId != null ? !countryId.equals(that.countryId) : that.countryId != null)
-        {
-            return false;
-        }
-        if (manufactures != null ? !manufactures.equals(that.manufactures) : that.manufactures != null)
-        {
-            return false;
-        }
-        if (registrationNumber != null ? !registrationNumber.equals(that.registrationNumber) : that.registrationNumber != null)
-        {
-            return false;
-        }
-        if (registrationDate != null ? !registrationDate.equals(that.registrationDate) : that.registrationDate != null)
-        {
-            return false;
-        }
-        if (expirationDate != null ? !expirationDate.equals(that.expirationDate) : that.expirationDate != null)
-        {
-            return false;
-        }
-        if (dose != null ? !dose.equals(that.dose) : that.dose != null)
-        {
-            return false;
-        }
-        if (pharmaceuticalForm != null ? !pharmaceuticalForm.equals(that.pharmaceuticalForm) : that.pharmaceuticalForm != null)
-        {
-            return false;
-        }
-        if (authorizationHolder != null ? !authorizationHolder.equals(that.authorizationHolder) : that.authorizationHolder != null)
-        {
-            return false;
-        }
-        if (medicamentType != null ? !medicamentType.equals(that.medicamentType) : that.medicamentType != null)
-        {
-            return false;
-        }
-        if (group != null ? !group.equals(that.group) : that.group != null)
-        {
-            return false;
-        }
-        if (prescription != null ? !prescription.equals(that.prescription) : that.prescription != null)
-        {
-            return false;
-        }
-        if (serialNr != null ? !serialNr.equals(that.serialNr) : that.serialNr != null)
-        {
-            return false;
-        }
-        if (primarePackage != null ? !primarePackage.equals(that.primarePackage) : that.primarePackage != null)
-        {
-            return false;
-        }
-        if (administeringMode != null ? !administeringMode.equals(that.administeringMode) : that.administeringMode != null)
-        {
-            return false;
-        }
-        if (status != null ? !status.equals(that.status) : that.status != null)
-        {
-            return false;
-        }
-        if (volume != null ? !volume.equals(that.volume) : that.volume != null)
-        {
-            return false;
-        }
-        if (volumeQuantityMeasurement != null ? !volumeQuantityMeasurement.equals(that.volumeQuantityMeasurement) : that.volumeQuantityMeasurement != null)
-        {
-            return false;
-        }
-        if (termsOfValidity != null ? !termsOfValidity.equals(that.termsOfValidity) : that.termsOfValidity != null)
-        {
-            return false;
-        }
-        if (activeSubstances != null ? !activeSubstances.equals(that.activeSubstances) : that.activeSubstances != null)
-        {
-            return false;
-        }
-        if (medicamentHistory != null ? !medicamentHistory.equals(that.medicamentHistory) : that.medicamentHistory != null)
-        {
-            return false;
-        }
-        if (experts != null ? !experts.equals(that.experts) : that.experts != null)
-        {
-            return false;
-        }
-        if (atcCode != null ? !atcCode.equals(that.atcCode) : that.atcCode != null)
-        {
-            return false;
-        }
-        return division != null ? division.equals(that.division) : that.division == null;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (code != null ? code.hashCode() : 0);
-        result = 31 * result + (productCode != null ? productCode.hashCode() : 0);
-        result = 31 * result + (customsCode != null ? customsCode.hashCode() : 0);
-        result = 31 * result + (barcode != null ? barcode.hashCode() : 0);
-        result = 31 * result + (internationalMedicamentName != null ? internationalMedicamentName.hashCode() : 0);
-        result = 31 * result + (countryId != null ? countryId.hashCode() : 0);
-        result = 31 * result + (manufactures != null ? manufactures.hashCode() : 0);
-        result = 31 * result + (registrationNumber != null ? registrationNumber.hashCode() : 0);
-        result = 31 * result + (registrationDate != null ? registrationDate.hashCode() : 0);
-        result = 31 * result + (expirationDate != null ? expirationDate.hashCode() : 0);
-        result = 31 * result + (dose != null ? dose.hashCode() : 0);
-        result = 31 * result + (pharmaceuticalForm != null ? pharmaceuticalForm.hashCode() : 0);
-        result = 31 * result + (authorizationHolder != null ? authorizationHolder.hashCode() : 0);
-        result = 31 * result + (medicamentType != null ? medicamentType.hashCode() : 0);
-        result = 31 * result + (group != null ? group.hashCode() : 0);
-        result = 31 * result + (prescription != null ? prescription.hashCode() : 0);
-        result = 31 * result + (serialNr != null ? serialNr.hashCode() : 0);
-        result = 31 * result + (primarePackage != null ? primarePackage.hashCode() : 0);
-        result = 31 * result + (administeringMode != null ? administeringMode.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
-        result = 31 * result + (volume != null ? volume.hashCode() : 0);
-        result = 31 * result + (volumeQuantityMeasurement != null ? volumeQuantityMeasurement.hashCode() : 0);
-        result = 31 * result + (termsOfValidity != null ? termsOfValidity.hashCode() : 0);
-        result = 31 * result + (activeSubstances != null ? activeSubstances.hashCode() : 0);
-        result = 31 * result + (medicamentHistory != null ? medicamentHistory.hashCode() : 0);
-        result = 31 * result + (experts != null ? experts.hashCode() : 0);
-        result = 31 * result + (atcCode != null ? atcCode.hashCode() : 0);
-        result = 31 * result + (division != null ? division.hashCode() : 0);
-        return result;
     }
 }

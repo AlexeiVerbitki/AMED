@@ -27,14 +27,14 @@ export class PaymentComponent implements OnInit {
 
     disabled: boolean = false;
 
-    serviceCharges: any[];
+    serviceCharges: any[] = [];
 
     constructor(private fb: FormBuilder,
                 private administrationService: AdministrationService) {
         this.addReceiptForm = this.fb.group({
             'receiptNumber': [''],
             'date': [''],
-            'serviceCharge': ['', Validators.required],
+            'serviceCharge': [null, Validators.required],
             'amount': [, Validators.required],
             'sP': [{value:false, disabled : this.disabled} ]
         });
@@ -54,6 +54,7 @@ export class PaymentComponent implements OnInit {
         this.subscriptions.push(
             this.administrationService.getAllServiceCharges().subscribe(data => {
                     this.serviceCharges = data;
+                    this.serviceCharges.push({description : "Bon suplimentar", amount : 0});
                 },
                 error => console.log(error)
             )

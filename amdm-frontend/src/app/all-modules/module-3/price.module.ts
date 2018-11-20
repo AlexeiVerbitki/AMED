@@ -13,9 +13,10 @@ import {UploadFileService} from "../../shared/service/upload/upload-file.service
 import {MatDialogModule} from "@angular/material";
 import {DocumentModule} from "../../document/document.module";
 import {OneMedPriceComponent} from "./one-med-price/one-med-price.component";
+import {PriceEditModalComponent} from "./modal/price-edit-modal/price-edit-modal.component";
 
 @NgModule({
-    entryComponents: [ReferencePriceComponent],
+    entryComponents: [ReferencePriceComponent, PriceEditModalComponent],
     imports: [
         CommonModule,
         PriceRoutingModule,
@@ -27,7 +28,7 @@ import {OneMedPriceComponent} from "./one-med-price/one-med-price.component";
         MaterialSharedModule.forRoot(),
     ],
     schemas: [],
-    declarations: [PriceRegMedComponent, OneMedPriceComponent, PriceEvaluateMedComponent, ReferencePriceComponent],
+    declarations: [PriceRegMedComponent, OneMedPriceComponent, PriceEvaluateMedComponent, ReferencePriceComponent, PriceEditModalComponent],
     providers: [UploadFileService, RequestService],
 
 })

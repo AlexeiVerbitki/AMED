@@ -352,7 +352,7 @@ export class AmbalajComponent implements OnInit {
 // expirationDate:  */
 //         }
 
-        modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
+        // modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
         console.log("modelToSubmit", modelToSubmit);
 
         this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {

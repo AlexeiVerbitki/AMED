@@ -36,6 +36,7 @@ import {GestDocComponent} from "./document-management/gest-doc/gest-doc.componen
 import {NumberOnlyDirective} from "./shared/directive/number-only.directive";
 import {RequestAdditionalDataDialogComponent} from "./dialog/request-additional-data-dialog/request-additional-data-dialog.component";
 import {PricesComponent} from "./prices/prices.component";
+import {ActiveSubstanceDialogComponent} from "./dialog/active-substance-dialog/active-substance-dialog.component";
 
 const interceptors = [{
     provide: HTTP_INTERCEPTORS,
@@ -74,7 +75,8 @@ const interceptors = [{
         ErrorResponseHandlerComponent,
         RequestAdditionalDataDialogComponent,
         GestDocComponent,
-        NumberOnlyDirective
+        NumberOnlyDirective,
+        ActiveSubstanceDialogComponent
     ],
     imports: [
         BrowserAnimationsModule,
@@ -88,7 +90,7 @@ const interceptors = [{
     ],
     schemas: [],
     entryComponents: [
-        ConfirmationDialogComponent,RequestAdditionalDataDialogComponent
+        ConfirmationDialogComponent,RequestAdditionalDataDialogComponent,ActiveSubstanceDialogComponent
     ],
     providers: [AuthService, AdministrationService, ErrorHandlerService, interceptors,
     ],

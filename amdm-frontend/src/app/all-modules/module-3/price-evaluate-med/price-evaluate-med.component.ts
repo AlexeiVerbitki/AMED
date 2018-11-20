@@ -14,28 +14,8 @@ import {LoaderService} from "../../../shared/service/loader.service";
 import {RequestAdditionalDataDialogComponent} from "../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component";
 import {MatDialog} from "@angular/material";
 import {PriceService} from "../../../shared/service/prices.service";
-import {Medicament} from "../../../models/medicament";
-
-enum PriceReferenceType {
-    OriginCountry = 3 ,
-    ReferenceCountry = 4,
-    OtherCountriesCatalog = 5
-
-}
-enum MedicamentType {
-    Original = 2 ,
-    Generic = 3
-}
-
-enum OutDocsStatus {
-    Missing = 'Lipsește',
-    Uploaded = 'Încărcat'
-}
-
-enum Decision {
-    Accept = 1,
-    Reject = 2
-}
+import {PriceEditModalComponent} from "../modal/price-edit-modal/price-edit-modal.component";
+import {Decision, MedicamentType, PriceReferenceType} from "../price-constants";
 
 @Component({
   selector: 'app-price-evaluate-med',
@@ -80,9 +60,11 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
      priceModuleAvaibleDocTypes: any[] = ['OP', 'A1', 'A2', 'DP', 'CP', 'RF', 'RC'];
 
     decisions: any[] = [
-        {description: 'Acceptă', id: 1},
-        {description: 'Respinge', id: 2}
+        {description: 'Acceptat', id: 1},
+        {description: 'Respins', id: 2}
     ];
+
+    medicaments: any[] = [];
 
     avgCurrencies: any[] = [];
 
@@ -91,6 +73,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
               private priceService: PriceService,
               public dialogConfirmation: MatDialog,
               private router: Router,
+              public dialog: MatDialog,
               private loadingService: LoaderService,
               private modalService: ModalService) {
 
@@ -100,6 +83,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
           'requestNumber': [null],
           'initiator':          [null],
           'assignedUser':       [null],
+          'requestStatus':      [null],
           'startDate': {disabled: true, value: new Date()},
           'dataToSaveInStartDateRequestHistory': [''],
           'currentStep': ['E'],
@@ -109,6 +93,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
               currency: [null],
               folderNr: [null],
               nationalPrice: [null],
+              type: [null]
           }),
           'evaluation':  fb.group({
               'expirationDate': [null, Validators.required],
@@ -159,6 +144,43 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
       });
   }
 
+    addNewReferencePrice(priceType: PriceReferenceType) {
+       let type = this.priceTypes.find(p => p.id == priceType);
+       let newPrice: any = {
+           priceId: this.PriceRegForm.get('price.id').value,
+           type: type
+       };
+
+       this.priceEditModalOpen(newPrice, -1);
+    }
+
+    priceEditModalOpen(price: any, index: number): void {
+        const dialogRef = this.dialog.open(PriceEditModalComponent, {
+            data: price,
+            width: '650px'
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed', result);
+
+            if(result) {
+                if(!~index) {
+                    price.country = result.country;
+                    price.value = result.price;
+                    price.currency = result.currency;
+                    this.refPrices.push(price);
+                    index = this.refPrices.length - 1;
+                } else {
+                    this.refPrices[index].country = result.country;
+                    this.refPrices[index].value = result.price;
+                    this.refPrices[index].currency = result.currency;
+                }
+                this.calculateCurrencyConversion(this.refPrices[index]);
+                this.processAveragePrices();
+            }
+        });
+    };
+
   ngOnInit() {
       this.getPrevMonthAVGCurrencies();
       this.getDocumentsTypes();
@@ -171,9 +193,21 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                       if(data.price.medicament != undefined) {
                           this.getMedPrevPrices(data.price);
                           this.getRelatedDCIMedicamentsPrices(data.price.medicament.internationalMedicamentName.id, data.price.id);
+                          data.price.medicament.price = { mdlValue: data.price.mdlValue, value: data.price.value, currency: data.price.currency };
+                          data.price.medicament.target = 'Medicamentul cu prețul solicitat';
+                          this.medicaments.push(data.price.medicament);
+                          if(data.price.medicament.medicamentType.description == 'Generic' && data.price.medicament.originalMedicament){
+                                  this.subscriptions.push(this.priceService.getMedPrice(data.price.medicament.originalMedicament.id).subscribe(originalMedPrice => {
+                                      console.log('getMedPrice', originalMedPrice);
+                                      data.price.medicament.originalMedicament.price = { mdlValue: originalMedPrice.mdlValue, value: originalMedPrice.value, currency: originalMedPrice.currency };
+                                      data.price.medicament.originalMedicament.target = 'Medicamentul Original de bază';
+                                      this.medicaments.push(data.price.medicament.originalMedicament);
+                                  }));
+
+                          }
                       }
 
-                      if(data.currentStep != 'R'){
+                      if (data.currentStep != 'R'){
                           console.log('Procesul a fost finisat deja');
                       }
 
@@ -182,9 +216,15 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                       }
 
                       if(data.price != undefined) {
+                          this.PriceRegForm.get('price.id').setValue(data.price.id);
                           this.PriceRegForm.get('price.value').setValue(data.price.value);
                           this.PriceRegForm.get('price.currency').setValue(data.price.currency.description);
                           this.PriceRegForm.get('price.folderNr').setValue(data.price.folderNr);
+                          this.PriceRegForm.get('price.type').setValue(data.price.type);
+                          let acceptType = this.priceTypes.find(type => type.description == 'Acceptat');
+                          if(data.price.type.id == acceptType.id) {
+                              this.PriceRegForm.get('evaluation.decision').setValue(this.decisions[0]);
+                          }
                           this.convertToNationalCurrencyPrice()
                       }
 
@@ -193,13 +233,30 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
 
                       });
 
-                      this.initRefPrices(data.price.referencePrices);
+
+                  switch (data.currentStep) {
+                          case 'R':
+                              this.PriceRegForm.get('requestStatus').setValue('Înregistrare');
+                              break;
+                          case 'E':
+                              this.PriceRegForm.get('requestStatus').setValue('Evaluare');
+                              break;
+                          case 'C':
+                              this.PriceRegForm.get('requestStatus').setValue('Întrerupt');
+                              break;
+                          case 'F':
+                              this.PriceRegForm.get('requestStatus').setValue('Finisat');
+                              break;
+                      }
+
+                      this.processReferencePrices(data.price.referencePrices);
 
                       this.medicamentType = data.price.medicament.medicamentType;
                       this.PriceRegForm.get('company.name').setValue(data.company.name);
                       this.PriceRegForm.get('company.id').setValue(data.company.id);
                       this.PriceRegForm.get('id').setValue(data.id);
                       this.PriceRegForm.get('requestNumber').setValue(data.requestNumber);
+                      this.PriceRegForm.get('initiator').setValue(data.initiator);
                       this.PriceRegForm.get('type').setValue(data.type);
                       this.PriceRegForm.get('requestHistories').setValue(data.requestHistories);
                       this.PriceRegForm.get('typeValue').setValue(data.type.code);
@@ -264,7 +321,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
 
     getAllPricesTypes(){
         this.subscriptions.push(
-            this.priceService.getAllPriceTypes().subscribe(priceTypes => {
+            this.priceService.getPriceTypes('3').subscribe(priceTypes => {
                     this.priceTypes = priceTypes;
                 },
                 error => console.log(error)
@@ -316,7 +373,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                     let avgOriginCountry = 0, originPriceCount = 0;
                     this.refPrices.forEach(p => {
                         if(p.type.description == 'În țara de origine') {
-                            // avgOriginCountry += +p.xchRateRefVal;
+                            avgOriginCountry += +(<any>p).xchRateRefVal;
                             originPriceCount++;
                         }
                     });
@@ -385,51 +442,29 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
       return this.outputDocuments.some(value => value.status == "Nu este atasat");
     }
 
-    initRefPrices(referencePrices?: Price[]) {
 
-        if(referencePrices != undefined) {
-            this.refPrices = referencePrices;
-            if (this.refPrices != undefined &&this.refPrices.length > 0) {
-                this.refPrices.forEach(refPrice => {
+    processReferencePrices(referencePrices?: Price[]){
+        if (referencePrices == undefined) return;
 
-                    for(let avgCur of this.avgCurrencies) {
-                        if(avgCur.currency.id == refPrice.currency.id) {
-                            refPrice['xchRateRef'] =  avgCur.value;
-                            refPrice['xchRateRefVal'] =  avgCur.value * +refPrice.value;
-                            break;
-                        }
-                    }
-
-                    if(!refPrice.hasOwnProperty('xchRateRef')){ // this is fucking Moldo Leu
-                        refPrice['xchRateRef'] =  1;
-                        refPrice['xchRateRefVal'] = refPrice.value;
-                    }
-
-                    for(let avgCur of this.avgCurrencies) {
-
-                        if (avgCur.currency.code == 'EUR') {
-                            refPrice['xchRateEur'] =  avgCur.value;
-                            refPrice['xchRateEurVal'] = refPrice['xchRateRefVal'] / avgCur.value;
-
-                        } else if (avgCur.currency.code == 'USD') {
-                            refPrice['xchRateUsd'] = avgCur.value;
-                            refPrice['xchRateUsdVal'] = refPrice['xchRateRefVal'] / avgCur.value;
-
-                        }
-                    }
-                });
-            }
-
-            this.initAverageMinPrice(this.minRefPrices, PriceReferenceType.ReferenceCountry);
-            this.initAverageMinPrice(this.minOtherCountriesCatPrices, PriceReferenceType.OtherCountriesCatalog);
-
-            this.hasReferencePrices = this.refPrices.some(p => p.type.description == 'În țara de referintă');
-            this.hasOriginCountryPrices = this.refPrices.some(p => p.type.description == 'În țara de origine');
-            this.hasOtherCountriesPrices = this.refPrices.some(p => p.type.description == 'În catalogul de piață a altor țări');
+        this.refPrices = referencePrices;
+        if (this.refPrices != undefined && this.refPrices.length > 0) {
+            this.refPrices.forEach(refPrice => this.calculateCurrencyConversion(refPrice));
+            this.processAveragePrices();
         }
     }
 
+    processAveragePrices() {;
+
+        this.initAverageMinPrice(this.minRefPrices, PriceReferenceType.ReferenceCountry);
+        this.initAverageMinPrice(this.minOtherCountriesCatPrices, PriceReferenceType.OtherCountriesCatalog);
+
+        this.hasReferencePrices = this.refPrices.some(p => p.type.description == 'În țara de referintă');
+        this.hasOriginCountryPrices = this.refPrices.some(p => p.type.description == 'În țara de origine');
+        this.hasOtherCountriesPrices = this.refPrices.some(p => p.type.description == 'În catalogul de piață a altor țări');
+    }
+
     initAverageMinPrice(array: any[], type: PriceReferenceType) {
+         array.splice(0, array.length);
         this.refPrices.sort((a, b) => {
             if(a['xchRateRefVal'] < b['xchRateRefVal']) {
                 return -1;
@@ -458,6 +493,34 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         avgMinPrice['xchRateEurVal'] /= array.length;
 
         array.push(avgMinPrice);
+    }
+
+    calculateCurrencyConversion(refPrice: Price) {
+        for (let avgCur of this.avgCurrencies) {
+            if (avgCur.currency.id == refPrice.currency.id) {
+                refPrice['xchRateRef'] = avgCur.value;
+                refPrice['xchRateRefVal'] = avgCur.value * +refPrice.value;
+                break;
+            }
+        }
+
+        if (!refPrice.hasOwnProperty('xchRateRef')) { // this is fucking Moldo Leu
+            refPrice['xchRateRef'] = 1;
+            refPrice['xchRateRefVal'] = refPrice.value;
+        }
+
+        for (let avgCur of this.avgCurrencies) {
+
+            if (avgCur.currency.code == 'EUR') {
+                refPrice['xchRateEur'] = avgCur.value;
+                refPrice['xchRateEurVal'] = refPrice['xchRateRefVal'] / avgCur.value;
+
+            } else if (avgCur.currency.code == 'USD') {
+                refPrice['xchRateUsd'] = avgCur.value;
+                refPrice['xchRateUsdVal'] = refPrice['xchRateRefVal'] / avgCur.value;
+
+            }
+        }
     }
 
 
@@ -495,60 +558,65 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         let expDate = this.PriceRegForm.get('evaluation')['controls'].expirationDate;
         let decision = this.PriceRegForm.get('evaluation')['controls'].decision;
 
-        let canSave: boolean = this.documents.length > 0 && !this.hasUnloadedDocs() &&
-            decision.value && ((this.needSelectPrice && (selectedPrice.value && (selectedPrice.value.id && expDate.value))) || !this.needSelectPrice);//acceptat
+        let uploadedOrder = this.documents.find(d => d.docType.description == 'Ordinul de înregistrare a prețului de producător');
+        let priceAcceptCondition: boolean = (decision.valid && decision.value.description == 'Acceptat' && uploadedOrder != undefined && !this.hasUnloadedDocs());
+        let canFinishEvaluate: boolean = decision.invalid || (decision.valid && decision.value.description == 'Respins') || priceAcceptCondition;
 
-        if (!canSave) {
+
+        if (!canFinishEvaluate) {
             this.loadingService.hide();
             return;
         }
 
         this.formSubmitted = false;
 
-        let priceModel : any = {};//this.PriceRegForm.value;
+        let priceModel : any = {};
         priceModel.id = this.PriceRegForm.get('id').value;
         priceModel.requestNumber = this.PriceRegForm.get('requestNumber').value;
         priceModel.initiator = this.PriceRegForm.get('initiator').value;
         priceModel.startDate = this.PriceRegForm.get('startDate').value;
         priceModel.company = this.PriceRegForm.get('company').value;
-        priceModel.currentStep = this.PriceRegForm.get('currentStep').value;
         priceModel.type = this.PriceRegForm.get('type').value;
         priceModel.endDate = new Date();
-        priceModel.currentStep = 'E';
+        priceModel.currentStep = priceAcceptCondition ? 'F' : 'C';
         priceModel.assignedUser = this.priceService.getUsername();
         priceModel.requestHistories = this.PriceRegForm.get('requestHistories').value;
+        priceModel.documents = this.documents;
 
         priceModel.requestHistories.push(
             {
                 startDate : this.PriceRegForm.get('dataToSaveInStartDateRequestHistory').value,
                 endDate: new Date(),
                 username : this.priceService.getUsername(),
-                step : 'E'
+                step : priceModel.currentStep
             });
 
-        if(decision.value.id == Decision.Accept) {
-            const acceptType: any = this.priceTypes.filter(value => value.description == 'Acceptat')[0];
+        let price = this.PriceRegForm.get('price').value;
+        let acceptType: any, aprovDate = price.orderApprovDate, revisionDate = price.revisionDate;
 
-            for(let p of this.proposedPrices) {
-                if(selectedPrice.value.id == p.id) {
-                    p.type = acceptType;
-                    p.expirationDate = expDate.value;
-                    p.expirationReason = this.expirationReasons[0];
-                }
-            }
+        if (priceAcceptCondition) {
+            aprovDate = new Date();
+            revisionDate = new Date();
+            acceptType = this.priceTypes.filter(value => value.description == 'Acceptat')[0];
+        } else {
+            acceptType = this.PriceRegForm.get('price.type').value;
         }
 
-        this.loadingService.hide();
-
-        priceModel.pricesRequest = {
-            id: this.priceRequestId,
-            medicament: {id: this.PriceRegForm.get('medicament')['controls'].id.value},
-            documents: this.documents,
-            prices: this.proposedPrices,
+        priceModel.price = {
+            id: price.id,
+            value: price.value,
+            type: acceptType,
+            orderApprovDate: aprovDate,
+            revisionDate: revisionDate,
+            expirationDate: expDate.value,
+            currency: {description: price.currency},
+            mdlValue: price.nationalPrice,
             referencePrices: this.refPrices,
-        }
+            medicament: {id: this.PriceRegForm.get('medicament.id').value}
+        };
 
-        console.log('priceModel:', JSON.stringify(priceModel));
+
+        //console.log('priceModel:', JSON.stringify(priceModel));
 
         this.subscriptions.push(this.priceService.savePrice(priceModel).subscribe(data => {
                 this.router.navigate(['dashboard/homepage']);

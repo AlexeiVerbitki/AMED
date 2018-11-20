@@ -49,27 +49,59 @@
 
         <div *ngIf="registerClinicalTrailForm.value.flowControl === 'CLPSC'">
             <h5 class="text-center font-weight-bold">Cautare studiu</h5>
-            <div class="row">
-
-                <div class="col-md-4">
-                    <div class="md-form-modified">
-                        <ng-select [items]="clinicalTrails | async"
-                                   bindLabel="code"
-                                   placeholder="Cod studiu / Eudra CT"
-                                   formControlName="company"
-                                   [loading]="loadingClinicalTrail"
-                                   [typeahead]="clinicalTrailInputs"
-                                   required="true">
-                            <ng-template ng-option-tmp let-item="item">
-                                {{item.code}} <br/>
-                                <small class="form-text text-muted">{{item.eudraCtNr}}</small>
-                            </ng-template>
-                        </ng-select>
+            <div [formGroup]="clinicalTrailForm">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="md-form-modified">
+                            <ng-select [items]="clinicalTrails | async"
+                                       placeholder="Cod studiu / Eudra CT"
+                                       formControlName="clinicalTrail"
+                                       [loading]="loadingClinicalTrail"
+                                       [typeahead]="clinicalTrailInputs"
+                                       required="true">
+                                <ng-template ng-option-tmp let-item="item">
+                                    {{item.code}} <br/>
+                                    <small class="form-text text-muted">{{item.eudraCtNr}}</small>
+                                </ng-template>
+                                <ng-template ng-label-tmp let-item="item">
+                                    {{item.code + ' / ' + item.eudraCtNr}}
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <input type="text" matInput placeholder="Sponsor" formControlName="sponsor">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <input type="text" matInput placeholder="Faza" formControlName="phase">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <input type="text" matInput placeholder="Tip studiu" formControlName="treatment">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="md-form">
+                            <textarea type="text" id="titluStud" class="md-textarea form-control" mdbInputDirective rows="1" formControlName="title"></textarea>
+                            <label for="titluStud">Titlul studiului</label>
+                        </div>
                     </div>
                 </div>
             </div>
+
             <hr>
         </div>
+
 
         <mat-radio-group>
             <div class="container">

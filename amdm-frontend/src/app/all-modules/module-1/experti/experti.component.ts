@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable, Subscription} from "rxjs";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Document} from "../../../models/document";
 import {ActivatedRoute, Router} from "@angular/router";
 import {RequestService} from "../../../shared/service/request.service";
@@ -32,6 +32,7 @@ export class ExpertiComponent implements OnInit {
     modelToSubmit: any;
     isNonAttachedDocuments: boolean = false;
     divisions: any[] = [];
+    manufacturesTable: any[] = [];
 
     constructor(private fb: FormBuilder,
                 private authService: AuthService,
@@ -54,14 +55,16 @@ export class ExpertiComponent implements OnInit {
             'initiator': [''],
             'assignedUser': [''],
             'companyValue': [''],
+            'division': [null],
             'medicament':
                 fb.group({
                     'id': [],
                     'name': [''],
                     'company': [''],
+                    'atcCode': [null, Validators.required],
                     'registrationDate': [],
-                    'pharmaceuticalForm': [null],
-                    'pharmaceuticalFormType': [null],
+                    'pharmaceuticalForm': [''],
+                    'pharmaceuticalFormType': [''],
                     'dose': [null],
                     'unitsOfMeasurement': [null],
                     'internationalMedicamentName': [null],
@@ -84,11 +87,7 @@ export class ExpertiComponent implements OnInit {
                     'documents': [],
                     'status': ['F'],
                     'experts': [''],
-                    'group':
-                        fb.group({
-                                'code': {disabled: true, value: null}
-                            }
-                        )
+                    'group':  ['']
                 }),
             'company': [''],
             'recetaType': [''],
@@ -129,23 +128,27 @@ export class ExpertiComponent implements OnInit {
                             this.expertForm.get('medicament.volumeQuantityMeasurement').setValue(data.medicaments[0].volumeQuantityMeasurement.description);
                         }
                         this.expertForm.get('medicament.termsOfValidity').setValue(data.medicaments[0].termsOfValidity);
-                        this.expertForm.get('medicament.group.code').setValue(data.medicaments[0].group.code);
-                        this.expertForm.get('medicament.prescription').setValue(data.medicaments[0].prescription.toString());
+                        this.expertForm.get('medicament.group').setValue(data.medicaments[0].group.description);
+                        if(data.medicaments[0].prescription==0) {
+                            this.expertForm.get('medicament.prescription').setValue('Fără prescripţie');
+                        }
+                        else
+                        {
+                            this.expertForm.get('medicament.prescription').setValue('Cu prescripţie');
+                        }
                         this.expertForm.get('medicament.authorizationHolder').setValue(data.medicaments[0].authorizationHolder.description);
                         this.expertForm.get('medicament.authorizationHolderCountry').setValue(data.medicaments[0].authorizationHolder.country.description);
                         this.expertForm.get('medicament.authorizationHolderAddress').setValue(data.medicaments[0].authorizationHolder.address);
-                        this.expertForm.get('medicament.manufacture').setValue(data.medicaments[0].manufacture.description);
-                        this.expertForm.get('medicament.manufactureMedCountry').setValue(data.medicaments[0].manufacture.country.description);
-                        this.expertForm.get('medicament.manufactureMedAddress').setValue(data.medicaments[0].manufacture.address);
+                        this.expertForm.get('medicament.atcCode').setValue(data.medicaments[0].atcCode);
                         this.activeSubstancesTable = data.medicaments[0].activeSubstances;
-                        for (let entry of data.medicaments) {
+                        this.manufacturesTable = data.medicaments[0].manufactures;
+                    for (let entry of data.medicaments) {
+                        if(entry.division && entry.division.length!=0) {
                             this.divisions.push({
-                                unitsQuantity: entry.unitsQuantity,
-                                unitsQuantityMeasurement: entry.unitsQuantityMeasurement,
-                                storageQuantity: entry.storageQuantity,
-                                storageQuantityMeasurement: entry.storageQuantityMeasurement
+                                description: entry.division
                             });
                         }
+                    }
                         this.expertForm.get('type').setValue(data.type);
                         this.expertForm.get('requestHistories').setValue(data.requestHistories);
                         this.expertForm.get('typeValue').setValue(data.type.code);
@@ -334,7 +337,7 @@ export class ExpertiComponent implements OnInit {
                     };
                 }
 
-                this.subscriptions.push(this.requestService.addMedicamentHistory(modelToSubmit).subscribe(data => {
+                this.subscriptions.push(this.requestService.addMedicamentRegistrationHistoryOnInterruption(modelToSubmit).subscribe(data => {
                         this.loadingService.hide();
                         this.router.navigate(['dashboard/module/medicament-registration/interrupt/' + this.expertForm.get('id').value]);
                     }, error => this.loadingService.hide())

@@ -9,7 +9,7 @@
 					<label for="requestNumber">Request number</label>
 				</div>
 			</div>
-			<div class="col-md-3">
+			<div class="col-4">
 				<div class="md-form-modified">
 					<ng-select id="request" name="request" [items]="requests"
 					           bindLabel="description"
@@ -19,7 +19,7 @@
 					</ng-select>
 				</div>
 			</div>
-			<div class="col-md-3">
+			<div class="col-3">
 				<div class="md-form-modified">
 					<ng-select id="requestType" name="requestType" [items]="requestTypes"
 					           bindLabel="description"
@@ -29,7 +29,7 @@
 					</ng-select>
 				</div>
 			</div>
-			<div class="col-3">
+			<div class="col">
 				<div class="md-form-modified">
 					<ng-select id="step" name="step" [items]="steps"
 					           bindLabel="description"
@@ -38,13 +38,15 @@
 					</ng-select>
 				</div>
 			</div>
+		</div>
+		<div class="row">
 			<div class="col-3">
 				<div class="md-form">
 					<input id="assignedPerson" mdbInputDirective type="text" class="form-control" formControlName="assignedPerson">
 					<label for="assignedPerson">Persoana asignata</label>
 				</div>
 			</div>
-			<div class="col-3">
+			<div class="col-4">
 				<div class="md-form-modified">
 					<mat-form-field class="w-100">
 						<input matInput [matDatepicker]="startDate" placeholder="Start date" formControlName="startDate">
@@ -62,9 +64,9 @@
 					</mat-form-field>
 				</div>
 			</div>
-			<div class="col-3">
+			<div class="col">
 				<div class="md-form-modified text-center">
-					<button type="button" class="btn btn-indigo waves-light btn-large" mdbWavesEffect (click)="findTasks();">Cauta</button>
+					<button type="button" class="btn btn-indigo waves-light btn-md btn-rounded-button z-depth-4" mdbWavesEffect (click)="findTasks();"><i class="fa fa-search fa-lg" aria-hidden="true"></i></button>
 				</div>
 			</div>
 		</div>

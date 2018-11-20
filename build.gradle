@@ -37,7 +37,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-security')
     compile('org.springframework.boot:spring-boot-starter-data-ldap')
-    compile('org.springframework.boot:spring-boot-starter-mail')
+    compileOnly('org.projectlombok:lombok')
 
     compile("org.springframework.ldap:spring-ldap-core")
     compile('org.springframework.security:spring-security-ldap')

@@ -361,3 +361,8 @@ ng-select.ng-valid.ng-touched .ng-select-container:after {
   background-color: #f44336;
   border: 1px solid #f44336;
 }
+
+
+.btn-rounded-button {
+  border-radius: 15px !important;
+}

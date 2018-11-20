@@ -1,6 +1,7 @@
 package com.bass.amed.entity;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -10,7 +11,7 @@ public class ClinicalTrialsEntity {
     private Integer id;
     private ClinicalTrialsTypesEntity treatment;
     private ClinicalTrialsTypesEntity provenance;
-    private String phase;
+    private NmClinicTrailPhasesEntity phase;
     private String eudraCtNr;
     private String code;
     private String title;
@@ -18,11 +19,13 @@ public class ClinicalTrialsEntity {
     private ImportMedNotRegisteredEntity medicament;
     private ImportMedNotRegisteredEntity referenceProduct;
     private ImportMedNotRegisteredEntity placebo;
-    private Integer trialPopulation;
+    private Integer trialPopNat;
+    private Integer trialPopInternat;
     private String pharmacovigilance;
     private String status;
     private Set<NmInvestigatorsEntity> investigators;
     private Set<NmMedicalInstitutionsEntity> medicalInstitutions;
+    private List<ClinicTrialAmendEntity> clinicTrialAmendEntities;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,13 +58,13 @@ public class ClinicalTrialsEntity {
         this.provenance = provenance;
     }
 
-    @Basic
-    @Column(name = "phase")
-    public String getPhase() {
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @JoinColumn(name = "phase_id")
+    public NmClinicTrailPhasesEntity getPhase() {
         return phase;
     }
 
-    public void setPhase(String phase) {
+    public void setPhase(NmClinicTrailPhasesEntity phase) {
         this.phase = phase;
     }
 
@@ -136,13 +139,23 @@ public class ClinicalTrialsEntity {
     }
 
     @Basic
-    @Column(name = "trial_population")
-    public Integer getTrialPopulation() {
-        return trialPopulation;
+    @Column(name = "trial_population_national")
+    public Integer getTrialPopNat() {
+        return trialPopNat;
     }
 
-    public void setTrialPopulation(Integer trialPopulation) {
-        this.trialPopulation = trialPopulation;
+    public void setTrialPopNat(Integer trialPopNat) {
+        this.trialPopNat = trialPopNat;
+    }
+
+    @Basic
+    @Column(name = "trial_population_international")
+    public Integer getTrialPopInternat() {
+        return trialPopInternat;
+    }
+
+    public void setTrialPopInternat(Integer trialPopInternat) {
+        this.trialPopInternat = trialPopInternat;
     }
 
     @Basic
@@ -189,20 +202,20 @@ public class ClinicalTrialsEntity {
         this.medicalInstitutions = medicalInstitutions;
     }
 
-    @Override
-    public int hashCode() {
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "clinical_trails_id")
+    public List<ClinicTrialAmendEntity> getClinicTrialAmendEntities() {
+        return clinicTrialAmendEntities;
+    }
 
-        return Objects.hash(id, treatment, provenance, phase, eudraCtNr, code, title, sponsor, medicament, referenceProduct, trialPopulation, pharmacovigilance, status, investigators, /*receipts, paymentOrders,*/ medicalInstitutions);
+    public void setClinicTrialAmendEntities(List<ClinicTrialAmendEntity> clinicTrialAmendEntities) {
+        this.clinicTrialAmendEntities = clinicTrialAmendEntities;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         ClinicalTrialsEntity that = (ClinicalTrialsEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(treatment, that.treatment) &&
@@ -214,10 +227,19 @@ public class ClinicalTrialsEntity {
                 Objects.equals(sponsor, that.sponsor) &&
                 Objects.equals(medicament, that.medicament) &&
                 Objects.equals(referenceProduct, that.referenceProduct) &&
-                Objects.equals(trialPopulation, that.trialPopulation) &&
+                Objects.equals(placebo, that.placebo) &&
+                Objects.equals(trialPopNat, that.trialPopNat) &&
+                Objects.equals(trialPopInternat, that.trialPopInternat) &&
                 Objects.equals(pharmacovigilance, that.pharmacovigilance) &&
                 Objects.equals(status, that.status) &&
-                Objects.equals(investigators, that.investigators) &&             
-                Objects.equals(medicalInstitutions, that.medicalInstitutions);
+                Objects.equals(investigators, that.investigators) &&
+                Objects.equals(medicalInstitutions, that.medicalInstitutions) &&
+                Objects.equals(clinicTrialAmendEntities, that.clinicTrialAmendEntities);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, treatment, provenance, phase, eudraCtNr, code, title, sponsor, medicament, referenceProduct, placebo, trialPopNat, trialPopInternat, pharmacovigilance, status, investigators, medicalInstitutions, clinicTrialAmendEntities);
     }
 }

@@ -36,6 +36,10 @@ export class AdministrationService {
         return this.http.get('/api/administration/all-pharamceutical-forms', {params: {typeId: typeId}});
     }
 
+    getAllMedicamentGroups(): Observable<any> {
+        return this.http.get('/api/administration/all-medicament-groups', {});
+    }
+
     getAllPharamceuticalFormsByName(partialDescr: string): Observable<any> {
         return this.http.get('/api/administration/search-pharamceutical-forms-by-descr', {params: {partialDescr: partialDescr}});
     }

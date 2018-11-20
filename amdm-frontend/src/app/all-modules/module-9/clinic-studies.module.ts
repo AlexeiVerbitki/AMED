@@ -10,13 +10,14 @@ import {RegCerereComponent} from './reg-cerere/reg-cerere.component';
 import {UploadFileService} from "../../shared/service/upload/upload-file.service";
 import { AEvaluareaPrimaraComponent } from './a-evaluarea-primara/a-evaluarea-primara.component';
 import {RequestService} from "../../shared/service/request.service";
+import {DocumentModule} from "../../document/document.module";
 import {PaymentModule} from "../../payment/payment.module";
 import { AAnalizaComponent } from './a-analiza/a-analiza.component';
 import {AdditionalDataDialogComponent} from "./dialog/additional-data-dialog/additional-data-dialog.component";
 import { AIntrerupereComponent } from './a-intrerupere/a-intrerupere.component';
 import { AAprobareComponent } from './a-aprobare/a-aprobare.component';
 import { MatDialogModule } from '@angular/material';
-import {DocumentModule} from "../../document/document.module";
+import { BEvaluarePrimaraComponent } from './b-evaluare-primara/b-evaluare-primara.component';
 
 @NgModule({
     imports: [
@@ -27,14 +28,14 @@ import {DocumentModule} from "../../document/document.module";
         ReactiveFormsModule,
         MaterialSharedModule.forRoot(),
         MDBBootstrapModule.forRoot(),
-        PaymentModule,
-        DocumentModule
+        DocumentModule,
+        PaymentModule
     ],
     schemas: [],
     entryComponents: [
         AdditionalDataDialogComponent
     ],
-    declarations: [ RegStudCliniceComponent, RegCerereComponent, AEvaluareaPrimaraComponent, AAnalizaComponent, AdditionalDataDialogComponent, AIntrerupereComponent, AAprobareComponent],
+    declarations: [RegStudCliniceComponent, RegCerereComponent, AEvaluareaPrimaraComponent, AAnalizaComponent, AdditionalDataDialogComponent, AIntrerupereComponent, AAprobareComponent, BEvaluarePrimaraComponent],
 
     providers: [UploadFileService,RequestService],
 })

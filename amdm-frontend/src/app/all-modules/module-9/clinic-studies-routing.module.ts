@@ -6,6 +6,7 @@ import {AEvaluareaPrimaraComponent} from "./a-evaluarea-primara/a-evaluarea-prim
 import {AAnalizaComponent} from "./a-analiza/a-analiza.component";
 import {AIntrerupereComponent} from "./a-intrerupere/a-intrerupere.component";
 import {AAprobareComponent} from "./a-aprobare/a-aprobare.component";
+import {BEvaluarePrimaraComponent} from "./b-evaluare-primara/b-evaluare-primara.component";
 
 const routes: Routes = [
     { path: 'register', component: RegCerereComponent},
@@ -13,6 +14,7 @@ const routes: Routes = [
     { path: 'analize/:id', component: AAnalizaComponent},
     { path: 'interrupt/:id', component: AIntrerupereComponent},
     { path: 'approval/:id', component: AAprobareComponent},
+    { path: 'evaluate-amendment/:id', component: BEvaluarePrimaraComponent},
     { path: 'register1', component: RegStudCliniceComponent},
 ];
 

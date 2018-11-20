@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
+//import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -210,10 +210,10 @@ public class AdministrationController {
     public ResponseEntity<Void> sendEmail(@RequestParam(value = "title") String title, @RequestParam(value = "content") String content,
                                           @RequestParam(value = "mailAddress") String mailAddress) throws CustomException {
         LOGGER.debug("send email");
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setSubject(title);
-        message.setText(content);
-        message.setTo(mailAddress);
+//        SimpleMailMessage message = new SimpleMailMessage();
+//        message.setSubject(title);
+//        message.setText(content);
+//        message.setTo(mailAddress);
 
         try {
         } catch (Exception e) {

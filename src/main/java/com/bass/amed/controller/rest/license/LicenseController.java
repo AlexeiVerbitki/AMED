@@ -170,7 +170,7 @@ public class LicenseController
     }
 
     @RequestMapping(value = "/retrieve-license-by-economic-agent-id", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LicensesEntity> loadLicenseByCompany(@RequestParam("id") String economicAgentId) throws  CustomException
+    public ResponseEntity<LicensesEntity> loadLicenseByCompany(@RequestParam("id") String economicAgentId) throws CustomException
     {
         logger.debug("Retrieve license by company id id", economicAgentId);
         Optional<LicensesEntity> r = licensesRepository.getActiveLicenseByCompanyId(Integer.valueOf(economicAgentId), new Date());

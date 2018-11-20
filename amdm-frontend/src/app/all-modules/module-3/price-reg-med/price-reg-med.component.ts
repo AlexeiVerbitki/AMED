@@ -4,7 +4,7 @@ import {
     OnDestroy,
     OnInit, ViewChild,
 } from '@angular/core';
-import {FormBuilder, FormControl, Validators} from '@angular/forms';
+import {FormBuilder, FormControl} from '@angular/forms';
 import { Subscription} from 'rxjs';
 import {Document} from '../../../models/document';
 import {MatDialog, MatTabGroup} from '@angular/material';
@@ -13,14 +13,6 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {LoaderService} from "../../../shared/service/loader.service";
 import {PriceService} from "../../../shared/service/prices.service";
 import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-
-
-enum MedicamentType {
-    Drug = 1,
-    Original = 2 ,
-    Generic = 3
-}
-
 
 @Component({
   selector: 'app-price-reg-med',
@@ -250,7 +242,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
             })
         });
 
-        this.subscriptions.push(this.priceService.savePrice(priceModels).subscribe(data => {
+        this.subscriptions.push(this.priceService.savePrices(priceModels).subscribe(data => {
                 if (!data.body) {
                     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
                         data: {

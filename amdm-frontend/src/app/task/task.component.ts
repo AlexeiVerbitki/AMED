@@ -4,7 +4,6 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from "rxjs";
 import {TaskService} from "../shared/service/task.service";
 import {Router} from "@angular/router";
-import {LoaderService} from "../shared/service/loader.service";
 
 @Component({
     selector: 'app-task',

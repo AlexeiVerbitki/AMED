@@ -114,7 +114,8 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                 'investigators': [],
                 'status': ['P'],
                 'pharmacovigilance': [],
-                'placebo': []
+                'placebo': [],
+                'clinicTrialAmendEntities':[]
             })
         });
 

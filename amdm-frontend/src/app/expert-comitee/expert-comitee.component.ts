@@ -47,11 +47,11 @@ export class ExpertComiteeComponent implements OnInit {
                     this.chairmans = data;
                     this.chairmans = this.chairmans.filter(r => r.chairmanOfExperts == 1);
                     this.farmacologs = data;
-                    this.farmacologs = this.farmacologs.filter(r => r.profession.category == 'FG');
+                    this.farmacologs = this.farmacologs.filter(r => r.profession && r.profession.category == 'FG');
                     this.farmacists = data;
-                    this.farmacists = this.farmacists.filter(r => r.profession.category == 'FT');
+                    this.farmacists = this.farmacists.filter(r => r.profession && r.profession.category == 'FT');
                     this.medics = data;
-                    this.medics = this.medics.filter(r => r.profession.category == 'MD');
+                    this.medics = this.medics.filter(r => r.profession && r.profession.category == 'CL');
                 },
                 error => console.log(error)
             )

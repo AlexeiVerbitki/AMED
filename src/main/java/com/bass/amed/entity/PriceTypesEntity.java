@@ -3,11 +3,22 @@ package com.bass.amed.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "price_types", schema = "amed", catalog = "")
+@Table(name = "nm_price_types", schema = "amed", catalog = "")
 public class PriceTypesEntity
 {
     private Integer id;
     private String description;
+    private Integer price;
+
+    @Basic
+    @Column(name = "price")
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
 
     @Id
     @Column(name = "id")

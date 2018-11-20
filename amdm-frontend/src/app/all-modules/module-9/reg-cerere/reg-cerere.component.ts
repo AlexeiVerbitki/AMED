@@ -42,6 +42,8 @@ export class RegCerereComponent implements OnInit, OnDestroy {
     loadingClinicalTrail: boolean = false;
     protected clinicalTrailInputs = new Subject<string>();
 
+    clinicalTrailForm: FormGroup;
+
     constructor(private fb: FormBuilder,
                 private dialog: MatDialog,
                 private requestService: RequestService,
@@ -62,7 +64,8 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             'assignedUser': [null],
             'flowControl': [null, Validators.required],
             'clinicalTrails': this.fb.group({
-                'status': ['P']
+                'status': ['P'],
+                'clinicTrialAmendEntities':[]
             }),
             'type':
                 this.fb.group({
@@ -70,12 +73,40 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                 })
         });
 
+        this.clinicalTrailForm = this.fb.group({
+            'title':{value: '', disabled: true},
+            'clinicalTrail':[null, Validators.required],
+            'sponsor':{value: '', disabled: true},
+            'phase':{value: '', disabled: true},
+            'treatment':{value: '', disabled: true},
+        });
+
         this.generateDocNr();
         this.loadEconomicAgents();
         this.catchFlowControl();
         this.loadClinicalTrails();
+        this.autocompleteClinicalTrailSearch();
+    }
 
-        console.log('this.registerClinicalTrailForm.get(\'flowControl\')', this.registerClinicalTrailForm.get('flowControl'));
+    autocompleteClinicalTrailSearch() {
+        this.subscriptions.push(
+            this.clinicalTrailForm.get('clinicalTrail').valueChanges.subscribe(changedValue =>{
+                if(changedValue === null){
+                    this.clinicalTrailForm.get('title').reset();
+                    this.clinicalTrailForm.get('sponsor').reset();
+                    this.clinicalTrailForm.get('phase').reset();
+                    this.clinicalTrailForm.get('treatment').reset();
+                }
+                else{
+                    console.log('Changed value', changedValue);
+                    this.clinicalTrailForm.get('title').setValue(changedValue.title);
+                    this.clinicalTrailForm.get('sponsor').setValue(changedValue.sponsor);
+                    this.clinicalTrailForm.get('phase').setValue(changedValue.phase);
+                    this.clinicalTrailForm.get('treatment').setValue(changedValue.treatment.description);
+                }
+
+            })
+        )
     }
 
     loadClinicalTrails() {
@@ -172,9 +203,9 @@ export class RegCerereComponent implements OnInit, OnDestroy {
         }
         let formModel = this.registerClinicalTrailForm.value;
 
-        this.loadingService.show();
 
         if (formModel.flowControl === 'CLAP') {
+            this.loadingService.show();
             formModel.type.id = '3';
             formModel.requestHistories = [{
                 startDate: formModel.startDate,
@@ -201,10 +232,38 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             );
         }
         else if (formModel.flowControl === 'CLPSC') {
-            this.registerClinicalTrailForm.get('type.id').setValue('4')
-            console.log('Going to -> Aprobarea amendamentelor la Protocoalele Studiilor Clinice la medicamente')
+            if (this.registerClinicalTrailForm.invalid || this.clinicalTrailForm.invalid) {
+                alert('Invalid Form!!')
+                this.loadingService.hide();
+                return;
+            }
+            let formModel = this.registerClinicalTrailForm.value;
+            formModel.type.id = '4';
+            formModel.requestHistories = [{
+                startDate: formModel.startDate,
+                endDate: new Date(),
+                username: this.authService.getUserName(),
+                step: formModel.currentStep
+            }];
+            formModel.documents = this.docs;
+            formModel.currentStep = 'E';
+            formModel.initiator = this.authService.getUserName();
+            formModel.assignedUser = this.authService.getUserName();
+            formModel.clinicalTrails = this.clinicalTrailForm.get('clinicalTrail').value;
 
-            console.log(Pages.CLAP);
+            formModel.clinicalTrails.clinicTrialAmendEntities=this.clinicalTrailForm.get('clinicalTrail').value.clinicTrialAmendEntities;
+
+            this.subscriptions.push(this.requestService.addClinicalTrailAmendmentRequest(formModel).subscribe(data => {
+                    this.router.navigate(['/dashboard/module/clinic-studies/evaluate-amendment/' + data.body]);
+                    this.loadingService.hide();
+                }, error => {
+                    this.loadingService.hide();
+                    console.log(error)
+                })
+            );
+            console.log('formModel', formModel);
+            console.log('this.clinicalTrailForm', this.clinicalTrailForm.get('clinicalTrail').value);
+            console.log('Going to -> Aprobarea amendamentelor la Protocoalele Studiilor Clinice la medicamente')
 
             this.loadingService.hide();
         }

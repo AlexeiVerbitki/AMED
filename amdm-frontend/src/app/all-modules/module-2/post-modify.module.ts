@@ -15,6 +15,7 @@ import {CanDeactivateGuard} from "../../shared/auth-guard/can-deactivate-guard.s
 import {PriceService} from "../../shared/service/prices.service";
 import {EvaluarePrimaraModifyComponent} from "./evaluare-primara-modify/evaluare-primara-modify.component";
 import {ExpertiModifyComponent} from "./experti-modify/experti-modify.component";
+import {ProcessInterruptionModifyComponent} from "./process-interruption-modify/process-interruption-modify.component";
 
 @NgModule({
     imports: [
@@ -29,7 +30,7 @@ import {ExpertiModifyComponent} from "./experti-modify/experti-modify.component"
         ExpertComiteeModule,
     ],
     schemas: [],
-    declarations: [RegModifyCerereComponent,EvaluarePrimaraModifyComponent,ExpertiModifyComponent],
+    declarations: [RegModifyCerereComponent,EvaluarePrimaraModifyComponent,ExpertiModifyComponent,ProcessInterruptionModifyComponent],
     providers: [UploadFileService,RequestService, CanDeactivateGuard,PriceService]
 })
 export class PostModifyModule {

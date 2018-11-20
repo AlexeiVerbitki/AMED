@@ -136,7 +136,8 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
                 'referenceProduct': [],
                 'status': ['P'],
                 'pharmacovigilance': [],
-                'placebo':[]
+                'placebo':[],
+                'clinicTrialAmendEntities':[]
             }),
 
             'requestHistories': []
@@ -203,10 +204,6 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         this.loadManufacturersRfPr();
         this.loadFarmFormsRfPr();
         this.loadATCCodesRfPr();
-
-        // this.administrationService.getManufacturersByName('Weimer').subscribe(data =>
-        //     console.log(data)
-        // );
     }
 
     loadATCCodesRfPr(){

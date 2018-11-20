@@ -50,6 +50,10 @@ export class PriceService {
         return this.administrationService.generateDocNr();
     }
 
+    getAllMedicamentTypes(): Observable<any> {
+        return this.administrationService.getAllMedicamentTypes();
+    }
+
     getCountries(): Observable<Country[]> {
         return this.administrationService.getCountries();
     }
@@ -62,8 +66,12 @@ export class PriceService {
         return this.administrationService.getCurrencyHistory(new Date());
     }
 
-    savePrice(priceModel: any): Observable<any> {
+    savePrices(priceModel: any): Observable<any> {
         return this.requestService.addPriceRequests(priceModel);
+    }
+
+    savePrice(priceModel: any): Observable<any> {
+        return this.requestService.addPriceRequest(priceModel);
     }
 
     getUsername(): string {
@@ -74,8 +82,8 @@ export class PriceService {
         return this.http.get('/api/price/all-price-expiration-reasons');
     }
 
-    getAllPriceTypes(): Observable<any> {
-        return this.http.get('/api/price/all-price-types');
+    getPriceTypes(price: string): Observable<any> {
+        return this.http.get('/api/price/price-types', {params: {price: price}});
     }
 
     getMedPrevPrices(medicamentId: string): Observable<any> {
@@ -106,13 +114,17 @@ export class PriceService {
         return this.http.get('/api/load-prices-request', {params: {id: id}});
     }
 
+    getMedPrice(medId: string): Observable<Price> {
+        return this.http.get<Price>('/api/price/med-price', {params: {id: medId}});
+    }
+
     getPricesByFilter(filter: any): Observable<any> {
-        const httpOptions = {
-          //  observe: 'response',
-            headers: new HttpHeaders({
-                'Access-Control-Allow-Origin':'*',
-            })
-        };
+        // const httpOptions = {
+        //     observe: 'response',
+        //     headers: new HttpHeaders({
+        //         'Access-Control-Allow-Origin':'*',
+        //     })
+        // };
         return this.http.post<any>('/api/price/by-filter', filter, {observe: 'response'});
     }
 }

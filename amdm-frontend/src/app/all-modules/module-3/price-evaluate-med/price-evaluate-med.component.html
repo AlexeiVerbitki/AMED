@@ -1,24 +1,30 @@
 <div class="container-fluid sky z-depth-2">
     <h3 class="text-center my-3 font-weight-bold">Evaluarea cererii de inregistrare a pretului la medicamente</h3>
-    <hr>
 
     <form [formGroup]='PriceRegForm'>
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="md-form">
                     <input id="nrCererii" mdbInputDirective type="text" class="form-control"
                            formControlName="requestNumber" [attr.disabled]="true">
                     <label for="nrCererii">Numarul cererii</label>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-3">
+                <div class="md-form">
+                    <input id="reqStatus" mdbInputDirective type="text" class="form-control"
+                           formControlName="requestStatus" [attr.disabled]="true">
+                    <label for="reqStatus">Statutul cererii</label>
+                </div>
+            </div>
+            <div class="col-lg-3">
                 <div class="md-form" formGroupName="price">
                     <input id="nrFolder" mdbInputDirective type="text" class="form-control"
                            formControlName="folderNr" [attr.disabled]="true">
                     <label for="nrFolder">Numarul dosarului</label>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="picker" placeholder="din data" formControlName="startDate">
@@ -29,8 +35,10 @@
             </div>
         </div>
 
+
+
         <div class="row">
-            <div class="col-md-4" formGroupName="company">
+            <div class="col" formGroupName="company">
                 <div class="md-form">
                     <input id="compName" mdbInputDirective type="text" class="form-control"
                            formControlName="name" [attr.disabled]="true">
@@ -38,86 +46,31 @@
                 </div>
             </div>
 
-            <div class="col-md-4" formGroupName="medicament">
-                <div class="md-form">
-                    <input id="medName" mdbInputDirective type="text" class="form-control" formControlName="name"
-                           [attr.disabled]="true">
-                    <label for="medName">Medicamentul</label>
-                </div>
-            </div>
-
-            <div class="col-md-4" formGroupName="medicament">
+            <div class="col" formGroupName="medicament">
                 <div class="md-form">
                     <input id="prod" mdbInputDirective type="text" class="form-control" [attr.disabled]="true"
                            formControlName="manufactureName">
-                    <label for="prod">Producator </label>
+                    <label for="prod">Producatorul medicamentului </label>
                 </div>
             </div>
-        </div>
 
-        <div class="row" formGroupName="medicament">
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input id="intName" mdbInputDirective type="text" class="form-control" [attr.disabled]="true"
-                           formControlName="internationalMedicamentName">
-                    <label for="intName">Denumirea Internațională</label>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input id="codMed" mdbInputDirective type="text" class="form-control" formControlName="code"
-                           [attr.disabled]="true">
-                    <label for="codMed">Codul medicamentului</label>
-                </div>
-            </div>
-            <div class="col-md-4">
+            <div class="col" formGroupName="medicament">
                 <div class="md-form">
                     <input id="valab" mdbInputDirective type="number" class="form-control"
                            formControlName="termsOfValidity"  [attr.disabled]="true">
                     <label for="valab">Termen de valabilitate (luni)</label>
                 </div>
             </div>
-        </div>
 
-        <div class="row" formGroupName="medicament">
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input id="dose" mdbInputDirective type="text" class="form-control" formControlName="dose"
-                           [attr.disabled]="true">
-                    <label for="dose">Doza</label>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input id="medd" mdbInputDirective type="text" class="form-control"
-                           formControlName="division"  [attr.disabled]="true">
-                    <label for="medd">Divizarea</label>
-                </div>
-            </div>
-            <div class="col-md-4">
+            <div class="col" formGroupName="medicament">
                 <div class="md-form">
                     <input id="expiration" mdbInputDirective type="text" class="form-control"
                            formControlName="expirationDate"  [attr.disabled]="true">
                     <label for="expiration">Data expirării licenței</label>
                 </div>
             </div>
-        </div>
-        <div class="row" formGroupName="medicament">
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input id="volum" mdbInputDirective type="number" class="form-control" formControlName="volume"
-                           [attr.disabled]="true">
-                    <label for="volum">Volumul</label>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input id="volMes" mdbInputDirective type="text" class="form-control"
-                           formControlName="volumeQuantityMeasurementName"  [attr.disabled]="true">
-                    <label for="volMes">Unitate de măsură (volum)</label>
-                </div>
-            </div>
-            <div class="col-md-4">
+
+            <div class="col">
                 <div class="md-form">
                     <input id="typeMed" mdbInputDirective type="text" class="form-control" [value]="medicamentType.description" [attr.disabled]="true">
                     <label for="typeMed">Tipul medicamentului</label>
@@ -125,31 +78,36 @@
             </div>
         </div>
 
-        <div class="row" formGroupName="price">
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input id="price" mdbInputDirective type="number" class="form-control"
-                           formControlName="value" [attr.disabled]="true">
-                    <label for="price">Prețul propus</label>
-                </div>
-            </div>
 
-            <div class="col-md-4" >
-                <div class="md-form">
-                    <input id="curr" mdbInputDirective type="text" class="form-control"
-                           formControlName="currency" [attr.disabled]="true">
-                    <label for="curr">Valuta propusă</label>
-                </div>
-            </div>
+        <table mdbTable class="my-5">
+            <thead class="black white-text">
+            <tr>
+                <th mdbTooltip="Tipul Medicamenului">Tipul Medicamenului</th>
+                <th mdbTooltip="Codul">Codul</th>
+                <th mdbTooltip="Denumirea">Denumirea</th>
+                <th mdbTooltip="Forma farmaceutică">Forma farmaceutică</th>
+                <th mdbTooltip="Doza">Doza</th>
+                <th mdbTooltip="Divizarea">Divizarea</th>
+                <th mdbTooltip="Denumirea internaţională">Denumirea internaţională</th>
+                <th mdbTooltip="Preţul MDL">Preţul MDL</th>
+                <th mdbTooltip="Preţul Valuta">Preţul Valuta</th>
+            </tr>
+            </thead>
+            <tbody>
 
-            <div class="col-md-4" [hidden]="PriceRegForm.get('price.nationalPrice').value == undefined">
-                <div class="md-form">
-                    <input id="pmdl" mdbInputDirective type="text" class="form-control"
-                           formControlName="nationalPrice" [attr.disabled]="true">
-                    <label for="pmdl">Prețul în valută naționala (MDL)</label>
-                </div>
-            </div>
-        </div>
+            <tr mdbTableCol *ngFor="let el of medicaments">
+                <td mdbTooltip="{{el.target}}" placement="top">{{el.target}}</td>
+                <td mdbTooltip="{{el.code}}" placement="top">{{el.code}}</td>
+                <td mdbTooltip="{{el.name}}" placement="top">{{el.name}}</td>
+                <td mdbTooltip="{{el.pharmaceuticalForm.description}}" placement="top">{{el.pharmaceuticalForm.description}}</td>
+                <td mdbTooltip="{{el.dose}}" placement="top">{{el.dose}}</td>
+                <td mdbTooltip="{{el.division}}" placement="top">{{el.division}}</td>
+                <td mdbTooltip="{{el.internationalMedicamentName.description}}" placement="top">{{el.internationalMedicamentName.description}}</td>
+                <td mdbTooltip="{{el.price.mdlValue | number:'1.4'}}" placement="top">{{el.price.mdlValue | number:'1.4'}}</td>
+                <td mdbTooltip="{{el.price.value | number:'1.4'}} {{el.price.currency.shortDescription}}" placement="top">{{el.price.value | number:'1.4'}} {{el.price.currency.shortDescription}}</td>
+            </tr>
+            </tbody>
+        </table>
 
         <hr>
         <h5 class="text-center font-weight-bold mt-4 mb-4">Rata medie a BNM pentru luna precedentă evaluării
@@ -176,32 +134,42 @@
                     <thead class="black white-text">
                     <tr>
                         <th scope="col">Țara de referință</th>
-                        <th>Valuta ţării de referinţă</th>
+                        <th mdbTooltip="Valuta ţării de referinţă">Valuta ţării de referinţă</th>
                         <th>Preţ</th>
-                        <th>Rata de schimb (valuta ţării de referinta/MDL)</th>
+                        <th mdbTooltip="Rata de schimb (valuta ţării de referinta/MDL)">Rata de schimb (valuta ţării de referinta/MDL)</th>
                         <th>MDL</th>
-                        <th>Rata de schimb (EUR/lei)</th>
+                        <th mdbTooltip="Rata de schimb (EUR/lei)">Rata de schimb (EUR/lei)</th>
                         <th>EUR</th>
-                        <th>Rata de schimb (USD/lei)</th>
+                        <th mdbTooltip="Rata de schimb (USD/lei)">Rata de schimb (USD/lei)</th>
                         <th>USD</th>
+                        <th>Actiuni</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr mdbTableCol *ngFor="let el of refPrices">
+                    <tr mdbTableCol *ngFor="let el of refPrices; let i = index">
                         <ng-container *ngIf="el.type.id == PriceRefType.ReferenceCountry">
-                            <td scope="row">{{el.country?.description}}</td>
-                            <td>{{el.currency?.shortDescription}}</td>
-                            <td>{{el.value | number:'1.4'}}</td>
-                            <td>{{el?.xchRateRef | number:'1.4'}}</td>
-                            <td>{{el?.xchRateRefVal | number:'1.4'}}</td>
-                            <td>{{el?.xchRateEur | number:'1.4'}}</td>
-                            <td>{{el?.xchRateEurVal | number:'1.4'}}</td>
-                            <td>{{el?.xchRateUsd | number:'1.4'}}</td>
-                            <td>{{el?.xchRateUsdVal | number:'1.4'}}</td>
+                            <td class="align-middle" scope="row">{{el.country?.description}}</td>
+                            <td class="align-middle">{{el.currency?.shortDescription}}</td>
+                            <td class="align-middle">{{el.value | number:'1.4'}}</td>
+                            <td class="align-middle">{{el?.xchRateRef | number:'1.4'}}</td>
+                            <td class="align-middle">{{el?.xchRateRefVal | number:'1.4'}}</td>
+                            <td class="align-middle">{{el?.xchRateEur | number:'1.4'}}</td>
+                            <td class="align-middle">{{el?.xchRateEurVal | number:'1.4'}}</td>
+                            <td class="align-middle">{{el?.xchRateUsd | number:'1.4'}}</td>
+                            <td class="align-middle">{{el?.xchRateUsdVal | number:'1.4'}}</td>
+                            <td class="align-middle"><button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
+                                        (click)="priceEditModalOpen(el, i)">
+                                Editare
+                            </button></td>
                         </ng-container>
                     </tr>
                     </tbody>
                 </table>
+                <div class="position-button">
+                    <button class="btn btn-dark-green-color waves-light btn-md" mdbWavesEffect (click)="addNewReferencePrice(PriceRefType.ReferenceCountry)">
+                        Adaugă
+                    </button>
+                </div>
 
                 <h5 class="text-center font-weight-bold mt-4 mb-4">Media celor mai mici prețuri în țările de
                     referință</h5>
@@ -304,24 +272,33 @@
                             <th>EUR</th>
                             <th>Rata de schimb (USD/lei)</th>
                             <th>USD</th>
+                            <th>Actiuni</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr mdbTableCol *ngFor="let el of refPrices">
+                        <tr mdbTableCol *ngFor="let el of refPrices; let i = index">
                             <ng-container *ngIf="el.type.id == PriceRefType.OtherCountriesCatalog">
-                                <td scope="row">{{el.country?.description}}</td>
-                                <td>{{el.currency?.shortDescription}}</td>
-                                <td>{{el.value | number:'1.4'}}</td>
-                                <td>{{el?.xchRateRef | number:'1.4'}}</td>
-                                <td>{{el?.xchRateRefVal | number:'1.4'}}</td>
-                                <td>{{el?.xchRateEur | number:'1.4'}}</td>
-                                <td>{{el?.xchRateEurVal | number:'1.4'}}</td>
-                                <td>{{el?.xchRateUsd | number:'1.4'}}</td>
-                                <td>{{el?.xchRateUsdVal | number:'1.4'}}</td>
+                                <td class="align-middle" scope="row">{{el.country?.description}}</td>
+                                <td class="align-middle">{{el.currency?.shortDescription}}</td>
+                                <td class="align-middle">{{el.value | number:'1.4'}}</td>
+                                <td class="align-middle">{{el?.xchRateRef | number:'1.4'}}</td>
+                                <td class="align-middle">{{el?.xchRateRefVal | number:'1.4'}}</td>
+                                <td class="align-middle">{{el?.xchRateEur | number:'1.4'}}</td>
+                                <td class="align-middle">{{el?.xchRateEurVal | number:'1.4'}}</td>
+                                <td class="align-middle">{{el?.xchRateUsd | number:'1.4'}}</td>
+                                <td class="align-middle">{{el?.xchRateUsdVal | number:'1.4'}}</td>
+                                <td class="align-middle"><button class="btn btn-mdb-color waves-light btn-sm" mdbWavesEffect (click)="priceEditModalOpen(el, i)">
+                                    Editare
+                                </button></td>
                             </ng-container>
                         </tr>
                         </tbody>
                     </table>
+                    <div class="position-button">
+                        <button class="btn btn-dark-green-color waves-light btn-md" mdbWavesEffect (click)="addNewReferencePrice(PriceRefType.OtherCountriesCatalog)">
+                            Adaugă
+                        </button>
+                    </div>
                 </div>
 
                 <h5 class="text-center font-weight-bold mt-4 mb-4">Media celor mai mici preţuri de pe cataloagele în
@@ -366,16 +343,16 @@
                 </thead>
                 <tbody>
                 <tr mdbTableCol *ngFor="let m of relatedMeds">
-                    <td scope="row">{{m.code}}</td>
-                    <td>{{m.name}}</td>
-                    <td>{{m.pharmaceuticalForm}}</td>
-                    <td>{{m.dose}}</td>
-                    <td>{{m.division}}</td>
-                    <td>{{m.country}}</td>
-                    <td>{{m.manufacture}}</td>
-                    <td>{{m.internationalName}}</td>
-                    <td>{{m.mdlValue | number:'1.4'}}</td>
-                    <td>{{m.price | number:'1.4'}} {{m.currency}}</td>
+                    <td class="align-middle" scope="row">{{m.code}}</td>
+                    <td class="align-middle" mdbTooltip="{{m.name}}">{{m.name}}</td>
+                    <td class="align-middle" mdbTooltip="{{m.pharmaceuticalForm}}">{{m.pharmaceuticalForm}}</td>
+                    <td class="align-middle">{{m.dose}}</td>
+                    <td class="align-middle">{{m.division}}</td>
+                    <td class="align-middle" mdbTooltip="{{m.country}}">{{m.country}}</td>
+                    <td class="align-middle" mdbTooltip="{{m.manufacture}}">{{m.manufacture}}</td>
+                    <td class="align-middle" mdbTooltip="{{m.internationalName}}">{{m.internationalName}}</td>
+                    <td class="align-middle">{{m.mdlValue | number:'1.4'}}</td>
+                    <td class="align-middle">{{m.price | number:'1.4'}} {{m.currency}}</td>
                 </tr>
                 <tr mdbTableCol>
                     <td scope="row" colspan="8">Media</td>
@@ -448,11 +425,11 @@
                                (change)="onDecisionChange($event)"
                                placeholder="Decizia luată în urma evaluării">
                     </ng-select>
-                    <div *ngIf="formSubmitted && PriceRegForm.get('evaluation.decision').invalid">
-                        <small class="text-muted"><strong class="text-danger">Selectați decizia privind
-                            prețurile</strong>
-                        </small>
-                    </div>
+                    <!--<div *ngIf="formSubmitted && PriceRegForm.get('evaluation.decision').invalid">-->
+                        <!--<small class="text-muted"><strong class="text-danger">Selectați decizia privind-->
+                            <!--prețurile</strong>-->
+                        <!--</small>-->
+                    <!--</div>-->
                 </div>
             </div>
 

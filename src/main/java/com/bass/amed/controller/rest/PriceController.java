@@ -48,6 +48,7 @@ public class PriceController {
     @Autowired
     private PriceRepository priceRepository;
 
+
     @RequestMapping("/all-currencies-short")
     public ResponseEntity<List<GetMinimalCurrencyProjection>> getCurrencyShort() throws CustomException {
         logger.debug("Retrieve all currencies with minimal info");
@@ -91,47 +92,48 @@ public class PriceController {
         return new ResponseEntity<>(prevMonthAVGCurrenciesList, HttpStatus.OK);
     }
 
-    @RequestMapping("/all-price-types")
-    public ResponseEntity<List<PriceTypesEntity>> getPriceTypes() throws CustomException {
+    @RequestMapping("/price-types")
+    public ResponseEntity<List<PriceTypesEntity>> getPriceTypes(@RequestParam(value = "price", required = true) Integer price) throws CustomException {
         logger.debug("Retrieve all price types");
-        Optional<List<PriceTypesEntity>> nonNullPriceTypesList = Optional.of(priceTypesRepository.findAll());
+        Optional<List<PriceTypesEntity>> nonNullPriceTypesList;
+        if(price == 3) {
+            nonNullPriceTypesList = Optional.of(priceTypesRepository.findAll());
+        } else {
+            nonNullPriceTypesList = Optional.of(priceTypesRepository.findAllByPrice(price));
+        }
         return new ResponseEntity<>(nonNullPriceTypesList.orElseThrow(() -> new CustomException("There isn't price types")), HttpStatus.OK);
     }
 
     @RequestMapping("/med-prev-prices")
     public ResponseEntity<List<PricesEntity>> getMedPrevPrices(@RequestParam(value = "id", required = true) Integer id) {
         logger.debug("getMedPrevPrices");
-        List<PricesEntity> prices = priceRepository.findAllByMedicamentIdAndTypeId(id, 2); //2 = propus
+        List<PricesEntity> prices = priceRepository.findAllByMedicamentIdAndTypeId(id, 2); //2 = acceptat
         return new ResponseEntity<>(prices, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/by-filter")
-    public ResponseEntity<List<PricesDTO>> getPricesByFilter(@RequestBody PricesDTO filter) throws CustomException {
-        logger.debug("Retrieve all price types");
+    @RequestMapping("/med-price")
+    public ResponseEntity<PricesEntity> getMedPrice(@RequestParam(value = "id", required = true) Integer id) {
+        logger.debug("getMedPrevPrices");
+        PriceTypesEntity type = priceTypesRepository.findOneByDescription("Acceptat");
+        PricesEntity price = priceRepository.findLast(id, type.getId());
+        return new ResponseEntity<>(price, HttpStatus.OK);
+    }
 
-          List<PricesDTO> nonNullPricesRequestList = pricesManagementRepository.getPricesByFilter(filter.getRequestNumber(),
+    @PostMapping(value = "/by-filter")
+    public ResponseEntity<List<PricesDTO>> getPricesByFilter(@RequestBody PricesDTO filter) {
+        logger.debug("getPricesByFilter");
+
+          List<PricesDTO> dtos = pricesManagementRepository.getPricesByFilter(filter.getRequestNumber(),
                 filter.getMedicamentCode(),
                 filter.getMedicamentType(),
                 filter.getCurrentStep(),
                 filter.getPriceType(),
                 filter.getAssignedPerson(),
                 filter.getStartDate(),
-                filter.getEndDate());/*.unwrap( org.hibernate.query.NativeQuery.class )
-            .setResultTransformer( Transformers.aliasToBean( PricesDTO.class ) )
-            .getResultList();*/
+                filter.getEndDate(),
+                filter.getFolderNr()  );
 
-        List<PricesDTO> dtos = nonNullPricesRequestList;
-
-//        nonNullPricesRequestList.forEach(priceRequestProjection -> {
-//            dtos.add(priceRequestProjection);
-//        });
-//
-//        PricesDTO t =  nonNullPricesRequestList.get(0);
-
-
-
-        return new ResponseEntity<>(nonNullPricesRequestList, HttpStatus.OK);
-//                nonNullPricesRequestList.orElseThrow(() -> new CustomException("There isn't prices")), HttpStatus.OK);
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
 }

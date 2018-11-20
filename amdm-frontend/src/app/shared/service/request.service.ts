@@ -20,13 +20,25 @@ export class RequestService {
         return this.http.get('/api/load-medicament-request', {params: {id: id}});
     }
 
+    getMedicamentHistory(id: string): Observable<any> {
+        return this.http.get('/api/load-medicament-history', {params: {id: id}});
+    }
+
     saveClinicalTrailRequest(requestDetails: any): Observable<HttpResponse<any>> {
-        return this.http.post<any>('/api/save-clinical-trail-request', requestDetails, {observe: 'response'});
+        return this.http.post<any>('/api/clinical-trails/save-request', requestDetails, {observe: 'response'});
     }
 
 
     addClinicalTrailRequest(requestDetails: any): Observable<HttpResponse<any>> {
-        return this.http.post<any>('/api/add-clinical-trail-request', requestDetails, {observe: 'response'});
+        return this.http.post<any>('/api/clinical-trails/add-request', requestDetails, {observe: 'response'});
+    }
+
+    addClinicalTrailAmendmentRequest(requestDetails: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/clinical-trails/add-amendment-request', requestDetails, {observe: 'response'});
+    }
+
+    savePostauthorizationMedicament(requestDetails: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/save-postauthorization-medicament', requestDetails, {observe: 'response'});
     }
 
     addOutputDocumentRequest(requestDetails: any): Observable<HttpResponse<any>> {
@@ -34,18 +46,33 @@ export class RequestService {
     }
 
     getClinicalTrailRequest(id: string): Observable<any> {
-        return this.http.get('/api/load-clinical-trail-request', {params: {id: id}});
+        return this.http.get('/api/clinical-trails/load-request', {params: {id: id}});
+    }
+
+    getClinicalTrailAmendmentRequest(id: string): Observable<any> {
+        return this.http.get('/api/clinical-trails/load-amendment-request', {params: {id: id}});
     }
 
     addPriceRequests(requests: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/add-prices-request', requests, {observe: 'response'});
     }
 
-    //used for interrupt proces s
+    addPriceRequest(request: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/add-price-request', request, {observe: 'response'});
+    }
+
     addMedicamentHistory(requestDetails: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/add-medicament-history', requestDetails, {observe: 'response'});
     }
 
+
+    addMedicamentRegistrationHistoryOnInterruption(requestDetails: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/add-medicament-registration-history', requestDetails, {observe: 'response'});
+    }
+
+    addMediacmentPostauthorizationHistoryOnInterruption(requestDetails: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/add-medicament-postauthorization-history', requestDetails, {observe: 'response'});
+    }
     addImportRequest(requestDetails: any): Observable<HttpResponse<any>> {
         // console.log("requestDetails before sending ",requestDetails);
         return this.http.post<any>('/api/add-import-request', requestDetails, {observe: 'response'});
