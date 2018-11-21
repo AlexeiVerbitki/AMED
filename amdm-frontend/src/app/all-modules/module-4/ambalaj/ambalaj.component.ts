@@ -65,6 +65,10 @@ export class AmbalajComponent implements OnInit {
 
     importData : any;
 
+    protected atcCodes: Observable<any[]>;
+    protected loadingAtcCodes: boolean = false;
+    protected atcCodesInputs = new Subject<string>();
+
     constructor(private fb: FormBuilder,
                 private requestService: RequestService,
                 public dialog: MatDialog,
@@ -93,7 +97,7 @@ export class AmbalajComponent implements OnInit {
                 // 'startDate': {value: '', disabled: true},
                 // 'importer': {value: '', disabled: true},
                 'id;': [''],
-                'importType': [null, Validators.required],
+                // 'importType': [null, Validators.required],
                 'applicationRegistrationNumber': [''],
                 'applicationDate': [new Date()],
                 'applicant': ['', Validators.required],
@@ -102,6 +106,7 @@ export class AmbalajComponent implements OnInit {
                 'importer': [null, Validators.required], // Tara si adresa lui e deja in baza
                 'conditionsAndSpecification': [''],
                 'medType': [''],
+                'atcCode': [''],
                 'importAuthorizationDetailsEntityList': this.fb.group({
 
                     customsCode: [],
@@ -138,6 +143,7 @@ export class AmbalajComponent implements OnInit {
         // this.addImportTypeForm();
         this.onChanges();
         this.loadCurrenciesShort();
+        this.loadATCCodes();
 
 
 
@@ -281,6 +287,29 @@ export class AmbalajComponent implements OnInit {
     //         )
     //     )
     // }
+
+    loadATCCodes(){
+        this.atcCodes =
+            this.atcCodesInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 0) {
+                        return true;
+                    }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingAtcCodes = true;
+
+                }),
+                flatMap(term =>
+                    this.administrationService.getAllAtcCodesByCode(term).pipe(
+                        tap(() => this.loadingAtcCodes = false)
+                    )
+                )
+            );
+    }
+
 
     loadEconomicAgents() {
         this.importer =

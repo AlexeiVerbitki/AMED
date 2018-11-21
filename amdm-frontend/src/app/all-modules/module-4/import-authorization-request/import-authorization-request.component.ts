@@ -222,7 +222,8 @@ export class ImportAuthorizationRequestComponent implements OnInit {
             switch(this.rForm.get('importType').value){
                 case "1":{this.router.navigate(['dashboard/module/import-authorization/registered-medicament/'  +data.body]) ; break;}
                 case "2":{this.router.navigate(['dashboard/module/import-authorization/unregistered-medicament/'+data.body]) ; break;}
-                case "3":{this.router.navigate(['dashboard/module/import-authorization/materia-prima/'          +data.body]) ; break;}
+                // case "3":{this.router.navigate(['dashboard/module/import-authorization/materia-prima/'          +data.body]) ; break;}
+                case "3":{this.router.navigate(['dashboard/module/import-authorization/ambalaj/'                +data.body]) ; break;}
                 case "4":{this.router.navigate(['dashboard/module/import-authorization/ambalaj/'                +data.body]) ; break;}
             }
             this.loadingService.hide();
