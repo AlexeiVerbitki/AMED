@@ -106,7 +106,7 @@ export class AmbalajComponent implements OnInit {
                 'importer': [null, Validators.required], // Tara si adresa lui e deja in baza
                 'conditionsAndSpecification': [''],
                 'medType': [''],
-                'atcCode': [''],
+
                 'importAuthorizationDetailsEntityList': this.fb.group({
 
                     customsCode: [],
@@ -117,6 +117,7 @@ export class AmbalajComponent implements OnInit {
                     summ: [],
                     producer: [],
                     expirationDate: [],
+                    atcCode: [],
 
                 }),
 

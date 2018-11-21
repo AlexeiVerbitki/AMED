@@ -5,7 +5,7 @@ import {Observable, Subscription} from "rxjs";
 import {MatDialog} from "@angular/material";
 import {Router} from "@angular/router";
 import {AdministrationService} from "../../../shared/service/administration.service";
-import {map, startWith} from "rxjs/operators";
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
 import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
 import {saveAs} from 'file-saver';
 import {Document} from "../../../models/document";
@@ -14,6 +14,7 @@ import {RequestService} from "../../../shared/service/request.service";
 import {TaskService} from "../../../shared/service/task.service";
 import {LoaderService} from "../../../shared/service/loader.service";
 import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
+import {Subject} from "rxjs/index";
 
 
 
@@ -38,6 +39,10 @@ export class ImportAuthorizationRequestComponent implements OnInit {
     currentDate: Date;
     file: any;
     medType: any;
+
+    importer: Observable<any[]>;
+    loadingCompany: boolean = false;
+    protected companyInputs = new Subject<string>();
 
 
 
@@ -75,12 +80,15 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         });
         this.dataForm = fb.group({});
 
-        this.loadSolicitantCompanyList();
-        this.generateDocNr();
-        this.loadDocTypes();
+        // this.loadSolicitantCompanyList();
+
     }
 
     ngOnInit() {
+        this.generateDocNr();
+        this.loadDocTypes();
+        this.loadEconomicAgents();
+
         this.currentDate = new Date();
 
 
@@ -132,15 +140,37 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         );
     }
 
-    loadSolicitantCompanyList() {
-        this.subscriptions.push(
-            this.administrationService.getAllCompanies().subscribe(data => {
-                    this.solicitantCompanyList = data;
-                },
-                error => console.log(error)
-            )
-        )
+    // loadSolicitantCompanyList() {
+    //     this.subscriptions.push(
+    //         this.administrationService.getAllCompanies().subscribe(data => {
+    //                 this.solicitantCompanyList = data;
+    //             },
+    //             error => console.log(error)
+    //         )
+    //     )
+    // }
+
+    loadEconomicAgents() {
+        this.importer =
+            this.companyInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) return true;
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingCompany = true;
+
+                }),
+                flatMap(term =>
+
+                    this.administrationService.getCompanyNamesAndIdnoList(term).pipe(
+                        tap(() => this.loadingCompany = false)
+                    )
+                )
+            );
     }
+
 
     generateDocNr() {
         this.subscriptions.push(
@@ -154,32 +184,6 @@ export class ImportAuthorizationRequestComponent implements OnInit {
     }
 
 
-    // onChange(event) {
-    //     this.file = event.srcElement.files[0];
-    //     const fileName = this.file.name;
-    //     const lastIndex = fileName.lastIndexOf('.');
-    //     let fileFormat = '';
-    //     if (lastIndex !== -1) {
-    //         fileFormat = '*.' + fileName.substring(lastIndex + 1);
-    //     }
-    //     this.sysDate = `${this.currentDate.getDate()}.${this.currentDate.getMonth() + 1}.${this.currentDate.getFullYear()}`;
-    //     this.cereri.push({denumirea: fileName, format: fileFormat, dataIncarcarii: this.sysDate});
-    // }
-    //
-    // removeDocument(index) {
-    //     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-    //         data: {message: 'Sunteti sigur ca doriti sa stergeti acest document?', confirm: false}
-    //     });
-    //     dialogRef.afterClosed().subscribe(result => {
-    //         if (result) {
-    //             this.cereri.splice(index, 1);
-    //         }
-    //     });
-    // }
-    //
-    // loadFile() {
-    //     saveAs(this.file, this.file.name);
-    // }
 
 
     nextStep() {
