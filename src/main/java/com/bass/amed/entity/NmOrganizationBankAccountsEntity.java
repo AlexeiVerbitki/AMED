@@ -11,7 +11,7 @@ public class NmOrganizationBankAccountsEntity
     private Integer bankAccountId;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     public Integer getId()
     {
         return id;

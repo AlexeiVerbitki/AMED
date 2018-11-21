@@ -22,6 +22,26 @@
 		<app-expert-comitee [expert]="expert" [formSubmitted]="formSubmitted"></app-expert-comitee>
 		<app-document [documents]="documents" [nrCerere]="expertForm.get('requestNumber').value" [dcTypes]="docTypes" (documentModified)="documentModified($event)"></app-document>
 		<hr>
+		<div class="row">
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="compSolicitant" mdbInputDirective type="text" class="form-control" formControlName="companyValue" [attr.disabled]="true">
+					<label for="compSolicitant">Compania solicitant</label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form" formGroupName="medicament">
+					<input id="med" mdbInputDirective type="text" class="form-control" formControlName="name" [attr.disabled]="true">
+					<label for="med">Denumire comerciala medicament</label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="typeValue" mdbInputDirective type="text" class="form-control" formControlName="typeValue" [attr.disabled]="true">
+					<label for="typeValue">Inregistrare</label>
+				</div>
+			</div>
+		</div>
 		<h5 class="text-center font-weight-bold">Divizari</h5>
 		<table class="table table-widths text-center">
 			<thead class="black white-text">

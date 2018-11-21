@@ -1,5 +1,8 @@
 package com.bass.amed.entity;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import javax.persistence.*;
 
 @Entity
@@ -7,10 +10,12 @@ import javax.persistence.*;
 public class NmCustomsGroupsEntity
 {
     private Integer id;
+    private String code;
     private String description;
+    private String oldId;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     public Integer getId()
     {
         return id;
@@ -22,7 +27,19 @@ public class NmCustomsGroupsEntity
     }
 
     @Basic
-    @Column(name = "description")
+    @Column(name = "code", nullable = true, length = 45)
+    public String getCode()
+    {
+        return code;
+    }
+
+    public void setCode(String code)
+    {
+        this.code = code;
+    }
+
+    @Basic
+    @Column(name = "description", nullable = true, length = 150)
     public String getDescription()
     {
         return description;
@@ -33,12 +50,27 @@ public class NmCustomsGroupsEntity
         this.description = description;
     }
 
+    @Basic
+    @Column(name = "old_id", nullable = true, length = 40)
+    public String getOldId()
+    {
+        return oldId;
+    }
+
+    public void setOldId(String oldId)
+    {
+        this.oldId = oldId;
+    }
+
     @Override
     public int hashCode()
     {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(code)
+                .append(description)
+                .append(oldId)
+                .toHashCode();
     }
 
     @Override
@@ -48,6 +80,7 @@ public class NmCustomsGroupsEntity
         {
             return true;
         }
+
         if (o == null || getClass() != o.getClass())
         {
             return false;
@@ -55,15 +88,11 @@ public class NmCustomsGroupsEntity
 
         NmCustomsGroupsEntity that = (NmCustomsGroupsEntity) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null)
-        {
-            return false;
-        }
-        if (description != null ? !description.equals(that.description) : that.description != null)
-        {
-            return false;
-        }
-
-        return true;
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(code, that.code)
+                .append(description, that.description)
+                .append(oldId, that.oldId)
+                .isEquals();
     }
 }

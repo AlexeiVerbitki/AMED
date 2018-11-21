@@ -3,7 +3,7 @@ package com.bass.amed.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "nm_professions", schema = "amed", catalog = "")
+@Table(name = "nm_professions", schema = "amed")
 public class NmProfessionsEntity
 {
     private Integer id;

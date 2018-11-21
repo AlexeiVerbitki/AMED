@@ -98,13 +98,25 @@ export class AmbalajComponent implements OnInit {
                 // 'importer': {value: '', disabled: true},
                 'id;': [''],
                 // 'importType': [null, Validators.required],
-                'applicationRegistrationNumber': [''],
+                // 'applicationRegistrationNumber': [''],
                 'applicationDate': [new Date()],
                 'applicant': ['', Validators.required],
                 'seller': [null, Validators.required], // Tara si adresa lui e deja in baza
                 'basisForImport': [],
                 'importer': [null, Validators.required], // Tara si adresa lui e deja in baza
                 'conditionsAndSpecification': [''],
+                'quantity': [],
+                'price': [],
+                'currency': [],
+                'summ': [],
+                'producer_id to be deleted': [],
+                'stuff_type_id to delete': [],
+                'expiration_date': [],
+
+                //   For Import management/ import based on customs
+                //customs_declaration_date
+                //customs_transacton_type_id
+                'authorizationsNumber': [''], // inca nu exista la pasul acesta
                 'medType': [''],
 
                 'importAuthorizationDetailsEntityList': this.fb.group({
@@ -121,7 +133,7 @@ export class AmbalajComponent implements OnInit {
 
                 }),
 
-                'authorizationsNumber': [''], // inca nu exista la pasul acesta
+
 
             }),
 
@@ -152,18 +164,16 @@ export class AmbalajComponent implements OnInit {
             this.subscriptions.push(this.requestService.getImportRequest(params['id']).subscribe(data => {
                     console.log('Import data', data);
                     this.importData = data;
-                    // alert(params['id'])
-                    // alert(data.startDate)
-                    // alert(data.importer)
 
                     this.evaluateImportForm.get('id').setValue(data.id);
-                    this.evaluateImportForm.get('initiator').setValue(data.initiator);
-                    this.evaluateImportForm.get('assignedUser').setValue(data.assignedUser);
                     this.evaluateImportForm.get('requestNumber').setValue(data.requestNumber);
                     this.evaluateImportForm.get('startDate').setValue(new Date(data.startDate));
+                    this.evaluateImportForm.get('initiator').setValue(data.initiator);
+                    this.evaluateImportForm.get('assignedUser').setValue(data.assignedUser);
                     this.evaluateImportForm.get('company').setValue(data.company);
-                    // this.evaluateImportForm.get('data').setValue(data.data);
-                    // this.evaluateImportForm.get('importType').setValue(data.importType);
+                    this.evaluateImportForm.get('importAuthorizationEntity.medType').setValue(data.importAuthorizationEntity.medType);
+                    this.evaluateImportForm.get('importAuthorizationEntity.applicant').setValue(data.company);
+                    this.evaluateImportForm.get('type.id').setValue(data.type.id);
 
                 },
                 error => console.log(error)
@@ -367,7 +377,7 @@ export class AmbalajComponent implements OnInit {
 
     nextStep() {
         this.formSubmitted = true;
-        let modelToSubmit = this.evaluateImportForm.getRawValue();
+        let modelToSubmit = this.evaluateImportForm.value;
        // let modelToSubmit;
         // let modelToSubmit: any ={};
         this.loadingService.show();
@@ -419,10 +429,12 @@ export class AmbalajComponent implements OnInit {
 
         // modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
         // console.log("modelToSubmit", modelToSubmit);
-        console.log("modelToSubmit", this.importData);
-        // console.log("modelToSubmit", modelToSubmit);
-        this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {
-            console.log("addImportRequest(modelToSubmit).subscribe: ",data)
+        console.log("modelToSubmit", modelToSubmit);
+        alert("before addImportRequest(modelToSubmit)")
+        // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {
+        this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
+            alert("after addImportRequest(modelToSubmit)")
+            console.log("addImportRequest(modelToSubmit).subscribe(data) ",data)
                 this.loadingService.hide();
                 this.router.navigate(['dashboard/module']);
             }, error => this.loadingService.hide())

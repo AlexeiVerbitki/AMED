@@ -3,7 +3,9 @@ package com.bass.amed.entity;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "import_med_not_registered", schema = "amed", catalog = "")
@@ -14,11 +16,12 @@ public class ImportMedNotRegisteredEntity {
     private Timestamp registrationDate;
     private NmInternationalMedicamentNameEntity internationalMedicamentName;
     private NmManufacturesEntity manufacture;
-    private Double dose;
+    private String dose;
     private NmUnitsOfMeasurementEntity volumeQuantityMeasurement;
     private NmPharmaceuticalFormsEntity pharmaceuticalForm;
     private NmAtcCodesEntity atcCode;
     private String administratingMode;
+    private Set<NotRegMedActiveSubstEntity> activeSubstances = new HashSet<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,11 +66,11 @@ public class ImportMedNotRegisteredEntity {
 
     @Basic
     @Column(name = "dose")
-    public Double getDose() {
+    public String getDose() {
         return dose;
     }
 
-    public void setDose(Double dose) {
+    public void setDose(String dose) {
         this.dose = dose;
     }
 
@@ -131,6 +134,18 @@ public class ImportMedNotRegisteredEntity {
         this.administratingMode = administratingMode;
     }
 
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @JoinColumn(name = "not_reg_med_id")
+    public Set<NotRegMedActiveSubstEntity> getActiveSubstances()
+    {
+        return activeSubstances;
+    }
+
+    public void setActiveSubstances(Set<NotRegMedActiveSubstEntity> activeSubstances)
+    {
+        this.activeSubstances = activeSubstances;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -145,12 +160,14 @@ public class ImportMedNotRegisteredEntity {
                 Objects.equals(dose, that.dose) &&
                 Objects.equals(volumeQuantityMeasurement, that.volumeQuantityMeasurement) &&
                 Objects.equals(pharmaceuticalForm, that.pharmaceuticalForm) &&
-                Objects.equals(atcCode, that.atcCode);
+                Objects.equals(atcCode, that.atcCode) &&
+                Objects.equals(administratingMode, that.administratingMode) &&
+                Objects.equals(activeSubstances, that.activeSubstances);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, name, registrationNumber, registrationDate, internationalMedicamentName, manufacture, dose, volumeQuantityMeasurement, pharmaceuticalForm, atcCode);
+        return Objects.hash(id, name, registrationNumber, registrationDate, internationalMedicamentName, manufacture, dose, volumeQuantityMeasurement, pharmaceuticalForm, atcCode, administratingMode, activeSubstances);
     }
 }

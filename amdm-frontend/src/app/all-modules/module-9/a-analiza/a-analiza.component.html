@@ -163,9 +163,11 @@
                 </div>
                 <div class="col-md-4">
                     <div class="md-form">
-                        <input id="fazaStudClinic" mdbInputDirective type="text" class="form-control"
-                               formControlName="phase">
-                        <label for="fazaStudClinic">Faza Studiului clinic</label>
+                        <ng-select id="phaseid" name="step" [items]="phaseList"
+                                   bindLabel="name"
+                                   placeholder="Faza studiului"
+                                   formControlName="phase">
+                        </ng-select>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -186,9 +188,16 @@
                 </div>
                 <div class="col-md-4">
                     <div class="md-form">
-                        <input id="popStudClinicNumPacienti" mdbInputDirective type="number" class="form-control"
-                               formControlName="trialPopulation">
-                        <label for="popStudClinicNumPacienti">Populația studiului clinic / Numărul pacienţilor</label>
+                        <input id="popStudClinicNumNational" mdbInputDirective type="number" class="form-control"
+                               formControlName="trialPopNat">
+                        <label for="popStudClinicNumNational">Populația studiului clinic / Numărul pacienţilor nationali</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="md-form">
+                        <input id="popStudClinicNumInternational" mdbInputDirective type="number" class="form-control"
+                               formControlName="trialPopInternat">
+                        <label for="popStudClinicNumInternational">Populația studiului clinic / Numărul pacienţilor internationali</label>
                     </div>
                 </div>
             </div>

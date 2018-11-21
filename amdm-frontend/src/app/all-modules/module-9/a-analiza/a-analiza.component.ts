@@ -29,6 +29,8 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
     protected docs: Document[] = [];
     docTypes: any[];
 
+    phaseList: any[] = [];
+
     //Treatments
     treatmentId: number;
     treatmentList: any[] = [
@@ -108,7 +110,8 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                 'eudraCtNr': ['eudraCtNr', Validators.required],
                 'code': ['code', Validators.required],
                 'medicalInstitutions': [],
-                'trialPopulation': ['5446', [Validators.required, Validators.pattern("^[0-9]*$")]],
+                'trialPopNat': ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+                'trialPopInternat': ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
                 'medicament': [],
                 'referenceProduct': [],
                 'investigators': [],
@@ -174,6 +177,16 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         this.initPage();
         this.disableEnablePage();
         this.loadDocTypes();
+
+        this.loadPhasesList();
+    }
+
+    loadPhasesList() {
+        this.subscriptions.push(
+            this.administrationService.getClinicalTrailsPhases().subscribe(data => {
+                this.phaseList = data;
+            }, error => console.log(error))
+        )
     }
 
     loadDocTypes() {

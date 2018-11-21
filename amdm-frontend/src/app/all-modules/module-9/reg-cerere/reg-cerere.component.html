@@ -13,7 +13,7 @@
                     </label>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="picker" placeholder="Data de înregistrare a cererii"
@@ -23,11 +23,11 @@
                     </mat-form-field>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="md-form-modified">
                     <ng-select [items]="companii | async"
                                bindLabel="name"
-                               placeholder="Compania solicitant"
+                               placeholder="Solicitantul"
                                formControlName="company"
                                [loading]="loadingCompany"
                                [typeahead]="companyInputs"

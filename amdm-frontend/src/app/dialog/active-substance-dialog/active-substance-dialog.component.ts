@@ -31,11 +31,17 @@ export class ActiveSubstanceDialogComponent implements OnInit {
             'manufactureSA': [null,Validators.required],
             'manufactureCountrySA': [null],
             'manufactureAddressSA': [null],
-            'status' : [null]
+            'status' : [null],
+            'response' : [null]
         });
     }
 
     ngOnInit() {
+
+        if(this.dataDialog && this.dataDialog.disableSubstance)
+        {
+            this.aForm.get('activeSubstance').disable();
+        }
 
         if(this.dataDialog) {
             this.aForm.get('activeSubstanceQuantity').setValue(this.dataDialog.quantity);
@@ -76,6 +82,10 @@ export class ActiveSubstanceDialogComponent implements OnInit {
                 error => console.log(error)
             )
         );
+
+        if(this.dataDialog) {
+            this.aForm.get('status').setValue(this.dataDialog.status);
+        }
     }
 
     checkActiveSubstanceValue() {
@@ -96,12 +106,13 @@ export class ActiveSubstanceDialogComponent implements OnInit {
 
         this.formSubmitted = false;
 
-        this.aForm.get('status').setValue(true);
+        this.aForm.get('response').setValue(true);
+        this.aForm.get('activeSubstance').enable();
         this.dialogRef.close(this.aForm.value);
     }
 
     cancel() {
-        this.aForm.get('status').setValue(false);
+        this.aForm.get('response').setValue(false);
         this.dialogRef.close(this.aForm.value);
     }
 

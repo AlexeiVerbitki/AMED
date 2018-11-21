@@ -1,4 +1,434 @@
 <div class="container-fluid sky z-depth-2">
-  <h3 class="text-center my-3 font-weight-bold">Evaluarea primara</h3>
-  <hr>
+    <h3 class="text-center my-3 font-weight-bold">Evaluarea primara</h3>
+    <hr>
+
+    <form [formGroup]='clinicTrailAmendForm' #f="ngForm">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="regNr" mdbInputDirective type="text" class="form-control"
+                           formControlName="requestNumber">
+                    <label for="regNr">Nr. cererii
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="regDate" [matDatepicker]="picker" mdbInputDirective type="text" class="form-control"
+                           formControlName="startDate">
+                    <mat-datepicker touchUi #picker></mat-datepicker>
+                    <label for="regDate">Data
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="company" mdbInputDirective type="text" class="form-control"
+                           value={{clinicTrailAmendForm.value.company.name}} [attr.disabled]="true">
+                    <label for="company">Compania solicitant
+                    </label>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        <app-document [documents]="docs" [nrCerere]="clinicTrailAmendForm.get('requestNumber').value"
+                      [dcTypes]="docTypes"></app-document>
+        <hr>
+
+        <mat-radio-group>
+            <div class="container">
+                <div class="row">
+                    <div class="offset-4"></div>
+                    <div class="col-4">
+                        <mat-radio-group class="radio-btn-wrapper"
+                                         value={{clinicTrailAmendForm.getRawValue().typeCode}} [disabled]="true">
+                            <mat-radio-button name="prop1" value="CLPSC">Aprobarea amendamentelor la Protocoalele
+                                Studiilor Clinice la medicamente
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                    <div class="offset-4"></div>
+                </div>
+            </div>
+        </mat-radio-group>
+        <hr>
+
+        <div formGroupName="clinicalTrailAmendment">
+            <div class="col-md-12">
+                <div class="md-form">
+                    <textarea type="text" id="titluStud" class="md-textarea form-control" mdbInputDirective rows="1"
+                              formControlName="title"></textarea>
+                    <label for="titluStud">Titlul studiului</label>
+                </div>
+            </div>
+
+
+            <h5 class="text-center font-weight-bold">Tipul studiului clinic</h5>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="md-form">
+                        <div class="container">
+                            <div class="col-md-12">
+                                <mat-radio-group class="adio-btn-wrapper"
+                                                 [value]="clinicTrailAmendForm.value.clinicalTrailAmendment.treatment.id"
+                                                 (change)="onTreatmentChange($event)">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h5 class="text-center font-weight-bold">Tratament</h5>
+                                            <hr>
+                                        </div>
+                                        <div class="col-12">
+                                            <mat-radio-button class="col-12" *ngFor="let treatment of treatmentList"
+                                                              [value]="treatment.id">{{treatment.description}}
+                                            </mat-radio-button>
+                                        </div>
+                                    </div>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="md-form">
+                        <div class="container">
+                            <div class="col-md-12">
+                                <mat-radio-group class="adio-btn-wrapper"
+                                                 [value]="clinicTrailAmendForm.value.clinicalTrailAmendment.provenance.id"
+                                                 (change)="onProvenanceChange($event)">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h5 class="text-center font-weight-bold">Provenienta</h5>
+                                            <hr>
+                                        </div>
+                                        <div class="col-12">
+                                            <mat-radio-button class="col-12" *ngFor="let provenance of provenanceList"
+                                                              [value]="provenance.id">{{provenance.description}}
+                                            </mat-radio-button>
+                                        </div>
+                                    </div>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="md-form">
+                        <input id="sponsoStudClinic" mdbInputDirective type="text" class="form-control"
+                               formControlName="sponsor">
+                        <label for="sponsoStudClinic">Sponsorul Studiului clinic</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="md-form">
+                        <!--<ng-select id="allMediacalInstitutions" name="allMediacalInstitutions"-->
+                                   <!--[items]="allMediacalInstitutionsList"-->
+                                   <!--bindLabel="name"-->
+                                   <!--placeholder="Instituţia medicala"-->
+                                   <!--formControlName="medicalInstitution"-->
+                                   <!--required="true">-->
+                        <!--</ng-select>-->
+                        <input id="fazaStudClinic" mdbInputDirective type="text" class="form-control"
+                               formControlName="phase">
+                        <label for="fazaStudClinic">Faza Studiului clinic</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="md-form">
+                        <input id="numEudraCT" mdbInputDirective type="text" class="form-control"
+                               formControlName="eudraCtNr">
+                        <label for="numEudraCT">Numărul Eudra CT nr.</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="md-form">
+                        <input id="codStud" mdbInputDirective type="text" class="form-control" formControlName="code">
+                        <label for="codStud">Codul studiului</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="md-form">
+                        <input id="popStudClinicNumPacienti" mdbInputDirective type="number" class="form-control"
+                               formControlName="trialPopulation">
+                        <label for="popStudClinicNumPacienti">Populația studiului clinic / Numărul pacienţilor</label>
+                    </div>
+                </div>
+            </div>
+            <hr>
+
+            <h5 class="text-center font-weight-bold">Instituţii medicale / Locul desfăşurării studiului</h5>
+            <hr>
+            <div class="row">
+                <div class="col-10">
+                    <div class="md-form-modified" [formGroup]="addMediacalInstitutionForm">
+                        <ng-select id="allMediacalInstitutions" name="allMediacalInstitutions"
+                                   [items]="allMediacalInstitutionsList"
+                                   bindLabel="name"
+                                   placeholder="Instituţia medicala"
+                                   formControlName="medicalInstitution"
+                                   required="true">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="md-form-modified mt-3">
+                        <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
+                                mdbWavesEffect (click)="addMedicalInstitution()">Adaugare
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div formGroupName="medicalInstitutions">
+                <table class="table table-widths text-center">
+                    <thead class="black white-text">
+                    <tr>
+                        <th class="w-25" scope="col">Codul IMS</th>
+                        <th class="w-25" scope="col">Denumire</th>
+                        <th class="w-25" scope="col">Adresa</th>
+                        <th class="w-25" scope="col">Actiuni</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let institution of mediacalInstitutionsList">
+                        <td>{{ institution.codIms}}</td>
+                        <td>{{ institution.name }}</td>
+                        <td> {{ institution.address }}</td>
+                        <td>
+                            <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                    (click)="deleteMedicalInstitution(institution)" mdbWavesEffect>Delete
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+
+            <div [formGroup]="medicamentForm">
+                <h5 class="text-center font-weight-bold">Medicamentul de investigat</h5>
+                <div class="row">
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Nume" formControlName="name">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <ng-select [items]="manufacturers | async"
+                                       bindLabel="description"
+                                       placeholder="Producatorul"
+                                       formControlName="manufacture"
+                                       [loading]="loadingManufacturer"
+                                       [typeahead]="manufacturerInputs"
+                                       required="true">
+                                <ng-template ng-option-tmp let-item="item">
+                                    {{item.description}}
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="number" matInput placeholder="Doza" formControlName="dose">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        <div class="md-form-modified">
+                            <ng-select [items]="measureUnits"
+                                       bindLabel="description"
+                                       placeholder="Unitati de masura"
+                                       formControlName="volumeQuantityMeasurement"
+                                       required="true">
+                                <ng-template ng-option-tmp let-item="item">
+                                    {{item.description}}
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <ng-select [items]="farmForms | async"
+                                       bindLabel="description"
+                                       placeholder="Forma farmaceutica"
+                                       formControlName="pharmaceuticalForm"
+                                       [loading]="loadingFarmForms"
+                                       [typeahead]="farmFormsInputs"
+                                       required="true">
+                                <ng-template ng-option-tmp let-item="item">
+                                    {{item.description}}
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <ng-select [items]="atcCodes | async"
+                                       bindLabel="description"
+                                       placeholder="Grupa farmaceutica"
+                                       formControlName="atcCode"
+                                       [loading]="loadingAtcCodes"
+                                       [typeahead]="atcCodesInputs"
+                                       required="true">
+                                <ng-template ng-option-tmp let-item="item">
+                                    {{item.code}} <br />
+                                    <small class="form-text text-muted">{{item.description}}</small>
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Calea de administrae" formControlName="administratingMode">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+
+            <div [formGroup]="referenceProductFormn">
+                <h5 class="text-center font-weight-bold">Produsul de referinţă</h5>
+                <div class="row">
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Nume" formControlName="name">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <ng-select [items]="manufacturersRfPr | async"
+                                       bindLabel="description"
+                                       placeholder="Producatorul"
+                                       formControlName="manufacture"
+                                       [loading]="loadingManufacturerRfPr"
+                                       [typeahead]="manufacturerInputsRfPr"
+                                       required="true">
+                                <ng-template ng-option-tmp let-item="item">
+                                    {{item.description}}
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="number" matInput placeholder="Doza" formControlName="dose">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        <div class="md-form-modified">
+                            <ng-select [items]="measureUnitsRfPr"
+                                       bindLabel="description"
+                                       placeholder="Unitati de masura"
+                                       formControlName="volumeQuantityMeasurement"
+                                       required="true">
+                                <ng-template ng-option-tmp let-item="item">
+                                    {{item.description}}
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <ng-select [items]="farmFormsRfPr | async"
+                                       bindLabel="description"
+                                       placeholder="Forma farmaceutica"
+                                       formControlName="pharmaceuticalForm"
+                                       [loading]="loadingFarmFormsRfPr"
+                                       [typeahead]="farmFormsInputsRfPr"
+                                       required="true">
+                                <ng-template ng-option-tmp let-item="item">
+                                    {{item.description}}
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <ng-select [items]="atcCodesRfPr | async"
+                                       bindLabel="description"
+                                       placeholder="Grupa farmaceutica"
+                                       formControlName="atcCode"
+                                       [loading]="loadingAtcCodesRfPr"
+                                       [typeahead]="atcCodesInputsRfPr"
+                                       required="true">
+                                <ng-template ng-option-tmp let-item="item">
+                                    {{item.code}} <br />
+                                    <small class="form-text text-muted">{{item.description}}</small>
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Calea de administrae" formControlName="administratingMode">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+
+            <div [formGroup]="placeboFormn">
+                <h5 class="text-center font-weight-bold">Placebo</h5>
+                <div class="row">
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Nume" formControlName="name">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="number" matInput placeholder="Doza" formControlName="dose">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="md-form-modified">
+                            <ng-select [items]="measureUnitsPlacebo"
+                                       bindLabel="description"
+                                       placeholder="Unitati de masura"
+                                       formControlName="volumeQuantityMeasurement">
+                                <ng-template ng-option-tmp let-item="item">
+                                    {{item.description}}
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        <div class="md-form-modified">
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Calea de administrae" formControlName="administratingMode">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+        </div>
+
+        <app-payment [receipts]="receiptsList" [paymentOrders]="paymentOrdersList"
+                     (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
+    </form>
 </div>

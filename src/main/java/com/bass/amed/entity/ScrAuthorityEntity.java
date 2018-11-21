@@ -1,5 +1,8 @@
 package com.bass.amed.entity;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
 
 import javax.persistence.*;
@@ -7,6 +10,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "scr_authority")
 public class ScrAuthorityEntity implements Serializable {
@@ -24,37 +29,5 @@ public class ScrAuthorityEntity implements Serializable {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "authorities")
     private Set<ScrRoleEntity> roles = new HashSet<>();
-
-    public Set<ScrRoleEntity> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<ScrRoleEntity> roles) {
-        this.roles = roles;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
 }

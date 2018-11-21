@@ -568,7 +568,7 @@ export class EvaluarePrimaraComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.manufactures.splice(index, 1);
+                this.manufacturesTable.splice(index, 1);
             }
         });
     }
@@ -863,7 +863,7 @@ export class EvaluarePrimaraComponent implements OnInit {
         let dialogRef =  this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
-            if (result.status) {
+            if (result.response) {
                 this.activeSubstancesTable.push({
                     activeSubstance: result.activeSubstance,
                     quantity: result.activeSubstanceQuantity,
@@ -898,7 +898,7 @@ export class EvaluarePrimaraComponent implements OnInit {
         let dialogRef =  this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
-            if (result.status) {
+            if (result.response) {
                 this.activeSubstancesTable[index] = {
                     activeSubstance: result.activeSubstance,
                     quantity: result.activeSubstanceQuantity,

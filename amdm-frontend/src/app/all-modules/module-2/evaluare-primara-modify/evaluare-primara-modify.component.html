@@ -58,6 +58,7 @@
 			<tr>
 				<th scope="col">Nr.</th>
 				<th scope="col">Denumire</th>
+				<th scope="col">Status</th>
 				<th scope="col">Actiuni</th>
 			</tr>
 			</thead>
@@ -65,6 +66,8 @@
 			<tr *ngFor="let division of divisions;let i = index">
 				<td>{{ i+1 }}</td>
 				<td>{{ division.description }}</td>
+				<td *ngIf="division.old==1">Divizare existenta</td>
+				<td *ngIf="division.old==0">Divizare noua</td>
 				<td>
 					<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeDivision(i)" mdbWavesEffect>Stergere</button>
 				</td>
@@ -75,96 +78,8 @@
 			<small class="text-muted"><strong class="text-danger">Nici o divizare nu a fost adaugata</strong></small>
 		</div>
 		<h5 class="text-center font-weight-bold">Substanţe active</h5>
-<div class="position-button">
+		<div class="position-button">
 			<button class="btn btn-indigo btn-sm" mdbWavesEffect (click)="addActiveSubstanceDialog()">Adaugă substanţa activă</button>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		</div>
 		<table class="table table-widths text-center">
 			<thead class="black white-text">
@@ -176,6 +91,7 @@
 				<th scope="col">Producător</th>
 				<th scope="col">Ţară producător</th>
 				<th scope="col">Adresă producător</th>
+				<th scope="col">Status</th>
 				<th scope="col">Actiuni</th>
 			</tr>
 			</thead>
@@ -188,6 +104,8 @@
 				<td>{{ substance.manufacture.description }}</td>
 				<td>{{ substance.manufacture.country.description }}</td>
 				<td>{{ substance.manufacture.address }}</td>
+				<td *ngIf="substance.status=='O'">Substanta existenta</td>
+				<td *ngIf="substance.status!='O'">Substanta noua</td>
 				<td>
 					<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="editSubstance(substance,i)" mdbWavesEffect>Editare</button>
 					<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeSubstance(i)" mdbWavesEffect>Stergere</button>
@@ -496,6 +414,7 @@
 				<th scope="col">Tara</th>
 				<th scope="col">Adresa</th>
 				<th scope="col">Producator produs finit</th>
+				<th scope="col">Status</th>
 				<th scope="col">Actiuni</th>
 			</tr>
 			</thead>
@@ -505,6 +424,8 @@
 				<td>{{ manufacture.manufacture.country.description }}</td>
 				<td>{{ manufacture.manufacture.address }}</td>
 				<th scope="row"><mat-checkbox #checkBoxProducatorProdusFinit [checked]="manufacture.producatorProdusFinit" (change)="checkProducatorProdusFinit(manufacture,checkBoxProducatorProdusFinit)"></mat-checkbox></th>
+				<td *ngIf="manufacture.status=='O'">Producator existent</td>
+				<td *ngIf="manufacture.status!='O'">Producator nou</td>
 				<td>
 					<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeManufacture(i)" mdbWavesEffect>Stergere</button>
 				</td>

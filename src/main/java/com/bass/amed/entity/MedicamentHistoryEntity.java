@@ -379,6 +379,7 @@ public class MedicamentHistoryEntity
     public void assign(MedicamentEntity entity)
     {
         this.atcCode = entity.getAtcCode();
+        this.dose = entity.getDose();
         this.name = entity.getName();
         this.productCode = entity.getProductCode();
         this.customsCode = entity.getCustomsCode();

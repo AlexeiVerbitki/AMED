@@ -81,20 +81,14 @@ export class ExpertiComponent implements OnInit {
                     'authorizationHolder': [null],
                     'authorizationHolderCountry': [null],
                     'authorizationHolderAddress': [null],
-                    'manufacture': [null],
-                    'manufactureMedCountry': [null],
-                    'manufactureMedAddress': [null],
                     'documents': [],
                     'status': ['F'],
                     'experts': [''],
-                    'group':  ['']
+                    'group': ['']
                 }),
             'company': [''],
             'recetaType': [''],
             'medicamentGroup': [''],
-            'manufactureSA': [null],
-            'manufactureCountrySA': [null],
-            'manufactureAddressSA': [null],
             'type': [],
             'typeValue': {disabled: true, value: null},
             'requestHistories': []
@@ -118,7 +112,7 @@ export class ExpertiComponent implements OnInit {
                         this.expertForm.get('medicament.pharmaceuticalForm').setValue(data.medicaments[0].pharmaceuticalForm.description);
                         this.expertForm.get('medicament.pharmaceuticalFormType').setValue(data.medicaments[0].pharmaceuticalForm.type.description);
                         this.expertForm.get('medicament.dose').setValue(data.medicaments[0].dose);
-                        if (data.medicaments && data.medicaments.length != 0 && data.medicaments[0].unitsOfMeasurement){
+                        if (data.medicaments && data.medicaments.length != 0 && data.medicaments[0].unitsOfMeasurement) {
                             this.expertForm.get('medicament.unitsOfMeasurement').setValue(data.medicaments[0].unitsOfMeasurement.description);
                         }
                         this.expertForm.get('medicament.internationalMedicamentName').setValue(data.medicaments[0].internationalMedicamentName.description);
@@ -129,11 +123,9 @@ export class ExpertiComponent implements OnInit {
                         }
                         this.expertForm.get('medicament.termsOfValidity').setValue(data.medicaments[0].termsOfValidity);
                         this.expertForm.get('medicament.group').setValue(data.medicaments[0].group.description);
-                        if(data.medicaments[0].prescription==0) {
+                        if (data.medicaments[0].prescription == 0) {
                             this.expertForm.get('medicament.prescription').setValue('Fără prescripţie');
-                        }
-                        else
-                        {
+                        } else {
                             this.expertForm.get('medicament.prescription').setValue('Cu prescripţie');
                         }
                         this.expertForm.get('medicament.authorizationHolder').setValue(data.medicaments[0].authorizationHolder.description);
@@ -142,13 +134,13 @@ export class ExpertiComponent implements OnInit {
                         this.expertForm.get('medicament.atcCode').setValue(data.medicaments[0].atcCode);
                         this.activeSubstancesTable = data.medicaments[0].activeSubstances;
                         this.manufacturesTable = data.medicaments[0].manufactures;
-                    for (let entry of data.medicaments) {
-                        if(entry.division && entry.division.length!=0) {
-                            this.divisions.push({
-                                description: entry.division
-                            });
+                        for (let entry of data.medicaments) {
+                            if (entry.division && entry.division.length != 0) {
+                                this.divisions.push({
+                                    description: entry.division
+                                });
+                            }
                         }
-                    }
                         this.expertForm.get('type').setValue(data.type);
                         this.expertForm.get('requestHistories').setValue(data.requestHistories);
                         this.expertForm.get('typeValue').setValue(data.type.code);
@@ -315,8 +307,8 @@ export class ExpertiComponent implements OnInit {
                 var modelToSubmit = {
                     requestHistories: [],
                     currentStep: 'I',
-                    initiator : this.modelToSubmit.initiator,
-                    assignedUser :userNameDB,
+                    initiator: this.modelToSubmit.initiator,
+                    assignedUser: userNameDB,
                     id: this.expertForm.get('id').value,
                     medicaments: this.modelToSubmit.medicaments
                 };
@@ -326,7 +318,7 @@ export class ExpertiComponent implements OnInit {
                 });
 
                 for (let med of modelToSubmit.medicaments) {
-                    med.experts={
+                    med.experts = {
                         chairman: this.expert.chairman,
                         farmacolog: this.expert.farmacolog,
                         farmacist: this.expert.farmacist,

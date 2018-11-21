@@ -161,4 +161,8 @@ export class AdministrationService {
 
         return this.http.get<any[]>('/api/administration/all-clinical-trails-by-cod-or-eudra', {params: Params});
     }
+
+    getClinicalTrailsPhases(): Observable<any>{
+        return this.http.get('/api/administration/all-clinical-trail-phases', {});
+    }
 }

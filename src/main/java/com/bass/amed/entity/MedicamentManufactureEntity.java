@@ -8,7 +8,7 @@ public class MedicamentManufactureEntity
 {
     private Integer id;
     private NmManufacturesEntity manufacture;
-    private Byte producatorProdusFinit;
+    private Boolean producatorProdusFinit;
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
@@ -37,12 +37,12 @@ public class MedicamentManufactureEntity
 
     @Basic
     @Column(name = "producator_produs_finit")
-    public Byte getProducatorProdusFinit()
+    public Boolean getProducatorProdusFinit()
     {
         return producatorProdusFinit;
     }
 
-    public void setProducatorProdusFinit(Byte producatorProdusFinit)
+    public void setProducatorProdusFinit(Boolean producatorProdusFinit)
     {
         this.producatorProdusFinit = producatorProdusFinit;
     }

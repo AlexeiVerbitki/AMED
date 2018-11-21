@@ -92,6 +92,7 @@ public class MedicamentActiveSubstancesHistoryEntity
         this.quantity = entity.getQuantity();
         this.unitsOfMeasurement = entity.getUnitsOfMeasurement();
         this.manufacture = entity.getManufacture();
+        this.status = "O";
     }
 
     @Override

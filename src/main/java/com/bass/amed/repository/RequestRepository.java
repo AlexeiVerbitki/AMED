@@ -20,6 +20,16 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
     Optional<RegistrationRequestsEntity> findMedicamentRequestById(@Param("id") Integer id);
 
     @Query("SELECT p FROM RegistrationRequestsEntity p " +
+            "LEFT JOIN FETCH p.medicamentHistory " +
+            "LEFT JOIN FETCH p.requestHistories " +
+            "LEFT JOIN FETCH p.outputDocuments " +
+            "LEFT JOIN FETCH p.documents " +
+            "LEFT JOIN FETCH p.receipts " +
+            "LEFT JOIN FETCH p.paymentOrders " +
+            "WHERE p.id = (:id)")
+    Optional<RegistrationRequestsEntity> findMedicamentHistoryById(@Param("id") Integer id);
+
+    @Query("SELECT p FROM RegistrationRequestsEntity p " +
             "LEFT JOIN FETCH p.clinicalTrails " +
             "LEFT JOIN FETCH p.requestHistories " +
             "LEFT JOIN FETCH p.outputDocuments " +

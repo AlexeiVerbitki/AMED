@@ -1,17 +1,13 @@
 package com.bass.amed.entity;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
-@Setter
-@Getter
-@EqualsAndHashCode
+@Data
 @Entity
 @Table(name = "registration_requests", schema = "amed")
 public class RegistrationRequestsEntity
@@ -92,8 +88,8 @@ public class RegistrationRequestsEntity
     @Basic
     @Column(name = "medicament_postauthorization_register_nr")
     private Integer medicamentPostauthorizationRegisterNr;
-    @OneToMany( fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST} )
-    @JoinColumn( name = "registration_request_id" )
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "registration_request_id")
     private Set<DrugCheckDecisionsEntity> drugCheckDecisions = new HashSet<>();
 //    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "registrationRequestsEntity")
 //    private DocumentModuleDetailsEntity documentModuleDetails;

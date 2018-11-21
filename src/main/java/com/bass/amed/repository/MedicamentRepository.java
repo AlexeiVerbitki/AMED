@@ -6,10 +6,8 @@ import com.bass.amed.projection.MedicamentRegisterNumberProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface MedicamentRepository extends JpaRepository<MedicamentEntity, Integer>
 {
@@ -23,7 +21,7 @@ public interface MedicamentRepository extends JpaRepository<MedicamentEntity, In
 
     Optional<MedicamentEntity> findById(Integer id);
 
-    @Query(value = "SELECT distinct name,registration_number as regnr FROM medicament m WHERE registration_number = ?1", nativeQuery = true)
+    @Query(value = "SELECT distinct name,registration_number as regnr FROM medicament m WHERE registration_number = ?1 and status='F'", nativeQuery = true)
     List<MedicamentRegisterNumberProjection> findDistinctByRegistrationNumber(Integer registrationNumber);
 
     List<MedicamentEntity> findByRegistrationNumber(Integer registrationNumber);

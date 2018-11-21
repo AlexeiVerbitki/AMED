@@ -1,151 +1,36 @@
 package com.bass.amed.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+@Data
 @Entity
 @Table(name = "documents", schema = "amed")
 public class DocumentsEntity
 {
-    private Integer id;
-    private Timestamp date;
-    private String name;
-    private String path;
-    private String number;
-    private NmDocumentTypesEntity docType;
-    private Integer registrationRequestId;
-
     @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    public Integer getId()
-    {
-        return id;
-    }
-
-    public void setId(Integer id)
-    {
-        this.id = id;
-    }
-
+    private Integer id;
     @Basic
     @Column(name = "date")
-    public Timestamp getDate()
-    {
-        return date;
-    }
-
-    public void setDate(Timestamp date)
-    {
-        this.date = date;
-    }
-
+    private Timestamp date;
     @Basic
     @Column(name = "name")
-    public String getName()
-    {
-        return name;
-    }
-
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
+    private String name;
     @Basic
     @Column(name = "path")
-    public String getPath()
-    {
-        return path;
-    }
-
-    public void setPath(String path)
-    {
-        this.path = path;
-    }
-
+    private String path;
     @Basic
     @Column(name = "number")
-    public String getNumber()
-    {
-        return number;
-    }
-
-    public void setNumber(String number)
-    {
-        this.number = number;
-    }
-
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
-    @JoinColumn( name = "doc_type_id" )
-    public NmDocumentTypesEntity getDocType()
-    {
-        return docType;
-    }
-
-    public void setDocType(NmDocumentTypesEntity docType)
-    {
-        this.docType = docType;
-    }
-
-    @Override
-    public boolean equals(Object o)
-    {
-        if (this == o)
-        {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass())
-        {
-            return false;
-        }
-
-        DocumentsEntity that = (DocumentsEntity) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null)
-        {
-            return false;
-        }
-        if (date != null ? !date.equals(that.date) : that.date != null)
-        {
-            return false;
-        }
-        if (name != null ? !name.equals(that.name) : that.name != null)
-        {
-            return false;
-        }
-        if (path != null ? !path.equals(that.path) : that.path != null)
-        {
-            return false;
-        }
-        if (number != null ? !number.equals(that.number) : that.number != null)
-        {
-            return false;
-        }
-        return docType != null ? docType.equals(that.docType) : that.docType == null;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (date != null ? date.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (path != null ? path.hashCode() : 0);
-        result = 31 * result + (number != null ? number.hashCode() : 0);
-        result = 31 * result + (docType != null ? docType.hashCode() : 0);
-        return result;
-    }
-
+    private String number;
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "doc_type_id")
+    private NmDocumentTypesEntity docType;
     @Basic
     @Column(name = "registration_request_id")
-    public Integer getRegistrationRequestId()
-    {
-        return registrationRequestId;
-    }
+    private Integer registrationRequestId;
 
-    public void setRegistrationRequestId(Integer registrationRequestId)
-    {
-        this.registrationRequestId = registrationRequestId;
-    }
 }
