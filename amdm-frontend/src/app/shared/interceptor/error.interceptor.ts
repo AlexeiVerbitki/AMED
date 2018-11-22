@@ -23,7 +23,6 @@ export class ErrorInterceptor implements HttpInterceptor {
                             console.log('1');
                             return throwError(this.getErrorMessage(error));
                         }
-                        console.log('2');
                         this.authService.logout();
                         // location.reload(true);
                         this.router.navigateByUrl('/', {preserveQueryParams: true});

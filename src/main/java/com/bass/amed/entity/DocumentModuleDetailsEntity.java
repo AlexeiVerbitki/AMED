@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Set;
 
 @Data
 @Entity
@@ -16,18 +17,20 @@ public class DocumentModuleDetailsEntity
     @Basic
     @Column(name = "sender", nullable = false, length = 30)
     private String sender;
-    @Basic
     @Column(name = "recipient", nullable = false, length = 30)
-    private String recipient;
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "document_module_id")
+    private Set<DocumentModuleRecipientsEntity> recipients;
     @Basic
     @Column(name = "execution_date", nullable = false)
     private Timestamp executionDate;
     @Basic
     @Column(name = "problem_description", nullable = true, length = 5000)
     private String problemDescription;
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
-    private RegistrationRequestsEntity registrationRequestsEntity;
+
+    //    @OneToOne(fetch = FetchType.LAZY)
+    //    @MapsId
+    //    private RegistrationRequestsEntity registrationRequestsEntity;
 
 
 }

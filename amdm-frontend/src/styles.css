@@ -4,6 +4,10 @@ body {
   background: #f5f5f5;
 }
 
+.md-form-modified .mat-form-field-infix {
+  padding: 0.61em 0 !important;
+}
+
 .mat-tab-body-content {
   overflow: hidden !important;
 }
@@ -286,7 +290,20 @@ ng-select.ng-valid.ng-touched .ng-select-container:after {
     opacity: 0
   }
 }
-@media only screen and (min-width: 1439px) {
+
+@media screen and (min-width: 1439px) and (max-width: 1441px) { 
+  .col-xxl-10 {
+    -ms-flex: 0 0 75%;
+    flex: 0 0 75%;
+    max-width: 75%;
+  }
+  .offset-xxl-2 {
+    margin-left: 25%;
+  }
+}
+
+
+@media screen and (min-width: 1442px){ 
   .col-xxl-10 {
     -ms-flex: 0 0 83.333333%;
     flex: 0 0 83.333333%;

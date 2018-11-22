@@ -1,75 +1,84 @@
 <div class="container-fluid sky z-depth-2">
-  <form [formGroup]='rForm'>
-    <h3 class="text-center my-3 font-weight-bold">Inregistrare cerere</h3>
-    <hr>
-    <div class="row">
-      <div class="col-lg-6">
-        <div class="md-form">
-          <input id="nrCererii" mdbInputDirective type="text" class="form-control" formControlName="requestNumber"
-            [attr.disabled]="true">
-          <label for="nrCererii">Nr. cererii</label>
-        </div>
-      </div>
-      <div class="col-lg-6">
-        <div class="md-form-modified">
-          <mat-form-field class="w-100">
-            <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker touchUi #picker></mat-datepicker>
-          </mat-form-field>
-        </div>
-      </div>
-    </div>
-    <hr>
-    <app-document [documents]="documents" [nrCerere]="rForm.get('requestNumber').value" [dcTypes]="docTypes"></app-document>
-    <div *ngIf="formSubmitted && documents.length==0">
-      <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
-    </div>
-    <hr>
-    <div class="row" formGroupName="docReg">
-      <div class="col-md-4">
-        <div class="md-form-modified">
-          <ng-select id="expeditor" name="expeditor" [items]="expeditori" bindLabel="name" placeholder="Expeditor"
-            formControlName="expeditor" required="true">
-          </ng-select>
-          <div *ngIf="formSubmitted && rForm.get('docReg.expeditor').invalid">
-            <small class="text-muted"><strong class="text-danger">Error</strong></small>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="md-form-modified">
-          <ng-select id="destinatar" name="destinatar" [items]="destinatari" bindLabel="name" placeholder="Destinatar"
-            formControlName="destinatar" required="true">
-          </ng-select>
-          <div *ngIf="formSubmitted && rForm.get('docReg.destinatar').invalid">
-            <small class="text-muted"><strong class="text-danger">Error</strong></small>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="md-form-modified">
-          <mat-form-field class="w-100">
-            <input matInput [matDatepicker]="pickerTermen" placeholder="Choose a date">
-            <mat-datepicker-toggle matSuffix [for]="pickerTermen"></mat-datepicker-toggle>
-            <mat-datepicker #pickerTermen></mat-datepicker>
-          </mat-form-field>
-        </div>
-      </div>
-    </div>
-      <hr>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="md-form">
-          <textarea type="text" id="problematica" class="md-textarea form-control" mdbInputDirective rows="7"></textarea>
-          <label for="problematica">Problematica</label>
-        </div>
-      </div>
-    </div>
-    <div class="text-center">
-      <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">
-        Urmatorul pas
-      </button>
-    </div>
-  </form>
+	<form [formGroup]='rForm'>
+		<h3 class="text-center my-3 font-weight-bold">Inregistrare cerere</h3>
+		<hr>
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="md-form">
+					<input id="nrCererii" mdbInputDirective type="text" class="form-control" formControlName="requestNumber"
+					       [attr.disabled]="true">
+					<label for="nrCererii">Nr. cererii</label>
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input matInput [matDatepicker]="picker" placeholder="Data" formControlName="startDate" [attr.disabled]="true">
+						<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #picker></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+		</div>
+		<hr>
+		<app-document [documents]="documents" [nrCerere]="rForm.get('requestNumber').value" [dcTypes]="docTypes"></app-document>
+		<div *ngIf="formSubmitted && documents.length==0">
+			<small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="expeditor" mdbInputDirective type="text" class="form-control" formControlName="sender">
+					<label for="expeditor">Expeditor</label>
+				</div>
+				<div *ngIf="formSubmitted && rForm.get('expeditor').invalid">
+					<small class="text-muted"><strong class="text-danger">Expeditoru trebuie introdus</strong></small>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form-modified-select">
+					<ng-select id="destinatar"
+					           name="destinatar"
+					           [items]="recipients"
+					           bindLabel="username"
+					           placeholder="Destinatar"
+					           formControlName="recipientList"
+					           [required]="true"
+					           [multiple]="true"
+					           [hideSelected]="true">
+					</ng-select>
+					<div *ngIf="formSubmitted && rForm.get('recipientList').invalid">
+						<small class="text-muted"><strong class="text-danger">Destinatarii trebuie selectati</strong></small>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input matInput [matDatepicker]="pickerTermen" placeholder="Termen de executare" formControlName="executionDate">
+						<mat-datepicker-toggle matSuffix [for]="pickerTermen"></mat-datepicker-toggle>
+						<mat-datepicker #pickerTermen></mat-datepicker>
+					</mat-form-field>
+					<div *ngIf="formSubmitted && rForm.get('termentExecutare').invalid">
+						<small class="text-muted"><strong class="text-danger">Destinatarii trebuie selectati</strong></small>
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form">
+					<textarea type="text" id="problematica" class="md-textarea form-control" mdbInputDirective rows="7" formControlName="problemDescription"></textarea>
+					<label for="problematica">Problematica</label>
+				</div>
+			</div>
+		</div>
+		<div class="text-center">
+			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">
+				Urmatorul pas
+			</button>
+		</div>
+	</form>
 </div>

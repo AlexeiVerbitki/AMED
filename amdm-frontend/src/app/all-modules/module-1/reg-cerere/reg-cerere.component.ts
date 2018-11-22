@@ -118,7 +118,7 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
 
         this.loadingService.show();
 
-        var useranameDB = this.authService.getUserName()
+        var useranameDB = this.authService.getUserName();
 
         var modelToSubmit: any = this.rForm.value;
         modelToSubmit.requestHistories = [{

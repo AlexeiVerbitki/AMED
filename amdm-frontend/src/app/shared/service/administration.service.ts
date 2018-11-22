@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from "@angular/common/http";
-import {from, Observable} from "rxjs";
+import {HttpClient, HttpParams} from "@angular/common/http";
+import {Observable} from "rxjs";
 
 @Injectable()
 export class AdministrationService {
@@ -155,14 +155,18 @@ export class AdministrationService {
         return this.http.get('/api/administration/all-atc-codes-by-code', {params: Params});
     }
 
-    getClinicalTrailsCodAndEudra(partialCode: string): Observable<any[]>{
+    getClinicalTrailsCodAndEudra(partialCode: string): Observable<any[]> {
         let Params = new HttpParams();
         Params = Params.set('partialCode', partialCode);
 
         return this.http.get<any[]>('/api/administration/all-clinical-trails-by-cod-or-eudra', {params: Params});
     }
 
-    getClinicalTrailsPhases(): Observable<any>{
+    getClinicalTrailsPhases(): Observable<any> {
         return this.http.get('/api/administration/all-clinical-trail-phases', {});
+    }
+
+    getAllScrUsers(): Observable<any> {
+        return this.http.get('/api/administration/all-scr-users');
     }
 }

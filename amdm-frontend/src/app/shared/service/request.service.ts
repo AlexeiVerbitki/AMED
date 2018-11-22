@@ -73,6 +73,10 @@ export class RequestService {
     addMediacmentPostauthorizationHistoryOnInterruption(requestDetails: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/add-medicament-postauthorization-history', requestDetails, {observe: 'response'});
     }
+    
+    addDocumentRequest(requestDetails: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/add-document-request', requestDetails, {observe: 'response'});
+    }
     addImportRequest(requestDetails: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/add-import-request', requestDetails, {observe: 'response'});
     }

@@ -4,7 +4,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 import {MatDialog} from '@angular/material';
 import {saveAs} from 'file-saver';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {AdministrationService} from '../../../shared/service/administration.service';
 import {Router} from '@angular/router';
 import {Document} from "../../../models/document";
@@ -13,18 +13,20 @@ import {AuthService} from "../../../shared/service/authetication.service";
 import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
 import {LoaderService} from "../../../shared/service/loader.service";
 import {TaskService} from "../../../shared/service/task.service";
+import {CanModuleDeactivate} from "../../../shared/auth-guard/can-deactivate-guard.service";
+import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
 
 @Component({
     selector: 'app-reg-doc',
     templateUrl: './reg-doc.component.html',
     styleUrls: ['./reg-doc.component.css']
 })
-export class RegDocComponent implements OnInit {
+export class RegDocComponent implements OnInit, CanModuleDeactivate {
 
     documents: Document [] = [];
-    companii: any[];
     rForm: FormGroup;
     docTypes: any[];
+    recipients: any[];
 
     generatedDocNrSeq: number;
     formSubmitted: boolean;
@@ -36,21 +38,18 @@ export class RegDocComponent implements OnInit {
                 private administrationService: AdministrationService,
                 private taskService: TaskService,
                 private errorHandlerService: ErrorHandlerService,
-                private loadingService: LoaderService) {
+                private loadingService: LoaderService,
+                public dialogConfirmation: MatDialog) {
         this.rForm = fb.group({
-            'data': {disabled: true, value: new Date()},
-            'requestNumber': [null],
-            'startDate': [new Date()],
-            'currentStep': ['E'],
-            'documentModuleDetails':
-                fb.group({
-                    'name': ['', Validators.required],
-                    'company': [null, Validators.required],
-                    'status': ['P']
-                }),
-            'company': [''],
-
-        });
+                'requestNumber': [null],
+                'startDate': [new Date(), Validators.required],
+                'currentStep': ['E'],
+                'sender': [null, Validators.required],
+                'recipientList': [null, Validators.required],
+                'executionDate': [null, Validators.required],
+                'problemDescription': [null]
+            }
+        );
     }
 
     ngOnInit() {
@@ -64,7 +63,7 @@ export class RegDocComponent implements OnInit {
         );
 
         this.subscriptions.push(
-            this.taskService.getRequestStepByIdAndCode('1', 'R').subscribe(step => {
+            this.taskService.getRequestStepByIdAndCode('24', 'R').subscribe(step => {
                     this.subscriptions.push(
                         this.administrationService.getAllDocTypes().subscribe(data => {
                                 this.docTypes = data;
@@ -75,6 +74,13 @@ export class RegDocComponent implements OnInit {
                     );
                 },
                 error => console.log(error)
+            )
+        );
+
+        this.subscriptions.push(this.administrationService.getAllScrUsers().subscribe(data => {
+                this.recipients = data;
+            },
+            error => console.log(error)
             )
         );
     }
@@ -90,19 +96,38 @@ export class RegDocComponent implements OnInit {
         this.formSubmitted = false;
 
         this.loadingService.show();
-        this.rForm.get('company').setValue(this.rForm.value.medicament.company);
+        let currentUser = this.authService.getUserName()
 
-        var modelToSubmit: any = this.rForm.value;
-        modelToSubmit.requestHistories = [{
-            startDate: this.rForm.get('startDate').value, endDate: new Date(),
-            username: this.authService.getUserName(), step: 'R'
+        let modelToSubmit: any = {recipients: [], registrationRequestsEntity: {requestHistories: {}, type: {}, documents: {}}};
+
+
+        modelToSubmit.registrationRequestsEntity.requestNumber = this.rForm.get('requestNumber').value;
+        modelToSubmit.registrationRequestsEntity.initiator = currentUser;
+        modelToSubmit.registrationRequestsEntity.assignedUser = currentUser;
+        modelToSubmit.registrationRequestsEntity.startDate = this.rForm.get('startDate').value;
+        modelToSubmit.registrationRequestsEntity.currentStep = 'E';
+
+        modelToSubmit.sender = this.rForm.get('sender').value;
+        modelToSubmit.executionDate = this.rForm.get('executionDate').value;
+        modelToSubmit.problemDescription = this.rForm.get('problemDescription').value;
+        // this.populateRecipientsDetails(modelToSubmit);
+
+        this.rForm.value.recipientList.forEach(elem => modelToSubmit.recipients.push({
+            name: elem.username, comment: '', confirmed: false
+        }));
+
+        modelToSubmit.registrationRequestsEntity.requestHistories = [{
+            startDate: this.rForm.get('startDate').value,
+            endDate: new Date(),
+            username: currentUser,
+            step: 'R'
         }];
-        modelToSubmit.medicament.documents = this.documents;
-        modelToSubmit.medicament.registrationDate = new Date();
+        modelToSubmit.registrationRequestsEntity.type = {id: 24, description: '', code: '', processId: ''};
+        modelToSubmit.registrationRequestsEntity.documents = this.documents;
 
-        this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
+        this.subscriptions.push(this.requestService.addDocumentRequest(modelToSubmit).subscribe(data => {
                 this.loadingService.hide();
-                this.router.navigate(['dashboard/module/medicament-registration/evaluate/' + data.body.id]);
+                //this.router.navigate(['dashboard/module/medicament-registration/evaluate/' + data.body.id]);
             }, error => this.loadingService.hide())
         );
     }
@@ -111,4 +136,21 @@ export class RegDocComponent implements OnInit {
         this.subscriptions.forEach(s => s.unsubscribe());
 
     }
+
+    canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
+
+        if (!this.rForm.dirty) {
+            return true;
+        }
+        const dialogRef = this.dialogConfirmation.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Toate datele colectate nu vor fi salvate, sunteti sigur(a)?',
+                confirm: false,
+            }
+        });
+
+        return dialogRef.afterClosed();
+    }
+
+
 }

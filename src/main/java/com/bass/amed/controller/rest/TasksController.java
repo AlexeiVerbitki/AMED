@@ -1,11 +1,11 @@
 package com.bass.amed.controller.rest;
 
-import com.bass.amed.projection.TaskDetailsProjectionDTO;
 import com.bass.amed.dto.TasksDTO;
 import com.bass.amed.entity.ProcessNamesEntity;
 import com.bass.amed.entity.RegistrationRequestStepsEntity;
 import com.bass.amed.entity.RequestTypesEntity;
 import com.bass.amed.exception.CustomException;
+import com.bass.amed.projection.TaskDetailsProjectionDTO;
 import com.bass.amed.repository.ProcessNamesRepository;
 import com.bass.amed.repository.RegistrationRequestStepRepository;
 import com.bass.amed.repository.RequestTypeRepository;
@@ -61,20 +61,18 @@ public class TasksController
 
     @GetMapping(value = "/request-step-by-id-and-code")
     public ResponseEntity<RegistrationRequestStepsEntity> getRegistrationRequestStepByIdAndCode(@RequestParam(value = "id") Integer id,
-                                                                                                  @RequestParam(value = "code") String code) throws CustomException
+                                                                                                @RequestParam(value = "code") String code) throws CustomException
     {
         LOGGER.debug("Get process step by id and code");
-        Optional<RegistrationRequestStepsEntity> requestTypesStepEntityList = registrationRequestStepRepository.findOneByRequestTypeIdAndCode(id,code);
+        Optional<RegistrationRequestStepsEntity> requestTypesStepEntityList = registrationRequestStepRepository.findOneByRequestTypeIdAndCode(id, code);
         return new ResponseEntity<>(requestTypesStepEntityList.orElseThrow(() -> new CustomException("Request was not found")), HttpStatus.OK);
     }
 
     @PostMapping(value = "/get-filtered-tasks")
-    public ResponseEntity<List<TaskDetailsProjectionDTO>> getTasksByFilter(@RequestBody TasksDTO filter) throws ParseException
+    public ResponseEntity<List<TaskDetailsProjectionDTO>> getTasksByFilter(@RequestBody TasksDTO filter)
     {
-        System.out.println(filter);
-
+        LOGGER.debug("Get processes by filter: ", filter.toString());
         List<TaskDetailsProjectionDTO> taskProjections = tasksService.retreiveTaskByFilter(filter);
-
         return new ResponseEntity<>(taskProjections, HttpStatus.OK);
     }
 

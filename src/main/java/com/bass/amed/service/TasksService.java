@@ -39,7 +39,7 @@ public class TasksService
     @Autowired
     private EntityManagerFactory entityManagerFactory;
 
-    public List<TaskDetailsProjectionDTO> retreiveTaskByFilter(TasksDTO filter) throws ParseException
+    public List<TaskDetailsProjectionDTO> retreiveTaskByFilter(TasksDTO filter)
     {
         EntityManager em = null;
         List<TaskDetailsProjectionDTO> taskDetails;

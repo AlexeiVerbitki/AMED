@@ -10,6 +10,9 @@ import {RegDocComponent} from './reg-doc/reg-doc.component';
 import {DocumentModule} from "../../document/document.module";
 import {UploadFileService} from "../../shared/service/upload/upload-file.service";
 import {RequestService} from "../../shared/service/request.service";
+import {CanDeactivateGuard} from "../../shared/auth-guard/can-deactivate-guard.service";
+import { EvaluateDocComponent } from './evaluate-doc/evaluate-doc.component';
+import { EvaluateModalComponent } from './modal/evaluate-modal/evaluate-modal.component';
 
 @NgModule({
     imports: [
@@ -22,8 +25,9 @@ import {RequestService} from "../../shared/service/request.service";
         MaterialSharedModule.forRoot(),
         MDBBootstrapModule.forRoot(),
     ],
-    declarations: [RegDocComponent],
-    providers: [UploadFileService,RequestService]
+    entryComponents: [EvaluateModalComponent],
+    declarations: [RegDocComponent, EvaluateDocComponent, EvaluateModalComponent],
+    providers: [UploadFileService,RequestService,CanDeactivateGuard]
 })
 export class DocFlowModule {
 }
