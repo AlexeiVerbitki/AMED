@@ -3,6 +3,7 @@ package com.bass.amed.entity;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Set;
 
 @Entity @Table(name = "import_authorization", schema = "amed", catalog = "") public class ImportAuthorizationEntity {
 	private Integer                                id;
@@ -25,7 +26,7 @@ import java.util.List;
 	private NmTypesOfCustomsTransactionsEntity     customsTransactionType;
 	private String                                 authorizationsNumber;
 	private Integer                                medType;
-	private List<ImportAuthorizationDetailsEntity> importAuthorizationDetailsEntityList;
+	private Set<ImportAuthorizationDetailsEntity> importAuthorizationDetailsEntityList;
 
 
 	@Id
@@ -221,11 +222,11 @@ import java.util.List;
 
 	@OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
 	@JoinColumn(name = "import_authorization_id")
-	public List<ImportAuthorizationDetailsEntity> getImportAuthorizationDetailsEntityList() {
+	public Set<ImportAuthorizationDetailsEntity> getImportAuthorizationDetailsEntityList() {
 		return importAuthorizationDetailsEntityList;
 	}
 
-	public void setImportAuthorizationDetailsEntityList(List<ImportAuthorizationDetailsEntity> importAuthorizationDetailsEntityList) {
+	public void setImportAuthorizationDetailsEntityList(Set<ImportAuthorizationDetailsEntity> importAuthorizationDetailsEntityList) {
 		this.importAuthorizationDetailsEntityList = importAuthorizationDetailsEntityList;
 	}
 

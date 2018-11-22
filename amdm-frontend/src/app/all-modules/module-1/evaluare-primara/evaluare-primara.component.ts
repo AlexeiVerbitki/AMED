@@ -465,6 +465,7 @@ export class EvaluarePrimaraComponent implements OnInit {
                 medicamentToSubmit.manufactures.push(x);
             }
             modelToSubmit.medicaments.push(medicamentToSubmit);
+            modelToSubmit.medicaments.push(medicamentToSubmit);
         }
 
         if(this.divisions.length==0)
