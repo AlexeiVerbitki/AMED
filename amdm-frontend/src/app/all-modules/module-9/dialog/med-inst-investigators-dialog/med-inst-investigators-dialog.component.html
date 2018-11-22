@@ -1,0 +1,43 @@
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="medInstInvestigatorsGroup" class="my-5">
+    <div class="row">
+      <div class="col-12">
+        <div class="md-form">
+          <input type="text" id="instMed" class="form-control" mdbInputDirective formControlName="instMed">
+          <label for="instMed" class="disabled">Instituţii medicale / Locul desfăşurării studiului</label>
+        </div>
+      </div>
+    </div>
+    <div class="position-button">
+      <button type="button" class="btn btn-indigo waves-light btn-sm" mdbWavesEffect (click)="addInvestigators()"><i
+          class="fa fa-user-plus fa-2x" aria-hidden="true"></i>
+      </button>
+    </div>
+    <hr>
+    <h3 class="text-center font-weight-bold">Lista de investigatori</h3>
+    <div class="container" *ngFor="let item of investigators; let i = index">
+      <div class="row">
+        <div class="col">
+          <div class="md-form-modified">
+            <ng-select id="allInvestigators" name="allInvestigators" [items]="allInvestigatorsList" bindLabel="description"
+              [items]="item.investigatorsList" placeholder="Investigator"
+              required="true">
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="md-form-modified mt-slide">
+            <mat-radio-button value="isInvestigatorPrincipal">Investigator Principal</mat-radio-button>
+          </div>
+        </div>
+        <div class="position-button mt-2">
+          <button type="button" class="btn btn-dark-red-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="removeInvestigator(i)"><i class="fa fa-minus fa-2x" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+  <button class="btn btn-dark-green-color btn-sm waves-light">Adauga</button>
+</mat-dialog-actions>

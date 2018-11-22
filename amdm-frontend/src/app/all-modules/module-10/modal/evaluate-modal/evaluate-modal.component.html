@@ -1,0 +1,13 @@
+<h2 mat-dialog-title class="text-center alert alert-success">Motivul</h2>
+<mat-dialog-content class="mat-typography">
+    <div class="col-md-12">
+        <div class="md-form">
+          <textarea type="text" id="problematica" class="md-textarea form-control" mdbInputDirective></textarea>
+          <label for="problematica">Problematica</label>
+        </div>
+      </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button class="btn btn-danger btn-sm waves-light">Revocare</button>
+  <button class="btn btn-dark-green-color btn-sm waves-light" (click)="addDivision()">Adaugare</button>
+</mat-dialog-actions>
