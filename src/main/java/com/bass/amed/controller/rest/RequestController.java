@@ -708,10 +708,12 @@ public class RequestController
         if (requests.getImportAuthorizationEntity() == null) {
             throw new CustomException("/add-import-request Request was not found");
         }
+        System.out.println(requests.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().toString());
         requestRepository.save(requests);
         //TODO fix the docs
 //        addDDDocument(requests);
         LOGGER.debug("\n\n\n\n=====================\nImport saved\n=====================\n\n\n");
+
         return new ResponseEntity<>(requests, HttpStatus.CREATED);
     }
 

@@ -116,9 +116,9 @@ export class AmbalajComponent implements OnInit {
                 //   For Import management/ import based on customs
                 //customs_declaration_date
                 //customs_transacton_type_id
-                'authorizationsNumber': [''], // inca nu exista la pasul acesta
+                'authorizationsNumber': [], // inca nu exista la pasul acesta
                 'medType': [''],
-                'importAuthorizationDetailsEntityList': [],
+                'importAuthorizationDetailsEntityList': [{}],
                 'unitOfImportTable': this.fb.group({
 
                     customsCode: [],
@@ -388,12 +388,15 @@ export class AmbalajComponent implements OnInit {
         // this.evaluateImportForm.get('importAuthorizationEntity.importAuthorizationDetailsEntityList').setValue(this.unitOfImportTable);
         console.log("this.evaluateImportForm.value", this.evaluateImportForm.value);
         //=============
-
-        // let importAuthorizationEntity = Object.assign({}, this.evaluateImportForm.get('importAuthorizationEntity').value);
-        // importAuthorizationEntity.importAuthorizationDetailsEntityList =
         //
-        // modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
-        modelToSubmit.importAuthorizationEntity.unitOfImportTable = null;
+        // let importAuthorizationEntity = Object.assign({}, this.evaluateImportForm.get('importAuthorizationEntity').value);
+        //
+        // for (let x of this.unitOfImportTable) {
+        //     importAuthorizationEntity.importAuthorizationDetailsEntityList.push(x);
+        // }
+        //
+
+        modelToSubmit.importAuthorizationEntity.unitOfImportTable = this.unitOfImportTable;
         console.log("modelToSubmit", modelToSubmit);
 
         //==============
@@ -404,7 +407,7 @@ export class AmbalajComponent implements OnInit {
             alert("after addImportRequest(modelToSubmit)")
             console.log("addImportRequest(modelToSubmit).subscribe(data) ",data)
                 this.loadingService.hide();
-                this.router.navigate(['dashboard/module']);
+                // this.router.navigate(['dashboard/module']); for now to post multiple times
             }, error => {
             alert("Something went wrong while sending the model")
             console.log("error: ",error)
