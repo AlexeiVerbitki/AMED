@@ -96,7 +96,7 @@ export class EvaluarePrimaraComponent implements OnInit {
                     'pharmaceuticalForm': [null, Validators.required],
                     'pharmaceuticalFormType': [null, Validators.required],
                     'dose': [null],
-                    'unitsOfMeasurement': [null],
+                    'unitsO fMeasurement': [null],
                     'internationalMedicamentName': [null, Validators.required],
                     'volume': [null],
                     'volumeQuantityMeasurement': [null],

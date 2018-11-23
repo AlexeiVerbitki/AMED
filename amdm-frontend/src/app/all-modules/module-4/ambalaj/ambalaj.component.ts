@@ -110,8 +110,8 @@ export class AmbalajComponent implements OnInit {
                 'price': [],
                 'currency': [],
                 'summ': [],
-                'producer_id to be deleted': [],
-                'stuff_type_id to delete': [],
+                'producer_id': [], // to be deleted
+                'stuff_type_id': [], // to delete
                 'expiration_date': [],
 
                 //   For Import management/ import based on customs
@@ -129,7 +129,7 @@ export class AmbalajComponent implements OnInit {
                     price: [],
                     currency: [],
                     summ: [],
-                    producer: [],
+                    producer: [''],
                     expirationDate: [],
                     atcCode: [],
 
@@ -262,9 +262,9 @@ export class AmbalajComponent implements OnInit {
              summ:              this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
                               * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
              producer:          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').value.description,
-             producerAddress:   this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').value.address
-                              + ", "
-                              + this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').value.country.description ,
+             // producerAddress:   this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').value.address
+             //                  + ", "
+             //                  + this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').value.country.description ,
             expirationDate:     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').value
         });
 
