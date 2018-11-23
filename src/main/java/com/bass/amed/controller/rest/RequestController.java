@@ -706,9 +706,8 @@ public class RequestController
 
 
         if (requests.getImportAuthorizationEntity() == null) {
-            throw new CustomException("/add-import-request Request was not found");
+            throw new CustomException("/add-import-request Threw an error, requests.getImportAuthorizationEntity() == null");
         }
-        System.out.println(requests.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().toString());
         requestRepository.save(requests);
         //TODO fix the docs
 //        addDDDocument(requests);
