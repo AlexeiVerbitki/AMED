@@ -136,7 +136,7 @@ export class AdministrationService {
     getAllInvestigators(): Observable<any> {
         return this.http.get('/api/administration/all-investigators', {});
     }
-
+am
     getAllMedicalInstitutions(): Observable<any> {
         return this.http.get('/api/administration/all-medical-institutions', {});
     }
@@ -170,7 +170,10 @@ export class AdministrationService {
         return this.http.get('/api/administration/all-scr-users');
     }
 
-    getAllCustomsCodes(): Observable<any> {
-        return this.http.get('/api/administration/all-customs-code');
+    getAllCustomsCodesByDescription(partialCode: string): Observable<any> {
+        let Params = new HttpParams();
+        Params = Params.set('partialCode', partialCode);
+
+        return this.http.get('/api/administration/all-customs-code',{params: Params});
     }
 }

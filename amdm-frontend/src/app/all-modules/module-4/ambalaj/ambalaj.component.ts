@@ -69,6 +69,10 @@ export class AmbalajComponent implements OnInit {
     loadingAtcCodes: boolean = false;
     atcCodesInputs = new Subject<string>();
 
+    customsCodes: Observable<any[]>;
+    loadingcustomsCodes: boolean = false;
+    customsCodesInputs = new Subject<string>();
+
     constructor(private fb: FormBuilder,
                 private requestService: RequestService,
                 public dialog: MatDialog,
@@ -289,6 +293,28 @@ export class AmbalajComponent implements OnInit {
 
 
     loadATCCodes(){
+        this.customsCodes =
+            this.customsCodesInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 0) {
+                        return true;
+                    }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingcustomsCodes = true;
+
+                }),
+                flatMap(term =>
+                    this.administrationService.getAllCustomsCodesByDescription(term).pipe(
+                        tap(() => this.loadingcustomsCodes = false)
+                    )
+                )
+            );
+    }
+
+    loadCustomsCodes(){
         this.atcCodes =
             this.atcCodesInputs.pipe(
                 filter((result: string) => {

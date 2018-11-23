@@ -1,10 +1,14 @@
 package com.bass.amed.repository;
 
+import com.bass.amed.entity.NmAtcCodesEntity;
 import com.bass.amed.entity.NmCustomsCodesEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
 public interface NmCustomsCodesRepository extends JpaRepository<NmCustomsCodesEntity, Integer> {
-    List<NmCustomsCodesEntity> findAll();
+
+	@Query(value = "SELECT * FROM nm_customs_codes m WHERE m.description like upper(CONCAT(?1, '%'))", nativeQuery = true)
+	List<NmAtcCodesEntity> findByDescriptionStartingWithIgnoreCase(String description);
 }

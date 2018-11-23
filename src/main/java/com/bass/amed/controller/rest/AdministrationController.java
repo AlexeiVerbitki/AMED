@@ -306,12 +306,13 @@ public class AdministrationController
         return new ResponseEntity<>(allScrUsers, HttpStatus.OK);
     }
 
-    @GetMapping("/all-customs-code")
-    public ResponseEntity<List<NmCustomsCodesEntity>> retrieveAllCustomsCodes()
+    @RequestMapping("/all-customs-code")
+    public ResponseEntity<List<NmCustomsCodesEntity>> retrieveAllCustomsCodes(String partialCode)
     {
-        LOGGER.debug("Retrieve customs codes");
-        List<NmCustomsCodesEntity> allCustomsCodes = nmCustomsCodesRepository.findAll();
-
-        return new ResponseEntity<>(allCustomsCodes, HttpStatus.OK);
+        LOGGER.debug("Retrieve customs codes by description" + partialCode);
+	    return new ResponseEntity<>(nmCustomsCodesRepository.findByDescriptionStartingWithIgnoreCase(partialCode), HttpStatus.OK);
     }
+
+    
+
 }
