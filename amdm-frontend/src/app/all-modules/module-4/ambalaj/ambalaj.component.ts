@@ -163,6 +163,7 @@ export class AmbalajComponent implements OnInit {
         this.onChanges();
         this.loadCurrenciesShort();
         this.loadATCCodes();
+        this.loadCustomsCodes();
 
 
 
@@ -329,7 +330,7 @@ export class AmbalajComponent implements OnInit {
 
                 }),
                 flatMap(term =>
-                    this.administrationService.getAllAtcCodesByCode(term).pipe(
+                    this.administrationService.getAllCustomsCodesByDescription(term).pipe(
                         tap(() => this.loadingAtcCodes = false)
                     )
                 )

@@ -136,10 +136,26 @@
                         <!--<div *ngFor="let importTypeForm of importTypeForms.controls; let i=index" [formGroupName]="i">-->
                         <div class="row">
                             <div class="col-4">
-                                <div class="md-form">
-                                    <input id="customsCode" mdbInputDirective type="text" class="form-control"
-                                           formControlName="customsCode">
-                                    <label for="customsCode">Codul vamal</label>
+                                <!--<div class="md-form">-->
+                                    <!--<input id="customsCode" mdbInputDirective type="text" class="form-control"-->
+                                           <!--formControlName="customsCode">-->
+                                    <!--<label for="customsCode">Codul vamal</label>-->
+                                <!--</div>-->
+                                <div class="md-form-modified">
+                                    <ng-select [items]="customsCodes | async"
+                                               bindLabel="description"
+                                               placeholder="Codul Vamal"
+                                               formControlName="producer"
+                                               [loading]="loadingcustomsCodes"
+                                               [typeahead]="customsCodesInputs"
+                                               required="true">
+                                        <ng-template ng-option-tmp let-item="item">
+                                            {{item.description}};
+                                            <small class="form-text text-muted">cod: {{item.code}}</small>
+
+
+                                        </ng-template>
+                                    </ng-select>
                                 </div>
                             </div>
                             <div class="col-4">

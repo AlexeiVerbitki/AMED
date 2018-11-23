@@ -708,6 +708,7 @@ public class RequestController
         if (requests.getImportAuthorizationEntity() == null) {
             throw new CustomException("/add-import-request Threw an error, requests.getImportAuthorizationEntity() == null");
         }
+
         requestRepository.save(requests);
         //TODO fix the docs
 //        addDDDocument(requests);
