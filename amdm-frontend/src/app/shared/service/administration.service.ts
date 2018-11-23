@@ -169,4 +169,8 @@ export class AdministrationService {
     getAllScrUsers(): Observable<any> {
         return this.http.get('/api/administration/all-scr-users');
     }
+
+    getAllCustomsCodes(): Observable<any> {
+        return this.http.get('/api/administration/all-customs-code');
+    }
 }

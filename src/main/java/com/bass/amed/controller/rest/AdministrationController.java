@@ -73,6 +73,8 @@ public class AdministrationController
     private NmCountriesRepository nmCountriesRepository;
     @Autowired
     private EmployeeRepository employeeRepository;
+    @Autowired
+    private NmCustomsCodesRepository nmCustomsCodesRepository;
 
     @RequestMapping(value = "/generate-doc-nr")
     public ResponseEntity<Integer> generateDocNr()
@@ -302,5 +304,14 @@ public class AdministrationController
         List<ScrUserEntity> allScrUsers = srcUserRepository.findAll();
 
         return new ResponseEntity<>(allScrUsers, HttpStatus.OK);
+    }
+
+    @GetMapping("/all-customs-code")
+    public ResponseEntity<List<NmCustomsCodesEntity>> retrieveAllCustomsCodes()
+    {
+        LOGGER.debug("Retrieve customs codes");
+        List<NmCustomsCodesEntity> allCustomsCodes = nmCustomsCodesRepository.findAll();
+
+        return new ResponseEntity<>(allCustomsCodes, HttpStatus.OK);
     }
 }

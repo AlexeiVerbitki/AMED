@@ -244,12 +244,6 @@ export class AmbalajComponent implements OnInit {
     addUnitOfImport() {
         this.unitOfImportPressed = true;
 
-        // if (this.evaluateImportForm.get('activeSubstance').value == null || this.evaluateImportForm.get('activeSubstance').value.toString().length == 0
-        //     || this.evaluateImportForm.get('activeSubstanceQuantity').value == null || this.evaluateImportForm.get('activeSubstanceQuantity').value.toString().length == 0
-        //     || this.evaluateImportForm.get('activeSubstanceUnit').value == null || this.evaluateImportForm.get('activeSubstanceUnit').value.toString().length == 0
-        //     || this.evaluateImportForm.get('manufactureSA').value == null || this.evaluateImportForm.get('manufactureSA').value.toString().length == 0) {
-        //     return;
-        // }
         this.unitOfImportPressed = false;
 
         this.unitOfImportTable.push({
@@ -261,7 +255,7 @@ export class AmbalajComponent implements OnInit {
              currency:          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').value,
              summ:              this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
                               * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
-             producer:          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').value.description,
+             producer:          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').value,
              // producerAddress:   this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').value.address
              //                  + ", "
              //                  + this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').value.country.description ,
@@ -293,15 +287,6 @@ export class AmbalajComponent implements OnInit {
         });
     }
 
-    // loadSolicitantCompanyList() {
-    //     this.subscriptions.push(
-    //         this.administrationService.getAllCompanies().subscribe(data => {
-    //                 this.solicitantCompanyList = data;
-    //             },
-    //             error => console.log(error)
-    //         )
-    //     )
-    // }
 
     loadATCCodes(){
         this.atcCodes =
@@ -330,7 +315,7 @@ export class AmbalajComponent implements OnInit {
         this.importer =
             this.companyInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) return true;
+                    if (result && result.length > 0) return true;
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -352,7 +337,7 @@ export class AmbalajComponent implements OnInit {
         this.manufacturersRfPr =
             this.manufacturerInputsRfPr.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) return true;
+                    if (result && result.length > 0) return true;
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
