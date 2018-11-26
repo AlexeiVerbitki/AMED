@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 	private Timestamp                           expirationDate;
 	private Double                              summ;
 	private NmInternationalMedicamentNameEntity internationalMedicamentName;
-	private String                              atcCode;
+	private NmAtcCodesEntity                    atcCode;
 	private Integer                             returnedAmount;
 	private Integer                             receivedAmount;
 	private Timestamp                           registrationDate;
@@ -132,13 +132,13 @@ import java.sql.Timestamp;
 		this.internationalMedicamentName = internationalMedicamentName;
 	}
 
-	@Basic
-	@Column(name = "atc_code", nullable = true, length = 11)
-	public String getAtcCode() {
+	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+	@JoinColumn(name = "atc_code")
+	public NmAtcCodesEntity getAtcCode() {
 		return atcCode;
 	}
 
-	public void setAtcCode(String atcCode) {
+	public void setAtcCode(NmAtcCodesEntity atcCode) {
 		this.atcCode = atcCode;
 	}
 

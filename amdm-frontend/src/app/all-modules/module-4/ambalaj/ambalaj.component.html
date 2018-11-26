@@ -230,25 +230,26 @@
                                 </div>
                             </div>
 
-                            <!--<div class="col-md-4" *ngIf="importData.importAuthorizationEntity.medType==3">-->
-                                <!--<div class="md-form-modified">-->
-                                    <!--<ng-select [items]="atcCodes | async"-->
-                                               <!--bindLabel="code"-->
-                                               <!--placeholder="Cod ATC"-->
-                                               <!--formControlName="atcCode"-->
-                                               <!--[loading]="loadingAtcCodes"-->
-                                               <!--[typeahead]="atcCodesInputs"-->
-                                               <!--required="true">-->
-                                        <!--<ng-template ng-option-tmp let-item="item">-->
-                                            <!--{{item.code}} <br />-->
-                                            <!--<small class="form-text text-muted">{{item.description}}</small>-->
-                                        <!--</ng-template>-->
-                                    <!--</ng-select>-->
-                                    <!--&lt;!&ndash;<div *ngIf="formSubmitted && eForm.get('medicament.atcCode').invalid">&ndash;&gt;-->
-                                        <!--&lt;!&ndash;<small class="text-muted"><strong class="text-danger">Codul ATC trebuie introdus</strong></small>&ndash;&gt;-->
-                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                                <!--</div>-->
-                            <!--</div>-->
+                            <div class="col-md-4" *ngIf="importData.importAuthorizationEntity.medType==3">
+                                <div class="md-form-modified">
+                                    <ng-select [items]="atcCodes | async"
+                                               bindLabel="code"
+                                               placeholder="Cod ATC"
+                                               formControlName="atcCode"
+                                               [loading]="loadingAtcCodes"
+                                               [typeahead]="atcCodesInputs"
+                                               required="true">
+                                        <ng-template ng-option-tmp let-item="item">
+                                            {{item.code}} <br />
+                                            <small class="form-text text-muted">{{item.description}}</small>
+                                        </ng-template>
+                                    </ng-select>
+
+                                    <!--<div *ngIf="formSubmitted && eForm.get('medicament.atcCode').invalid">-->
+                                        <!--<small class="text-muted"><strong class="text-danger">Codul ATC trebuie introdus</strong></small>-->
+                                    <!--</div>-->
+                                </div>
+                            </div>
 
                             <div class="col-4">
                                 <div class="md-form-modified">
@@ -274,7 +275,7 @@
                         <tr>
                             <th scope="col">Codul Vamal</th>
                             <th scope="col">Denumirea materiei prime (DCI)</th>
-                            <!--<th scope="col" *ngIf="importData.importAuthorizationEntity.medType==3">Codul ATC</th>-->
+                            <th scope="col" *ngIf="importData.importAuthorizationEntity.medType==3">Codul ATC</th>
                             <th scope="col">Cantitate</th>
                             <th scope="col">Pretul</th>
                             <th scope="col">Valuta</th>
@@ -290,14 +291,15 @@
                         <tr *ngFor="let unitOfImport of unitOfImportTable;let i = index">
                             <th scope="row">{{ unitOfImport.customsCode.description }}</th>
                             <td>{{ unitOfImport.name }}</td>
+                            <td>{{ unitOfImport.atcCode.code}}</td>
                             <td>{{ unitOfImport.quantity }}</td>
                             <td>{{ unitOfImport.price }}</td>
-                            <td>{{ unitOfImport.currency.shortDescription }}</td>
+                            <td>{{ unitOfImport.currency.shortDescription}}</td>
                             <td>{{ unitOfImport.summ }}</td>
                             <td>{{ unitOfImport.producer.description }}</td>
                             <td>{{ unitOfImport.producer.address }}, {{ unitOfImport.producer.country.description }}</td>
                             <td>{{ unitOfImport.expirationDate | date:'mediumDate' }}</td>
-                            <!--<td>{{ unitOfImport.atcCode}}</td>-->
+
                             <td>
                                 <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeunitOfImport(i)" mdbWavesEffect>Stergere</button>
                             </td>

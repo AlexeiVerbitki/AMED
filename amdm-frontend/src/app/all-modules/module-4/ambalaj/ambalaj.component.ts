@@ -162,8 +162,9 @@ export class AmbalajComponent implements OnInit {
         // this.addImportTypeForm();
         this.onChanges();
         this.loadCurrenciesShort();
-        this.loadATCCodes();
         this.loadCustomsCodes();
+        this.loadATCCodes();
+
 
 
 
@@ -263,6 +264,7 @@ export class AmbalajComponent implements OnInit {
              summ:              this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
                               * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
              producer:          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').value,
+             atcCode:           this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').value,
              expirationDate:    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').value
         });
 
@@ -309,6 +311,7 @@ export class AmbalajComponent implements OnInit {
                 flatMap(term =>
                     this.administrationService.getAllCustomsCodesByDescription(term).pipe(
                         tap(() => this.loadingcustomsCodes = false)
+
                     )
                 )
             );
@@ -329,11 +332,12 @@ export class AmbalajComponent implements OnInit {
 
                 }),
                 flatMap(term =>
-                    this.administrationService.getAllCustomsCodesByDescription(term).pipe(
+                    this.administrationService.getAllAtcCodesByCode(term).pipe(
                         tap(() => this.loadingAtcCodes = false)
                     )
                 )
             );
+
     }
 
 
