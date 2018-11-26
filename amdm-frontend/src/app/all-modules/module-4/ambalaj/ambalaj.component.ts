@@ -101,7 +101,7 @@ export class AmbalajComponent implements OnInit {
                 // 'requestNumber': {value: '', disabled: true},
                 // 'startDate': {value: '', disabled: true},
                 // 'importer': {value: '', disabled: true},
-                'id;': [''],
+                'id': [],
                 // 'importType': [null, Validators.required],
                 // 'applicationRegistrationNumber': [''],
                 'applicationDate': [new Date()],
@@ -133,7 +133,7 @@ export class AmbalajComponent implements OnInit {
                     price: [],
                     currency: [],
                     summ: [],
-                    producer: [''],
+                    producer: [],
                     expirationDate: [],
                     atcCode: [],
 
@@ -178,7 +178,7 @@ export class AmbalajComponent implements OnInit {
                     this.evaluateImportForm.get('initiator').setValue(data.initiator);
                     this.evaluateImportForm.get('assignedUser').setValue(data.assignedUser);
                     this.evaluateImportForm.get('company').setValue(data.company);
-                    this.evaluateImportForm.get('importAuthorizationEntity.medType').setValue(data.importAuthorizationEntity.medType);
+                                       this.evaluateImportForm.get('importAuthorizationEntity.medType').setValue(data.importAuthorizationEntity.medType);
                     this.evaluateImportForm.get('importAuthorizationEntity.applicant').setValue(data.company);
                     this.evaluateImportForm.get('type.id').setValue(data.type.id);
 
@@ -198,8 +198,10 @@ export class AmbalajComponent implements OnInit {
                 }
             });
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').valueChanges.subscribe(val => {
+                // console.log("val",val)
                 if (val) {
                     this.producerAddress = val.address + ", " + val.country.description;
+                    // console.log("producerAddress",this.producerAddress)
                 }
             });
             this.evaluateImportForm.get('importAuthorizationEntity.importer').valueChanges.subscribe(val => {
@@ -261,10 +263,7 @@ export class AmbalajComponent implements OnInit {
              summ:              this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
                               * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
              producer:          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').value,
-             // producerAddress:   this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').value.address
-             //                  + ", "
-             //                  + this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').value.country.description ,
-            expirationDate:     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').value
+             expirationDate:    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').value
         });
 
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(null);
@@ -392,9 +391,15 @@ export class AmbalajComponent implements OnInit {
 
 
     nextStep() {
+
+
+
         this.formSubmitted = true;
         let modelToSubmit: any ={};
         modelToSubmit = this.evaluateImportForm.value;
+        if (this.importData.importAuthorizationEntity.id){
+            modelToSubmit.importAuthorizationEntity.id =  this.importData.importAuthorizationEntity.id;
+        }
         this.loadingService.show();
 
         modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;

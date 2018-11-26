@@ -145,7 +145,7 @@
                                     <ng-select [items]="customsCodes | async"
                                                bindLabel="description"
                                                placeholder="Codul Vamal"
-                                               formControlName="producer"
+                                               formControlName="customsCode"
                                                [loading]="loadingcustomsCodes"
                                                [typeahead]="customsCodesInputs"
                                                required="true">
@@ -288,14 +288,14 @@
                         </thead>
                         <tbody>
                         <tr *ngFor="let unitOfImport of unitOfImportTable;let i = index">
-                            <th scope="row">{{ unitOfImport.customsCode }}</th>
+                            <th scope="row">{{ unitOfImport.customsCode.description }}</th>
                             <td>{{ unitOfImport.name }}</td>
                             <td>{{ unitOfImport.quantity }}</td>
                             <td>{{ unitOfImport.price }}</td>
                             <td>{{ unitOfImport.currency.shortDescription }}</td>
                             <td>{{ unitOfImport.summ }}</td>
-                            <td>{{ unitOfImport.producer }}</td>
-                            <td>{{ unitOfImport.producerAddress }}</td>
+                            <td>{{ unitOfImport.producer.description }}</td>
+                            <td>{{ unitOfImport.producer.address }}, {{ unitOfImport.producer.country.description }}</td>
                             <td>{{ unitOfImport.expirationDate | date:'mediumDate' }}</td>
                             <!--<td>{{ unitOfImport.atcCode}}</td>-->
                             <td>
