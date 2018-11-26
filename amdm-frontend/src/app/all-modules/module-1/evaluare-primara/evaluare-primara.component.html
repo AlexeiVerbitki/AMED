@@ -80,12 +80,28 @@
 		<div *ngIf="formSubmitted && divisions.length==0">
 			<small class="text-muted"><strong class="text-danger">Nici o divizare nu a fost adaugata</strong></small>
 		</div>
-		<h5 class="text-center font-weight-bold">Substanţe active</h5>
-		<div class="position-button">
-			<button class="btn btn-indigo btn-sm" mdbWavesEffect (click)="addActiveSubstanceDialog()">Adaugă substanţa activă</button>
+		<!--<h5 class="text-center font-weight-bold">Substanţe active</h5>-->
+		<hr>
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Substanţe active</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addActiveSubstanceDialog()" class="fa fa-cog fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
+
+		<!-- Card content -->
+		<div class="card-body card-body-cascade">
 		<table class="table table-widths text-center">
-			<thead class="black white-text">
+			<thead class="bg-sidebar white-text">
 			<tr>
 				<th scope="col">Denumire</th>
 				<th scope="col">Cod CAS</th>
@@ -113,6 +129,7 @@
 			</tr>
 			</tbody>
 		</table>
+		</div>
 		<div *ngIf="formSubmitted && activeSubstancesTable.length==0">
 			<small class="text-muted"><strong class="text-danger">Nici o substanta activa nu a fost adaugata</strong></small>
 		</div>

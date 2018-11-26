@@ -1,9 +1,13 @@
 import {
     Component,
     ComponentFactory,
-    ComponentFactoryResolver, ComponentRef, EventEmitter, Input,
+    ComponentFactoryResolver,
+    ComponentRef,
+    EventEmitter,
+    Input,
     OnDestroy,
-    OnInit, Output,
+    OnInit,
+    Output,
     ViewChild,
     ViewContainerRef
 } from '@angular/core';
@@ -19,7 +23,6 @@ import {Currency} from "../../../models/currency";
 import {UnitOfMeasure} from "../../../models/unitOfMeasure";
 import {Price} from "../../../models/price";
 import {ActivatedRoute, Router} from "@angular/router";
-import {LoaderService} from "../../../shared/service/loader.service";
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
 import {PriceService} from "../../../shared/service/prices.service";
 import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
@@ -39,24 +42,13 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
       private subscriptions: Subscription[] = [];
       private getMedSubscr: Subscription;
 
-
-
       companies: Observable<any[]>;
       loadingCompany : boolean = false;
       companyInputs = new Subject<string>();
 
-      countries: Country[] = [];
-      currencies: Currency[] = [];
-      priceTypes: any[];
-
       companyMedicaments: Observable<any[]>;
       medInputs = new Subject<string>();
       medLoading = false;
-
-
-      OriginCountryPriceTypeId: number;
-
-      startRecDate: Date = new Date();
 
       @ViewChild("priceReferenceContainer", { read: ViewContainerRef }) priceReferenceContainer;
       priceReferenceComponentRef: ComponentRef<ReferencePriceComponent> [] = [];
@@ -67,10 +59,22 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
     public submit: EventEmitter<any> = new EventEmitter();
 
     @Input()
+    docTypes: any[];
+
+    @Input()
     public formSubmitted: boolean;
 
     @Input()
     public medIndex: number;
+
+    @Input()
+    countries: Country[] = [];
+
+    @Input()
+    currencies: Currency[] = [];
+
+    @Input()
+    priceTypes: any[];
 
     medCode:                    string = '';
     internationalName:          string = '';
@@ -80,7 +84,6 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
     expirationDate:             string = '';
     volumeQuantityMeasurement:  string = '';
     volumeProp:                 number;
-    pricesRequestId:            number;
     medicamentType:             any = {code:MedicamentType.Generic, description: 'Generic'};
     MedType = MedicamentType;
 
@@ -91,8 +94,7 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
               private priceService: PriceService,
               private router: Router,
               private route: ActivatedRoute,
-              private resolver: ComponentFactoryResolver,
-              private loadingService: LoaderService) {
+              private resolver: ComponentFactoryResolver) {
 
           this.subscriptions.push(
           this.route.params.subscribe(params => {
@@ -111,112 +113,64 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
         });
   }
 
-  ngOnInit() {
+    ngOnInit() {
 
-      this.companies =
-          this.companyInputs.pipe(
-              filter((result: string) => {
-                  if (result && result.length > 2) return true;
-              }),
-              debounceTime(400),
-              distinctUntilChanged(),
-              tap((val: string) => {
-                  this.loadingCompany = true;
+        this.companies =
+            this.companyInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) return true;
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingCompany = true;
 
-              }),
-              flatMap(term =>
+                }),
+                flatMap(term =>
 
-                  this.priceService.getCompanyNamesAndIdnoList(term).pipe(
-                      tap(() => this.loadingCompany = false)
-                  )
-              )
-          );
+                    this.priceService.getCompanyNamesAndIdnoList(term).pipe(
+                        tap(() => this.loadingCompany = false)
+                    )
+                )
+            );
 
-      this.subscriptions.push(
-          this.priceService.getCountries().subscribe(countriesData => {
-                  this.countries = countriesData;
-              },
-              error => console.log(error)
-          ));
+        this.companyMedicaments =
+            this.medInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) return true;
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.medLoading = true;
 
-      this.subscriptions.push(
-          this.priceService.getCurrenciesShort().subscribe(currenciesData => {
-                  this.currencies = currenciesData;
-              },
-              error => console.log(error)
-          ));
+                }),
+                flatMap(term =>
 
-      this.subscriptions.push(
-          this.priceService.getPriceTypes('2').subscribe(priceTypes => {
-                  this.priceTypes = priceTypes;
+                    this.priceService.getMedicamentNamesAndCodeList(term).pipe(
+                        tap(() => this.medLoading = false)
+                    )
+                )
+            );
 
-                  var i = 0;
-                  while (i < this.priceTypes.length) {
-                      if (this.priceTypes[i].description == 'Propus' || this.priceTypes[i].description == 'Acceptat') {
-                          this.priceTypes.splice(i, 1);
-                      }
-                      else {
-                          ++i;
-                      }
-                  }
+        this.generateRequestNumber();
+    }
 
-                  for(let p of this.priceTypes) {
-                      if(p.description == 'În țara de origine') {
-                          this.OriginCountryPriceTypeId = p.id;
-                          break;
-                      }
-                  }
-              },
-              error => console.log(error)
-          ));
+    generateRequestNumber(){
+        this.subscriptions.push(
+            this.priceService.generateDocNumber().subscribe(generatedNumber => {
+                    this.PriceRegForm.get('requestNumber').setValue(generatedNumber);
+                },
+                error => {
+                    console.log(error);
+                    alert(error);
+                }
+            )
+        );
+    }
 
-      this.companyMedicaments =
-          this.medInputs.pipe(
-              filter((result: string) => {
-                  if (result && result.length > 2) return true;
-              }),
-              debounceTime(400),
-              distinctUntilChanged(),
-              tap((val: string) => {
-                  this.medLoading = true;
-
-              }),
-              flatMap(term =>
-
-                  this.priceService.getMedicamentNamesAndCodeList(term).pipe(
-                      tap(() => this.medLoading = false)
-                  )
-              )
-          );
-
-      if(this.updateRouteId != undefined) {
-          this.subscriptions.push(
-              this.priceService.getPricesRequest(this.updateRouteId).subscribe(request => {
-                  console.log('requewst', JSON.stringify(request));
-                  this.pricesRequestId = request.pricesRequest.id;
-                  this.PriceRegForm.get('id').setValue(request.id);
-                  this.PriceRegForm.get('requestNumber').setValue(request.requestNumber);
-                  this.PriceRegForm.get('company').setValue(request.company);
-                  this.PriceRegForm.get('medicament').setValue(request.pricesRequest.medicament);
-                  this.PriceRegForm.get('initiator').setValue(request.initiator);
-                  this.PriceRegForm.get('requestHistories').setValue(request.requestHistories);
-                  this.onMedSelected(request.pricesRequest.medicament);
-                  this.initPrices(request.pricesRequest);
-
-                  this.documents = [];
-                  request.pricesRequest.documents.forEach(doc => this.documents.push(doc));
-          }));
-      } else {
-          this.subscriptions.push(
-              this.priceService.generateDocNumber().subscribe(generatedNumber => {
-                      this.PriceRegForm.get('requestNumber').setValue(generatedNumber);
-                  },
-                  error => {console.log(error); alert(error);}
-              )
-          );
-      }
-  }
-
+    documentAdded($event) {
+    }
 
   sendDTO() {
       let refPrices: Price[] = [];
@@ -224,6 +178,7 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
           refPrices.push(value.instance.refPrice);
       });
       let dto: any = this.PriceRegForm.value;
+      dto.documents = this.documents;
       dto.referencePrices = refPrices;
       dto.index = this.medIndex;
       dto.valid = this.PriceRegForm.valid;
@@ -271,18 +226,9 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
   private initPrices(newMed: any) {
       if(!newMed) return;
 
-      // let prices: Price[] = newMed.prices;
-      // if(prices != undefined && prices.length > 0) {
-      //     prices.forEach(value => {
-      //         this.addProposedPriceRow();
-      //         this.proposedPriceComponentRef[this.proposedPriceRefIndex - 1].instance.price = value
-      //     });
-      // }
-
       let refPrices: Price[] = newMed.referencePrices;
       if (refPrices != undefined && refPrices.length > 0) {
           refPrices.forEach(value => {
-              // if(value.type == 3) { // 3 - pret in tara de origine 4 - pret in tara de referinta
               this.addReferencePriceRow();
               this.priceReferenceComponentRef[this.priceRefIndex - 1].instance.refPrice = value;
           })
@@ -294,13 +240,13 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
       if(med.expirationDate == undefined) return;
 
       let expDate: Date = new Date();
-      expDate.setFullYear(expDate.getFullYear() + 1);
+      expDate.setMonth(expDate.getMonth() + 2);
       let expMedDate = new Date(med.expirationDate);
 
       let diffInMs: number = Date.parse(expMedDate.toDateString()) - Date.parse(expDate.toDateString());
       let diffInHours: number = diffInMs / 1000 / 60 / 60 ;
 
-       if (diffInHours >= 0) {
+       if (expMedDate < expDate) {
           const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
               data: {
                   message: 'Medicamentul selectat expiră în curînd, selectați altul!',
@@ -308,10 +254,11 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
               }
           });
           dialogRef.afterClosed().subscribe(result => {
-              // if(result) {
+               if(result) {
                   this.PriceRegForm.get('medicament').reset();
                   this.onRemoveMed();
-              // }
+                  this.sendDTO();
+               }
           });
        }
   }
@@ -338,9 +285,6 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
       }
 
       this.medicamentType = newMed.medicamentType;
-      // if(newMed.medicamentType != undefined) {
-      //     this.medicamentType = (<MedicamentType>newMed.medicamentType.code);
-      // }
 
       let expDate: Date = newMed.expirationDate;
       if(expDate != undefined) {
@@ -360,8 +304,8 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
       this.internationalName = '';
       this.volumeQuantityMeasurement = '';
       this.medicamentType = undefined;
-      this.dose = undefined;
-      this.division = undefined;
+      this.dose = '';
+      this.division = '';
       this.expirationDate = '';
       this.termsOfValidity = undefined;
       this.volumeProp = undefined;
@@ -407,13 +351,4 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
       this.subscriptions.forEach(value => value.unsubscribe());
       this.priceReferenceComponentRef.forEach(row => row.destroy());
   }
-
-    // ngAfterContentInit() {
-    //     alert('ngAfterContentInit');
-    //     // this.footer now points to the instance of `FooterComponent`
-    // }
-    //
-    // ngAfterViewInit() {
-    //     alert('ngAfterViewInit');
-    // }
 }

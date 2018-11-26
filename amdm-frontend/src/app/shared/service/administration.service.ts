@@ -148,6 +148,13 @@ am
         return this.http.get<any[]>('/api/administration/search-companies-by-name-or-idno', {params: Params});
     }
 
+    getCompanyDetailsForLicense(partialName: string): Observable<any[]> {
+        let Params = new HttpParams();
+        Params = Params.set('partialName', partialName);
+
+        return this.http.get<any[]>('/api/administration/all-companies-details-license', {params: Params});
+    }
+
     getAllAtcCodesByCode(partialCode: string): Observable<any> {
         let Params = new HttpParams();
         Params = Params.set('partialCode', partialCode);

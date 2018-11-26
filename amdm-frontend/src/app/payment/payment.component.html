@@ -18,7 +18,7 @@
                 <label for="sumaBon">Suma (lei)</label>
             </div>
         </div>
-        <div class="col-2">
+        <div class="col-2" *ngIf="!bonSuplimentarNotRender">
             <div class="md-form">
                 <mat-checkbox formControlName="sP" [attr.disabled]="isDisabled">Bon suplimentar</mat-checkbox>
             </div>

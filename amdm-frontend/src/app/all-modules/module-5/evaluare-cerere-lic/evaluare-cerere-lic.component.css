@@ -15,3 +15,24 @@
   left: -11px;
   top: 13px;
 }
+
+table td a {
+  text-decoration: underline;
+  color : #488CD3;
+  font-weight : bold;
+}
+
+
+.example-container {
+  max-height : 250px;
+  width: 100%;
+  overflow: auto;
+}
+
+table td {
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 350px;
+}

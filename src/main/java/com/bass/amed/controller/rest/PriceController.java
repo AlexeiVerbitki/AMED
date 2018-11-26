@@ -125,13 +125,13 @@ public class PriceController {
 
           List<PricesDTO> dtos = pricesManagementRepository.getPricesByFilter(filter.getRequestNumber(),
                 filter.getMedicamentCode(),
-                filter.getMedicamentType(),
+                filter.getOrderNr(),
                 filter.getCurrentStep(),
                 filter.getPriceType(),
                 filter.getAssignedPerson(),
-                filter.getStartDate(),
-                filter.getEndDate(),
-                filter.getFolderNr()  );
+                filter.getOrderApprovDate(),
+                filter.getFolderNr(),
+                filter.getExpirationDate());
 
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }

@@ -23,6 +23,8 @@ export class PaymentComponent implements OnInit {
     paymentOrdersList: PaymentOrder[] = [];
     paymentOrdersTotal: number = 0;
 
+    bonSuplimentarNotRender: boolean = false;
+
     total: number = 0;
 
     disabled: boolean = false;
@@ -99,6 +101,15 @@ export class PaymentComponent implements OnInit {
             disabled ? this.addPaymentOrderForm.controls[control].disable() : this.addPaymentOrderForm.controls[control].enable();
         }
         this.disabled = disabled;
+    }
+
+    get isBonSuplimentarNotRender(): boolean {
+        return this.bonSuplimentarNotRender;
+    }
+
+    @Input()
+    set isBonSuplimentarNotRender(bonSuplimentarNotRender: boolean) {
+        this.bonSuplimentarNotRender = bonSuplimentarNotRender;
     }
 
     addReceipt() {

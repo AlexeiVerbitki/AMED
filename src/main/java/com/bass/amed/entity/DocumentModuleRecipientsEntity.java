@@ -10,11 +10,12 @@ import javax.persistence.*;
 public class DocumentModuleRecipientsEntity
 {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
     @Basic
-    @Column(name = "name", nullable = true)
-    private Integer name;
+    @Column(name = "name", nullable = true, length = 60)
+    private String name;
     @Basic
     @Column(name = "comment", nullable = true, length = 5000)
     private String comment;

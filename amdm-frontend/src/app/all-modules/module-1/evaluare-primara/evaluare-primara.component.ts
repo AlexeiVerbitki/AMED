@@ -356,7 +356,7 @@ export class EvaluarePrimaraComponent implements OnInit {
 
         this.subscriptions.push(
             this.administrationService.getAllPharamceuticalFormsByTypeId(this.eForm.get('medicament.pharmaceuticalFormType').value.id).subscribe(data => {
-                    this.eForm.get('medicament.pharmaceuticalForm').setValue('');
+                    this.eForm.get('medicament.pharmaceuticalForm').setValue(null);
                     this.pharmaceuticalForms = data;
                     if (this.initialData.medicaments && this.initialData.medicaments.length!=0 && this.initialData.medicaments[0] && this.initialData.medicaments[0].pharmaceuticalForm) {
                         this.eForm.get('medicament.pharmaceuticalForm').setValue(this.pharmaceuticalForms.find(r => r.id === this.initialData.medicaments[0].pharmaceuticalForm.id));

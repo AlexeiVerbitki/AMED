@@ -68,6 +68,16 @@ public class TasksController
         return new ResponseEntity<>(requestTypesStepEntityList.orElseThrow(() -> new CustomException("Request was not found")), HttpStatus.OK);
     }
 
+
+    @GetMapping(value = "/request-step-by-code-and-step")
+    public ResponseEntity<RegistrationRequestStepsEntity> getRegistrationRequestStepByCodeAndStep(@RequestParam(value = "code") String code,
+                                                                                                @RequestParam(value = "step") String step) throws CustomException
+    {
+        LOGGER.debug("Get process step by code and step" + code + step);
+        Optional<RegistrationRequestStepsEntity> requestTypesStepEntityList = registrationRequestStepRepository.findByRequestCodeAndStep(code, step);
+        return new ResponseEntity<>(requestTypesStepEntityList.orElseThrow(() -> new CustomException("Request was not found")), HttpStatus.OK);
+    }
+
     @PostMapping(value = "/get-filtered-tasks")
     public ResponseEntity<List<TaskDetailsProjectionDTO>> getTasksByFilter(@RequestBody TasksDTO filter)
     {

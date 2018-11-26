@@ -29,6 +29,13 @@ export class MedicamentService {
         return this.http.get<any>('/api/medicaments/search-medicament-by-id', {params: Params});
     }
 
+    getMedicamentByCode(code: string): Observable<any> {
+        let Params = new HttpParams();
+        Params = Params.set('code', code);
+
+        return this.http.get<any>('/api/medicaments/search-medicament-by-code', {params: Params});
+    }
+
     interruptProcess(details: any): Observable<any> {
         return this.http.post<any>('/api/medicaments/interrupt-process', details, {observe: 'response'});
     }
@@ -37,6 +44,10 @@ export class MedicamentService {
         let Params = new HttpParams();
         Params = Params.set('registerNumber', registerNumber);
         return this.http.get<any>('/api/medicaments/search-medicaments-by-register-number',{params: Params});
+    }
+
+    getMedicamentsByFilter(filter: any): Observable<any> {
+        return this.http.post<any>('/api/medicaments/by-filter', filter, {observe: 'response'});
     }
 
 }

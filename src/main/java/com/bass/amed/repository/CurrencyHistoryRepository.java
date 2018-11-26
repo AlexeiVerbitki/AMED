@@ -10,6 +10,15 @@ import java.util.List;
 public interface CurrencyHistoryRepository extends JpaRepository<NmCurrenciesHistoryEntity, Integer> {
     List<NmCurrenciesHistoryEntity> getAllByPeriod(Date today);
 
-    @Query(value = "SELECT t.id, t.currency_id currencyId, AVG(t.value) avgValue FROM nm_currencies_history t LEFT JOIN nm_currencies c ON t.currency_id = c.id WHERE (t.period <= NOW() AND t.period >= DATE_ADD(NOW(), INTERVAL -30 DAY)) GROUP BY t.currency_id", nativeQuery = true)
+    @Query(value = "SELECT t.id,\n" +
+            "       t.currency_id                                                           currencyId,\n" +
+            "       AVG(t.value)                                                            avgValue,\n" +
+            "       DATE_ADD(DATE_ADD(LAST_DAY(NOW()), INTERVAL 1 DAY), INTERVAL - 2 MONTH) firstDayOfLastMonth,\n" +
+            "       LAST_DAY(DATE_ADD(NOW(), INTERVAL - 1 MONTH))                           lastDayOfLastMonth\n" +
+            "FROM nm_currencies_history t\n" +
+            "       LEFT JOIN nm_currencies c ON t.currency_id = c.id\n" +
+            "WHERE (t.period <= LAST_DAY(DATE_ADD(NOW(), INTERVAL - 1 MONTH)) AND\n" +
+            "       t.period >= DATE_ADD(DATE_ADD(LAST_DAY(NOW()), INTERVAL 1 DAY), INTERVAL - 2 MONTH))\n" +
+            "GROUP BY t.currency_id;", nativeQuery = true)
     List<GetAVGCurrencyProjection> getPrevMonthAVGCurrencies();
 }

@@ -41,6 +41,8 @@ public class RequestController
     private GenerateMedicamentRegistrationNumberRepository generateMedicamentRegistrationNumberRepository;
     @Autowired
     private PriceRepository priceRepository;
+    @Autowired
+    private DocumentModuleDetailsRepository documentModuleDetailsRepository;
 
     @RequestMapping(value = "/add-medicament-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RegistrationRequestsEntity> saveMedicamentRequest(@RequestBody RegistrationRequestsEntity request) throws CustomException
@@ -393,8 +395,8 @@ public class RequestController
 
             RegistrationRequestsEntity request = regOptional.get();
             PricesEntity price = (PricesEntity) Hibernate.unproxy(request.getPrice());
-            MedicamentEntity originalMedicament = (MedicamentEntity) Hibernate.unproxy(price.getMedicament().getOriginalMedicament());
-            price.getMedicament().setOriginalMedicament(originalMedicament);
+//            String originalMedicamentName = price.getMedicament().getOriginalMedicamentName();
+//            price.getMedicament().setOriginalMedicamentName(originalMedicamentName);
             request.setPrice(price);
 
             Set<OutputDocumentsEntity> outputDocs = new HashSet<>(docTypes.size());
@@ -684,12 +686,11 @@ public class RequestController
     }
 
     @PostMapping("/add-document-request")
-    public ResponseEntity<RegistrationRequestsEntity> addDocumentRequest(@RequestBody RegistrationRequestsEntity request)
+    public ResponseEntity<DocumentModuleDetailsEntity> addDocumentRequest(@RequestBody DocumentModuleDetailsEntity request)
     {
         LOGGER.info("Add document registration request");
-        //        request.getType().set
-        requestRepository.save(request);
-        return new ResponseEntity<>(new RegistrationRequestsEntity(), HttpStatus.CREATED);
+        documentModuleDetailsRepository.save(request);
+        return new ResponseEntity<>(request, HttpStatus.CREATED);
     }
 
 

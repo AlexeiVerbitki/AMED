@@ -3,15 +3,17 @@ package com.bass.amed.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "nm_types_of_economic_agents", schema = "amed", catalog = "")
+@Table(name = "nm_economic_agent_types", schema = "amed")
 public class NmTypesOfEconomicAgentsEntity
 {
     private Integer id;
     private String code;
     private String description;
+    private String representant;
 
     @Id
     @Column(name = "id")
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
     public Integer getId()
     {
         return id;
@@ -44,6 +46,18 @@ public class NmTypesOfEconomicAgentsEntity
     public void setDescription(String description)
     {
         this.description = description;
+    }
+
+    @Basic
+    @Column(name = "main_representant")
+    public String getRepresentant()
+    {
+        return representant;
+    }
+
+    public void setRepresentant(String representant)
+    {
+        this.representant = representant;
     }
 
     @Override

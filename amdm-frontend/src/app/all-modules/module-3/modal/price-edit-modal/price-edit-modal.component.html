@@ -36,4 +36,5 @@
 </mat-dialog-content>
 <mat-dialog-actions align="center">
     <button class="btn btn-dark-green-color btn-sm waves-light" [disabled]="this.priceEntity.invalid" (click)="save()">Salvează</button>
+    <button class="btn btn-dark-red-color btn-sm waves-light" (click)="this.dialogRef.close()">Închide</button>
 </mat-dialog-actions>

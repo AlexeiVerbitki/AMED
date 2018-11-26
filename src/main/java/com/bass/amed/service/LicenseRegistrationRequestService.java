@@ -14,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -27,6 +28,9 @@ public class LicenseRegistrationRequestService
 
     @Autowired
     private NmStatesRepository statesRepository;
+
+    @Autowired
+    private LocalityService localityService;
 
     @Autowired
     private LicenseResolutionRepository licenseResolutionRepository;
@@ -46,10 +50,24 @@ public class LicenseRegistrationRequestService
         }
         RegistrationRequestsEntity rrE = re.get();
         rrE.setLicense((LicensesEntity)Hibernate.unproxy(re.get().getLicense()));
-        rrE.getLicense().getAddresses().forEach(
-                addr -> addr.setState(statesRepository.findById(addr.getLocality().getStateId()).get())
-        );
-        rrE.setCompany((NmEconomicAgentsEntity) Hibernate.unproxy(re.get().getCompany()));
+//        rrE.getLicense().getAddresses().forEach(
+//                addr -> addr.setState(statesRepository.findById(addr.getLocality().getStateId()).get())
+//        );
+
+        rrE.getLicense().setDetail(rrE.getLicense().getDetails().stream().filter(det -> det.getRegistrationId().equals(rrE.getId())).findFirst().get());
+
+        for (NmEconomicAgentsEntity ece : rrE.getLicense().getEconomicAgents())
+        {
+            ece.setLocality(localityService.findLocalityById(ece.getLocality().getId()));
+            ece.setSelectedPharmaceutist(ece.getAgentPharmaceutist().stream().filter(af -> af.getSelectionDate() != null).max(Comparator.comparing(LicenseAgentPharmaceutistEntity::getSelectionDate)).get());
+        }
+
+        for (NmEconomicAgentsEntity ne : rrE.getLicense().getEconomicAgents())
+        {
+            ne.setCurrentResolution(ne.getResolutions().stream().filter(e -> e.getLicenseDetailId().equals(rrE.getLicense().getDetail().getId())).findFirst().orElse(null));
+        }
+
+
 
 //        if (rrE.getLicense().getAgentPharmaceutist() != null && !rrE.getLicense().getAgentPharmaceutist().isEmpty())
 //        {
@@ -117,102 +135,124 @@ public class LicenseRegistrationRequestService
             em.getTransaction().begin();
             RegistrationRequestsEntity r = em.find(RegistrationRequestsEntity.class, request.getId());
 
-            //Update object addresses
-            r.getLicense().setAddresses(request.getLicense().getAddresses());
-
-            //Update resolution
-//            if (r.getLicense().getResolution() == null)
-//            {
-//                LicenseResolutionEntity resolutionAng = request.getLicense().getResolution();
-//                resolutionAng.setRegistrationId(r.getId());
-//                r.getLicense().getResolutions().add(resolutionAng);
-//            }
-//            else {
-//                LicenseResolutionEntity lre = em.find(LicenseResolutionEntity.class, r.getLicense().getResolution().getId());
-//                lre.setDate(request.getLicense().getResolution().getDate());
-//                lre.setReason(request.getLicense().getResolution().getReason());
-//                lre.setResolution(request.getLicense().getResolution().getResolution());
-//
-//                em.merge(lre);
-//            }
-
-
-            r.getLicense().setSerialNr(request.getLicense().getSerialNr());
-            r.getLicense().setNr(request.getLicense().getNr());
+            //License Details
+            LicenseDetailsEntity lde = em.find(LicenseDetailsEntity.class, request.getLicense().getDetail().getId());
+            boolean updateDetails = false;
 
             //Update documents
-//            Set<DocumentsEntity> dSet = request.getLicense().getDocuments().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
-//
-//            if (!dSet.isEmpty()){
-//                r.getLicense().getDocuments().addAll(dSet);
-//            }
+            Set<DocumentsEntity> dSet = request.getLicense().getDetail().getDocuments().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
+
+            if (!dSet.isEmpty()){
+                lde.getDocuments().addAll(dSet);
+                updateDetails = true;
+            }
 
 
             //Update receipts
-//            Set<ReceiptsEntity> rSet = request.getLicense().getReceipts().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
-//
-//            if (!rSet.isEmpty()){
-//                r.getLicense().getReceipts().addAll(rSet);
-//            }
+            Set<ReceiptsEntity> rSet = request.getLicense().getDetail().getReceipts().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
+
+            if (!rSet.isEmpty()){
+                lde.getReceipts().addAll(rSet);
+                updateDetails = true;
+            }
 
             //Update payments
-//            Set<PaymentOrdersEntity> pSet = request.getLicense().getPaymentOrders().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
-//
-//            if (!pSet.isEmpty()){
-//                r.getLicense().getPaymentOrders().addAll(pSet);
-//            }
+            Set<PaymentOrdersEntity> pSet = request.getLicense().getDetail().getPaymentOrders().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
 
-            //Update farmacisti
-//            Set<LicenseAgentPharmaceutistEntity> fSet = request.getLicense().getAgentPharmaceutist().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
-//
-//            if (!fSet.isEmpty()){
-//                r.getLicense().getAgentPharmaceutist().addAll(fSet);
-//            }
-//
-//            for (LicenseAgentPharmaceutistEntity lap : request.getLicense().getAgentPharmaceutist())
-//            {
-//                if (lap.getId() != null)
-//                {
-//                    LicenseAgentPharmaceutistEntity lTmp = em.find(LicenseAgentPharmaceutistEntity.class, lap.getId());
-//                    lTmp.setSelectionDate(lap.getSelectionDate());
-//
-//                    em.merge(lTmp);
-//                }
-//            }
+            if (!pSet.isEmpty()){
+                lde.getPaymentOrders().addAll(pSet);
+                updateDetails = true;
+            }
 
-            //Update commision response
-//            for (LicenseCommisionResponseEntity le : request.getLicense().getCommisionResponses())
-//            {
-//                if (le.getId() != null){
-//                    LicenseCommisionResponseEntity lTmp = em.find(LicenseCommisionResponseEntity.class, le.getId());
-//                    lTmp.setDate(le.getDate());
-//                    lTmp.setAnnouncedMethods(le.getAnnouncedMethods());
-//                    lTmp.setEntryRspNumber(le.getEntryRspNumber());
-//                    lTmp.setOrganization(le.getOrganization());
-//                    lTmp.setExtraData(le.getExtraData());
+
+            //Commision responses
+            for (LicenseCommisionResponseEntity le : request.getLicense().getDetail().getCommisionResponses())
+            {
+                if (le.getId() != null){
+                    LicenseCommisionResponseEntity lTmp = em.find(LicenseCommisionResponseEntity.class, le.getId());
+                    lTmp.setDate(le.getDate());
+                    lTmp.setAnnouncedMethods(le.getAnnouncedMethods());
+                    lTmp.setEntryRspNumber(le.getEntryRspNumber());
+                    lTmp.setOrganization(le.getOrganization());
+                    lTmp.setExtraData(le.getExtraData());
+
+                    em.merge(lTmp);
+                }
+            }
+
+            Set<LicenseCommisionResponseEntity> newC = request.getLicense().getDetail().getCommisionResponses().stream().filter(co -> co.getId() == null).collect(Collectors.toSet());
+            if (!newC.isEmpty())
+            {
+                lde.setCommisionResponses(newC);
+            }
+
+            //Merge data
+            if (updateDetails)
+            {
+                em.merge(lde);
+            }
+
+
+            //Economic agents
+            //From view
+            Set<NmEconomicAgentsEntity> ecViewList =  request.getLicense().getEconomicAgents();
+            //Existing
+            Set<NmEconomicAgentsEntity> ecExistingList =  r.getLicense().getEconomicAgents();
+
+            Set<Integer> ecViewIds = ecViewList.stream().map(x -> x.getId()).collect(Collectors.toSet());
+            Set<Integer> ecExistingIds = ecExistingList.stream().map(x -> x.getId()).collect(Collectors.toSet());
+
+            ecExistingIds.removeAll(ecViewIds);
+
+            for (Integer rmv : ecExistingIds)
+            {
+                NmEconomicAgentsEntity ec = em.find(NmEconomicAgentsEntity.class, rmv);
+
+                ec.setLicenseId(null);
+
+                em.merge(ec);
+            }
+
+            for (NmEconomicAgentsEntity ecView : ecViewList)
+            {
+                NmEconomicAgentsEntity ec = em.find(NmEconomicAgentsEntity.class, ecView.getId());
+
+//                ec = ecView;
+
+                //Farmacisti
+                ec.getAgentPharmaceutist().clear();
+                ec.getAgentPharmaceutist().addAll(ecView.getAgentPharmaceutist());
+
+
+                //Activitati
+                ec.getActivities().clear();
+                ec.getActivities().addAll(ecView.getActivities());
+
+                //Resolution
+                if (ecView.getCurrentResolution() != null)
+                {
+                    ecView.getCurrentResolution().setLicenseDetailId(request.getLicense().getDetail().getId());
+                    ec.getResolutions().clear();
+                    ec.getResolutions().add(ecView.getCurrentResolution());
+                }
+
+
+                ec.setLicenseId(request.getLicense().getId());
+
+                em.merge(ec);
+            }
+
+//            //License
+//            LicensesEntity lEntity = em.find(LicensesEntity.class, request.getLicense().getId());
 //
-//                    em.merge(lTmp);
-//                }
-//            }
-//
-//            Set<LicenseCommisionResponseEntity> newC = request.getLicense().getCommisionResponses().stream().filter(co -> co.getId() == null).collect(Collectors.toSet());
-//            if (!newC.isEmpty())
-//            {
-//                r.getLicense().setCommisionResponses(newC);
-//            }
+//            r.getLicense().getEconomicAgents().clear();
+//            r.getLicense().getEconomicAgents().addAll(request.getLicense().getEconomicAgents());
+
 
             r.getRequestHistories().add(new ArrayList<>(request.getRequestHistories()).get(0));
 
-
-            //Update activities
-//            r.getLicense().getActivities().clear();
-//            r.getLicense().getActivities().addAll(request.getLicense().getActivities());
-
-            if (next)
-            {
-                r.setCurrentStep("I");
-
-            }
+            r.setCurrentStep(request.getCurrentStep());
+            r.setAssignedUser(request.getAssignedUser());
 
             em.merge(r);
 
@@ -265,18 +305,30 @@ public class LicenseRegistrationRequestService
 //                em.merge(lm);
 //            }
 
+            r.getLicense().setSerialNr(request.getLicense().getSerialNr());
+            r.getLicense().setNr(request.getLicense().getNr());
+
             r.getRequestHistories().add(new ArrayList<>(request.getRequestHistories()).get(0));
+
             r.setEndDate(request.getEndDate());
+
+            if (request.getLicense().getStatus().equals("F"))
+            {
+                Date releaseDate = new Date();
+                r.getLicense().setReleaseDate(releaseDate);
+
+                Calendar c = Calendar.getInstance();
+                c.setTime(releaseDate);
+                c.add(Calendar.YEAR, 5);
+
+                r.getLicense().setExpirationDate(c.getTime());
+            }
+
             r.getLicense().setStatus(request.getLicense().getStatus());
-            Date releaseDate = new Date();
-            r.getLicense().setReleaseDate(releaseDate);
-
-            Calendar c = Calendar.getInstance();
-            c.setTime(releaseDate);
-            c.add(Calendar.YEAR, 5);
-
-            r.getLicense().setExpirationDate(c.getTime());
             r.setCurrentStep(request.getCurrentStep());
+            r.setAssignedUser(request.getAssignedUser());
+
+            r.getLicense().setStatus(request.getLicense().getStatus());
 
             em.merge(r);
 
@@ -350,20 +402,20 @@ public class LicenseRegistrationRequestService
             //New request
             em.persist(request);
 
-            //Update license
-//            Set<DocumentsEntity> dSet = originalLicense.getDocuments().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
-//
-//            if (!dSet.isEmpty()){
-//                le.getDocuments().addAll(dSet);
-//            }
-//
-//
-//            //Mandated contact
-//            LicenseMandatedContactEntity mandatedContact = new ArrayList<>(originalLicense.getLicenseMandatedContacts()).get(0);
-//            mandatedContact.setRegistrationRequestId(request.getId());
-//            le.getLicenseMandatedContacts().add(mandatedContact);
 
-            em.merge(le);
+            LicenseDetailsEntity detail = originalLicense.getDetail();
+            detail.setRegistrationId(request.getId());
+            request.getLicense().getDetails().add(detail);
+
+            em.merge(request);
+
+//            //Update license
+//            //Mandated contact
+//            LicenseMandatedContactEntity mandatedContact = new ArrayList<>(originalLicense.getDetail().getLicenseMandatedContacts()).get(0);
+//            mandatedContact.set setRegistrationRequestId(request.getId());
+//            le.getLicenseMandatedContacts().add(mandatedContact);
+//
+//            em.merge(le);
             em.getTransaction().commit();
 
         }

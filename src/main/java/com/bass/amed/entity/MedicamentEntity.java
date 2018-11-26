@@ -104,12 +104,14 @@ public class MedicamentEntity
     @Basic
     @Column(name = "division")
     private String division;
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH})
-    @JoinColumn(name = "original_medicament_id")
-    private MedicamentEntity originalMedicament;
+//    @Basic
+//    @Column(name = "original_medicament_name")
+//    private String originalMedicamentName;
     @Basic
     @Column(name = "request_id")
     private Integer requestId;
+    @Column(name = "drug_check_decisions_id")
+    private Integer drugCheckDecisionsId;
 
     public void assign(MedicamentHistoryEntity entity)
     {

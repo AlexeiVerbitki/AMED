@@ -16,184 +16,197 @@ import {TaskService} from "../../../shared/service/task.service";
 import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
 
 @Component({
-  selector: 'app-cerere-dub-autor-act',
-  templateUrl: './cerere-dub-autor-act.component.html',
-  styleUrls: ['./cerere-dub-autor-act.component.css']
+    selector: 'app-cerere-dub-autor-act',
+    templateUrl: './cerere-dub-autor-act.component.html',
+    styleUrls: ['./cerere-dub-autor-act.component.css']
 })
 export class CerereDubAutorActComponent implements OnInit {
 
-  cerereDupAutorForm: FormGroup;
-  documents: Document [] = [];
-  docTypes: any[];
-  formSubmitted: boolean;
-  currentDate: Date;
-  generatedDocNrSeq: number;
-  private subscriptions: Subscription[] = [];
-  paymentOrdersList: PaymentOrder[] = [];
-  receiptsList: Receipt[] = [];
-  paymentTotal : number;
-  outDocuments: any[] = [];
-  initialData: any;
-  isNonAttachedDocuments: boolean = false;
-  isResponseReceived: boolean = false;
-  docTypesInitial: any[];
+    cerereDupAutorForm: FormGroup;
+    documents: Document [] = [];
+    docTypes: any[];
+    formSubmitted: boolean;
+    currentDate: Date;
+    generatedDocNrSeq: number;
+    private subscriptions: Subscription[] = [];
+    paymentOrdersList: PaymentOrder[] = [];
+    receiptsList: Receipt[] = [];
+    paymentTotal: number;
+    outDocuments: any[] = [];
+    initialData: any;
+    isNonAttachedDocuments: boolean = false;
+    isResponseReceived: boolean = false;
+    docTypesInitial: any[];
 
-  constructor(private fb: FormBuilder, private administrationService: AdministrationService,
-              private authService : AuthService, private requestService : RequestService, private router: Router,
-              private activatedRoute: ActivatedRoute, private documentService: DocumentService,
-              private loadingService: LoaderService, public dialogConfirmation: MatDialog, private taskService: TaskService,
-              private errorHandlerService: ErrorHandlerService) {
-    this.cerereDupAutorForm = fb.group({
-        'id': [],
-        'data': {disabled: true, value: new Date()},
-        'dataReg': {disabled: true, value: null},
-        'currentStep' : ['E'],
-        'startDate': [new Date()],
-        'endDate': [''],
-        'requestNumber': [null, Validators.required],
-        'company' : [null, Validators.required],
-        'companyValue': [''],
-        'documents': [],
-        'medicaments': [[]],
-        'requestHistories': [],
-        'type': [],
-        'typeValue': {disabled: true, value: null}
-    });
-  }
+    constructor(private fb: FormBuilder, private administrationService: AdministrationService,
+                private authService: AuthService, private requestService: RequestService, private router: Router,
+                private activatedRoute: ActivatedRoute, private documentService: DocumentService,
+                private loadingService: LoaderService, public dialogConfirmation: MatDialog, private taskService: TaskService,
+                private errorHandlerService: ErrorHandlerService) {
 
-  ngOnInit() {
+        this.cerereDupAutorForm = fb.group({
+            'id': [],
+            'data': {disabled: true, value: new Date()},
+            'dataReg': {disabled: true, value: null},
+            'currentStep': ['E'],
+            'startDate': [new Date()],
+            'endDate': [''],
+            'requestNumber': [null, Validators.required],
+            'initiator': [''],
+            'assignedUser': [''],
+            'company': [null, Validators.required],
+            'companyValue': [''],
+            'documents': [],
+            'medicaments': [[]],
+            'requestHistories': [],
+            'type': [],
+            'typeValue': {disabled: true, value: null}
+        });
+    }
 
-      this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
-              this.subscriptions.push(this.requestService.getMedicamentRequest(params['id']).subscribe(data => {
-                      this.cerereDupAutorForm.get('id').setValue(data.id);
-                      this.cerereDupAutorForm.get('dataReg').setValue(data.startDate);
-                      this.cerereDupAutorForm.get('requestNumber').setValue(data.requestNumber);
-                      this.cerereDupAutorForm.get('company').setValue(data.company);
-                      this.cerereDupAutorForm.get('companyValue').setValue(data.company.name);
-                      this.cerereDupAutorForm.get('requestHistories').setValue(data.requestHistories);
-                      this.cerereDupAutorForm.get('type').setValue(data.type);
-                      this.cerereDupAutorForm.get('typeValue').setValue(data.type.code);
-                      this.cerereDupAutorForm.get('medicaments').setValue(data.medicaments);
-                      this.documents = data.documents;
-                      this.outDocuments = data.outputDocuments;
-                      this.documents.sort((a,b)=>new Date(a.date).getTime()-new Date(b.date).getTime());
-                      let xs = this.documents;
-                      xs = xs.map(x => {
-                          x.isOld = true;
-                          return x;
-                      });
+    ngOnInit() {
 
-                      this.loadDocTypes();
-                  })
-              );
-          })
-      );
+        this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
+                this.subscriptions.push(this.requestService.getMedicamentRequest(params['id']).subscribe(data => {
+                        this.cerereDupAutorForm.get('id').setValue(data.id);
+                        this.cerereDupAutorForm.get('dataReg').setValue(data.startDate);
+                        this.cerereDupAutorForm.get('requestNumber').setValue(data.requestNumber);
+                        this.cerereDupAutorForm.get('initiator').setValue(data.initiator);
+                        this.cerereDupAutorForm.get('company').setValue(data.company);
+                        this.cerereDupAutorForm.get('companyValue').setValue(data.company.name);
+                        this.cerereDupAutorForm.get('requestHistories').setValue(data.requestHistories);
+                        this.cerereDupAutorForm.get('type').setValue(data.type);
+                        this.cerereDupAutorForm.get('typeValue').setValue(data.type.code);
+                        this.cerereDupAutorForm.get('medicaments').setValue(data.medicaments);
+                        this.documents = data.documents;
+                        this.outDocuments = data.outputDocuments;
+                        this.documents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+                        let xs = this.documents;
+                        xs = xs.map(x => {
+                            x.isOld = true;
+                            return x;
+                        });
 
-    this.currentDate = new Date();
+                        this.loadDocTypes();
+                    })
+                );
+            })
+        );
 
-  }
+        this.currentDate = new Date();
 
-  saveRequest() {
+    }
 
-      this.formSubmitted = true;
-      let isFormInvalid = false;
-      this.isResponseReceived = false;
-      this.isNonAttachedDocuments = false;
+    saveRequest() {
 
-      if (this.cerereDupAutorForm.invalid || this.paymentTotal<0) {
-          isFormInvalid = true;
-      }
+        this.formSubmitted = true;
+        let isFormInvalid = false;
+        this.isResponseReceived = false;
+        this.isNonAttachedDocuments = false;
 
-      for (let entry of this.outDocuments) {
+        if (this.cerereDupAutorForm.invalid || this.paymentTotal < 0) {
+            isFormInvalid = true;
+        }
 
-          if (entry.responseReceived || entry.status == 'Atasat') {
-              this.isResponseReceived = true;
-              if (entry.status == 'Nu este atasat') {
-                  this.isNonAttachedDocuments = true;
-              }
-          }
-      }
+        this.checkSelectedDocumentsStatus();
 
-      if (isFormInvalid) {
-          this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
-          return;
-      } else if (!this.isResponseReceived) {
-          this.errorHandlerService.showError('Nici un document pentru emitere nu a fost selectat.');
-          return;
-      }
-      else if (this.isNonAttachedDocuments && this.isResponseReceived) {
-          this.errorHandlerService.showError('Exista documente care nu au fost atasate.');
-          return;
-      }
+        if (isFormInvalid) {
+            this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
+            return;
+        } else if (!this.isResponseReceived) {
+            this.errorHandlerService.showError('Nici un document pentru emitere nu a fost selectat.');
+            return;
+        } else if (this.isNonAttachedDocuments && this.isResponseReceived) {
+            this.errorHandlerService.showError('Exista documente care nu au fost atasate.');
+            return;
+        }
 
-      if (isFormInvalid) {
-          return;
-      }
+        if (isFormInvalid) {
+            return;
+        }
 
-      this.isResponseReceived = true;
-      this.formSubmitted = false;
+        this.isResponseReceived = true;
+        this.formSubmitted = false;
 
-      this.cerereDupAutorForm.get('endDate').setValue(new Date());
-      this.cerereDupAutorForm.get('company').setValue(this.cerereDupAutorForm.value.company);
+        this.cerereDupAutorForm.get('endDate').setValue(new Date());
+        this.cerereDupAutorForm.get('company').setValue(this.cerereDupAutorForm.value.company);
 
-      let modelToSubmit : any = this.cerereDupAutorForm.value;
+        let modelToSubmit: any = this.cerereDupAutorForm.value;
 
-      modelToSubmit.requestHistories.push({
-          startDate: this.cerereDupAutorForm.get('data').value, endDate: new Date(),
-          username: this.authService.getUserName(), step: 'E'
-      });
+        this.populateModelToSubmit(modelToSubmit);
 
-      modelToSubmit.paymentOrders = this.paymentOrdersList;
-      modelToSubmit.receipts = this.receiptsList;
-      modelToSubmit.documents = this.documents;
+        this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
+                this.router.navigate(['dashboard/module']);
+            }, error => console.log(error))
+        );
+    }
 
-      console.log(modelToSubmit);
+    populateModelToSubmit(modelToSubmit: any) {
 
-      this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
-              this.router.navigate(['dashboard/module']);
-          }, error => console.log(error))
-      );
-  }
+        modelToSubmit.requestHistories.push({
+            startDate: this.cerereDupAutorForm.get('data').value, endDate: new Date(),
+            username: this.authService.getUserName(), step: 'E'
+        });
 
-  paymentTotalUpdate(event) {
-      this.paymentTotal = event.valueOf();
-  }
+        modelToSubmit.assignedUser = this.authService.getUserName();
 
-  checkResponseReceived(doc: any, value: any) {
-      doc.responseReceived = value.checked;
-  }
+        modelToSubmit.paymentOrders = this.paymentOrdersList;
+        modelToSubmit.receipts = this.receiptsList;
+        modelToSubmit.documents = this.documents;
+    }
 
-  viewDoc(document: any) {
-      this.loadingService.show();
-      if (document.docType.category == 'SR' || document.docType.category == 'AP') {
-          this.subscriptions.push(this.documentService.viewRequest(document.number,
-              document.content,
-              document.title,
-              document.docType.category).subscribe(data => {
-                  let file = new Blob([data], {type: 'application/pdf'});
-                  var fileURL = URL.createObjectURL(file);
-                  window.open(fileURL);
-                  this.loadingService.hide();
-              }, error => {
-                  this.loadingService.hide();
-              }
-              )
-          );
-      } else {
-          this.subscriptions.push(this.documentService.viewDD(document.number).subscribe(data => {
-                  let file = new Blob([data], {type: 'application/pdf'});
-                  var fileURL = URL.createObjectURL(file);
-                  window.open(fileURL);
-                  this.loadingService.hide();
-              }, error => {
-                  this.loadingService.hide();
-              }
-              )
-          );
-      }
-  }
+    paymentTotalUpdate(event) {
+        this.paymentTotal = event.valueOf();
+    }
 
-  remove(doc: any) {
+    checkResponseReceived(doc: any, value: any) {
+        doc.responseReceived = value.checked;
+    }
+
+    checkSelectedDocumentsStatus() {
+
+        for (let entry of this.outDocuments) {
+
+            if (entry.responseReceived || entry.status == 'Atasat') {
+                this.isResponseReceived = true;
+                if (entry.status == 'Nu este atasat') {
+                    this.isNonAttachedDocuments = true;
+                }
+            }
+        }
+    }
+
+    viewDoc(document: any) {
+        this.loadingService.show();
+        if (document.docType.category == 'SR' || document.docType.category == 'AP') {
+            this.subscriptions.push(this.documentService.viewRequest(document.number,
+                document.content,
+                document.title,
+                document.docType.category).subscribe(data => {
+                    let file = new Blob([data], {type: 'application/pdf'});
+                    var fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.loadingService.hide();
+                }, error => {
+                    this.loadingService.hide();
+                }
+                )
+            );
+        } else {
+            this.subscriptions.push(this.documentService.viewDD(document.number).subscribe(data => {
+                    let file = new Blob([data], {type: 'application/pdf'});
+                    var fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.loadingService.hide();
+                }, error => {
+                    this.loadingService.hide();
+                }
+                )
+            );
+        }
+    }
+
+    remove(doc: any) {
         const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
             data: {
                 message: 'Sunteti sigur(a)?',
@@ -217,9 +230,9 @@ export class CerereDubAutorActComponent implements OnInit {
                 );
             }
         });
-  }
+    }
 
-  checkOutputDocumentsStatus() {
+    checkOutputDocumentsStatus() {
         for (let entry of this.outDocuments) {
             var isMatch = this.documents.some(elem => {
                 return (elem.docType.category == entry.docType.category && elem.number == entry.number) ? true : false;
@@ -230,9 +243,9 @@ export class CerereDubAutorActComponent implements OnInit {
                 entry.status = 'Nu este atasat';
             }
         }
-  }
+    }
 
-  loadDocTypes() {
+    loadDocTypes() {
 
         this.subscriptions.push(
             this.taskService.getRequestStepByIdAndCode('13', 'E').subscribe(step => {
@@ -251,9 +264,9 @@ export class CerereDubAutorActComponent implements OnInit {
                 error => console.log(error)
             )
         );
-  }
+    }
 
-  private initOutputDocuments() {
+    private initOutputDocuments() {
 
         this.outDocuments = [];
         let outDocumentAP = {
@@ -287,7 +300,7 @@ export class CerereDubAutorActComponent implements OnInit {
             date: new Date()
         };
         this.outDocuments.push(outDocumentSR);
-  }
+    }
 
     documentModified(event) {
         this.formSubmitted = false;
@@ -306,7 +319,13 @@ export class CerereDubAutorActComponent implements OnInit {
             if (result) {
                 this.loadingService.show();
                 let usernameDB = this.authService.getUserName();
-                var modelToSubmit = {requestHistories: [], currentStep: 'I', id: this.cerereDupAutorForm.get('id').value, assignedUser : usernameDB, initiator : this.authService.getUserName()};
+                var modelToSubmit = {
+                    requestHistories: [],
+                    currentStep: 'I',
+                    id: this.cerereDupAutorForm.get('id').value,
+                    assignedUser: usernameDB,
+                    initiator: this.authService.getUserName()
+                };
                 modelToSubmit.requestHistories.push({
                     startDate: this.cerereDupAutorForm.get('data').value, endDate: new Date(),
                     username: usernameDB, step: 'E'

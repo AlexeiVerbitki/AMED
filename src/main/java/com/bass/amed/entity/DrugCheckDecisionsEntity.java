@@ -4,6 +4,8 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -47,5 +49,11 @@ public class DrugCheckDecisionsEntity
     @Basic
     @Column(name = "cpcd_response_date")
     private Date cpcdResponseDate;
+    @Basic
+    @Column(name = "drug_substance_types_id")
+    private Integer drugSubstanceTypesId;
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @JoinColumn(name = "drug_check_decisions_id")
+    private Set<MedicamentEntity> medicaments = new HashSet<>();
 
 }

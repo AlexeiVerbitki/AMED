@@ -9,7 +9,6 @@ import {MaterialSharedModule} from "../../material-shared.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {UploadFileService} from "../../shared/service/upload/upload-file.service";
 import {RequestService} from "../../shared/service/request.service";
-import {NumberOnlyDirective} from "../../shared/directive/number-only.directive";
 import {DocumentModule} from "../../document/document.module";
 import {PaymentModule} from "../../payment/payment.module";
 import {ProcessInterruptionComponent} from "./process-interruption/process-interruption.component";

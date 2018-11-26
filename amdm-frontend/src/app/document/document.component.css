@@ -1,13 +1,7 @@
-.md-form {
+.md-forms {
     position: relative;
-    margin-top: 14px !important;
-    margin-bottom: 5px !important;
-}
-
-.md-form-modified {
-    position: relative;
-    margin-top: 0px;
-    margin-bottom: 5px !important;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
 label.required:not(:empty):after, .field-header.required:after {
@@ -18,6 +12,72 @@ label.required:not(:empty):after, .field-header.required:after {
     top: -15px;
 }
 
+td, td {
+    text-align: center !important;
+}
+
 .mt-4s {
     padding-top: 45px;
 }
+
+.md-form-modified {
+    position: relative;
+    margin-top: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.table-width {
+    width: 100%;
+}
+th, td {
+    text-align: center !important;
+}
+mat-header-cell {
+    display:flex;
+    justify-content:flex-end;
+}
+::ng-deep .mat-sort-header-container {
+    display:flex;
+    justify-content:center;
+}
+
+.modal-open .modal {
+    overflow-y: auto;
+}
+
+.modal {
+    overflow-y:auto;
+}
+
+.w-10 {
+    width: 10%;
+}
+
+.w-15 {
+    width: 15%;
+}
+.mat-focused .mat-form-field-label {
+    color: #5cb53f !important;
+}
+
+.mat-form-field-ripple {
+    background-color: #5cb53f !important;
+}
+
+mat-label {
+    color: #fff !important;
+}
+.filter .mat-form-field-appearance-legacy .mat-form-field-label {
+    color: #fff !important;
+}
+
+mat-form-field {
+    color: #fff !important;
+}
+
+.md-form-doc {
+    position: relative;
+    margin-top: 0px;
+    margin-bottom: 5px !important;
+}
+

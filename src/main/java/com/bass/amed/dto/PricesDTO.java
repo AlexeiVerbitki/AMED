@@ -11,14 +11,19 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @Entity
-public class PricesDTO implements Serializable
-{
+public class PricesDTO implements Serializable {
+    public PricesDTO() {
+    }
+
     private String medicament;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
     private String requestNumber;
+    private String price;
+    private String orderNr;
+    private String mdlValue;
+    private String currency;
+    private String division;
     private String medicamentType;
     private String priceType;
     private String medicamentCode;
@@ -29,9 +34,9 @@ public class PricesDTO implements Serializable
     private Date startDate;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date endDate;
-    public PricesDTO()
-    {
-
-    }
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private Date expirationDate;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private Date orderApprovDate;
 
 }

@@ -31,17 +31,18 @@ public class LicensesEntity
     @Column(name = "status")
     private String status;
 
-//    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
-//    @JoinColumn( name = "ec_agent_id" )
-//    private NmEconomicAgentsEntity economicAgent;
+    @Basic
+    @Column(name = "idno")
+    private String idno;
+
+
+    @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "license_id")
+    private Set<NmEconomicAgentsEntity> economicAgents;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @JoinColumn(name = "cessation_reason_id")
     private LicenseCessationReasonsEntity cessationReasons;
-
-    @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "license_id")
-    private Set<LicenseAddressesEntity> addresses;
 
     @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "license_id")
@@ -130,25 +131,14 @@ public class LicensesEntity
         this.cessationReasons = cessationReasons;
     }
 
-//    public NmEconomicAgentsEntity getEconomicAgent()
-//    {
-//        return economicAgent;
-//    }
-
-//    public void setEconomicAgent(NmEconomicAgentsEntity economicAgent)
-//    {
-//        this.economicAgent = economicAgent;
-//    }
-
-
-    public Set<LicenseAddressesEntity> getAddresses()
+    public Set<NmEconomicAgentsEntity> getEconomicAgents()
     {
-        return addresses;
+        return economicAgents;
     }
 
-    public void setAddresses(Set<LicenseAddressesEntity> addresses)
+    public void setEconomicAgents(Set<NmEconomicAgentsEntity> economicAgents)
     {
-        this.addresses = addresses;
+        this.economicAgents = economicAgents;
     }
 
     public Set<LicenseDetailsEntity> getDetails()
@@ -164,6 +154,16 @@ public class LicensesEntity
     public LicenseDetailsEntity getDetail()
     {
         return detail;
+    }
+
+    public String getIdno()
+    {
+        return idno;
+    }
+
+    public void setIdno(String idno)
+    {
+        this.idno = idno;
     }
 
     public void setDetail(LicenseDetailsEntity detail)
@@ -184,14 +184,12 @@ public class LicensesEntity
                 Objects.equals(cessationDate, that.cessationDate) &&
                 Objects.equals(expirationDate, that.expirationDate) &&
                 Objects.equals(status, that.status) &&
-//                Objects.equals(economicAgent, that.economicAgent) &&
-                Objects.equals(cessationReasons, that.cessationReasons) &&
-                Objects.equals(addresses, that.addresses);
+                Objects.equals(cessationReasons, that.cessationReasons);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(id, serialNr, nr, releaseDate, cessationDate, expirationDate, status, /*economicAgent,*/ cessationReasons, addresses);
+        return Objects.hash(id, serialNr, nr, releaseDate, cessationDate, expirationDate, status, cessationReasons);
     }
 }

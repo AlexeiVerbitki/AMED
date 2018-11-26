@@ -7,7 +7,6 @@ body {
 .md-form-modified .mat-form-field-infix {
   padding: 0.61em 0 !important;
 }
-
 .mat-tab-body-content {
   overflow: hidden !important;
 }
@@ -64,6 +63,8 @@ ng-select.ng-valid.ng-touched .ng-select-container:after {
 .mt-4s {
   padding-top: 40px;
 }
+
+
 
 .md-forms {
   position: relative;
@@ -127,6 +128,10 @@ ng-select.ng-valid.ng-touched .ng-select-container:after {
 .btn-violet-color {
   background-color: #574b90  !important;
   color: #fff !important;
+}
+
+.filter.mat-form-field-appearance-legacy .mat-form-field-underline {
+  background: #fff !important;
 }
 
 .btn-dark-red-color {
@@ -237,6 +242,25 @@ ng-select.ng-valid.ng-touched .ng-select-container:after {
   stroke-linecap: round;
 }
 
+.doc-checkbox .mat-checkbox-label {
+  margin-left: 15px !important;
+}
+.mat-form-field.mat-form-field-invalid .mat-form-field-ripple, .mat-form-field.mat-form-field-invalid .mat-form-field-ripple.mat-accent {
+  background-color: #f44336;
+  border: 1px solid #f44336;
+}
+
+
+.btn-rounded-button {
+  border-radius: 15px !important;
+}
+
+.md-form-selected-modified {
+  position: relative;
+  margin-top: 0px!important;
+  margin-bottom: 2px !important;
+}
+
 @keyframes rotate {
   100% {
     transform: rotate(360deg);
@@ -290,8 +314,7 @@ ng-select.ng-valid.ng-touched .ng-select-container:after {
     opacity: 0
   }
 }
-
-@media screen and (min-width: 1439px) and (max-width: 1441px) { 
+@media screen and (min-width: 1439px) and (max-width: 1441px) {
   .col-xxl-10 {
     -ms-flex: 0 0 75%;
     flex: 0 0 75%;
@@ -303,7 +326,7 @@ ng-select.ng-valid.ng-touched .ng-select-container:after {
 }
 
 
-@media screen and (min-width: 1442px){ 
+@media screen and (min-width: 1442px){
   .col-xxl-10 {
     -ms-flex: 0 0 83.333333%;
     flex: 0 0 83.333333%;
@@ -373,13 +396,10 @@ ng-select.ng-valid.ng-touched .ng-select-container:after {
     width: 100%;
   }
 }
-
 .mat-form-field.mat-form-field-invalid .mat-form-field-ripple, .mat-form-field.mat-form-field-invalid .mat-form-field-ripple.mat-accent {
   background-color: #f44336;
   border: 1px solid #f44336;
 }
-
-
 .btn-rounded-button {
   border-radius: 15px !important;
 }

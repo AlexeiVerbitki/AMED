@@ -28,7 +28,8 @@
               "./node_modules/angular-bootstrap-md/scss/mdb-free.scss",
               "./node_modules/font-awesome/css/font-awesome.min.css",
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-              "./src/styles.css"
+              "./src/styles.css",
+              "./src/table.css"
             ],
             "scripts": [
               "./node_modules/jquery/dist/jquery.min.js",

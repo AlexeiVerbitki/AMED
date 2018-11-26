@@ -396,13 +396,16 @@ export class AmbalajComponent implements OnInit {
 
         this.formSubmitted = true;
         let modelToSubmit: any ={};
+        this.loadingService.show();
+
         modelToSubmit = this.evaluateImportForm.value;
         if (this.importData.importAuthorizationEntity.id){
             modelToSubmit.importAuthorizationEntity.id =  this.importData.importAuthorizationEntity.id;
         }
-        this.loadingService.show();
+
 
         modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
+        modelToSubmit.endDate = new Date();
         console.log("this.evaluateImportForm.value", this.evaluateImportForm.value);
         //=============
 

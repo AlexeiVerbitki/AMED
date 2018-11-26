@@ -24,8 +24,12 @@ public class LicenseAddressesEntity
     @OneToOne( fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "locality_id")
     private NmLocalitiesEntity locality;
+    @Basic
+    @Column(name="license_detail_id")
+    private Integer licenseDetail;
     @Transient
     private NmStatesEntity state;
+
 
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
@@ -136,6 +140,16 @@ public class LicenseAddressesEntity
     public void setSelectedPharmaceutist(LicenseAgentPharmaceutistEntity selectedPharmaceutist)
     {
         this.selectedPharmaceutist = selectedPharmaceutist;
+    }
+
+    public Integer getLicenseDetail()
+    {
+        return licenseDetail;
+    }
+
+    public void setLicenseDetail(Integer licenseDetail)
+    {
+        this.licenseDetail = licenseDetail;
     }
 
     @Override

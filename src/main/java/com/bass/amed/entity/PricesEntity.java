@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import java.util.Set;
 
 @Entity
-@Table(name = "prices", schema = "amed", catalog = "")
+@Table(name = "prices", schema = "amed")
 public class PricesEntity
 {
     private Integer id;
@@ -21,6 +21,7 @@ public class PricesEntity
     private Timestamp orderApprovDate;
     private Timestamp revisionDate;
     private BigDecimal mdlValue;
+    private String orderNr;
 
     @Basic
     @Column(name = "order_approv_date")
@@ -30,6 +31,16 @@ public class PricesEntity
 
     public void setOrderApprovDate(Timestamp orderApprovDate) {
         this.orderApprovDate = orderApprovDate;
+    }
+
+    @Basic
+    @Column(name = "order_nr")
+    public String getOrderNr() {
+        return orderNr;
+    }
+
+    public void setOrderNr(String orderNr) {
+        this.orderNr = orderNr;
     }
 
     @Basic
@@ -164,7 +175,13 @@ public class PricesEntity
             return false;
         if (referencePrices != null ? !referencePrices.equals(that.referencePrices) : that.referencePrices != null)
             return false;
-        return medicament != null ? medicament.equals(that.medicament) : that.medicament == null;
+        if (medicament != null ? !medicament.equals(that.medicament) : that.medicament != null) return false;
+        if (folderNr != null ? !folderNr.equals(that.folderNr) : that.folderNr != null) return false;
+        if (orderApprovDate != null ? !orderApprovDate.equals(that.orderApprovDate) : that.orderApprovDate != null)
+            return false;
+        if (revisionDate != null ? !revisionDate.equals(that.revisionDate) : that.revisionDate != null) return false;
+        if (mdlValue != null ? !mdlValue.equals(that.mdlValue) : that.mdlValue != null) return false;
+        return orderNr != null ? orderNr.equals(that.orderNr) : that.orderNr == null;
     }
 
     @Override
@@ -177,6 +194,11 @@ public class PricesEntity
         result = 31 * result + (expirationReason != null ? expirationReason.hashCode() : 0);
         result = 31 * result + (referencePrices != null ? referencePrices.hashCode() : 0);
         result = 31 * result + (medicament != null ? medicament.hashCode() : 0);
+        result = 31 * result + (folderNr != null ? folderNr.hashCode() : 0);
+        result = 31 * result + (orderApprovDate != null ? orderApprovDate.hashCode() : 0);
+        result = 31 * result + (revisionDate != null ? revisionDate.hashCode() : 0);
+        result = 31 * result + (mdlValue != null ? mdlValue.hashCode() : 0);
+        result = 31 * result + (orderNr != null ? orderNr.hashCode() : 0);
         return result;
     }
 
@@ -191,6 +213,11 @@ public class PricesEntity
                 ", expirationReason=" + expirationReason +
                 ", referencePrices=" + referencePrices +
                 ", medicament=" + medicament +
+                ", folderNr='" + folderNr + '\'' +
+                ", orderApprovDate=" + orderApprovDate +
+                ", revisionDate=" + revisionDate +
+                ", mdlValue=" + mdlValue +
+                ", orderNr='" + orderNr + '\'' +
                 '}';
     }
 }

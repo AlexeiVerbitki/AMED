@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Document} from "../../../models/document";
 import {Observable, of, Subject, Subscription} from "rxjs";
 import {AdministrationService} from "../../../shared/service/administration.service";
@@ -20,7 +20,7 @@ import {LocalityService} from "../../../shared/service/locality.service";
 export class RegMedCerereLicComponent implements OnInit, OnDestroy {
 
     companii: Observable<any[]>;
-    loadingCompany : boolean = false;
+    loadingCompany: boolean = false;
     companyInputs = new Subject<string>();
 
     docs: Document [] = [];
@@ -30,6 +30,10 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
     rFormSubbmitted: boolean = false;
     companyLicenseNotFound = false;
     oldLicense: any;
+    docTypeIdentifier: any;
+
+
+    maxDate = new Date();
 
     //count time
     startDate: Date;
@@ -66,13 +70,13 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
                 }),
                 flatMap(term =>
 
-                    this.administrationService.getCompanyNamesAndIdnoList(term).pipe(
+                    this.administrationService.getCompanyDetailsForLicense(term).pipe(
                         tap(() => this.loadingCompany = false),
-                        catchError( () => {
+                        catchError(() => {
                             this.loadingCompany = false;
-                            return of([]);;
+                            return of([]);
+                            ;
                         })
-
                     )
                 )
             );
@@ -92,7 +96,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
             'persResDepCereriiFirstname': [null, Validators.required],
             'persResDepCereriiLastname': [null, Validators.required],
             'nrProcurii1': [null, Validators.required],
-            'dataProcurii1': [null, Validators.required],
+            'dataProcurii1': [{value: null, disabled: true}, Validators.required],
             'seria': [{value: null, disabled: true}],
             'nrLic': [{value: null, disabled: true}],
             'dataEliberariiLic': [{value: null, disabled: true}],
@@ -152,9 +156,10 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
         }
 
         licenseModel.detail = licenseDetail;
+        licenseModel.idno =  this.rForm.get('idno').value;
         modelToSubmit.license = licenseModel;
         modelToSubmit.requestNumber = this.mForm.get('nrCererii').value;
-        modelToSubmit.company = {id: this.rForm.get('compGet').value.id};
+        // modelToSubmit.company = {id: this.rForm.get('compGet').value.id};
 
 
         modelToSubmit.requestHistories = [{
@@ -218,6 +223,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
                             this.administrationService.generateDocNr().subscribe(data => {
                                     this.mForm.get('nrCererii').setValue(data);
                                     this.rForm.reset();
+                                    this.docTypeIdentifier = {code: this.tipCerere, step: 'R'};
                                 }
                             )
                         );
@@ -232,6 +238,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
                 this.subscriptions.push(
                     this.administrationService.generateDocNr().subscribe(data => {
                             this.mForm.get('nrCererii').setValue(data);
+                            this.docTypeIdentifier = {code: this.tipCerere, step: 'R'};
                         }
                     )
                 );
@@ -242,10 +249,8 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
             this.oldLicense = null;
             if (val) {
                 this.rForm.get('idno').setValue(val.idno);
-                if (val.locality)
-                {
-                    this.subscriptions.push(this.localityService.loadLocalityDetails(val.locality.id).subscribe(data =>
-                        {
+                if (val.locality) {
+                    this.subscriptions.push(this.localityService.loadLocalityDetails(val.locality.id).subscribe(data => {
                             console.log('sfsd', data);
                             let addres = data.stateName + ' ,' + data.description + ' ,' + val.street;
                             this.rForm.get('adresa').setValue(addres);
@@ -256,7 +261,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
 
                 this.companyLicenseNotFound = false;
                 this.subscriptions.push(
-                    this.licenseService.retrieveLicenseByEconomicAgentId(val.id).subscribe(data => {
+                    this.licenseService.retrieveLicenseByIdno(val.idno).subscribe(data => {
                             if (data) {
                                 console.log('sdfs', data);
                                 this.oldLicense = data;
@@ -288,7 +293,6 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
 
         });
     }
-
 
     ngOnDestroy() {
         this.subscriptions.forEach(s => s.unsubscribe());

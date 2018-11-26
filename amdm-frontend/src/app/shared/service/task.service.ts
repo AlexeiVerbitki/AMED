@@ -30,4 +30,8 @@ export class TaskService {
     getRequestStepByIdAndCode(requestTypeId: string,code : string): Observable<any> {
         return this.http.get('/api/tasks/request-step-by-id-and-code', {params: {id: requestTypeId, code : code}});
     }
+
+    getRequestStepByCodeAndStep(code: string,step : string): Observable<any> {
+        return this.http.get('/api/tasks/request-step-by-code-and-step', {params: {code: code, step : step}});
+    }
 }

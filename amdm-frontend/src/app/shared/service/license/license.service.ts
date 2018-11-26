@@ -60,8 +60,8 @@ export class LicenseService {
         return this.http.get('/api/license/retrieve-license-by-request-id', {params :{ id : id} });
     }
 
-    retrieveLicenseByEconomicAgentId(id: string): Observable<any> {
-        return this.http.get('/api/license/retrieve-license-by-economic-agent-id', {params :{ id : id} });
+    retrieveLicenseByIdno(idno: string): Observable<any> {
+        return this.http.get('/api/license/retrieve-license-by-idno', {params :{ idno : idno} });
     }
 
     loadAnnounces(): Observable<any> {
@@ -70,6 +70,10 @@ export class LicenseService {
 
     loadActivities(): Observable<any> {
         return this.http.get('/api/license/retrieve-activities');
+    }
+
+    retrieveAgentsByIdnoWithoutLicense(idno: string): Observable<any> {
+        return this.http.get('/api/license/retrieve-agents-by-idno-without-license', {params :{ idno : idno} });
     }
 
 }

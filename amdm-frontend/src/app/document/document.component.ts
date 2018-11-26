@@ -1,28 +1,43 @@
-import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
 import {Document} from "../models/document";
 import {ConfirmationDialogComponent} from "../dialog/confirmation-dialog.component";
-import {MatDialog} from "@angular/material";
-import {Subscription} from "rxjs";
+import {MatDialog, MatSort, MatTable, MatTableDataSource} from "@angular/material";
+import { Subscription} from "rxjs";
 import {HttpResponse} from "@angular/common/http";
 import {UploadFileService} from "../shared/service/upload/upload-file.service";
 import {saveAs} from "file-saver";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AdministrationService} from "../shared/service/administration.service";
 import {ErrorHandlerService} from "../shared/service/error-handler.service";
+import {TaskService} from "../shared/service/task.service";
+import {DatePipe} from "@angular/common";
 
 @Component({
     selector: 'app-document',
     templateUrl: './document.component.html',
     styleUrls: ['./document.component.css']
 })
-export class DocumentComponent implements OnInit, OnDestroy {
+export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
 
+    @Input()
+    title: string = 'Documente atasate';
     documentList: Document [];
     numarCerere: string;
     enableUploading: boolean = true;
     result: any;
     docForm: FormGroup;
     docTypes: any[];
+    docTypeIdentifier: any;
     formSubmitted: boolean;
     disabled: boolean = false;
     @ViewChild('incarcaFisier')
@@ -30,13 +45,27 @@ export class DocumentComponent implements OnInit, OnDestroy {
     @Output() documentModified = new EventEmitter();
     private subscriptions: Subscription[] = [];
 
+
+    displayedColumns: any[] = ['name', 'docType', 'docNumber', 'date', 'actions'];
+    dataSource = new MatTableDataSource<any>();
+
+    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatTable) table: MatTable<any>;
+
     constructor(public dialog: MatDialog, private uploadService: UploadFileService, private fb: FormBuilder,
                 private errorHandlerService: ErrorHandlerService,
-                private administrationService: AdministrationService) {
+                private administrationService: AdministrationService,
+                private taskService: TaskService) {
         this.docForm = fb.group({
             'docType': [null, Validators.required],
             'nrDoc': [null, Validators.required]
         });
+
+
+    }
+
+    ngAfterViewInit(): void {
+        this.dataSource.sort = this.sort;
     }
 
     get canUpload(): boolean {
@@ -55,6 +84,10 @@ export class DocumentComponent implements OnInit, OnDestroy {
     @Input()
     set documents(docList: Document []) {
         this.documentList = docList;
+        console.log('fsdf', docList);
+        this.dataSource.data = this.documentList.slice();
+
+        this.dataSource.filterPredicate = this.createFilter();
     }
 
     get nrCerere(): string {
@@ -84,16 +117,40 @@ export class DocumentComponent implements OnInit, OnDestroy {
         this.docTypes = docTypes;
     }
 
-    ngOnInit() {
-        if (!this.docTypes || this.docTypes.length == 0) {
+    get dcTypeIdentifier(): any {
+        return this.docTypeIdentifier;
+    }
+
+    @Input()
+    set dcTypeIdentifier(docTypeIdentifier: any) {
+        this.docTypeIdentifier = docTypeIdentifier;
+        if (docTypeIdentifier) {
             this.subscriptions.push(
-                this.administrationService.getAllDocTypes().subscribe(data => {
-                        this.docTypes = data;
-                    },
-                    error => console.log(error)
+                this.taskService.getRequestStepByCodeAndStep(docTypeIdentifier.code, docTypeIdentifier.step).subscribe(step => {
+                        this.subscriptions.push(
+                            this.administrationService.getAllDocTypes().subscribe(data => {
+                                    this.docTypes = data;
+                                    this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
+                                }
+                            )
+                        );
+                    }
                 )
             );
         }
+    }
+
+    ngOnInit() {
+        //To remove it in future
+        // if (!this.docTypes || this.docTypes.length == 0) {
+        //     this.subscriptions.push(
+        //         this.administrationService.getAllDocTypes().subscribe(data => {
+        //                 this.docTypes = data;
+        //             },
+        //             error => console.log(error)
+        //         )
+        //     );
+        // }
 
     }
 
@@ -105,7 +162,12 @@ export class DocumentComponent implements OnInit, OnDestroy {
             if (result) {
                 this.subscriptions.push(this.uploadService.removeFileFromStorage(this.documents[index].path).subscribe(data => {
                         this.documents.splice(index, 1);
+                        console.log('index', index);
+                        this.dataSource.data = this.documents.slice();
+                        this.table.renderRows();
                         this.documentModified.emit(true);
+
+
                     },
                     error => {
                         console.log(error);
@@ -147,11 +209,11 @@ export class DocumentComponent implements OnInit, OnDestroy {
         }
 
         var allowedExtensions =
-            ["jpg","jpeg","png","jfif","bmp","svg","pdf"];
+            ["jpg", "jpeg", "png", "jfif", "bmp", "svg", "pdf"];
         var fileExtension = event.srcElement.files[0].name.split('.').pop();
 
-        if(allowedExtensions.indexOf(fileExtension.toLowerCase()) <= -1) {
-            this.errorHandlerService.showError('Nu se permite atasarea documentelor cu aceasta extensie. Extensiile permise: '+allowedExtensions);
+        if (allowedExtensions.indexOf(fileExtension.toLowerCase()) <= -1) {
+            this.errorHandlerService.showError('Nu se permite atasarea documentelor cu aceasta extensie. Extensiile permise: ' + allowedExtensions);
             return;
         }
 
@@ -172,6 +234,12 @@ export class DocumentComponent implements OnInit, OnDestroy {
                         isOld: false,
                         number: this.docForm.get('nrDoc').value
                     });
+                    this.dataSource.data = this.documents.slice();
+                    this.table.renderRows();
+
+
+                    this.dataSource.filterPredicate = this.createFilter();
+
                     this.docForm.get('docType').setValue(null);
                     this.docForm.get('nrDoc').setValue(null);
                     this.documentModified.emit(true);
@@ -198,4 +266,19 @@ export class DocumentComponent implements OnInit, OnDestroy {
     }
 
 
+    applyFilter(filterValue: string) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+    }
+
+
+    createFilter(): (data: any, filter: string) => boolean {
+        let filterFunction = function (data, filter): boolean {
+            var datePipe = new DatePipe("en-US");
+            const dataStr = data.name.toLowerCase() + data.docType.description.toLowerCase() + data.number + datePipe.transform(data.date, 'dd/MM/yyyy HH:mm:ss');
+            return dataStr.indexOf(filter) != -1;
+        };
+        return filterFunction;
+    }
 }

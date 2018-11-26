@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Observable, Subject, Subscription} from "rxjs";
 import {TaskService} from "../shared/service/task.service";
@@ -8,6 +8,7 @@ import {LoaderService} from "../shared/service/loader.service";
 import {debounceTime, distinctUntilChanged, filter, tap} from "rxjs/operators";
 import {flatMap} from "rxjs/internal/operators";
 import {PriceService} from "../shared/service/prices.service";
+import {PriceReqEditModalComponent} from "./price-req-edit-modal/price-req-edit-modal.component";
 
 @Component({
     selector: 'app-prices',
@@ -26,14 +27,11 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
         {short: 'F', description: 'Finisat'},
     ]
 
-
-
-
     companyMedicaments: Observable<any[]>;
     medInputs = new Subject<string>();
     medLoading = false;
 
-    displayedColumns: any[] = ['requestNumber', 'folderNr', 'medicament','medicamentType', 'assignedPerson', 'startDate', 'endDate', 'currentStep', 'priceType'];
+    displayedColumns: any[] = ['orderNr', 'folderNr', 'medicament', 'medicamentCode', 'division', 'medicamentType', 'orderApprovDate', 'expirationDate'];
     dataSource = new MatTableDataSource<any>();
     row: any;
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -44,16 +42,17 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
                 private route: Router,
                 private taskService: TaskService,
                 private priceService: PriceService,
+                public dialog: MatDialog,
                 private loaderService: LoaderService) {
 
         this.taskForm = fb.group({
-            'requestNumber': [null],
+            'orderNr': [null],
             'folderNr': [null],
             'medicament': [null],
-            'assignedPerson': [null],
-            'startDate': [null],
-            'endDate': [null],
-            'currentStep': [null],
+            'division': [null],
+            'medicamentCode': [null],
+            'orderApprovDate': [null],
+            'expirationDate': [null],
             'medicamentType': [null],
             'priceType': [null],
         });
@@ -115,7 +114,6 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
         dto.medicamentCode = dto.medicament?dto.medicament.code:undefined;
         dto.medicament = undefined;
         dto.medicamentType = dto.medicamentType?dto.medicamentType.description:undefined;
-        dto.currentStep = dto.currentStep?dto.currentStep.short:undefined;
         dto.priceType = dto.priceType?dto.priceType.description:undefined;
 
         this.taskForm.reset();
@@ -123,7 +121,7 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
             this.priceService.getPricesByFilter(dto
             ).subscribe(pricesRequests => {
                     this.dataSource.data = pricesRequests.body;
-                    console.log('pricesRequests', pricesRequests.body);
+                    console.log('pricesRequests', this.dataSource.data);
                 },
                 error => console.log(error)
             ));
@@ -141,12 +139,31 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    navigateToUrl(rowDetails: any) {
-        const urlToNavigate = rowDetails.navigationUrl + rowDetails.id;
-        if (urlToNavigate !== '') {
-            this.route.navigate([urlToNavigate]);
-        }
+    navigateToUrl(index: number, rowDetails: any) {
+         this.priceEditModalOpen(index, rowDetails);
+        // this.route.navigate(['dashboard/module/price/evaluate/' + rowDetails.id]);
+
+        // const urlToNavigate = rowDetails.navigationUrl + rowDetails.id;
+        // if (urlToNavigate !== '') {
+        //     this.route.navigate([urlToNavigate]);
+        // }
     }
+
+    priceEditModalOpen(index: number, rowDetails: any): void {
+        const dialogRef = this.dialog.open(PriceReqEditModalComponent, {
+            data: {request: rowDetails, medTypes: this.medTypes, steps: this.steps, priceTypes: this.priceTypes},
+            width: '1000px'
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed', result);
+
+            if(result) {
+                this.dataSource.data[index] = result;
+                this.dataSource._updateChangeSubscription();
+            }
+        });
+    };
 
     isLink(rowDetails: any): boolean {
         return rowDetails.navigationUrl !== '';

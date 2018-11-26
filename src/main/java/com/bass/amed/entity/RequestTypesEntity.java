@@ -6,9 +6,8 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "request_types", schema = "amed", catalog = "")
-public class RequestTypesEntity
-{
+@Table(name = "request_types", schema = "amed")
+public class RequestTypesEntity {
     @Id
     @Column(name = "id", nullable = false)
     private Integer id;

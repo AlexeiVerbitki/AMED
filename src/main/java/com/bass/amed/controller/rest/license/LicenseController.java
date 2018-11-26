@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -57,14 +58,14 @@ public class LicenseController
     {
         logger.debug("Add license" + request);
 
-        Optional<NmEconomicAgentsEntity> eco = economicAgentsRepository.findById(request.getCompany().getId());
-
-        if (!eco.isPresent())
-        {
-            throw new CustomException("Economic agent not found" + request.getCompany().getId());
-        }
-
-        request.setCompany(eco.get());
+//        Optional<NmEconomicAgentsEntity> eco = economicAgentsRepository.findById(request.getCompany().getId());
+//
+//        if (!eco.isPresent())
+//        {
+//            throw new CustomException("Economic agent not found" + request.getCompany().getId());
+//        }
+//
+//        request.setCompany(eco.get());
 //        request.getLicense().setEconomicAgent(eco.get());
 
         request.setType(requestTypeRepository.findByCode("LICEL").get());
@@ -103,10 +104,6 @@ public class LicenseController
     public ResponseEntity<Void> finishLicense(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
         logger.debug("Finish license" + request);
-
-        request.getLicense().setStatus("F");
-
-        request.setCurrentStep("F");
         request.setEndDate(new Timestamp(new Date().getTime()));
 
         licenseRegistrationRequestService.finishLicense(request);
@@ -118,9 +115,6 @@ public class LicenseController
     public ResponseEntity<Void> confirmIssueLicense(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
         logger.debug("Confirm issue license" + request);
-
-        request.getLicense().setStatus("A");
-        request.setCurrentStep("I");
 
         licenseRegistrationRequestService.finishLicense(request);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -166,20 +160,39 @@ public class LicenseController
     {
         logger.debug("Retrieve license by request id", id);
         RegistrationRequestsEntity r = licenseRegistrationRequestService.findLicenseRegistrationById(Integer.valueOf(id));
+
+
+
+
         return new ResponseEntity<>(r, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/retrieve-license-by-economic-agent-id", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LicensesEntity> loadLicenseByCompany(@RequestParam("id") String economicAgentId) throws CustomException
+    @RequestMapping(value = "/retrieve-license-by-idno", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<LicensesEntity> loadLicenseByCompany(@RequestParam("idno") String idno) throws  CustomException
     {
-        logger.debug("Retrieve license by company id id", economicAgentId);
-        Optional<LicensesEntity> r = licensesRepository.getActiveLicenseByCompanyId(Integer.valueOf(economicAgentId), new Date());
-
-//        if (!r.isPresent())
-//        {
-//            throw new CustomException("License could not be found by company");
-//        }
+        logger.debug("Retrieve license by company id idno", idno);
+        Optional<NmEconomicAgentsEntity> firstChoice = economicAgentsRepository.findFirstByIdnoEqualsAndLicenseIdIsNotNull(idno);
+        Optional<LicensesEntity> r = Optional.empty();
+            if (firstChoice.isPresent())
+        {
+            r = licensesRepository.getActiveLicenseById(firstChoice.get().getLicenseId(), new Date());
+        }
         return new ResponseEntity<>(r.isPresent() ? r.get() : null, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/retrieve-agents-by-idno-without-license", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<NmEconomicAgentsEntity>> loadAgentsByIdnoWitouhtLicense(@RequestParam("idno") String idno) throws  CustomException
+    {
+        logger.debug("Retrieve agents by idno", idno);
+        List<NmEconomicAgentsEntity> all = economicAgentsRepository.findAllByIdnoEndsWithAndLicenseIdIsNull(idno);
+        for (NmEconomicAgentsEntity ece : all)
+        {
+            Optional<LicenseAgentPharmaceutistEntity> selectedPharmaceutist = ece.getAgentPharmaceutist().stream().filter(af -> af.getSelectionDate() != null).max(Comparator.comparing(LicenseAgentPharmaceutistEntity::getSelectionDate));
+            ece.setSelectedPharmaceutist(selectedPharmaceutist.isPresent() ? selectedPharmaceutist.get() : null);
+        }
+
+        return new ResponseEntity<>(all, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/retrieve-announce-methods", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

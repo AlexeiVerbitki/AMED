@@ -1,0 +1,259 @@
+<div class="container-fluid sky z-depth-2">
+  <h3 class="text-center my-1 font-weight-bold">Cautare medicamente</h3>
+  <form [formGroup]='mForm'>
+      <!--prima linie-->
+      <div class="row">
+        <div class="col-2">
+          <div class="md-form">
+            <input id="code" mdbInputDirective type="text" class="form-control"
+                   formControlName="code">
+            <label for="code">Cod medicament</label>
+          </div>
+        </div>
+        <div class="col-2">
+          <div class="md-form">
+            <input id="name" mdbInputDirective type="text" class="form-control"
+                   formControlName="name">
+            <label for="name">Denumire comerciala</label>
+          </div>
+        </div>
+        <div class="col-2">
+          <div class="md-form">
+            <input id="atcCode" mdbInputDirective type="text" class="form-control"
+                   formControlName="atcCode">
+            <label for="atcCode">Cod ATC</label>
+          </div>
+        </div>
+        <div class="col-2">
+          <div class="md-form">
+            <input id="registerNumber" mdbInputDirective type="text" class="form-control"
+                   formControlName="registerNumber">
+            <label for="registerNumber">Numar de inregistrare</label>
+          </div>
+        </div>
+        <div class="col-2">
+          <div class="md-form-modified">
+            <mat-form-field class="w-100">
+              <input matInput [matDatepicker]="registrationDateFrom" placeholder="Data inregistrarii (de la)" formControlName="registrationDateFrom">
+              <mat-datepicker-toggle matSuffix [for]="registrationDateFrom"></mat-datepicker-toggle>
+              <mat-datepicker touchUi #registrationDateFrom></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-2">
+          <div class="md-form-modified">
+            <mat-form-field class="w-100">
+              <input matInput [matDatepicker]="registrationDateTo" placeholder="Data inregistrarii (pina la)" formControlName="registrationDateTo">
+              <mat-datepicker-toggle matSuffix [for]="registrationDateTo"></mat-datepicker-toggle>
+              <mat-datepicker touchUi #registrationDateTo></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+    </div>
+    <!--a 2-a linie-->
+    <div class="row">
+      <div class="col-2">
+        <div class="md-form-modified">
+          <ng-select id="internationalName" name="internationalName" [items]="internationalNames"
+                     bindLabel="description"
+                     placeholder="Denumire internationala"
+                     formControlName="internationalName">
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="md-form-modified">
+          <ng-select id="pharmaceuticalFormType" name="pharmaceuticalFormType" [items]="pharmaceuticalFormTypes"
+                     bindLabel="description"
+                     placeholder="Tip forma farmaceutica"
+                     (ngModelChange)="checkPharmaceuticalFormTypeValue()"
+                     formControlName="pharmaceuticalFormType">
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="md-form-modified">
+          <ng-select id="pharmaceuticalForm" name="pharmaceuticalForm" [items]="pharmaceuticalForms"
+                     bindLabel="description"
+                     placeholder="Denumire forma farmaceutica"
+                     formControlName="pharmaceuticalForm">
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="md-form-modified">
+          <ng-select id="authorizationHolder" name="authorizationHolder" [items]="authorizationHolders"
+                     bindLabel="description"
+                     placeholder="Deţinătorul certificatului de inregistrare"
+                     formControlName="authorizationHolder">
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="expirationDateFrom" placeholder="Data expirarii (de la)" formControlName="expirationDateFrom">
+            <mat-datepicker-toggle matSuffix [for]="expirationDateFrom"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #expirationDateFrom></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="expirationDateTo" placeholder="Data expirarii (pina la)" formControlName="expirationDateTo">
+            <mat-datepicker-toggle matSuffix [for]="expirationDateTo"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #expirationDateTo></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <!--a 3-a linie-->
+    <div class="row">
+      <div class="col-2">
+        <div class="md-form-modified">
+          <ng-select id="type" name="authorizationHolder" [items]="types"
+                     bindLabel="description"
+                     placeholder="Tip medicament"
+                     formControlName="type">
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="md-form-modified">
+          <ng-select id="group" name="authorizationHolder" [items]="groups"
+                     bindLabel="description"
+                     placeholder="Grupa medicament"
+                     formControlName="group">
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="md-form-modified">
+          <ng-select id="prescription" name="authorizationHolder" [items]="prescriptions"
+                     bindLabel="description"
+                     placeholder="Eliberare receta"
+                     formControlName="prescription">
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="md-form">
+          <input id="terms" mdbInputDirective type="number" class="form-control"
+                 formControlName="terms">
+          <label for="terms">Termen de valabilitate</label>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="md-form">
+          <input id="requestNumber" mdbInputDirective type="text" class="form-control"
+                 formControlName="requestNumber">
+          <label for="requestNumber">Numar cerere</label>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="md-form">
+          <input id="division" mdbInputDirective type="text" class="form-control"
+                 formControlName="division">
+          <label for="division">Divizare</label>
+        </div>
+      </div>
+    </div>
+    <!--a 4-a linie-->
+    <div class="row">
+      <div class="col-2">
+        <div class="md-form-modified">
+          <ng-select id="manufacture" name="authorizationHolder" [items]="manufactures"
+                     bindLabel="description"
+                     placeholder="Producator produs finit"
+                     formControlName="manufacture">
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="col">
+          <div class="md-form-modified-select">
+            <ng-select [items]="activeSubstances"
+                       bindLabel="description"
+                       placeholder="Substante active"
+                       formControlName="activeSubstances"
+                       (ngModelChange)="checkSAValue(atLeastOneSACheckBox,allSACheckBox)"
+                       [multiple]="true"
+                       [required]="true">
+            </ng-select>
+          </div>
+        </div>
+      </div>
+      <div class="col-2">
+        <mat-checkbox #atLeastOneSACheckBox (change)="checkOneSA(atLeastOneSACheckBox,allSACheckBox)" [disabled]="areSACheckBoxesDisabled">Cautare medicament cu una din substantele selectate</mat-checkbox>
+      </div>
+      <div class="col-2">
+        <mat-checkbox #allSACheckBox (change)="checkAllSA(atLeastOneSACheckBox,allSACheckBox)" [disabled]="areSACheckBoxesDisabled">Cautare medicament care contine toate substantele selectate</mat-checkbox>
+      </div>
+      <div class="col-2">
+        <mat-checkbox #expiratedMedicamentsCheckBox>Afisare medicamente expirate</mat-checkbox>
+      </div>
+      <div class="row">
+        <div class="md-form-modified text-center mt-1">
+          <button type="button" class="btn btn-indigo waves-light btn-md btn-rounded-button z-depth-4" mdbWavesEffect (click)="clear(atLeastOneSACheckBox,allSACheckBox,expiratedMedicamentsCheckBox);"><i class="fa fa-undo fa-lg" aria-hidden="true"></i></button>
+        </div>
+        <div class="md-form-modified text-center mt-1">
+          <button type="button" class="btn btn-indigo waves-light btn-md btn-rounded-button z-depth-4" mdbWavesEffect (click)="getMedicaments(atLeastOneSACheckBox,allSACheckBox,expiratedMedicamentsCheckBox);"><i class="fa fa-search fa-lg" aria-hidden="true"></i></button>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="table-width">
+    <div class="example-container">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="code">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Cod medicament</th>
+          <td mat-cell *matCellDef="let element">
+            <a title="Deschide medicament" (click)="showMedicamentDetails(element)">
+              {{element.code}}
+            </a>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Denumire comerciala</th>
+          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="atcCode">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Cod ATC</th>
+          <td mat-cell *matCellDef="let element"> {{element.atcCode}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="registerNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Numar de inregistrare</th>
+          <td mat-cell *matCellDef="let element"> {{element.registerNumber}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="registrationDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Data inregistrarii</th>
+          <td mat-cell *matCellDef="let element"> {{element.registrationDate}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="division">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Divizare</th>
+          <td mat-cell *matCellDef="let element"> {{element.division}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="authorizationHolder">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Deţinătorul certificatului de inregistrare</th>
+          <td mat-cell *matCellDef="let element"> {{element.authorizationHolderDescription}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="expirationDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Data expirarii</th>
+          <td mat-cell *matCellDef="let element"> {{element.expirationDate}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+    </div>
+  </div>
+</div>

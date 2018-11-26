@@ -11,8 +11,8 @@ import {UploadFileService} from "../../shared/service/upload/upload-file.service
 import {LicenseService} from "../../shared/service/license/license.service";
 import { EliberareCerereLicComponent } from './eliberare-cerere-lic/eliberare-cerere-lic.component';
 import {DocumentModule} from "../../document/document.module";
-import {ErrorHandlerService} from "../../shared/service/error-handler.service";
 import {PaymentModule} from "../../payment/payment.module";
+import {LicenseDecisionDialogComponent} from "../../dialog/license-decision-dialog/license-decision-dialog.component";
 
 @NgModule({
     imports: [
@@ -26,9 +26,13 @@ import {PaymentModule} from "../../payment/payment.module";
         PaymentModule
     ],
     schemas: [],
+    entryComponents: [
+        LicenseDecisionDialogComponent
+    ],
     declarations: [RegMedCerereLicComponent,
         EvaluareCerereLicComponent,
-	 EliberareCerereLicComponent
+	 EliberareCerereLicComponent,
+        LicenseDecisionDialogComponent
     ]    ,
     providers: [UploadFileService, LicenseService,
     ],

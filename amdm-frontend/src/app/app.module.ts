@@ -36,7 +36,12 @@ import {GestDocComponent} from "./document-management/gest-doc/gest-doc.componen
 import {NumberOnlyDirective} from "./shared/directive/number-only.directive";
 import {RequestAdditionalDataDialogComponent} from "./dialog/request-additional-data-dialog/request-additional-data-dialog.component";
 import {PricesComponent} from "./prices/prices.component";
+import {PriceReqEditModalComponent} from "./prices/price-req-edit-modal/price-req-edit-modal.component";
+import {MatDialogModule} from "@angular/material";
 import {ActiveSubstanceDialogComponent} from "./dialog/active-substance-dialog/active-substance-dialog.component";
+import {HomepageModalComponent} from "./homepage/homepage-modal/homepage-modal.component";
+import {MedicamentsComponent} from "./management/medicaments/medicaments.component";
+import {MedicamentDetailsDialogComponent} from "./dialog/medicament-details-dialog/medicament-details-dialog.component";
 
 const interceptors = [{
     provide: HTTP_INTERCEPTORS,
@@ -67,7 +72,9 @@ const interceptors = [{
         ModuleDashboardComponent,
         AdminDashboardComponent,
         ConfirmationDialogComponent,
+        PriceReqEditModalComponent,
         PricesComponent,
+        MedicamentsComponent,
         TaskComponent,
         HistoryComponent,
         ModuleComponent,
@@ -76,13 +83,16 @@ const interceptors = [{
         RequestAdditionalDataDialogComponent,
         GestDocComponent,
         NumberOnlyDirective,
-        ActiveSubstanceDialogComponent
+        ActiveSubstanceDialogComponent,
+        HomepageModalComponent,
+        MedicamentDetailsDialogComponent
     ],
     imports: [
         BrowserAnimationsModule,
         HttpClientModule,
         AppRoutingModule,
         FormsModule,
+        MatDialogModule,
         ReactiveFormsModule,
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
@@ -90,7 +100,7 @@ const interceptors = [{
     ],
     schemas: [],
     entryComponents: [
-        ConfirmationDialogComponent,RequestAdditionalDataDialogComponent,ActiveSubstanceDialogComponent
+        ConfirmationDialogComponent,RequestAdditionalDataDialogComponent,PriceReqEditModalComponent,ActiveSubstanceDialogComponent, HomepageModalComponent,MedicamentDetailsDialogComponent
     ],
     providers: [AuthService, AdministrationService, ErrorHandlerService, interceptors,
     ],

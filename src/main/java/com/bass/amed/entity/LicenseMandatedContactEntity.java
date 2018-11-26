@@ -21,6 +21,7 @@ public class LicenseMandatedContactEntity
     private Date newMandatedDate;
     private String newPhoneNumber;
     private String newEmail;
+    private Integer licenseDetailId;
 
     @Id
     @Column(name = "id")
@@ -164,6 +165,18 @@ public class LicenseMandatedContactEntity
     public void setNewMandatedDate(Date newMandatedDate)
     {
         this.newMandatedDate = newMandatedDate;
+    }
+
+    @Basic
+    @Column(name = "license_detail_id")
+    public Integer getLicenseDetailId()
+    {
+        return licenseDetailId;
+    }
+
+    public void setLicenseDetailId(Integer licenseDetailId)
+    {
+        this.licenseDetailId = licenseDetailId;
     }
 
     @Override

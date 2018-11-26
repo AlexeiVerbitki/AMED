@@ -1,23 +1,26 @@
- <!--Navbar-->
-    <mdb-navbar SideClass="navbar fixed-top navbar-expand-lg navbar-dark darkskie scrolling-navbar intro-fixed-nav offset-lg-3 offset-xl-3 col-xl-9 col-lg-9 offset-xxl-2 col-xxl-10" [containerInside]="false">
-        <links>
-            <!-- Links -->
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown" dropdown>
-                    <a dropdownToggle mdbWavesEffect type="button" class="nav-link dropdown-toggle waves-light dark-grey-text" mdbWavesEffect>
-                        Profile
-                        <span class="caret"></span>
-                    </a>
-                    <div *dropdownMenu class="dropdown-menu dropdown dropdown-primary dropdown-menu-right" role="menu">
-                        <a class="dropdown-item waves-light dark-grey-text" mdbWavesEffect (click)="logout()">Log out</a>
-                        <a class="dropdown-item waves-light dark-grey-text" mdbWavesEffect routerLink="/module">Change Password</a>
-                        <a class="dropdown-item waves-light dark-grey-text" mdbWavesEffect routerLink="/module">About us</a>
-                        <a class="dropdown-item waves-light dark-grey-text" mdbWavesEffect routerLink="/autocomplete">Autocomplete</a>
-                    </div>
-                </li>
-            </ul>
-            <!-- Links -->
-        </links>
-        <!-- Collapsible content -->
-    </mdb-navbar>
-    <!--/.Navbar-->
+<!--Navbar-->
+<mdb-navbar SideClass="navbar fixed-top navbar-expand-lg navbar-dark darkskie scrolling-navbar intro-fixed-nav offset-lg-3 offset-xl-3 col-xl-9 col-lg-9 offset-xxl-2 col-xxl-10" [containerInside]="false">
+	<links>
+		<!-- Links -->
+		<span class="navbar-text navbar-center black-text">
+                    {{title}}
+                </span>
+		<ul class="navbar-nav ml-auto">
+			<li class="nav-item dropdown" dropdown>
+				<a dropdownToggle mdbWavesEffect type="button" class="nav-link dropdown-toggle waves-light dark-grey-text" mdbWavesEffect>
+					Profile
+					<span class="caret"></span>
+				</a>
+				<div *dropdownMenu class="dropdown-menu dropdown dropdown-primary dropdown-menu-right" role="menu">
+					<a class="dropdown-item waves-light dark-grey-text" mdbWavesEffect (click)="logout()">Log out</a>
+					<a class="dropdown-item waves-light dark-grey-text" mdbWavesEffect routerLink="/module">Change Password</a>
+					<a class="dropdown-item waves-light dark-grey-text" mdbWavesEffect routerLink="/module">About us</a>
+					<a class="dropdown-item waves-light dark-grey-text" mdbWavesEffect routerLink="/autocomplete">Autocomplete</a>
+				</div>
+			</li>
+		</ul>
+		<!-- Links -->
+	</links>
+	<!-- Collapsible content -->
+</mdb-navbar>
+<!--/.Navbar-->

@@ -81,9 +81,9 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
           'id': [],
           'data': {disabled: true, value: new Date()},
           'requestNumber': [null],
-          'initiator':          [null],
-          'assignedUser':       [null],
-          'requestStatus':      [null],
+          'initiator': [null],
+          'assignedUser': [null],
+          'requestStatus': [null],
           'startDate': {disabled: true, value: new Date()},
           'dataToSaveInStartDateRequestHistory': [''],
           'currentStep': ['E'],
@@ -95,45 +95,38 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
               nationalPrice: [null],
               type: [null]
           }),
-          'evaluation':  fb.group({
+          'evaluation': fb.group({
               'expirationDate': [null, Validators.required],
               'selectedPrice': [null, Validators.required],
               'selectedReason': [null, Validators.required],
               'decision': [null, Validators.required],
           }),
-          // 'pricesRequest':
-          //     fb.group({
-          //         'id':             [null, Validators.required],
-          //         'documents':      [],
-          //         'referencePrices':[],
-          //         'prices':         [],
-                  'medicament':
+          'medicament':
+              fb.group({
+                  'id': [],
+                  'name': ['', Validators.required],
+                  'registrationDate': [],
+                  'expirationDate': [],
+                  'pharmaceuticalForm': [null, Validators.required],
+                  'dose': [null, Validators.required],
+                  'division': [null, Validators.required],
+                  'unitsOfMeasurementDesc': [null, Validators.required],
+                  'internationalMedicamentName': [null, Validators.required],
+                  'volume': [null],
+                  'volumeQuantityMeasurementName': [null],
+                  'termsOfValidity': [null, Validators.required],
+                  'code': [null, Validators.required],
+                  'prescription': [null, Validators.required],
+                  'authorizationHolder': [null, Validators.required],
+                  'manufactureName': [null],
+                  'documents': [],
+                  'status': ['P'],
+                  'group':
                       fb.group({
-                          'id': [],
-                          'name': ['', Validators.required],
-                          'registrationDate': [],
-                          'expirationDate': [],
-                          'pharmaceuticalForm': [null, Validators.required],
-                          'dose': [null, Validators.required],
-                          'division': [null, Validators.required],
-                          'unitsOfMeasurementDesc': [null, Validators.required],
-                          'internationalMedicamentName': [null, Validators.required],
-                          'volume': [null],
-                          'volumeQuantityMeasurementName': [null],
-                          'termsOfValidity': [null, Validators.required],
-                          'code': [null, Validators.required],
-                          'prescription': [null, Validators.required],
-                          'authorizationHolder': [null, Validators.required],
-                          'manufactureName': [null],
-                          'documents': [],
-                          'status': ['P'],
-                          'group':
-                              fb.group({
-                                      'code': ['', Validators.required]
-                                  }
-                              )
-                      }),
-              // }),
+                              'code': ['', Validators.required]
+                          }
+                      )
+              }),
           'company': fb.group({
               'id': [],
               'name': ['', Validators.required],
@@ -181,6 +174,21 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         });
     };
 
+    // exchangeModalOpen(): void {
+    //     const dialogRef = this.dialog.open(ExchangeModalComponent, {
+    //         data: {currencies: this.avgCurrencies},
+    //         width: '650px'
+    //     });
+    //
+    //     dialogRef.afterClosed().subscribe(result => {
+    //         console.log('The dialog was closed', result);
+    //
+    //         if(result) {
+    //
+    //         }
+    //     });
+    // };
+
   ngOnInit() {
       this.getPrevMonthAVGCurrencies();
       this.getDocumentsTypes();
@@ -191,6 +199,12 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                       console.log(data);
 
                       if(data.price.medicament != undefined) {
+                          this.avgCurrencies.forEach(cur => {
+                              if(data.price.currency.id == cur.currency.id) {
+                                  data.price.mdlValue = cur.value;
+                                  return;
+                              }
+                          });
                           this.getMedPrevPrices(data.price);
                           this.getRelatedDCIMedicamentsPrices(data.price.medicament.internationalMedicamentName.id, data.price.id);
                           data.price.medicament.price = { mdlValue: data.price.mdlValue, value: data.price.value, currency: data.price.currency };
@@ -228,11 +242,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                           this.convertToNationalCurrencyPrice()
                       }
 
-                      data.documents.forEach(doc => {
-                          this.documents.push(doc);
-
-                      });
-
+                  this.documents =  data.documents;
 
                   switch (data.currentStep) {
                           case 'R':
@@ -307,6 +317,11 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         }));
     }
 
+    exchangeRateModified(index: number, newVal: string) {
+      this.avgCurrencies[index].value = newVal;
+      this.processReferencePrices(this.refPrices);
+    }
+
 
     getDocumentsTypes() {
         this.subscriptions.push(this.priceService.getDocumentTypes().subscribe(data =>{
@@ -353,6 +368,11 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
             ));
     }
 
+    calculateAvgRelatedMeds() {
+        this.avgRelatedMeds = 0;
+        this.relatedMeds.forEach(m => this.avgRelatedMeds += m.mdlValue?m.mdlValue:0);
+        this.avgRelatedMeds /= this.relatedMeds.length;
+    }
 
     getRelatedDCIMedicamentsPrices(internationalNameId: string, id: number) {
         this.subscriptions.push(
@@ -365,30 +385,33 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                         }
                     }
                     this.relatedMeds = meds;
-                    this.avgRelatedMeds = 0;
-                    this.relatedMeds.forEach(m => this.avgRelatedMeds += m.mdlValue?m.mdlValue:0);
-                    this.avgRelatedMeds /= this.relatedMeds.length;
-
+                    this.calculateAvgRelatedMeds();
                     //------------------|AVG(ORIGIN , DCI)|--------------------
-                    let avgOriginCountry = 0, originPriceCount = 0;
-                    this.refPrices.forEach(p => {
-                        if(p.type.description == 'În țara de origine') {
-                            avgOriginCountry += +(<any>p).xchRateRefVal;
-                            originPriceCount++;
-                        }
-                    });
-                    if(originPriceCount > 0) {
-                        this.dciAndOriginAvgs.push({source: 'Media în țara de origine', avg: avgOriginCountry / originPriceCount});
-                    }
-
-                    this.dciAndOriginAvgs.push({source: 'Media DCI', avg: this.avgRelatedMeds});
-                    let avg = 0;
-                    this.dciAndOriginAvgs.forEach(v => avg += v.avg);
-                    avg /= this.dciAndOriginAvgs.length;
-                    this.dciAndOriginAvgs.push({source: 'Media', avg: avg});
+                    this.calculateAVGOriginAndDci();
                 },
                 error => console.log(error)
             ));
+    }
+
+    calculateAVGOriginAndDci() {
+        //------------------|AVG(ORIGIN , DCI)|--------------------
+        this.dciAndOriginAvgs = [];
+        let avgOriginCountry = 0, originPriceCount = 0;
+        this.refPrices.forEach(p => {
+            if(p.type.description == 'În țara de origine') {
+                avgOriginCountry += +(<any>p).xchRateRefVal;
+                originPriceCount++;
+            }
+        });
+        if(originPriceCount > 0) {
+            this.dciAndOriginAvgs.push({source: 'Media în țara de origine', avg: avgOriginCountry / originPriceCount});
+        }
+
+        this.dciAndOriginAvgs.push({source: 'Media DCI', avg: this.avgRelatedMeds});
+        let avg = 0;
+        this.dciAndOriginAvgs.forEach(v => avg += v.avg);
+        avg /= this.dciAndOriginAvgs.length;
+        this.dciAndOriginAvgs.push({source: 'Media', avg: avg});
     }
 
     convertToNationalCurrencyPrice(){
@@ -453,7 +476,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         }
     }
 
-    processAveragePrices() {;
+    processAveragePrices() {
 
         this.initAverageMinPrice(this.minRefPrices, PriceReferenceType.ReferenceCountry);
         this.initAverageMinPrice(this.minOtherCountriesCatPrices, PriceReferenceType.OtherCountriesCatalog);
@@ -521,6 +544,13 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
 
             }
         }
+    }
+
+
+    deleteRelatedMed(index: number) {
+      this.relatedMeds.splice(index, 1);
+      this.calculateAvgRelatedMeds();
+      this.calculateAVGOriginAndDci();
     }
 
 

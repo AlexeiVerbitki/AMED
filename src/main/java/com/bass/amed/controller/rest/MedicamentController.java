@@ -1,13 +1,17 @@
 package com.bass.amed.controller.rest;
 
 import com.bass.amed.dto.InterruptDetailsDTO;
+import com.bass.amed.dto.MedicamentDetailsDTO;
+import com.bass.amed.dto.MedicamentFilterDTO;
 import com.bass.amed.dto.SimilarMedicamentDTO;
 import com.bass.amed.entity.MedicamentEntity;
 import com.bass.amed.entity.RegistrationRequestHistoryEntity;
 import com.bass.amed.entity.RegistrationRequestsEntity;
+import com.bass.amed.exception.CustomException;
 import com.bass.amed.projection.MedicamentNamesListProjection;
 import com.bass.amed.projection.MedicamentRegisterNumberProjection;
 import com.bass.amed.repository.*;
+import com.bass.amed.utils.MedicamentQueryUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +20,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -41,10 +46,11 @@ public class MedicamentController
     private RequestRepository requestRepository;
     @Autowired
     private OutputDocumentsRepository outputDocumentsRepository;
+    @Autowired
+    private EntityManagerFactory entityManagerFactory;
 
     @RequestMapping("/company-all-medicaments")
-    public ResponseEntity<List<MedicamentEntity>> getAllMedicaments()
-    {
+    public ResponseEntity<List<MedicamentEntity>> getAllMedicaments() {
         logger.debug("Retrieve all medicaments");
         return new ResponseEntity<>(medicamentRepository.findAll(), HttpStatus.OK);
     }
@@ -70,6 +76,15 @@ public class MedicamentController
         logger.debug("Retrieve medicament by id");
         MedicamentEntity m = medicamentRepository.findById(id).get();
         return new ResponseEntity<>(m, HttpStatus.OK);
+    }
+
+    @RequestMapping("/search-medicament-by-code")
+    public ResponseEntity<List<MedicamentEntity>> getMedicamentByCode(String code)
+    {
+        logger.debug("Retrieve medicament by code");
+        MedicamentEntity m = medicamentRepository.findByCode(code);
+
+        return new ResponseEntity<>(medicamentRepository.findByRegistrationNumber(m.getRegistrationNumber()), HttpStatus.OK);
     }
 
     @RequestMapping("/search-medicaments-by-register-number")
@@ -118,6 +133,63 @@ public class MedicamentController
         requestRepository.save(registrationRequestsEntity);
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/by-filter")
+    public ResponseEntity<List<MedicamentDetailsDTO>> getMedicamentsByFilter(@RequestBody MedicamentFilterDTO filter) throws CustomException {
+        logger.debug("get medicaments by filter");
+
+        EntityManager em = null;
+        List<MedicamentDetailsDTO> result = new ArrayList<>();
+        try
+        {
+            em = entityManagerFactory.createEntityManager();
+            em.getTransaction().begin();
+            StringBuilder queryString = MedicamentQueryUtils.createMedicamentByFilterQuery(filter);
+            Query query = em.createNativeQuery(queryString.toString(), MedicamentDetailsDTO.class);
+            MedicamentQueryUtils.updateMedicamentByFilerQueryWithValues(filter, query);
+            result = query.getResultList();
+            List<Integer> medicamentIds = result.stream().map(m -> m.getId()).collect(Collectors.toList());
+            if(Boolean.TRUE.equals(filter.getAtLeastOneSA()) || Boolean.TRUE.equals(filter.getAllSA()))
+            {
+                if (Boolean.TRUE.equals(filter.getAtLeastOneSA()))
+                {
+                    queryString = MedicamentQueryUtils.createMedicamentSALeastOneQuery(filter);
+                }
+                else if (Boolean.TRUE.equals(filter.getAllSA()))
+                {
+                    queryString = MedicamentQueryUtils.createMedicamentSAAllQuery(filter);
+                }
+                query = em.createNativeQuery(queryString.toString(), MedicamentDetailsDTO.class);
+                result = query.getResultList();
+                List<Integer> mSAIds = result.stream().map(m -> m.getId()).collect(Collectors.toList());
+                medicamentIds =  medicamentIds.stream().filter(f -> mSAIds.contains(f)).collect(Collectors.toList());
+            }
+
+            if(medicamentIds.size()!=0)
+            {
+                queryString = MedicamentQueryUtils.createMedicamentDetailsQuery(medicamentIds);
+                query = em.createNativeQuery(queryString.toString(), MedicamentDetailsDTO.class);
+                result = query.getResultList();
+            }
+
+            em.getTransaction().commit();
+        }
+        catch (Exception e)
+        {
+            if (em != null)
+            {
+                em.getTransaction().rollback();
+            }
+            throw new CustomException(e.getMessage());
+        }
+
+        finally
+        {
+            em.close();
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 }

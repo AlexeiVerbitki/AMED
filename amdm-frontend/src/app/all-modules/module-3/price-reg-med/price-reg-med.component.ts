@@ -13,6 +13,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {LoaderService} from "../../../shared/service/loader.service";
 import {PriceService} from "../../../shared/service/prices.service";
 import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
+import {Country} from "../../../models/country";
+import {Currency} from "../../../models/currency";
 
 @Component({
   selector: 'app-price-reg-med',
@@ -22,11 +24,12 @@ import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.c
 })
 export class PriceRegMedComponent implements OnInit, OnDestroy {
 
-      requestNumber: number;
-      documents: Document[] = [];
+      public folderNumber: number;
+      commonDocuments: Document[] = [];
       private subscriptions: Subscription[] = [];
-      private getMedSubscr: Subscription;
-      private generatedDocNrSeq: any;
+      countries: Country[] = [];
+      currencies: Currency[] = [];
+      priceTypes: any[];
 
       requests: any[] = [];
 
@@ -41,13 +44,12 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
     selected = new FormControl(0);
 
     docTypes : any[];
-    prevMonthAVGCurr : any[];
 
-    mandatoryDocuments: any[] = [{
+    /*mandatoryDocuments: any[] = [{
         description: 'Cerere',
         number: undefined,
         status: "Nu este atasat"
-    },/* {
+    }, {
         description: 'Declaraţie pe propria răspundere (Anexa 2)',
         number: undefined,
         status: "Nu este atasat"
@@ -63,7 +65,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
         description: 'Procură ce confirmă dreptul de înregistrare a preţului de producător',
         number: undefined,
         status: "Nu este atasat"
-    }*/];
+    }];*/
 
     updateRouteId: string;
 
@@ -86,31 +88,19 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
       this.loadDocTypes();
-      this.getPrevMonthAVGCurrencies()
+      this.getCountries();
+      this.getCurrencies();
+      this.getPriceTypes();
 
       if(this.updateRouteId != undefined) {
           this.subscriptions.push(
               this.priceService.getPricesRequest(this.updateRouteId).subscribe(request => {
                   console.log('requewst', JSON.stringify(request));
-                  this.generatedDocNrSeq = request.requestNumber;
-                  // this.pricesRequestId = request.pricesRequest.id;
-                  // this.PriceRegForm.get('id').setValue(request.id);
-                  // this.PriceRegForm.get('requestNumber').setValue(this.generatedDocNrSeq);
-                  // this.PriceRegForm.get('importer').setValue(request.importer);
-                  // this.PriceRegForm.get('medicament').setValue(request.pricesRequest.medicament);
-                  // this.PriceRegForm.get('initiator').setValue(request.initiator);
-                  // this.PriceRegForm.get('requestHistories').setValue(request.requestHistories);
-                  // this.onMedSelected(request.pricesRequest.medicament);
-                  // this.initPrices(request.pricesRequest);
-
-                  this.documents = [];
-                  request.pricesRequest.documents.forEach(doc => this.documents.push(doc));
           }));
       } else {
           this.subscriptions.push(
               this.priceService.generateDocNumber().subscribe(generatedNumber => {
-                      this.generatedDocNrSeq = generatedNumber;
-                      this.requestNumber = this.generatedDocNrSeq;
+                      this.folderNumber = generatedNumber;
                   },
                   error => {console.log(error); alert(error);}
               )
@@ -118,19 +108,42 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
       }
   }
 
-    getPrevMonthAVGCurrencies(){
-        this.subscriptions.push(this.priceService.getPrevMonthAVGCurrencies().subscribe(data =>{
-            this.prevMonthAVGCurr = data;
+
+    getPriceTypes() {
+        this.subscriptions.push(
+            this.priceService.getPriceTypes('2').subscribe(priceTypes => {
+                    this.priceTypes = priceTypes;
+
+                    var i = 0;
+                    while (i < this.priceTypes.length) {
+                        if (this.priceTypes[i].description == 'Propus' || this.priceTypes[i].description == 'Acceptat') {
+                            this.priceTypes.splice(i, 1);
+                        } else {
+                            ++i;
+                        }
+                    }
+                },
+                error => console.log(error)
+            ));
+    }
+
+    getCountries() {
+        this.subscriptions.push(
+            this.priceService.getCountries().subscribe(countriesData => {
+                    this.countries = countriesData;
+                },
+                error => console.log(error)
+            ));
+    }
 
 
-            /* nonNullAVGCurrencyList.get().forEach(avgCur -> {
-                NmCurrenciesHistoryEntity elem = new NmCurrenciesHistoryEntity();
-                elem.setValue(avgCur.getAvgValue());
-                NmCurrenciesEntity currency = currencyRepository.findById(avgCur.getCurrencyId()).get();
-                elem.setCurrency(currency);
-                prevMonthAVGCurrenciesList.add(elem);
-            });*/
-        }));
+    getCurrencies() {
+        this.subscriptions.push(
+            this.priceService.getCurrenciesShort().subscribe(currenciesData => {
+                    this.currencies = currenciesData;
+                },
+                error => console.log(error)
+            ));
     }
 
     loadDocTypes(){
@@ -138,7 +151,6 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
             this.priceService.getRequestStepByIdAndCode('14','R').subscribe(step => {
                     this.subscriptions.push(
                         this.priceService.getAllDocTypes().subscribe(data => {
-                                //console.log('getAllDocTypes', data);
                                 this.docTypes = data;
                                 this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
                             },
@@ -151,20 +163,17 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
         );
     }
 
-    documentAdded($event) {
-
+    commonDocumentAdded($event) {
       console.log('documentAdded', $event);
-      console.log('documents', this.documents);
 
-      this.documents.forEach(addedDoc => {
-          // this.mandatoryDocuments.splice( this.mandatoryDocuments.indexOf('foo'), 1 );
-          for(var i = 0; i < this.mandatoryDocuments.length; i++) {
-              if(this.mandatoryDocuments[i].number == addedDoc.number && this.mandatoryDocuments[i].description == addedDoc.docType.description) {
-                  this.mandatoryDocuments.splice(i, 1);
-                  break;
-              }
-          }
-      });
+      // this.documents.forEach(addedDoc => {
+      //     for(var i = 0; i < this.mandatoryDocuments.length; i++) {
+      //         if(this.mandatoryDocuments[i].number == addedDoc.number && this.mandatoryDocuments[i].description == addedDoc.docType.description) {
+      //             this.mandatoryDocuments.splice(i, 1);
+      //             break;
+      //         }
+      //     }
+      // });
     }
 
 
@@ -172,9 +181,9 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
         this.loadingService.show();
         this.formSubmitted = true;
 
-        let canSave: boolean = this.documents.length > 0 &&
+        let canSave: boolean = this.commonDocuments.length > 0 && this.folderNumber != undefined &&
             (this.requests.length == this.tabs.length &&
-            this.requests.every(value => value.valid)) && this.mandatoryDocuments.length == 0;
+            this.requests.every(value => value.valid)); //&& this.mandatoryDocuments.length == 0;
 
         if(!canSave)
         {
@@ -198,26 +207,21 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
             startDate : this.startRecDate,
             endDate: new Date(),
             username : user,
-            step : 'R'
+            step : 'E'
         };
 
         let priceModels: any[] = [];
 
         this.requests.forEach(req => {
-            let documents: Document[] = [];
 
-            this.documents.forEach(doc =>{
-                if(doc.docType.description == 'CERERE-TIP (Anexa 1)' && doc.number != req.requestNumber){
-                    return true;
-                }
-                documents.push(doc);
-            });
+            // this.commonDocuments.forEach(doc =>{
+            //     if(doc.docType.description == 'CERERE-TIP (Anexa 1)' && doc.number != req.requestNumber){
+            //         return true;
+            //     }
+            //     documents.push(doc);
+            // });
 
-            this.prevMonthAVGCurr.forEach(cur => {
-                if(req.currency.id == cur.currency.id) {
-                    req.mdlValue = cur.value
-                }
-            });
+            req.documents.push(...this.commonDocuments);
 
             priceModels.push({
                 requestNumber: req.requestNumber,
@@ -227,16 +231,15 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
                 endDate: new Date(),
                 requestHistories: [requestHistory],
                 company: req.company,
-                documents: documents,
-                currentStep: 'R',
+                documents: req.documents,
+                currentStep: 'E',
                 type:{ code: 'PMED' },
                 price: {
                     value: req.price,
                     currency: req.currency,
                     medicament: req.medicament,
                     referencePrices: req.referencePrices,
-                    folderNr: this.requestNumber,
-                    mdlValue: req.mdlValue,
+                    folderNr: this.folderNumber,
                     type: {id: 1}
                 },
             })
@@ -252,6 +255,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
                     });
                     dialogRef.afterClosed().subscribe(result => {
                         // if(result) {
+                        // this.route.navigate(['dashboard/module/price/evaluate/' + rowDetails.id]);
                         this.router.navigate(['dashboard/homepage']);
                         // }
                     });
@@ -287,17 +291,19 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
     onFormChange($event) {
       if($event.index != undefined) {
           this.requests[$event.index] = $event;
+          // let tab = this.tabGroup._tabs.find(tab => tab.position == $event.index);
+          let tab = this.tabGroup._tabs.toArray()[$event.index];
+          tab.textLabel = $event.medicament == undefined || $event.medicament.code == undefined ? 'Medicamentul ' + ($event.index + 1) : 'AMED ' + $event.medicament.code;
+          this.tabGroup._tabs.notifyOnChanges();
 
-          let mandatoryDocAddedToList: boolean = this.mandatoryDocuments.some(value => value.number == $event.requestNumber);
-          if(!mandatoryDocAddedToList) {
-              this.mandatoryDocuments.push({
-                  description: 'CERERE-TIP (Anexa 1)',
-                  number: $event.requestNumber,
-                  status: "Nu este atasat"
-              });
-          }
-
-          console.log('requests', this.requests);
+          // let mandatoryDocAddedToList: boolean = this.mandatoryDocuments.some(value => value.number == $event.requestNumber);
+          // if(!mandatoryDocAddedToList) {
+          //     this.mandatoryDocuments.push({
+          //         description: 'CERERE-TIP (Anexa 1)',
+          //         number: $event.requestNumber,
+          //         status: "Nu este atasat"
+          //     });
+          // }
       }
     }
 
@@ -308,15 +314,15 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
     }
 
     removeTab(index: number) {
-        let reqNr = this.requests[index].requestNumber;
-        if(reqNr != undefined) {
-            for(let i = 0; i < this.mandatoryDocuments.length; i++){
-                if(this.mandatoryDocuments[i].number == reqNr) {
-                    this.mandatoryDocuments.splice(i, 1);
-                    break;
-                }
-            }
-        }
+        // let reqNr = this.requests[index].requestNumber;
+        // if(reqNr != undefined) {
+        //     for(let i = 0; i < this.mandatoryDocuments.length; i++){
+        //         if(this.mandatoryDocuments[i].number == reqNr) {
+        //             this.mandatoryDocuments.splice(i, 1);
+        //             break;
+        //         }
+        //     }
+        // }
         this.requests.splice(index, 1);
         this.tabs.splice(index, 1);
     }

@@ -1,0 +1,87 @@
+<div mat-dialog-content >
+  <form [formGroup]='rForm'>
+    <h3 class="text-center my-3 font-weight-bold">{{title}}</h3>
+    <div class="row" *ngIf="type === 'D'">
+      <div class="offset-2 col-4 mt-6">
+        <div class="md-form-modified">
+
+          <mat-radio-group formControlName="decizieLuata">
+            <div class="container">
+              <div class="row">
+                <!--<div class="offset-2"></div>-->
+                <div class="col-12">
+                  <mat-radio-button name="prop1" value="1">Acceptare</mat-radio-button>
+                </div>
+                <div class="col-12">
+                  <mat-radio-button name="prop2" value="0">Refuz</mat-radio-button>
+                </div>
+                <!--<div class="offset-2"></div>-->
+              </div>
+              <div *ngIf="rFormSubbmitted && !rForm.get('decizieLuata').valid">
+                <small class="text-muted"><strong class="text-danger">Decizia trebuie
+                  introdusa</strong>
+                </small>
+              </div>
+            </div>
+          </mat-radio-group>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="mt-2">
+          <div class="md-form-modified">
+            <mat-form-field class="w-100">
+              <input matInput [matDatepicker]="picker2" placeholder="Data deciziei"
+                     formControlName="decisionDate" [max]="maxDate">
+              <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+              <mat-datepicker touchUi #picker2 [disabled]="false"></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <div *ngIf="rFormSubbmitted && !rForm.get('decisionDate').valid">
+          <small class="text-muted"><strong class="text-danger">Data deciziei trebuie introdusa</strong>
+          </small>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="md-form">
+                        <textarea type="text" id="argumentDec" class="md-textarea form-control" mdbInputDirective
+                                  rows="2" formControlName="argumentDec"></textarea>
+          <label for="argumentDec">Argumentarea deciziei</label>
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="type === 'A'">
+      <div class="col-md-12">
+        <div class="col">
+          <div class="md-form-modified-select">
+            <div class="overflow-box">
+              <ng-select [items]="activities"
+                         bindLabel="description"
+                         placeholder="Tipuri de activitate"
+                         formControlName="licenseActivities"
+                         [multiple]="true"
+                         [required]="true"
+              >
+              </ng-select>
+            </div>
+          </div>
+          <div *ngIf="rFormSubbmitted && !rForm.get('licenseActivities').valid">
+            <small class="text-muted"><strong class="text-danger">Trebuie de ales cel putin un gen
+              de
+              activitate</strong>
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="text-center">
+    <div mat-dialog-actions>
+      <div class="w-100">
+      <button class="btn btn-dark-green-color btn-sm-bl btn-sm" (click)="ok()">Salvare</button>
+      <button class="btn btn-danger btn-sm-bl btn-sm" (click)="cancel()">Inchidere</button>
+      </div>
+    </div>
+  </div>
+</div>
+

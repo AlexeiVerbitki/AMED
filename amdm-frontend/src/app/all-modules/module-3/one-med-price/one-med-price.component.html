@@ -152,10 +152,9 @@
         </div>
     </div>
 
-    <div [hidden]="medicamentType == undefined || medicamentType.code == MedType.Original">
+    <div>
         <hr>
-        <h5 class="text-center font-weight-bold">Medicamentul dat este unul <font color="red">GENERIC</font>. Indicați
-            prețul acestuia în 9 țări de referință </h5>
+        <h5 class="text-center font-weight-bold">Prețul medicamentului în țările de referință </h5>
         <template #priceReferenceContainer ></template>
         <div>
             <div class="position-button">
@@ -165,7 +164,15 @@
             </div>
         </div>
     </div>
-    <div *ngIf="medicamentType == MedType.Generic && formSubmitted && priceReferenceComponentRef.length == 0">
+    <div *ngIf="(medicamentType != undefined && medicamentType.code == MedType.Generic) && formSubmitted && priceReferenceComponentRef.length == 0">
         <small class="text-muted"><strong class="text-danger">Introduceți prețurile de referință</strong></small>
     </div>
+    <hr>
+    <app-document [title]="'Documente necesare înregistrării prețului medicamentului curent'"
+                  [documents]="documents"
+                  [dcTypes]="docTypes"
+                  [nrCerere]="this.PriceRegForm.get('requestNumber').value"
+                  (documentModified)="documentAdded($event)">
+    </app-document>
+
 </form>

@@ -12,8 +12,10 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 	</div>
 	<div class="text-center">
 		<div mat-dialog-actions>
-			<button class="btn btn-primary btn-sm-bl btn-sm" (click)="cancel()">Nu</button>
-			<button class="btn btn-danger btn-sm-bl btn-sm" (click)="confirm()">Da</button>
+            <div class="w-100">
+			<button class="btn btn-danger btn-sm-bl btn-sm" (click)="cancel()">Nu</button>
+			<button class="btn btn-dark-green-color btn-sm-bl btn-sm" (click)="confirm()">Da</button>
+            </div>
 		</div>
 	</div>`,
     styles: [`.w450 {

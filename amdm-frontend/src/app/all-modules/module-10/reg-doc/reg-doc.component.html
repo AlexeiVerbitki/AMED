@@ -1,7 +1,5 @@
 <div class="container-fluid sky z-depth-2">
 	<form [formGroup]='rForm'>
-		<h3 class="text-center my-3 font-weight-bold">Inregistrare cerere</h3>
-		<hr>
 		<div class="row">
 			<div class="col-lg-6">
 				<div class="md-form">
@@ -32,7 +30,7 @@
 					<input id="expeditor" mdbInputDirective type="text" class="form-control" formControlName="sender">
 					<label for="expeditor">Expeditor</label>
 				</div>
-				<div *ngIf="formSubmitted && rForm.get('expeditor').invalid">
+				<div *ngIf="formSubmitted && rForm.get('sender').invalid">
 					<small class="text-muted"><strong class="text-danger">Expeditoru trebuie introdus</strong></small>
 				</div>
 			</div>
@@ -60,7 +58,7 @@
 						<mat-datepicker-toggle matSuffix [for]="pickerTermen"></mat-datepicker-toggle>
 						<mat-datepicker #pickerTermen></mat-datepicker>
 					</mat-form-field>
-					<div *ngIf="formSubmitted && rForm.get('termentExecutare').invalid">
+					<div *ngIf="formSubmitted && rForm.get('executionDate').invalid">
 						<small class="text-muted"><strong class="text-danger">Destinatarii trebuie selectati</strong></small>
 					</div>
 				</div>

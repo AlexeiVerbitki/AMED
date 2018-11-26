@@ -7,7 +7,7 @@
     </div>
     <hr>
     <div class="example-container">
-      <table mat-table [dataSource]="dataSource" matSort>
+      <table mat-table [dataSource]="dataSource" matSort class="w-100">
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> ID </th>
           <td mat-cell *matCellDef="let element"> {{element.id}} </td>

@@ -12,6 +12,7 @@ public class LicenseResolutionEntity
     private String resolution;
     private Date date;
     private String reason;
+    private Integer licenseDetailId;
 
     @Id
     @Column(name = "id")
@@ -60,6 +61,18 @@ public class LicenseResolutionEntity
     public void setReason(String reason)
     {
         this.reason = reason;
+    }
+
+    @Basic
+    @Column(name = "license_detail_id")
+    public Integer getLicenseDetailId()
+    {
+        return licenseDetailId;
+    }
+
+    public void setLicenseDetailId(Integer licenseDetailId)
+    {
+        this.licenseDetailId = licenseDetailId;
     }
 
     @Override

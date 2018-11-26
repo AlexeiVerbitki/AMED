@@ -1,7 +1,100 @@
+<div class="container-fluid sky z-depth-2">
+  <div class="row">
+    <div class="col-4">
+      <div class="widget widget-stats bg-gradient-red">
+        <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+        <div class="stats-content">
+          <div class="stats-title">Lorem ipsum dolor sit amet.</div>
+          <div class="stats-number">60,324</div>
+          <div class="stats-progress progress">
+            <div class="progress-bar" style="width: 95.1%;"></div>
+          </div>
+          <div class="stats-desc">Lorem ipsum dolor sit amet consectetur</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="widget widget-stats bg-gradient-green">
+        <div class="stats-icon stats-icon-lg"><i class="fa fa-bandcamp fa-fw"></i></div>
+        <div class="stats-content">
+          <div class="stats-title">Lorem ipsum dolor sit amet.</div>
+          <div class="stats-number">60,324</div>
+          <div class="stats-progress progress">
+            <div class="progress-bar" style="width: 70.1%;"></div>
+          </div>
+          <div class="stats-desc">Better than last week (70.1%)</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="widget widget-stats bg-gradient-blue">
+        <div class="stats-icon stats-icon-lg"><i class="fa fa-bell fa-fw"></i></div>
+        <div class="stats-content">
+          <div class="stats-title">TODAY'S VISITS</div>
+          <div class="stats-number">7,842,900</div>
+          <div class="stats-progress progress">
+            <div class="progress-bar" style="width: 70.1%;"></div>
+          </div>
+          <div class="stats-desc">Better than last week (70.1%)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="position-button">
+    <button mdbBtn type="button" size="sm" color="primary" mdbWavesEffect><i class="fa fa-cog fa-2x fa-fw"></i></button>
+  </div> -->
 
+  <!-- Card gradient -->
+  <div class="gradient-card-header bg-sidebar border-gradient">
+    <div class="container-fluid">
+      <!-- Title -->
+      <div class="row">
+        <div class="col-6">
+          <div class="card-header-title white-text">Table</div>
+        </div>
+        <div class="col-6">
+          <div class="text-right fap text-white">
+            <i (click)="filterModalTable()" class="fa fa-cog fa-lg fa-mt" aria-hidden="true"></i>
+          </div>
+        </div>
+      </div>
+    </div>
 
+  </div>
 
+  <!-- Card content -->
+  <div class="card-body card-body-cascade">
+    <div class="table-height">
+      <table mat-table [dataSource]="dataSource" matSort class="text-center table-striped">
 
+        <!-- Position Column -->
+        <ng-container matColumnDef="position">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar-lighter text-white"> No. </th>
+          <td mat-cell *matCellDef="let element" class="td-color"> {{element.position}} </td>
+        </ng-container>
 
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar-lighter text-white"> Name </th>
+          <td mat-cell *matCellDef="let element" class="td-color"> {{element.name}} </td>
+        </ng-container>
 
-<h4><b>Home page</b></h4>
+        <!-- Weight Column -->
+        <ng-container matColumnDef="weight">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar-lighter text-white"> Weight </th>
+          <td mat-cell *matCellDef="let element" class="td-color"> {{element.weight}} </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="symbol">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar-lighter text-white"> Symbol </th>
+          <td mat-cell *matCellDef="let element" class="td-color"> {{element.symbol}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+    <mat-paginator class="td-color" [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
+  </div>
+</div>

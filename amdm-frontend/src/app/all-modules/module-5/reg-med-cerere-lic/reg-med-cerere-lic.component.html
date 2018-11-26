@@ -54,10 +54,7 @@
             </div>
         </div>
 
-        <app-document *ngIf="tipCerere" [documents]="docs" [nrCerere]="mForm.get('nrCererii').value"></app-document>
-        <div *ngIf="rFormSubbmitted && docs && docs.length==0">
-            <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
-        </div>
+        <app-document *ngIf="tipCerere" [documents]="docs" [nrCerere]="mForm.get('nrCererii').value" [dcTypeIdentifier]="docTypeIdentifier"></app-document>
 
     </form>
 
@@ -142,9 +139,9 @@
                         <mat-form-field class="w-100">
                             <input id="dataEliberariiLic" matInput [matDatepicker]="picker9"
                                    placeholder="Data eliberării licentei" formControlName="dataEliberariiLic"
-                            >
+                             >
                             <mat-datepicker-toggle matSuffix [for]="picker9"></mat-datepicker-toggle>
-                            <mat-datepicker touchUi #picker9></mat-datepicker>
+                            <mat-datepicker touchUi #picker9 ></mat-datepicker>
                         </mat-form-field>
                     </div>
                 </div>
@@ -216,11 +213,11 @@
                 <div class="col-md-4">
                     <div class="md-form-modified">
                         <mat-form-field class="w-100">
-                            <input id="dataProcurii1" matInput [matDatepicker]="picker3"
+                            <input id="dataProcurii1" matInput [matDatepicker]="picker3" [max]="maxDate"
                                    placeholder="Data eliberării procurii" formControlName="dataProcurii1"
-                                    >
+                                   >
                             <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
-                            <mat-datepicker touchUi #picker3></mat-datepicker>
+                            <mat-datepicker touchUi #picker3 [disabled]="false"></mat-datepicker>
                         </mat-form-field>
                     </div>
                     <div *ngIf="rFormSubbmitted && !rForm.get('dataProcurii1').valid">

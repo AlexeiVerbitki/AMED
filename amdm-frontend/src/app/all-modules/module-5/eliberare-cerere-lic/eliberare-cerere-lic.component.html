@@ -33,15 +33,45 @@
             </div>
         </div>
 
-        <app-document *ngIf="tipCerere" [documents]="docs" [nrCerere]="mForm.get('nrCererii').value" (documentModified)="documentAdded($event)"></app-document>
+        <app-document *ngIf="tipCerere" [documents]="docs" [nrCerere]="mForm.get('nrCererii').value"
+                      (documentModified)="documentAdded($event)" [dcTypeIdentifier]="docTypeIdentifier"></app-document>
         <div *ngIf="rFormSubbmitted && docs.length==0">
             <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
         </div>
 
     </form>
 
-    <hr>
     <form [formGroup]="rForm" name="form" #f="ngForm">
+    <hr>
+    <h5 class="text-center font-weight-bold">Detalii licenta</h5>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="md-form">
+                <input id="seriaLic" mdbInputDirective type="text" class="form-control"
+                       formControlName="seriaLic">
+                <label for="seriaLic">Seria licenţei<span class="text-danger"> * </span></label>
+            </div>
+            <div *ngIf="rFormSubbmitted && !rForm.get('seriaLic').valid">
+                <small class="text-muted"><strong class="text-danger">Seria licentei trebuie introdusa</strong>
+                </small>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="md-form">
+                <input id="nrLic" mdbInputDirective type="text" class="form-control"
+                       formControlName="nrLic">
+                <label for="nrLic">Numarul licenţei<span class="text-danger"> * </span></label>
+            </div>
+            <div *ngIf="rFormSubbmitted && !rForm.get('nrLic').valid">
+                <small class="text-muted"><strong class="text-danger">Numarul licentei trebuie introdus</strong>
+                </small>
+            </div>
+        </div>
+    </div>
+
+
+
         <h5 class="text-center font-weight-bold">Persoana care a depus solicitarea</h5>
         <div class="row">
             <div class="col-md-4">
@@ -103,13 +133,13 @@
 
         <hr>
         <h5 class="text-center font-weight-bold">Persoana care primeste licenta</h5>
-            <mat-checkbox id="otherPerson" formControlName="otherPerson">Alta persoana</mat-checkbox>
+        <mat-checkbox id="otherPerson" formControlName="otherPerson">Alta persoana</mat-checkbox>
         <div class="row">
             <div class="col-md-4">
                 <div class="md-form">
                     <input id="persResDepCereriiFirstnameRec" mdbInputDirective type="text" class="form-control"
                            formControlName="persResDepCereriiFirstnameRec">
-                    <label for="persResDepCereriiFirstnameRec">Nume persoana responsabilă <span
+                    <label for="persResDepCereriiFirstnameRec">Prenume persoana responsabilă <span
                             class="text-danger">*</span></label>
 
                 </div>
@@ -121,9 +151,9 @@
             </div>
             <div class="col-md-4">
                 <div class="md-form">
-                    <input id="persResDepCereriiLastnameRec" mdbInputDirective type="email" class="form-control"
+                    <input id="persResDepCereriiLastnameRec" mdbInputDirective type="text" class="form-control"
                            formControlName="persResDepCereriiLastnameRec">
-                    <label for="persResDepCereriiLastnameRec">Prenume persoana responsabilă <span
+                    <label for="persResDepCereriiLastnameRec">Nume persoana responsabilă <span
                             class="text-danger">*</span></label>
 
                 </div>
@@ -170,9 +200,9 @@
                     <mat-form-field class="w-100">
                         <input id="dataProcurii1Rec" matInput [matDatepicker]="picker2"
                                placeholder="Data eliberării procurii" formControlName="dataProcurii1Rec"
-                        >
+                        [max]="maxDate" >
                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                        <mat-datepicker touchUi #picker2></mat-datepicker>
+                        <mat-datepicker touchUi #picker2 [disabled]="false"></mat-datepicker>
                     </mat-form-field>
                 </div>
                 <div *ngIf="rFormSubbmitted && !rForm.get('dataProcurii1Rec').valid">
@@ -202,19 +232,23 @@
                 <th scope="row">{{ a.number }}</th>
                 <th scope="row">{{ a.status ? a.status.description : ''}}</th>
                 <td>
-                    <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)">Vizualizare</button>
+                    <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)">Vizualizare
+                    </button>
                 </td>
             </tr>
             </tbody>
         </table>
-        <div *ngIf="rFormSubbmitted && !checkAllDocumentsWasAttached()">
-            <small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong></small>
-        </div>
+      <!--  <div *ngIf="rFormSubbmitted && !checkAllDocumentsWasAttached()">
+            <small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong>
+            </small>
+        </div>-->
 
         <div class="text-center">
-            <button type="button" (click)="save()" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Salvare date
+            <button type="button" (click)="save()" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
+                    mdbWavesEffect>Salvare date
             </button>
-            <button type="button" (click)="submitFinish()" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>Finisare
+            <button type="button" (click)="submitFinish()" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
+                    mdbWavesEffect>Finisare
             </button>
         </div>
     </form>

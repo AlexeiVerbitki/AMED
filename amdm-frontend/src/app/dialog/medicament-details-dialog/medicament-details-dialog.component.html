@@ -1,0 +1,224 @@
+<div class="mat-dialog-content">
+	<h3 class="text-center my-3 font-weight-bold">Detalii medicament</h3>
+	<form [formGroup]='mForm'>
+		<div class="row">
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="name" mdbInputDirective type="text" class="form-control" formControlName="name" [attr.disabled]="true">
+					<label for="name">Denumire comerciala</label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="dose" mdbInputDirective type="text" class="form-control" formControlName="dose" [attr.disabled]="true">
+					<label for="dose">Doza</label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="registrationNumber" mdbInputDirective type="text" class="form-control" formControlName="registrationNumber" [attr.disabled]="true">
+					<label for="registrationNumber">Numar de inregistrare</label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="atcCode" mdbInputDirective type="text" class="form-control" formControlName="atcCode" [attr.disabled]="true">
+					<label for="atcCode">Cod ATC</label>
+				</div>
+			</div>
+			<div class="col-4">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input matInput [matDatepicker]="registrationDate" placeholder="Data inregistrarii" formControlName="registrationDate" [attr.disabled]="true">
+						<mat-datepicker-toggle matSuffix [for]="registrationDate"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #registrationDate></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="col-4">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input matInput [matDatepicker]="expirationDate" placeholder="Data expirarii" formControlName="expirationDate" [attr.disabled]="true">
+						<mat-datepicker-toggle matSuffix [for]="expirationDate"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #expirationDate></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="volum" mdbInputDirective type="text" class="form-control" formControlName="volume" [attr.disabled]="true">
+					<label for="volum">Volum </label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="volumeQuantityMeasurement" mdbInputDirective type="text" class="form-control" formControlName="volumeQuantityMeasurement" [attr.disabled]="true">
+					<label for="volumeQuantityMeasurement">Unitate de masura (volum)</label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="pharmaceuticalFormType" mdbInputDirective type="text" class="form-control" formControlName="pharmaceuticalFormType" [attr.disabled]="true">
+					<label for="pharmaceuticalFormType">Tip forma farmaceutica</label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="pharmaceuticalForm" mdbInputDirective type="text" class="form-control" formControlName="pharmaceuticalForm" [attr.disabled]="true">
+					<label for="pharmaceuticalForm">Denumire forma farmaceutica</label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="group" mdbInputDirective type="text" class="form-control" formControlName="group" [attr.disabled]="true">
+					<label for="group">Grupa medicament</label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="prescription" mdbInputDirective type="text" class="form-control" formControlName="prescription" [attr.disabled]="true">
+					<label for="prescription">Eliberare receta</label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="internationalMedicamentName" mdbInputDirective type="text" class="form-control" formControlName="internationalMedicamentName" [attr.disabled]="true">
+					<label for="prescription">Denumirea internationala</label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="termenVal" mdbInputDirective type="number" class="form-control" formControlName="termsOfValidity" [attr.disabled]="true">
+					<label for="termenVal">Termen de valabilitate (luni) <span class="text-danger">*</span></label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="medicamentType" mdbInputDirective type="text" class="form-control" formControlName="medicamentType" [attr.disabled]="true">
+					<label for="medicamentType">Clasificarea medicamentului</label>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="authorizationHolder" mdbInputDirective type="text" class="form-control" formControlName="authorizationHolder" [attr.disabled]="true">
+					<label for="authorizationHolder">Deţinătorul certificatului de inregistrare</label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="taraDetinAutProd" mdbInputDirective type="text" formControlName="authorizationHolderCountry" class="form-control" [attr.disabled]="true">
+					<label for="taraDetinAutProd">Ţara deţinătorului certificatului de inregistrare</label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="adresaDetAutProd" mdbInputDirective type="text" formControlName="authorizationHolderAddress" class="form-control" [attr.disabled]="true">
+					<label for="adresaDetAutProd">Adresa deţinătorului certificatului de inregistrare</label>
+				</div>
+			</div>
+		</div>
+		<!--Divizari tabela-->
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Divizari</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Cod medicament</th>
+					<th scope="col">Divizare</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let division of divisions;let i = index">
+					<td>{{ i + 1 }}</td>
+					<td>{{ division.code }}</td>
+					<td>{{ division.description }}</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<!--Substante active tabela-->
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Substanţe active</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Denumire</th>
+					<th scope="col">Cod CAS</th>
+					<th scope="col">Concentratie</th>
+					<th scope="col">Unitate de masură</th>
+					<th scope="col">Producător</th>
+					<th scope="col">Ţară producător</th>
+					<th scope="col">Adresă producător</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let substance of activeSubstancesTable;let i = index">
+					<th scope="row">{{ substance.activeSubstance.description }}</th>
+					<td>{{ substance.activeSubstance.code }}</td>
+					<td>{{ substance.quantity }}</td>
+					<td>{{ substance.unitsOfMeasurement.description }}</td>
+					<td>{{ substance.manufacture.description }}</td>
+					<td>{{ substance.manufacture.country.description }}</td>
+					<td>{{ substance.manufacture.address }}</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<!--Producatori tabela-->
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Producatori</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Denumire</th>
+					<th scope="col">Tara</th>
+					<th scope="col">Adresa</th>
+					<th scope="col">Producator produs finit</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let manufacture of manufacturesTable;let i = index">
+					<td>{{ manufacture.manufacture. description }}</td>
+					<td>{{ manufacture.manufacture.country.description }}</td>
+					<td>{{ manufacture.manufacture.address }}</td>
+					<th scope="row"><mat-checkbox [checked]="manufacture.producatorProdusFinit" [disabled]="true"></mat-checkbox></th>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</form>
+</div>
+<div class="text-center">
+	<div mat-dialog-actions>
+		<div class="w-100">
+			<button class="btn btn-dark-green-color btn-sm-bl btn-sm" (click)="confirm()">Ok</button>
+		</div>
+	</div>
+</div>

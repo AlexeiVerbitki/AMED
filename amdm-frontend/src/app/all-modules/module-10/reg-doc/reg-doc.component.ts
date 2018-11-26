@@ -15,6 +15,7 @@ import {LoaderService} from "../../../shared/service/loader.service";
 import {TaskService} from "../../../shared/service/task.service";
 import {CanModuleDeactivate} from "../../../shared/auth-guard/can-deactivate-guard.service";
 import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
+import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
 
 @Component({
     selector: 'app-reg-doc',
@@ -29,7 +30,8 @@ export class RegDocComponent implements OnInit, CanModuleDeactivate {
     recipients: any[];
 
     generatedDocNrSeq: number;
-    formSubmitted: boolean;
+    formSubmitted: boolean = false;
+    canBeDeactivated: boolean = false;
     private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder, public dialog: MatDialog, private router: Router,
@@ -39,6 +41,7 @@ export class RegDocComponent implements OnInit, CanModuleDeactivate {
                 private taskService: TaskService,
                 private errorHandlerService: ErrorHandlerService,
                 private loadingService: LoaderService,
+                private navbarTitleService: NavbarTitleService,
                 public dialogConfirmation: MatDialog) {
         this.rForm = fb.group({
                 'requestNumber': [null],
@@ -53,6 +56,8 @@ export class RegDocComponent implements OnInit, CanModuleDeactivate {
     }
 
     ngOnInit() {
+        this.navbarTitleService.showTitleMsg('Înregistrare documente / Registrare cerere');
+
         this.subscriptions.push(
             this.administrationService.generateDocNr().subscribe(data => {
                     this.generatedDocNrSeq = data;
@@ -86,9 +91,8 @@ export class RegDocComponent implements OnInit, CanModuleDeactivate {
     }
 
     nextStep() {
-
-
         this.formSubmitted = true;
+
         if (this.documents.length === 0 || !this.rForm.valid) {
             return;
         }
@@ -110,7 +114,6 @@ export class RegDocComponent implements OnInit, CanModuleDeactivate {
         modelToSubmit.sender = this.rForm.get('sender').value;
         modelToSubmit.executionDate = this.rForm.get('executionDate').value;
         modelToSubmit.problemDescription = this.rForm.get('problemDescription').value;
-        // this.populateRecipientsDetails(modelToSubmit);
 
         this.rForm.value.recipientList.forEach(elem => modelToSubmit.recipients.push({
             name: elem.username, comment: '', confirmed: false
@@ -126,31 +129,31 @@ export class RegDocComponent implements OnInit, CanModuleDeactivate {
         modelToSubmit.registrationRequestsEntity.documents = this.documents;
 
         this.subscriptions.push(this.requestService.addDocumentRequest(modelToSubmit).subscribe(data => {
+                this.canBeDeactivated = true;
                 this.loadingService.hide();
-                //this.router.navigate(['dashboard/module/medicament-registration/evaluate/' + data.body.id]);
+                this.router.navigate(['dashboard/module/documents/evaluate/' + data.body.id]);
             }, error => this.loadingService.hide())
         );
     }
 
     ngOnDestroy(): void {
+        this.navbarTitleService.showTitleMsg('');
         this.subscriptions.forEach(s => s.unsubscribe());
 
     }
 
     canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
+        if (this.rForm.dirty && !this.canBeDeactivated) {
+            const dialogRef = this.dialogConfirmation.open(ConfirmationDialogComponent, {
+                data: {
+                    message: 'Toate datele colectate nu vor fi salvate, sunteti sigur(a)?',
+                    confirm: false,
+                }
+            });
 
-        if (!this.rForm.dirty) {
-            return true;
+            return dialogRef.afterClosed();
         }
-        const dialogRef = this.dialogConfirmation.open(ConfirmationDialogComponent, {
-            data: {
-                message: 'Toate datele colectate nu vor fi salvate, sunteti sigur(a)?',
-                confirm: false,
-            }
-        });
 
-        return dialogRef.afterClosed();
+        return true;
     }
-
-
 }
