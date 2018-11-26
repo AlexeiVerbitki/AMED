@@ -93,7 +93,7 @@
                                        required="true">
                                 <ng-template ng-option-tmp let-item="item">
                                     {{item.name}} <br/>
-                                    <small class="form-text text-muted">{{item.idno}}</small>
+                                    <small class="form-text text-muted">IDNO: {{item.idno}}</small>
                                 </ng-template>
                             </ng-select>
                         </div>
@@ -152,7 +152,7 @@
                                                required="true">
                                         <ng-template ng-option-tmp let-item="item">
                                             {{item.description}};
-                                            <small class="form-text text-muted">cod: {{item.code}}</small>
+                                            <small class="form-text text-muted">Cod: {{item.code}}</small>
 
 
                                         </ng-template>
@@ -213,7 +213,7 @@
                                                [typeahead]="manufacturerInputsRfPr"
                                                required="true">
                                         <ng-template ng-option-tmp let-item="item">
-                                            {{item.description}};
+                                            Denumire: {{item.description}};
                                             <small class="form-text text-muted">{{item.address}}, {{item.country.description}}</small>
 
 
@@ -242,7 +242,7 @@
                                                required="true">
                                         <ng-template ng-option-tmp let-item="item">
                                             {{item.code}} <br />
-                                            <small class="form-text text-muted">{{item.description}}</small>
+                                            <small class="form-text text-muted">Denumire: {{item.description}}</small>
                                         </ng-template>
                                     </ng-select>
 
