@@ -1,20 +1,26 @@
-import { Cerere } from './../../../models/cerere';
-import { Validators } from '@angular/forms';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
-import { Observable, Subscription } from "rxjs";
-import { MatDialog } from "@angular/material";
-import { Router } from "@angular/router";
-import { AdministrationService } from "../../../shared/service/administration.service";
-import { map, startWith } from "rxjs/operators";
-import { ConfirmationDialogComponent } from "../../../dialog/confirmation-dialog.component";
-import { saveAs } from 'file-saver';
+import {Cerere} from './../../../models/cerere';
+import {FormArray, Validators} from '@angular/forms';
+import {FormGroup, FormBuilder} from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {Observable, Subscription} from "rxjs";
+import {MatDialog} from "@angular/material";
+import {ActivatedRoute, Router} from "@angular/router";
+import {AdministrationService} from "../../../shared/service/administration.service";
+// import {debounceTime, distinctUntilChanged, filter, map, startWith, tap} from "rxjs/operators";
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
+import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
+import {saveAs} from 'file-saver';
+import {Document} from "../../../models/document";
+import {RequestService} from "../../../shared/service/request.service";
+import {Subject} from "rxjs/index";
+import {LoaderService} from "../../../shared/service/loader.service";
+import {AuthService} from "../../../shared/service/authetication.service";
 
 export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
+    name: string;
+    position: number;
+    weight: number;
+    symbol: string;
 }
 
 
@@ -24,141 +30,442 @@ export interface PeriodicElement {
   styleUrls: ['./med-reg.component.css']
 })
 export class MedRegComponent implements OnInit {
-  cereri: Cerere[] = [];
-  companii: any[];
-  primRep: string;
-  rForm: FormGroup;
-  dataForm: FormGroup;
-  sysDate: string;
-  currentDate: Date;
-  file: any;
-  generatedDocNrSeq: number;
-  filteredOptions: Observable<any[]>;
-  formSubmitted: boolean;
-  isWrongValueCompany: boolean;
-  private subscriptions: Subscription[] = [];
-  constructor(private fb: FormBuilder, public dialog: MatDialog, private router: Router,
-    private administrationService: AdministrationService) {
+    cereri: Cerere[] = [];
+    // importer: any[];
+    evaluateImportForm: FormGroup;
+    // importTypeForm: FormGroup;
+    currentDate: Date;
+    file: any;
+    generatedDocNrSeq: number;
+    filteredOptions: Observable<any[]>;
+    formSubmitted: boolean;
+    private subscriptions: Subscription[] = [];
+    docs: Document [] = [];
 
-    this.rForm = fb.group({
-      'compGet': [null, Validators.required],
-      'seller': [null, Validators.required],
-      'sellerTaraAdresa': [null, Validators.required],
-      'autorizatiaImport': [null, Validators.required],
-      'importator': [null, Validators.required],
-      'importatorTaraAdresa': [null, Validators.required],
-      'conditiiPrecizari': [null, Validators.required],
-      'firmaProducatoare': [null, Validators.required],
-      'producatorTaraAdresa': [null, Validators.required],
-      'medReg': [null, Validators.required],
-      'medUnreg': [null, Validators.required],
-      'MatPrima': [null, Validators.required],
-      'AmbalajProd': [null, Validators.required],
-    });
+    unitOfImportTable: any[] = [];
 
-    this.dataForm = fb.group({
-      'data': { disabled: true, value: null },
-      'nrCererii': [null, Validators.required]
-    });
-  }
+    protected manufacturersRfPr: Observable<any[]>;
+    protected loadingManufacturerRfPr: boolean = false;
+    protected manufacturerInputsRfPr = new Subject<string>();
 
-  ngOnInit() {
-    this.currentDate = new Date();
+    importer: Observable<any[]>;
+    loadingCompany: boolean = false;
+    protected companyInputs = new Subject<string>();
 
-    this.subscriptions.push(
-      this.administrationService.generateDocNr().subscribe(data => {
-        this.generatedDocNrSeq = data;
-        this.dataForm.get('nrCererii').setValue(this.generatedDocNrSeq);
-      },
-        error => console.log(error)
-      )
-    );
+    sellerAddress: any;
+    importerAddress: any;
+    producerAddress: any;
 
-    this.subscriptions.push(
-      this.administrationService.getAllCompanies().subscribe(data => {
-        this.companii = data;
-        this.filteredOptions = this.rForm.controls['compGet'].valueChanges
-          .pipe(
-            startWith<string | any>(''),
-            // map(value => this._filter(value.viewValue))
-            map(value => typeof value === 'string' ? value : value.name),
-            map(name => this._filter(name))
-          );
-      },
-        error => console.log(error)
-      )
-    );
+    solicitantCompanyList: Observable<any[]>;
+    unitSumm: any;
+    private unitOfImportPressed : boolean;
 
-    this.dataForm.get('data').setValue(this.currentDate);
-  }
+    formModel: any;
+    valutaList: Observable<any[]>;
 
-  displayFn(user?: any): string | undefined {
-    return user ? user.name : undefined;
-  }
+    importData : any;
 
-  onChange(event) {
-    this.file = event.srcElement.files[0];
-    const fileName = this.file.name;
-    const lastIndex = fileName.lastIndexOf('.');
-    let fileFormat = '';
-    if (lastIndex !== -1) {
-      fileFormat = '*.' + fileName.substring(lastIndex + 1);
+    atcCodes: Observable<any[]>;
+    loadingAtcCodes: boolean = false;
+    atcCodesInputs = new Subject<string>();
+
+    customsCodes: Observable<any[]>;
+    loadingcustomsCodes: boolean = false;
+    customsCodesInputs = new Subject<string>();
+
+    constructor(private fb: FormBuilder,
+                private requestService: RequestService,
+                public dialog: MatDialog,
+                private router: Router,
+                private activatedRoute: ActivatedRoute,
+                private loadingService: LoaderService,
+                private authService: AuthService,
+                public dialogConfirmation: MatDialog,
+                private administrationService: AdministrationService) {
+
+        this.evaluateImportForm = fb.group({
+            'id': [''],
+            'requestNumber': [null],
+            'startDate': [new Date()],
+            'currentStep': ['R'],
+            'company': ['', Validators.required],
+            'initiator': [null],
+            'assignedUser': [null],
+            'data': {disabled: true, value: null},
+            'importType': [null, Validators.required],
+            'type':
+                this.fb.group({
+                    'id': ['']
+                }),
+
+            'requestHistories': [],
+
+            'importAuthorizationEntity': fb.group({
+                // 'requestNumber': {value: '', disabled: true},
+                // 'startDate': {value: '', disabled: true},
+                // 'importer': {value: '', disabled: true},
+                'id': [],
+                // 'importType': [null, Validators.required],
+                // 'applicationRegistrationNumber': [''],
+                'applicationDate': [new Date()],
+                'applicant': ['', Validators.required],
+                'seller': [null, Validators.required], // Tara si adresa lui e deja in baza
+                'basisForImport': [],
+                'importer': [null, Validators.required], // Tara si adresa lui e deja in baza
+                'conditionsAndSpecification': [''],
+                'quantity': [],
+                'price': [],
+                'currency': [],
+                'summ': [],
+                'producer_id': [], // to be deleted
+                'stuff_type_id': [], // to delete
+                'expiration_date': [],
+
+                //   For Import management/ import based on customs
+                //customs_declaration_date
+                //customs_transacton_type_id
+                'authorizationsNumber': [], // inca nu exista la pasul acesta
+                'medType': [''],
+                // 'unitOfImportTable': [],
+                'importAuthorizationDetailsEntityList' :[],
+                'unitOfImportTable': this.fb.group({
+
+                    customsCode: [],
+                    name: [],
+                    quantity: [],
+                    price: [],
+                    currency: [],
+                    summ: [],
+                    producer: [],
+                    expirationDate: [],
+                    atcCode: [],
+
+                }),
+
+
+
+            }),
+
+        });
+
+
     }
-    this.sysDate = `${this.currentDate.getDate()}.${this.currentDate.getMonth() + 1}.${this.currentDate.getFullYear()}`;
-    this.cereri.push({ denumirea: fileName, format: fileFormat, dataIncarcarii: this.sysDate });
-  }
 
-  removeDocument(index) {
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      data: { message: 'Sunteti sigur ca doriti sa stergeti acest document?', confirm: false }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.cereri.splice(index, 1);
-      }
-    });
-  }
+    ngOnInit() {
 
-  loadFile() {
-    saveAs(this.file, this.file.name);
-  }
+        this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
+            this.subscriptions.push(this.requestService.getImportRequest(params['id']).subscribe(data => {
+                    console.log('Import data', data);
+                    this.importData = data;
 
-  chekCompanyValue() {
-    this.isWrongValueCompany = !this.companii.some(elem => {
-      return this.rForm.get('compGet').value == null ? true : elem.name === this.rForm.get('compGet').value.name;
-    });
-  }
+                    this.evaluateImportForm.get('id').setValue(data.id);
+                    this.evaluateImportForm.get('requestNumber').setValue(data.requestNumber);
+                    this.evaluateImportForm.get('startDate').setValue(new Date(data.startDate));
+                    this.evaluateImportForm.get('initiator').setValue(data.initiator);
+                    this.evaluateImportForm.get('assignedUser').setValue(data.assignedUser);
+                    this.evaluateImportForm.get('company').setValue(data.company);
+                    this.evaluateImportForm.get('importAuthorizationEntity.medType').setValue(data.importAuthorizationEntity.medType);
+                    this.evaluateImportForm.get('importAuthorizationEntity.applicant').setValue(data.company);
+                    this.evaluateImportForm.get('type.id').setValue(data.type.id);
+                    this.evaluateImportForm.get('requestHistories').setValue(data.requestHistories);
 
-  nextStep() {
-    this.formSubmitted = true;
+                },
+                error => console.log(error)
+            ))
+        }))
 
-    this.isWrongValueCompany = !this.companii.some(elem => {
-      return this.rForm.get('compGet').value == null ? true : elem.name === this.rForm.get('compGet').value.name;
-    });
-
-    if (!this.rForm.controls['compGet'].valid || !this.rForm.controls['primRep'].valid || !this.rForm.controls['med'].valid
-      || this.cereri.length === 0 || this.isWrongValueCompany) {
-      return;
+        this.currentDate = new Date();
+        this.sellerAddress='';
+        this.producerAddress='';
+        this.importerAddress='';
+        this.formSubmitted = false;
+        this.loadEconomicAgents();
+        this.loadManufacturersRfPr();
+        this.onChanges();
+        this.loadCurrenciesShort();
+        this.loadCustomsCodes();
+        this.loadATCCodes();
+        console.log("importTypeForms.value",this.importTypeForms.value)
     }
 
-    this.formSubmitted = false;
+    onChanges(): void {
+        if (this.evaluateImportForm.get('importAuthorizationEntity')) {
+            this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.seller').valueChanges.subscribe(val => {
+                if (val) {
+                    this.sellerAddress = val.address + ", " + val.country.description;
+                }
+            }));
+            this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').valueChanges.subscribe(val => {
+                // console.log("val",val)
+                if (val) {
+                    this.producerAddress = val.address + ", " + val.country.description;
+                    // console.log("producerAddress",this.producerAddress)
+                }
+            }));
+            this.subscriptions.push(  this.evaluateImportForm.get('importAuthorizationEntity.importer').valueChanges.subscribe(val => {
+                if (val) {
+                    this.importerAddress = val.legalAddress /*+ ", " + val.country.description*/;
+                }
+            }));
+            this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').valueChanges.subscribe(val => {
+                if (val) {
+                    this.unitSumm = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
+                        * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value;
+                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.unitSumm);
+                }
+            }));
+            this.subscriptions.push(  this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').valueChanges.subscribe(val => {
+                if (val) {
+                    this.unitSumm = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
+                        * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value;
+                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.unitSumm);
+                }
+            }));
+        }
+    }
 
-    // TODO save in DB values from form
-    // this.subscriptions.push(this.claimService.editClaim(this.model).subscribe(data => {
-    //     this.router.navigate(['/evaluate/initial']);
-    //   })
-    // );
-  }
 
-  private _filter(name: string): any[] {
-    const filterValue = name.toLowerCase();
+    get importTypeForms() {
+        return this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable') as FormArray
+    }
 
-    return this.companii.filter(option => option.name.toLowerCase().includes(filterValue));
-  }
+    addUnitOfImport() {
+        this.unitOfImportPressed = true;
 
-  private saveToFileSystem(response: any, docName: string) {
-    const blob = new Blob([response]);
-    saveAs(blob, docName);
-  }
+        this.unitOfImportPressed = false;
+
+        this.unitOfImportTable.push({
+
+            customsCode:       this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').value,
+            name:              this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').value,
+            quantity:          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value,
+            price:             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
+            currency:          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').value,
+            summ:              this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
+            * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
+            producer:          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').value,
+            atcCode:           this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').value,
+            expirationDate:    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').value
+        });
+
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(null);
+        this.producerAddress=null;
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(null);
+        console.log("this.unitOfImportTable", this.unitOfImportTable)
+    }
+
+    removeunitOfImport(index: number) {
+
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {message: 'Sunteti sigur ca doriti sa stergeti ?', confirm: false}
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.unitOfImportTable.splice(index, 1);
+            }
+        });
+    }
+
+
+    loadATCCodes(){
+        this.customsCodes =
+            this.customsCodesInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 0) {
+                        return true;
+                    }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingcustomsCodes = true;
+
+                }),
+                flatMap(term =>
+                    this.administrationService.getAllCustomsCodesByDescription(term).pipe(
+                        tap(() => this.loadingcustomsCodes = false)
+
+                    )
+                )
+            );
+    }
+
+    loadCustomsCodes(){
+        this.atcCodes =
+            this.atcCodesInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 0) {
+                        return true;
+                    }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingAtcCodes = true;
+
+                }),
+                flatMap(term =>
+                    this.administrationService.getAllAtcCodesByCode(term).pipe(
+                        tap(() => this.loadingAtcCodes = false)
+                    )
+                )
+            );
+
+    }
+
+
+    loadEconomicAgents() {
+        this.importer =
+            this.companyInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 0) return true;
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingCompany = true;
+
+                }),
+                flatMap(term =>
+
+                    this.administrationService.getCompanyNamesAndIdnoList(term).pipe(
+                        tap(() => this.loadingCompany = false)
+                    )
+                )
+            );
+    }
+
+
+    loadManufacturersRfPr(){
+        this.manufacturersRfPr =
+            this.manufacturerInputsRfPr.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 0) return true;
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingManufacturerRfPr = true;
+
+                }),
+                flatMap (term =>
+                    this.administrationService.getManufacturersByName(term).pipe(
+                        tap(() => this.loadingManufacturerRfPr = false)
+                    )
+                )
+            );
+    }
+
+    loadCurrenciesShort() {
+        this.subscriptions.push(
+            this.administrationService.getCurrenciesShort().subscribe(data => {
+                    this.valutaList = data;
+                },
+                error => console.log(error)
+            )
+        )
+    }
+
+    interruptProcess() {
+        const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur(a)?',
+                confirm: false
+            }
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            // console.log('result', result);
+            if (result) {
+                this.loadingService.show();
+                let modelToSubmit = this.evaluateImportForm.getRawValue();
+                modelToSubmit.currentStep = 'I';
+                // modelToSubmit.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
+                modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
+                modelToSubmit.endDate = new Date();
+                modelToSubmit.documents = this.docs;
+                modelToSubmit.requestHistories.push({
+                    startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
+                    endDate: new Date(),
+                    username: this.authService.getUserName(),
+                    step: 'E'
+                });
+                modelToSubmit.documents = this.docs;
+                this.subscriptions.push(
+                    this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
+                        this.router.navigate(['/dashboard/homepage']);
+                        this.loadingService.hide();
+                    }, error => {
+                        this.loadingService.hide();
+                        console.log(error)
+                    })
+                )
+            }
+        });
+    }
+
+
+
+    nextStep() {
+
+
+
+        this.formSubmitted = true;
+        let modelToSubmit: any ={};
+        this.loadingService.show();
+
+        modelToSubmit = this.evaluateImportForm.value;
+        if (this.importData.importAuthorizationEntity.id){
+            modelToSubmit.importAuthorizationEntity.id =  this.importData.importAuthorizationEntity.id;
+        }
+
+
+        modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
+        modelToSubmit.endDate = new Date();
+
+        modelToSubmit.documents = this.docs;
+
+        modelToSubmit.requestHistories.push({
+            startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
+            endDate: new Date(),
+            username: this.authService.getUserName(),
+            step: 'E'
+        });
+
+        console.log("this.evaluateImportForm.value", this.evaluateImportForm.value);
+        //=============
+
+
+        console.log("modelToSubmit", modelToSubmit);
+        alert("before addImportRequest(modelToSubmit)")
+        // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {
+        this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
+                alert("after addImportRequest(modelToSubmit)")
+                console.log("addImportRequest(modelToSubmit).subscribe(data) ",data)
+                this.loadingService.hide();
+                // this.router.navigate(['dashboard/module']); for now to post multiple times
+            }, error => {
+                alert("Something went wrong while sending the model")
+                console.log("error: ",error)
+                this.loadingService.hide()}
+        ));
+
+        this.formSubmitted = false;
+    }
+
+
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(subscription => {
+            subscription.unsubscribe();
+        })
+    }
+
 
 }
