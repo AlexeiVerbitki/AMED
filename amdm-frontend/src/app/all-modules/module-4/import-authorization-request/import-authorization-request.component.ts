@@ -227,7 +227,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
                 case "1":{this.router.navigate(['dashboard/module/import-authorization/registered-medicament/'  +data.body.id]) ; break;}
                 case "2":{this.router.navigate(['dashboard/module/import-authorization/unregistered-medicament/'+data.body.id]) ; break;}
                 // case "3":{this.router.navigate(['dashboard/module/import-authorization/materia-prima/'          +data.body]) ; break;}
-                case "3":{this.router.navigate(['dashboard/module/import-authorization/ambalaj/'                +data.body.id]) ; break;}
+                case "3":{this.router.navigate(['dashboard/module/import-authorization/materia-prima/'                +data.body.id]) ; break;}
                 case "4":{this.router.navigate(['dashboard/module/import-authorization/ambalaj/'                +data.body.id]) ; break;}
             }
             this.loadingService.hide();

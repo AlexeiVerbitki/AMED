@@ -10,7 +10,8 @@ const routes: Routes = [
     {path: 'register', component: ImportAuthorizationRequestComponent},
     {path: 'registered-medicament/:id', component: MedRegComponent},
     {path: 'unregistered-medicament/:id', component: MedNeregComponent},
-    {path: 'materia-prima/:id', component: MateriaPrimaComponent},
+    // {path: 'materia-prima/:id', component: MateriaPrimaComponent},
+    {path: 'materia-prima/:id', component: AmbalajComponent},
     {path: 'ambalaj/:id', component: AmbalajComponent},
 ];
 
