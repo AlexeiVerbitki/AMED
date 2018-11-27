@@ -26,7 +26,7 @@ import java.util.Set;
 	private NmTypesOfCustomsTransactionsEntity     customsTransactionType;
 	private String                                 authorizationsNumber;
 	private Integer                                medType;
-	private Set<ImportAuthorizationDetailsEntity> importAuthorizationDetailsEntityList;
+	private Set<ImportAuthorizationDetailsEntity>  importAuthorizationDetailsEntityList;
 
 
 	@Id
