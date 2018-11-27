@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface NmCustomsCodesRepository extends JpaRepository<NmCustomsCodesEntity, Integer> {
 
-	@Query(value = "SELECT * FROM nm_customs_codes m WHERE m.description like upper(CONCAT(?1, '%'))", nativeQuery = true)
+	@Query(value = "SELECT * FROM nm_customs_codes m WHERE m.description OR m.code like upper(CONCAT(?1, '%'))", nativeQuery = true)
 	List<NmCustomsCodesEntity> findByDescriptionStartingWithIgnoreCase(String description);
 }
