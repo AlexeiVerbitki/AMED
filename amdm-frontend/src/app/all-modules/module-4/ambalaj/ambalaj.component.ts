@@ -80,6 +80,7 @@ export class AmbalajComponent implements OnInit {
                 private activatedRoute: ActivatedRoute,
                 private loadingService: LoaderService,
                 private authService: AuthService,
+                public dialogConfirmation: MatDialog,
                 private administrationService: AdministrationService) {
 
         this.evaluateImportForm = fb.group({
@@ -379,6 +380,45 @@ export class AmbalajComponent implements OnInit {
         )
     }
 
+    interruptProcess() {
+        const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur(a)?',
+                confirm: false
+            }
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            // console.log('result', result);
+            if (result) {
+                this.loadingService.show();
+                let modelToSubmit = this.evaluateImportForm.getRawValue();
+                modelToSubmit.currentStep = 'I';
+                // modelToSubmit.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
+                modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
+                modelToSubmit.endDate = new Date();
+                modelToSubmit.documents = this.docs;
+                modelToSubmit.requestHistories.push({
+                    startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
+                    endDate: new Date(),
+                    username: this.authService.getUserName(),
+                    step: 'E'
+                });
+                modelToSubmit.documents = this.docs;
+                this.subscriptions.push(
+                    this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
+                        this.router.navigate(['/dashboard/homepage']);
+                        this.loadingService.hide();
+                    }, error => {
+                        this.loadingService.hide();
+                        console.log(error)
+                    })
+                )
+            }
+        });
+    }
+
+
 
     nextStep() {
 
@@ -408,6 +448,8 @@ export class AmbalajComponent implements OnInit {
 
         console.log("this.evaluateImportForm.value", this.evaluateImportForm.value);
         //=============
+
+
         console.log("modelToSubmit", modelToSubmit);
         alert("before addImportRequest(modelToSubmit)")
         // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {
@@ -424,6 +466,7 @@ export class AmbalajComponent implements OnInit {
 
         this.formSubmitted = false;
     }
+
 
     ngOnDestroy(): void {
         this.subscriptions.forEach(subscription => {
