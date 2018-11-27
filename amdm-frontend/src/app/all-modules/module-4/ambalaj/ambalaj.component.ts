@@ -193,57 +193,40 @@ export class AmbalajComponent implements OnInit {
 
     onChanges(): void {
         if (this.evaluateImportForm.get('importAuthorizationEntity')) {
-            this.evaluateImportForm.get('importAuthorizationEntity.seller').valueChanges.subscribe(val => {
+            this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.seller').valueChanges.subscribe(val => {
                 if (val) {
                     this.sellerAddress = val.address + ", " + val.country.description;
                 }
-            });
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').valueChanges.subscribe(val => {
+            }));
+            this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').valueChanges.subscribe(val => {
                 // console.log("val",val)
                 if (val) {
                     this.producerAddress = val.address + ", " + val.country.description;
                     // console.log("producerAddress",this.producerAddress)
                 }
-            });
-            this.evaluateImportForm.get('importAuthorizationEntity.importer').valueChanges.subscribe(val => {
+            }));
+            this.subscriptions.push(  this.evaluateImportForm.get('importAuthorizationEntity.importer').valueChanges.subscribe(val => {
                 if (val) {
                     this.importerAddress = val.legalAddress /*+ ", " + val.country.description*/;
                 }
-            });
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').valueChanges.subscribe(val => {
+            }));
+            this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').valueChanges.subscribe(val => {
                 if (val) {
                     this.unitSumm = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
                         * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value;
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.unitSumm);
                 }
-            });
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').valueChanges.subscribe(val => {
+            }));
+            this.subscriptions.push(  this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').valueChanges.subscribe(val => {
                 if (val) {
                     this.unitSumm = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
                         * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value;
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.unitSumm);
                 }
-            });
+            }));
         }
-        // this.evaluateImportForm.getthis.addImportTypeForm('importAuthorizationEntity.importer').valueChanges.subscribe(val => {
-        //     if (val) {
-        //         this.importerAddress = val.legalAddress + ", Moldova";
-        //         // this.evaluateImportForm.get('importAuthorizationEntity.adresa').setValue("test")
-        //     }
-        // });
     }
 
-    // getProducerAddress(index: number){
-    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').valueChanges.subscribe(val => {
-    //         console.log("val:", val)
-    //         console.log("index: ",index)
-    //         if (val) {
-    //             this.producerAddress = val[index].producer.address + ", " + val[index].producer.country.description;
-    //             console.log("producerAddress =",  this.producerAddress)               // this.evaluateImportForm.get('importAuthorizationEntity.adresa').setValue("test")
-    //         }
-    //     });
-    //
-    // }
 
     get importTypeForms() {
         return this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable') as FormArray
@@ -412,16 +395,6 @@ export class AmbalajComponent implements OnInit {
         modelToSubmit.endDate = new Date();
         console.log("this.evaluateImportForm.value", this.evaluateImportForm.value);
         //=============
-
-        // modelToSubmit.importAuthorizationEntity = {};
-        // let importAuthorizationEntity = Object.assign({}, this.evaluateImportForm.get('importAuthorizationEntity').value);
-        // modelToSubmit.importAuthorizationEntity.unitOfImportTable = this.unitOfImportTable;
-
-
-        // modelToSubmit.importAuthorizationEntity = }{;
-
-
-        //==============
         console.log("modelToSubmit", modelToSubmit);
         alert("before addImportRequest(modelToSubmit)")
         // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {
@@ -437,6 +410,12 @@ export class AmbalajComponent implements OnInit {
         ));
 
         this.formSubmitted = false;
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(subscription => {
+            subscription.unsubscribe();
+        })
     }
 
 
