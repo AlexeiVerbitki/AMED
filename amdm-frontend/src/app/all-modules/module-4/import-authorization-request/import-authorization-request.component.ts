@@ -214,7 +214,8 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         }];
 
 
-        formModel.importAuthorizationEntity.documents = this.docs;
+        // formModel.importAuthorizationEntity.documents = this.docs;
+        formModel.documents = this.docs;
         formModel.currentStep = 'E';
         formModel.initiator = this.authService.getUserName();
         formModel.assignedUser = this.authService.getUserName();
