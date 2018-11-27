@@ -152,24 +152,6 @@ export class AmbalajComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.currentDate = new Date();
-        this.sellerAddress='';
-        this.producerAddress='';
-        this.importerAddress='';
-        this.formSubmitted = false;
-        // this.producerAddress='';
-        // this.importTypeForms[0].producer.address='';
-        // this.loadSolicitantCompanyList();
-        this.loadEconomicAgents();
-        this.loadManufacturersRfPr();
-        // this.addImportTypeForm();
-        this.onChanges();
-        this.loadCurrenciesShort();
-        this.loadCustomsCodes();
-        this.loadATCCodes();
-
-
-
 
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
             this.subscriptions.push(this.requestService.getImportRequest(params['id']).subscribe(data => {
@@ -192,6 +174,17 @@ export class AmbalajComponent implements OnInit {
             ))
         }))
 
+        this.currentDate = new Date();
+        this.sellerAddress='';
+        this.producerAddress='';
+        this.importerAddress='';
+        this.formSubmitted = false;
+        this.loadEconomicAgents();
+        this.loadManufacturersRfPr();
+        this.onChanges();
+        this.loadCurrenciesShort();
+        this.loadCustomsCodes();
+        this.loadATCCodes();
         console.log("importTypeForms.value",this.importTypeForms.value)
     }
 
