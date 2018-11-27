@@ -97,6 +97,8 @@ export class AmbalajComponent implements OnInit {
                     'id': ['']
                 }),
 
+            'requestHistories': [],
+
             'importAuthorizationEntity': fb.group({
                 // 'requestNumber': {value: '', disabled: true},
                 // 'startDate': {value: '', disabled: true},
@@ -182,6 +184,7 @@ export class AmbalajComponent implements OnInit {
                                        this.evaluateImportForm.get('importAuthorizationEntity.medType').setValue(data.importAuthorizationEntity.medType);
                     this.evaluateImportForm.get('importAuthorizationEntity.applicant').setValue(data.company);
                     this.evaluateImportForm.get('type.id').setValue(data.type.id);
+                    this.evaluateImportForm.get('requestHistories').setValue(data.requestHistories);
 
                 },
                 error => console.log(error)
@@ -393,6 +396,16 @@ export class AmbalajComponent implements OnInit {
 
         modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
         modelToSubmit.endDate = new Date();
+
+        modelToSubmit.documents = this.docs;
+
+        modelToSubmit.requestHistories.push({
+            startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
+            endDate: new Date(),
+            username: this.authService.getUserName(),
+            step: 'E'
+        });
+
         console.log("this.evaluateImportForm.value", this.evaluateImportForm.value);
         //=============
         console.log("modelToSubmit", modelToSubmit);

@@ -292,7 +292,7 @@
                         <tr *ngFor="let unitOfImport of unitOfImportTable;let i = index">
                             <th scope="row">{{ unitOfImport.customsCode.description }}</th>
                             <td>{{ unitOfImport.name }}</td>
-                            <td>{{ unitOfImport.atcCode.code}}</td>
+                            <td *ngIf="importData.importAuthorizationEntity.medType==3">{{ unitOfImport.atcCode.code}}</td>
                             <td>{{ unitOfImport.quantity }}</td>
                             <td>{{ unitOfImport.price }}</td>
                             <td>{{ unitOfImport.currency.shortDescription}}</td>

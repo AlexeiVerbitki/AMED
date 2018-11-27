@@ -214,13 +214,12 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         }];
 
 
-
         formModel.importAuthorizationEntity.documents = this.docs;
-        formModel.currentStep='E';
+        formModel.currentStep = 'E';
         formModel.initiator = this.authService.getUserName();
         formModel.assignedUser = this.authService.getUserName();
 
-
+        console.log("formModel", formModel)
 
         this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
             switch(this.rForm.get('importType').value){
