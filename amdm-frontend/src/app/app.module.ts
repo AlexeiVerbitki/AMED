@@ -40,8 +40,9 @@ import {PriceReqEditModalComponent} from "./prices/price-req-edit-modal/price-re
 import {MatDialogModule} from "@angular/material";
 import {ActiveSubstanceDialogComponent} from "./dialog/active-substance-dialog/active-substance-dialog.component";
 import {HomepageModalComponent} from "./homepage/homepage-modal/homepage-modal.component";
-import {MedicamentsComponent} from "./management/medicaments/medicaments.component";
 import {MedicamentDetailsDialogComponent} from "./dialog/medicament-details-dialog/medicament-details-dialog.component";
+import {MedicamentHistoryDialogComponent} from "./dialog/medicament-history-dialog/medicament-history-dialog.component";
+import {MedicamentModificationsDialogComponent} from "./dialog/medicament-modifications-dialog/medicament-modifications-dialog.component";
 
 const interceptors = [{
     provide: HTTP_INTERCEPTORS,
@@ -74,7 +75,6 @@ const interceptors = [{
         ConfirmationDialogComponent,
         PriceReqEditModalComponent,
         PricesComponent,
-        MedicamentsComponent,
         TaskComponent,
         HistoryComponent,
         ModuleComponent,
@@ -85,7 +85,9 @@ const interceptors = [{
         NumberOnlyDirective,
         ActiveSubstanceDialogComponent,
         HomepageModalComponent,
-        MedicamentDetailsDialogComponent
+        MedicamentDetailsDialogComponent,
+        MedicamentHistoryDialogComponent,
+        MedicamentModificationsDialogComponent
     ],
     imports: [
         BrowserAnimationsModule,
@@ -100,7 +102,7 @@ const interceptors = [{
     ],
     schemas: [],
     entryComponents: [
-        ConfirmationDialogComponent,RequestAdditionalDataDialogComponent,PriceReqEditModalComponent,ActiveSubstanceDialogComponent, HomepageModalComponent,MedicamentDetailsDialogComponent
+        ConfirmationDialogComponent,MedicamentHistoryDialogComponent,MedicamentModificationsDialogComponent,RequestAdditionalDataDialogComponent,PriceReqEditModalComponent,ActiveSubstanceDialogComponent, HomepageModalComponent,MedicamentDetailsDialogComponent
     ],
     providers: [AuthService, AdministrationService, ErrorHandlerService, interceptors,
     ],

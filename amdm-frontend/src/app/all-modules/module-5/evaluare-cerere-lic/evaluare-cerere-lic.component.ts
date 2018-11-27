@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from "rxjs";
+import {Observable, of, Subject, Subscription} from "rxjs";
 import {Document} from "../../../models/document";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -15,6 +15,7 @@ import {DocumentService} from "../../../shared/service/document.service";
 import {LocalityService} from "../../../shared/service/locality.service";
 import {RequestAdditionalDataDialogComponent} from "../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component";
 import {LicenseDecisionDialogComponent} from "../../../dialog/license-decision-dialog/license-decision-dialog.component";
+import {catchError, debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
 
 @Component({
     selector: 'app-evaluare-cerere-lic',
@@ -39,6 +40,10 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
     companiiPerIdnoSelected: any[] = [];
 
     pharmacyRepresentantProf: any;
+
+    companii: Observable<any[]>;
+    loadingCompany: boolean = false;
+    companyInputs = new Subject<string>();
 
     CPCDId: string;
     ASPId: string;
@@ -97,12 +102,11 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
                             console.log('data', data);
                             this.patchData(data);
 
-                            this.subscriptions.push(
-                                this.licenseService.retrieveAgentsByIdnoWithoutLicense(this.oldData.license.idno).subscribe(data => {
-                                        this.companiiPerIdnoNotSelected = data;
-                                    }
-                                )
-                            );
+                            if (this.tipCerere !== 'LICC')
+                            {
+                                this.retrieveNotSelectedFilials(this.oldData.license.idno);
+                            }
+
 
                             this.subscriptions.push(
                                 this.licenseService.loadActivities().subscribe(data => {
@@ -132,6 +136,23 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         this.onChanges();
     }
 
+
+    private retrieveNotSelectedFilials(idno : string ) {
+        this.subscriptions.push(
+            this.licenseService.retrieveAgentsByIdnoWithoutLicense(idno).subscribe(data => {
+                    this.companiiPerIdnoNotSelected = data;
+                    this.companiiPerIdnoNotSelected.forEach(co => {
+                        this.subscriptions.push(
+                            this.localityService.loadLocalityDetails(co.locality.id).subscribe(data => {
+                                    co.addressStr = data.stateName + ', ' + data.description + ', ' + co.street;
+                                }
+                            )
+                        );
+                    });
+                }
+            )
+        );
+    }
 
     private patchData(data) {
         this.mForm.get('nrCererii').patchValue(data.requestNumber);
@@ -185,7 +206,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
             })
         }
 
-        if (this.tipCerere === 'LICD') {
+        if (this.tipCerere === 'LICD' || this.tipCerere === 'LICP' || this.tipCerere === 'LICA' || this.tipCerere === 'LICS' || this.tipCerere === 'LICRL' ) {
             this.rForm.disable();
             this.oForm.disable();
         }
@@ -220,8 +241,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
             cis.address = cis.locality.stateName + ', ' + cis.locality.description + ', ' + cis.street;
             let activitiesStr;
             cis.activities.forEach(r => {
-                if (activitiesStr)
-                {
+                if (activitiesStr) {
                     activitiesStr += ', ' + r.description
                 }
                 else {
@@ -232,16 +252,29 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
             cis.activitiesStr = activitiesStr;
         });
 
-        // console.log('asdasdasd', activitiesStr, 'kesulika', activities);
-        // let filiala = this.oForm.get('filiala').value;
-        //
-        // filiala.companyType = this.oForm.get('tipIntreprindere').value;
-        // filiala.address = this.oForm.get('region').value + ', ' + this.oForm.get('locality').value + ', ' + this.oForm.get('street').value;
-        // filiala.agentPharmaceutist = this.farmacistiPerAddress;
-        // filiala.activities = this.oForm.get('licenseActivities').value;
-        // filiala.activitiesStr = activitiesStr;
-        //
-        // this.companiiPerIdnoSelected.push( filiala );
+        this.companii =
+            this.companyInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) return true;
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingCompany = true;
+
+                }),
+                flatMap(term =>
+
+                    this.administrationService.getCompanyDetailsForLicense(term).pipe(
+                        tap(() => this.loadingCompany = false),
+                        catchError(() => {
+                            this.loadingCompany = false;
+                            return of([]);
+                            ;
+                        })
+                    )
+                )
+            );
 
         this.backupForm = this.rForm;
     }
@@ -254,11 +287,11 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
             'releaseDate': '',
             'dataSistarii': '',
             'motivulSistarii': '',
-            'CPCDDate': [{value: null, disabled:true}],
+            'CPCDDate': [{value: null, disabled: true}],
             'CPCDMethod': '',
             'CPCDEmail': [null, Validators.email],
             'CPCDPhone': [null, [Validators.maxLength(9), Validators.pattern('[0-9]+')]],
-            'ASPDate': [{value: null, disabled:true}],
+            'ASPDate': [{value: null, disabled: true}],
             'ASPMethod': '',
             'ASPEmail': [null, Validators.email],
             'ASPPhone': [null, [Validators.maxLength(9), Validators.pattern('[0-9]+')]],
@@ -288,7 +321,8 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
             'street': [{value: null, disabled: true}],
             'farmDir': [null, Validators.required],
             'licenseActivities': [null, Validators.required],
-            'filiala': [null, Validators.required]
+            'filiala': [null, Validators.required],
+            'compGet': [null, Validators.required]
         });
     }
 
@@ -326,6 +360,21 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
                 this.oForm.get('street').setValue(null);
             }
         });
+
+
+
+
+        this.oForm.get('compGet').valueChanges.subscribe(val => {
+            if (val) {
+                console.log('dgdfg', val);
+                this.retrieveNotSelectedFilials(val.idno);
+            }
+            else {
+                this.companiiPerIdnoNotSelected = [];
+                this.oForm.get('filiala').setValue(null);
+            }
+
+        });
     }
 
     addNewObjAddres() {
@@ -343,8 +392,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         let activities: any[] = this.oForm.get('licenseActivities').value;
         let activitiesStr;
         activities.forEach(r => {
-            if (activitiesStr)
-            {
+            if (activitiesStr) {
                 activitiesStr += ', ' + r.description
             }
             else {
@@ -364,17 +412,15 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         filiala.activitiesStr = activitiesStr;
 
         this.companiiPerIdnoSelected.push(
-
-                filiala
-                // filiala: filiala,
-                // companyType: this.oForm.get('tipIntreprindere').value,
-                // address: this.oForm.get('region').value + ', ' + this.oForm.get('locality').value + ', ' + this.oForm.get('street').value,
-                // agentPharmaceutist: this.farmacistiPerAddress,
-                // activities: this.oForm.get('licenseActivities').value,
-                // activitiesStr: activitiesStr,
+            filiala
+            // filiala: filiala,
+            // companyType: this.oForm.get('tipIntreprindere').value,
+            // address: this.oForm.get('region').value + ', ' + this.oForm.get('locality').value + ', ' + this.oForm.get('street').value,
+            // agentPharmaceutist: this.farmacistiPerAddress,
+            // activities: this.oForm.get('licenseActivities').value,
+            // activitiesStr: activitiesStr,
 
         );
-
 
 
         this.farmacistiPerAddress = [];
@@ -405,7 +451,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
     submit() {
         this.rFormSubbmitted = true;
         this.nextSubmit = true;
-        if (this.tipCerere !== 'LICD' && (!this.rForm.valid || this.docs.length == 0 || this.companiiPerIdnoSelected.length == 0)) {
+        if ((this.tipCerere !== 'LICD' && this.tipCerere !== 'LICP' && this.tipCerere !== 'LICA' && this.tipCerere !== 'LICS' && this.tipCerere !== 'LICRL') && (!this.rForm.valid || this.docs.length == 0 || this.companiiPerIdnoSelected.length == 0)) {
             return;
         }
 
@@ -424,7 +470,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
     submitNextStep() {
         this.rFormSubbmitted = true;
         this.nextSubmit = true;
-        if (this.tipCerere !== 'LICD' && (!this.rForm.valid || this.docs.length == 0 || this.companiiPerIdnoSelected.length == 0)) {
+        if (this.tipCerere !== 'LICD' && this.tipCerere !== 'LICP' && this.tipCerere !== 'LICA' && this.tipCerere !== 'LICS' && this.tipCerere !== 'LICRL' && (!this.rForm.valid || this.docs.length == 0 || this.companiiPerIdnoSelected.length == 0)) {
             return;
         }
 
@@ -438,6 +484,8 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
         this.rFormSubbmitted = false;
         let modelToSubmit = this.composeModel('I');
+
+        console.log('mdl', modelToSubmit);
 
         this.subscriptions.push(
             this.licenseService.evaluateNextLicense(modelToSubmit).subscribe(data => {
@@ -641,7 +689,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         console.log('hjhgk', selectedFilial);
         const dialogRef2 = this.dialogDecision.open(LicenseDecisionDialogComponent, {
             data: {
-                type : 'D',
+                type: 'D',
                 currentResolution: selectedFilial.currentResolution,
             },
             hasBackdrop: false
@@ -659,9 +707,9 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
             width: '550px',
             height: '550px',
             data: {
-                type : 'A',
+                type: 'A',
                 activities: this.activities,
-                selectedActivities : selectedFilial.activities
+                selectedActivities: selectedFilial.activities
             },
             hasBackdrop: false
         });
@@ -672,8 +720,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
                 let activitiesStr;
                 selectedFilial.activities.forEach(r => {
-                    if (activitiesStr)
-                    {
+                    if (activitiesStr) {
                         activitiesStr += ', ' + r.description
                     }
                     else {

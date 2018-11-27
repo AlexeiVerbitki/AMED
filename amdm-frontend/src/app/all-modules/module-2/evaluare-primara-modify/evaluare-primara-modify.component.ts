@@ -701,6 +701,7 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
                 medicamentToSubmit = Object.assign({}, this.eForm.get('medicament').value);
                 medicamentToSubmit.activeSubstancesHistory = this.activeSubstancesTable;
                 medicamentToSubmit.divisionHistory = this.divisions;
+                medicamentToSubmit.prescription = this.eForm.get('medicament.prescription').value.value;
                 modelToSubmit.medicamentHistory.push(medicamentToSubmit);
 
                 this.subscriptions.push(this.requestService.addMediacmentPostauthorizationHistoryOnInterruption(modelToSubmit).subscribe(data => {
@@ -890,7 +891,7 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
         let dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
-            if (result.response) {
+            if (result && result.response) {
                 this.activeSubstancesTable[index] = {
                     activeSubstance: result.activeSubstance,
                     quantity: result.activeSubstanceQuantity,

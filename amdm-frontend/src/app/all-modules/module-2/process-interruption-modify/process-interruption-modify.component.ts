@@ -65,14 +65,14 @@ export class ProcessInterruptionModifyComponent implements OnInit {
     ngOnInit() {
         this.modalService.data.next('');
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
-                this.subscriptions.push(this.requestService.getMedicamentRequest(params['id']).subscribe(data => {
+                this.subscriptions.push(this.requestService.getMedicamentHistory(params['id']).subscribe(data => {
                         this.initialData = Object.assign({}, data);
                         this.iForm.get('id').setValue(data.id);
                         this.iForm.get('initiator').setValue(data.initiator);
                         this.iForm.get('requestNumber').setValue(data.requestNumber);
                         this.iForm.get('company').setValue(data.company);
                         this.iForm.get('companyValue').setValue(data.company.name);
-                        this.iForm.get('medValue').setValue(data.medicamentName);
+                        this.iForm.get('medValue').setValue(data.medicamentHistory[0].name);
                         this.iForm.get('requestHistories').setValue(data.requestHistories);
                         this.documents = data.documents;
                         this.outputDocuments = data.outputDocuments;
@@ -278,7 +278,7 @@ export class ProcessInterruptionModifyComponent implements OnInit {
                 });
                 this.initialData.outputDocuments = this.outputDocuments;
 
-                this.subscriptions.push(this.requestService.addMedicamentRequest(this.initialData).subscribe(data => {
+                this.subscriptions.push(this.requestService.addMedicamentHistoryRequest(this.initialData).subscribe(data => {
                         this.outputDocuments = data.body.outputDocuments;
                         this.checkOutputDocumentsStatus();
                     }, error => console.log(error))
@@ -337,12 +337,12 @@ export class ProcessInterruptionModifyComponent implements OnInit {
                     username: this.authService.getUserName(), step: 'I'
                 });
 
-                this.subscriptions.push(this.requestService.addMedicamentRequest(this.initialData).subscribe(data => {
+                this.subscriptions.push(this.requestService.addMedicamentHistoryRequest(this.initialData).subscribe(data => {
                         this.loadingService.hide();
                         if (reqHist.step == 'E') {
-                            this.router.navigate(['dashboard/module/medicament-registration/evaluate/' + this.initialData.id]);
+                            this.router.navigate(['dashboard/module/post-modify/evaluate/' + this.initialData.id]);
                         } else {
-                            this.router.navigate(['dashboard/module/medicament-registration/expert/' + this.initialData.id]);
+                            this.router.navigate(['dashboard/module/post-modify/expert/' + this.initialData.id]);
                         }
                     }, error =>   this.loadingService.hide())
                 );

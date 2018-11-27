@@ -155,6 +155,63 @@ public class LicenseController
         return new ResponseEntity<>(request.getId(),HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/confirm-prelungire-license", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> confirmPrelungireLicense(@RequestBody RegistrationRequestsEntity request) throws CustomException
+    {
+        logger.debug("Confirm prelungire license" + request);
+
+        request.setType(requestTypeRepository.findByCode("LICP").get());
+
+        licenseRegistrationRequestService.updateModifyLicense(request);
+        return new ResponseEntity<>(request.getId(),HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/confirm-anulare-license", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> confirmAnulareLicense(@RequestBody RegistrationRequestsEntity request) throws CustomException
+    {
+        logger.debug("Confirm anulare license" + request);
+
+        request.setType(requestTypeRepository.findByCode("LICA").get());
+
+        licenseRegistrationRequestService.updateModifyLicense(request);
+        return new ResponseEntity<>(request.getId(),HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/confirm-suspendare-license", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> confirmSuspendareLicense(@RequestBody RegistrationRequestsEntity request) throws CustomException
+    {
+        logger.debug("Confirm anulare license" + request);
+
+        request.setType(requestTypeRepository.findByCode("LICS").get());
+
+        licenseRegistrationRequestService.updateModifyLicense(request);
+        return new ResponseEntity<>(request.getId(),HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/confirm-reluare-license", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> confirmReluareLicense(@RequestBody RegistrationRequestsEntity request) throws CustomException
+    {
+        logger.debug("Confirm reluare license" + request);
+
+        request.setType(requestTypeRepository.findByCode("LICRL").get());
+
+        licenseRegistrationRequestService.updateModifyLicense(request);
+        return new ResponseEntity<>(request.getId(),HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/confirm-cesionare-license", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> confirmCesionareLicense(@RequestBody RegistrationRequestsEntity request) throws CustomException
+    {
+        logger.debug("Confirm cesionare license" + request);
+
+        request.setType(requestTypeRepository.findByCode("LICC").get());
+
+        licenseRegistrationRequestService.updateModifyLicense(request);
+        return new ResponseEntity<>(request.getId(),HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/retrieve-license-by-request-id", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RegistrationRequestsEntity> loadLicenseById(@RequestParam("id") String id) throws  CustomException
     {
@@ -176,6 +233,20 @@ public class LicenseController
             if (firstChoice.isPresent())
         {
             r = licensesRepository.getActiveLicenseById(firstChoice.get().getLicenseId(), new Date());
+        }
+        return new ResponseEntity<>(r.isPresent() ? r.get() : null, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/retrieve-suspended-license-by-idno", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<LicensesEntity> loadSuspendedLicenseByCompany(@RequestParam("idno") String idno) throws  CustomException
+    {
+        logger.debug("Retrieve suspended license by company id idno", idno);
+        Optional<NmEconomicAgentsEntity> firstChoice = economicAgentsRepository.findFirstByIdnoEqualsAndLicenseIdIsNotNull(idno);
+        Optional<LicensesEntity> r = Optional.empty();
+        if (firstChoice.isPresent())
+        {
+            r = licensesRepository.getSuspendedLicenseById(firstChoice.get().getLicenseId(), new Date());
         }
         return new ResponseEntity<>(r.isPresent() ? r.get() : null, HttpStatus.OK);
     }

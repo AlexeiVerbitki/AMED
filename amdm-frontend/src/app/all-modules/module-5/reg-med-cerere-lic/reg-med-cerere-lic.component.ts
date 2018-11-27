@@ -32,7 +32,6 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
     oldLicense: any;
     docTypeIdentifier: any;
 
-
     maxDate = new Date();
 
     //count time
@@ -100,6 +99,9 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
             'seria': [{value: null, disabled: true}],
             'nrLic': [{value: null, disabled: true}],
             'dataEliberariiLic': [{value: null, disabled: true}],
+            'dataExpirariiLic': [{value: null, disabled: true}],
+            'reasonSuspension': '',
+            'reasonCancel': '',
 
         });
 
@@ -125,7 +127,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
         if (this.tipCerere === 'LICEL' && this.oldLicense) {
             return;
         }
-        else if ((this.tipCerere === 'LICM' || this.tipCerere === 'LICD') && this.companyLicenseNotFound) {
+        else if (this.tipCerere !== 'LICEL' && this.companyLicenseNotFound) {
             return;
         }
 
@@ -151,12 +153,19 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
 
         licenseDetail.documents = this.docs;
 
-        if (this.tipCerere === 'LICM' || this.tipCerere === 'LICD') {
+        if (this.tipCerere !== 'LICEL') {
             licenseModel.id = this.oldLicense.id;
         }
 
+        if (this.tipCerere === 'LICS') {
+            licenseModel.reason = this.rForm.get('reasonSuspension').value;
+        }
+        if (this.tipCerere === 'LICA') {
+            licenseModel.reason = this.rForm.get('reasonCancel').value;
+        }
+
         licenseModel.detail = licenseDetail;
-        licenseModel.idno =  this.rForm.get('idno').value;
+        licenseModel.idno = this.rForm.get('idno').value;
         modelToSubmit.license = licenseModel;
         modelToSubmit.requestNumber = this.mForm.get('nrCererii').value;
         // modelToSubmit.company = {id: this.rForm.get('compGet').value.id};
@@ -173,8 +182,6 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
         modelToSubmit.startDate = this.startDate;
         modelToSubmit.initiator = this.authService.getUserName();
         modelToSubmit.assignedUser = this.authService.getUserName();
-
-        console.log('mdl', modelToSubmit);
 
         if (this.tipCerere === 'LICEL') {
             this.subscriptions.push(
@@ -203,6 +210,51 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
                 )
             );
         }
+        else if (this.tipCerere === 'LICP') {
+            this.subscriptions.push(
+                this.licenseService.confirmPrelungireLicense(modelToSubmit).subscribe(data => {
+                        let result = data.body;
+                        this.router.navigate(['/dashboard/module/license/evaluate', result]);
+                    }
+                )
+            );
+        }
+        else if (this.tipCerere === 'LICA') {
+            this.subscriptions.push(
+                this.licenseService.confirmAnulareLicense(modelToSubmit).subscribe(data => {
+                        let result = data.body;
+                        this.router.navigate(['/dashboard/module/license/evaluate', result]);
+                    }
+                )
+            );
+        }
+        else if (this.tipCerere === 'LICS') {
+            this.subscriptions.push(
+                this.licenseService.confirmSuspendareLicense(modelToSubmit).subscribe(data => {
+                        let result = data.body;
+                        this.router.navigate(['/dashboard/module/license/evaluate', result]);
+                    }
+                )
+            );
+        }
+        else if (this.tipCerere === 'LICRL') {
+            this.subscriptions.push(
+                this.licenseService.confirmReluareLicense(modelToSubmit).subscribe(data => {
+                        let result = data.body;
+                        this.router.navigate(['/dashboard/module/license/evaluate', result]);
+                    }
+                )
+            );
+        }
+        else if (this.tipCerere === 'LICC') {
+            this.subscriptions.push(
+                this.licenseService.confirmCesionareLicense(modelToSubmit).subscribe(data => {
+                        let result = data.body;
+                        this.router.navigate(['/dashboard/module/license/evaluate', result]);
+                    }
+                )
+            );
+        }
 
     }
 
@@ -219,6 +271,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
                 dialogRef.afterClosed().subscribe(result => {
                     if (result) {
                         this.tipCerere = val;
+                        this.updateReasonValidation(this.tipCerere);
                         this.subscriptions.push(
                             this.administrationService.generateDocNr().subscribe(data => {
                                     this.mForm.get('nrCererii').setValue(data);
@@ -235,6 +288,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
             }
             else if (this.tipCerere !== val) {
                 this.tipCerere = val;
+                this.updateReasonValidation(this.tipCerere);
                 this.subscriptions.push(
                     this.administrationService.generateDocNr().subscribe(data => {
                             this.mForm.get('nrCererii').setValue(data);
@@ -243,13 +297,17 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
                     )
                 );
             }
+
+
         });
 
         this.rForm.get('compGet').valueChanges.subscribe(val => {
             this.oldLicense = null;
             if (val) {
+                console.log('dgdfg', val);
                 this.rForm.get('idno').setValue(val.idno);
-                if (val.locality) {
+                this.rForm.get('adresa').setValue(val.legal_Address);
+                /*if (val.locality) {
                     this.subscriptions.push(this.localityService.loadLocalityDetails(val.locality.id).subscribe(data => {
                             console.log('sfsd', data);
                             let addres = data.stateName + ' ,' + data.description + ' ,' + val.street;
@@ -257,41 +315,84 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
 
                         }
                     ));
-                }
+                }*/
 
                 this.companyLicenseNotFound = false;
-                this.subscriptions.push(
-                    this.licenseService.retrieveLicenseByIdno(val.idno).subscribe(data => {
-                            if (data) {
-                                console.log('sdfs', data);
-                                this.oldLicense = data;
-                                this.rForm.get('seria').setValue(data.serialNr);
-                                this.rForm.get('nrLic').setValue(data.nr);
-                                this.rForm.get('dataEliberariiLic').setValue(new Date(data.releaseDate));
+                if (this.tipCerere !== 'LICRL') {
+                    this.subscriptions.push(
+                        this.licenseService.retrieveLicenseByIdno(val.idno).subscribe(data => {
+                                if (data) {
+                                    this.oldLicense = data;
+                                    this.rForm.get('seria').setValue(data.serialNr);
+                                    this.rForm.get('nrLic').setValue(data.nr);
+                                    this.rForm.get('dataEliberariiLic').setValue(new Date(data.releaseDate));
+                                    this.rForm.get('dataExpirariiLic').setValue(new Date(data.expirationDate));
+                                }
+                                else {
+                                    this.companyLicenseNotFound = true;
+                                    this.resetAgentDetails();
+                                }
                             }
-                            else {
-                                this.companyLicenseNotFound = true;
-                                this.rForm.get('seria').setValue(null);
-                                this.rForm.get('nrLic').setValue(null);
-                                this.rForm.get('dataEliberariiLic').setValue(null);
+                        )
+                    );
+                }
+                else {
+                    this.subscriptions.push(
+                        this.licenseService.retrieveSuspendedLicenseByIdno(val.idno).subscribe(data => {
+                                if (data) {
+                                    this.oldLicense = data;
+                                    this.rForm.get('seria').setValue(data.serialNr);
+                                    this.rForm.get('nrLic').setValue(data.nr);
+                                    this.rForm.get('dataEliberariiLic').setValue(new Date(data.releaseDate));
+                                    this.rForm.get('dataExpirariiLic').setValue(new Date(data.expirationDate));
+                                }
+                                else {
+                                    this.companyLicenseNotFound = true;
+                                    this.resetAgentDetails();
+                                }
                             }
-                        }
-                    )
-                );
+                        )
+                    );
+                }
 
 
             }
             else {
                 this.rForm.get('adresa').setValue(null);
                 this.rForm.get('idno').setValue(null);
-                if (this.tipCerere === 'LICM' || this.tipCerere === 'LICD') {
-                    this.rForm.get('seria').setValue(null);
-                    this.rForm.get('nrLic').setValue(null);
-                    this.rForm.get('dataEliberariiLic').setValue(null);
+                if (this.tipCerere !== 'LICEL') {
+                    this.resetAgentDetails();
                 }
             }
 
         });
+    }
+
+    private updateReasonValidation(tipCerere : string) {
+        if (tipCerere === 'LICS')
+        {
+            this.rForm.get('reasonSuspension').setValidators(Validators.required);
+            this.rForm.get('reasonSuspension').updateValueAndValidity();
+        }
+        else if (tipCerere === 'LICA')
+        {
+            this.rForm.get('reasonCancel').setValidators(Validators.required);
+            this.rForm.get('reasonCancel').updateValueAndValidity();
+        }
+        else {
+            this.rForm.get('reasonSuspension').setValidators(null);
+            this.rForm.get('reasonSuspension').updateValueAndValidity();
+            this.rForm.get('reasonCancel').setValidators(null);
+            this.rForm.get('reasonCancel').updateValueAndValidity();
+        }
+
+    }
+
+    private resetAgentDetails() {
+        this.rForm.get('seria').setValue(null);
+        this.rForm.get('nrLic').setValue(null);
+        this.rForm.get('dataEliberariiLic').setValue(null);
+        this.rForm.get('dataExpirariiLic').setValue(null);
     }
 
     ngOnDestroy() {

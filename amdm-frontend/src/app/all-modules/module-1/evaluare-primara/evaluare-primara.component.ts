@@ -600,7 +600,7 @@ export class EvaluarePrimaraComponent implements OnInit {
                     if (this.eForm.get('medicament.dose').value == null || this.eForm.get('medicament.dose').value.length == 0) {
                         this.eForm.get('medicament.dose').setValue(as.quantity + ' ' + as.unitsOfMeasurement.description);
                     } else {
-                        this.eForm.get('medicament.dose').setValue(this.eForm.get('medicament.dose').value + ' / ' + as.quantity + ' ' + as.unitsOfMeasurement.description);
+                        this.eForm.get('medicament.dose').setValue(this.eForm.get('medicament.dose').value + ' + ' + as.quantity + ' ' + as.unitsOfMeasurement.description);
                     }
                 }
             }
@@ -858,13 +858,12 @@ export class EvaluarePrimaraComponent implements OnInit {
         dialogConfig2.autoFocus = true;
         dialogConfig2.hasBackdrop = true;
 
-        dialogConfig2.height='650px';
         dialogConfig2.width='600px';
 
         let dialogRef =  this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
-            if (result.response) {
+            if (result && result.response) {
                 this.activeSubstancesTable.push({
                     activeSubstance: result.activeSubstance,
                     quantity: result.activeSubstanceQuantity,
@@ -878,7 +877,7 @@ export class EvaluarePrimaraComponent implements OnInit {
                 }
                 else
                 {
-                    this.eForm.get('medicament.dose').setValue(this.eForm.get('medicament.dose').value+' / '+result.activeSubstanceQuantity+' '+result.activeSubstanceUnit.description);
+                    this.eForm.get('medicament.dose').setValue(this.eForm.get('medicament.dose').value+' + '+result.activeSubstanceQuantity+' '+result.activeSubstanceUnit.description);
                 }
             }
         });
@@ -892,7 +891,6 @@ export class EvaluarePrimaraComponent implements OnInit {
         dialogConfig2.autoFocus = true;
         dialogConfig2.hasBackdrop = true;
 
-        dialogConfig2.height='650px';
         dialogConfig2.width='600px';
         dialogConfig2.data=substance;
 
@@ -912,7 +910,7 @@ export class EvaluarePrimaraComponent implements OnInit {
                     if (this.eForm.get('medicament.dose').value == null || this.eForm.get('medicament.dose').value.length == 0) {
                         this.eForm.get('medicament.dose').setValue(as.quantity + ' ' + as.unitsOfMeasurement.description);
                     } else {
-                        this.eForm.get('medicament.dose').setValue(this.eForm.get('medicament.dose').value + ' / ' + as.quantity + ' ' + as.unitsOfMeasurement.description);
+                        this.eForm.get('medicament.dose').setValue(this.eForm.get('medicament.dose').value + ' + ' + as.quantity + ' ' + as.unitsOfMeasurement.description);
                     }
                 }
             }

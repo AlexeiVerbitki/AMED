@@ -1,23 +1,30 @@
 package com.bass.amed.service;
 
-import com.bass.amed.entity.ClinicTrialAmendEntity;
-import com.bass.amed.entity.ClinicalTrialsEntity;
-import com.bass.amed.entity.RegistrationRequestsEntity;
+import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
+import com.bass.amed.repository.CtMedINstInvestigatorRepository;
+import com.bass.amed.repository.RequestRepository;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EmbeddedId;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional
 public class ClinicalTrailsService {
     @Autowired
     private EntityManagerFactory entityManagerFactory;
+
+    @Autowired
+    private RequestRepository requestRepository;
+
+    @Autowired
+    private CtMedINstInvestigatorRepository medINstInvestigatorRepository;
 
     public void registerNewClinicalTrailAmendment(RegistrationRequestsEntity requests) throws CustomException {
 
@@ -50,8 +57,7 @@ public class ClinicalTrailsService {
             clinicTrialAmendEntity.setTrialPopNat(clinicalTrialsEntity.getTrialPopNat());
             clinicTrialAmendEntity.setTrialPopInternat(clinicalTrialsEntity.getTrialPopInternat());
             clinicTrialAmendEntity.setStatus("P");
-            clinicTrialAmendEntity.setInvestigators(clinicalTrialsEntity.getInvestigators());
-            clinicTrialAmendEntity.setMedicalInstitutions(clinicalTrialsEntity.getMedicalInstitutions());
+//            clinicTrialAmendEntity.setMedicalInstitutions(clinicalTrialsEntity.getMedicalInstitutions());
             em.persist(clinicTrialAmendEntity);
 
             clinicTrialAmendEntities.add(clinicTrialAmendEntity);
@@ -90,4 +96,23 @@ public class ClinicalTrailsService {
 //        }
 //
 //    }
+
+    public void handeMedicalInstitutions(RegistrationRequestsEntity requests) throws CustomException {
+        Set<CtMedInstInvestigatorEntity> requestTypesStepEntityList2 = medINstInvestigatorRepository.findCtMedInstInvestigatorById(requests.getClinicalTrails().getId());
+
+        Set<CtMedInstInvestigatorEntity> ctMedInstInvestigatorEntities = new HashSet<>();
+        requests.getClinicalTrails().getMedicalInstitutions().forEach(medInst ->{
+            medInst.getInvestigators().forEach(investig -> {
+                CtMedInstInvestigatorEntity entity = new CtMedInstInvestigatorEntity(requests.getClinicalTrails().getId(), medInst.getId(), investig.getId(), Boolean.TRUE);
+                entity.setInvestigatorsEntity(investig);
+                entity.setMedicalInstitutionsEntity(medInst);
+                entity.setClinicalTrialsEntity(requests.getClinicalTrails());
+                entity.setMainInvestigator(investig.getMain());
+                ctMedInstInvestigatorEntities.add(entity);
+            });
+        });
+
+        medINstInvestigatorRepository.deleteAll(requestTypesStepEntityList2);
+        medINstInvestigatorRepository.saveAll(ctMedInstInvestigatorEntities);
+    }
 }

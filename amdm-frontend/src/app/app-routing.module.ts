@@ -13,7 +13,6 @@ import {AuthGuard} from "./shared/auth-guard/auth.guard";
 import {AdminDashboardComponent} from "./dashboard/admin-dashboard.component";
 import {GestDocComponent} from "./document-management/gest-doc/gest-doc.component";
 import {PricesComponent} from "./prices/prices.component";
-import {MedicamentsComponent} from "./management/medicaments/medicaments.component";
 
 const routes: Routes = [
     {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -73,9 +72,12 @@ const routes: Routes = [
             },
             {path: 'task', component: TaskComponent},
             {path: 'prices', component: PricesComponent},
-            {path: 'medicaments', component: MedicamentsComponent},
             {path: 'doc-management', component: GestDocComponent},
             {path: 'history', component: HistoryComponent},
+            {
+                path: 'management',
+                loadChildren: '../app/management/management.module#ManagementModule'
+            },
             {
                 path: '', component: AdminDashboardComponent,
                 children: [

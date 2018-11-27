@@ -2,6 +2,7 @@ package com.bass.amed.controller.rest.clinicaltrails;
 
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
+import com.bass.amed.repository.CtMedINstInvestigatorRepository;
 import com.bass.amed.repository.DocumentTypeRepository;
 import com.bass.amed.repository.RegistrationRequestStepRepository;
 import com.bass.amed.repository.RequestRepository;
@@ -12,10 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -29,12 +27,18 @@ public class ClinicalTrailsController {
     private DocumentTypeRepository documentTypeRepository;
     @Autowired
     private ClinicalTrailsService clinicalTrailsService;
+    @Autowired
+    private CtMedINstInvestigatorRepository medINstInvestigatorRepository;
+
 
     @PostMapping(value = "/save-request")
     public ResponseEntity<Integer> saveClinicalTrailRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
+
         if (requests.getClinicalTrails() == null) {
             throw new CustomException("Request was not found");
         }
+        clinicalTrailsService.handeMedicalInstitutions(requests);
+
         requestRepository.save(requests);
         return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
     }
@@ -45,6 +49,7 @@ public class ClinicalTrailsController {
             throw new CustomException("Request was not found");
         }
         addDDClinicalTrailsDocument(requests);
+        clinicalTrailsService.handeMedicalInstitutions(requests);
         requestRepository.save(requests);
         return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
     }
@@ -72,26 +77,31 @@ public class ClinicalTrailsController {
     }
 
     @GetMapping(value = "/load-request")
-    public ResponseEntity<RegistrationRequestsEntity> getClinicalTrailById(@RequestParam(value = "id") Integer id) throws CustomException
-    {
+    public ResponseEntity<RegistrationRequestsEntity> getClinicalTrailById(@RequestParam(value = "id") Integer id) throws CustomException {
         Optional<RegistrationRequestsEntity> regOptional = requestRepository.findClinicalTrailstRequestById(id);
-        if (!regOptional.isPresent())
-        {
+        if (!regOptional.isPresent()) {
             throw new CustomException("Inregistrarea nu a fost gasita");
         }
+
+        ClinicalTrialsEntity ct = regOptional.get().getClinicalTrails();
+        Set<CtMedicalInstitutionEntity> medInstitutions = ct.getMedicalInstitutions();
+
+        Set<CtMedInstInvestigatorEntity> ctMedInstInvestigatorEntitiesOld = medINstInvestigatorRepository.findCtMedInstInvestigatorById(ct.getId());
+
+        Set<CtMedicalInstitutionEntity> ctMedicalInstitutionEntities = new HashSet<>();
+
+        ctMedInstInvestigatorEntitiesOld.forEach(ctMedInstInvestigatorEntity -> {
+            CtMedicalInstitutionEntity medInst = ctMedInstInvestigatorEntity.getMedicalInstitutionsEntity();
+            CtInvestigatorEntity ctInvestigatorEntity = ctMedInstInvestigatorEntity.getInvestigatorsEntity();
+            ctInvestigatorEntity.setMain(ctMedInstInvestigatorEntity.getMainInvestigator());
+
+            medInst.getInvestigators().add(ctMedInstInvestigatorEntity.getInvestigatorsEntity());
+            ctMedicalInstitutionEntities.add(medInst);
+
+        });
+        ct.setMedicalInstitutions(ctMedicalInstitutionEntities);
+
         return new ResponseEntity<>(regOptional.get(), HttpStatus.OK);
-
-
-//        Optional<RegistrationRequestsEntity> regOptional = requestRepository.findById(id);
-//        if (!regOptional.isPresent())
-//        {
-//            throw new CustomException("Inregistrarea nu a fost gasita");
-//        }
-//        RegistrationRequestsEntity rrE = regOptional.get();
-//        rrE.setClinicalTrails((ClinicalTrialsEntity) Hibernate.unproxy(regOptional.get().getClinicalTrails()));
-//        rrE.setCompany((NmEconomicAgentsEntity) Hibernate.unproxy(regOptional.get().getCompany()));
-//
-//        return new ResponseEntity<>(rrE, HttpStatus.OK);
     }
 
 

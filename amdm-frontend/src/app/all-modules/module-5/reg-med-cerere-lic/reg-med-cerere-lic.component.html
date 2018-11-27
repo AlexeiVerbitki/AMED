@@ -10,10 +10,10 @@
                 <div class="container">
                     <div class="row">
                         <div class="col">
-                            <mat-radio-button name="prop1" value="LICEL">Eliberarea licentei</mat-radio-button>
+                            <mat-radio-button name="prop1" value="LICEL">Eliberare</mat-radio-button>
                         </div>
                         <div class="col">
-                            <mat-radio-button name="prop2" value="LICM">Modificarea licentei</mat-radio-button>
+                            <mat-radio-button name="prop2" value="LICM">Reperfectare</mat-radio-button>
                         </div>
                         <div class="col">
                             <mat-radio-button name="prop3" value="LICD">Eliberarea duplicatului</mat-radio-button>
@@ -23,6 +23,9 @@
                         </div>
                         <div class="col">
                             <mat-radio-button name="prop3" value="LICS">Suspendare</mat-radio-button>
+                        </div>
+                        <div class="col">
+                            <mat-radio-button name="prop3" value="LICRL">Reluare</mat-radio-button>
                         </div>
                         <div class="col">
                             <mat-radio-button name="prop3" value="LICA">Anulare</mat-radio-button>
@@ -62,12 +65,13 @@
         <section *ngIf="tipCerere">
             <hr>
             <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICEL'">Eliberarea licentei</h5>
-            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICM'">Modificarea licentei</h5>
+            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICM'">Reperfectare licentei</h5>
             <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICD'">Eliberarea duplicatului licentei</h5>
             <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICP'">Prelungire</h5>
             <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICS'">Suspendare</h5>
+            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICRL'">Reluare</h5>
             <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICA'">Anulare</h5>
-            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICT'">Preluare</h5>
+            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICC'">Cesionare</h5>
 
             <hr>
             <div class="row">
@@ -108,7 +112,7 @@
                 </div>
 
                 <!--For Modification and duplicate-->
-                <div class="col-md-12" *ngIf="(tipCerere === 'LICM' || tipCerere === 'LICD') && companyLicenseNotFound === true">
+                <div class="col-md-12" *ngIf="tipCerere !== 'LICEL' && companyLicenseNotFound === true">
                     <div class="md-form-modified">
                             <strong class="text-danger">Nu a fost gasita nici o licenta pentru compania selectata</strong>
                     </div>
@@ -120,21 +124,28 @@
                     </div>
                 </div>
 
-                <div class="col-md-4" *ngIf="(tipCerere === 'LICM' || tipCerere === 'LICD')">
+               <!-- &lt;!&ndash;For Suspension&ndash;&gt;
+                <div class="col-md-12" *ngIf="tipCerere === 'LICS' && companyLicenseNotFound === false">
+                    <div class="md-form-modified">
+                        <strong class="text-info">{{titleSuspension}}</strong>
+                    </div>
+                </div>-->
+
+                <div class="col-md-3" *ngIf="tipCerere !== 'LICEL'">
                     <div class="md-form">
                         <input id="seria" mdbInputDirective type="text" class="form-control" formControlName="seria"
                         >
                         <label for="seria">Seria Licentei</label>
                     </div>
                 </div>
-                <div class="col-md-4" *ngIf="(tipCerere === 'LICM' || tipCerere === 'LICD')">
+                <div class="col-md-3" *ngIf="tipCerere !== 'LICEL'">
                     <div class="md-form">
                         <input id="nrLic" mdbInputDirective type="text" class="form-control" formControlName="nrLic"
                         >
                         <label for="nrLic">Numarul licentei</label>
                     </div>
                 </div>
-                <div class="col-md-4" *ngIf="(tipCerere === 'LICM' || tipCerere === 'LICD')">
+                <div class="col-md-3" *ngIf="tipCerere !== 'LICEL'">
                     <div class="md-form-modified">
                         <mat-form-field class="w-100">
                             <input id="dataEliberariiLic" matInput [matDatepicker]="picker9"
@@ -146,9 +157,48 @@
                     </div>
                 </div>
 
+                <div class="col-md-3" *ngIf="tipCerere !== 'LICEL'">
+                    <div class="md-form-modified">
+                        <mat-form-field class="w-100">
+                            <input id="dataExpirariiLic" matInput [matDatepicker]="picker9"
+                                   placeholder="Data expirarii licentei" formControlName="dataExpirariiLic"
+                            >
+                            <mat-datepicker-toggle matSuffix [for]="picker9"></mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker9 ></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
 
 
 
+                <div class="col-md-12" *ngIf="tipCerere === 'LICS'">
+                    <div class="md-form">
+                        <textarea type="text" id="reasonSuspension" class="md-textarea form-control" mdbInputDirective
+                                  rows="2" formControlName="reasonSuspension"></textarea>
+                        <label for="reasonSuspension" >Motivul suspendarii<span class="text-danger">*</span></label>
+                    </div>
+                </div>
+
+
+                <div class="col-md-12" *ngIf="tipCerere === 'LICA'">
+                    <div class="md-form">
+                        <textarea type="text" id="reasonCancel" class="md-textarea form-control" mdbInputDirective
+                                  rows="2" formControlName="reasonCancel"></textarea>
+                        <label for="reasonCancel" >Motivul anularii<span class="text-danger">*</span></label>
+                    </div>
+                </div>
+
+                <div class="col-md-12"  *ngIf="rFormSubbmitted && tipCerere === 'LICS' && !rForm.get('reasonSuspension').valid">
+                    <div class="md-form-modified">
+                        <strong class="text-danger">Introduceti motivul suspendarii.</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-12"  *ngIf="rFormSubbmitted && tipCerere === 'LICA' && !rForm.get('reasonCancel').valid">
+                    <div class="md-form-modified">
+                        <strong class="text-danger">Introduceti motivul retragerii.</strong>
+                    </div>
+                </div>
 
                 <div class="col-md-4">
                     <div class="md-form">
@@ -220,7 +270,7 @@
                             <mat-datepicker touchUi #picker3 [disabled]="false"></mat-datepicker>
                         </mat-form-field>
                     </div>
-                    <div *ngIf="rFormSubbmitted && !rForm.get('dataProcurii1').valid">
+                    <div *ngIf="rFormSubbmitted && !rForm.get('dataProcurii1').value">
                         <small class="text-muted"><strong class="text-danger">Data procurii trebuie introdusa</strong>
                         </small>
                     </div>

@@ -1,8 +1,9 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {Subscription} from "rxjs";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material";
 import {MedicamentService} from "../../shared/service/medicament.service";
+import {MedicamentHistoryDialogComponent} from "../medicament-history-dialog/medicament-history-dialog.component";
 
 @Component({
     selector: 'app-medicament-details-dialog',
@@ -16,9 +17,11 @@ export class MedicamentDetailsDialogComponent implements OnInit {
     divisions : any[] = [];
     activeSubstancesTable : any[] = [];
     manufacturesTable: any[]= [];
+    initialData : any;
 
     constructor(private fb: FormBuilder,
                 public dialogRef: MatDialogRef<MedicamentDetailsDialogComponent>,
+                private dialog: MatDialog,
                 @Inject(MAT_DIALOG_DATA) public dataDialog: any,
                 private medicamentService: MedicamentService) {
         this.mForm = fb.group({
@@ -47,10 +50,13 @@ export class MedicamentDetailsDialogComponent implements OnInit {
         this.mForm.get('registrationDate').disable();
         this.mForm.get('expirationDate').disable();
         this.subscriptions.push(this.medicamentService.getMedicamentByCode(this.dataDialog.value).subscribe(data => {
+            this.initialData = Object.assign({}, data);
             this.mForm.get('name').setValue(data[0].name);
             this.mForm.get('dose').setValue(data[0].dose);
             this.mForm.get('volume').setValue(data[0].volume);
-            this.mForm.get('volumeQuantityMeasurement').setValue(data[0].volumeQuantityMeasurement.description);
+            if(data[0].volumeQuantityMeasurement) {
+                this.mForm.get('volumeQuantityMeasurement').setValue(data[0].volumeQuantityMeasurement.description);
+            }
             this.mForm.get('atcCode').setValue(data[0].atcCode);
             this.mForm.get('pharmaceuticalFormType').setValue(data[0].pharmaceuticalForm.type.description);
             this.mForm.get('pharmaceuticalForm').setValue(data[0].pharmaceuticalForm.description);
@@ -80,6 +86,24 @@ export class MedicamentDetailsDialogComponent implements OnInit {
 
     confirm(): void {
         this.dialogRef.close(true);
+    }
+
+
+    showMedicamentHistory() {
+
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.width='1100px';
+
+        dialogConfig2.data = {
+            value: this.initialData
+        };
+
+        this.dialog.open(MedicamentHistoryDialogComponent, dialogConfig2);
     }
 
 }

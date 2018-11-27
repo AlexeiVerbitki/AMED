@@ -19,6 +19,6 @@ public class MedicamentDivisionHistoryEntity
     private String status;
     @Basic@Column(name = "medicament_id")
     private Integer medicamentId;
-
-
+    @Basic@Column(name = "medicament_code")
+    private String medicamentCode;
 }

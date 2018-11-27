@@ -3,6 +3,8 @@ package com.bass.amed.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -57,18 +59,11 @@ public class ClinicalTrialsEntity
     @Basic
     @Column(name = "status", nullable = true, length = 1)
     private String status;
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinTable(name = "CLINICAL_TRAILS_INVESTIGATORS", joinColumns = {
-            @JoinColumn(name = "CLINICAL_TRAILS_ID")}, inverseJoinColumns = {
-            @JoinColumn(name = "NM_INVESTIGATORS_ID")})
-    private Set<NmInvestigatorsEntity> investigators;
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinTable(name = "CLINICAL_TRIALS_MEDICAL_INSTITUTIONS", joinColumns = {
-            @JoinColumn(name = "CLINICAL_TRIALS_ID")}, inverseJoinColumns = {
-            @JoinColumn(name = "MEDICAL_INSTITUTIONS_ID")})
-    private Set<NmMedicalInstitutionsEntity> medicalInstitutions;
+
+    @Transient
+    private Set<CtMedicalInstitutionEntity> medicalInstitutions = new HashSet<>();
+
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "clinical_trails_id")
     private List<ClinicTrialAmendEntity> clinicTrialAmendEntities;
-
 }

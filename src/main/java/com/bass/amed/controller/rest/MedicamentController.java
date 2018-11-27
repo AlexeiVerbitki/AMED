@@ -84,7 +84,7 @@ public class MedicamentController
         logger.debug("Retrieve medicament by code");
         MedicamentEntity m = medicamentRepository.findByCode(code);
 
-        return new ResponseEntity<>(medicamentRepository.findByRegistrationNumber(m.getRegistrationNumber()), HttpStatus.OK);
+        return new ResponseEntity<>(medicamentRepository.findByRegistrationNumber(m.getRegistrationNumber()).stream().filter(r->r.getStatus().equals("F")).collect(Collectors.toList()), HttpStatus.OK);
     }
 
     @RequestMapping("/search-medicaments-by-register-number")
@@ -92,6 +92,13 @@ public class MedicamentController
     {
         logger.debug("Retrieve medicaments by register number");
         return new ResponseEntity<>(medicamentRepository.findDistinctByRegistrationNumber(registerNumber), HttpStatus.OK);
+    }
+
+    @RequestMapping("/all-by-name")
+    public ResponseEntity<List<MedicamentEntity>> getAllByName(String medName)
+    {
+        logger.debug("Retrieve all medicaments by name");
+        return new ResponseEntity<>(medicamentRepository.findAllByName(medName, "F"), HttpStatus.OK);
     }
 
     @Autowired

@@ -52,6 +52,31 @@ export class LicenseService {
         return this.http.post<any>('/api/license/confirm-duplicate-license', model, {observe: 'response'});
     }
 
+    confirmPrelungireLicense (model : any): Observable<HttpResponse<any>>
+    {
+        return this.http.post<any>('/api/license/confirm-prelungire-license', model, {observe: 'response'});
+    }
+
+    confirmAnulareLicense (model : any): Observable<HttpResponse<any>>
+    {
+        return this.http.post<any>('/api/license/confirm-anulare-license', model, {observe: 'response'});
+    }
+
+    confirmSuspendareLicense (model : any): Observable<HttpResponse<any>>
+    {
+        return this.http.post<any>('/api/license/confirm-suspendare-license', model, {observe: 'response'});
+    }
+
+    confirmReluareLicense (model : any): Observable<HttpResponse<any>>
+    {
+        return this.http.post<any>('/api/license/confirm-reluare-license', model, {observe: 'response'});
+    }
+
+    confirmCesionareLicense (model : any): Observable<HttpResponse<any>>
+    {
+        return this.http.post<any>('/api/license/confirm-cesionare-license', model, {observe: 'response'});
+    }
+
     retrieveAllRequestTypes(): Observable<any> {
         return this.http.get('/api/license/all-license-request-types');
     }
@@ -62,6 +87,10 @@ export class LicenseService {
 
     retrieveLicenseByIdno(idno: string): Observable<any> {
         return this.http.get('/api/license/retrieve-license-by-idno', {params :{ idno : idno} });
+    }
+
+    retrieveSuspendedLicenseByIdno(idno: string): Observable<any> {
+        return this.http.get('/api/license/retrieve-suspended-license-by-idno', {params :{ idno : idno} });
     }
 
     loadAnnounces(): Observable<any> {

@@ -272,14 +272,14 @@ public class AdministrationController
     }
 
     @RequestMapping("/all-investigators")
-    public ResponseEntity<List<NmInvestigatorsEntity>> retrieveAllInvestigators()
+    public ResponseEntity<List<CtInvestigatorEntity>> retrieveAllInvestigators()
     {
         LOGGER.debug("Retrieve all investigators");
         return new ResponseEntity<>(investigatorRepository.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping("/all-medical-institutions")
-    public ResponseEntity<List<NmMedicalInstitutionsEntity>> retrieveMedicalInstitutions()
+    public ResponseEntity<List<CtMedicalInstitutionEntity>> retrieveMedicalInstitutions()
     {
         LOGGER.debug("Retrieve all investigators");
         return new ResponseEntity<>(medicalInstitutionsRepository.findAll(), HttpStatus.OK);

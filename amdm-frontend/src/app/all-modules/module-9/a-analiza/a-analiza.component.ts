@@ -1,10 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Document} from "../../../models/document";
-import {BehaviorSubject, Subscription} from "rxjs/index";
+import {BehaviorSubject, Observable, Subject, Subscription} from "rxjs/index";
 import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {RequestService} from "../../../shared/service/request.service";
-import {MatDialog, MatRadioChange} from "@angular/material";
+import {MatDialog, MatDialogConfig, MatRadioChange} from "@angular/material";
 import {MedicamentService} from "../../../shared/service/medicament.service";
 import {PaymentOrder} from "../../../models/paymentOrder";
 import {Receipt} from "../../../models/receipt";
@@ -16,6 +16,8 @@ import {AdditionalDataDialogComponent} from "../dialog/additional-data-dialog/ad
 import {AuthService} from "../../../shared/service/authetication.service";
 import {TaskService} from "../../../shared/service/task.service";
 import {LoaderService} from "../../../shared/service/loader.service";
+import {MedInstInvestigatorsDialogComponent} from "../dialog/med-inst-investigators-dialog/med-inst-investigators-dialog.component";
+import {ActiveSubstanceDialogComponent} from "../../../dialog/active-substance-dialog/active-substance-dialog.component";
 
 @Component({
     selector: 'app-a-analiza',
@@ -70,7 +72,37 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
     initialData: any;
     outDocuments: any[] = [];
 
+    protected manufacturers: Observable<any[]>;
+    protected loadingManufacturer: boolean = false;
+    protected manufacturerInputs = new Subject<string>();
+
+    medActiveSubstances: any[] = [];
+    refProdActiveSubstances: any[] = [];
+
+    protected farmForms: Observable<any[]>;
+    protected loadingFarmForms: boolean = false;
+    protected farmFormsInputs = new Subject<string>();
+
+    protected atcCodes: Observable<any[]>;
+    protected loadingAtcCodes: boolean = false;
+    protected atcCodesInputs = new Subject<string>();
+
+    protected manufacturersRfPr: Observable<any[]>;
+    protected loadingManufacturerRfPr: boolean = false;
+    protected manufacturerInputsRfPr = new Subject<string>();
+
+    protected farmFormsRfPr: Observable<any[]>;
+    protected loadingFarmFormsRfPr: boolean = false;
+    protected farmFormsInputsRfPr = new Subject<string>();
+
+    protected atcCodesRfPr: Observable<any[]>;
+    protected loadingAtcCodesRfPr: boolean = false;
+    protected atcCodesInputsRfPr = new Subject<string>();
+
+    protected measureUnitsPlacebo: any[] = [];
+
     constructor(private fb: FormBuilder,
+                public dialog: MatDialog,
                 private activatedRoute: ActivatedRoute,
                 private medicamentService: MedicamentService,
                 private modalService: ModalService,
@@ -114,7 +146,6 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                 'trialPopInternat': ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
                 'medicament': [],
                 'referenceProduct': [],
-                'investigators': [],
                 'status': ['P'],
                 'pharmacovigilance': [],
                 'placebo': [],
@@ -133,7 +164,8 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             'volumeQuantityMeasurement': [{value: null, disabled: true}],
             'pharmaceuticalForm': [{value: null, disabled: true}],
             'atcCode': [{value: null, disabled: true}],
-            'administratingMode': [{value: null, disabled: true}]
+            'administratingMode': [{value: null, disabled: true}],
+            'activeSubstances': [null, Validators.required]
         });
 
         this.referenceProductFormn = this.fb.group({
@@ -147,7 +179,8 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             'volumeQuantityMeasurement': [{value: null, disabled: true}],
             'pharmaceuticalForm': [{value: null, disabled: true}],
             'atcCode': [{value: null, disabled: true}],
-            'administratingMode': [{value: null, disabled: true}]
+            'administratingMode': [{value: null, disabled: true}],
+            'activeSubstances': [null, Validators.required]
         });
 
         this.placeboFormn = this.fb.group({
@@ -161,7 +194,8 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             'volumeQuantityMeasurement': [{value: null, disabled: true}],
             'pharmaceuticalForm': [{value: null, disabled: true}],
             'atcCode': [{value: null, disabled: true}],
-            'administratingMode': [{value: null, disabled: true}]
+            'administratingMode': [{value: null, disabled: true}],
+            'activeSubstances': [null, Validators.required]
         });
 
         this.addInvestigatorForm = this.fb.group({
@@ -249,22 +283,23 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
                     if (data.clinicalTrails.medicament !== null) {
                         this.medicamentForm.setValue(data.clinicalTrails.medicament);
-                        this.medicamentForm.get('manufacture').setValue(data.clinicalTrails.medicament.manufacture.description);
-                        this.medicamentForm.get('volumeQuantityMeasurement').setValue(data.clinicalTrails.medicament.volumeQuantityMeasurement.description);
-                        this.medicamentForm.get('pharmaceuticalForm').setValue(data.clinicalTrails.medicament.pharmaceuticalForm.description);
-                        this.medicamentForm.get('atcCode').setValue(data.clinicalTrails.medicament.atcCode.description);
+                        this.medActiveSubstances = data.clinicalTrails.medicament.activeSubstances;
+                        // this.medicamentForm.get('manufacture').setValue(data.clinicalTrails.medicament.manufacture.description);
+                        // this.medicamentForm.get('volumeQuantityMeasurement').setValue(data.clinicalTrails.medicament.volumeQuantityMeasurement.description);
+                        // this.medicamentForm.get('pharmaceuticalForm').setValue(data.clinicalTrails.medicament.pharmaceuticalForm.description);
+                        // this.medicamentForm.get('atcCode').setValue(data.clinicalTrails.medicament.atcCode.description);
                     }
 
                     if (data.clinicalTrails.referenceProduct !== null) {
                         this.referenceProductFormn.setValue(data.clinicalTrails.referenceProduct);
-                        this.referenceProductFormn.get('manufacture').setValue(data.clinicalTrails.referenceProduct.manufacture.description);
-                        this.referenceProductFormn.get('volumeQuantityMeasurement').setValue(data.clinicalTrails.referenceProduct.volumeQuantityMeasurement.description);
-                        this.referenceProductFormn.get('pharmaceuticalForm').setValue(data.clinicalTrails.referenceProduct.pharmaceuticalForm.description);
-                        this.referenceProductFormn.get('atcCode').setValue(data.clinicalTrails.referenceProduct.atcCode.description);
+                        this.refProdActiveSubstances = data.clinicalTrails.referenceProduct.activeSubstances;
+                        // this.referenceProductFormn.get('manufacture').setValue(data.clinicalTrails.referenceProduct.manufacture.description);
+                        // this.referenceProductFormn.get('volumeQuantityMeasurement').setValue(data.clinicalTrails.referenceProduct.volumeQuantityMeasurement.description);
+                        // this.referenceProductFormn.get('pharmaceuticalForm').setValue(data.clinicalTrails.referenceProduct.pharmaceuticalForm.description);
+                        // this.referenceProductFormn.get('atcCode').setValue(data.clinicalTrails.referenceProduct.atcCode.description);
                     }
 
                     if (data.clinicalTrails.placebo !== null) {
-                        console.log('data.clinicalTrails.placebo',data.clinicalTrails.placebo);
                         this.placeboFormn.setValue(data.clinicalTrails.placebo);
                         this.placeboFormn.get('volumeQuantityMeasurement').setValue(data.clinicalTrails.placebo.volumeQuantityMeasurement.description);
                     }
@@ -298,37 +333,70 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
     }
 
     addMedicalInstitution() {
-        this.mediacalInstitutionsList.push(this.addMediacalInstitutionForm.get('medicalInstitution').value);
-        let intdexToDelete = this.allMediacalInstitutionsList.indexOf(this.addMediacalInstitutionForm.get('medicalInstitution').value);
-        this.allMediacalInstitutionsList.splice(intdexToDelete, 1);
-        this.allMediacalInstitutionsList = this.allMediacalInstitutionsList.splice(0);
-        this.addMediacalInstitutionForm.get('medicalInstitution').setValue('');
+        // this.mediacalInstitutionsList.push(this.addMediacalInstitutionForm.get('medicalInstitution').value);
+        // let intdexToDelete = this.allMediacalInstitutionsList.indexOf(this.addMediacalInstitutionForm.get('medicalInstitution').value);
+        // this.allMediacalInstitutionsList.splice(intdexToDelete, 1);
+        // this.allMediacalInstitutionsList = this.allMediacalInstitutionsList.splice(0);
+        // this.addMediacalInstitutionForm.get('medicalInstitution').setValue('');
+
+        let dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.height = '600px';
+        dialogConfig2.width = '650px';
+
+        dialogConfig2.data = {
+            medicalInstitution: this.addMediacalInstitutionForm.get('medicalInstitution').value,
+            investigatorsList: this.allInvestigatorsList
+        }
+
+        let dialogRef = this.dialog.open(MedInstInvestigatorsDialogComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('result', result);
+            if (result == null || result == undefined || result.success === false) {
+                return;
+            }
+
+            let medInst = this.addMediacalInstitutionForm.get('medicalInstitution').value;
+            medInst.investigators = result.investigators;
+            this.mediacalInstitutionsList.push(medInst);
+            let intdexToDelete = this.allMediacalInstitutionsList.indexOf(this.addMediacalInstitutionForm.get('medicalInstitution').value);
+            this.allMediacalInstitutionsList.splice(intdexToDelete, 1);
+            this.allMediacalInstitutionsList = this.allMediacalInstitutionsList.splice(0);
+            this.addMediacalInstitutionForm.get('medicalInstitution').setValue('');
+        });
     }
 
-    deleteMedicalInstitution(institution) {
-        var intdexToDelete = this.mediacalInstitutionsList.indexOf(institution);
-        this.mediacalInstitutionsList.splice(intdexToDelete, 1);
-        this.allMediacalInstitutionsList.push(institution);
+    // deleteMedicalInstitution(institution) {
+    //     var intdexToDelete = this.mediacalInstitutionsList.indexOf(institution);
+    //     this.mediacalInstitutionsList.splice(intdexToDelete, 1);
+    //     this.allMediacalInstitutionsList.push(institution);
+    //     this.allMediacalInstitutionsList = this.allMediacalInstitutionsList.splice(0);
+    // }
+
+    deleteMedicalInstitution(i) {
+        // console.log('i', i);
+        // console.log('this.mediacalInstitutionsList', this.mediacalInstitutionsList);
+        // console.log('this.allMediacalInstitutionsList', this.allMediacalInstitutionsList);
+
+        this.allMediacalInstitutionsList.push(this.mediacalInstitutionsList[i]);
+        this.mediacalInstitutionsList.splice(i, 1);
         this.allMediacalInstitutionsList = this.allMediacalInstitutionsList.splice(0);
     }
+
 
     loadInvestigatorsList() {
         this.subscriptions.push(
             this.administrationService.getAllInvestigators().subscribe(data => {
                     this.allInvestigatorsList = data;
+                    this.allInvestigatorsList.forEach(item => {
+                        item.main = false;
+                    });
 
-                    if (this.investigatorsList.length > 0) {
-                        let missing = this.allInvestigatorsList.filter(item =>
-                            !this.investigatorsList.some(other => item.id === other.id));
-
-                        missing.forEach(investigator => investigator.description = investigator.firstName + ' ' + investigator.lastName + ' - ' + investigator.title);
-                        this.allInvestigatorsList = missing;
-                    }
-                    else {
-                        this.allInvestigatorsList.forEach(investigator => {
-                            investigator.description = investigator.firstName + ' ' + investigator.lastName + ' - ' + investigator.title;
-                        })
-                    }
                 }, error => console.log(error)
             )
         )
@@ -375,7 +443,6 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         dialogRef2.afterClosed().subscribe(result => {
             if (result.success) {
                 result.docType = this.docTypes.find(doc => doc.category === 'SL');
-                console.log('find doc type', result.docType);
                 this.initialData.outputDocuments.push(result);
                 this.subscriptions.push(this.requestService.addOutputDocumentRequest(this.initialData).subscribe(data => {
                         console.log('outDocuments', data);
@@ -449,10 +516,8 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         formModel.currentStep = 'A';
         formModel.documents = this.docs;
         formModel.outputDocuments = this.outDocuments;
-
         formModel.receipts = this.receiptsList;
         formModel.paymentOrders = this.paymentOrdersList;
-        formModel.clinicalTrails.investigators = this.investigatorsList;
         formModel.clinicalTrails.medicalInstitutions = this.mediacalInstitutionsList;
 
         formModel.assignedUser = this.authService.getUserName();
@@ -546,6 +611,153 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
     disableEnableForm() {
         this.isWaitingStep.next(!this.isWaitingStep.value);
+    }
+
+    editMedicalInstitution(i) {
+        let dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.height = '600px';
+        dialogConfig2.width = '650px';
+
+        dialogConfig2.data = {
+            medicalInstitution: this.addMediacalInstitutionForm.get('medicalInstitution').value,
+            investigatorsList: this.allInvestigatorsList,
+            collectedInvestigators: this.mediacalInstitutionsList[i].investigators
+        }
+
+        let dialogRef = this.dialog.open(MedInstInvestigatorsDialogComponent, dialogConfig2);
+
+    }
+
+    addMedActiveSubstanceDialog() {
+
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.height = '650px';
+        dialogConfig2.width = '600px';
+
+        let dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('result', result);
+            if (result !== undefined && result.response) {
+                this.medActiveSubstances.push({
+                    activeSubstance: result.activeSubstance,
+                    quantity: result.activeSubstanceQuantity,
+                    unitsOfMeasurement: result.activeSubstanceUnit,
+                    manufacture: result.manufactureSA
+                });
+            }
+        });
+    }
+
+    editMedActiveSubstance(substance: any, index: number) {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.height = '650px';
+        dialogConfig2.width = '600px';
+        dialogConfig2.data = substance;
+
+        let dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result !== undefined && result.response) {
+                this.medActiveSubstances[index] = {
+                    activeSubstance: result.activeSubstance,
+                    quantity: result.activeSubstanceQuantity,
+                    unitsOfMeasurement: result.activeSubstanceUnit,
+                    manufacture: result.manufactureSA
+                };
+            }
+        });
+    }
+
+    removeMedActiveSubstance(index: number) {
+
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {message: 'Sunteti sigur ca doriti sa stergeti aceasta substanta?', confirm: false}
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.medActiveSubstances.splice(index, 1);
+            }
+        });
+    }
+
+    addRefProdActiveSubstanceDialog() {
+
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.height = '650px';
+        dialogConfig2.width = '600px';
+
+        let dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result.response) {
+                this.refProdActiveSubstances.push({
+                    activeSubstance: result.activeSubstance,
+                    quantity: result.activeSubstanceQuantity,
+                    unitsOfMeasurement: result.activeSubstanceUnit,
+                    manufacture: result.manufactureSA
+                });
+            }
+        });
+    }
+
+    editRefProdActiveSubstance(substance: any, index: number) {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.height = '650px';
+        dialogConfig2.width = '600px';
+        dialogConfig2.data = substance;
+
+        let dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result.response) {
+                this.refProdActiveSubstances[index] = {
+                    activeSubstance: result.activeSubstance,
+                    quantity: result.activeSubstanceQuantity,
+                    unitsOfMeasurement: result.activeSubstanceUnit,
+                    manufacture: result.manufactureSA
+                };
+            }
+        });
+    }
+
+    removeRefProdActiveSubstance(index: number) {
+
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {message: 'Sunteti sigur ca doriti sa stergeti aceasta substanta?', confirm: false}
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.refProdActiveSubstances.splice(index, 1);
+            }
+        });
     }
 
     ngOnDestroy(): void {

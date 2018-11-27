@@ -18,9 +18,10 @@
 				</div>
 			</div>
 		</div>
-		<app-document [documents]="documents" [nrCerere]="eForm.get('requestNumber').value" [dcTypes]="docTypes"
-		 (documentModified)="documentModified($event)"></app-document>
-		<hr>
+		<div class="my-3">
+			<app-document [documents]="documents" [nrCerere]="eForm.get('requestNumber').value" [dcTypes]="docTypes"
+			 (documentModified)="documentModified($event)"></app-document>
+		</div>
 		<div class="row">
 			<div class="col-md-4">
 				<div class="md-form">
@@ -41,7 +42,6 @@
 				</div>
 			</div>
 		</div>
-		<h5 class="text-center font-weight-bold">Divizari</h5>
 		<div class="row">
 			<div class="col-md-4">
 				<div class="md-form">
@@ -55,32 +55,51 @@
 					<small class="text-muted"><strong class="text-danger">Aceasta divizare a fost deja introdusa</strong></small>
 				</div>
 			</div>
-			<div class="col-2 offset-6 position-button mt-4">
-				<button class="btn btn-indigo btn-sm" mdbWavesEffect (click)="addDivision()">Adaugă divizare</button>
-			</div>
 		</div>
-		<table class="table table-widths text-center">
-			<thead class="black white-text">
-			<tr>
-				<th scope="col">Nr.</th>
-				<th scope="col">Denumire</th>
-				<th scope="col">Actiuni</th>
-			</tr>
-			</thead>
-			<tbody>
-			<tr *ngFor="let division of divisions;let i = index">
-				<td>{{ i+1 }}</td>
-				<td>{{ division.description }}</td>
-				<td>
-					<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeDivision(i)" mdbWavesEffect>Stergere</button>
-				</td>
-			</tr>
-			</tbody>
-		</table>
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Divizari</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addDivision()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- Card content -->
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+					<tr>
+						<th scope="col">Nr.</th>
+						<th scope="col">Denumire</th>
+						<th scope="col">Actiuni</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let division of divisions;let i = index">
+						<td>{{ i+1 }}</td>
+						<td>{{ division.description }}</td>
+						<td>
+							<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+							        (click)="removeDivision(i)" mdbWavesEffect attr.disabled="this.disabled"><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+							</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="divisions.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
 		<div *ngIf="formSubmitted && divisions.length==0">
 			<small class="text-muted"><strong class="text-danger">Nici o divizare nu a fost adaugata</strong></small>
 		</div>
-		<!--<h5 class="text-center font-weight-bold">Substanţe active</h5>-->
 		<hr>
 		<div class="gradient-card-header bg-sidebar border-gradient">
 			<div class="container-fluid">
@@ -91,45 +110,49 @@
 					</div>
 					<div class="col-6">
 						<div class="text-right fap text-white">
-							<i (click)="addActiveSubstanceDialog()" class="fa fa-cog fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+							<i (click)="addActiveSubstanceDialog()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
 					</div>
 				</div>
 			</div>
+
 		</div>
 
 		<!-- Card content -->
 		<div class="card-body card-body-cascade">
-		<table class="table table-widths text-center">
-			<thead class="bg-sidebar white-text">
-			<tr>
-				<th scope="col">Denumire</th>
-				<th scope="col">Cod CAS</th>
-				<th scope="col">Concentratie</th>
-				<th scope="col">Unitate de masură</th>
-				<th scope="col">Producător</th>
-				<th scope="col">Ţară producător</th>
-				<th scope="col">Adresă producător</th>
-				<th scope="col">Actiuni</th>
-			</tr>
-			</thead>
-			<tbody>
-			<tr *ngFor="let substance of activeSubstancesTable;let i = index">
-				<th scope="row">{{ substance.activeSubstance.description }}</th>
-				<td>{{ substance.activeSubstance.code }}</td>
-				<td>{{ substance.quantity }}</td>
-				<td>{{ substance.unitsOfMeasurement.description }}</td>
-				<td>{{ substance.manufacture.description }}</td>
-				<td>{{ substance.manufacture.country.description }}</td>
-				<td>{{ substance.manufacture.address }}</td>
-				<td>
-					<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="editSubstance(substance,i)" mdbWavesEffect>Editare</button>
-					<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeSubstance(i)" mdbWavesEffect>Stergere</button>
-				</td>
-			</tr>
-			</tbody>
-		</table>
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+					<tr>
+						<th scope="col">Denumire</th>
+						<th scope="col">Cod CAS</th>
+						<th scope="col">Concentratie</th>
+						<th scope="col">Unitate de masură</th>
+						<th scope="col">Producător</th>
+						<th scope="col">Ţară producător</th>
+						<th scope="col">Adresă producător</th>
+						<th scope="col">Actiuni</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let substance of activeSubstancesTable;let i = index">
+						<th scope="row">{{ substance.activeSubstance.description }}</th>
+						<td>{{ substance.activeSubstance.code }}</td>
+						<td>{{ substance.quantity }}</td>
+						<td>{{ substance.unitsOfMeasurement.description }}</td>
+						<td>{{ substance.manufacture.description }}</td>
+						<td>{{ substance.manufacture.country.description }}</td>
+						<td>{{ substance.manufacture.address }}</td>
+						<td>
+							<button class="btn btn-mdb-color waves-light btn-sm waves-light" (click)="editSubstance(substance,i)"
+							 mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></button>
+							<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeSubstance(i)"
+							 mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
+		<div *ngIf="activeSubstancesTable.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
 		<div *ngIf="formSubmitted && activeSubstancesTable.length==0">
 			<small class="text-muted"><strong class="text-danger">Nici o substanta activa nu a fost adaugata</strong></small>
 		</div>
@@ -280,14 +303,12 @@
 			</div>
 		</div>
 		<hr>
-		<h5 class="text-center font-weight-bold">Producatori</h5>
+
 		<div class="row">
 			<div class="col-6">
 				<div class="md-form-modified">
-					<ng-select id="manufacture" name="manufacture" [items]="manufactures"
-					           bindLabel="description"
-					           placeholder="Producător "
-					           formControlName="manufacture">
+					<ng-select id="manufacture" name="manufacture" [items]="manufactures" bindLabel="description" placeholder="Producător "
+					 formControlName="manufacture">
 					</ng-select>
 					<div *ngIf="isAddManufacture && (!eForm.get('manufacture').value || eForm.get('manufacture').value.toString().length == 0)">
 						<small class="text-muted"><strong class="text-danger">Producatorul trebuie selectat</strong></small>
@@ -297,32 +318,54 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-2 offset-4 position-button mt-4">
-				<button class="btn btn-indigo btn-sm" mdbWavesEffect (click)="addManufacture()">Adaugă producator</button>
-			</div>
 		</div>
-		<table class="table table-widths text-center">
-			<thead class="black white-text">
-			<tr>
-				<th scope="col">Denumire</th>
-				<th scope="col">Tara</th>
-				<th scope="col">Adresa</th>
-				<th scope="col">Producator produs finit</th>
-				<th scope="col">Actiuni</th>
-			</tr>
-			</thead>
-			<tbody>
-			<tr *ngFor="let manufacture of manufacturesTable;let i = index">
-				<td>{{ manufacture.manufacture. description }}</td>
-				<td>{{ manufacture.manufacture.country.description }}</td>
-				<td>{{ manufacture.manufacture.address }}</td>
-				<th scope="row"><mat-checkbox #checkBoxProducatorProdusFinit [checked]="manufacture.producatorProdusFinit" (change)="checkProducatorProdusFinit(manufacture,checkBoxProducatorProdusFinit)"></mat-checkbox></th>
-				<td>
-					<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeManufacture(i)" mdbWavesEffect>Stergere</button>
-				</td>
-			</tr>
-			</tbody>
-		</table>
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Producatori</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addManufacture()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- Card content -->
+		<div class="card-body card-body-cascade">
+
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+					<tr>
+						<th scope="col">Denumire</th>
+						<th scope="col">Tara</th>
+						<th scope="col">Adresa</th>
+						<th scope="col">Producator produs finit</th>
+						<th scope="col">Actiuni</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let manufacture of manufacturesTable;let i = index">
+						<td>{{ manufacture.manufacture. description }}</td>
+						<td>{{ manufacture.manufacture.country.description }}</td>
+						<td>{{ manufacture.manufacture.address }}</td>
+						<th scope="row">
+							<mat-checkbox #checkBoxProducatorProdusFinit [checked]="manufacture.producatorProdusFinit" (change)="checkProducatorProdusFinit(manufacture,checkBoxProducatorProdusFinit)"></mat-checkbox>
+						</th>
+						<td>
+							<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeManufacture(i)"
+							        mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="manufacturesTable.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
 		<div *ngIf="formSubmitted && manufacturesTable.length==0">
 			<small class="text-muted"><strong class="text-danger">Nici un producator nu a fost adaugat</strong></small>
 		</div>
@@ -332,46 +375,67 @@
 			<small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>
 		</div>
 		<hr>
-		<h5 class="text-center font-weight-bold">Documente de iesire</h5>
-		<hr>
-		<div class="position-button">
-			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="requestAdditionalData()">Solicitare date aditionale</button>
-			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="requestLaboratoryAnalysis()">Solicitare analiza laborator</button>
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Documente de iesire</div>
+					</div>
+					<div class="col-6">
+						<div class="position-button">
+							<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="requestAdditionalData()">Solicitare
+								date aditionale</button>
+							<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="requestLaboratoryAnalysis()">Solicitare
+								analiza laborator</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
 		</div>
-		<table class="table table-widths-lg text-center">
-			<thead class="black white-text">
-			<tr>
-				<th scope="col">Denumirea</th>
-				<th scope="col">Numar</th>
-				<th scope="col">Status document</th>
-				<th scope="col">Status raspuns</th>
-				<th>Actiuni</th>
-			</tr>
-			</thead>
-			<tbody>
-			<tr *ngFor="let a of outDocuments">
-				<th scope="row">{{ a.name }}</th>
-				<th scope="row">{{ a.number }}</th>
-				<th scope="row">{{ a.status }}</th>
-				<th scope="row"><mat-checkbox *ngIf="a.docType && (a.docType.category=='SL' || a.docType.category=='LA')" #checkBoxResponse [checked]="a.responseReceived" (change)="checkResponseReceived(a,checkBoxResponse)">Raspuns primit</mat-checkbox></th>
-				<td>
-					<button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)">Vizualizare</button>
-					<button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && (a.docType.category=='SL' || a.docType.category=='LA')" class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)">Stergere</button>
-				</td>
-			</tr>
-			</tbody>
-		</table>
-		<!--<div *ngIf="formSubmitted && !isResponseReceived">-->
+
+		<!-- Card content -->
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths-lg text-center">
+				<thead class="bg-sidebar white-text">
+					<tr>
+						<th scope="col">Denumirea</th>
+						<th scope="col">Numar</th>
+						<th scope="col">Status document</th>
+						<th scope="col">Status raspuns</th>
+						<th>Actiuni</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let a of outDocuments">
+						<th scope="row">{{ a.name }}</th>
+						<th scope="row">{{ a.number }}</th>
+						<th scope="row">{{ a.status }}</th>
+						<th scope="row">
+							<mat-checkbox *ngIf="a.docType && (a.docType.category=='SL' || a.docType.category=='LA')" #checkBoxResponse
+							 [checked]="a.responseReceived" (change)="checkResponseReceived(a,checkBoxResponse)">Raspuns primit</mat-checkbox>
+						</th>
+						<td>
+							<button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)"><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
+							<button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && (a.docType.category=='SL' || a.docType.category=='LA')"
+							 class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</div>
+			<!--<div *ngIf="formSubmitted && !isResponseReceived">-->
 			<!--<small class="text-muted"><strong class="text-danger">Exista documente fara raspuns</strong></small>-->
-		<!--</div>-->
-		<!--<div *ngIf="formSubmitted && isNonAttachedDocuments">-->
+			<!--</div>-->
+			<!--<div *ngIf="formSubmitted && isNonAttachedDocuments">-->
 			<!--<small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong></small>-->
-		<!--</div>-->
-		<hr>
-		<div class="text-center">
-			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>
-			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Urmatorul pas</button>
-			<button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>
-		</div>
+			<!--</div>-->
+			<hr>
+			<div class="text-center">
+				<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>
+				<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Urmatorul pas</button>
+				<button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>
+			</div>
 	</form>
 </div>

@@ -253,6 +253,14 @@ export class ExpertiModifyComponent implements OnInit {
     }
 
     success() {
+
+        for (let entry of this.outputDocuments) {
+            if (entry.docType.category == 'OM' && entry.status == 'Nu este atasat') {
+                this.errorHandlerService.showError('Ordinul de aprobare a modificărilor postautorizare nu a fost atasat');
+             return;
+            }
+        }
+
         this.loadingService.show();
         this.formSubmitted = false;
 
@@ -345,7 +353,7 @@ export class ExpertiModifyComponent implements OnInit {
     checkOutputDocumentsStatus() {
         for (let entry of this.outputDocuments) {
             var isMatch = this.documents.some(elem => {
-                return (elem.docType.category == entry.docType.category && elem.number == entry.number) ? true : false;
+                return (elem.docType.category == entry.docType.category) ? true : false;
             });
             if (isMatch) {
                 entry.status = 'Atasat';

@@ -1,103 +1,108 @@
-<h5 class="text-center font-weight-bold">{{title}}</h5>
-<hr>
 <form [formGroup]='docForm' *ngIf="canUpload">
-  <div class="row">
-    <div class="col-6">
-      <div class="md-form-modified">
-        <ng-select id="docType" name="docType" [items]="docTypes"
-                   bindLabel="description"
-                   placeholder="Tip document"
-                   formControlName="docType">
-        </ng-select>
-        <div *ngIf="formSubmitted && docForm.get('docType').invalid">
-          <small class="text-muted"><strong class="text-danger">Tip document trebuie selectat</strong></small>
-        </div>
-      </div>
-    </div>
-    <div class="col-4">
-      <div class="md-form">
-        <input id="nrDocInvisibil" *ngIf="!this.docForm.get('docType').value || !this.docForm.get('docType').value.needDocNr" style="display:none;" mdbInputDirective type="text">
-        <input id="nrDoc" *ngIf="this.docForm.get('docType').value && this.docForm.get('docType').value.needDocNr" mdbInputDirective type="text" class="form-control" formControlName="nrDoc">
-        <label for="nrDoc" *ngIf="this.docForm.get('docType').value && this.docForm.get('docType').value.needDocNr">Numar document</label>
-      </div>
-      <div *ngIf="formSubmitted && docForm.get('nrDoc').invalid && docForm.get('docType').value && docForm.get('docType').value.needDocNr">
-        <small class="text-muted"><strong class="text-danger">Numar document trebuie introdus</strong></small>
-      </div>
-    </div>
-    <!--<div class="col-2 position-button mt-4">-->
-        <!--<button type="button" class="btn btn-indigo btn-sm waves-light" (click)="checkFields() ? incarcaFisier.click() : ''" mdbWavesEffect>Incarcă Document</button>-->
-        <!--<input id="incarcaFisier" #incarcaFisier type="file" style="display:none;" (click)="reset()" (change)="addDocument($event);" attr.disabled="this.disabled"-->
-                <!--accept=".pdf,image/*" > &lt;!&ndash;webkitdirectory directory multiple&ndash;&gt;-->
-  <!--</div>-->
-  </div>
-  </form>
+	<div class="row">
+		<div class="col-3">
+			<div class="md-form-modified">
+				<ng-select id="docType" name="docType" [items]="docTypes"
+				           bindLabel="description"
+				           placeholder="Tip document"
+				           formControlName="docType">
+				</ng-select>
+				<div *ngIf="formSubmitted && docForm.get('docType').invalid">
+					<small class="text-muted"><strong class="text-danger">Tip document trebuie selectat</strong></small>
+				</div>
+			</div>
+		</div>
+		<div class="col-3">
+			<div class="md-form">
+				<input id="nrDocInvisibil" *ngIf="!this.docForm.get('docType').value || !this.docForm.get('docType').value.needDocNr" style="display:none;" mdbInputDirective type="text">
+				<input id="nrDoc" *ngIf="this.docForm.get('docType').value && this.docForm.get('docType').value.needDocNr" mdbInputDirective type="text" class="form-control" formControlName="nrDoc">
+				<label for="nrDoc" *ngIf="this.docForm.get('docType').value && this.docForm.get('docType').value.needDocNr">Numar document</label>
+			</div>
+			<div *ngIf="formSubmitted && docForm.get('nrDoc').invalid && docForm.get('docType').value && docForm.get('docType').value.needDocNr">
+				<small class="text-muted"><strong class="text-danger">Numar document trebuie introdus</strong></small>
+			</div>
+		</div>
+		<div class="col-3">
+			<div class="md-form"  *ngIf="!this.docForm.get('docType').value || !this.docForm.get('docType').value.needDate">
+				<input id="nrDateInvisibil" style="display:none;" mdbInputDirective type="text">
+			</div>
+			<div class="md-form-modified" *ngIf="this.docForm.get('docType').value && this.docForm.get('docType').value.needDate">
+				<mat-form-field class="w-100">
+					<input matInput [matDatepicker]="dateDoc" placeholder="Data emiterii documentului" formControlName="dateDoc" [attr.disabled]="true">
+					<mat-datepicker-toggle matSuffix [for]="dateDoc"></mat-datepicker-toggle>
+					<mat-datepicker touchUi #dateDoc></mat-datepicker>
+				</mat-form-field>
+				<div *ngIf="formSubmitted && docForm.get('dateDoc').invalid && docForm.get('docType').value && docForm.get('docType').value.needDate">
+					<small class="text-muted"><strong class="text-danger">Data emiterii documentului trebuie introdusa</strong></small>
+				</div>
+			</div>
+		</div>
+		<div class="col-3" *ngIf=visibility>
+			<div class="form-inline w-100">
+				<div class="md-form form-sm w-100">
+					<input (keyup)="applyFilter($event.target.value)" class="form-control w-100" type="search" placeholder="Filtru">
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
 <div class="gradient-card-header bg-sidebar border-gradient">
-    <div class="container-fluid">
-        <!-- Title -->
-        <div class="row">
-            <div class="col-8">
-                <div class="card-header-title white-text">Documente atasate</div>
-            </div>
-            <div class="col-4">
-                <div class="row">
-                    <div class="col-9">
-                                <div class="form-inline waves-light">
-                                    <div class="md-form mt-0">
-                                        <input class="form-control mr-sm-2" type="text" placeholder="Filtru" (keyup)="applyFilter($event.target.value)">
-                                    </div>
-                                </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="text-right fap text-white">
-                            <i (click)="checkFields() ? incarcaFisier.click() : ''" class="fa fa-upload fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
-                            <input id="incarcaFisier" #incarcaFisier type="file" style="display:none;" (click)="reset()" (change)="addDocument($event);" attr.disabled="this.disabled"
-                                   accept=".pdf,image/*" > <!--webkitdirectory directory multiple-->
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
+	<div class="container-fluid">
+		<!-- Title -->
+		<div class="row">
+			<div class="col-8">
+				<div class="card-header-title white-text">Documente atasate</div>
+			</div>
+			<div class="col-4">
+				<div class="text-right fap text-white">
+					<i class="fa fa-lg fa-mt" aria-hidden="true" (click)="changeVisibility();" [ngClass]="visibility ? 'fa-touched fa-search-plus' : 'fa-untouched fa-search-minus'"></i>
+					<i (click)="checkFields() ? incarcaFisier.click() : ''" class="fa fa-upload fa-lg fa-mt" aria-hidden="true"></i>
+					<input id="incarcaFisier" #incarcaFisier type="file" style="display:none;" (click)="reset()" (change)="addDocument($event);" attr.disabled="this.disabled"
+					       accept=".pdf,image/*">
+				</div>
+			</div>
+		</div>
+	</div>
 
 </div>
 <div class="card-body card-body-cascade">
-    <div class="example-container">
-        <table mat-table [dataSource]="dataSource" matSort class="w-100 text-center">
-            <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text text-center"> Denumire</th>
-                <td mat-cell *matCellDef="let element">{{element.name}} </td>
-            </ng-container>
+	<div class="example-container">
+		<table mat-table [dataSource]="dataSource" matSort class="w-100 text-center">
+			<ng-container matColumnDef="name">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text text-center"> Denumire</th>
+				<td mat-cell *matCellDef="let element">{{element.name}} </td>
+			</ng-container>
 
-            <ng-container matColumnDef="docType">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text text-center"> Tip document</th>
-                <td mat-cell *matCellDef="let element"> {{element.docType.description}}</td>
-            </ng-container>
+			<ng-container matColumnDef="docType">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text text-center"> Tip document</th>
+				<td mat-cell *matCellDef="let element"> {{element.docType.description}}</td>
+			</ng-container>
 
-            <ng-container matColumnDef="docNumber">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text text-center"> Numar document</th>
-                <td mat-cell *matCellDef="let element"> {{element.number}}</td>
-            </ng-container>
+			<ng-container matColumnDef="docNumber">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text text-center"> Numar document</th>
+				<td mat-cell *matCellDef="let element"> {{element.number}}</td>
+			</ng-container>
 
-            <ng-container matColumnDef="date">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text text-center"> Data incarcarii</th>
-                <td mat-cell *matCellDef="let element"> {{element.date | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
-            </ng-container>
+			<ng-container matColumnDef="date">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text text-center"> Data incarcarii</th>
+				<td mat-cell *matCellDef="let element"> {{element.date | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+			</ng-container>
 
-            <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text text-center"> Actiuni</th>
-                <td mat-cell *matCellDef="let element; let i=index;">
-                    <button type="button" class="btn btn-mdb-color btn-sm waves-light" (click)="loadFile(element.path)"
-                            mdbWavesEffect><i class="fa fa-download fa-lg" aria-hidden="true"></i>
-                    </button>
-                    <button type="button" *ngIf="!element.isOld" class="btn btn-dark-red-color waves-light btn-sm waves-light"
-                            (click)="removeDocument(i)" mdbWavesEffect attr.disabled="this.disabled"><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
-                    </button>
-                </td>
-            </ng-container>
+			<ng-container matColumnDef="actions">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text text-center"> Actiuni</th>
+				<td mat-cell *matCellDef="let element; let i=index;">
+					<button type="button" class="btn btn-mdb-color btn-sm waves-light" (click)="loadFile(element.path)"
+					        mdbWavesEffect><i class="fa fa-download fa-lg" aria-hidden="true"></i>
+					</button>
+					<button type="button" *ngIf="!element.isOld" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+					        (click)="removeDocument(i)" mdbWavesEffect attr.disabled="this.disabled"><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+					</button>
+				</td>
+			</ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-    </div>
+			<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+		</table>
+	</div>
+	<div *ngIf="dataSource.data.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
 </div>

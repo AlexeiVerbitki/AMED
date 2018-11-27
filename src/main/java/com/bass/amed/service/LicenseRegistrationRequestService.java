@@ -95,8 +95,7 @@ public class LicenseRegistrationRequestService
         {
             em = entityManagerFactory.createEntityManager();
             em.getTransaction().begin();
-
-
+            request.getLicense().setCurrentStatus("A");
 
             em.persist(request);
 
@@ -239,6 +238,21 @@ public class LicenseRegistrationRequestService
 
                 ec.setLicenseId(request.getLicense().getId());
 
+                //Cesionare
+                if (request.getType().getCode().equals("LICC") && !ecView.getIdno().equals(request.getLicense().getIdno()))
+                {
+                    NmEconomicAgentsEntity originalEc = ecViewList.stream().filter(ss -> !ss.getIdno().equals(ecView.getIdno())).findFirst().get();
+
+                    ec.setOldIdno(ecView.getIdno());
+                    ec.setIdno(request.getLicense().getIdno());
+
+
+
+                    ec.setName(originalEc.getName());
+                    ec.setLongName(originalEc.getLongName());
+                    ec.setLegalAddress(originalEc.getLegalAddress());
+                }
+
                 em.merge(ec);
             }
 
@@ -282,37 +296,16 @@ public class LicenseRegistrationRequestService
             em.getTransaction().begin();
             RegistrationRequestsEntity r = em.find(RegistrationRequestsEntity.class, request.getId());
 
-            //Update documents
-//            Set<DocumentsEntity> dSet = request.getLicense().getDocuments().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
-//
-//            if (!dSet.isEmpty()){
-//                r.getLicense().getDocuments().addAll(dSet);
-//            }
-
-
-            //Update mandated contact
-//            LicenseMandatedContactEntity lme = new ArrayList<>(request.getLicense().getLicenseMandatedContacts()).get(0);
-//            if (lme.getNewMandatedLastname() != null)
-//            {
-//                LicenseMandatedContactEntity lm = em.find(LicenseMandatedContactEntity.class, lme.getId());
-//                lm.setNewPhoneNumber(lme.getNewPhoneNumber());
-//                lm.setNewEmail(lme.getNewEmail());
-//                lm.setNewMandatedFirstname(lme.getNewMandatedFirstname());
-//                lm.setNewMandatedLastname(lme.getNewMandatedLastname());
-//                lm.setNewMandatedNr(lme.getNewMandatedNr());
-//                lm.setNewMandatedDate(lme.getNewMandatedDate());
-//
-//                em.merge(lm);
-//            }
-
             r.getLicense().setSerialNr(request.getLicense().getSerialNr());
             r.getLicense().setNr(request.getLicense().getNr());
+
+            r.getLicense().setCurrentStatus(null);
 
             r.getRequestHistories().add(new ArrayList<>(request.getRequestHistories()).get(0));
 
             r.setEndDate(request.getEndDate());
 
-            if (request.getLicense().getStatus().equals("F"))
+            if (request.getType().getCode().equals("LICEL") && request.getLicense().getStatus().equals("F"))
             {
                 Date releaseDate = new Date();
                 r.getLicense().setReleaseDate(releaseDate);
@@ -322,6 +315,50 @@ public class LicenseRegistrationRequestService
                 c.add(Calendar.YEAR, 5);
 
                 r.getLicense().setExpirationDate(c.getTime());
+            }
+
+            //Prelungire
+            if (request.getType().getCode().equals("LICP"))
+            {
+                Date curExpirationDate = request.getLicense().getExpirationDate();
+
+                Calendar c = Calendar.getInstance();
+                c.setTime(curExpirationDate);
+                c.add(Calendar.YEAR, 5);
+
+                r.getLicense().setExpirationDate(c.getTime());
+            }
+
+            //Anulare
+            if (request.getType().getCode().equals("LICA"))
+            {
+                request.getLicense().setStatus("R");
+                r.getLicense().setClosedDate(new Date());
+
+
+                for (NmEconomicAgentsEntity ecView : r.getLicense().getEconomicAgents())
+                {
+                    NmEconomicAgentsEntity ec = em.find(NmEconomicAgentsEntity.class, ecView.getId());
+
+                    ec.setLicenseId(null);
+
+                    em.merge(ec);
+                }
+
+            }
+
+
+            //Suspendare
+            if (request.getType().getCode().equals("LICS"))
+            {
+                request.getLicense().setStatus("S");
+                r.getLicense().setSuspendDate(new Date());
+            }
+
+            //Reluare
+            if (request.getType().getCode().equals("LICRL"))
+            {
+                request.getLicense().setStatus("F");
             }
 
             r.getLicense().setStatus(request.getLicense().getStatus());
@@ -366,6 +403,7 @@ public class LicenseRegistrationRequestService
                 r.getLicense().setStatus("C");
             }
 
+            r.getLicense().setCurrentStatus(null);
             r.setCurrentStep("C");
 
             em.merge(r);
@@ -397,7 +435,10 @@ public class LicenseRegistrationRequestService
             em.getTransaction().begin();
             LicensesEntity originalLicense = request.getLicense();
             LicensesEntity le = em.find(LicensesEntity.class, originalLicense.getId());
+            le.setCurrentStatus("A");
+            le.setReason(originalLicense.getReason());
             request.setLicense(le);
+
 
             //New request
             em.persist(request);

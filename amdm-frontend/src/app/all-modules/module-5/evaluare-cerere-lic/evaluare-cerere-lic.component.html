@@ -7,6 +7,11 @@
             <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICEL'">Eliberarea licentei</h5>
             <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICM'">Modificarea licentei</h5>
             <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICD'">Eliberarea duplicatului</h5>
+            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICP'">Prelungire</h5>
+            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICS'">Suspendare</h5>
+            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICRL'">Reluare</h5>
+            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICA'">Anulare</h5>
+            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICC'">Cesionare</h5>
         </div>
     </div>
     <form [formGroup]="mForm">
@@ -50,6 +55,28 @@
                 <div class="row">
                     <div class="col-md-3">
                         <div class="md-form-modified-select">
+                            <ng-select class="custom"  [items]="companii | async"
+                                       bindLabel="name"
+                                       placeholder = "Agentul economic donor"
+                                       formControlName="compGet"
+                                       [required]="true"
+                                       [loading]="loadingCompany"
+                                       [typeahead]="companyInputs"
+                            >
+                                <ng-template ng-option-tmp let-item="item">
+                                    {{item.name}} <br />
+                                    <small class="form-text text-muted">{{item.idno}}</small>
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                        <div *ngIf="oFormSubbmitted && !oForm.get('compGet').valid">
+                            <small class="text-muted"><strong class="text-danger">Agentul economic trebuie introdus</strong>
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="md-form-modified-select">
                             <ng-select class="custom" [items]="companiiPerIdnoNotSelected"
                                        bindLabel="name"
                                        placeholder="Filiala"
@@ -58,7 +85,7 @@
                             >
                                 <ng-template ng-option-tmp let-item="item">
                                     {{item.name}} <br/>
-                                    <small class="form-text text-muted">{{item.idno}}</small>
+                                    <small class="form-text text-muted">{{item.addressStr}}</small>
                                 </ng-template>
                             </ng-select>
                         </div>
@@ -99,7 +126,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3" *ngIf="pharmacyRepresentantProf">
+                    <div class="col-md-2" *ngIf="pharmacyRepresentantProf">
                         <div class="md-form-modified-select">
                             <ng-select class="custom" [items]="farmacistiPerAddress"
                                        [addTag]="addTagPromise"
@@ -155,7 +182,7 @@
                         <div class="text-center">
                             <div class="md-form">
                                 <button type="button" class="btn btn-indigo waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                                        (click)="addNewObjAddres()" [disabled]="tipCerere === 'LICD'">Adauga
+                                        (click)="addNewObjAddres()" [disabled]="tipCerere === 'LICD' || tipCerere === 'LICP' || tipCerere === 'LICA' || tipCerere === 'LICS' || tipCerere === 'LICRL'">Adauga
                                 </button>
                             </div>
                         </div>
@@ -182,13 +209,12 @@
                         <td>{{ objAddr.address }}</td>
                         <td>{{ objAddr.selectedPharmaceutist.fullName }}</td>
                         <td mdbTooltip="{{objAddr.activitiesStr}}" placement="top">
-                            <a title="Activitatile" (click)="setActivities(objAddr)">{{ objAddr.activitiesStr }}</a>
+                            <a title="Activitatile" (click)="setActivities(objAddr)" *ngIf="tipCerere !== 'LICD' && tipCerere !== 'LICP' && tipCerere !== 'LICA' && tipCerere !== 'LICS' && tipCerere !== 'LICRL'">{{ objAddr.activitiesStr ?  objAddr.activitiesStr : 'Add'}}</a>
+                            <label *ngIf="tipCerere === 'LICD' || tipCerere === 'LICP' || tipCerere === 'LICA' || tipCerere === 'LICS' || tipCerere === 'LICRL'">{{ objAddr.activitiesStr }} </label>
                         </td>
                         <td>
-                            <!--<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" type="button"-->
-                            <!--(click)="addDecision(objAddr)" mdbWavesEffect [disabled]="tipCerere === 'LICD'">Decizia-->
-                            <!--</button>-->
-                            <a title="Decizia" (click)="addDecision(objAddr)">Decizia</a>
+                            <a title="Decizia" (click)="addDecision(objAddr)" *ngIf="tipCerere !== 'LICD' && tipCerere !== 'LICP' && tipCerere !== 'LICA' && tipCerere !== 'LICS' && tipCerere !== 'LICRL'">Decizia</a>
+                            <!--<label *ngIf="tipCerere === 'LICD'">Decizia </label>-->
                         </td>
                         <td>
                             <div *ngIf="objAddr.currentResolution">
@@ -201,7 +227,7 @@
                         </td>
                         <td>
                             <button class="btn btn-dark-red-color waves-light btn-sm waves-light" type="button"
-                                    (click)="removeDocument(i)" mdbWavesEffect [disabled]="tipCerere === 'LICD'">Sterge
+                                    (click)="removeDocument(i)" mdbWavesEffect [disabled]="tipCerere === 'LICD' || tipCerere === 'LICP' || tipCerere === 'LICA' || tipCerere === 'LICS' || tipCerere === 'LICRL'">Sterge
                             </button>
                         </td>
                     </tr>
@@ -216,7 +242,7 @@
 
 
             <!--=====================================================================================================================================-->
-            <h5 class="text-center font-weight-bold" *ngIf="tipCerere !== 'LICD'">Comisiile</h5>
+            <h5 class="text-center font-weight-bold" *ngIf="tipCerere !== 'LICD' && tipCerere !== 'LICP' && tipCerere !== 'LICA' && tipCerere !== 'LICS' && tipCerere !== 'LICRL'">Comisiile</h5>
             <hr>
             <div class="row" *ngIf="tipCerere == 'LICM'">
 
@@ -302,7 +328,7 @@
             </div>
 
 
-            <div class="row" *ngIf="tipCerere !== 'LICD'">
+            <div class="row" *ngIf="tipCerere !== 'LICD' && tipCerere !== 'LICP' && tipCerere !== 'LICA' && tipCerere !== 'LICS' && tipCerere !== 'LICRL'">
                 <div class="col-md-3">
                     <div class="md-form">
                         <input id="nrRasASP" mdbInputDirective type="text" class="form-control"
@@ -357,8 +383,6 @@
 
 
             </div>
-            <hr>
-
 
             <app-payment [receipts]="receiptsList" [paymentOrders]="paymentOrdersList"
                          (totalValueChanged)="paymentTotalUpdate($event)"

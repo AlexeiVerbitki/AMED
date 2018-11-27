@@ -175,17 +175,20 @@
                     <div class="md-form-modified" [formGroup]="addMediacalInstitutionForm">
                         <ng-select id="allMediacalInstitutions" name="allMediacalInstitutions"
                                    [items]="allMediacalInstitutionsList"
-                                   bindLabel="name"
                                    placeholder="Instituţia medicala"
                                    formControlName="medicalInstitution"
                                    required="true">
+                            <ng-template ng-option-tmp ng-label-tmp let-item="item">
+                                {{item.name}}
+                            </ng-template>
                         </ng-select>
                     </div>
                 </div>
                 <div class="col-2">
                     <div class="md-form-modified mt-3">
                         <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
-                                mdbWavesEffect (click)="addMedicalInstitution()">Adaugare
+                                mdbWavesEffect (click)="addMedicalInstitution()"
+                                [disabled]="!this.addMediacalInstitutionForm.controls.medicalInstitution.valid">Adaugare
                         </button>
                     </div>
                 </div>
@@ -201,14 +204,17 @@
                         <th class="w-25" scope="col">Actiuni</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr *ngFor="let institution of mediacalInstitutionsList">
+                    <tbody>editMedicalInstitution(i
+                    <tr *ngFor="let institution of mediacalInstitutionsList; let i = index">
                         <td>{{ institution.codIms}}</td>
                         <td>{{ institution.name }}</td>
                         <td> {{ institution.address }}</td>
                         <td>
                             <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
-                                    (click)="deleteMedicalInstitution(institution)" mdbWavesEffect>Delete
+                                    (click)="editMedicalInstitution(i)" mdbWavesEffect>Edit
+                            </button>
+                            <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                    (click)="deleteMedicalInstitution(i)" mdbWavesEffect>Delete
                             </button>
                         </td>
                     </tr>
@@ -373,7 +379,8 @@
 
                 <h6 class="text-center font-weight-bold">Substanţe active</h6>
                 <div class="position-button ">
-                    <button class="btn btn-indigo btn-sm" mdbWavesEffect (click)="addRefProdActiveSubstanceDialog()">Adaugă
+                    <button class="btn btn-indigo btn-sm" mdbWavesEffect (click)="addRefProdActiveSubstanceDialog()">
+                        Adaugă
                         substanţa activă
                     </button>
                 </div>
@@ -497,57 +504,8 @@
             </div>
             <hr>
 
-
-            <h5 class="text-center font-weight-bold">Lista de investigatori</h5>
-            <hr>
-            <div class="row">
-                <div class="col-10">
-                    <div class="md-form-modified" [formGroup]="addInvestigatorForm">
-                        <ng-select id="allInvestigators" name="allInvestigators" [items]="allInvestigatorsList"
-                                   bindLabel="description"
-                                   placeholder="Investigator"
-                                   formControlName="investigator"
-                                   required="true">
-                        </ng-select>
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="md-form-modified mt-3">
-                        <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
-                                mdbWavesEffect (click)="addInvestigator()">Adaugare
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <hr>
-            <div formGroupName="investigators">
-                <table class="table table-widths text-center">
-                    <thead class="black white-text">
-                    <tr>
-                        <th class="w-25" scope="col">Nume</th>
-                        <th class="w-25" scope="col">Prenume</th>
-                        <th class="w-25" scope="col">Titlu</th>
-                        <th class="w-25" scope="col">Actiuni</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr *ngFor="let investigator of investigatorsList">
-                        <td>{{ investigator.firstName}}</td>
-                        <td>{{ investigator.lastName }}</td>
-                        <td> {{ investigator.title }}</td>
-                        <td>
-                            <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
-                                    (click)="deleteInvestigator(investigator)" mdbWavesEffect>Delete
-                            </button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <hr>
-
-            <app-payment [receipts]="receiptsList" [paymentOrders]="paymentOrdersList"
-                         (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
+            <!--<app-payment [receipts]="receiptsList" [paymentOrders]="paymentOrdersList"
+                         (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>-->
 
         </div>
         <hr>

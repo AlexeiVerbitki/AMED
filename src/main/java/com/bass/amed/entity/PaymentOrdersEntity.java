@@ -1,84 +1,32 @@
 package com.bass.amed.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Objects;
 
+@Data
 @Entity
-@Table(name = "payment_orders", schema = "amed", catalog = "")
-public class PaymentOrdersEntity {
-    private Integer id;
-    private String nr;
-    private Timestamp data;
-    private String basis;
-    private Double amount;
-
+@Table(name = "payment_orders", schema = "amed")
+public class PaymentOrdersEntity
+{
     @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
+    private Integer id;
     @Basic
-    @Column(name = "nr")
-    public String getNr() {
-        return nr;
-    }
-
-    public void setNr(String nr) {
-        this.nr = nr;
-    }
-
+    @Column(name = "number")
+    private String number;
     @Basic
-    @Column(name = "data")
-    public Timestamp getData() {
-        return data;
-    }
-
-    public void setData(Timestamp data) {
-        this.data = data;
-    }
-
-    @Basic
-    @Column(name = "basis")
-    public String getBasis() {
-        return basis;
-    }
-
-    public void setBasis(String basis) {
-        this.basis = basis;
-    }
-
+    @Column(name = "date")
+    private Timestamp date;
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "service_charge_id")
+    private ServiceChargesEntity serviceCharge;
     @Basic
     @Column(name = "amount")
-    public Double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PaymentOrdersEntity that = (PaymentOrdersEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(nr, that.nr) &&
-                Objects.equals(data, that.data) &&
-                Objects.equals(basis, that.basis) &&
-                Objects.equals(amount, that.amount);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(id, nr, data, basis, amount);
-    }
+    private Double amount;
+    @Basic
+    @Column(name = "supplementary_payment")
+    private Integer sP;
 }

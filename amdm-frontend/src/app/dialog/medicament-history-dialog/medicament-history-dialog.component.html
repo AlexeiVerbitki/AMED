@@ -1,0 +1,36 @@
+<div class="mat-dialog-content">
+	<div class="gradient-card-header bg-sidebar border-gradient">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-12">
+					<div class="card-header-title white-text">Ordine de aprobare a modificărilor postautorizare</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="card-body card-body-cascade">
+		<table class="table table-widths text-center">
+			<thead class="bg-sidebar white-text">
+			<tr>
+				<th scope="col">Nr.</th>
+				<th scope="col">Numar ordin</th>
+				<th scope="col">Data emitere ordin</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr *ngFor="let order of orders;let i = index">
+				<td>{{ i + 1 }}</td>
+				<td>  <a title="Deschide medicament" (click)="showOrderDetails(order)">{{ order.number }}</a></td>
+				<td>{{ order.dateOfIssue | date: ('dd/MM/yyyy')  }}</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<div class="text-center">
+	<div mat-dialog-actions>
+		<div class="w-100">
+			<button class="btn btn-dark-green-color btn-sm-bl btn-sm" (click)="confirm()">Ok</button>
+		</div>
+	</div>
+</div>

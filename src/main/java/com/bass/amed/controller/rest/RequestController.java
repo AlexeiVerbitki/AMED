@@ -100,7 +100,10 @@ public class RequestController
             NmMedicamentGroupEntity nmMedicamentGroupEntity = medicamentGroupRepository.findByCode(medicamentHistoryEntity.getGroup().getCode());
             medicamentHistoryEntity.setGroup(nmMedicamentGroupEntity);
         }
-
+        if(request.getMedicaments()==null)
+        {
+            request.setMedicaments(new HashSet<>());
+        }
         addDRDocument(request);
         requestRepository.save(request);
         return new ResponseEntity<>(request, HttpStatus.CREATED);
@@ -248,58 +251,6 @@ public class RequestController
         throw new CustomException("Request was not found");
     }
 
-    @PostMapping(value = "/save-clinical-trail-request")
-    public ResponseEntity<Integer> saveClinicalTrailRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException
-    {
-        if (requests.getClinicalTrails() == null)
-        {
-            throw new CustomException("Request was not found");
-        }
-        requestRepository.save(requests);
-        return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
-    }
-
-    @PostMapping(value = "/add-clinical-trail-request")
-    public ResponseEntity<Integer> saveNextClinicalTrailRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException
-    {
-        if (requests.getClinicalTrails() == null)
-        {
-            throw new CustomException("Request was not found");
-        }
-        addDDClinicalTrailsDocument(requests);
-        requestRepository.save(requests);
-        return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
-    }
-
-    private void addDDClinicalTrailsDocument(@RequestBody RegistrationRequestsEntity request)
-    {
-        Optional<RegistrationRequestStepsEntity> requestTypesStepEntityList = registrationRequestStepRepository.findOneByRequestTypeIdAndCode(3, request.getCurrentStep());
-        if (requestTypesStepEntityList.isPresent())
-        {
-            RegistrationRequestStepsEntity entity = requestTypesStepEntityList.get();
-            request.setOutputDocuments(new HashSet<>());
-            //            if(request.getOutputDocuments()==null){
-            //                request.setOutputDocuments(new HashSet<>());
-            //            }
-
-            String[] docTypes = entity.getOutputDocTypes() == null ? new String[0] : entity.getOutputDocTypes().split(",");
-
-            for (String docType : docTypes)
-            {
-                Optional<NmDocumentTypesEntity> nmDocumentTypeEntity = documentTypeRepository.findByCategory(docType);
-                if (nmDocumentTypeEntity.isPresent())
-                {
-                    OutputDocumentsEntity outputDocumentsEntity = new OutputDocumentsEntity();
-                    outputDocumentsEntity.setDocType(nmDocumentTypeEntity.get());
-                    outputDocumentsEntity.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
-                    outputDocumentsEntity.setName(nmDocumentTypeEntity.get().getDescription());
-                    outputDocumentsEntity.setNumber(docType + "-" + request.getRequestNumber());
-                    request.getOutputDocuments().add(outputDocumentsEntity);
-                }
-            }
-        }
-    }
-
     @PostMapping(value = "/add-output-document-request")
     public ResponseEntity<Integer> saveOutputDocumentRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException
     {
@@ -395,8 +346,6 @@ public class RequestController
 
             RegistrationRequestsEntity request = regOptional.get();
             PricesEntity price = (PricesEntity) Hibernate.unproxy(request.getPrice());
-//            String originalMedicamentName = price.getMedicament().getOriginalMedicamentName();
-//            price.getMedicament().setOriginalMedicamentName(originalMedicamentName);
             request.setPrice(price);
 
             Set<OutputDocumentsEntity> outputDocs = new HashSet<>(docTypes.size());
@@ -432,7 +381,7 @@ public class RequestController
         medicamentEntities = medicamentEntities.stream().filter(m -> m.getStatus().equals("F")).collect(Collectors.toList());
         Optional<MedicamentHistoryEntity> medicamentHistoryEntityOpt = request.getMedicamentHistory().stream().findFirst();
         MedicamentHistoryEntity medicamentHistoryEntity = medicamentHistoryEntityOpt.orElse(new MedicamentHistoryEntity());
-        //in medicament history save old changes
+        //in medicament history handeMedicalInstitutions old changes
         Optional<MedicamentEntity> medicamentEntityOpt = medicamentEntities.stream().findFirst();
         MedicamentEntity medicamentEntityForUpdate = medicamentEntityOpt.orElse(new MedicamentEntity());
         MedicamentHistoryEntity medicamentHistoryEntityForUpdate = fillMedicamentHistoryDetails(request.getMedicamentPostauthorizationRegisterNr(), medicamentHistoryEntity, medicamentEntityForUpdate);
@@ -468,6 +417,7 @@ public class RequestController
             medicamentDivisionHistoryEntity.setDescription(med.getDivision());
             medicamentDivisionHistoryEntity.setMedicamentId(med.getId());
             medicamentDivisionHistoryEntity.setStatus(isExistingDivisionInHistory ? "M" : "R");
+            medicamentDivisionHistoryEntity.setMedicamentCode(med.getCode());
             medicamentHistoryEntityForUpdate.getDivisionHistory().add(medicamentDivisionHistoryEntity);
         }
         for (MedicamentDivisionHistoryEntity medicamentDivisionHistoryEntity : medicamentHistoryEntity.getDivisionHistory())
@@ -482,6 +432,7 @@ public class RequestController
                 medicamentDivisionHistoryEntity1.setDescription(medicamentDivisionHistoryEntity.getDescription());
                 medicamentDivisionHistoryEntity1.setMedicamentId(medicamentEntity.getId());
                 medicamentDivisionHistoryEntity1.setStatus("N");
+                medicamentDivisionHistoryEntity1.setMedicamentCode(medicamentEntity.getCode());
                 medicamentHistoryEntityForUpdate.getDivisionHistory().add(medicamentDivisionHistoryEntity1);
             }
         }
@@ -692,6 +643,13 @@ public class RequestController
         documentModuleDetailsRepository.save(request);
         return new ResponseEntity<>(request, HttpStatus.CREATED);
     }
+
+    @PostMapping(value = "/get-requests-by-registration-number")
+    public ResponseEntity<List<RegistrationRequestsEntity>> getRequestsByRegistrationNumber(@RequestBody Integer registrationNumber) throws CustomException {
+        Optional<List<RegistrationRequestsEntity>> registrationRequestsEntities =   requestRepository.findMedicamentHistoryByRegistrationNumber(registrationNumber);
+        return new ResponseEntity<>(registrationRequestsEntities.orElse(new ArrayList<>()), HttpStatus.CREATED);
+    }
+
 
 
 //    @RequestMapping(value = "/add-import-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

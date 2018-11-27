@@ -6,4 +6,5 @@ export class Document {
   docType: any;
   isOld: boolean;
   number :  string;
+  dateOfIssue: any;
 }

@@ -18,14 +18,12 @@ import { AIntrerupereComponent } from './a-intrerupere/a-intrerupere.component';
 import { AAprobareComponent } from './a-aprobare/a-aprobare.component';
 import { MatDialogModule } from '@angular/material';
 import { BEvaluarePrimaraComponent } from './b-evaluare-primara/b-evaluare-primara.component';
-import {MatSlideToggleModule} from '@angular/material';
-import { MedInstInvestigatorsDialogComponent } from './dialog/med-inst-investigators-dialog/med-inst-investigators-dialog.component';
+import {MedInstInvestigatorsDialogComponent} from "./dialog/med-inst-investigators-dialog/med-inst-investigators-dialog.component";
 
 
 @NgModule({
     imports: [
         MatDialogModule,
-        MatSlideToggleModule,
         CommonModule,
         ClinicStudiesRoutingModule,
         FormsModule,
@@ -38,9 +36,9 @@ import { MedInstInvestigatorsDialogComponent } from './dialog/med-inst-investiga
     schemas: [],
     entryComponents: [
         AdditionalDataDialogComponent,
-        MedInstInvestigatorsDialogComponent
+        MedInstInvestigatorsDialogComponent,
     ],
-    declarations: [RegStudCliniceComponent, RegCerereComponent, AEvaluareaPrimaraComponent, AAnalizaComponent, AdditionalDataDialogComponent, AIntrerupereComponent, AAprobareComponent, BEvaluarePrimaraComponent, MedInstInvestigatorsDialogComponent, MedInstInvestigatorsDialogComponent],
+    declarations: [RegStudCliniceComponent, RegCerereComponent, AEvaluareaPrimaraComponent, AAnalizaComponent, AdditionalDataDialogComponent, AIntrerupereComponent, AAprobareComponent, BEvaluarePrimaraComponent, MedInstInvestigatorsDialogComponent],
 
     providers: [UploadFileService,RequestService],
 })

@@ -32,5 +32,8 @@ public class DocumentsEntity
     @Basic
     @Column(name = "registration_request_id")
     private Integer registrationRequestId;
+    @Basic
+    @Column(name = "date_of_issue")
+    private Timestamp dateOfIssue;
 
 }

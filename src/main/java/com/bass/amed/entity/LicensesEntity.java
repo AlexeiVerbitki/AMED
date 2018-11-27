@@ -1,8 +1,11 @@
 package com.bass.amed.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.*;
 
+@Data
 @Entity
 @Table(name = "licenses", schema = "amed")
 public class LicensesEntity
@@ -32,9 +35,21 @@ public class LicensesEntity
     private String status;
 
     @Basic
+    @Column(name = "current_status")
+    private String currentStatus;
+
+    @Basic
     @Column(name = "idno")
     private String idno;
 
+    @Basic
+    @Column(name = "closed_date")
+    private Date closedDate;
+
+
+    @Basic
+    @Column(name = "suspend_date")
+    private Date suspendDate;
 
     @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "license_id")
@@ -51,145 +66,7 @@ public class LicensesEntity
     @Transient
     private LicenseDetailsEntity detail;
 
-    public Integer getId()
-    {
-        return id;
-    }
-
-    public void setId(Integer id)
-    {
-        this.id = id;
-    }
-
-    public String getSerialNr()
-    {
-        return serialNr;
-    }
-
-    public void setSerialNr(String serialNr)
-    {
-        this.serialNr = serialNr;
-    }
-
-    public String getNr()
-    {
-        return nr;
-    }
-
-    public void setNr(String nr)
-    {
-        this.nr = nr;
-    }
-
-    public Date getReleaseDate()
-    {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(Date releaseDate)
-    {
-        this.releaseDate = releaseDate;
-    }
-
-    public Date getCessationDate()
-    {
-        return cessationDate;
-    }
-
-    public void setCessationDate(Date cessationDate)
-    {
-        this.cessationDate = cessationDate;
-    }
-
-    public Date getExpirationDate()
-    {
-        return expirationDate;
-    }
-
-    public void setExpirationDate(Date expirationDate)
-    {
-        this.expirationDate = expirationDate;
-    }
-
-    public String getStatus()
-    {
-        return status;
-    }
-
-    public void setStatus(String status)
-    {
-        this.status = status;
-    }
-
-    public LicenseCessationReasonsEntity getCessationReasons()
-    {
-        return cessationReasons;
-    }
-
-    public void setCessationReasons(LicenseCessationReasonsEntity cessationReasons)
-    {
-        this.cessationReasons = cessationReasons;
-    }
-
-    public Set<NmEconomicAgentsEntity> getEconomicAgents()
-    {
-        return economicAgents;
-    }
-
-    public void setEconomicAgents(Set<NmEconomicAgentsEntity> economicAgents)
-    {
-        this.economicAgents = economicAgents;
-    }
-
-    public Set<LicenseDetailsEntity> getDetails()
-    {
-        return details;
-    }
-
-    public void setDetails(Set<LicenseDetailsEntity> details)
-    {
-        this.details = details;
-    }
-
-    public LicenseDetailsEntity getDetail()
-    {
-        return detail;
-    }
-
-    public String getIdno()
-    {
-        return idno;
-    }
-
-    public void setIdno(String idno)
-    {
-        this.idno = idno;
-    }
-
-    public void setDetail(LicenseDetailsEntity detail)
-    {
-        this.detail = detail;
-    }
-
-    @Override
-    public boolean equals(Object o)
-    {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        LicensesEntity that = (LicensesEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(serialNr, that.serialNr) &&
-                Objects.equals(nr, that.nr) &&
-                Objects.equals(releaseDate, that.releaseDate) &&
-                Objects.equals(cessationDate, that.cessationDate) &&
-                Objects.equals(expirationDate, that.expirationDate) &&
-                Objects.equals(status, that.status) &&
-                Objects.equals(cessationReasons, that.cessationReasons);
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return Objects.hash(id, serialNr, nr, releaseDate, cessationDate, expirationDate, status, cessationReasons);
-    }
+    @Basic
+    @Column(name = "reason")
+    private String reason;
 }

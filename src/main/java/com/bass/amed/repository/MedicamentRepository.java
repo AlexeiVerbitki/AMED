@@ -31,4 +31,7 @@ public interface MedicamentRepository extends JpaRepository<MedicamentEntity, In
 
     Optional<List<MedicamentEntity>> findAllById(Integer id);
 
+    @Query(value = "SELECT * FROM medicament m WHERE (upper(m.name) like upper(CONCAT(?1, '%'))) and m.status = ?2", nativeQuery = true)
+    List<MedicamentEntity> findAllByName(String name, String status);
+
 }

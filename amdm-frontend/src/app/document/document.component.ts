@@ -44,7 +44,7 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
     incarcaFisierVariable: ElementRef;
     @Output() documentModified = new EventEmitter();
     private subscriptions: Subscription[] = [];
-
+    visibility: boolean = false;
 
     displayedColumns: any[] = ['name', 'docType', 'docNumber', 'date', 'actions'];
     dataSource = new MatTableDataSource<any>();
@@ -58,7 +58,8 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
                 private taskService: TaskService) {
         this.docForm = fb.group({
             'docType': [null, Validators.required],
-            'nrDoc': [null, Validators.required]
+            'nrDoc': [null, Validators.required],
+            'dateDoc': [null, Validators.required]
         });
 
 
@@ -84,7 +85,6 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input()
     set documents(docList: Document []) {
         this.documentList = docList;
-        console.log('fsdf', docList);
         this.dataSource.data = this.documentList.slice();
 
         this.dataSource.filterPredicate = this.createFilter();
@@ -193,7 +193,8 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
     checkFields(): boolean {
         this.formSubmitted = true;
 
-        if (this.docForm.get('docType').invalid || (this.docForm.get('nrDoc').invalid && this.docForm.get('docType').value.needDocNr)) {
+        if (this.docForm.get('docType').invalid || (this.docForm.get('nrDoc').invalid && this.docForm.get('docType').value.needDocNr)
+            || (this.docForm.get('dateDoc').invalid && this.docForm.get('docType').value.needDate)) {
             return false;
         }
 
@@ -232,7 +233,8 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
                         date: new Date(),
                         path: this.result.path,
                         isOld: false,
-                        number: this.docForm.get('nrDoc').value
+                        number: this.docForm.get('nrDoc').value,
+                        dateOfIssue: this.docForm.get('dateDoc').value
                     });
                     this.dataSource.data = this.documents.slice();
                     this.table.renderRows();
@@ -242,6 +244,7 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
 
                     this.docForm.get('docType').setValue(null);
                     this.docForm.get('nrDoc').setValue(null);
+                    this.docForm.get('dateDoc').setValue(null);
                     this.documentModified.emit(true);
                 }
             },
@@ -280,5 +283,9 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
             return dataStr.indexOf(filter) != -1;
         };
         return filterFunction;
+    }
+
+    changeVisibility() {
+        this.visibility = !this.visibility;
     }
 }

@@ -1,0 +1,180 @@
+<div class="mat-dialog-content">
+	<!--Variatii tabela-->
+	<div class="gradient-card-header bg-sidebar border-gradient" *ngIf="modifications.length!=0">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-6">
+					<div class="card-header-title white-text">Variatii</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="card-body card-body-cascade" *ngIf="modifications.length!=0">
+		<table class="table table-widths text-center">
+			<thead class="bg-sidebar white-text">
+			<tr>
+				<th scope="col">Nr.</th>
+				<th scope="col">Denumire cimp</th>
+				<th scope="col">Valaore veche</th>
+				<th scope="col">Valaore noua</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr *ngFor="let modification of modifications;let i = index">
+				<td>{{ i + 1 }}</td>
+				<td>{{ modification.field }}</td>
+				<td>{{ modification.oldValue }}</td>
+				<td>{{ modification.newValue }}</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+	<!--Divizari tabela-->
+	<div class="gradient-card-header bg-sidebar border-gradient" *ngIf="divisions.length!=0">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-6">
+					<div class="card-header-title white-text">Divizari</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="card-body card-body-cascade" *ngIf="divisions.length!=0">
+		<table class="table table-widths text-center">
+			<thead class="bg-sidebar white-text">
+			<tr>
+				<th scope="col">Nr.</th>
+				<th scope="col">Cod medicament</th>
+				<th scope="col">Divizare</th>
+				<th scope="col">Status</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr *ngFor="let division of divisions;let i = index">
+				<td>{{ i + 1 }}</td>
+				<td>{{ division.medicamentCode }}</td>
+				<td>{{ division.description }}</td>
+				<td>{{ division.status == 'R' ? 'Divizare anulata' : 'Divizare noua' }}</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+	<!--Substante active tabela-->
+	<div class="gradient-card-header bg-sidebar border-gradient" *ngIf="activeSubstancesTable.length!=0">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-6">
+					<div class="card-header-title white-text">Substanţe active</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="card-body card-body-cascade" *ngIf="activeSubstancesTable.length!=0">
+		<table class="table table-widths text-center">
+			<thead class="bg-sidebar white-text">
+			<tr>
+				<th scope="col">Denumire</th>
+				<th scope="col">Cod CAS</th>
+				<th scope="col">Concentratie</th>
+				<th scope="col">Unitate de masură</th>
+				<th scope="col">Producător</th>
+				<th scope="col">Ţară producător</th>
+				<th scope="col">Adresă producător</th>
+				<th scope="col">Status</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr *ngFor="let substance of activeSubstancesTable;let i = index">
+				<th scope="row">{{ substance.activeSubstance.description }}</th>
+				<td>{{ substance.activeSubstance.code }}</td>
+				<td class="text-center">
+					<div *ngIf="substance.status!='M'">{{ substance.quantity }}</div>
+					<div class="row" *ngIf="substance.status=='M' && substance.quantity">
+						{{ substance.quantity }}
+						<p>&nbsp;&nbsp;=>&nbsp;&nbsp;</p>
+						{{ substance.quantityNew }}
+					</div>
+				</td>
+				<td>
+					<div *ngIf="substance.status!='M'">{{ substance.unitsOfMeasurement.description }}</div>
+					<div class="row" *ngIf="substance.status=='M' && substance.unitsOfMeasurement">
+						{{ substance.unitsOfMeasurement.description }}
+						<p>&nbsp;&nbsp;=>&nbsp;&nbsp;</p>
+						{{ substance.unitsOfMeasurementNew.description }}
+					</div>
+				</td>
+				<td>
+					<div *ngIf="substance.status!='M'">{{ substance.manufacture.description }}</div>
+					<div *ngIf="substance.status=='M' && substance.manufacture">
+						{{ substance.manufacture.description }}
+						<p>&nbsp;&nbsp;=>&nbsp;&nbsp;</p>
+						{{ substance.manufactureNew.description }}
+					</div>
+				</td>
+				<td>
+					<div *ngIf="substance.status!='M'">{{ substance.manufacture.country.description }}</div>
+					<div *ngIf="substance.status=='M' && substance.manufacture">
+						{{ substance.manufacture.country.description }}
+						<p>&nbsp;&nbsp;=>&nbsp;&nbsp;</p>
+						{{ substance.manufactureNew.country.description }}
+					</div>
+				</td>
+				<td>
+					<div *ngIf="substance.status!='M'">{{ substance.manufacture.address }}</div>
+					<div *ngIf="substance.status=='M' && substance.manufacture">
+						{{ substance.manufacture.address }}
+						<p>&nbsp;&nbsp;=>&nbsp;&nbsp;</p>
+						{{ substance.manufactureNew.address }}
+					</div>
+				</td>
+				<td>{{ substance.status == 'R' ? 'Substanta activa anulata' : (substance.status == 'N' ? 'Substanta activa noua' : 'Substanta activa modificata') }}</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+	<!--Producatori tabela-->
+	<div class="gradient-card-header bg-sidebar border-gradient" *ngIf="manufacturesTable.length!=0">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-6">
+					<div class="card-header-title white-text">Producatori</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="card-body card-body-cascade" *ngIf="manufacturesTable.length!=0">
+		<table class="table table-widths text-center">
+			<thead class="bg-sidebar white-text">
+			<tr>
+				<th scope="col">Denumire</th>
+				<th scope="col">Tara</th>
+				<th scope="col">Adresa</th>
+				<th scope="col">Producator produs finit</th>
+				<th scope="col">Status</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr *ngFor="let manufacture of manufacturesTable;let i = index">
+				<td>{{ manufacture.manufacture.description }}</td>
+				<td>{{ manufacture.manufacture.country.description }}</td>
+				<td>{{ manufacture.manufacture.address }}</td>
+				<th scope="row">
+					<div class="row">
+						<mat-checkbox [checked]="manufacture.producatorProdusFinit" [disabled]="true"></mat-checkbox>
+						<p *ngIf="manufacture.status=='M'">&nbsp;&nbsp;=>&nbsp;&nbsp;</p>
+						<mat-checkbox *ngIf="manufacture.status=='M'" [checked]="!manufacture.producatorProdusFinit" [disabled]="true"></mat-checkbox>
+					</div>
+				</th>
+				<td>{{ manufacture.status == 'R' ? 'Producator anulat' : (manufacture.status == 'N' ? 'Producator nou' : 'Producator modificat')}}</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<div class="text-center">
+	<div mat-dialog-actions>
+		<div class="w-100">
+			<button class="btn btn-dark-green-color btn-sm-bl btn-sm" (click)="confirm()">Ok</button>
+		</div>
+	</div>
+</div>

@@ -155,6 +155,12 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
 
 
         this.tipCerere = data.type.code;
+        if (this.tipCerere === 'LICM' || this.tipCerere === 'LICD' || this.tipCerere === 'LICP' || this.tipCerere === 'LICA'|| this.tipCerere === 'LICS' || this.tipCerere === 'LICRL')
+        {
+            this.rForm.get('seriaLic').disable();
+            this.rForm.get('nrLic').disable();
+        }
+
         this.docTypeIdentifier = {code: this.tipCerere, step: 'I'};
 
         this.docs = data.license.detail.documents;
@@ -337,7 +343,14 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
             status: this.getOutputDocStatus()
         };
 
+        let outDocumentAnexa = {
+            name: 'Anexa Licenta',
+            number: '',
+            status: this.getOutputDocStatus()
+        };
+
         this.outDocuments.push(outDocument);
+        this.outDocuments.push(outDocumentAnexa);
     }
 
 
@@ -373,6 +386,10 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
             {
                 return true;
             }
+            if (doc.docType.category === 'AL')
+            {
+                return true;
+            }
         });
         if (result)
         {
@@ -387,22 +404,6 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
             description : 'Nu este atasat'
         };
     }
-
-
-    private getReqType() {
-        let requestTypeId;
-        if (this.tipCerere === 'LICEL') {
-            requestTypeId = '7';
-        }
-        else if (this.tipCerere === 'LICM') {
-            requestTypeId = '8';
-        }
-        else if (this.tipCerere === 'LICD') {
-            requestTypeId = '9';
-        }
-        return requestTypeId;
-    }
-
 
     ngOnDestroy() {
         this.subscriptions.forEach(s => s.unsubscribe());
