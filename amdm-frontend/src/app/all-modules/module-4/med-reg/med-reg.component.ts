@@ -155,6 +155,7 @@ export class MedRegComponent implements OnInit {
                     producer: [],
                     expirationDate: [],
                     atcCode: [],
+
                     medicament:[],
                     internationalMedicamentName:[]
 
