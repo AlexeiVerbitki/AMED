@@ -173,14 +173,12 @@
                                                bindLabel="description"
                                                placeholder="Codul medicamentului"
                                                formControlName="medicament"
-                                               [loading]="loadingMedicaments"
+                                               [loading]="loadingmedicaments"
                                                [typeahead]="medicamentsInputs"
                                                required="true">
                                         <ng-template ng-option-tmp let-item="item">
                                             {{item.name}};
                                             <small class="form-text text-muted">Cod: {{item.code}}</small>
-
-
                                         </ng-template>
                                     </ng-select>
                                 </div>
@@ -215,47 +213,50 @@
                                                required="true">
                                         <ng-template ng-option-tmp let-item="item">
                                             {{item.description}};
-                                            <small class="form-text text-muted">Cod: {{item.code}}</small>
-
-
+                                            <!--<small class="form-text text-muted">Cod: {{item.code}}</small>-->
                                         </ng-template>
                                     </ng-select>
                                 </div>
                             </div>
+
                             <div class="col-4">
-                                <div class="md-form-modified">
-                                    <ng-select [items]="dose | async"
-                                               bindLabel="description"
-                                               placeholder="Doza"
-                                               formControlName="customsCode"
-                                               [loading]="loadingdose"
-                                               [typeahead]="doseInputs"
-                                               required="true">
-                                        <ng-template ng-option-tmp let-item="item">
-                                            {{item.description}};
-                                            <small class="form-text text-muted">Cod: {{item.code}}</small>
-
-
-                                        </ng-template>
-                                    </ng-select>
+                                <div class="md-form">
+                                    <input id="dose" mdbInputDirective type="number" class="form-control"
+                                           formControlName="dose">
+                                    <label for="dose">Doza</label>
                                 </div>
                             </div>
+
+                            <!--<div class="col-4">-->
+                                <!--<div class="md-form-modified">-->
+                                    <!--<ng-select [items]="dose | async"-->
+                                               <!--bindLabel="description"-->
+                                               <!--placeholder="Doza"-->
+                                               <!--formControlName="customsCode"-->
+                                               <!--[loading]="loadingdose"-->
+                                               <!--[typeahead]="doseInputs"-->
+                                               <!--required="true">-->
+                                        <!--<ng-template ng-option-tmp let-item="item">-->
+                                            <!--{{item.description}};-->
+                                            <!--<small class="form-text text-muted">Cod: {{item.code}}</small>-->
+
+
+                                        <!--</ng-template>-->
+                                    <!--</ng-select>-->
+                                <!--</div>-->
+                            <!--</div>-->
                             <div class="col-4">
                                 <div class="md-form-modified">
-                                    <ng-select [items]="divizare | async"
-                                               bindLabel="description"
-                                               placeholder="Divizare (Unitatea  de măsură)"
-                                               formControlName="customsCode"
-                                               [loading]="loadingdivizare"
-                                               [typeahead]="divizareInputs"
-                                               required="true">
-                                        <ng-template ng-option-tmp let-item="item">
-                                            {{item.description}};
-                                            <small class="form-text text-muted">Cod: {{item.code}}</small>
-
-
-                                        </ng-template>
-                                    </ng-select>
+                                    <mat-form-field class="w-100">
+                                        <mat-select id="unitsOfMeasurement" placeholder="Divizare (Unitatea  de măsură)"
+                                                    formControlName="unitsOfMeasurement">
+                                            <mat-option *ngFor="let unit of unitsOfMeasurement" [value]="unitsOfMeasurement">{{ unit.description }}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div *ngIf="[formSubmitted]==true && !evaluateImportForm.get('unitOfImportTable.division').valid "> /*!evaluateImportForm.get('currency')=== null &&*/
+                                    <small class="text-muted"><strong class="text-danger">Divizarea trebuie introdusă</strong>
+                                    </small>
                                 </div>
                             </div>
 <!--======================================================================-->
@@ -354,15 +355,15 @@
 
                             <div class="col-md-4" >
                                 <div class="md-form-modified">
-                                    <ng-select [items]="internationalMedicamentName | async"
-                                               bindLabel="code"
+                                    <ng-select [items]="internationalMedicamentNames | async"
+                                               bindLabel="description"
                                                placeholder="Denumirea comună internaționala"
                                                formControlName="internationalMedicamentName"
                                                [loading]="loadinginternationalMedicamentName"
                                                [typeahead]="internationalMedicamentNameInputs"
                                                required="true">
                                         <ng-template ng-option-tmp let-item="item">
-                                            {{item.Description}} <br />
+                                            {{item.description}} <br />
                                             <small class="form-text text-muted">Cod: {{item.code}}</small>
                                         </ng-template>
                                     </ng-select>

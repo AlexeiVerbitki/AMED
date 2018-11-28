@@ -15,6 +15,7 @@ import {RequestService} from "../../../shared/service/request.service";
 import {Subject} from "rxjs/index";
 import {LoaderService} from "../../../shared/service/loader.service";
 import {AuthService} from "../../../shared/service/authetication.service";
+import {MedicamentService} from "../../../shared/service/medicament.service";
 
 export interface PeriodicElement {
     name: string;
@@ -73,6 +74,20 @@ export class MedRegComponent implements OnInit {
     loadingcustomsCodes: boolean = false;
     customsCodesInputs = new Subject<string>();
 
+    pharmaceuticalForm: Observable<any[]>;
+    loadingpharmaceuticalForm: boolean = false;
+    pharmaceuticalFormInputs = new Subject<string>();
+
+    unitsOfMeasurement: Observable<any[]>;
+
+    medicaments: Observable<any[]>;
+    loadingmedicaments: boolean = false;
+    medicamentsInputs = new Subject<string>();
+
+    internationalMedicamentNames: Observable<any[]>;
+    loadinginternationalMedicamentName: boolean = false;
+    internationalMedicamentNameInputs = new Subject<string>();
+
     constructor(private fb: FormBuilder,
                 private requestService: RequestService,
                 public dialog: MatDialog,
@@ -81,6 +96,7 @@ export class MedRegComponent implements OnInit {
                 private loadingService: LoaderService,
                 private authService: AuthService,
                 public dialogConfirmation: MatDialog,
+                public medicamentService: MedicamentService,
                 private administrationService: AdministrationService) {
 
         this.evaluateImportForm = fb.group({
@@ -139,6 +155,8 @@ export class MedRegComponent implements OnInit {
                     producer: [],
                     expirationDate: [],
                     atcCode: [],
+                    medicament:[],
+                    internationalMedicamentName:[]
 
                 }),
 
@@ -185,6 +203,10 @@ export class MedRegComponent implements OnInit {
         this.loadCurrenciesShort();
         this.loadCustomsCodes();
         this.loadATCCodes();
+        this.loadPharmaceuticalForm();
+        this.loadUnitsOfMeasurement();
+        this.loadMedicaments();
+        this.loadInternationalMedicamentName();
         console.log("importTypeForms.value",this.importTypeForms.value)
     }
 
@@ -295,6 +317,110 @@ export class MedRegComponent implements OnInit {
                     )
                 )
             );
+    }
+
+    loadInternationalMedicamentName(){
+        this.internationalMedicamentNames =
+            this.internationalMedicamentNameInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 0) {
+                        return true;
+                    }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadinginternationalMedicamentName = true;
+
+                }),
+                flatMap(term =>
+
+                    this.administrationService.getAllInternationalNamesByName(term).pipe(
+                    // this.administrationService.getAllInternationalNames().pipe(
+                        tap(() => this.loadinginternationalMedicamentName = false)
+
+                    )
+                )
+            );
+    }
+
+    loadPharmaceuticalForm(){
+        this.pharmaceuticalForm =
+            this.pharmaceuticalFormInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 0) {
+                        return true;
+                    }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingpharmaceuticalForm = true;
+
+                }),
+                flatMap(term =>
+                    this.administrationService.getAllPharamceuticalFormsByName(term).pipe(
+                        tap(() => this.loadingpharmaceuticalForm = false)
+
+                    )
+                )
+            );
+    }
+
+    loadMedicaments(){
+        this.medicaments =
+            this.medicamentsInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 0) {
+                        return true;
+                    }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingmedicaments = true;
+
+                }),
+                flatMap(term =>
+                    this.medicamentService.getMedicamentNamesAndCodeList(term).pipe(
+                        tap(() => this.loadingmedicaments = false)
+
+                    )
+                )
+            );
+    }
+
+    // loadUnitsOfMeasurement(){
+    //     this.unitsOfMeasurement =
+    //         this.unitsOfMeasurementInputs.pipe(
+    //             filter((result: string) => {
+    //                 if (result && result.length > 0) {
+    //                     return true;
+    //                 }
+    //             }),
+    //             debounceTime(400),
+    //             distinctUntilChanged(),
+    //             tap((val: string) => {
+    //                 this.loadingunitsOfMeasurement = true;
+    //
+    //             }),
+    //             flatMap(term =>
+    //                 this.administrationService.getAllUnitsOfMeasurement(term).pipe(
+    //                     tap(() => this.loadingunitsOfMeasurement = false)
+    //
+    //                 )
+    //             )
+    //         );
+    // }
+
+    loadUnitsOfMeasurement() {
+        this.subscriptions.push(
+            this.administrationService.getAllUnitsOfMeasurement().subscribe(data => {
+                    this.unitsOfMeasurement = data;
+                },
+                error => console.log(error)
+            )
+        )
     }
 
     loadCustomsCodes(){

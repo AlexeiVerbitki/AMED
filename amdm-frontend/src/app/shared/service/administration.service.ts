@@ -115,6 +115,11 @@ export class AdministrationService {
         return this.http.get('/api/administration/all-international-names', {});
     }
 
+
+
+
+
+
     sendEmail(title: string, content: string, mailAddress: string): Observable<any> {
         return this.http.get('/api/administration/send-email', {
             params: {
@@ -160,6 +165,14 @@ am
         Params = Params.set('partialCode', partialCode);
 
         return this.http.get('/api/administration/all-atc-codes-by-code', {params: Params});
+    }
+
+    getAllInternationalNamesByName(partialName: string): Observable<any> {
+        let Params = new HttpParams();
+        Params = Params.set('partialName', partialName);
+        console.log("partialName: ",partialName);
+
+        return this.http.get<any[]>('/api/administration/all-international-names-by-name', {params: Params});
     }
 
     getClinicalTrailsCodAndEudra(partialCode: string): Observable<any[]> {

@@ -70,6 +70,8 @@ public class MedicamentController
         return new ResponseEntity<>(medicamentRepository.getMedicamentsByNameAndCode( partialName, partialName, "F"), HttpStatus.OK);
     }
 
+
+
     @RequestMapping("/search-medicament-by-id")
     public ResponseEntity<MedicamentEntity> getMedicamentById(Integer id)
     {
@@ -100,6 +102,7 @@ public class MedicamentController
         logger.debug("Retrieve all medicaments by name");
         return new ResponseEntity<>(medicamentRepository.findAllByName(medName, "F"), HttpStatus.OK);
     }
+
 
     @Autowired
     SimilarMedicamentsRepository similarMedicamentsRepository;

@@ -209,6 +209,18 @@ public class AdministrationController
         return new ResponseEntity<>(internationalMedicamentNameRepository.findAll(), HttpStatus.OK);
     }
 
+    @RequestMapping("/all-international-names-by-name")
+    public ResponseEntity<List<NmInternationalMedicamentNameEntity>> retrieveAllInternationalNamesByName(String partialName) {
+        LOGGER.debug("Retrieve International names by name: " + partialName);
+        return new ResponseEntity<>(internationalMedicamentNameRepository.findInternationalMedicamentNameByName(partialName), HttpStatus.OK);
+    }
+
+    @RequestMapping("/all-atc-codes-by-code")
+    public ResponseEntity<List<NmAtcCodesEntity>> retrieveAtcCodeByCode(String partialCode) {
+        LOGGER.debug("Retrieve all ATC codes by code " + partialCode);
+        return new ResponseEntity<>(nmAtcCodesRepository.findByCodeStartingWithIgnoreCase(partialCode), HttpStatus.OK);
+    }
+
     @RequestMapping("/all-employees")
     public ResponseEntity<List<NmEmployeesEntity>> retrieveAllEmployees()
     {
@@ -240,7 +252,7 @@ public class AdministrationController
     @RequestMapping("/search-manufactures-by-name")
     public ResponseEntity<List<NmManufacturesEntity>> getManufacturesByName(String partialName)
     {
-        LOGGER.debug("Retrieve manufacturers by name");
+        LOGGER.debug("Retrieve manufacturers by name:" + partialName);
         return new ResponseEntity<>(manufactureRepository.findByDescriptionStartingWithIgnoreCase(partialName), HttpStatus.OK);
     }
 
@@ -285,12 +297,7 @@ public class AdministrationController
         return new ResponseEntity<>(medicalInstitutionsRepository.findAll(), HttpStatus.OK);
     }
 
-    @RequestMapping("/all-atc-codes-by-code")
-    public ResponseEntity<List<NmAtcCodesEntity>> retrieveAtcCodeByCode(String partialCode)
-    {
-        LOGGER.debug("Retrieve all ATC codes by code " + partialCode);
-        return new ResponseEntity<>(nmAtcCodesRepository.findByCodeStartingWithIgnoreCase(partialCode), HttpStatus.OK);
-    }
+
 
     @RequestMapping("/all-clinical-trails-by-cod-or-eudra")
     public ResponseEntity<List<ClinicalTrialsEntity>> getClinicalTrailByCodeAndEudra(String partialCode)
