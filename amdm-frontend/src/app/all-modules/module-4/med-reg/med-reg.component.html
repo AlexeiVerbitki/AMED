@@ -167,7 +167,8 @@
                     <div formArrayName="unitOfImportTable">
                         <div class="row">
 
-                            <div class="col-4" *ngIf="importData.importAuthorizationEntity.medType==1">
+                            <!--<div class="col-4" *ngIf="importData.importAuthorizationEntity.medType==1">-->
+                            <div class="col-4">
                                 <div class="md-form-modified">
                                     <ng-select [items]="medicaments | async"
                                                bindLabel="name"
@@ -188,20 +189,22 @@
                                 <div class="md-form">
                                     <input id="name" mdbInputDirective type="text" class="form-control"
                                            formControlName="name">
+
                                     <label for="name">Denumirea comercială a medicamentului</label>
                                 </div>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-4" >
                                 <div class="md-form-modified" >
-                                    <ng-select [items]="internationalMedicamentNames | async" [attr.disabled]="medicamentData? true : null"
+                                    <ng-select
+                                               [items]="internationalMedicamentNames | async"
                                                bindLabel="description"
                                                placeholder="Denumirea comună internaționala"
                                                formControlName="internationalMedicamentName"
                                                [loading]="loadinginternationalMedicamentName"
                                                [typeahead]="internationalMedicamentNameInputs"
                                                required="true">
-                                        <ng-template ng-option-tmp let-item="item">
+                                        <ng-template ng-option-tmp let-item="item" >
                                             {{item.description}} <br/>
                                             <small class="form-text text-muted">Cod: {{item.code}}</small>
                                         </ng-template>

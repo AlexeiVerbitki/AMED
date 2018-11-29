@@ -194,6 +194,25 @@ export class MedRegComponent implements OnInit {
                     this.evaluateImportForm.get('type.id').setValue(data.type.id);
                     this.evaluateImportForm.get('requestHistories').setValue(data.requestHistories);
 
+                    //If it's a registered medicament, disable the following fields
+                    if (data.importAuthorizationEntity.medType=1) {
+                        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producerAddress').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').disable();
+
+                    }
+
                 },
                 error => console.log(error)
             ))
