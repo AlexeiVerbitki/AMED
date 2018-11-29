@@ -65,6 +65,7 @@ export class MedRegComponent implements OnInit {
     valutaList: Observable<any[]>;
 
     importData : any;
+    medicamentData : any;
 
     atcCodes: Observable<any[]>;
     loadingAtcCodes: boolean = false;
@@ -221,9 +222,23 @@ export class MedRegComponent implements OnInit {
 
             this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').valueChanges.subscribe(val => {
                 if (val) {
-                    // this.producerAddress = val.address + ", " + val.country.description;
-                    console.log("importAuthorizationEntity.unitOfImportTable.medicament", val)
-                    // alert("importAuthorizationEntity.unitOfImportTable.medicament")
+                    this.medicamentData = val;
+                    console.log("importAuthorizationEntity.unitOfImportTable.medicament", this.medicamentData)
+                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode);
+                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(val.pharmaceuticalForm);
+                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').setValue(val.dose);
+                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').setValue(val.division);
+                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').setValue(val.internationalMedicamentName);
+                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(val.commercialName);
+                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode);
+                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(val.manufactures[0].manufacture);
+                    // console.log('val.manufactures',val.manufactures)
+                    this.producerAddress = val.manufactures[0].manufacture.address;
+                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(val.atcCode);
+                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(val.registrationNumber);
+                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(val.registrationDate));
+                    console.log('val.registrationDate',val.registrationDate)
+                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(val.expirationDate);
                 }
             }));
             /*================================================*/
@@ -233,7 +248,7 @@ export class MedRegComponent implements OnInit {
                 }
             }));
             this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').valueChanges.subscribe(val => {
-                if (val) {
+                if (this.medicamentData=null && val) {
                     this.producerAddress = val.address + ", " + val.country.description;
                     // console.log("producerAddress",this.producerAddress)
                 }
@@ -278,7 +293,7 @@ export class MedRegComponent implements OnInit {
             price:             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
             currency:          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').value,
             summ:              this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
-            * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
+                             * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
             producer:          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').value,
             atcCode:           this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').value,
             expirationDate:    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').value
@@ -404,28 +419,6 @@ export class MedRegComponent implements OnInit {
             );
     }
 
-    // loadUnitsOfMeasurement(){
-    //     this.unitsOfMeasurement =
-    //         this.unitsOfMeasurementInputs.pipe(
-    //             filter((result: string) => {
-    //                 if (result && result.length > 0) {
-    //                     return true;
-    //                 }
-    //             }),
-    //             debounceTime(400),
-    //             distinctUntilChanged(),
-    //             tap((val: string) => {
-    //                 this.loadingunitsOfMeasurement = true;
-    //
-    //             }),
-    //             flatMap(term =>
-    //                 this.administrationService.getAllUnitsOfMeasurement(term).pipe(
-    //                     tap(() => this.loadingunitsOfMeasurement = false)
-    //
-    //                 )
-    //             )
-    //         );
-    // }
 
     loadUnitsOfMeasurement() {
         this.subscriptions.push(
