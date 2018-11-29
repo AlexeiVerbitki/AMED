@@ -50,11 +50,12 @@ export class MedicamentService {
         return this.http.post<any>('/api/medicaments/by-filter', filter, {observe: 'response'});
     }
 
-    getMedicamentByNameOrCode(id: string): Observable<any> {
+    getMedicamentByName(medName: string): Observable<any> {
         let Params = new HttpParams();
-        Params = Params.set('id', id);
+        Params = Params.set('medName', medName);
+        console.log('medName:', medName)
 
-        return this.http.get<any>('/api/medicaments/all-by-name-or-code', {params: Params});
+        return this.http.get<any>('/api/medicaments/all-by-name', {params: Params});
     }
 
 }

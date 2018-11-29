@@ -99,7 +99,13 @@ export class MedRegComponent implements OnInit {
                 public medicamentService: MedicamentService,
                 private administrationService: AdministrationService) {
 
-        this.evaluateImportForm = fb.group({
+
+
+
+    }
+
+    ngOnInit() {
+        this.evaluateImportForm = this.fb.group({
             'id': [''],
             'requestNumber': [null],
             'startDate': [new Date()],
@@ -116,7 +122,7 @@ export class MedRegComponent implements OnInit {
 
             'requestHistories': [],
 
-            'importAuthorizationEntity': fb.group({
+            'importAuthorizationEntity': this.fb.group({
                 // 'requestNumber': {value: '', disabled: true},
                 // 'startDate': {value: '', disabled: true},
                 // 'importer': {value: '', disabled: true},
@@ -138,11 +144,10 @@ export class MedRegComponent implements OnInit {
                 'expiration_date': [],
 
                 //   For Import management/ import based on customs
-                //customs_declaration_date
-                //customs_transacton_type_id
+                'customsNumber': [],
+                'customsDeclarationDate': [],
                 'authorizationsNumber': [], // inca nu exista la pasul acesta
                 'medType': [''],
-                // 'unitOfImportTable': [],
                 'importAuthorizationDetailsEntityList' :[],
                 'unitOfImportTable': this.fb.group({
 
@@ -157,6 +162,11 @@ export class MedRegComponent implements OnInit {
                     atcCode: [],
 
                     medicament:[],
+                    pharmaceuticalForm:[],
+                    dose:[],
+                    registrationRmNumber:[],
+                    unitsOfMeasurement:[],
+                    registrationRmDate:[],
                     internationalMedicamentName:[]
 
                 }),
@@ -166,11 +176,6 @@ export class MedRegComponent implements OnInit {
             }),
 
         });
-
-
-    }
-
-    ngOnInit() {
 
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
             this.subscriptions.push(this.requestService.getImportRequest(params['id']).subscribe(data => {
@@ -213,13 +218,21 @@ export class MedRegComponent implements OnInit {
 
     onChanges(): void {
         if (this.evaluateImportForm.get('importAuthorizationEntity')) {
+
+            this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').valueChanges.subscribe(val => {
+                if (val) {
+                    // this.producerAddress = val.address + ", " + val.country.description;
+                    console.log("importAuthorizationEntity.unitOfImportTable.medicament", val)
+                    // alert("importAuthorizationEntity.unitOfImportTable.medicament")
+                }
+            }));
+            /*================================================*/
             this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.seller').valueChanges.subscribe(val => {
                 if (val) {
                     this.sellerAddress = val.address + ", " + val.country.description;
                 }
             }));
             this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').valueChanges.subscribe(val => {
-                // console.log("val",val)
                 if (val) {
                     this.producerAddress = val.address + ", " + val.country.description;
                     // console.log("producerAddress",this.producerAddress)
@@ -383,7 +396,7 @@ export class MedRegComponent implements OnInit {
 
                 }),
                 flatMap(term =>
-                    this.medicamentService.getMedicamentNamesAndCodeList(term).pipe(
+                    this.medicamentService.getMedicamentByName(term).pipe(
                         tap(() => this.loadingmedicaments = false)
 
                     )

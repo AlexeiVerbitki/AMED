@@ -99,7 +99,7 @@ public class MedicamentController
     @RequestMapping("/all-by-name")
     public ResponseEntity<List<MedicamentEntity>> getAllByName(String medName)
     {
-        logger.debug("Retrieve all medicaments by name");
+        logger.debug("Retrieve all medicaments by name:" + medName);
         return new ResponseEntity<>(medicamentRepository.findAllByName(medName, "F"), HttpStatus.OK);
     }
 
