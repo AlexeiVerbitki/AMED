@@ -7,8 +7,8 @@ import java.sql.Timestamp;
 	private Integer                             id;
 	private Integer                             codeAmed;
 	private NmPharmaceuticalFormsEntity         pharmaceuticalForm;
-	private Double                              dose;
-	private NmUnitsOfMeasurementEntity          unitsQuantityMeasurement;
+	private String                              dose;
+	private String                              unitsQuantityMeasurement;
 	private Integer                             quantity;
 	private Boolean                             approved;
 	private Timestamp                           expirationDate;
@@ -64,21 +64,21 @@ import java.sql.Timestamp;
 
 	@Basic
 	@Column(name = "dose", nullable = true, length = 11)
-	public Double getDose() {
+	public String getDose() {
 		return dose;
 	}
 
-	public void setDose(Double dose) {
+	public void setDose(String dose) {
 		this.dose = dose;
 	}
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
-	@JoinColumn(name = "unit_measurement_id")
-	public NmUnitsOfMeasurementEntity getUnitsQuantityMeasurement() {
+	@Basic
+	@Column(name = "unit_measurement_id")
+	public String getUnitsQuantityMeasurement() {
 		return unitsQuantityMeasurement;
 	}
 
-	public void setUnitsQuantityMeasurement(NmUnitsOfMeasurementEntity unitsQuantityMeasurement) {
+	public void setUnitsQuantityMeasurement(String unitsQuantityMeasurement) {
 		this.unitsQuantityMeasurement = unitsQuantityMeasurement;
 	}
 

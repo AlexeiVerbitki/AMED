@@ -195,22 +195,23 @@ export class MedRegComponent implements OnInit {
                     this.evaluateImportForm.get('requestHistories').setValue(data.requestHistories);
 
                     //If it's a registered medicament, disable the following fields
-                    if (data.importAuthorizationEntity.medType===1) {
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').disable();
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').disable();
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').disable();
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').disable();
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').disable();
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').disable();
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').disable();
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').disable();
-                        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producerAddress').disable();
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').disable();
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').disable();
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').disable();
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').disable();
 
-                    }
+                    // if (data.importAuthorizationEntity.medType===1) {
+                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').disable();
+                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').disable();
+                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').disable();
+                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').disable();
+                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').disable();
+                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').disable();
+                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').disable();
+                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').disable();
+                    //     // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producerAddress').disable();
+                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').disable();
+                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').disable();
+                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').disable();
+                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').disable();
+                    //
+                    // }
 
                 },
                 error => console.log(error)
@@ -242,21 +243,24 @@ export class MedRegComponent implements OnInit {
                 if (val) {
                     this.medicamentData = val;
                     console.log("importAuthorizationEntity.unitOfImportTable.medicament", this.medicamentData)
+
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode);
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(val.pharmaceuticalForm);
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').setValue(val.dose);
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').setValue(val.division);
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').setValue(val.internationalMedicamentName);
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(val.commercialName);
-                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode);
+
+                    if (val.customsCode!==null) {
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode);
+                    }
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(val.manufactures[0].manufacture);
-                    // console.log('val.manufactures',val.manufactures)
                     this.producerAddress = val.manufactures[0].manufacture.address;
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(val.atcCode);
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(val.registrationNumber);
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(val.registrationDate));
-                    console.log('val.registrationDate',val.registrationDate)
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(val.expirationDate);
+                    console.log('val.registrationDate',val.registrationDate)
                 }
             }));
             /*================================================*/
@@ -326,6 +330,20 @@ export class MedRegComponent implements OnInit {
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(null);
         this.producerAddress=null;
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(null);
+
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(null);
+
         console.log("this.unitOfImportTable", this.unitOfImportTable)
     }
 

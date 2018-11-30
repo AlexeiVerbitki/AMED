@@ -449,7 +449,7 @@ export class AmbalajComponent implements OnInit {
             alert("after addImportRequest(modelToSubmit)")
             console.log("addImportRequest(modelToSubmit).subscribe(data) ",data)
                 this.loadingService.hide();
-                // this.router.navigate(['dashboard/module']); for now to post multiple times
+                this.router.navigate(['dashboard/module']);
             }, error => {
             alert("Something went wrong while sending the model")
             console.log("error: ",error)
