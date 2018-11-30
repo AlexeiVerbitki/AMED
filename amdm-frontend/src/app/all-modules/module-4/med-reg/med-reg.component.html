@@ -162,7 +162,7 @@
 
                 <section>
 
-
+                    Medicamentuk
                     <h5 class="text-center font-weight-bold" *ngIf="importData.importAuthorizationEntity.medType===1">Informația despre Medicamentul Înregistrat</h5>
                     <h5 class="text-center font-weight-bold" *ngIf="importData.importAuthorizationEntity.medType===2">Informația despre Medicamentul Neînregistrat</h5>
                     <hr>
@@ -185,7 +185,7 @@
                                         </ng-template>
                                     </ng-select>
                                     <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').invalid">
-                                        <small class="text-muted"><strong class="text-danger">Medicamentuk trebuie selectat</strong></small>
+                                        <small class="text-muted"><strong class="text-danger">Medicamentul trebuie selectat</strong></small>
                                     </div>
                                 </div>
                             </div>
@@ -312,6 +312,9 @@
                                     <input id="dose" mdbInputDirective type="text" class="form-control"
                                            formControlName="dose" >
                                     <label for="dose">Doza</label>
+                                </div>
+                                <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').invalid">
+                                    <small class="text-muted"><strong class="text-danger">Doza trebuie selectată</strong></small>
                                 </div>
                             </div>
 
