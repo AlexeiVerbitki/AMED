@@ -61,6 +61,7 @@
                                     <small class="form-text text-muted">{{item.address}}, {{item.country.description}}</small>
                                 </ng-template>
                             </ng-select>
+
                         </div>
                     </div>
 
@@ -183,6 +184,9 @@
                                             <small class="form-text text-muted">Cod: {{item.code}}</small>
                                         </ng-template>
                                     </ng-select>
+                                    <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').invalid">
+                                        <small class="text-muted"><strong class="text-danger">Medicamentuk trebuie selectat</strong></small>
+                                    </div>
                                 </div>
                             </div>
 
@@ -190,8 +194,10 @@
                                 <div class="md-form">
                                     <input id="name" mdbInputDirective type="text" class="form-control"
                                            formControlName="name">
-
                                     <label for="name">Denumirea comercială a medicamentului</label>
+                                </div>
+                                <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').invalid">
+                                    <small class="text-muted"><strong class="text-danger">Denumirea trebuie selectata</strong></small>
                                 </div>
                             </div>
 
@@ -211,9 +217,9 @@
                                         </ng-template>
                                     </ng-select>
 
-                                    <!--<div *ngIf="formSubmitted && eForm.get('medicament.atcCode').invalid">-->
-                                    <!--<small class="text-muted"><strong class="text-danger">Codul ATC trebuie introdus</strong></small>-->
-                                    <!--</div>-->
+                                    <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').invalid">
+                                        <small class="text-muted"><strong class="text-danger">Denumirea trebuie selectata</strong></small>
+                                    </div>
                                 </div>
                             </div>
 
@@ -223,12 +229,18 @@
                                            formControlName="quantity">
                                     <label for="quantity">Cantitatea</label>
                                 </div>
+                                <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').invalid">
+                                    <small class="text-muted"><strong class="text-danger">Cantitatea trebuie selectată</strong></small>
+                                </div>
                             </div>
                             <div class="col-4">
                                 <div class="md-form">
                                     <input id="price" mdbInputDirective type="number" class="form-control"
                                            formControlName="price">
                                     <label for="price">Pretul</label>
+                                </div>
+                                <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').invalid">
+                                    <small class="text-muted"><strong class="text-danger">Prețul trebuie selectat</strong></small>
                                 </div>
                             </div>
                             <div class="col-4">
@@ -266,10 +278,11 @@
                                         <ng-template ng-option-tmp let-item="item">
                                             {{item.description}};
                                             <small class="form-text text-muted">Cod AMED: {{item.code}}</small>
-
-
                                         </ng-template>
                                     </ng-select>
+                                    <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').invalid">
+                                        <small class="text-muted"><strong class="text-danger">Codul trebuie selectat</strong></small>
+                                    </div>
                                 </div>
                             </div>
 
@@ -288,6 +301,9 @@
                                             <!--<small class="form-text text-muted">Cod: {{item.code}}</small>-->
                                         </ng-template>
                                     </ng-select>
+                                    <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').invalid">
+                                        <small class="text-muted"><strong class="text-danger">Forma medicamentoasă trebuie selectată</strong></small>
+                                    </div>
                                 </div>
                             </div>
 
@@ -299,25 +315,14 @@
                                 </div>
                             </div>
 
-                            <!--<div class="col-4">-->
-                            <!--<div class="md-form-modified">-->
-                            <!--<mat-form-field class="w-100">-->
-                            <!--<mat-select id="unitsOfMeasurement" placeholder="Divizare (Unitatea  de măsură)"-->
-                            <!--formControlName="unitsOfMeasurement">-->
-                            <!--<mat-option *ngFor="let unit of unitsOfMeasurement" [value]="unitsOfMeasurement">{{ unit.description }}</mat-option>-->
-                            <!--</mat-select>-->
-                            <!--</mat-form-field>-->
-                            <!--</div>-->
-                            <!--<div *ngIf="[formSubmitted]==true && !evaluateImportForm.get('unitOfImportTable.division').valid "> /*!evaluateImportForm.get('currency')=== null &&*/-->
-                            <!--<small class="text-muted"><strong class="text-danger">Divizarea trebuie introdusă</strong>-->
-                            <!--</small>-->
-                            <!--</div>-->
-                            <!--</div>-->
                             <div class="col-4">
                                 <div class="md-form">
                                     <input id="unitsOfMeasurement" mdbInputDirective type="text" class="form-control"
                                            formControlName="unitsOfMeasurement">
                                     <label for="dose">Divizare (Unitatea  de măsură)</label>
+                                </div>
+                                <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').invalid">
+                                    <small class="text-muted"><strong class="text-danger">Divizarea trebuie selectată</strong></small>
                                 </div>
                             </div>
                             <!--======================================================================-->
@@ -335,10 +340,11 @@
                                         <ng-template ng-option-tmp let-item="item">
                                             Denumire: {{item.description}};
                                             <small class="form-text text-muted">{{item.address}}, {{item.country.description}}</small>
-
-
                                         </ng-template>
                                     </ng-select>
+                                    <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').invalid">
+                                        <small class="text-muted"><strong class="text-danger">Producatorul trebuie selectat</strong></small>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -365,10 +371,9 @@
                                             <small class="form-text text-muted">Denumire: {{item.description}}</small>
                                         </ng-template>
                                     </ng-select>
-
-                                    <!--<div *ngIf="formSubmitted && eForm.get('medicament.atcCode').invalid">-->
-                                    <!--<small class="text-muted"><strong class="text-danger">Codul ATC trebuie introdus</strong></small>-->
-                                    <!--</div>-->
+                                    <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').invalid">
+                                        <small class="text-muted"><strong class="text-danger">Codul trebuie selectat</strong></small>
+                                    </div>
                                 </div>
                             </div>
 
@@ -379,6 +384,9 @@
                                     <label for="registrationRmNumber">Nr. de înregistrare în RM
                                         <span class="text-danger">*</span>
                                     </label>
+                                </div>
+                                <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').invalid">
+                                    <small class="text-muted"><strong class="text-danger">Nr. de înregistrare în RM trebuie selectat</strong></small>
                                 </div>
                             </div>
                             <!--<div class="col-md-4" *ngIf="importData.importAuthorizationEntity.medType==1">-->
@@ -397,6 +405,9 @@
                                         <mat-datepicker-toggle matSuffix [for]="picker22"></mat-datepicker-toggle>
                                         <mat-datepicker touchUi #picker22></mat-datepicker>
                                     </mat-form-field>
+                                    <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').invalid">
+                                        <small class="text-muted"><strong class="text-danger">Data de înregistrare în RM trebuie selectată</strong></small>
+                                    </div>
                                 </div>
                             </div>
 
@@ -408,6 +419,9 @@
                                         <mat-datepicker-toggle matSuffix [for]="picker22"></mat-datepicker-toggle>
                                         <mat-datepicker touchUi #picker22></mat-datepicker>
                                     </mat-form-field>
+                                </div>
+                                <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').invalid">
+                                    <small class="text-muted"><strong class="text-danger">Termenul de valabilitate trebuie selectat</strong></small>
                                 </div>
                             </div>
                         </div>
