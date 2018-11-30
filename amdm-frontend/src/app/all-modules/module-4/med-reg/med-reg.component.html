@@ -265,7 +265,7 @@
                                                required="true">
                                         <ng-template ng-option-tmp let-item="item">
                                             {{item.description}};
-                                            <small class="form-text text-muted">Cod: {{item.code}}</small>
+                                            <small class="form-text text-muted">Cod AMED: {{item.code}}</small>
 
 
                                         </ng-template>
@@ -294,7 +294,7 @@
                             <div class="col-4">
                                 <div class="md-form">
                                     <input id="dose" mdbInputDirective type="text" class="form-control"
-                                           formControlName="dose" [attr.disabled]="importData.importAuthorizationEntity.medType==1 ? true : null">
+                                           formControlName="dose" >
                                     <label for="dose">Doza</label>
                                 </div>
                             </div>

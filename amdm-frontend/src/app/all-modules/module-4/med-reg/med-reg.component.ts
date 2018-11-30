@@ -56,6 +56,7 @@ export class MedRegComponent implements OnInit {
     sellerAddress: any;
     importerAddress: any;
     producerAddress: any;
+    codeAmed: any;
 
     solicitantCompanyList: Observable<any[]>;
     unitSumm: any;
@@ -88,6 +89,7 @@ export class MedRegComponent implements OnInit {
     internationalMedicamentNames: Observable<any[]>;
     loadinginternationalMedicamentName: boolean = false;
     internationalMedicamentNameInputs = new Subject<string>();
+
 
     constructor(private fb: FormBuilder,
                 private requestService: RequestService,
@@ -242,6 +244,7 @@ export class MedRegComponent implements OnInit {
             this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').valueChanges.subscribe(val => {
                 if (val) {
                     this.medicamentData = val;
+                    this.codeAmed = val.code;
                     console.log("importAuthorizationEntity.unitOfImportTable.medicament", this.medicamentData)
 
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode);
@@ -309,16 +312,31 @@ export class MedRegComponent implements OnInit {
 
         this.unitOfImportTable.push({
 
-            customsCode:       this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').value,
-            name:              this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').value,
-            quantity:          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value,
-            price:             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
-            currency:          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').value,
-            summ:              this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
-                             * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
-            producer:          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').value,
-            atcCode:           this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').value,
-            expirationDate:    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').value
+            codeAmed:                      this.codeAmed,
+            customsCode:                   this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').value,
+            name:                          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').value,
+            quantity:                      this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value,
+            price:                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
+            currency:                      this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').value,
+            summ:                          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
+                                           * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
+            producer:                      this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').value,
+            expirationDate:                this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').value,
+
+            pharmaceuticalForm:            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').value,
+            dose:                          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').value,
+            unitsOfMeasurement:            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').value,
+            internationalMedicamentName:   this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').value,
+            atcCode:                       this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').value,
+            registrationNumber:          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').value,
+            registrationDate:            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').value,
+
+
+
+
+
+
+
         });
 
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(null);
@@ -331,18 +349,13 @@ export class MedRegComponent implements OnInit {
         this.producerAddress=null;
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(null);
 
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(null);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(null);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').setValue(null);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').setValue(null);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').setValue(null);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(null);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(null);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(null);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(null);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(null);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(null);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(null);
 
         console.log("this.unitOfImportTable", this.unitOfImportTable)
     }

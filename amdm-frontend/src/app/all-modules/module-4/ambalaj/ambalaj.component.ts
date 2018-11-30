@@ -256,6 +256,9 @@ export class AmbalajComponent implements OnInit {
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(null);
         this.producerAddress=null;
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(null);
+        if (this.importData.importAuthorizationEntity.medType===3) {
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(null);
+        }
         console.log("this.unitOfImportTable", this.unitOfImportTable)
     }
 
