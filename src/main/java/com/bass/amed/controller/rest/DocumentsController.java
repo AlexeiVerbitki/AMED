@@ -3,8 +3,12 @@ package com.bass.amed.controller.rest;
 import com.bass.amed.dto.DistributionDispositionDTO;
 import com.bass.amed.dto.RequestAdditionalDataDTO;
 import com.bass.amed.entity.NmDocumentTypesEntity;
+import com.bass.amed.entity.PaymentOrderNumberSequence;
+import com.bass.amed.entity.PaymentOrdersEntity;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.DocumentTypeRepository;
+import com.bass.amed.repository.PaymentOrderNumberRepository;
+import com.bass.amed.repository.PaymentOrderRepository;
 import com.bass.amed.service.GenerateDocNumberService;
 import com.bass.amed.service.StorageService;
 import net.sf.jasperreports.engine.*;
@@ -21,6 +25,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,11 +34,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/documents")
@@ -47,6 +50,10 @@ public class DocumentsController
     private GenerateDocNumberService generateDocNumberService;
     @Autowired
     private DocumentTypeRepository documentTypeRepository;
+    @Autowired
+    private PaymentOrderNumberRepository paymentOrderNumberRepository;
+    @Autowired
+    private PaymentOrderRepository paymentOrderRepository;
 
     @Value("${final.documents.folder}")
     private String folder;
@@ -97,6 +104,95 @@ public class DocumentsController
             JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(dataList);
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, null, beanColDataSource);
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+        }
+        catch (Exception e)
+        {
+            throw new CustomException(e.getMessage());
+        }
+
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=dd.pdf").body(bytes);
+    }
+
+    @RequestMapping(value = "/view-bon-de-plata", method = RequestMethod.GET)
+    @Transactional
+    public ResponseEntity<byte[]> viewBonDePlata(@RequestParam(value = "requestId") Integer requestId) throws CustomException
+    {
+        byte[] bytes = null;
+        try
+        {
+            ResourceLoader resourceLoader = new DefaultResourceLoader();
+            Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts");
+            String classPathWithoutJRXML = res.getFile().getAbsolutePath();
+            res = resourceLoader.getResource("layouts\\distributionDisposition.jrxml");
+            JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
+
+            List<DistributionDispositionDTO> dataList = new ArrayList();
+            DistributionDispositionDTO obj = new DistributionDispositionDTO();
+            obj.setDispositionDate(Calendar.getInstance().getTime());
+            obj.setNrDisposition("1");
+            obj.setPath(classPathWithoutJRXML);
+            dataList.add(obj);
+
+            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(dataList);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, null, beanColDataSource);
+            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+
+            List<PaymentOrdersEntity> details = paymentOrderRepository.findByregistrationRequestId(requestId);
+
+            Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+            PaymentOrderNumberSequence seq = new PaymentOrderNumberSequence();
+            paymentOrderNumberRepository.save(seq);
+            for (PaymentOrdersEntity order : details)
+            {
+                order.setDate(now);
+                order.setNumber(String.valueOf(seq.getId()));
+                paymentOrderRepository.save(order);
+            }
+        }
+        catch (Exception e)
+        {
+            throw new CustomException(e.getMessage());
+        }
+
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=dd.pdf").body(bytes);
+    }
+
+    @RequestMapping(value = "/view-bon-de-plata-one", method = RequestMethod.GET)
+    @Transactional
+    public ResponseEntity<byte[]> viewBonDePlataOne(@RequestParam(value = "paymentOrderId") Integer paymentOrderId) throws CustomException
+    {
+        byte[] bytes = null;
+        try
+        {
+            ResourceLoader resourceLoader = new DefaultResourceLoader();
+            Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts");
+            String classPathWithoutJRXML = res.getFile().getAbsolutePath();
+            res = resourceLoader.getResource("layouts\\distributionDisposition.jrxml");
+            JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
+
+            List<DistributionDispositionDTO> dataList = new ArrayList();
+            DistributionDispositionDTO obj = new DistributionDispositionDTO();
+            obj.setDispositionDate(Calendar.getInstance().getTime());
+            obj.setNrDisposition("1");
+            obj.setPath(classPathWithoutJRXML);
+            dataList.add(obj);
+
+            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(dataList);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, null, beanColDataSource);
+            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+
+            Optional<PaymentOrdersEntity> orderOpt = paymentOrderRepository.findById(paymentOrderId);
+            PaymentOrdersEntity order = orderOpt.orElse(new PaymentOrdersEntity());
+
+            Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+            PaymentOrderNumberSequence seq = new PaymentOrderNumberSequence();
+            paymentOrderNumberRepository.save(seq);
+            order.setDate(now);
+            order.setNumber(String.valueOf(seq.getId()));
+            paymentOrderRepository.save(order);
+
         }
         catch (Exception e)
         {

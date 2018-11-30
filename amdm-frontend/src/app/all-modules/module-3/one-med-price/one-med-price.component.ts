@@ -59,9 +59,6 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
     public submit: EventEmitter<any> = new EventEmitter();
 
     @Input()
-    docTypes: any[];
-
-    @Input()
     public formSubmitted: boolean;
 
     @Input()

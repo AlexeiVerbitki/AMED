@@ -12,8 +12,6 @@ import {PharmaceuticalFormsService} from "../../../shared/service/pharmaceutical
 import {ActivatedRoute, Router} from "@angular/router";
 import {RequestService} from "../../../shared/service/request.service";
 import {AuthService} from "../../../shared/service/authetication.service";
-import {PaymentOrder} from "../../../models/paymentOrder";
-import {Receipt} from "../../../models/receipt";
 import {DocumentService} from "../../../shared/service/document.service";
 import {LoaderService} from "../../../shared/service/loader.service";
 import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
@@ -41,9 +39,7 @@ export class CerereImportExportComponent implements OnInit {
     pharmaceuticalForms: any[];
     unitsOfMeasurement: any[];
     paymentTotal: number;
-    paymentOrdersList: PaymentOrder[] = [];
-    receiptsList: Receipt[] = [];
-    docTypes: any[];
+     docTypes: any[];
     allDocTypes: any[];
     activeSubstancesTable: any[] = [];
     initialData: any;
@@ -482,9 +478,6 @@ export class CerereImportExportComponent implements OnInit {
         this.drugCheckDecisions = [];
         this.drugCheckDecisions.push(this.cerereImpExpForm.get('drugCheckDecision').value);
         modelToSubmit.drugCheckDecisions = this.drugCheckDecisions;
-
-        modelToSubmit.paymentOrders = this.paymentOrdersList;
-        modelToSubmit.receipts = this.receiptsList;
         modelToSubmit.documents = this.documents;
         modelToSubmit.outputDocuments = this.outDocuments;
 

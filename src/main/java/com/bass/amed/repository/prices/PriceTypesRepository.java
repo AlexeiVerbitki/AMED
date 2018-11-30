@@ -1,4 +1,4 @@
-package com.bass.amed.repository;
+package com.bass.amed.repository.prices;
 
 import com.bass.amed.entity.PriceTypesEntity;
 import com.bass.amed.entity.PricesEntity;

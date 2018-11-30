@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <app-document [documents]="docs" [nrCerere]="mForm.get('nrCererii').value" (documentModified)="documentAdded($event)"></app-document>
+        <app-document [documents]="docs" [nrCerere]="mForm.get('nrCererii').value" (documentModified)="documentAdded($event)" [dcTypeIdentifier]="{code : 'INMD', step : 'E'}"></app-document>
         <div *ngIf="rFormSubbmitted && docs.length==0">
             <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
         </div>
@@ -65,8 +65,7 @@
         </table>
         <hr>
 
-        <app-payment [receipts]="receiptsList" [paymentOrders]="paymentOrdersList" (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
-
+        <app-payment [requestId]="requestId" (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
 
     <hr>
     <h5 class="text-center font-weight-bold">Documente de iesire</h5>

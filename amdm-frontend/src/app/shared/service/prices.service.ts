@@ -82,6 +82,10 @@ export class PriceService {
         return this.http.get('/api/price/all-price-expiration-reasons');
     }
 
+    getPricesForRevaluation(): Observable<any> {
+        return this.http.get('/api/price/revaluation');
+    }
+
     getPriceTypes(price: string): Observable<any> {
         return this.http.get('/api/price/price-types', {params: {price: price}});
     }
@@ -112,6 +116,11 @@ export class PriceService {
 
     getPricesRequest(id: string): Observable<any> {
         return this.http.get('/api/load-prices-request', {params: {id: id}});
+    }
+
+
+    getOriginalMedsByInternationalName(id: string): Observable<any> {
+        return this.http.get('/api/price/original-meds-prices', {params: {id: id}});
     }
 
     getMedPrice(medId: string): Observable<Price> {

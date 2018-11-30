@@ -54,7 +54,7 @@ public class LicenseRegistrationRequestService
 //                addr -> addr.setState(statesRepository.findById(addr.getLocality().getStateId()).get())
 //        );
 
-        rrE.getLicense().setDetail(rrE.getLicense().getDetails().stream().filter(det -> det.getRegistrationId().equals(rrE.getId())).findFirst().get());
+        rrE.getLicense().setDetail(rrE.getLicense().getDetails().stream().filter(det -> det.getRegistrationId().equals(rrE.getId())).findFirst().orElse(null));
 
         for (NmEconomicAgentsEntity ece : rrE.getLicense().getEconomicAgents())
         {
@@ -145,24 +145,6 @@ public class LicenseRegistrationRequestService
                 lde.getDocuments().addAll(dSet);
                 updateDetails = true;
             }
-
-
-            //Update receipts
-            Set<ReceiptsEntity> rSet = request.getLicense().getDetail().getReceipts().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
-
-            if (!rSet.isEmpty()){
-                lde.getReceipts().addAll(rSet);
-                updateDetails = true;
-            }
-
-            //Update payments
-            Set<PaymentOrdersEntity> pSet = request.getLicense().getDetail().getPaymentOrders().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
-
-            if (!pSet.isEmpty()){
-                lde.getPaymentOrders().addAll(pSet);
-                updateDetails = true;
-            }
-
 
             //Commision responses
             for (LicenseCommisionResponseEntity le : request.getLicense().getDetail().getCommisionResponses())

@@ -31,24 +31,26 @@
         </div>
         <hr>
 
-        <h5 class="text-center font-weight-bold">Comisia de experti</h5>
-        <hr>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="md-form">
-                    <input id="comisiaNr" mdbInputDirective type="text" class="form-control">
-                    <label for="regNr">Nr. comisiei medicamentului
-                    </label>
+        <div formGroupName="clinicalTrails">
+            <h5 class="text-center font-weight-bold">Comisia de experti</h5>
+            <hr>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="md-form">
+                        <input id="comisiaNr" mdbInputDirective type="text" class="form-control" formControlName="comissionNr">
+                        <label for="regNr">Nr. comisiei medicamentului
+                        </label>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <mat-form-field class="w-100">
-                    <input matInput [matDatepicker]="picker2" placeholder="Data">
-                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                    <mat-datepicker touchUi #picker2></mat-datepicker>
-                </mat-form-field>
-            </div>
+                <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker2" placeholder="Data" formControlName="comissionDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker2></mat-datepicker>
+                    </mat-form-field>
+                </div>
 
+            </div>
         </div>
 
         <app-document [documents]="docs" [dcTypes]="docTypes"
@@ -72,8 +74,13 @@
                 <th scope="row">{{ doc.number }}</th>
                 <th scope="row">{{ doc.status }}</th>
                 <td>
-                    <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(doc)">Vizualizare</button>
-                    <button *ngIf="doc.status=='Nu este atasat' && doc.responseReceived==false && (doc.docType.category=='RA')" class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(doc)">Stergere</button>
+                    <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(doc)">
+                        Vizualizare
+                    </button>
+                    <button *ngIf="doc.status=='Nu este atasat' && doc.responseReceived==false && (doc.docType.category=='RA')"
+                            class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(doc)">
+                        Stergere
+                    </button>
                 </td>
             </tr>
             </tbody>
@@ -101,6 +108,8 @@
     </form>
 
     <div class="text-center">
-        <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="onSubmit()">Finisare</button>
+        <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="onSubmit()">
+            Finisare
+        </button>
     </div>
 </div>

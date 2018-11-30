@@ -51,7 +51,7 @@
 		<!-- Title -->
 		<div class="row">
 			<div class="col-8">
-				<div class="card-header-title white-text">Documente atasate</div>
+				<div class="card-header-title white-text">{{title}}</div>
 			</div>
 			<div class="col-4">
 				<div class="text-right fap text-white">
@@ -105,4 +105,5 @@
 		</table>
 	</div>
 	<div *ngIf="dataSource.data.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+	<hr *ngIf="dataSource.data.length === 0">
 </div>

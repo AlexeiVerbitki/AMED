@@ -1,6 +1,7 @@
 package com.bass.amed.repository;
 
 import com.bass.amed.entity.MedicamentEntity;
+import com.bass.amed.entity.NmMedicamentTypeEntity;
 import com.bass.amed.projection.MedicamentNamesListProjection;
 import com.bass.amed.projection.MedicamentRegisterNumberProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -30,11 +31,9 @@ public interface MedicamentRepository extends JpaRepository<MedicamentEntity, In
     List<MedicamentNamesListProjection> getMedicamentsByNameAndCode(String name, String code, String status);
 
     Optional<List<MedicamentEntity>> findAllById(Integer id);
-
-    @Query(value = "SELECT * FROM medicament m WHERE (upper(m.name) like upper(CONCAT(?1, '%'))) and m.status = ?2", nativeQuery = true)
-    List<MedicamentEntity> findAllByName(String name, String status);
-
 //    @Query(value = "SELECT * FROM medicament m WHERE m.name OR m.code like upper(CONCAT(?1, '%'))", nativeQuery = true)
 //    List<MedicamentEntity> findByNameOrCode(String description);
 
+    @Query(value = "SELECT * FROM medicament m WHERE (upper(m.name) like upper(CONCAT(?1, '%'))) and m.status = ?2", nativeQuery = true)
+    List<MedicamentEntity> findAllByName(String name, String status);
 }

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Autorizare M Bon de plata" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="10" uuid="523fb55a-b7a8-4c3c-86ea-fd79290ecf5e">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="subscriberName" class="java.lang.String"/>
+	<parameter name="subscribeDoc" class="java.lang.String"/>
+	<parameter name="address" class="java.lang.String"/>
+	<parameter name="subscriberResidents" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<pageHeader>
+		<band height="60">
+			<image>
+				<reportElement x="1" y="10" width="220" height="47" uuid="f86557a5-ef0f-4960-87ca-020ab6949066"/>
+				<imageExpression><![CDATA["layouts/icons/header_left.jpg"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="261" y="4" width="289" height="53" uuid="ae27ee01-a17f-4e89-81b4-1417b9af443c"/>
+				<imageExpression><![CDATA["layouts/icons/header_right.PNG"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="660" splitType="Stretch">
+			<textField>
+				<reportElement x="1" y="226" width="548" height="80" uuid="f5637f31-5742-441f-8686-2876778d5245"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Subsemnata/subsemnatul, " + $P{subscriberName} + ", deţinătoare/deţinător a/al CIM/BI/P " + $P{subscribeDoc} + ", în calitate de reprezentant împuternicit al " + $P{address} + ", cu sediul în " + $P{subscriberResidents}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="228" y="146" width="100" height="20" uuid="a762999b-205b-4e38-b7f2-357f3014832b"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DECLARAŢIE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="320" width="547" height="186" uuid="62d50fee-4c46-4323-8ee1-6db448b6c6ac"/>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<text><![CDATA[în calitate de: 
+	[ ] deţinător al CIM 
+	[ ] reprezentant oficial al deţinătorului CIM 
+	(se bifează în mod corespunzător),
+
+declar pe propria răspundere, sub sancţiunea aplicată pentru fals în înscrisuri şi declaraţii, conform art.3521 al Codului penal al Republicii Moldova nr.985-XV din 18 aprilie 2002, că toate informaţiile cuprinse în documentaţia de solicitare a aprobării şi înregistrării preţului de producător la medicament sînt complete şi corecte.
+Subsemnata/subsemnatul declar că am luat cunoştinţă de faptul că, declararea în fals a celor menţionate mai sus atrage excluderea pe o perioadă de un an a medicamentului respectiv din Catalogul naţional de preţuri de producător la medicamente conform subpct. 16) pct.6 din Regulamentul cu privire la modul de aprobare şi înregistrare a preţurilor de producător la medicamente.
+Prezenta declaraţie face parte din documentaţia de aprobare a preţului de producător la medicament prevăzută în Regulamentul cu privire la modul de aprobare şi înregistrare a preţurilor de producător la medicamente.
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="590" width="285" height="40" uuid="a352de7d-0b02-4442-9b85-4badd83e3741"/>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<text><![CDATA[Semnătura
+
+_______________________                        L.Ş.
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="10" width="549" height="40" uuid="bf0b8f3a-7c13-473a-9052-ad0cfe1cbf2d"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<text><![CDATA[Anexa nr.2
+la Regulamentul cu privire la modul de aprobare 
+şi înregistrare a preţurilor de producător la medicamente]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="65" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="19" width="280" height="45" uuid="62abd8fc-753c-4d82-926d-20153ed31c42"/>
+				<textElement markup="none">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Agenţia Medicamentului şi Dispozitivelor Medicale
+Medicines and Medical Devices Agency 
+Republica Moldova, MD-2028, Chişinău, str. Korolenko, 2/1
+tel. +373 22 884 301, e-mail: office@amed.md; Web: www.amed.md
+]]></text>
+			</staticText>
+			<image>
+				<reportElement x="483" y="0" width="65" height="60" uuid="36094911-1947-4f9d-a837-51c429be067a"/>
+				<imageExpression><![CDATA["layouts/icons/cer.png"]]></imageExpression>
+			</image>
+		</band>
+	</pageFooter>
+</jasperReport>

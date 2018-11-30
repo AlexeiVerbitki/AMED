@@ -144,7 +144,9 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
                 'status': ['P'],
                 'pharmacovigilance': [],
                 'placebo': [],
-                'clinicTrialAmendEntities': []
+                'clinicTrialAmendEntities': [],
+                'comissionNr': [],
+                'comissionDate': []
             }),
 
             'requestHistories': []
@@ -385,7 +387,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
     initPage() {
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
             this.subscriptions.push(this.requestService.getClinicalTrailRequest(params['id']).subscribe(data => {
-                    // console.log('clinicalTrails', data);
+                    console.log('clinicalTrails', data);
 
                     this.evaluateClinicalTrailForm.get('id').setValue(data.id);
                     this.evaluateClinicalTrailForm.get('requestNumber').setValue(data.requestNumber);
@@ -432,6 +434,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
                     this.receiptsList = data.receipts;
                     this.paymentOrdersList = data.paymentOrders;
 
+                    console.log('clinicalTrails', this.evaluateClinicalTrailForm);
 
                     this.loadInvestigatorsList();
                     this.loadMedicalInstitutionsList();
@@ -698,7 +701,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
 
         dialogRef.afterClosed().subscribe(result => {
             console.log('result', result);
-            if (result.response) {
+            if (result !== null && result !== undefined && result.response) {
                 this.medActiveSubstances.push({
                     activeSubstance: result.activeSubstance,
                     quantity: result.activeSubstanceQuantity,
@@ -724,7 +727,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
 
         dialogRef.afterClosed().subscribe(result => {
             console.log('result', result);
-            if (result.response) {
+            if (result !== null && result !== undefined &&result.response) {
                 this.refProdActiveSubstances.push({
                     activeSubstance: result.activeSubstance,
                     quantity: result.activeSubstanceQuantity,
@@ -749,7 +752,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         let dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
-            if (result.response) {
+            if (result !== null && result !== undefined && result.response) {
                 this.medActiveSubstances[index] = {
                     activeSubstance: result.activeSubstance,
                     quantity: result.activeSubstanceQuantity,
@@ -774,7 +777,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         let dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
-            if (result.response) {
+            if (result !== null && result !== undefined && result.response) {
                 this.refProdActiveSubstances[index] = {
                     activeSubstance: result.activeSubstance,
                     quantity: result.activeSubstanceQuantity,

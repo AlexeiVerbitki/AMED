@@ -1,9 +1,12 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AdministrationService} from "../shared/service/administration.service";
-import {Receipt} from "../models/receipt";
-import {PaymentOrder} from "../models/paymentOrder";
 import {Subscription} from "rxjs";
+import {MatDialog, MatDialogConfig} from "@angular/material";
+import {AddPaymentOrderComponent} from "../dialog/add-payment-order/add-payment-order.component";
+import {LoaderService} from "../shared/service/loader.service";
+import {ConfirmationDialogComponent} from "../dialog/confirmation-dialog.component";
+import {DocumentService} from "../shared/service/document.service";
+import {ErrorHandlerService} from "../shared/service/error-handler.service";
 
 @Component({
     selector: 'app-payment',
@@ -12,77 +15,50 @@ import {Subscription} from "rxjs";
 })
 export class PaymentComponent implements OnInit {
 
-    //Receipt controls
+    //Bon de plata
     private subscriptions: Subscription[] = [];
-    addReceiptForm: FormGroup;
-    receiptsList: Receipt[] = [];
-    receiptTotal: number = 0;
+    bonDePlataList: any[] = [];
+    bonDePlataTotal: number = 0;
 
-    //Payment Order controls
-    addPaymentOrderForm: FormGroup;
-    paymentOrdersList: PaymentOrder[] = [];
-    paymentOrdersTotal: number = 0;
-
-    bonSuplimentarNotRender: boolean = false;
-
+    //Incasari
+    receiptsList: any[] = [];
+    receiptsTotal: number = 0;
     total: number = 0;
 
     disabled: boolean = false;
+    bonSuplimentarNotRender: boolean = false;
+    requestIdP: any;
 
-    serviceCharges: any[] = [];
+    constructor(private administrationService: AdministrationService,
+                private dialog: MatDialog,
+                private documentService: DocumentService,
+                private errorHandlerService: ErrorHandlerService,
+                private loadingService: LoaderService) {
 
-    constructor(private fb: FormBuilder,
-                private administrationService: AdministrationService) {
-        this.addReceiptForm = this.fb.group({
-            'receiptNumber': [''],
-            'date': [''],
-            'serviceCharge': [null, Validators.required],
-            'amount': [, Validators.required],
-            'sP': [{value:false, disabled : this.disabled} ]
-        });
-
-        this.addPaymentOrderForm = this.fb.group({
-            'nr': ['', Validators.required],
-            'data': [null, Validators.required],
-            'basis': ['', Validators.required],
-            'amount': [null, Validators.required]
-        })
     }
 
     ngOnInit() {
-        this.recalculateTotalReceipt();
-        this.recalculateTotalPaymentOrders();
+    }
+
+    loadPaymentOrders() {
+        if (!this.requestIdP) {
+            this.requestIdP = 0;
+        }
 
         this.subscriptions.push(
-            this.administrationService.getAllServiceCharges().subscribe(data => {
-                    this.serviceCharges = data;
-                    this.serviceCharges.push({description : "Bon suplimentar", amount : 0});
+            this.administrationService.getPaymentOrders(this.requestIdP).subscribe(data => {
+                    this.bonDePlataList = data;
+                    if (this.bonDePlataList.length != 0) {
+                        this.checkReceipts();
+                    }
+                    this.recalculateTotalTaxes();
                 },
-                error => console.log(error)
+                error => {
+                    console.log(error);
+                    this.loadingService.hide();
+                }
             )
         );
-    }
-
-    get receipts(): Receipt [] {
-        return this.receiptsList;
-    }
-
-    @Input()
-    set receipts(receiptList: Receipt []) {
-        this.receiptsList = receiptList;
-        this.recalculateTotalReceipt();
-        this.recalculateTotalPaymentOrders();
-    }
-
-    get paymentOrders(): PaymentOrder [] {
-        return this.paymentOrdersList;
-    }
-
-    @Input()
-    set paymentOrders(paymentOrdersList: PaymentOrder []) {
-        this.paymentOrdersList = paymentOrdersList;
-        this.recalculateTotalReceipt();
-        this.recalculateTotalPaymentOrders();
     }
 
     @Output() totalValueChanged = new EventEmitter();
@@ -93,14 +69,94 @@ export class PaymentComponent implements OnInit {
 
     @Input()
     set isDisabled(disabled: boolean) {
-        for(var control in this.addReceiptForm.controls){
-            disabled ? this.addReceiptForm.controls[control].disable() : this.addReceiptForm.controls[control].enable();
+        this.disabled = disabled;
+    }
+
+    addTaxes() {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.width = '600px';
+        dialogConfig2.data = {bonSuplimentarNotRender: this.isBonSuplimentarNotRender};
+
+        let dialogRef = this.dialog.open(AddPaymentOrderComponent, dialogConfig2);
+        dialogRef.afterClosed().subscribe(result => {
+            if (result && result.response) {
+                result.registrationRequestId = this.requestIdP;
+                this.loadingService.show();
+                this.subscriptions.push(
+                    this.administrationService.addPaymentOrder(result).subscribe(request => {
+                            this.loadPaymentOrders();
+                            this.loadingService.hide();
+                        },
+                        error => {
+                            console.log(error);
+                            this.loadingService.hide();
+                        }
+                    ));
+            }
+        });
+    }
+
+    isDisableDeleteBonDePlata(bonDePlata: any): boolean {
+        return this.receiptsList.find(r => r.paymentOrderNumber == bonDePlata.number);
+    }
+
+    deleteBonDePlata(bonDePlata: any, i: number) {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {message: 'Sunteti sigur ca doriti sa stergeti aceasta taxa?', confirm: false}
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.loadingService.show();
+                this.subscriptions.push(this.administrationService.removePaymentOrder(bonDePlata.id).subscribe(data => {
+                        this.bonDePlataList.splice(i, 1);
+                        this.recalculateTotalTaxes();
+                        this.loadingService.hide();
+                    }, error => this.loadingService.hide())
+                );
+            }
+        });
+    }
+
+    private recalculateTotalTaxes() {
+        this.bonDePlataTotal = 0;
+        this.bonDePlataList.filter(bon => bon.serviceCharge.category != 'BS').forEach(bon => {
+            this.bonDePlataTotal += bon.amount;
+        });
+        this.recalculateTotal();
+    }
+
+    private recalculateTotalReceipts() {
+        this.receiptsTotal = 0;
+        this.receiptsList.forEach(receipt => {
+            this.receiptsTotal += receipt.amount;
+        });
+        this.recalculateTotal();
+    }
+
+    private recalculateTotal() {
+        this.total = this.receiptsTotal - this.bonDePlataTotal;
+        this.totalValueChanged.emit(this.total);
+    }
+
+    checkReceipts() {
+        let ar: any[] = [];
+        for (let bon of this.bonDePlataList) {
+            ar.push(bon.number);
         }
 
-        for(var control in this.addPaymentOrderForm.controls){
-            disabled ? this.addPaymentOrderForm.controls[control].disable() : this.addPaymentOrderForm.controls[control].enable();
-        }
-        this.disabled = disabled;
+        this.loadingService.show();
+        this.subscriptions.push(this.administrationService.getReceiptsByPaymentOrderNumbers(ar).subscribe(data => {
+                this.receiptsList = data.body;
+                this.recalculateTotalReceipts();
+                this.loadingService.hide();
+            }, error => this.loadingService.hide())
+        );
     }
 
     get isBonSuplimentarNotRender(): boolean {
@@ -112,74 +168,50 @@ export class PaymentComponent implements OnInit {
         this.bonSuplimentarNotRender = bonSuplimentarNotRender;
     }
 
-    addReceipt() {
-        if (this.addReceiptForm.invalid) {
-            return;
+    get requestId(): any {
+        return this.requestIdP;
+    }
+
+    @Input()
+    set requestId(requestId: any) {
+        this.requestIdP = requestId;
+        if (requestId) {
+            this.loadPaymentOrders();
         }
-
-        this.administrationService.generateReceiptNr().subscribe(data => {
-                this.addReceiptForm.get('receiptNumber').setValue(data);
-                this.addReceiptForm.get('date').setValue(new Date());
-                this.receiptsList.push(this.addReceiptForm.value);
-                this.recalculateTotalReceipt();
-                this.addReceiptForm.reset();
-                this.addReceiptForm.get('sP').setValue(false);
-            },
-            error => console.log(error)
-        );
     }
 
-    deleteReceipt(receipt: any) {
-        var intdexToDelete = this.receiptsList.indexOf(receipt);
-        // console.log(intdexToDelete);
-        this.receiptsList.splice(intdexToDelete, 1);
-        this.recalculateTotalReceipt();
+    generateBonDePlataForAll() {
+        if (this.bonDePlataList.length != 0) {
+            this.loadingService.show();
+            this.subscriptions.push(this.documentService.viewBonDePlata(this.requestIdP).subscribe(data => {
+                    let file = new Blob([data.body], {type: 'application/pdf'});
+                    var fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.loadPaymentOrders();
+                    this.loadingService.hide();
+                }, error => {
+                    this.loadingService.hide();
+                }
+                )
+            );
+        } else {
+            this.errorHandlerService.showError('Nu a fost introdusa nici o taxa spre achitare');
+        }
     }
 
-    private recalculateTotalReceipt() {
-        this.receiptTotal = 0;
-        this.receiptsList.forEach(receipt => {
-            if (!receipt.sP) {
-                this.receiptTotal += receipt.amount;
+    generateSingleBonDePlata(bonDePlata: any) {
+        this.loadingService.show();
+        this.subscriptions.push(this.documentService.viewBonDePlataForOne(bonDePlata.id).subscribe(data => {
+                let file = new Blob([data.body], {type: 'application/pdf'});
+                var fileURL = URL.createObjectURL(file);
+                window.open(fileURL);
+                this.loadPaymentOrders();
+                this.loadingService.hide();
+            }, error => {
+                this.loadingService.hide();
             }
-        });
-        this.recalculateTotal();
-    }
-
-    addPaymentOrder() {
-        if (this.addPaymentOrderForm.invalid) {
-            return;
-        }
-        this.paymentOrdersList.push(this.addPaymentOrderForm.value);
-        this.addPaymentOrderForm.reset();
-        this.recalculateTotalPaymentOrders();
-    }
-
-    deletePaymentOrder(payOrder: any) {
-        var intdexToDelete = this.paymentOrdersList.indexOf(payOrder);
-        // console.log(intdexToDelete);
-        this.paymentOrdersList.splice(intdexToDelete, 1);
-        this.recalculateTotalPaymentOrders();
-    }
-
-    private recalculateTotalPaymentOrders() {
-        this.paymentOrdersTotal = 0;
-        this.paymentOrdersList.forEach(receipt => {
-            this.paymentOrdersTotal += receipt.amount;
-        });
-        this.recalculateTotal();
-    }
-
-    private recalculateTotal(){
-        this.total = this.paymentOrdersTotal - this.receiptTotal;
-        this.totalValueChanged.emit(this.total);
-    }
-
-    checkAmount()
-    {
-        if(this.addReceiptForm.get('serviceCharge').value) {
-            this.addReceiptForm.get('amount').setValue(this.addReceiptForm.get('serviceCharge').value.amount);
-        }
+            )
+        );
     }
 
 }

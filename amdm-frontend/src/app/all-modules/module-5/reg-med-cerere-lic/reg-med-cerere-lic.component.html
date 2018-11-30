@@ -63,7 +63,6 @@
 
     <form [formGroup]="rForm" name="form"  #f="ngForm">
         <section *ngIf="tipCerere">
-            <hr>
             <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICEL'">Eliberarea licentei</h5>
             <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICM'">Reperfectare licentei</h5>
             <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICD'">Eliberarea duplicatului licentei</h5>

@@ -3,6 +3,9 @@ package com.bass.amed.controller.rest;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
+import com.bass.amed.repository.prices.NmPricesRepository;
+import com.bass.amed.repository.prices.PriceRepository;
+import com.bass.amed.repository.prices.PricesHistoryRepository;
 import com.bass.amed.utils.Utils;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
@@ -43,6 +46,10 @@ public class RequestController
     private PriceRepository priceRepository;
     @Autowired
     private DocumentModuleDetailsRepository documentModuleDetailsRepository;
+    @Autowired
+    private NmPricesRepository nmPricesRepository;
+    @Autowired
+    private PricesHistoryRepository pricesHistoryRepository;
 
     @RequestMapping(value = "/add-medicament-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RegistrationRequestsEntity> saveMedicamentRequest(@RequestBody RegistrationRequestsEntity request) throws CustomException
@@ -100,7 +107,7 @@ public class RequestController
             NmMedicamentGroupEntity nmMedicamentGroupEntity = medicamentGroupRepository.findByCode(medicamentHistoryEntity.getGroup().getCode());
             medicamentHistoryEntity.setGroup(nmMedicamentGroupEntity);
         }
-        if(request.getMedicaments()==null)
+        if (request.getMedicaments() == null)
         {
             request.setMedicaments(new HashSet<>());
         }
@@ -315,16 +322,27 @@ public class RequestController
         price.setType(updatedPrice.getType());
         price.setValue(updatedPrice.getValue());
         price.setMdlValue(updatedPrice.getMdlValue());
-        price.setExpirationDate(updatedPrice.getExpirationDate());
-        price.setExpirationReason(updatedPrice.getExpirationReason());
-        price.setOrderApprovDate(updatedPrice.getOrderApprovDate());
-        price.setRevisionDate(updatedPrice.getRevisionDate());
         price.setReferencePrices(updatedPrice.getReferencePrices());
+
+        PricesHistoryEntity priceHistory = null;
+
+        if(price.getType().getId() == 2) {//acceptat
+            NmPricesEntity oldNmPrice = nmPricesRepository.findOneByMedicament(price.getMedicament());
+            if(oldNmPrice != null) {
+                updatedPrice.getNmPrice().setId(oldNmPrice.getId());
+            }
+            price.setNmPrice(updatedPrice.getNmPrice());
+
+            priceHistory = new PricesHistoryEntity(price.getNmPrice());
+        }
 
         request.setPrice(price);
         try
         {
-            requestRepository.saveAndFlush(request);
+            requestRepository.save(request);
+            if(priceHistory != null) {
+                pricesHistoryRepository.save(priceHistory);
+            }
         }
         catch (Exception ex)
         {
@@ -340,7 +358,7 @@ public class RequestController
         Optional<RegistrationRequestsEntity> regOptional = requestRepository.findPricesRequestById(id);
         if (regOptional.isPresent())
         {
-            List<String> docTypes = Arrays.asList("OP", "A1", "A2", "DP", "NL");//OP,A1,A2,DP,CP,RF,RC,NL,RQ,CR,CC,PC
+            List<String> docTypes = Arrays.asList("OP", "A1", "DP", "NL");//OP,A1,A2,DP,CP,RF,RC,NL,RQ,CR,CC,PC
             List<NmDocumentTypesEntity> outputDocTypes = documentTypeRepository.findAll();
             outputDocTypes.removeIf(docType -> !docTypes.contains(docType.getCategory()));
 
@@ -645,8 +663,9 @@ public class RequestController
     }
 
     @PostMapping(value = "/get-requests-by-registration-number")
-    public ResponseEntity<List<RegistrationRequestsEntity>> getRequestsByRegistrationNumber(@RequestBody Integer registrationNumber) throws CustomException {
-        Optional<List<RegistrationRequestsEntity>> registrationRequestsEntities =   requestRepository.findMedicamentHistoryByRegistrationNumber(registrationNumber);
+    public ResponseEntity<List<RegistrationRequestsEntity>> getRequestsByRegistrationNumber(@RequestBody Integer registrationNumber) throws CustomException
+    {
+        Optional<List<RegistrationRequestsEntity>> registrationRequestsEntities = requestRepository.findMedicamentHistoryByRegistrationNumber(registrationNumber);
         return new ResponseEntity<>(registrationRequestsEntities.orElse(new ArrayList<>()), HttpStatus.CREATED);
     }
 

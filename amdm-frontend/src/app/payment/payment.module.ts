@@ -4,6 +4,7 @@ import {CommonModule} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MaterialSharedModule} from "../material-shared.module";
 import {MDBBootstrapModule} from "angular-bootstrap-md";
+import {AddPaymentOrderComponent} from "../dialog/add-payment-order/add-payment-order.component";
 
 @NgModule({
     imports:[
@@ -14,8 +15,8 @@ import {MDBBootstrapModule} from "angular-bootstrap-md";
         MDBBootstrapModule.forRoot(),
     ],
 
-    declarations:[PaymentComponent],
-
+    declarations:[PaymentComponent,AddPaymentOrderComponent],
+    entryComponents : [AddPaymentOrderComponent],
     exports:[PaymentComponent,CommonModule, FormsModule, ReactiveFormsModule]
 })
 export class PaymentModule { }

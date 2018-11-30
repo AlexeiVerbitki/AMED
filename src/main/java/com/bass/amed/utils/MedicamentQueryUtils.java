@@ -49,7 +49,7 @@ public class MedicamentQueryUtils
         }
         else if(medicamentFilters.getRegistrationDateFrom() != null )
         {
-            stringBuilder.append(" and DATE_FORMAT(registration_date, \"%Y-%m-%d\")  = DATE_FORMAT(:registrationDateFrom, \"%Y-%m-%d\")");
+            stringBuilder.append(" and DATE_FORMAT(registration_date, \"%Y-%m-%d\")  >= DATE_FORMAT(:registrationDateFrom, \"%Y-%m-%d\")");
         }
         else if(medicamentFilters.getRegistrationDateTo() != null )
         {
@@ -85,7 +85,7 @@ public class MedicamentQueryUtils
         }
         else if(medicamentFilters.getExpirationDateFrom() != null)
         {
-            stringBuilder.append(" and DATE_FORMAT(expiration_date, \"%Y-%m-%d\")  = DATE_FORMAT(:expirationDateFrom, \"%Y-%m-%d\")");
+            stringBuilder.append(" and DATE_FORMAT(expiration_date, \"%Y-%m-%d\")  >= DATE_FORMAT(:expirationDateFrom, \"%Y-%m-%d\")");
         }
         else if(medicamentFilters.getExpirationDateTo() != null )
         {
@@ -125,6 +125,15 @@ public class MedicamentQueryUtils
         if (medicamentFilters.getManufacture() != null && medicamentFilters.getManufacture().getId()!=null)
         {
             stringBuilder.append(" and mm.manufacture_id = :manufacture");
+        }
+
+        if(stringBuilder.toString().endsWith("produs_finit = 1 "))
+        {
+            stringBuilder.append(" order by m.id desc limit 500");
+        }
+        else
+        {
+            stringBuilder.append(" order by m.id desc");
         }
 
         return stringBuilder;

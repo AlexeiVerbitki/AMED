@@ -8,8 +8,6 @@ import {AdministrationService} from "../../../shared/service/administration.serv
 import {MatDialog, MatDialogConfig} from "@angular/material";
 import {AuthService} from "../../../shared/service/authetication.service";
 import {DocumentService} from "../../../shared/service/document.service";
-import {PaymentOrder} from "../../../models/paymentOrder";
-import {Receipt} from "../../../models/receipt";
 import {RequestAdditionalDataDialogComponent} from "../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component";
 import {TaskService} from "../../../shared/service/task.service";
 import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
@@ -52,8 +50,6 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
     manufactureAuthorizations: any[];
     docTypes: any[];
     docTypesInitial: any[];
-    paymentOrdersList: PaymentOrder[] = [];
-    receiptsList: Receipt[] = [];
     outDocuments: any[] = [];
     isResponseReceived: boolean = true;
     isNonAttachedDocuments: boolean = false;
@@ -177,18 +173,6 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
                             this.activeSubstancesTable = data.medicamentHistory[0].activeSubstancesHistory;
                             this.manufacturesTable = data.medicamentHistory[0].manufacturesHistory;
                         }
-                        this.receiptsList = data.receipts;
-                        this.paymentOrdersList = data.paymentOrders;
-                        let xs2 = this.receiptsList;
-                        xs2 = xs2.map(x => {
-                            x.isOld = true;
-                            return x;
-                        });
-                        let xs3 = this.paymentOrdersList;
-                        xs3 = xs3.map(x => {
-                            x.isOld = true;
-                            return x;
-                        });
                         this.checkOutputDocumentsStatus();
                         this.documents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
                         let xs = this.documents;
@@ -479,9 +463,6 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
             medicamentToSubmit.prescription = this.eForm.get('medicament.prescription').value.value;
         }
         modelToSubmit.medicamentHistory.push(medicamentToSubmit);
-
-        modelToSubmit.paymentOrders = this.paymentOrdersList;
-        modelToSubmit.receipts = this.receiptsList;
 
         modelToSubmit.requestHistories.push({
             startDate: this.eForm.get('data').value, endDate: new Date(),
@@ -807,9 +788,6 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
             medicamentToSubmit.prescription = this.eForm.get('medicament.prescription').value.value;
         }
         modelToSubmit.medicamentHistory.push(medicamentToSubmit);
-
-        modelToSubmit.paymentOrders = this.paymentOrdersList;
-        modelToSubmit.receipts = this.receiptsList;
 
         modelToSubmit.requestHistories.push({
             startDate: this.eForm.get('data').value, endDate: new Date(),

@@ -43,7 +43,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
     tabs = ['Medicamentul 1'];
     selected = new FormControl(0);
 
-    docTypes : any[];
+   // docTypes : any[];
 
     /*mandatoryDocuments: any[] = [{
         description: 'Cerere',
@@ -87,7 +87,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-      this.loadDocTypes();
+      //this.loadDocTypes();
       this.getCountries();
       this.getCurrencies();
       this.getPriceTypes();
@@ -146,7 +146,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
             ));
     }
 
-    loadDocTypes(){
+    /*loadDocTypes(){
         this.subscriptions.push(
             this.priceService.getRequestStepByIdAndCode('14','R').subscribe(step => {
                     this.subscriptions.push(
@@ -161,7 +161,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
                 error => console.log(error)
             )
         );
-    }
+    }*/
 
     commonDocumentAdded($event) {
       console.log('documentAdded', $event);

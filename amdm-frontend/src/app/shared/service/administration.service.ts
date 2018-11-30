@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpParams, HttpResponse} from "@angular/common/http";
 import {Observable} from "rxjs";
 
 @Injectable()
@@ -179,7 +179,7 @@ am
         let Params = new HttpParams();
         Params = Params.set('partialCode', partialCode);
 
-        return this.http.get<any[]>('/api/administration/all-clinical-trails-by-cod-or-eudra', {params: Params});
+        return this.http.get<any[]>('/api/clinical-trails/all-clinical-trails-by-cod-or-eudra', {params: Params});
     }
 
     getClinicalTrailsPhases(): Observable<any> {
@@ -195,5 +195,39 @@ am
         Params = Params.set('partialCode', partialCode);
 
         return this.http.get('/api/administration/all-customs-code',{params: Params});
+    }
+
+    getReceiptsByPaymentOrderNumbers(paymentOrderNumbers: any[]): Observable<any> {
+        return this.http.post<any>('/api/administration/receipts-by-payment-order-numbers', paymentOrderNumbers, {observe: 'response'});
+    }
+
+    getReceiptsByFilter(filter: any): Observable<any> {
+        return this.http.post<any>('/api/administration/receipts-by-filter', filter, {observe: 'response'});
+    }
+
+    addReceipt(receiptDetails: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/administration/add-receipt', receiptDetails, {observe: 'response'});
+    }
+
+    editReceipt(receiptDetails: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/administration/edit-receipt', receiptDetails, {observe: 'response'});
+    }
+
+    removeReceipt(id: number): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/administration/remove-receipt', id, {observe: 'response'});
+    }
+
+    addPaymentOrder(paymentOrder: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/administration/add-payment-order', paymentOrder, {observe: 'response'});
+    }
+
+    removePaymentOrder(id: number): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/administration/remove-payment-order', id, {observe: 'response'});
+    }
+
+    getPaymentOrders(requestId): Observable<any> {
+        let Params = new HttpParams();
+        Params = Params.set('requestId', requestId);
+        return this.http.get('/api/administration/get-payment-orders-by-request-id', {params: Params});
     }
 }

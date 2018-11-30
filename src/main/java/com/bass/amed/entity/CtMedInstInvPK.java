@@ -31,49 +31,4 @@ public class CtMedInstInvPK implements Serializable {
         this.medicaInstitutionId = medicaInstitutionId;
         this.investigator = investigator;
     }
-
-    public Integer getClinicalTrailId() {
-        return clinicalTrailId;
-    }
-
-    public void setClinicalTrailId(Integer clinicalTrailId) {
-        this.clinicalTrailId = clinicalTrailId;
-    }
-
-    public Integer getMedicaInstitutionId() {
-        return medicaInstitutionId;
-    }
-
-    public void setMedicaInstitutionId(Integer medicaInstitutionId) {
-        this.medicaInstitutionId = medicaInstitutionId;
-    }
-
-    public Integer getInvestigator() {
-        return investigator;
-    }
-
-    public void setInvestigator(Integer investigator) {
-        this.investigator = investigator;
-    }
-
-    //    @NotNull
-//    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
-//    @JoinColumn(name="medical_institution_id")
-//    private NmMedicalInstitutionsEntity medicalInstitutionId;
-//
-//    @NotNull
-//    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
-//    @JoinColumn(name = "investigator_id")
-//    private NmInvestigatorsEntity investigatorId;
-//
-//    public CtMedInstInvestigatorEntityPK() {
-//
-//    }
-//
-//    public CtMedInstInvestigatorEntityPK(Integer clinicalTrailId,NmMedicalInstitutionsEntity medicalInstitutionId,  NmInvestigatorsEntity investigatorsEntity) {
-//        this.clinicalTrailId = clinicalTrailId;
-//        this.medicalInstitutionId = medicalInstitutionId;
-//        this.investigatorId = investigatorsEntity;
-//    }
-
 }

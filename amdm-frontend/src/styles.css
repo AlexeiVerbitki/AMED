@@ -323,6 +323,14 @@ ng-select.ng-valid.ng-touched .ng-select-container:after {
   .offset-xxl-2 {
     margin-left: 25%;
   }
+  .offset-xxl-1 {
+    margin-left: 4%
+  } 
+  .col-xxl-11 {
+    flex: 0 0 96%;
+    max-width: 96%;
+    margin-right: 10px;
+  }
 }
 
 
@@ -334,6 +342,24 @@ ng-select.ng-valid.ng-touched .ng-select-container:after {
   }
   .offset-xxl-2 {
     margin-left: 16.666667%;
+  }
+  .offset-xxl-1 {
+    margin-left: 3%
+  } 
+  .col-xxl-11 {
+    flex: 0 0 97%;
+    max-width: 97%;
+    margin-right: 10px;
+  }
+}
+
+@media screen and (min-width: 200px) and (max-width: 1438px){
+  .offset-xl-1 {
+    margin-left: 4.333333%;
+  }
+  .col-xl-11 {
+    flex: 0 0 95.666667%;
+    max-width: 95.666667%;
   }
 }
 

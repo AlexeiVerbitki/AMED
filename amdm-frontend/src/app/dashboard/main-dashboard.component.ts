@@ -4,7 +4,7 @@ import {LoaderService} from "../shared/service/loader.service";
 @Component({
     selector: 'app-main-dashboard',
     template: `
-		<app-sidebar></app-sidebar>
+		<app-sidebar (skipEvent)="skipValueChanged($event)"></app-sidebar>
 		<app-navbar></app-navbar>
 		<div class="body-loader" *ngIf=loaderActive>
 			<div class="loader">
@@ -16,7 +16,7 @@ import {LoaderService} from "../shared/service/loader.service";
 		<div class="mt-5">
 			<div class="container-fluid">
 				<div class="row">
-					<div class="offset-lg-3 offset-xl-3 col-xl-9 col-lg-9 offset-xxl-2 col-xxl-10">
+					<div [ngClass]="classValue ? 'offset-xxl-1 offset-xl-1 skip-offset-lg col-xxl-11 col-xl-11 skip-col-lg' : 'offset-lg-3 offset-xl-3 col-xl-9 col-lg-9 offset-xxl-2 col-xxl-10'">
 						<router-outlet></router-outlet>
 					</div>
 				</div>
@@ -28,7 +28,9 @@ import {LoaderService} from "../shared/service/loader.service";
 })
 export class MainDashboardComponent implements OnInit, AfterViewInit {
 
-    loaderActive: boolean;
+	loaderActive: boolean;
+	skip: boolean;
+	classValue: any;
     constructor(private loadingService: LoaderService) {
     }
 
@@ -40,6 +42,13 @@ export class MainDashboardComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.loaderActive = false;
+	}
+	
+    skipValueChanged($event) {
+		console.log('event skip', $event)
+		this.skip = $event.value;
+
+		this.classValue = !this.classValue;
     }
 
 

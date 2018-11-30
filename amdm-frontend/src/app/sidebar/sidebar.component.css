@@ -6,6 +6,18 @@
   width: 16.666667%;
   height: 100%;
   z-index: 1000;
+  transition: 0.25s;
+}
+
+.sidebar-width-new {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #122f3b;
+  width: 62px  !important;
+  height: 100%;
+  z-index: 1000;
+  transition: 0.25s;
 }
 
 .sidebar-logo {
@@ -67,6 +79,19 @@
   color: #fff;
 }
 
+.sidebar .skip {
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
+  cursor: pointer !important;
+}
+
+.disabled {
+  /* display: none !important; */
+  opacity: 0 !important;
+  transition: 5s !important;
+}
+
 @media only screen and (min-width: 1240px) {
   .sidebar-border {
     border-left: 1px solid #fff;
@@ -75,6 +100,10 @@
 
 .fa-lock:before {
   margin-left: 5px;
+}
+
+.fa-usd:before {
+  margin-left: 6px;
 }
 
 @media only screen and (max-width: 1441px) {

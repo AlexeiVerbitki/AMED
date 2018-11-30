@@ -6,8 +6,6 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {RequestService} from "../../../shared/service/request.service";
 import {MatDialog, MatDialogConfig, MatRadioChange} from "@angular/material";
 import {MedicamentService} from "../../../shared/service/medicament.service";
-import {PaymentOrder} from "../../../models/paymentOrder";
-import {Receipt} from "../../../models/receipt";
 import {ModalService} from "../../../shared/service/modal.service";
 import {AdministrationService} from "../../../shared/service/administration.service";
 import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
@@ -65,8 +63,6 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
     investigatorsList: any[] = [];
 
     //Payments control
-    receiptsList: Receipt[] = [];
-    paymentOrdersList: PaymentOrder[] = [];
     paymentTotal: number = 0;
 
     initialData: any;
@@ -129,8 +125,6 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             'requestHistories': [],
             'initiator': [null],
             'assignedUser': [null],
-            'receipts': [],
-            'paymentOrders': [],
             'outputDocuments': [],
             'clinicalTrails': this.fb.group({
                 'id': [''],
@@ -149,7 +143,9 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                 'status': ['P'],
                 'pharmacovigilance': [],
                 'placebo': [],
-                'clinicTrialAmendEntities':[]
+                'clinicTrialAmendEntities':[],
+                'comissionNr': [],
+                'comissionDate': []
             })
         });
 
@@ -306,8 +302,6 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
                     this.investigatorsList = data.clinicalTrails.investigators;
                     this.mediacalInstitutionsList = data.clinicalTrails.medicalInstitutions;
-                    this.receiptsList = data.receipts;
-                    this.paymentOrdersList = data.paymentOrders;
                     this.outDocuments = data.outputDocuments;
 
                     this.loadInvestigatorsList();
@@ -516,8 +510,6 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         formModel.currentStep = 'A';
         formModel.documents = this.docs;
         formModel.outputDocuments = this.outDocuments;
-        formModel.receipts = this.receiptsList;
-        formModel.paymentOrders = this.paymentOrdersList;
         formModel.clinicalTrails.medicalInstitutions = this.mediacalInstitutionsList;
 
         formModel.assignedUser = this.authService.getUserName();
@@ -554,8 +546,6 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             step: 'A'
         });
         formModel.documents = this.docs;
-        formModel.receipts = this.receiptsList;
-        formModel.paymentOrders = this.paymentOrdersList;
         formModel.clinicalTrails.investigators = this.investigatorsList;
         formModel.clinicalTrails.medicalInstitutions = this.mediacalInstitutionsList;
 

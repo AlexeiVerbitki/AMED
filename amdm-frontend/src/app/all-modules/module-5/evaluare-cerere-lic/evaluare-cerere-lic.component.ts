@@ -8,12 +8,9 @@ import {LicenseService} from "../../../shared/service/license/license.service";
 import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
 import {MatDialog} from "@angular/material";
 import {AuthService} from "../../../shared/service/authetication.service";
-import {PaymentOrder} from "../../../models/paymentOrder";
-import {Receipt} from "../../../models/receipt";
 import {LoaderService} from "../../../shared/service/loader.service";
 import {DocumentService} from "../../../shared/service/document.service";
 import {LocalityService} from "../../../shared/service/locality.service";
-import {RequestAdditionalDataDialogComponent} from "../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component";
 import {LicenseDecisionDialogComponent} from "../../../dialog/license-decision-dialog/license-decision-dialog.component";
 import {catchError, debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
 
@@ -65,8 +62,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
 
     paymentTotal: number;
-    paymentOrdersList: PaymentOrder[] = [];
-    receiptsList: Receipt[] = [];
+    paymentOrdersList: any[] = [];
 
     //Validations
     mForm: FormGroup;
@@ -216,14 +212,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
             // this.rForm.get('nrLic').disable();
         }
 
-        this.receiptsList = data.license.detail.receipts;
         this.paymentOrdersList = data.license.detail.paymentOrders;
-
-        let xs2 = this.receiptsList;
-        xs2 = xs2.map(x => {
-            x.isOld = true;
-            return x;
-        });
         let xs3 = this.paymentOrdersList;
         xs3 = xs3.map(x => {
             x.isOld = true;
@@ -524,8 +513,6 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         // licenseModel.addresses.activities = this.rForm.get('licenseActivities').value;
 
         licenseModel.detail.paymentOrders = this.paymentOrdersList;
-        licenseModel.detail.receipts = this.receiptsList;
-
 
         if (this.rForm.get('CPCDNrdeintrare').value) {
             let extraData: any;

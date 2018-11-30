@@ -1,5 +1,6 @@
 package com.bass.amed.controller.rest;
 
+import com.bass.amed.dto.ReceiptFilterDTO;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.projection.GetCountriesMinimalProjection;
@@ -8,16 +9,20 @@ import com.bass.amed.projection.LicenseCompanyProjection;
 import com.bass.amed.repository.*;
 import com.bass.amed.service.GenerateDocNumberService;
 import com.bass.amed.service.GenerateReceiptNumberService;
+import com.bass.amed.utils.ReceiptsQueryUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 
@@ -36,8 +41,6 @@ public class AdministrationController
     MedicamentFormsRepository medicamentFormsRepository;
     @Autowired
     NmAtcCodesRepository nmAtcCodesRepository;
-    @Autowired
-    ClinicalTrialsRepository clinicalTrialsRepository;
     @Autowired
     SrcUserRepository srcUserRepository;
     @Autowired
@@ -76,6 +79,14 @@ public class AdministrationController
     private EmployeeRepository employeeRepository;
     @Autowired
     private NmCustomsCodesRepository nmCustomsCodesRepository;
+    @Autowired
+    private ReceiptRepository receiptRepository;
+    @Autowired
+    private PaymentOrderRepository paymentOrderRepository;
+    @Autowired
+    private EntityManagerFactory entityManagerFactory;
+    @Autowired
+    private PaymentOrderNumberRepository paymentOrderNumberRepository;
 
     @RequestMapping(value = "/generate-doc-nr")
     public ResponseEntity<Integer> generateDocNr()
@@ -109,7 +120,8 @@ public class AdministrationController
     }
 
     @GetMapping("/all-companies-details-license")
-    public ResponseEntity<List<LicenseCompanyProjection>> retrieveAllEconomicAgentsDetailsForLicense(String partialName) {
+    public ResponseEntity<List<LicenseCompanyProjection>> retrieveAllEconomicAgentsDetailsForLicense(String partialName)
+    {
         LOGGER.debug("Retrieve all economic agents group by IDNO");
         List<LicenseCompanyProjection> allCompanies = economicAgentsRepository.getLicenseDetails(partialName, partialName);
 
@@ -298,14 +310,6 @@ public class AdministrationController
     }
 
 
-
-    @RequestMapping("/all-clinical-trails-by-cod-or-eudra")
-    public ResponseEntity<List<ClinicalTrialsEntity>> getClinicalTrailByCodeAndEudra(String partialCode)
-    {
-        LOGGER.debug("Retrieve clinical trails by code or eudra" + partialCode);
-        return new ResponseEntity<>(clinicalTrialsRepository.getClinicalTrailByCodeOrEudra(partialCode, partialCode), HttpStatus.OK);
-    }
-
     @RequestMapping("/all-clinical-trail-phases")
     public ResponseEntity<List<NmClinicTrailPhasesEntity>> getAllClinicalTrailsPhases()
     {
@@ -329,6 +333,92 @@ public class AdministrationController
 	    return new ResponseEntity<>(nmCustomsCodesRepository.findByDescriptionStartingWithIgnoreCase(partialCode), HttpStatus.OK);
     }
 
-    
+    @PostMapping(value = "/receipts-by-payment-order-numbers")
+    public ResponseEntity<List<ReceiptsEntity>> getReceiptsByPaymentOrderNumbers(@RequestBody List<String> paymentOrderNumbers) throws CustomException
+    {
+        LOGGER.debug("Get receipts by payment order numbers");
+        return new ResponseEntity<>(receiptRepository.findByPaymentOrderNumberIn( paymentOrderNumbers), HttpStatus.OK);
+    }
 
+    @PostMapping(value = "/receipts-by-filter")
+    public ResponseEntity<List<ReceiptsEntity>> getReceiptsByFilter(@RequestBody ReceiptFilterDTO filter) throws CustomException
+    {
+        LOGGER.debug("Get receipts by filter");
+
+        EntityManager em = null;
+        List<ReceiptsEntity> result = new ArrayList<>();
+        try
+        {
+            em = entityManagerFactory.createEntityManager();
+            em.getTransaction().begin();
+            StringBuilder queryString = ReceiptsQueryUtils.createReceiptsByFilterQuery(filter);
+            Query query = em.createNativeQuery(queryString.toString(), ReceiptsEntity.class);
+            ReceiptsQueryUtils.fillReceiptQueryWithValues(filter, query);
+            result = query.getResultList();
+            em.getTransaction().commit();
+        }
+        catch (Exception e)
+        {
+            if (em != null)
+            {
+                em.getTransaction().rollback();
+            }
+            throw new CustomException(e.getMessage());
+        }
+
+        finally
+        {
+            em.close();
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/add-payment-order", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PaymentOrdersEntity> savePaymentOrder(@RequestBody PaymentOrdersEntity paymentOrdersEntity) throws CustomException
+    {
+        LOGGER.debug("Add payment order");
+        paymentOrderRepository.save(paymentOrdersEntity);
+        return new ResponseEntity<>(paymentOrdersEntity, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/remove-payment-order", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> removePaymentOrder(@RequestBody Integer id) throws CustomException
+    {
+        LOGGER.debug("Remove payment order");
+        paymentOrderRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/add-receipt", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ReceiptsEntity> saveReceipts(@RequestBody ReceiptsEntity receipt) throws CustomException
+    {
+        LOGGER.debug("Add receipt");
+        receipt.setInsertDate(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
+        receiptRepository.save(receipt);
+        return new ResponseEntity<>(receipt, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/edit-receipt", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ReceiptsEntity> editReceipts(@RequestBody ReceiptsEntity receipt) throws CustomException
+    {
+        LOGGER.debug("Edit receipt");
+        receiptRepository.save(receipt);
+        return new ResponseEntity<>(receipt, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/remove-receipt", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> removeReceipt(@RequestBody Integer id) throws CustomException
+    {
+        LOGGER.debug("Remove receipt");
+        receiptRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @RequestMapping("/get-payment-orders-by-request-id")
+    public ResponseEntity<List<PaymentOrdersEntity>> getPaymentOrdersByRequestId(Integer requestId)
+    {
+        LOGGER.debug("Retrieve payment orders by request id " + requestId);
+        return new ResponseEntity<>(paymentOrderRepository.findByregistrationRequestId(requestId), HttpStatus.OK);
+    }
 }

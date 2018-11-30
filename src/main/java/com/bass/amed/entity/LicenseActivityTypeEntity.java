@@ -4,11 +4,12 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "license_activity_type", schema = "amed", catalog = "")
+@Table(name = "license_activity_type", schema = "amed")
 public class LicenseActivityTypeEntity
 {
     private Integer id;
     private String description;
+    private Integer canUsePsihotropicDrugs;
 
     @Id
     @Column(name = "id")
@@ -33,6 +34,18 @@ public class LicenseActivityTypeEntity
     public void setDescription(String description)
     {
         this.description = description;
+    }
+
+    @Basic
+    @Column(name = "can_use_psyhotropic")
+    public Integer getCanUsePsihotropicDrugs()
+    {
+        return canUsePsihotropicDrugs;
+    }
+
+    public void setCanUsePsihotropicDrugs(Integer canUsePsihotropicDrugs)
+    {
+        this.canUsePsihotropicDrugs = canUsePsihotropicDrugs;
     }
 
     @Override

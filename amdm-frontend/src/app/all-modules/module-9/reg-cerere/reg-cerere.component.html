@@ -79,9 +79,11 @@
                         </mat-form-field>
                     </div>
                     <div class="col-md-4">
-                        <mat-form-field>
-                            <input type="text" matInput placeholder="Faza" formControlName="phase">
-                        </mat-form-field>
+                        <ng-select [items]="phaseList"
+                                   bindLabel="name"
+                                   placeholder="Faza"
+                                   formControlName="phase">
+                        </ng-select>
                     </div>
                     <div class="col-md-4">
                         <mat-form-field>

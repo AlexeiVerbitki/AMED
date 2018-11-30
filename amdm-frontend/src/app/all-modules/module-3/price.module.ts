@@ -14,9 +14,11 @@ import {MatDialogModule} from "@angular/material";
 import {DocumentModule} from "../../document/document.module";
 import {OneMedPriceComponent} from "./one-med-price/one-med-price.component";
 import {PriceEditModalComponent} from "./modal/price-edit-modal/price-edit-modal.component";
+import {PriceAutoRevaluationComponent} from "./price-auto-revaluation/price-auto-revaluation.component";
+import {XchangeInfoComponent} from "./xchangeInfo/xchangeinfo.component";
 
 @NgModule({
-    entryComponents: [ReferencePriceComponent, PriceEditModalComponent],
+    entryComponents: [ReferencePriceComponent, PriceEditModalComponent, XchangeInfoComponent],
     imports: [
         CommonModule,
         PriceRoutingModule,
@@ -28,7 +30,15 @@ import {PriceEditModalComponent} from "./modal/price-edit-modal/price-edit-modal
         MaterialSharedModule.forRoot(),
     ],
     schemas: [],
-    declarations: [PriceRegMedComponent, OneMedPriceComponent, PriceEvaluateMedComponent, ReferencePriceComponent, PriceEditModalComponent],
+    declarations: [
+        PriceRegMedComponent,
+        PriceAutoRevaluationComponent,
+        OneMedPriceComponent,
+        PriceEvaluateMedComponent,
+        ReferencePriceComponent,
+        PriceEditModalComponent,
+        XchangeInfoComponent
+    ],
     providers: [UploadFileService, RequestService],
 
 })

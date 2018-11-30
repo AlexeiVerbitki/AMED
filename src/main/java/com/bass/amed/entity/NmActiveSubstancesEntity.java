@@ -92,7 +92,6 @@ public class NmActiveSubstancesEntity
     public int hashCode()
     {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (code != null ? code.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (quantity != null ? quantity.hashCode() : 0);
         return result;

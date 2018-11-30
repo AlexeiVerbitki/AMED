@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {Document} from "../../../models/document";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -340,13 +340,15 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
         let outDocument = {
             name: 'Licenta',
             number: '',
-            status: this.getOutputDocStatus()
+            status: this.getOutputDocStatus(),
+            category : 'LI'
         };
 
         let outDocumentAnexa = {
             name: 'Anexa Licenta',
             number: '',
-            status: this.getOutputDocStatus()
+            status: this.getOutputDocStatus(),
+            category : 'AL'
         };
 
         this.outDocuments.push(outDocument);
@@ -358,19 +360,6 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
         this.refreshOutputDocuments();
     }
 
-    viewDoc(document: any) {
-        this.loadingService.show();
-        this.subscriptions.push(this.documentService.viewDD(document.number).subscribe(data => {
-                let file = new Blob([data], {type: 'application/pdf'});
-                var fileURL = URL.createObjectURL(file);
-                window.open(fileURL);
-                this.loadingService.hide();
-            }, error => {
-                this.loadingService.hide();
-            }
-            )
-        );
-    }
 
     checkAllDocumentsWasAttached(): boolean
     {
@@ -403,6 +392,32 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
             mode : 'N',
             description : 'Nu este atasat'
         };
+    }
+
+    viewDoc(document: any) {
+        this.loadingService.show();
+
+        let observable : Observable<any> = null;
+
+        if (document.category === 'AL')
+        {
+            observable = this.licenseService.viewAnexaLicenta(this.composeModel('A', 'A'));
+        }
+        else if (document.category === 'LI')
+        {
+            observable = this.licenseService.viewLicenta(this.composeModel('A', 'A'));
+        }
+
+        this.subscriptions.push(observable.subscribe(data => {
+                let file = new Blob([data], {type: 'application/pdf'});
+                var fileURL = URL.createObjectURL(file);
+                window.open(fileURL);
+                this.loadingService.hide();
+            }, error => {
+                this.loadingService.hide();
+            }
+            )
+        );
     }
 
     ngOnDestroy() {

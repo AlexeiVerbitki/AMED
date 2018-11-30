@@ -1,30 +1,30 @@
-<div class="container-fluid sky z-depth-2">
+<div class="container-fluid sky z-depth-1">
     <h3 class="text-center my-3 font-weight-bold">Evaluarea cererii de inregistrare a pretului la medicamente</h3>
 
     <form [formGroup]='PriceRegForm'>
         <div class="row">
-            <div class="col-lg-3">
+            <div class="col-md-4">
                 <div class="md-form">
                     <input id="nrCererii" mdbInputDirective type="text" class="form-control"
                            formControlName="requestNumber" [attr.disabled]="true">
                     <label for="nrCererii">Numarul cererii</label>
                 </div>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-4">
                 <div class="md-form">
                     <input id="reqStatus" mdbInputDirective type="text" class="form-control"
                            formControlName="requestStatus" [attr.disabled]="true">
                     <label for="reqStatus">Statutul cererii</label>
                 </div>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-4">
                 <div class="md-form" formGroupName="price">
                     <input id="nrFolder" mdbInputDirective type="text" class="form-control"
                            formControlName="folderNr" [attr.disabled]="true">
                     <label for="nrFolder">Numarul dosarului</label>
                 </div>
             </div>
-            <div class="col-lg-3">
+            <div class="col-md-4">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="picker" placeholder="din data" formControlName="startDate">
@@ -33,12 +33,7 @@
                     </mat-form-field>
                 </div>
             </div>
-        </div>
-
-
-
-        <div class="row">
-            <div class="col" formGroupName="company">
+            <div class="col-md-4" formGroupName="company">
                 <div class="md-form">
                     <input id="compName" mdbInputDirective type="text" class="form-control"
                            formControlName="name" [attr.disabled]="true">
@@ -46,7 +41,7 @@
                 </div>
             </div>
 
-            <div class="col" formGroupName="medicament">
+            <div class="col-md-4" formGroupName="medicament">
                 <div class="md-form">
                     <input id="prod" mdbInputDirective type="text" class="form-control" [attr.disabled]="true"
                            formControlName="manufactureName">
@@ -54,7 +49,7 @@
                 </div>
             </div>
 
-            <div class="col" formGroupName="medicament">
+            <div class="col-md-4" formGroupName="medicament">
                 <div class="md-form">
                     <input id="valab" mdbInputDirective type="number" class="form-control"
                            formControlName="termsOfValidity"  [attr.disabled]="true">
@@ -62,7 +57,7 @@
                 </div>
             </div>
 
-            <div class="col" formGroupName="medicament">
+            <div class="col-md-4" formGroupName="medicament">
                 <div class="md-form">
                     <input id="expiration" mdbInputDirective type="text" class="form-control"
                            formControlName="expirationDate"  [attr.disabled]="true">
@@ -70,7 +65,7 @@
                 </div>
             </div>
 
-            <div class="col">
+            <div class="col-md-4">
                 <div class="md-form">
                     <input id="typeMed" mdbInputDirective type="text" class="form-control" [value]="medicamentType.description" [attr.disabled]="true">
                     <label for="typeMed">Tipul medicamentului</label>
@@ -79,8 +74,8 @@
         </div>
 
 
-        <table mdbTable class="my-5">
-            <thead class="black white-text">
+        <table mdbTable class="my-5 text-center z-depth-1">
+            <thead class="bg-sidebar white-text">
             <tr>
                 <th mdbTooltip="Tipul Medicamenului">Tipul Medicamenului</th>
                 <th mdbTooltip="Codul">Codul</th>
@@ -91,156 +86,141 @@
                 <th mdbTooltip="Denumirea internaţională">Denumirea internaţională</th>
                 <th mdbTooltip="Preţul MDL">Preţul MDL</th>
                 <th mdbTooltip="Preţul Valuta">Preţul Valuta</th>
+                <th *ngIf="medicaments.length > 1">Șterge</th>
             </tr>
             </thead>
             <tbody>
 
-            <tr mdbTableCol *ngFor="let el of medicaments">
-                <td mdbTooltip="{{el.target}}" placement="top">{{el.target}}</td>
-                <td mdbTooltip="{{el.code}}" placement="top">{{el.code}}</td>
-                <td mdbTooltip="{{el.name}}" placement="top">{{el.name}}</td>
-                <td mdbTooltip="{{el.pharmaceuticalForm.description}}" placement="top">{{el.pharmaceuticalForm.description}}</td>
-                <td mdbTooltip="{{el.dose}}" placement="top">{{el.dose}}</td>
-                <td mdbTooltip="{{el.division}}" placement="top">{{el.division}}</td>
-                <td mdbTooltip="{{el.internationalMedicamentName.description}}" placement="top">{{el.internationalMedicamentName.description}}</td>
-                <td mdbTooltip="{{el.price.mdlValue | number:'1.4'}}" placement="top">{{el.price.mdlValue | number:'1.4'}}</td>
-                <td mdbTooltip="{{el.price.value | number:'1.4'}} {{el.price.currency.shortDescription}}" placement="top">{{el.price.value | number:'1.4'}} {{el.price.currency.shortDescription}}</td>
+            <tr mdbTableCol *ngFor="let el of medicaments; let i = index">
+                <td class="align-middle" mdbTooltip="{{el.target}}" placement="top">{{el.target}}</td>
+                <td class="align-middle"  mdbTooltip="{{el.code}}" placement="top">{{el.code}}</td>
+                <td class="align-middle" mdbTooltip="{{el.name}}" placement="top">{{el.name}}</td>
+                <td class="align-middle" mdbTooltip="{{el.pharmaceuticalForm.description}}" placement="top">{{el.pharmaceuticalForm.description}}</td>
+                <td class="align-middle" mdbTooltip="{{el.dose}}" placement="top">{{el.dose}}</td>
+                <td class="align-middle" mdbTooltip="{{el.division}}" placement="top">{{el.division}}</td>
+                <td class="align-middle" mdbTooltip="{{el.internationalMedicamentName.description}}" placement="top">{{el.internationalMedicamentName.description}}</td>
+                <td class="align-middle" mdbTooltip="{{el.price.mdlValue | number:'1.4'}}" placement="top">{{el.price.mdlValue | number:'1.4'}}</td>
+                <td class="align-middle" mdbTooltip="{{el.price.value | number:'1.4'}} {{el.price.currency.shortDescription}}" placement="top">{{el.price.value | number:'1.4'}} {{el.price.currency.shortDescription}}</td>
+                <td class="align-middle w-40"  *ngIf="el.rowType == 2">
+                    <button type="button" class="btn btn-dark-red-color btn-sm" (click)="deleteRelatedOriginalMed(i)">
+                        <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+                    </button>
+                </td>
             </tr>
             </tbody>
         </table>
 
-        <h5 class="text-center font-weight-bold mt-4 mb-4">Rata medie a BNM pentru luna precedentă evaluării
-            dosarului</h5>
-        <div class="container ">
-            <div class="row" *ngFor="let avgCur of avgCurrencies; let i = index">
-                <div class="offset-2"></div>
-                <div class="col-8">
-                    <div class="row text-center font-weight-bold alert alert-currency">
-                        <div class="col-5">{{'1 ' + avgCur?.currency?.shortDescription}}</div>
-                        <div class="col-2">=</div>
-                        <div class="col-3">
-                            <input #exchangeField
-                                   id="myText"
-                                   type="number"
-                                   class="text-right font-weight-bold" style=" border:none; background: transparent; outline: 0;"
-                                   [value]="avgCur?.value | number:'1.4'"
-                                   (change)="exchangeRateModified(i, exchangeField.value)" />
-                        </div>
-                        <div class="col-2 text-left font-weight-bold">MDL</div>
-                    </div>
-                </div>
-                <div class="offset-2"></div>
-            </div>
-        </div>
-
-            <div [hidden]="!hasReferencePrices">
-                    <!-- Card gradient -->
-                    <div class="cascade-header bg-sidebar">
-
-                        <!-- Title -->
-                        <div class="row">
-                            <div class="col-10">
-                                <div class="card-header-title white-text mt-2">Prețul medicamentului în 9 țări de referință</div>
-                            </div>
-                            <div class="col-2">
-                                <div class="text-right text-white pr-2 fap">
-                                    <span class="cursorPointer" (click)="addNewReferencePrice(PriceRefType.ReferenceCountry)"><i class="fa fa-plus-circle fa-2x fa-mt" aria-hidden="true"></i></span>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <!-- Card content -->
-                    <div class="card-body card-body-cascade z-depth-3">
-                        <table mdbTable striped="true" hover="true" small="true" class="text-center">
-                            <thead class="black white-text">
-                            <tr>
-                                <th scope="col" mdbTooltip="Țara de referință">Țara de referință</th>
-                                <th mdbTooltip="Valuta ţării de referinţă">Valuta ţării de referinţă</th>
-                                <th>Preţ</th>
-                                <th mdbTooltip="Rata de schimb (valuta ţării de referinta/MDL)">Rata de schimb (valuta ţării de referinta/MDL)</th>
-                                <th>MDL</th>
-                                <th mdbTooltip="Rata de schimb (EUR/lei)">Rata de schimb (EUR/lei)</th>
-                                <th>EUR</th>
-                                <th mdbTooltip="Rata de schimb (USD/lei)">Rata de schimb (USD/lei)</th>
-                                <th>USD</th>
-                                <th>Actiuni</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr mdbTableCol *ngFor="let el of refPrices; let i = index">
-                                <ng-container *ngIf="el.type.id == PriceRefType.ReferenceCountry">
-                                    <td mdbTooltip="{{el.country?.description}}" class="align-middle" scope="row">{{el.country?.description}}</td>
-                                    <td mdbTooltip="{{el.currency?.shortDescription}}" class="align-middle">{{el.currency?.shortDescription}}</td>
-                                    <td mdbTooltip="{{el.value | number:'1.4'}}" class="align-middle">{{el.value | number:'1.4'}}</td>
-                                    <td mdbTooltip="{{el?.xchRateRef | number:'1.4'}}" class="align-middle">{{el?.xchRateRef | number:'1.4'}}</td>
-                                    <td mdbTooltip="{{el?.xchRateRefVal | number:'1.4'}}" class="align-middle">{{el?.xchRateRefVal | number:'1.4'}}</td>
-                                    <td mdbTooltip="{{el?.xchRateEur | number:'1.4'}}" class="align-middle">{{el?.xchRateEur | number:'1.4'}}</td>
-                                    <td mdbTooltip="{{el?.xchRateEurVal | number:'1.4'}}" class="align-middle">{{el?.xchRateEurVal | number:'1.4'}}</td>
-                                    <td mdbTooltip="{{el?.xchRateUsd | number:'1.4'}}" class="align-middle">{{el?.xchRateUsd | number:'1.4'}}</td>
-                                    <td mdbTooltip="{{el?.xchRateUsdVal | number:'1.4'}}" class="align-middle">{{el?.xchRateUsdVal | number:'1.4'}}</td>
-                                    <td mdbTooltip="" class="align-middle"><button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                                                                     (click)="priceEditModalOpen(el, i)">
-                                        Editare
-                                    </button></td>
-                                </ng-container>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-
-                <div class="my-5">
-                <div class="cascade-header bg-sidebar">
+        <div [hidden]="!hasReferencePrices">
+            <div class="gradient-card-header bg-sidebar border-gradient mt-5">
+                <div class="container-fluid">
                     <!-- Title -->
                     <div class="row">
-                        <div class="col-12">
-                            <div class="card-header-title white-text mt-2">Media celor mai mici prețuri în țările de referință</div>
+                        <div class="col-6">
+                            <div class="card-header-title white-text">Prețul medicamentului în 9 țări de referință</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-right fap text-white">
+                                <i (click)="addNewReferencePrice(PriceRefType.ReferenceCountry)" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                </div>
-                        <!-- Card content -->
-                        <div class="card-body card-body-cascade z-depth-3">
-                            <table mdbTable striped="true" hover="true" small="true" class="text-center">
-                                <thead class="black white-text">
-                                <tr>
-                                    <th scope="col">Cele mai mici 3 prețuri</th>
-                                    <th>MDL</th>
-                                    <th>EUR</th>
-                                    <th>USD</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr mdbTableCol *ngFor="let el of minRefPrices">
-                                    <td scope="row">{{el.country?.description}}</td>
-                                    <td>{{el?.xchRateRefVal | number:'1.4'}}</td>
-                                    <td>{{el?.xchRateEurVal | number:'1.4'}}</td>
-                                    <td>{{el?.xchRateUsdVal | number:'1.4'}}</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                </div>
             </div>
 
-        <div [hidden]="prevPrices == undefined || prevPrices.length == 0">
+            <!-- Card content -->
+            <div class="card-body card-body-cascade z-depth-1">
+                <table mdbTable striped="true" hover="true" small="true" class="text-center">
+                    <thead class="bg-sidebar white-text">
+                    <tr>
+                        <th scope="col" mdbTooltip="Țara de referință">Țara de referință</th>
+                        <th mdbTooltip="Valuta ţării de referinţă">Valuta ţării de referinţă</th>
+                        <th>Preţ</th>
+                        <th mdbTooltip="Rata de schimb (valuta ţării de referinta/MDL)">Rata de schimb (valuta ţării de referinta/MDL)</th>
+                        <th>MDL</th>
+                        <th mdbTooltip="Rata de schimb (EUR/lei)">Rata de schimb (EUR/lei)</th>
+                        <th>EUR</th>
+                        <th mdbTooltip="Rata de schimb (USD/lei)">Rata de schimb (USD/lei)</th>
+                        <th>USD</th>
+                        <th>Actiuni</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr mdbTableCol *ngFor="let el of refPrices; let i = index">
+                        <ng-container *ngIf="el.type.id == PriceRefType.ReferenceCountry">
+                            <td mdbTooltip="{{el.country?.description}}" class="align-middle" scope="row">{{el.country?.description}}</td>
+                            <td mdbTooltip="{{el.currency?.shortDescription}}" class="align-middle">{{el.currency?.shortDescription}}</td>
+                            <td mdbTooltip="{{el.value | number:'1.4'}}" class="align-middle">{{el.value | number:'1.4'}}</td>
+                            <td mdbTooltip="{{el?.xchRateRef | number:'1.4'}}" class="align-middle">{{el?.xchRateRef | number:'1.4'}}</td>
+                            <td mdbTooltip="{{el?.xchRateRefVal | number:'1.4'}}" class="align-middle">{{el?.xchRateRefVal | number:'1.4'}}</td>
+                            <td mdbTooltip="{{el?.xchRateEur | number:'1.4'}}" class="align-middle">{{el?.xchRateEur | number:'1.4'}}</td>
+                            <td mdbTooltip="{{el?.xchRateEurVal | number:'1.4'}}" class="align-middle">{{el?.xchRateEurVal | number:'1.4'}}</td>
+                            <td mdbTooltip="{{el?.xchRateUsd | number:'1.4'}}" class="align-middle">{{el?.xchRateUsd | number:'1.4'}}</td>
+                            <td mdbTooltip="{{el?.xchRateUsdVal | number:'1.4'}}" class="align-middle">{{el?.xchRateUsdVal | number:'1.4'}}</td>
+                            <td mdbTooltip="" class="align-middle w-40"><button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
+                                                                           (click)="priceEditModalOpen(el, i)">
+                                <i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+                            </button></td>
+                        </ng-container>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
 
             <div class="my-5">
-                <div class="cascade-header bg-sidebar">
-                    <!-- Title -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card-header-title white-text mt-2">Date despre înregistrările precedente</div>
+                <div class="gradient-card-header bg-sidebar border-gradient">
+                    <div class="container-fluid">
+                        <!-- Title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card-header-title white-text">Media celor mai mici prețuri în țările de referință</div>
+                            </div>
                         </div>
                     </div>
 
                 </div>
                 <!-- Card content -->
-                <div class="card-body card-body-cascade z-depth-3">
+                <div class="card-body card-body-cascade z-depth-1">
                     <table mdbTable striped="true" hover="true" small="true" class="text-center">
-                        <thead class="black white-text">
+                        <thead class="bg-sidebar white-text">
+                        <tr>
+                            <th scope="col">Cele mai mici 3 prețuri</th>
+                            <th>MDL</th>
+                            <th>EUR</th>
+                            <th>USD</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr mdbTableCol *ngFor="let el of minRefPrices">
+                            <td scope="row">{{el.country?.description}}</td>
+                            <td>{{el?.xchRateRefVal | number:'1.4'}}</td>
+                            <td>{{el?.xchRateEurVal | number:'1.4'}}</td>
+                            <td>{{el?.xchRateUsdVal | number:'1.4'}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div [hidden]="prevPrices == undefined || prevPrices.length == 0">
+
+            <div class="my-5">
+                <div class="gradient-card-header bg-sidebar border-gradient">
+                    <div class="container-fluid">
+                        <!-- Title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card-header-title white-text">Date despre înregistrările precedente</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card content -->
+                <div class="card-body card-body-cascade z-depth-1">
+                    <table mdbTable striped="true" hover="true" small="true" class="text-center">
+                        <thead class="bg-sidebar white-text">
                         <tr>
                             <th scope="col">Data aprobării ordinului</th>
                             <th>Data revizuirii preţului</th>
@@ -252,8 +232,8 @@
                         <tr mdbTableCol *ngFor="let el of prevPrices">
                             <td scope="row">{{el.orderApprovDate | date: 'dd/MM/yyyy'}}</td>
                             <td>{{el.revisionDate | date: 'dd/MM/yyyy'}}</td>
-                            <td>{{el.mdlValue | number:'1.4'}}</td>
-                            <td>{{el.value | number:'1.4'}} {{el.currency?.shortDescription}}</td>
+                            <td>{{el.priceMdl | number:'1.4'}}</td>
+                            <td>{{el.price | number:'1.4'}} {{el.currency?.shortDescription}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -262,163 +242,180 @@
 
         </div>
 
-            <div [hidden]="!hasOriginCountryPrices">
+        <div [hidden]="!hasOriginCountryPrices">
 
-                    <div class="my-5">
-                        <div class="cascade-header bg-sidebar">
-                            <!-- Title -->
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="card-header-title white-text mt-2">Prețul medicamentului în țara de origine</div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <!-- Card content -->
-                        <div class="card-body card-body-cascade z-depth-3">
-                            <table mdbTable striped="true" hover="true" small="true"
-                                   class="text-center">
-                                <thead class="black white-text">
-                                <tr>
-                                    <th mdbTooltip="Țara de origine" scope="col">Țara de origine</th>
-                                    <th mdbTooltip="Valuta ţării de referinţă">Valuta ţării de referinţă</th>
-                                    <th mdbTooltip="Preţ">Preţ</th>
-                                    <th mdbTooltip="Rata de schimb (valuta ţării de referinta/MDL)">Rata de schimb (valuta ţării de referinta/MDL)</th>
-                                    <th mdbTooltip="MDL">MDL</th>
-                                    <th mdbTooltip="Rata de schimb (EUR/lei)">Rata de schimb (EUR/lei)</th>
-                                    <th mdbTooltip="EUR">EUR</th>
-                                    <th mdbTooltip="Rata de schimb (USD/lei)">Rata de schimb (USD/lei)</th>
-                                    <th mdbTooltip="USD">USD</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr mdbTableCol *ngFor="let el of refPrices">
-                                    <ng-container *ngIf="el.type.id == PriceRefType.OriginCountry">
-                                        <td mdbTooltip="{{el.country?.description}}" scope="row">{{el.country?.description}}</td>
-                                        <td mdbTooltip="{{el.currency?.shortDescription}}">{{el.currency?.shortDescription}}</td>
-                                        <td mdbTooltip="{{el.value | number:'1.4'}}">{{el.value | number:'1.4'}}</td>
-                                        <td mdbTooltip="{{el?.xchRateRef | number:'1.4'}}">{{el?.xchRateRef | number:'1.4'}}</td>
-                                        <td mdbTooltip="{{el?.xchRateRefVal | number:'1.4'}}">{{el?.xchRateRefVal | number:'1.4'}}</td>
-                                        <td mdbTooltip="{{el?.xchRateEur | number:'1.4'}}">{{el?.xchRateEur | number:'1.4'}}</td>
-                                        <td mdbTooltip="{{el?.xchRateEurVal | number:'1.4'}}">{{el?.xchRateEurVal | number:'1.4'}}</td>
-                                        <td mdbTooltip="{{el?.xchRateUsd | number:'1.4'}}">{{el?.xchRateUsd | number:'1.4'}}</td>
-                                        <td mdbTooltip="{{el?.xchRateUsdVal | number:'1.4'}}">{{el?.xchRateUsdVal | number:'1.4'}}</td>
-                                    </ng-container>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                </div>
-
-            <div [hidden]="!hasOtherCountriesPrices">
-                <div class="my-5">
-                    <div class="cascade-header bg-sidebar">
-                        <!-- Title -->
-                        <div class="row">
-                            <div class="col-10">
-                                <div class="card-header-title white-text mt-2">Prețul medicamentului în cataloagele în care medicamentul este plasat pe piaţă</div>
-                            </div>
-                            <div class="col-2">
-                                <div class="text-right text-white pr-2 fap">
-                                    <span class="cursorPointer" (click)="addNewReferencePrice(PriceRefType.OtherCountriesCatalog)"><i class="fa fa-plus-circle fa-2x fa-mt" aria-hidden="true"></i></span>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <!-- Card content -->
-                    <div class="card-body card-body-cascade z-depth-3">
-                        <table mdbTable  striped="true" hover="true" small="true"
-                               class="text-center">
-                            <thead class="black white-text">
-                            <tr>
-                                <th mdbTooltip="Țara" scope="col">Țara</th>
-                                <th mdbTooltip="Valuta ţării de referinţă">Valuta ţării de referinţă</th>
-                                <th mdbTooltip="Preţ">Preţ</th>
-                                <th mdbTooltip="Rata de schimb (valuta ţării de referinta/MDL)">Rata de schimb (valuta ţării de referinta/MDL)</th>
-                                <th mdbTooltip="MDL">MDL</th>
-                                <th mdbTooltip="Rata de schimb (EUR/lei)">Rata de schimb (EUR/lei)</th>
-                                <th mdbTooltip="EUR">EUR</th>
-                                <th mdbTooltip="Rata de schimb (USD/lei)">Rata de schimb (USD/lei)</th>
-                                <th mdbTooltip="USD">USD</th>
-                                <th mdbTooltip="Actiuni">Actiuni</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr mdbTableCol *ngFor="let el of refPrices; let i = index">
-                                <ng-container *ngIf="el.type.id == PriceRefType.OtherCountriesCatalog">
-                                    <td mdbTooltip="{{el.country?.description}}" class="align-middle" scope="row">{{el.country?.description}}</td>
-                                    <td mdbTooltip="{{el.currency?.shortDescription}}" class="align-middle">{{el.currency?.shortDescription}}</td>
-                                    <td mdbTooltip="{{el.value | number:'1.4'}}" class="align-middle">{{el.value | number:'1.4'}}</td>
-                                    <td mdbTooltip="{{el?.xchRateRef | number:'1.4'}}" class="align-middle">{{el?.xchRateRef | number:'1.4'}}</td>
-                                    <td mdbTooltip="{{el?.xchRateRefVal | number:'1.4'}}" class="align-middle">{{el?.xchRateRefVal | number:'1.4'}}</td>
-                                    <td mdbTooltip="{{el?.xchRateEur | number:'1.4'}}" class="align-middle">{{el?.xchRateEur | number:'1.4'}}</td>
-                                    <td mdbTooltip="{{el?.xchRateEurVal | number:'1.4'}}" class="align-middle">{{el?.xchRateEurVal | number:'1.4'}}</td>
-                                    <td mdbTooltip="{{el?.xchRateUsd | number:'1.4'}}" class="align-middle">{{el?.xchRateUsd | number:'1.4'}}</td>
-                                    <td mdbTooltip="{{el?.xchRateUsdVal | number:'1.4'}}" class="align-middle">{{el?.xchRateUsdVal | number:'1.4'}}</td>
-                                    <td class="align-middle"><button class="btn btn-mdb-color waves-light btn-sm" mdbWavesEffect (click)="priceEditModalOpen(el, i)">
-                                        Editare
-                                    </button></td>
-                                </ng-container>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-
-                <div class="my-5">
-                    <div class="cascade-header bg-sidebar">
+            <div class="my-5">
+                <div class="gradient-card-header bg-sidebar border-gradient">
+                    <div class="container-fluid">
                         <!-- Title -->
                         <div class="row">
                             <div class="col-12">
-                                <div class="card-header-title white-text mt-2">Media celor mai mici preţuri de pe cataloagele în care medicamentul este plasat pe piaţă</div>
+                                <div class="card-header-title white-text">Prețul medicamentului în țara de origine</div>
                             </div>
-                        </div>
-
-                    </div>
-                    <!-- Card content -->
-                    <div class="card-body card-body-cascade z-depth-3">
-                        <table mdbTable striped="true" hover="true" small="true" class="text-center">
-                            <thead class="black white-text">
-                            <tr>
-                                <th scope="col">Cele mai mici 3 prețuri</th>
-                                <th>MDL</th>
-                                <th>EUR</th>
-                                <th>USD</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr mdbTableCol *ngFor="let el of minOtherCountriesCatPrices">
-                                <td scope="row">{{el.country?.description}}</td>
-                                <td>{{el?.xchRateRefVal | number:'1.4'}}</td>
-                                <td>{{el?.xchRateEurVal | number:'1.4'}}</td>
-                                <td>{{el?.xchRateUsdVal | number:'1.4'}}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-            </div>
-
-        <div [hidden]="relatedMeds == undefined || relatedMeds.length == 0">
-            <div class="my-5">
-                <div class="cascade-header bg-sidebar">
-                    <!-- Title -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card-header-title white-text mt-2">Medicamente similare înregistrate în CNP conform denumirii comune internaţionale</div>
                         </div>
                     </div>
 
                 </div>
                 <!-- Card content -->
-                <div class="card-body card-body-cascade z-depth-3">
+                <div class="card-body card-body-cascade z-depth-1">
+                    <table mdbTable striped="true" hover="true" small="true"
+                           class="text-center">
+                        <thead class="bg-sidebar white-text">
+                        <tr>
+                            <th mdbTooltip="Țara de origine" scope="col">Țara de origine</th>
+                            <th mdbTooltip="Valuta ţării de referinţă">Valuta ţării de referinţă</th>
+                            <th mdbTooltip="Preţ">Preţ</th>
+                            <th mdbTooltip="Rata de schimb (valuta ţării de referinta/MDL)">Rata de schimb (valuta ţării de referinta/MDL)</th>
+                            <th mdbTooltip="MDL">MDL</th>
+                            <th mdbTooltip="Rata de schimb (EUR/lei)">Rata de schimb (EUR/lei)</th>
+                            <th mdbTooltip="EUR">EUR</th>
+                            <th mdbTooltip="Rata de schimb (USD/lei)">Rata de schimb (USD/lei)</th>
+                            <th mdbTooltip="USD">USD</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr mdbTableCol *ngFor="let el of refPrices">
+                            <ng-container *ngIf="el.type.id == PriceRefType.OriginCountry">
+                                <td mdbTooltip="{{el.country?.description}}" scope="row">{{el.country?.description}}</td>
+                                <td mdbTooltip="{{el.currency?.shortDescription}}">{{el.currency?.shortDescription}}</td>
+                                <td mdbTooltip="{{el.value | number:'1.4'}}">{{el.value | number:'1.4'}}</td>
+                                <td mdbTooltip="{{el?.xchRateRef | number:'1.4'}}">{{el?.xchRateRef | number:'1.4'}}</td>
+                                <td mdbTooltip="{{el?.xchRateRefVal | number:'1.4'}}">{{el?.xchRateRefVal | number:'1.4'}}</td>
+                                <td mdbTooltip="{{el?.xchRateEur | number:'1.4'}}">{{el?.xchRateEur | number:'1.4'}}</td>
+                                <td mdbTooltip="{{el?.xchRateEurVal | number:'1.4'}}">{{el?.xchRateEurVal | number:'1.4'}}</td>
+                                <td mdbTooltip="{{el?.xchRateUsd | number:'1.4'}}">{{el?.xchRateUsd | number:'1.4'}}</td>
+                                <td mdbTooltip="{{el?.xchRateUsdVal | number:'1.4'}}">{{el?.xchRateUsdVal | number:'1.4'}}</td>
+                            </ng-container>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <div [hidden]="!hasOtherCountriesPrices">
+            <div class="my-5">
+                <div class="gradient-card-header bg-sidebar border-gradient">
+                    <div class="container-fluid">
+                        <!-- Title -->
+                        <div class="row">
+                            <div class="col-9">
+                                <div class="card-header-title white-text">Prețul medicamentului în cataloagele în care medicamentul este plasat pe piaţă</div>
+                            </div>
+                            <div class="col-3">
+                                <div class="text-right fap text-white">
+                                    <i (click)="addNewReferencePrice(PriceRefType.OtherCountriesCatalog)" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Card content -->
+                <div class="card-body card-body-cascade z-depth-1">
+                    <table mdbTable  striped="true" hover="true" small="true"
+                           class="text-center">
+                        <thead class="bg-sidebar white-text">
+                        <tr>
+                            <th mdbTooltip="Țara" scope="col">Țara</th>
+                            <th mdbTooltip="Valuta ţării de referinţă">Valuta ţării de referinţă</th>
+                            <th mdbTooltip="Preţ">Preţ</th>
+                            <th mdbTooltip="Rata de schimb (valuta ţării de referinta/MDL)">Rata de schimb (valuta ţării de referinta/MDL)</th>
+                            <th mdbTooltip="MDL">MDL</th>
+                            <th mdbTooltip="Rata de schimb (EUR/lei)">Rata de schimb (EUR/lei)</th>
+                            <th mdbTooltip="EUR">EUR</th>
+                            <th mdbTooltip="Rata de schimb (USD/lei)">Rata de schimb (USD/lei)</th>
+                            <th mdbTooltip="USD">USD</th>
+                            <th mdbTooltip="Actiuni">Actiuni</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr mdbTableCol *ngFor="let el of refPrices; let i = index">
+                            <ng-container *ngIf="el.type.id == PriceRefType.OtherCountriesCatalog">
+                                <td mdbTooltip="{{el.country?.description}}" class="align-middle" scope="row">{{el.country?.description}}</td>
+                                <td mdbTooltip="{{el.currency?.shortDescription}}" class="align-middle">{{el.currency?.shortDescription}}</td>
+                                <td mdbTooltip="{{el.value | number:'1.4'}}" class="align-middle">{{el.value | number:'1.4'}}</td>
+                                <td mdbTooltip="{{el?.xchRateRef | number:'1.4'}}" class="align-middle">{{el?.xchRateRef | number:'1.4'}}</td>
+                                <td mdbTooltip="{{el?.xchRateRefVal | number:'1.4'}}" class="align-middle">{{el?.xchRateRefVal | number:'1.4'}}</td>
+                                <td mdbTooltip="{{el?.xchRateEur | number:'1.4'}}" class="align-middle">{{el?.xchRateEur | number:'1.4'}}</td>
+                                <td mdbTooltip="{{el?.xchRateEurVal | number:'1.4'}}" class="align-middle">{{el?.xchRateEurVal | number:'1.4'}}</td>
+                                <td mdbTooltip="{{el?.xchRateUsd | number:'1.4'}}" class="align-middle">{{el?.xchRateUsd | number:'1.4'}}</td>
+                                <td mdbTooltip="{{el?.xchRateUsdVal | number:'1.4'}}" class="align-middle">{{el?.xchRateUsdVal | number:'1.4'}}</td>
+                                <td class="align-middle w-40"><button class="btn btn-mdb-color waves-light btn-sm" mdbWavesEffect (click)="priceEditModalOpen(el, i)">
+                                    <i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+                                </button></td>
+                            </ng-container>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="my-5">
+                <!--<div class="cascade-header bg-sidebar">-->
+                    <!--&lt;!&ndash; Title &ndash;&gt;-->
+                    <!--<div class="row">-->
+                        <!--<div class="col-12">-->
+                            <!--<div class="card-header-title white-text mt-2">Media celor mai mici preţuri de pe cataloagele în care medicamentul este plasat pe piaţă</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+                <!--</div>-->
+                <div class="gradient-card-header bg-sidebar border-gradient">
+                    <div class="container-fluid">
+                        <!-- Title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card-header-title white-text">Media celor mai mici preţuri de pe cataloagele în care medicamentul este plasat pe piaţă</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Card content -->
+                <div class="card-body card-body-cascade z-depth-1">
                     <table mdbTable striped="true" hover="true" small="true" class="text-center">
-                        <thead class="black white-text">
+                        <thead class="bg-sidebar white-text">
+                        <tr>
+                            <th scope="col">Cele mai mici 3 prețuri</th>
+                            <th>MDL</th>
+                            <th>EUR</th>
+                            <th>USD</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr mdbTableCol *ngFor="let el of minOtherCountriesCatPrices">
+                            <td scope="row">{{el.country?.description}}</td>
+                            <td>{{el?.xchRateRefVal | number:'1.4'}}</td>
+                            <td>{{el?.xchRateEurVal | number:'1.4'}}</td>
+                            <td>{{el?.xchRateUsdVal | number:'1.4'}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <div [hidden]="relatedMeds == undefined || relatedMeds.length == 0">
+            <div class="my-5">
+                <div class="gradient-card-header bg-sidebar border-gradient">
+                    <div class="container-fluid">
+                        <!-- Title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card-header-title white-text">Medicamente similare înregistrate în CNP conform denumirii comune internaţionale</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Card content -->
+                <div class="card-body card-body-cascade z-depth-1">
+                    <table mdbTable striped="true" hover="true" small="true" class="text-center">
+                        <thead class="bg-sidebar white-text">
                         <tr>
                             <th scope="col" mdbTooltip="Codul medicamentului">Codul medicamentului</th>
                             <th mdbTooltip="Denumirea">Denumirea</th>
@@ -445,9 +442,9 @@
                             <td class="align-middle" mdbTooltip="{{m.internationalName}}">{{m.internationalName}}</td>
                             <td class="align-middle">{{m.mdlValue | number:'1.4'}}</td>
                             <td class="align-middle">{{m.price | number:'1.4'}} {{m.currency}}</td>
-                            <td class="align-middle">
-                                <button type="button" class="btn btn-danger btn-circle" (click)="deleteRelatedMed(i)">
-                                    <i class="fa fa-times fa-lg" aria-hidden="true"></i>
+                            <td class="align-middle w-40">
+                                <button type="button" class="btn btn-dark-red-color btn-sm" (click)="deleteRelatedMed(i)">
+                                    <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
                                 </button>
                             </td>
                         </tr>
@@ -465,20 +462,21 @@
 
         <div [hidden]="(relatedMeds == undefined || relatedMeds.length == 0) && !hasOriginCountryPrices" >
             <div class="my-5">
-                <div class="cascade-header bg-sidebar">
-                    <!-- Title -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card-header-title white-text mt-2">Media preţului din ţara de origine şi medicamentele similare înregistrate în CNP conform DCI</div>
+                <div class="gradient-card-header bg-sidebar border-gradient">
+                    <div class="container-fluid">
+                        <!-- Title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card-header-title white-text">Media preţului din ţara de origine şi medicamentele similare înregistrate în CNP conform DCI</div>
+                            </div>
                         </div>
                     </div>
 
                 </div>
-                <!-- Card content -->
-                <div class="card-body card-body-cascade z-depth-3">
+                <div class="card-body card-body-cascade z-depth-1">
 
                     <table mdbTable striped="true" hover="true" small="true" class="text-center">
-                        <thead class="black white-text">
+                        <thead class="bg-sidebar white-text">
                         <tr>
                             <th scope="col">Sursa</th>
                             <th>Media MDL</th>
@@ -496,37 +494,50 @@
 
         </div>
 
-        <hr>
-        <app-document [dcTypeIdentifier]="{code: 'PMED', step: 'E'}"
-                      [canUpload]="true"
-                      [documents]="documents"
-                      (documentModified)="documentAdded($event)"
+        <app-document [canUpload]="true" [documents]="documents" (documentModified)="documentAdded($event)"
+                      [dcTypeIdentifier]="{code:'PMED',step:'E'}"
                       [nrCerere]="PriceRegForm.get('requestNumber').value"></app-document>
+        <div class="my-5">
+        <div class="gradient-card-header bg-sidebar border-gradient">
+            <div class="container-fluid">
+                <!-- Title -->
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card-header-title white-text">Documente necesare</div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-right fap text-white">
+                            <i (click)="sendInfoLetter()" class="fa fa-envelope fa-lg fa-mt"
+                               aria-hidden="true" mdbTooltip="Scrisoare de informare" placement="top"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-
-        <h5 class="text-center font-weight-bold mt-5">Documente necesare</h5>
-
-        <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="sendInfoLetter()">Scrisoare de informare</button>
-        <table class="table table-widths-lg text-center">
-            <thead class="black white-text">
-            <tr>
-                <th class="w-50" scope="col">Denumirea</th>
-                <th class="w-25" scope="col">Numărul</th>
-                <th class="w-20" scope="col">Statusul documentului</th>
-                <th class="w-5">Acțiuni</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let a of outputDocuments">
-                <td scope="row">{{ a.description }}</td>
-                <td scope="row">{{ a.number }}</td>
-                <td scope="row">{{ a.status }}</td>
-                <td>
-                    <button class="btn btn-default btn-sm waves-light" mdbWavesEffect [disabled]="true" (click)="viewDoc(a)">Generare</button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        </div>
+        <div class="card-body card-body-cascade">
+            <table class="table table-widths-lg text-center">
+                <thead class="bg-sidebar white-text">
+                <tr>
+                    <th class="w-50" scope="col">Denumirea</th>
+                    <th class="w-25" scope="col">Numărul</th>
+                    <th class="w-20" scope="col">Statusul documentului</th>
+                    <th class="w-5">Acțiuni</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let a of outputDocuments">
+                    <td scope="row">{{ a.description }}</td>
+                    <td scope="row">{{ a.number }}</td>
+                    <td scope="row">{{ a.status }}</td>
+                    <td>
+                        <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect [disabled]="true" (click)="viewDoc(a)"><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        </div>
         <div *ngIf="formSubmitted && this.hasUnloadedDocs()">
             <small class="text-muted"><strong class="text-danger">Încărcați toate documentele necesare</strong>
             </small>
@@ -545,9 +556,9 @@
                                placeholder="Decizia luată în urma evaluării">
                     </ng-select>
                     <!--<div *ngIf="formSubmitted && PriceRegForm.get('evaluation.decision').invalid">-->
-                        <!--<small class="text-muted"><strong class="text-danger">Selectați decizia privind-->
-                            <!--prețurile</strong>-->
-                        <!--</small>-->
+                    <!--<small class="text-muted"><strong class="text-danger">Selectați decizia privind-->
+                    <!--prețurile</strong>-->
+                    <!--</small>-->
                     <!--</div>-->
                 </div>
             </div>
@@ -573,5 +584,4 @@
         </div>
     </form>
 </div>
-
-<!--<button class="btn peach-gradient btn-md btn-fixed z-depth-5" (click)="exchangeModalOpen()">Curs valutar</button>-->
+<app-xchangeinfo (changed)="currencyChanged($event)"></app-xchangeinfo>

@@ -7,6 +7,8 @@ import {MDBBootstrapModule} from "angular-bootstrap-md";
 import {MaterialSharedModule} from "../material-shared.module";
 import {LicenseManagementComponent} from "./license/license-management/license-management.component";
 import {MedicamentsComponent} from "./medicaments/medicaments.component";
+import {ReceiptsComponent} from "./receipts/receipts.component";
+import {AddReceiptDialogComponent} from "../dialog/add-receipt-dialog/add-receipt-dialog.component";
 
 @NgModule({
   imports: [
@@ -17,6 +19,7 @@ import {MedicamentsComponent} from "./medicaments/medicaments.component";
       MDBBootstrapModule.forRoot(),
       MaterialSharedModule.forRoot(),
   ],
-  declarations: [LicenseManagementComponent,MedicamentsComponent]
+  declarations: [LicenseManagementComponent,MedicamentsComponent,ReceiptsComponent,AddReceiptDialogComponent],
+    entryComponents:[AddReceiptDialogComponent]
 })
 export class ManagementModule { }

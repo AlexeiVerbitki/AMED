@@ -1,9 +1,11 @@
 <div class="mat-dialog-content">
 	<h3 class="text-center my-3 font-weight-bold">Detalii medicament</h3>
 	<form [formGroup]='mForm'>
-		<a class="offset-8 col-md-4" title="Istoric" (click)="showMedicamentHistory()">
-			Istoric
-		</a>
+<div class="position-button">
+		<button type="button" class="btn btn-mdb-color btn-sm" title="Istoric" (click)="showMedicamentHistory()" mdbTooltip="Istoric" placement="top">
+				<i class="fa fa-info-circle fa-lg" aria-hidden="true"></i>
+			</button>
+</div>
 		<div class="row">
 			<div class="col-md-4">
 				<div class="md-form">

@@ -1,7 +1,6 @@
 package com.bass.amed.entity;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -12,7 +11,6 @@ public class MedicamentAnnihilationEntity
 {
     private Integer id;
     private Set<PaymentOrdersEntity> paymentOrders;
-    private Set<ReceiptsEntity> receipts;
     private List<MedicamentAnnihilationMedsEntity> medicamentsMedicamentAnnihilationMeds;
     private String status;
     private Set<DocumentsEntity> documents;
@@ -43,20 +41,6 @@ public class MedicamentAnnihilationEntity
     public void setPaymentOrders(Set<PaymentOrdersEntity> paymentOrders)
     {
         this.paymentOrders = paymentOrders;
-    }
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
-    @JoinTable(name = "medicament_annihilation_receipts", joinColumns = {
-            @JoinColumn(name = "medicament_annihilation_id")}, inverseJoinColumns = {
-            @JoinColumn(name = "receipt_id")})
-    public Set<ReceiptsEntity> getReceipts()
-    {
-        return receipts;
-    }
-
-    public void setReceipts(Set<ReceiptsEntity> receipts)
-    {
-        this.receipts = receipts;
     }
 
     @Transient
@@ -119,7 +103,6 @@ public class MedicamentAnnihilationEntity
         MedicamentAnnihilationEntity that = (MedicamentAnnihilationEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(paymentOrders, that.paymentOrders) &&
-                Objects.equals(receipts, that.receipts) &&
                 Objects.equals(medicamentsMedicamentAnnihilationMeds, that.medicamentsMedicamentAnnihilationMeds) &&
                 Objects.equals(status, that.status) &&
                 Objects.equals(documents, that.documents);
@@ -128,6 +111,6 @@ public class MedicamentAnnihilationEntity
     @Override
     public int hashCode()
     {
-        return Objects.hash(id, paymentOrders, receipts, medicamentsMedicamentAnnihilationMeds, status, documents);
+        return Objects.hash(id, paymentOrders, medicamentsMedicamentAnnihilationMeds, status, documents);
     }
 }

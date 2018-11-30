@@ -185,7 +185,6 @@ export class AmbalajComponent implements OnInit {
         this.loadCurrenciesShort();
         this.loadCustomsCodes();
         this.loadATCCodes();
-        console.log("importTypeForms.value",this.importTypeForms.value)
     }
 
     onChanges(): void {

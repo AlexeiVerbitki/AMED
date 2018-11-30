@@ -32,7 +32,7 @@
         </div>
 
         <app-document [documents]="docs" [nrCerere]="mForm.get('nrCererii').value"
-                      (documentModified)="documentAdded($event)"></app-document>
+                      (documentModified)="documentAdded($event)" [dcTypeIdentifier]="{code : 'INMD', step : 'A'}"></app-document>
         <div *ngIf="rFormSubbmitted && docs.length==0">
             <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
         </div>

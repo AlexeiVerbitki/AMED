@@ -60,7 +60,7 @@
 		<div class="example-container">
 			<table mat-table [dataSource]="dataSource" matSort>
 				<ng-container matColumnDef="orderNr">
-					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Numar ordin</th>
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Numar ordin</th>
 					<td mat-cell *matCellDef="let element; let i = index;">
 						<a title="Deschide proces" (click)="navigateToUrl(i, element)" *ngIf="isLink(element)">
 							{{element.orderNr}}
@@ -72,42 +72,42 @@
 				</ng-container>
 
 				<ng-container matColumnDef="folderNr">
-					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Numar Dosar</th>
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Numar Dosar</th>
 					<td mat-cell *matCellDef="let element"> {{element.folderNr}} </td>
 				</ng-container>
 
 				<ng-container matColumnDef="medicament">
-					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Medicament</th>
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Medicament</th>
 					<td mat-cell *matCellDef="let element"> {{element.medicament}} </td>
 				</ng-container>
 
 				<ng-container matColumnDef="medicamentCode">
-					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Codul AMED</th>
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Codul AMED</th>
 					<td mat-cell *matCellDef="let element"> {{element.medicamentCode}} </td>
 				</ng-container>
 
 				<ng-container matColumnDef="division">
-					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Divizare</th>
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Divizare</th>
 					<td mat-cell *matCellDef="let element"> {{element.division}} </td>
 				</ng-container>
 
                 <ng-container matColumnDef="medicamentType">
-					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Tip Medicament</th>
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Tip Medicament</th>
 					<td mat-cell *matCellDef="let element"> {{element.medicamentType}} </td>
 				</ng-container>
 
 				<ng-container matColumnDef="priceType">
-					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Stare Preț</th>
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Stare Preț</th>
 					<td mat-cell *matCellDef="let element"> {{element.priceType}} </td>
 				</ng-container>
 
 				<ng-container matColumnDef="orderApprovDate">
-					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Data aprobării</th>
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Data aprobării</th>
 					<td mat-cell *matCellDef="let element"> {{element.orderApprovDate | date: 'dd/MM/yyyy'}} </td>
 				</ng-container>
 
 				<ng-container matColumnDef="expirationDate">
-					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Data expirării</th>
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Data expirării</th>
 					<td mat-cell *matCellDef="let element"> {{element.expirationDate | date: 'dd/MM/yyyy'}} </td>
 				</ng-container>
 

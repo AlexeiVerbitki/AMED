@@ -97,43 +97,4 @@ public class CtInvestigatorEntity {
 
         return Objects.hash(id, firstName, lastName, title, isMain);
     }
-
-
-    //    private NmInvestigatorsEntity investigatorsEntity;
-//
-//    private Boolean isMainInvestigator;
-//
-//
-//
-//    public NmInvestigatorsEntity getInvestigatorsEntity() {
-//        return investigatorsEntity;
-//    }
-//
-//    public void setInvestigatorsEntity(NmInvestigatorsEntity investigatorsEntity) {
-//        this.investigatorsEntity = investigatorsEntity;
-//    }
-//
-//    public Boolean getMainInvestigator() {
-//        return isMainInvestigator;
-//    }
-//
-//    public void setMainInvestigator(Boolean mainInvestigator) {
-//        isMainInvestigator = mainInvestigator;
-//    }
-//
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//        if (!super.equals(o)) return false;
-//        CtInvestigator that = (CtInvestigator) o;
-//        return Objects.equals(investigatorsEntity, that.investigatorsEntity) &&
-//                Objects.equals(isMainInvestigator, that.isMainInvestigator);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//
-//        return Objects.hash(super.hashCode(), investigatorsEntity, isMainInvestigator);
-//    }
 }

@@ -1,0 +1,40 @@
+<div class="mat-dialog-content">
+  <form [formGroup]='aForm'>
+    <h3 class="text-center my-3 font-weight-bold">Adaugare taxa spre achitare</h3>
+  <div class="my-5">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="md-form-modified">
+          <ng-select id="serviceCharge" name="serviceCharge" [items]="serviceCharges"
+                     bindLabel="description"
+                     placeholder="Taxa de acordare servicii *"
+                     (ngModelChange)="checkAmount();"
+                     formControlName="serviceCharge">
+          </ng-select>
+          <div *ngIf="formSubmitted && aForm.get('serviceCharge').invalid">
+            <small class="text-muted"><strong class="text-danger">Taxa de acordare servicii trebuie selectata</strong></small>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12">
+        <div class="md-form">
+          <input id="amount" mdbInputDirective min="0" step=".01" type="number" class="form-control" formControlName="amount">
+          <label for="amount">Suma<span class="text-danger">*</span></label>
+          <div *ngIf="formSubmitted && aForm.get('amount').invalid">
+            <small class="text-muted"><strong class="text-danger">Suma trebuie introdusa</strong></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </form>
+</div>
+<div class="text-center">
+  <div mat-dialog-actions>
+    <div class="w-100">
+      <button class="btn btn-danger btn-sm waves-light" (click)="cancel()">Anulare</button>
+      <button class="btn btn-dark-green-color btn-sm waves-light" (click)="add()">Adaugare</button>
+    </div>
+  </div>
+</div>

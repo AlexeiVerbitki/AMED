@@ -27,6 +27,6 @@ public class PaymentOrdersEntity
     @Column(name = "amount")
     private Double amount;
     @Basic
-    @Column(name = "supplementary_payment")
-    private Integer sP;
+    @Column(name = "registration_request_id")
+    private Integer registrationRequestId;
 }

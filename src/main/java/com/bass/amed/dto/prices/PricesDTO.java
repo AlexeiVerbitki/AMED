@@ -1,4 +1,4 @@
-package com.bass.amed.dto;
+package com.bass.amed.dto.prices;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

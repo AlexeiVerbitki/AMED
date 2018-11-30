@@ -53,7 +53,7 @@
             <hr>
             <form [formGroup]="oForm">
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-3" *ngIf="tipCerere==='LICC'">
                         <div class="md-form-modified-select">
                             <ng-select class="custom"  [items]="companii | async"
                                        bindLabel="name"
@@ -243,7 +243,7 @@
 
             <!--=====================================================================================================================================-->
             <h5 class="text-center font-weight-bold" *ngIf="tipCerere !== 'LICD' && tipCerere !== 'LICP' && tipCerere !== 'LICA' && tipCerere !== 'LICS' && tipCerere !== 'LICRL'">Comisiile</h5>
-            <hr>
+            <hr *ngIf="tipCerere == 'LICM' || tipCerere == 'LICEL'">
             <div class="row" *ngIf="tipCerere == 'LICM'">
 
 
@@ -253,7 +253,7 @@
                                  formControlName="seriaLic">
                           <label for="seriaLic">Seria licenţei<span class="text-danger"> * </span></label>
                       </div>
-                      <div *ngIf="rFormSubbmitted && !rForm.get('seriaLic').valid">
+                      <div *ngIf="mFormSubbmitted && !rForm.get('seriaLic').valid">
                           <small class="text-muted"><strong class="text-danger">Seria licentei trebuie introdusa</strong>
                           </small>
                       </div>
@@ -265,7 +265,7 @@
                                  formControlName="nrLic">
                           <label for="nrLic">Numarul licenţei<span class="text-danger"> * </span></label>
                       </div>
-                      <div *ngIf="rFormSubbmitted && !rForm.get('nrLic').valid">
+                      <div *ngIf="mFormSubbmitted && !rForm.get('nrLic').valid">
                           <small class="text-muted"><strong class="text-danger">Numarul licentei trebuie introdus</strong>
                           </small>
                       </div>
@@ -384,7 +384,7 @@
 
             </div>
 
-            <app-payment [receipts]="receiptsList" [paymentOrders]="paymentOrdersList"
+            <app-payment [requestId]="requestId"
                          (totalValueChanged)="paymentTotalUpdate($event)"
                          [isBonSuplimentarNotRender]="true"></app-payment>
             <div *ngIf="rFormSubbmitted && nextSubmit && paymentTotal < 0">
@@ -418,7 +418,7 @@
                 </tr>
                 </tbody>
             </table>
-           <!-- <div *ngIf="rFormSubbmitted && !checkAllDocumentsWasAttached()">
+           <!-- <div *ngIf="mFormSubbmitted && !checkAllDocumentsWasAttached()">
                 <small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong>
                 </small>
             </div>-->

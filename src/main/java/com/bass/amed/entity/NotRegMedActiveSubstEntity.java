@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "not_reg_med_active_subst", schema = "amed", catalog = "")
+@Table(name = "ct_not_reg_med_active_subst", schema = "amed", catalog = "")
 public class NotRegMedActiveSubstEntity {
     private Integer id;
     private NmActiveSubstancesEntity activeSubstance;

@@ -164,7 +164,7 @@
         </div>
 
         <hr>
-        <app-payment [receipts]="receiptsList" [paymentOrders]="paymentOrdersList"
+        <app-payment [requestId]="cerereSolicAutorForm.get('id').value"
                      (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
         <div *ngIf="formSubmitted && paymentTotal<0">
             <small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>

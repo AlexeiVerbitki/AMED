@@ -91,7 +91,7 @@
 					<div *ngIf="substance.status!='M'">{{ substance.quantity }}</div>
 					<div class="row" *ngIf="substance.status=='M' && substance.quantity">
 						{{ substance.quantity }}
-						<p>&nbsp;&nbsp;=>&nbsp;&nbsp;</p>
+						<span> <i class="fa fa-long-arrow-right fa-lg fa-mtrl" aria-hidden="true"></i> </span>
 						{{ substance.quantityNew }}
 					</div>
 				</td>
@@ -99,7 +99,7 @@
 					<div *ngIf="substance.status!='M'">{{ substance.unitsOfMeasurement.description }}</div>
 					<div class="row" *ngIf="substance.status=='M' && substance.unitsOfMeasurement">
 						{{ substance.unitsOfMeasurement.description }}
-						<p>&nbsp;&nbsp;=>&nbsp;&nbsp;</p>
+						<span> <i class="fa fa-long-arrow-right fa-lg fa-mtrl" aria-hidden="true"></i> </span>
 						{{ substance.unitsOfMeasurementNew.description }}
 					</div>
 				</td>
@@ -107,7 +107,7 @@
 					<div *ngIf="substance.status!='M'">{{ substance.manufacture.description }}</div>
 					<div *ngIf="substance.status=='M' && substance.manufacture">
 						{{ substance.manufacture.description }}
-						<p>&nbsp;&nbsp;=>&nbsp;&nbsp;</p>
+						<span> <i class="fa fa-long-arrow-right fa-lg fa-mtrl" aria-hidden="true"></i> </span>
 						{{ substance.manufactureNew.description }}
 					</div>
 				</td>
@@ -115,7 +115,7 @@
 					<div *ngIf="substance.status!='M'">{{ substance.manufacture.country.description }}</div>
 					<div *ngIf="substance.status=='M' && substance.manufacture">
 						{{ substance.manufacture.country.description }}
-						<p>&nbsp;&nbsp;=>&nbsp;&nbsp;</p>
+						<span> <i class="fa fa-long-arrow-right fa-lg fa-mtrl" aria-hidden="true"></i> </span>
 						{{ substance.manufactureNew.country.description }}
 					</div>
 				</td>
@@ -123,7 +123,7 @@
 					<div *ngIf="substance.status!='M'">{{ substance.manufacture.address }}</div>
 					<div *ngIf="substance.status=='M' && substance.manufacture">
 						{{ substance.manufacture.address }}
-						<p>&nbsp;&nbsp;=>&nbsp;&nbsp;</p>
+						<span> <i class="fa fa-long-arrow-right fa-lg fa-mtrl" aria-hidden="true"></i> </span>
 						{{ substance.manufactureNew.address }}
 					</div>
 				</td>
@@ -161,7 +161,7 @@
 				<th scope="row">
 					<div class="row">
 						<mat-checkbox [checked]="manufacture.producatorProdusFinit" [disabled]="true"></mat-checkbox>
-						<p *ngIf="manufacture.status=='M'">&nbsp;&nbsp;=>&nbsp;&nbsp;</p>
+						<span *ngIf="manufacture.status=='M'"> <i class="fa fa-long-arrow-right fa-lg fa-mtrl" aria-hidden="true"></i> </span>
 						<mat-checkbox *ngIf="manufacture.status=='M'" [checked]="!manufacture.producatorProdusFinit" [disabled]="true"></mat-checkbox>
 					</div>
 				</th>

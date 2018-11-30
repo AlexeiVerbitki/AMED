@@ -46,13 +46,31 @@ export class AAprobareComponent implements OnInit, OnDestroy {
             'type': [],
             'typeCode': [''],
             'requestHistories': [],
-            'initiator':[null],
-            'assignedUser':[null],
+            'initiator': [null],
+            'assignedUser': [null],
             'outputDocuments': [],
-            'receipts': [],
-            'paymentOrders': [],
-            'clinicalTrails': undefined,
-            'status':[undefined, Validators.required]
+            'clinicalTrails': this.fb.group({
+                'id': [''],
+                'title': ['title', Validators.required],
+                'treatment': ['', Validators.required],
+                'provenance': ['', Validators.required],
+                'sponsor': ['sponsor', Validators.required],
+                'phase': ['faza', Validators.required],
+                'eudraCtNr': ['eudraCtNr', Validators.required],
+                'code': ['code', Validators.required],
+                'medicalInstitutions': [],
+                'trialPopNat': ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+                'trialPopInternat': ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+                'medicament': [],
+                'referenceProduct': [],
+                'status': ['P'],
+                'pharmacovigilance': [],
+                'placebo': [],
+                'clinicTrialAmendEntities': [],
+                'comissionNr': ['', Validators.required],
+                'comissionDate': ['', Validators.required]
+            }),
+            'status': [undefined, Validators.required],
         });
         this.initPage();
         this.loadDocTypes();
@@ -88,16 +106,20 @@ export class AAprobareComponent implements OnInit, OnDestroy {
                     this.approveClinicalTrailForm.get('type').setValue(data.type);
                     this.approveClinicalTrailForm.get('typeCode').setValue(data.type.code);
                     this.approveClinicalTrailForm.get('initiator').setValue(data.initiator);
-                    this.approveClinicalTrailForm.get('receipts').setValue(data.receipts);
-                    this.approveClinicalTrailForm.get('paymentOrders').setValue(data.paymentOrders);
 
                     data.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
                     this.approveClinicalTrailForm.get('requestHistories').setValue(data.requestHistories);
 
                     this.approveClinicalTrailForm.get('clinicalTrails').setValue(data.clinicalTrails);
+                    if(data.clinicalTrails.comissionDate !== null) {
+                        this.approveClinicalTrailForm.get('clinicalTrails.comissionDate').setValue(new Date(data.clinicalTrails.comissionDate));
+                    }
+
 
                     this.docs = data.documents;
                     this.outDocuments = data.outputDocuments;
+
+                    console.log('this.approveClinicalTrailForm', this.approveClinicalTrailForm);
                 },
                 error => console.log(error)
             ))
@@ -108,8 +130,12 @@ export class AAprobareComponent implements OnInit, OnDestroy {
         let formModel = this.approveClinicalTrailForm.getRawValue();
 
         console.log(formModel.status);
-        if(formModel.status === '0'){
+        if (formModel.status === '0') {
             console.log(formModel);
+            if (this.approveClinicalTrailForm.invalid ) {
+               alert('InvalidForm');
+               return;
+            }
             this.loadingService.show();
 
             formModel.currentStep = 'F';
@@ -129,10 +155,10 @@ export class AAprobareComponent implements OnInit, OnDestroy {
             formModel.assignedUser = this.authService.getUserName();
 
             formModel.clinicalTrails.status = 'F';
-            console.log('formModel',formModel);
+            console.log('formModel', formModel);
             this.subscriptions.push(
                 this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
-                    this.router.navigate(['dashboard/module']);
+                   this.router.navigate(['dashboard/module']);
                     this.loadingService.hide();
                 }, error => {
                     this.loadingService.hide();
@@ -140,7 +166,7 @@ export class AAprobareComponent implements OnInit, OnDestroy {
                 })
             )
         }
-        else if(formModel.status === '1') {
+        else if (formModel.status === '1') {
             const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
                 data: {
                     message: 'Sunteti sigur(a)?',

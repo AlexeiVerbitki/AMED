@@ -1,24 +1,24 @@
-package com.bass.amed.controller.rest;
+package com.bass.amed.controller.rest.prices;
 
-import com.bass.amed.dto.PricesDTO;
+import com.bass.amed.dto.prices.CatalogPriceDTO;
+import com.bass.amed.dto.prices.PricesDTO;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.projection.GetAVGCurrencyProjection;
 import com.bass.amed.projection.GetMinimalCurrencyProjection;
 import com.bass.amed.repository.*;
-import org.hibernate.transform.Transformers;
+import com.bass.amed.repository.prices.*;
+import com.bass.amed.repository.prices.PriceRepository;
+import com.bass.amed.repository.prices.PriceTypesRepository;
+import com.bass.amed.repository.prices.PricesManagementRepository;
+import com.bass.amed.service.PriceAutoRevaluationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -48,6 +48,14 @@ public class PriceController {
     @Autowired
     private PriceRepository priceRepository;
 
+    @Autowired
+    private NmPricesRepository nmPricesRepository;
+
+    @Autowired
+    private PricesHistoryRepository pricesHistoryRepository;
+
+    @Autowired
+    private PriceAutoRevaluationService priceAutoRevaluationService;
 
     @RequestMapping("/all-currencies-short")
     public ResponseEntity<List<GetMinimalCurrencyProjection>> getCurrencyShort() throws CustomException {
@@ -105,10 +113,17 @@ public class PriceController {
     }
 
     @RequestMapping("/med-prev-prices")
-    public ResponseEntity<List<PricesEntity>> getMedPrevPrices(@RequestParam(value = "id", required = true) Integer id) {
+    public ResponseEntity<List<PricesHistoryEntity>> getMedPrevPrices(@RequestParam(value = "id", required = true) Integer id) {
         logger.debug("getMedPrevPrices");
-        List<PricesEntity> prices = priceRepository.findAllByMedicamentIdAndTypeId(id, 2); //2 = acceptat
+        List<PricesHistoryEntity> prices = pricesHistoryRepository.findAllByMedicamentId(id); //2 = acceptat
         return new ResponseEntity<>(prices, HttpStatus.OK);
+    }
+
+    @RequestMapping("/original-meds-prices")
+    public ResponseEntity<List<NmPricesEntity>> getOriginalMedsPrices(@RequestParam(value = "id", required = true) Integer internationalNameId) {
+        logger.debug("getOriginalMedsPrices");
+        List<NmPricesEntity> pricesCNP = nmPricesRepository.findAllOriginalMedsSource(internationalNameId, 2, "F"); //2 = acceptat
+        return new ResponseEntity<>(pricesCNP, HttpStatus.OK);
     }
 
     @RequestMapping("/med-price")
@@ -117,6 +132,13 @@ public class PriceController {
         PriceTypesEntity type = priceTypesRepository.findOneByDescription("Acceptat");
         PricesEntity price = priceRepository.findLast(id, type.getId());
         return new ResponseEntity<>(price, HttpStatus.OK);
+    }
+
+    @RequestMapping("/revaluation")
+    public ResponseEntity<List<CatalogPriceDTO>> getPricesForRevaluation() {
+        logger.debug("getPricesForRevaluation");
+        List<CatalogPriceDTO> prices = priceAutoRevaluationService.getPricesForRevaluation();
+        return new ResponseEntity<>(prices, HttpStatus.OK);
     }
 
     @PostMapping(value = "/by-filter")

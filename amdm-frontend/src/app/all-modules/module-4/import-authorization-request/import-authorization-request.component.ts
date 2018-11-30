@@ -196,11 +196,13 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         }
 
         this.medType = this.rForm.get('importType').value
+        console.log("this.medType",this.medType);
         // this.rForm.get('importAuthorizationEntity.medType').setValue(this.medType);
 
 
         let formModel: any = this.rForm.value;
         formModel.importAuthorizationEntity.medType = this.medType;
+        console.log("formModel.importAuthorizationEntity.medType",formModel.importAuthorizationEntity.medType);
 
         this.loadingService.show();
 
@@ -226,8 +228,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
             switch(this.rForm.get('importType').value){
                 case "1":{this.router.navigate(['dashboard/module/import-authorization/registered-medicament/'  +data.body.id]) ; break;}
                 case "2":{this.router.navigate(['dashboard/module/import-authorization/unregistered-medicament/'+data.body.id]) ; break;}
-                // case "3":{this.router.navigate(['dashboard/module/import-authorization/materia-prima/'          +data.body]) ; break;}
-                case "3":{this.router.navigate(['dashboard/module/import-authorization/materia-prima/'                +data.body.id]) ; break;}
+                case "3":{this.router.navigate(['dashboard/module/import-authorization/materia-prima/'          +data.body.id]) ; break;}
                 case "4":{this.router.navigate(['dashboard/module/import-authorization/ambalaj/'                +data.body.id]) ; break;}
             }
             this.loadingService.hide();

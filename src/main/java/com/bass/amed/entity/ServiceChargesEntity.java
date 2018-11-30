@@ -18,5 +18,8 @@ public class ServiceChargesEntity
     @Basic
     @Column(name = "amount")
     private Double amount;
+    @Basic
+    @Column(name = "category")
+    private String category;
 
 }

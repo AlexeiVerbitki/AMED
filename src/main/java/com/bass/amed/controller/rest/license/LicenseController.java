@@ -1,5 +1,7 @@
 package com.bass.amed.controller.rest.license;
 
+import com.bass.amed.common.Constants;
+import com.bass.amed.dto.license.AnexaLaLicenta;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
@@ -8,22 +10,27 @@ import com.bass.amed.repository.license.LicenseAnnounceMethodsRepository;
 import com.bass.amed.repository.license.LicenseMandatedContactRepository;
 import com.bass.amed.repository.license.LicensesRepository;
 import com.bass.amed.service.LicenseRegistrationRequestService;
+import com.bass.amed.service.LocalityService;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
-@RequestMapping( "/api/license" )
+@RequestMapping("/api/license")
 public class LicenseController
 {
     private static final Logger logger = LoggerFactory.getLogger(LicenseController.class);
@@ -53,6 +60,12 @@ public class LicenseController
     @Autowired
     private LicenseMandatedContactRepository licenseMandatedContactRepository;
 
+    @Autowired
+    private LocalityService localityService;
+
+    @Autowired
+    private SysParamsRepository sysParamsRepository;
+
     @RequestMapping(value = "/new-license", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> nextNewLicense(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
@@ -77,7 +90,7 @@ public class LicenseController
         licenseRegistrationRequestService.saveNewLicense(request);
 
 
-        return new ResponseEntity<>(request.getId(),HttpStatus.CREATED);
+        return new ResponseEntity<>(request.getId(), HttpStatus.CREATED);
     }
 
 
@@ -87,7 +100,7 @@ public class LicenseController
         logger.debug("Save evaluation license" + request);
 
         licenseRegistrationRequestService.updateRegistrationLicense(request, false);
-        return new ResponseEntity<>(request.getId(),HttpStatus.OK);
+        return new ResponseEntity<>(request.getId(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/next-evaluation-license", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -96,7 +109,7 @@ public class LicenseController
         logger.debug("Save evaluation license" + request);
 
         licenseRegistrationRequestService.updateRegistrationLicense(request, true);
-        return new ResponseEntity<>(request.getId(),HttpStatus.OK);
+        return new ResponseEntity<>(request.getId(), HttpStatus.OK);
     }
 
 
@@ -121,14 +134,13 @@ public class LicenseController
     }
 
 
-
     @RequestMapping(value = "/stop-license", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> stopLicense(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
         logger.debug("Cancel request license" + request);
 
         licenseRegistrationRequestService.stopLicense(request);
-        return new ResponseEntity<>(request.getId(),HttpStatus.OK);
+        return new ResponseEntity<>(request.getId(), HttpStatus.OK);
     }
 
 
@@ -140,7 +152,7 @@ public class LicenseController
         request.setType(requestTypeRepository.findByCode("LICM").get());
 
         licenseRegistrationRequestService.updateModifyLicense(request);
-        return new ResponseEntity<>(request.getId(),HttpStatus.OK);
+        return new ResponseEntity<>(request.getId(), HttpStatus.OK);
     }
 
 
@@ -152,7 +164,7 @@ public class LicenseController
         request.setType(requestTypeRepository.findByCode("LICD").get());
 
         licenseRegistrationRequestService.updateModifyLicense(request);
-        return new ResponseEntity<>(request.getId(),HttpStatus.OK);
+        return new ResponseEntity<>(request.getId(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/confirm-prelungire-license", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -163,7 +175,7 @@ public class LicenseController
         request.setType(requestTypeRepository.findByCode("LICP").get());
 
         licenseRegistrationRequestService.updateModifyLicense(request);
-        return new ResponseEntity<>(request.getId(),HttpStatus.OK);
+        return new ResponseEntity<>(request.getId(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/confirm-anulare-license", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -174,7 +186,7 @@ public class LicenseController
         request.setType(requestTypeRepository.findByCode("LICA").get());
 
         licenseRegistrationRequestService.updateModifyLicense(request);
-        return new ResponseEntity<>(request.getId(),HttpStatus.OK);
+        return new ResponseEntity<>(request.getId(), HttpStatus.OK);
     }
 
 
@@ -186,7 +198,7 @@ public class LicenseController
         request.setType(requestTypeRepository.findByCode("LICS").get());
 
         licenseRegistrationRequestService.updateModifyLicense(request);
-        return new ResponseEntity<>(request.getId(),HttpStatus.OK);
+        return new ResponseEntity<>(request.getId(), HttpStatus.OK);
     }
 
 
@@ -198,7 +210,7 @@ public class LicenseController
         request.setType(requestTypeRepository.findByCode("LICRL").get());
 
         licenseRegistrationRequestService.updateModifyLicense(request);
-        return new ResponseEntity<>(request.getId(),HttpStatus.OK);
+        return new ResponseEntity<>(request.getId(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/confirm-cesionare-license", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -209,28 +221,26 @@ public class LicenseController
         request.setType(requestTypeRepository.findByCode("LICC").get());
 
         licenseRegistrationRequestService.updateModifyLicense(request);
-        return new ResponseEntity<>(request.getId(),HttpStatus.OK);
+        return new ResponseEntity<>(request.getId(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/retrieve-license-by-request-id", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RegistrationRequestsEntity> loadLicenseById(@RequestParam("id") String id) throws  CustomException
+    public ResponseEntity<RegistrationRequestsEntity> loadLicenseById(@RequestParam("id") String id) throws CustomException
     {
         logger.debug("Retrieve license by request id", id);
         RegistrationRequestsEntity r = licenseRegistrationRequestService.findLicenseRegistrationById(Integer.valueOf(id));
-
-
 
 
         return new ResponseEntity<>(r, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/retrieve-license-by-idno", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LicensesEntity> loadLicenseByCompany(@RequestParam("idno") String idno) throws  CustomException
+    public ResponseEntity<LicensesEntity> loadLicenseByCompany(@RequestParam("idno") String idno) throws CustomException
     {
         logger.debug("Retrieve license by company id idno", idno);
         Optional<NmEconomicAgentsEntity> firstChoice = economicAgentsRepository.findFirstByIdnoEqualsAndLicenseIdIsNotNull(idno);
         Optional<LicensesEntity> r = Optional.empty();
-            if (firstChoice.isPresent())
+        if (firstChoice.isPresent())
         {
             r = licensesRepository.getActiveLicenseById(firstChoice.get().getLicenseId(), new Date());
         }
@@ -239,7 +249,7 @@ public class LicenseController
 
 
     @RequestMapping(value = "/retrieve-suspended-license-by-idno", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LicensesEntity> loadSuspendedLicenseByCompany(@RequestParam("idno") String idno) throws  CustomException
+    public ResponseEntity<LicensesEntity> loadSuspendedLicenseByCompany(@RequestParam("idno") String idno) throws CustomException
     {
         logger.debug("Retrieve suspended license by company id idno", idno);
         Optional<NmEconomicAgentsEntity> firstChoice = economicAgentsRepository.findFirstByIdnoEqualsAndLicenseIdIsNotNull(idno);
@@ -253,7 +263,7 @@ public class LicenseController
 
 
     @RequestMapping(value = "/retrieve-agents-by-idno-without-license", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<NmEconomicAgentsEntity>> loadAgentsByIdnoWitouhtLicense(@RequestParam("idno") String idno) throws  CustomException
+    public ResponseEntity<List<NmEconomicAgentsEntity>> loadAgentsByIdnoWitouhtLicense(@RequestParam("idno") String idno) throws CustomException
     {
         logger.debug("Retrieve agents by idno", idno);
         List<NmEconomicAgentsEntity> all = economicAgentsRepository.findAllByIdnoEndsWithAndLicenseIdIsNull(idno);
@@ -278,5 +288,117 @@ public class LicenseController
     {
         logger.debug("Retrieve all activities");
         return new ResponseEntity<>(licenseActivityTypeRepository.findAll(), HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/view-anexa-licenta", method = RequestMethod.POST)
+    public ResponseEntity<byte[]> viewAnexaLicenta(@RequestBody RegistrationRequestsEntity request) throws CustomException
+    {
+        byte[] bytes = null;
+        try
+        {
+            ResourceLoader resourceLoader = new DefaultResourceLoader();
+            Resource res = resourceLoader.getResource("layouts/module5/AnexaLicenta.jrxml");
+            JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
+
+            List<AnexaLaLicenta> filiale = new ArrayList<>();
+            final AtomicInteger i = new AtomicInteger(1);
+
+            request.getLicense().getEconomicAgents().forEach(
+                    m -> {
+                        AnexaLaLicenta p = new AnexaLaLicenta();
+                        p.setNr(i.getAndIncrement());
+
+                        StringBuilder sb = new StringBuilder();
+                        sb.append(m.getLocality().getStateName()).append(", ");
+                        sb.append(m.getLocality().getDescription()).append(", ");
+                        sb.append(m.getStreet());
+                        p.setAddress(sb.toString());
+
+                        p.setPharmacist((m.getType().getRepresentant() + ": " + m.getSelectedPharmaceutist().getFullName()));
+                        p.setPharmType(m.getType().getDescription());
+
+                        p.setPsychotropicSubstances(false);
+                        for (LicenseActivityTypeEntity type : m.getActivities())
+                        {
+                            if (type.getCanUsePsihotropicDrugs().equals(1))
+                            {
+                                p.setPsychotropicSubstances(true);
+                                break;
+                            }
+                        }
+                        filiale.add(p);
+
+                    }
+            );
+
+
+            /* Convert List to JRBeanCollectionDataSource */
+            JRBeanCollectionDataSource itemsJRBean = new JRBeanCollectionDataSource(filiale);
+
+            /* Map to hold Jasper report Parameters */
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("licenseSeries", request.getLicense().getSerialNr());
+            parameters.put("licenseNumber", request.getLicense().getNr());
+            parameters.put("companyName", request.getLicense().getEconomicAgents().stream().findFirst().get().getLongName());
+            List<RegistrationRequestsEntity> listOfModifications = requestRepository.findAllLicenseModifications(request.getLicense().getId());
+
+            StringBuilder sb1 = new StringBuilder();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+            listOfModifications.forEach(lm ->
+                    {
+                        if (sb1.length() > 0)
+                        {
+                            sb1.append(";");
+                        }
+                        sb1.append(sdf.format(lm.getEndDate()));
+                    }
+
+            );
+
+            parameters.put("updatedDates", sb1.toString());
+            parameters.put("parameterAnexaLaLicenta", itemsJRBean);
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
+            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+        } catch (Exception e)
+        {
+            throw new CustomException(e.getMessage());
+        }
+
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=anexaLicenta.pdf").body(bytes);
+    }
+
+
+    @RequestMapping(value = "/view-licenta", method = RequestMethod.POST)
+    public ResponseEntity<byte[]> viewLicenta(@RequestBody RegistrationRequestsEntity request) throws CustomException
+    {
+        byte[] bytes = null;
+        try
+        {
+            ResourceLoader resourceLoader = new DefaultResourceLoader();
+            Resource res = resourceLoader.getResource("layouts/module5/Licenta.jrxml");
+            JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
+
+            /* Map to hold Jasper report Parameters */
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("companyName", request.getLicense().getEconomicAgents().stream().findFirst().get().getLongName());
+            parameters.put("companyAddress", request.getLicense().getEconomicAgents().stream().findFirst().get().getLegalAddress());
+            parameters.put("companyIdno", request.getLicense().getIdno());
+            parameters.put("startDate", new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format(request.getLicense().getReleaseDate()));
+            parameters.put("endDate", new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format(request.getLicense().getExpirationDate()));
+            parameters.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getDescription());
+            parameters.put("dateOfApprovalOfDecision", new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format(request.getLicense().getEconomicAgents().stream().findFirst().get().getRegistrationDate()));
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
+            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+        } catch (Exception e)
+        {
+            throw new CustomException(e.getMessage());
+        }
+
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=anexaLicenta.pdf").body(bytes);
     }
 }

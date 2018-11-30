@@ -6,8 +6,6 @@ import {RequestService} from "../../../shared/service/request.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Document} from "../../../models/document";
 import {Subscription} from "rxjs";
-import {PaymentOrder} from "../../../models/paymentOrder";
-import {Receipt} from "../../../models/receipt";
 import {DocumentService} from "../../../shared/service/document.service";
 import {LoaderService} from "../../../shared/service/loader.service";
 import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
@@ -29,8 +27,6 @@ export class CerereDubAutorActComponent implements OnInit {
     currentDate: Date;
     generatedDocNrSeq: number;
     private subscriptions: Subscription[] = [];
-    paymentOrdersList: PaymentOrder[] = [];
-    receiptsList: Receipt[] = [];
     paymentTotal: number;
     outDocuments: any[] = [];
     initialData: any;
@@ -149,9 +145,6 @@ export class CerereDubAutorActComponent implements OnInit {
         });
 
         modelToSubmit.assignedUser = this.authService.getUserName();
-
-        modelToSubmit.paymentOrders = this.paymentOrdersList;
-        modelToSubmit.receipts = this.receiptsList;
         modelToSubmit.documents = this.documents;
     }
 

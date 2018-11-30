@@ -34,6 +34,8 @@ export class RegCerereComponent implements OnInit, OnDestroy {
     docs: Document [] = [];
     docTypes: any[] = [];
 
+    phaseList: any[] = [];
+
     companii: Observable<any[]>;
     loadingCompany: boolean = false;
     protected companyInputs = new Subject<string>();
@@ -65,7 +67,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             'flowControl': [null, Validators.required],
             'clinicalTrails': this.fb.group({
                 'status': ['P'],
-                'clinicTrialAmendEntities':[]
+                'clinicTrialAmendEntities': []
             }),
             'type':
                 this.fb.group({
@@ -74,11 +76,11 @@ export class RegCerereComponent implements OnInit, OnDestroy {
         });
 
         this.clinicalTrailForm = this.fb.group({
-            'title':{value: '', disabled: true},
-            'clinicalTrail':[null, Validators.required],
-            'sponsor':{value: '', disabled: true},
-            'phase':{value: '', disabled: true},
-            'treatment':{value: '', disabled: true},
+            'title': {value: '', disabled: true},
+            'clinicalTrail': [null, Validators.required],
+            'sponsor': {value: '', disabled: true},
+            'phase': {value: '', disabled: true},
+            'treatment': {value: '', disabled: true},
         });
 
         this.generateDocNr();
@@ -90,21 +92,26 @@ export class RegCerereComponent implements OnInit, OnDestroy {
 
     autocompleteClinicalTrailSearch() {
         this.subscriptions.push(
-            this.clinicalTrailForm.get('clinicalTrail').valueChanges.subscribe(changedValue =>{
-                if(changedValue === null){
+            this.clinicalTrailForm.get('clinicalTrail').valueChanges.subscribe(changedValue => {
+                if (changedValue === null) {
                     this.clinicalTrailForm.get('title').reset();
                     this.clinicalTrailForm.get('sponsor').reset();
                     this.clinicalTrailForm.get('phase').reset();
+                    this.phaseList = [];
                     this.clinicalTrailForm.get('treatment').reset();
                 }
-                else{
+                else {
                     console.log('Changed value', changedValue);
                     this.clinicalTrailForm.get('title').setValue(changedValue.title);
                     this.clinicalTrailForm.get('sponsor').setValue(changedValue.sponsor);
                     this.clinicalTrailForm.get('phase').setValue(changedValue.phase);
+                    // console.log('changedValue.phase', changedValue.phase);
+                    this.phaseList = [this.phaseList, changedValue.phase];
                     this.clinicalTrailForm.get('treatment').setValue(changedValue.treatment.description);
-                }
 
+                    // console.log('this.registerClinicalTrailForm1', this.registerClinicalTrailForm);
+                    // console.log(' this.clinicalTrailForm1', this.clinicalTrailForm);
+                }
             })
         )
     }
@@ -119,10 +126,8 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                 distinctUntilChanged(),
                 tap((val: string) => {
                     this.loadingClinicalTrail = true;
-
                 }),
                 flatMap(term =>
-
                     this.administrationService.getClinicalTrailsCodAndEudra(term).pipe(
                         tap(() => this.loadingClinicalTrail = false)
                     )
@@ -133,21 +138,21 @@ export class RegCerereComponent implements OnInit, OnDestroy {
     catchFlowControl() {
         this.registerClinicalTrailForm.get('flowControl');
         this.subscriptions.push(
-            this.registerClinicalTrailForm.get('flowControl').valueChanges.subscribe(changedValue=>{
-                console.log('Pages[changedValue]',Pages[changedValue]);
+            this.registerClinicalTrailForm.get('flowControl').valueChanges.subscribe(changedValue => {
+                // console.log('Pages[changedValue]', Pages[changedValue]);
                 this.loadDocTypes(Pages[changedValue]);
             })
         )
     }
 
-    loadDocTypes(stepId:string) {
+    loadDocTypes(stepId: string) {
         this.subscriptions.push(
             this.taskService.getRequestStepByIdAndCode(stepId, 'R').subscribe(step => {
-                    console.log('getRequestStepByIdAndCode', step);
+                    // console.log('getRequestStepByIdAndCode', step);
                     this.subscriptions.push(
                         this.administrationService.getAllDocTypes().subscribe(data => {
                                 //console.log('getAllDocTypes', data);
-                                if(step.availableDocTypes === null) {
+                                if (step.availableDocTypes === null) {
                                     return;
                                 }
 
@@ -198,11 +203,10 @@ export class RegCerereComponent implements OnInit, OnDestroy {
 
     onSubmit() {
         if (this.registerClinicalTrailForm.invalid) {
-            alert('Invalid Form!!')
+            alert('Invalid Form1!!')
             return;
         }
         let formModel = this.registerClinicalTrailForm.value;
-
 
         if (formModel.flowControl === 'CLAP') {
             this.loadingService.show();
@@ -219,7 +223,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             formModel.initiator = this.authService.getUserName();
             formModel.assignedUser = this.authService.getUserName();
 
-            console.log("formModel", formModel);
+            // console.log("formModel", formModel);
             // console.log("regCerereJSON", JSON.stringify(formModel));
 
             this.subscriptions.push(this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
@@ -232,12 +236,13 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             );
         }
         else if (formModel.flowControl === 'CLPSC') {
-            if (this.registerClinicalTrailForm.invalid || this.clinicalTrailForm.invalid) {
-                alert('Invalid Form!!')
+            if (this.clinicalTrailForm.invalid) {
+                alert('Invalid Form2!!')
                 this.loadingService.hide();
                 return;
             }
-            let formModel = this.registerClinicalTrailForm.value;
+            this.loadingService.show();
+
             formModel.type.id = '4';
             formModel.requestHistories = [{
                 startDate: formModel.startDate,
@@ -251,7 +256,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             formModel.assignedUser = this.authService.getUserName();
             formModel.clinicalTrails = this.clinicalTrailForm.get('clinicalTrail').value;
 
-            formModel.clinicalTrails.clinicTrialAmendEntities=this.clinicalTrailForm.get('clinicalTrail').value.clinicTrialAmendEntities;
+            formModel.clinicalTrails.clinicTrialAmendEntities = this.clinicalTrailForm.get('clinicalTrail').value.clinicTrialAmendEntities;
 
             this.subscriptions.push(this.requestService.addClinicalTrailAmendmentRequest(formModel).subscribe(data => {
                     this.router.navigate(['/dashboard/module/clinic-studies/evaluate-amendment/' + data.body]);
@@ -262,8 +267,6 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                 })
             );
             console.log('formModel', formModel);
-            console.log('this.clinicalTrailForm', this.clinicalTrailForm.get('clinicalTrail').value);
-            console.log('Going to -> Aprobarea amendamentelor la Protocoalele Studiilor Clinice la medicamente')
 
             this.loadingService.hide();
         }

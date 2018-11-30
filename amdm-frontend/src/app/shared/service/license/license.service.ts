@@ -105,4 +105,12 @@ export class LicenseService {
         return this.http.get('/api/license/retrieve-agents-by-idno-without-license', {params :{ idno : idno} });
     }
 
+    viewAnexaLicenta(object: any): Observable<any> {
+        return this.http.post('/api/license/view-anexa-licenta', object,{ responseType: 'blob'});
+    }
+
+    viewLicenta(object: any): Observable<any> {
+        return this.http.post('/api/license/view-licenta', object,{ responseType: 'blob'});
+    }
+
 }

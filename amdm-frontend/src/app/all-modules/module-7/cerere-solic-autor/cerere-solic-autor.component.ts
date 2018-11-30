@@ -8,8 +8,6 @@ import {MedicamentService} from "../../../shared/service/medicament.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {RequestService} from "../../../shared/service/request.service";
 import {AuthService} from "../../../shared/service/authetication.service";
-import {Receipt} from "../../../models/receipt";
-import {PaymentOrder} from "../../../models/paymentOrder";
 import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
 import {LoaderService} from "../../../shared/service/loader.service";
 import {DocumentService} from "../../../shared/service/document.service";
@@ -35,8 +33,6 @@ export class CerereSolicAutorComponent implements OnInit {
     private subscriptions: Subscription[] = [];
     states: any[] = [];
     localities: any[] = [];
-    receiptsList: Receipt[] = [];
-    paymentOrdersList: PaymentOrder[] = [];
     paymentTotal: number;
     locality: any[] = [];
     docTypes: any[];
@@ -351,8 +347,6 @@ export class CerereSolicAutorComponent implements OnInit {
         modelToSubmit.company.locality = this.cerereSolicAutorForm.get('locality').value;
         modelToSubmit.company.street = this.cerereSolicAutorForm.get('street').value;
         modelToSubmit.company.legalAddress = this.cerereSolicAutorForm.get('legalAddress').value;
-        modelToSubmit.paymentOrders = this.paymentOrdersList;
-        modelToSubmit.receipts = this.receiptsList;
         modelToSubmit.documents = this.documents;
         modelToSubmit.outputDocuments = this.outDocuments;
         if (modelToSubmit.medicaments != null && modelToSubmit.medicaments[0]) {

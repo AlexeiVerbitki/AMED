@@ -1,19 +1,15 @@
 package com.bass.amed.entity;
 
-import com.bass.amed.repository.CtMedINstInvestigatorRepository;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 @Data
 @EqualsAndHashCode
 @Table(name = "ct_med_inst_investigator", schema = "amed", catalog = "")
 public class CtMedInstInvestigatorEntity {
-
-
     @EmbeddedId
     private CtMedInstInvPK embededId;
 

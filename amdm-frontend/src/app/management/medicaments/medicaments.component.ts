@@ -2,7 +2,6 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {Subscription} from "rxjs";
 import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
-import {Router} from "@angular/router";
 import {AdministrationService} from "../../shared/service/administration.service";
 import {MedicamentService} from "../../shared/service/medicament.service";
 import {MedicamentDetailsDialogComponent} from "../../dialog/medicament-details-dialog/medicament-details-dialog.component";
@@ -33,7 +32,6 @@ export class MedicamentsComponent implements OnInit {
     areSACheckBoxesDisabled: boolean;
 
     constructor(private fb: FormBuilder,
-                private route: Router,
                 private administrationService: AdministrationService,
                 private dialog: MatDialog,
                 private medicamentService: MedicamentService) {

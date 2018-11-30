@@ -3,7 +3,7 @@ package com.bass.amed.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,13 +38,13 @@ public class ClinicalTrialsEntity
     @Basic
     @Column(name = "sponsor")
     private String sponsor;
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     @JoinColumn(name = "medicament_id")
     private ImportMedNotRegisteredEntity medicament;
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     @JoinColumn(name = "reference_product_id")
     private ImportMedNotRegisteredEntity referenceProduct;
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     @JoinColumn(name = "placebo_id")
     private ImportMedNotRegisteredEntity placebo;
     @Basic
@@ -60,10 +60,18 @@ public class ClinicalTrialsEntity
     @Column(name = "status", nullable = true, length = 1)
     private String status;
 
+    @Basic
+    @Column(name = "med_comission_nr")
+    private String comissionNr;
+
+    @Basic
+    @Column(name = "med_comission_date")
+    private Timestamp comissionDate;
+
     @Transient
     private Set<CtMedicalInstitutionEntity> medicalInstitutions = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     @JoinColumn(name = "clinical_trails_id")
-    private List<ClinicTrialAmendEntity> clinicTrialAmendEntities;
+    private Set<ClinicTrialAmendEntity> clinicTrialAmendEntities = new HashSet<>();
 }

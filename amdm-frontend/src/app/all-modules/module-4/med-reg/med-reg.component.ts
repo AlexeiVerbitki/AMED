@@ -180,7 +180,7 @@ export class MedRegComponent implements OnInit {
 
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
             this.subscriptions.push(this.requestService.getImportRequest(params['id']).subscribe(data => {
-                    console.log('Import data', data);
+                    console.log('this.requestService.getImportRequest(params[\'id\'])', data);
                     this.importData = data;
 
                     this.evaluateImportForm.get('id').setValue(data.id);
@@ -195,8 +195,7 @@ export class MedRegComponent implements OnInit {
                     this.evaluateImportForm.get('requestHistories').setValue(data.requestHistories);
 
                     //If it's a registered medicament, disable the following fields
-                    if (data.importAuthorizationEntity.medType=1) {
-                        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').disable();
+                    if (data.importAuthorizationEntity.medType===1) {
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').disable();
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').disable();
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').disable();
@@ -205,7 +204,7 @@ export class MedRegComponent implements OnInit {
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').disable();
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').disable();
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').disable();
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producerAddress').disable();
+                        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producerAddress').disable();
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').disable();
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').disable();
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').disable();

@@ -8,8 +8,6 @@ import {MatDialog} from "@angular/material";
 import {AuthService} from "../../../shared/service/authetication.service";
 import {MedicamentService} from "../../../shared/service/medicament.service";
 import {AnnihilationService} from "../../../shared/service/annihilation/annihilation.service";
-import {PaymentOrder} from "../../../models/paymentOrder";
-import {Receipt} from "../../../models/receipt";
 import {LoaderService} from "../../../shared/service/loader.service";
 import {DocumentService} from "../../../shared/service/document.service";
 
@@ -36,9 +34,6 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
     endDate: Date;
 
     paymentTotal: number;
-    paymentOrdersList: PaymentOrder[] = [];
-    receiptsList: Receipt[] = [];
-
     outDocuments: any[] = [];
 
     //Validations
@@ -111,20 +106,6 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
 
         this.docs = data.medicamentAnnihilation.documents;
         this.docs.forEach(doc => doc.isOld = true);
-
-        this.receiptsList = data.medicamentAnnihilation.receipts;
-        this.paymentOrdersList = data.medicamentAnnihilation.paymentOrders;
-
-        let xs2 = this.receiptsList;
-        xs2 = xs2.map(x => {
-            x.isOld = true;
-            return x;
-        });
-        let xs3 = this.paymentOrdersList;
-        xs3 = xs3.map(x => {
-            x.isOld = true;
-            return x;
-        });
 
         this.medicamentsToDestroy  = data.medicamentAnnihilation.medicamentsMedicamentAnnihilationMeds;
         this.refreshOutputDocuments();
@@ -221,10 +202,6 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
         annihilationModel.documents = this.docs;
 
         annihilationModel.medicamentsMedicamentAnnihilationMeds = this.medicamentsToDestroy;
-
-        annihilationModel.paymentOrders = this.paymentOrdersList;
-        annihilationModel.receipts = this.receiptsList;
-
 
         modelToSubmit.requestHistories = [{
             startDate: this.startDate,

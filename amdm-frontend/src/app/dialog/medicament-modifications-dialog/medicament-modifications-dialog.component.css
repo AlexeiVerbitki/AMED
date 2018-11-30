@@ -26,3 +26,8 @@ label.required:not(:empty):after,
 .mt-4s {
     padding-top: 45px;
 }
+
+.fa-mtrl {
+    margin-left: 3px;
+    margin-right: 3px;
+}

@@ -42,7 +42,12 @@
         </tbody>
     </table>-->
     <hr>
-    <app-document [title]="'Documente comune'" [documents]="commonDocuments" [dcTypes]="docTypes" [nrCerere]="folderNumber" (documentModified)="commonDocumentAdded($event)"></app-document>
+    <app-document [title]="'Documente comune'"
+                  [dcTypeIdentifier]="{code:'PMED',step:'R'}"
+                  [documents]="commonDocuments"
+                  [nrCerere]="folderNumber"
+                  (documentModified)="commonDocumentAdded($event)"></app-document>
+
     <div *ngIf="formSubmitted && commonDocuments.length == 0">
         <small class="text-muted"><strong class="text-danger">Încărcați actele comune necesare înregistrării prețului la
             medicament</strong></small>
@@ -69,7 +74,6 @@
                 <app-one-med-price [countries]="countries"
                                    [currencies]="currencies"
                                    [priceTypes]="priceTypes"
-                                   [docTypes]="docTypes"
                                    [formSubmitted]="formSubmitted"
                                    (submit)="onFormChange($event)"
                                    [medIndex]="index"></app-one-med-price>

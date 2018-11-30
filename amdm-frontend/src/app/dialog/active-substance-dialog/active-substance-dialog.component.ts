@@ -84,6 +84,7 @@ export class ActiveSubstanceDialogComponent implements OnInit {
         );
 
         if(this.dataDialog) {
+            this.title = 'Editare substanta activa'
             this.aForm.get('status').setValue(this.dataDialog.status);
         }
     }

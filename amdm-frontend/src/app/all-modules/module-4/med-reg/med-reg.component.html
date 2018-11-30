@@ -162,7 +162,8 @@
                 <section>
 
 
-                    <h5 class="text-center font-weight-bold">Informația despre Medicamentul Înregistrat</h5>
+                    <h5 class="text-center font-weight-bold" *ngIf="importData.importAuthorizationEntity.medType===1">Informația despre Medicamentul Înregistrat</h5>
+                    <h5 class="text-center font-weight-bold" *ngIf="importData.importAuthorizationEntity.medType===2">Informația despre Medicamentul Neînregistrat</h5>
                     <hr>
                     <div formArrayName="unitOfImportTable">
                         <div class="row">

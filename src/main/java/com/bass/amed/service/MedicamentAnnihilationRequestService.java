@@ -116,21 +116,6 @@ public class MedicamentAnnihilationRequestService
                 r.getMedicamentAnnihilation().getDocuments().addAll(dSet);
             }
 
-            //Update receipts
-            Set<ReceiptsEntity> rSet = request.getMedicamentAnnihilation().getReceipts().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
-
-            if (!rSet.isEmpty()){
-                r.getMedicamentAnnihilation().getReceipts().addAll(rSet);
-            }
-
-            //Update payments
-            Set<PaymentOrdersEntity> pSet = request.getMedicamentAnnihilation().getPaymentOrders().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
-
-            if (!pSet.isEmpty()){
-                r.getMedicamentAnnihilation().getPaymentOrders().addAll(pSet);
-            }
-
-
             //Update commisions
             r.getMedicamentAnnihilation().getCommisions().clear();
             r.getMedicamentAnnihilation().getCommisions().addAll(request.getMedicamentAnnihilation().getCommisions());

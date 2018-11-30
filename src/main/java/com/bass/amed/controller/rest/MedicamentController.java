@@ -5,6 +5,7 @@ import com.bass.amed.dto.MedicamentDetailsDTO;
 import com.bass.amed.dto.MedicamentFilterDTO;
 import com.bass.amed.dto.SimilarMedicamentDTO;
 import com.bass.amed.entity.MedicamentEntity;
+import com.bass.amed.entity.NmMedicamentTypeEntity;
 import com.bass.amed.entity.RegistrationRequestHistoryEntity;
 import com.bass.amed.entity.RegistrationRequestsEntity;
 import com.bass.amed.exception.CustomException;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
@@ -37,15 +39,7 @@ public class MedicamentController
     @Autowired
     private MedicamentRepository medicamentRepository;
     @Autowired
-    private EconomicAgentsRepository economicAgentsRepository;
-    @Autowired
-    private DocumentsRepository documentsRepository;
-    @Autowired
-    private DocumentTypeRepository documentTypeRepository;
-    @Autowired
     private RequestRepository requestRepository;
-    @Autowired
-    private OutputDocumentsRepository outputDocumentsRepository;
     @Autowired
     private EntityManagerFactory entityManagerFactory;
 

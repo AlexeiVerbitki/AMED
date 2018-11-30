@@ -1,4 +1,4 @@
-package com.bass.amed.repository;
+package com.bass.amed.repository.prices;
 
 import com.bass.amed.entity.PricesEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -20,6 +20,6 @@ public class ReceiptsEntity {
     @Basic@Column(name = "amount")
     private Double amount;
     @Basic@Column(name = "insert_date")
-    private Double insertDate;
+    private Timestamp insertDate;
 
 }
