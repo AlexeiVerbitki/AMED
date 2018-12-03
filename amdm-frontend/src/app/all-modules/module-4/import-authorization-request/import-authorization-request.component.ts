@@ -183,9 +183,6 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         );
     }
 
-
-
-
     nextStep() {
         this.formSubmitted = true;
 

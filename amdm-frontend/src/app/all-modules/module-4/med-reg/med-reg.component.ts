@@ -16,6 +16,7 @@ import {Subject} from "rxjs/index";
 import {LoaderService} from "../../../shared/service/loader.service";
 import {AuthService} from "../../../shared/service/authetication.service";
 import {MedicamentService} from "../../../shared/service/medicament.service";
+import {Utils} from "angular-bootstrap-md/angular-bootstrap-md/utils/utils.class";
 
 export interface PeriodicElement {
     name: string;
@@ -307,6 +308,8 @@ export class MedRegComponent implements OnInit {
         this.unitOfImportTable.push({
 
             codeAmed:                      this.codeAmed,
+            // codeAmed:                      Utils.generateMedicamentCode(),
+
             customsCode:                   this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').value,
             name:                          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').value,
             quantity:                      this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value,
@@ -589,8 +592,6 @@ export class MedRegComponent implements OnInit {
 
 
     nextStep() {
-
-
 
         this.formSubmitted = true;
         let modelToSubmit: any ={};
