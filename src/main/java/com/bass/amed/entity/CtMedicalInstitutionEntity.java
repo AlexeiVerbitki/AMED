@@ -37,6 +37,13 @@ public class CtMedicalInstitutionEntity {
         this.investigators = investigators;
     }
 
+    public void asign(CtMedicalInstitutionEntity other){
+        this.id = other.id;
+        this.codIms = other.codIms;
+        this.name = other.name;
+        this.address = other.address;
+    }
+
 
     public Integer getId() {
         return id;

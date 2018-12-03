@@ -63,7 +63,7 @@ public class CtMedAmendEntity {
     private String administratingMode;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
-    @JoinColumn(name = "active_substance_id")
+    @JoinColumn(name = "med_amend_id")
     private Set<CtMedAmendActiveSubstEntity> activeSubstances = new HashSet<>();
 
     public void asign(ImportMedNotRegisteredEntity entity){
@@ -77,12 +77,6 @@ public class CtMedAmendEntity {
         this.pharmaceuticalForm = entity.getPharmaceuticalForm();
         this.atcCode = entity.getAtcCode();
         this.administratingMode = entity.getAdministratingMode();
-//        entity.getActiveSubstances().forEach(substance ->{
-//            CtMedAmendActiveSubstEntity activeSubstEntity = new CtMedAmendActiveSubstEntity();
-//            activeSubstEntity.asign(substance);
-//            activeSubstances.add(activeSubstEntity);
-//        });
-
     }
 
     @Override
@@ -100,23 +94,13 @@ public class CtMedAmendEntity {
                 Objects.equals(volumeQuantityMeasurement, that.volumeQuantityMeasurement) &&
                 Objects.equals(pharmaceuticalForm, that.pharmaceuticalForm) &&
                 Objects.equals(atcCode, that.atcCode) &&
-                Objects.equals(administratingMode, that.administratingMode);
+                Objects.equals(administratingMode, that.administratingMode) &&
+                Objects.equals(activeSubstances, that.activeSubstances);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id,
-                name,
-                registrationNumber,
-                registrationDate,
-                internationalMedicamentName,
-                manufacture,
-                dose,
-                volumeQuantityMeasurement,
-                pharmaceuticalForm,
-                atcCode,
-                administratingMode,
-                activeSubstances);
+        return Objects.hash(id, name, registrationNumber, registrationDate, internationalMedicamentName, manufacture, dose, volumeQuantityMeasurement, pharmaceuticalForm, atcCode, administratingMode, activeSubstances);
     }
 }

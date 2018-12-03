@@ -191,7 +191,9 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                               });
                           }
                           this.getMedPrevPrices(data.price);
-                          this.getRelatedDCIMedicamentsPrices(data.price.medicament.internationalMedicamentName.id, data.price.id);
+                          if(data.price.medicament.internationalMedicamentName){
+                              this.getRelatedDCIMedicamentsPrices(data.price.medicament.internationalMedicamentName.id, data.price.id);
+                          }
                           data.price.medicament.price = { mdlValue: data.price.mdlValue, value: data.price.value, currency: data.price.currency };
                           data.price.medicament.target = 'Medicamentul cu prețul solicitat';
                           data.price.medicament.rowType = 1;
@@ -302,9 +304,11 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         if (this.avgCurrencies == undefined || this.avgCurrencies.length == 0) return;
 
         this.medicaments.forEach(m => {
-            let avgCur = this.avgCurrencies.find(cur => cur.currency.description == m.price.currency.description);
-            let nationalCur = m.price.value * (avgCur ? avgCur.value : 1);
-            m.price.mdlValue = nationalCur;
+            if(m.rowType == 1) {
+                let avgCur = this.avgCurrencies.find(cur => cur.currency.description == m.price.currency.description);
+                let nationalCur = m.price.value * (avgCur ? avgCur.value : 1);
+                m.price.mdlValue = nationalCur;
+            }
         });
     }
 
@@ -350,7 +354,9 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
     calculateAvgRelatedMeds() {
         this.avgRelatedMeds = 0;
         this.relatedMeds.forEach(m => this.avgRelatedMeds += m.mdlValue?m.mdlValue:0);
-        this.avgRelatedMeds /= this.relatedMeds.length;
+        if(this.relatedMeds.length > 0){
+            this.avgRelatedMeds /= this.relatedMeds.length;
+        }
     }
 
     getRelatedDCIMedicamentsPrices(internationalNameId: string, id: number) {
@@ -385,6 +391,8 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         if(originPriceCount > 0) {
             this.dciAndOriginAvgs.push({source: 'Media în țara de origine', avg: avgOriginCountry / originPriceCount});
         }
+
+
 
         this.dciAndOriginAvgs.push({source: 'Media DCI', avg: this.avgRelatedMeds});
         let avg = 0;

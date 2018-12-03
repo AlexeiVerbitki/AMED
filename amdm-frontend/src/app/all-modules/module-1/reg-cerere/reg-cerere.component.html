@@ -23,7 +23,6 @@
 		</div>
 		<hr>
 		<app-document [documents]="documents" [nrCerere]="rForm.get('requestNumber').value" [dcTypes]="docTypes"></app-document>
-		<hr>
 		<div class="row">
 
               <div class="col-md-6">
@@ -52,7 +51,7 @@
 						<span class="text-danger">*</span>
 					</label>
 					<div *ngIf="formSubmitted && rForm.get('medicamentName').invalid">
-						<small class="text-muted"><strong class="text-danger">Medicamentul trebuie introdus</strong></small>
+						<small class="text-muted"><strong class="text-danger">Denumirea comerciala a medicamentului trebuie introdusa</strong></small>
 					</div>
 				</div>
 			</div>

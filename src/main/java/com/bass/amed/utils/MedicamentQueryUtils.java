@@ -9,7 +9,9 @@ public class MedicamentQueryUtils
 {
     public static StringBuilder createMedicamentByFilterQuery(MedicamentFilterDTO medicamentFilters)
     {
-        StringBuilder stringBuilder = new StringBuilder("select m.id,m.code,m.name,m.division,DATE_FORMAT(expiration_date,'%d/%m/%Y') expirationDate,m.atc_code atcCode,ma" +
+        StringBuilder stringBuilder = new StringBuilder("select m.id,m.code,m.commercial_name commercialName,m.division,DATE_FORMAT(expiration_date,'%d/%m/%Y') expirationDate,m" +
+                ".atc_code " +
+                "atcCode,ma" +
                 ".description " +
                 "authorizationHolderDescription, m.registration_number registerNumber,DATE_FORMAT(registration_date,'%d/%m/%Y') registrationDate " +
                 " from medicament m,nm_pharmaceutical_forms ph,registration_requests r,medicament_manufactures mm, nm_manufactures ma " +
@@ -25,9 +27,9 @@ public class MedicamentQueryUtils
             stringBuilder.append(" and m.code = :code");
         }
 
-        if (medicamentFilters.getName() != null && !medicamentFilters.getName().isEmpty())
+        if (medicamentFilters.getCommercialName() != null && !medicamentFilters.getCommercialName().isEmpty())
         {
-            stringBuilder.append(" and upper(m.name) like upper(:name)");
+            stringBuilder.append(" and upper(m.commercial_name) like upper(:commercialName)");
         }
 
         if (medicamentFilters.getAtcCode() != null && !medicamentFilters.getAtcCode().isEmpty())
@@ -141,7 +143,8 @@ public class MedicamentQueryUtils
 
     public static StringBuilder createMedicamentSALeastOneQuery(MedicamentFilterDTO medicamentFilters)
     {
-        StringBuilder stringBuilder = new StringBuilder("select m.id,m.code,m.name,m.division,DATE_FORMAT(expiration_date,'%d/%m/%Y') expirationDate,m.atc_code atcCode,man" +
+        StringBuilder stringBuilder = new StringBuilder("select m.id,m.code,m.commercial_name commercialName,m.division,DATE_FORMAT(expiration_date,'%d/%m/%Y') expirationDate,m" +
+                ".atc_code atcCode,man" +
                 ".description " +
                 "authorizationHolderDescription, m.registration_number registerNumber,DATE_FORMAT(registration_date,'%d/%m/%Y') registrationDate " +
                 "from medicament m,medicament_active_substances ma,nm_manufactures man\n" +
@@ -152,7 +155,8 @@ public class MedicamentQueryUtils
 
     public static StringBuilder createMedicamentSAAllQuery(MedicamentFilterDTO medicamentFilters)
     {
-        StringBuilder stringBuilder = new StringBuilder("select m.id,m.code,m.name,m.division,DATE_FORMAT(expiration_date,'%d/%m/%Y') expirationDate,m.atc_code atcCode,man" +
+        StringBuilder stringBuilder = new StringBuilder("select m.id,m.code,m.commercial_name commercialName,m.division,DATE_FORMAT(expiration_date,'%d/%m/%Y') expirationDate,m.atc_code " +
+                "atcCode,man" +
                 ".description " +
                 "authorizationHolderDescription, m.registration_number registerNumber,DATE_FORMAT(registration_date,'%d/%m/%Y') registrationDate " +
                 "from\n" +
@@ -166,7 +170,9 @@ public class MedicamentQueryUtils
 
     public static StringBuilder createMedicamentDetailsQuery(List<Integer> ids)
     {
-        StringBuilder stringBuilder = new StringBuilder("select m.id,m.code,name,atc_code atcCode,registration_number registerNumber,DATE_FORMAT(registration_date,'%d/%m/%Y') registrationDate," +
+        StringBuilder stringBuilder = new StringBuilder("select m.id,m.code,m.commercial_name commercialName,atc_code atcCode,registration_number registerNumber,DATE_FORMAT" +
+                "(registration_date," +
+                "'%d/%m/%Y') registrationDate," +
                 "division,ma" +
                 ".description authorizationHolderDescription,DATE_FORMAT(expiration_date,'%d/%m/%Y') expirationDate from medicament m,nm_manufactures ma\n" +
                 "where m.authorization_holder_id=ma.id and m.id in (");
@@ -181,9 +187,9 @@ public class MedicamentQueryUtils
             query.setParameter("code", medicamentFilters.getCode());
         }
 
-        if (medicamentFilters.getName() != null && !medicamentFilters.getName().isEmpty())
+        if (medicamentFilters.getCommercialName() != null && !medicamentFilters.getCommercialName().isEmpty())
         {
-            query.setParameter("name","%" +  medicamentFilters.getName()+ "%");
+            query.setParameter("commercialName","%" +  medicamentFilters.getCommercialName()+ "%");
         }
 
         if (medicamentFilters.getAtcCode() != null && !medicamentFilters.getAtcCode().isEmpty())

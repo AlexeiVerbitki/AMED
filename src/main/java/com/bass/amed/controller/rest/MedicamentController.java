@@ -5,13 +5,14 @@ import com.bass.amed.dto.MedicamentDetailsDTO;
 import com.bass.amed.dto.MedicamentFilterDTO;
 import com.bass.amed.dto.SimilarMedicamentDTO;
 import com.bass.amed.entity.MedicamentEntity;
-import com.bass.amed.entity.NmMedicamentTypeEntity;
 import com.bass.amed.entity.RegistrationRequestHistoryEntity;
 import com.bass.amed.entity.RegistrationRequestsEntity;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.projection.MedicamentNamesListProjection;
 import com.bass.amed.projection.MedicamentRegisterNumberProjection;
-import com.bass.amed.repository.*;
+import com.bass.amed.repository.MedicamentRepository;
+import com.bass.amed.repository.RequestRepository;
+import com.bass.amed.repository.SimilarMedicamentsRepository;
 import com.bass.amed.utils.MedicamentQueryUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
@@ -35,7 +35,8 @@ import java.util.stream.Collectors;
 public class MedicamentController
 {
     private static final Logger logger = LoggerFactory.getLogger(MedicamentController.class);
-
+    @Autowired
+    SimilarMedicamentsRepository similarMedicamentsRepository;
     @Autowired
     private MedicamentRepository medicamentRepository;
     @Autowired
@@ -44,7 +45,8 @@ public class MedicamentController
     private EntityManagerFactory entityManagerFactory;
 
     @RequestMapping("/company-all-medicaments")
-    public ResponseEntity<List<MedicamentEntity>> getAllMedicaments() {
+    public ResponseEntity<List<MedicamentEntity>> getAllMedicaments()
+    {
         logger.debug("Retrieve all medicaments");
         return new ResponseEntity<>(medicamentRepository.findAll(), HttpStatus.OK);
     }
@@ -56,12 +58,11 @@ public class MedicamentController
         return new ResponseEntity<>(medicamentRepository.findByNameStartingWithIgnoreCase(partialName), HttpStatus.OK);
     }
 
-
     @RequestMapping("/search-medicament-names-by-name-or-code")
     public ResponseEntity<List<MedicamentNamesListProjection>> getAllMedicamentNamesByNameAndCode(String partialName)
     {
         logger.debug("Retrieve medicament names list by name");
-        return new ResponseEntity<>(medicamentRepository.getMedicamentsByNameAndCode( partialName, partialName, "F"), HttpStatus.OK);
+        return new ResponseEntity<>(medicamentRepository.getMedicamentsByNameAndCode(partialName, partialName, "F"), HttpStatus.OK);
     }
 
 
@@ -80,14 +81,18 @@ public class MedicamentController
         logger.debug("Retrieve medicament by code");
         MedicamentEntity m = medicamentRepository.findByCode(code);
 
-        return new ResponseEntity<>(medicamentRepository.findByRegistrationNumber(m.getRegistrationNumber()).stream().filter(r->r.getStatus().equals("F")).collect(Collectors.toList()), HttpStatus.OK);
+        return new ResponseEntity<>(medicamentRepository.findByRegistrationNumber(m.getRegistrationNumber()).stream().filter(r -> r.getStatus().equals("F")).collect(Collectors.toList()), HttpStatus.OK);
     }
 
     @RequestMapping("/search-medicaments-by-register-number")
-    public ResponseEntity<List<MedicamentRegisterNumberProjection>> getMedicamentsByRegisterNumber(Integer registerNumber)
+    public ResponseEntity<List<MedicamentRegisterNumberProjection>> getMedicamentsByRegisterNumber(String registerNumber)
     {
         logger.debug("Retrieve medicaments by register number");
-        return new ResponseEntity<>(medicamentRepository.findDistinctByRegistrationNumber(registerNumber), HttpStatus.OK);
+        if (registerNumber.matches("[0-9]+"))
+        {
+            return new ResponseEntity<>(medicamentRepository.findDistinctByRegistrationNumber(Integer.valueOf(registerNumber)), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
     }
 
     @RequestMapping("/all-by-name")
@@ -98,8 +103,8 @@ public class MedicamentController
     }
 
 
-    @Autowired
-    SimilarMedicamentsRepository similarMedicamentsRepository;
+//    @Autowired
+//    SimilarMedicamentsRepository similarMedicamentsRepository;
     @RequestMapping("/related")
     public ResponseEntity<List<SimilarMedicamentDTO>> getSimilarMedicaments(@RequestParam(value = "internationalNameId", required = true) Integer internationalNameId)
     {
@@ -140,7 +145,8 @@ public class MedicamentController
     }
 
     @PostMapping(value = "/by-filter")
-    public ResponseEntity<List<MedicamentDetailsDTO>> getMedicamentsByFilter(@RequestBody MedicamentFilterDTO filter) throws CustomException {
+    public ResponseEntity<List<MedicamentDetailsDTO>> getMedicamentsByFilter(@RequestBody MedicamentFilterDTO filter) throws CustomException
+    {
         logger.debug("get medicaments by filter");
 
         EntityManager em = null;
@@ -154,7 +160,7 @@ public class MedicamentController
             MedicamentQueryUtils.updateMedicamentByFilerQueryWithValues(filter, query);
             result = query.getResultList();
             List<Integer> medicamentIds = result.stream().map(m -> m.getId()).collect(Collectors.toList());
-            if(Boolean.TRUE.equals(filter.getAtLeastOneSA()) || Boolean.TRUE.equals(filter.getAllSA()))
+            if (Boolean.TRUE.equals(filter.getAtLeastOneSA()) || Boolean.TRUE.equals(filter.getAllSA()))
             {
                 if (Boolean.TRUE.equals(filter.getAtLeastOneSA()))
                 {
@@ -167,10 +173,10 @@ public class MedicamentController
                 query = em.createNativeQuery(queryString.toString(), MedicamentDetailsDTO.class);
                 result = query.getResultList();
                 List<Integer> mSAIds = result.stream().map(m -> m.getId()).collect(Collectors.toList());
-                medicamentIds =  medicamentIds.stream().filter(f -> mSAIds.contains(f)).collect(Collectors.toList());
+                medicamentIds = medicamentIds.stream().filter(f -> mSAIds.contains(f)).collect(Collectors.toList());
             }
 
-            if(medicamentIds.size()!=0)
+            if (medicamentIds.size() != 0)
             {
                 queryString = MedicamentQueryUtils.createMedicamentDetailsQuery(medicamentIds);
                 query = em.createNativeQuery(queryString.toString(), MedicamentDetailsDTO.class);

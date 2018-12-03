@@ -91,9 +91,10 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
             'medicament':
                 fb.group({
                     'id': [],
-                    'name': ['', Validators.required],
+                    'commercialName': ['', Validators.required],
                     'atcCode': [null, Validators.required],
                     'registrationDate': [],
+                    'registrationNumber': [],
                     'pharmaceuticalForm': [null, Validators.required],
                     'pharmaceuticalFormType': [null, Validators.required],
                     'dose': [null],
@@ -151,8 +152,9 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
                         this.eForm.get('company').setValue(data.company);
                         this.eForm.get('companyValue').setValue(data.company.name);
                         this.eForm.get('medicament.id').setValue(data.medicamentHistory[0].id);
-                        this.eForm.get('medicament.name').setValue(data.medicamentHistory[0].name);
-                        this.eForm.get('medicamentName').setValue(data.medicamentHistory[0].name);
+                        this.eForm.get('medicament.commercialName').setValue(data.medicamentHistory[0].commercialName);
+                        this.eForm.get('medicamentName').setValue(data.medicamentHistory[0].commercialName);
+                        this.eForm.get('medicament.registrationNumber').setValue(data.medicamentHistory[0].registrationNumber);
                         this.eForm.get('medicamentPostauthorizationRegisterNr').setValue(data.medicamentHistory[0].registrationNumber);
                         this.documents = data.documents;
                         this.outDocuments = data.outputDocuments;

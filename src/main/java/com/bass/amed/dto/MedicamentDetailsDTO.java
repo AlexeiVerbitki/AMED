@@ -14,7 +14,7 @@ public class MedicamentDetailsDTO
     @Id
     private Integer id;
     private String code;
-    private String name;
+    private String commercialName;
     private String atcCode;
     private String registerNumber;
     private String registrationDate;

@@ -8,9 +8,9 @@ import {LoaderService} from "../../../shared/service/loader.service";
 import {AuthService} from "../../../shared/service/authetication.service";
 
 @Component({
-  selector: 'app-a-intrerupere',
-  templateUrl: './a-intrerupere.component.html',
-  styleUrls: ['./a-intrerupere.component.css']
+    selector: 'app-a-intrerupere',
+    templateUrl: './a-intrerupere.component.html',
+    styleUrls: ['./a-intrerupere.component.css']
 })
 export class AIntrerupereComponent implements OnInit, OnDestroy {
     private subscriptions: Subscription[] = [];
@@ -19,32 +19,33 @@ export class AIntrerupereComponent implements OnInit, OnDestroy {
     docTypes: any[];
     outDocuments: any[] = [];
 
-  constructor(private fb: FormBuilder,
-              private activatedRoute: ActivatedRoute,
-              private requestService: RequestService,
-              private authService: AuthService,
-              private router: Router,
-              private loadingService: LoaderService
-              ) { }
+    constructor(private fb: FormBuilder,
+                private activatedRoute: ActivatedRoute,
+                private requestService: RequestService,
+                private authService: AuthService,
+                private router: Router,
+                private loadingService: LoaderService
+    ) {
+    }
 
-  ngOnInit() {
-      this.cancelClinicalTrailForm = this.fb.group({
-          'id': [''],
-          'requestNumber': [{value: '', disabled: true}],
-          'startDate': [{value: '', disabled: true}],
-          'endDate': [''],
-          'company': [''],
-          'currentStep': ['E'],
-          'type': [],
-          'typeCode': [''],
-          'interruptionReason':[''],
-          'requestHistories': [],
-          'initiator':[null],
-          'assignedUser':[null],
-          'clinicalTrails': undefined,
-      });
-    this.initPage();
-  }
+    ngOnInit() {
+        this.cancelClinicalTrailForm = this.fb.group({
+            'id': [''],
+            'requestNumber': [{value: '', disabled: true}],
+            'startDate': [{value: '', disabled: true}],
+            'endDate': [''],
+            'company': [''],
+            'currentStep': ['E'],
+            'type': [],
+            'typeCode': [''],
+            'interruptionReason': [''],
+            'requestHistories': [],
+            'initiator': [null],
+            'assignedUser': [null],
+            'clinicalTrails': undefined,
+        });
+        this.initPage();
+    }
 
     initPage() {
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
@@ -109,7 +110,7 @@ export class AIntrerupereComponent implements OnInit, OnDestroy {
         )
     }
 
-    requestNL(){
+    requestNL() {
 
 
     }

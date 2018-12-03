@@ -25,7 +25,7 @@ export class MedicamentDetailsDialogComponent implements OnInit {
                 @Inject(MAT_DIALOG_DATA) public dataDialog: any,
                 private medicamentService: MedicamentService) {
         this.mForm = fb.group({
-            'name': [null],
+            'commercialName': [null],
             'dose': [null],
             'volume': [null],
             'volumeQuantityMeasurement': [null],
@@ -51,7 +51,7 @@ export class MedicamentDetailsDialogComponent implements OnInit {
         this.mForm.get('expirationDate').disable();
         this.subscriptions.push(this.medicamentService.getMedicamentByCode(this.dataDialog.value).subscribe(data => {
             this.initialData = Object.assign({}, data);
-            this.mForm.get('name').setValue(data[0].name);
+            this.mForm.get('commercialName').setValue(data[0].commercialName);
             this.mForm.get('dose').setValue(data[0].dose);
             this.mForm.get('volume').setValue(data[0].volume);
             if(data[0].volumeQuantityMeasurement) {

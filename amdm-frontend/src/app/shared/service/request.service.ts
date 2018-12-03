@@ -53,6 +53,10 @@ export class RequestService {
         return this.http.get('/api/clinical-trails/load-amendment-request', {params: {id: id}});
     }
 
+    saveClinicalTrailAmendmentRequest(requestDetails: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/clinical-trails/save-amendment-request', requestDetails, {observe: 'response'});
+    }
+
     addPriceRequests(requests: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/add-prices-request', requests, {observe: 'response'});
     }

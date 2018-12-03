@@ -621,6 +621,14 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
         let dialogRef = this.dialog.open(MedInstInvestigatorsDialogComponent, dialogConfig2);
 
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('result', result);
+            if (result == null || result == undefined || result.success === false) {
+                return;
+            }
+            this.mediacalInstitutionsList[i].investigators = result.investigators;
+        });
+
     }
 
     addMedActiveSubstanceDialog() {

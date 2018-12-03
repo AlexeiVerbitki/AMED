@@ -64,10 +64,10 @@ export class MedicamentModificationsDialogComponent implements OnInit {
         for (let history of this.dataDialog.historyDetails) {
             if (history.id == this.dataDialog.order.registrationRequestId) {
                 this.changeDateReference = new Date(history.medicamentHistory[0].changeDate);
-                if (history.medicamentHistory[0].name) {
+                if (history.medicamentHistory[0].commercialName) {
                     this.modifications.push({
                         field: 'Denumire comerciala',
-                        oldValue: history.medicamentHistory[0].name,
+                        oldValue: history.medicamentHistory[0].commercialName,
                         newValue: '',
                         changeDate: new Date()
                     })
@@ -190,7 +190,7 @@ export class MedicamentModificationsDialogComponent implements OnInit {
                 m.newValue = this.dataDialog.medicamentDetails[0].internationalMedicamentName.description;
             }
             if (m.field == 'Denumire comerciala') {
-                m.newValue = this.dataDialog.medicamentDetails[0].name;
+                m.newValue = this.dataDialog.medicamentDetails[0].commercialName;
             }
         }
     }
@@ -201,7 +201,7 @@ export class MedicamentModificationsDialogComponent implements OnInit {
             for (let history of this.dataDialog.historyDetails) {
                 if (history.id != this.dataDialog.order.registrationRequestId) {
                     if (m.field == 'Denumire comerciala' && m.changeDate > new Date(history.medicamentHistory[0].changeDate) && new Date(history.medicamentHistory[0].changeDate)> this.changeDateReference && history.medicamentHistory[0].name) {
-                        m.newValue = history.medicamentHistory[0].name;
+                        m.newValue = history.medicamentHistory[0].commercialName;
                         m.changeDate = history.medicamentHistory[0].changeDate;
                     }
                     if (m.field == 'Denumire internationala' && m.changeDate >new Date( history.medicamentHistory[0].changeDate) && new Date(history.medicamentHistory[0].changeDate)> this.changeDateReference  && history.medicamentHistory[0].internationalMedicamentName) {

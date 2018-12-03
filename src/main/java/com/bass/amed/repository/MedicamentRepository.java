@@ -1,7 +1,6 @@
 package com.bass.amed.repository;
 
 import com.bass.amed.entity.MedicamentEntity;
-import com.bass.amed.entity.NmMedicamentTypeEntity;
 import com.bass.amed.projection.MedicamentNamesListProjection;
 import com.bass.amed.projection.MedicamentRegisterNumberProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,7 +21,8 @@ public interface MedicamentRepository extends JpaRepository<MedicamentEntity, In
 
     Optional<MedicamentEntity> findById(Integer id);
 
-    @Query(value = "SELECT distinct name,registration_number as regnr FROM medicament m WHERE registration_number = ?1 and status='F'", nativeQuery = true)
+    @Query(value = "SELECT distinct commercial_name commercialName,registration_number as regnr FROM medicament m WHERE registration_number = ?1 and status='F'", nativeQuery =
+            true)
     List<MedicamentRegisterNumberProjection> findDistinctByRegistrationNumber(Integer registrationNumber);
 
     List<MedicamentEntity> findByRegistrationNumber(Integer registrationNumber);

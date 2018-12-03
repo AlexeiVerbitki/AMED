@@ -38,7 +38,7 @@ export class MedicamentsComponent implements OnInit {
 
         this.mForm = fb.group({
             'code': [null],
-            'name': [null],
+            'commercialName': [null],
             'atcCode': [null],
             'registerNumber': [null],
             'registrationDateFrom': [null],

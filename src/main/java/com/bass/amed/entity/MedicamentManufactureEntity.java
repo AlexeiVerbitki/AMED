@@ -50,7 +50,7 @@ public class MedicamentManufactureEntity
     public void assign(MedicamentManufactureHistoryEntity entity)
     {
         this.manufacture = entity.getManufacture();
-        this.producatorProdusFinit = entity.getProducatorProdusFinit();
+        this.producatorProdusFinit = entity.getProducatorProdusFinitTo();
     }
 
     @Override

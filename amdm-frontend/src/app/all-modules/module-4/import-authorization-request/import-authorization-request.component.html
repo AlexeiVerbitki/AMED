@@ -45,11 +45,13 @@
                         </ng-template>
                     </ng-select>
                 </div>
+                <div *ngIf="formSubmitted && rForm.get('company').invalid">
+                    <small class="text-muted"><strong class="text-danger">Importator trebuie selectat</strong></small>
+                </div>
             </div>
 
         </div>
         <app-document [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypes]="docTypes"></app-document>
-        <hr>
 
         <mat-radio-group formControlName="importType">
             <div class="container">
@@ -69,6 +71,9 @@
                 </div>
             </div>
         </mat-radio-group>
+        <div *ngIf="formSubmitted && rForm.get('importType').invalid">
+            <small class="text-muted"><strong class="text-danger">Tipul de import trebuie selectat</strong></small>
+        </div>
         <hr>
         <div class="text-center">
             <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Urmatorul

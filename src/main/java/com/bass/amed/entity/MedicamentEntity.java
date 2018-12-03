@@ -21,6 +21,9 @@ public class MedicamentEntity
     @Column(name = "name", nullable = false, length = 100)
     private String name;
     @Basic
+    @Column(name = "commercial_name")
+    private String commercialName;
+    @Basic
     @Column(name = "code", nullable = true, length = 10)
     private String code;
     @Basic
@@ -115,26 +118,24 @@ public class MedicamentEntity
 
     public void assign(MedicamentHistoryEntity entity)
     {
-        this.name = entity.getName();
-        this.dose = entity.getDose();
-        this.atcCode = entity.getAtcCode();
-        this.productCode = entity.getProductCode();
-        this.customsCode = entity.getCustomsCode();
-        this.barcode = entity.getBarcode();
-        this.internationalMedicamentName = entity.getInternationalMedicamentName();
-        this.countryId = entity.getCountryId();
-        this.pharmaceuticalForm = entity.getPharmaceuticalForm();
-        this.authorizationHolder = entity.getAuthorizationHolder();
-        this.medicamentType = entity.getMedicamentType();
-        this.group = entity.getGroup();
-        this.prescription = entity.getPrescription();
-        this.serialNr = entity.getSerialNr();
-        this.primarePackage = entity.getPrimarePackage();
-        this.administeringMode = entity.getAdministeringMode();
-        this.volume = entity.getVolume();
-        this.volumeQuantityMeasurement = entity.getVolumeQuantityMeasurement();
-        this.termsOfValidity = entity.getTermsOfValidity();
-        this.dose = entity.getDose();
+        this.commercialName = entity.getCommercialNameTo();
+        this.dose = entity.getDoseTo();
+        this.atcCode = entity.getAtcCodeTo();
+        this.productCode = entity.getProductCodeTo();
+        this.customsCode = entity.getCustomsCodeTo();
+        this.barcode = entity.getBarcodeTo();
+        this.internationalMedicamentName = entity.getInternationalMedicamentNameTo();
+        this.pharmaceuticalForm = entity.getPharmaceuticalFormTo();
+        this.authorizationHolder = entity.getAuthorizationHolderTo();
+        this.medicamentType = entity.getMedicamentTypeTo();
+        this.group = entity.getGroupTo();
+        this.prescription = entity.getPrescriptionTo();
+        this.primarePackage = entity.getPrimarePackageTo();
+        this.administeringMode = entity.getAdministeringModeTo();
+        this.volume = entity.getVolumeTo();
+        this.volumeQuantityMeasurement = entity.getVolumeQuantityMeasurementTo();
+        this.termsOfValidity = entity.getTermsOfValidityTo();
+        this.dose = entity.getDoseTo();
         this.activeSubstances.clear();
         for (MedicamentActiveSubstancesHistoryEntity medicamentActiveSubstancesHistoryEntity : entity.getActiveSubstancesHistory())
         {

@@ -1,5 +1,5 @@
 import { NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, DatePipe, DecimalPipe} from '@angular/common';
 
 import {PriceRoutingModule} from './price-routing.module';
 import {PriceEvaluateMedComponent} from './price-evaluate-med/price-evaluate-med.component';
@@ -16,6 +16,7 @@ import {OneMedPriceComponent} from "./one-med-price/one-med-price.component";
 import {PriceEditModalComponent} from "./modal/price-edit-modal/price-edit-modal.component";
 import {PriceAutoRevaluationComponent} from "./price-auto-revaluation/price-auto-revaluation.component";
 import {XchangeInfoComponent} from "./xchangeInfo/xchangeinfo.component";
+import {PipeModule} from "../../shared/pipe/pipe.module";
 
 @NgModule({
     entryComponents: [ReferencePriceComponent, PriceEditModalComponent, XchangeInfoComponent],
@@ -28,6 +29,7 @@ import {XchangeInfoComponent} from "./xchangeInfo/xchangeinfo.component";
         DocumentModule,
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
+        PipeModule
     ],
     schemas: [],
     declarations: [
@@ -37,9 +39,9 @@ import {XchangeInfoComponent} from "./xchangeInfo/xchangeinfo.component";
         PriceEvaluateMedComponent,
         ReferencePriceComponent,
         PriceEditModalComponent,
-        XchangeInfoComponent
+        XchangeInfoComponent,
     ],
-    providers: [UploadFileService, RequestService],
+    providers: [UploadFileService, RequestService, PipeModule],
 
 })
 export class PriceModule {

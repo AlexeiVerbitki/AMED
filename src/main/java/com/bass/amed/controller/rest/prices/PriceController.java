@@ -82,21 +82,9 @@ public class PriceController {
     }
 
     @RequestMapping("/prev-month-avg-currencies")
-    public ResponseEntity<List<NmCurrenciesHistoryEntity>> getPrevMonthAVGCurrencies() throws CustomException {
+    public ResponseEntity<List<NmCurrenciesHistoryEntity>> getPrevMonthAVGCurrencies() {
         logger.debug("Retrieve all average currencies for previous 30 days");
-        Optional<List<GetAVGCurrencyProjection>> nonNullAVGCurrencyList = Optional.of(currencyHistoryRepository.getPrevMonthAVGCurrencies());
-        List<NmCurrenciesHistoryEntity> prevMonthAVGCurrenciesList = new ArrayList<>(nonNullAVGCurrencyList.get().size());
-
-        if (nonNullAVGCurrencyList.isPresent()) {
-
-            nonNullAVGCurrencyList.get().forEach(avgCur -> {
-                NmCurrenciesHistoryEntity elem = new NmCurrenciesHistoryEntity();
-                elem.setValue(avgCur.getAvgValue());
-                NmCurrenciesEntity currency = currencyRepository.findById(avgCur.getCurrencyId()).get();
-                elem.setCurrency(currency);
-                prevMonthAVGCurrenciesList.add(elem);
-            });
-        }
+        List<NmCurrenciesHistoryEntity> prevMonthAVGCurrenciesList = priceAutoRevaluationService.getPrevMonthAVGCurrencies();
         return new ResponseEntity<>(prevMonthAVGCurrenciesList, HttpStatus.OK);
     }
 
@@ -137,8 +125,7 @@ public class PriceController {
     @RequestMapping("/revaluation")
     public ResponseEntity<List<CatalogPriceDTO>> getPricesForRevaluation() {
         logger.debug("getPricesForRevaluation");
-        List<CatalogPriceDTO> prices = priceAutoRevaluationService.getPricesForRevaluation();
-        return new ResponseEntity<>(prices, HttpStatus.OK);
+        return new ResponseEntity<>(priceAutoRevaluationService.getPricesForRevaluation(), HttpStatus.OK);
     }
 
     @PostMapping(value = "/by-filter")

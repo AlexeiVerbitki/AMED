@@ -18,7 +18,7 @@ public class SimilarMedicamentDTO implements Serializable
     private String internationalName;
     private String country;
     private String manufacture;
-    private Double dose;
+    private String dose;
     private String pharmaceuticalForm;
     private String division;
     @Id

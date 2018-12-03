@@ -49,15 +49,17 @@ public class ClinicTrialAmendEntity
     @Basic
     @Column(name = "sponsor")
     private String sponsor;
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE, CascadeType.PERSIST }, orphanRemoval = true)
     @JoinColumn(name = "medicament_id")
-    private CtMedAmendEntity medicament/* = new CtMedAmendEntity()*/;
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    private CtMedAmendEntity medicament/* = new CtMedAmendRepository()*/;
+    @OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     @JoinColumn(name = "reference_product_id")
-    private CtMedAmendEntity referenceProduct /*= new CtMedAmendEntity()*/;
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    private CtMedAmendEntity referenceProduct /*= new CtMedAmendRepository()*/;
+    @OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     @JoinColumn(name = "placebo_id")
-    private CtMedAmendEntity placebo /*= new CtMedAmendEntity()*/;
+    private CtMedAmendEntity placebo /*= new CtMedAmendRepository()*/;
+
     @Basic
     @Column(name = "trial_population_national")
     private Integer trialPopNat;
@@ -97,6 +99,27 @@ public class ClinicTrialAmendEntity
         this.comissionDate = entity.getComissionDate();
     }
 
+    public void assign(ClinicTrialAmendEntity entity){
+        this.clinicalTrialsEntityId = entity.getId();
+        this.treatment = entity.getTreatment();
+        this.provenance = entity.getProvenance();
+        this.phase = entity.getPhase();
+        this.eudraCtNr = entity.getEudraCtNr();
+        this.code = entity.getCode();
+        this.title = entity.getTitle();
+        this.sponsor = entity.getSponsor();
+
+        this.medicament = entity.getMedicament();
+        this.referenceProduct = entity.getReferenceProduct();
+        this.placebo = entity.getPlacebo();
+
+        this.trialPopNat = entity.getTrialPopNat();
+        this.trialPopInternat = entity.getTrialPopInternat();
+        this.comissionNr = entity.getComissionNr();
+        this.comissionDate = entity.getComissionDate();
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -119,13 +142,13 @@ public class ClinicTrialAmendEntity
                 Objects.equals(trialPopInternat, that.trialPopInternat) &&
                 Objects.equals(comissionNr, that.comissionNr) &&
                 Objects.equals(comissionDate, that.comissionDate) &&
-                Objects.equals(status, that.status) &&
-                Objects.equals(medicalInstitutions, that.medicalInstitutions);
+                Objects.equals(status, that.status) /*&&
+                Objects.equals(medicalInstitutions, that.medicalInstitutions)*/;
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, registrationRequestId, clinicalTrialsEntityId, treatment, provenance, phase, eudraCtNr, code, title, sponsor, medicament, referenceProduct, placebo, trialPopNat, trialPopInternat, comissionNr, comissionDate, status, medicalInstitutions);
+        return Objects.hash(id, registrationRequestId, clinicalTrialsEntityId, treatment, provenance, phase, eudraCtNr, code, title, sponsor, medicament, referenceProduct, placebo, trialPopNat, trialPopInternat, comissionNr, comissionDate, status/*, medicalInstitutions*/);
     }
 }

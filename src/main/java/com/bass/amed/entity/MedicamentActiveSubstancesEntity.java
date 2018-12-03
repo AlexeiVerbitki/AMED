@@ -76,9 +76,9 @@ public class MedicamentActiveSubstancesEntity
     public void assign(MedicamentActiveSubstancesHistoryEntity entity)
     {
         this.activeSubstance = entity.getActiveSubstance();
-        this.quantity = entity.getQuantity();
-        this.unitsOfMeasurement = entity.getUnitsOfMeasurement();
-        this.manufacture = entity.getManufacture();
+        this.quantity = entity.getQuantityTo();
+        this.unitsOfMeasurement = entity.getUnitsOfMeasurementTo();
+        this.manufacture = entity.getManufactureTo();
     }
 
     @Override

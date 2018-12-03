@@ -62,13 +62,12 @@ public class ClinicalTrailsService {
 
             CtMedAmendEntity placebo = new CtMedAmendEntity();
             placebo.asign(clinicalTrialsEntity.getPlacebo());
-            clinicTrialAmendEntity.setPlacebo(referenceProd);
+            clinicTrialAmendEntity.setPlacebo(placebo);
             em.persist(placebo);
 
             //active substances
             persistActiveSubstances(em,clinicalTrialsEntity.getMedicament().getActiveSubstances(),medcament);
             persistActiveSubstances(em,clinicalTrialsEntity.getReferenceProduct().getActiveSubstances(),referenceProd);
-
 
 
             //populate ct amendments list
@@ -114,7 +113,6 @@ public class ClinicalTrailsService {
             CtMedAmendActiveSubstEntity ctMedAmendActiveSubstEntity = new CtMedAmendActiveSubstEntity();
             ctMedAmendActiveSubstEntity.asign(entity);
             ctMedAmendActiveSubstEntity.setCtAmendmentId(med.getId());
-            med.getActiveSubstances().add(ctMedAmendActiveSubstEntity);
             em.persist(ctMedAmendActiveSubstEntity);
         }
     }
@@ -156,24 +154,28 @@ public class ClinicalTrailsService {
         medINstInvestigatorRepository.saveAll(ctMedInstInvestigatorEntities);
     }
 
-//    public void handeMedicalInstitutionsForAmendments(RegistrationRequestsEntity requests) throws CustomException {
-//        Set<CtAmendMedInstInvestigatorEntity> requestTypesStepEntityList2 = ctAmendMedInstInvestigatorRepository.findCtMedInstInvestigatorById(requests.getClinicalTrails().getId());
-//
-//        Set<CtAmendMedInstInvestigatorEntity> ctMedInstInvestigatorEntities = new HashSet<>();
-//        requests.getClinicalTrails().getMedicalInstitutions().forEach(medInst ->{
-//            medInst.getInvestigators().forEach(investig -> {
-//                CtMedInstInvestigatorEntity entity = new CtMedInstInvestigatorEntity(requests.getClinicalTrails().getId(), medInst.getId(), investig.getId(), Boolean.TRUE);
-//                entity.setInvestigatorsEntity(investig);
-//                entity.setMedicalInstitutionsEntity(medInst);
-//                entity.setClinicalTrialsEntity(requests.getClinicalTrails());
-//                entity.setMainInvestigator(investig.getMain());
-//                ctMedInstInvestigatorEntities.add(entity);
-//            });
-//        });
-//
-//        medINstInvestigatorRepository.deleteAll(requestTypesStepEntityList2);
-//        medINstInvestigatorRepository.saveAll(ctMedInstInvestigatorEntities);
-//    }
+    public void handeMedicalInstitutionsForAmendments(RegistrationRequestsEntity requests) throws CustomException {
+        ClinicTrialAmendEntity clinicTrialAmendEntity = requests.getClinicalTrails().getClinicTrialAmendEntities().stream().filter(entity ->
+                entity.getRegistrationRequestId().equals(requests.getId())
+        ).findFirst().orElse(null);
+
+        Set<CtAmendMedInstInvestigatorEntity> requestTypesStepEntityList2 = ctAmendMedInstInvestigatorRepository.findCtMedInstInvestigatorById(clinicTrialAmendEntity.getId());
+
+        Set<CtAmendMedInstInvestigatorEntity> ctMedInstInvestigatorEntities = new HashSet<>();
+        clinicTrialAmendEntity.getMedicalInstitutions().forEach(medInst ->{
+            medInst.getInvestigators().forEach(investig -> {
+                CtAmendMedInstInvestigatorEntity entity = new CtAmendMedInstInvestigatorEntity(requests.getClinicalTrails().getId(), medInst.getId(), investig.getId(), Boolean.TRUE);
+                entity.setInvestigatorsEntity(investig);
+                entity.setMedicalInstitutionsEntity(medInst);
+                entity.setClinicalTrialsAmendEntity(clinicTrialAmendEntity);
+                entity.setMainInvestigator(investig.getMain());
+                ctMedInstInvestigatorEntities.add(entity);
+            });
+        });
+
+        ctAmendMedInstInvestigatorRepository.deleteAll(requestTypesStepEntityList2);
+        ctAmendMedInstInvestigatorRepository.saveAll(ctMedInstInvestigatorEntities);
+    }
 
     public void getCtMedInstInvestigator(RegistrationRequestsEntity requests) {
         ClinicalTrialsEntity ct = requests.getClinicalTrails();

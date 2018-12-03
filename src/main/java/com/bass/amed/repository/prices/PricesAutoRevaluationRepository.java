@@ -28,6 +28,8 @@ public interface PricesAutoRevaluationRepository extends JpaRepository<CatalogPr
             "       p.price                price,\n" +
             "       ncur.short_description currency,\n" +
             "       p.price_mdl            priceMdl,\n" +
+            "       null                   priceMdlNew,\n" +
+            "       null                   priceMdlDifferencePercents,\n" +
             "       p.order_approv_date    priceApprovDate\n" +
             "FROM\n" +
             "     nm_prices p\n" +

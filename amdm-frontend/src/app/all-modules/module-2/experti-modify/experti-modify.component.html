@@ -34,7 +34,7 @@
 			</div>
 			<div class="col-md-6">
 				<div class="md-form" formGroupName="medicament">
-					<input id="med" mdbInputDirective type="text" class="form-control" formControlName="name" [attr.disabled]="true">
+					<input id="med" mdbInputDirective type="text" class="form-control" formControlName="commercialName" [attr.disabled]="true">
 					<label for="med">Denumire comerciala medicament</label>
 				</div>
 			</div>
@@ -112,66 +112,66 @@
 		<h5 class="text-center font-weight-bold">Informatii generale medicament</h5>
 		<hr>
 		<div class="row" formGroupName="medicament">
-			<div class="col-md-3">
+			<div class="col-md-4">
 				<div class="md-form">
 					<input id="dose" mdbInputDirective type="text" class="form-control" formControlName="dose" [attr.disabled]="true">
 					<label for="dose">Doza</label>
 				</div>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-4">
 				<div class="md-form">
 					<input id="volum" mdbInputDirective type="text" class="form-control" formControlName="volume">
 					<label for="volum">Volum </label>
 				</div>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-4">
 				<div class="md-form">
 					<input id="volumeQuantityMeasurement" mdbInputDirective type="text" class="form-control" formControlName="volumeQuantityMeasurement"
 					 [attr.disabled]="true">
 					<label for="volumeQuantityMeasurement">Unitate de masura (volum)</label>
 				</div>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-4">
 				<div class="md-form">
 					<input id="atcCode" mdbInputDirective type="text" class="form-control" formControlName="atcCode" [attr.disabled]="true">
 					<label for="atcCode">Cod ATC</label>
 				</div>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-4">
 				<div class="md-form">
 					<input id="pharmaceuticalFormType" mdbInputDirective type="text" class="form-control" formControlName="pharmaceuticalFormType"
 					 [attr.disabled]="true">
 					<label for="pharmaceuticalFormType">Tip forma farmaceutica</label>
 				</div>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-4">
 				<div class="md-form">
 					<input id="pharmaceuticalForm" mdbInputDirective type="text" class="form-control" formControlName="pharmaceuticalForm"
 					 [attr.disabled]="true">
 					<label for="pharmaceuticalForm">Denumire forma farmaceutica</label>
 				</div>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-4">
 				<div class="md-form">
 					<input id="group" mdbInputDirective type="text" class="form-control" formControlName="group" [attr.disabled]="true">
 					<label for="group">Grupa medicament</label>
 				</div>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-4">
 				<div class="md-form">
 					<input id="prescription" mdbInputDirective type="text" class="form-control" formControlName="prescription"
 					 [attr.disabled]="true">
 					<label for="prescription">Eliberare receta</label>
 				</div>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-4">
 				<div class="md-form">
 					<input id="internationalMedicamentName" mdbInputDirective type="text" class="form-control" formControlName="internationalMedicamentName"
 					 [attr.disabled]="true">
 					<label for="prescription">Denumirea internationala</label>
 				</div>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-4">
 				<div class="md-form">
 					<input id="termenVal" mdbInputDirective type="number" class="form-control" formControlName="termsOfValidity">
 					<label for="termenVal">Termen de valabilitate (luni) <span class="text-danger">*</span></label>
@@ -180,28 +180,28 @@
 					<small class="text-muted"><strong class="text-danger">Termenul de valabilitate trebuie introdus</strong></small>
 				</div>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-4">
 				<div class="md-form">
 					<input id="medicamentType" mdbInputDirective type="text" class="form-control" formControlName="medicamentType"
 					 [attr.disabled]="true">
 					<label for="medicamentType">Clasificarea medicamentului</label>
 				</div>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-4">
 				<div class="md-form">
 					<input id="authorizationHolder" mdbInputDirective type="text" class="form-control" formControlName="authorizationHolder"
 					 [attr.disabled]="true">
 					<label for="medicamentType">Deţinătorul certificatului de inregistrare</label>
 				</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-4">
 				<div class="md-form">
 					<input id="taraDetinAutProd" mdbInputDirective type="text" formControlName="authorizationHolderCountry" class="form-control"
 					 [attr.disabled]="true">
 					<label for="taraDetinAutProd">Ţara deţinătorului certificatului de inregistrare</label>
 				</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-4">
 				<div class="md-form">
 					<input id="adresaDetAutProd" mdbInputDirective type="text" formControlName="authorizationHolderAddress" class="form-control"
 					 [attr.disabled]="true">

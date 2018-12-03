@@ -99,8 +99,8 @@
                 <td class="align-middle" mdbTooltip="{{el.dose}}" placement="top">{{el.dose}}</td>
                 <td class="align-middle" mdbTooltip="{{el.division}}" placement="top">{{el.division}}</td>
                 <td class="align-middle" mdbTooltip="{{el.internationalMedicamentName.description}}" placement="top">{{el.internationalMedicamentName.description}}</td>
-                <td class="align-middle" mdbTooltip="{{el.price.mdlValue | number:'1.4'}}" placement="top">{{el.price.mdlValue | number:'1.4'}}</td>
-                <td class="align-middle" mdbTooltip="{{el.price.value | number:'1.4'}} {{el.price.currency.shortDescription}}" placement="top">{{el.price.value | number:'1.4'}} {{el.price.currency.shortDescription}}</td>
+                <td class="align-middle" mdbTooltip="{{el.price.mdlValue | digitsAfterDecimal:4}}" placement="top">{{el.price.mdlValue | digitsAfterDecimal:4}}</td>
+                <td class="align-middle" mdbTooltip="{{el.price.value | digitsAfterDecimal:4}} {{el.price.currency.shortDescription}}" placement="top">{{el.price.value | digitsAfterDecimal:4}} {{el.price.currency.shortDescription}}</td>
                 <td class="align-middle w-40"  *ngIf="el.rowType == 2">
                     <button type="button" class="btn btn-dark-red-color btn-sm" (click)="deleteRelatedOriginalMed(i)">
                         <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
@@ -150,13 +150,13 @@
                         <ng-container *ngIf="el.type.id == PriceRefType.ReferenceCountry">
                             <td mdbTooltip="{{el.country?.description}}" class="align-middle" scope="row">{{el.country?.description}}</td>
                             <td mdbTooltip="{{el.currency?.shortDescription}}" class="align-middle">{{el.currency?.shortDescription}}</td>
-                            <td mdbTooltip="{{el.value | number:'1.4'}}" class="align-middle">{{el.value | number:'1.4'}}</td>
-                            <td mdbTooltip="{{el?.xchRateRef | number:'1.4'}}" class="align-middle">{{el?.xchRateRef | number:'1.4'}}</td>
-                            <td mdbTooltip="{{el?.xchRateRefVal | number:'1.4'}}" class="align-middle">{{el?.xchRateRefVal | number:'1.4'}}</td>
-                            <td mdbTooltip="{{el?.xchRateEur | number:'1.4'}}" class="align-middle">{{el?.xchRateEur | number:'1.4'}}</td>
-                            <td mdbTooltip="{{el?.xchRateEurVal | number:'1.4'}}" class="align-middle">{{el?.xchRateEurVal | number:'1.4'}}</td>
-                            <td mdbTooltip="{{el?.xchRateUsd | number:'1.4'}}" class="align-middle">{{el?.xchRateUsd | number:'1.4'}}</td>
-                            <td mdbTooltip="{{el?.xchRateUsdVal | number:'1.4'}}" class="align-middle">{{el?.xchRateUsdVal | number:'1.4'}}</td>
+                            <td mdbTooltip="{{el.value | digitsAfterDecimal:4}}" class="align-middle">{{el.value | digitsAfterDecimal:4}}</td>
+                            <td mdbTooltip="{{el?.xchRateRef | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateRef | digitsAfterDecimal:4}}</td>
+                            <td mdbTooltip="{{el?.xchRateRefVal | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateRefVal | digitsAfterDecimal:4}}</td>
+                            <td mdbTooltip="{{el?.xchRateEur | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateEur | digitsAfterDecimal:4}}</td>
+                            <td mdbTooltip="{{el?.xchRateEurVal | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateEurVal | digitsAfterDecimal:4}}</td>
+                            <td mdbTooltip="{{el?.xchRateUsd | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateUsd | digitsAfterDecimal:4}}</td>
+                            <td mdbTooltip="{{el?.xchRateUsdVal | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateUsdVal | digitsAfterDecimal:4}}</td>
                             <td mdbTooltip="" class="align-middle w-40"><button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
                                                                            (click)="priceEditModalOpen(el, i)">
                                 <i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
@@ -194,9 +194,9 @@
                         <tbody>
                         <tr mdbTableCol *ngFor="let el of minRefPrices">
                             <td scope="row">{{el.country?.description}}</td>
-                            <td>{{el?.xchRateRefVal | number:'1.4'}}</td>
-                            <td>{{el?.xchRateEurVal | number:'1.4'}}</td>
-                            <td>{{el?.xchRateUsdVal | number:'1.4'}}</td>
+                            <td>{{el?.xchRateRefVal | digitsAfterDecimal:4}}</td>
+                            <td>{{el?.xchRateEurVal | digitsAfterDecimal:4}}</td>
+                            <td>{{el?.xchRateUsdVal | digitsAfterDecimal:4}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -232,8 +232,8 @@
                         <tr mdbTableCol *ngFor="let el of prevPrices">
                             <td scope="row">{{el.orderApprovDate | date: 'dd/MM/yyyy'}}</td>
                             <td>{{el.revisionDate | date: 'dd/MM/yyyy'}}</td>
-                            <td>{{el.priceMdl | number:'1.4'}}</td>
-                            <td>{{el.price | number:'1.4'}} {{el.currency?.shortDescription}}</td>
+                            <td>{{el.priceMdl | digitsAfterDecimal:4}}</td>
+                            <td>{{el.price | digitsAfterDecimal:4}} {{el.currency?.shortDescription}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -278,13 +278,13 @@
                             <ng-container *ngIf="el.type.id == PriceRefType.OriginCountry">
                                 <td mdbTooltip="{{el.country?.description}}" scope="row">{{el.country?.description}}</td>
                                 <td mdbTooltip="{{el.currency?.shortDescription}}">{{el.currency?.shortDescription}}</td>
-                                <td mdbTooltip="{{el.value | number:'1.4'}}">{{el.value | number:'1.4'}}</td>
-                                <td mdbTooltip="{{el?.xchRateRef | number:'1.4'}}">{{el?.xchRateRef | number:'1.4'}}</td>
-                                <td mdbTooltip="{{el?.xchRateRefVal | number:'1.4'}}">{{el?.xchRateRefVal | number:'1.4'}}</td>
-                                <td mdbTooltip="{{el?.xchRateEur | number:'1.4'}}">{{el?.xchRateEur | number:'1.4'}}</td>
-                                <td mdbTooltip="{{el?.xchRateEurVal | number:'1.4'}}">{{el?.xchRateEurVal | number:'1.4'}}</td>
-                                <td mdbTooltip="{{el?.xchRateUsd | number:'1.4'}}">{{el?.xchRateUsd | number:'1.4'}}</td>
-                                <td mdbTooltip="{{el?.xchRateUsdVal | number:'1.4'}}">{{el?.xchRateUsdVal | number:'1.4'}}</td>
+                                <td mdbTooltip="{{el.value | digitsAfterDecimal:4}}">{{el.value | digitsAfterDecimal:4}}</td>
+                                <td mdbTooltip="{{el?.xchRateRef | digitsAfterDecimal:4}}">{{el?.xchRateRef | digitsAfterDecimal:4}}</td>
+                                <td mdbTooltip="{{el?.xchRateRefVal | digitsAfterDecimal:4}}">{{el?.xchRateRefVal | digitsAfterDecimal:4}}</td>
+                                <td mdbTooltip="{{el?.xchRateEur | digitsAfterDecimal:4}}">{{el?.xchRateEur | digitsAfterDecimal:4}}</td>
+                                <td mdbTooltip="{{el?.xchRateEurVal | digitsAfterDecimal:4}}">{{el?.xchRateEurVal | digitsAfterDecimal:4}}</td>
+                                <td mdbTooltip="{{el?.xchRateUsd | digitsAfterDecimal:4}}">{{el?.xchRateUsd | digitsAfterDecimal:4}}</td>
+                                <td mdbTooltip="{{el?.xchRateUsdVal | digitsAfterDecimal:4}}">{{el?.xchRateUsdVal | digitsAfterDecimal:4}}</td>
                             </ng-container>
                         </tr>
                         </tbody>
@@ -335,13 +335,13 @@
                             <ng-container *ngIf="el.type.id == PriceRefType.OtherCountriesCatalog">
                                 <td mdbTooltip="{{el.country?.description}}" class="align-middle" scope="row">{{el.country?.description}}</td>
                                 <td mdbTooltip="{{el.currency?.shortDescription}}" class="align-middle">{{el.currency?.shortDescription}}</td>
-                                <td mdbTooltip="{{el.value | number:'1.4'}}" class="align-middle">{{el.value | number:'1.4'}}</td>
-                                <td mdbTooltip="{{el?.xchRateRef | number:'1.4'}}" class="align-middle">{{el?.xchRateRef | number:'1.4'}}</td>
-                                <td mdbTooltip="{{el?.xchRateRefVal | number:'1.4'}}" class="align-middle">{{el?.xchRateRefVal | number:'1.4'}}</td>
-                                <td mdbTooltip="{{el?.xchRateEur | number:'1.4'}}" class="align-middle">{{el?.xchRateEur | number:'1.4'}}</td>
-                                <td mdbTooltip="{{el?.xchRateEurVal | number:'1.4'}}" class="align-middle">{{el?.xchRateEurVal | number:'1.4'}}</td>
-                                <td mdbTooltip="{{el?.xchRateUsd | number:'1.4'}}" class="align-middle">{{el?.xchRateUsd | number:'1.4'}}</td>
-                                <td mdbTooltip="{{el?.xchRateUsdVal | number:'1.4'}}" class="align-middle">{{el?.xchRateUsdVal | number:'1.4'}}</td>
+                                <td mdbTooltip="{{el.value | digitsAfterDecimal:4}}" class="align-middle">{{el.value | digitsAfterDecimal:4}}</td>
+                                <td mdbTooltip="{{el?.xchRateRef | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateRef | digitsAfterDecimal:4}}</td>
+                                <td mdbTooltip="{{el?.xchRateRefVal | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateRefVal | digitsAfterDecimal:4}}</td>
+                                <td mdbTooltip="{{el?.xchRateEur | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateEur | digitsAfterDecimal:4}}</td>
+                                <td mdbTooltip="{{el?.xchRateEurVal | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateEurVal | digitsAfterDecimal:4}}</td>
+                                <td mdbTooltip="{{el?.xchRateUsd | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateUsd | digitsAfterDecimal:4}}</td>
+                                <td mdbTooltip="{{el?.xchRateUsdVal | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateUsdVal | digitsAfterDecimal:4}}</td>
                                 <td class="align-middle w-40"><button class="btn btn-mdb-color waves-light btn-sm" mdbWavesEffect (click)="priceEditModalOpen(el, i)">
                                     <i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
                                 </button></td>
@@ -388,9 +388,9 @@
                         <tbody>
                         <tr mdbTableCol *ngFor="let el of minOtherCountriesCatPrices">
                             <td scope="row">{{el.country?.description}}</td>
-                            <td>{{el?.xchRateRefVal | number:'1.4'}}</td>
-                            <td>{{el?.xchRateEurVal | number:'1.4'}}</td>
-                            <td>{{el?.xchRateUsdVal | number:'1.4'}}</td>
+                            <td>{{el?.xchRateRefVal | digitsAfterDecimal:4}}</td>
+                            <td>{{el?.xchRateEurVal | digitsAfterDecimal:4}}</td>
+                            <td>{{el?.xchRateUsdVal | digitsAfterDecimal:4}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -440,8 +440,8 @@
                             <td class="align-middle" mdbTooltip="{{m.country}}">{{m.country}}</td>
                             <td class="align-middle" mdbTooltip="{{m.manufacture}}">{{m.manufacture}}</td>
                             <td class="align-middle" mdbTooltip="{{m.internationalName}}">{{m.internationalName}}</td>
-                            <td class="align-middle">{{m.mdlValue | number:'1.4'}}</td>
-                            <td class="align-middle">{{m.price | number:'1.4'}} {{m.currency}}</td>
+                            <td class="align-middle">{{m.mdlValue | digitsAfterDecimal:4}}</td>
+                            <td class="align-middle">{{m.price | digitsAfterDecimal:4}} {{m.currency}}</td>
                             <td class="align-middle w-40">
                                 <button type="button" class="btn btn-dark-red-color btn-sm" (click)="deleteRelatedMed(i)">
                                     <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
@@ -450,7 +450,7 @@
                         </tr>
                         <tr mdbTableCol>
                             <td scope="row" colspan="8">Media</td>
-                            <td>{{avgRelatedMeds | number:'1.4'}}</td>
+                            <td>{{avgRelatedMeds | digitsAfterDecimal:4}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -485,7 +485,7 @@
                         <tbody>
                         <tr mdbTableCol *ngFor="let m of dciAndOriginAvgs">
                             <td scope="row">{{m.source}}</td>
-                            <td>{{m.avg | number:'1.4'}}</td>
+                            <td>{{m.avg | digitsAfterDecimal:4}}</td>
                         </tr>
                         </tbody>
                     </table>

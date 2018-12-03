@@ -1,12 +1,8 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import { Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import {MatDialog} from '@angular/material';
+import {FormBuilder} from '@angular/forms';
 import {Subscription} from "rxjs";
-import {Router} from "@angular/router";
-import {TaskService} from "../../../shared/service/task.service";
 import {PriceService} from "../../../shared/service/prices.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {Document} from "../../../models/document";
 
 @Component({
     selector: 'app-xchangeinfo',
@@ -36,6 +32,7 @@ export class XchangeInfoComponent implements OnInit, OnDestroy {
     getPrevMonthAVGCurrencies(){
         this.subscriptions.push(this.priceService.getPrevMonthAVGCurrencies().subscribe(data =>{
             this.currencies = data;
+            console.log('currencies', this.currencies);
             this.changed.emit(this.currencies);
         }));
     }

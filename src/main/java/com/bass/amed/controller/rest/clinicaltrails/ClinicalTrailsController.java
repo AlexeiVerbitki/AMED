@@ -1,6 +1,5 @@
 package com.bass.amed.controller.rest.clinicaltrails;
 
-import com.bass.amed.controller.rest.AdministrationController;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
@@ -10,11 +9,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.beans.Transient;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 
 @RestController
@@ -31,6 +32,8 @@ public class ClinicalTrailsController {
     ClinicTrialAmendRepository clinicTrialAmendRepository;
     @Autowired
     CtAmendMedInstInvestigatorRepository ctAmendMedInstInvestigatorRepository;
+//    @Autowired
+//    CtMedAmendRepository ctMedAmendRepository;
 
     @PostMapping(value = "/save-request")
     public ResponseEntity<Integer> saveClinicalTrailRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
@@ -88,16 +91,17 @@ public class ClinicalTrailsController {
                 entity.getRegistrationRequestId().equals(registrationRequestsEntity.getId())
         ).findFirst().orElse(null);
 
-        Set<ClinicTrialAmendEntity> clinicTrialAmendEntities = new HashSet<>();
-        clinicTrialAmendEntities.add(clinicTrialAmendEntity);
-        registrationRequestsEntity.getClinicalTrails().setClinicTrialAmendEntities(clinicTrialAmendEntities);
+//        Set<ClinicTrialAmendEntity> clinicTrialAmendEntities = new HashSet<>();
+//        clinicTrialAmendEntities.add(clinicTrialAmendEntity);
+//        registrationRequestsEntity.getClinicalTrails().setClinicTrialAmendEntities(clinicTrialAmendEntities);
 
-        if(clinicTrialAmendEntities!=null){
+        if (clinicTrialAmendEntity != null) {
             Set<CtAmendMedInstInvestigatorEntity> requestTypesStepEntityList = ctAmendMedInstInvestigatorRepository.findCtMedInstInvestigatorById(clinicTrialAmendEntity.getId());
 
             requestTypesStepEntityList.forEach(medInstInvestigator -> {
                 CtMedicalInstitutionEntity medInst = medInstInvestigator.getMedicalInstitutionsEntity();
-                CtInvestigatorEntity ctInvestigatorEntity = medInstInvestigator.getInvestigatorsEntity();
+                CtInvestigatorEntity ctInvestigatorEntity = new CtInvestigatorEntity();
+                ctInvestigatorEntity.asign(medInstInvestigator.getInvestigatorsEntity());
                 ctInvestigatorEntity.setMain(medInstInvestigator.getMainInvestigator());
                 medInst.getInvestigators().add(ctInvestigatorEntity);
 
@@ -106,6 +110,22 @@ public class ClinicalTrailsController {
         }
 
         return new ResponseEntity<>(registrationRequestsEntity, HttpStatus.OK);
+    }
+
+    @Transactional
+    @PostMapping(value = "/save-amendment-request")
+    public ResponseEntity<Integer> saveClinicalTrailAmendmentRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
+        if (requests.getClinicalTrails() == null) {
+            throw new CustomException("Request was not found");
+        }
+
+        ClinicTrialAmendEntity clinicTrialAmendEntity = requests.getClinicalTrails().getClinicTrialAmendEntities().stream().filter(entity ->
+                entity.getRegistrationRequestId().equals(requests.getId())
+        ).findFirst().orElse(null);
+        clinicalTrailsService.handeMedicalInstitutionsForAmendments(requests);
+
+        requestRepository.save(requests);
+        return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
     }
 
     @RequestMapping("/all-clinical-trails-by-cod-or-eudra")

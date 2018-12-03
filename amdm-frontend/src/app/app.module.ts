@@ -43,6 +43,7 @@ import {HomepageModalComponent} from "./homepage/homepage-modal/homepage-modal.c
 import {MedicamentDetailsDialogComponent} from "./dialog/medicament-details-dialog/medicament-details-dialog.component";
 import {MedicamentHistoryDialogComponent} from "./dialog/medicament-history-dialog/medicament-history-dialog.component";
 import {MedicamentModificationsDialogComponent} from "./dialog/medicament-modifications-dialog/medicament-modifications-dialog.component";
+import {PipeModule} from "./shared/pipe/pipe.module";
 
 const interceptors = [{
     provide: HTTP_INTERCEPTORS,
@@ -87,7 +88,7 @@ const interceptors = [{
         HomepageModalComponent,
         MedicamentDetailsDialogComponent,
         MedicamentHistoryDialogComponent,
-        MedicamentModificationsDialogComponent
+        MedicamentModificationsDialogComponent,
     ],
     imports: [
         BrowserAnimationsModule,
@@ -98,7 +99,7 @@ const interceptors = [{
         ReactiveFormsModule,
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
-
+        PipeModule.forRoot()
     ],
     schemas: [],
     entryComponents: [

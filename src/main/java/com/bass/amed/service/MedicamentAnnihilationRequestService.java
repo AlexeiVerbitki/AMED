@@ -50,7 +50,7 @@ public class MedicamentAnnihilationRequestService
 
         rrE.getMedicamentAnnihilation().setMedicamentsMedicamentAnnihilationMeds(medicamentAnnihilationMedsRepository.findByMedicamentAnnihilationId(rrE.getMedicamentAnnihilation().getId()));
 
-        rrE.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds().forEach(ma -> ma.setMedicamentName(medicamentRepository.findById(ma.getMedicamentId()).get().getName()));
+        rrE.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds().forEach(ma -> ma.setMedicamentName(medicamentRepository.findById(ma.getMedicamentId()).get().getCommercialName()));
 
         return rrE;
     }

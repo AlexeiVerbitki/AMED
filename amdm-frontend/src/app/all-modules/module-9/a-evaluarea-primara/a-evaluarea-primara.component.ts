@@ -202,7 +202,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         });
 
         this.addMediacalInstitutionForm = this.fb.group({
-            'medicalInstitution': []
+            'medicalInstitution': [{}]
         });
 
         this.initPage();
@@ -485,6 +485,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
 
             let medInst = this.addMediacalInstitutionForm.get('medicalInstitution').value;
             medInst.investigators = result.investigators;
+            console.log('result.investigators', result.investigators);
             this.mediacalInstitutionsList.push(medInst);
             let intdexToDelete = this.allMediacalInstitutionsList.indexOf(this.addMediacalInstitutionForm.get('medicalInstitution').value);
             this.allMediacalInstitutionsList.splice(intdexToDelete, 1);
@@ -520,6 +521,14 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         }
 
         let dialogRef = this.dialog.open(MedInstInvestigatorsDialogComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('result', result);
+            if (result == null || result == undefined || result.success === false) {
+                return;
+            }
+            this.mediacalInstitutionsList[i].investigators = result.investigators;
+        });
 
     }
 

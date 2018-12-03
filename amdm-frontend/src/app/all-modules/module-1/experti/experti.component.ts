@@ -59,10 +59,11 @@ export class ExpertiComponent implements OnInit {
             'medicament':
                 fb.group({
                     'id': [],
-                    'name': [''],
+                    'commercialName': [''],
                     'company': [''],
                     'atcCode': [null, Validators.required],
                     'registrationDate': [],
+                    'registrationNumber': [],
                     'pharmaceuticalForm': [''],
                     'pharmaceuticalFormType': [''],
                     'dose': [null],
@@ -107,7 +108,7 @@ export class ExpertiComponent implements OnInit {
                         this.expertForm.get('requestNumber').setValue(data.requestNumber);
                         this.expertForm.get('companyValue').setValue(data.company.name);
                         this.expertForm.get('company').setValue(data.company);
-                        this.expertForm.get('medicament.name').setValue(data.medicamentName);
+                        this.expertForm.get('medicament.commercialName').setValue(data.medicamentName);
                         this.expertForm.get('medicamentName').setValue(data.medicamentName);
                         this.expertForm.get('medicament.pharmaceuticalForm').setValue(data.medicaments[0].pharmaceuticalForm.description);
                         this.expertForm.get('medicament.pharmaceuticalFormType').setValue(data.medicaments[0].pharmaceuticalForm.type.description);
@@ -272,6 +273,7 @@ export class ExpertiComponent implements OnInit {
         x.outputDocuments = this.outputDocuments;
 
         for (let med of x.medicaments) {
+            med.atcCode = this.expertForm.get('medicament.atcCode').value;
             med.status = 'F';
             med.experts = {
                 chairman: this.expert.chairman, farmacolog: this.expert.farmacolog, farmacist: this.expert.farmacist,
@@ -318,6 +320,7 @@ export class ExpertiComponent implements OnInit {
                 });
 
                 for (let med of modelToSubmit.medicaments) {
+                    med.atcCode = this.expertForm.get('medicament.atcCode').value;
                     med.experts = {
                         chairman: this.expert.chairman,
                         farmacolog: this.expert.farmacolog,

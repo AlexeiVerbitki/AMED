@@ -6,18 +6,17 @@ import {Router} from "@angular/router";
 import {TaskService} from "../../../shared/service/task.service";
 import {PriceService} from "../../../shared/service/prices.service";
 import {LoaderService} from "../../../shared/service/loader.service";
-
 @Component({
     selector: 'app-prices-auto-revaluation',
     templateUrl: './price-auto-revaluation.component.html',
-    styleUrls: ['./price-auto-revaluation.component.css']
+    styleUrls: ['./price-auto-revaluation.component.css'],
 })
 export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnDestroy {
     taskForm: FormGroup;
     documents: Document[] = [];
     requestNumber: number;
+    displayedColumns: any[] = ['medicamentCode', 'commercialName', 'pharmaceuticalForm', 'dose', 'volume', 'division', 'registrationDate', 'price', 'priceMdl', 'priceMdlNew', 'priceMdlDifferencePercents'];
 
-    displayedColumns: any[] = ['medicamentCode', 'commercialName', 'pharmaceuticalForm', 'dose', 'volume', 'division', 'registrationDate', 'priceMdl', 'price'];
     dataSource = new MatTableDataSource<any>();
     row: any;
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -40,6 +39,7 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
             'division': [null],
             'registrationDate': [null],
             'priceMdl': [null],
+            'priceMdlNew': [null],
             'price': [null],
         });
     }
@@ -72,8 +72,8 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
         this.taskForm.reset();
         this.subscriptions.push(
             this.priceService.getPricesForRevaluation().subscribe(prices => {
-                    console.log('prices', prices);
                     this.dataSource.data = prices;
+                    console.log('prices', prices);
                 },
                 error => console.log(error)
             ));
@@ -81,6 +81,10 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
 
     documentAdded($event){
 
+    }
+
+    newPriceModified(i: number, newValue: any){
+        console.log('newPriceModified', newValue);
     }
 
     ngOnDestroy(): void {

@@ -34,6 +34,9 @@ table {
 .modal {
     overflow-y : auto;
 }
+.input-currency {
+    border:none; background: transparent; outline: 0; color: #0c5460;
+}
 
 .md-form-modified {
     position      : relative;

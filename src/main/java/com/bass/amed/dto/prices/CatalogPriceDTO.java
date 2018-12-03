@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
@@ -14,6 +15,33 @@ import java.util.Date;
 public class CatalogPriceDTO {
     public CatalogPriceDTO() {
     }
+
+    public CatalogPriceDTO(CatalogPriceDTO c) {
+        setId(c.getId());
+        setOrderNr(c.getOrderNr());
+        setMedicamentCode(c.getMedicamentCode());
+        setCommercialName(c.getCommercialName());
+        setPharmaceuticalForm(c.getPharmaceuticalForm());
+        setDose(c.getDose());
+        setVolume(c.getVolume());
+        setDivision(c.getDivision());
+        setCountry(c.getCountry());
+        setManufacture(c.getManufacture());
+        setRegistrationNumber(c.getRegistrationNumber());
+        setRegistrationDate(c.getRegistrationDate());
+        setAtcCode(c.getAtcCode());
+        setInternationalName(c.getInternationalName());
+        setTermsOfValidity(c.getTermsOfValidity());
+        setBarCode(c.getBarCode());
+        setPriceMdl(c.getPriceMdl());
+        setPriceMdlNew(c.getPriceMdlNew());
+        setPriceMdlDifferencePercents(c.getPriceMdlDifferencePercents());
+        setPrice(c.getPrice());
+        setCurrency(c.getCurrency());
+        setPriceApprovDate(c.getPriceApprovDate());
+    }
+
+
 
     @Id
     private Integer id;
@@ -33,8 +61,10 @@ public class CatalogPriceDTO {
     private String internationalName;
     private Integer termsOfValidity;
     private String barCode;
-    private String priceMdl;
-    private String price;
+    private Double priceMdl;
+    private Double priceMdlNew;
+    private String priceMdlDifferencePercents;
+    private Double price;
     private String currency;
     private String priceApprovDate;
 }

@@ -1,108 +1,30 @@
 package com.bass.amed.entity;
 
+import lombok.*;
+
 import javax.persistence.*;
 
+@Data
 @Entity
 @Table(name = "medicament_manufactures_history", schema = "amed")
 public class MedicamentManufactureHistoryEntity
 {
+    @Id@GeneratedValue( strategy = GenerationType.IDENTITY )@Column(name = "id", nullable = false)
     private Integer id;
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})@JoinColumn(name = "manufacture_id")
     private NmManufacturesEntity manufacture;
-    private Boolean producatorProdusFinit;
+    @Basic@Column(name = "producator_produs_finit_to")
+    private Boolean producatorProdusFinitTo;
+    @Basic@Column(name = "producator_produs_finit_from")
+    private Boolean producatorProdusFinitFrom;
+    @Basic@Column(name = "status")
     private String status;
-
-    @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY )
-    @Column(name = "id", nullable = false)
-    public Integer getId()
-    {
-        return id;
-    }
-
-    public void setId(Integer id)
-    {
-        this.id = id;
-    }
-
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
-    @JoinColumn(name = "manufacture_id")
-    public NmManufacturesEntity getManufacture()
-    {
-        return manufacture;
-    }
-
-    public void setManufacture(NmManufacturesEntity manufacture)
-    {
-        this.manufacture = manufacture;
-    }
-
-    @Basic
-    @Column(name = "producator_produs_finit")
-    public Boolean getProducatorProdusFinit()
-    {
-        return producatorProdusFinit;
-    }
-
-    public void setProducatorProdusFinit(Boolean producatorProdusFinit)
-    {
-        this.producatorProdusFinit = producatorProdusFinit;
-    }
-
-    @Basic
-    @Column(name = "status")
-    public String getStatus()
-    {
-        return status;
-    }
-
-    public void setStatus(String status)
-    {
-        this.status = status;
-    }
 
     public void assign(MedicamentManufactureEntity entity)
     {
         this.manufacture = entity.getManufacture();
-        this.producatorProdusFinit = entity.getProducatorProdusFinit();
+        this.producatorProdusFinitTo = entity.getProducatorProdusFinit();
         this.status = "O";
     }
 
-    @Override
-    public boolean equals(Object o)
-    {
-        if (this == o)
-        {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass())
-        {
-            return false;
-        }
-
-        MedicamentManufactureHistoryEntity that = (MedicamentManufactureHistoryEntity) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null)
-        {
-            return false;
-        }
-        if (manufacture != null ? !manufacture.equals(that.manufacture) : that.manufacture != null)
-        {
-            return false;
-        }
-        if (producatorProdusFinit != null ? !producatorProdusFinit.equals(that.producatorProdusFinit) : that.producatorProdusFinit != null)
-        {
-            return false;
-        }
-        return status != null ? status.equals(that.status) : that.status == null;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (manufacture != null ? manufacture.hashCode() : 0);
-        result = 31 * result + (producatorProdusFinit != null ? producatorProdusFinit.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
-        return result;
-    }
 }

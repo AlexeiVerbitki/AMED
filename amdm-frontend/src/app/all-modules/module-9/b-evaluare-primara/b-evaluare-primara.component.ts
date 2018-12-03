@@ -13,6 +13,8 @@ import {ActiveSubstanceDialogComponent} from "../../../dialog/active-substance-d
 import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
 import {LoaderService} from "../../../shared/service/loader.service";
 import {AuthService} from "../../../shared/service/authetication.service";
+import {PaymentOrder} from "../../../models/paymentOrder";
+import {Receipt} from "../../../models/receipt";
 
 @Component({
     selector: 'app-b-evaluare-primara',
@@ -34,6 +36,9 @@ export class BEvaluarePrimaraComponent implements OnInit {
     private subscriptions: Subscription[] = [];
 
     clinicTrailAmendForm: FormGroup;
+    clinicalTrailAmendmentForm: FormGroup;
+
+    private amendmentIndex : number = -1;
 
     docs: Document[] = [];
     docTypes: any[] = [];
@@ -76,7 +81,10 @@ export class BEvaluarePrimaraComponent implements OnInit {
     protected atcCodesInputsRfPr = new Subject<string>();
 
     //Payments control
+    receiptsList: Receipt[] = [];
+    paymentOrdersList: PaymentOrder[] = [];
     paymentTotal: number = 0;
+
 
     medActiveSubstances: any[] = [];
     refProdActiveSubstances: any[] = [];
@@ -93,7 +101,8 @@ export class BEvaluarePrimaraComponent implements OnInit {
                 private administrationService: AdministrationService,
                 private loadingService: LoaderService,
                 private authService: AuthService,
-                private router: Router,) {
+                private router: Router,
+                private dialogConfirmation: MatDialog,) {
     }
 
     ngOnInit() {
@@ -107,6 +116,7 @@ export class BEvaluarePrimaraComponent implements OnInit {
             'initiator': [null],
             'assignedUser': [null],
             'outputDocuments': [],
+            'clinicalTrails':[],
             'clinicalTrailAmendment': this.fb.group({
                 'id': [''],
                 'registrationRequestId' : [],
@@ -143,7 +153,7 @@ export class BEvaluarePrimaraComponent implements OnInit {
             'internationalMedicamentName': [null],
             'manufacture': [null, Validators.required],
             'dose': [null, Validators.required],
-            'volumeQuantityMeasurement': [null, Validators.required],
+            'volumeQuantityMeasurement': [null],
             'pharmaceuticalForm': [null, Validators.required],
             'atcCode': [null, Validators.required],
             'administratingMode': [null, Validators.required],
@@ -158,7 +168,7 @@ export class BEvaluarePrimaraComponent implements OnInit {
             'internationalMedicamentName': [null],
             'manufacture': [null, Validators.required],
             'dose': [null, Validators.required],
-            'volumeQuantityMeasurement': [null, Validators.required],
+            'volumeQuantityMeasurement': [null],
             'pharmaceuticalForm': [null, Validators.required],
             'atcCode': [null, Validators.required],
             'administratingMode': [null, Validators.required],
@@ -173,7 +183,7 @@ export class BEvaluarePrimaraComponent implements OnInit {
             'internationalMedicamentName': [null],
             'manufacture': [null, Validators.required],
             'dose': [null, Validators.required],
-            'volumeQuantityMeasurement': [null, Validators.required],
+            'volumeQuantityMeasurement': [null],
             'pharmaceuticalForm': [null, Validators.required],
             'atcCode': [null, Validators.required],
             'administratingMode': [null, Validators.required],
@@ -448,41 +458,51 @@ export class BEvaluarePrimaraComponent implements OnInit {
                         this.clinicTrailAmendForm.get('typeCode').setValue(data.type.code);
                         this.clinicTrailAmendForm.get('initiator').setValue(data.initiator);
                         this.clinicTrailAmendForm.get('requestHistories').setValue(data.requestHistories);
+                        this.clinicTrailAmendForm.get('clinicalTrails').setValue(data.clinicalTrails);
 
-                        this.clinicTrailAmendForm.get('clinicalTrailAmendment').setValue(data.clinicalTrails.clinicTrialAmendEntities[0]);
+
+                        let findAmendment = data.clinicalTrails.clinicTrialAmendEntities.find(amendment => data.id == amendment.registrationRequestId);
+                        this.amendmentIndex = data.clinicalTrails.clinicTrialAmendEntities.indexOf(findAmendment);
+
+                        // console.log('findAmendment', findAmendment);
+                        // console.log('this.amendmentIndex', this.amendmentIndex);
+                        // console.log(data.clinicalTrails.clinicTrialAmendEntities);
+
+                        this.clinicTrailAmendForm.get('clinicalTrailAmendment').setValue(findAmendment);
 
                         this.clinicTrailAmendForm.get('clinicalTrailAmendment.medicalInstitutions').setValue(
-                            data.clinicalTrails.clinicTrialAmendEntities[0].medicalInstitutions == null ? [] : data.clinicalTrails.clinicTrialAmendEntities[0].medicalInstitutions);
+                            findAmendment.medicalInstitutions == null ? [] : findAmendment.medicalInstitutions);
                         this.clinicTrailAmendForm.get('clinicalTrailAmendment.treatment').setValue(
-                            data.clinicalTrails.clinicTrialAmendEntities[0].treatment == null ? this.treatmentList[0] : data.clinicalTrails.treatment);
+                            findAmendment.treatment == null ? this.treatmentList[0] : findAmendment.treatment);
                         this.clinicTrailAmendForm.get('clinicalTrailAmendment.provenance').setValue(
-                            data.clinicalTrails.clinicTrialAmendEntities[0].provenance == null ? this.provenanceList[0] : data.clinicalTrails.provenance);
+                            findAmendment.provenance == null ? this.provenanceList[0] : findAmendment.provenance);
 
 
-                        if (data.clinicalTrails.clinicTrialAmendEntities[0].medicament !== null) {
+                        if (findAmendment.medicament !== null) {
                             //this.medicamentForm.setValue(data.clinicalTrails.clinicTrialAmendEntities[0].medicament);
-                            this.medicamentForm.setValue(data.clinicalTrails.clinicTrialAmendEntities[0].medicament);
-                            this.medActiveSubstances = data.clinicalTrails.clinicTrialAmendEntities[0].medicament.activeSubstances;
+                            this.medicamentForm.setValue(findAmendment.medicament);
+                            this.medActiveSubstances = findAmendment.medicament.activeSubstances;
                         }
-                        if (data.clinicalTrails.clinicTrialAmendEntities[0].referenceProduct !== null) {
+                        if (findAmendment.referenceProduct !== null) {
                             //this.referenceProductFormn.setValue(data.clinicalTrails.clinicTrialAmendEntities[0].referenceProduct);
-                            this.referenceProductFormn.setValue(data.clinicalTrails.clinicTrialAmendEntities[0].referenceProduct);
-                            this.refProdActiveSubstances = data.clinicalTrails.clinicTrialAmendEntities[0].referenceProduct.activeSubstances;
+                            this.referenceProductFormn.setValue(findAmendment.referenceProduct);
+                            this.refProdActiveSubstances = findAmendment.referenceProduct.activeSubstances;
                         }
-                        if (data.clinicalTrails.clinicTrialAmendEntities[0].placebo !== null) {
-                            this.placeboFormn.setValue(data.clinicalTrails.clinicTrialAmendEntities[0].placebo);
+                        if (findAmendment.placebo !== null) {
+                            this.placeboFormn.setValue(findAmendment.placebo);
                         }
 
-                        if ( data.clinicalTrails.clinicTrialAmendEntities[0].medicalInstitutions !== null) {
-                            this.mediacalInstitutionsList = data.clinicalTrails.clinicTrialAmendEntities[0].medicalInstitutions;
+                        if ( findAmendment.medicalInstitutions !== null) {
+                            this.mediacalInstitutionsList = findAmendment.medicalInstitutions;
                         }
 
                         console.log(' this.clinicTrailAmendForm', this.clinicTrailAmendForm);
-                        // console.log('data.clinicalTrails.clinicTrialAmendEntities[0]', data.clinicalTrails.clinicTrialAmendEntities);
-                        // console.log(' this.clinicTrailAmendForm', this.clinicTrailAmendForm);
 
                         this.docs = data.documents;
                         this.docs.forEach(doc => doc.isOld = true);
+
+                        this.receiptsList = data.receipts;
+                        this.paymentOrdersList = data.paymentOrders;
 
                         this.loadInvestigatorsList();
                         this.loadMedicalInstitutionsList();
@@ -511,6 +531,13 @@ export class BEvaluarePrimaraComponent implements OnInit {
 
         let dialogRef = this.dialog.open(MedInstInvestigatorsDialogComponent, dialogConfig2);
 
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('result', result);
+            if (result == null || result == undefined || result.success === false) {
+                return;
+            }
+            this.mediacalInstitutionsList[i].investigators = result.investigators;
+        });
     }
 
     addMedActiveSubstanceDialog() {
@@ -658,32 +685,140 @@ export class BEvaluarePrimaraComponent implements OnInit {
 
     save() {
         this.loadingService.show();
+        console.log("formData", this.clinicTrailAmendForm);
+
         let formModel = this.clinicTrailAmendForm.getRawValue();
         formModel.currentStep = 'E';
         formModel.documents = this.docs;
-        formModel.clinicalTrails.medicalInstitutions = this.mediacalInstitutionsList;
-        // console.log('this.mediacalInstitutionsList', this.mediacalInstitutionsList);
+        formModel.receipts = this.receiptsList;
+        formModel.paymentOrders = this.paymentOrdersList;
 
-        formModel.clinicalTrails.medicament = this.medicamentForm.value;
-        formModel.clinicalTrails.medicament.activeSubstances = this.medActiveSubstances;
+        formModel.clinicalTrailAmendment.medicalInstitutions = this.mediacalInstitutionsList;
 
-        formModel.clinicalTrails.referenceProduct = this.referenceProductFormn.value;
-        formModel.clinicalTrails.referenceProduct.activeSubstances = this.refProdActiveSubstances;
+        formModel.clinicalTrailAmendment.medicament = this.medicamentForm.value;
+        formModel.clinicalTrailAmendment.medicament.activeSubstances = this.medActiveSubstances;
 
-        formModel.clinicalTrails.placebo = this.placeboFormn.value;
+        formModel.clinicalTrailAmendment.referenceProduct = this.referenceProductFormn.value;
+        formModel.clinicalTrailAmendment.referenceProduct.activeSubstances = this.refProdActiveSubstances;
+
+        formModel.clinicalTrailAmendment.placebo = this.placeboFormn.value;
 
         formModel.assignedUser = this.authService.getUserName();
+
+        let currentAmendment = formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex];
+        console.log('currentAmendment', currentAmendment);
+
+        formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex] = formModel.clinicalTrailAmendment;
+
+        console.log("formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex].name", formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex].medicament.name);
+
         console.log("Save data", formModel);
         this.subscriptions.push(
-            this.requestService.saveClinicalTrailRequest(formModel).subscribe(data => {
+            this.requestService.saveClinicalTrailAmendmentRequest(formModel).subscribe(data => {
                 this.loadingService.hide();
-                //this.router.navigate(['dashboard/module']);
+                this.router.navigate(['dashboard/module']);
             }, error => {
                 this.loadingService.hide();
                 console.log(error)
             })
         )
+    }
 
+    onSubmit() {
+        let formModel = this.clinicTrailAmendForm.getRawValue();
+
+        if (this.clinicTrailAmendForm.invalid /*|| this.paymentTotal < 0*/) {
+            alert('Invalid Form1!');
+            console.log("Not submitted data", formModel);
+            return;
+        }
+
+        if (this.medicamentForm.invalid || this.referenceProductFormn.invalid) {
+            console.log("this.medicamentForm", this.medicamentForm);
+            console.log("this.referenceProductFormn", this.referenceProductFormn);
+            alert('Invalid Form2!');
+            return;
+        }
+
+        // this.loadingService.show();
+        formModel.documents = this.docs;
+
+        //TODO Payment managment
+        formModel.receipts = this.receiptsList;
+        formModel.paymentOrders = this.paymentOrdersList;
+
+
+        formModel.clinicalTrailAmendment.medicalInstitutions = this.mediacalInstitutionsList;
+
+        formModel.clinicalTrailAmendment.medicament = this.medicamentForm.value;
+        formModel.clinicalTrailAmendment.medicament.activeSubstances = this.medActiveSubstances;
+
+        formModel.clinicalTrailAmendment.referenceProduct = this.referenceProductFormn.value;
+        formModel.clinicalTrailAmendment.referenceProduct.activeSubstances = this.refProdActiveSubstances;
+
+        formModel.clinicalTrailAmendment.placebo = this.placeboFormn.value;
+
+        formModel.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
+        formModel.requestHistories.push({
+            startDate: formModel.requestHistories[formModel.requestHistories.length - 1].endDate,
+            endDate: new Date(),
+            username: this.authService.getUserName(),
+            step: 'E'
+        });
+
+        formModel.assignedUser = this.authService.getUserName();
+        formModel.currentStep = 'A';
+
+        let currentAmendment = formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex];
+        console.log('currentAmendment', currentAmendment);
+        formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex] = formModel.clinicalTrailAmendment;
+
+        console.log("Next page data", formModel);
+
+        // this.subscriptions.push(
+        //     this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
+        //         this.router.navigate(['/dashboard/module/clinic-studies/analize/' + data.body]);
+        //         this.loadingService.hide();
+        //     }, error => {
+        //         this.loadingService.hide();
+        //         console.log(error)
+        //     })
+        // )
+    }
+
+    interruptProcess() {
+        const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur(a)?',
+                confirm: false
+            }
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            // console.log('result', result);
+            if (result) {
+                this.loadingService.show();
+                let formModel = this.clinicTrailAmendForm.getRawValue();
+                formModel.currentStep = 'I';
+                formModel.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
+                formModel.requestHistories.push({
+                    startDate: formModel.requestHistories[formModel.requestHistories.length - 1].endDate,
+                    endDate: new Date(),
+                    username: this.authService.getUserName(),
+                    step: 'E'
+                });
+                formModel.documents = this.docs;
+                this.subscriptions.push(
+                    this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
+                        this.router.navigate(['/dashboard/module/clinic-studies/interrupt/' + data.body]);
+                        this.loadingService.hide();
+                    }, error => {
+                        this.loadingService.hide();
+                        console.log(error)
+                    })
+                )
+            }
+        });
     }
 
 }

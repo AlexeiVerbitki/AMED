@@ -76,6 +76,7 @@ public class RequestController
                 {
                     setCodeAndRegistrationNr(medicament, medicamentRegistrationNumberSequence.getId());
                     medicament.setExpirationDate(java.sql.Date.valueOf(LocalDate.now().plusYears(5)));
+                    medicament.setName(medicament.getCommercialName() + " " + medicament.getPharmaceuticalForm().getCode() + " " + medicament.getDose() + " " + medicament.getDivision());
                 }
             }
         }
@@ -104,8 +105,8 @@ public class RequestController
         else
         {
             MedicamentHistoryEntity medicamentHistoryEntity = request.getMedicamentHistory().stream().findFirst().get();
-            NmMedicamentGroupEntity nmMedicamentGroupEntity = medicamentGroupRepository.findByCode(medicamentHistoryEntity.getGroup().getCode());
-            medicamentHistoryEntity.setGroup(nmMedicamentGroupEntity);
+            NmMedicamentGroupEntity nmMedicamentGroupEntity = medicamentGroupRepository.findByCode(medicamentHistoryEntity.getGroupTo().getCode());
+            medicamentHistoryEntity.setGroupTo(nmMedicamentGroupEntity);
         }
         if (request.getMedicaments() == null)
         {
@@ -326,9 +327,11 @@ public class RequestController
 
         PricesHistoryEntity priceHistory = null;
 
-        if(price.getType().getId() == 2) {//acceptat
+        if (price.getType().getId() == 2)
+        {//acceptat
             NmPricesEntity oldNmPrice = nmPricesRepository.findOneByMedicament(price.getMedicament());
-            if(oldNmPrice != null) {
+            if (oldNmPrice != null)
+            {
                 updatedPrice.getNmPrice().setId(oldNmPrice.getId());
             }
             price.setNmPrice(updatedPrice.getNmPrice());
@@ -340,7 +343,8 @@ public class RequestController
         try
         {
             requestRepository.save(request);
-            if(priceHistory != null) {
+            if (priceHistory != null)
+            {
                 pricesHistoryRepository.save(priceHistory);
             }
         }
@@ -399,10 +403,12 @@ public class RequestController
         medicamentEntities = medicamentEntities.stream().filter(m -> m.getStatus().equals("F")).collect(Collectors.toList());
         Optional<MedicamentHistoryEntity> medicamentHistoryEntityOpt = request.getMedicamentHistory().stream().findFirst();
         MedicamentHistoryEntity medicamentHistoryEntity = medicamentHistoryEntityOpt.orElse(new MedicamentHistoryEntity());
-        //in medicament history handeMedicalInstitutions old changes
+        //in medicament history save old changes
         Optional<MedicamentEntity> medicamentEntityOpt = medicamentEntities.stream().findFirst();
         MedicamentEntity medicamentEntityForUpdate = medicamentEntityOpt.orElse(new MedicamentEntity());
         MedicamentHistoryEntity medicamentHistoryEntityForUpdate = fillMedicamentHistoryDetails(request.getMedicamentPostauthorizationRegisterNr(), medicamentHistoryEntity, medicamentEntityForUpdate);
+        fillHistoryDetailsTo(medicamentHistoryEntity, medicamentHistoryEntityForUpdate);
+
         addMedicamentDivisionHistory(medicamentEntities, medicamentHistoryEntity, medicamentHistoryEntityForUpdate, request);
         request.getMedicamentHistory().clear();
         request.getMedicamentHistory().add(medicamentHistoryEntityForUpdate);
@@ -413,6 +419,7 @@ public class RequestController
             if (isExistingDivisionInHistory)
             {
                 med.assign(medicamentHistoryEntity);
+                med.setName(med.getCommercialName() + " " + med.getPharmaceuticalForm().getCode() + " " + med.getDose() + " " + med.getDivision());
                 medicamentRepository.save(med);
             }
             else
@@ -422,6 +429,23 @@ public class RequestController
             }
         }
         return new ResponseEntity<>(requestRepository.save(request), HttpStatus.OK);
+    }
+
+    private void fillHistoryDetailsTo(MedicamentHistoryEntity medicamentHistoryEntity, MedicamentHistoryEntity medicamentHistoryEntityForUpdate)
+    {
+        medicamentHistoryEntityForUpdate.setInternationalMedicamentNameTo(medicamentHistoryEntity.getInternationalMedicamentNameTo());
+        medicamentHistoryEntityForUpdate.setDoseTo(medicamentHistoryEntity.getDoseTo());
+        medicamentHistoryEntityForUpdate.setPharmaceuticalFormTo(medicamentHistoryEntity.getPharmaceuticalFormTo());
+        medicamentHistoryEntityForUpdate.setAuthorizationHolderTo(medicamentHistoryEntity.getAuthorizationHolderTo());
+        medicamentHistoryEntityForUpdate.setMedicamentTypeTo(medicamentHistoryEntity.getMedicamentTypeTo());
+        medicamentHistoryEntityForUpdate.setGroupTo(medicamentHistoryEntity.getGroupTo());
+        medicamentHistoryEntityForUpdate.setPrescriptionTo(medicamentHistoryEntity.getPrescriptionTo());
+        medicamentHistoryEntityForUpdate.setVolumeTo(medicamentHistoryEntity.getVolumeTo());
+        medicamentHistoryEntityForUpdate.setVolumeQuantityMeasurementTo(medicamentHistoryEntity.getVolumeQuantityMeasurementTo());
+        medicamentHistoryEntityForUpdate.setTermsOfValidityTo(medicamentHistoryEntity.getTermsOfValidityTo());
+        medicamentHistoryEntityForUpdate.setAtcCodeTo(medicamentHistoryEntity.getAtcCodeTo());
+        medicamentHistoryEntityForUpdate.setCommercialNameTo(medicamentHistoryEntity.getCommercialNameTo());
+        medicamentHistoryEntityForUpdate.setStatus("F");
     }
 
     private void addMedicamentDivisionHistory(List<MedicamentEntity> medicamentEntities, MedicamentHistoryEntity medicamentHistoryEntity,
@@ -459,54 +483,18 @@ public class RequestController
     private MedicamentHistoryEntity fillMedicamentHistoryDetails(Integer regNr, MedicamentHistoryEntity medicamentHistoryEntity, MedicamentEntity medicamentEntityForUpdate)
     {
         MedicamentHistoryEntity medicamentHistoryEntityForUpdate = new MedicamentHistoryEntity();
-        if (!medicamentEntityForUpdate.getName().equals(medicamentHistoryEntity.getName()))
-        {
-            medicamentHistoryEntityForUpdate.setName(medicamentEntityForUpdate.getName());
-        }
-        if (!medicamentEntityForUpdate.getInternationalMedicamentName().equals(medicamentHistoryEntity.getInternationalMedicamentName()))
-        {
-            medicamentHistoryEntityForUpdate.setInternationalMedicamentName(medicamentEntityForUpdate.getInternationalMedicamentName());
-        }
-        if (!medicamentEntityForUpdate.getDose().equals(medicamentHistoryEntity.getDose()))
-        {
-            medicamentHistoryEntityForUpdate.setDose(medicamentEntityForUpdate.getDose());
-        }
-        if (!medicamentEntityForUpdate.getPharmaceuticalForm().equals(medicamentHistoryEntity.getPharmaceuticalForm()))
-        {
-            medicamentHistoryEntityForUpdate.setPharmaceuticalForm(medicamentEntityForUpdate.getPharmaceuticalForm());
-        }
-        if (!medicamentEntityForUpdate.getAuthorizationHolder().equals(medicamentHistoryEntity.getAuthorizationHolder()))
-        {
-            medicamentHistoryEntityForUpdate.setAuthorizationHolder(medicamentEntityForUpdate.getAuthorizationHolder());
-        }
-        if (!medicamentEntityForUpdate.getMedicamentType().equals(medicamentHistoryEntity.getMedicamentType()))
-        {
-            medicamentHistoryEntityForUpdate.setMedicamentType(medicamentEntityForUpdate.getMedicamentType());
-        }
-        if (!medicamentEntityForUpdate.getGroup().equals(medicamentHistoryEntity.getGroup()))
-        {
-            medicamentHistoryEntityForUpdate.setGroup(medicamentEntityForUpdate.getGroup());
-        }
-        if (!medicamentEntityForUpdate.getPrescription().equals(medicamentHistoryEntity.getPrescription()))
-        {
-            medicamentHistoryEntityForUpdate.setPrescription(medicamentEntityForUpdate.getPrescription());
-        }
-        if (!medicamentEntityForUpdate.getAtcCode().equals(medicamentHistoryEntity.getAtcCode()))
-        {
-            medicamentHistoryEntityForUpdate.setAtcCode(medicamentEntityForUpdate.getAtcCode());
-        }
-        if ((medicamentEntityForUpdate.getVolume() == null && medicamentHistoryEntity.getVolume() != null) || (medicamentEntityForUpdate.getVolume() != null && !medicamentEntityForUpdate.getVolume().equals(medicamentHistoryEntity.getVolume())))
-        {
-            medicamentHistoryEntityForUpdate.setVolume(medicamentEntityForUpdate.getVolume());
-        }
-        if (!medicamentEntityForUpdate.getTermsOfValidity().equals(medicamentHistoryEntity.getTermsOfValidity()))
-        {
-            medicamentHistoryEntityForUpdate.setTermsOfValidity(medicamentEntityForUpdate.getTermsOfValidity());
-        }
-        if ((medicamentEntityForUpdate.getVolumeQuantityMeasurement() == null && medicamentHistoryEntity.getVolumeQuantityMeasurement() != null) || (medicamentEntityForUpdate.getVolumeQuantityMeasurement() != null && !medicamentEntityForUpdate.getVolumeQuantityMeasurement().equals(medicamentHistoryEntity.getVolumeQuantityMeasurement())))
-        {
-            medicamentHistoryEntityForUpdate.setVolumeQuantityMeasurement(medicamentEntityForUpdate.getVolumeQuantityMeasurement());
-        }
+        medicamentHistoryEntityForUpdate.setCommercialNameFrom(medicamentEntityForUpdate.getCommercialName());
+        medicamentHistoryEntityForUpdate.setInternationalMedicamentNameFrom(medicamentEntityForUpdate.getInternationalMedicamentName());
+        medicamentHistoryEntityForUpdate.setDoseFrom(medicamentEntityForUpdate.getDose());
+        medicamentHistoryEntityForUpdate.setPharmaceuticalFormFrom(medicamentEntityForUpdate.getPharmaceuticalForm());
+        medicamentHistoryEntityForUpdate.setAuthorizationHolderFrom(medicamentEntityForUpdate.getAuthorizationHolder());
+        medicamentHistoryEntityForUpdate.setMedicamentTypeFrom(medicamentEntityForUpdate.getMedicamentType());
+        medicamentHistoryEntityForUpdate.setGroupFrom(medicamentEntityForUpdate.getGroup());
+        medicamentHistoryEntityForUpdate.setPrescriptionFrom(medicamentEntityForUpdate.getPrescription());
+        medicamentHistoryEntityForUpdate.setAtcCodeFrom(medicamentEntityForUpdate.getAtcCode());
+        medicamentHistoryEntityForUpdate.setVolumeFrom(medicamentEntityForUpdate.getVolume());
+        medicamentHistoryEntityForUpdate.setTermsOfValidityFrom(medicamentEntityForUpdate.getTermsOfValidity());
+        medicamentHistoryEntityForUpdate.setVolumeQuantityMeasurementFrom(medicamentEntityForUpdate.getVolumeQuantityMeasurement());
         checkActiveSubstancesModifications(medicamentHistoryEntity, medicamentEntityForUpdate, medicamentHistoryEntityForUpdate);
         checkManufacturesModifications(medicamentHistoryEntity, medicamentEntityForUpdate, medicamentHistoryEntityForUpdate);
         medicamentHistoryEntityForUpdate.setExperts(medicamentHistoryEntity.getExperts());
@@ -527,34 +515,26 @@ public class RequestController
             {
                 MedicamentActiveSubstancesHistoryEntity medicamentActiveSubstancesHistoryEntity = medicamentActiveSubstancesHistoryEntityOpt.get();
                 medicamentActiveSubstancesHistoryForUpdateEntity.setActiveSubstance(medicamentActiveSubstancesEntity.getActiveSubstance());
-                boolean isModified = false;
-                if (!medicamentActiveSubstancesHistoryEntity.getManufacture().equals(medicamentActiveSubstancesEntity.getManufacture()))
-                {
-                    medicamentActiveSubstancesHistoryForUpdateEntity.setManufacture(medicamentActiveSubstancesEntity.getManufacture());
-                    isModified = true;
-                }
-                if (!medicamentActiveSubstancesHistoryEntity.getQuantity().equals(medicamentActiveSubstancesEntity.getQuantity()))
-                {
-                    medicamentActiveSubstancesHistoryForUpdateEntity.setQuantity(medicamentActiveSubstancesEntity.getQuantity());
-                    isModified = true;
-                }
-                if (!medicamentActiveSubstancesHistoryEntity.getUnitsOfMeasurement().equals(medicamentActiveSubstancesEntity.getUnitsOfMeasurement()))
-                {
-                    medicamentActiveSubstancesHistoryForUpdateEntity.setUnitsOfMeasurement(medicamentActiveSubstancesEntity.getUnitsOfMeasurement());
-                    isModified = true;
-                }
+                medicamentActiveSubstancesHistoryForUpdateEntity.setManufactureFrom(medicamentActiveSubstancesEntity.getManufacture());
+                medicamentActiveSubstancesHistoryForUpdateEntity.setQuantityFrom(medicamentActiveSubstancesEntity.getQuantity());
+                medicamentActiveSubstancesHistoryForUpdateEntity.setUnitsOfMeasurementFrom(medicamentActiveSubstancesEntity.getUnitsOfMeasurement());
                 medicamentActiveSubstancesHistoryForUpdateEntity.setStatus("M");
-                if (isModified)
+                if (!medicamentActiveSubstancesHistoryEntity.getManufactureTo().equals(medicamentActiveSubstancesEntity.getManufacture())
+                || !medicamentActiveSubstancesHistoryEntity.getQuantityTo().equals(medicamentActiveSubstancesEntity.getQuantity())
+                || !medicamentActiveSubstancesHistoryEntity.getUnitsOfMeasurementTo().equals(medicamentActiveSubstancesEntity.getUnitsOfMeasurement()))
                 {
+                    medicamentActiveSubstancesHistoryForUpdateEntity.setManufactureTo(medicamentActiveSubstancesHistoryEntity.getManufactureTo());
+                    medicamentActiveSubstancesHistoryForUpdateEntity.setQuantityTo(medicamentActiveSubstancesHistoryEntity.getQuantityTo());
+                    medicamentActiveSubstancesHistoryForUpdateEntity.setUnitsOfMeasurementTo(medicamentActiveSubstancesHistoryEntity.getUnitsOfMeasurementTo());
                     medicamentHistoryEntityForUpdate.getActiveSubstancesHistory().add(medicamentActiveSubstancesHistoryForUpdateEntity);
                 }
             }
             else
             {
                 medicamentActiveSubstancesHistoryForUpdateEntity.setActiveSubstance(medicamentActiveSubstancesEntity.getActiveSubstance());
-                medicamentActiveSubstancesHistoryForUpdateEntity.setManufacture(medicamentActiveSubstancesEntity.getManufacture());
-                medicamentActiveSubstancesHistoryForUpdateEntity.setQuantity(medicamentActiveSubstancesEntity.getQuantity());
-                medicamentActiveSubstancesHistoryForUpdateEntity.setUnitsOfMeasurement(medicamentActiveSubstancesEntity.getUnitsOfMeasurement());
+                medicamentActiveSubstancesHistoryForUpdateEntity.setManufactureFrom(medicamentActiveSubstancesEntity.getManufacture());
+                medicamentActiveSubstancesHistoryForUpdateEntity.setQuantityFrom(medicamentActiveSubstancesEntity.getQuantity());
+                medicamentActiveSubstancesHistoryForUpdateEntity.setUnitsOfMeasurementFrom(medicamentActiveSubstancesEntity.getUnitsOfMeasurement());
                 medicamentActiveSubstancesHistoryForUpdateEntity.setStatus("R");
                 medicamentHistoryEntityForUpdate.getActiveSubstancesHistory().add(medicamentActiveSubstancesHistoryForUpdateEntity);
             }
@@ -583,21 +563,17 @@ public class RequestController
             {
                 MedicamentManufactureHistoryEntity medicamentManufactureHistoryEntity = medicamentManufactureHistoryEntityOpt.get();
                 medicamentManufactureHistoryForUpdateEntity.setManufacture(medicamentManufactureEntity.getManufacture());
-                boolean isModified = false;
-                if (!medicamentManufactureHistoryEntity.getProducatorProdusFinit().equals(medicamentManufactureEntity.getProducatorProdusFinit()))
-                {
-                    medicamentManufactureHistoryForUpdateEntity.setProducatorProdusFinit(medicamentManufactureEntity.getProducatorProdusFinit());
-                    isModified = true;
-                }
+                medicamentManufactureHistoryForUpdateEntity.setProducatorProdusFinitFrom(medicamentManufactureEntity.getProducatorProdusFinit());
                 medicamentManufactureHistoryForUpdateEntity.setStatus("M");
-                if (isModified)
+                if (!medicamentManufactureHistoryEntity.getProducatorProdusFinitTo().equals(medicamentManufactureEntity.getProducatorProdusFinit()))
                 {
+                    medicamentManufactureHistoryForUpdateEntity.setProducatorProdusFinitTo(medicamentManufactureHistoryEntity.getProducatorProdusFinitTo());
                     medicamentHistoryEntityForUpdate.getManufacturesHistory().add(medicamentManufactureHistoryForUpdateEntity);
                 }
             }
             else
             {
-                medicamentManufactureHistoryForUpdateEntity.setProducatorProdusFinit(medicamentManufactureEntity.getProducatorProdusFinit());
+                medicamentManufactureHistoryForUpdateEntity.setProducatorProdusFinitFrom(medicamentManufactureEntity.getProducatorProdusFinit());
                 medicamentManufactureHistoryForUpdateEntity.setManufacture(medicamentManufactureEntity.getManufacture());
                 medicamentManufactureHistoryForUpdateEntity.setStatus("R");
                 medicamentHistoryEntityForUpdate.getManufacturesHistory().add(medicamentManufactureHistoryForUpdateEntity);
@@ -620,35 +596,35 @@ public class RequestController
         MedicamentEntity medicamentEntity = new MedicamentEntity();
         setCodeAndRegistrationNr(medicamentEntity, regNr);
         medicamentEntity.setStatus("F");
-        medicamentEntity.setName(medicamentHistoryEntity.getName());
-        medicamentEntity.setInternationalMedicamentName(medicamentHistoryEntity.getInternationalMedicamentName());
+        medicamentEntity.setCommercialName(medicamentHistoryEntity.getCommercialNameTo());
+        medicamentEntity.setInternationalMedicamentName(medicamentHistoryEntity.getInternationalMedicamentNameTo());
         medicamentEntity.setExpirationDate(java.sql.Date.valueOf(LocalDate.now().plusYears(5)));
-        medicamentEntity.setDose(medicamentHistoryEntity.getDose());
-        medicamentEntity.setPharmaceuticalForm(medicamentHistoryEntity.getPharmaceuticalForm());
-        medicamentEntity.setAuthorizationHolder(medicamentHistoryEntity.getAuthorizationHolder());
-        medicamentEntity.setMedicamentType(medicamentHistoryEntity.getMedicamentType());
-        medicamentEntity.setGroup(medicamentHistoryEntity.getGroup());
-        medicamentEntity.setPrescription(medicamentHistoryEntity.getPrescription());
-        medicamentEntity.setVolume(medicamentHistoryEntity.getVolume());
-        medicamentEntity.setTermsOfValidity(medicamentHistoryEntity.getTermsOfValidity());
+        medicamentEntity.setDose(medicamentHistoryEntity.getDoseTo());
+        medicamentEntity.setPharmaceuticalForm(medicamentHistoryEntity.getPharmaceuticalFormTo());
+        medicamentEntity.setAuthorizationHolder(medicamentHistoryEntity.getAuthorizationHolderTo());
+        medicamentEntity.setMedicamentType(medicamentHistoryEntity.getMedicamentTypeTo());
+        medicamentEntity.setGroup(medicamentHistoryEntity.getGroupTo());
+        medicamentEntity.setPrescription(medicamentHistoryEntity.getPrescriptionTo());
+        medicamentEntity.setVolume(medicamentHistoryEntity.getVolumeTo());
+        medicamentEntity.setTermsOfValidity(medicamentHistoryEntity.getTermsOfValidityTo());
         medicamentEntity.setExperts(medicamentHistoryEntity.getExperts());
-        medicamentEntity.setVolumeQuantityMeasurement(medicamentHistoryEntity.getVolumeQuantityMeasurement());
-        medicamentEntity.setAtcCode(medicamentHistoryEntity.getAtcCode());
+        medicamentEntity.setVolumeQuantityMeasurement(medicamentHistoryEntity.getVolumeQuantityMeasurementTo());
+        medicamentEntity.setAtcCode(medicamentHistoryEntity.getAtcCodeTo());
         medicamentEntity.setDivision(division);
         for (MedicamentActiveSubstancesHistoryEntity medicamentActiveSubstancesHistEntity : medicamentHistoryEntity.getActiveSubstancesHistory())
         {
             MedicamentActiveSubstancesEntity medicamentActiveSubstancesEntity = new MedicamentActiveSubstancesEntity();
             medicamentActiveSubstancesEntity.setActiveSubstance(medicamentActiveSubstancesHistEntity.getActiveSubstance());
-            medicamentActiveSubstancesEntity.setManufacture(medicamentActiveSubstancesHistEntity.getManufacture());
-            medicamentActiveSubstancesEntity.setQuantity(medicamentActiveSubstancesHistEntity.getQuantity());
-            medicamentActiveSubstancesEntity.setUnitsOfMeasurement(medicamentActiveSubstancesHistEntity.getUnitsOfMeasurement());
+            medicamentActiveSubstancesEntity.setManufacture(medicamentActiveSubstancesHistEntity.getManufactureTo());
+            medicamentActiveSubstancesEntity.setQuantity(medicamentActiveSubstancesHistEntity.getQuantityTo());
+            medicamentActiveSubstancesEntity.setUnitsOfMeasurement(medicamentActiveSubstancesHistEntity.getUnitsOfMeasurementTo());
             medicamentEntity.getActiveSubstances().add(medicamentActiveSubstancesEntity);
         }
         for (MedicamentManufactureHistoryEntity medicamentManufactureHistoryEntity : medicamentHistoryEntity.getManufacturesHistory())
         {
             MedicamentManufactureEntity medicamentManufactureEntity = new MedicamentManufactureEntity();
             medicamentManufactureEntity.setManufacture(medicamentManufactureHistoryEntity.getManufacture());
-            medicamentManufactureEntity.setProducatorProdusFinit(medicamentManufactureHistoryEntity.getProducatorProdusFinit());
+            medicamentManufactureEntity.setProducatorProdusFinit(medicamentManufactureHistoryEntity.getProducatorProdusFinitTo());
             medicamentEntity.getManufactures().add(medicamentManufactureEntity);
         }
         return medicamentEntity;

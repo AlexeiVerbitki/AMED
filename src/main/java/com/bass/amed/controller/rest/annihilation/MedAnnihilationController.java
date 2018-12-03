@@ -151,7 +151,7 @@ public class MedAnnihilationController
                         {
                             ProcesVerbal p = new ProcesVerbal();
                             p.setNr(i.getAndIncrement());
-                            p.setName(med.get().getName());
+                            p.setName(med.get().getCommercialName());
                             p.setDoza(String.valueOf(med.get().getDose()));
                             p.setForma(med.get().getPharmaceuticalForm().getDescription());
                             p.setSeria(med.get().getSerialNr());
@@ -214,7 +214,7 @@ public class MedAnnihilationController
                         {
                             ProcesVerbal p = new ProcesVerbal();
                             p.setNr(i.getAndIncrement());
-                            p.setName(med.get().getName());
+                            p.setName(med.get().getCommercialName());
                             p.setDoza(String.valueOf(med.get().getDose()));
                             p.setForma(med.get().getPharmaceuticalForm().getDescription());
                             p.setSeria(med.get().getSerialNr());

@@ -28,7 +28,7 @@
                                                id="myText"
                                                type="number"
                                                class="text-right font-weight-bold w-100 input-currency"
-                                               [value]="avgCur?.value | number:'1.4'"
+                                               [value]="avgCur?.value | digitsAfterDecimal:4"
                                                (change)="exchangeRateModified(i, exchangeField.value)"/>
                                     </div>
                                     <div class="col-2 text-left font-weight-bold">MDL</div>

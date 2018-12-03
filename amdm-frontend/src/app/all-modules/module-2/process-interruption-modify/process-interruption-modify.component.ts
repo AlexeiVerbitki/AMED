@@ -72,7 +72,7 @@ export class ProcessInterruptionModifyComponent implements OnInit {
                         this.iForm.get('requestNumber').setValue(data.requestNumber);
                         this.iForm.get('company').setValue(data.company);
                         this.iForm.get('companyValue').setValue(data.company.name);
-                        this.iForm.get('medValue').setValue(data.medicamentHistory[0].name);
+                        this.iForm.get('medValue').setValue(data.medicamentHistory[0].commercialName);
                         this.iForm.get('requestHistories').setValue(data.requestHistories);
                         this.documents = data.documents;
                         this.outputDocuments = data.outputDocuments;

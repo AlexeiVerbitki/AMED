@@ -187,6 +187,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
 
     nextStep() {
+        this.formSubmitted = true;
 
         // console.log(this.rForm)
         // console.log(this.rForm.status)
@@ -232,7 +233,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
                 case "4":{this.router.navigate(['dashboard/module/import-authorization/ambalaj/'                +data.body.id]) ; break;}
             }
             this.loadingService.hide();
-                // this.router.navigate(['dashboard/module/medicament-registration/evaluate/' + data.body]);
+            this.formSubmitted=false;
             }, error => this.loadingService.hide())
         );
 

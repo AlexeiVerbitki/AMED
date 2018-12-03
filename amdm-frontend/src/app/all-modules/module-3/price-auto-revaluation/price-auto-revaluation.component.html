@@ -55,6 +55,7 @@
 					</div>
 			</div>
 		</div>-->
+
 		<app-document [title]="'Încărcați actele necesare reevaluării prețurilor'"
 					  [documents]="documents"
 					  [nrCerere]="requestNumber"
@@ -104,16 +105,27 @@
 					<td mdbTooltip="{{element.registrationDate}}" mat-cell *matCellDef="let element"> {{element.registrationDate | date: 'dd/MM/yyyy'}} </td>
 				</ng-container>
 
-				<ng-container matColumnDef="priceMdl">
-					<th mdbTooltip="Prețul stabilit în MDL" mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Preț MDL stabilit</th>
-					<td mdbTooltip="{{element.priceMdl}}" mat-cell *matCellDef="let element"> {{element.priceMdl}} </td>
-				</ng-container>
-
 				<ng-container matColumnDef="price">
 					<th mdbTooltip="Prețul în valuta stabilită" mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Preț Valută stabilit</th>
 					<td mdbTooltip="{{element.price}} {{element.currency}}" mat-cell *matCellDef="let element"> {{element.price}} {{element.currency}}</td>
 				</ng-container>
 
+				<ng-container matColumnDef="priceMdl">
+					<th mdbTooltip="Prețul stabilit în MDL" mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Preț MDL stabilit</th>
+					<td mdbTooltip="{{element.priceMdl}}" mat-cell *matCellDef="let element"> {{element.priceMdl | digitsAfterDecimal:4}} </td>
+				</ng-container>
+
+				<ng-container matColumnDef="priceMdlNew">
+					<th mdbTooltip="Varianta actualizată de preț MDL" mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">Preț MDL actualizat</th>
+					<td mdbTooltip="{{element.priceMdlNew}}" mat-cell *matCellDef="let element; let i = index" type="number">
+						<input  type="number" #newMdlPriceInput [value]="element.priceMdlNew | digitsAfterDecimal:4" (change)="newPriceModified(i, newMdlPriceInput.value)" id="priceMdlNew" class="form-control text-center form-control-sm input-currency"/>
+					</td>
+				</ng-container>
+
+				<ng-container matColumnDef="priceMdlDifferencePercents">
+					<th mdbTooltip="Diferența dintre prețul stabilit și cel actualizat în MDL" mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">Diferența MDL (nou/vechi)</th>
+					<td mdbTooltip="{{element.priceMdlDifferencePercents}}" mat-cell *matCellDef="let element"> {{element.priceMdlDifferencePercents}} </td>
+				</ng-container>
 
 				<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
 				<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
@@ -123,3 +135,4 @@
 	</div>
 </div>
 <app-xchangeinfo (changed)="currencyChanged($event)"></app-xchangeinfo>
+

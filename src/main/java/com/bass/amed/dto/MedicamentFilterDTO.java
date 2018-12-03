@@ -14,7 +14,7 @@ import java.util.List;
 public class MedicamentFilterDTO implements Serializable
 {
     private String code;
-    private String name;
+    private String commercialName;
     private String atcCode;
     private String registerNumber;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

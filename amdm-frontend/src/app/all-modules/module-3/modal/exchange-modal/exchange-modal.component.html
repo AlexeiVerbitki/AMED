@@ -9,7 +9,7 @@
                         <div class="col-5">{{'1 ' + avgCur?.currency?.shortDescription}}</div>
                         <div class="col-2">=</div>
                         <div class="col-3">
-                            <input id="myText" type="number" class="text-center font-weight-bold" style=" border:none; background: transparent; outline: 0;" [value]="avgCur?.value | number:'1.4'" />
+                            <input id="myText" type="number" class="text-center font-weight-bold" style=" border:none; background: transparent; outline: 0;" [value]="avgCur?.value | digitsAfterDecimal:4" />
                         </div>
                         <div class="col-1 text-right font-weight-bold">MDL</div>
                     </div>

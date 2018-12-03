@@ -62,10 +62,11 @@ export class ExpertiModifyComponent implements OnInit {
             'medicament':
                 fb.group({
                     'id': [],
-                    'name': [''],
+                    'commercialName': [''],
                     'company': [''],
                     'atcCode': [null],
                     'registrationDate': [],
+                    'registrationNumber': [],
                     'pharmaceuticalForm': [null],
                     'pharmaceuticalFormType': [null],
                     'dose': [null],
@@ -112,8 +113,9 @@ export class ExpertiModifyComponent implements OnInit {
                         this.expertForm.get('companyValue').setValue(data.company.name);
                         this.expertForm.get('company').setValue(data.company);
                         this.expertForm.get('medicament.id').setValue(data.medicamentHistory[0].id);
-                        this.expertForm.get('medicament.name').setValue(data.medicamentHistory[0].name);
-                        this.expertForm.get('medicamentName').setValue(data.medicamentHistory[0].name);
+                        this.expertForm.get('medicament.commercialName').setValue(data.medicamentHistory[0].commercialName);
+                        this.expertForm.get('medicamentName').setValue(data.medicamentHistory[0].commercialName);
+                        this.expertForm.get('medicament.registrationNumber').setValue(data.medicamentHistory[0].registrationNumber);
                         this.expertForm.get('medicamentPostauthorizationRegisterNr').setValue(data.medicamentHistory[0].registrationNumber);
                         this.expertForm.get('medicament.pharmaceuticalForm').setValue(data.medicamentHistory[0].pharmaceuticalForm.description);
                         this.expertForm.get('medicament.pharmaceuticalFormType').setValue(data.medicamentHistory[0].pharmaceuticalForm.type.description);

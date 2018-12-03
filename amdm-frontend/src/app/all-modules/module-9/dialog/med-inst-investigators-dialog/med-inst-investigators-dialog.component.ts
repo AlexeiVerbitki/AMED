@@ -35,10 +35,13 @@ export class MedInstInvestigatorsDialogComponent implements OnInit {
 
         this.investigatorsList = JSON.parse(JSON.stringify(this.dataDialog.investigatorsList));
 
-        this.collectedInvestigators = this.dataDialog.collectedInvestigators;
-        if (this.collectedInvestigators === undefined || this.collectedInvestigators === null || this.collectedInvestigators.length === 0) {
+        if (this.dataDialog.collectedInvestigators !== undefined && this.dataDialog.collectedInvestigators !== null && this.dataDialog.collectedInvestigators !== 0){
+            this.collectedInvestigators = JSON.parse(JSON.stringify(this.dataDialog.collectedInvestigators));
+        }else{
             this.collectedInvestigators = [Object.assign({}, this.investigatorsList[0])];
         }
+
+        console.log('this.dataDialog.collectedInvestigators', this.dataDialog.collectedInvestigators);
     }
 
     addInvestigators() {
