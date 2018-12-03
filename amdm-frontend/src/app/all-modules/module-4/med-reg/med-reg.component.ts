@@ -309,9 +309,9 @@ export class MedRegComponent implements OnInit {
 
     addUnitOfImport() {
         this.addMedicamentClicked=true;
-            alert(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').valid),
-        console.log("this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable'",(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').valid),
-        console.log("this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable'",(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').value),
+        //     alert(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').valid),
+        // console.log("this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable'",(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').valid),
+
 
         if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').valid) {
         this.unitOfImportTable.push({
@@ -337,7 +337,10 @@ export class MedRegComponent implements OnInit {
             registrationNumber:            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').value,
             registrationDate:              this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').value,
 
+
         });
+
+        console.log("this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable'",(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').value)),
 
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(null);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(null);
