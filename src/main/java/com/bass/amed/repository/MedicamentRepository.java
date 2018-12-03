@@ -34,6 +34,7 @@ public interface MedicamentRepository extends JpaRepository<MedicamentEntity, In
 //    @Query(value = "SELECT * FROM medicament m WHERE m.name OR m.code like upper(CONCAT(?1, '%'))", nativeQuery = true)
 //    List<MedicamentEntity> findByNameOrCode(String description);
 
-    @Query(value = "SELECT * FROM medicament m WHERE (upper(m.name) like upper(CONCAT(?1, '%'))) and m.status = ?2", nativeQuery = true)
+    @Query(value = "SELECT * FROM medicament m WHERE (upper(m.name) like upper(CONCAT(?1, '%'))or m.code like (CONCAT(?1, '%'))) and m.status = ?2", nativeQuery
+            = true)
     List<MedicamentEntity> findAllByName(String name, String status);
 }
