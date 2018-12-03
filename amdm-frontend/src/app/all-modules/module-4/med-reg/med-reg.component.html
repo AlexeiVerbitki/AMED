@@ -168,8 +168,8 @@
                     <div formArrayName="unitOfImportTable">
                         <div class="row">
 
-                            <!--<div class="col-4" *ngIf="importData.importAuthorizationEntity.medType==1">-->
-                            <div class="col-4">
+                            <div class="col-4" *ngIf="importData.importAuthorizationEntity.medType==1">
+                            <!--<div class="col-4">-->
                                 <div class="md-form-modified">
                                     <ng-select [items]="medicaments | async"
                                                bindLabel="name"
@@ -195,7 +195,7 @@
                                            formControlName="name">
                                     <label for="name">Denumirea comercială a medicamentului</label>
                                 </div>
-                                <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').invalid">
+                                <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').invalid">
                                     <small class="text-muted"><strong class="text-danger">Denumirea trebuie selectata</strong></small>
                                 </div>
                             </div>

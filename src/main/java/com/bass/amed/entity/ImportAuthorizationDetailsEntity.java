@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 
 @Entity @Table(name = "import_authorization_details"/*, schema = "amed", catalog = ""*/) public class ImportAuthorizationDetailsEntity {
 	private Integer                             id;
-	private Integer                             codeAmed;
+	private String                              codeAmed;
 	private NmPharmaceuticalFormsEntity         pharmaceuticalForm;
 	private String                              dose;
 	private String                              unitsQuantityMeasurement;
@@ -34,11 +34,11 @@ import java.sql.Timestamp;
 
 	@Basic
 	@Column(name = "code_amed", nullable = true, length = 11)
-	public Integer getCodeAmed() {
+	public String getCodeAmed() {
 		return codeAmed;
 	}
 
-	public void setCodeAmed(Integer codeAmed) {
+	public void setCodeAmed(String codeAmed) {
 		this.codeAmed = codeAmed;
 	}
 

@@ -208,6 +208,11 @@ export class MedRegComponent implements OnInit {
                     //
                     // }
 
+                    if (data.importAuthorizationEntity.medType === 2) {
+                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setErrors(null);
+                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setErrors(null);
+                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setErrors(null);
+                    }
                 },
                 error => console.log(error)
             ))
@@ -270,7 +275,7 @@ export class MedRegComponent implements OnInit {
                 }
             }));
             this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').valueChanges.subscribe(val => {
-                if (this.medicamentData=null && val) {
+                if (this.medicamentData==null && val) {
                     this.producerAddress = val.address + ", " + val.country.description;
                     // console.log("producerAddress",this.producerAddress)
                 }
@@ -304,6 +309,10 @@ export class MedRegComponent implements OnInit {
 
     addUnitOfImport() {
         this.addMedicamentClicked=true;
+            alert(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').valid),
+        console.log("this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable'",(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').valid),
+        console.log("this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable'",(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').value),
+
         if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').valid) {
         this.unitOfImportTable.push({
 

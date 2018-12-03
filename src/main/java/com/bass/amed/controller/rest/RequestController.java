@@ -663,6 +663,17 @@ public class RequestController
             throw new CustomException("/add-import-request Threw an error, requests.getImportAuthorizationEntity() == null");
         }
 
+        if (requests.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList()!=null) {
+
+            for (ImportAuthorizationDetailsEntity medNotGer: requests.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList()) {
+                if (medNotGer.getCodeAmed()==null){
+                    medNotGer.setCodeAmed(Utils.generateMedicamentCode());
+                }
+            }
+        } else {
+            System.out.println("\n\n\n\n=====================\ngetImportAuthorizationEntity is null\n=====================\n\n\n");
+        }
+
         requestRepository.save(requests);
         //TODO fix the docs
 //        addDDDocument(requests);
