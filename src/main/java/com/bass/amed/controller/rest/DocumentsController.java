@@ -2,11 +2,10 @@ package com.bass.amed.controller.rest;
 
 import com.bass.amed.dto.DistributionDispositionDTO;
 import com.bass.amed.dto.RequestAdditionalDataDTO;
-import com.bass.amed.entity.NmDocumentTypesEntity;
-import com.bass.amed.entity.PaymentOrderNumberSequence;
-import com.bass.amed.entity.PaymentOrdersEntity;
+import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.DocumentTypeRepository;
+import com.bass.amed.repository.DocumentsRepository;
 import com.bass.amed.repository.PaymentOrderNumberRepository;
 import com.bass.amed.repository.PaymentOrderRepository;
 import com.bass.amed.service.GenerateDocNumberService;
@@ -54,6 +53,8 @@ public class DocumentsController
     private PaymentOrderNumberRepository paymentOrderNumberRepository;
     @Autowired
     private PaymentOrderRepository paymentOrderRepository;
+    @Autowired
+    private DocumentsRepository documentsRepository;
 
     @Value("${final.documents.folder}")
     private String folder;
@@ -501,6 +502,67 @@ public class DocumentsController
     public ResponseEntity<List<NmDocumentTypesEntity>> getDocumentTypes()
     {
         return new ResponseEntity<>(documentTypeRepository.findAll(), HttpStatus.OK);
+    }
+
+
+
+    @RequestMapping(value = "/view-bon-de-plata-nimicire", method = RequestMethod.POST)
+    @Transactional
+    public ResponseEntity<byte[]> viewBonDePlataNimicire(@RequestBody RegistrationRequestsEntity request) throws CustomException
+    {
+        logger.debug("Generare bon pentru nimicire" + request.getId());
+        byte[] bytes = null;
+//        try
+//        {
+//            ResourceLoader resourceLoader = new DefaultResourceLoader();
+//            Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts");
+//            String classPathWithoutJRXML = res.getFile().getAbsolutePath();
+//            res = resourceLoader.getResource("layouts\\distributionDisposition.jrxml");
+//            JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
+//
+//            List<DistributionDispositionDTO> dataList = new ArrayList();
+//            DistributionDispositionDTO obj = new DistributionDispositionDTO();
+//            obj.setDispositionDate(Calendar.getInstance().getTime());
+//            obj.setNrDisposition("1");
+//            obj.setPath(classPathWithoutJRXML);
+//            dataList.add(obj);
+//
+//            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(dataList);
+//            JasperPrint jasperPrint = JasperFillManager.fillReport(report, null, beanColDataSource);
+//            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+//
+//            List<PaymentOrdersEntity> details = paymentOrderRepository.findByregistrationRequestId(requestId);
+//
+//            Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+//            PaymentOrderNumberSequence seq = new PaymentOrderNumberSequence();
+//            paymentOrderNumberRepository.save(seq);
+//            for (PaymentOrdersEntity order : details)
+//            {
+//                order.setDate(now);
+//                order.setNumber(String.valueOf(seq.getId()));
+//                paymentOrderRepository.save(order);
+//            }
+//        }
+//        catch (Exception e)
+//        {
+//            throw new CustomException(e.getMessage());
+//        }
+
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=dd.pdf").body(bytes);
+    }
+	
+	
+	@Transactional
+    @RequestMapping(value = "/save-docs", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> saveDocuments(@RequestBody List<DocumentsEntity> documents)
+    {
+        try {
+            documentsRepository.saveAll(documents);
+            return new ResponseEntity<>(true, HttpStatus.CREATED);
+        }catch (Exception e) {
+            return new ResponseEntity<>(false, HttpStatus.CREATED);
+        }
     }
 
     static class FileResult

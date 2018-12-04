@@ -31,6 +31,10 @@ export class AnnihilationService {
         return this.http.get('/api/annihilation/retrieve-all-commisions');
     }
 
+    retrieveDestructionMethods(): Observable<any> {
+        return this.http.get('/api/annihilation/retrieve-all-destruction-methods');
+    }
+
     viewActDeReceptie(object: any): Observable<any> {
         return this.http.post('/api/annihilation/view-act-receptie', object,{ responseType: 'blob'});
     }

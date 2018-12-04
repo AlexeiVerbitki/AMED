@@ -13,6 +13,7 @@ import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.c
 import {MatDialog} from "@angular/material";
 import {TaskService} from "../../../shared/service/task.service";
 import {LoaderService} from "../../../shared/service/loader.service";
+import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
 
 @Component({
     selector: 'app-experti',
@@ -41,6 +42,7 @@ export class ExpertiComponent implements OnInit {
                 private administrationService: AdministrationService,
                 private router: Router,
                 private errorHandlerService: ErrorHandlerService,
+                private navbarTitleService: NavbarTitleService,
                 private taskService: TaskService,
                 private loadingService: LoaderService,
                 private documentService: DocumentService,
@@ -97,6 +99,8 @@ export class ExpertiComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.navbarTitleService.showTitleMsg('Înregistrare documente / Expertiza');
+
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
                 this.subscriptions.push(this.requestService.getMedicamentRequest(params['id']).subscribe(data => {
                         this.modelToSubmit = Object.assign({}, data);
@@ -368,6 +372,12 @@ export class ExpertiComponent implements OnInit {
         //
         // return dialogRef.afterClosed();
         return true;
+
+    }
+
+    ngOnDestroy(): void {
+        this.navbarTitleService.showTitleMsg('');
+        this.subscriptions.forEach(s => s.unsubscribe());
 
     }
 }

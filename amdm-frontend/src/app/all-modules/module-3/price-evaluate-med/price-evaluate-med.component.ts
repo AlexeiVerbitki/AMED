@@ -48,12 +48,10 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
     hasOriginCountryPrices: boolean = false;
     hasOtherCountriesPrices: boolean = false;
 
-    priceRequestId: number;
-
     requiredOutputDocs: any[] = [];
     medicamentType: any = {code:MedicamentType.Generic, description: 'Generic'};
 
-     priceModuleAvaibleDocTypes: any[] = ['OP', 'A1', 'A2', 'DP', 'CP', 'RF', 'RC'];
+     priceModuleAvaibleDocTypes: any[] = ['OP', 'A1', 'A2', 'DP', 'CP', 'RF', 'RC', 'FE'];
 
     decisions: any[] = [
         {description: 'Acceptat', id: 1},
@@ -214,11 +212,6 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                           }
                       }
 
-                      if (data.currentStep != 'R'){
-                          console.log('Procesul a fost finisat deja');
-                      }
-
-
                       if(data.price != undefined) {
                           this.PriceRegForm.get('price.id').setValue(data.price.id);
                           this.PriceRegForm.get('price.value').setValue(data.price.value);
@@ -244,6 +237,9 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                               break;
                           case 'C':
                               this.PriceRegForm.get('requestStatus').setValue('Întrerupt');
+                              break;
+                          case 'A':
+                              this.PriceRegForm.get('requestStatus').setValue('Acceptat');
                               break;
                           case 'F':
                               this.PriceRegForm.get('requestStatus').setValue('Finisat');
@@ -588,8 +584,8 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         let expDate = this.PriceRegForm.get('evaluation')['controls'].expirationDate;
         let decision = this.PriceRegForm.get('evaluation')['controls'].decision;
 
-        let uploadedOrder = this.documents.find(d => d.docType.description == 'Ordinul de înregistrare a prețului de producător');
-        let priceAcceptCondition: boolean = (decision.valid && decision.value.description == 'Acceptat' && uploadedOrder != undefined && !this.hasUnloadedDocs());
+        let uploadedEvaluationFile = this.documents.find(d => d.docType.category == 'FE');
+        let priceAcceptCondition: boolean = (decision.valid && decision.value.description == 'Acceptat' && uploadedEvaluationFile != undefined && !this.hasUnloadedDocs());
         let canFinishEvaluate: boolean = decision.invalid || (decision.valid && decision.value.description == 'Respins') || priceAcceptCondition;
 
 
@@ -608,7 +604,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         priceModel.company = this.PriceRegForm.get('company').value;
         priceModel.type = this.PriceRegForm.get('type').value;
         priceModel.endDate = new Date();
-        priceModel.currentStep = priceAcceptCondition ? 'F' : 'C';
+        priceModel.currentStep = priceAcceptCondition ? 'A' : 'C';
         priceModel.assignedUser = this.priceService.getUsername();
         priceModel.requestHistories = this.PriceRegForm.get('requestHistories').value;
         priceModel.documents = this.documents;
@@ -632,7 +628,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
             acceptType = this.PriceRegForm.get('price.type').value;
         }
 
-         let orderNr = this.documents.find(d => d.docType.category == 'OP');
+         // let orderNr = this.documents.find(d => d.docType.category == 'OP');
 
         priceModel.price = {
             id: price.id,
@@ -642,24 +638,29 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
             mdlValue: price.nationalPrice,
             referencePrices: this.refPrices,
             medicament: {id: this.PriceRegForm.get('medicament.id').value},
-            nmPrice:{
-                currency: price.currency,
-                orderApprovDate: aprovDate,
-                revisionDate: revisionDate,
-                expirationDate: expDate.value,
-                medicament: {id: this.PriceRegForm.get('medicament.id').value},
-                price: price.value,
-                priceMdl:price.nationalPrice,
-                orderNr: orderNr.number,
-                id: this.PriceRegForm.get('price.nmPriceId').value
-            }
+            // nmPrice:{
+            //     currency: price.currency,
+            //     orderApprovDate: aprovDate,
+            //     revisionDate: revisionDate,
+            //     expirationDate: expDate.value,
+            //     medicament: {id: this.PriceRegForm.get('medicament.id').value},
+            //     price: price.value,
+            //     priceMdl:price.nationalPrice,
+            //     orderNr: orderNr.number,
+            //     id: this.PriceRegForm.get('price.nmPriceId').value
+            // }
         };
-
 
         console.log('priceModel:', JSON.stringify(priceModel));
 
         this.subscriptions.push(this.priceService.savePrice(priceModel).subscribe(data => {
-                this.router.navigate(['dashboard/homepage']);
+
+                if (priceAcceptCondition && this.medicamentType.description == 'Original') {
+                    this.router.navigate(['dashboard/module/price/revaluation-generics/' + data.body.price.id]);
+                } else {
+                    this.router.navigate(['dashboard/homepage']);
+                }
+
                 this.loadingService.hide();
             },
             error1 => {

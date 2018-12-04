@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
@@ -36,6 +36,10 @@ export class DocumentService {
                 requestId: requestId
             }, responseType: 'blob'
         });
+    }
+
+    viewBonDePlataNimicire(requestNimicire: any): Observable<any> {
+            return this.http.post('/api/documents/view-bon-de-plata-nimicire', requestNimicire,{ responseType: 'blob'});
     }
 
     viewBonDePlataForOne(paymentOrderId: any): Observable<any> {

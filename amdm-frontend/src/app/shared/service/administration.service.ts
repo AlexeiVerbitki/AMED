@@ -230,4 +230,11 @@ am
         Params = Params.set('requestId', requestId);
         return this.http.get('/api/administration/get-payment-orders-by-request-id', {params: Params});
     }
+
+    getServiceChargeByCategory(category: string): Observable<any> {
+        let params = new HttpParams();
+        params = params.set('category', category);
+
+        return this.http.get<any[]>('/api/administration/find-service-charge-by-code', {params: params});
+    }
 }

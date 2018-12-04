@@ -2,6 +2,8 @@ package com.bass.amed.service;
 
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
+import com.bass.amed.repository.EconomicAgentsRepository;
+import com.bass.amed.repository.annihilation.MedicamentAnnihilationInstitutionRepository;
 import com.bass.amed.repository.annihilation.MedicamentAnnihilationMedsRepository;
 import com.bass.amed.repository.MedicamentRepository;
 import com.bass.amed.repository.RequestRepository;
@@ -32,6 +34,12 @@ public class MedicamentAnnihilationRequestService
     @Autowired
     private MedicamentRepository medicamentRepository;
 
+    @Autowired
+    private EconomicAgentsRepository economicAgentsRepository;
+
+    @Autowired
+    private MedicamentAnnihilationInstitutionRepository medicamentAnnihilationInstitutionRepository;
+
     @Transactional(readOnly = true)
     public RegistrationRequestsEntity findMedAnnihilationRegistrationById(Integer id) throws CustomException
     {
@@ -48,9 +56,11 @@ public class MedicamentAnnihilationRequestService
         RegistrationRequestsEntity rrE = re.get();
         rrE.setMedicamentAnnihilation((MedicamentAnnihilationEntity) Hibernate.unproxy(re.get().getMedicamentAnnihilation()));
 
+        rrE.getMedicamentAnnihilation().setCompanyName(economicAgentsRepository.findFirstByIdnoEquals(rrE.getMedicamentAnnihilation().getIdno()).get().getName());
+
         rrE.getMedicamentAnnihilation().setMedicamentsMedicamentAnnihilationMeds(medicamentAnnihilationMedsRepository.findByMedicamentAnnihilationId(rrE.getMedicamentAnnihilation().getId()));
 
-        rrE.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds().forEach(ma -> ma.setMedicamentName(medicamentRepository.findById(ma.getMedicamentId()).get().getCommercialName()));
+        rrE.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds().forEach(ma -> ma.setMedicamentName(medicamentRepository.getCommercialNameById(ma.getMedicamentId()).orElse(null)));
 
         return rrE;
     }
@@ -103,8 +113,9 @@ public class MedicamentAnnihilationRequestService
             {
                 MedicamentAnnihilationMedsEntity mam = em.find(MedicamentAnnihilationMedsEntity.class, new MedicamentAnnihilationIdentity(mm.getMedicamentId(), mm.getMedicamentAnnihilationId()));
                 mam.setDestructionMethod(mm.getDestructionMethod());
+                mam.setTax(mm.getTax());
 
-                em.persist(mam);
+                em.merge(mam);
             }
 
             r.getRequestHistories().add(new ArrayList<>(request.getRequestHistories()).get(0));
@@ -116,12 +127,15 @@ public class MedicamentAnnihilationRequestService
                 r.getMedicamentAnnihilation().getDocuments().addAll(dSet);
             }
 
-            //Update commisions
-            r.getMedicamentAnnihilation().getCommisions().clear();
-            r.getMedicamentAnnihilation().getCommisions().addAll(request.getMedicamentAnnihilation().getCommisions());
+           //Institions
+            r.getMedicamentAnnihilation().getMedicamentAnnihilationInsitutions().clear();
+            r.getMedicamentAnnihilation().getMedicamentAnnihilationInsitutions().addAll(request.getMedicamentAnnihilation().getMedicamentAnnihilationInsitutions());
 
             r.setCurrentStep(request.getCurrentStep());
             r.setAssignedUser(request.getAssignedUser());
+
+            r.getMedicamentAnnihilation().setFirstname(request.getMedicamentAnnihilation().getFirstname());
+            r.getMedicamentAnnihilation().setLastname(request.getMedicamentAnnihilation().getLastname());
 
             em.merge(r);
 
@@ -169,9 +183,9 @@ public class MedicamentAnnihilationRequestService
             r.setEndDate(new Timestamp( new Date().getTime()));
 
 
-            //Update commisions
-            r.getMedicamentAnnihilation().getCommisions().clear();
-            r.getMedicamentAnnihilation().getCommisions().addAll(request.getMedicamentAnnihilation().getCommisions());
+            //Institions
+            r.getMedicamentAnnihilation().getMedicamentAnnihilationInsitutions().clear();
+            r.getMedicamentAnnihilation().getMedicamentAnnihilationInsitutions().addAll(request.getMedicamentAnnihilation().getMedicamentAnnihilationInsitutions());
 
             em.merge(r);
 

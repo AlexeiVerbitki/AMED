@@ -20,6 +20,10 @@ export class PaymentComponent implements OnInit {
     bonDePlataList: any[] = [];
     bonDePlataTotal: number = 0;
 
+    additionalBonDePlataList: any;
+    process: string;
+    requestNimicire : any;
+
     //Incasari
     receiptsList: any[] = [];
     receiptsTotal: number = 0;
@@ -28,6 +32,7 @@ export class PaymentComponent implements OnInit {
     disabled: boolean = false;
     bonSuplimentarNotRender: boolean = false;
     requestIdP: any;
+
 
     constructor(private administrationService: AdministrationService,
                 private dialog: MatDialog,
@@ -70,6 +75,29 @@ export class PaymentComponent implements OnInit {
     @Input()
     set isDisabled(disabled: boolean) {
         this.disabled = disabled;
+    }
+
+
+    get additionalBonDePlata(): any {
+        return this.additionalBonDePlataList;
+    }
+
+    @Input()
+    set additionalBonDePlata(additionalBonDePlataList: any) {
+        console.log('dfgdf', additionalBonDePlataList);
+        this.additionalBonDePlataList = additionalBonDePlataList;
+        this.loadPaymentOrders();
+    }
+
+
+    get processModule() : string {
+        return this.process;
+    }
+
+    @Input()
+    set processModule(process : string)
+    {
+        this.process = process;
     }
 
     addTaxes() {
@@ -168,6 +196,15 @@ export class PaymentComponent implements OnInit {
         this.bonSuplimentarNotRender = bonSuplimentarNotRender;
     }
 
+    get requestAnnihilation(): any {
+        return this.requestNimicire;
+    }
+
+    @Input()
+    set requestAnnihilation(requestNimicire: any) {
+        this.requestNimicire = requestNimicire;
+    }
+
     get requestId(): any {
         return this.requestIdP;
     }
@@ -182,8 +219,20 @@ export class PaymentComponent implements OnInit {
 
     generateBonDePlataForAll() {
         if (this.bonDePlataList.length != 0) {
+
             this.loadingService.show();
-            this.subscriptions.push(this.documentService.viewBonDePlata(this.requestIdP).subscribe(data => {
+            let observable;
+            if (this.process && this.process === 'NIMICIRE')
+            {
+                console.log('sdfsd', this.requestNimicire);
+                observable = this.documentService.viewBonDePlataNimicire(this.requestNimicire);
+            }
+            else {
+                observable = this.documentService.viewBonDePlata(this.requestIdP);
+            }
+
+
+            this.subscriptions.push(observable.subscribe(data => {
                     let file = new Blob([data.body], {type: 'application/pdf'});
                     var fileURL = URL.createObjectURL(file);
                     window.open(fileURL);

@@ -37,7 +37,7 @@
 				        mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
 				<button class="btn btn-mdb-color waves-light btn-sm waves-light" mdbTooltip="Generare bon de plata pentru o singura taxa" placement="top" (click)="generateSingleBonDePlata(bonDePlata)"
 				        [disabled] = "isDisableDeleteBonDePlata(bonDePlata)"
-				        mdbWavesEffect><i class="fa fa-file-text-o fa-lg" aria-hidden="true"></i></button>
+				        mdbWavesEffect *ngIf="process !== 'NIMICIRE'"><i class="fa fa-file-text-o fa-lg" aria-hidden="true"></i></button>
 			</td>
 		</tr>
 		</tbody>

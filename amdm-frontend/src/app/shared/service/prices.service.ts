@@ -82,8 +82,20 @@ export class PriceService {
         return this.http.get('/api/price/all-price-expiration-reasons');
     }
 
+    saveReevaluation(pricesModel: any): Observable<any> {
+        return this.http.post<any>('/api/price/save-reevaluation', pricesModel, {observe: 'response'});
+    }
+
+    saveDocuments(documetns: any): Observable<any> {
+        return this.http.post<any>('/api/documents/save-docs', documetns, {observe: 'response'});
+    }
+
     getPricesForRevaluation(): Observable<any> {
         return this.http.get('/api/price/revaluation');
+    }
+
+    getGenericsPricesForRevaluation(priceId: string): Observable<any> {
+        return this.http.get('/api/price/generics-revaluation', {params: {priceId: priceId}});
     }
 
     getPriceTypes(price: string): Observable<any> {
@@ -116,6 +128,10 @@ export class PriceService {
 
     getPricesRequest(id: string): Observable<any> {
         return this.http.get('/api/load-prices-request', {params: {id: id}});
+    }
+
+    getPriceById(id: string): Observable<any> {
+        return this.http.get('/api/price/by-id', {params: {id: id}});
     }
 
 

@@ -13,6 +13,7 @@ import {AnnihilationService} from "../../shared/service/annihilation/annihilatio
 import { DrugsDestroyEvaluateComponent } from './drugs-destroy-evaluate/drugs-destroy-evaluate.component';
 import {PaymentModule} from "../../payment/payment.module";
 import { DrugsDestroyActualComponent } from './drugs-destroy-actual/drugs-destroy-actual.component';
+import {AnnihilationMedDialogComponent} from "../../dialog/annihilation-med-dialog/annihilation-med-dialog.component";
 
 @NgModule({
     imports: [
@@ -25,7 +26,10 @@ import { DrugsDestroyActualComponent } from './drugs-destroy-actual/drugs-destro
         DocumentModule,
         PaymentModule
     ],
-    declarations: [ DrugsDestroyRegisterComponent, DrugsDestroyEvaluateComponent, DrugsDestroyActualComponent],
+    entryComponents: [
+        AnnihilationMedDialogComponent
+    ],
+    declarations: [ DrugsDestroyRegisterComponent, DrugsDestroyEvaluateComponent, DrugsDestroyActualComponent, AnnihilationMedDialogComponent],
     providers: [UploadFileService,MedicamentService, AnnihilationService
     ],
 })

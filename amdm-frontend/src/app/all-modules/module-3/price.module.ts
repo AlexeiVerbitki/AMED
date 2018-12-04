@@ -17,6 +17,7 @@ import {PriceEditModalComponent} from "./modal/price-edit-modal/price-edit-modal
 import {PriceAutoRevaluationComponent} from "./price-auto-revaluation/price-auto-revaluation.component";
 import {XchangeInfoComponent} from "./xchangeInfo/xchangeinfo.component";
 import {PipeModule} from "../../shared/pipe/pipe.module";
+import {RevaluationGenericsComponent} from "./revaluation-generics/revaluation-generics.component";
 
 @NgModule({
     entryComponents: [ReferencePriceComponent, PriceEditModalComponent, XchangeInfoComponent],
@@ -35,6 +36,7 @@ import {PipeModule} from "../../shared/pipe/pipe.module";
     declarations: [
         PriceRegMedComponent,
         PriceAutoRevaluationComponent,
+        RevaluationGenericsComponent,
         OneMedPriceComponent,
         PriceEvaluateMedComponent,
         ReferencePriceComponent,

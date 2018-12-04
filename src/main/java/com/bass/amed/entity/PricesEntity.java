@@ -44,7 +44,7 @@ public class PricesEntity
 
     @Basic
     @Column(name = "mdl_value")
-    private BigDecimal mdlValue;
+    private Double mdlValue;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "priceRequest")
     @JsonManagedReference

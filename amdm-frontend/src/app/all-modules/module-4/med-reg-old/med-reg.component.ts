@@ -20,8 +20,8 @@
 //
 // @Component({
 //   selector: 'app-med-reg',
-//   templateUrl: './med-reg.component.html',
-//   styleUrls: ['./med-reg.component.css']
+//   templateUrl: './med-reg-approve.component.html',
+//   styleUrls: ['./med-reg-approve.component.css']
 // })
 // export class MedRegComponent implements OnInit {
 //   cereri: Cerere[] = [];

@@ -50,6 +50,10 @@ public class NmPricesEntity
     @Column(name = "price_mdl")
     private BigDecimal priceMdl;
 
+    @Basic
+    @Column(name = "status")
+    private String status;
+
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "currency_id")
     private NmCurrenciesEntity currency;
@@ -64,6 +68,7 @@ public class NmPricesEntity
                 ", expirationDate=" + expirationDate +
                 ", revisionDate=" + revisionDate +
                 ", price=" + price +
+                ", status=" + status +
                 ", priceMdl=" + priceMdl +
                 ", currency=" + currency +
                 '}';

@@ -10,9 +10,12 @@ import {DocumentService} from "../../../shared/service/document.service";
 import {AuthService} from "../../../shared/service/authetication.service";
 import {AdministrationService} from "../../../shared/service/administration.service";
 import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {MatDialog} from "@angular/material";
+import {MatDialog, MatDialogConfig} from "@angular/material";
 import {TaskService} from "../../../shared/service/task.service";
 import {LoaderService} from "../../../shared/service/loader.service";
+import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
+import {MedicamentDetailsDialogComponent} from "../../../dialog/medicament-details-dialog/medicament-details-dialog.component";
+import {MedicamentService} from "../../../shared/service/medicament.service";
 
 @Component({
     selector: 'app-experti',
@@ -34,6 +37,7 @@ export class ExpertiModifyComponent implements OnInit {
     isNonAttachedDocuments: boolean = false;
     divisions: any[] = [];
     manufacturesTable: any[] = [];
+    medicamentsDetails : any[];
 
     constructor(private fb: FormBuilder,
                 private authService: AuthService,
@@ -41,8 +45,11 @@ export class ExpertiModifyComponent implements OnInit {
                 public dialogConfirmation: MatDialog,
                 private administrationService: AdministrationService,
                 private router: Router,
+                public dialog: MatDialog,
                 private errorHandlerService: ErrorHandlerService,
                 private taskService: TaskService,
+                private navbarTitleService: NavbarTitleService,
+                private medicamentService: MedicamentService,
                 private loadingService: LoaderService,
                 private documentService: DocumentService,
                 private activatedRoute: ActivatedRoute) {
@@ -62,33 +69,29 @@ export class ExpertiModifyComponent implements OnInit {
             'medicament':
                 fb.group({
                     'id': [],
-                    'commercialName': [''],
+                    'commercialNameTo': [''],
                     'company': [''],
-                    'atcCode': [null],
+                    'atcCodeTo': [null],
                     'registrationDate': [],
                     'registrationNumber': [],
-                    'pharmaceuticalForm': [null],
+                    'pharmaceuticalFormTo': [null],
                     'pharmaceuticalFormType': [null],
-                    'dose': [null],
-                    'unitsOfMeasurement': [null],
-                    'internationalMedicamentName': [null],
-                    'volume': [null],
-                    'volumeQuantityMeasurement': [null],
-                    'termsOfValidity': [null],
+                    'doseTo': [null],
+                    'unitsOfMeasurementTo': [null],
+                    'internationalMedicamentNameTo': [null],
+                    'volumeTo': [null],
+                    'volumeQuantityMeasurementTo': [null],
+                    'termsOfValidityTo': [null],
                     'code': [null],
-                    'medicamentType': [null],
-                    'storageQuantityMeasurement': [null],
-                    'storageQuantity': [null],
-                    'unitsQuantityMeasurement': [null],
-                    'unitsQuantity': [null],
-                    'prescription': {disabled: true, value: null},
-                    'authorizationHolder': [null],
+                    'medicamentTypeTo': [null],
+                    'prescriptionTo': {disabled: true, value: null},
+                    'authorizationHolderTo': [null],
                     'authorizationHolderCountry': [null],
                     'authorizationHolderAddress': [null],
                     'documents': [],
                     'status': ['F'],
                     'experts': [''],
-                    'group': ['']
+                    'groupTo': ['']
                 }),
             'company': [''],
             'recetaType': [''],
@@ -100,6 +103,8 @@ export class ExpertiModifyComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.navbarTitleService.showTitleMsg('Aprobarea modificarilor postautorizate / Expertiza');
+
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
                 this.subscriptions.push(this.requestService.getMedicamentHistory(params['id']).subscribe(data => {
                         this.modelToSubmit = Object.assign({}, data);
@@ -113,39 +118,39 @@ export class ExpertiModifyComponent implements OnInit {
                         this.expertForm.get('companyValue').setValue(data.company.name);
                         this.expertForm.get('company').setValue(data.company);
                         this.expertForm.get('medicament.id').setValue(data.medicamentHistory[0].id);
-                        this.expertForm.get('medicament.commercialName').setValue(data.medicamentHistory[0].commercialName);
-                        this.expertForm.get('medicamentName').setValue(data.medicamentHistory[0].commercialName);
+                        this.expertForm.get('medicament.commercialNameTo').setValue(data.medicamentHistory[0].commercialNameTo);
+                        this.expertForm.get('medicamentName').setValue(data.medicamentHistory[0].commercialNameTo);
                         this.expertForm.get('medicament.registrationNumber').setValue(data.medicamentHistory[0].registrationNumber);
                         this.expertForm.get('medicamentPostauthorizationRegisterNr').setValue(data.medicamentHistory[0].registrationNumber);
-                        this.expertForm.get('medicament.pharmaceuticalForm').setValue(data.medicamentHistory[0].pharmaceuticalForm.description);
-                        this.expertForm.get('medicament.pharmaceuticalFormType').setValue(data.medicamentHistory[0].pharmaceuticalForm.type.description);
-                        this.expertForm.get('medicament.dose').setValue(data.medicamentHistory[0].dose);
-                        if (data.medicamentHistory && data.medicamentHistory.length != 0 && data.medicamentHistory[0].unitsOfMeasurement) {
-                            this.expertForm.get('medicament.unitsOfMeasurement').setValue(data.medicamentHistory[0].unitsOfMeasurement.description);
+                        this.expertForm.get('medicament.pharmaceuticalFormTo').setValue(data.medicamentHistory[0].pharmaceuticalFormTo.description);
+                        this.expertForm.get('medicament.pharmaceuticalFormType').setValue(data.medicamentHistory[0].pharmaceuticalFormTo.type.description);
+                        this.expertForm.get('medicament.doseTo').setValue(data.medicamentHistory[0].doseTo);
+                        if (data.medicamentHistory && data.medicamentHistory.length != 0 && data.medicamentHistory[0].unitsOfMeasurementTo) {
+                            this.expertForm.get('medicament.unitsOfMeasurementTo').setValue(data.medicamentHistory[0].unitsOfMeasurementTo.description);
                         }
-                        this.expertForm.get('medicament.internationalMedicamentName').setValue(data.medicamentHistory[0].internationalMedicamentName.description);
-                        this.expertForm.get('medicament.medicamentType').setValue(data.medicamentHistory[0].medicamentType.description);
-                        this.expertForm.get('medicament.volume').setValue(data.medicamentHistory[0].volume);
-                        if (data.medicamentHistory && data.medicamentHistory.length != 0 && data.medicamentHistory[0].volumeQuantityMeasurement) {
-                            this.expertForm.get('medicament.volumeQuantityMeasurement').setValue(data.medicamentHistory[0].volumeQuantityMeasurement.description);
+                        this.expertForm.get('medicament.internationalMedicamentNameTo').setValue(data.medicamentHistory[0].internationalMedicamentNameTo.description);
+                        this.expertForm.get('medicament.medicamentTypeTo').setValue(data.medicamentHistory[0].medicamentTypeTo.description);
+                        this.expertForm.get('medicament.volumeTo').setValue(data.medicamentHistory[0].volumeTo);
+                        if (data.medicamentHistory && data.medicamentHistory.length != 0 && data.medicamentHistory[0].volumeQuantityMeasurementTo) {
+                            this.expertForm.get('medicament.volumeQuantityMeasurementTo').setValue(data.medicamentHistory[0].volumeQuantityMeasurementTo.description);
                         }
-                        this.expertForm.get('medicament.termsOfValidity').setValue(data.medicamentHistory[0].termsOfValidity);
-                        this.expertForm.get('medicament.group').setValue(data.medicamentHistory[0].group.description);
-                        if (data.medicamentHistory[0].prescription == 0) {
-                            this.expertForm.get('medicament.prescription').setValue('Fără prescripţie');
+                        this.expertForm.get('medicament.termsOfValidityTo').setValue(data.medicamentHistory[0].termsOfValidityTo);
+                        this.expertForm.get('medicament.groupTo').setValue(data.medicamentHistory[0].groupTo.description);
+                        if (data.medicamentHistory[0].prescriptionTo == 0) {
+                            this.expertForm.get('medicament.prescriptionTo').setValue('Fără prescripţie');
                         } else {
-                            this.expertForm.get('medicament.prescription').setValue('Cu prescripţie');
+                            this.expertForm.get('medicament.prescriptionTo').setValue('Cu prescripţie');
                         }
-                        this.expertForm.get('medicament.authorizationHolder').setValue(data.medicamentHistory[0].authorizationHolder.description);
-                        this.expertForm.get('medicament.authorizationHolderCountry').setValue(data.medicamentHistory[0].authorizationHolder.country.description);
-                        this.expertForm.get('medicament.authorizationHolderAddress').setValue(data.medicamentHistory[0].authorizationHolder.address);
+                        this.expertForm.get('medicament.authorizationHolderTo').setValue(data.medicamentHistory[0].authorizationHolderTo.description);
+                        this.expertForm.get('medicament.authorizationHolderCountry').setValue(data.medicamentHistory[0].authorizationHolderTo.country.description);
+                        this.expertForm.get('medicament.authorizationHolderAddress').setValue(data.medicamentHistory[0].authorizationHolderTo.address);
                         for (let entry of data.medicamentHistory[0].divisionHistory) {
                             this.divisions.push({
                                 description: entry.description,
                                 old: entry.old
                             });
                         }
-                        this.expertForm.get('medicament.atcCode').setValue(data.medicamentHistory[0].atcCode);
+                        this.expertForm.get('medicament.atcCodeTo').setValue(data.medicamentHistory[0].atcCodeTo);
                         this.activeSubstancesTable = data.medicamentHistory[0].activeSubstancesHistory;
                         this.manufacturesTable = data.medicamentHistory[0].manufacturesHistory;
                         this.expertForm.get('type').setValue(data.type);
@@ -159,6 +164,13 @@ export class ExpertiModifyComponent implements OnInit {
                             x.isOld = true;
                             return x;
                         });
+                        this.subscriptions.push(
+                        this.medicamentService.getMedicamentsByFilter({registerNumber : data.medicamentHistory[0].registrationNumber}
+                        ).subscribe(request => {
+                                this.medicamentsDetails = request.body;
+                            },
+                            error => console.log(error)
+                        ));
                     })
                 );
             })
@@ -380,5 +392,28 @@ export class ExpertiModifyComponent implements OnInit {
         // return dialogRef.afterClosed();
         return true;
 
+    }
+
+    ngOnDestroy(): void {
+        this.navbarTitleService.showTitleMsg('');
+        this.subscriptions.forEach(s => s.unsubscribe());
+
+    }
+
+    showMedicamentDetails() {
+
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.width = '1100px';
+
+        dialogConfig2.data = {
+            value: this.medicamentsDetails[0].code
+        };
+
+        this.dialog.open(MedicamentDetailsDialogComponent, dialogConfig2);
     }
 }

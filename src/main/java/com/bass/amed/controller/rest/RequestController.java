@@ -327,11 +327,9 @@ public class RequestController
 
         PricesHistoryEntity priceHistory = null;
 
-        if (price.getType().getId() == 2)
-        {//acceptat
+        if(price.getType().getId() == 2 && request.getCurrentStep() == "F") {//acceptat
             NmPricesEntity oldNmPrice = nmPricesRepository.findOneByMedicament(price.getMedicament());
-            if (oldNmPrice != null)
-            {
+            if(oldNmPrice != null) {
                 updatedPrice.getNmPrice().setId(oldNmPrice.getId());
             }
             price.setNmPrice(updatedPrice.getNmPrice());
@@ -343,8 +341,7 @@ public class RequestController
         try
         {
             requestRepository.save(request);
-            if (priceHistory != null)
-            {
+            if(priceHistory != null) {
                 pricesHistoryRepository.save(priceHistory);
             }
         }
@@ -362,7 +359,7 @@ public class RequestController
         Optional<RegistrationRequestsEntity> regOptional = requestRepository.findPricesRequestById(id);
         if (regOptional.isPresent())
         {
-            List<String> docTypes = Arrays.asList("OP", "A1", "DP", "NL");//OP,A1,A2,DP,CP,RF,RC,NL,RQ,CR,CC,PC
+            List<String> docTypes = Arrays.asList("A1", "DP", "NL" ,"FE");//OP,A1,A2,DP,CP,RF,RC,NL,RQ,CR,CC,PC
             List<NmDocumentTypesEntity> outputDocTypes = documentTypeRepository.findAll();
             outputDocTypes.removeIf(docType -> !docTypes.contains(docType.getCategory()));
 

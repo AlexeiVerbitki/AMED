@@ -31,19 +31,43 @@
             </div>
         </div>
 
-        <app-document [documents]="docs" [nrCerere]="mForm.get('nrCererii').value" (documentModified)="documentAdded($event)" [dcTypeIdentifier]="{code : 'INMD', step : 'E'}"></app-document>
-        <div *ngIf="rFormSubbmitted && docs.length==0">
+        <app-document [documents]="docs" [nrCerere]="mForm.get('nrCererii').value"
+                      (documentModified)="documentAdded($event)"
+                      [dcTypeIdentifier]="{code : 'INMD', step : 'E'}"></app-document>
+        <div *ngIf="mFormSubbmitted && docs.length==0">
             <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
         </div>
 
-    </form>
 
-
-
-    <hr>
-    <h3 class="text-center my-3 font-weight-bold">Lista medicamentelor pentru distrugere</h3>
-    <hr>
-  <!--  <form [formGroup]="rForm">-->
+        <hr>
+        <h3 class="text-center my-3 font-weight-bold">Lista medicamentelor pentru distrugere</h3>
+        <hr>
+        <!--  <form [formGroup]="rForm">-->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input id="firstname" mdbInputDirective type="text" class="form-control" formControlName="firstname"
+                    >
+                    <label for="firstname">Prenumele reprezentantului<span class="text-danger">*</span></label>
+                </div>
+                <div *ngIf="mFormSubbmitted && !mForm.get('firstname').valid">
+                    <small class="text-muted"><strong class="text-danger">Prenumele trebuie introdus</strong>
+                    </small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input id="lastname" mdbInputDirective type="text" class="form-control" formControlName="lastname"
+                    >
+                    <label for="lastname">Numele reprezentantului<span class="text-danger">*</span></label>
+                </div>
+                <div *ngIf="mFormSubbmitted && !mForm.get('lastname').valid">
+                    <small class="text-muted"><strong class="text-danger">Numele trebuie introdus</strong>
+                    </small>
+                </div>
+            </div>
+        </div>
+        <br/>
         <table class="table table-widths text-center">
             <thead class="black white-text">
             <tr>
@@ -51,6 +75,9 @@
                 <th scope="col">Cantitatea</th>
                 <th scope="col">Cauza distrugerii</th>
                 <th scope="col">Metoda de nimicire</th>
+                <th scope="col">Taxa</th>
+                <th scope="col">Taxa totala</th>
+                <th scope="col">Detalii</th>
             </tr>
             </thead>
             <tbody>
@@ -58,42 +85,62 @@
                 <th scope="row">{{ meds.medicamentName }}</th>
                 <td>{{ meds.quantity }}</td>
                 <td>{{ meds.uselessReason }}</td>
-                <td><input mdbInputDirective type="text" class="form-control"
-                           [(ngModel)]="meds.destructionMethod"></td>
+                <td>{{ meds.destructionMethod ? meds.destructionMethod.description : '' }}</td>
+                <td>{{ meds.tax }}</td>
+                <td>{{ meds.taxTotal }}</td>
+                <td><a title="Detalii" (click)="details(meds)">Detalii...</a></td>
+                <!--  <td><input mdbInputDirective type="text" class="form-control"
+                             [(ngModel)]="meds.destructionMethod"></td>-->
+            </tr>
+            <tr>
+                <td colspan="5">
+
+                </td>
+                <td>
+                    Total:{{totalSum}}
+                </td>
+                <td>
+                    <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="generareTax()">Generare
+                        Taxa
+                    </button>
+                </td>
             </tr>
             </tbody>
         </table>
         <hr>
 
-        <app-payment [requestId]="requestId" (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
+        <app-payment [requestId]="requestId" (totalValueChanged)="paymentTotalUpdate($event)"
+                     [additionalBonDePlata]="additionalBonDePlata" [processModule]="'NIMICIRE'"
+                     [requestAnnihilation]="viewModelData"></app-payment>
 
-    <hr>
-    <h5 class="text-center font-weight-bold">Documente de iesire</h5>
-    <hr>
+        <hr>
+        <h5 class="text-center font-weight-bold">Documente de iesire</h5>
+        <hr>
 
-    <table class="table table-widths-lg text-center">
-        <thead class="black white-text">
-        <tr>
-            <th scope="col">Denumirea</th>
-            <th scope="col">Numar</th>
-            <th scope="col">Status document</th>
-            <th>Actiuni</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let a of outDocuments">
-            <th scope="row">{{ a.name }}</th>
-            <th scope="row">{{ a.number }}</th>
-            <th scope="row">{{ a.status ? a.status.description : ''}}</th>
-            <td>
-                <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)">Vizualizare</button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <div *ngIf="rFormSubbmitted && !checkAllDocumentsWasAttached()">
-        <small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong></small>
-    </div>
+        <table class="table table-widths-lg text-center">
+            <thead class="black white-text">
+            <tr>
+                <th scope="col">Denumirea</th>
+                <th scope="col">Numar</th>
+                <th scope="col">Status document</th>
+                <th>Actiuni</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let a of outDocuments">
+                <th scope="row">{{ a.name }}</th>
+                <th scope="row">{{ a.number }}</th>
+                <th scope="row">{{ a.status ? a.status.description : ''}}</th>
+                <td>
+                    <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)">Vizualizare
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <!--  <div *ngIf="mFormSubbmitted && !checkAllDocumentsWasAttached()">
+              <small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong></small>
+          </div>-->
 
 
         <div class="text-center">
@@ -104,7 +151,7 @@
                     (click)="submit()">Urmatorul pas
             </button>
         </div>
-  <!--  </form>-->
-
+        <!--  </form>-->
+    </form>
 
 </div>

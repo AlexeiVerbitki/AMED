@@ -5,6 +5,7 @@ import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} f
 import {AdministrationService} from "../../shared/service/administration.service";
 import {MedicamentService} from "../../shared/service/medicament.service";
 import {MedicamentDetailsDialogComponent} from "../../dialog/medicament-details-dialog/medicament-details-dialog.component";
+import {NavbarTitleService} from "../../shared/service/navbar-title.service";
 
 @Component({
     selector: 'app-medicaments',
@@ -34,6 +35,7 @@ export class MedicamentsComponent implements OnInit {
     constructor(private fb: FormBuilder,
                 private administrationService: AdministrationService,
                 private dialog: MatDialog,
+                private navbarTitleService: NavbarTitleService,
                 private medicamentService: MedicamentService) {
 
         this.mForm = fb.group({
@@ -68,6 +70,8 @@ export class MedicamentsComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.navbarTitleService.showTitleMsg('Cautare medicamente');
+
         this.subscriptions.push(
             this.administrationService.getAllInternationalNames().subscribe(data => {
                     this.internationalNames = data;
@@ -138,7 +142,7 @@ export class MedicamentsComponent implements OnInit {
         );
     }
 
-    checkSAValue(valueOne : any, valueAll : any) {
+    checkSAValue(valueOne: any, valueAll: any) {
         if (this.mForm.get('activeSubstances').value == null || this.mForm.get('activeSubstances').value.length == 0) {
             this.areSACheckBoxesDisabled = true;
             valueOne.checked = false;
@@ -146,11 +150,11 @@ export class MedicamentsComponent implements OnInit {
             return;
         } else {
             if (this.areSACheckBoxesDisabled) {
-            this.areSACheckBoxesDisabled = false;
-            valueAll.checked = false;
-            valueOne.checked = true;
-            return;
-        }
+                this.areSACheckBoxesDisabled = false;
+                valueAll.checked = false;
+                valueOne.checked = true;
+                return;
+            }
         }
     }
 
@@ -170,14 +174,14 @@ export class MedicamentsComponent implements OnInit {
         }
     }
 
-    clear(valueOne: any, valueAll: any,valueExpirated: any) {
+    clear(valueOne: any, valueAll: any, valueExpirated: any) {
         this.mForm.reset();
         valueOne.checked = false;
         valueAll.checked = false;
         valueExpirated.checked = false;
     }
 
-    getMedicaments(valueOne: any, valueAll: any,valueExpirated: any) {
+    getMedicaments(valueOne: any, valueAll: any, valueExpirated: any) {
         let dto = this.mForm.value;
         dto.allSA = valueAll.checked;
         dto.atLeastOneSA = valueOne.checked;
@@ -194,10 +198,6 @@ export class MedicamentsComponent implements OnInit {
             ));
     }
 
-    ngOnDestroy(): void {
-        this.subscriptions.forEach(s => s.unsubscribe());
-    }
-
     applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue.trim().toLowerCase();
 
@@ -210,7 +210,7 @@ export class MedicamentsComponent implements OnInit {
 
     }
 
-    showMedicamentDetails(element:any) {
+    showMedicamentDetails(element: any) {
 
         const dialogConfig2 = new MatDialogConfig();
 
@@ -218,12 +218,18 @@ export class MedicamentsComponent implements OnInit {
         dialogConfig2.autoFocus = true;
         dialogConfig2.hasBackdrop = true;
 
-        dialogConfig2.width='1100px';
+        dialogConfig2.width = '1100px';
 
         dialogConfig2.data = {
             value: element.code
         };
 
         this.dialog.open(MedicamentDetailsDialogComponent, dialogConfig2);
+    }
+
+    ngOnDestroy(): void {
+        this.navbarTitleService.showTitleMsg('');
+        this.subscriptions.forEach(s => s.unsubscribe());
+
     }
 }

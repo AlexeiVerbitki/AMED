@@ -15,6 +15,9 @@ import {LoaderService} from "../../../shared/service/loader.service";
 import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
 import {ActiveSubstanceDialogComponent} from "../../../dialog/active-substance-dialog/active-substance-dialog.component";
+import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
+import {MedicamentDetailsDialogComponent} from "../../../dialog/medicament-details-dialog/medicament-details-dialog.component";
+import {MedicamentService} from "../../../shared/service/medicament.service";
 
 @Component({
     selector: 'app-evaluare-primara',
@@ -56,6 +59,7 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
     initialData: any;
     wasFoundDivision: boolean;
     wasFoundManufacture: boolean;
+    medicamentsDetails : any[];
 
     protected atcCodes: Observable<any[]>;
     protected loadingAtcCodes: boolean = false;
@@ -69,6 +73,8 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
                 private taskService: TaskService,
                 private errorHandlerService: ErrorHandlerService,
                 private loadingService: LoaderService,
+                private medicamentService : MedicamentService,
+                private navbarTitleService: NavbarTitleService,
                 public dialogConfirmation: MatDialog,
                 private authService: AuthService,
                 private router: Router,
@@ -91,29 +97,25 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
             'medicament':
                 fb.group({
                     'id': [],
-                    'commercialName': ['', Validators.required],
-                    'atcCode': [null, Validators.required],
+                    'commercialNameTo': ['', Validators.required],
+                    'atcCodeTo': [null, Validators.required],
                     'registrationDate': [],
                     'registrationNumber': [],
-                    'pharmaceuticalForm': [null, Validators.required],
+                    'pharmaceuticalFormTo': [null, Validators.required],
                     'pharmaceuticalFormType': [null, Validators.required],
-                    'dose': [null],
-                    'unitsOfMeasurement': [null],
-                    'internationalMedicamentName': [null, Validators.required],
-                    'volume': [null],
-                    'volumeQuantityMeasurement': [null],
-                    'termsOfValidity': [null, Validators.required],
-                    'medicamentType': [null, Validators.required],
-                    'storageQuantityMeasurement': [null],
-                    'storageQuantity': [null],
-                    'unitsQuantityMeasurement': [null],
-                    'unitsQuantity': [null],
-                    'prescription': [null, Validators.required],
-                    'authorizationHolder': [null, Validators.required],
+                    'doseTo': [null],
+                    'unitsOfMeasurementTo': [null],
+                    'internationalMedicamentNameTo': [null, Validators.required],
+                    'volumeTo': [null],
+                    'volumeQuantityMeasurementTo': [null],
+                    'termsOfValidityTo': [null, Validators.required],
+                    'medicamentTypeTo': [null, Validators.required],
+                    'prescriptionTo': [null, Validators.required],
+                    'authorizationHolderTo': [null, Validators.required],
                     'authorizationHolderCountry': [null],
                     'authorizationHolderAddress': [null],
                     'status': ['P'],
-                    'group': [null, Validators.required]
+                    'groupTo': [null, Validators.required]
                 }),
             'company': [''],
             'recetaType': [''],
@@ -138,6 +140,8 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.navbarTitleService.showTitleMsg('Aprobarea modificarilor postautorizate / Evaluare primara');
+
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
                 this.subscriptions.push(this.requestService.getMedicamentHistory(params['id']).subscribe(data => {
                         this.initialData = Object.assign({}, data);
@@ -152,8 +156,8 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
                         this.eForm.get('company').setValue(data.company);
                         this.eForm.get('companyValue').setValue(data.company.name);
                         this.eForm.get('medicament.id').setValue(data.medicamentHistory[0].id);
-                        this.eForm.get('medicament.commercialName').setValue(data.medicamentHistory[0].commercialName);
-                        this.eForm.get('medicamentName').setValue(data.medicamentHistory[0].commercialName);
+                        this.eForm.get('medicament.commercialNameTo').setValue(data.medicamentHistory[0].commercialNameTo);
+                        this.eForm.get('medicamentName').setValue(data.medicamentHistory[0].commercialNameTo);
                         this.eForm.get('medicament.registrationNumber').setValue(data.medicamentHistory[0].registrationNumber);
                         this.eForm.get('medicamentPostauthorizationRegisterNr').setValue(data.medicamentHistory[0].registrationNumber);
                         this.documents = data.documents;
@@ -167,11 +171,11 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
                                     old: entry.old
                                 });
                             }
-                            this.eForm.get('medicament.atcCode').setValue(data.medicamentHistory[0].atcCode);
+                            this.eForm.get('medicament.atcCodeTo').setValue(data.medicamentHistory[0].atcCodeTo);
 
-                            this.eForm.get('medicament.dose').setValue(data.medicamentHistory[0].dose);
-                            this.eForm.get('medicament.termsOfValidity').setValue(data.medicamentHistory[0].termsOfValidity);
-                            this.eForm.get('medicament.volume').setValue(data.medicamentHistory[0].volume);
+                            this.eForm.get('medicament.doseTo').setValue(data.medicamentHistory[0].doseTo);
+                            this.eForm.get('medicament.termsOfValidityTo').setValue(data.medicamentHistory[0].termsOfValidityTo);
+                            this.eForm.get('medicament.volumeTo').setValue(data.medicamentHistory[0].volumeTo);
                             this.activeSubstancesTable = data.medicamentHistory[0].activeSubstancesHistory;
                             this.manufacturesTable = data.medicamentHistory[0].manufacturesHistory;
                         }
@@ -183,6 +187,14 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
                             return x;
                         });
                         this.loadAllQuickSearches(data);
+
+                        this.subscriptions.push(
+                            this.medicamentService.getMedicamentsByFilter({registerNumber : data.medicamentHistory[0].registrationNumber}
+                            ).subscribe(request => {
+                                    this.medicamentsDetails = request.body;
+                                },
+                                error => console.log(error)
+                            ));
                     })
                 );
             })
@@ -231,8 +243,8 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
         this.subscriptions.push(
             this.administrationService.getAllPharamceuticalFormTypes().subscribe(data => {
                     this.pharmaceuticalFormTypes = data;
-                    if (dataDB.medicamentHistory && dataDB.medicamentHistory.length != 0 && dataDB.medicamentHistory[0].pharmaceuticalForm) {
-                        this.eForm.get('medicament.pharmaceuticalFormType').setValue(this.pharmaceuticalFormTypes.find(r => r.id === dataDB.medicamentHistory[0].pharmaceuticalForm.type.id));
+                    if (dataDB.medicamentHistory && dataDB.medicamentHistory.length != 0 && dataDB.medicamentHistory[0].pharmaceuticalFormTo) {
+                        this.eForm.get('medicament.pharmaceuticalFormType').setValue(this.pharmaceuticalFormTypes.find(r => r.id === dataDB.medicamentHistory[0].pharmaceuticalFormTo.type.id));
                     }
                 },
                 error => console.log(error)
@@ -251,14 +263,9 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
             this.administrationService.getAllUnitsOfMeasurement().subscribe(data => {
                     this.unitsOfMeasurement = data;
                     this.volumeUnitsOfMeasurement = data;
-
-
                     this.activeSubstanceUnitsOfMeasurement = data;
-                    if (dataDB.medicamentHistory && dataDB.medicamentHistory.length != 0 && dataDB.medicamentHistory[0].unitsOfMeasurement) {
-                        this.eForm.get('medicament.unitsOfMeasurement').setValue(this.unitsOfMeasurement.find(r => r.id === dataDB.medicamentHistory[0].unitsOfMeasurement.id));
-                    }
-                    if (dataDB.medicamentHistory && dataDB.medicamentHistory.length != 0 && dataDB.medicamentHistory[0].volumeQuantityMeasurement) {
-                        this.eForm.get('medicament.volumeQuantityMeasurement').setValue(this.volumeUnitsOfMeasurement.find(r => r.id === dataDB.medicamentHistory[0].volumeQuantityMeasurement.id));
+                    if (dataDB.medicamentHistory && dataDB.medicamentHistory.length != 0 && dataDB.medicamentHistory[0].volumeQuantityMeasurementTo) {
+                        this.eForm.get('medicament.volumeQuantityMeasurementTo').setValue(this.volumeUnitsOfMeasurement.find(r => r.id === dataDB.medicamentHistory[0].volumeQuantityMeasurementTo.id));
                     }
                 },
                 error => console.log(error)
@@ -277,8 +284,8 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
         this.subscriptions.push(
             this.administrationService.getAllInternationalNames().subscribe(data => {
                     this.internationalNames = data;
-                    if (dataDB.medicamentHistory && dataDB.medicamentHistory.length != 0 && dataDB.medicamentHistory[0].internationalMedicamentName) {
-                        this.eForm.get('medicament.internationalMedicamentName').setValue(this.internationalNames.find(r => r.id === dataDB.medicamentHistory[0].internationalMedicamentName.id));
+                    if (dataDB.medicamentHistory && dataDB.medicamentHistory.length != 0 && dataDB.medicamentHistory[0].internationalMedicamentNameTo) {
+                        this.eForm.get('medicament.internationalMedicamentNameTo').setValue(this.internationalNames.find(r => r.id === dataDB.medicamentHistory[0].internationalMedicamentNameTo.id));
                     }
                 },
                 error => console.log(error)
@@ -289,8 +296,8 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
             this.administrationService.getAllMedicamentTypes().subscribe(data => {
                     this.medicamentTypes = data;
                     this.medicamentTypes = this.medicamentTypes.filter(r => r.category === 'M');
-                    if (dataDB.medicamentHistory && dataDB.medicamentHistory.length != 0 && dataDB.medicamentHistory[0].medicamentType) {
-                        this.eForm.get('medicament.medicamentType').setValue(this.medicamentTypes.find(r => r.id === dataDB.medicamentHistory[0].medicamentType.id));
+                    if (dataDB.medicamentHistory && dataDB.medicamentHistory.length != 0 && dataDB.medicamentHistory[0].medicamentTypeTo) {
+                        this.eForm.get('medicament.medicamentTypeTo').setValue(this.medicamentTypes.find(r => r.id === dataDB.medicamentHistory[0].medicamentTypeTo.id));
                     }
                 },
                 error => console.log(error)
@@ -301,8 +308,8 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
             this.administrationService.getAllManufactures().subscribe(data => {
                     this.manufactures = data;
                     this.manufactureAuthorizations = this.manufactures.filter(r => r.authorizationHolder == 1);
-                    if (dataDB.medicamentHistory && dataDB.medicamentHistory.length != 0 && dataDB.medicamentHistory[0].authorizationHolder) {
-                        this.eForm.get('medicament.authorizationHolder').setValue(this.manufactureAuthorizations.find(r => r.id === dataDB.medicamentHistory[0].authorizationHolder.id));
+                    if (dataDB.medicamentHistory && dataDB.medicamentHistory.length != 0 && dataDB.medicamentHistory[0].authorizationHolderTo) {
+                        this.eForm.get('medicament.authorizationHolderTo').setValue(this.manufactureAuthorizations.find(r => r.id === dataDB.medicamentHistory[0].authorizationHolderTo.id));
                     }
                     if (dataDB.medicamentHistory && dataDB.medicamentHistory.length != 0 && dataDB.medicamentHistory[0].manufacture) {
                         this.eForm.get('medicament.manufacture').setValue(this.manufactures.find(r => r.id === dataDB.medicamentHistory[0].manufacture.id));
@@ -330,8 +337,8 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
         this.subscriptions.push(
             this.administrationService.getAllMedicamentGroups().subscribe(data => {
                     this.groups = data;
-                    if (dataDB.medicamentHistory && dataDB.medicamentHistory.length != 0 && dataDB.medicamentHistory[0].group) {
-                        this.eForm.get('medicament.group').setValue(this.groups.find(r => r.id === dataDB.medicamentHistory[0].group.id));
+                    if (dataDB.medicamentHistory && dataDB.medicamentHistory.length != 0 && dataDB.medicamentHistory[0].groupTo) {
+                        this.eForm.get('medicament.groupTo').setValue(this.groups.find(r => r.id === dataDB.medicamentHistory[0].groupTo.id));
                     }
                 },
                 error => console.log(error)
@@ -341,11 +348,11 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
 
         this.prescriptions = [...this.prescriptions, {value: 1, description: 'Cu prescripţie'}];
         this.prescriptions = [...this.prescriptions, {value: 0, description: 'Fără prescripţie'}];
-        if (dataDB.medicamentHistory && dataDB.medicamentHistory.length != 0 && dataDB.medicamentHistory[0].prescription != undefined && dataDB.medicamentHistory[0].prescription != null) {
-            if (dataDB.medicamentHistory[0].prescription == 1) {
-                this.eForm.get('medicament.prescription').setValue({value: 1, description: "Cu prescripţie"});
+        if (dataDB.medicamentHistory && dataDB.medicamentHistory.length != 0 && dataDB.medicamentHistory[0].prescriptionTo != undefined && dataDB.medicamentHistory[0].prescriptionTo != null) {
+            if (dataDB.medicamentHistory[0].prescriptionTo == 1) {
+                this.eForm.get('medicament.prescriptionTo').setValue({value: 1, description: "Cu prescripţie"});
             } else {
-                this.eForm.get('medicament.prescription').setValue({value: 0, description: "Fără prescripţie"});
+                this.eForm.get('medicament.prescriptionTo').setValue({value: 0, description: "Fără prescripţie"});
             }
         }
 
@@ -363,10 +370,10 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
 
         this.subscriptions.push(
             this.administrationService.getAllPharamceuticalFormsByTypeId(this.eForm.get('medicament.pharmaceuticalFormType').value.id).subscribe(data => {
-                    this.eForm.get('medicament.pharmaceuticalForm').setValue(null);
+                    this.eForm.get('medicament.pharmaceuticalFormTo').setValue(null);
                     this.pharmaceuticalForms = data;
-                    if (this.initialData.medicamentHistory && this.initialData.medicamentHistory.length != 0 && this.initialData.medicamentHistory[0] && this.initialData.medicamentHistory[0].pharmaceuticalForm) {
-                        this.eForm.get('medicament.pharmaceuticalForm').setValue(this.pharmaceuticalForms.find(r => r.id === this.initialData.medicamentHistory[0].pharmaceuticalForm.id));
+                    if (this.initialData.medicamentHistory && this.initialData.medicamentHistory.length != 0 && this.initialData.medicamentHistory[0] && this.initialData.medicamentHistory[0].pharmaceuticalFormTo) {
+                        this.eForm.get('medicament.pharmaceuticalFormTo').setValue(this.pharmaceuticalForms.find(r => r.id === this.initialData.medicamentHistory[0].pharmaceuticalFormTo.id));
                     }
                 },
                 error => console.log(error)
@@ -375,12 +382,12 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
     }
 
     fillAutorizationHolderDetails() {
-        if (this.eForm.get('medicament.authorizationHolder').value == null) {
+        if (this.eForm.get('medicament.authorizationHolderTo').value == null) {
             return;
         }
 
-        this.eForm.get('medicament.authorizationHolderCountry').setValue(this.eForm.get('medicament.authorizationHolder').value.country.description);
-        this.eForm.get('medicament.authorizationHolderAddress').setValue(this.eForm.get('medicament.authorizationHolder').value.address);
+        this.eForm.get('medicament.authorizationHolderCountry').setValue(this.eForm.get('medicament.authorizationHolderTo').value.country.description);
+        this.eForm.get('medicament.authorizationHolderAddress').setValue(this.eForm.get('medicament.authorizationHolderTo').value.address);
     }
 
     fillManufactureDetails() {
@@ -431,7 +438,7 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
             return;
         }
 
-        let test = this.manufacturesTable.find(r => r.producatorProdusFinit == true);
+        let test = this.manufacturesTable.find(r => r.producatorProdusFinitTo == true);
         if (!test) {
             this.errorHandlerService.showError('Nu a fost selectat producatorul produsului finit');
             return;
@@ -452,17 +459,15 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
         medicamentToSubmit.activeSubstancesHistory = this.activeSubstancesTable;
         medicamentToSubmit.divisionHistory = this.divisions;
         medicamentToSubmit.manufacturesHistory = this.manufacturesTable;
-        if (this.eForm.get('medicament.atcCode').value) {
-            if(this.eForm.get('medicament.atcCode').value.code) {
-                medicamentToSubmit.atcCode = this.eForm.get('medicament.atcCode').value.code;
-            }
-            else
-            {
-                medicamentToSubmit.atcCode = this.eForm.get('medicament.atcCode').value;
+        if (this.eForm.get('medicament.atcCodeTo').value) {
+            if (this.eForm.get('medicament.atcCodeTo').value.code) {
+                medicamentToSubmit.atcCodeTo = this.eForm.get('medicament.atcCodeTo').value.code;
+            } else {
+                medicamentToSubmit.atcCodeTo = this.eForm.get('medicament.atcCodeTo').value;
             }
         }
-        if(this.eForm.get('medicament.prescription').value) {
-            medicamentToSubmit.prescription = this.eForm.get('medicament.prescription').value.value;
+        if (this.eForm.get('medicament.prescriptionTo').value) {
+            medicamentToSubmit.prescriptionTo = this.eForm.get('medicament.prescriptionTo').value.value;
         }
         modelToSubmit.medicamentHistory.push(medicamentToSubmit);
 
@@ -517,7 +522,7 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
 
         this.divisions.push({
             description: this.eForm.get('division').value,
-            old : 0
+            old: 0
         });
 
         this.eForm.get('division').setValue(null);
@@ -577,12 +582,12 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.activeSubstancesTable.splice(index, 1);
-                this.eForm.get('medicament.dose').setValue(null);
+                this.eForm.get('medicament.doseTo').setValue(null);
                 for (let as of this.activeSubstancesTable) {
-                    if (this.eForm.get('medicament.dose').value == null || this.eForm.get('medicament.dose').value.length == 0) {
-                        this.eForm.get('medicament.dose').setValue(as.quantity + ' ' + as.unitsOfMeasurement.description);
+                    if (this.eForm.get('medicament.doseTo').value == null || this.eForm.get('medicament.doseTo').value.length == 0) {
+                        this.eForm.get('medicament.doseTo').setValue(as.quantityTo + ' ' + as.unitsOfMeasurementTo.description);
                     } else {
-                        this.eForm.get('medicament.dose').setValue(this.eForm.get('medicament.dose').value + ' + ' + as.quantity + ' ' + as.unitsOfMeasurement.description);
+                        this.eForm.get('medicament.doseTo').setValue(this.eForm.get('medicament.doseTo').value + ' + ' + as.quantityTo + ' ' + as.unitsOfMeasurementTo.description);
                     }
                 }
             }
@@ -758,9 +763,9 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
 
     checkProducatorProdusFinit(manufacture: any, value: any) {
         for (let m of this.manufacturesTable) {
-            m.producatorProdusFinit = false;
+            m.producatorProdusFinitTo = false;
         }
-        manufacture.producatorProdusFinit = value.checked;
+        manufacture.producatorProdusFinitTo = value.checked;
     }
 
     save() {
@@ -777,17 +782,15 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
         medicamentToSubmit.activeSubstancesHistory = this.activeSubstancesTable;
         medicamentToSubmit.divisionHistory = this.divisions;
         medicamentToSubmit.manufacturesHistory = this.manufacturesTable;
-        if (this.eForm.get('medicament.atcCode').value) {
-            if(this.eForm.get('medicament.atcCode').value.code) {
-                medicamentToSubmit.atcCode = this.eForm.get('medicament.atcCode').value.code;
-            }
-            else
-            {
-                medicamentToSubmit.atcCode = this.eForm.get('medicament.atcCode').value;
+        if (this.eForm.get('medicament.atcCodeTo').value) {
+            if (this.eForm.get('medicament.atcCodeTo').value.code) {
+                medicamentToSubmit.atcCodeTo = this.eForm.get('medicament.atcCodeTo').value.code;
+            } else {
+                medicamentToSubmit.atcCodeTo = this.eForm.get('medicament.atcCodeTo').value;
             }
         }
-        if (this.eForm.get('medicament.prescription').value) {
-            medicamentToSubmit.prescription = this.eForm.get('medicament.prescription').value.value;
+        if (this.eForm.get('medicament.prescriptionTo').value) {
+            medicamentToSubmit.prescriptionTo = this.eForm.get('medicament.prescriptionTo').value.value;
         }
         modelToSubmit.medicamentHistory.push(medicamentToSubmit);
 
@@ -841,16 +844,16 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
             if (result.response) {
                 this.activeSubstancesTable.push({
                     activeSubstance: result.activeSubstance,
-                    quantity: result.activeSubstanceQuantity,
-                    unitsOfMeasurement: result.activeSubstanceUnit,
-                    manufacture: result.manufactureSA,
-                    status : result.status
+                    quantityTo: result.activeSubstanceQuantity,
+                    unitsOfMeasurementTo: result.activeSubstanceUnit,
+                    manufactureTo: result.manufactureSA,
+                    status: result.status
                 });
 
-                if (this.eForm.get('medicament.dose').value == null || this.eForm.get('medicament.dose').value.length == 0) {
-                    this.eForm.get('medicament.dose').setValue(result.activeSubstanceQuantity + ' ' + result.activeSubstanceUnit.description);
+                if (this.eForm.get('medicament.doseTo').value == null || this.eForm.get('medicament.doseTo').value.length == 0) {
+                    this.eForm.get('medicament.doseTo').setValue(result.activeSubstanceQuantity + ' ' + result.activeSubstanceUnit.description);
                 } else {
-                    this.eForm.get('medicament.dose').setValue(this.eForm.get('medicament.dose').value + ' + ' + result.activeSubstanceQuantity + ' ' + result.activeSubstanceUnit.description);
+                    this.eForm.get('medicament.doseTo').setValue(this.eForm.get('medicament.doseTo').value + ' + ' + result.activeSubstanceQuantity + ' ' + result.activeSubstanceUnit.description);
                 }
             }
         });
@@ -865,8 +868,14 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
 
         dialogConfig2.height = '650px';
         dialogConfig2.width = '600px';
-        dialogConfig2.data = substance;
-        dialogConfig2.data.disableSubstance = true;
+        dialogConfig2.data = {
+            activeSubstance: substance.activeSubstance,
+            quantity: substance.quantityTo,
+            unitsOfMeasurement: substance.unitsOfMeasurementTo,
+            manufacture: substance.manufactureTo,
+            status: substance.status
+        };
+        dialogConfig2.data.disableSubstance = (substance.status && substance.status == 'O');
 
         let dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
@@ -874,22 +883,45 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
             if (result && result.response) {
                 this.activeSubstancesTable[index] = {
                     activeSubstance: result.activeSubstance,
-                    quantity: result.activeSubstanceQuantity,
-                    unitsOfMeasurement: result.activeSubstanceUnit,
-                    manufacture: result.manufactureSA,
+                    quantityTo: result.activeSubstanceQuantity,
+                    unitsOfMeasurementTo: result.activeSubstanceUnit,
+                    manufactureTo: result.manufactureSA,
                     status: result.status,
                 };
 
-                this.eForm.get('medicament.dose').setValue(null);
+                this.eForm.get('medicament.doseTo').setValue(null);
                 for (let as of this.activeSubstancesTable) {
-                    if (this.eForm.get('medicament.dose').value == null || this.eForm.get('medicament.dose').value.length == 0) {
-                        this.eForm.get('medicament.dose').setValue(as.quantity + ' ' + as.unitsOfMeasurement.description);
+                    if (this.eForm.get('medicament.doseTo').value == null || this.eForm.get('medicament.doseTo').value.length == 0) {
+                        this.eForm.get('medicament.doseTo').setValue(as.quantityTo + ' ' + as.unitsOfMeasurementTo.description);
                     } else {
-                        this.eForm.get('medicament.dose').setValue(this.eForm.get('medicament.dose').value + ' + ' + as.quantity + ' ' + as.unitsOfMeasurement.description);
+                        this.eForm.get('medicament.doseTo').setValue(this.eForm.get('medicament.doseTo').value + ' + ' + as.quantityTo + ' ' + as.unitsOfMeasurementTo.description);
                     }
                 }
             }
         });
+    }
+
+    ngOnDestroy(): void {
+        this.navbarTitleService.showTitleMsg('');
+        this.subscriptions.forEach(s => s.unsubscribe());
+
+    }
+
+    showMedicamentDetails() {
+
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.width = '1100px';
+
+        dialogConfig2.data = {
+            value: this.medicamentsDetails[0].code
+        };
+
+        this.dialog.open(MedicamentDetailsDialogComponent, dialogConfig2);
     }
 
 }

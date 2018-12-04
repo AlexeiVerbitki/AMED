@@ -24,4 +24,6 @@ public interface NmPricesRepository extends JpaRepository<NmPricesEntity, Intege
             "      m.status = ?3\n"
             , nativeQuery = true)
     List<NmPricesEntity> findAllOriginalMedsSource(Integer internationalNameId, Integer typeId, String status);
+
+    NmPricesEntity findOneById(Integer id);
 }

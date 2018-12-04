@@ -1,14 +1,14 @@
 <div class="container-fluid sky z-depth-2">
-  <form [formGroup]='expertForm'>
+	<form [formGroup]='expertForm'>
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-5">
 				<div class="md-form">
 					<input id="nrCererii" mdbInputDirective type="text" class="form-control" formControlName="requestNumber"
-					 [attr.disabled]="true">
+					       [attr.disabled]="true">
 					<label for="nrCererii">Nr. cererii</label>
 				</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-5">
 				<div class="md-form-modified">
 					<mat-form-field class="w-100">
 						<input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data">
@@ -17,24 +17,31 @@
 					</mat-form-field>
 				</div>
 			</div>
+			<div class="col-md-2">
+				<div class="position-button">
+					<button type="button" class="btn btn-mdb-color btn-sm" title="Cartela medicament" (click)="showMedicamentDetails()">
+						<i class="fa fa-medkit fa-lg" aria-hidden="true"></i>
+					</button>
+				</div>
+			</div>
 		</div>
 		<hr>
 		<app-expert-comitee [expert]="expert" [formSubmitted]="formSubmitted" [type]="type"></app-expert-comitee>
 		<app-document [documents]="documents" [nrCerere]="expertForm.get('requestNumber').value" [dcTypes]="docTypes"
-		 (documentModified)="documentModified($event)"></app-document>
+		              (documentModified)="documentModified($event)"></app-document>
 		<hr>
 		<h5 class="text-center font-weight-bold">Detalii medicament</h5>
 		<div class="row">
 			<div class="col-md-6">
 				<div class="md-form">
 					<input id="compSolicitant" mdbInputDirective type="text" class="form-control" formControlName="companyValue"
-					 [attr.disabled]="true">
+					       [attr.disabled]="true">
 					<label for="compSolicitant">Compania solicitant</label>
 				</div>
 			</div>
 			<div class="col-md-6">
 				<div class="md-form" formGroupName="medicament">
-					<input id="med" mdbInputDirective type="text" class="form-control" formControlName="commercialName" [attr.disabled]="true">
+					<input id="med" mdbInputDirective type="text" class="form-control" formControlName="commercialNameTo" [attr.disabled]="true">
 					<label for="med">Denumire comerciala medicament</label>
 				</div>
 			</div>
@@ -53,19 +60,19 @@
 		<div class="card-body card-body-cascade">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
-					<tr>
-						<th scope="col">Nr.</th>
-						<th scope="col">Denumire</th>
-						<th scope="col">Status</th>
-					</tr>
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Denumire</th>
+					<th scope="col">Status</th>
+				</tr>
 				</thead>
 				<tbody>
-					<tr *ngFor="let division of divisions;let i = index">
-						<td>{{ i + 1 }}</td>
-						<td>{{ division.description }}</td>
-						<td *ngIf="division.old==1">Divizare existenta</td>
-						<td *ngIf="division.old==0">Divizare noua</td>
-					</tr>
+				<tr *ngFor="let division of divisions;let i = index">
+					<td>{{ i + 1 }}</td>
+					<td>{{ division.description }}</td>
+					<td *ngIf="division.old==1">Divizare existenta</td>
+					<td *ngIf="division.old==0">Divizare noua</td>
+				</tr>
 				</tbody>
 			</table>
 		</div>
@@ -85,26 +92,26 @@
 		<div class="card-body card-body-cascade">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
-					<tr>
-						<th scope="col">Denumire</th>
-						<th scope="col">Cod CAS</th>
-						<th scope="col">Concentratie</th>
-						<th scope="col">Unitate de masură</th>
-						<th scope="col">Producător</th>
-						<th scope="col">Ţară producător</th>
-						<th scope="col">Adresă producător</th>
-					</tr>
+				<tr>
+					<th scope="col">Denumire</th>
+					<th scope="col">Cod CAS</th>
+					<th scope="col">Concentratie</th>
+					<th scope="col">Unitate de masură</th>
+					<th scope="col">Producător</th>
+					<th scope="col">Ţară producător</th>
+					<th scope="col">Adresă producător</th>
+				</tr>
 				</thead>
 				<tbody>
-					<tr *ngFor="let substance of activeSubstancesTable;let i = index">
-						<th scope="row">{{ substance.activeSubstance.description }}</th>
-						<td>{{ substance.activeSubstance.code }}</td>
-						<td>{{ substance.quantity }}</td>
-						<td>{{ substance.unitsOfMeasurement.description }}</td>
-						<td>{{ substance.manufacture.description }}</td>
-						<td>{{ substance.manufacture.country.description }}</td>
-						<td>{{ substance.manufacture.address }}</td>
-					</tr>
+				<tr *ngFor="let substance of activeSubstancesTable;let i = index">
+					<th scope="row">{{ substance.activeSubstance.description }}</th>
+					<td>{{ substance.activeSubstance.code }}</td>
+					<td>{{ substance.quantityTo }}</td>
+					<td>{{ substance.unitsOfMeasurementTo.description }}</td>
+					<td>{{ substance.manufactureTo.description }}</td>
+					<td>{{ substance.manufactureTo.country.description }}</td>
+					<td>{{ substance.manufactureTo.address }}</td>
+				</tr>
 				</tbody>
 			</table>
 		</div>
@@ -114,97 +121,99 @@
 		<div class="row" formGroupName="medicament">
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="dose" mdbInputDirective type="text" class="form-control" formControlName="dose" [attr.disabled]="true">
+					<input id="dose" mdbInputDirective type="text" class="form-control" formControlName="doseTo" [attr.disabled]="true">
 					<label for="dose">Doza</label>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="volum" mdbInputDirective type="text" class="form-control" formControlName="volume">
+					<input id="volum" mdbInputDirective type="text" class="form-control" formControlName="volumeTo">
 					<label for="volum">Volum </label>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="volumeQuantityMeasurement" mdbInputDirective type="text" class="form-control" formControlName="volumeQuantityMeasurement"
-					 [attr.disabled]="true">
+					<input id="volumeQuantityMeasurement" mdbInputDirective type="text" class="form-control" formControlName="volumeQuantityMeasurementTo"
+					       [attr.disabled]="true">
 					<label for="volumeQuantityMeasurement">Unitate de masura (volum)</label>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="atcCode" mdbInputDirective type="text" class="form-control" formControlName="atcCode" [attr.disabled]="true">
+					<input id="atcCode" mdbInputDirective type="text" class="form-control" formControlName="atcCodeTo" [attr.disabled]="true">
 					<label for="atcCode">Cod ATC</label>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
 					<input id="pharmaceuticalFormType" mdbInputDirective type="text" class="form-control" formControlName="pharmaceuticalFormType"
-					 [attr.disabled]="true">
+					       [attr.disabled]="true">
 					<label for="pharmaceuticalFormType">Tip forma farmaceutica</label>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="pharmaceuticalForm" mdbInputDirective type="text" class="form-control" formControlName="pharmaceuticalForm"
-					 [attr.disabled]="true">
+					<input id="pharmaceuticalForm" mdbInputDirective type="text" class="form-control" formControlName="pharmaceuticalFormTo"
+					       [attr.disabled]="true">
 					<label for="pharmaceuticalForm">Denumire forma farmaceutica</label>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="group" mdbInputDirective type="text" class="form-control" formControlName="group" [attr.disabled]="true">
+					<input id="group" mdbInputDirective type="text" class="form-control" formControlName="groupTo" [attr.disabled]="true">
 					<label for="group">Grupa medicament</label>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="prescription" mdbInputDirective type="text" class="form-control" formControlName="prescription"
-					 [attr.disabled]="true">
+					<input id="prescription" mdbInputDirective type="text" class="form-control" formControlName="prescriptionTo"
+					       [attr.disabled]="true">
 					<label for="prescription">Eliberare receta</label>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="internationalMedicamentName" mdbInputDirective type="text" class="form-control" formControlName="internationalMedicamentName"
-					 [attr.disabled]="true">
+					<input id="internationalMedicamentName" mdbInputDirective type="text" class="form-control" formControlName="internationalMedicamentNameTo"
+					       [attr.disabled]="true">
 					<label for="prescription">Denumirea internationala</label>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="termenVal" mdbInputDirective type="number" class="form-control" formControlName="termsOfValidity">
+					<input id="termenVal" mdbInputDirective type="number" class="form-control" formControlName="termsOfValidityTo">
 					<label for="termenVal">Termen de valabilitate (luni) <span class="text-danger">*</span></label>
 				</div>
-				<div *ngIf="formSubmitted && expertForm.get('medicament.termsOfValidity').invalid">
+				<div *ngIf="formSubmitted && expertForm.get('medicament.termsOfValidityTo').invalid">
 					<small class="text-muted"><strong class="text-danger">Termenul de valabilitate trebuie introdus</strong></small>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="medicamentType" mdbInputDirective type="text" class="form-control" formControlName="medicamentType"
-					 [attr.disabled]="true">
+					<input id="medicamentType" mdbInputDirective type="text" class="form-control" formControlName="medicamentTypeTo"
+					       [attr.disabled]="true">
 					<label for="medicamentType">Clasificarea medicamentului</label>
 				</div>
 			</div>
+		</div>
+		<div class="row" formGroupName="medicament">
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="authorizationHolder" mdbInputDirective type="text" class="form-control" formControlName="authorizationHolder"
-					 [attr.disabled]="true">
+					<input id="authorizationHolder" mdbInputDirective type="text" class="form-control" formControlName="authorizationHolderTo"
+					       [attr.disabled]="true">
 					<label for="medicamentType">Deţinătorul certificatului de inregistrare</label>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
 					<input id="taraDetinAutProd" mdbInputDirective type="text" formControlName="authorizationHolderCountry" class="form-control"
-					 [attr.disabled]="true">
+					       [attr.disabled]="true">
 					<label for="taraDetinAutProd">Ţara deţinătorului certificatului de inregistrare</label>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
 					<input id="adresaDetAutProd" mdbInputDirective type="text" formControlName="authorizationHolderAddress" class="form-control"
-					 [attr.disabled]="true">
+					       [attr.disabled]="true">
 					<label for="adresaDetAutProd">Adresa deţinătorului certificatului de inregistrare</label>
 				</div>
 			</div>
@@ -226,22 +235,22 @@
 		<div class="card-body card-body-cascade">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
-					<tr>
-						<th scope="col">Denumire</th>
-						<th scope="col">Tara</th>
-						<th scope="col">Adresa</th>
-						<th scope="col">Producator produs finit</th>
-					</tr>
+				<tr>
+					<th scope="col">Denumire</th>
+					<th scope="col">Tara</th>
+					<th scope="col">Adresa</th>
+					<th scope="col">Producator produs finit</th>
+				</tr>
 				</thead>
 				<tbody>
-					<tr *ngFor="let manufacture of manufacturesTable;let i = index">
-						<td>{{ manufacture.manufacture.description }}</td>
-						<td>{{ manufacture.manufacture.country.description }}</td>
-						<td>{{ manufacture.manufacture.address }}</td>
-						<th scope="row">
-							<mat-checkbox [checked]="manufacture.producatorProdusFinit" [disabled]="true"></mat-checkbox>
-						</th>
-					</tr>
+				<tr *ngFor="let manufacture of manufacturesTable;let i = index">
+					<td>{{ manufacture.manufacture.description }}</td>
+					<td>{{ manufacture.manufacture.country.description }}</td>
+					<td>{{ manufacture.manufacture.address }}</td>
+					<th scope="row">
+						<mat-checkbox [checked]="manufacture.producatorProdusFinitTo" [disabled]="true"></mat-checkbox>
+					</th>
+				</tr>
 				</tbody>
 			</table>
 		</div>
@@ -262,32 +271,32 @@
 		<div class="card-body card-body-cascade">
 			<table class="table table-widths-lg text-center">
 				<thead class="bg-sidebar white-text">
-					<tr>
-						<th scope="col">Denumirea</th>
-						<th scope="col">Numar</th>
-						<th scope="col">Status document</th>
-						<th>Actiuni</th>
-					</tr>
+				<tr>
+					<th scope="col">Denumirea</th>
+					<th scope="col">Numar</th>
+					<th scope="col">Status document</th>
+					<th>Actiuni</th>
+				</tr>
 				</thead>
 				<tbody>
-					<tr *ngFor="let a of outputDocuments">
-						<th scope="row" *ngIf="a.docType && (a.docType.category=='OM' || a.docType.category=='MP')">{{ a.name }}</th>
-						<th scope="row" *ngIf="a.docType && (a.docType.category=='OM' || a.docType.category=='MP')">{{ a.number }}</th>
-						<th scope="row" *ngIf="a.docType && (a.docType.category=='OM' || a.docType.category=='MP')">{{ a.status }}</th>
-						<td *ngIf="a.docType && (a.docType.category=='OM' || a.docType.category=='MP')">
-							<button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)"><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
-						</td>
-					</tr>
+				<tr *ngFor="let a of outputDocuments">
+					<th scope="row" *ngIf="a.docType && (a.docType.category=='OM' || a.docType.category=='MP')">{{ a.name }}</th>
+					<th scope="row" *ngIf="a.docType && (a.docType.category=='OM' || a.docType.category=='MP')">{{ a.number }}</th>
+					<th scope="row" *ngIf="a.docType && (a.docType.category=='OM' || a.docType.category=='MP')">{{ a.status }}</th>
+					<td *ngIf="a.docType && (a.docType.category=='OM' || a.docType.category=='MP')">
+						<button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)"><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
+					</td>
+				</tr>
 				</tbody>
 			</table>
-			</div>
-			<!--<div *ngIf="formSubmitted && isNonAttachedDocuments">-->
-			<!--<small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong></small>-->
-			<!--</div>-->
-			<hr>
-			<div class="text-center">
-				<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="finish()">Finisare</button>
-				<!--<button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>-->
-			</div>
+		</div>
+		<!--<div *ngIf="formSubmitted && isNonAttachedDocuments">-->
+		<!--<small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong></small>-->
+		<!--</div>-->
+		<hr>
+		<div class="text-center">
+			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="finish()">Finisare</button>
+			<!--<button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>-->
+		</div>
 	</form>
 </div>

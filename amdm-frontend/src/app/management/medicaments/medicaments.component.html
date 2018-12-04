@@ -1,5 +1,4 @@
 <div class="container-fluid sky z-depth-2">
-  <h3 class="text-center my-1 font-weight-bold">Cautare medicamente</h3>
   <form [formGroup]='mForm'>
       <!--prima linie-->
       <div class="row">
@@ -203,11 +202,20 @@
       </div>
     </div>
   </form>
+  <div class="gradient-card-header bg-sidebar border-gradient">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-6">
+          <div class="card-header-title white-text">Medicamente</div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="table-width">
     <div class="example-container">
       <table mat-table [dataSource]="dataSource" matSort>
         <ng-container matColumnDef="code">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Cod medicament</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Cod medicament</th>
           <td mat-cell *matCellDef="let element">
             <a title="Deschide medicament" (click)="showMedicamentDetails(element)">
               {{element.code}}
@@ -216,37 +224,37 @@
         </ng-container>
 
         <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Denumire comerciala</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Denumire comerciala</th>
           <td mat-cell *matCellDef="let element"> {{element.commercialName}} </td>
         </ng-container>
 
         <ng-container matColumnDef="atcCode">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Cod ATC</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Cod ATC</th>
           <td mat-cell *matCellDef="let element"> {{element.atcCode}} </td>
         </ng-container>
 
         <ng-container matColumnDef="registerNumber">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Numar de inregistrare</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Numar de inregistrare</th>
           <td mat-cell *matCellDef="let element"> {{element.registerNumber}} </td>
         </ng-container>
 
         <ng-container matColumnDef="registrationDate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Data inregistrarii</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Data inregistrarii</th>
           <td mat-cell *matCellDef="let element"> {{element.registrationDate}} </td>
         </ng-container>
 
         <ng-container matColumnDef="division">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Divizare</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Divizare</th>
           <td mat-cell *matCellDef="let element"> {{element.division}} </td>
         </ng-container>
 
         <ng-container matColumnDef="authorizationHolder">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Deţinătorul certificatului de inregistrare</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Deţinătorul certificatului de inregistrare</th>
           <td mat-cell *matCellDef="let element"> {{element.authorizationHolderDescription}} </td>
         </ng-container>
 
         <ng-container matColumnDef="expirationDate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Data expirarii</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Data expirarii</th>
           <td mat-cell *matCellDef="let element"> {{element.expirationDate}} </td>
         </ng-container>
 
@@ -255,5 +263,6 @@
       </table>
       <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
     </div>
+    <div *ngIf="dataSource.data.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
   </div>
 </div>

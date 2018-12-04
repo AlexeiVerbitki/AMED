@@ -16,11 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -206,6 +208,13 @@ public class AdministrationController
     {
         LOGGER.debug("Retrieve service charges");
         return new ResponseEntity<>(serviceChargesRepositorys.findAll(), HttpStatus.OK);
+    }
+
+    @RequestMapping("/find-service-charge-by-code")
+    public ResponseEntity<ServiceChargesEntity> retrieveServiceChargeByCategory(@RequestParam(value = "category") String category)
+    {
+        LOGGER.debug("Retrieve service charge by category" + category);
+        return new ResponseEntity<>(serviceChargesRepositorys.findByCategory(category).get(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/generate-receipt-nr")

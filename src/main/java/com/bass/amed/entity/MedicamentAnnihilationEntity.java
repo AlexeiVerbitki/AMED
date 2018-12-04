@@ -6,15 +6,19 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "medicament_annihilation", schema = "amed", catalog = "")
+@Table(name = "medicament_annihilation", schema = "amed")
 public class MedicamentAnnihilationEntity
 {
     private Integer id;
-    private Set<PaymentOrdersEntity> paymentOrders;
     private List<MedicamentAnnihilationMedsEntity> medicamentsMedicamentAnnihilationMeds;
+    private Set<MedicamentAnnihilationInsitutionEntity> medicamentAnnihilationInsitutions;
     private String status;
     private Set<DocumentsEntity> documents;
-    private Set<AnnihilationCommisionsEntity> commisions;
+//    private Set<AnnihilationCommisionsEntity> commisions;
+    private String idno;
+    private String firstname;
+    private String lastname;
+    private String companyName;
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
@@ -27,20 +31,6 @@ public class MedicamentAnnihilationEntity
     public void setId(Integer id)
     {
         this.id = id;
-    }
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
-    @JoinTable(name = "medicament_annihilation_payment_orders", joinColumns = {
-            @JoinColumn(name = "medicament_annihilation_id")}, inverseJoinColumns = {
-            @JoinColumn(name = "payment_id")})
-    public Set<PaymentOrdersEntity> getPaymentOrders()
-    {
-        return paymentOrders;
-    }
-
-    public void setPaymentOrders(Set<PaymentOrdersEntity> paymentOrders)
-    {
-        this.paymentOrders = paymentOrders;
     }
 
     @Transient
@@ -81,18 +71,77 @@ public class MedicamentAnnihilationEntity
     }
 
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinTable(name = "med_annihilation_commisions", joinColumns = {
-            @JoinColumn(name = "med_annihilation_id")}, inverseJoinColumns = {
-            @JoinColumn(name = "annihilation_commision_id")})
-    public Set<AnnihilationCommisionsEntity> getCommisions()
+//    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+//    @JoinTable(name = "med_annihilation_commisions", joinColumns = {
+//            @JoinColumn(name = "med_annihilation_id")}, inverseJoinColumns = {
+//            @JoinColumn(name = "annihilation_commision_id")})
+//    public Set<AnnihilationCommisionsEntity> getCommisions()
+//    {
+//        return commisions;
+//    }
+//
+//    public void setCommisions(Set<AnnihilationCommisionsEntity> commisions)
+//    {
+//        this.commisions = commisions;
+//    }
+
+    @Basic
+    @Column(name = "idno")
+    public String getIdno()
     {
-        return commisions;
+        return idno;
     }
 
-    public void setCommisions(Set<AnnihilationCommisionsEntity> commisions)
+    public void setIdno(String idno)
     {
-        this.commisions = commisions;
+        this.idno = idno;
+    }
+
+    @Basic
+    @Column(name = "firstname")
+    public String getFirstname()
+    {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname)
+    {
+        this.firstname = firstname;
+    }
+
+    @Basic
+    @Column(name = "lastname")
+    public String getLastname()
+    {
+        return lastname;
+    }
+
+    public void setLastname(String lastname)
+    {
+        this.lastname = lastname;
+    }
+
+    @Transient
+    public String getCompanyName()
+    {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName)
+    {
+        this.companyName = companyName;
+    }
+
+    @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "med_annihilation_id")
+    public Set<MedicamentAnnihilationInsitutionEntity> getMedicamentAnnihilationInsitutions()
+    {
+        return medicamentAnnihilationInsitutions;
+    }
+
+    public void setMedicamentAnnihilationInsitutions(Set<MedicamentAnnihilationInsitutionEntity> medicamentAnnihilationInsitutions)
+    {
+        this.medicamentAnnihilationInsitutions = medicamentAnnihilationInsitutions;
     }
 
     @Override
@@ -102,7 +151,6 @@ public class MedicamentAnnihilationEntity
         if (o == null || getClass() != o.getClass()) return false;
         MedicamentAnnihilationEntity that = (MedicamentAnnihilationEntity) o;
         return Objects.equals(id, that.id) &&
-                Objects.equals(paymentOrders, that.paymentOrders) &&
                 Objects.equals(medicamentsMedicamentAnnihilationMeds, that.medicamentsMedicamentAnnihilationMeds) &&
                 Objects.equals(status, that.status) &&
                 Objects.equals(documents, that.documents);
@@ -111,6 +159,6 @@ public class MedicamentAnnihilationEntity
     @Override
     public int hashCode()
     {
-        return Objects.hash(id, paymentOrders, medicamentsMedicamentAnnihilationMeds, status, documents);
+        return Objects.hash(id, medicamentsMedicamentAnnihilationMeds, status, documents);
     }
 }

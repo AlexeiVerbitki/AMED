@@ -15,6 +15,7 @@ import {RequestAdditionalDataDialogComponent} from "../../../dialog/request-addi
 import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
 import {TaskService} from "../../../shared/service/task.service";
 import {LoaderService} from "../../../shared/service/loader.service";
+import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
 
 @Component({
     selector: 'app-process-interruption',
@@ -41,6 +42,7 @@ export class ProcessInterruptionComponent implements OnInit {
                 private medicamentService: MedicamentService,
                 private requestService: RequestService,
                 private errorHandlerService: ErrorHandlerService,
+                private navbarTitleService: NavbarTitleService,
                 private taskService: TaskService,
                 private loadingService: LoaderService,
                 public dialogConfirmation: MatDialog,
@@ -63,6 +65,8 @@ export class ProcessInterruptionComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.navbarTitleService.showTitleMsg('Înregistrare documente / Întrerupere proces');
+
         this.modalService.data.next('');
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
                 this.subscriptions.push(this.requestService.getMedicamentRequest(params['id']).subscribe(data => {
@@ -371,5 +375,10 @@ export class ProcessInterruptionComponent implements OnInit {
         // return dialogRef.afterClosed();
         return true;
 
+    }
+
+    ngOnDestroy(): void {
+        this.navbarTitleService.showTitleMsg('');
+        this.subscriptions.forEach(s => s.unsubscribe());
     }
 }

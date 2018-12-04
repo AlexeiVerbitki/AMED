@@ -48,7 +48,7 @@ export class MedicamentHistoryDialogComponent implements OnInit {
         dialogConfig2.data = {
             order: order,
             historyDetails: this.initialData,
-            medicamentDetails: this.dataDialog.value
+          //  medicamentDetails: this.dataDialog.value
         };
 
         this.dialog.open(MedicamentModificationsDialogComponent, dialogConfig2);

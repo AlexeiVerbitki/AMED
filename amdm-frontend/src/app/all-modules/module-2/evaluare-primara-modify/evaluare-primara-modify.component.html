@@ -1,20 +1,27 @@
 <div class="container-fluid sky z-depth-2">
 	<form [formGroup]="eForm">
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-5">
 				<div class="md-form">
 					<input id="nrCererii" mdbInputDirective type="text" class="form-control" formControlName="requestNumber"
 					 [attr.disabled]="true">
 					<label for="nrCererii">Nr. cererii</label>
 				</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-5">
 				<div class="md-form-modified">
 					<mat-form-field class="w-100">
 						<input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data">
 						<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
 						<mat-datepicker touchUi #picker></mat-datepicker>
 					</mat-form-field>
+				</div>
+			</div>
+			<div class="col-md-2">
+				<div class="position-button">
+					<button type="button" class="btn btn-mdb-color btn-sm" title="Cartela medicament" (click)="showMedicamentDetails()">
+						<i class="fa fa-medkit fa-lg" aria-hidden="true"></i>
+					</button>
 				</div>
 			</div>
 		</div>
@@ -29,7 +36,7 @@
 			</div>
 			<div class="col-md-6">
 				<div class="md-form" formGroupName="medicament">
-					<input id="med" mdbInputDirective type="text" class="form-control" formControlName="commercialName">
+					<input id="med" mdbInputDirective type="text" class="form-control" formControlName="commercialNameTo">
 					<label for="med">Denumire comerciala medicament</label>
 				</div>
 			</div>
@@ -129,11 +136,11 @@
 					<tr *ngFor="let substance of activeSubstancesTable;let i = index">
 						<th scope="row">{{ substance.activeSubstance.description }}</th>
 						<td>{{ substance.activeSubstance.code }}</td>
-						<td>{{ substance.quantity }}</td>
-						<td>{{ substance.unitsOfMeasurement.description }}</td>
-						<td>{{ substance.manufacture.description }}</td>
-						<td>{{ substance.manufacture.country.description }}</td>
-						<td>{{ substance.manufacture.address }}</td>
+						<td>{{ substance.quantityTo }}</td>
+						<td>{{ substance.unitsOfMeasurementTo.description }}</td>
+						<td>{{ substance.manufactureTo.description }}</td>
+						<td>{{ substance.manufactureTo.country.description }}</td>
+						<td>{{ substance.manufactureTo.address }}</td>
 						<td *ngIf="substance.status=='O'">Substanta existenta</td>
 						<td *ngIf="substance.status!='O'">Substanta noua</td>
 						<td>
@@ -156,13 +163,13 @@
 		<div class="row" formGroupName="medicament">
 <div class="col-md-4">
 				<div class="md-form">
-					<input id="dose" mdbInputDirective type="text" class="form-control" formControlName="dose" [attr.disabled]="true">
+					<input id="dose" mdbInputDirective type="text" class="form-control" formControlName="doseTo" [attr.disabled]="true">
 					<label for="dose">Doza</label>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="volum" mdbInputDirective type="text" class="form-control" formControlName="volume">
+					<input id="volum" mdbInputDirective type="text" class="form-control" formControlName="volumeTo">
 					<label for="volum">Volum </label>
 				</div>
 			</div>
@@ -171,7 +178,7 @@
 					<ng-select id="volumUnit" name="medUnit" [items]="volumeUnitsOfMeasurement"
 					           bindLabel="description"
 					           placeholder="Unitate de masura (volum)"
-					           formControlName="volumeQuantityMeasurement">
+					           formControlName="volumeQuantityMeasurementTo">
 					</ng-select>
 				</div>
 			</div>
@@ -180,7 +187,7 @@
 					<ng-select [items]="atcCodes | async"
 					           bindLabel="code"
 					           placeholder="Cod ATC"
-					           formControlName="atcCode"
+					           formControlName="atcCodeTo"
 					           [loading]="loadingAtcCodes"
 					           [typeahead]="atcCodesInputs"
 					           required="true">
@@ -189,7 +196,7 @@
 							<small class="form-text text-muted">{{item.description}}</small>
 						</ng-template>
 					</ng-select>
-					<div *ngIf="formSubmitted && eForm.get('medicament.atcCode').invalid">
+					<div *ngIf="formSubmitted && eForm.get('medicament.atcCodeTo').invalid">
 						<small class="text-muted"><strong class="text-danger">Codul ATC trebuie introdus</strong></small>
 					</div>
 				</div>
@@ -208,9 +215,9 @@
 			<div class="col-4">
 				<div class="md-form-modified">
 					<ng-select id="pharmaceuticalForms" name="pharmaceuticalForms" [items]="pharmaceuticalForms" bindLabel="description"
-					           placeholder="Denumire forma farmaceutica" formControlName="pharmaceuticalForm" required="true">
+					           placeholder="Denumire forma farmaceutica" formControlName="pharmaceuticalFormTo" required="true">
 					</ng-select>
-					<div *ngIf="formSubmitted && eForm.get('medicament.pharmaceuticalForm').invalid">
+					<div *ngIf="formSubmitted && eForm.get('medicament.pharmaceuticalFormTo').invalid">
 						<small class="text-muted"><strong class="text-danger">Denumirea trebuie selectata</strong></small>
 					</div>
 				</div>
@@ -218,9 +225,9 @@
 			<div class="col-4">
 				<div class="md-form-modified">
 					<ng-select id="group" name="group" [items]="groups" bindLabel="description"
-					           placeholder="Grupa medicament" formControlName="group" required="true">
+					           placeholder="Grupa medicament" formControlName="groupTo" required="true">
 					</ng-select>
-					<div *ngIf="formSubmitted && eForm.get('medicament.group').invalid">
+					<div *ngIf="formSubmitted && eForm.get('medicament.groupTo').invalid">
 						<small class="text-muted"><strong class="text-danger">Grupa medicament trebuie selectata</strong></small>
 					</div>
 				</div>
@@ -228,9 +235,9 @@
 			<div class="col-4">
 				<div class="md-form-modified">
 					<ng-select id="prescription" name="prescription" [items]="prescriptions" bindLabel="description"
-					           placeholder="Eliberare receta" formControlName="prescription" required="true">
+					           placeholder="Eliberare receta" formControlName="prescriptionTo" required="true">
 					</ng-select>
-					<div *ngIf="formSubmitted && eForm.get('medicament.prescription').invalid">
+					<div *ngIf="formSubmitted && eForm.get('medicament.prescriptionTo').invalid">
 						<small class="text-muted"><strong class="text-danger">Tipul eliberarii recetei trebuie selectat</strong></small>
 					</div>
 				</div>
@@ -240,19 +247,19 @@
 					<ng-select id="internationalName" name="internationalName" [items]="internationalNames"
 					           bindLabel="description"
 					           placeholder="Denumirea internationala *"
-					           formControlName="internationalMedicamentName">
+					           formControlName="internationalMedicamentNameTo">
 					</ng-select>
-					<div *ngIf="formSubmitted && eForm.get('medicament.internationalMedicamentName').invalid">
+					<div *ngIf="formSubmitted && eForm.get('medicament.internationalMedicamentNameTo').invalid">
 						<small class="text-muted"><strong class="text-danger">Denumirea comuna internationala trebuie introdusa</strong></small>
 					</div>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="termenVal" mdbInputDirective type="number" class="form-control" formControlName="termsOfValidity">
+					<input id="termenVal" mdbInputDirective type="number" class="form-control" formControlName="termsOfValidityTo">
 					<label for="termenVal">Termen de valabilitate (luni) <span class="text-danger">*</span></label>
 				</div>
-				<div *ngIf="formSubmitted && eForm.get('medicament.termsOfValidity').invalid">
+				<div *ngIf="formSubmitted && eForm.get('medicament.termsOfValidityTo').invalid">
 					<small class="text-muted"><strong class="text-danger">Termenul de valabilitate trebuie introdus</strong></small>
 				</div>
 			</div>
@@ -261,9 +268,9 @@
 					<ng-select id="medType" name="medType" [items]="medicamentTypes"
 					           bindLabel="description"
 					           placeholder="Clasificarea medicamentului *"
-					           formControlName="medicamentType">
+					           formControlName="medicamentTypeTo">
 					</ng-select>
-					<div *ngIf="formSubmitted && eForm.get('medicament.medicamentType').invalid">
+					<div *ngIf="formSubmitted && eForm.get('medicament.medicamentTypeTo').invalid">
 						<small class="text-muted"><strong class="text-danger">Clasificarea medicamentului trebuie selectata</strong></small>
 					</div>
 				</div>
@@ -277,9 +284,9 @@
 					           bindLabel="description"
 					           placeholder="Deţinătorul certificatului de inregistrare *"
 					           (ngModelChange)="fillAutorizationHolderDetails()"
-					           formControlName="authorizationHolder">
+					           formControlName="authorizationHolderTo">
 					</ng-select>
-					<div *ngIf="formSubmitted && eForm.get('medicament.authorizationHolder').invalid">
+					<div *ngIf="formSubmitted && eForm.get('medicament.authorizationHolderTo').invalid">
 						<small class="text-muted"><strong class="text-danger">Deţinătorul certificatului de inregistrare trebuie selectat</strong></small>
 					</div>
 				</div>
@@ -351,7 +358,7 @@
 						<td>{{ manufacture.manufacture.country.description }}</td>
 						<td>{{ manufacture.manufacture.address }}</td>
 						<th scope="row">
-							<mat-checkbox #checkBoxProducatorProdusFinit [checked]="manufacture.producatorProdusFinit" (change)="checkProducatorProdusFinit(manufacture,checkBoxProducatorProdusFinit)"></mat-checkbox>
+							<mat-checkbox #checkBoxProducatorProdusFinit [checked]="manufacture.producatorProdusFinitTo" (change)="checkProducatorProdusFinit(manufacture,checkBoxProducatorProdusFinit)"></mat-checkbox>
 						</th>
 						<td *ngIf="manufacture.status=='O'">Producator existent</td>
 						<td *ngIf="manufacture.status!='O'">Producator nou</td>

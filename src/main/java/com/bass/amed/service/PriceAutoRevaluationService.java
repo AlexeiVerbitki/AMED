@@ -20,6 +20,7 @@ import java.util.Optional;
 public class PriceAutoRevaluationService {
     public static final Double INCREASE_PERCENT_LIMIT = new Double(3);
     public static final Double DECREASE_PERCENT_LIMIT = new Double(5);
+    public static final Double ORIGINAL_MED_PERCENT_LIMIT = new Double(75);
 
     @Autowired
     PricesAutoRevaluationRepository pricesAutoRevaluationRepository;
@@ -30,9 +31,28 @@ public class PriceAutoRevaluationService {
     @Autowired
     private CurrencyRepository currencyRepository;
 
+    public List<CatalogPriceDTO> getGenericsPricesForRevaluation(Integer internationalNameId, Double originalMedPriceMdl) {
+        List<CatalogPriceDTO> genericMedsPrices = pricesAutoRevaluationRepository.getGenericsPricesForRevaluationByDCI(internationalNameId);
+        List<CatalogPriceDTO> genericMedsPricesFiltred = new ArrayList<>();
+
+        double maxGenericMDLPriceValue = (originalMedPriceMdl * ORIGINAL_MED_PERCENT_LIMIT) / 100;
+
+        genericMedsPrices.forEach(p -> {
+            if(p.getPriceMdl() > maxGenericMDLPriceValue) {
+                CatalogPriceDTO newPrice = new CatalogPriceDTO(p);
+                Double differencePercents = (p.getPriceMdl() * 100) / originalMedPriceMdl;
+                newPrice.setPriceMdlDifferencePercents(String.format("%.2f%%", differencePercents));
+                newPrice.setPriceMdlNew(maxGenericMDLPriceValue);
+                genericMedsPricesFiltred.add(newPrice);
+            }
+        });
+        return genericMedsPricesFiltred;
+    }
+
     public List<CatalogPriceDTO> getPricesForRevaluation() {
         List<CatalogPriceDTO> allPrices = pricesAutoRevaluationRepository.getTodayRevisionPrices();
         List<NmCurrenciesHistoryEntity> lastMonthCurrenciesAvg = getPrevMonthAVGCurrencies();
+        lastMonthCurrenciesAvg.removeIf(cur -> !cur.getCurrency().getShortDescription().equals("EUR") && !cur.getCurrency().getShortDescription().equals("USD"));
 
         List<CatalogPriceDTO> pricesToChange = new ArrayList<>();
 

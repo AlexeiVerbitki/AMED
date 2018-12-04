@@ -15,6 +15,7 @@ import {LoaderService} from "../../../shared/service/loader.service";
 import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
 import {ActiveSubstanceDialogComponent} from "../../../dialog/active-substance-dialog/active-substance-dialog.component";
+import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
 
 @Component({
     selector: 'app-evaluare-primara',
@@ -65,6 +66,7 @@ export class EvaluarePrimaraComponent implements OnInit {
                 private documentService: DocumentService,
                 private taskService: TaskService,
                 private errorHandlerService: ErrorHandlerService,
+                private navbarTitleService: NavbarTitleService,
                 private loadingService: LoaderService,
                 public dialogConfirmation: MatDialog,
                 private authService: AuthService,
@@ -133,6 +135,8 @@ export class EvaluarePrimaraComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.navbarTitleService.showTitleMsg('Înregistrarea medicamentului / Evaluare primara');
+
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
                 this.subscriptions.push(this.requestService.getMedicamentRequest(params['id']).subscribe(data => {
                         this.initialData = Object.assign({}, data);
@@ -899,6 +903,11 @@ export class EvaluarePrimaraComponent implements OnInit {
                 }
             }
         });
+    }
+
+    ngOnDestroy(): void {
+        this.navbarTitleService.showTitleMsg('');
+        this.subscriptions.forEach(s => s.unsubscribe());
     }
 
 }

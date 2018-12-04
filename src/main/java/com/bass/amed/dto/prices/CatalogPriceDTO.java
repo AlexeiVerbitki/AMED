@@ -6,7 +6,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
@@ -18,6 +17,7 @@ public class CatalogPriceDTO {
 
     public CatalogPriceDTO(CatalogPriceDTO c) {
         setId(c.getId());
+        setStatus(c.getStatus());
         setOrderNr(c.getOrderNr());
         setMedicamentCode(c.getMedicamentCode());
         setCommercialName(c.getCommercialName());
@@ -45,6 +45,7 @@ public class CatalogPriceDTO {
 
     @Id
     private Integer id;
+    private String status;
     private String orderNr;
     private String medicamentCode;
     private String commercialName;

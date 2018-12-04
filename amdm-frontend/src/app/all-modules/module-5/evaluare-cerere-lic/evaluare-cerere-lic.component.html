@@ -53,8 +53,8 @@
             <hr>
             <form [formGroup]="oForm">
                 <div class="row">
-                    <div class="col-md-3" *ngIf="tipCerere==='LICC'">
-                        <div class="md-form-modified-select">
+                    <div class="col-md-3" *ngIf="tipCerere === 'LICC'">
+                        <div class="md-form-modified-select" >
                             <ng-select class="custom"  [items]="companii | async"
                                        bindLabel="name"
                                        placeholder = "Agentul economic donor"
@@ -192,7 +192,7 @@
             <hr>
             <div class="example-container">
                 <table class="table table-widths text-center">
-                    <thead class="black white-text">
+                    <thead class="bg-sidebar white-text">
                     <tr>
                         <th scope="col">Tipul intreprinderii</th>
                         <th scope="col">Adresa</th>
@@ -397,7 +397,7 @@
             <hr>
 
             <table class="table table-widths-lg text-center">
-                <thead class="black white-text">
+                <thead class="bg-sidebar white-text">
                 <tr>
                     <th scope="col">Denumirea</th>
                     <th scope="col">Numar</th>

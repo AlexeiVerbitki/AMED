@@ -24,6 +24,7 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
         {short: 'R', description: 'Înregistrare'},
         {short: 'E', description: 'Evaluare'},
         {short: 'C', description: 'Întrerupt'},
+        {short: 'A', description: 'Acceptat'},
         {short: 'F', description: 'Finisat'},
     ]
 
@@ -42,8 +43,7 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
                 private route: Router,
                 private taskService: TaskService,
                 private priceService: PriceService,
-                public dialog: MatDialog,
-                private loaderService: LoaderService) {
+                public dialog: MatDialog) {
 
         this.taskForm = fb.group({
             'orderNr': [null],
@@ -60,7 +60,7 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
-        this.dataSource.paginator._intl.itemsPerPageLabel = "Prorcese pe pagina: ";
+        this.dataSource.paginator._intl.itemsPerPageLabel = "Procese pe pagină: ";
         this.dataSource.sort = this.sort;
     }
 

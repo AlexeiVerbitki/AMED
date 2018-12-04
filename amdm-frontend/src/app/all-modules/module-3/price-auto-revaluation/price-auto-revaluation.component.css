@@ -23,7 +23,7 @@ table td a {
 }
 
 .example-container {
-    height    : 610px;
+    max-height    : 360px;
     overflow : auto;
 }
 
@@ -36,7 +36,17 @@ table {
 }
 .input-currency {
     border:none; background: transparent; outline: 0; color: #0c5460;
+    outline: none;
 }
+.input-currency:focus {
+    border:none !important;
+    outline: none !important;
+    background: #43a047 !important;
+    transition: 0.5s;
+    color: #fff;
+}
+
+
 
 .md-form-modified {
     position      : relative;

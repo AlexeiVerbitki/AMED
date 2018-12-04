@@ -3,7 +3,6 @@ package com.bass.amed.service;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +44,7 @@ public class ClinicalTrailsService {
 
             ClinicTrialAmendEntity clinicTrialAmendEntity = new ClinicTrialAmendEntity();
             clinicTrialAmendEntity.setRegistrationRequestId(requests.getId());
-            clinicTrialAmendEntity.assign(clinicalTrialsEntity);
+            clinicTrialAmendEntity.assignTo(clinicalTrialsEntity);
             clinicTrialAmendEntity.setStatus("P");
             em.persist(clinicTrialAmendEntity);
 
@@ -162,7 +161,7 @@ public class ClinicalTrailsService {
         Set<CtAmendMedInstInvestigatorEntity> requestTypesStepEntityList2 = ctAmendMedInstInvestigatorRepository.findCtMedInstInvestigatorById(clinicTrialAmendEntity.getId());
 
         Set<CtAmendMedInstInvestigatorEntity> ctMedInstInvestigatorEntities = new HashSet<>();
-        clinicTrialAmendEntity.getMedicalInstitutions().forEach(medInst ->{
+        clinicTrialAmendEntity.getMedicalInstitutionsFrom().forEach(medInst ->{
             medInst.getInvestigators().forEach(investig -> {
                 CtAmendMedInstInvestigatorEntity entity = new CtAmendMedInstInvestigatorEntity(requests.getClinicalTrails().getId(), medInst.getId(), investig.getId(), Boolean.TRUE);
                 entity.setInvestigatorsEntity(investig);

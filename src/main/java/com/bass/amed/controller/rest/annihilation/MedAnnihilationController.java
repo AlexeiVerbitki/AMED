@@ -4,13 +4,11 @@ import com.bass.amed.common.Constants;
 import com.bass.amed.controller.rest.license.LicenseController;
 import com.bass.amed.dto.annihilation.ActDeReceptieDTO;
 import com.bass.amed.dto.annihilation.ProcesVerbal;
-import com.bass.amed.entity.AnnihilationCommisionsEntity;
-import com.bass.amed.entity.MedicamentEntity;
-import com.bass.amed.entity.NmEconomicAgentsEntity;
-import com.bass.amed.entity.RegistrationRequestsEntity;
+import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
 import com.bass.amed.repository.annihilation.AnnihilationCommisionRepository;
+import com.bass.amed.repository.annihilation.AnnihilationDestroyMethodsRepository;
 import com.bass.amed.service.MedicamentAnnihilationRequestService;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -53,20 +51,14 @@ public class MedAnnihilationController
     @Autowired
     private MedicamentRepository medicamentRepository;
 
+    @Autowired
+    private AnnihilationDestroyMethodsRepository annihilationDestroyMethodsRepository;
+
 
     @RequestMapping(value = "/new-annihilation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> nextNewAnnihilation(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
         LOGGER.debug("Add annihilation" + request);
-
-        Optional<NmEconomicAgentsEntity> eco = economicAgentsRepository.findById(request.getCompany().getId());
-
-        if (!eco.isPresent())
-        {
-            throw new CustomException("Economic agent not found" + request.getCompany().getId());
-        }
-
-        request.setCompany(eco.get());
 
         request.setType(requestTypeRepository.findByCode("INMD").get());
         request.getMedicamentAnnihilation().setStatus("A");
@@ -123,6 +115,14 @@ public class MedAnnihilationController
     }
 
 
+    @RequestMapping(value = "/retrieve-all-destruction-methods", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MedAnnihilationDestroyMethodsEntity>> loadAllDestructionMethods()
+    {
+        LOGGER.debug("Retrieve all destruction methods");
+        return new ResponseEntity<>(annihilationDestroyMethodsRepository.findAll(), HttpStatus.OK);
+    }
+
+
     @RequestMapping(value = "/view-act-receptie", method = RequestMethod.POST)
     public ResponseEntity<byte[]> viewActReceptie(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
@@ -136,7 +136,7 @@ public class MedAnnihilationController
             List<ActDeReceptieDTO> dataList = new ArrayList();
             ActDeReceptieDTO obj = new ActDeReceptieDTO();
             obj.setNr(request.getRequestNumber());
-            obj.setCompanyName(request.getCompany().getName());
+            obj.setCompanyName(economicAgentsRepository.findFirstByIdnoEquals(request.getMedicamentAnnihilation().getIdno()).get().getLongName());
             obj.setDate(new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format( request.getStartDate()));
 
             dataList.add(obj);
@@ -154,9 +154,9 @@ public class MedAnnihilationController
                             p.setName(med.get().getCommercialName());
                             p.setDoza(String.valueOf(med.get().getDose()));
                             p.setForma(med.get().getPharmaceuticalForm().getDescription());
-                            p.setSeria(med.get().getSerialNr());
+                            p.setSeria(m.getSeria());
                             p.setQuantity(String.valueOf(m.getQuantity()));
-//                            p.setNotes(m.getNote());
+                            p.setNotes(m.getNote());
 
                             procesVerbals.add(p);
                         }
@@ -219,7 +219,7 @@ public class MedAnnihilationController
                             p.setForma(med.get().getPharmaceuticalForm().getDescription());
                             p.setSeria(med.get().getSerialNr());
                             p.setQuantity(String.valueOf(m.getQuantity()));
-                            p.setMethodAnnihilation(m.getDestructionMethod());
+                            p.setMethodAnnihilation(m.getDestructionMethod().getDescription());
 
                             procesVerbals.add(p);
                         }

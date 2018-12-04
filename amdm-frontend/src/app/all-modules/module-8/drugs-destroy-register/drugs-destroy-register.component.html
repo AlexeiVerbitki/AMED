@@ -26,7 +26,7 @@
                 <div class="md-form-modified-select">
                     <ng-select class="custom" [items]="companii | async"
                                bindLabel="name"
-                               placeholder="Companii"
+                               placeholder="Agentul economic"
                                formControlName="company"
                                [required]="true"
                                [loading]="loadingCompany"
@@ -46,9 +46,9 @@
         </div>
 
         <app-document [documents]="docs" [nrCerere]="mForm.get('nrCererii').value" [dcTypeIdentifier]="{code : 'INMD', step : 'R'}"></app-document>
-        <div *ngIf="rFormSubbmitted && docs.length==0">
+      <!--  <div *ngIf="mFormSubbmitted && docs.length==0">
             <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
-        </div>
+        </div>-->
 
     </form>
 
@@ -105,14 +105,14 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="md-form">
                     <input id="seria" mdbInputDirective type="text" class="form-control" formControlName="seria"
                     >
                     <label for="seria">Seria</label>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="md-form">
                     <input id="quantity" mdbInputDirective type="text" class="form-control"
                            formControlName="quantity"
@@ -124,7 +124,7 @@
                     </small>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="md-form">
                     <input id="reasonDestroy" mdbInputDirective type="text" class="form-control"
                            formControlName="reasonDestroy"
@@ -160,7 +160,7 @@
 
     <hr>
     <table class="table table-widths text-center">
-        <thead class="black white-text">
+        <thead class="bg-sidebar white-text">
         <tr>
             <th scope="col">Medicament</th>
             <th scope="col">Cantitatea</th>

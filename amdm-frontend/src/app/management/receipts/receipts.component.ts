@@ -6,6 +6,7 @@ import {AdministrationService} from "../../shared/service/administration.service
 import {AddReceiptDialogComponent} from "../../dialog/add-receipt-dialog/add-receipt-dialog.component";
 import {LoaderService} from "../../shared/service/loader.service";
 import {ConfirmationDialogComponent} from "../../dialog/confirmation-dialog.component";
+import {NavbarTitleService} from "../../shared/service/navbar-title.service";
 
 @Component({
     selector: 'app-receipts',
@@ -23,6 +24,7 @@ export class ReceiptsComponent implements OnInit {
     constructor(private fb: FormBuilder,
                 private dialog: MatDialog,
                 private loadingService: LoaderService,
+                private navbarTitleService: NavbarTitleService,
                 private administrationService: AdministrationService) {
         this.rForm = fb.group({
             'receiptDateFrom': [null],
@@ -35,6 +37,7 @@ export class ReceiptsComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.navbarTitleService.showTitleMsg('Incasari');
     }
 
     clear() {
@@ -137,5 +140,11 @@ export class ReceiptsComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
         this.dataSource.paginator._intl.itemsPerPageLabel = "Prorcese pe pagina: ";
         this.dataSource.sort = this.sort;
+    }
+
+    ngOnDestroy(): void {
+        this.navbarTitleService.showTitleMsg('');
+        this.subscriptions.forEach(s => s.unsubscribe());
+
     }
 }

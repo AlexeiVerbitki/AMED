@@ -99,7 +99,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
                 }),
                 flatMap(term =>
 
-                    this.administrationService.getCompanyNamesAndIdnoList(term).pipe(
+                    this.administrationService.getCompanyDetailsForLicense(term).pipe(
                         tap(() => this.loadingCompany = false)
                     )
                 )
@@ -129,7 +129,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
             'forma': [{value: null, disabled: true}],
             'doza': [{value: null, disabled: true}],
             'ambalajPrimar': [{value: null, disabled: true}],
-            'seria': [{value: null, disabled: true}],
+            'seria': '',
             'quantity': [null, Validators.required],
             'reasonDestroy': [null, Validators.required],
             'note': '',
@@ -152,17 +152,14 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
             if (val) {
                 this.subscriptions.push(
                     this.medicamentService.getMedicamentById(val.id).subscribe(data => {
-                            console.log('medd', data);
                             this.rForm.get('forma').setValue(data.pharmaceuticalForm.description);
                             this.rForm.get('doza').setValue(data.dose);
                             this.rForm.get('ambalajPrimar').setValue(data.primarePackage);
-                            this.rForm.get('seria').setValue(data.serialNr);
                         },
                         error => {
                             this.rForm.get('forma').setValue(null);
                             this.rForm.get('doza').setValue(null);
                             this.rForm.get('ambalajPrimar').setValue(null);
-                            this.rForm.get('seria').setValue(null);
                         }
                     )
                 );
@@ -171,7 +168,6 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
                 this.rForm.get('forma').setValue(null);
                 this.rForm.get('doza').setValue(null);
                 this.rForm.get('ambalajPrimar').setValue(null);
-                this.rForm.get('seria'). setValue(null);
             }
         });
     }
@@ -181,7 +177,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
         this.fFormSubbmitted = true;
         this.mFormSubbmitted = true;
 
-        if (!this.mForm.valid || this.docs.length == 0) {
+        if (!this.mForm.valid) {
             return;
         }
 
@@ -196,10 +192,11 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
 
         annihilationModel.documents = this.docs;
         annihilationModel.medicamentsMedicamentAnnihilationMeds = this.medicamentsToDestroy;
+        annihilationModel.idno = this.mForm.get('company').value.idno;
 
         modelToSubmit.medicamentAnnihilation = annihilationModel;
         modelToSubmit.requestNumber = this.mForm.get('nrCererii').value;
-        modelToSubmit.company = {id : this.mForm.get('company').value.id};
+        // modelToSubmit.company = {id : this.mForm.get('company').value.id};
 
 
         modelToSubmit.requestHistories = [{
@@ -249,7 +246,8 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
                 medicamentName: this.rForm.get('medicaments').value.name,
                 quantity : this.rForm.get('quantity').value,
                 uselessReason : this.rForm.get('reasonDestroy').value,
-                note : this.rForm.get('note').value
+                note : this.rForm.get('note').value,
+                seria : this.rForm.get('seria').value
             }
         );
 
@@ -257,10 +255,10 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
         this.rForm.get('forma').setValue(null);
         this.rForm.get('doza').setValue(null);
         this.rForm.get('ambalajPrimar').setValue(null);
-        this.rForm.get('seria').setValue(null);
         this.rForm.get('quantity').setValue(null);
         this.rForm.get('reasonDestroy').setValue(null);
         this.rForm.get('note').setValue(null);
+        this.rForm.get('seria').setValue(null);
     }
 
     removeMedicamentToDestroy(index) {

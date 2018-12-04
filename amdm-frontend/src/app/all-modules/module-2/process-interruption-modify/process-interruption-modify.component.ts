@@ -15,6 +15,7 @@ import {RequestAdditionalDataDialogComponent} from "../../../dialog/request-addi
 import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
 import {TaskService} from "../../../shared/service/task.service";
 import {LoaderService} from "../../../shared/service/loader.service";
+import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
 
 @Component({
     selector: 'app-process-interruption',
@@ -44,6 +45,7 @@ export class ProcessInterruptionModifyComponent implements OnInit {
                 private taskService: TaskService,
                 private loadingService: LoaderService,
                 public dialogConfirmation: MatDialog,
+                private navbarTitleService: NavbarTitleService,
                 private authService: AuthService,
                 private activatedRoute: ActivatedRoute) {
         this.iForm = fb.group({
@@ -63,6 +65,8 @@ export class ProcessInterruptionModifyComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.navbarTitleService.showTitleMsg('Aprobarea modificarilor postautorizate / Întrerupere proces');
+
         this.modalService.data.next('');
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
                 this.subscriptions.push(this.requestService.getMedicamentHistory(params['id']).subscribe(data => {
@@ -72,7 +76,7 @@ export class ProcessInterruptionModifyComponent implements OnInit {
                         this.iForm.get('requestNumber').setValue(data.requestNumber);
                         this.iForm.get('company').setValue(data.company);
                         this.iForm.get('companyValue').setValue(data.company.name);
-                        this.iForm.get('medValue').setValue(data.medicamentHistory[0].commercialName);
+                        this.iForm.get('medValue').setValue(data.medicamentHistory[0].commercialNameTo);
                         this.iForm.get('requestHistories').setValue(data.requestHistories);
                         this.documents = data.documents;
                         this.outputDocuments = data.outputDocuments;
@@ -370,6 +374,12 @@ export class ProcessInterruptionModifyComponent implements OnInit {
         //
         // return dialogRef.afterClosed();
         return true;
+
+    }
+
+    ngOnDestroy(): void {
+        this.navbarTitleService.showTitleMsg('');
+        this.subscriptions.forEach(s => s.unsubscribe());
 
     }
 }

@@ -15,6 +15,7 @@ import {LoaderService} from "../../../shared/service/loader.service";
 import {TaskService} from "../../../shared/service/task.service";
 import {CanModuleDeactivate} from "../../../shared/auth-guard/can-deactivate-guard.service";
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
+import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
 
 @Component({
     selector: 'app-reg-cerere',
@@ -40,6 +41,7 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
                 private requestService: RequestService,
                 private authService: AuthService,
                 private administrationService: AdministrationService,
+                private navbarTitleService: NavbarTitleService,
                 private taskService: TaskService,
                 private errorHandlerService: ErrorHandlerService,
                 private loadingService: LoaderService,
@@ -62,6 +64,8 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
     }
 
     ngOnInit() {
+        this.navbarTitleService.showTitleMsg('Înregistrarea medicamentului / Înregistrare cerere');
+
         this.subscriptions.push(
             this.administrationService.generateDocNr().subscribe(data => {
                     this.generatedDocNrSeq = data;
@@ -138,7 +142,7 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
 
     ngOnDestroy(): void {
         this.subscriptions.forEach(s => s.unsubscribe());
-
+        this.navbarTitleService.showTitleMsg('');
     }
 
     canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {

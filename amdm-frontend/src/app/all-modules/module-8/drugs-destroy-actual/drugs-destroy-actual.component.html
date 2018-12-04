@@ -32,7 +32,8 @@
         </div>
 
         <app-document [documents]="docs" [nrCerere]="mForm.get('nrCererii').value"
-                      (documentModified)="documentAdded($event)" [dcTypeIdentifier]="{code : 'INMD', step : 'A'}"></app-document>
+                      (documentModified)="documentAdded($event)"
+                      [dcTypeIdentifier]="{code : 'INMD', step : 'A'}"></app-document>
         <div *ngIf="rFormSubbmitted && docs.length==0">
             <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
         </div>
@@ -58,31 +59,116 @@
             <th scope="row">{{ meds.medicamentName }}</th>
             <td>{{ meds.quantity }}</td>
             <td>{{ meds.uselessReason }}</td>
-            <td>{{meds.destructionMethod}}</td>
+            <td>{{meds.destructionMethod.description}}</td>
         </tr>
         </tbody>
     </table>
     <hr>
-    <h5 class="text-center font-weight-bold">Date generale</h5>
+    <h5 class="text-center font-weight-bold">Comisia</h5>
     <form [formGroup]="rForm">
         <div class="row">
             <div class="col-md-4">
                 <div class="md-form-modified-select">
+                    <ng-select [items]="responsabilities"
+                               bindLabel="value"
+                               placeholder="Responsabilitatea"
+                               formControlName="responsability"
+                               [required]="true"
+                    >
+                    </ng-select>
+                </div>
+                <div *ngIf="rFormSubbmitted && this.rForm.get('responsability').value.id && this.checkIfPresidentAlreadyAdded()">
+                    <small class="text-muted"><strong class="text-danger">Puteti selecta numai un singur presedinte al comisiei</strong>
+                    </small>
+                </div>
+                <div *ngIf="rFormSubbmitted && !rForm.get('responsability').valid">
+                    <small class="text-muted"><strong class="text-danger">Responsabilitatea trebuie selectata</strong>
+                    </small>
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+                <div class="md-form-modified-select">
                     <ng-select [items]="commisions"
                                bindLabel="description"
-                               placeholder="Comisia de nimicire"
+                               placeholder="Institutia"
                                formControlName="commision"
                                [required]="true"
-                               [multiple]="true"
                     >
                     </ng-select>
                 </div>
                 <div *ngIf="rFormSubbmitted && !rForm.get('commision').valid">
-                    <small class="text-muted"><strong class="text-danger">Comisia de nimicire trebuie selectata</strong>
+                    <small class="text-muted"><strong class="text-danger">Institutia trebuie selectata</strong>
                     </small>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="name" mdbInputDirective type="text" class="form-control"
+                           formControlName="name">
+                    <label for="name">Nume, prenume<span class="text-danger">*</span></label>
+                </div>
+                <div *ngIf="rFormSubbmitted && !rForm.get('name').valid">
+                    <small class="text-muted"><strong class="text-danger">Trebuie de introdus numele si
+                        prenumele</strong>
+                    </small>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="md-form">
+                    <input id="proffesion" mdbInputDirective type="text" class="form-control"
+                           formControlName="proffesion">
+                    <label for="proffesion">Profesia<span class="text-danger">*</span></label>
+                </div>
+                <div *ngIf="rFormSubbmitted && !rForm.get('proffesion').valid">
+                    <small class="text-muted"><strong class="text-danger">Introduceti prefesia</strong>
+                    </small>
+                </div>
+            </div>
+
+
+            <div class="col">
+                <div class="text-center">
+                    <div class="md-form mt-button">
+                        <button type="button" class="btn btn-indigo waves-light btn-sm btn-sm-bl" mdbWavesEffect
+                                (click)="addMember()">Adauga
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <table class="table table-widths text-center">
+            <thead class="black white-text">
+            <tr>
+                <th scope="col">Nume</th>
+                <th scope="col">Responsabilitatea</th>
+                <th scope="col">Institutia</th>
+                <th scope="col">Functia</th>
+                <th scope="col">Actiuni</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let mem of members;let i = index">
+                <td>{{ mem.name }}</td>
+                <th >{{ mem.memberDescription }}</th>
+                <td>{{ mem.institution.description }}</td>
+                <td>{{ mem.function }}</td>
+
+                <td>
+                    <button class="btn btn-dark-red-color waves-light btn-sm waves-light" type="button"
+                            (click)="removeMember(i)" mdbWavesEffect>Sterge
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div *ngIf="mFormSubbmitted && members.length==0">
+            <small class="text-muted"><strong class="text-danger">Nici un membru nu a fost adaugat</strong></small>
+        </div>
+        <hr>
     </form>
 
 

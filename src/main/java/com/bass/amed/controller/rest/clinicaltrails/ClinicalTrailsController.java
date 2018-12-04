@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.beans.Transient;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -32,8 +31,6 @@ public class ClinicalTrailsController {
     ClinicTrialAmendRepository clinicTrialAmendRepository;
     @Autowired
     CtAmendMedInstInvestigatorRepository ctAmendMedInstInvestigatorRepository;
-//    @Autowired
-//    CtMedAmendRepository ctMedAmendRepository;
 
     @PostMapping(value = "/save-request")
     public ResponseEntity<Integer> saveClinicalTrailRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
@@ -86,7 +83,6 @@ public class ClinicalTrailsController {
 
         RegistrationRequestsEntity registrationRequestsEntity = regOptional.get();
 
-
         ClinicTrialAmendEntity clinicTrialAmendEntity = registrationRequestsEntity.getClinicalTrails().getClinicTrialAmendEntities().stream().filter(entity ->
                 entity.getRegistrationRequestId().equals(registrationRequestsEntity.getId())
         ).findFirst().orElse(null);
@@ -105,7 +101,7 @@ public class ClinicalTrailsController {
                 ctInvestigatorEntity.setMain(medInstInvestigator.getMainInvestigator());
                 medInst.getInvestigators().add(ctInvestigatorEntity);
 
-                clinicTrialAmendEntity.getMedicalInstitutions().add(medInst);
+                clinicTrialAmendEntity.getMedicalInstitutionsFrom().add(medInst);
             });
         }
 
@@ -119,11 +115,29 @@ public class ClinicalTrailsController {
             throw new CustomException("Request was not found");
         }
 
-        ClinicTrialAmendEntity clinicTrialAmendEntity = requests.getClinicalTrails().getClinicTrialAmendEntities().stream().filter(entity ->
-                entity.getRegistrationRequestId().equals(requests.getId())
-        ).findFirst().orElse(null);
+//        ClinicTrialAmendEntity clinicTrialAmendEntity = requests.getClinicalTrails().getClinicTrialAmendEntities().stream().filter(entity ->
+//                entity.getRegistrationRequestId().equals(requests.getId())
+//        ).findFirst().orElse(null);
         clinicalTrailsService.handeMedicalInstitutionsForAmendments(requests);
 
+        requestRepository.save(requests);
+        return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
+    }
+
+    @PostMapping(value = "/add-amendment-next-reques")
+    public ResponseEntity<Integer> saveNextClinicalTrailAmendmentRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
+        if (requests.getClinicalTrails() == null) {
+            throw new CustomException("Request was not found");
+        }
+
+        clinicalTrailsService.addDDClinicalTrailsDocument(requests);
+        clinicalTrailsService.handeMedicalInstitutionsForAmendments(requests);
+
+//        ClinicTrialAmendEntity clinicTrialAmendEntity = requests.getClinicalTrails().getClinicTrialAmendEntities().stream().filter(entity ->
+//                entity.getRegistrationRequestId().equals(requests.getId())
+//        ).findFirst().orElse(null);
+
+        //clinicalTrailsService.handeMedicalInstitutions(requests);
         requestRepository.save(requests);
         return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
     }

@@ -60,21 +60,6 @@ mat-header-cell {
     color: #5cb53f !important;
 }
 
-.mat-form-field-ripple {
-    background-color: #5cb53f !important;
-}
-
-mat-label {
-    color: #fff !important;
-}
-.filter .mat-form-field-appearance-legacy .mat-form-field-label {
-    color: #fff !important;
-}
-
-mat-form-field {
-    color: #fff !important;
-}
-
 .fa-touched {
     font-size: 0.95em;
 }
@@ -91,5 +76,13 @@ mat-form-field {
 .active-white input[type=search] {
     border-bottom: 0px solid #fff;
     box-shadow: 0 1px 0 0 #fff;
+}
+
+.ng-select {
+    padding-bottom: 0px !important;
+}
+
+.md-form {
+    margin-bottom : 0em !important;
 }
 

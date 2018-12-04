@@ -14,6 +14,7 @@ import {ErrorHandlerService} from "../../../shared/service/error-handler.service
 import {LoaderService} from "../../../shared/service/loader.service";
 import {CanModuleDeactivate} from "../../../shared/auth-guard/can-deactivate-guard.service";
 import {MedicamentService} from "../../../shared/service/medicament.service";
+import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
 
 @Component({
     selector: 'app-reg-modify-cerere',
@@ -44,6 +45,7 @@ export class RegModifyCerereComponent implements OnInit, CanModuleDeactivate {
                 private taskService: TaskService,
                 private medicamentService: MedicamentService,
                 private errorHandlerService: ErrorHandlerService,
+                private navbarTitleService: NavbarTitleService,
                 private loadingService: LoaderService,
                 public dialog: MatDialog,
                 public dialogConfirmation: MatDialog) {
@@ -64,6 +66,8 @@ export class RegModifyCerereComponent implements OnInit, CanModuleDeactivate {
     }
 
     ngOnInit() {
+        this.navbarTitleService.showTitleMsg('Aprobarea modificarilor postautorizate / Inregistrare cerere');
+
         this.subscriptions.push(
             this.administrationService.generateDocNr().subscribe(data => {
                     this.generatedDocNrSeq = data;
@@ -151,8 +155,6 @@ export class RegModifyCerereComponent implements OnInit, CanModuleDeactivate {
         modelToSubmit.medicamentPostauthorizationRegisterNr = this.rForm.get('medicament').value.regnr;
         modelToSubmit.medicament = null;
 
-        console.log(modelToSubmit);
-
         this.subscriptions.push(this.requestService.addMedicamentHistoryRequest(modelToSubmit).subscribe(data => {
                 this.loadingService.hide();
                 this.router.navigate(['dashboard/module/post-modify/evaluate/' + data.body.id]);
@@ -162,7 +164,7 @@ export class RegModifyCerereComponent implements OnInit, CanModuleDeactivate {
 
     ngOnDestroy(): void {
         this.subscriptions.forEach(s => s.unsubscribe());
-
+        this.navbarTitleService.showTitleMsg('');
     }
 
     canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
