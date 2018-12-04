@@ -450,6 +450,7 @@
                             <!--<th scope="col">Ţara şi adresa producătorului materiei prime</th>-->
                             <th scope="col">Termen de valabilitate</th>
                             <th scope="col">Codul Vamal</th>
+                            <th scope="col">Aprobat</th>
 
                             <!--<th scope="col">Actiuni</th>-->
                         </tr>
@@ -468,12 +469,13 @@
                             <!--<td>{{ unitOfImport.producer.address }}, {{ unitOfImport.producer.country.description }}</td>-->
                             <td>{{ unitOfImport.expirationDate | date:'mediumDate' }}</td>
                             <td>{{ unitOfImport.customsCode.description }}</td>
+                            <td> <mat-checkbox value="A"> </mat-checkbox> </td>
 
+                            <!--<td>-->
+                                <!--<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeunitOfImport(i)" mdbWavesEffect>Stergere</button>-->
+                            <!--</td>-->
                             <td>
-                                <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeunitOfImport(i)" mdbWavesEffect>Stergere</button>
-                            </td>
-                            <td>
-                                <button class="btn btn-blue-color waves-light btn-sm waves-light" (click)="showunitOfImport(i)" mdbWavesEffect>Vizualizare</button>
+                                <input class="check-box-table-cell btn-blue-color waves-light btn-sm waves-light" (click)="showunitOfImport(i)" mdbWavesEffect>Vizualizare</input>
                             </td>
                         </tr>
                         </tbody>
