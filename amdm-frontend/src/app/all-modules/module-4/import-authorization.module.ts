@@ -17,6 +17,7 @@ import {ProcessInterruptionComponent} from "../module-1/process-interruption/pro
 import {UploadFileService} from "../../shared/service/upload/upload-file.service";
 import {RequestService} from "../../shared/service/request.service";
 import {DocumentModule} from "../../document/document.module";
+import {MedRegApproveComponent} from "./med-reg-approve/med-reg-approve.component";
 
 
 @NgModule({
@@ -29,7 +30,7 @@ import {DocumentModule} from "../../document/document.module";
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
     ],
-    declarations: [ImportAuthorizationEvaluateComponent,ImportAuthorizationRequestComponent, MedRegComponent, MedNeregComponent, MateriaPrimaComponent, AmbalajComponent],
+    declarations: [ImportAuthorizationEvaluateComponent,ImportAuthorizationRequestComponent, MedRegComponent, MedNeregComponent, MateriaPrimaComponent, AmbalajComponent, MedRegApproveComponent],
     providers: [UploadFileService,RequestService]
 })
 export class ImportAuthorizationModule {

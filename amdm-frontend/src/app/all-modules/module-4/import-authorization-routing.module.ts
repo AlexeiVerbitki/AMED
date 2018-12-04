@@ -5,13 +5,17 @@ import { MedNeregComponent } from './med-nereg/med-nereg.component';
 import { MateriaPrimaComponent } from './materia-prima/materia-prima.component';
 import { AmbalajComponent } from './ambalaj/ambalaj.component';
 import {NgModule} from "@angular/core";
+import {MedRegApproveComponent} from "./med-reg-approve/med-reg-approve.component";
 
 const routes: Routes = [
     {path: 'register', component: ImportAuthorizationRequestComponent},
+
     {path: 'registered-medicament/:id', component: MedRegComponent},
     {path: 'unregistered-medicament/:id', component: MedRegComponent},
-    // {path: 'unregistered-medicament/:id', component: MedNeregComponent},
-    // {path: 'materia-prima/:id', component: MateriaPrimaComponent},
+
+    {path: 'registered-medicament-approve/:id', component: MedRegApproveComponent},
+    {path: 'unregistered-medicament-approve/:id', component: MedRegApproveComponent},
+
     {path: 'materia-prima/:id', component: AmbalajComponent},
     {path: 'ambalaj/:id', component: AmbalajComponent},
 ];

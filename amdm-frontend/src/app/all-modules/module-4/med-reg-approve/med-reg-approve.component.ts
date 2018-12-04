@@ -27,11 +27,11 @@ export interface PeriodicElement {
 
 
 @Component({
-  selector: 'app-med-reg',
+  selector: 'app-MedRegApproveComponent',
   templateUrl: './med-reg-approve.component.html',
   styleUrls: ['./med-reg-approve.component.css']
 })
-export class MedRegComponent implements OnInit {
+export class MedRegApproveComponent implements OnInit {
     cereri: Cerere[] = [];
     // importer: any[];
     evaluateImportForm: FormGroup;
