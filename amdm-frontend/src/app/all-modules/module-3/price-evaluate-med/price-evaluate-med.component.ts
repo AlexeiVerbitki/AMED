@@ -12,6 +12,7 @@ import {MatDialog} from "@angular/material";
 import {PriceService} from "../../../shared/service/prices.service";
 import {PriceEditModalComponent} from "../modal/price-edit-modal/price-edit-modal.component";
 import {Decision, MedicamentType, PriceReferenceType} from "../price-constants";
+import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
 
 @Component({
   selector: 'app-price-evaluate-med',
@@ -66,6 +67,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
               private activatedRoute: ActivatedRoute,
               private priceService: PriceService,
               public dialogConfirmation: MatDialog,
+              private navbarTitleService: NavbarTitleService,
               private router: Router,
               public dialog: MatDialog,
               private loadingService: LoaderService,
@@ -170,6 +172,8 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
     };
 
   ngOnInit() {
+      this.navbarTitleService.showTitleMsg('Evaluarea cererii de inregistrare a pretului la medicamente');
+
       this.getDocumentsTypes();
       this.getAllPricesTypes();
 
@@ -388,9 +392,10 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
             this.dciAndOriginAvgs.push({source: 'Media în țara de origine', avg: avgOriginCountry / originPriceCount});
         }
 
+        if(this.avgRelatedMeds) {
+            this.dciAndOriginAvgs.push({source: 'Media DCI', avg: this.avgRelatedMeds});
+        }
 
-
-        this.dciAndOriginAvgs.push({source: 'Media DCI', avg: this.avgRelatedMeds});
         let avg = 0;
         this.dciAndOriginAvgs.forEach(v => avg += v.avg);
         avg /= this.dciAndOriginAvgs.length;
@@ -526,11 +531,11 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
 
         for (let avgCur of this.avgCurrencies) {
 
-            if (avgCur.currency.code == 'EUR') {
+            if (avgCur.currency.shortDescription == 'EUR') {
                 refPrice['xchRateEur'] = avgCur.value;
                 refPrice['xchRateEurVal'] = refPrice['xchRateRefVal'] / avgCur.value;
 
-            } else if (avgCur.currency.code == 'USD') {
+            } else if (avgCur.currency.shortDescription == 'USD') {
                 refPrice['xchRateUsd'] = avgCur.value;
                 refPrice['xchRateUsdVal'] = refPrice['xchRateRefVal'] / avgCur.value;
 
@@ -699,6 +704,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        this.navbarTitleService.showTitleMsg('');
         this.subscriptions.forEach(value => value.unsubscribe());
     }
 

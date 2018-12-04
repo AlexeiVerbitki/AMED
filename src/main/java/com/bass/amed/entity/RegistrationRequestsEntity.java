@@ -55,6 +55,7 @@ public class RegistrationRequestsEntity
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "registration_request_id")
     private Set<RegistrationRequestHistoryEntity> requestHistories = new HashSet<>();
+
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @JoinColumn(name = "request_id")
     private Set<MedicamentEntity> medicaments = new HashSet<>();

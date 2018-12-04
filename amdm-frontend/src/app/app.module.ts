@@ -35,8 +35,8 @@ import {AdminDashboardComponent} from "./dashboard/admin-dashboard.component";
 import {GestDocComponent} from "./document-management/gest-doc/gest-doc.component";
 import {NumberOnlyDirective} from "./shared/directive/number-only.directive";
 import {RequestAdditionalDataDialogComponent} from "./dialog/request-additional-data-dialog/request-additional-data-dialog.component";
-import {PricesComponent} from "./prices/prices.component";
-import {PriceReqEditModalComponent} from "./prices/price-req-edit-modal/price-req-edit-modal.component";
+import {PricesComponent} from "./management/prices/prices.component";
+import {PriceReqEditModalComponent} from "./management/prices/price-req-edit-modal/price-req-edit-modal.component";
 import {MatDialogModule} from "@angular/material";
 import {ActiveSubstanceDialogComponent} from "./dialog/active-substance-dialog/active-substance-dialog.component";
 import {HomepageModalComponent} from "./homepage/homepage-modal/homepage-modal.component";
@@ -74,8 +74,6 @@ const interceptors = [{
         ModuleDashboardComponent,
         AdminDashboardComponent,
         ConfirmationDialogComponent,
-        PriceReqEditModalComponent,
-        PricesComponent,
         TaskComponent,
         HistoryComponent,
         ModuleComponent,
@@ -103,7 +101,7 @@ const interceptors = [{
     ],
     schemas: [],
     entryComponents: [
-        ConfirmationDialogComponent,MedicamentHistoryDialogComponent,MedicamentModificationsDialogComponent,RequestAdditionalDataDialogComponent,PriceReqEditModalComponent,ActiveSubstanceDialogComponent, HomepageModalComponent,MedicamentDetailsDialogComponent
+        ConfirmationDialogComponent,MedicamentHistoryDialogComponent,MedicamentModificationsDialogComponent,RequestAdditionalDataDialogComponent,ActiveSubstanceDialogComponent, HomepageModalComponent,MedicamentDetailsDialogComponent
     ],
     providers: [AuthService, AdministrationService, ErrorHandlerService, interceptors,
     ],

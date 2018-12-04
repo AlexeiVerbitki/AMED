@@ -12,8 +12,8 @@ import {ModuleDashboardComponent} from "./dashboard/module-dashboard.component";
 import {AuthGuard} from "./shared/auth-guard/auth.guard";
 import {AdminDashboardComponent} from "./dashboard/admin-dashboard.component";
 import {GestDocComponent} from "./document-management/gest-doc/gest-doc.component";
-import {PricesComponent} from "./prices/prices.component";
-import {PriceAutoRevaluationComponent} from "./all-modules/module-3/price-auto-revaluation/price-auto-revaluation.component";
+import {PricesComponent} from "./management/prices/prices.component";
+import {PriceAutoRevaluationComponent} from "./management/price-auto-revaluation/price-auto-revaluation.component";
 
 const routes: Routes = [
     {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -72,8 +72,6 @@ const routes: Routes = [
                 ],
             },
             {path: 'task', component: TaskComponent},
-            {path: 'prices', component: PricesComponent},
-            // {path: 'auto-revaluation', component: RevaluationGenericsComponent},
             {path: 'doc-management', component: GestDocComponent},
             {path: 'history', component: HistoryComponent},
             {

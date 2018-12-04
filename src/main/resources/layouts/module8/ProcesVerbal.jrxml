@@ -142,7 +142,7 @@ confirmă nimicirea preparatelor medicamentoase prezentate de către solicitanţ
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 2_TD" height="30">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="40" height="30" uuid="574efa86-ced3-4a16-994f-91a95b742844"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10"/>
@@ -163,7 +163,7 @@ confirmă nimicirea preparatelor medicamentoase prezentate de către solicitanţ
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 2_TD" height="30">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="103" height="30" uuid="41888bb5-eb03-46c4-9681-82216770ad2f"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10"/>
@@ -184,7 +184,7 @@ confirmă nimicirea preparatelor medicamentoase prezentate de către solicitanţ
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 2_TD" height="30">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="83" height="30" uuid="d4fa2877-62f8-4694-80ff-3c5adfbe73d8"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10"/>
@@ -205,7 +205,7 @@ confirmă nimicirea preparatelor medicamentoase prezentate de către solicitanţ
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 2_TD" height="30">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="83" height="30" uuid="1b6dd260-5c74-4ce3-b758-3bb86635d9c9"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10"/>
@@ -226,7 +226,7 @@ confirmă nimicirea preparatelor medicamentoase prezentate de către solicitanţ
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 2_TD" height="30">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="82" height="30" uuid="dd1970fd-aedb-4b91-8dcb-fceaeb2e0231"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10"/>
@@ -247,7 +247,7 @@ confirmă nimicirea preparatelor medicamentoase prezentate de către solicitanţ
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 2_TD" height="30">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="81" height="30" uuid="cb8160c8-f416-44f8-84f0-1225914aa7da"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10"/>
@@ -269,7 +269,7 @@ NIM]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 2_TD" height="30">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="81" height="30" uuid="01f01504-9b62-4b21-b521-9b527e874024"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10"/>
@@ -290,7 +290,7 @@ NIM]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 2_TD" height="30">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="81" height="30" uuid="a825ac9a-6fc8-44ad-adf8-c55ec3add6cb"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10"/>
@@ -312,7 +312,7 @@ a plăţii]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 2_TD" height="30">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="81" height="30" uuid="ad56e409-4b81-49b0-81c0-2d1368d7e4b5"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10"/>
@@ -333,7 +333,7 @@ a plăţii]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 2_TD" height="30">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="81" height="30" uuid="84346d23-5c30-4c9b-aee5-fcc4d59d8a08"/>
 								<textElement textAlignment="Center"/>
 								<textFieldExpression><![CDATA[$F{methodAnnihilation}]]></textFieldExpression>

@@ -671,6 +671,8 @@ public class RequestController
             System.out.println("\n\n\n\n=====================\ngetImportAuthorizationEntity is null\n=====================\n\n\n");
         }
 
+//        requests.setMedicaments(null);
+        LOGGER.debug("MED=============="+requests.getMedicaments());
         requestRepository.save(requests);
         //TODO fix the docs
 //        addDDDocument(requests);

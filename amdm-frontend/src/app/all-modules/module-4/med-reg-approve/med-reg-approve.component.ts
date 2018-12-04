@@ -128,6 +128,7 @@ export class MedRegApproveComponent implements OnInit {
                 }),
 
             'requestHistories': [],
+            'medicaments': [],
 
             'importAuthorizationEntity': this.fb.group({
                 'id':                                    [Validators.required],
@@ -665,7 +666,7 @@ export class MedRegApproveComponent implements OnInit {
         //=============
 
 
-        console.log("checked", this.checked);
+        modelToSubmit.medicaments = [];
         console.log("modelToSubmit", modelToSubmit);
         alert("before addImportRequest(modelToSubmit)")
         // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {

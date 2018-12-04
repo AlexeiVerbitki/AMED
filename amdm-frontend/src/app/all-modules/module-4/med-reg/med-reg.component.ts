@@ -631,7 +631,7 @@ export class MedRegComponent implements OnInit {
         console.log("this.evaluateImportForm.value", this.evaluateImportForm.value);
         //=============
 
-
+        modelToSubmit.medicaments = [];
         console.log("modelToSubmit", modelToSubmit);
         alert("before addImportRequest(modelToSubmit)")
         // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {

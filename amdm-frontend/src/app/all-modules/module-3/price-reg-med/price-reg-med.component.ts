@@ -15,6 +15,7 @@ import {PriceService} from "../../../shared/service/prices.service";
 import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
 import {Country} from "../../../models/country";
 import {Currency} from "../../../models/currency";
+import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
 
 @Component({
   selector: 'app-price-reg-med',
@@ -73,6 +74,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
               public dialog: MatDialog,
               private priceService: PriceService,
               private router: Router,
+              private navbarTitleService: NavbarTitleService,
               private route: ActivatedRoute,
               private resolver: ComponentFactoryResolver,
               private loadingService: LoaderService) {
@@ -86,6 +88,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+      this.navbarTitleService.showTitleMsg('Înregistrarea prețului medicamentelor');
 
       //this.loadDocTypes();
       this.getCountries();
@@ -274,6 +277,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy() {
+      this.navbarTitleService.showTitleMsg('');
       this.subscriptions.forEach(value => value.unsubscribe());
   }
 

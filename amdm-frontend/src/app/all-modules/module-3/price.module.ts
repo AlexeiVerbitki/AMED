@@ -1,5 +1,5 @@
-import { NgModule} from '@angular/core';
-import {CommonModule, DatePipe, DecimalPipe} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
 import {PriceRoutingModule} from './price-routing.module';
 import {PriceEvaluateMedComponent} from './price-evaluate-med/price-evaluate-med.component';
@@ -14,13 +14,12 @@ import {MatDialogModule} from "@angular/material";
 import {DocumentModule} from "../../document/document.module";
 import {OneMedPriceComponent} from "./one-med-price/one-med-price.component";
 import {PriceEditModalComponent} from "./modal/price-edit-modal/price-edit-modal.component";
-import {PriceAutoRevaluationComponent} from "./price-auto-revaluation/price-auto-revaluation.component";
-import {XchangeInfoComponent} from "./xchangeInfo/xchangeinfo.component";
 import {PipeModule} from "../../shared/pipe/pipe.module";
 import {RevaluationGenericsComponent} from "./revaluation-generics/revaluation-generics.component";
+import {XchangeinfoModule} from "../../xchangeInfo/xchangeinfo.module";
 
 @NgModule({
-    entryComponents: [ReferencePriceComponent, PriceEditModalComponent, XchangeInfoComponent],
+    entryComponents: [ReferencePriceComponent, PriceEditModalComponent],
     imports: [
         CommonModule,
         PriceRoutingModule,
@@ -30,20 +29,19 @@ import {RevaluationGenericsComponent} from "./revaluation-generics/revaluation-g
         DocumentModule,
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
-        PipeModule
+        PipeModule,
+        XchangeinfoModule
     ],
     schemas: [],
     declarations: [
         PriceRegMedComponent,
-        PriceAutoRevaluationComponent,
         RevaluationGenericsComponent,
         OneMedPriceComponent,
         PriceEvaluateMedComponent,
         ReferencePriceComponent,
         PriceEditModalComponent,
-        XchangeInfoComponent,
     ],
-    providers: [UploadFileService, RequestService, PipeModule],
+    providers: [UploadFileService, RequestService],
 
 })
 export class PriceModule {
