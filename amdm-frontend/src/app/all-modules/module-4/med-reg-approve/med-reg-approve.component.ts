@@ -17,6 +17,7 @@ import {LoaderService} from "../../../shared/service/loader.service";
 import {AuthService} from "../../../shared/service/authetication.service";
 import {MedicamentService} from "../../../shared/service/medicament.service";
 import {Utils} from "angular-bootstrap-md/angular-bootstrap-md/utils/utils.class";
+import {forEach} from "@angular/router/src/utils/collection";
 
 export interface PeriodicElement {
     name: string;
@@ -90,6 +91,8 @@ export class MedRegApproveComponent implements OnInit {
     internationalMedicamentNames: Observable<any[]>;
     loadinginternationalMedicamentName: boolean = false;
     internationalMedicamentNameInputs = new Subject<string>();
+
+    checked: boolean;
 
 
     constructor(private fb: FormBuilder,
@@ -178,6 +181,22 @@ export class MedRegApproveComponent implements OnInit {
                     console.log('this.requestService.getImportRequest(params[\'id\'])', data);
                     this.importData = data;
 
+                    let list: any =[];
+                    list = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList;
+
+
+                    list.forEach(item => {
+                        item.approved == null ? item.approved = true: item.approved=item.approved;
+                        console.log("item", item);
+                    })
+
+                    // this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList.forEach(item=>{
+                    //     if (item.approve === null){
+                    //         item.approve = false;
+                    //     }
+                    // })
+                    // console.log("importData", this.importData)
+
                     this.evaluateImportForm.get('id').setValue(data.id);
                     this.evaluateImportForm.get('requestNumber').setValue(data.requestNumber);
                     this.evaluateImportForm.get('startDate').setValue(new Date(data.startDate));
@@ -218,6 +237,7 @@ export class MedRegApproveComponent implements OnInit {
             ))
         }))
 
+        this.checked=false;
         this.currentDate = new Date();
         this.sellerAddress='';
         this.producerAddress='';
@@ -235,6 +255,17 @@ export class MedRegApproveComponent implements OnInit {
         this.loadMedicaments();
         this.loadInternationalMedicamentName();
         console.log("importTypeForms.value",this.importTypeForms.value)
+    }
+
+
+    setApproved(i: any){
+
+        // this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved ? this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = false : this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = true;
+        if (this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved == false) {
+            this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = true
+        } else this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = false;
+
+        console.log("this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList["+i+"]",this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved)
     }
 
     onChanges(): void {
@@ -301,6 +332,7 @@ export class MedRegApproveComponent implements OnInit {
             }));
         }
     }
+
 
 
     get importTypeForms() {
@@ -610,17 +642,18 @@ export class MedRegApproveComponent implements OnInit {
         let modelToSubmit: any ={};
         this.loadingService.show();
 
-        modelToSubmit = this.evaluateImportForm.value;
-        if (this.importData.importAuthorizationEntity.id){
-            modelToSubmit.importAuthorizationEntity.id =  this.importData.importAuthorizationEntity.id;
-        }
+        // modelToSubmit = this.evaluateImportForm.value;
+        // if (this.importData.importAuthorizationEntity.id){
+        //     modelToSubmit.importAuthorizationEntity.id =  this.importData.importAuthorizationEntity.id;
+        // }
 
 
-        modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
+        // modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
         modelToSubmit.endDate = new Date();
 
-        modelToSubmit.documents = this.docs;
+        // modelToSubmit.documents = this.docs;
 
+        modelToSubmit = this.importData;
         modelToSubmit.requestHistories.push({
             startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
             endDate: new Date(),
@@ -632,6 +665,7 @@ export class MedRegApproveComponent implements OnInit {
         //=============
 
 
+        console.log("checked", this.checked);
         console.log("modelToSubmit", modelToSubmit);
         alert("before addImportRequest(modelToSubmit)")
         // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {

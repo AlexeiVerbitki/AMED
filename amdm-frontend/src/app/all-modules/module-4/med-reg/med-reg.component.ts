@@ -317,7 +317,7 @@ export class MedRegComponent implements OnInit {
         this.unitOfImportTable.push({
 
             codeAmed:                      this.codeAmed,
-            // codeAmed:                      Utils.generateMedicamentCode(),
+            approved:                      false,
 
             customsCode:                   this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').value,
             name:                          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').value,

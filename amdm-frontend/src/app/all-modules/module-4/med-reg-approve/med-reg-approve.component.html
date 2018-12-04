@@ -456,7 +456,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let unitOfImport of unitOfImportTable;let i = index">
+                        <tr *ngFor="let unitOfImport of importData.importAuthorizationEntity.importAuthorizationDetailsEntityList;let i = index">
                             <th scope="row">{{ unitOfImport.name }} </th>
                             <td>{{ unitOfImport.atcCode.code}}</td>
                             <td>{{ unitOfImport.dose }}</td>
@@ -469,7 +469,9 @@
                             <!--<td>{{ unitOfImport.producer.address }}, {{ unitOfImport.producer.country.description }}</td>-->
                             <td>{{ unitOfImport.expirationDate | date:'mediumDate' }}</td>
                             <td>{{ unitOfImport.customsCode.description }}</td>
-                            <td> <mat-checkbox value="A"> </mat-checkbox> </td>
+                            <td> <input type="checkbox" [checked]="importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved" (change)="setApproved(i)">   </td>
+                            <!--<td> <input type="checkbox" [(ngModel)] = // unitOfImport. (change)="setApproved(i)" >   </td>-->
+                            <!--<td> <mat-checkbox [checked]="checked" > (change)</mat-checkbox> </td>-->
 
                         </tr>
                         </tbody>
