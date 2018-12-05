@@ -209,24 +209,23 @@ export class MedRegApproveComponent implements OnInit {
                     this.evaluateImportForm.get('type.id').setValue(data.type.id);
                     this.evaluateImportForm.get('requestHistories').setValue(data.requestHistories);
 
-                    //If it's a registered medicament, disable the following fields
+                    this.evaluateImportForm.get('importAuthorizationEntity.seller').setValue(data.importAuthorizationEntity.seller);
+                    this.evaluateImportForm.get('importAuthorizationEntity.importer').setValue(data.importAuthorizationEntity.importer);
+                    this.evaluateImportForm.get('importAuthorizationEntity.basisForImport').setValue(data.importAuthorizationEntity.basisForImport);
+                    this.evaluateImportForm.get('importAuthorizationEntity.conditionsAndSpecification').setValue(data.importAuthorizationEntity.conditionsAndSpecification);
+                    this.evaluateImportForm.get('importAuthorizationEntity.authorizationsNumber').setValue(data.importAuthorizationEntity.authorizationsNumber);
+                    this.evaluateImportForm.get('importAuthorizationEntity.customsNumber').setValue(data.importAuthorizationEntity.customsNumber);
+                    this.evaluateImportForm.get('importAuthorizationEntity.customsDeclarationDate').setValue(new Date(data.importAuthorizationEntity.customsDeclarationDate));
 
-                    // if (data.importAuthorizationEntity.medType===1) {
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').disable();
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').disable();
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').disable();
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').disable();
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').disable();
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').disable();
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').disable();
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').disable();
-                    //     // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producerAddress').disable();
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').disable();
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').disable();
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').disable();
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').disable();
-                    //
-                    // }
+                    this.evaluateImportForm.get('startDate').disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.seller').disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.importer').disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.basisForImport').disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.conditionsAndSpecification').disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.authorizationsNumber').disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.customsNumber').disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.customsDeclarationDate').disable();
+
 
                     if (data.importAuthorizationEntity.medType === 2) {
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setErrors(null);
