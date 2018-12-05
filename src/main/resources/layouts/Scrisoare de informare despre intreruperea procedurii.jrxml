@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Scrisoare de informare despre intreruperea procedurii" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="10" uuid="c084aefd-f7fb-40ce-ab3f-dc897567241a">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
+	<parameter name="La Nr." class="java.lang.String"/>
+	<parameter name="Din: " class="java.util.Date"/>
+	<parameter name="path" class="java.lang.String"/>
+	<parameter name="genDir" class="java.lang.String"/>
+	<parameter name="regRequest" class="java.lang.String"/>
+	<parameter name="pct" class="java.lang.String"/>
+	<parameter name="prod" class="java.lang.String"/>
+	<parameter name="companyName" class="java.lang.String"/>
+	<parameter name="medicinalProduct" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<pageHeader>
+		<band height="84" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="220" height="60" uuid="d4fe1f91-f2a0-4e52-b4c3-5c3e9dd935ca"/>
+				<imageExpression><![CDATA["layouts/icons/header_left.jpg"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="220" y="0" width="330" height="70" uuid="11dd8ec7-6404-4cc7-9d59-a7e8f6fd0917"/>
+				<imageExpression><![CDATA["layouts/icons/header_right.PNG"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="467" y="70" width="82" height="13" uuid="a8ab1945-d22e-4171-95ce-3d9fdc3195e2"/>
+				<textElement textAlignment="Right">
+					<font isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Anexa 11]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="196" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="299" height="20" uuid="ce38b20a-01d3-474a-aa37-99aaaf58e8cd"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["La Nr. " + $P{La Nr.} + " din " +$P{Din: }]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="310" y="11" width="241" height="79" uuid="535122a0-df92-40c6-aa1c-2023105c157d"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Dlui Nume Prenume, responsabil de autorizarea produselor companiei " + $P{companyName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="3" y="100" width="548" height="60" uuid="4493e394-6e29-446b-8621-81f3c7643fe3"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Prin prezenta, Agenţia Medicamentului şi Dispozitivelor Medicale, Vă informeazăcă în baza ordinului „Cu privire la întreruperea procedurii de aprobare amodificărilor postautorizare” Nr " +  $P{regRequest} + ", a fost întreruptă procedura de aprobare a variaţiilor postautorizare pentru produsul medicamentos:"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="3" y="166" width="548" height="24" uuid="8df13232-e2e7-487e-a74e-d80744bc531e"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{medicinalProduct}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="182">
+			<textField>
+				<reportElement x="5" y="2" width="546" height="30" uuid="38e244a7-3a73-43cf-bbc9-1c55683e2896"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["producător: " + $P{prod} + ", ca urmare a solicitării din partea deținătorului Certificatului de Înregistrare."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="5" y="50" width="546" height="60" uuid="33fef8ea-3242-48c9-8059-5e241e86ba19"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["	Întreruperea procedurii nu prejudiciază dreptul deținătorului de a redepune cererea conform pct. " + $P{pct} + " , capitolul II al Ordinului MSRM Nr. 739 din 23.07.2012 'Cu privire la reglementarea autorizării produselor medicamentoase de uz uman şi întroducerea modificărilor postautorizare' (anexa nr. 2), cu modificările şi completările ulterioare."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="5" y="120" width="305" height="20" uuid="21eea136-b686-429f-b4bf-d4b55540cb0b"/>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Ex: Nume Prenume"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="160" width="257" height="18" uuid="58bbaa30-8f56-4b5a-a5fc-d68e8cab02ea"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Director general ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="324" y="160" width="227" height="18" uuid="c5ac03c8-8190-4f63-9788-99e123f83aed"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{genDir}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="77" splitType="Stretch">
+			<staticText>
+				<reportElement x="484" y="64" width="25" height="13" uuid="b64b0e3a-fd13-4790-bea5-b0b9acc35d20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Pagina]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="19" width="280" height="45" uuid="3e8850d9-7aa2-4b9e-8af5-ee0a5feafe93"/>
+				<textElement markup="none">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Agenţia Medicamentului şi Dispozitivelor Medicale
+Medicines and Medical Devices Agency 
+Republica Moldova, MD-2028, Chişinău, str. Korolenko, 2/1
+tel. +373 22 884 301, e-mail: office@amed.md; Web: www.amed.md
+]]></text>
+			</staticText>
+			<image>
+				<reportElement x="483" y="0" width="65" height="60" uuid="bbc38907-770b-4532-b958-246786ffa841"/>
+				<imageExpression><![CDATA["layouts/icons/cer.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="521" y="64" width="16" height="13" uuid="01717c74-486d-40b7-9137-07898e652885"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[din ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="509" y="64" width="12" height="13" uuid="564d9887-ad6f-4b42-954a-70326fbf7e32"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="537" y="64" width="12" height="13" uuid="8f3c4fe0-41af-4130-8f08-f3280bdb65f3"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

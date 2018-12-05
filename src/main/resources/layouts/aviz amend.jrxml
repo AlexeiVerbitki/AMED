@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="aviz amend" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="10" uuid="c084aefd-f7fb-40ce-ab3f-dc897567241a">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
+	<parameter name="nr" class="java.lang.String"/>
+	<parameter name="date" class="java.util.Date"/>
+	<parameter name="genDir" class="java.lang.String"/>
+	<parameter name="amdmDate" class="java.lang.String"/>
+	<parameter name="protocolClinic" class="java.lang.String"/>
+	<parameter name="applicant" class="java.lang.String"/>
+	<parameter name="sponsor" class="java.lang.String"/>
+	<parameter name="institution" class="java.lang.String"/>
+	<parameter name="studyCode" class="java.lang.String"/>
+	<parameter name="eudra" class="java.lang.String"/>
+	<parameter name="studyType" class="java.lang.String"/>
+	<parameter name="phase" class="java.lang.String"/>
+	<parameter name="avizAmdmNr" class="java.lang.String"/>
+	<parameter name="avizComitetEticNr" class="java.lang.String"/>
+	<parameter name="amdmOrderNr" class="java.lang.String"/>
+	<parameter name="amdmIdentification" class="java.lang.String"/>
+	<parameter name="docAnexed" class="java.lang.String"/>
+	<parameter name="clinicalStudyName" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<pageHeader>
+		<band height="72" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="220" height="60" uuid="d4fe1f91-f2a0-4e52-b4c3-5c3e9dd935ca"/>
+				<imageExpression><![CDATA["layouts/icons/header_left.jpg"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="220" y="0" width="330" height="70" uuid="11dd8ec7-6404-4cc7-9d59-a7e8f6fd0917"/>
+				<imageExpression><![CDATA["layouts/icons/header_right.PNG"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="661" splitType="Stretch">
+			<textField>
+				<reportElement x="2" y="30" width="550" height="20" uuid="b8809fc8-2a40-4a5a-988b-18213e70bf00"/>
+				<textElement textAlignment="Left">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Nr. " + $P{nr} + " din " +$P{date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="620" width="258" height="28" uuid="58bbaa30-8f56-4b5a-a5fc-d68e8cab02ea"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Director general,
+Preşedinte al Comisiei Medicamentului                             
+]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="289" y="630" width="263" height="18" uuid="c5ac03c8-8190-4f63-9788-99e123f83aed"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{genDir}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="180" width="552" height="50" uuid="3cfeeffa-ac49-4028-a901-0a53eca72db4"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["	Prin prezenta, Agenţia Medicamentului şi Dispozitivelor Medicale, în baza deciziei Comisiei Medicamentului din cadrul AMDM din data de " + $P{amdmDate} + ", aprobă Amendamentul la protocolul studiului clinic " + $P{protocolClinic}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="120" width="551" height="30" uuid="30570afb-e818-48c9-a274-9c09c7393701"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AVIZ 
+PENTRU AMENDAMENT LA STUDIU CLINIC
+]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="234" width="551" height="36" uuid="b99560f1-587b-4c68-ae01-35453f85997f"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Titlu studiu: " + $P{clinicalStudyName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="270" width="100" height="20" uuid="12133a2b-f0cd-4f34-940a-6e23c0113d6d"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Solicitant]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="290" width="100" height="20" uuid="538aaf73-d543-4064-ad92-895c15490ce2"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sponsor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="310" width="100" height="20" uuid="c91bc416-870a-427c-bc9c-fabd325e38f7"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Instituţie]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="330" width="100" height="20" uuid="77233a0d-08c6-4861-8b5e-fcecb212a286"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cod studiu]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="350" width="100" height="20" uuid="dd6295eb-68e1-451a-b269-324557a99672"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Eudra CT nr.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="370" width="100" height="20" uuid="4cd6f43b-b586-4f5e-9b93-ec4dbcc922d1"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tip studiu]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="390" width="100" height="20" uuid="ff55869b-7218-44e1-ba1b-e4f45cc3c17d"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Faza]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="270" width="451" height="20" uuid="22050511-979c-4304-8069-f7ae36ee7001"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{applicant}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="290" width="451" height="20" uuid="7a0c4c19-cff6-4bb0-bf84-2f784f84d94c"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{sponsor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="101" y="310" width="451" height="20" uuid="c3f496d7-32d5-4ab0-abea-150188f6670c"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{institution}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="101" y="330" width="451" height="20" uuid="c3a0af83-b8eb-434f-8cd8-6b2d07e29e7f"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{studyCode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="101" y="350" width="451" height="20" uuid="6cb3db96-8092-4ba9-a578-731190b7c456"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{eudra}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="370" width="451" height="20" uuid="063d7546-7367-4bda-9b54-a7d2403620b6"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{studyType}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="101" y="390" width="451" height="20" uuid="d94aa081-483e-408b-a105-862b03484359"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{phase}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="-1" y="430" width="552" height="50" uuid="d638a940-7888-4045-b84a-42e9220c3b66"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Aviz AMDM nr. " + $P{avizAmdmNr} + "; Aviz Comitetul de Etică nr. " + $P{avizComitetEticNr} + "; Ordin AMDM nr. " + $P{amdmOrderNr}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-1" y="410" width="176" height="20" uuid="90b56b55-689c-4657-b3e4-a4ed97ff6778"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Informaţii privind studiul:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="500" width="139" height="20" uuid="7e82390c-8849-4971-af71-8ab44efba7f5"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Documente anexate:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="480" width="168" height="20" uuid="76e5fe73-4b97-42f1-afb5-d815834f9749"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Identificare amendament: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="139" y="500" width="413" height="20" uuid="5db59652-971a-4f0a-b203-896b2bb73372"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{docAnexed}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="168" y="480" width="384" height="20" uuid="2a1130c9-f973-433e-add0-39c90cc6344c"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{amdmIdentification}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="540" width="552" height="60" uuid="23475d9b-0fdf-40c1-afa8-be66ea37e26e"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<text><![CDATA[	Studiul se va desfăşura cu respectarea legislaţiei în vigoare privind organizarea studiului clinic în Republica Moldova, Regulilor de Bună Practică în studiul clinic (GCP ICH) cu respectarea calităţii şi eticii studiilor clinice prevăzute în Declaraţia drepturilor omului de la Helsinki, reactualizată.]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="77" splitType="Stretch">
+			<staticText>
+				<reportElement x="484" y="64" width="25" height="13" uuid="b64b0e3a-fd13-4790-bea5-b0b9acc35d20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Pagina]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="19" width="280" height="45" uuid="3e8850d9-7aa2-4b9e-8af5-ee0a5feafe93"/>
+				<textElement markup="none">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Agenţia Medicamentului şi Dispozitivelor Medicale
+Medicines and Medical Devices Agency 
+Republica Moldova, MD-2028, Chişinău, str. Korolenko, 2/1
+tel. +373 22 884 301, e-mail: office@amed.md; Web: www.amed.md
+]]></text>
+			</staticText>
+			<image>
+				<reportElement x="483" y="0" width="65" height="60" uuid="bbc38907-770b-4532-b958-246786ffa841"/>
+				<imageExpression><![CDATA["layouts/icons/cer.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="521" y="64" width="16" height="13" uuid="01717c74-486d-40b7-9137-07898e652885"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[din ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="509" y="64" width="12" height="13" uuid="564d9887-ad6f-4b42-954a-70326fbf7e32"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="537" y="64" width="12" height="13" uuid="8f3c4fe0-41af-4130-8f08-f3280bdb65f3"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

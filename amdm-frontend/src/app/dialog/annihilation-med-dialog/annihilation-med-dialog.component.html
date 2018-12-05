@@ -1,0 +1,130 @@
+<div mat-dialog-content>
+    <form [formGroup]='rForm'>
+        <h3 class="text-center my-3 font-weight-bold">Detalii nimicire</h3>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input id="medicamentName" mdbInputDirective type="text" class="form-control"
+                           formControlName="medicamentName"
+                    >
+                    <label for="medicamentName">Nume medicament</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input id="forma" mdbInputDirective type="text" class="form-control" formControlName="forma"
+                    >
+                    <label for="forma">Forma</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input id="doza" mdbInputDirective type="text" class="form-control" formControlName="doza"
+                    >
+                    <label for="doza">Doza</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input id="ambalajPrimar" mdbInputDirective type="text" class="form-control"
+                           formControlName="ambalajPrimar"
+                    >
+                    <label for="ambalajPrimar">Ambalaj primar</label>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input id="seria" mdbInputDirective type="text" class="form-control" formControlName="seria"
+                    >
+                    <label for="seria">Seria</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input id="quantity" mdbInputDirective type="text" class="form-control"
+                           formControlName="quantity"
+                    >
+                    <label for="quantity">Cantitatea</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input id="reasonDestroy" mdbInputDirective type="text" class="form-control"
+                           formControlName="reasonDestroy"
+                    >
+                    <label for="reasonDestroy">Cauza inutilitatii</label>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div class="md-form">
+                <textarea type="text" id="note" class="md-textarea form-control" mdbInputDirective rows="2"
+                          formControlName="note"></textarea>
+                    <label for="note">Nota</label>
+                </div>
+            </div>
+
+            <!--<div class="col-md-3">
+                <div class="md-form">
+                    <input id="destroyMethod" mdbInputDirective type="text" class="form-control"
+                           formControlName="destroyMethod"
+                    >
+                    <label for="destroyMethod">Metoda de distrugere<span class="text-danger">*</span></label>
+                </div>
+            </div>
+-->
+
+
+            <div class="col-md-3">
+                <div class="md-form-modified-select">
+                    <ng-select [items]="destroyMethods"
+                               bindLabel="description"
+                               placeholder="Metoda de distrugere"
+                               formControlName="destroyMethod"
+                               [required]="true"
+                    >
+                    </ng-select>
+                </div>
+                <div *ngIf="rFormSubbmitted && !rForm.get('destroyMethod').valid">
+                    <small class="text-muted"><strong class="text-danger">Metoda de distrugere trebuie introdusa.</strong>
+                    </small>
+                </div>
+            </div>
+
+
+
+
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input id="tax" mdbInputDirective type="number" class="form-control"
+                           formControlName="tax"
+                    >
+                    <label for="tax">Taxa per unitate<span class="text-danger">*</span></label>
+                </div>
+                <div *ngIf="rFormSubbmitted && !rForm.get('tax').valid">
+                    <small class="text-muted"><strong class="text-danger">Taxa trebuie introdusa.</strong>
+                    </small>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input id="taxTotal" mdbInputDirective type="number" class="form-control"
+                           formControlName="taxTotal"
+                    >
+                    <label for="taxTotal">Taxa totala<span class="text-danger">*</span></label>
+                </div>
+            </div>
+
+        </div>
+    </form>
+    <div class="text-center">
+        <div mat-dialog-actions>
+            <div class="w-100">
+                <button class="btn btn-dark-green-color btn-sm-bl btn-sm" (click)="ok()">Salvare</button>
+                <button class="btn btn-danger btn-sm-bl btn-sm" (click)="cancel()">Inchidere</button>
+            </div>
+        </div>
+    </div>
+</div>
+

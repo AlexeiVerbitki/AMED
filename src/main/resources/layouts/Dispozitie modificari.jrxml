@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="7_Dispozitie modificari" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="10" uuid="c084aefd-f7fb-40ce-ab3f-dc897567241a">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
+	<style name="Table_CH" mode="Opaque" backcolor="#F0F0F0">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="7_dsipozitia modificare tabel" uuid="f2792023-d783-453c-8431-d7947eb52e12">
+		<parameter name="dsipozitiaModificareDataset" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="expertName" class="java.lang.String"/>
+		<field name="medicamentNameDosePharmform" class="java.lang.String"/>
+		<field name="medification" class="java.lang.String"/>
+		<field name="registrationNrDate" class="java.lang.String"/>
+		<field name="autorizationOwner" class="java.lang.String"/>
+		<field name="notes" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="Title" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="La Nr." class="java.lang.String"/>
+	<parameter name="Din: " class="java.util.Date"/>
+	<parameter name="path" class="java.lang.String"/>
+	<parameter name="genDir" class="java.lang.String"/>
+	<parameter name="totalPreparations" class="java.lang.String"/>
+	<parameter name="europ" class="java.lang.String"/>
+	<parameter name="csi" class="java.lang.String"/>
+	<parameter name="autohton" class="java.lang.String"/>
+	<parameter name="others" class="java.lang.String"/>
+	<parameter name="totalVariations" class="java.lang.String"/>
+	<parameter name="variations1" class="java.lang.String"/>
+	<parameter name="variations2" class="java.lang.String"/>
+	<parameter name="transfCert" class="java.lang.String"/>
+	<parameter name="dsipozitiaModificareDataset" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<pageHeader>
+		<band height="94" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="220" height="60" uuid="d4fe1f91-f2a0-4e52-b4c3-5c3e9dd935ca"/>
+				<imageExpression><![CDATA["layouts/icons/header_left.jpg"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="220" y="0" width="330" height="70" uuid="11dd8ec7-6404-4cc7-9d59-a7e8f6fd0917"/>
+				<imageExpression><![CDATA["layouts/icons/header_right.PNG"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="466" y="77" width="82" height="13" uuid="a8ab1945-d22e-4171-95ce-3d9fdc3195e2"/>
+				<textElement textAlignment="Right">
+					<font isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Anexa 7]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="484" splitType="Stretch">
+			<textField>
+				<reportElement x="250" y="10" width="299" height="20" uuid="b8809fc8-2a40-4a5a-988b-18213e70bf00"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["La Nr. " + $P{La Nr.} + " din " +$P{Din: }]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="40" width="549" height="20" uuid="17daf0f6-a76a-4e3a-b457-f2e228d883a5"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="11" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[DISPOZIŢIE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="260" width="160" height="18" uuid="58bbaa30-8f56-4b5a-a5fc-d68e8cab02ea"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Director general ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="323" y="260" width="227" height="18" uuid="c5ac03c8-8190-4f63-9788-99e123f83aed"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{genDir}]]></textFieldExpression>
+			</textField>
+			<break>
+				<reportElement x="0" y="280" width="549" height="1" uuid="d3b0a28e-6e07-4f91-96b5-e09329606cf5"/>
+			</break>
+			<staticText>
+				<reportElement x="3" y="60" width="549" height="50" uuid="9f0d751a-097e-44d3-906c-8f19a97dfc1c"/>
+				<textElement textAlignment="Left">
+					<font fontName="DejaVu Sans" size="11" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Referitor la expertiza
+documentaţiei la produsele farmaceutice
+prezentate pentru modificări postautorizare
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="150" width="552" height="90" uuid="125bb100-d843-4be9-84be-7c7bc1de97ae"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<text><![CDATA[	În conformitate cu prevederile punctului 35, capitolul III, al Ordinului nr.739 din 23.07.2012 „Cu privire la reglementarea autorizării produselor medicamentoase de uz uman şi introducerea modificărilor postautorizare”, cu modificările și completările ulterioare şi în baza Ordinului Ministerului Sănătăţii nr.822 din 15.10.2015 „Cu privire la Regulamentul de organizare şi funcţionare a Comisiei Medicamentului”, se desemnează comisiile de experţi pentru efectuarea lucrărilor de expertiză şi de avizare a documentaţiei la produsele medicamentoase (conform anexei).]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="3" y="290" width="550" height="90" uuid="f193f4ba-84cb-4421-bc51-73042a47f07c">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.components.autoresize.next" value="true"/>
+					<property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="7_dsipozitia modificare tabel" uuid="22424e40-de12-4cb0-9f87-ebd214907166">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="60" uuid="b8b2b737-98be-4a23-bae6-3f067f91c2fa">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:columnHeader style="Table_CH" height="60" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="60" height="60" uuid="803b6a19-b028-4bc8-85ac-c340feff5662"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" isBold="true"/>
+								</textElement>
+								<text><![CDATA[N.P. experţilor]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="60" height="30" uuid="a79f4b88-6c74-44bf-8564-4c9e928ce6b6"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" size="10"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{expertName}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="124" uuid="b1068e70-97d8-4332-88fd-61b7276b595b">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:columnHeader style="Table_CH" height="60" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="124" height="60" uuid="7c8bbed2-6bc9-4415-b9c4-34a0c409d63e"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Denumirea, doza, forma farmaceutică]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="124" height="30" uuid="bd4d7045-21c1-4b1c-82e9-43c061d86c32"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" size="10"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{medicamentNameDosePharmform}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="93" uuid="8ea56053-a501-468b-b51c-a14ee9235ce4">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<jr:columnHeader style="Table_CH" height="60" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="93" height="60" uuid="1bd22c99-1bd3-4c71-bf4e-2416f3d80d74"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Modificări]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="93" height="30" uuid="e73011ee-6076-4904-8200-a58abc8047bb"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" size="10"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{medification}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="72" uuid="919bdbc3-7c39-470a-8a21-145488c3a366">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+						<jr:columnHeader style="Table_CH" height="60" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="72" height="60" uuid="ea9a2d96-6e2c-48cd-863b-0c2259194f3c"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Nr. înreg.  data]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="72" height="30" uuid="0e4747d7-856a-4dd5-b436-470b52587595"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" size="10"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{registrationNrDate}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="110" uuid="5784aec3-3313-48e8-9bb2-1d5012fc0010">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+						<jr:columnHeader style="Table_CH" height="60" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="110" height="60" uuid="7c85b203-fe66-49ee-bea5-a55cbd01128f"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Deţinătorul 
+Autorizaţiei de 
+Punere pe Piaţă/
+producătorul, ţara de producere
+]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="110" height="30" uuid="a0677ee3-e4fe-41a2-9ede-2e8e4ae11891"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" size="10"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{autorizationOwner}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="91" uuid="32e04c88-3d08-40c1-8d33-4144e5d76fcb">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+						<jr:columnHeader style="Table_CH" height="60" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="91" height="60" uuid="3a79973a-4106-42ec-9f98-e8298effd1b3"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Note]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="91" height="30" uuid="a5b68560-02ff-4909-b0dd-f5bacca6afe9"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" size="10"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{notes}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<textField>
+				<reportElement x="3" y="400" width="127" height="20" uuid="7d1ca081-57e3-4dfc-a250-6b408b0ed4c4"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total preparate – " + $P{totalPreparations}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="130" y="400" width="150" height="20" uuid="475698d0-3b4a-4ba3-a173-9cb144251baa"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Europene – " + $P{europ}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="400" width="130" height="20" uuid="bfd5cfdd-4eee-4d72-92ec-0ad3c5f4a956"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total variaţii – " + $P{totalVariations}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="410" y="400" width="142" height="20" uuid="ac260763-4027-4ed1-9175-34ea661a312a"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Variaţii tip I – " + $P{variations1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="130" y="420" width="150" height="20" uuid="c0fb8976-2602-4683-b57a-43c5332375a6"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CSI – " + $P{csi}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="130" y="440" width="150" height="20" uuid="e70acb18-d3e5-4489-8ce2-b96f2aa6f9eb"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Autohtone – " + $P{autohton}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="130" y="460" width="150" height="20" uuid="a958e9c8-f678-467e-94a8-3b4ac4227757"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Altele – " + $P{others}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="410" y="420" width="142" height="20" uuid="d60923e2-c489-47e5-87d2-fe17cd1c64ac"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Variaţii tip II – " + $P{variations2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="410" y="440" width="142" height="20" uuid="8b69b778-bc02-4d99-b1ee-f4663d72a42a"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Transfer de Certificat – " + $P{transfCert}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="77" splitType="Stretch">
+			<staticText>
+				<reportElement x="484" y="64" width="25" height="13" uuid="b64b0e3a-fd13-4790-bea5-b0b9acc35d20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Pagina]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="19" width="280" height="45" uuid="3e8850d9-7aa2-4b9e-8af5-ee0a5feafe93"/>
+				<textElement markup="none">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Agenţia Medicamentului şi Dispozitivelor Medicale
+Medicines and Medical Devices Agency 
+Republica Moldova, MD-2028, Chişinău, str. Korolenko, 2/1
+tel. +373 22 884 301, e-mail: office@amed.md; Web: www.amed.md
+]]></text>
+			</staticText>
+			<image>
+				<reportElement x="483" y="0" width="65" height="60" uuid="bbc38907-770b-4532-b958-246786ffa841"/>
+				<imageExpression><![CDATA["layouts/icons/cer.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="521" y="64" width="16" height="13" uuid="01717c74-486d-40b7-9137-07898e652885"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[din ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="509" y="64" width="12" height="13" uuid="564d9887-ad6f-4b42-954a-70326fbf7e32"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="537" y="64" width="12" height="13" uuid="8f3c4fe0-41af-4130-8f08-f3280bdb65f3"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>
