@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 	private String                              codeAmed;
 	private NmPharmaceuticalFormsEntity         pharmaceuticalForm;
 	private String                              dose;
-	private String                              unitsQuantityMeasurement;
+	private String                              unitsOfMeasurement;
 	private Integer                             quantity;
 	private Boolean                             approved;
 	private Timestamp                           expirationDate;
@@ -74,12 +74,12 @@ import java.sql.Timestamp;
 
 	@Basic
 	@Column(name = "unit_measurement_id")
-	public String getUnitsQuantityMeasurement() {
-		return unitsQuantityMeasurement;
+	public String getUnitsOfMeasurement() {
+		return unitsOfMeasurement;
 	}
 
-	public void setUnitsQuantityMeasurement(String unitsQuantityMeasurement) {
-		this.unitsQuantityMeasurement = unitsQuantityMeasurement;
+	public void setUnitsOfMeasurement(String unitsOfMeasurement) {
+		this.unitsOfMeasurement = unitsOfMeasurement;
 	}
 
 	@Basic
@@ -234,7 +234,7 @@ import java.sql.Timestamp;
 		if (codeAmed != null ? !codeAmed.equals(that.codeAmed) : that.codeAmed != null) return false;
 		if (pharmaceuticalForm != null ? !pharmaceuticalForm.equals(that.pharmaceuticalForm) : that.pharmaceuticalForm != null) return false;
 		if (dose != null ? !dose.equals(that.dose) : that.dose != null) return false;
-		if (unitsQuantityMeasurement != null ? !unitsQuantityMeasurement.equals(that.unitsQuantityMeasurement) : that.unitsQuantityMeasurement != null)
+		if (unitsOfMeasurement != null ? !unitsOfMeasurement.equals(that.unitsOfMeasurement) : that.unitsOfMeasurement != null)
 			return false;
 		if (quantity != null ? !quantity.equals(that.quantity) : that.quantity != null) return false;
 		if (approved != null ? !approved.equals(that.approved) : that.approved != null) return false;
@@ -260,7 +260,7 @@ import java.sql.Timestamp;
 		result = 31 * result + (codeAmed != null ? codeAmed.hashCode() : 0);
 		result = 31 * result + (pharmaceuticalForm != null ? pharmaceuticalForm.hashCode() : 0);
 		result = 31 * result + (dose != null ? dose.hashCode() : 0);
-		result = 31 * result + (unitsQuantityMeasurement != null ? unitsQuantityMeasurement.hashCode() : 0);
+		result = 31 * result + (unitsOfMeasurement != null ? unitsOfMeasurement.hashCode() : 0);
 		result = 31 * result + (quantity != null ? quantity.hashCode() : 0);
 		result = 31 * result + (approved != null ? approved.hashCode() : 0);
 		result = 31 * result + (expirationDate != null ? expirationDate.hashCode() : 0);

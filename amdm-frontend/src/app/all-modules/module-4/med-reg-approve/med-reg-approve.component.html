@@ -162,14 +162,13 @@
 
                 <section>
 
-                    <h5 class="text-center font-weight-bold" *ngIf="importData.importAuthorizationEntity.medType===1">Informația despre Medicamentul Înregistrat</h5>
-                    <h5 class="text-center font-weight-bold" *ngIf="importData.importAuthorizationEntity.medType===2">Informația despre Medicamentul Neînregistrat</h5>
+                    <h5 class="text-center font-weight-bold" >Specificaţia tehnică şi de preţ a obiectelor importului</h5>
                     <hr>
-                    <div formArrayName="unitOfImportTable">
+                  <!--  <div formArrayName="unitOfImportTable">
                         <div class="row">
 
                             <div class="col-4" *ngIf="importData.importAuthorizationEntity.medType==1">
-                            <!--<div class="col-4">-->
+                            &lt;!&ndash;<div class="col-4">&ndash;&gt;
                                 <div class="md-form-modified">
                                     <ng-select [items]="medicaments | async"
                                                bindLabel="name"
@@ -285,7 +284,7 @@
                                 </div>
                             </div>
 
-                            <!--======================================================================-->
+                            &lt;!&ndash;======================================================================&ndash;&gt;
                             <div class="col-4">
                                 <div class="md-form-modified">
                                     <ng-select [items]="pharmaceuticalForm | async"
@@ -297,7 +296,7 @@
                                                required="true">
                                         <ng-template ng-option-tmp let-item="item">
                                             {{item.description}};
-                                            <!--<small class="form-text text-muted">Cod: {{item.code}}</small>-->
+                                            &lt;!&ndash;<small class="form-text text-muted">Cod: {{item.code}}</small>&ndash;&gt;
                                         </ng-template>
                                     </ng-select>
                                     <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').invalid">
@@ -327,7 +326,7 @@
                                     <small class="text-muted"><strong class="text-danger">Divizarea trebuie selectată</strong></small>
                                 </div>
                             </div>
-                            <!--======================================================================-->
+                            &lt;!&ndash;======================================================================&ndash;&gt;
 
 
                             <div class="col-md-4">
@@ -391,14 +390,14 @@
                                     <small class="text-muted"><strong class="text-danger">Nr. de înregistrare în RM trebuie selectat</strong></small>
                                 </div>
                             </div>
-                            <!--<div class="col-md-4" *ngIf="importData.importAuthorizationEntity.medType==1">-->
-                            <!--<div class="md-form">-->
-                            <!--<input id="registrationRmDate" mdbInputDirective type="text" class="form-control" formControlName="registrationRmDate">-->
-                            <!--<label for="registrationRmDate">Data de înregistrare în RM-->
-                            <!--<span class="text-danger">*</span>-->
-                            <!--</label>-->
-                            <!--</div>-->
-                            <!--</div>-->
+                            &lt;!&ndash;<div class="col-md-4" *ngIf="importData.importAuthorizationEntity.medType==1">&ndash;&gt;
+                            &lt;!&ndash;<div class="md-form">&ndash;&gt;
+                            &lt;!&ndash;<input id="registrationRmDate" mdbInputDirective type="text" class="form-control" formControlName="registrationRmDate">&ndash;&gt;
+                            &lt;!&ndash;<label for="registrationRmDate">Data de înregistrare în RM&ndash;&gt;
+                            &lt;!&ndash;<span class="text-danger">*</span>&ndash;&gt;
+                            &lt;!&ndash;</label>&ndash;&gt;
+                            &lt;!&ndash;</div>&ndash;&gt;
+                            &lt;!&ndash;</div>&ndash;&gt;
                             <div class="col-4" *ngIf="importData.importAuthorizationEntity.medType==1">
                                 <div class="md-form-modified">
                                     <mat-form-field class="w-100">
@@ -428,12 +427,10 @@
                             </div>
                         </div>
                         <div class="text-right">
-                            <!--<button class="btn btn-danger waves-light btn-md" (click)="deleteImportTypeForm(i)">Sterge</button>-->
-                            <!--<button type="submit" class="btn btn-indigo waves-light btn-md" mdbWavesEffect (click)="addImportTypeForm()" (click)="getProducerAddress(i)">Adauga</button>-->
                             <button type="submit" class="btn btn-indigo waves-light btn-md" mdbWavesEffect (click)="addUnitOfImport()">Adauga</button>
                         </div>
-                        <!--</div>-->
-                    </div>
+                        </div>
+                    </div>-->
 
                     <table class="table table-widths text-center">
                         <thead class="black white-text">
@@ -452,7 +449,6 @@
                             <th scope="col">Codul Vamal</th>
                             <th scope="col">Aprobat</th>
 
-                            <!--<th scope="col">Actiuni</th>-->
                         </tr>
                         </thead>
                         <tbody>
@@ -470,8 +466,6 @@
                             <td>{{ unitOfImport.expirationDate | date:'mediumDate' }}</td>
                             <td>{{ unitOfImport.customsCode.description }}</td>
                             <td> <input type="checkbox" [checked]="importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved" (change)="setApproved(i)">   </td>
-                            <!--<td> <input type="checkbox" [(ngModel)] = // unitOfImport. (change)="setApproved(i)" >   </td>-->
-                            <!--<td> <mat-checkbox [checked]="checked" > (change)</mat-checkbox> </td>-->
 
                         </tr>
                         </tbody>
