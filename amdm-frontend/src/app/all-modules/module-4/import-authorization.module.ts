@@ -18,6 +18,9 @@ import {UploadFileService} from "../../shared/service/upload/upload-file.service
 import {RequestService} from "../../shared/service/request.service";
 import {DocumentModule} from "../../document/document.module";
 import {MedRegApproveComponent} from "./med-reg-approve/med-reg-approve.component";
+import {ImportMedDialog} from "./dialog/import-med-dialog";
+import {MedInstInvestigatorsDialogComponent} from "../module-9/dialog/med-inst-investigators-dialog/med-inst-investigators-dialog.component";
+import {AdditionalDataDialogComponent} from "../module-9/dialog/additional-data-dialog/additional-data-dialog.component";
 
 
 @NgModule({
@@ -30,7 +33,12 @@ import {MedRegApproveComponent} from "./med-reg-approve/med-reg-approve.componen
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
     ],
-    declarations: [ImportAuthorizationEvaluateComponent,ImportAuthorizationRequestComponent, MedRegComponent, MedNeregComponent, MateriaPrimaComponent, AmbalajComponent, MedRegApproveComponent],
+    entryComponents: [
+       ImportMedDialog,
+    ],
+    declarations: [ImportAuthorizationEvaluateComponent,ImportAuthorizationRequestComponent,
+                    MedRegComponent, MedNeregComponent, MateriaPrimaComponent, AmbalajComponent,
+                    MedRegApproveComponent, ImportMedDialog],
     providers: [UploadFileService,RequestService]
 })
 export class ImportAuthorizationModule {
