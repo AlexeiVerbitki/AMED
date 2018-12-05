@@ -121,12 +121,10 @@ export class AmbalajComponent implements OnInit {
                 'stuff_type_id': [], // to delete
                 'expiration_date': [],
 
-                //   For Import management/ import based on customs
-                //customs_declaration_date
-                //customs_transacton_type_id
-                'authorizationsNumber': [], // inca nu exista la pasul acesta
+                'customsNumber':[],
+                'customsDeclarationDate':[],
+                'authorizationsNumber':[], // inca nu exista la pasul acesta
                 'medType': [''],
-                // 'unitOfImportTable': [],
                 'importAuthorizationDetailsEntityList' :[],
                 'unitOfImportTable': this.fb.group({
 

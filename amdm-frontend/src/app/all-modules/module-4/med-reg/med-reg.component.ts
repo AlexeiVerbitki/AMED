@@ -208,7 +208,8 @@ export class MedRegComponent implements OnInit {
                     //
                     // }
 
-                    if (data.importAuthorizationEntity.medType === 2) {
+                    // if (data.importAuthorizationEntity.medType === 2) {
+                    if (data.importAuthorizationEntity.medType) {
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setErrors(null);
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setErrors(null);
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setErrors(null);
@@ -474,6 +475,10 @@ export class MedRegComponent implements OnInit {
                     )
                 )
             );
+    }
+
+    loadMedicamentPrice(){
+
     }
 
 
