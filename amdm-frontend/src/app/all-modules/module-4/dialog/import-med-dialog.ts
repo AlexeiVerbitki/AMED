@@ -229,7 +229,8 @@ export class ImportMedDialog implements OnInit {
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(this.dialogData.atcCode);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(this.dialogData.registrationNumber);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(this.dialogData.registrationDate));
-            this.producerAddress = this.dialogData.producer.address + ", " + this.dialogData.producer.country.description
+            this.producerAddress = this.dialogData.producer.address + ", " + this.dialogData.producer.country.description;
+
             this.evaluateImportForm.get('importAuthorizationEntity.seller').disable();
             this.evaluateImportForm.get('importAuthorizationEntity.importer').disable();
             this.evaluateImportForm.get('importAuthorizationEntity.basisForImport').disable();
