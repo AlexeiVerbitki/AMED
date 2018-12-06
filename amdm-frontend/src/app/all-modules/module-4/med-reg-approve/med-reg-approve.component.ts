@@ -3,7 +3,7 @@ import {FormArray, Validators} from '@angular/forms';
 import {FormGroup, FormBuilder} from '@angular/forms';
 import {Component, OnInit} from '@angular/core';
 import {Observable, Subscription} from "rxjs";
-import {MatDialog} from "@angular/material";
+import {MatDialog, MatDialogConfig} from "@angular/material";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AdministrationService} from "../../../shared/service/administration.service";
 // import {debounceTime, distinctUntilChanged, filter, map, startWith, tap} from "rxjs/operators";
@@ -18,6 +18,7 @@ import {AuthService} from "../../../shared/service/authetication.service";
 import {MedicamentService} from "../../../shared/service/medicament.service";
 import {Utils} from "angular-bootstrap-md/angular-bootstrap-md/utils/utils.class";
 import {forEach} from "@angular/router/src/utils/collection";
+import {ImportMedDialog} from "../dialog/import-med-dialog";
 
 export interface PeriodicElement {
     name: string;
@@ -413,6 +414,29 @@ export class MedRegApproveComponent implements OnInit {
         });
     }
 
+    showunitOfImport(unitOfImport: any) {
+        let dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.height = '900px';
+        dialogConfig2.width = '850px';
+
+        dialogConfig2.data = unitOfImport;
+        dialogConfig2.data.medtType = this.importData.importAuthorizationEntity.medType;
+
+        let dialogRef = this.dialog.open(ImportMedDialog, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('result', result);
+            if (result == null || result == undefined || result.success === false) {
+                return;
+            }
+
+        });
+    }
 
     loadATCCodes(){
         this.customsCodes =
@@ -673,7 +697,7 @@ export class MedRegApproveComponent implements OnInit {
                 alert("after addImportRequest(modelToSubmit)")
                 console.log("addImportRequest(modelToSubmit).subscribe(data) ",data)
                 this.loadingService.hide();
-                // this.router.navigate(['dashboard/module']); for now to post multiple times
+                this.router.navigate(['dashboard/homepage']);
             }, error => {
                 alert("Something went wrong while sending the model")
                 console.log("error: ",error)

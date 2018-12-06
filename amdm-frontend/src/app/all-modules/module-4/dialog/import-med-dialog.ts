@@ -96,6 +96,7 @@ export class ImportMedDialog implements OnInit {
     internationalMedicamentNameInputs = new Subject<string>();
 
     checked: boolean;
+    medType : any;
 
 
 
@@ -119,6 +120,7 @@ export class ImportMedDialog implements OnInit {
     ngOnInit() {
         console.log("dialogData: ",this.dialogData)
         this.importData = this.dialogData;
+        this.medType= this.dialogData.medtType;
 
         this.checked=false;
         this.currentDate = new Date();

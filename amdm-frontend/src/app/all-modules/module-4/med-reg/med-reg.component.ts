@@ -396,6 +396,7 @@ export class MedRegComponent implements OnInit {
         dialogConfig2.width = '850px';
 
         dialogConfig2.data = unitOfImport;
+        dialogConfig2.data.medtType = this.importData.importAuthorizationEntity.medType;
 
         let dialogRef = this.dialog.open(ImportMedDialog, dialogConfig2);
 
