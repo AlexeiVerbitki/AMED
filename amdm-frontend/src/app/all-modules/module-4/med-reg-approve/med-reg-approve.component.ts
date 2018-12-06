@@ -679,7 +679,7 @@ export class MedRegApproveComponent implements OnInit {
         // modelToSubmit.documents = this.docs;
 
         modelToSubmit = this.importData;
-        modelToSubmit.importAuthorizationEntity.applicationRegistrationNumber = this.importData.importAuthorizationEntity.id + "/" + new Date().getFullYear().toString().slice(2)+ "-AM"
+        modelToSubmit.importAuthorizationEntity.applicationRegistrationNumber = this.importData.importAuthorizationEntity.id + "/" + new Date().getFullYear()+ "-AM"
         modelToSubmit.requestHistories.push({
             startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
             endDate: new Date(),
