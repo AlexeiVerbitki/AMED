@@ -48,13 +48,16 @@
                 <div *ngIf="formSubmitted && rForm.get('company').invalid">
                     <small class="text-muted"><strong class="text-danger">Importator trebuie selectat</strong></small>
                 </div>
-                <div *ngIf="activeLicenses==null">
+                <div *ngIf="activeLicenses==null && formSubmitted">
                     <small class="text-muted"><strong class="text-danger">Importatorul selectat nu are licente valabile</strong></small>
                 </div>
             </div>
 
         </div>
         <app-document [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypes]="docTypes"></app-document>
+        <div *ngIf="docs.length<=0 && formSubmitted">
+            <small class="text-muted"><strong class="text-danger">Importatorul selectat nu are licente valabile</strong></small>
+        </div>
 
         <mat-radio-group formControlName="importType">
             <div class="container">
