@@ -56,7 +56,7 @@
         </div>
         <app-document [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypes]="docTypes"></app-document>
         <div *ngIf="docs.length<=0 && formSubmitted">
-            <small class="text-muted"><strong class="text-danger">Importatorul selectat nu are licente valabile</strong></small>
+            <small class="text-muted "><strong class="text-danger">Nici un document nu a fost încărcat</strong></small>
         </div>
 
         <mat-radio-group formControlName="importType">
