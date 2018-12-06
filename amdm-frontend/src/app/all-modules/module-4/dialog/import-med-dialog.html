@@ -1,8 +1,9 @@
 <div>
     <div class="container-fluid sky z-depth-2">
         <!--<h3 class="text-center my-3 font-weight-bold">Inregistrare cerere</h3>-->
-        dialogData: {{dialogData.currency | json}}
-        valutaList: {{valutaList | json}}
+        <!--dialogData: {{dialogData.currency | json}}-->
+        dialogData: {{producerAddress | json}}
+        <!--valutaList: {{valutaList | json}}-->
         <form [formGroup]="evaluateImportForm">
             <!--<div class="row">
                 <div class="col-lg-4">
@@ -174,6 +175,7 @@
                                                formControlName="medicament"
                                                [loading]="loadingmedicaments"
                                                [typeahead]="medicamentsInputs"
+                                               [attr.disabled]="true"
                                                required="true">
                                         <ng-template ng-option-tmp let-item="item">
                                             {{item.name}};
@@ -206,6 +208,7 @@
                                             formControlName="internationalMedicamentName"
                                             [loading]="loadinginternationalMedicamentName"
                                             [typeahead]="internationalMedicamentNameInputs"
+                                            [attr.disabled]="true"
                                             required="true">
                                         <ng-template ng-option-tmp let-item="item">
                                             {{item.description}} <br/>
@@ -222,6 +225,7 @@
                             <div class="col-4">
                                 <div class="md-form">
                                     <input id="quantity" mdbInputDirective type="number" class="form-control"
+                                           [attr.disabled]="true"
                                            formControlName="quantity">
                                     <label for="quantity">Cantitatea</label>
                                 </div>
@@ -232,6 +236,7 @@
                             <div class="col-4">
                                 <div class="md-form">
                                     <input id="price" mdbInputDirective type="number" class="form-control"
+                                           [attr.disabled]="true"
                                            formControlName="price">
                                     <label for="price">Pretul</label>
                                 </div>
@@ -243,6 +248,7 @@
                                 <div class="md-form-modified">
                                     <mat-form-field class="w-100">
                                         <mat-select id="currency" placeholder="Valuta"
+                                                    [attr.disabled]="true"
                                                     formControlName="currency">
                                             <mat-option *ngFor="let valuta of valutaList" [value]="valuta">{{ valuta.shortDescription }}</mat-option>
                                         </mat-select>
@@ -271,6 +277,7 @@
                                                formControlName="customsCode"
                                                [loading]="loadingcustomsCodes"
                                                [typeahead]="customsCodesInputs"
+                                               [attr.disabled]="true"
                                                required="true">
                                         <ng-template ng-option-tmp let-item="item">
                                             {{item.description}};
@@ -292,6 +299,7 @@
                                                formControlName="pharmaceuticalForm"
                                                [loading]="loadingpharmaceuticalForm"
                                                [typeahead]="pharmaceuticalFormInputs"
+                                               [attr.disabled]="true"
                                                required="true">
                                         <ng-template ng-option-tmp let-item="item">
                                             {{item.description}};
@@ -307,6 +315,7 @@
                             <div class="col-4">
                                 <div class="md-form">
                                     <input id="dose" mdbInputDirective type="text" class="form-control"
+                                           [attr.disabled]="true"
                                            formControlName="dose">
                                     <label for="dose">Doza</label>
                                 </div>
@@ -318,6 +327,7 @@
                             <div class="col-4">
                                 <div class="md-form">
                                     <input id="unitsOfMeasurement" mdbInputDirective type="text" class="form-control"
+                                           [attr.disabled]="true"
                                            formControlName="unitsOfMeasurement">
                                     <label for="dose">Divizare (Unitatea  de măsură)</label>
                                 </div>
@@ -336,6 +346,7 @@
                                                formControlName="producer"
                                                [loading]="loadingManufacturerRfPr"
                                                [typeahead]="manufacturerInputsRfPr"
+                                               [attr.disabled]="true"
                                                required="true">
                                         <ng-template ng-option-tmp let-item="item">
                                             Denumire: {{item.description}};
@@ -365,6 +376,7 @@
                                                formControlName="atcCode"
                                                [loading]="loadingAtcCodes"
                                                [typeahead]="atcCodesInputs"
+                                               [attr.disabled]="true"
                                                required="true">
                                         <ng-template ng-option-tmp let-item="item">
                                             {{item.code}} <br/>
@@ -380,7 +392,9 @@
 
                             <div class="col-md-4" >
                                 <div class="md-form">
-                                    <input id="registrationRmNumber" mdbInputDirective type="text" class="form-control" formControlName="registrationRmNumber">
+                                    <input id="registrationRmNumber" mdbInputDirective type="text" class="form-control"
+                                           [attr.disabled]="true"
+                                           formControlName="registrationRmNumber">
                                     <label for="registrationRmNumber">Nr. de înregistrare în RM
                                         <span class="text-danger">*</span>
                                     </label>
@@ -393,6 +407,7 @@
                                 <div class="md-form-modified">
                                     <mat-form-field class="w-100">
                                         <input matInput [matDatepicker]="picker22" placeholder="Data de înregistrare în RM"
+                                               [attr.disabled]="true"
                                                formControlName="registrationRmDate">
                                         <mat-datepicker-toggle matSuffix [for]="picker22"></mat-datepicker-toggle>
                                         <mat-datepicker touchUi #picker22></mat-datepicker>
@@ -407,6 +422,7 @@
                                 <div class="md-form-modified">
                                     <mat-form-field class="w-100">
                                         <input matInput [matDatepicker]="picker23" placeholder="Termen de valabilitate"
+                                               [attr.disabled]="true"
                                                formControlName="expirationDate">
                                         <mat-datepicker-toggle matSuffix [for]="picker23"></mat-datepicker-toggle>
                                         <mat-datepicker touchUi #picker23></mat-datepicker>

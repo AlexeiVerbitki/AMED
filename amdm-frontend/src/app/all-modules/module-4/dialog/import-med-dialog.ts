@@ -119,6 +119,26 @@ export class ImportMedDialog implements OnInit {
     ngOnInit() {
         console.log("dialogData: ",this.dialogData)
         this.importData = this.dialogData;
+
+        this.checked=false;
+        this.currentDate = new Date();
+        this.sellerAddress='';
+        this.producerAddress='';
+        this.importerAddress='';
+        this.formSubmitted = false;
+        this.addMedicamentClicked = false;
+        this.loadEconomicAgents();
+        this.loadManufacturersRfPr();
+        // this.onChanges();
+        this.loadCurrenciesShort();
+        this.loadCustomsCodes();
+        this.loadATCCodes();
+        this.loadPharmaceuticalForm();
+        this.loadUnitsOfMeasurement();
+        this.loadMedicaments();
+        this.loadInternationalMedicamentName();
+        // console.log("importTypeForms.value",this.importTypeForms.value)
+
         this.evaluateImportForm = this.fb.group({
             // 'id':              [''],
             // 'requestNumber':   [null],
@@ -218,8 +238,7 @@ export class ImportMedDialog implements OnInit {
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(this.dialogData.quantity);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').setValue(this.dialogData.price);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.dialogData.summ);
-            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(this.dialogData.currency.shortDescription);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(this.dialogData.quantity);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(this.dialogData.currency.shortDescription);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(this.dialogData.producer);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(new Date(this.dialogData.expirationDate));
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(this.dialogData.pharmaceuticalForm);
@@ -230,14 +249,27 @@ export class ImportMedDialog implements OnInit {
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(this.dialogData.registrationNumber);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(this.dialogData.registrationDate));
             this.producerAddress = this.dialogData.producer.address + ", " + this.dialogData.producer.country.description;
+            console.log("this.dialogData.producer.address",this.dialogData.producer.address);
+            console.log("this.dialogData.producer.country.description",this.dialogData.producer.country.description);
 
-            this.evaluateImportForm.get('importAuthorizationEntity.seller').disable();
-            this.evaluateImportForm.get('importAuthorizationEntity.importer').disable();
-            this.evaluateImportForm.get('importAuthorizationEntity.basisForImport').disable();
-            this.evaluateImportForm.get('importAuthorizationEntity.conditionsAndSpecification').disable();
-            this.evaluateImportForm.get('importAuthorizationEntity.authorizationsNumber').disable();
-            this.evaluateImportForm.get('importAuthorizationEntity.customsNumber').disable();
-            this.evaluateImportForm.get('importAuthorizationEntity.customsDeclarationDate').disable();
+
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').disable();
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').disable();
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').disable();
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').disable();
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').disable();
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').disable();
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').disable();
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').disable();
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').disable();
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').disable();
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').disable();
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').disable();
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').disable();
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').disable();
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').disable();
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').disable();
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').disable();
 
 
                     // if (this.dialogData.importAuthorizationEntity.medType === 2) {
@@ -250,24 +282,7 @@ export class ImportMedDialog implements OnInit {
         //     ))
         // }))
 
-        this.checked=false;
-        this.currentDate = new Date();
-        this.sellerAddress='';
-        this.producerAddress='';
-        this.importerAddress='';
-        this.formSubmitted = false;
-        this.addMedicamentClicked = false;
-        this.loadEconomicAgents();
-        this.loadManufacturersRfPr();
-        // this.onChanges();
-        this.loadCurrenciesShort();
-        this.loadCustomsCodes();
-        this.loadATCCodes();
-        this.loadPharmaceuticalForm();
-        this.loadUnitsOfMeasurement();
-        this.loadMedicaments();
-        this.loadInternationalMedicamentName();
-        console.log("importTypeForms.value",this.importTypeForms.value)
+
     }
 
 
