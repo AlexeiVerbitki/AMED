@@ -23,4 +23,9 @@ public interface LicensesRepository extends JpaRepository<LicensesEntity, Intege
 
     @Query(value = "SELECT * FROM licenses where id = ?1 and status='S' and expiration_date > ?2", nativeQuery = true)
     Optional<LicensesEntity> getSuspendedLicenseById(Integer id, @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date now);
+
+
+    @Query(value = "SELECT * FROM licenses where idno = ?1 and status='F' and expiration_date > ?2", nativeQuery = true)
+    Optional<LicensesEntity> getActiveLicenseByIdno(String idno, @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date now);
+
 }

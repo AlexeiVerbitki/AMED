@@ -48,6 +48,9 @@
                 <div *ngIf="formSubmitted && rForm.get('company').invalid">
                     <small class="text-muted"><strong class="text-danger">Importator trebuie selectat</strong></small>
                 </div>
+                <div *ngIf="activeLicenses==null">
+                    <small class="text-muted"><strong class="text-danger">Importatorul nu are licente valabile</strong></small>
+                </div>
             </div>
 
         </div>

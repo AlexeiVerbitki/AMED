@@ -45,7 +45,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
     loadingCompany: boolean = false;
     protected companyInputs = new Subject<string>();
 
-
+    activeLicenses: any;
 
 
 
@@ -89,13 +89,8 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         this.generateDocNr();
         this.loadDocTypes();
         this.loadEconomicAgents();
-        this.applicationRegistrationNumber = this.requestService.getImportAuthorizationNumber();
-        console.log("applicationRegistrationNumber", this.applicationRegistrationNumber)
-
-        this.subscriptions.push(this.requestService.getImportAuthorizationNumber().subscribe(data =>{
-            this.applicationRegistrationNumber = data;
-            console.log("applicationRegistrationNumber", this.applicationRegistrationNumber)
-        }))
+        this.onChanges();
+        this.activeLicenses=false;
 
         this.currentDate = new Date();
 
@@ -148,15 +143,6 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         );
     }
 
-    // loadSolicitantCompanyList() {
-    //     this.subscriptions.push(
-    //         this.administrationService.getAllCompanies().subscribe(data => {
-    //                 this.solicitantCompanyList = data;
-    //             },
-    //             error => console.log(error)
-    //         )
-    //     )
-    // }
 
     loadEconomicAgents() {
         this.importer =
@@ -191,60 +177,93 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         );
     }
 
+    onChanges(): void {
+        this.subscriptions.push( this.rForm.get('company').valueChanges.subscribe(val => {
+            if (val) {
+                console.log("company has changed to: " , val)
+                this.requestService.getActiveLicenses(val.idno).subscribe(data=>{
+                    console.log("this.requestService.getActiveLicenses(val.idno).subscribe", data)
+                    this.activeLicenses = data;
+
+                })
+            }
+        }));
+    }
+
     nextStep() {
         this.formSubmitted = true;
 
-        // console.log(this.rForm)
-        // console.log(this.rForm.status)
-        if (/*this.docs.length == 0 ||*/ this.rForm.invalid ) {
-            alert('No Documents attached or Invalid Form data!!')
-            return;
+        // if (/*this.docs.length == 0 ||*/ this.rForm.invalid) {
+        //     alert('Invalid Form data!!')
+        //     return;
+        // }
+        // if (!this.activeLicenses == null) {
+        //
+        //     return;
+        // } else {
+        //     alert('No active licenses!!')
+        // }
+
+
+
+            this.medType = this.rForm.get('importType').value
+            console.log("this.medType", this.medType);
+            // this.rForm.get('importAuthorizationEntity.medType').setValue(this.medType);
+
+
+            let formModel: any = this.rForm.value;
+            formModel.importAuthorizationEntity.medType = this.medType;
+            console.log("formModel.importAuthorizationEntity.medType", formModel.importAuthorizationEntity.medType);
+
+
+
+            formModel.type.id = '11';
+            formModel.requestHistories = [{
+                // startDate: this.rForm.get('startDate').value,
+                startDate: formModel.startDate,
+                endDate: new Date(),
+                username: this.authService.getUserName(),
+                step: formModel.currentStep
+            }];
+
+
+            // formModel.importAuthorizationEntity.documents = this.docs;
+            formModel.documents = this.docs;
+            formModel.currentStep = 'E';
+            formModel.initiator = this.authService.getUserName();
+            formModel.assignedUser = this.authService.getUserName();
+
+            console.log("formModel", formModel)
+            console.log("this.activeLicenses", this.activeLicenses)
+            console.log("rForm.valid", this.rForm.valid)
+
+        if (this.activeLicenses !== null && this.rForm.valid) {
+            this.loadingService.show();
+            this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
+                    switch (this.rForm.get('importType').value) {
+                        case "1": {
+                            this.router.navigate(['dashboard/module/import-authorization/registered-medicament/' + data.body.id]);
+                            break;
+                        }
+                        case "2": {
+                            this.router.navigate(['dashboard/module/import-authorization/unregistered-medicament/' + data.body.id]);
+                            break;
+                        }
+                        case "3": {
+                            this.router.navigate(['dashboard/module/import-authorization/materia-prima/' + data.body.id]);
+                            break;
+                        }
+                        case "4": {
+                            this.router.navigate(['dashboard/module/import-authorization/ambalaj/' + data.body.id]);
+                            break;
+                        }
+                    }
+                    this.loadingService.hide();
+                    this.formSubmitted = false;
+                }, error => this.loadingService.hide())
+            );
+
         }
-
-        this.medType = this.rForm.get('importType').value
-        console.log("this.medType",this.medType);
-        // this.rForm.get('importAuthorizationEntity.medType').setValue(this.medType);
-
-
-        let formModel: any = this.rForm.value;
-        formModel.importAuthorizationEntity.medType = this.medType;
-        console.log("formModel.importAuthorizationEntity.medType",formModel.importAuthorizationEntity.medType);
-
-        this.loadingService.show();
-
-        formModel.type.id = '11';
-        formModel.requestHistories = [{
-            // startDate: this.rForm.get('startDate').value,
-            startDate: formModel.startDate,
-            endDate: new Date(),
-            username: this.authService.getUserName(),
-            step: formModel.currentStep
-        }];
-
-
-        // formModel.importAuthorizationEntity.documents = this.docs;
-        formModel.documents = this.docs;
-        formModel.currentStep = 'E';
-        formModel.initiator = this.authService.getUserName();
-        formModel.assignedUser = this.authService.getUserName();
-
-        console.log("formModel", formModel)
-
-        this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
-            switch(this.rForm.get('importType').value){
-                case "1":{this.router.navigate(['dashboard/module/import-authorization/registered-medicament/'  +data.body.id]) ; break;}
-                case "2":{this.router.navigate(['dashboard/module/import-authorization/unregistered-medicament/'+data.body.id]) ; break;}
-                case "3":{this.router.navigate(['dashboard/module/import-authorization/materia-prima/'          +data.body.id]) ; break;}
-                case "4":{this.router.navigate(['dashboard/module/import-authorization/ambalaj/'                +data.body.id]) ; break;}
-            }
-            this.loadingService.hide();
-            this.formSubmitted=false;
-            }, error => this.loadingService.hide())
-        );
-
-
-
     }
-
 
 }

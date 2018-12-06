@@ -3,6 +3,7 @@ package com.bass.amed.controller.rest;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
+import com.bass.amed.repository.license.LicensesRepository;
 import com.bass.amed.repository.prices.NmPricesRepository;
 import com.bass.amed.repository.prices.PriceRepository;
 import com.bass.amed.repository.prices.PricesHistoryRepository;
@@ -50,8 +51,8 @@ public class RequestController
     private NmPricesRepository nmPricesRepository;
     @Autowired
     private PricesHistoryRepository pricesHistoryRepository;
-//    @Autowired
-//    private ImportDetailsRepository importDetailsRepository;
+    @Autowired
+    private LicensesRepository licensesRepository;
 
     @RequestMapping(value = "/add-medicament-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RegistrationRequestsEntity> saveMedicamentRequest(@RequestBody RegistrationRequestsEntity request) throws CustomException
@@ -697,12 +698,19 @@ public class RequestController
         return new ResponseEntity<>(rrE, HttpStatus.OK);
     }
 
-//    @GetMapping(value = "/get-max-import-authorization-number")
-//    public String getImportById() throws CustomException {
-//        String maxId = importDetailsRepository.findMaxImportAuthorizationNumber();
-//
-//
-//        return maxId+"-AM";
-//    }
+    @GetMapping(value = "/load-active-licenses")
+    public ResponseEntity<LicensesEntity> getActiveLicensesByIdno(@RequestParam(value = "id") String idno) throws CustomException {
+        Optional<LicensesEntity> regOptional = licensesRepository.getActiveLicenseByIdno(idno, new Date());
+        if (!regOptional.isPresent()) {
+//            throw new CustomException("Licenta nu a fost gasita");
+            return null;
+
+        }
+        LicensesEntity rrE = regOptional.get();
+//        rrE.setClinicalTrails((ClinicalTrialsEntity) Hibernate.unproxy(regOptional.get().getClinicalTrails()));
+//        rrE.setCompany((NmEconomicAgentsEntity) Hibernate.unproxy(regOptional.get().getCompany()));
+
+        return new ResponseEntity<>(rrE, HttpStatus.OK);
+    }
 
 }
