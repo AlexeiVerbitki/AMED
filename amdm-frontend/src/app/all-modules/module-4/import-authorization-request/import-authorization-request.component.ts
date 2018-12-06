@@ -39,6 +39,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
     currentDate: Date;
     file: any;
     medType: any;
+    applicationRegistrationNumber: any;
 
     importer: Observable<any[]>;
     loadingCompany: boolean = false;
@@ -88,6 +89,13 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         this.generateDocNr();
         this.loadDocTypes();
         this.loadEconomicAgents();
+        this.applicationRegistrationNumber = this.requestService.getImportAuthorizationNumber();
+        console.log("applicationRegistrationNumber", this.applicationRegistrationNumber)
+
+        this.subscriptions.push(this.requestService.getImportAuthorizationNumber().subscribe(data =>{
+            this.applicationRegistrationNumber = data;
+            console.log("applicationRegistrationNumber", this.applicationRegistrationNumber)
+        }))
 
         this.currentDate = new Date();
 

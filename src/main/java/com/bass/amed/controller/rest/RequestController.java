@@ -50,6 +50,8 @@ public class RequestController
     private NmPricesRepository nmPricesRepository;
     @Autowired
     private PricesHistoryRepository pricesHistoryRepository;
+//    @Autowired
+//    private ImportDetailsRepository importDetailsRepository;
 
     @RequestMapping(value = "/add-medicament-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RegistrationRequestsEntity> saveMedicamentRequest(@RequestBody RegistrationRequestsEntity request) throws CustomException
@@ -694,5 +696,13 @@ public class RequestController
 
         return new ResponseEntity<>(rrE, HttpStatus.OK);
     }
+
+//    @GetMapping(value = "/get-max-import-authorization-number")
+//    public String getImportById() throws CustomException {
+//        String maxId = importDetailsRepository.findMaxImportAuthorizationNumber();
+//
+//
+//        return maxId+"-AM";
+//    }
 
 }

@@ -19,6 +19,7 @@ import {MedicamentService} from "../../../shared/service/medicament.service";
 import {Utils} from "angular-bootstrap-md/angular-bootstrap-md/utils/utils.class";
 import {forEach} from "@angular/router/src/utils/collection";
 import {ImportMedDialog} from "../dialog/import-med-dialog";
+import {Timestamp} from "rxjs/internal/operators/timestamp";
 
 export interface PeriodicElement {
     name: string;
@@ -678,6 +679,7 @@ export class MedRegApproveComponent implements OnInit {
         // modelToSubmit.documents = this.docs;
 
         modelToSubmit = this.importData;
+        modelToSubmit.importAuthorizationEntity.applicationRegistrationNumber = this.importData.importAuthorizationEntity.id + "/" + new Date().getFullYear().toString().slice(2)+ "-AM"
         modelToSubmit.requestHistories.push({
             startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
             endDate: new Date(),

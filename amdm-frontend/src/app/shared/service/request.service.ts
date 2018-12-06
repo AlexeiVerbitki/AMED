@@ -92,4 +92,7 @@ export class RequestService {
     getImportRequest(id: string): Observable<any> {
         return this.http.get('/api/load-import-request', {params: {id: id}});
     }
+    getImportAuthorizationNumber(): Observable<any> {
+        return this.http.get('/api/get-max-import-authorization-number', {observe: 'response'});
+    }
 }
