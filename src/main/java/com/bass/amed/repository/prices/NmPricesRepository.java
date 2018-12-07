@@ -1,6 +1,5 @@
 package com.bass.amed.repository.prices;
 
-import com.bass.amed.entity.MedicamentEntity;
 import com.bass.amed.entity.NmPricesEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -9,7 +8,8 @@ import java.util.List;
 
 public interface NmPricesRepository extends JpaRepository<NmPricesEntity, Integer>
 {
-    NmPricesEntity findOneByMedicament(MedicamentEntity m);
+    NmPricesEntity findOneByMedicamentIdAndStatus(Integer mId, String status);
+    NmPricesEntity findOneByMedicamentId(Integer medId);
 
 
     @Query(value = "SELECT np.*\n" +

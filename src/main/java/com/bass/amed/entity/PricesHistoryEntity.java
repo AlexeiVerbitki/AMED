@@ -3,7 +3,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.util.Date;
 import java.sql.Timestamp;
 
 @Data
@@ -42,15 +42,15 @@ public class PricesHistoryEntity
 
     @Basic
     @Column(name = "revision_date")
-    private Timestamp revisionDate;
+    private Date revisionDate;
 
     @Basic
     @Column(name = "price")
-    private BigDecimal price;
+    private Double price;
 
     @Basic
     @Column(name = "price_mdl")
-    private BigDecimal priceMdl;
+    private Double priceMdl;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "currency_id")

@@ -86,7 +86,7 @@ const interceptors = [{
         HomepageModalComponent,
         MedicamentDetailsDialogComponent,
         MedicamentHistoryDialogComponent,
-        MedicamentModificationsDialogComponent,
+        MedicamentModificationsDialogComponent
     ],
     imports: [
         BrowserAnimationsModule,
@@ -101,7 +101,7 @@ const interceptors = [{
     ],
     schemas: [],
     entryComponents: [
-        ConfirmationDialogComponent,MedicamentHistoryDialogComponent,MedicamentModificationsDialogComponent,RequestAdditionalDataDialogComponent,ActiveSubstanceDialogComponent, HomepageModalComponent,MedicamentDetailsDialogComponent
+        ConfirmationDialogComponent, MedicamentHistoryDialogComponent, MedicamentModificationsDialogComponent, RequestAdditionalDataDialogComponent, ActiveSubstanceDialogComponent, HomepageModalComponent, MedicamentDetailsDialogComponent
     ],
     providers: [AuthService, AdministrationService, ErrorHandlerService, interceptors,
     ],

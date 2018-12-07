@@ -13,7 +13,7 @@ public interface PricesManagementRepository extends JpaRepository<PricesDTO, Int
 
     @Query(value = "SELECT rr.id               id,\n" +
             "       m.code              medicamentCode,\n" +
-            "       nmp.order_nr          orderNr,\n" +
+            "       nmp.order_nr        orderNr,\n" +
             "       rr.request_number   requestNumber,\n" +
             "       m.commercial_name   medicament,\n" +
             "       m.division          division,\n" +

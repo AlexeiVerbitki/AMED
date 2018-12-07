@@ -1,23 +1,26 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
-import {FormBuilder, FormGroup} from '@angular/forms';
 import {Subscription} from "rxjs";
 import {Router} from "@angular/router";
-import {TaskService} from "../../shared/service/task.service";
 import {PriceService} from "../../shared/service/prices.service";
 import {LoaderService} from "../../shared/service/loader.service";
 import {Document} from "../../models/document";
 import {NavbarTitleService} from "../../shared/service/navbar-title.service";
+import {ConfirmationDialogComponent} from "../../dialog/confirmation-dialog.component";
+
 @Component({
     selector: 'app-prices-auto-revaluation',
     templateUrl: './price-auto-revaluation.component.html',
     styleUrls: ['./price-auto-revaluation.component.css'],
 })
 export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnDestroy {
-    taskForm: FormGroup;
+    public static INCREASE_PERCENT_LIMIT = 3;
+    public static DECREASE_PERCENT_LIMIT = 5;
+
     documents: Document[] = [];
+    avgCurrencies: any[] = [];
     requestNumber: number;
-    containInvalidPrices: boolean = false;
+    containInvalidPrices: boolean = true;
     formSubmitted: boolean = false;
     savePrices: boolean = false;
     outputDocuments: any[] = [{
@@ -26,7 +29,19 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
         status: "Nu este atasat"
     }];
 
-    displayedColumns: any[] = ['medicamentCode', 'commercialName', 'pharmaceuticalForm', 'dose', 'volume', 'division', 'registrationDate', 'price', 'priceMdl', 'priceMdlNew', 'priceMdlDifferencePercents'];
+    displayedColumns: any[] = [
+        'medicamentCode',
+        'commercialName',
+        'pharmaceuticalForm',
+        'dose',
+        'volume',
+        'division',
+        'registrationDate',
+        'price',
+        'priceMdl',
+        'priceMdlNew',
+        'priceNew',
+        'priceMdlDifferencePercents'];
 
     dataSource = new MatTableDataSource<any>();
     row: any;
@@ -34,27 +49,13 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
     @ViewChild(MatSort) sort: MatSort;
     private subscriptions: Subscription[] = [];
 
-    constructor(private fb: FormBuilder,
-                private route: Router,
-                private taskService: TaskService,
+    constructor(private route: Router,
                 private priceService: PriceService,
                 private navbarTitleService: NavbarTitleService,
                 public dialog: MatDialog,
                 public dialogConfirmation: MatDialog,
                 private loadingService: LoaderService) {
 
-        this.taskForm = fb.group({
-            'medicamentCode': [null],
-            'commercialName': [null],
-            'pharmaceuticalForm': [null],
-            'dose': [null],
-            'volume': [null],
-            'division': [null],
-            'registrationDate': [null],
-            'priceMdl': [null],
-            'priceMdlNew': [null],
-            'price': [null],
-        });
     }
 
     ngAfterViewInit(): void {
@@ -84,19 +85,31 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
     }
 
     currencyChanged($event){
-        console.log('currencyChanged', $event); }
+        console.log('currencyChanged', $event);
+        this.avgCurrencies = $event;
+    }
 
 
     getPrices() {
-        this.taskForm.reset();
         this.subscriptions.push(
             this.priceService.getPricesForRevaluation().subscribe(prices => {
                     this.dataSource.data = prices;
-                    // let item = this.dataSource.data[0];
-                    // for(let i = 0; i < 12; i++){
-                    //     this.dataSource.data.push(item);
-                    // }
-                    // this.dataSource._updateChangeSubscription();
+
+                    if(this.dataSource.data.length == 0) {
+                        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+                            data: {
+                                message: 'Nu exista prețuri necesare a fi reevaluate. Mergeți la pagina principală?',
+                                confirm: false
+                            }
+                        });
+                        dialogRef.afterClosed().subscribe(result => {
+                            if (result) {
+                                this.route.navigate(['dashboard/homepage']);
+                            }
+                        });
+                    } else {
+                        this.dataSource._updateChangeSubscription();
+                    }
                     console.log('prices', prices);
                 },
                 error => console.log(error)
@@ -124,54 +137,71 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
         this.loadingService.show();
         this.formSubmitted = true;
 
-        let canSave = this.documents.length > 0 && !this.containInvalidPrices;
+        let prices: any[] = [];
 
-        if (!canSave && this.savePrices) {
+        let uploadedDoc = this.documents.find(d => d.docType.description == 'Anexa 3:Lista medicamentelor cu prețul revizuit după modificarea valutei');
+
+        if (this.containInvalidPrices || this.documents.length == 0) {
             this.loadingService.hide();
             return;
         }
 
         this.formSubmitted = false;
 
-        let prices: any[] = [];
-
-      //  let uploadedOrder = this.documents.find(d => d.docType.description == 'Ordinul de înregistrare a prețului de producător');
-        let uploadedOrder = this.documents.find(d => d.docType.description == 'Anexa 3:Lista medicamentelor cu prețul revizuit după modificarea valutei');
-
         this.dataSource.data.forEach(p => {
             prices.push({
-                id: p.id,
-                revisionDate: new Date(),
-                priceMdl: p.priceMdlNew,
-                status: this.savePrices ? 'V' : 'N',
-                orderNr: uploadedOrder ? uploadedOrder.number : p.orderNr,
-                orderApprovDate: uploadedOrder ? new Date() : p.priceApprovDate,
-            })
+                value: p.priceNew,
+                mdlValue: p.priceMdlNew,
+                currency: {id: p.currencyId},
+                medicament: {id: p.medicamentId},
+                type: {id: 11}, //Propus dupa modificarea valutei
+                document: uploadedDoc
+            });
         });
 
-        this.subscriptions.push(this.priceService.saveReevaluation(prices).subscribe(data => {
-                // this.router.navigate(['dashboard/homepage']);
+        this.subscriptions.push(this.priceService.modifyPrices(prices).subscribe(data => {
                 console.log('saved', data.body);
-                if (data.body && this.documents && this.documents.length > 0) {
-                    this.subscriptions.push(this.priceService.saveDocuments(this.documents).subscribe(docDate => {
-                        this.loadingService.hide();
-                    }));
-                } else {
-                    this.loadingService.hide();
-                }
+                this.loadingService.hide();
+                this.route.navigate(['dashboard/homepage']);
+
             },
             error1 => {
                 console.log(error1);
                 this.loadingService.hide();
             })
         );
-
     }
 
-    newPriceModified(i: number, newValue: any){
+    newPriceModified(i: number, newValue: any) {
         console.log('newPriceModified', newValue);
-        this.dataSource.data[i].priceMdlNew = newValue;
+        this.dataSource.data[i].priceMdlNew = +newValue;
         this.containInvalidPrices = this.dataSource.data.some(p => p.priceMdlNew == undefined || p.priceMdlNew <= 0 )
+
+        let avgCur = this.avgCurrencies.find(cur => cur.currency.shortDescription == this.dataSource.data[i].currency);
+
+        this.dataSource.data[i].priceNew = +newValue / avgCur.value;
+        let increasePercentDifference = this.calculateIncreaseRate(newValue, this.dataSource.data[i].priceMdl);
+        let decreasePercentDifference = this.calculateIncreaseRate(this.dataSource.data[i].priceMdl, newValue);
+
+        let afterLimit: boolean = false;
+        if (increasePercentDifference > PriceAutoRevaluationComponent.INCREASE_PERCENT_LIMIT ){
+            this.dataSource.data[i].priceMdlDifferencePercents = '↑' + increasePercentDifference.toFixed(1).toString() + '%';
+            afterLimit = true;
+        } else if(decreasePercentDifference > PriceAutoRevaluationComponent.DECREASE_PERCENT_LIMIT) {
+            this.dataSource.data[i].priceMdlDifferencePercents = '↓' + decreasePercentDifference.toFixed(1).toString() + '%';
+            afterLimit = true;
+        } else {
+            this.dataSource.data[i].priceMdlDifferencePercents = decreasePercentDifference < 0 ? '↑' + increasePercentDifference.toFixed(1).toString() + '%' : '↓' + decreasePercentDifference.toFixed(1).toString() + '%';
+        }
+
+        this.containInvalidPrices = this.dataSource.data.some(p => p.priceMdlNew == undefined || p.priceMdlNew <= 0 || afterLimit)
+    }
+
+    calculateIncreaseRate(initialValue: number, modifiedValue: number) {
+        return ((initialValue - modifiedValue) / modifiedValue) * 100;
+    }
+
+    viewDoc(document: any) {
     }
 
     ngOnDestroy(): void {

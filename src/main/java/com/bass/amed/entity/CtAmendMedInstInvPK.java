@@ -24,12 +24,17 @@ public class CtAmendMedInstInvPK implements Serializable {
     @Column(name = "investigator_id")
     private Integer investigatorId;
 
+    @NotNull
+    @Column(name="status")
+    private Character status;
+
     public CtAmendMedInstInvPK() {}
 
-    public CtAmendMedInstInvPK(@NotNull Integer clinicalTrailAmendId, @NotNull Integer medicalInstitutionId, @NotNull Integer investigatorId){
+    public CtAmendMedInstInvPK(@NotNull Integer clinicalTrailAmendId, @NotNull Integer medicalInstitutionId, @NotNull Integer investigatorId, @NotNull Character status){
         this.clinicalTrailAmendId = clinicalTrailAmendId;
         this.medicalInstitutionId = medicalInstitutionId;
         this.investigatorId = investigatorId;
+        this.status = status;
     }
 
 }

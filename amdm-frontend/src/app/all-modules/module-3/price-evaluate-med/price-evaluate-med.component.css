@@ -51,8 +51,25 @@ table.table td {
   padding-top: 3px;
   padding-bottom: 3px;
 }
+.input-price {
+  border:none !important;
+  outline: none !important;
+  transition: 0.5s;
+}
 
-
+.input-price:focus {
+  border:none !important;
+  outline: none !important;
+  background: #43a047 !important;
+  transition: 0.5s;
+  color: #fff;
+}
+.input-price:disabled {
+  border:none !important;
+  outline: none !important;
+  background: rgba(0,0,0,0) !important;
+  transition: 0.5s;
+}
 ::ng-deep .mat-sort-header-container {
   display:flex;
   justify-content:center;

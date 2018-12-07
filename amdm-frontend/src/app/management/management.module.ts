@@ -16,6 +16,7 @@ import {PricesComponent} from "./prices/prices.component";
 import {PriceReqEditModalComponent} from "./prices/price-req-edit-modal/price-req-edit-modal.component";
 import {MatDialogModule} from "@angular/material";
 import {XchangeinfoModule} from "../xchangeInfo/xchangeinfo.module";
+import {PriceApprovalComponent} from "./price-approval/price-approval.component";
 
 @NgModule({
     imports: [
@@ -37,6 +38,7 @@ import {XchangeinfoModule} from "../xchangeInfo/xchangeinfo.module";
         AddReceiptDialogComponent,
         PricesComponent,
         PriceReqEditModalComponent,
+        PriceApprovalComponent,
         PriceAutoRevaluationComponent
     ],
     entryComponents: [AddReceiptDialogComponent,PriceReqEditModalComponent,]

@@ -20,7 +20,7 @@ public class PricesEntity
 
     @Basic
     @Column(name = "value")
-    private BigDecimal value;
+    private Double value;
 
     @OneToOne(fetch = FetchType.EAGER) //, cascade = CascadeType.DETACH)
     @JoinColumn(name = "type_id")
@@ -45,6 +45,10 @@ public class PricesEntity
     @Basic
     @Column(name = "mdl_value")
     private Double mdlValue;
+
+    @OneToOne( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST })
+    @JoinColumn( name = "doc_id" )
+    private DocumentsEntity document;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "priceRequest")
     @JsonManagedReference

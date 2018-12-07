@@ -7,6 +7,8 @@ import {AAnalizaComponent} from "./a-analiza/a-analiza.component";
 import {AIntrerupereComponent} from "./a-intrerupere/a-intrerupere.component";
 import {AAprobareComponent} from "./a-aprobare/a-aprobare.component";
 import {BEvaluarePrimaraComponent} from "./b-evaluare-primara/b-evaluare-primara.component";
+import {BAprobareComponent} from "./b-aprobare/b-aprobare.component";
+import {BIntrerupereComponent} from "./b-intrerupere/b-intrerupere.component";
 
 const routes: Routes = [
     { path: 'register', component: RegCerereComponent},
@@ -15,6 +17,10 @@ const routes: Routes = [
     { path: 'interrupt/:id', component: AIntrerupereComponent},
     { path: 'approval/:id', component: AAprobareComponent},
     { path: 'evaluate-amendment/:id', component: BEvaluarePrimaraComponent},
+    { path: 'analize-amendment/:id', component: BEvaluarePrimaraComponent},
+    { path: 'interrupt-amendment/:id', component: BIntrerupereComponent},
+    { path: 'approval-amendment/:id', component: BAprobareComponent},
+
     { path: 'register1', component: RegStudCliniceComponent},
 ];
 

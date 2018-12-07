@@ -71,7 +71,7 @@
                 <th>Actiuni</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody>pla
             <tr *ngFor="let doc of outDocuments">
                 <th scope="row">{{ doc.name }}</th>
                 <th scope="row">{{ doc.number }}</th>
@@ -540,33 +540,21 @@
             <div [formGroup]="placeboFormn">
                 <h5 class="text-center font-weight-bold">Placebo</h5>
                 <div class="row">
-                    <div class="col-2">
+                    <div class="col-4">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
                                 <input type="text" matInput placeholder="Nume" formControlName="name">
                             </mat-form-field>
                         </div>
                     </div>
-                    <div class="col-2">
+                    <div class="col-4">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
-                                <input type="number" matInput placeholder="Doza" formControlName="dose">
+                                <input type="text" matInput placeholder="Doza" formControlName="dose">
                             </mat-form-field>
                         </div>
                     </div>
-                    <div class="col-2">
-                        <div class="md-form-modified">
-                            <ng-select [items]="measureUnitsPlacebo"
-                                       bindLabel="description"
-                                       placeholder="Unitati de masura"
-                                       formControlName="volumeQuantityMeasurement">
-                                <ng-template ng-option-tmp let-item="item">
-                                    {{item.description}}
-                                </ng-template>
-                            </ng-select>
-                        </div>
-                    </div>
-                    <div class="col-1">
+                    <div class="col-4">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
                                 <input type="text" matInput placeholder="Calea de administrae"
@@ -574,7 +562,6 @@
                             </mat-form-field>
                         </div>
                     </div>
-
                 </div>
             </div>
             <hr>

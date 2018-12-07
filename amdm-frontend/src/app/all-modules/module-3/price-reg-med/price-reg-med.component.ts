@@ -248,6 +248,8 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
             })
         });
 
+        console.log('requests', priceModels);
+
         this.subscriptions.push(this.priceService.savePrices(priceModels).subscribe(data => {
                 if (!data.body) {
                     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {

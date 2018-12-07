@@ -39,15 +39,22 @@ public class CatalogPriceDTO {
         setPrice(c.getPrice());
         setCurrency(c.getCurrency());
         setPriceApprovDate(c.getPriceApprovDate());
+        setCurrencyId(c.getCurrencyId());
+        setMedicamentId(c.getMedicamentId());
+        setPriceNew(c.getPriceNew());
+        setPriceRequestType(c.getPriceRequestType());
+        setDocId(c.getDocId());
     }
-
 
 
     @Id
     private Integer id;
+    private Integer priceRequestType;
     private String status;
     private String orderNr;
+    private Integer docId;
     private String medicamentCode;
+    private Integer medicamentId;
     private String commercialName;
     private String pharmaceuticalForm;
     private String dose;
@@ -66,6 +73,8 @@ public class CatalogPriceDTO {
     private Double priceMdlNew;
     private String priceMdlDifferencePercents;
     private Double price;
+    private Double priceNew;
     private String currency;
+    private Integer currencyId;
     private String priceApprovDate;
 }

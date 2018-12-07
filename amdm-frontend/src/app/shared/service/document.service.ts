@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpRequest} from '@angular/common/http';
+import {HttpClient, HttpRequest, HttpResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
@@ -87,6 +87,10 @@ export class DocumentService {
 
     getDocumentTypes(): Observable<any> {
         return this.http.get('/api/documents/get-document-types');
+    }
+
+    getDocumentsByIds(documentsIds: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/documents/by-ids', documentsIds, {observe: 'response'});
     }
 
     // generateOrdinDeInrerupereAInregistrariiMedicamentului(nrDocument: any, nrCerere: any): Observable<any> {

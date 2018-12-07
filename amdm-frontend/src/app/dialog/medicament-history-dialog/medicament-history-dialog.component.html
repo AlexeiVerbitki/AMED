@@ -27,6 +27,43 @@
 		</table>
 	</div>
 </div>
+
+<div class="mat-dialog-content mt-4">
+	<div class="gradient-card-header bg-sidebar border-gradient">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-12">
+					<div class="card-header-title white-text">Istoricul prețurilor</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="card-body card-body-cascade">
+		<table class="table table-widths text-center">
+			<thead class="bg-sidebar white-text">
+			<tr>
+				<th scope="col">Nr</th>
+				<th scope="col">Numar ordin</th>
+				<th scope="col">Data aprobării</th>
+				<th scope="col">Data revizuirii</th>
+				<th scope="col">Prețul MDL</th>
+				<th scope="col">Prețul Valută</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr *ngFor="let p of prices;let i = index">
+				<td>{{ i + 1 }}</td>
+				<td>{{ p.orderNr }}</td>
+				<td>{{ p.orderApprovDate | date: ('dd/MM/yyyy')  }}</td>
+				<td>{{ p.revisionDate | date: ('dd/MM/yyyy')  }}</td>
+				<td>{{ p.priceMdl }}</td>
+				<td>{{ p.price }} {{p.currency.shortDescription}}</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
 <div class="text-center">
 	<div mat-dialog-actions>
 		<div class="w-100">

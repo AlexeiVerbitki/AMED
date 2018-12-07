@@ -10,7 +10,7 @@ import com.bass.amed.repository.prices.*;
 import com.bass.amed.repository.prices.PriceRepository;
 import com.bass.amed.repository.prices.PriceTypesRepository;
 import com.bass.amed.repository.prices.PricesManagementRepository;
-import com.bass.amed.service.PriceAutoRevaluationService;
+import com.bass.amed.service.PriceEvaluationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @RestController
@@ -57,7 +54,13 @@ public class PriceController {
     private PricesHistoryRepository pricesHistoryRepository;
 
     @Autowired
-    private PriceAutoRevaluationService priceAutoRevaluationService;
+    private PriceEvaluationService priceEvaluationService;
+
+    @Autowired
+    private PricesEvaluationRepository pricesEvaluationRepository;
+
+    @Autowired
+    private DocumentsRepository documentsRepository;
 
     @RequestMapping("/all-currencies-short")
     public ResponseEntity<List<GetMinimalCurrencyProjection>> getCurrencyShort() throws CustomException {
@@ -86,7 +89,7 @@ public class PriceController {
     @RequestMapping("/prev-month-avg-currencies")
     public ResponseEntity<List<NmCurrenciesHistoryEntity>> getPrevMonthAVGCurrencies() {
         logger.debug("Retrieve all average currencies for previous 30 days");
-        List<NmCurrenciesHistoryEntity> prevMonthAVGCurrenciesList = priceAutoRevaluationService.getPrevMonthAVGCurrencies();
+        List<NmCurrenciesHistoryEntity> prevMonthAVGCurrenciesList = priceEvaluationService.getPrevMonthAVGCurrencies();
         return new ResponseEntity<>(prevMonthAVGCurrenciesList, HttpStatus.OK);
     }
 
@@ -123,6 +126,13 @@ public class PriceController {
         return new ResponseEntity<>(pricesCNP, HttpStatus.OK);
     }
 
+    @RequestMapping("/med-current-price")
+    public ResponseEntity<NmPricesEntity> getMedCurrentPrice(@RequestParam(value = "id", required = true) Integer id) {
+        logger.debug("getOriginalMedsPrices");
+        NmPricesEntity priceCNP = nmPricesRepository.findOneByMedicamentIdAndStatus(id, "V");
+        return new ResponseEntity<>(priceCNP, HttpStatus.OK);
+    }
+
     @RequestMapping("/med-price")
     public ResponseEntity<PricesEntity> getMedPrice(@RequestParam(value = "id", required = true) Integer id) {
         logger.debug("getMedPrevPrices");
@@ -134,7 +144,29 @@ public class PriceController {
     @RequestMapping("/revaluation")
     public ResponseEntity<List<CatalogPriceDTO>> getPricesForRevaluation() {
         logger.debug("getPricesForRevaluation");
-        return new ResponseEntity<>(priceAutoRevaluationService.getPricesForRevaluation(), HttpStatus.OK);
+        return new ResponseEntity<>(priceEvaluationService.getPricesForRevaluation(), HttpStatus.OK);
+    }
+
+    @RequestMapping("/price-approval")
+    public ResponseEntity<List<CatalogPriceDTO>> getPricesForApproval() {
+        logger.debug("getPricesForApproval");
+        return new ResponseEntity<>(pricesEvaluationRepository.getPricesForApproval(), HttpStatus.OK);
+    }
+
+    @RequestMapping("/make-available")
+    public ResponseEntity<Boolean> changePriceStatus(@RequestParam(value = "prices", required = true) List<CatalogPriceDTO> prices) {
+        logger.debug("changePriceStatus");
+        priceEvaluationService.changeCNPricesStatus(prices, "F");
+        return new ResponseEntity<>(true, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/documents-by-prices-ids", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<DocumentsEntity>> getDocumentsByPriceIds(@RequestBody Integer[] ids)
+    {
+        logger.debug("getDocumentsByIds");
+        List<DocumentsEntity> docs  = documentsRepository.findAllByPriceIds(Arrays.asList(ids));
+        return new ResponseEntity<>(docs, HttpStatus.OK);
     }
 
     @RequestMapping("/generics-revaluation")
@@ -146,7 +178,7 @@ public class PriceController {
 
         if(dci.isPresent()) {
             Integer dciId = dci.get().getId();
-            List<CatalogPriceDTO> genericMedPrices = priceAutoRevaluationService.getGenericsPricesForRevaluation(dciId, originalMedPrice.getMdlValue());
+            List<CatalogPriceDTO> genericMedPrices = priceEvaluationService.getGenericsPricesForRevaluation(dciId, originalMedPrice.getMdlValue());
             return new ResponseEntity<>(genericMedPrices, HttpStatus.OK);
         }
 
@@ -172,7 +204,7 @@ public class PriceController {
         try {
             nmPricesRepository.saveAll(oldPrices);
             return new ResponseEntity<>(true, HttpStatus.CREATED);
-        }catch (Exception e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(false, HttpStatus.CREATED);
         }
     }

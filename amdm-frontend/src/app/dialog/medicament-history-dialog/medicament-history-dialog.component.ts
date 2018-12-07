@@ -13,6 +13,7 @@ export class MedicamentHistoryDialogComponent implements OnInit {
 
     private subscriptions: Subscription[] = [];
     orders: any[] = [];
+    prices: any[] = [];
     initialData: any;
 
     constructor(public dialogRef: MatDialogRef<MedicamentHistoryDialogComponent>,
@@ -22,15 +23,27 @@ export class MedicamentHistoryDialogComponent implements OnInit {
     }
 
     ngOnInit() {
-            this.subscriptions.push(this.requestService.getRequestsByRegNumber(this.dataDialog.value[0].registrationNumber).subscribe(data => {
+        this.subscriptions.push(this.requestService.getRequestsByRegNumber(this.dataDialog.value[0].registrationNumber).subscribe(data => {
             this.initialData = Object.assign([], data.body);
-            for(let d of data.body)
-            {
-                let ar = d.documents.filter(r => r.docType.category=='OM');
-                if(ar && ar.length!=0) {
+            for (let d of data.body) {
+                let ar = d.documents.filter(r => r.docType.category == 'OM');
+                if (ar && ar.length != 0) {
                     this.orders.push(ar[0]);
                 }
             }
+        }));
+
+        this.subscriptions.push(this.requestService.getMedPricesHistory(this.dataDialog.id).subscribe(data => {
+            this.prices = data;
+            this.prices.sort((a, b) => {
+                if (a.orderApprovDate > b.orderApprovDate) {
+                    return -1;
+                } else if (a.orderApprovDate < b.orderApprovDate) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            });
         }));
     }
 

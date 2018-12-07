@@ -124,6 +124,26 @@
 				</div>
 			</div>
 		</div>
+		<div class="row">
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="priceMdl" mdbInputDirective type="text" class="form-control" formControlName="priceMdl" [attr.disabled]="true">
+					<label for="priceMdl">Prețul MDL</label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="price" mdbInputDirective type="text" formControlName="price" class="form-control" [attr.disabled]="true">
+					<label for="price">Prețul în valută</label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="currency" mdbInputDirective type="text" formControlName="currency" class="form-control" [attr.disabled]="true">
+					<label for="currency">Valuta</label>
+				</div>
+			</div>
+		</div>
 		<!--Divizari tabela-->
 		<div class="gradient-card-header bg-sidebar border-gradient">
 			<div class="container-fluid">

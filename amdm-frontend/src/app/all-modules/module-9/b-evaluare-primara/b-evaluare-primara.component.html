@@ -1,5 +1,5 @@
 <div class="container-fluid sky z-depth-2">
-    <h3 class="text-center my-3 font-weight-bold">Evaluarea primara</h3>
+    <h3 class="text-center my-3 font-weight-bold">{{stepName}}</h3>
     <hr>
 
     <form [formGroup]='clinicTrailAmendForm' #f="ngForm">
@@ -36,6 +36,44 @@
                       [dcTypes]="docTypes"></app-document>
         <hr>
 
+        <div *ngIf="isAnalizePage">
+            <h5 class="text-center font-weight-bold">Documente de iesire</h5>
+            <hr>
+
+            <div class="position-button">
+                <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
+                        (click)="requestAdditionalData()">Solicitare date aditionale
+                </button>
+            </div>
+            <table class="table table-widths-lg text-center">
+                <thead class="black white-text">
+                <tr>
+                    <th scope="col">Denumirea</th>
+                    <th scope="col">Numar</th>
+                    <th scope="col">Status document</th>
+                    <th>Actiuni</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let doc of outDocuments">
+                    <th scope="row">{{ doc.name }}</th>
+                    <th scope="row">{{ doc.number }}</th>
+                    <th scope="row">{{ doc.status }}</th>
+                    <!--<th scope="row"><mat-checkbox *ngIf="doc.docType.category=='RA'" #checkBoxResponse [checked]="doc.responseReceived" (change)="checkResponseReceived(doc,checkBoxResponse)">Raspuns primit</mat-checkbox></th>-->
+                    <td>
+                        <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(doc)">
+                            Vizualizare
+                        </button>
+                        <button class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(doc)">
+                            Stergere
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <hr>
+        </div>
+
         <mat-radio-group>
             <div class="container">
                 <div class="row">
@@ -58,7 +96,7 @@
             <div class="col-md-12">
                 <div class="md-form">
                     <textarea type="text" id="titluStud" class="md-textarea form-control" mdbInputDirective rows="1"
-                              formControlName="title"></textarea>
+                              formControlName="titleTo"></textarea>
                     <label for="titluStud">Titlul studiului</label>
                 </div>
             </div>
@@ -72,7 +110,7 @@
                         <div class="container">
                             <div class="col-md-12">
                                 <mat-radio-group class="adio-btn-wrapper"
-                                                 [value]="clinicTrailAmendForm.value.clinicalTrailAmendment.treatment.id"
+                                                 [value]="clinicTrailAmendForm.value.clinicalTrailAmendment.treatmentTo.id"
                                                  (change)="onTreatmentChange($event)">
                                     <div class="row">
                                         <div class="col-12">
@@ -96,7 +134,7 @@
                         <div class="container">
                             <div class="col-md-12">
                                 <mat-radio-group class="adio-btn-wrapper"
-                                                 [value]="clinicTrailAmendForm.value.clinicalTrailAmendment.provenance.id"
+                                                 [value]="clinicTrailAmendForm.value.clinicalTrailAmendment.provenanceTo.id"
                                                  (change)="onProvenanceChange($event)">
                                     <div class="row">
                                         <div class="col-12">
@@ -121,7 +159,7 @@
                 <div class="col-md-4">
                     <div class="md-form">
                         <input id="sponsoStudClinic" mdbInputDirective type="text" class="form-control"
-                               formControlName="sponsor">
+                               formControlName="sponsorTo">
                         <label for="sponsoStudClinic">Sponsorul Studiului clinic</label>
                     </div>
                 </div>
@@ -130,14 +168,14 @@
                         <ng-select id="phaseid" name="step" [items]="phaseList"
                                    bindLabel="name"
                                    placeholder="Faza studiului"
-                                   formControlName="phase">
+                                   formControlName="phaseTo">
                         </ng-select>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="md-form">
                         <input id="numEudraCT" mdbInputDirective type="text" class="form-control"
-                               formControlName="eudraCtNr">
+                               formControlName="eudraCtNrTo">
                         <label for="numEudraCT">Numărul Eudra CT nr.</label>
                     </div>
                 </div>
@@ -146,14 +184,14 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="md-form">
-                        <input id="codStud" mdbInputDirective type="text" class="form-control" formControlName="code">
+                        <input id="codStud" mdbInputDirective type="text" class="form-control" formControlName="codeTo">
                         <label for="codStud">Codul studiului</label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="md-form">
                         <input id="popStudClinicNumNational" mdbInputDirective type="number" class="form-control"
-                               formControlName="trialPopNat">
+                               formControlName="trialPopNatTo">
                         <label for="popStudClinicNumNational">Populația studiului clinic / Numărul pacienţilor
                             nationali</label>
                     </div>
@@ -161,7 +199,7 @@
                 <div class="col-md-4">
                     <div class="md-form">
                         <input id="popStudClinicNumInternational" mdbInputDirective type="number" class="form-control"
-                               formControlName="trialPopInternat">
+                               formControlName="trialPopInternatTo">
                         <label for="popStudClinicNumInternational">Populația studiului clinic / Numărul pacienţilor
                             internationali</label>
                     </div>
@@ -186,7 +224,8 @@
                 <div class="col-2">
                     <div class="md-form-modified mt-3">
                         <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
-                                mdbWavesEffect (click)="addMedicalInstitution()" [disabled]="!this.addMediacalInstitutionForm.controls.medicalInstitution.valid">Adaugare
+                                mdbWavesEffect (click)="addMedicalInstitution()"
+                                [disabled]="!this.addMediacalInstitutionForm.controls.medicalInstitution.valid">Adaugare
                         </button>
                     </div>
                 </div>
@@ -269,7 +308,7 @@
                     <div class="col-4">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Nume" formControlName="name">
+                                <input type="text" matInput placeholder="Nume" formControlName="nameTo">
                             </mat-form-field>
                         </div>
                     </div>
@@ -278,7 +317,7 @@
                             <ng-select [items]="manufacturers | async"
                                        bindLabel="description"
                                        placeholder="Producatorul"
-                                       formControlName="manufacture"
+                                       formControlName="manufactureTo"
                                        [loading]="loadingManufacturer"
                                        [typeahead]="manufacturerInputs"
                                        required="true">
@@ -291,7 +330,7 @@
                     <div class="col-4">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Doza" formControlName="dose">
+                                <input type="text" matInput placeholder="Doza" formControlName="doseTo">
                             </mat-form-field>
                         </div>
                     </div>
@@ -345,7 +384,7 @@
                             <ng-select [items]="farmForms | async"
                                        bindLabel="description"
                                        placeholder="Forma farmaceutica"
-                                       formControlName="pharmaceuticalForm"
+                                       formControlName="pharmFormTo"
                                        [loading]="loadingFarmForms"
                                        [typeahead]="farmFormsInputs"
                                        required="true">
@@ -360,7 +399,7 @@
                             <ng-select [items]="atcCodes | async"
                                        bindLabel="description"
                                        placeholder="Grupa farmaceutica"
-                                       formControlName="atcCode"
+                                       formControlName="atcCodeTo"
                                        [loading]="loadingAtcCodes"
                                        [typeahead]="atcCodesInputs"
                                        required="true">
@@ -375,7 +414,7 @@
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
                                 <input type="text" matInput placeholder="Calea de administrae"
-                                       formControlName="administratingMode">
+                                       formControlName="administModeTo">
                             </mat-form-field>
                         </div>
                     </div>
@@ -389,7 +428,7 @@
                     <div class="col-4">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Nume" formControlName="name">
+                                <input type="text" matInput placeholder="Nume" formControlName="nameTo">
                             </mat-form-field>
                         </div>
                     </div>
@@ -398,7 +437,7 @@
                             <ng-select [items]="manufacturersRfPr | async"
                                        bindLabel="description"
                                        placeholder="Producatorul"
-                                       formControlName="manufacture"
+                                       formControlName="manufactureTo"
                                        [loading]="loadingManufacturerRfPr"
                                        [typeahead]="manufacturerInputsRfPr"
                                        required="true">
@@ -411,7 +450,7 @@
                     <div class="col-4">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Doza" formControlName="dose">
+                                <input type="text" matInput placeholder="Doza" formControlName="doseTo">
                             </mat-form-field>
                         </div>
                     </div>
@@ -464,7 +503,7 @@
                             <ng-select [items]="farmFormsRfPr | async"
                                        bindLabel="description"
                                        placeholder="Forma farmaceutica"
-                                       formControlName="pharmaceuticalForm"
+                                       formControlName="pharmFormTo"
                                        [loading]="loadingFarmFormsRfPr"
                                        [typeahead]="farmFormsInputsRfPr"
                                        required="true">
@@ -479,7 +518,7 @@
                             <ng-select [items]="atcCodesRfPr | async"
                                        bindLabel="description"
                                        placeholder="Grupa farmaceutica"
-                                       formControlName="atcCode"
+                                       formControlName="atcCodeTo"
                                        [loading]="loadingAtcCodesRfPr"
                                        [typeahead]="atcCodesInputsRfPr"
                                        required="true">
@@ -494,7 +533,7 @@
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
                                 <input type="text" matInput placeholder="Calea de administrae"
-                                       formControlName="administratingMode">
+                                       formControlName="administModeTo">
                             </mat-form-field>
                         </div>
                     </div>
@@ -505,37 +544,25 @@
             <div [formGroup]="placeboFormn">
                 <h5 class="text-center font-weight-bold">Placebo</h5>
                 <div class="row">
-                    <div class="col-2">
+                    <div class="col-4">
                         <div class="md-form-modified">
-                            <mat-form-field>
-                                <input type="text" matInput placeholder="Nume" formControlName="name">
+                            <mat-form-field class="w-100">
+                                <input type="text" matInput placeholder="Nume" formControlName="nameTo">
                             </mat-form-field>
                         </div>
                     </div>
-                    <div class="col-2">
+                    <div class="col-4">
                         <div class="md-form-modified">
-                            <mat-form-field>
-                                <input type="number" matInput placeholder="Doza" formControlName="dose">
+                            <mat-form-field class="w-100">
+                                <input type="text" matInput placeholder="Doza" formControlName="doseTo">
                             </mat-form-field>
                         </div>
                     </div>
-                    <div class="col-2">
+                    <div class="col-4">
                         <div class="md-form-modified">
-                            <ng-select [items]="measureUnitsPlacebo"
-                                       bindLabel="description"
-                                       placeholder="Unitati de masura"
-                                       formControlName="volumeQuantityMeasurement">
-                                <ng-template ng-option-tmp let-item="item">
-                                    {{item.description}}
-                                </ng-template>
-                            </ng-select>
-                        </div>
-                    </div>
-                    <div class="col-1">
-                        <div class="md-form-modified">
-                            <mat-form-field>
+                            <mat-form-field class="w-100">
                                 <input type="text" matInput placeholder="Calea de administrae"
-                                       formControlName="administratingMode">
+                                       formControlName="administModeTo">
                             </mat-form-field>
                         </div>
                     </div>

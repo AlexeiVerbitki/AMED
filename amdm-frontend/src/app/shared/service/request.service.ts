@@ -37,6 +37,16 @@ export class RequestService {
         return this.http.post<any>('/api/clinical-trails/add-amendment-request', requestDetails, {observe: 'response'});
     }
 
+    addClinicalTrailAmendmentNextRequest(requestDetails: any): Observable<HttpResponse<any>> {
+        console.log('addClinicalTrailAmendmentNextRequest');
+        return this.http.post<any>('/api/clinical-trails/add-amendment-next-reques', requestDetails, {observe: 'response'});
+    }
+
+    finishClinicalTrailAmendmentRequest(requestDetails: any): Observable<HttpResponse<any>> {
+        console.log('finishClinicalTrailAmendmentRequest');
+        return this.http.post<any>('/api/clinical-trails/finish-amendment-request', requestDetails, {observe: 'response'});
+    }
+
     savePostauthorizationMedicament(requestDetails: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/save-postauthorization-medicament', requestDetails, {observe: 'response'});
     }
@@ -95,5 +105,9 @@ export class RequestService {
 
     getActiveLicenses(id: string): Observable<any> {
         return this.http.get('/api/load-active-licenses', {params: {id: id}});
+    }
+
+    getMedPricesHistory(medicamentId: string): Observable<any> {
+        return this.http.get('/api/price/med-prev-prices',  {params: {id: medicamentId}});
     }
 }

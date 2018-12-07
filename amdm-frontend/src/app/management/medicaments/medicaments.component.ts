@@ -221,7 +221,10 @@ export class MedicamentsComponent implements OnInit {
         dialogConfig2.width = '1100px';
 
         dialogConfig2.data = {
-            value: element.code
+            value: {
+                code: element.code,
+                id: element.id
+            }
         };
 
         this.dialog.open(MedicamentDetailsDialogComponent, dialogConfig2);

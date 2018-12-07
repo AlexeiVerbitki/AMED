@@ -1,14 +1,14 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
-import {FormBuilder} from '@angular/forms';
 import {Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
-import {TaskService} from "../../../shared/service/task.service";
 import {PriceService} from "../../../shared/service/prices.service";
 import {LoaderService} from "../../../shared/service/loader.service";
 import {Document} from "../../../models/document";
 import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
 import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
+import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
+
 @Component({
     selector: 'app-prices-revaluation-generics',
     templateUrl: './revaluation-generics.component.html',
@@ -19,10 +19,11 @@ export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDe
     documents: Document[] = [];
     priceId: string ;
     requestNumber: number;
-    containInvalidPrices: boolean = false;
+    containInvalidPrices: boolean = true;
     formSubmitted: boolean = false;
-    savePrices: boolean = false;
     medicaments: any[] = [];
+    avgCurrencies: any[] = [];
+    saved: boolean = false;
 
     outputDocuments: any[] = [{
         description: 'Anexa 2:Lista medicamentelor generice cu prețuri reevaluate',
@@ -30,7 +31,20 @@ export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDe
         status: "Nu este atasat"
     }];
 
-    displayedColumns: any[] = ['medicamentCode', 'commercialName', 'pharmaceuticalForm', 'dose', 'volume', 'division', 'registrationDate', 'price', 'priceMdl', 'priceMdlNew', 'priceMdlDifferencePercents', 'ignore'];
+    displayedColumns: any[] = [
+        'medicamentCode',
+        'commercialName',
+        'pharmaceuticalForm',
+        'dose',
+        'volume',
+        'division',
+        'registrationDate',
+        'price',
+        'priceMdl',
+        'priceMdlNew',
+        'priceNew',
+        'priceMdlDifferencePercents',
+        'ignore'];
 
     dataSource = new MatTableDataSource<any>();
     row: any;
@@ -38,16 +52,22 @@ export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDe
     @ViewChild(MatSort) sort: MatSort;
     private subscriptions: Subscription[] = [];
 
-    constructor(private fb: FormBuilder,
-                private router: Router,
+    constructor(private router: Router,
                 private route: ActivatedRoute,
-                private taskService: TaskService,
                 private priceService: PriceService,
                 private navbarTitleService: NavbarTitleService,
                 public dialog: MatDialog,
                 private errorHandlerService: ErrorHandlerService,
                 public dialogConfirmation: MatDialog,
                 private loadingService: LoaderService) {
+
+        this.saved = false;
+
+        let thisObject = this;
+        window.onbeforeunload = function(e) {
+            thisObject.onCloseWindow();
+            return 'onbeforeunload';
+        };
 
         this.subscriptions.push(
             this.route.params.subscribe(params => {
@@ -63,10 +83,6 @@ export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDe
         this.dataSource.paginator = this.paginator;
         this.dataSource.paginator._intl.itemsPerPageLabel = "Medicamente pe pagina: ";
         this.dataSource.sort = this.sort;
-    }
-
-    savePricesCheck($event){
-        this.savePrices = $event.checked;
     }
 
     ngOnInit() {
@@ -87,8 +103,9 @@ export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDe
         // });
     }
 
+
     currencyChanged($event){
-        console.log('currencyChanged', $event);
+        this.avgCurrencies = $event;
     }
 
     deleteRelatedMed(index: number) {
@@ -113,6 +130,22 @@ export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDe
         this.subscriptions.push(
             this.priceService.getGenericsPricesForRevaluation(this.priceId).subscribe(prices => {
                     this.dataSource.data = prices;
+
+                    if(this.dataSource.data.length == 0) {
+                        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+                            data: {
+                                message: 'Nu exista prețuri necesare a fi reevaluate. Mergeți la pagina principală?',
+                                confirm: false
+                            }
+                        });
+                        dialogRef.afterClosed().subscribe(result => {
+                            if (result) {
+                                this.router.navigate(['dashboard/homepage']);
+                            }
+                        });
+                    } else {
+                        this.dataSource._updateChangeSubscription();
+                    }
                     console.log('getGenericMedsPrices', prices);
                 },
                 error => console.log(error)
@@ -140,40 +173,34 @@ export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDe
         this.loadingService.show();
         this.formSubmitted = true;
 
-        let canSave = this.documents.length > 0 && !this.containInvalidPrices;
+        let prices: any[] = [];
 
-        if (!canSave && this.savePrices) {
+        let uploadedDoc = this.documents.find(d => d.docType.description == 'Anexa 2:Lista medicamentelor generice cu prețuri reevaluate');
+
+        if (this.containInvalidPrices || this.documents.length == 0) {
             this.loadingService.hide();
             return;
         }
 
         this.formSubmitted = false;
 
-        let prices: any[] = [];
-
-        let uploadedOrder = this.documents.find(d => d.docType.description == 'Anexa 2:Lista medicamentelor generice cu prețuri reevaluate');
-
         this.dataSource.data.forEach(p => {
             prices.push({
-                id: p.id,
-                revisionDate: new Date(),
-                priceMdl: p.priceMdlNew,
-                status: this.savePrices ? 'V' : 'N',
-                orderNr: uploadedOrder ? uploadedOrder.number : p.orderNr,
-                orderApprovDate: uploadedOrder ? new Date() : p.priceApprovDate,
-            })
+                value: p.priceNew,
+                mdlValue: p.priceMdlNew,
+                currency: {id: p.currencyId},
+                medicament: {id: p.medicamentId},
+                type: {id: 9}, //Propus după modificarea originalului
+                document: uploadedDoc
+            });
         });
 
-        this.subscriptions.push(this.priceService.saveReevaluation(prices).subscribe(data => {
-                // this.router.navigate(['dashboard/homepage']);
+        this.subscriptions.push(this.priceService.modifyPrices(prices).subscribe(data => {
+                this.saved = true;
                 console.log('saved', data.body);
-                if (data.body && this.documents && this.documents.length > 0) {
-                    this.subscriptions.push(this.priceService.saveDocuments(this.documents).subscribe(docDate => {
-                        this.loadingService.hide();
-                    }));
-                } else {
-                    this.loadingService.hide();
-                }
+                this.loadingService.hide();
+                this.router.navigate(['dashboard/homepage']);
+
             },
             error1 => {
                 console.log(error1);
@@ -183,10 +210,31 @@ export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDe
 
     }
 
+    onCloseWindow() {
+        if(!this.saved) {
+            // this.priceService.makeAvailableAgain(this.dataSource.data);
+
+            // let win = window.open('http://localhost:4200/dashboard/module/price/revaluation-generics/61', '_blank');
+            // let win = window.open('about:blank', '_blank');
+            // win.focus();
+        }
+    }
+
     newPriceModified(i: number, newValue: any) {
         console.log('newPriceModified', newValue);
-        this.dataSource.data[i].priceMdlNew = newValue;
-        this.containInvalidPrices = this.dataSource.data.some(p => p.priceMdlNew == undefined || p.priceMdlNew <= 0 )
+        this.dataSource.data[i].priceMdlNew = +newValue;
+
+        let avgCur = this.avgCurrencies.find(cur => cur.currency.shortDescription == this.dataSource.data[i].currency);
+        this.dataSource.data[i].priceNew = (+newValue / avgCur.value);
+
+        let percents = (+newValue * 100) / this.medicaments[0].mdlValue;
+
+        this.dataSource.data[i].priceMdlDifferencePercents = percents.toFixed(1);
+
+        this.containInvalidPrices = this.dataSource.data.some(p => p.priceMdlNew == undefined || p.priceMdlNew <= 0 || +p.priceMdlDifferencePercents > 75)
+    }
+
+    viewDoc(document: any) {
     }
 
     ngOnDestroy(): void {

@@ -21,6 +21,7 @@ import {MedRegApproveComponent} from "./med-reg-approve/med-reg-approve.componen
 import {ImportMedDialog} from "./dialog/import-med-dialog";
 import {MedInstInvestigatorsDialogComponent} from "../module-9/dialog/med-inst-investigators-dialog/med-inst-investigators-dialog.component";
 import {AdditionalDataDialogComponent} from "../module-9/dialog/additional-data-dialog/additional-data-dialog.component";
+import {XchangeinfoModule} from "../../xchangeInfo/xchangeinfo.module";
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import {AdditionalDataDialogComponent} from "../module-9/dialog/additional-data-
         DocumentModule,
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
+        XchangeinfoModule
     ],
     entryComponents: [
        ImportMedDialog,

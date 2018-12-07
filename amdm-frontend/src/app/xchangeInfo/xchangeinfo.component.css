@@ -21,6 +21,10 @@ th, td {
     text-align : center !important;
 }
 
+.modal-content .close:focus {
+    outline: none;
+}
+
 mat-header-cell {
     display         : flex;
     justify-content : flex-end;

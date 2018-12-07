@@ -101,11 +101,11 @@ public class ClinicTrialAmendEntity
     @Column(name = "status", nullable = true, length = 1)
     private String status;
 
-    @Transient
-    private Set<CtMedicalInstitutionEntity> medicalInstitutionsFrom = new HashSet<>();
+//    @Transient
+//    private Set<CtMedicalInstitutionEntity> medicalInstitutionsFrom = new HashSet<>();
 
     @Transient
-    private Set<CtMedicalInstitutionEntity> medicalInstitutionsTo = new HashSet<>();
+    private Set<CtMedicalInstitutionEntity> medicalInstitutions = new HashSet<>();
 
     public void assignTo(ClinicalTrialsEntity entity){
         this.clinicalTrialsEntityId = entity.getId();

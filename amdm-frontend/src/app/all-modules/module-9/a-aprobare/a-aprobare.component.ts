@@ -73,11 +73,11 @@ export class AAprobareComponent implements OnInit, OnDestroy {
             'status': [undefined, Validators.required],
         });
         this.initPage();
-        this.loadDocTypes();
+        // this.loadDocTypes();
 
     }
 
-    loadDocTypes() {
+    loadDocTypes(data) {
         this.subscriptions.push(
             this.taskService.getRequestStepByIdAndCode('3', 'AP').subscribe(step => {
                     this.subscriptions.push(
@@ -202,10 +202,6 @@ export class AAprobareComponent implements OnInit, OnDestroy {
                 }
             });
         }
-    }
-
-    interruptProcess() {
-
     }
 
     ngOnDestroy(): void {

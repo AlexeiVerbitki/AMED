@@ -101,12 +101,19 @@ public class ClinicalTrailsController {
                 ctInvestigatorEntity.setMain(medInstInvestigator.getMainInvestigator());
                 medInst.getInvestigators().add(ctInvestigatorEntity);
 
-                clinicTrialAmendEntity.getMedicalInstitutionsFrom().add(medInst);
+                clinicTrialAmendEntity.getMedicalInstitutions().add(medInst);
             });
         }
 
         return new ResponseEntity<>(registrationRequestsEntity, HttpStatus.OK);
     }
+
+    @PostMapping(value = "/finish-amendment-request")
+    public ResponseEntity<Integer> finishClinicalTrailAmendmentRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
+        clinicalTrailsService.finishNewClinicalTrailAmendment(requests);
+        return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
+    }
+
 
     @Transactional
     @PostMapping(value = "/save-amendment-request")

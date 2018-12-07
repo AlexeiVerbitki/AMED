@@ -34,12 +34,9 @@ export class CerereImportExportComponent implements OnInit {
     generatedDocNrSeq: number;
     companies: any[];
     filteredOptions: Observable<any[]>;
-    medicamentTypes: any[];
-    medicamentGroups: any[];
-    pharmaceuticalForms: any[];
     unitsOfMeasurement: any[];
     paymentTotal: number;
-     docTypes: any[];
+    docTypes: any[];
     allDocTypes: any[];
     activeSubstancesTable: any[] = [];
     initialData: any;
@@ -367,6 +364,7 @@ export class CerereImportExportComponent implements OnInit {
                 if (data.pharmaceuticalForm != null) {
                     this.cerereImpExpForm.get('medicament.pharmaceuticalForm').setValue(data.pharmaceuticalForm.description);
                 }
+                this.selectedMedicament = data;
             })
         );
 
@@ -387,7 +385,6 @@ export class CerereImportExportComponent implements OnInit {
 
         this.medicamentNotSelected = true;
         this.medicamentExistInTable = false;
-        this.selectedMedicament = this.cerereImpExpForm.get('selectedMedicaments.selectedMedicament').value;
         if (this.selectedMedicament != null) {
             this.medicamentNotSelected = false;
             let medicamnet = this.selectedMedicamentsTable.find(r => r.id == this.selectedMedicament.id);
@@ -472,7 +469,6 @@ export class CerereImportExportComponent implements OnInit {
         modelToSubmit.assignedUser = this.authService.getUserName();
 
         this.populateSelectedSubstances(modelToSubmit);
-
         modelToSubmit.drugCheckDecision.medicaments = this.selectedMedicamentsTable;
 
         this.drugCheckDecisions = [];

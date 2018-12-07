@@ -5,6 +5,7 @@ import {CerereModAutorActComponent} from "./cerere-mod-autor-act/cerere-mod-auto
 import {CerereImportExportComponent} from "./cerere-import-export/cerere-import-export.component";
 import {CerereDubAutorActComponent} from "./cerere-dub-autor-act/cerere-dub-autor-act.component";
 import {RegDrugControl} from "./reg-drug-control/reg-drug-control";
+import {CPCADTaskComponent} from "./cpcadtask/cpcadtask.component";
 
 const routes: Routes = [
     {path: 'activity-authorization/:id', component: CerereSolicAutorComponent},
@@ -12,6 +13,7 @@ const routes: Routes = [
     {path: 'modify-authority/:id', component: CerereModAutorActComponent},
     {path: 'duplicate-authority/:id', component: CerereDubAutorActComponent},
     {path: 'reg-drug-control', component: RegDrugControl},
+    {path: 'cpcadtask', component: CPCADTaskComponent}
 ];
 
 @NgModule({

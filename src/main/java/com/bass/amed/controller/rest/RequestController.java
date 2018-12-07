@@ -1,5 +1,7 @@
 package com.bass.amed.controller.rest;
 
+import com.bass.amed.common.Constants;
+import com.bass.amed.dto.prices.CatalogPriceDTO;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -314,6 +318,64 @@ public class RequestController
     }
 
 
+    @Transactional
+    @RequestMapping(value = "/add-prices", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> savePrices(@RequestBody List<PricesEntity> pricesRequests)
+    {
+        LOGGER.debug("add new prices");
+
+        if(pricesRequests != null && pricesRequests.size() > 0) {
+            for (PricesEntity p : pricesRequests) {
+                if (p.getMedicament() != null && p.getMedicament().getId() != null) {
+                    int type = p.getType().getId();
+                    PricesEntity oldPrice = priceRepository.findOneByMedicamentIdAndType(p.getMedicament().getId(), type); //9 - Propus după modificarea originalului / 11 - Propus dupa modificarea valutei
+                    if (oldPrice != null) {
+                        p.setId(oldPrice.getId());
+                    }
+                }
+            }
+        }
+
+        priceRepository.saveAll(pricesRequests);
+
+        boolean saved = true;
+        for (PricesEntity p : pricesRequests)
+        {
+            saved &= p.getId() != null;
+        }
+
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    }
+
+
+    @Transactional
+    @RequestMapping(value = "/approve-prices", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> approvePrices(@RequestBody List<PricesEntity> prices) {
+        LOGGER.debug("approvePrices");
+        List<PricesHistoryEntity> newHistoryPrices = new ArrayList<>(prices.size());
+
+        for (PricesEntity p : prices) {
+            PricesEntity oldPrice = priceRepository.findOneById(p.getId());
+            p.setFolderNr(oldPrice.getFolderNr());
+            newHistoryPrices.add(new PricesHistoryEntity(p.getNmPrice()));
+            NmPricesEntity nmPrice = nmPricesRepository.findOneByMedicamentId(p.getMedicament().getId());
+
+            if (nmPrice != null) {
+                p.getNmPrice().setId(nmPrice.getId());
+            }
+        }
+
+        priceRepository.saveAll(prices);
+        pricesHistoryRepository.saveAll(newHistoryPrices);
+
+        boolean saved = true;
+        for (PricesEntity p : prices) {
+            saved &= p.getId() != null;
+        }
+
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    }
+
     @RequestMapping(value = "/add-price-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RegistrationRequestsEntity> savePriceRequest(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
@@ -328,25 +390,11 @@ public class RequestController
         price.setMdlValue(updatedPrice.getMdlValue());
         price.setReferencePrices(updatedPrice.getReferencePrices());
 
-        PricesHistoryEntity priceHistory = null;
-
-        if(price.getType().getId() == 2 && request.getCurrentStep() == "F") {//acceptat
-            NmPricesEntity oldNmPrice = nmPricesRepository.findOneByMedicament(price.getMedicament());
-            if(oldNmPrice != null) {
-                updatedPrice.getNmPrice().setId(oldNmPrice.getId());
-            }
-            price.setNmPrice(updatedPrice.getNmPrice());
-
-            priceHistory = new PricesHistoryEntity(price.getNmPrice());
-        }
 
         request.setPrice(price);
         try
         {
             requestRepository.save(request);
-            if(priceHistory != null) {
-                pricesHistoryRepository.save(priceHistory);
-            }
         }
         catch (Exception ex)
         {

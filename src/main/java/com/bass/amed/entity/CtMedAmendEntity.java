@@ -1,7 +1,5 @@
 package com.bass.amed.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,10 +21,6 @@ public class CtMedAmendEntity {
     private Integer id;
 
     @Basic
-    @Column(name = "name")
-    private String name;
-
-    @Basic
     @Column(name = "registration_number")
     private Integer registrationNumber;
 
@@ -38,45 +32,77 @@ public class CtMedAmendEntity {
     @JoinColumn(name = "international_name_id")
     private NmInternationalMedicamentNameEntity internationalMedicamentName;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
-    @JoinColumn(name = "manufacture_id")
-    private NmManufacturesEntity manufacture;
+    @Basic
+    @Column(name = "name_from")
+    private String nameFrom;
 
     @Basic
-    @Column(name = "dose")
-    private String dose;
+    @Column(name = "name_to")
+    private String nameTo;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
-    @JoinColumn(name = "unit_measurement_id")
-    private NmUnitsOfMeasurementEntity volumeQuantityMeasurement;
+    @JoinColumn(name = "manufacture_id_from")
+    private NmManufacturesEntity manufactureFrom;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
-    @JoinColumn(name = "pharmaceutical_form_id")
-    private NmPharmaceuticalFormsEntity pharmaceuticalForm;
-
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
-    @JoinColumn(name = "atc_code")
-    private NmAtcCodesEntity atcCode;
+    @JoinColumn(name = "manufacture_id_to")
+    private NmManufacturesEntity manufactureTo;
 
     @Basic
-    @Column(name = "administering_mode")
-    private String administratingMode;
+    @Column(name = "dose_from")
+    private String doseFrom;
+
+    @Basic
+    @Column(name = "dose_to")
+    private String doseTo;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "unit_measur_id_from")
+    private NmUnitsOfMeasurementEntity volumeQuantityMeasurementFrom;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "unit_measur_id_to")
+    private NmUnitsOfMeasurementEntity volumeQuantityMeasurementTo;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "pharm_form_id_from")
+    private NmPharmaceuticalFormsEntity pharmFormFrom;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "pharm_form_id_to")
+    private NmPharmaceuticalFormsEntity pharmFormTo;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "atc_code_from")
+    private NmAtcCodesEntity atcCodeFrom;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "atc_code_to")
+    private NmAtcCodesEntity atcCodeTo;
+
+    @Basic
+    @Column(name = "administ_mode_from")
+    private String administModeFrom;
+
+    @Basic
+    @Column(name = "administ_mode_to")
+    private String administModeTo;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     @JoinColumn(name = "med_amend_id")
     private Set<CtMedAmendActiveSubstEntity> activeSubstances = new HashSet<>();
 
     public void asign(ImportMedNotRegisteredEntity entity){
-        this.name = entity.getName();
+        this.nameTo = entity.getName();
         this.registrationNumber = entity.getRegistrationNumber();
         this.registrationDate = entity.getRegistrationDate();
         this.internationalMedicamentName = entity.getInternationalMedicamentName();
-        this.manufacture = entity.getManufacture();
-        this.dose = entity.getDose();
-        this.volumeQuantityMeasurement = entity.getVolumeQuantityMeasurement();
-        this.pharmaceuticalForm = entity.getPharmaceuticalForm();
-        this.atcCode = entity.getAtcCode();
-        this.administratingMode = entity.getAdministratingMode();
+        this.manufactureTo = entity.getManufacture();
+        this.doseTo = entity.getDose();
+        this.volumeQuantityMeasurementTo = entity.getVolumeQuantityMeasurement();
+        this.pharmFormTo = entity.getPharmaceuticalForm();
+        this.atcCodeTo = entity.getAtcCode();
+        this.administModeTo = entity.getAdministratingMode();
     }
 
     @Override
@@ -85,22 +111,29 @@ public class CtMedAmendEntity {
         if (o == null || getClass() != o.getClass()) return false;
         CtMedAmendEntity that = (CtMedAmendEntity) o;
         return Objects.equals(id, that.id) &&
-                Objects.equals(name, that.name) &&
                 Objects.equals(registrationNumber, that.registrationNumber) &&
                 Objects.equals(registrationDate, that.registrationDate) &&
                 Objects.equals(internationalMedicamentName, that.internationalMedicamentName) &&
-                Objects.equals(manufacture, that.manufacture) &&
-                Objects.equals(dose, that.dose) &&
-                Objects.equals(volumeQuantityMeasurement, that.volumeQuantityMeasurement) &&
-                Objects.equals(pharmaceuticalForm, that.pharmaceuticalForm) &&
-                Objects.equals(atcCode, that.atcCode) &&
-                Objects.equals(administratingMode, that.administratingMode) &&
+                Objects.equals(nameFrom, that.nameFrom) &&
+                Objects.equals(nameTo, that.nameTo) &&
+                Objects.equals(manufactureFrom, that.manufactureFrom) &&
+                Objects.equals(manufactureTo, that.manufactureTo) &&
+                Objects.equals(doseFrom, that.doseFrom) &&
+                Objects.equals(doseTo, that.doseTo) &&
+                Objects.equals(volumeQuantityMeasurementFrom, that.volumeQuantityMeasurementFrom) &&
+                Objects.equals(volumeQuantityMeasurementTo, that.volumeQuantityMeasurementTo) &&
+                Objects.equals(pharmFormFrom, that.pharmFormFrom) &&
+                Objects.equals(pharmFormTo, that.pharmFormTo) &&
+                Objects.equals(atcCodeFrom, that.atcCodeFrom) &&
+                Objects.equals(atcCodeTo, that.atcCodeTo) &&
+                Objects.equals(administModeFrom, that.administModeFrom) &&
+                Objects.equals(administModeTo, that.administModeTo) &&
                 Objects.equals(activeSubstances, that.activeSubstances);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, name, registrationNumber, registrationDate, internationalMedicamentName, manufacture, dose, volumeQuantityMeasurement, pharmaceuticalForm, atcCode, administratingMode, activeSubstances);
+        return Objects.hash(id, registrationNumber, registrationDate, internationalMedicamentName, nameFrom, nameTo, manufactureFrom, manufactureTo, doseFrom, doseTo, volumeQuantityMeasurementFrom, volumeQuantityMeasurementTo, pharmFormFrom, pharmFormTo, atcCodeFrom, atcCodeTo, administModeFrom, administModeTo, activeSubstances);
     }
 }

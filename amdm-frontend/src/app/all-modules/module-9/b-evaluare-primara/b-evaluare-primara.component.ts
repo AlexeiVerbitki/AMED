@@ -15,6 +15,7 @@ import {LoaderService} from "../../../shared/service/loader.service";
 import {AuthService} from "../../../shared/service/authetication.service";
 import {PaymentOrder} from "../../../models/paymentOrder";
 import {Receipt} from "../../../models/receipt";
+import {AdditionalDataDialogComponent} from "../dialog/additional-data-dialog/additional-data-dialog.component";
 
 @Component({
     selector: 'app-b-evaluare-primara',
@@ -34,14 +35,16 @@ export class BEvaluarePrimaraComponent implements OnInit {
     ];
 
     private subscriptions: Subscription[] = [];
-
     clinicTrailAmendForm: FormGroup;
-    clinicalTrailAmendmentForm: FormGroup;
+    private amendmentIndex: number = -1;
 
-    private amendmentIndex : number = -1;
+    protected stepName: string;
 
     docs: Document[] = [];
     docTypes: any[] = [];
+
+    initialData: any;
+    outDocuments: any[] = [];
 
     addMediacalInstitutionForm: FormGroup;
     allMediacalInstitutionsList: any[] = [];
@@ -92,6 +95,10 @@ export class BEvaluarePrimaraComponent implements OnInit {
     phaseList: any[] = [];
     allInvestigatorsList: any[] = [];
 
+    isAnalizePage: boolean = false;
+    private typeId: string;
+    private currentStep: string;
+
 
     constructor(private fb: FormBuilder,
                 public dialog: MatDialog,
@@ -116,21 +123,30 @@ export class BEvaluarePrimaraComponent implements OnInit {
             'initiator': [null],
             'assignedUser': [null],
             'outputDocuments': [],
-            'clinicalTrails':[],
+            'clinicalTrails': [],
             'clinicalTrailAmendment': this.fb.group({
                 'id': [''],
-                'registrationRequestId' : [],
-                'clinicalTrialsEntityId' : [],
-                'title': ['title', Validators.required],
-                'treatment': ['', Validators.required],
-                'provenance': ['', Validators.required],
-                'sponsor': ['', Validators.required],
-                'phase': ['', Validators.required],
-                'eudraCtNr': ['eudraCtNr', Validators.required],
-                'code': ['', Validators.required],
+                'registrationRequestId': [],
+                'clinicalTrialsEntityId': [],
+                'titleFrom': [''],
+                'titleTo': ['', Validators.required],
+                'treatmentFrom': [''],
+                'treatmentTo': ['', Validators.required],
+                'provenanceFrom': [''],
+                'provenanceTo': ['', Validators.required],
+                'sponsorFrom': [''],
+                'sponsorTo': ['', Validators.required],
+                'phaseFrom': [''],
+                'phaseTo': ['', Validators.required],
+                'eudraCtNrFrom': [''],
+                'eudraCtNrTo': ['', Validators.required],
+                'codeFrom': [''],
+                'codeTo': ['', Validators.required],
                 'medicalInstitutions': [],
-                'trialPopNat': ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-                'trialPopInternat': ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+                'trialPopNatFrom': [''],
+                'trialPopNatTo': ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+                'trialPopInternatFrom': [''],
+                'trialPopInternatTo': ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
                 'medicament': [],
                 'referenceProduct': [],
                 'status': ['P'],
@@ -147,51 +163,72 @@ export class BEvaluarePrimaraComponent implements OnInit {
 
         this.medicamentForm = this.fb.group({
             'id': [null],
-            'name': [null, Validators.required],
+            'nameFrom': [null],
+            'nameTo': [null, Validators.required],
             'registrationNumber': [null],
             'registrationDate': [new Date()],
             'internationalMedicamentName': [null],
-            'manufacture': [null, Validators.required],
-            'dose': [null, Validators.required],
-            'volumeQuantityMeasurement': [null],
-            'pharmaceuticalForm': [null, Validators.required],
-            'atcCode': [null, Validators.required],
-            'administratingMode': [null, Validators.required],
+            'manufactureFrom': [null],
+            'manufactureTo': [null, Validators.required],
+            'doseFrom': [null],
+            'doseTo': [null, Validators.required],
+            'volumeQuantityMeasurementFrom': [null],
+            'volumeQuantityMeasurementTo': [null],
+            'pharmFormFrom': [null],
+            'pharmFormTo': [null, Validators.required],
+            'atcCodeFrom': [null],
+            'atcCodeTo': [null, Validators.required],
+            'administModeFrom': [null],
+            'administModeTo': [null, Validators.required],
             'activeSubstances': [null]
         });
 
         this.referenceProductFormn = this.fb.group({
             'id': [null],
-            'name': [null, Validators.required],
+            'nameFrom': [null],
+            'nameTo': [null, Validators.required],
             'registrationNumber': [null],
             'registrationDate': [new Date()],
             'internationalMedicamentName': [null],
-            'manufacture': [null, Validators.required],
-            'dose': [null, Validators.required],
-            'volumeQuantityMeasurement': [null],
-            'pharmaceuticalForm': [null, Validators.required],
-            'atcCode': [null, Validators.required],
-            'administratingMode': [null, Validators.required],
+            'manufactureFrom': [null],
+            'manufactureTo': [null, Validators.required],
+            'doseFrom': [null],
+            'doseTo': [null, Validators.required],
+            'volumeQuantityMeasurementFrom': [null],
+            'volumeQuantityMeasurementTo': [null],
+            'pharmFormFrom': [null],
+            'pharmFormTo': [null, Validators.required],
+            'atcCodeFrom': [null],
+            'atcCodeTo': [null, Validators.required],
+            'administModeFrom': [null],
+            'administModeTo': [null, Validators.required],
             'activeSubstances': [null]
         });
 
         this.placeboFormn = this.fb.group({
             'id': [null],
-            'name': [null, Validators.required],
+            'nameFrom': [null],
+            'nameTo': [null, Validators.required],
             'registrationNumber': [null],
             'registrationDate': [new Date()],
             'internationalMedicamentName': [null],
-            'manufacture': [null, Validators.required],
-            'dose': [null, Validators.required],
-            'volumeQuantityMeasurement': [null],
-            'pharmaceuticalForm': [null, Validators.required],
-            'atcCode': [null, Validators.required],
-            'administratingMode': [null, Validators.required],
-            'activeSubstances': [null, Validators.required]
+            'manufactureFrom': [null],
+            'manufactureTo': [null, Validators.required],
+            'doseFrom': [null],
+            'doseTo': [null, Validators.required],
+            'volumeQuantityMeasurementFrom': [null],
+            'volumeQuantityMeasurementTo': [null],
+            'pharmFormFrom': [null],
+            'pharmFormTo': [null, Validators.required],
+            'atcCodeFrom': [null],
+            'atcCodeTo': [null, Validators.required],
+            'administModeFrom': [null],
+            'administModeTo': [null, Validators.required],
+            'activeSubstances': [null]
         });
 
         this.initPage();
-        this.loadDocTypes();
+        // this.loadDocTypes();
         this.loadMedicalInstitutionsList();
         this.loadManufacturers();
         this.initMeasureUnits();
@@ -426,9 +463,9 @@ export class BEvaluarePrimaraComponent implements OnInit {
         )
     }
 
-    loadDocTypes() {
+    loadDocTypes(data) {
         this.subscriptions.push(
-            this.taskService.getRequestStepByIdAndCode('4', 'E').subscribe(step => {
+            this.taskService.getRequestStepByIdAndCode(data.type.id, data.currentStep).subscribe(step => {
                     this.subscriptions.push(
                         this.administrationService.getAllDocTypes().subscribe(data => {
                                 if (step.availableDocTypes) {
@@ -450,6 +487,11 @@ export class BEvaluarePrimaraComponent implements OnInit {
             this.activatedRoute.params.subscribe(params => {
                 this.subscriptions.push(this.requestService.getClinicalTrailAmendmentRequest(params['id']).subscribe(data => {
                         console.log(data);
+
+                        this.initialData = data;
+                        this.isAnalizePage = data.type.id == 4 && data.currentStep == 'A';
+                        this.stepName = this.isAnalizePage ? 'Analiza dosarului' : 'Evaluarea primara';
+
                         this.clinicTrailAmendForm.get('id').setValue(data.id);
                         this.clinicTrailAmendForm.get('requestNumber').setValue(data.requestNumber);
                         this.clinicTrailAmendForm.get('startDate').setValue(new Date(data.startDate));
@@ -460,22 +502,17 @@ export class BEvaluarePrimaraComponent implements OnInit {
                         this.clinicTrailAmendForm.get('requestHistories').setValue(data.requestHistories);
                         this.clinicTrailAmendForm.get('clinicalTrails').setValue(data.clinicalTrails);
 
-
                         let findAmendment = data.clinicalTrails.clinicTrialAmendEntities.find(amendment => data.id == amendment.registrationRequestId);
                         this.amendmentIndex = data.clinicalTrails.clinicTrialAmendEntities.indexOf(findAmendment);
-
-                        // console.log('findAmendment', findAmendment);
-                        // console.log('this.amendmentIndex', this.amendmentIndex);
-                        // console.log(data.clinicalTrails.clinicTrialAmendEntities);
 
                         this.clinicTrailAmendForm.get('clinicalTrailAmendment').setValue(findAmendment);
 
                         this.clinicTrailAmendForm.get('clinicalTrailAmendment.medicalInstitutions').setValue(
                             findAmendment.medicalInstitutions == null ? [] : findAmendment.medicalInstitutions);
-                        this.clinicTrailAmendForm.get('clinicalTrailAmendment.treatment').setValue(
-                            findAmendment.treatment == null ? this.treatmentList[0] : findAmendment.treatment);
-                        this.clinicTrailAmendForm.get('clinicalTrailAmendment.provenance').setValue(
-                            findAmendment.provenance == null ? this.provenanceList[0] : findAmendment.provenance);
+                        this.clinicTrailAmendForm.get('clinicalTrailAmendment.treatmentTo').setValue(
+                            findAmendment.treatmentTo == null ? this.treatmentList[0] : findAmendment.treatmentTo);
+                        this.clinicTrailAmendForm.get('clinicalTrailAmendment.provenanceTo').setValue(
+                            findAmendment.provenanceTo == null ? this.provenanceList[0] : findAmendment.provenanceTo);
 
 
                         if (findAmendment.medicament !== null) {
@@ -492,18 +529,21 @@ export class BEvaluarePrimaraComponent implements OnInit {
                             this.placeboFormn.setValue(findAmendment.placebo);
                         }
 
-                        if ( findAmendment.medicalInstitutions !== null) {
+                        if (findAmendment.medicalInstitutions !== null) {
                             this.mediacalInstitutionsList = findAmendment.medicalInstitutions;
                         }
 
-                        console.log(' this.clinicTrailAmendForm', this.clinicTrailAmendForm);
+                        // console.log(' this.clinicTrailAmendForm', this.clinicTrailAmendForm);
 
                         this.docs = data.documents;
                         this.docs.forEach(doc => doc.isOld = true);
+                        this.outDocuments = data.outputDocuments;
+
 
                         this.receiptsList = data.receipts;
                         this.paymentOrdersList = data.paymentOrders;
 
+                        this.loadDocTypes(data);
                         this.loadInvestigatorsList();
                         this.loadMedicalInstitutionsList();
                     },
@@ -575,7 +615,14 @@ export class BEvaluarePrimaraComponent implements OnInit {
 
         dialogConfig2.height = '650px';
         dialogConfig2.width = '600px';
-        dialogConfig2.data = substance;
+        console.log('substance', substance);
+
+        dialogConfig2.data = {
+            activeSubstance: substance.activeSubstance,
+            quantity: substance.quantity,
+            unitsOfMeasurement: substance.unitsOfMeasurement,
+            manufacture: substance.manufacture
+        };
 
         let dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
@@ -619,7 +666,7 @@ export class BEvaluarePrimaraComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             console.log('result', result);
-            if (result !== null && result !== undefined &&result.response) {
+            if (result !== null && result !== undefined && result.response) {
                 this.refProdActiveSubstances.push({
                     activeSubstance: result.activeSubstance,
                     quantity: result.activeSubstanceQuantity,
@@ -639,7 +686,12 @@ export class BEvaluarePrimaraComponent implements OnInit {
 
         dialogConfig2.height = '650px';
         dialogConfig2.width = '600px';
-        dialogConfig2.data = substance;
+        dialogConfig2.data = {
+            activeSubstance: substance.activeSubstance,
+            quantity: substance.quantity,
+            unitsOfMeasurement: substance.unitsOfMeasurement,
+            manufacture: substance.manufacture
+        };
 
         let dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
@@ -670,11 +722,11 @@ export class BEvaluarePrimaraComponent implements OnInit {
 
 
     onTreatmentChange(mrChange: MatRadioChange) {
-        this.clinicTrailAmendForm.get('clinicalTrailAmendment.treatment').setValue(this.treatmentList[mrChange.value - 1]);
+        this.clinicTrailAmendForm.get('clinicalTrailAmendment.treatmentTo').setValue(this.treatmentList[mrChange.value - 1]);
     }
 
     onProvenanceChange(mrChange: MatRadioChange) {
-        this.clinicTrailAmendForm.get('clinicalTrailAmendment.provenance').setValue(this.provenanceList[mrChange.value - 3]);
+        this.clinicTrailAmendForm.get('clinicalTrailAmendment.provenanceTo').setValue(this.provenanceList[mrChange.value - 3]);
     }
 
     ngOnDestroy(): void {
@@ -710,8 +762,6 @@ export class BEvaluarePrimaraComponent implements OnInit {
 
         formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex] = formModel.clinicalTrailAmendment;
 
-        console.log("formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex].name", formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex].medicament.name);
-
         console.log("Save data", formModel);
         this.subscriptions.push(
             this.requestService.saveClinicalTrailAmendmentRequest(formModel).subscribe(data => {
@@ -729,7 +779,7 @@ export class BEvaluarePrimaraComponent implements OnInit {
 
         if (this.clinicTrailAmendForm.invalid /*|| this.paymentTotal < 0*/) {
             alert('Invalid Form1!');
-            console.log("Not submitted data", formModel);
+            console.log("Not submitted data", this.clinicTrailAmendForm);
             return;
         }
 
@@ -763,11 +813,11 @@ export class BEvaluarePrimaraComponent implements OnInit {
             startDate: formModel.requestHistories[formModel.requestHistories.length - 1].endDate,
             endDate: new Date(),
             username: this.authService.getUserName(),
-            step: 'E'
+            step: this.isAnalizePage ? 'E' : 'A'
         });
 
         formModel.assignedUser = this.authService.getUserName();
-        formModel.currentStep = 'A';
+        formModel.currentStep = this.isAnalizePage ? 'AP' : 'A';
 
         let currentAmendment = formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex];
         console.log('currentAmendment', currentAmendment);
@@ -775,15 +825,17 @@ export class BEvaluarePrimaraComponent implements OnInit {
 
         console.log("Next page data", formModel);
 
-        // this.subscriptions.push(
-        //     this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
-        //         this.router.navigate(['/dashboard/module/clinic-studies/analize/' + data.body]);
-        //         this.loadingService.hide();
-        //     }, error => {
-        //         this.loadingService.hide();
-        //         console.log(error)
-        //     })
-        // )
+        let pagePath = this.isAnalizePage ? '/dashboard/module/clinic-studies/approval-amendment/' : '/dashboard/module/clinic-studies/analize-amendment/';
+        console.log("pagePath", pagePath);
+        this.subscriptions.push(
+            this.requestService.addClinicalTrailAmendmentNextRequest(formModel).subscribe(data => {
+                this.router.navigate([pagePath + data.body]);
+                this.loadingService.hide();
+            }, error => {
+                this.loadingService.hide();
+                console.log(error)
+            })
+        )
     }
 
     interruptProcess() {
@@ -817,6 +869,30 @@ export class BEvaluarePrimaraComponent implements OnInit {
                         console.log(error)
                     })
                 )
+            }
+        });
+    }
+
+    requestAdditionalData() {
+        const dialogRef2 = this.dialogConfirmation.open(AdditionalDataDialogComponent, {
+            data: {
+                requestNumber: 'SL-' + this.clinicTrailAmendForm.get('requestNumber').value,
+                requestId: this.clinicTrailAmendForm.get('id').value,
+                modalType: 'REQUEST_ADDITIONAL_DATA',
+                startDate: this.clinicTrailAmendForm.get('startDate').value
+            },
+            hasBackdrop: false
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result.success) {
+                result.docType = this.docTypes.find(doc => doc.category === 'SL');
+                this.initialData.outputDocuments.push(result);
+                this.subscriptions.push(this.requestService.addOutputDocumentRequest(this.initialData).subscribe(data => {
+                        console.log('outDocuments', data);
+                        this.outDocuments = data.body.clinicalTrails.outputDocuments;
+                    }, error => console.log(error))
+                );
             }
         });
     }

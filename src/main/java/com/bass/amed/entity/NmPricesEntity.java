@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.sql.Timestamp;
+import java.util.Date;
 
 @Data
 @Entity
@@ -37,18 +35,18 @@ public class NmPricesEntity
 
     @Basic
     @Column(name = "expiration_date")
-    private Timestamp expirationDate;
+    private Date expirationDate;
     @Basic
     @Column(name = "revision_date")
-    private Timestamp revisionDate;
+    private Date revisionDate;
 
     @Basic
     @Column(name = "price")
-    private BigDecimal price;
+    private Double price;
 
     @Basic
     @Column(name = "price_mdl")
-    private BigDecimal priceMdl;
+    private Double priceMdl;
 
     @Basic
     @Column(name = "status")

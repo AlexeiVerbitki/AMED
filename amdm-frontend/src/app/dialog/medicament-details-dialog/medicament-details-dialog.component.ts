@@ -15,6 +15,7 @@ export class MedicamentDetailsDialogComponent implements OnInit {
     private subscriptions: Subscription[] = [];
     mForm: FormGroup;
     divisions : any[] = [];
+    prices : any[] = [];
     activeSubstancesTable : any[] = [];
     manufacturesTable: any[]= [];
     initialData : any;
@@ -43,13 +44,16 @@ export class MedicamentDetailsDialogComponent implements OnInit {
             'registrationNumber': [null],
             'registrationDate': [null],
             'expirationDate': [null],
+            'priceMdl': [null],
+            'price': [null],
+            'currency': [null],
         });
     }
 
     ngOnInit() {
         this.mForm.get('registrationDate').disable();
         this.mForm.get('expirationDate').disable();
-        this.subscriptions.push(this.medicamentService.getMedicamentByCode(this.dataDialog.value).subscribe(data => {
+        this.subscriptions.push(this.medicamentService.getMedicamentByCode(this.dataDialog.value.code).subscribe(data => {
             this.initialData = Object.assign({}, data);
             this.mForm.get('commercialName').setValue(data[0].commercialName);
             this.mForm.get('dose').setValue(data[0].dose);
@@ -82,6 +86,12 @@ export class MedicamentDetailsDialogComponent implements OnInit {
             this.activeSubstancesTable = data[0].activeSubstances;
             this.manufacturesTable = data[0].manufactures;
         }));
+        this.subscriptions.push(this.medicamentService.getMedPrice(this.dataDialog.value.id).subscribe(data => {
+            let currentPrice = data;
+            this.mForm.get('priceMdl').setValue(currentPrice.priceMdl);
+            this.mForm.get('price').setValue(currentPrice.price);
+            this.mForm.get('currency').setValue(currentPrice.currency.shortDescription);
+        }));
     }
 
     confirm(): void {
@@ -100,7 +110,8 @@ export class MedicamentDetailsDialogComponent implements OnInit {
         dialogConfig2.width='1100px';
 
         dialogConfig2.data = {
-            value: this.initialData
+            value: this.initialData,
+            id: this.dataDialog.value.id
         };
 
         this.dialog.open(MedicamentHistoryDialogComponent, dialogConfig2);

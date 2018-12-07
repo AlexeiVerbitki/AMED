@@ -4,7 +4,7 @@ import {CompanyService} from "./company.service";
 import {MedicamentService} from "./medicament.service";
 import {RequestService} from "./request.service";
 import {AuthService} from "./authetication.service";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Company} from "../../models/company";
 import {Medicament} from "../../models/medicament";
@@ -86,12 +86,36 @@ export class PriceService {
         return this.http.post<any>('/api/price/save-reevaluation', pricesModel, {observe: 'response'});
     }
 
+    modifyPrices(requests: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/add-prices', requests, {observe: 'response'});
+    }
+
+    approvePrices(requests: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/approve-prices', requests, {observe: 'response'});
+    }
+
+    documentsByPricesIds(priceIds: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/price/documents-by-prices-ids', priceIds, {observe: 'response'});
+    }
+
+    getDocumentsByIds(requests: any): Observable<any> {
+        return this.documentService.getDocumentsByIds(requests);
+    }
+
+    makeAvailableAgain(prices: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/make-available', prices, {observe: 'response'});
+    }
+
     saveDocuments(documetns: any): Observable<any> {
         return this.http.post<any>('/api/documents/save-docs', documetns, {observe: 'response'});
     }
 
     getPricesForRevaluation(): Observable<any> {
         return this.http.get('/api/price/revaluation');
+    }
+
+    getPricesForApproval(): Observable<any> {
+        return this.http.get('/api/price/price-approval');
     }
 
     getGenericsPricesForRevaluation(priceId: string): Observable<any> {

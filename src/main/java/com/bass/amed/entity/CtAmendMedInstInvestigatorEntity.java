@@ -1,7 +1,6 @@
 package com.bass.amed.entity;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -12,18 +11,6 @@ import java.util.Objects;
 public class CtAmendMedInstInvestigatorEntity {
     @EmbeddedId
     private CtAmendMedInstInvPK embededId;
-
-//    @Basic
-//    @Column(name = "clinical_trail_amend_id")
-//    private Integer clinicalTrialsAmendId;
-//
-//    @Basic
-//    @Column(name = "medical_institution_id")
-//    private Integer medicalInstitutionsEntity;
-//
-//    @Basic
-//    @Column(name = "investigator_id")
-//    private Integer investigatorsEntity;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @MapsId("clinicalTrailAmendId")
@@ -43,20 +30,33 @@ public class CtAmendMedInstInvestigatorEntity {
     @Column(name = "main_investigator")
     private Boolean mainInvestigator;
 
-    public CtAmendMedInstInvestigatorEntity(ClinicTrialAmendEntity clinicalTrialsAmendEntity, CtMedicalInstitutionEntity medicalInstitutionsEntity,CtInvestigatorEntity investigatorsEntity, Boolean mainInvestigator){
+//    @Basic
+//    @Column(name = "status")
+//    private Character status;
+
+    public boolean meaningfulyEquals(CtMedInstInvestigatorEntity o) {
+        if (o == null) return false;
+
+        return Objects.equals(medicalInstitutionsEntity.getId(), o.getMedicalInstitutionsEntity().getId()) &&
+                Objects.equals(investigatorsEntity.getId(), o.getInvestigatorsEntity().getId()) &&
+                Objects.equals(mainInvestigator, o.getMainInvestigator());
+    }
+
+    public CtAmendMedInstInvestigatorEntity(ClinicTrialAmendEntity clinicalTrialsAmendEntity, CtMedicalInstitutionEntity medicalInstitutionsEntity, CtInvestigatorEntity investigatorsEntity, Character status, Boolean mainInvestigator) {
         this.clinicalTrialsAmendEntity = clinicalTrialsAmendEntity;
         this.medicalInstitutionsEntity = medicalInstitutionsEntity;
         this.investigatorsEntity = investigatorsEntity;
         this.mainInvestigator = mainInvestigator;
-        this.embededId = new CtAmendMedInstInvPK(clinicalTrialsAmendEntity.getId(),medicalInstitutionsEntity.getId(), investigatorsEntity.getId());
+        this.embededId = new CtAmendMedInstInvPK(clinicalTrialsAmendEntity.getId(), medicalInstitutionsEntity.getId(), investigatorsEntity.getId(), status);
     }
 
-    public CtAmendMedInstInvestigatorEntity(Integer ctId, Integer medInstId, Integer investigID, Boolean mainInvestigator){
+    public CtAmendMedInstInvestigatorEntity(Integer ctId, Integer medInstId, Integer investigID, Boolean mainInvestigator, Character status) {
         this.mainInvestigator = mainInvestigator;
-        this.embededId = new CtAmendMedInstInvPK(ctId,medInstId, investigID);
+        this.embededId = new CtAmendMedInstInvPK(ctId, medInstId, investigID, status);
     }
 
-    public CtAmendMedInstInvestigatorEntity(){}
+    public CtAmendMedInstInvestigatorEntity() {
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -64,12 +64,30 @@ public class CtAmendMedInstInvestigatorEntity {
         if (o == null || getClass() != o.getClass()) return false;
         CtAmendMedInstInvestigatorEntity that = (CtAmendMedInstInvestigatorEntity) o;
         return Objects.equals(embededId, that.embededId) &&
+                Objects.equals(clinicalTrialsAmendEntity, that.clinicalTrialsAmendEntity) &&
+                Objects.equals(medicalInstitutionsEntity, that.medicalInstitutionsEntity) &&
+                Objects.equals(investigatorsEntity, that.investigatorsEntity) &&
                 Objects.equals(mainInvestigator, that.mainInvestigator);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(embededId, mainInvestigator);
+        return Objects.hash(embededId, clinicalTrialsAmendEntity, medicalInstitutionsEntity, investigatorsEntity, mainInvestigator);
     }
+
+    //    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        CtAmendMedInstInvestigatorEntity that = (CtAmendMedInstInvestigatorEntity) o;
+//        return Objects.equals(medicalInstitutionsEntity, that.medicalInstitutionsEntity) &&
+//                Objects.equals(investigatorsEntity, that.investigatorsEntity) &&
+//                Objects.equals(mainInvestigator, that.mainInvestigator);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(medicalInstitutionsEntity,investigatorsEntity, mainInvestigator);
+//    }
 }

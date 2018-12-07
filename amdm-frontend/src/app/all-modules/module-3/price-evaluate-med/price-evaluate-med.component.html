@@ -98,9 +98,14 @@
                 <td class="align-middle" mdbTooltip="{{el.dose}}" placement="top">{{el.dose}}</td>
                 <td class="align-middle" mdbTooltip="{{el.division}}" placement="top">{{el.division}}</td>
                 <td class="align-middle" mdbTooltip="{{el.internationalMedicamentName.description}}" placement="top">{{el.internationalMedicamentName.description}}</td>
-                <td class="align-middle" mdbTooltip="{{el.price.mdlValue | digitsAfterDecimal:4}}" placement="top">{{el.price.mdlValue | digitsAfterDecimal:4}}</td>
+                <td class="align-middle" mdbTooltip="{{el.price.mdlValue | digitsAfterDecimal:4}}" placement="top">
+                    <input type="number" #newMdlPriceInput [value]="el.price.mdlValue | digitsAfterDecimal:4"
+                           (change)="currentMedPriceChanged(i, newMdlPriceInput.value)" id="priceMdlNew" [disabled]="el.rowType == 2"
+                           class="form-control text-center form-control-sm input-price"/>
+                </td>
+
                 <td class="align-middle" mdbTooltip="{{el.price.value | digitsAfterDecimal:4}} {{el.price.currency.shortDescription}}" placement="top">{{el.price.value | digitsAfterDecimal:4}} {{el.price.currency.shortDescription}}</td>
-                <td class="align-middle w-40"  *ngIf="el.rowType == 2">
+                <td class="align-middle w-40" *ngIf="el.rowType == 2">
                     <button type="button" class="btn btn-dark-red-color btn-sm" (click)="deleteRelatedOriginalMed(i)">
                         <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
                     </button>
@@ -108,6 +113,9 @@
             </tr>
             </tbody>
         </table>
+        <div *ngIf="this.medicaments[0].price.mdlValue <= 0">
+            <small class="text-muted"><strong class="text-danger">Introduceți un preț valid</strong></small>
+        </div>
 
         <div [hidden]="!hasReferencePrices">
             <div class="gradient-card-header bg-sidebar border-gradient mt-5">

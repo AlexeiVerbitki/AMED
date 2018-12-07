@@ -280,24 +280,16 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                     if (data.clinicalTrails.medicament !== null) {
                         this.medicamentForm.setValue(data.clinicalTrails.medicament);
                         this.medActiveSubstances = data.clinicalTrails.medicament.activeSubstances;
-                        // this.medicamentForm.get('manufacture').setValue(data.clinicalTrails.medicament.manufacture.description);
-                        // this.medicamentForm.get('volumeQuantityMeasurement').setValue(data.clinicalTrails.medicament.volumeQuantityMeasurement.description);
-                        // this.medicamentForm.get('pharmaceuticalForm').setValue(data.clinicalTrails.medicament.pharmaceuticalForm.description);
-                        // this.medicamentForm.get('atcCode').setValue(data.clinicalTrails.medicament.atcCode.description);
                     }
 
                     if (data.clinicalTrails.referenceProduct !== null) {
                         this.referenceProductFormn.setValue(data.clinicalTrails.referenceProduct);
                         this.refProdActiveSubstances = data.clinicalTrails.referenceProduct.activeSubstances;
-                        // this.referenceProductFormn.get('manufacture').setValue(data.clinicalTrails.referenceProduct.manufacture.description);
-                        // this.referenceProductFormn.get('volumeQuantityMeasurement').setValue(data.clinicalTrails.referenceProduct.volumeQuantityMeasurement.description);
-                        // this.referenceProductFormn.get('pharmaceuticalForm').setValue(data.clinicalTrails.referenceProduct.pharmaceuticalForm.description);
-                        // this.referenceProductFormn.get('atcCode').setValue(data.clinicalTrails.referenceProduct.atcCode.description);
                     }
 
                     if (data.clinicalTrails.placebo !== null) {
                         this.placeboFormn.setValue(data.clinicalTrails.placebo);
-                        this.placeboFormn.get('volumeQuantityMeasurement').setValue(data.clinicalTrails.placebo.volumeQuantityMeasurement.description);
+                        //this.placeboFormn.get('volumeQuantityMeasurement').setValue(data.clinicalTrails.placebo.volumeQuantityMeasurement.description);
                     }
 
                     this.investigatorsList = data.clinicalTrails.investigators;

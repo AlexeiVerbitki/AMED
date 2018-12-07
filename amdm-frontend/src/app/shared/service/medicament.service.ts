@@ -58,4 +58,7 @@ export class MedicamentService {
         return this.http.get<any>('/api/medicaments/all-by-name', {params: Params});
     }
 
+    getMedPrice(medicamentId: string): Observable<any> {
+        return this.http.get('/api/price/med-current-price',  {params: {id: medicamentId}});
+    }
 }

@@ -48,6 +48,7 @@ export class MedRegComponent implements OnInit {
     docs: Document [] = [];
 
     unitOfImportTable: any[] = [];
+    currencies: any[] = [];
 
     protected manufacturersRfPr: Observable<any[]>;
     protected loadingManufacturerRfPr: boolean = false;
@@ -66,7 +67,7 @@ export class MedRegComponent implements OnInit {
     unitSumm: any;
 
     formModel: any;
-    valutaList: Observable<any[]>;
+    valutaList: any[];
 
     importData : any;
     medicamentData : any;
@@ -92,6 +93,9 @@ export class MedRegComponent implements OnInit {
     internationalMedicamentNames: Observable<any[]>;
     loadinginternationalMedicamentName: boolean = false;
     internationalMedicamentNameInputs = new Subject<string>();
+
+    medicamentPrice: any;
+    vadlidPrice: boolean;
 
 
     constructor(private fb: FormBuilder,
@@ -221,6 +225,7 @@ export class MedRegComponent implements OnInit {
             ))
         }))
 
+
         this.currentDate = new Date();
         this.sellerAddress='';
         this.producerAddress='';
@@ -237,7 +242,9 @@ export class MedRegComponent implements OnInit {
         this.loadUnitsOfMeasurement();
         this.loadMedicaments();
         this.loadInternationalMedicamentName();
+        this.vadlidPrice=false;
         console.log("importTypeForms.value",this.importTypeForms.value)
+        console.log("currencies", this.currencies)
     }
 
     onChanges(): void {
@@ -268,7 +275,17 @@ export class MedRegComponent implements OnInit {
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(val.registrationNumber);
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(val.registrationDate));
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(val.expirationDate);
-                    console.log('val.registrationDate',val.registrationDate)
+
+                    this.medicamentService.getMedPrice(val.id).subscribe(priceEntity=>{
+                        this.medicamentPrice = priceEntity;
+                        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(this.valutaList.find(r => r === priceEntity.currency.shortDescription));
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(priceEntity.currency.shortDescription);
+                        console.log(" this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency')",  this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').value)
+                        console.log("this.medicamentPrice", this.medicamentPrice)
+                        console.log("valutaList", this.valutaList)
+                        console.log("priceEntity.currency.shortDescription", priceEntity.currency.shortDescription)
+                    })
+
                 }
             }));
             /*================================================*/
@@ -308,6 +325,10 @@ export class MedRegComponent implements OnInit {
 
     get importTypeForms() {
         return this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable') as FormArray
+    }
+
+    currencyChanged($event){
+        this.currencies = $event;
     }
 
     addUnitOfImport() {

@@ -6,6 +6,13 @@ import javax.persistence.*;
 @Table(name = "nm_price_types", schema = "amed", catalog = "")
 public class PriceTypesEntity
 {
+    public PriceTypesEntity() {
+    }
+
+    public PriceTypesEntity(Integer id) {
+        this.id = id;
+    }
+
     private Integer id;
     private String description;
     private Integer price;

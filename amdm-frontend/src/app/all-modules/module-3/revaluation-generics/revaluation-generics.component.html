@@ -113,7 +113,7 @@
                             class="bg-sidebar white-text"> Preț Valută stabilit
                         </th>
                         <td mdbTooltip="{{element.price}} {{element.currency}}" mat-cell
-                            *matCellDef="let element"> {{element.price}} {{element.currency}}</td>
+                            *matCellDef="let element"> {{element.price | digitsAfterDecimal:4}} {{element.currency}}</td>
                     </ng-container>
 
                     <ng-container matColumnDef="priceMdl">
@@ -126,7 +126,7 @@
 
                     <ng-container matColumnDef="priceMdlNew">
                         <th mdbTooltip="Prețul MDL maxim posibil (75% din prețul medicamentului original)" mat-header-cell *matHeaderCellDef
-                            mat-sort-header class="bg-sidebar white-text">Preț MDL maxim posibil
+                            mat-sort-header class="bg-sidebar white-text">Preț MDL modificat
                         </th>
                         <td mdbTooltip="{{element.priceMdlNew}}" mat-cell *matCellDef="let element; let i = index"
                             type="number">
@@ -136,12 +136,20 @@
                         </td>
                     </ng-container>
 
+                    <ng-container matColumnDef="priceNew">
+                        <th mdbTooltip="Prețul în valută modificat" mat-header-cell *matHeaderCellDef mat-sort-header
+                            class="bg-sidebar white-text"> Preț Valută modificat
+                        </th>
+                        <td mdbTooltip="{{element.priceNew}} {{element.currency}}" mat-cell
+                            *matCellDef="let element"> {{+element.priceNew | digitsAfterDecimal:4}} {{element.currency}}</td>
+                    </ng-container>
+
                     <ng-container matColumnDef="priceMdlDifferencePercents">
                         <th mdbTooltip="Devierea prețului actual de la limita posibilă (75% din prețul originalului)" mat-header-cell
-                            *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Devierea de preț
+                            *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Raportat la prețul originalului
                         </th>
-                        <td mdbTooltip="{{element.priceMdlDifferencePercents}}" mat-cell
-                            *matCellDef="let element"> {{element.priceMdlDifferencePercents}} </td>
+                        <td mdbTooltip="{{element.priceMdlDifferencePercents}}%" mat-cell
+                            *matCellDef="let element"> {{element.priceMdlDifferencePercents}}%</td>
                     </ng-container>
 
                     <ng-container matColumnDef="ignore">
@@ -218,17 +226,19 @@
         <strong>Indicați valori valide pentru preț</strong>
     </div>
 
-    <div class="row align-items-center">
-        <div class="col text-right">
-                <div class="mt-2">
-                    <mat-checkbox labelPosition="before" [checked]="savePrices" (change)="savePricesCheck($event)" ><strong>Salvează prețurile în CNP</strong></mat-checkbox>
-                </div>
-        </div>
-        <div class="col text-left">
-            <button class="btn btn-dark-green-color waves-light btn-sm waves-light" mdbWavesEffect (click)="save()">
-                Salvează rezultatele evaluării
-            </button>
-        </div>
+    <div class="text-center">
+        <!--<div class="col text-right">-->
+                <!--<div class="mt-2">-->
+                    <!--<mat-checkbox labelPosition="before" [checked]="savePrices" (change)="savePricesCheck($event)" ><strong>Salvează prețurile în CNP</strong></mat-checkbox>-->
+                <!--</div>-->
+        <!--</div>-->
+        <!--<div class="col text-left">-->
+            <!---->
+        <!--</div>-->
+
+        <button class="btn btn-dark-green-color waves-light btn-sm waves-light" mdbWavesEffect (click)="save()">
+            Salvează rezultatele evaluării
+        </button>
     </div>
 </div>
 <app-xchangeinfo (changed)="currencyChanged($event)"></app-xchangeinfo>

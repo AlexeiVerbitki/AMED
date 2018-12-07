@@ -281,23 +281,15 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                       let expDate: Date = new Date();
                       expDate.setFullYear(expDate.getFullYear() + 1);
                       this.PriceRegForm.get('evaluation.expirationDate').setValue(expDate);
-                      // let beginDate: Date = data.startDate;
-                      // if(beginDate != undefined) {
-                      //     let d: Date = new Date(beginDate);
-                      //     let begDateString = d.getDay() + '/' +  d.getMonth() + '/' +  d.getFullYear();
-                      //     this.PriceRegForm.get('startDate').setValue(d);
-                      // }
 
                       if(data.requestHistories != undefined && data.requestHistories.length > 0) {
                           var reqHist = data.requestHistories.reduce((p, n) => p.id < n.id ? p : n);
                           this.PriceRegForm.get('dataToSaveInStartDateRequestHistory').setValue(reqHist.endDate);
                       }
-                  })
+                  }, error1 => console.log('getPricesRequest', error1))
               );
           })
       );
-
-      this.getPricesExpirationReasons();
     }
 
     updateCurrentMedPrice() {
@@ -327,15 +319,6 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
             this.priceService.getPriceTypes('3').subscribe(priceTypes => {
                     this.priceTypes = priceTypes;
-                },
-                error => console.log(error)
-            ));
-    }
-
-    getPricesExpirationReasons(){
-        this.subscriptions.push(
-            this.priceService.getPriceExpirationReasons().subscribe(reasons => {
-                    this.expirationReasons = reasons;
                 },
                 error => console.log(error)
             ));
@@ -418,6 +401,13 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
       } else if($event.id == Decision.Reject) {
           this.needSelectPrice = false;
       }
+    }
+
+    currentMedPriceChanged(i: number, newMdlPrice: string) {
+        this.medicaments[i].price.mdlValue = +newMdlPrice;
+
+        let avgCur = this.avgCurrencies.find(cur => cur.currency.code == this.medicaments[i].price.currency.code);
+        this.medicaments[i].price.value = (+newMdlPrice / avgCur.value);
     }
 
     currencyChanged($event) {
@@ -591,7 +581,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
 
         let uploadedEvaluationFile = this.documents.find(d => d.docType.category == 'FE');
         let priceAcceptCondition: boolean = (decision.valid && decision.value.description == 'Acceptat' && uploadedEvaluationFile != undefined && !this.hasUnloadedDocs());
-        let canFinishEvaluate: boolean = decision.invalid || (decision.valid && decision.value.description == 'Respins') || priceAcceptCondition;
+        let canFinishEvaluate: boolean = this.medicaments[0].price.mdlValue > 0 && (decision.invalid || (decision.valid && decision.value.description == 'Respins') || priceAcceptCondition);
 
 
         if (!canFinishEvaluate) {
@@ -637,10 +627,10 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
 
         priceModel.price = {
             id: price.id,
-            value: price.value,
+            value: this.medicaments[0].price.value,
             type: acceptType,
             currency: price.currency,
-            mdlValue: price.nationalPrice,
+            mdlValue: this.medicaments[0].price.mdlValue,
             referencePrices: this.refPrices,
             medicament: {id: this.PriceRegForm.get('medicament.id').value},
             // nmPrice:{
@@ -651,7 +641,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
             //     medicament: {id: this.PriceRegForm.get('medicament.id').value},
             //     price: price.value,
             //     priceMdl:price.nationalPrice,
-            //     orderNr: orderNr.number,
+            //     orderNr: 4546,//orderNr.number,
             //     id: this.PriceRegForm.get('price.nmPriceId').value
             // }
         };
