@@ -351,12 +351,16 @@ export class MedRegComponent implements OnInit {
     }
 
     maxPriceForCurrency(valuta: any) {
+        if (valuta.shortDescription === "MDL") {
+            this.medicamentCurrencyExchangeRate = 1;
+        } else {
             this.medicamentCurrencyExchangeRate = this.exchengeCurrencies.find(i => i.currency.shortDescription == valuta.shortDescription).value;
             // *  this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value;
 
             // console.log("medicamentCurrencyExchangeRate",this.medicamentCurrencyExchangeRate)
             // console.log("this.medicamentMAXPrice", this.medicamentMAXPrice),
             // console.log("exchangeCurrencies", 10 * this.exchengeCurrencies[1].value);
+        }
     }
 
     get importTypeForms() {
