@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Anexa 3 la ordin" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="10" uuid="c084aefd-f7fb-40ce-ab3f-dc897567241a">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="TableDataset1" whenResourceMissingType="Empty" uuid="a7b12c8d-62d5-4b41-a8d1-d502269ee333">
+		<parameter name="annex3DataSource" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource">
+			<defaultValueExpression><![CDATA[$P{annex3DataSource}]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="medicineCode" class="java.lang.String"/>
+		<field name="commercialName" class="java.lang.String"/>
+		<field name="pharmaceuticalForm" class="java.lang.String"/>
+		<field name="dose" class="java.lang.String"/>
+		<field name="division" class="java.lang.String"/>
+		<field name="country" class="java.lang.String"/>
+		<field name="producerCompany" class="java.lang.String"/>
+		<field name="previousPrice" class="java.lang.Double"/>
+		<field name="reviewedPrice" class="java.lang.Double"/>
+		<field name="producerPrice" class="java.lang.Double"/>
+		<field name="currency" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="annex3DataSource" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource">
+		<defaultValueExpression><![CDATA[$P{annex3DataSource}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="registrationNumber" class="java.lang.String" evaluationTime="Early">
+		<defaultValueExpression><![CDATA[$P{registrationNumber}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date" class="java.util.Date">
+		<defaultValueExpression><![CDATA[$P{date}]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<pageHeader>
+		<band height="75" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="220" height="60" uuid="d4fe1f91-f2a0-4e52-b4c3-5c3e9dd935ca"/>
+				<imageExpression><![CDATA["layouts/icons/header_left.jpg"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="220" y="0" width="330" height="70" uuid="11dd8ec7-6404-4cc7-9d59-a7e8f6fd0917"/>
+				<imageExpression><![CDATA["layouts/icons/header_right.PNG"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="229" splitType="Stretch">
+			<staticText>
+				<reportElement x="280" y="10" width="270" height="20" uuid="29ca3c6a-bf93-4cf4-b9a1-36b7c60e5efc"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="8" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Anexa nr. 3
+la ordinul Agenţiei Medicamentului şi Dispozitivelor Medicale 
+]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="297" y="30" width="253" height="10" uuid="0afe0ce5-2237-4f56-9b00-35adcbe35979"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="8" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Nr. " + $P{registrationNumber}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="296" y="40" width="253" height="10" uuid="de6c0da3-8a79-4f38-b3dc-c6ee873064a1"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="8" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["din " +  new SimpleDateFormat("dd.MM.yyyy" ).format($P{date})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="50" width="550" height="60" uuid="366bb4d4-3234-4bee-9a88-4ced3ae8fae6"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LISTA
+medicamentelor cu preţul de producător aprobat revizuit în urma aprecierii cu 3% şi mai mult a monedei naţionale în raport cu valuta preţului inclus în Catalogul naţional de preţuri (USD/EUR) de la data emiterii ordinului de aprobare a preţului de producător şi menţinerea acestei modificări a cursului oficial mediu de schimb valutar în decurs de cel puţin o lună de zile
+]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement stretchType="RelativeToTallestObject" x="1" y="120" width="549" height="99" uuid="b7002f1a-94e5-45a2-99da-7a2b4db25c36">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="Blank">
+					<datasetRun subDataset="TableDataset1" uuid="c0af70f9-6ac3-4521-944a-0bd28663d405">
+						<datasetParameter name="annex3DataSource">
+							<datasetParameterExpression><![CDATA[$P{annex3DataSource}]]></datasetParameterExpression>
+						</datasetParameter>
+						<dataSourceExpression><![CDATA[$P{annex3DataSource}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="20" uuid="eec8cc8b-f56c-4050-b119-205c28e5682d">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="20" height="50" uuid="116947aa-6417-4ff0-8a29-94a3b80d8463"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Nr. 
+d/o]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="50" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true" hyperlinkTarget="Blank">
+								<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="20" height="50" isPrintWhenDetailOverflows="true" uuid="cd7eaff3-88fa-47c3-a654-3f306b78b0ff"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Verdana" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="60" uuid="1c4b8efe-f02a-4cbf-be31-926543717060">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="60" height="50" uuid="21d33031-216e-45db-889d-65d9ab75b16e"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Codul medicamentului]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="50">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true" hyperlinkTarget="Blank">
+								<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="50" isPrintWhenDetailOverflows="true" uuid="230255a5-86d3-44f0-b5ba-94d3b32e6921"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Verdana" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{medicineCode}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="60" uuid="f7256199-8293-47e9-b2ab-4e9aa688df2c">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="60" height="50" uuid="333aaf88-92f8-4a01-b77d-486d141d1ff1"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Denumirea comercială]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="50">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true" hyperlinkTarget="Blank">
+								<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="50" isPrintWhenDetailOverflows="true" uuid="600d4ed7-f77f-4b73-b5a9-d29ae440d225"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Verdana" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{commercialName}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="60" uuid="7e823f03-463c-4c9e-9e90-52ec470ba035">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+						<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="60" height="50" uuid="a4511a5d-ee32-4626-ae87-bdbf472e1dd6"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Forma farmaceutică]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="50">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true" hyperlinkTarget="Blank">
+								<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="50" isPrintWhenDetailOverflows="true" uuid="a55bb486-52f4-4c8f-b385-6169761da445"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Verdana" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{pharmaceuticalForm}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="30" uuid="f8163fcf-c488-479b-834c-30a51969173e">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+						<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="30" height="50" uuid="b22290a0-494b-492e-a861-011867507235"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Doza]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="50">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true" hyperlinkTarget="Blank">
+								<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="30" height="50" isPrintWhenDetailOverflows="true" uuid="f5f5c1ab-d4df-46c6-9d68-e0617f6fc283"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Verdana" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{dose}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="30" uuid="924b593f-ef12-4514-a929-3ce3845186f7">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+						<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="30" height="50" uuid="844abe97-4e35-41b5-b964-af7d25110a8d"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Divizarea]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="50">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true" hyperlinkTarget="Blank">
+								<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="30" height="50" isPrintWhenDetailOverflows="true" uuid="293019be-e606-4206-b2e5-35d420c7c84e"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Verdana" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{division}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="40" uuid="f017ff42-efe6-4e53-a054-e0818bd59eef">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+						<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="40" height="50" uuid="95527ce9-1836-4fc5-95f1-454bb3b9e0b9"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Țara]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="50">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true" hyperlinkTarget="Blank">
+								<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="40" height="50" isPrintWhenDetailOverflows="true" uuid="a433695c-e279-4ae8-a010-0956904041d4"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Verdana" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{country}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="70" uuid="ea069029-67db-488e-bb7a-7b42c86c735a">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
+						<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="70" height="50" uuid="fe34f489-b064-45a7-97df-569c3e4ce045"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Firma producătoare]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="50">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true" hyperlinkTarget="Blank">
+								<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="70" height="50" isPrintWhenDetailOverflows="true" uuid="8d91086e-499f-44d8-815f-cf85b4fa678d"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Verdana" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{producerCompany}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="40" uuid="0a9564cc-e91d-41b8-bdbe-49d47a590fdc">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column9"/>
+						<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="40" height="50" uuid="a765595f-7ac7-4030-ad66-3142ed9083dc"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Preț precedent]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="50">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true" hyperlinkTarget="Blank">
+								<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="40" height="50" isPrintWhenDetailOverflows="true" uuid="f90cb75b-ea30-420d-acd1-85e2de954ff1"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Verdana" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[String.format("%.2f",(double)$F{previousPrice}).replace(".",",")]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="40" uuid="f967ca1b-a81a-453a-8ae5-b09b5ddfa619">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
+						<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="40" height="50" uuid="f5dcf0cb-26f8-41bb-a294-bec66addef38"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Preț revizuit]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="50">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true" hyperlinkTarget="Blank">
+								<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="40" height="50" isPrintWhenDetailOverflows="true" uuid="d58966aa-e65c-4b9f-ae89-39d0dfda36ac"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Verdana" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[String.format("%.2f",(double)$F{reviewedPrice}).replace(".",",")]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="59" uuid="ef50d972-7e8a-4533-986e-90de4aa19aa7">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column11"/>
+						<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="59" height="50" uuid="7c4683ac-ab71-4474-9670-2b2e84ecd74f"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Preț producător (exworks) valută]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="50">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true" hyperlinkTarget="Blank">
+								<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="59" height="50" isPrintWhenDetailOverflows="true" uuid="5ea90e0f-7de2-4ca3-aff6-03d25095acdf"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Verdana" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[String.format("%.2f",(double)$F{producerPrice}).replace(".",",")]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="41" uuid="b437cf86-e508-44b8-86eb-f505ab668c84">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column12"/>
+						<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="41" height="50" uuid="a3c68529-c4c6-4365-82c5-f383f714847e"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Valută]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="50">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true" hyperlinkTarget="Blank">
+								<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="41" height="50" isPrintWhenDetailOverflows="true" uuid="74b20b1c-91df-4528-a850-43e298b299f6"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Verdana" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{currency}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="77" splitType="Stretch">
+			<staticText>
+				<reportElement x="484" y="64" width="25" height="13" uuid="b64b0e3a-fd13-4790-bea5-b0b9acc35d20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Pagina]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="19" width="280" height="45" uuid="3e8850d9-7aa2-4b9e-8af5-ee0a5feafe93"/>
+				<textElement markup="none">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Agenţia Medicamentului şi Dispozitivelor Medicale
+Medicines and Medical Devices Agency 
+Republica Moldova, MD-2028, Chişinău, str. Korolenko, 2/1
+tel. +373 22 884 301, e-mail: office@amed.md; Web: www.amed.md
+]]></text>
+			</staticText>
+			<image>
+				<reportElement x="483" y="0" width="65" height="60" uuid="bbc38907-770b-4532-b958-246786ffa841"/>
+				<imageExpression><![CDATA["layouts/icons/cer.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="521" y="64" width="16" height="13" uuid="01717c74-486d-40b7-9137-07898e652885"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[din ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="509" y="64" width="12" height="13" uuid="564d9887-ad6f-4b42-954a-70326fbf7e32"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="537" y="64" width="12" height="13" uuid="8f3c4fe0-41af-4130-8f08-f3280bdb65f3"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

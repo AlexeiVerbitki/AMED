@@ -1,0 +1,113 @@
+<div class="container-fluid sky z-depth-2">
+    <h3 class="text-center my-3 font-weight-bold">Aprobare amendament la studiu clinic</h3>
+    <hr>
+
+    <form [formGroup]='approveClinicalTrailAmendForm' #f="ngForm">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="regNr" mdbInputDirective type="text" class="form-control"
+                           formControlName="requestNumber">
+                    <label for="regNr">Nr. de înregistrare a cererii
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="regDate" [matDatepicker]="picker" mdbInputDirective type="text" class="form-control"
+                           formControlName="startDate" [attr.disabled]="true">
+                    <mat-datepicker touchUi #picker></mat-datepicker>
+                    <label for="regDate">Data de înregistrare a cererii
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="company" mdbInputDirective type="text" class="form-control"
+                           value={{approveClinicalTrailAmendForm.value.company.name}} [attr.disabled]="true">
+                    <label for="company">Compania solicitant
+                    </label>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        <div [formGroup]="clinicalTrailAmendmentForm">
+            <h5 class="text-center font-weight-bold">Comisia de experti</h5>
+            <hr>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="md-form">
+                        <input id="comisiaNr" mdbInputDirective type="text" class="form-control" formControlName="comissionNr">
+                        <label for="regNr">Nr. comisiei medicamentului
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker2" placeholder="Data" formControlName="comissionDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker2></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <app-document [documents]="docs" [dcTypes]="docTypes"
+                      [nrCerere]="approveClinicalTrailAmendForm.get('requestNumber').value"></app-document>
+        <hr>
+
+        <h5 class="text-center font-weight-bold">Documente de iesire</h5>
+        <hr>
+        <table class="table table-widths-lg text-center">
+            <thead class="black white-text">
+            <tr>
+                <th scope="col">Denumirea</th>
+                <th scope="col">Numar</th>
+                <th scope="col">Status document</th>
+                <th>Actiuni</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let doc of outDocuments">
+                <th scope="row">{{ doc.name }}</th>
+                <th scope="row">{{ doc.number }}</th>
+                <th scope="row">{{ doc.status }}</th>
+                <td>
+                    <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(doc)">
+                        Vizualizare
+                    </button>
+                    <button *ngIf="doc.status=='Nu este atasat' && doc.responseReceived==false && (doc.docType.category=='RA')"
+                            class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(doc)">
+                        Stergere
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <hr>
+
+        <hr>
+        <mat-radio-group formControlName="status">
+            <div class="container">
+                <div class="row">
+                    <div class="offset-3">
+                    </div>
+                    <div class="col-5">
+                        <mat-radio-button name="prop1" value="0">Acceptată</mat-radio-button>
+                    </div>
+                    <div class="col-4">
+                        <mat-radio-button name="prop2" value="1">Respinsă</mat-radio-button>
+                    </div>
+                </div>
+            </div>
+        </mat-radio-group>
+        <hr>
+    </form>
+
+    <div class="text-center">
+        <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="onSubmit()">
+            Finisare
+        </button>
+    </div>
+</div>

@@ -1,0 +1,73 @@
+<div class="mat-dialog-content">
+  <h3 class="text-center my-3 font-weight-bold">Detalii autorizare</h3>
+  <form [formGroup]='mForm'>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="protocol" mdbInputDirective type="text" class="form-control" formControlName="protocolNr" [attr.disabled]="true">
+          <label for="protocol">Numarul procesului verbal</label>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="protocolDate" placeholder="Data procesului verbal" formControlName="protocolDate" [attr.disabled]="true">
+            <mat-datepicker-toggle matSuffix [for]="protocolDate"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #protocolDate></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="company" mdbInputDirective type="text" class="form-control" formControlName="companyName" [attr.disabled]="true">
+          <label for="company">Compania</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="registrationNumber" mdbInputDirective type="text" class="form-control" formControlName="requestNumber" [attr.disabled]="true">
+          <label for="registrationNumber">Numarul cererii</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="medicament" mdbInputDirective type="text" class="form-control" formControlName="medicamentCommercialName" [attr.disabled]="true">
+          <label for="medicament">Denumire medicamnet</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="md-form">
+          <input id="code" mdbInputDirective type="text" class="form-control" formControlName="medicamentCode" [attr.disabled]="true">
+          <label for="code">Cod medicament </label>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="row">
+        <div class="col-4">
+          <div class="md-form">
+            <mat-checkbox formControlName="precursor">Precursori</mat-checkbox>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="md-form">
+            <mat-checkbox formControlName="psihotrop">Psihotrope</mat-checkbox>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="md-form">
+            <mat-checkbox formControlName="stupefiant">Stupefiante</mat-checkbox>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="text-center">
+  <div mat-dialog-actions>
+    <div class="w-100">
+      <button class="btn btn-dark-green-color btn-sm-bl btn-sm" (click)="confirm()">Ok</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,191 @@
+<div class="container-fluid sky z-depth-2">
+    
+    <div class="gradient-card-header bg-sidebar border-gradient">
+        <div class="container-fluid">
+            <!-- Title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card-header-title white-text">Lista prețurilor acceptate pentru care se va genera ordinul</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body card-body-cascade">
+        <div class="table-width">
+            <div class="example-container">
+                <table mat-table [dataSource]="dataSource" matSort>
+
+                    <ng-container matColumnDef="priceRequestType" >
+                        <th mdbTooltip="Anexa, conform căruia a fost evaluat" mat-header-cell *matHeaderCellDef mat-sort-header
+                            class="bg-sidebar white-text"> Tip Anexa
+                        </th>
+                        <td [ngSwitch]="element.priceRequestType" mdbTooltip="{{element.priceRequestType}}" mat-cell *matCellDef="let element">
+                            <div  *ngSwitchCase="2">Anexa 1</div>
+                            <div  *ngSwitchCase="9">Anexa 2</div>
+                            <div  *ngSwitchCase="11">Anexa 3</div>
+                            <div  *ngSwitchDefault> - </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="medicamentCode">
+                        <th mdbTooltip="Codul AMED" mat-header-cell *matHeaderCellDef mat-sort-header
+                            class="bg-sidebar white-text"> Codul AMED
+                        </th>
+                        <td mdbTooltip="{{element.medicamentCode}}" mat-cell
+                            *matCellDef="let element"> {{element.medicamentCode}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="commercialName">
+                        <th mdbTooltip="Denumirea comercială" mat-header-cell *matHeaderCellDef mat-sort-header
+                            class="bg-sidebar white-text"> Denumirea comercială
+                        </th>
+                        <td mdbTooltip="{{element.commercialName}}" mat-cell
+                            *matCellDef="let element"> {{element.commercialName}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="pharmaceuticalForm">
+                        <th mdbTooltip="Forma farmaceutică" mat-header-cell *matHeaderCellDef mat-sort-header
+                            class="bg-sidebar white-text"> Forma farmaceutică
+                        </th>
+                        <td mdbTooltip="{{element.pharmaceuticalForm}}" mat-cell
+                            *matCellDef="let element"> {{element.pharmaceuticalForm}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dose">
+                        <th mdbTooltip="Doza" mat-header-cell *matHeaderCellDef mat-sort-header
+                            class="bg-sidebar white-text"> Doza
+                        </th>
+                        <td mdbTooltip="{{element.dose}}" mat-cell *matCellDef="let element"> {{element.dose}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="volume">
+                        <th mdbTooltip="Volumul" mat-header-cell *matHeaderCellDef mat-sort-header
+                            class="bg-sidebar white-text"> Volumul
+                        </th>
+                        <td mdbTooltip="{{element.volume}}" mat-cell *matCellDef="let element"> {{element.volume}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="division">
+                        <th mdbTooltip="Divizare" mat-header-cell *matHeaderCellDef mat-sort-header
+                            class="bg-sidebar white-text"> Divizare
+                        </th>
+                        <td mdbTooltip="{{element.division}}" mat-cell
+                            *matCellDef="let element"> {{element.division}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="registrationDate">
+                        <th mdbTooltip="Data înregistrării" mat-header-cell *matHeaderCellDef mat-sort-header
+                            class="bg-sidebar white-text"> Data înregistrării
+                        </th>
+                        <td mdbTooltip="{{element.registrationDate}}" mat-cell
+                            *matCellDef="let element"> {{element.registrationDate | date: 'dd/MM/yyyy'}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="price">
+                        <th mdbTooltip="Prețul vechi valuta" mat-header-cell *matHeaderCellDef mat-sort-header
+                            class="bg-sidebar white-text"> Preț vechi Valută
+                        </th>
+                        <td mdbTooltip="{{element.price}} {{element.currency}}" mat-cell
+                            *matCellDef="let element"> {{element.price}} {{element.currency}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="priceNew">
+                        <th mdbTooltip="Prețul în valută" mat-header-cell *matHeaderCellDef mat-sort-header
+                            class="bg-sidebar white-text"> Preț Valută
+                        </th>
+                        <td mdbTooltip="{{element.priceNew}} {{element.currency}}" mat-cell
+                            *matCellDef="let element"> {{element.priceNew | digitsAfterDecimal:4}} {{element.currency}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="priceMdl">
+                        <th mdbTooltip="Prețul vechi MDL" mat-header-cell *matHeaderCellDef mat-sort-header
+                            class="bg-sidebar white-text"> Preț vechi MDL
+                        </th>
+                        <td mdbTooltip="{{element.priceMdl}}" mat-cell
+                            *matCellDef="let element"> {{element.priceMdl | digitsAfterDecimal:4}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="priceMdlNew">
+                        <th mdbTooltip="Prețul în valuta națională MDL" mat-header-cell *matHeaderCellDef mat-sort-header
+                            class="bg-sidebar white-text"> Prețul MDL
+                        </th>
+                        <td mdbTooltip="{{element.priceMdlNew}}" mat-cell
+                            *matCellDef="let element"> {{element.priceMdlNew | digitsAfterDecimal:4}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </div>
+            <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+        </div>
+    </div>
+
+
+    <app-document [title]="'Documente atașate'"
+                  [documents]="documents"
+                  [nrCerere]="requestNumber"
+                  [dcTypeIdentifier]="{code:'PMED',step:'E'}"
+                  (documentModified)="documentAdded($event)"></app-document>
+    <div class="my-5">
+        <div class="gradient-card-header bg-sidebar border-gradient">
+            <div class="container-fluid">
+                <!-- Title -->
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card-header-title white-text">Documente necesare</div>
+                    </div>
+                    <!--<div class="col-6">
+                        <div class="text-right fap text-white">
+                            <i (click)="sendInfoLetter()" class="fa fa-envelope fa-lg fa-mt"
+                               aria-hidden="true" mdbTooltip="Scrisoare de informare" placement="top"></i>
+                        </div>
+                    </div>-->
+                </div>
+            </div>
+
+        </div>
+        <div class="card-body card-body-cascade">
+            <table class="table table-widths-lg text-center">
+                <thead class="bg-sidebar white-text">
+                <tr>
+                    <th class="w-50" scope="col">Denumirea</th>
+                    <th class="w-25" scope="col">Numărul</th>
+                    <th class="w-20" scope="col">Statusul documentului</th>
+                    <th class="w-5">Acțiuni</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let a of outputDocuments">
+                    <td scope="row">{{ a.description }}</td>
+                    <td scope="row">{{ a.number }}</td>
+                    <td scope="row">{{ a.status }}</td>
+                    <td>
+                        <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect [disabled]="true" (click)="viewDoc(a)"><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="alert alert-danger text-center" *ngIf="formSubmitted && documents.length == 0">
+        <strong>Încărcați documentele necesare</strong>
+    </div>
+
+    <div class="text-center">
+        <button class="btn btn-dark-green-color waves-light btn-sm waves-light" mdbWavesEffect (click)="save()">
+            Salvează prețurile în nomenclator
+        </button>
+    </div>
+  <!--  <div class="row align-items-center">
+        <div class="col text-right">
+                <div class="mt-2">
+                    <mat-checkbox labelPosition="before" [checked]="savePrices" (change)="savePricesCheck($event)" ><strong>Salvează prețurile în CNP</strong></mat-checkbox>
+                </div>
+        </div>
+
+    </div>-->
+</div>
+<app-xchangeinfo (changed)="currencyChanged($event)"></app-xchangeinfo>
+

@@ -246,14 +246,13 @@
                             </div>
                             <div class="col-4">
                                 <div class="md-form-modified">
-                                    <mat-form-field class="w-100">
-                                        <mat-select id="currency" placeholder="Valuta"
+                                    <!--<mat-form-field class="w-100">-->
+                                        <ng-select id="currency" placeholder="Valuta"
                                                     [attr.disabled]="true"
-                                                    [value]="dialogData.currency.shortDescription"
                                                     formControlName="currency">
                                             <mat-option *ngFor="let valuta of valutaList" [value]="valuta">{{ valuta.shortDescription }}</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
+                                        </ng-select>
+                                    <!--</mat-form-field>-->
                                 </div>
 
                                 <!--<div *ngIf="[formSubmitted]==true && !evaluateImportForm.get('currency').valid "> /*!evaluateImportForm.get('currency')=== null &&*/-->

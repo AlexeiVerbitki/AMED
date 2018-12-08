@@ -241,6 +241,9 @@
                                 <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').invalid">
                                     <small class="text-muted"><strong class="text-danger">Prețul trebuie selectat</strong></small>
                                 </div>
+                                <div *ngIf="invalidPrice">
+                                    <small class="text-muted"><strong class="text-danger">Prețul este mai mare decât cel înregistrat in monimclatorul</strong></small>
+                                </div>
                             </div>
                             <div class="col-4">
                                 <div class="md-form-modified">

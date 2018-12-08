@@ -19,6 +19,7 @@ import {MedicamentService} from "../../../shared/service/medicament.service";
 import {Utils} from "angular-bootstrap-md/angular-bootstrap-md/utils/utils.class";
 import {MedInstInvestigatorsDialogComponent} from "../../module-9/dialog/med-inst-investigators-dialog/med-inst-investigators-dialog.component";
 import {ImportMedDialog} from "../dialog/import-med-dialog";
+import {PriceService} from "../../../shared/service/prices.service";
 
 export interface PeriodicElement {
     name: string;
@@ -48,7 +49,7 @@ export class MedRegComponent implements OnInit {
     docs: Document [] = [];
 
     unitOfImportTable: any[] = [];
-    currencies: any[] = [];
+    exchengeCurrencies: any[] = [];
 
     protected manufacturersRfPr: Observable<any[]>;
     protected loadingManufacturerRfPr: boolean = false;
@@ -95,7 +96,11 @@ export class MedRegComponent implements OnInit {
     internationalMedicamentNameInputs = new Subject<string>();
 
     medicamentPrice: any;
-    vadlidPrice: boolean;
+    medicamentMAXPrice: any[] = [];
+    medicamentCurrencyExchangeRate: any;
+    medicamnetMaxPriceValuta:any;
+    medicamnetMaxPriceMDL:any;
+    invalidPrice: boolean = false;
 
 
     constructor(private fb: FormBuilder,
@@ -107,6 +112,7 @@ export class MedRegComponent implements OnInit {
                 private authService: AuthService,
                 public dialogConfirmation: MatDialog,
                 public medicamentService: MedicamentService,
+                public priceServise: PriceService,
                 private administrationService: AdministrationService) {
 
 
@@ -225,10 +231,9 @@ export class MedRegComponent implements OnInit {
             ))
         }))
 
-
         this.currentDate = new Date();
-        this.sellerAddress='';
-        this.producerAddress='';
+        this.sellerAddress = '';
+        this.producerAddress = '';
         this.importerAddress='';
         this.formSubmitted = false;
         this.addMedicamentClicked = false;
@@ -242,9 +247,8 @@ export class MedRegComponent implements OnInit {
         this.loadUnitsOfMeasurement();
         this.loadMedicaments();
         this.loadInternationalMedicamentName();
-        this.vadlidPrice=false;
         console.log("importTypeForms.value",this.importTypeForms.value)
-        console.log("currencies", this.currencies)
+        console.log("currencies", this.exchengeCurrencies)
     }
 
     onChanges(): void {
@@ -278,11 +282,14 @@ export class MedRegComponent implements OnInit {
 
                     this.medicamentService.getMedPrice(val.id).subscribe(priceEntity=>{
                         this.medicamentPrice = priceEntity;
-                        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(this.valutaList.find(r => r === priceEntity.currency.shortDescription));
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(priceEntity.currency.shortDescription);
-                        console.log(" this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency')",  this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').value)
+                        this.valutaList = [this.valutaList.find(i=> i.shortDescription === "MDL"), priceEntity.currency];
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(this.valutaList.find(r => r === priceEntity.currency));
+
+                        // this.medicamentMAXPrice.push(inMDL = this.medicamentPrice.priceMdl);
+                        // this.medicamentMAXPrice.inCurrency = this.medicamentPrice.price;
+
                         console.log("this.medicamentPrice", this.medicamentPrice)
-                        console.log("valutaList", this.valutaList)
+                        console.log("medicamentValutaList", this.valutaList)
                         console.log("priceEntity.currency.shortDescription", priceEntity.currency.shortDescription)
                     })
 
@@ -318,17 +325,47 @@ export class MedRegComponent implements OnInit {
                         * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value;
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.unitSumm);
                 }
+
+                if (val){
+                    this.medicamnetMaxPriceValuta = val* this.medicamentCurrencyExchangeRate;
+                    this.medicamnetMaxPriceMDL = this.medicamentPrice.priceMdl;
+                    console.log(" this.medicamnetMaxPriceValuta", this.medicamnetMaxPriceValuta)
+                    console.log(" this.medicamnetMaxPriceMDL", this.medicamnetMaxPriceMDL)
+
+                    if (this.medicamnetMaxPriceMDL < (this.medicamnetMaxPriceValuta || val)){
+                        this.invalidPrice=true;
+                    }
+                }
+
+            }));
+
+            this.subscriptions.push(  this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').valueChanges.subscribe(val => {
+                if (val) {
+                    console.log("importAuthorizationEntity.unitOfImportTable.currency",val)
+                    console.log("this.exchengeCurrencies",this.exchengeCurrencies)
+                    this.maxPriceForCurrency(val);
+
+                }
             }));
         }
     }
 
+    maxPriceForCurrency(valuta: any) {
+            this.medicamentCurrencyExchangeRate = this.exchengeCurrencies.find(i => i.currency.shortDescription == valuta.shortDescription).value;
+            // *  this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value;
+
+            // console.log("medicamentCurrencyExchangeRate",this.medicamentCurrencyExchangeRate)
+            // console.log("this.medicamentMAXPrice", this.medicamentMAXPrice),
+            // console.log("exchangeCurrencies", 10 * this.exchengeCurrencies[1].value);
+    }
 
     get importTypeForms() {
         return this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable') as FormArray
     }
 
     currencyChanged($event){
-        this.currencies = $event;
+        this.exchengeCurrencies = $event;
+        // console.log("exchengeCurrencies", this.exchengeCurrencies)
     }
 
     addUnitOfImport() {
@@ -404,6 +441,7 @@ export class MedRegComponent implements OnInit {
             }
         });
     }
+
 
 
     showunitOfImport(unitOfImport: any) {
@@ -532,9 +570,6 @@ export class MedRegComponent implements OnInit {
             );
     }
 
-    loadMedicamentPrice(){
-
-    }
 
 
     loadUnitsOfMeasurement() {
@@ -617,6 +652,7 @@ export class MedRegComponent implements OnInit {
         this.subscriptions.push(
             this.administrationService.getCurrenciesShort().subscribe(data => {
                     this.valutaList = data;
+                    console.log(this.valutaList)
 
                 },
                 error => console.log(error)
