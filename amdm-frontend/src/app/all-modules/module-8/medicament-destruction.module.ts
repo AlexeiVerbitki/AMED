@@ -14,6 +14,7 @@ import { DrugsDestroyEvaluateComponent } from './drugs-destroy-evaluate/drugs-de
 import {PaymentModule} from "../../payment/payment.module";
 import { DrugsDestroyActualComponent } from './drugs-destroy-actual/drugs-destroy-actual.component';
 import {AnnihilationMedDialogComponent} from "../../dialog/annihilation-med-dialog/annihilation-med-dialog.component";
+import {PipeModule} from "../../shared/pipe/pipe.module";
 
 @NgModule({
     imports: [
@@ -24,13 +25,14 @@ import {AnnihilationMedDialogComponent} from "../../dialog/annihilation-med-dial
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
         DocumentModule,
-        PaymentModule
+        PaymentModule,
+        PipeModule
     ],
     entryComponents: [
         AnnihilationMedDialogComponent
     ],
     declarations: [ DrugsDestroyRegisterComponent, DrugsDestroyEvaluateComponent, DrugsDestroyActualComponent, AnnihilationMedDialogComponent],
-    providers: [UploadFileService,MedicamentService, AnnihilationService
+    providers: [UploadFileService,MedicamentService, AnnihilationService, PipeModule
     ],
 })
 export class MedicamentDestructionModule {

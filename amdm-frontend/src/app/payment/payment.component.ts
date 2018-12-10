@@ -224,7 +224,13 @@ export class PaymentComponent implements OnInit {
             let observable;
             if (this.process && this.process === 'NIMICIRE')
             {
-                console.log('sdfsd', this.requestNimicire);
+                let nimicireList = this.bonDePlataList.filter( bdp => bdp.serviceCharge.category === 'BN')
+                if (nimicireList.length !== 1)
+                {
+                    this.errorHandlerService.showError('Trebuie sa exista o singura taxa pentru nimicirea medicamentelor.');
+                    this.loadingService.hide();
+                    return;
+                }
                 observable = this.documentService.viewBonDePlataNimicire(this.requestNimicire);
             }
             else {
@@ -233,7 +239,7 @@ export class PaymentComponent implements OnInit {
 
 
             this.subscriptions.push(observable.subscribe(data => {
-                    let file = new Blob([data.body], {type: 'application/pdf'});
+                    let file = new Blob([data], {type: 'application/pdf'});
                     var fileURL = URL.createObjectURL(file);
                     window.open(fileURL);
                     this.loadPaymentOrders();

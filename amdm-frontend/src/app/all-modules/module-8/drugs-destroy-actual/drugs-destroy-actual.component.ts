@@ -150,17 +150,27 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
         let outDocument1 = {
             name: 'Scrisoare de solicitare a persoanelor pentru Comisia de NIM',
             number: '',
-            status: this.getOutputDocStatus('NS')
+            status: this.getOutputDocStatus('NS'),
+            category : 'NS'
         };
 
         let outDocument2 = {
             name: 'Procesul-verbal de NIM',
             number: '',
-            status: this.getOutputDocStatus('NP')
+            status: this.getOutputDocStatus('NP'),
+            category : 'NP'
         };
 
-        this.outDocuments.push(outDocument1);
+        let outDocument3 = {
+            name: 'Lista medicamentelor pentru comisie',
+            number: '',
+            status: this.getOutputDocStatus('LN'),
+            category : 'LN'
+        };
+
+        // this.outDocuments.push(outDocument1);
         this.outDocuments.push(outDocument2);
+        this.outDocuments.push(outDocument3);
     }
 
     getOutputDocStatus(category: string): any {
@@ -253,7 +263,19 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
 
     viewDoc(document: any) {
         this.loadingService.show();
-        this.subscriptions.push(this.annihilationService.viewProcesVerbal(this.composeModel('A')).subscribe(data => {
+
+        let observable;
+
+        if (document.category === 'LN')
+        {
+            observable = this.annihilationService.viewListaPentruComisie(this.composeModel('A'));
+        }
+        else if(document.category === 'NP')
+        {
+            observable = this.annihilationService.viewProcesVerbal(this.composeModel('A'));
+        }
+
+        this.subscriptions.push(observable.subscribe(data => {
                 let file = new Blob([data], {type: 'application/pdf'});
                 var fileURL = URL.createObjectURL(file);
                 window.open(fileURL);

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subject, Subscription} from "rxjs/index";
 import {ActivatedRoute, Router} from "@angular/router";
 import {RequestService} from "../../../shared/service/request.service";
@@ -22,7 +22,7 @@ import {AdditionalDataDialogComponent} from "../dialog/additional-data-dialog/ad
     templateUrl: './b-evaluare-primara.component.html',
     styleUrls: ['./b-evaluare-primara.component.css']
 })
-export class BEvaluarePrimaraComponent implements OnInit {
+export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
     treatmentList: any[] = [
         {'id': 1, 'description': 'Unicentric', 'code': 'U'},
@@ -416,26 +416,28 @@ export class BEvaluarePrimaraComponent implements OnInit {
         dialogConfig2.width = '650px';
 
         dialogConfig2.data = {
-            medicalInstitution: this.addMediacalInstitutionForm.get('medicalInstitution').value,
+            medicalInstitution: this.addMediacalInstitutionForm.get('medicalInstitution').value.name,
             investigatorsList: this.allInvestigatorsList
         }
 
         let dialogRef = this.dialog.open(MedInstInvestigatorsDialogComponent, dialogConfig2);
 
-        dialogRef.afterClosed().subscribe(result => {
-            console.log('result', result);
-            if (result == null || result == undefined || result.success === false) {
-                return;
-            }
+        this.subscriptions.push(
+            dialogRef.afterClosed().subscribe(result => {
+                console.log('result', result);
+                if (result == null || result == undefined || result.success === false) {
+                    return;
+                }
 
-            let medInst = this.addMediacalInstitutionForm.get('medicalInstitution').value;
-            medInst.investigators = result.investigators;
-            this.mediacalInstitutionsList.push(medInst);
-            let intdexToDelete = this.allMediacalInstitutionsList.indexOf(this.addMediacalInstitutionForm.get('medicalInstitution').value);
-            this.allMediacalInstitutionsList.splice(intdexToDelete, 1);
-            this.allMediacalInstitutionsList = this.allMediacalInstitutionsList.splice(0);
-            this.addMediacalInstitutionForm.get('medicalInstitution').setValue('');
-        });
+                let medInst = this.addMediacalInstitutionForm.get('medicalInstitution').value;
+                medInst.investigators = result.investigators;
+                this.mediacalInstitutionsList.push(medInst);
+                let intdexToDelete = this.allMediacalInstitutionsList.indexOf(this.addMediacalInstitutionForm.get('medicalInstitution').value);
+                this.allMediacalInstitutionsList.splice(intdexToDelete, 1);
+                this.allMediacalInstitutionsList = this.allMediacalInstitutionsList.splice(0);
+                this.addMediacalInstitutionForm.get('medicalInstitution').setValue('');
+            })
+        )
     }
 
     deleteMedicalInstitution(i) {
@@ -563,21 +565,25 @@ export class BEvaluarePrimaraComponent implements OnInit {
         dialogConfig2.height = '600px';
         dialogConfig2.width = '650px';
 
+        // console.log('medInst', this.addMediacalInstitutionForm.get('medicalInstitution').value);
+        console.log('this.mediacalInstitutionsList[i]', this.mediacalInstitutionsList[i]);
         dialogConfig2.data = {
-            medicalInstitution: this.addMediacalInstitutionForm.get('medicalInstitution').value,
+            medicalInstitution: this.mediacalInstitutionsList[i].name,
             investigatorsList: this.allInvestigatorsList,
             collectedInvestigators: this.mediacalInstitutionsList[i].investigators
         }
 
         let dialogRef = this.dialog.open(MedInstInvestigatorsDialogComponent, dialogConfig2);
 
-        dialogRef.afterClosed().subscribe(result => {
-            console.log('result', result);
-            if (result == null || result == undefined || result.success === false) {
-                return;
-            }
-            this.mediacalInstitutionsList[i].investigators = result.investigators;
-        });
+        this.subscriptions.push(
+            dialogRef.afterClosed().subscribe(result => {
+                console.log('result', result);
+                if (result == null || result == undefined || result.success === false) {
+                    return;
+                }
+                this.mediacalInstitutionsList[i].investigators = result.investigators;
+            })
+        )
     }
 
     addMedActiveSubstanceDialog() {
@@ -593,17 +599,19 @@ export class BEvaluarePrimaraComponent implements OnInit {
 
         let dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
-        dialogRef.afterClosed().subscribe(result => {
-            console.log('result', result);
-            if (result !== null && result !== undefined && result.response) {
-                this.medActiveSubstances.push({
-                    activeSubstance: result.activeSubstance,
-                    quantity: result.activeSubstanceQuantity,
-                    unitsOfMeasurement: result.activeSubstanceUnit,
-                    manufacture: result.manufactureSA
-                });
-            }
-        });
+        this.subscriptions.push(
+            dialogRef.afterClosed().subscribe(result => {
+                console.log('result', result);
+                if (result !== null && result !== undefined && result.response) {
+                    this.medActiveSubstances.push({
+                        activeSubstance: result.activeSubstance,
+                        quantity: result.activeSubstanceQuantity,
+                        unitsOfMeasurement: result.activeSubstanceUnit,
+                        manufacture: result.manufactureSA
+                    });
+                }
+            })
+        )
     }
 
     editMedActiveSubstance(substance: any, index: number) {
@@ -626,16 +634,18 @@ export class BEvaluarePrimaraComponent implements OnInit {
 
         let dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
-        dialogRef.afterClosed().subscribe(result => {
-            if (result !== null && result !== undefined && result.response) {
-                this.medActiveSubstances[index] = {
-                    activeSubstance: result.activeSubstance,
-                    quantity: result.activeSubstanceQuantity,
-                    unitsOfMeasurement: result.activeSubstanceUnit,
-                    manufacture: result.manufactureSA
-                };
-            }
-        });
+        this.subscriptions.push(
+            dialogRef.afterClosed().subscribe(result => {
+                if (result !== null && result !== undefined && result.response) {
+                    this.medActiveSubstances[index] = {
+                        activeSubstance: result.activeSubstance,
+                        quantity: result.activeSubstanceQuantity,
+                        unitsOfMeasurement: result.activeSubstanceUnit,
+                        manufacture: result.manufactureSA
+                    };
+                }
+            })
+        )
     }
 
     removeMedActiveSubstance(index: number) {
@@ -644,11 +654,13 @@ export class BEvaluarePrimaraComponent implements OnInit {
             data: {message: 'Sunteti sigur ca doriti sa stergeti aceasta substanta?', confirm: false}
         });
 
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.medActiveSubstances.splice(index, 1);
-            }
-        });
+        this.subscriptions.push(
+            dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                    this.medActiveSubstances.splice(index, 1);
+                }
+            })
+        )
     }
 
     addRefProdActiveSubstanceDialog() {
@@ -664,17 +676,19 @@ export class BEvaluarePrimaraComponent implements OnInit {
 
         let dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
-        dialogRef.afterClosed().subscribe(result => {
-            console.log('result', result);
-            if (result !== null && result !== undefined && result.response) {
-                this.refProdActiveSubstances.push({
-                    activeSubstance: result.activeSubstance,
-                    quantity: result.activeSubstanceQuantity,
-                    unitsOfMeasurement: result.activeSubstanceUnit,
-                    manufacture: result.manufactureSA
-                });
-            }
-        });
+        this.subscriptions.push(
+            dialogRef.afterClosed().subscribe(result => {
+                console.log('result', result);
+                if (result !== null && result !== undefined && result.response) {
+                    this.refProdActiveSubstances.push({
+                        activeSubstance: result.activeSubstance,
+                        quantity: result.activeSubstanceQuantity,
+                        unitsOfMeasurement: result.activeSubstanceUnit,
+                        manufacture: result.manufactureSA
+                    });
+                }
+            })
+        )
     }
 
     editRefProdActiveSubstance(substance: any, index: number) {
@@ -695,16 +709,18 @@ export class BEvaluarePrimaraComponent implements OnInit {
 
         let dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
-        dialogRef.afterClosed().subscribe(result => {
-            if (result !== null && result !== undefined && result.response) {
-                this.refProdActiveSubstances[index] = {
-                    activeSubstance: result.activeSubstance,
-                    quantity: result.activeSubstanceQuantity,
-                    unitsOfMeasurement: result.activeSubstanceUnit,
-                    manufacture: result.manufactureSA
-                };
-            }
-        });
+        this.subscriptions.push(
+            dialogRef.afterClosed().subscribe(result => {
+                if (result !== null && result !== undefined && result.response) {
+                    this.refProdActiveSubstances[index] = {
+                        activeSubstance: result.activeSubstance,
+                        quantity: result.activeSubstanceQuantity,
+                        unitsOfMeasurement: result.activeSubstanceUnit,
+                        manufacture: result.manufactureSA
+                    };
+                }
+            })
+        )
     }
 
     removeRefProdActiveSubstance(index: number) {
@@ -713,11 +729,13 @@ export class BEvaluarePrimaraComponent implements OnInit {
             data: {message: 'Sunteti sigur ca doriti sa stergeti aceasta substanta?', confirm: false}
         });
 
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.refProdActiveSubstances.splice(index, 1);
-            }
-        });
+        this.subscriptions.push(
+            dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                    this.refProdActiveSubstances.splice(index, 1);
+                }
+            })
+        )
     }
 
 
@@ -727,12 +745,6 @@ export class BEvaluarePrimaraComponent implements OnInit {
 
     onProvenanceChange(mrChange: MatRadioChange) {
         this.clinicTrailAmendForm.get('clinicalTrailAmendment.provenanceTo').setValue(this.provenanceList[mrChange.value - 3]);
-    }
-
-    ngOnDestroy(): void {
-        this.subscriptions.forEach(subscription => {
-            subscription.unsubscribe();
-        })
     }
 
     save() {
@@ -825,7 +837,7 @@ export class BEvaluarePrimaraComponent implements OnInit {
 
         console.log("Next page data", formModel);
 
-        let pagePath = this.isAnalizePage ? '/dashboard/module/clinic-studies/approval-amendment/' : '/dashboard/module/clinic-studies/analize-amendment/';
+        let pagePath = this.isAnalizePage ? '/dashboard/module/clinic-studies/approval-amendment/' : '/dashboard/module/clinic-studies/analyze-amendment/';
         console.log("pagePath", pagePath);
         this.subscriptions.push(
             this.requestService.addClinicalTrailAmendmentNextRequest(formModel).subscribe(data => {
@@ -846,31 +858,33 @@ export class BEvaluarePrimaraComponent implements OnInit {
             }
         });
 
-        dialogRef2.afterClosed().subscribe(result => {
-            // console.log('result', result);
-            if (result) {
-                this.loadingService.show();
-                let formModel = this.clinicTrailAmendForm.getRawValue();
-                formModel.currentStep = 'I';
-                formModel.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
-                formModel.requestHistories.push({
-                    startDate: formModel.requestHistories[formModel.requestHistories.length - 1].endDate,
-                    endDate: new Date(),
-                    username: this.authService.getUserName(),
-                    step: 'E'
-                });
-                formModel.documents = this.docs;
-                this.subscriptions.push(
-                    this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
-                        this.router.navigate(['/dashboard/module/clinic-studies/interrupt/' + data.body]);
-                        this.loadingService.hide();
-                    }, error => {
-                        this.loadingService.hide();
-                        console.log(error)
-                    })
-                )
-            }
-        });
+        this.subscriptions.push(
+            dialogRef2.afterClosed().subscribe(result => {
+                // console.log('result', result);
+                if (result) {
+                    this.loadingService.show();
+                    let formModel = this.clinicTrailAmendForm.getRawValue();
+                    formModel.currentStep = 'I';
+                    formModel.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
+                    formModel.requestHistories.push({
+                        startDate: formModel.requestHistories[formModel.requestHistories.length - 1].endDate,
+                        endDate: new Date(),
+                        username: this.authService.getUserName(),
+                        step: 'E'
+                    });
+                    formModel.documents = this.docs;
+                    this.subscriptions.push(
+                        this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
+                            this.router.navigate(['/dashboard/module/clinic-studies/interrupt-amendment/' + data.body]);
+                            this.loadingService.hide();
+                        }, error => {
+                            this.loadingService.hide();
+                            console.log(error)
+                        })
+                    )
+                }
+            })
+        )
     }
 
     requestAdditionalData() {
@@ -884,17 +898,25 @@ export class BEvaluarePrimaraComponent implements OnInit {
             hasBackdrop: false
         });
 
-        dialogRef2.afterClosed().subscribe(result => {
-            if (result.success) {
-                result.docType = this.docTypes.find(doc => doc.category === 'SL');
-                this.initialData.outputDocuments.push(result);
-                this.subscriptions.push(this.requestService.addOutputDocumentRequest(this.initialData).subscribe(data => {
-                        console.log('outDocuments', data);
-                        this.outDocuments = data.body.clinicalTrails.outputDocuments;
-                    }, error => console.log(error))
-                );
-            }
-        });
+        this.subscriptions.push(
+            dialogRef2.afterClosed().subscribe(result => {
+                if (result.success) {
+                    result.docType = this.docTypes.find(doc => doc.category === 'SL');
+                    this.initialData.outputDocuments.push(result);
+                    this.subscriptions.push(
+                        this.requestService.addOutputDocumentRequest(this.initialData).subscribe(data => {
+                            console.log('outDocuments', data);
+                            this.outDocuments = data.body.clinicalTrails.outputDocuments;
+                        }, error => console.log(error))
+                    );
+                }
+            })
+        )
     }
 
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(subscription => {
+            subscription.unsubscribe();
+        })
+    }
 }

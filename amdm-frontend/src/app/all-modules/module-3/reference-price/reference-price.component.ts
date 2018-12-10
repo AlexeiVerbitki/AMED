@@ -40,6 +40,11 @@ export class ReferencePriceComponent implements OnInit {
        // alert($event.target.value);
     }
 
+    onDivisionChange($event) {
+        this.change.emit('division');
+       // alert($event.target.value);
+    }
+
     constructor() {
     }
 

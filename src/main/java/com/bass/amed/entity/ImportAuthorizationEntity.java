@@ -27,6 +27,7 @@ import java.util.Set;
 	private String                                 authorizationsNumber;
 	private Integer                                medType;
 	private Set<ImportAuthorizationDetailsEntity>  importAuthorizationDetailsEntityList;
+	private Boolean                                authorized;
 
 
 	@Id
@@ -38,6 +39,16 @@ import java.util.Set;
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	@Basic
+	@Column(name = "authorized", nullable = true, length = 200)
+	public Boolean getauthorized() {
+		return authorized;
+	}
+
+	public void setauthorized(Boolean authorized) {
+		this.authorized = authorized;
 	}
 
 	@Basic
@@ -259,8 +270,9 @@ import java.util.Set;
 		if (customsTransactionType != null ? !customsTransactionType.equals(that.customsTransactionType) : that.customsTransactionType != null) return false;
 		if (authorizationsNumber != null ? !authorizationsNumber.equals(that.authorizationsNumber) : that.authorizationsNumber != null) return false;
 		if (medType != null ? !medType.equals(that.medType) : that.medType != null) return false;
-		return importAuthorizationDetailsEntityList != null ? importAuthorizationDetailsEntityList.equals(
-				that.importAuthorizationDetailsEntityList) : that.importAuthorizationDetailsEntityList == null;
+		if (importAuthorizationDetailsEntityList != null ? !importAuthorizationDetailsEntityList.equals(
+				that.importAuthorizationDetailsEntityList) : that.importAuthorizationDetailsEntityList != null) return false;
+		return authorized != null ? authorized.equals(that.authorized) : that.authorized == null;
 	}
 
 	@Override
@@ -286,6 +298,7 @@ import java.util.Set;
 		result = 31 * result + (authorizationsNumber != null ? authorizationsNumber.hashCode() : 0);
 		result = 31 * result + (medType != null ? medType.hashCode() : 0);
 		result = 31 * result + (importAuthorizationDetailsEntityList != null ? importAuthorizationDetailsEntityList.hashCode() : 0);
+		result = 31 * result + (authorized != null ? authorized.hashCode() : 0);
 		return result;
 	}
 }

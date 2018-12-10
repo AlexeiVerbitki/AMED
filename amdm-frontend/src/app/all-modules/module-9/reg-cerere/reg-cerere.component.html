@@ -13,7 +13,7 @@
                     </label>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="picker" placeholder="Data de înregistrare a cererii"
@@ -23,7 +23,7 @@
                     </mat-form-field>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="md-form-modified">
                     <ng-select [items]="companii | async"
                                bindLabel="name"
@@ -41,13 +41,14 @@
             </div>
         </div>
 
-        <div *ngIf="registerClinicalTrailForm.value.flowControl !== null">
-            <app-document [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypes]="docTypes"></app-document>
+        <div class="my-3">
+            <div *ngIf="registerClinicalTrailForm.value.flowControl !== null">
+                <app-document [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypes]="docTypes"></app-document>
+            </div>
         </div>
-        <hr>
 
 
-        <div *ngIf="registerClinicalTrailForm.value.flowControl === 'CLPSC'">
+        <div *ngIf="this.showClinicTrail">
             <h5 class="text-center font-weight-bold">Cautare studiu</h5>
             <div [formGroup]="clinicalTrailForm">
                 <div class="row">
@@ -69,32 +70,33 @@
                             </ng-select>
                         </div>
                     </div>
-                    <div class="col-md-9">
+                    <div class="col-md-3">
+                        <div class="md-form-modified">
+                            <mat-form-field class="w-100">
+                                <input type="text" matInput placeholder="Sponsor" formControlName="sponsor">
+                            </mat-form-field>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <mat-form-field>
-                            <input type="text" matInput placeholder="Sponsor" formControlName="sponsor">
-                        </mat-form-field>
+                    <div class="col-md-3">
+                        <div class="md-form-modified">
+                            <ng-select [items]="phaseList" bindLabel="name" placeholder="Faza" formControlName="phase"
+                                class="w-100">
+                            </ng-select>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <ng-select [items]="phaseList"
-                                   bindLabel="name"
-                                   placeholder="Faza"
-                                   formControlName="phase">
-                        </ng-select>
-                    </div>
-                    <div class="col-md-4">
-                        <mat-form-field>
-                            <input type="text" matInput placeholder="Tip studiu" formControlName="treatment">
-                        </mat-form-field>
+                    <div class="col-md-3">
+                        <div class="md-form-modified">
+                            <mat-form-field class="w-100">
+                                <input type="text" matInput placeholder="Tip studiu" formControlName="treatment">
+                            </mat-form-field>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="md-form">
-                            <textarea type="text" id="titluStud" class="md-textarea form-control" mdbInputDirective rows="1" formControlName="title"></textarea>
+                            <textarea type="text" id="titluStud" class="md-textarea form-control" mdbInputDirective
+                                rows="1" formControlName="title"></textarea>
                             <label for="titluStud">Titlul studiului</label>
                         </div>
                     </div>

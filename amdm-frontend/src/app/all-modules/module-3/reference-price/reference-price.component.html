@@ -10,6 +10,16 @@
     </div>
   </div>
   <div class="col">
+    <div class="md-form">
+      <input id="division" mdbInputDirective type="text" class="form-control" [(ngModel)]="refPrice.division" (change)="onDivisionChange($event)" [disabled]="forEvaluation">
+      <label for="division">Divizarea medicamentului</label>
+      <!--<span class="text-danger">*</span>-->
+      <div *ngIf="formSubmitted && refPrice.division == undefined">
+        <small class="text-muted"><strong class="text-danger">Indicați divizarea medicamentului</strong></small>
+      </div>
+    </div>
+  </div>
+  <div class="col">
     <div class="md-form-modified">
       <ng-select class="w-100"
                  [dropdownPosition]="'top'"

@@ -429,3 +429,9 @@ ng-select.ng-valid.ng-touched .ng-select-container:after {
 .btn-rounded-button {
   border-radius: 15px !important;
 }
+.btn{
+  text-transform: none !important;
+}
+.btn.btn-sm{
+  font-size: 0.80rem;
+}

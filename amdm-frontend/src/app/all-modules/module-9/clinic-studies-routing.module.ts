@@ -9,17 +9,19 @@ import {AAprobareComponent} from "./a-aprobare/a-aprobare.component";
 import {BEvaluarePrimaraComponent} from "./b-evaluare-primara/b-evaluare-primara.component";
 import {BAprobareComponent} from "./b-aprobare/b-aprobare.component";
 import {BIntrerupereComponent} from "./b-intrerupere/b-intrerupere.component";
+import {CNotificareComponent} from "./c-notificare/c-notificare.component";
 
 const routes: Routes = [
     { path: 'register', component: RegCerereComponent},
     { path: 'evaluate/:id', component: AEvaluareaPrimaraComponent},
-    { path: 'analize/:id', component: AAnalizaComponent},
+    { path: 'analyze/:id', component: AAnalizaComponent},
     { path: 'interrupt/:id', component: AIntrerupereComponent},
     { path: 'approval/:id', component: AAprobareComponent},
     { path: 'evaluate-amendment/:id', component: BEvaluarePrimaraComponent},
-    { path: 'analize-amendment/:id', component: BEvaluarePrimaraComponent},
+    { path: 'analyze-amendment/:id', component: BEvaluarePrimaraComponent},
     { path: 'interrupt-amendment/:id', component: BIntrerupereComponent},
     { path: 'approval-amendment/:id', component: BAprobareComponent},
+    { path: 'notify/:id', component: CNotificareComponent},
 
     { path: 'register1', component: RegStudCliniceComponent},
 ];

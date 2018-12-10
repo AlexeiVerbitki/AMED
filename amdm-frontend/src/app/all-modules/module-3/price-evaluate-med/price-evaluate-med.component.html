@@ -85,7 +85,7 @@
                 <th mdbTooltip="Denumirea internaţională">Denumirea internaţională</th>
                 <th mdbTooltip="Preţul MDL">Preţul MDL</th>
                 <th mdbTooltip="Preţul Valuta">Preţul Valuta</th>
-                <th *ngIf="medicaments.length > 1">Șterge</th>
+                <th *ngIf="medicaments?.length > 1">Șterge</th>
             </tr>
             </thead>
             <tbody>
@@ -113,7 +113,7 @@
             </tr>
             </tbody>
         </table>
-        <div *ngIf="this.medicaments[0].price.mdlValue <= 0">
+        <div *ngIf="this.medicaments[0]?.price?.mdlValue <= 0">
             <small class="text-muted"><strong class="text-danger">Introduceți un preț valid</strong></small>
         </div>
 
@@ -142,6 +142,7 @@
                     <tr>
                         <th scope="col" mdbTooltip="Țara de referință">Țara de referință</th>
                         <th mdbTooltip="Valuta ţării de referinţă">Valuta ţării de referinţă</th>
+                        <th>Divizare</th>
                         <th>Preţ</th>
                         <th mdbTooltip="Rata de schimb (valuta ţării de referinta/MDL)">Rata de schimb (valuta ţării de referinta/MDL)</th>
                         <th>MDL</th>
@@ -154,9 +155,10 @@
                     </thead>
                     <tbody>
                     <tr mdbTableCol *ngFor="let el of refPrices; let i = index">
-                        <ng-container *ngIf="el.type.id == PriceRefType.ReferenceCountry">
+                        <ng-container *ngIf="el.type?.id == PriceRefType.ReferenceCountry">
                             <td mdbTooltip="{{el.country?.description}}" class="align-middle" scope="row">{{el.country?.description}}</td>
                             <td mdbTooltip="{{el.currency?.shortDescription}}" class="align-middle">{{el.currency?.shortDescription}}</td>
+                            <td mdbTooltip="{{el.division}}" class="align-middle">{{el.division}}</td>
                             <td mdbTooltip="{{el.value | digitsAfterDecimal:4}}" class="align-middle">{{el.value | digitsAfterDecimal:4}}</td>
                             <td mdbTooltip="{{el?.xchRateRef | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateRef | digitsAfterDecimal:4}}</td>
                             <td mdbTooltip="{{el?.xchRateRefVal | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateRefVal | digitsAfterDecimal:4}}</td>
@@ -271,6 +273,7 @@
                         <tr>
                             <th mdbTooltip="Țara de origine" scope="col">Țara de origine</th>
                             <th mdbTooltip="Valuta ţării de referinţă">Valuta ţării de referinţă</th>
+                            <th mdbTooltip="Divizarea">Divizare</th>
                             <th mdbTooltip="Preţ">Preţ</th>
                             <th mdbTooltip="Rata de schimb (valuta ţării de referinta/MDL)">Rata de schimb (valuta ţării de referinta/MDL)</th>
                             <th mdbTooltip="MDL">MDL</th>
@@ -282,9 +285,10 @@
                         </thead>
                         <tbody>
                         <tr mdbTableCol *ngFor="let el of refPrices">
-                            <ng-container *ngIf="el.type.id == PriceRefType.OriginCountry">
+                            <ng-container *ngIf="el.type?.id == PriceRefType.OriginCountry">
                                 <td mdbTooltip="{{el.country?.description}}" scope="row">{{el.country?.description}}</td>
                                 <td mdbTooltip="{{el.currency?.shortDescription}}">{{el.currency?.shortDescription}}</td>
+                                <td mdbTooltip="{{el.division}}">{{el.division}}</td>
                                 <td mdbTooltip="{{el.value | digitsAfterDecimal:4}}">{{el.value | digitsAfterDecimal:4}}</td>
                                 <td mdbTooltip="{{el?.xchRateRef | digitsAfterDecimal:4}}">{{el?.xchRateRef | digitsAfterDecimal:4}}</td>
                                 <td mdbTooltip="{{el?.xchRateRefVal | digitsAfterDecimal:4}}">{{el?.xchRateRefVal | digitsAfterDecimal:4}}</td>
@@ -327,6 +331,7 @@
                         <tr>
                             <th mdbTooltip="Țara" scope="col">Țara</th>
                             <th mdbTooltip="Valuta ţării de referinţă">Valuta ţării de referinţă</th>
+                            <th mdbTooltip="Divizarea">Divizare</th>
                             <th mdbTooltip="Preţ">Preţ</th>
                             <th mdbTooltip="Rata de schimb (valuta ţării de referinta/MDL)">Rata de schimb (valuta ţării de referinta/MDL)</th>
                             <th mdbTooltip="MDL">MDL</th>
@@ -339,9 +344,10 @@
                         </thead>
                         <tbody>
                         <tr mdbTableCol *ngFor="let el of refPrices; let i = index">
-                            <ng-container *ngIf="el.type.id == PriceRefType.OtherCountriesCatalog">
+                            <ng-container *ngIf="el.type?.id == PriceRefType.OtherCountriesCatalog">
                                 <td mdbTooltip="{{el.country?.description}}" class="align-middle" scope="row">{{el.country?.description}}</td>
                                 <td mdbTooltip="{{el.currency?.shortDescription}}" class="align-middle">{{el.currency?.shortDescription}}</td>
+                                <td mdbTooltip="{{el.division}}" class="align-middle">{{el.division}}</td>
                                 <td mdbTooltip="{{el.value | digitsAfterDecimal:4}}" class="align-middle">{{el.value | digitsAfterDecimal:4}}</td>
                                 <td mdbTooltip="{{el?.xchRateRef | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateRef | digitsAfterDecimal:4}}</td>
                                 <td mdbTooltip="{{el?.xchRateRefVal | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateRefVal | digitsAfterDecimal:4}}</td>
@@ -490,7 +496,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr mdbTableCol *ngFor="let m of dciAndOriginAvgs">
+                        <tr mdbTableCol *ngFor="let m of dciAndOriginAvgs ">
                             <td scope="row">{{m.source}}</td>
                             <td>{{m.avg | digitsAfterDecimal:4}}</td>
                         </tr>
@@ -534,11 +540,11 @@
                 </thead>
                 <tbody>
                 <tr *ngFor="let a of outputDocuments">
-                    <td scope="row">{{ a.description }}</td>
+                    <td scope="row">{{ a.docType.description }}</td>
                     <td scope="row">{{ a.number }}</td>
                     <td scope="row">{{ a.status }}</td>
                     <td>
-                        <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect [disabled]="true" (click)="viewDoc(a)"><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
+                        <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect [disabled]="false" (click)="viewDoc(a)"><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
                     </td>
                 </tr>
                 </tbody>

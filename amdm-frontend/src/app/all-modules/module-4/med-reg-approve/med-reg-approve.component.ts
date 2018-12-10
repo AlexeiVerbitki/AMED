@@ -94,7 +94,13 @@ export class MedRegApproveComponent implements OnInit {
     loadinginternationalMedicamentName: boolean = false;
     internationalMedicamentNameInputs = new Subject<string>();
 
+    expirationDate : any[] =[];
+
     checked: boolean;
+    
+    activeLicenses: any;
+
+    importDetailsList: any =[];
 
 
     constructor(private fb: FormBuilder,
@@ -152,6 +158,7 @@ export class MedRegApproveComponent implements OnInit {
                 'authorizationsNumber':                  [], // inca nu exista la pasul acesta
                 'medType':                               [''],
                 'importAuthorizationDetailsEntityList' : [],
+                'authorized' : [],
                 'unitOfImportTable': this.fb.group({
 
                     customsCode:                 [null, Validators.required],
@@ -184,14 +191,27 @@ export class MedRegApproveComponent implements OnInit {
                     console.log('this.requestService.getImportRequest(params[\'id\'])', data);
                     this.importData = data;
 
-                    let list: any =[];
-                    list = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList;
+                    
 
+                    this.importDetailsList = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList;
 
-                    list.forEach(item => {
-                        item.approved == null ? item.approved = true: item.approved=item.approved;
-                        console.log("item", item);
+                    this.requestService.getActiveLicenses(data.importAuthorizationEntity.applicant.idno).subscribe(data=>{
+                        console.log("this.requestService.getActiveLicenses(data.applicant.idno).subscribe", data)
+                        this.activeLicenses = data;
+                        console.log("this.activeLicenses",this.activeLicenses);
+                        this.expirationDate.push(this.activeLicenses.expirationDate);
+
                     })
+
+
+                    this.importDetailsList.forEach(item => {
+                        item.approved == null ? item.approved = true : item.approved = item.approved;
+                        this.expirationDate.push(item.expirationDate);
+                    })
+
+
+
+
 
                     // this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList.forEach(item=>{
                     //     if (item.approve === null){
@@ -257,6 +277,8 @@ export class MedRegApproveComponent implements OnInit {
         this.loadMedicaments();
         this.loadInternationalMedicamentName();
         console.log("importTypeForms.value",this.importTypeForms.value)
+        console.log("this.expirationDate",this.expirationDate)
+        // console.log("lowest expiration.date:", this.expirationDate.reduce(function (a, b) { return a < b ? a : b; }) )
     }
 
 
@@ -661,7 +683,7 @@ export class MedRegApproveComponent implements OnInit {
 
 
 
-    nextStep() {
+    nextStep(aprrovedOrNot : boolean) {
 
         this.formSubmitted = true;
         let modelToSubmit: any ={};
@@ -674,11 +696,13 @@ export class MedRegApproveComponent implements OnInit {
 
 
         // modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
+        modelToSubmit = this.importData;
         modelToSubmit.endDate = new Date();
+        modelToSubmit.importAuthorizationEntity.authorized = aprrovedOrNot;
 
         // modelToSubmit.documents = this.docs;
 
-        modelToSubmit = this.importData;
+
         modelToSubmit.importAuthorizationEntity.authorizationsNumber = this.importData.importAuthorizationEntity.id + "/" + new Date().getFullYear()+ "-AM"
         modelToSubmit.requestHistories.push({
             startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
@@ -692,6 +716,7 @@ export class MedRegApproveComponent implements OnInit {
 
 
         modelToSubmit.medicaments = [];
+        modelToSubmit.importAuthorizationEntity.expirationDate = new Date(this.expirationDate.reduce(function (a, b) { return a < b ? a : b; }) );
         console.log("modelToSubmit", modelToSubmit);
         alert("before addImportRequest(modelToSubmit)")
         // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {

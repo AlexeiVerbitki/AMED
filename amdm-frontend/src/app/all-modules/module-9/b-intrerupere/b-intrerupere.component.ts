@@ -35,7 +35,7 @@ export class BIntrerupereComponent implements OnInit, OnDestroy {
             'startDate': [{value: '', disabled: true}],
             'endDate': [''],
             'company': [''],
-            'currentStep': ['E'],
+            'currentStep': [''],
             'type': [],
             'typeCode': [''],
             'interruptionReason': ['', Validators.required],
@@ -94,18 +94,19 @@ export class BIntrerupereComponent implements OnInit, OnDestroy {
         });
         formModel.documents = this.docs;
 
-        console.log("evaluareaPrimaraObjectLet", JSON.stringify(formModel));
-
         formModel.currentStep = 'C';
         formModel.assignedUser = this.authService.getUserName();
         formModel.endDate = new Date();
+
+        let findAmendment = formModel.clinicalTrails.clinicTrialAmendEntities.find(amendment => formModel.id == amendment.registrationRequestId);
+        findAmendment.status = 'C';
         this.subscriptions.push(
             this.requestService.addClinicalTrailAmendmentNextRequest(formModel).subscribe(data => {
                 this.router.navigate(['/dashboard/module/']);
                 this.loadingService.hide();
             }, error => {
                 this.loadingService.hide();
-                console.log(error)
+                console.log(error);
             })
         )
     }

@@ -14,6 +14,7 @@ import {LoaderService} from "../../../shared/service/loader.service";
 import {DocumentService} from "../../../shared/service/document.service";
 import {LicenseDecisionDialogComponent} from "../../../dialog/license-decision-dialog/license-decision-dialog.component";
 import {AnnihilationMedDialogComponent} from "../../../dialog/annihilation-med-dialog/annihilation-med-dialog.component";
+import {DecimalPipe} from "@angular/common";
 
 @Component({
     selector: 'app-drugs-destroy-evaluate',
@@ -39,6 +40,7 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
 
     additionalBonDePlata : any;
 
+    numberPipe : DecimalPipe = new DecimalPipe('en-US');
 
     //count time
     startDate: Date;
@@ -188,6 +190,10 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
             return;
         }
 
+        if (this.paymentTotal < 0) {
+            return;
+        }
+
         this.mFormSubbmitted = false;
         let modelToSubmit = this.composeModel('A');
 
@@ -323,10 +329,12 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
         this.totalSum = 0;
         this.medicamentsToDestroy.forEach(md => {
             if (md.tax) {
-                md.taxTotal = md.tax * md.quantity;
+                md.taxTotal = this.numberPipe.transform(md.tax * md.quantity, '1.2-2');
                 this.totalSum += md.tax * md.quantity;
             }
         });
+
+        // this.totalSum = this.numberPipe.transform(this.totalSum, '1.2-2');
     }
 
     ngOnDestroy() {

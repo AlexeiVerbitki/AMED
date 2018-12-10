@@ -14,5 +14,6 @@ public interface Constants
 
     interface SysParams{
         String DIRECTOR_GENERAL = "DIR_GEN";
+        String ACCOUNTANT = "ACCOUNTANT";
     }
 }

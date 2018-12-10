@@ -6,6 +6,7 @@ export class Price {
     id: number;
     description: string;
     value: string;
+    division: string;
     currency: Currency;
     country: Country;  //only for referencePrice type
     type: any;

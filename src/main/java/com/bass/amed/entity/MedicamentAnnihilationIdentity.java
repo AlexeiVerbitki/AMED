@@ -4,13 +4,9 @@ package com.bass.amed.entity;
 import java.io.Serializable;
 import java.util.Objects;
 
-//@Embeddable
 public class MedicamentAnnihilationIdentity implements Serializable
 {
-//    @Column(name = "medicament_id")
     private Integer medicamentId;
-
-//    @Column(name = "medicament_annihilation_id")
     private Integer medicamentAnnihilationId;
 
 

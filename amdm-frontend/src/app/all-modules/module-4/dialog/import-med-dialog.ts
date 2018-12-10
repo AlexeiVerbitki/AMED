@@ -68,7 +68,7 @@ export class ImportMedDialog implements OnInit {
     unitSumm: any;
 
     formModel: any;
-    valutaList: Observable<any[]>;
+    valutaList: any[];
 
     importData : any;
     medicamentData : any;
@@ -121,6 +121,7 @@ export class ImportMedDialog implements OnInit {
         console.log("dialogData: ",this.dialogData)
         this.importData = this.dialogData;
         this.medType= this.dialogData.medtType;
+        this.valutaList = [];
 
         this.checked=false;
         this.currentDate = new Date();
@@ -240,7 +241,7 @@ export class ImportMedDialog implements OnInit {
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(this.dialogData.quantity);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').setValue(this.dialogData.price);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.dialogData.summ);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(this.dialogData.currency);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(this.valutaList.find(r => r === this.dialogData.currency.shortDescription));
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(this.dialogData.producer);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(new Date(this.dialogData.expirationDate));
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(this.dialogData.pharmaceuticalForm);
@@ -621,10 +622,12 @@ export class ImportMedDialog implements OnInit {
     loadCurrenciesShort() {
         this.subscriptions.push(
             this.administrationService.getCurrenciesShort().subscribe(data => {
+                    console.log("this.administrationService.getCurrenciesShort().subscribe", data)
                     this.valutaList = data;
+                    console.log("this.valutaList", this.valutaList)
 
                 },
-                error => console.log(error)
+                error => console.log("loadCurrenciesShort() ERROR", error)
             )
         )
     }

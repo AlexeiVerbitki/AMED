@@ -42,4 +42,8 @@ export class AnnihilationService {
     viewProcesVerbal(object: any): Observable<any> {
         return this.http.post('/api/annihilation/view-proces-verbal', object,{ responseType: 'blob'});
     }
+
+    viewListaPentruComisie(object: any): Observable<any> {
+        return this.http.post('/api/annihilation/view-lista-pentru-comisie', object,{ responseType: 'blob'});
+    }
 }

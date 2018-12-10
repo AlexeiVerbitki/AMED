@@ -25,9 +25,6 @@ public class LicensesEntity
     @Column(name = "release_date")
     private Date releaseDate;
     @Basic
-    @Column(name = "cessation_date")
-    private Date cessationDate;
-    @Basic
     @Column(name = "expiration_date")
     private Date expirationDate;
     @Basic
@@ -55,10 +52,6 @@ public class LicensesEntity
     @JoinColumn(name = "license_id")
     private Set<NmEconomicAgentsEntity> economicAgents;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
-    @JoinColumn(name = "cessation_reason_id")
-    private LicenseCessationReasonsEntity cessationReasons;
-
     @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "license_id")
     private Set<LicenseDetailsEntity> details = new HashSet<>();
@@ -69,4 +62,7 @@ public class LicensesEntity
     @Basic
     @Column(name = "reason")
     private String reason;
+
+    @Transient
+    private String companyName;
 }

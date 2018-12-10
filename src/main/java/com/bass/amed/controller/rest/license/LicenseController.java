@@ -1,15 +1,20 @@
 package com.bass.amed.controller.rest.license;
 
 import com.bass.amed.common.Constants;
+import com.bass.amed.dto.TasksDTO;
 import com.bass.amed.dto.license.AnexaLaLicenta;
+import com.bass.amed.dto.license.LicenseDTO;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
+import com.bass.amed.projection.LicenseProjection;
+import com.bass.amed.projection.TaskDetailsProjectionDTO;
 import com.bass.amed.repository.*;
 import com.bass.amed.repository.license.LicenseActivityTypeRepository;
 import com.bass.amed.repository.license.LicenseAnnounceMethodsRepository;
 import com.bass.amed.repository.license.LicenseMandatedContactRepository;
 import com.bass.amed.repository.license.LicensesRepository;
 import com.bass.amed.service.LicenseRegistrationRequestService;
+import com.bass.amed.service.LicenseService;
 import com.bass.amed.service.LocalityService;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -65,6 +70,9 @@ public class LicenseController
 
     @Autowired
     private SysParamsRepository sysParamsRepository;
+
+    @Autowired
+    private LicenseService licenseService;
 
     @RequestMapping(value = "/new-license", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> nextNewLicense(@RequestBody RegistrationRequestsEntity request) throws CustomException
@@ -288,6 +296,23 @@ public class LicenseController
     {
         logger.debug("Retrieve all activities");
         return new ResponseEntity<>(licenseActivityTypeRepository.findAll(), HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/get-filtered-licenses", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<LicenseProjection>> getLicenseByFilter(@RequestBody LicenseDTO filter)
+    {
+        logger.debug("Get processes by filter: ", filter.toString());
+        List<LicenseProjection> licenseProjections = licenseService.retrieveLicenseByFilter(filter);
+        return new ResponseEntity<>(licenseProjections, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/find-license-by-id", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<LicensesEntity> getLicenseById(@RequestParam("licenseId") String licenseId) throws  CustomException
+    {
+        logger.debug("Get license by id: ", licenseId);
+        LicensesEntity le = licenseService.findLicenseById(Integer.valueOf(licenseId));
+        return new ResponseEntity<>(le, HttpStatus.OK);
     }
 
 

@@ -99,6 +99,7 @@ export class AIntrerupereComponent implements OnInit, OnDestroy {
         formModel.currentStep = 'C';
         formModel.assignedUser = this.authService.getUserName();
         formModel.endDate = new Date();
+        formModel.clinicalTrails.status='C';
         this.subscriptions.push(
             this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
                 this.router.navigate(['/dashboard/module/']);

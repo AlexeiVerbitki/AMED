@@ -113,4 +113,14 @@ export class LicenseService {
         return this.http.post('/api/license/view-licenta', object,{ responseType: 'blob'});
     }
 
+
+    loadLicenseListByFilter(object: any): Observable<any> {
+        return this.http.post('/api/license/get-filtered-licenses', object);
+    }
+
+
+    findLicenseById(id: string): Observable<any> {
+        return this.http.get('/api/license/find-license-by-id', {params :{ licenseId : id} });
+    }
+
 }

@@ -21,6 +21,7 @@ import { BEvaluarePrimaraComponent } from './b-evaluare-primara/b-evaluare-prima
 import {MedInstInvestigatorsDialogComponent} from "./dialog/med-inst-investigators-dialog/med-inst-investigators-dialog.component";
 import { BAprobareComponent } from './b-aprobare/b-aprobare.component';
 import { BIntrerupereComponent } from './b-intrerupere/b-intrerupere.component';
+import { CNotificareComponent } from './c-notificare/c-notificare.component';
 
 
 @NgModule({
@@ -40,7 +41,7 @@ import { BIntrerupereComponent } from './b-intrerupere/b-intrerupere.component';
         AdditionalDataDialogComponent,
         MedInstInvestigatorsDialogComponent,
     ],
-    declarations: [RegStudCliniceComponent, RegCerereComponent, AEvaluareaPrimaraComponent, AAnalizaComponent, AdditionalDataDialogComponent, AIntrerupereComponent, AAprobareComponent, BEvaluarePrimaraComponent, MedInstInvestigatorsDialogComponent, BAprobareComponent, BIntrerupereComponent],
+    declarations: [RegStudCliniceComponent, RegCerereComponent, AEvaluareaPrimaraComponent, AAnalizaComponent, AdditionalDataDialogComponent, AIntrerupereComponent, AAprobareComponent, BEvaluarePrimaraComponent, MedInstInvestigatorsDialogComponent, BAprobareComponent, BIntrerupereComponent, CNotificareComponent],
 
     providers: [UploadFileService,RequestService],
 })

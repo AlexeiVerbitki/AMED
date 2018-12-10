@@ -111,7 +111,7 @@ public class ClinicalTrailsController {
     @PostMapping(value = "/finish-amendment-request")
     public ResponseEntity<Integer> finishClinicalTrailAmendmentRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
         clinicalTrailsService.finishNewClinicalTrailAmendment(requests);
-        return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
+        return new ResponseEntity<>(requests.getId(), HttpStatus.OK);
     }
 
 
@@ -146,6 +146,17 @@ public class ClinicalTrailsController {
 
         //clinicalTrailsService.handeMedicalInstitutions(requests);
         requestRepository.save(requests);
+        return new ResponseEntity<>(requests.getId(), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/add-notification-request")
+    public ResponseEntity<Integer> addNotificationRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
+        if (requests.getClinicalTrails() == null) {
+            throw new CustomException("Request was not found");
+        }
+
+        clinicalTrailsService.registerNewClinicalTrailNotification(requests);
+
         return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
     }
 

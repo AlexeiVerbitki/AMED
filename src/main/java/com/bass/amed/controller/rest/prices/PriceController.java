@@ -5,11 +5,10 @@ import com.bass.amed.dto.prices.PricesDTO;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.projection.GetMinimalCurrencyProjection;
-import com.bass.amed.repository.*;
+import com.bass.amed.repository.CurrencyHistoryRepository;
+import com.bass.amed.repository.CurrencyRepository;
+import com.bass.amed.repository.DocumentsRepository;
 import com.bass.amed.repository.prices.*;
-import com.bass.amed.repository.prices.PriceRepository;
-import com.bass.amed.repository.prices.PriceTypesRepository;
-import com.bass.amed.repository.prices.PricesManagementRepository;
 import com.bass.amed.service.PriceEvaluationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.*;
 
 
@@ -225,5 +223,4 @@ public class PriceController {
 
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
-
 }

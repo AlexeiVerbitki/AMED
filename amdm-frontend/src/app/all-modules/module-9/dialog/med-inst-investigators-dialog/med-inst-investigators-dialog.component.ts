@@ -29,8 +29,9 @@ export class MedInstInvestigatorsDialogComponent implements OnInit {
     }
 
     ngOnInit() {
+        console.log(this.dataDialog);
         this.medInvForm = this.fb.group({
-            'instMed': {disabled: true, value: this.dataDialog.name},
+            'instMed': {disabled: true, value: this.dataDialog.medicalInstitution},
         });
 
         this.investigatorsList = JSON.parse(JSON.stringify(this.dataDialog.investigatorsList));
@@ -40,8 +41,6 @@ export class MedInstInvestigatorsDialogComponent implements OnInit {
         }else{
             this.collectedInvestigators = [Object.assign({}, this.investigatorsList[0])];
         }
-
-        console.log('this.dataDialog.collectedInvestigators', this.dataDialog.collectedInvestigators);
     }
 
     addInvestigators() {

@@ -45,6 +45,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
     protected clinicalTrailInputs = new Subject<string>();
 
     clinicalTrailForm: FormGroup;
+    showClinicTrail: boolean = false;
 
     constructor(private fb: FormBuilder,
                 private dialog: MatDialog,
@@ -88,6 +89,18 @@ export class RegCerereComponent implements OnInit, OnDestroy {
         this.catchFlowControl();
         this.loadClinicalTrails();
         this.autocompleteClinicalTrailSearch();
+        this.manageClinicalTrailForm();
+    }
+
+    manageClinicalTrailForm() {
+        this.subscriptions.push(
+            this.registerClinicalTrailForm.controls['flowControl'].valueChanges.subscribe(value => {
+                this.showClinicTrail = value === "CLPSC" || value === "CLNP";
+                if (!this.showClinicTrail) {
+                    this.clinicalTrailForm.reset();
+                }
+            })
+        )
     }
 
     autocompleteClinicalTrailSearch() {
@@ -108,9 +121,6 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                     // console.log('changedValue.phase', changedValue.phase);
                     this.phaseList = [this.phaseList, changedValue.phase];
                     this.clinicalTrailForm.get('treatment').setValue(changedValue.treatment.description);
-
-                    // console.log('this.registerClinicalTrailForm1', this.registerClinicalTrailForm);
-                    // console.log(' this.clinicalTrailForm1', this.clinicalTrailForm);
                 }
             })
         )
@@ -181,7 +191,6 @@ export class RegCerereComponent implements OnInit, OnDestroy {
 
                 }),
                 flatMap(term =>
-
                     this.administrationService.getCompanyNamesAndIdnoList(term).pipe(
                         tap(() => this.loadingCompany = false)
                     )
@@ -237,8 +246,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
         }
         else if (formModel.flowControl === 'CLPSC') {
             if (this.clinicalTrailForm.invalid) {
-                alert('Invalid Form2!!')
-                this.loadingService.hide();
+                alert('Invalid Form2!!');
                 return;
             }
             this.loadingService.show();
@@ -266,11 +274,37 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                     console.log(error)
                 })
             );
-            console.log('formModel', formModel);
-
-            this.loadingService.hide();
         }
         else if (formModel.flowControl === 'CLNP') {
+            if (this.clinicalTrailForm.invalid) {
+                alert('Invalid Form2!!');
+                return;
+            }
+
+            formModel.type.id = '5';
+            formModel.requestHistories = [{
+                startDate: formModel.startDate,
+                endDate: new Date(),
+                username: this.authService.getUserName(),
+                step: formModel.currentStep
+            }];
+            formModel.documents = this.docs;
+            formModel.currentStep = 'N';
+
+            formModel.initiator = this.authService.getUserName();
+            formModel.assignedUser = this.authService.getUserName();
+            formModel.clinicalTrails = this.clinicalTrailForm.get('clinicalTrail').value;
+
+            this.subscriptions.push(this.requestService.addClinicalTrailNotificationRequest(formModel).subscribe(data => {
+                    this.router.navigate(['/dashboard/module/clinic-studies/notify/' + data.body]);
+                    this.loadingService.hide();
+                }, error => {
+                    this.loadingService.hide();
+                    console.log(error)
+                })
+            );
+
+            console.log('clinicTrail', this.clinicalTrailForm.value);
             console.log('Going to -> Înregistrarea Notificărilor privind Protocolul studiului clinic cu medicamente')
             this.loadingService.hide();
         }

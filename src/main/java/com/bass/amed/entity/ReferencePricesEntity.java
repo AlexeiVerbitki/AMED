@@ -30,5 +30,7 @@ public class ReferencePricesEntity
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "type_id", referencedColumnName = "id", nullable = false)
     private PriceTypesEntity type;
-
+    @Basic
+    @Column(name = "division")
+    private String division;
 }

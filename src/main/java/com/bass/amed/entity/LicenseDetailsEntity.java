@@ -35,19 +35,6 @@ public class LicenseDetailsEntity
     private Set<LicenseMandatedContactEntity> licenseMandatedContacts;
 
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
-    @JoinTable(name = "license_payments_orders", joinColumns = {
-            @JoinColumn(name = "license_detail_id")}, inverseJoinColumns = {
-            @JoinColumn(name = "payment_order_id")})
-    private Set<PaymentOrdersEntity> paymentOrders;
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.PERSIST})
-    @JoinTable(name = "license_receipts", joinColumns = {
-            @JoinColumn(name = "license_detail_id")}, inverseJoinColumns = {
-            @JoinColumn(name = "receipt_id")})
-    private Set<ReceiptsEntity> receipts;
-
-
     public Integer getId()
     {
         return id;
@@ -110,26 +97,6 @@ public class LicenseDetailsEntity
         this.licenseMandatedContacts = licenseMandatedContacts;
     }
 
-    public Set<PaymentOrdersEntity> getPaymentOrders()
-    {
-        return paymentOrders;
-    }
-
-    public void setPaymentOrders(Set<PaymentOrdersEntity> paymentOrders)
-    {
-        this.paymentOrders = paymentOrders;
-    }
-
-    public Set<ReceiptsEntity> getReceipts()
-    {
-        return receipts;
-    }
-
-    public void setReceipts(Set<ReceiptsEntity> receipts)
-    {
-        this.receipts = receipts;
-    }
-
     @Override
     public boolean equals(Object o)
     {
@@ -141,14 +108,12 @@ public class LicenseDetailsEntity
                 Objects.equals(resolutions, that.resolutions) &&
                 Objects.equals(documents, that.documents) &&
                 Objects.equals(commisionResponses, that.commisionResponses) &&
-                Objects.equals(licenseMandatedContacts, that.licenseMandatedContacts) &&
-                Objects.equals(paymentOrders, that.paymentOrders) &&
-                Objects.equals(receipts, that.receipts);
+                Objects.equals(licenseMandatedContacts, that.licenseMandatedContacts);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(id, registrationId, resolutions, documents, commisionResponses, licenseMandatedContacts, paymentOrders, receipts);
+        return Objects.hash(id, registrationId, resolutions, documents, commisionResponses, licenseMandatedContacts);
     }
 }

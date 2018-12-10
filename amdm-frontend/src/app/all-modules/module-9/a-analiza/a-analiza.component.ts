@@ -128,12 +128,16 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             'outputDocuments': [],
             'clinicalTrails': this.fb.group({
                 'id': [''],
+                'startDateInternational':[''],
+                'startDateNational':[''],
+                'endDateNational':[''],
+                'endDateInternational':[''],
                 'title': [{value: '', disabled: this.isWaitingStep}],
                 'treatment': ['', Validators.required],
                 'provenance': ['', Validators.required],
-                'sponsor': ['sponsor'],
+                'sponsor': [''],
                 'phase': ['faza', Validators.required],
-                'eudraCtNr': ['eudraCtNr', Validators.required],
+                'eudraCtNr': ['', Validators.required],
                 'code': ['code', Validators.required],
                 'medicalInstitutions': [],
                 'trialPopNat': ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
@@ -271,8 +275,17 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
                     this.analyzeClinicalTrailForm.get('clinicalTrails.treatment').setValue(
                         data.clinicalTrails.treatment == null ? this.treatmentList[0] : data.clinicalTrails.treatment);
-                    this.analyzeClinicalTrailForm.get('clinicalTrails.provenance').setValue(
-                        data.clinicalTrails.provenance == null ? this.provenanceList[0] : data.clinicalTrails.provenance);
+
+
+                    if(data.clinicalTrails.provenance == null){
+                        this.analyzeClinicalTrailForm.get('clinicalTrails.provenance').setValue(this.provenanceList[0]);
+                        this.analyzeClinicalTrailForm.get('clinicalTrails.trialPopInternat').disable();
+                    }else {
+                        this.analyzeClinicalTrailForm.get('clinicalTrails.provenance').setValue(data.clinicalTrails.provenance);
+                        data.clinicalTrails.provenance.id!=4 ?
+                            this.analyzeClinicalTrailForm.get('clinicalTrails.trialPopInternat').disable() :
+                            this.analyzeClinicalTrailForm.get('clinicalTrails.trialPopInternat').enable();
+                    }
 
                     this.docs = data.documents;
                     //this.docs.forEach(doc => doc.isOld = true);
@@ -409,6 +422,12 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
     onProvenanceChange(mrChange: MatRadioChange) {
         this.analyzeClinicalTrailForm.get('clinicalTrails.provenance').setValue(this.provenanceList[mrChange.value - 3]);
+        if(mrChange.value === 4) {
+            this.analyzeClinicalTrailForm.get('clinicalTrails.trialPopInternat').enable()
+        } else{
+            this.analyzeClinicalTrailForm.get('clinicalTrails.trialPopInternat').reset();
+            this.analyzeClinicalTrailForm.get('clinicalTrails.trialPopInternat').disable();
+        }
     }
 
     paymentTotalUpdate(event) {

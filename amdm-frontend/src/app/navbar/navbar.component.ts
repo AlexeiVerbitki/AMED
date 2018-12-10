@@ -15,6 +15,9 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
+        this.titleService.message.asObservable().subscribe(value => {
+            this.title = value;
+        });
     }
 
     logout() {
@@ -23,11 +26,7 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.titleService.message.asObservable().subscribe(value => {
-            // if (value && value.length > 0) {
-                this.title = value;
-            // }
-        });
+
     }
 
 

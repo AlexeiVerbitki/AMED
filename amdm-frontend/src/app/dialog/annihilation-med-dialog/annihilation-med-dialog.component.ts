@@ -3,6 +3,7 @@ import {Subscription} from "rxjs";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
 import {ConfirmationDialogComponent} from "../confirmation-dialog.component";
+import {DecimalPipe} from "@angular/common";
 
 @Component({
     selector: 'app-annihilation-med-dialog',
@@ -14,6 +15,8 @@ export class AnnihilationMedDialogComponent implements OnInit, OnDestroy {
     private subscriptions: Subscription[] = [];
     rFormSubbmitted: boolean = false;
     rForm: FormGroup;
+
+    numberPipe : DecimalPipe = new DecimalPipe('en-US');
 
     destroyMethods : any[];
 
@@ -31,6 +34,7 @@ export class AnnihilationMedDialogComponent implements OnInit, OnDestroy {
     }
 
     private initFormData() {
+
         this.destroyMethods = this.dataDialog.destructionMethods;
         this.annihilationMedInitial = this.dataDialog.annihilationMed;
         this.rForm = this.fb.group({
@@ -43,15 +47,17 @@ export class AnnihilationMedDialogComponent implements OnInit, OnDestroy {
             'reasonDestroy': [{value : this.annihilationMedInitial.uselessReason, disabled: true}],
             'note': [{value : this.annihilationMedInitial.note, disabled: true}],
             'destroyMethod': [this.annihilationMedInitial.destructionMethod, Validators.required],
-            'tax': [this.annihilationMedInitial.tax, Validators.required],
-            'taxTotal': [{ value : this.annihilationMedInitial.tax * this.annihilationMedInitial.quantity, disabled: true}],
+            'tax': [ this.annihilationMedInitial.tax, [Validators.required, Validators.pattern('^\\d+(\\.\\d{0,2})?$')]],
+            'taxTotal': [{value : this.numberPipe.transform(this.annihilationMedInitial.tax * this.annihilationMedInitial.quantity, '1.2-2'), disabled: true}],
+
+            // [Validators.required, Validators.maxLength(9), Validators.pattern('[0-9]+')] Validators.pattern('^\\d+\\.\\d{2}$')
         });
     }
 
     onChanges(): void {
         this.rForm.get('tax').valueChanges.subscribe(val => {
             if (val) {
-                this.rForm.get('taxTotal').setValue(val * this.rForm.get('quantity').value);
+                this.rForm.get('taxTotal').setValue(this.numberPipe.transform(val * this.rForm.get('quantity').value, '1.2-2'));
             }
             else {
                 this.rForm.get('taxTotal').setValue(null);

@@ -470,15 +470,16 @@
                         </tr>
                         </tbody>
                     </table>
-                    <div *ngIf="formSubmitted && unitOfImportTable.length===0">
-                        <small class="text-muted"><strong class="text-danger">Nici o unitate de import nu a fost adaugata</strong></small>
-                    </div>
+                    <!--<div *ngIf="formSubmitted && unitOfImportTable.length===0">-->
+                        <!--<small class="text-muted"><strong class="text-danger">Nici o unitate de import nu a fost adaugata</strong></small>-->
+                    <!--</div>-->
 
                     <hr>
                 </section>
                 <div class="text-center">
-                    <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep()" type="button">Submit</button>
-                    <button class="btn btn-danger waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="interruptProcess()">
+                    <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(true)" type="button">Aprob autorizația</button>
+                    <button class="btn btn-danger waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(false)" type="button">Resping autorizația</button>
+                    <button class="btn btn-dark-red-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="interruptProcess()">
                         Intrerupere
                     </button>
                 </div>

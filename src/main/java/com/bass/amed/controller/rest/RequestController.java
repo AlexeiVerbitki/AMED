@@ -410,7 +410,7 @@ public class RequestController
         Optional<RegistrationRequestsEntity> regOptional = requestRepository.findPricesRequestById(id);
         if (regOptional.isPresent())
         {
-            List<String> docTypes = Arrays.asList("A1", "DP", "NL" ,"FE");//OP,A1,A2,DP,CP,RF,RC,NL,RQ,CR,CC,PC
+            List<String> docTypes = Arrays.asList("A1", "DP", "NL" ,"FE", "LP");//OP,A1,A2,DP,CP,RF,RC,NL,RQ,CR,CC,PC
             List<NmDocumentTypesEntity> outputDocTypes = documentTypeRepository.findAll();
             outputDocTypes.removeIf(docType -> !docTypes.contains(docType.getCategory()));
 

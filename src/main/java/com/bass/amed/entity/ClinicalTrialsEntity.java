@@ -3,6 +3,7 @@ package com.bass.amed.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.List;
@@ -17,6 +18,23 @@ public class ClinicalTrialsEntity
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
+
+    @Basic
+    @Column(name = "start_date_international")
+    private Timestamp startDateInternational;
+
+    @Basic
+    @Column(name = "start_date_national")
+    private Timestamp startDateNational;
+
+    @Basic
+    @Column(name = "end_date_national")
+    private Timestamp endDateNational;
+
+    @Basic
+    @Column(name = "end_date_international")
+    private Timestamp endDateInternational;
+
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "treatment_id")
     private ClinicalTrialsTypesEntity treatment;
@@ -74,4 +92,8 @@ public class ClinicalTrialsEntity
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     @JoinColumn(name = "clinical_trails_id")
     private Set<ClinicTrialAmendEntity> clinicTrialAmendEntities = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @JoinColumn(name = "clinical_trails_id")
+    private Set<ClinicTrailNotificationEntity> clinicTrialNotificationEntities = new HashSet<>();
 }

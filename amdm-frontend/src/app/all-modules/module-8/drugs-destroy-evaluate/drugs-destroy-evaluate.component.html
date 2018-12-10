@@ -37,14 +37,9 @@
         <div *ngIf="mFormSubbmitted && docs.length==0">
             <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
         </div>
-
-
-        <hr>
-        <h3 class="text-center my-3 font-weight-bold">Lista medicamentelor pentru distrugere</h3>
-        <hr>
         <!--  <form [formGroup]="rForm">-->
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <div class="md-form">
                     <input id="firstname" mdbInputDirective type="text" class="form-control" formControlName="firstname"
                     >
@@ -55,7 +50,7 @@
                     </small>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <div class="md-form">
                     <input id="lastname" mdbInputDirective type="text" class="form-control" formControlName="lastname"
                     >
@@ -68,8 +63,27 @@
             </div>
         </div>
         <br/>
+        <div class="gradient-card-header bg-sidebar border-gradient">
+            <div class="container-fluid">
+                <!-- Title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card-header-title white-text">Lista medicamentelor pentru distrugere</div>
+                    </div>
+                    <!-- <div class="col-4">
+                        <div class="text-right fap text-white">
+                            <i class="fa fa-lg fa-mt" aria-hidden="true" (click)="changeVisibility();" [ngClass]="visibility ? 'fa-touched fa-search-plus' : 'fa-untouched fa-search-minus'"></i>
+                            <i (click)="add.show()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"
+                                data-toggle="modal" data-target="#add"></i>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+
+        </div>
+        <div class="card-body card-body-cascade">
         <table class="table table-widths text-center">
-            <thead class="black white-text">
+                <thead class="bg-sidebar white-text">
             <tr>
                 <th scope="col">Medicament</th>
                 <th scope="col">Cantitatea</th>
@@ -100,25 +114,45 @@
                     Total:{{totalSum}}
                 </td>
                 <td>
-                    <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="generareTax()">Generare
-                        Taxa
+                            <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect mdbTooltip="Adauga in lista de plati" placement="top" (click)="generareTax()"><i class="fa fa-file fa-lg" aria-hidden="true"></i>
                     </button>
                 </td>
             </tr>
             </tbody>
         </table>
+        </div>
         <hr>
 
         <app-payment [requestId]="requestId" (totalValueChanged)="paymentTotalUpdate($event)"
                      [additionalBonDePlata]="additionalBonDePlata" [processModule]="'NIMICIRE'"
                      [requestAnnihilation]="viewModelData"></app-payment>
+        <div *ngIf="mFormSubbmitted && paymentTotal < 0">
+            <small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>
+        </div>
 
         <hr>
-        <h5 class="text-center font-weight-bold">Documente de iesire</h5>
-        <hr>
-
+        <!-- <h5 class="text-center font-weight-bold">Documente de iesire</h5>
+        <hr> -->
+        <div class="gradient-card-header bg-sidebar border-gradient">
+            <div class="container-fluid">
+              <!-- Title -->
+              <div class="row">
+                <div class="col-12">
+                    <div class="card-header-title white-text">Documente de iesire</div>
+                </div>
+                <!-- <div class="col-4">
+                  <div class="text-right fap text-white">
+                    <i class="fa fa-lg fa-mt" aria-hidden="true" (click)="changeVisibility();" [ngClass]="visibility ? 'fa-touched fa-search-plus' : 'fa-untouched fa-search-minus'"></i>
+                    <i (click)="add.show()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true" data-toggle="modal" data-target="#add"></i>
+                  </div>
+                </div> -->
+              </div>
+            </div>
+          
+          </div>
+          <div class="card-body card-body-cascade">
         <table class="table table-widths-lg text-center">
-            <thead class="black white-text">
+            <thead class="bg-sidebar white-text">
             <tr>
                 <th scope="col">Denumirea</th>
                 <th scope="col">Numar</th>
@@ -132,12 +166,13 @@
                 <th scope="row">{{ a.number }}</th>
                 <th scope="row">{{ a.status ? a.status.description : ''}}</th>
                 <td>
-                    <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)">Vizualizare
+                        <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)"><i class="fa fa-file-text" aria-hidden="true"></i>
                     </button>
                 </td>
             </tr>
             </tbody>
         </table>
+          </div>
         <!--  <div *ngIf="mFormSubbmitted && !checkAllDocumentsWasAttached()">
               <small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong></small>
           </div>-->

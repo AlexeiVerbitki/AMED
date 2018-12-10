@@ -96,20 +96,20 @@
 
             <div class="col-md-3">
                 <div class="md-form">
-                    <input id="tax" mdbInputDirective type="number" class="form-control"
+                    <input id="tax" mdbInputDirective type="text" class="form-control"
                            formControlName="tax"
                     >
                     <label for="tax">Taxa per unitate<span class="text-danger">*</span></label>
                 </div>
                 <div *ngIf="rFormSubbmitted && !rForm.get('tax').valid">
-                    <small class="text-muted"><strong class="text-danger">Taxa trebuie introdusa.</strong>
+                    <small class="text-muted"><strong class="text-danger">Taxa trebuie introdusa sau nu este valida.</strong>
                     </small>
                 </div>
             </div>
 
             <div class="col-md-3">
                 <div class="md-form">
-                    <input id="taxTotal" mdbInputDirective type="number" class="form-control"
+                    <input id="taxTotal" mdbInputDirective type="text" class="form-control"
                            formControlName="taxTotal"
                     >
                     <label for="taxTotal">Taxa totala<span class="text-danger">*</span></label>

@@ -17,6 +17,10 @@ import {PriceReqEditModalComponent} from "./prices/price-req-edit-modal/price-re
 import {MatDialogModule} from "@angular/material";
 import {XchangeinfoModule} from "../xchangeInfo/xchangeinfo.module";
 import {PriceApprovalComponent} from "./price-approval/price-approval.component";
+import {LicenseService} from "../shared/service/license/license.service";
+import {AdministrationService} from "../shared/service/administration.service";
+import {LicenseDecisionDialogComponent} from "../dialog/license-decision-dialog/license-decision-dialog.component";
+import {LicenseDetailsComponent} from "./license/license-details/license-details.component";
 
 @NgModule({
     imports: [
@@ -39,9 +43,13 @@ import {PriceApprovalComponent} from "./price-approval/price-approval.component"
         PricesComponent,
         PriceReqEditModalComponent,
         PriceApprovalComponent,
-        PriceAutoRevaluationComponent
+        PriceAutoRevaluationComponent,
+        LicenseDetailsComponent,
+
     ],
-    entryComponents: [AddReceiptDialogComponent,PriceReqEditModalComponent,]
+    entryComponents: [AddReceiptDialogComponent,PriceReqEditModalComponent,LicenseDetailsComponent],
+    providers: [LicenseService, AdministrationService
+    ],
 })
 export class ManagementModule {
 }

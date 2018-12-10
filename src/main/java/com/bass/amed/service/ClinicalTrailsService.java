@@ -76,7 +76,10 @@ public class ClinicalTrailsService {
             Set<CtAmendMedInstInvestigatorEntity> ctAmendMedInstInvestigatorsSet = new HashSet<>(ctAmendMedInstInvestigatorsList);
             ClinicTrialAmendEntity persistedEntity = em.createQuery("select ctAm from ClinicTrialAmendEntity ctAm where ctAm.id = :id", ClinicTrialAmendEntity.class).setParameter("id", clinicTrialAmendEntity.getId()).getSingleResult();
             List<CtAmendMedInstInvestigatorEntity> amendmentMedInstInvestResult = handelMediclInstitutions(ctAmendMedInstInvestigatorsSet, ctMedInstInvestigatorsSet, persistedEntity);
-            if (ctAmendMedInstInvestigatorsSet.size() == amendmentMedInstInvestResult.size()) {
+
+            Optional<CtAmendMedInstInvestigatorEntity> dasgsgas = amendmentMedInstInvestResult.stream().filter(medInst -> 'N'==medInst.getEmbededId().getStatus() || 'R'==medInst.getEmbededId().getStatus()).findAny();
+            boolean isMedInstModified = amendmentMedInstInvestResult.stream().filter(medInst -> 'N'==medInst.getEmbededId().getStatus() || 'R'==medInst.getEmbededId().getStatus()).findAny().isPresent();
+            if (!isMedInstModified) {
                 for (CtAmendMedInstInvestigatorEntity entity : amendmentMedInstInvestResult) {
                     entity.getEmbededId().setStatus('U');
                     em.merge(entity);
@@ -459,4 +462,35 @@ public class ClinicalTrailsService {
             }
         }
     }
+
+    public void registerNewClinicalTrailNotification(RegistrationRequestsEntity requests) throws CustomException {
+
+        EntityManager em = null;
+        try {
+            em = entityManagerFactory.createEntityManager();
+            em.getTransaction().begin();
+            ClinicalTrialsEntity clinicalTrialsEntity = em.find(ClinicalTrialsEntity.class, requests.getClinicalTrails().getId()); /*requests.getClinicalTrails()*/
+            requests.setClinicalTrails(clinicalTrialsEntity);
+            em.persist(requests);
+
+            ClinicTrailNotificationEntity clinicTrailNotificationEntity = new ClinicTrailNotificationEntity();
+            clinicTrailNotificationEntity.setClinicalTrialsEntityId(clinicalTrialsEntity.getId());
+            clinicTrailNotificationEntity.setRegistrationRequestId(requests.getId());
+            clinicTrailNotificationEntity.setStatus("P");
+
+            clinicalTrialsEntity.getClinicTrialNotificationEntities().add(clinicTrailNotificationEntity);
+
+            em.merge(requests);
+            em.getTransaction().commit();
+
+        } catch (Exception e) {
+            if (em != null) {
+                em.getTransaction().rollback();
+            }
+            throw new CustomException(e.getMessage(), e);
+        } finally {
+            em.close();
+        }
+    }
+
 }

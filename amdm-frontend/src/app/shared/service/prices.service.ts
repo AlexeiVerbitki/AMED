@@ -176,4 +176,13 @@ export class PriceService {
         // };
         return this.http.post<any>('/api/price/by-filter', filter, {observe: 'response'});
     }
+
+    viewEvaluationSheet(object: any): Observable<any> {
+        return this.http.post('/api/price-docs/view-evaluation-sheet', object,{ responseType: 'blob'});
+    }
+
+
+    viewAnexa1(object: any): Observable<any> {
+        return this.http.post('/api/license/view-anexa-1', object,{ responseType: 'blob'});
+    }
 }

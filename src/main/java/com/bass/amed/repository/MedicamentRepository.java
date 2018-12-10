@@ -27,7 +27,7 @@ public interface MedicamentRepository extends JpaRepository<MedicamentEntity, In
 
     List<MedicamentEntity> findByRegistrationNumber(Integer registrationNumber);
 
-    @Query(value = "SELECT id, name, code FROM medicament m WHERE (upper(m.name) like upper(CONCAT(?1, '%')) or m.code = ?2 ) and m.status = ?3", nativeQuery = true)
+    @Query(value = "SELECT id, commercial_name as name, code FROM medicament m WHERE (upper(m.commercial_name) like upper(CONCAT(?1, '%')) or m.code = ?2 ) and m.status = ?3", nativeQuery = true)
     List<MedicamentNamesListProjection> getMedicamentsByNameAndCode(String name, String code, String status);
 
     Optional<List<MedicamentEntity>> findAllById(Integer id);

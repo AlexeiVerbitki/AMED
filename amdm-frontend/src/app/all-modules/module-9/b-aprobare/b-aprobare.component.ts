@@ -160,7 +160,7 @@ export class BAprobareComponent implements OnInit, OnDestroy {
 
         if (formModel.status === '0') {
             console.log(formModel);
-            // this.loadingService.show();
+            this.loadingService.show();
             //
             formModel.currentStep = 'F';
             formModel.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
@@ -181,10 +181,10 @@ export class BAprobareComponent implements OnInit, OnDestroy {
             console.log('formModel', formModel);
             this.subscriptions.push(
                 this.requestService.finishClinicalTrailAmendmentRequest(formModel).subscribe(data => {
-                    // this.router.navigate(['dashboard/module']);
-                    // this.loadingService.hide();
+                    this.router.navigate(['dashboard/module']);
+                    this.loadingService.hide();
                 }, error => {
-                    // this.loadingService.hide();
+                    this.loadingService.hide();
                     console.log(error)
                 })
             )

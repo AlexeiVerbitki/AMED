@@ -3,6 +3,7 @@ package com.bass.amed.controller.rest.annihilation;
 import com.bass.amed.common.Constants;
 import com.bass.amed.controller.rest.license.LicenseController;
 import com.bass.amed.dto.annihilation.ActDeReceptieDTO;
+import com.bass.amed.dto.annihilation.ListaMedicamentelorPentruComisie;
 import com.bass.amed.dto.annihilation.ProcesVerbal;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
@@ -10,6 +11,7 @@ import com.bass.amed.repository.*;
 import com.bass.amed.repository.annihilation.AnnihilationCommisionRepository;
 import com.bass.amed.repository.annihilation.AnnihilationDestroyMethodsRepository;
 import com.bass.amed.service.MedicamentAnnihilationRequestService;
+import com.bass.amed.utils.AmountUtils;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.slf4j.Logger;
@@ -53,6 +55,9 @@ public class MedAnnihilationController
 
     @Autowired
     private AnnihilationDestroyMethodsRepository annihilationDestroyMethodsRepository;
+
+    @Autowired
+    private SysParamsRepository sysParamsRepository;
 
 
     @RequestMapping(value = "/new-annihilation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -199,7 +204,7 @@ public class MedAnnihilationController
             List<ActDeReceptieDTO> dataList = new ArrayList();
             ActDeReceptieDTO obj = new ActDeReceptieDTO();
             obj.setNr(request.getRequestNumber());
-            obj.setCompanyName(request.getCompany().getName());
+            obj.setCompanyName(request.getMedicamentAnnihilation().getCompanyName());
             obj.setDate(new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format( request.getStartDate()));
 
             dataList.add(obj);
@@ -246,5 +251,63 @@ public class MedAnnihilationController
 
         return ResponseEntity.ok().header("Content-Type", "application/pdf")
                 .header("Content-Disposition", "inline; filename=procesVerbal.pdf").body(bytes);
+    }
+
+
+    @RequestMapping(value = "/view-lista-pentru-comisie", method = RequestMethod.POST)
+    public ResponseEntity<byte[]> viewListapentruComisie(@RequestBody RegistrationRequestsEntity request) throws CustomException
+    {
+        byte[] bytes = null;
+        try
+        {
+            ResourceLoader resourceLoader = new DefaultResourceLoader();
+            Resource res = resourceLoader.getResource("layouts/module8/ListaMedicamentelorPentruComisie.jrxml");
+            JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
+
+
+
+            List<ListaMedicamentelorPentruComisie> listaMeds = new ArrayList<>();
+
+            request.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds().forEach(
+                    m -> {
+                        Optional<MedicamentEntity> med = medicamentRepository.findById(m.getMedicamentId());
+                        if (med.isPresent())
+                        {
+                            ListaMedicamentelorPentruComisie l = new ListaMedicamentelorPentruComisie();
+                            l.setCompanyName(request.getMedicamentAnnihilation().getCompanyName());
+                            l.setAnihilationMethod(m.getDestructionMethod().getDescription());
+                            l.setFutilityCause(m.getUselessReason());
+                            l.setMedicamentName(med.get().getCommercialName());
+                            l.setPharmaceuticForm(med.get().getPharmaceuticalForm().getDescription());
+                            l.setPrimaryPackage(med.get().getPrimarePackage());
+                            l.setQuantety(String.valueOf(AmountUtils.round(m.getQuantity(),2)));
+                            l.setSeries(m.getSeria());
+
+                            listaMeds.add(l);
+                        }
+
+                    }
+            );
+
+
+            /* Convert List to JRBeanCollectionDataSource */
+            JRBeanCollectionDataSource itemsJRBean = new JRBeanCollectionDataSource(listaMeds);
+
+            /* Map to hold Jasper report Parameters */
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("date", new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format(new Date()));
+            parameters.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getDescription());
+
+            parameters.put("listaMedicamentelorPentruComisieDataset", itemsJRBean);
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
+            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+        } catch (Exception e)
+        {
+            throw new CustomException(e.getMessage());
+        }
+
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=listaPentruComisie.pdf").body(bytes);
     }
 }

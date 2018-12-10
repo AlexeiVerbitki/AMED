@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {Observable, Subject, Subscription} from "rxjs";
 import {TaskService} from "../../shared/service/task.service";
 import {Router} from "@angular/router";
@@ -45,6 +45,12 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
                 private taskService: TaskService,
                 private priceService: PriceService,
                 public dialog: MatDialog) {
+
+        let thisObject = this;
+        window.onbeforeunload = function(e) {
+            thisObject.onCloseWindow();
+            return 'onbeforeunload';
+        };
 
         this.taskForm = fb.group({
             'orderNr': [null],
@@ -168,6 +174,14 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         });
     };
+
+    onCloseWindow() {
+        // this.priceService.makeAvailableAgain(this.dataSource.data);
+
+        // let win = window.open('about:blank', '_blank');
+        // let win = window.open('http://localhost:4200/dashboard/management/prices', '_blank');
+        // win.focus();
+    }
 
     isLink(rowDetails: any): boolean {
         return rowDetails.navigationUrl !== '';

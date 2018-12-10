@@ -1,15 +1,18 @@
 package com.bass.amed.controller.rest;
 
+import com.bass.amed.common.Constants;
 import com.bass.amed.dto.DistributionDispositionDTO;
 import com.bass.amed.dto.RequestAdditionalDataDTO;
+import com.bass.amed.dto.annihilation.BonPlataAnihilare1;
+import com.bass.amed.dto.annihilation.BonPlataAnihilare2;
+import com.bass.amed.dto.license.AnexaLaLicenta;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
-import com.bass.amed.repository.DocumentTypeRepository;
-import com.bass.amed.repository.DocumentsRepository;
-import com.bass.amed.repository.PaymentOrderNumberRepository;
-import com.bass.amed.repository.PaymentOrderRepository;
+import com.bass.amed.repository.*;
 import com.bass.amed.service.GenerateDocNumberService;
 import com.bass.amed.service.StorageService;
+import com.bass.amed.utils.AmountUtils;
+import com.bass.amed.utils.NumberToWordsConverter;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.slf4j.Logger;
@@ -33,10 +36,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Array;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 @RequestMapping("/api/documents")
@@ -56,6 +60,12 @@ public class DocumentsController
     private PaymentOrderRepository paymentOrderRepository;
     @Autowired
     private DocumentsRepository documentsRepository;
+
+    @Autowired
+    private EconomicAgentsRepository economicAgentsRepository;
+
+    @Autowired
+    private SysParamsRepository sysParamsRepository;
 
     @Value("${final.documents.folder}")
     private String folder;
@@ -520,47 +530,104 @@ public class DocumentsController
     {
         logger.debug("Generare bon pentru nimicire" + request.getId());
         byte[] bytes = null;
-//        try
-//        {
-//            ResourceLoader resourceLoader = new DefaultResourceLoader();
-//            Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts");
-//            String classPathWithoutJRXML = res.getFile().getAbsolutePath();
-//            res = resourceLoader.getResource("layouts\\distributionDisposition.jrxml");
-//            JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
-//
-//            List<DistributionDispositionDTO> dataList = new ArrayList();
-//            DistributionDispositionDTO obj = new DistributionDispositionDTO();
-//            obj.setDispositionDate(Calendar.getInstance().getTime());
-//            obj.setNrDisposition("1");
-//            obj.setPath(classPathWithoutJRXML);
-//            dataList.add(obj);
-//
-//            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(dataList);
-//            JasperPrint jasperPrint = JasperFillManager.fillReport(report, null, beanColDataSource);
-//            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
-//
-//            List<PaymentOrdersEntity> details = paymentOrderRepository.findByregistrationRequestId(requestId);
-//
-//            Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
-//            PaymentOrderNumberSequence seq = new PaymentOrderNumberSequence();
-//            paymentOrderNumberRepository.save(seq);
-//            for (PaymentOrdersEntity order : details)
-//            {
-//                order.setDate(now);
-//                order.setNumber(String.valueOf(seq.getId()));
-//                paymentOrderRepository.save(order);
-//            }
-//        }
-//        catch (Exception e)
-//        {
-//            throw new CustomException(e.getMessage());
-//        }
+        try
+        {
+            ResourceLoader resourceLoader = new DefaultResourceLoader();
+            Resource res = resourceLoader.getResource("layouts/module8/BonPlataNimicireMedicamente.jrxml");
+            JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
+
+            List<PaymentOrdersEntity> details = paymentOrderRepository.findByregistrationRequestId(request.getId());
+
+            Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+            PaymentOrderNumberSequence seq = new PaymentOrderNumberSequence();
+            paymentOrderNumberRepository.save(seq);
+            for (PaymentOrdersEntity order : details)
+            {
+                order.setDate(now);
+                order.setNumber(String.valueOf(seq.getId()));
+                paymentOrderRepository.save(order);
+            }
+
+            List<BonPlataAnihilare1> bonNimicire = new ArrayList<>();
+
+            double quantitySum = 0.0;
+            double totalSum = 0.0;
+
+            for (MedicamentAnnihilationMedsEntity mm : request.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds())
+            {
+                BonPlataAnihilare1 b = new BonPlataAnihilare1();
+                double tax = mm.getTax() != null ? mm.getTax() : 0.0;
+                double round = AmountUtils.round(mm.getQuantity() * tax, 2);
+                b.setAmount(round);
+                b.setFutilityCause(mm.getUselessReason());
+                b.setNameDoseDivision(mm.getMedicamentName());
+                b.setPrice(tax);
+                b.setSeries(mm.getSeria());
+                b.setQuantity(mm.getQuantity());
+
+                quantitySum += mm.getQuantity();
+                totalSum += round;
+
+                bonNimicire.add(b);
+            }
+
+            /* Convert List to JRBeanCollectionDataSource */
+            JRBeanCollectionDataSource itemsBonAnihilareMedicamenteJRBean = new JRBeanCollectionDataSource(bonNimicire);
+
+            double totalAbsolut = totalSum;
+
+            List<BonPlataAnihilare2> bon2List = new ArrayList<>();
+
+            for (PaymentOrdersEntity order : details)
+            {
+                if (!("BN").equals(order.getServiceCharge().getCategory()))
+                {
+                    BonPlataAnihilare2 bon = new BonPlataAnihilare2();
+                    bon.setType(order.getServiceCharge().getDescription());
+                    bon.setTypeAmount(order.getServiceCharge().getAmount());
+
+                    totalAbsolut += order.getServiceCharge().getAmount();
+                    bon2List.add(bon);
+                }
+            }
+
+
+            /* Convert List to JRBeanCollectionDataSource */
+            JRBeanCollectionDataSource itemsBonAnihilare2MedicamenteJRBean = new JRBeanCollectionDataSource(bon2List);
+
+
+
+
+            NmEconomicAgentsEntity ecAgent = economicAgentsRepository.findFirstByIdnoEquals(request.getMedicamentAnnihilation().getIdno()).get();
+
+            /* Map to hold Jasper report Parameters */
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("invoice_date", new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format(new Date()));
+            parameters.put("nr_invoice", seq.getId().toString());
+            parameters.put("payer", ecAgent.getLongName());
+            parameters.put("payer_address", ecAgent.getLegalAddress());
+            parameters.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getDescription());
+            parameters.put("accountant", sysParamsRepository.findByCode(Constants.SysParams.ACCOUNTANT).get().getDescription());
+
+            parameters.put("bonDePlataAnihilareMedicamenteDataset", itemsBonAnihilareMedicamenteJRBean);
+            parameters.put("bonDePlataAnihilareMedicamenteDataset2", itemsBonAnihilare2MedicamenteJRBean);
+            parameters.put("totalQuantity", quantitySum);
+            parameters.put("totalAmount", totalSum);
+            parameters.put("totalPrice", totalAbsolut);
+            parameters.put("totalPriceLetters", NumberToWordsConverter.convert(totalAbsolut));
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
+            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+        } catch (Exception e)
+        {
+            throw new CustomException(e.getMessage(), e);
+        }
 
         return ResponseEntity.ok().header("Content-Type", "application/pdf")
-                .header("Content-Disposition", "inline; filename=dd.pdf").body(bytes);
+                .header("Content-Disposition", "inline; filename=bonDePlataNimicire.pdf").body(bytes);
+
     }
-	
-	
+
 	@Transactional
     @RequestMapping(value = "/save-docs", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> saveDocuments(@RequestBody List<DocumentsEntity> documents)

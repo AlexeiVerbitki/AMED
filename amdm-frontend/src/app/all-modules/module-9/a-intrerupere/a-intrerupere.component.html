@@ -47,31 +47,48 @@
             </div>-->
         </div>
 
-        <h5 class="text-center font-weight-bold">Documente de iesire</h5>
-        <hr>
-        <div class="position-button">
-            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect  (click)="requestNL()">Scrisoare de informare</button>
+        <!-- <h5 class="text-center font-weight-bold">Documente de iesire</h5> -->
+        <div class="gradient-card-header bg-sidebar border-gradient">
+            <div class="container-fluid">
+                <!-- Title -->
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card-header-title white-text">Documente de iesire</div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-right fap text-white">
+                            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
+                                (click)="requestNL()">Scrisoare de informare</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
-        <table class="table table-widths-lg text-center">
-            <thead class="black white-text">
-            <tr>
-                <th scope="col">Denumirea</th>
-                <th scope="col">Numar</th>
-                <th scope="col">Status document</th>
-                <th>Actiuni</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let a of outDocuments">
-                <th scope="row" *ngIf="a.docType.category=='NL' || a.docType.category=='OI'">{{ a.name }}</th>
-                <th scope="row" *ngIf="a.docType.category=='NL' || a.docType.category=='OI'">{{ a.number }}</th>
-                <th scope="row" *ngIf="a.docType.category=='NL' || a.docType.category=='OI'">{{ a.status }}</th>
-                <td *ngIf="a.docType.category=='NL' || a.docType.category=='OI'">
-                    <button class="btn btn-default btn-sm waves-light" mdbWavesEffect >Vizualizare</button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+
+        <!-- Card content -->
+        <div class="card-body card-body-cascade">
+            <table class="table table-widths-lg text-center">
+                <thead class="bg-sidebar white-text">
+                    <tr>
+                        <th scope="col">Denumirea</th>
+                        <th scope="col">Numar</th>
+                        <th scope="col">Status document</th>
+                        <th>Actiuni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let a of outDocuments">
+                        <th scope="row" *ngIf="a.docType.category=='NL' || a.docType.category=='OI'">{{ a.name }}</th>
+                        <th scope="row" *ngIf="a.docType.category=='NL' || a.docType.category=='OI'">{{ a.number }}</th>
+                        <th scope="row" *ngIf="a.docType.category=='NL' || a.docType.category=='OI'">{{ a.status }}</th>
+                        <td *ngIf="a.docType.category=='NL' || a.docType.category=='OI'">
+                            <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </form>
     <div class="text-center">
         <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="doSubmit()">Intrerupere</button>
