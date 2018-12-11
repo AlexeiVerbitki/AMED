@@ -73,6 +73,9 @@ export class AmbalajComponent implements OnInit {
     loadingcustomsCodes: boolean = false;
     customsCodesInputs = new Subject<string>();
 
+    authorizationSumm: any;
+    authorizationCurrency: any;
+
     constructor(private fb: FormBuilder,
                 private requestService: RequestService,
                 public dialog: MatDialog,
@@ -183,6 +186,7 @@ export class AmbalajComponent implements OnInit {
         this.loadCurrenciesShort();
         this.loadCustomsCodes();
         this.loadATCCodes();
+        this.authorizationSumm=0;
     }
 
     onChanges(): void {
@@ -245,6 +249,9 @@ export class AmbalajComponent implements OnInit {
              expirationDate:    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').value
         });
 
+        this.authorizationSumm = this.authorizationSumm + this.unitSumm;
+        this.authorizationCurrency = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').value;
+
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(null);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(null);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(null);
@@ -268,6 +275,7 @@ export class AmbalajComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+                this.authorizationSumm = this.authorizationSumm - this.unitOfImportTable[index].summ;
                 this.unitOfImportTable.splice(index, 1);
             }
         });
@@ -441,7 +449,8 @@ export class AmbalajComponent implements OnInit {
 
         console.log("this.evaluateImportForm.value", this.evaluateImportForm.value);
         //=============
-
+        modelToSubmit.importAuthorizationEntity.summ = this.authorizationSumm;
+        modelToSubmit.importAuthorizationEntity.currency = this.authorizationCurrency;
 
         console.log("modelToSubmit", modelToSubmit);
         alert("before addImportRequest(modelToSubmit)")

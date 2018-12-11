@@ -107,6 +107,9 @@ export class MedRegComponent implements OnInit {
 
     activeLicenses: any;
 
+    authorizationSumm: any;
+    authorizationCurrency: any;
+
 
     constructor(private fb: FormBuilder,
                 private requestService: RequestService,
@@ -225,11 +228,12 @@ export class MedRegComponent implements OnInit {
                     //
                     // }
 
-                    // if (data.importAuthorizationEntity.medType === 2) {
-                    if (data.importAuthorizationEntity.medType) {
+                    if (data.importAuthorizationEntity.medType === 2) {
+                        if (data.importAuthorizationEntity.medType) {
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setErrors(null);
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setErrors(null);
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setErrors(null);
+                        }
                     }
                 },
                 error => console.log(error)
@@ -254,6 +258,7 @@ export class MedRegComponent implements OnInit {
         this.loadMedicaments();
         this.loadInternationalMedicamentName();
         this.invalidPrice = false;
+        this.authorizationSumm = 0;
         console.log("importTypeForms.value",this.importTypeForms.value)
         console.log("currencies", this.exchengeCurrencies)
 
@@ -324,6 +329,7 @@ export class MedRegComponent implements OnInit {
                     this.unitSumm = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
                         * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value;
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.unitSumm);
+
                 }
             }));
 
@@ -333,6 +339,7 @@ export class MedRegComponent implements OnInit {
                     this.unitSumm = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
                         * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value;
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.unitSumm);
+
                 }
 
                 //========================================
@@ -486,7 +493,13 @@ export class MedRegComponent implements OnInit {
             registrationDate:              this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').value,
 
 
+
         });
+
+        this.authorizationSumm = this.authorizationSumm + this.unitSumm;
+        this.authorizationCurrency = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').value;
+        console.log("this.authorizationSumm",this.authorizationSumm)
+        console.log("this.authorizationCurrency",this.authorizationCurrency)
 
         console.log("this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable'",(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').value)),
 
@@ -524,6 +537,7 @@ export class MedRegComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+                this.authorizationSumm = this.authorizationSumm - this.unitOfImportTable[index].summ;
                 this.unitOfImportTable.splice(index, 1);
             }
         });
@@ -815,6 +829,8 @@ export class MedRegComponent implements OnInit {
         //=============
 
         modelToSubmit.medicaments = [];
+        modelToSubmit.importAuthorizationEntity.summ = this.authorizationSumm;
+        modelToSubmit.importAuthorizationEntity.currency = this.authorizationCurrency;
         console.log("modelToSubmit", modelToSubmit);
         alert("before addImportRequest(modelToSubmit)")
         // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {

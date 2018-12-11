@@ -452,7 +452,7 @@
                         <tbody>
                         <tr *ngFor="let unitOfImport of importData.importAuthorizationEntity.importAuthorizationDetailsEntityList;let i = index">
                             <th scope="row">{{ unitOfImport.name }} </th>
-                            <td>{{ unitOfImport.atcCode.code}}</td>
+                            <td *ngIf="importData.importAuthorizationEntity.medType!==4">{{ unitOfImport.atcCode.code}}</td>
                             <td>{{ unitOfImport.dose }}</td>
                             <td>{{ unitOfImport.unitsOfMeasurement }}</td>
                             <td>{{ unitOfImport.producer.description }}</td>
@@ -463,7 +463,7 @@
                             <!--<td>{{ unitOfImport.producer.address }}, {{ unitOfImport.producer.country.description }}</td>-->
                             <td>{{ unitOfImport.expirationDate | date:'mediumDate' }}</td>
                             <td>{{ unitOfImport.customsCode.description }}</td>
-                            <td> <input type="checkbox" [checked]="importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved" (change)="setApproved(i)">   </td>
+                            <td> <input class="checkbox-rounded" type="checkbox" [checked]="importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved" (change)="setApproved(i)">   </td>
                             <td>
                                 <button class="btn btn-blue-color waves-light btn-sm waves-light" (click)="showunitOfImport(unitOfImport)" mdbWavesEffect>Vizualizare</button>
                             </td>
