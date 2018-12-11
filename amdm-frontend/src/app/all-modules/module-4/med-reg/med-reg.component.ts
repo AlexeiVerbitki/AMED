@@ -102,7 +102,10 @@ export class MedRegComponent implements OnInit {
     medicamentCurrencyExchangeRate: any;
     medicamnetMaxPriceValuta:any;
     medicamnetMaxPriceMDL:any;
+
     invalidPrice: boolean;
+
+    activeLicenses: any;
 
 
     constructor(private fb: FormBuilder,
@@ -233,6 +236,7 @@ export class MedRegComponent implements OnInit {
             ))
         }))
 
+        this.activeLicenses=false;
         this.currentDate = new Date();
         this.sellerAddress = '';
         this.producerAddress = '';
@@ -356,6 +360,17 @@ export class MedRegComponent implements OnInit {
                     }
                 }
 
+            }));
+
+            this.subscriptions.push( this.evaluateImportForm.get ('importAuthorizationEntity.importer').valueChanges.subscribe(val => {
+                if (val) {
+                    console.log("company has changed to: " , val)
+                    this.requestService.getActiveLicenses(val.idno).subscribe(data=>{
+                        console.log("this.requestService.getActiveLicenses(val.idno).subscribe", data)
+                        this.activeLicenses = data;
+
+                    })
+                }
             }));
 
             this.subscriptions.push(  this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').valueChanges.subscribe(val => {
@@ -754,12 +769,12 @@ export class MedRegComponent implements OnInit {
     nextStep() {
 
         this.formSubmitted = true;
-        let modelToSubmit: any ={};
-        this.loadingService.show();
+        let modelToSubmit: any = {};
+
 
         modelToSubmit = this.evaluateImportForm.value;
-        if (this.importData.importAuthorizationEntity.id){
-            modelToSubmit.importAuthorizationEntity.id =  this.importData.importAuthorizationEntity.id;
+        if (this.importData.importAuthorizationEntity.id) {
+            modelToSubmit.importAuthorizationEntity.id = this.importData.importAuthorizationEntity.id;
         }
 
 
@@ -782,18 +797,24 @@ export class MedRegComponent implements OnInit {
         console.log("modelToSubmit", modelToSubmit);
         alert("before addImportRequest(modelToSubmit)")
         // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {
-        this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
-                alert("after addImportRequest(modelToSubmit)")
-                console.log("addImportRequest(modelToSubmit).subscribe(data) ",data)
-                this.loadingService.hide();
-                this.router.navigate(['dashboard/module/import-authorization/registered-medicament-approve/'+data.body.id]);
-            }, error => {
-                alert("Something went wrong while sending the model")
-                console.log("error: ",error)
-                this.loadingService.hide()}
-        ));
 
-        this.formSubmitted = false;
+        if (this.activeLicenses !== null && this.evaluateImportForm.valid) {
+            this.loadingService.show();
+
+            this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
+                    alert("after addImportRequest(modelToSubmit)")
+                    console.log("addImportRequest(modelToSubmit).subscribe(data) ", data)
+                    this.loadingService.hide();
+                    this.router.navigate(['dashboard/module/import-authorization/registered-medicament-approve/' + data.body.id]);
+                }, error => {
+                    alert("Something went wrong while sending the model")
+                    console.log("error: ", error)
+                    this.loadingService.hide()
+                }
+            ));
+
+            this.formSubmitted = false;
+        }
     }
 
 

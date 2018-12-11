@@ -97,6 +97,9 @@
                                     <small class="form-text text-muted">IDNO: {{item.idno}}</small>
                                 </ng-template>
                             </ng-select>
+                            <div *ngIf="activeLicenses==null ">
+                                <small class="text-muted"><strong class="text-danger">Importatorul selectat nu are licente valabile</strong></small>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-4">
