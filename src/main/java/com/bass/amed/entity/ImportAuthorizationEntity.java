@@ -28,6 +28,12 @@ import java.util.Set;
 	private Integer                                medType;
 	private Set<ImportAuthorizationDetailsEntity>  importAuthorizationDetailsEntityList;
 	private Boolean                                authorized;
+	private String                                 contract;
+	private Timestamp                              contractDate;
+	private String                                 anexa;
+	private Timestamp                              anexaDate;
+	private String                                 specification;
+	private Timestamp                              SpecificationDate;
 
 
 	@Id
@@ -241,6 +247,62 @@ import java.util.Set;
 		this.importAuthorizationDetailsEntityList = importAuthorizationDetailsEntityList;
 	}
 
+	@Basic
+	@Column(name = "contract_number", nullable = true)
+	public String getContract() {
+		return contract;
+	}
+
+	public void setContract(String contract) {
+		this.contract = contract;
+	}
+	@Basic
+	@Column(name = "contract_date", nullable = true)
+	public Timestamp getContractDate() {
+		return contractDate;
+	}
+
+	public void setContractDate(Timestamp contractDate) {
+		this.contractDate = contractDate;
+	}
+	@Basic
+	@Column(name = "contract_annex_number", nullable = true)
+	public String getAnexa() {
+		return anexa;
+	}
+
+	public void setAnexa(String anexa) {
+		this.anexa = anexa;
+	}
+	@Basic
+	@Column(name = "contract_annex_date", nullable = true)
+	public Timestamp getAnexaDate() {
+		return anexaDate;
+	}
+
+	public void setAnexaDate(Timestamp anexaDate) {
+		this.anexaDate = anexaDate;
+	}
+	@Basic
+	@Column(name = "specification_number", nullable = true)
+	public String getSpecification() {
+		return specification;
+	}
+
+	public void setSpecification(String specification) {
+		this.specification = specification;
+	}
+
+	@Basic
+	@Column(name = "specification_date", nullable = true)
+	public Timestamp getSpecificationDate() {
+		return SpecificationDate;
+	}
+
+	public void setSpecificationDate(Timestamp specificationDate) {
+		SpecificationDate = specificationDate;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -272,7 +334,13 @@ import java.util.Set;
 		if (medType != null ? !medType.equals(that.medType) : that.medType != null) return false;
 		if (importAuthorizationDetailsEntityList != null ? !importAuthorizationDetailsEntityList.equals(
 				that.importAuthorizationDetailsEntityList) : that.importAuthorizationDetailsEntityList != null) return false;
-		return authorized != null ? authorized.equals(that.authorized) : that.authorized == null;
+		if (authorized != null ? !authorized.equals(that.authorized) : that.authorized != null) return false;
+		if (contract != null ? !contract.equals(that.contract) : that.contract != null) return false;
+		if (contractDate != null ? !contractDate.equals(that.contractDate) : that.contractDate != null) return false;
+		if (anexa != null ? !anexa.equals(that.anexa) : that.anexa != null) return false;
+		if (anexaDate != null ? !anexaDate.equals(that.anexaDate) : that.anexaDate != null) return false;
+		if (specification != null ? !specification.equals(that.specification) : that.specification != null) return false;
+		return SpecificationDate != null ? SpecificationDate.equals(that.SpecificationDate) : that.SpecificationDate == null;
 	}
 
 	@Override
@@ -299,6 +367,12 @@ import java.util.Set;
 		result = 31 * result + (medType != null ? medType.hashCode() : 0);
 		result = 31 * result + (importAuthorizationDetailsEntityList != null ? importAuthorizationDetailsEntityList.hashCode() : 0);
 		result = 31 * result + (authorized != null ? authorized.hashCode() : 0);
+		result = 31 * result + (contract != null ? contract.hashCode() : 0);
+		result = 31 * result + (contractDate != null ? contractDate.hashCode() : 0);
+		result = 31 * result + (anexa != null ? anexa.hashCode() : 0);
+		result = 31 * result + (anexaDate != null ? anexaDate.hashCode() : 0);
+		result = 31 * result + (specification != null ? specification.hashCode() : 0);
+		result = 31 * result + (SpecificationDate != null ? SpecificationDate.hashCode() : 0);
 		return result;
 	}
 }
