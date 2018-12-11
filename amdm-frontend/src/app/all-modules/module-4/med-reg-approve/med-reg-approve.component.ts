@@ -308,7 +308,7 @@ export class MedRegApproveComponent implements OnInit {
         if (this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved == false) {
             this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = true
             this.authorizationSumm = this.authorizationSumm + this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].summ;
-            this.authorizationCurrency = this.authorizationSumm + this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].currency;
+            this.authorizationCurrency = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].currency;
             console.log("this.authorizationSumm", this.authorizationSumm)
         } else {
             this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = false;
