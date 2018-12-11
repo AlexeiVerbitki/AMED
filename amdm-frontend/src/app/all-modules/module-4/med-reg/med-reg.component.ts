@@ -291,11 +291,9 @@ export class MedRegComponent implements OnInit {
 
                     this.medicamentService.getMedPrice(val.id).subscribe(priceEntity=>{
                         this.medicamentPrice = priceEntity;
-                        this.valutaList = [this.valutaList.find(i=> i.shortDescription === "MDL"), priceEntity.currency];
+                        this.valutaList = [/*this.valutaList.find(i=> i.shortDescription === "MDL"), */ priceEntity.currency];
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(this.valutaList.find(r => r === priceEntity.currency));
 
-                        // this.medicamentMAXPrice.push(inMDL = this.medicamentPrice.priceMdl);
-                        // this.medicamentMAXPrice.inCurrency = this.medicamentPrice.price;
 
                         console.log("this.medicamentPrice", this.medicamentPrice)
                         console.log("medicamentValutaList", this.valutaList)
@@ -328,6 +326,7 @@ export class MedRegComponent implements OnInit {
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.unitSumm);
                 }
             }));
+
             this.subscriptions.push(  this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').valueChanges.subscribe(val => {
                 if (val) {
                     this.userPrice = val;
@@ -336,29 +335,39 @@ export class MedRegComponent implements OnInit {
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.unitSumm);
                 }
 
+                //========================================
                 if (val){
 
-                    if (this.medicamentCurrencyExchangeRate ===1 ) {
-                        this.medicamnetMaxPriceValuta = this.medicamentPrice.priceMdl;
-                    } else{
-                        this.medicamnetMaxPriceValuta = this.medicamentPrice.price * this.medicamentCurrencyExchangeRate;
-                    }
-                    this.medicamnetMaxPriceMDL = this.medicamentPrice.priceMdl;
+                    if (this.userPrice > this.medicamentPrice.price) {
+                        this.invalidPrice = true;
 
-                    console.log(" this.medicamnetMaxPriceValuta", this.medicamnetMaxPriceValuta)
-                    console.log(" this.medicamnetMaxPriceMDL", this.medicamnetMaxPriceMDL)
-
-                    // if (this.medicamnetMaxPriceMDL < (this.medicamnetMaxPriceValuta || val)){
-                    //     this.invalidPrice=true;
-                        if  (this.userPrice > this.medicamnetMaxPriceMDL || this.userPrice * this.medicamentCurrencyExchangeRate > this.medicamnetMaxPriceValuta){
-                            this.invalidPrice=true;
-
-                           console.log("invalidPrice",this.invalidPrice)
+                        console.log("invalidPrice", this.invalidPrice)
                     } else {
                         this.invalidPrice = false;
                         console.log("invalidPrice", this.invalidPrice)
                     }
+
+                    // if (this.medicamentCurrencyExchangeRate ===1 ) {
+                    //     this.medicamnetMaxPriceValuta = this.medicamentPrice.priceMdl;
+                    // } else{
+                    //     this.medicamnetMaxPriceValuta = this.medicamentPrice.price * this.medicamentCurrencyExchangeRate;
+                    // }
+                    // this.medicamnetMaxPriceMDL = this.medicamentPrice.priceMdl;
+                    //
+                    // console.log(" this.medicamnetMaxPriceValuta", this.medicamnetMaxPriceValuta)
+                    // console.log(" this.medicamnetMaxPriceMDL", this.medicamnetMaxPriceMDL)
+                    //
+                    //
+                    //     if  (this.userPrice > this.medicamnetMaxPriceMDL || this.userPrice * this.medicamentCurrencyExchangeRate > this.medicamnetMaxPriceValuta){
+                    //         this.invalidPrice=true;
+                    //
+                    //        console.log("invalidPrice",this.invalidPrice)
+                    // } else {
+                    //     this.invalidPrice = false;
+                    //     console.log("invalidPrice", this.invalidPrice)
+                    // }
                 }
+                //========================================
 
             }));
 
@@ -374,40 +383,52 @@ export class MedRegComponent implements OnInit {
             }));
 
             this.subscriptions.push(  this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').valueChanges.subscribe(val => {
-                if (val) {
-                    console.log("importAuthorizationEntity.unitOfImportTable.currency",val)
-                    console.log("this.exchengeCurrencies",this.exchengeCurrencies)
-                    this.maxPriceForCurrency(val);
+                //========================================
 
-                    if (val){
+                if (this.userPrice > this.medicamentPrice.price) {
+                    this.invalidPrice = true;
 
-                        if (this.medicamentCurrencyExchangeRate === 1) {
-                            this.medicamnetMaxPriceValuta = this.medicamnetMaxPriceMDL;
-                        } else {
-                            this.medicamnetMaxPriceValuta = this.medicamentCurrencyExchangeRate * this.medicamentPrice.price;
-                        }
-
-                        this.medicamnetMaxPriceMDL = this.medicamentPrice.priceMdl;
-
-
-                        console.log(" this.userPrice", this.userPrice)
-                        console.log(" this.medicamnetMaxPriceValuta", this.medicamnetMaxPriceValuta)
-                        console.log(" this.medicamnetMaxPriceMDL", this.medicamnetMaxPriceMDL)
-
-                        // if (this.medicamnetMaxPriceMDL < (this.medicamnetMaxPriceValuta || val)){
-                        //     this.invalidPrice=true;
-                        // }
-
-                        if  (this.userPrice > this.medicamnetMaxPriceMDL || this.userPrice * this.medicamentCurrencyExchangeRate > this.medicamnetMaxPriceValuta){
-                                this.invalidPrice=true;
-                        }
-                        else {
-                            this.invalidPrice = false;
-                            console.log("invalidPrice", this.invalidPrice)
-                        }
-                    }
-
+                    console.log("invalidPrice", this.invalidPrice)
+                } else {
+                    this.invalidPrice = false;
+                    console.log("invalidPrice", this.invalidPrice)
                 }
+
+                // if (val) {
+                //     console.log("importAuthorizationEntity.unitOfImportTable.currency",val)
+                //     console.log("this.exchengeCurrencies",this.exchengeCurrencies)
+                //     this.maxPriceForCurrency(val);
+                //
+                //     if (val){
+                //
+                //         if (this.medicamentCurrencyExchangeRate === 1) {
+                //             this.medicamnetMaxPriceValuta = this.medicamnetMaxPriceMDL;
+                //         } else {
+                //             this.medicamnetMaxPriceValuta = this.medicamentCurrencyExchangeRate * this.medicamentPrice.price;
+                //         }
+                //
+                //         this.medicamnetMaxPriceMDL = this.medicamentPrice.priceMdl;
+                //
+                //
+                //         console.log(" this.userPrice", this.userPrice)
+                //         console.log(" this.medicamnetMaxPriceValuta", this.medicamnetMaxPriceValuta)
+                //         console.log(" this.medicamnetMaxPriceMDL", this.medicamnetMaxPriceMDL)
+                //
+                //         // if (this.medicamnetMaxPriceMDL < (this.medicamnetMaxPriceValuta || val)){
+                //         //     this.invalidPrice=true;
+                //         // }
+                //
+                //         if  (this.userPrice > this.medicamnetMaxPriceMDL || this.userPrice * this.medicamentCurrencyExchangeRate > this.medicamnetMaxPriceValuta){
+                //                 this.invalidPrice=true;
+                //         }
+                //         else {
+                //             this.invalidPrice = false;
+                //             console.log("invalidPrice", this.invalidPrice)
+                //         }
+                //     }
+                //
+                // }
+                //========================================
             }));
         }
     }

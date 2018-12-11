@@ -34,7 +34,7 @@
                 <div class="md-form-modified">
                     <ng-select [items]="importer | async"
                                bindLabel="name"
-                               placeholder="Importator"
+                               placeholder="Compania solicitant"
                                formControlName="company"
                                [loading]="loadingCompany"
                                [typeahead]="companyInputs"
@@ -46,11 +46,11 @@
                     </ng-select>
                 </div>
                 <div *ngIf="formSubmitted && rForm.get('company').invalid">
-                    <small class="text-muted"><strong class="text-danger">Importator trebuie selectat</strong></small>
+                    <small class="text-muted"><strong class="text-danger">Compania solicitant trebuie selectată</strong></small>
                 </div>
-                <div *ngIf="activeLicenses==null && formSubmitted">
-                    <small class="text-muted"><strong class="text-danger">Importatorul selectat nu are licente valabile</strong></small>
-                </div>
+                <!--<div *ngIf="activeLicenses==null && formSubmitted">-->
+                    <!--<small class="text-muted"><strong class="text-danger">Importatorul selectat nu are licente valabile</strong></small>-->
+                <!--</div>-->
             </div>
 
         </div>

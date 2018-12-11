@@ -121,8 +121,8 @@ export class AmbalajComponent implements OnInit {
                 'stuff_type_id': [], // to delete
                 'expiration_date': [],
 
-                'customsNumber':[],
-                'customsDeclarationDate':[],
+                // 'customsNumber':[],
+                // 'customsDeclarationDate':[],
                 'authorizationsNumber':[], // inca nu exista la pasul acesta
                 'medType': [''],
                 'importAuthorizationDetailsEntityList' :[],

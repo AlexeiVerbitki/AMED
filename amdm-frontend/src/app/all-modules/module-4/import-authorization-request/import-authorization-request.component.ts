@@ -45,7 +45,6 @@ export class ImportAuthorizationRequestComponent implements OnInit {
     loadingCompany: boolean = false;
     protected companyInputs = new Subject<string>();
 
-    activeLicenses: any;
 
 
 
@@ -89,8 +88,8 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         this.generateDocNr();
         this.loadDocTypes();
         this.loadEconomicAgents();
-        this.onChanges();
-        this.activeLicenses=false;
+        // this.onChanges();
+        // this.activeLicenses=false;
 
         this.currentDate = new Date();
 
@@ -177,18 +176,18 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         );
     }
 
-    onChanges(): void {
-        this.subscriptions.push( this.rForm.get('company').valueChanges.subscribe(val => {
-            if (val) {
-                console.log("company has changed to: " , val)
-                this.requestService.getActiveLicenses(val.idno).subscribe(data=>{
-                    console.log("this.requestService.getActiveLicenses(val.idno).subscribe", data)
-                    this.activeLicenses = data;
-
-                })
-            }
-        }));
-    }
+    // onChanges(): void {
+    //     this.subscriptions.push( this.rForm.get('company').valueChanges.subscribe(val => {
+    //         if (val) {
+    //             console.log("company has changed to: " , val)
+    //             this.requestService.getActiveLicenses(val.idno).subscribe(data=>{
+    //                 console.log("this.requestService.getActiveLicenses(val.idno).subscribe", data)
+    //                 this.activeLicenses = data;
+    //
+    //             })
+    //         }
+    //     }));
+    // }
 
     nextStep() {
         this.formSubmitted = true;
@@ -234,10 +233,9 @@ export class ImportAuthorizationRequestComponent implements OnInit {
             formModel.assignedUser = this.authService.getUserName();
 
             console.log("formModel", formModel)
-            console.log("this.activeLicenses", this.activeLicenses)
             console.log("rForm.valid", this.rForm.valid)
 
-        if (this.activeLicenses !== null && this.rForm.valid) {
+        if (this.rForm.valid) {
             this.loadingService.show();
             this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
                     switch (this.rForm.get('importType').value) {
