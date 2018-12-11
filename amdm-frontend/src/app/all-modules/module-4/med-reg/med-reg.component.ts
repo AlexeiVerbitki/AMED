@@ -130,7 +130,7 @@ export class MedRegComponent implements OnInit {
             'id':              [''],
             'requestNumber':   [null],
             'startDate':       [new Date()],
-            'currentStep':     ['R'],
+            'currentStep':     ['E'],
             'company':         ['', Validators.required],
             'initiator':       [null],
             'assignedUser':    [null],
