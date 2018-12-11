@@ -209,6 +209,18 @@ export class MedRegComponent implements OnInit {
                     this.evaluateImportForm.get('type.id').setValue(data.type.id);
                     this.evaluateImportForm.get('requestHistories').setValue(data.requestHistories);
 
+                    this.evaluateImportForm.get('importAuthorizationEntity.seller').setValue(data.importAuthorizationEntity.seller);
+                    this.evaluateImportForm.get('importAuthorizationEntity.importer').setValue(data.importAuthorizationEntity.importer);
+                    this.evaluateImportForm.get('importAuthorizationEntity.basisForImport').setValue(data.importAuthorizationEntity.basisForImport);
+                    this.evaluateImportForm.get('importAuthorizationEntity.conditionsAndSpecification').setValue(data.importAuthorizationEntity.conditionsAndSpecification);
+                    this.evaluateImportForm.get('importAuthorizationEntity.authorizationsNumber').setValue(data.importAuthorizationEntity.authorizationsNumber);
+                    this.evaluateImportForm.get('importAuthorizationEntity.customsNumber').setValue(data.importAuthorizationEntity.customsNumber);
+                    if (data.importAuthorizationEntity.customsDeclarationDate !== null){
+                        this.evaluateImportForm.get('importAuthorizationEntity.customsDeclarationDate').setValue(new Date(data.importAuthorizationEntity.customsDeclarationDate));
+                    }
+
+                    this.unitOfImportTable = data.importAuthorizationEntity.importAuthorizationDetailsEntityList;
+
                     //If it's a registered medicament, disable the following fields
 
                     // if (data.importAuthorizationEntity.medType===1) {
@@ -835,7 +847,10 @@ export class MedRegComponent implements OnInit {
         alert("before addImportRequest(modelToSubmit)")
         // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {
 
-        if (this.activeLicenses !== null && this.evaluateImportForm.valid) {
+        console.log("this.evaluateImportForm.valid",this.evaluateImportForm.valid)
+        console.log("this.docs",this.docs)
+        if (this.activeLicenses !== null /*&& this.evaluateImportForm.valid*/ && this.docs !== null) {
+        // if (this.activeLicenses !== null ) {
             this.loadingService.show();
 
             this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
