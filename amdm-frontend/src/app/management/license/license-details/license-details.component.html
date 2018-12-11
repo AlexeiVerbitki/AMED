@@ -1,0 +1,108 @@
+<div mat-dialog-content>
+    <form [formGroup]='rForm'>
+        <h3 class="text-center my-3 font-weight-bold">Detalii licenta</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="md-form">
+                    <input type="text" id="companyName" class="form-control" mdbInputDirective
+                           formControlName="companyName">
+                    <label for="companyName">Agentul economic</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="md-form">
+                    <input type="text" id="companyIdno" class="form-control" mdbInputDirective
+                           formControlName="companyIdno">
+                    <label for="companyIdno">IDNO</label>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input type="text" id="seriaLicenta" class="form-control" mdbInputDirective
+                           formControlName="seriaLicenta">
+                    <label for="seriaLicenta">Seria licenta</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input type="text" id="nrLicenta" class="form-control" mdbInputDirective
+                           formControlName="nrLicenta">
+                    <label for="nrLicenta">Numar licenta</label>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker2" placeholder="Data eliberare"
+                               formControlName="dataEliberarii" >
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker2 ></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker3" placeholder="Data expirare"
+                               formControlName="dataExpirare" >
+                        <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker3 ></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+        <div class="table-width ">
+            <div class="gradient-card-header bg-sidebar border-gradient">
+                <div class="container-fluid">
+                    <!-- Title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card-header-title white-text">Filiale</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body card-body-cascade">
+                <div class="table-width">
+                    <div class="example-container">
+                        <table class="table table-widths text-center">
+                            <thead class="bg-sidebar white-text">
+                            <tr>
+                                <th scope="col">Tipul intreprinderii</th>
+                                <th scope="col">Adresa</th>
+                                <th scope="col">Farmacist/Sef de filiala</th>
+                                <th scope="col">Activitatile</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let objAddr of companiiPerIdnoSelected;let i = index">
+                                <th scope="row">{{ objAddr.companyType }}</th>
+                                <td>{{ objAddr.address }}</td>
+                                <td>{{ objAddr.selectedPharmaceutist ? objAddr.selectedPharmaceutist.fullName : '' }}</td>
+                                <td mdbTooltip="{{objAddr.activitiesStr}}" placement="top">
+                                    {{objAddr.activitiesStr}}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="text-center">
+        <div mat-dialog-actions>
+            <div class="w-100">
+                <button class="btn btn-info btn-sm-bl btn-sm" (click)="cancel()">Inchidere</button>
+            </div>
+        </div>
+    </div>
+</div>

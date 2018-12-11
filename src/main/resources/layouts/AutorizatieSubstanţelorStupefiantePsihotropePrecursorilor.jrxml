@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="AutorizatieSubstanţelorStupefiantePsihotropePrecursorilor" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="10" uuid="523fb55a-b7a8-4c3c-86ea-fd79290ecf5e">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="nr" class="java.lang.String"/>
+	<parameter name="date" class="java.lang.String"/>
+	<parameter name="headTeacher" class="java.lang.String"/>
+	<parameter name="releasedFor" class="java.lang.String"/>
+	<parameter name="instituteAndAddress" class="java.lang.String"/>
+	<parameter name="responsibility" class="java.lang.String"/>
+	<parameter name="ValidUntil" class="java.lang.String"/>
+	<parameter name="genDir" class="java.lang.String"/>
+	<parameter name="druggist" class="java.lang.String"/>
+	<parameter name="committeeChairman" class="java.lang.String"/>
+	<parameter name="substance" class="java.lang.String"/>
+	<parameter name="qrCode" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<pageHeader>
+		<band height="90">
+			<image>
+				<reportElement x="0" y="2" width="550" height="86" uuid="ae27ee01-a17f-4e89-81b4-1417b9af443c"/>
+				<imageExpression><![CDATA["layouts/icons/stupefiante-header.PNG"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="184" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="10" width="320" height="20" uuid="c9332ebf-d0f7-4f3c-8970-4aade3b3e1a8"/>
+				<textElement textAlignment="Left">
+					<font fontName="DejaVu Sans" size="13" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Nr. " + $P{nr} + " din " +$P{date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="180" y="43" width="201" height="17" uuid="477d9f8e-4cc1-40d9-b44a-ded5538ba067"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[A  U  T  O  R  I  Z  A  Ţ  I  E]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="67" width="400" height="53" uuid="28fbc298-171c-4ad8-8aa7-204ebf75d6b2"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="13"/>
+				</textElement>
+				<text><![CDATA[de activitate  pentru utilizarea obiectivelor şi încăperilor
+destinate activităţilor legate de circulaţia  substanţelor
+stupefiante, psihotrope şi a precursorilor.
+]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="2" y="157" width="548" height="18" uuid="1912e2f1-931b-44ab-b439-8bc08e04c503"/>
+				<textElement textAlignment="Left">
+					<font fontName="DejaVu Sans" size="13" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Eliberată  " + $P{releasedFor}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="181">
+			<staticText>
+				<reportElement x="3" y="30" width="547" height="21" uuid="949edfc0-2f1e-4d12-971d-d2e241f190f6"/>
+				<box>
+					<topPen lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" rotation="None">
+					<font fontName="DejaVu Sans" size="13" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Autorizează următoarele genuri de activitate farmaceutică:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="60" width="552" height="110" uuid="d1f5cff4-fc46-4380-89f9-bbb56356d28c"/>
+				<textElement textAlignment="Left">
+					<font fontName="DejaVu Sans" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA["	Achiziţionarea, păstrarea, livrarea şi eliberarea remediilor stupefiante (narcotice) din Lista 1, 2 și 3 Tabela 3 „Substanțele stupefiante (narcotice), utilizate în scopuri medicale”, și precursorii din Lista 1, 2 - Tabela 4 „Precursorii substanțelor stupefiante (narcotice) și preparatelor psihotrope, aflate sub control pe teritoriul Republicii Moldova ”, aprobate prin Hotărârea Guvernului Nr.1088 din 05.10.2004, cu privire la aprobarea tabelelor și listelor substanțelor stupefiante, psihotrope și precursorilor acestora, supuse controlului, în cadrul serviciului medical " + $P{instituteAndAddress}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="80" y="0" width="470" height="18" uuid="6fb90a3d-562e-412f-81b2-0879fce7d4fd"/>
+				<textElement textAlignment="Left">
+					<font fontName="DejaVu Sans" size="13" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Diriginte: " + $P{headTeacher}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="42">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="3" y="0" width="548" height="39" uuid="3f7ab25d-09d0-4caa-9edd-f35059a96957"/>
+				<textElement textAlignment="Left">
+					<font fontName="DejaVu Sans" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA["	Responsabilitatea de modul de recepționare, păstrare, evidență a substanțelor " + $P{substance} + " se atribuie " + $P{responsibility}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="74">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="3" y="0" width="548" height="70" uuid="f1a74a7d-35da-4baa-81f5-2834c606e0cf"/>
+				<textElement textAlignment="Left">
+					<font fontName="DejaVu Sans" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA["	Modul de acordare, suspendare (retragere) a autorizației Comitetului Permanent de Control asupra Drogurilor este stabilit de Legea Republicii Moldova nr. 382-XIV din 06.05.1999, cu privire la circulația substanțelor stupefiante, psihotrope și a precursorilor."]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="147">
+			<staticText>
+				<reportElement x="1" y="42" width="278" height="22" uuid="ecce1c9f-49a7-419c-9f3c-a3b4f45df3ab"/>
+				<textElement textAlignment="Left">
+					<font fontName="DejaVu Sans" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Director  general]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="64" width="278" height="22" uuid="06a680c7-24c5-4bcc-8f72-2240f8551cec"/>
+				<textElement textAlignment="Left">
+					<font fontName="DejaVu Sans" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Preşedintele Comitetului]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="86" width="278" height="28" uuid="a402678f-efed-4a64-b106-f5aec3dd81a5"/>
+				<textElement textAlignment="Left">
+					<font fontName="DejaVu Sans" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Permanent de Control asupra Drogurilor Farmacist]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="1" y="123" width="278" height="21" uuid="86969453-4047-4371-9f81-f9a36b6dbe0b"/>
+				<textElement>
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Valabilă pînă la: " + $P{ValidUntil}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="279" y="42" width="272" height="22" uuid="76a80b1c-0a7f-4d0c-abaa-486ca26d07c6"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="13" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{genDir}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="279" y="64" width="272" height="22" uuid="7487fd56-831a-4c68-b430-8b5d106de145"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="13" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{committeeChairman}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="279" y="92" width="272" height="22" uuid="d6e2f52c-06ab-4cdf-8212-55ce71f68a18"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="13" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{druggist}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="76" splitType="Stretch">
+			<staticText>
+				<reportElement x="91" y="14" width="339" height="45" uuid="62abd8fc-753c-4d82-926d-20153ed31c42"/>
+				<textElement markup="none">
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<text><![CDATA[Agenţia Medicamentului şi Dispozitivelor Medicale
+Medicines and Medical Devices Agency 
+Republica Moldova, MD-2028, Chişinău, str. Korolenko, 2/1
+tel. +373 22 884 301, e-mail: office@amed.md; Web: www.amed.md
+]]></text>
+			</staticText>
+			<image>
+				<reportElement x="483" y="8" width="65" height="60" uuid="36094911-1947-4f9d-a837-51c429be067a"/>
+				<imageExpression><![CDATA["layouts/icons/cer.png"]]></imageExpression>
+			</image>
+		</band>
+	</pageFooter>
+</jasperReport>
