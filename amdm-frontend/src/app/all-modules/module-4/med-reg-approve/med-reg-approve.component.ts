@@ -125,7 +125,7 @@ export class MedRegApproveComponent implements OnInit {
             'id': [''],
             'requestNumber': [null],
             'startDate': [new Date()],
-            'currentStep': ['R'],
+            'currentStep': ['AP'],
             'company': ['', Validators.required],
             'initiator': [null],
             'assignedUser': [null],
