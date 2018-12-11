@@ -452,17 +452,7 @@
                             </div>
 
 
-                            <div class="col-md-4" *ngIf="importData.importAuthorizationEntity.medType==1">
-                                <div class="md-form">
-                                    <input id="registrationRmNumber" mdbInputDirective type="text" class="form-control" formControlName="registrationRmNumber">
-                                    <label for="registrationRmNumber">Nr. de înregistrare în RM
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                </div>
-                                <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').invalid">
-                                    <small class="text-muted"><strong class="text-danger">Nr. de înregistrare în RM trebuie selectat</strong></small>
-                                </div>
-                            </div>
+
                             &lt;!&ndash;<div class="col-md-4" *ngIf="importData.importAuthorizationEntity.medType==1">&ndash;&gt;
                             &lt;!&ndash;<div class="md-form">&ndash;&gt;
                             &lt;!&ndash;<input id="registrationRmDate" mdbInputDirective type="text" class="form-control" formControlName="registrationRmDate">&ndash;&gt;
@@ -504,6 +494,31 @@
                         </div>
                         </div>
                     </div>-->
+
+                    <!--<div class="col-md-4" *ngIf="importData.importAuthorizationEntity.medType==1">-->
+                        <!--<div class="md-form">-->
+                            <!--<input id="registrationRmNumber" mdbInputDirective type="text" class="form-control" formControlName="registrationRmNumber">-->
+                            <!--<label for="registrationRmNumber">Nr. de înregistrare în RM-->
+                                <!--<span class="text-danger">*</span>-->
+                            <!--</label>-->
+                        <!--</div>-->
+                        <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').invalid">-->
+                            <!--<small class="text-muted"><strong class="text-danger">Nr. de înregistrare în RM trebuie selectat</strong></small>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="col-4" *ngIf="importData.importAuthorizationEntity.medType==1">-->
+                        <!--<div class="md-form-modified">-->
+                            <!--<mat-form-field class="w-100">-->
+                                <!--<input matInput [matDatepicker]="picker22" placeholder="Data de înregistrare în RM"-->
+                                       <!--formControlName="registrationRmDate">-->
+                                <!--<mat-datepicker-toggle matSuffix [for]="picker22"></mat-datepicker-toggle>-->
+                                <!--<mat-datepicker touchUi #picker22></mat-datepicker>-->
+                            <!--</mat-form-field>-->
+                            <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').invalid">-->
+                                <!--<small class="text-muted"><strong class="text-danger">Data de înregistrare în RM trebuie selectată</strong></small>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
 
                     <table class="table table-widths text-center">
                         <thead class="black white-text">
