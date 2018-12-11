@@ -115,6 +115,12 @@ export class AmbalajComponent implements OnInit {
                 'seller': [null, Validators.required], // Tara si adresa lui e deja in baza
                 'basisForImport': [],
                 'importer': [null, Validators.required], // Tara si adresa lui e deja in baza
+                'contract':                              [null, Validators.required],
+                'contractDate':                          [null, Validators.required],
+                'anexa':                                 [null, Validators.required],
+                'anexaDate':                             [null, Validators.required],
+                'specification':                         [null, Validators.required],
+                'specificationDate':                     [null, Validators.required],
                 'conditionsAndSpecification': [''],
                 'quantity': [],
                 'price': [],

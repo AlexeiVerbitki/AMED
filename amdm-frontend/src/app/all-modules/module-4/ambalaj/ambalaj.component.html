@@ -107,12 +107,85 @@
                             </label>
                         </div>
                     </div>
+
+                    <div class="col-md-4">
+                        <div class="md-form">
+                            <input id="contract" mdbInputDirective type="text" class="form-control"
+                                   formControlName="contract">
+                            <label for="contract">Contract
+                                <span class="text-danger">*</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="md-form-modified">
+                            <mat-form-field class="w-100">
+                                <input matInput [matDatepicker]="picker26" placeholder="Data contractului"
+                                       formControlName="contractDate">
+                                <mat-datepicker-toggle matSuffix [for]="picker26"></mat-datepicker-toggle>
+                                <mat-datepicker touchUi #picker26></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').invalid">-->
+                        <!--<small class="text-muted"><strong class="text-danger">Termenul de valabilitate trebuie selectat</strong></small>-->
+                        <!--</div>-->
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="md-form">
+                            <input id="anexa" mdbInputDirective type="text" class="form-control"
+                                   formControlName="anexa">
+                            <label for="anexa">Anexa la contract
+                                <span class="text-danger">*</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="md-form-modified">
+                            <mat-form-field class="w-100">
+                                <input matInput [matDatepicker]="picker25" placeholder="Data anexei"
+                                       formControlName="anexaDate">
+                                <mat-datepicker-toggle matSuffix [for]="picker25"></mat-datepicker-toggle>
+                                <mat-datepicker touchUi #picker25></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').invalid">-->
+                        <!--<small class="text-muted"><strong class="text-danger">Termenul de valabilitate trebuie selectat</strong></small>-->
+                        <!--</div>-->
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="md-form">
+                            <input id="specification" mdbInputDirective type="text" class="form-control"
+                                   formControlName="specification">
+                            <label for="anexa">Specificație
+                                <span class="text-danger">*</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="md-form-modified">
+                            <mat-form-field class="w-100">
+                                <input matInput [matDatepicker]="picker27" placeholder="Data specificației"
+                                       formControlName="specificationDate">
+                                <mat-datepicker-toggle matSuffix [for]="picker27"></mat-datepicker-toggle>
+                                <mat-datepicker touchUi #picker27></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').invalid">-->
+                        <!--<small class="text-muted"><strong class="text-danger">Termenul de valabilitate trebuie selectat</strong></small>-->
+                        <!--</div>-->
+                    </div>
+
                     <div class="col-md-4">
                         <div class="md-form">
                             <input id="conditionsAndSpecification" mdbInputDirective type="text" class="form-control"
                                    formControlName="conditionsAndSpecification">
-                            <label for="basisForImport">Condiții și precizări
-                                <span class="text-danger">*</span>
+                            <label for="basisForImport">Altele
+                                <!--<span class="text-danger">*</span>-->
                             </label>
                         </div>
                     </div>
@@ -147,12 +220,12 @@
 
 
 
-                    <div class="text-center w-100 mt-3">
-                        <div class="alert alert-primary">
-                            <span>Nr. de inregistrare a cererii: </span>
-                            <strong>{{generatedDocNrSeq}}</strong>
-                        </div>
-                    </div>
+                    <!--<div class="text-center w-100 mt-3">-->
+                        <!--<div class="alert alert-primary">-->
+                            <!--<span>Nr. de inregistrare a cererii: </span>-->
+                            <!--<strong>{{generatedDocNrSeq}}</strong>-->
+                        <!--</div>-->
+                    <!--</div>-->
                 </div>
 
                 <hr>
@@ -161,7 +234,8 @@
                 <section>
 
 
-                    <h5 class="text-center font-weight-bold">Informația despre ambalaj</h5>
+                    <h5 class="text-center font-weight-bold" *ngIf="importData.importAuthorizationEntity.medType==3">Informația despre materia primă</h5>
+                    <h5 class="text-center font-weight-bold" *ngIf="importData.importAuthorizationEntity.medType==4">Informația despre ambalaj</h5>
                     <hr>
                     <div formArrayName="unitOfImportTable">
                         <!--<div *ngFor="let importTypeForm of importTypeForms.controls; let i=index" [formGroupName]="i">-->
@@ -292,6 +366,8 @@
                                     </mat-form-field>
                                 </div>
                             </div>
+
+
 
 
 

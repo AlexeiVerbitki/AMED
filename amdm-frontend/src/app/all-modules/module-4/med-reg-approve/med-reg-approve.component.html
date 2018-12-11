@@ -1,6 +1,6 @@
 <div>
     <div class="container-fluid sky z-depth-2">
-        <h3 class="text-center my-3 font-weight-bold">Inregistrare cerere</h3>
+        <h3 class="text-center my-3 font-weight-bold">Aprobare autorizației</h3>
 
         <form [formGroup]="evaluateImportForm">
             <div class="row">
@@ -105,15 +105,80 @@
                             </label>
                         </div>
                     </div>
+
                     <div class="col-md-4">
                         <div class="md-form">
-                            <input id="conditionsAndSpecification" mdbInputDirective type="text" class="form-control"
-                                   formControlName="conditionsAndSpecification">
-                            <label for="basisForImport">Condiții și precizări
+                            <input id="contract" mdbInputDirective type="text" class="form-control"
+                                   formControlName="contract">
+                            <label for="contract">Contract
                                 <span class="text-danger">*</span>
                             </label>
                         </div>
                     </div>
+
+                    <div class="col-4">
+                        <div class="md-form-modified">
+                            <mat-form-field class="w-100">
+                                <input matInput [matDatepicker]="picker26" placeholder="Data contractului"
+                                       formControlName="contractDate">
+                                <mat-datepicker-toggle matSuffix [for]="picker26"></mat-datepicker-toggle>
+                                <mat-datepicker touchUi #picker26></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').invalid">-->
+                        <!--<small class="text-muted"><strong class="text-danger">Termenul de valabilitate trebuie selectat</strong></small>-->
+                        <!--</div>-->
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="md-form">
+                            <input id="anexa" mdbInputDirective type="text" class="form-control"
+                                   formControlName="anexa">
+                            <label for="anexa">Anexa la contract
+                                <span class="text-danger">*</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="md-form-modified">
+                            <mat-form-field class="w-100">
+                                <input matInput [matDatepicker]="picker25" placeholder="Data anexei"
+                                       formControlName="anexaDate">
+                                <mat-datepicker-toggle matSuffix [for]="picker25"></mat-datepicker-toggle>
+                                <mat-datepicker touchUi #picker25></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').invalid">-->
+                        <!--<small class="text-muted"><strong class="text-danger">Termenul de valabilitate trebuie selectat</strong></small>-->
+                        <!--</div>-->
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="md-form">
+                            <input id="specification" mdbInputDirective type="text" class="form-control"
+                                   formControlName="specification">
+                            <label for="anexa">Specificație
+                                <span class="text-danger">*</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="md-form-modified">
+                            <mat-form-field class="w-100">
+                                <input matInput [matDatepicker]="picker27" placeholder="Data specificației"
+                                       formControlName="specificationDate">
+                                <mat-datepicker-toggle matSuffix [for]="picker27"></mat-datepicker-toggle>
+                                <mat-datepicker touchUi #picker27></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').invalid">-->
+                        <!--<small class="text-muted"><strong class="text-danger">Termenul de valabilitate trebuie selectat</strong></small>-->
+                        <!--</div>-->
+                    </div>
+
+
 
                     <!--=======================================================================================-->
 
@@ -142,6 +207,16 @@
                                 <mat-datepicker-toggle matSuffix [for]="picker22"></mat-datepicker-toggle>
                                 <mat-datepicker touchUi #picker22></mat-datepicker>
                             </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="md-form">
+                            <input id="conditionsAndSpecification" mdbInputDirective type="text" class="form-control"
+                                   formControlName="conditionsAndSpecification">
+                            <label for="basisForImport">Altele
+                                <span class="text-danger">*</span>
+                            </label>
                         </div>
                     </div>
                     <!--=======================================================================================-->
@@ -465,7 +540,7 @@
                             <td>{{ unitOfImport.customsCode.description }}</td>
                             <td> <input class="checkbox-rounded" type="checkbox" [checked]="importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved" (change)="setApproved(i)">   </td>
                             <td>
-                                <button class="btn btn-blue-color waves-light btn-sm waves-light" (click)="showunitOfImport(unitOfImport)" mdbWavesEffect>Vizualizare</button>
+                                <button class="btn btn-primary waves-light btn-sm waves-light" (click)="showunitOfImport(unitOfImport)" mdbWavesEffect>Vizualizare</button>
                             </td>
                         </tr>
                         </tbody>
