@@ -246,9 +246,21 @@ export class MedRegApproveComponent implements OnInit {
                     this.evaluateImportForm.get('importAuthorizationEntity.authorizationsNumber').setValue(data.importAuthorizationEntity.authorizationsNumber);
                     this.evaluateImportForm.get('importAuthorizationEntity.customsNumber').setValue(data.importAuthorizationEntity.customsNumber);
                     this.evaluateImportForm.get('importAuthorizationEntity.customsDeclarationDate').setValue(new Date(data.importAuthorizationEntity.customsDeclarationDate));
+                    this.evaluateImportForm.get('importAuthorizationEntity.contract'         ).setValue(data.importAuthorizationEntity.contract);
+                    this.evaluateImportForm.get('importAuthorizationEntity.contractDate'     ).setValue(new Date(data.importAuthorizationEntity.contractDate));
+                    this.evaluateImportForm.get('importAuthorizationEntity.anexa'            ).setValue(data.importAuthorizationEntity.anexa);
+                    this.evaluateImportForm.get('importAuthorizationEntity.anexaDate'        ).setValue(new Date(data.importAuthorizationEntity.anexaDate));
+                    this.evaluateImportForm.get('importAuthorizationEntity.specification'    ).setValue(data.importAuthorizationEntity.specification);
+                    this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').setValue(new Date(data.importAuthorizationEntity.specificationDate));
 
                     this.evaluateImportForm.get('startDate').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.seller').disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.contract'         ).disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.contractDate'     ).disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.anexa'            ).disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.anexaDate'        ).disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.specification'    ).disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.importer').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.basisForImport').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.conditionsAndSpecification').disable();

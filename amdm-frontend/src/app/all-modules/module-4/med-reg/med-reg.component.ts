@@ -30,9 +30,9 @@ export interface PeriodicElement {
 
 
 @Component({
-  selector: 'app-med-reg',
-  templateUrl: './med-reg.component.html',
-  styleUrls: ['./med-reg.component.css']
+    selector: 'app-med-reg',
+    templateUrl: './med-reg.component.html',
+    styleUrls: ['./med-reg.component.css']
 })
 export class MedRegComponent implements OnInit {
     cereri: Cerere[] = [];
@@ -70,8 +70,8 @@ export class MedRegComponent implements OnInit {
     formModel: any;
     valutaList: any[];
 
-    importData : any;
-    medicamentData : any;
+    importData: any;
+    medicamentData: any;
 
     atcCodes: Observable<any[]>;
     loadingAtcCodes: boolean = false;
@@ -98,10 +98,10 @@ export class MedRegComponent implements OnInit {
     medicamentPrice: any;
     medicamentMAXPrice: any[] = [];
 
-    userPrice :any;
+    userPrice: any;
     medicamentCurrencyExchangeRate: any;
-    medicamnetMaxPriceValuta:any;
-    medicamnetMaxPriceMDL:any;
+    medicamnetMaxPriceValuta: any;
+    medicamnetMaxPriceMDL: any;
 
     invalidPrice: boolean;
 
@@ -124,21 +124,19 @@ export class MedRegComponent implements OnInit {
                 private administrationService: AdministrationService) {
 
 
-
-
     }
 
     ngOnInit() {
         this.evaluateImportForm = this.fb.group({
-            'id':              [''],
-            'requestNumber':   [null],
-            'startDate':       [new Date()],
-            'currentStep':     ['E'],
-            'company':         ['', Validators.required],
-            'initiator':       [null],
-            'assignedUser':    [null],
-            'data':            {disabled: true, value: null},
-            'importType':      [null, Validators.required],
+            'id': [''],
+            'requestNumber': [null],
+            'startDate': [new Date()],
+            'currentStep': ['E'],
+            'company': ['', Validators.required],
+            'initiator': [null],
+            'assignedUser': [null],
+            'data': {disabled: true, value: null},
+            'importType': [null, Validators.required],
             'type':
                 this.fb.group({
                     'id': ['']
@@ -147,52 +145,51 @@ export class MedRegComponent implements OnInit {
             'requestHistories': [],
 
             'importAuthorizationEntity': this.fb.group({
-                'id':                                    [Validators.required],
-                'applicationDate':                       [new Date()],
-                'applicant':                             ['', Validators.required],
-                'seller':                                [null, Validators.required], // Tara si adresa lui e deja in baza
-                'basisForImport':                        [],
-                'importer':                              [null, Validators.required], // Tara si adresa lui e deja in baza
-                'contract':                              [null, Validators.required],
-                'contractDate':                          [null, Validators.required],
-                'anexa':                                 [null, Validators.required],
-                'anexaDate':                             [null, Validators.required],
-                'specification':                         [null, Validators.required],
-                'specificationDate':                     [null, Validators.required],
-                'conditionsAndSpecification':            [''],
-                'quantity':                              [Validators.required],
-                'price':                                 [Validators.required],
-                'currency':                              [Validators.required],
-                'summ':                                  [Validators.required],
-                'producer_id':                           [Validators.required], // to be deleted
-                'stuff_type_id':                         [Validators.required], // to delete
-                'expiration_date':                       [Validators.required],
-                'customsNumber':                         [],
-                'customsDeclarationDate':                [],
-                'authorizationsNumber':                  [], // inca nu exista la pasul acesta
-                'medType':                               [''],
-                'importAuthorizationDetailsEntityList' : [],
+                'id': [Validators.required],
+                'applicationDate': [new Date()],
+                'applicant': ['', Validators.required],
+                'seller': [null, Validators.required], // Tara si adresa lui e deja in baza
+                'basisForImport': [],
+                'importer': [null, Validators.required], // Tara si adresa lui e deja in baza
+                'contract': [null, Validators.required],
+                'contractDate': [null, Validators.required],
+                'anexa': [null, Validators.required],
+                'anexaDate': [null, Validators.required],
+                'specification': [null, Validators.required],
+                'specificationDate': [null, Validators.required],
+                'conditionsAndSpecification': [''],
+                'quantity': [Validators.required],
+                'price': [Validators.required],
+                'currency': [Validators.required],
+                'summ': [Validators.required],
+                'producer_id': [Validators.required], // to be deleted
+                'stuff_type_id': [Validators.required], // to delete
+                'expiration_date': [Validators.required],
+                'customsNumber': [],
+                'customsDeclarationDate': [],
+                'authorizationsNumber': [], // inca nu exista la pasul acesta
+                'medType': [''],
+                'importAuthorizationDetailsEntityList': [],
                 'unitOfImportTable': this.fb.group({
 
-                    customsCode:                 [null, Validators.required],
-                    name:                        [null, Validators.required],
-                    quantity:                    [null, Validators.required],
-                    price:                       [null, Validators.required],
-                    currency:                    [null, Validators.required],
-                    summ:                        [null, Validators.required],
-                    producer:                    [null, Validators.required],
-                    expirationDate:              [null, Validators.required],
-                    atcCode:                     [null, Validators.required],
-                    medicament:                  [null, Validators.required],
-                    pharmaceuticalForm:          [null, Validators.required],
-                    dose:                        [null, Validators.required],
-                    registrationRmNumber:        [null, Validators.required],
-                    unitsOfMeasurement:          [null, Validators.required],
-                    registrationRmDate:          [null, Validators.required],
+                    customsCode: [null, Validators.required],
+                    name: [null, Validators.required],
+                    quantity: [null, Validators.required],
+                    price: [null, Validators.required],
+                    currency: [null, Validators.required],
+                    summ: [null, Validators.required],
+                    producer: [null, Validators.required],
+                    expirationDate: [null, Validators.required],
+                    atcCode: [null, Validators.required],
+                    medicament: [null, Validators.required],
+                    pharmaceuticalForm: [null, Validators.required],
+                    dose: [null, Validators.required],
+                    registrationRmNumber: [null, Validators.required],
+                    unitsOfMeasurement: [null, Validators.required],
+                    registrationRmDate: [null, Validators.required],
                     internationalMedicamentName: [null, Validators.required]
 
                 }),
-
 
 
             }),
@@ -221,10 +218,21 @@ export class MedRegComponent implements OnInit {
                     this.evaluateImportForm.get('importAuthorizationEntity.conditionsAndSpecification').setValue(data.importAuthorizationEntity.conditionsAndSpecification);
                     this.evaluateImportForm.get('importAuthorizationEntity.authorizationsNumber').setValue(data.importAuthorizationEntity.authorizationsNumber);
                     this.evaluateImportForm.get('importAuthorizationEntity.customsNumber').setValue(data.importAuthorizationEntity.customsNumber);
-                    if (data.importAuthorizationEntity.customsDeclarationDate !== null){
+                    if (data.importAuthorizationEntity.customsDeclarationDate !== null) {
                         this.evaluateImportForm.get('importAuthorizationEntity.customsDeclarationDate').setValue(new Date(data.importAuthorizationEntity.customsDeclarationDate));
                     }
-
+                    this.evaluateImportForm.get('importAuthorizationEntity.contract').setValue(data.importAuthorizationEntity.contract);
+                    if (data.importAuthorizationEntity.contractDate !== null) {
+                        this.evaluateImportForm.get('importAuthorizationEntity.contractDate').setValue(new Date(data.importAuthorizationEntity.contractDate));
+                    }
+                    this.evaluateImportForm.get('importAuthorizationEntity.anexa').setValue(data.importAuthorizationEntity.anexa);
+                    if (data.importAuthorizationEntity.anexaDate !== null) {
+                        this.evaluateImportForm.get('importAuthorizationEntity.anexaDate').setValue(new Date(data.importAuthorizationEntity.anexaDate));
+                    }
+                    this.evaluateImportForm.get('importAuthorizationEntity.specification').setValue(data.importAuthorizationEntity.specification);
+                    if (data.importAuthorizationEntity.specificationDate !== null) {
+                        this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').setValue(new Date(data.importAuthorizationEntity.specificationDate));
+                    }
                     this.unitOfImportTable = data.importAuthorizationEntity.importAuthorizationDetailsEntityList;
 
                     //If it's a registered medicament, disable the following fields
@@ -258,11 +266,11 @@ export class MedRegComponent implements OnInit {
             ))
         }))
 
-        this.activeLicenses=false;
+        this.activeLicenses = false;
         this.currentDate = new Date();
         this.sellerAddress = '';
         this.producerAddress = '';
-        this.importerAddress='';
+        this.importerAddress = '';
         this.formSubmitted = false;
         this.addMedicamentClicked = false;
         this.loadEconomicAgents();
@@ -277,7 +285,7 @@ export class MedRegComponent implements OnInit {
         this.loadInternationalMedicamentName();
         this.invalidPrice = false;
         this.authorizationSumm = 0;
-        console.log("importTypeForms.value",this.importTypeForms.value)
+        console.log("importTypeForms.value", this.importTypeForms.value)
         console.log("currencies", this.exchengeCurrencies)
 
 
@@ -286,7 +294,7 @@ export class MedRegComponent implements OnInit {
     onChanges(): void {
         if (this.evaluateImportForm.get('importAuthorizationEntity')) {
 
-            this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').valueChanges.subscribe(val => {
+            this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').valueChanges.subscribe(val => {
                 if (val) {
                     this.medicamentData = val;
                     this.codeAmed = val.code;
@@ -299,7 +307,7 @@ export class MedRegComponent implements OnInit {
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').setValue(val.internationalMedicamentName);
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(val.commercialName);
 
-                    if (val.customsCode!==null) {
+                    if (val.customsCode !== null) {
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode);
                     }
 
@@ -312,7 +320,7 @@ export class MedRegComponent implements OnInit {
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(val.registrationDate));
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(val.expirationDate);
 
-                    this.medicamentService.getMedPrice(val.id).subscribe(priceEntity=>{
+                    this.medicamentService.getMedPrice(val.id).subscribe(priceEntity => {
                         this.medicamentPrice = priceEntity;
                         this.valutaList = [/*this.valutaList.find(i=> i.shortDescription === "MDL"), */ priceEntity.currency];
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(this.valutaList.find(r => r === priceEntity.currency));
@@ -326,23 +334,23 @@ export class MedRegComponent implements OnInit {
                 }
             }));
             /*================================================*/
-            this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.seller').valueChanges.subscribe(val => {
+            this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.seller').valueChanges.subscribe(val => {
                 if (val) {
                     this.sellerAddress = val.address + ", " + val.country.description;
                 }
             }));
-            this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').valueChanges.subscribe(val => {
-                if (this.medicamentData==null && val) {
+            this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').valueChanges.subscribe(val => {
+                if (this.medicamentData == null && val) {
                     this.producerAddress = val.address + ", " + val.country.description;
                     // console.log("producerAddress",this.producerAddress)
                 }
             }));
-            this.subscriptions.push(  this.evaluateImportForm.get('importAuthorizationEntity.importer').valueChanges.subscribe(val => {
+            this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.importer').valueChanges.subscribe(val => {
                 if (val) {
                     this.importerAddress = val.legalAddress /*+ ", " + val.country.description*/;
                 }
             }));
-            this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').valueChanges.subscribe(val => {
+            this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').valueChanges.subscribe(val => {
                 if (val) {
                     this.unitSumm = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
                         * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value;
@@ -351,7 +359,7 @@ export class MedRegComponent implements OnInit {
                 }
             }));
 
-            this.subscriptions.push(  this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').valueChanges.subscribe(val => {
+            this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').valueChanges.subscribe(val => {
                 if (val) {
                     this.userPrice = val;
                     this.unitSumm = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
@@ -361,7 +369,7 @@ export class MedRegComponent implements OnInit {
                 }
 
                 //========================================
-                if (val){
+                if (val) {
 
                     if (this.userPrice > this.medicamentPrice.price) {
                         this.invalidPrice = true;
@@ -396,10 +404,10 @@ export class MedRegComponent implements OnInit {
 
             }));
 
-            this.subscriptions.push( this.evaluateImportForm.get ('importAuthorizationEntity.importer').valueChanges.subscribe(val => {
+            this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.importer').valueChanges.subscribe(val => {
                 if (val) {
-                    console.log("company has changed to: " , val)
-                    this.requestService.getActiveLicenses(val.idno).subscribe(data=>{
+                    console.log("company has changed to: ", val)
+                    this.requestService.getActiveLicenses(val.idno).subscribe(data => {
                         console.log("this.requestService.getActiveLicenses(val.idno).subscribe", data)
                         this.activeLicenses = data;
 
@@ -407,7 +415,7 @@ export class MedRegComponent implements OnInit {
                 }
             }));
 
-            this.subscriptions.push(  this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').valueChanges.subscribe(val => {
+            this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').valueChanges.subscribe(val => {
                 //========================================
 
                 if (this.userPrice > this.medicamentPrice.price) {
@@ -475,72 +483,71 @@ export class MedRegComponent implements OnInit {
         return this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable') as FormArray
     }
 
-    currencyChanged($event){
+    currencyChanged($event) {
         this.exchengeCurrencies = $event;
         // console.log("exchengeCurrencies", this.exchengeCurrencies)
     }
 
     addUnitOfImport() {
-        this.addMedicamentClicked=true;
+        this.addMedicamentClicked = true;
         //     alert(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').valid),
         // console.log("this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable'",(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').valid),
 
 
         if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').valid) {
-        this.unitOfImportTable.push({
+            this.unitOfImportTable.push({
 
-            codeAmed:                      this.codeAmed,
-            approved:                      false,
+                codeAmed: this.codeAmed,
+                approved: false,
 
-            customsCode:                   this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').value,
-            name:                          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').value,
-            quantity:                      this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value,
-            price:                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
-            currency:                      this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').value,
-            summ:                          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
-                                           * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
-            producer:                      this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').value,
-            expirationDate:                this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').value,
+                customsCode: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').value,
+                name: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').value,
+                quantity: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value,
+                price: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
+                currency: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').value,
+                summ: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
+                * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
+                producer: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').value,
+                expirationDate: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').value,
 
-            pharmaceuticalForm:            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').value,
-            dose:                          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').value,
-            unitsOfMeasurement:            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').value,
-            internationalMedicamentName:   this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').value,
-            atcCode:                       this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').value,
-            registrationNumber:            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').value,
-            registrationDate:              this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').value,
+                pharmaceuticalForm: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').value,
+                dose: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').value,
+                unitsOfMeasurement: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').value,
+                internationalMedicamentName: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').value,
+                atcCode: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').value,
+                registrationNumber: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').value,
+                registrationDate: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').value,
 
 
+            });
 
-        });
+            this.authorizationSumm = this.authorizationSumm + this.unitSumm;
+            this.authorizationCurrency = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').value;
+            console.log("this.authorizationSumm", this.authorizationSumm)
+            console.log("this.authorizationCurrency", this.authorizationCurrency)
 
-        this.authorizationSumm = this.authorizationSumm + this.unitSumm;
-        this.authorizationCurrency = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').value;
-        console.log("this.authorizationSumm",this.authorizationSumm)
-        console.log("this.authorizationCurrency",this.authorizationCurrency)
+            console.log("this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable'", (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').value)),
 
-        console.log("this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable'",(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').value)),
+                this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(null);
+            this.producerAddress = null;
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(null);
 
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(null);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(null);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(null);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').setValue(null);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(null);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(null);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(null);
-        this.producerAddress=null;
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(null);
 
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(null);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').setValue(null);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').setValue(null);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').setValue(null);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(null);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(null);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(null);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(null);
-
-        // this.addMedicamentClicked = false;
+            // this.addMedicamentClicked = false;
 
             this.addMedicamentClicked = false;
         }
@@ -560,7 +567,6 @@ export class MedRegComponent implements OnInit {
             }
         });
     }
-
 
 
     showunitOfImport(unitOfImport: any) {
@@ -595,7 +601,7 @@ export class MedRegComponent implements OnInit {
         });
     }
 
-    loadATCCodes(){
+    loadATCCodes() {
         this.customsCodes =
             this.customsCodesInputs.pipe(
                 filter((result: string) => {
@@ -612,13 +618,12 @@ export class MedRegComponent implements OnInit {
                 flatMap(term =>
                     this.administrationService.getAllCustomsCodesByDescription(term).pipe(
                         tap(() => this.loadingcustomsCodes = false)
-
                     )
                 )
             );
     }
 
-    loadInternationalMedicamentName(){
+    loadInternationalMedicamentName() {
         this.internationalMedicamentNames =
             this.internationalMedicamentNameInputs.pipe(
                 filter((result: string) => {
@@ -635,15 +640,14 @@ export class MedRegComponent implements OnInit {
                 flatMap(term =>
 
                     this.administrationService.getAllInternationalNamesByName(term).pipe(
-                    // this.administrationService.getAllInternationalNames().pipe(
+                        // this.administrationService.getAllInternationalNames().pipe(
                         tap(() => this.loadinginternationalMedicamentName = false)
-
                     )
                 )
             );
     }
 
-    loadPharmaceuticalForm(){
+    loadPharmaceuticalForm() {
         this.pharmaceuticalForm =
             this.pharmaceuticalFormInputs.pipe(
                 filter((result: string) => {
@@ -660,13 +664,12 @@ export class MedRegComponent implements OnInit {
                 flatMap(term =>
                     this.administrationService.getAllPharamceuticalFormsByName(term).pipe(
                         tap(() => this.loadingpharmaceuticalForm = false)
-
                     )
                 )
             );
     }
 
-    loadMedicaments(){
+    loadMedicaments() {
         this.medicaments =
             this.medicamentsInputs.pipe(
                 filter((result: string) => {
@@ -683,12 +686,10 @@ export class MedRegComponent implements OnInit {
                 flatMap(term =>
                     this.medicamentService.getMedicamentByName(term).pipe(
                         tap(() => this.loadingmedicaments = false)
-
                     )
                 )
             );
     }
-
 
 
     loadUnitsOfMeasurement() {
@@ -701,7 +702,7 @@ export class MedRegComponent implements OnInit {
         )
     }
 
-    loadCustomsCodes(){
+    loadCustomsCodes() {
         this.atcCodes =
             this.atcCodesInputs.pipe(
                 filter((result: string) => {
@@ -747,7 +748,7 @@ export class MedRegComponent implements OnInit {
     }
 
 
-    loadManufacturersRfPr(){
+    loadManufacturersRfPr() {
         this.manufacturersRfPr =
             this.manufacturerInputsRfPr.pipe(
                 filter((result: string) => {
@@ -759,7 +760,7 @@ export class MedRegComponent implements OnInit {
                     this.loadingManufacturerRfPr = true;
 
                 }),
-                flatMap (term =>
+                flatMap(term =>
                     this.administrationService.getManufacturersByName(term).pipe(
                         tap(() => this.loadingManufacturerRfPr = false)
                     )
@@ -818,7 +819,6 @@ export class MedRegComponent implements OnInit {
     }
 
 
-
     nextStep() {
 
         this.formSubmitted = true;
@@ -853,10 +853,10 @@ export class MedRegComponent implements OnInit {
         alert("before addImportRequest(modelToSubmit)")
         // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {
 
-        console.log("this.evaluateImportForm.valid",this.evaluateImportForm.valid)
-        console.log("this.docs",this.docs)
+        console.log("this.evaluateImportForm.valid", this.evaluateImportForm.valid)
+        console.log("this.docs", this.docs)
         if (this.activeLicenses !== null /*&& this.evaluateImportForm.valid*/ && this.docs !== null) {
-        // if (this.activeLicenses !== null ) {
+            // if (this.activeLicenses !== null ) {
             this.loadingService.show();
 
             this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
@@ -881,7 +881,6 @@ export class MedRegComponent implements OnInit {
             subscription.unsubscribe();
         })
     }
-
 
 
 }
