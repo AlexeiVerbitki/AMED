@@ -334,26 +334,7 @@
                             <!--======================================================================-->
 
 
-                            <div class="col-md-4">
-                                <div class="md-form-modified">
-                                    <ng-select [items]="manufacturersRfPr | async"
-                                               bindLabel="description"
-                                               placeholder="Producatorul"
-                                               formControlName="producer"
-                                               [loading]="loadingManufacturerRfPr"
-                                               [typeahead]="manufacturerInputsRfPr"
-                                               [attr.disabled]="true"
-                                               required="true">
-                                        <ng-template ng-option-tmp let-item="item">
-                                            Denumire: {{item.description}};
-                                            <small class="form-text text-muted">{{item.address}}, {{item.country.description}}</small>
-                                        </ng-template>
-                                    </ng-select>
-                                    <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').invalid">-->
-                                        <!--<small class="text-muted"><strong class="text-danger">Producatorul trebuie selectat</strong></small>-->
-                                    <!--</div>-->
-                                </div>
-                            </div>
+
 
 
                             <div class="col-md-4" *ngIf="importData.medType!==4">
@@ -373,6 +354,27 @@
                                     </ng-select>
                                     <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').invalid">-->
                                         <!--<small class="text-muted"><strong class="text-danger">Codul trebuie selectat</strong></small>-->
+                                    <!--</div>-->
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="md-form-modified">
+                                    <ng-select [items]="manufacturersRfPr | async"
+                                               bindLabel="description"
+                                               placeholder="Producatorul"
+                                               formControlName="producer"
+                                               [loading]="loadingManufacturerRfPr"
+                                               [typeahead]="manufacturerInputsRfPr"
+                                               [attr.disabled]="true"
+                                               required="true">
+                                        <ng-template ng-option-tmp let-item="item">
+                                            Denumire: {{item.description}};
+                                            <small class="form-text text-muted">{{item.address}}, {{item.country.description}}</small>
+                                        </ng-template>
+                                    </ng-select>
+                                    <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').invalid">-->
+                                    <!--<small class="text-muted"><strong class="text-danger">Producatorul trebuie selectat</strong></small>-->
                                     <!--</div>-->
                                 </div>
                             </div>
