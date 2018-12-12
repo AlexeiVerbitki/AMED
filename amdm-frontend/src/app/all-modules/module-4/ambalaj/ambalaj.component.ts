@@ -58,7 +58,7 @@ export class AmbalajComponent implements OnInit {
 
     solicitantCompanyList: Observable<any[]>;
     unitSumm: any;
-    private unitOfImportPressed : boolean;
+    unitOfImportPressed : boolean;
 
     formModel: any;
     valutaList: Observable<any[]>;
@@ -122,13 +122,13 @@ export class AmbalajComponent implements OnInit {
                 'specification':                         [null, Validators.required],
                 'specificationDate':                     [null, Validators.required],
                 'conditionsAndSpecification': [''],
-                'quantity': [],
-                'price': [],
-                'currency': [],
+                'quantity':                               [null, Validators.required],
+                'price':                                  [null, Validators.required],
+                'currency':                               [null, Validators.required],
                 'summ': [],
-                'producer_id': [], // to be deleted
-                'stuff_type_id': [], // to delete
-                'expiration_date': [],
+                'producer_id':                            [null, Validators.required],
+                'stuff_type_id':                          [null, Validators.required],
+                'expiration_date':                        [null, Validators.required],
 
                 // 'customsNumber':[],
                 // 'customsDeclarationDate':[],
@@ -137,15 +137,15 @@ export class AmbalajComponent implements OnInit {
                 'importAuthorizationDetailsEntityList' :[],
                 'unitOfImportTable': this.fb.group({
 
-                    customsCode: [],
-                    name: [],
-                    quantity: [],
-                    price: [],
-                    currency: [],
-                    summ: [],
-                    producer: [],
-                    expirationDate: [],
-                    atcCode: [],
+                    customsCode:    [null, Validators.required],
+                    name:           [null, Validators.required],
+                    quantity:       [null, Validators.required],
+                    price:          [null, Validators.required],
+                    currency:       [null, Validators.required],
+                    summ:           [null, Validators.required],
+                    producer:       [null, Validators.required],
+                    expirationDate: [null, Validators.required],
+                    atcCode:        [null, Validators.required],
 
                 }),
 
@@ -171,10 +171,29 @@ export class AmbalajComponent implements OnInit {
                     this.evaluateImportForm.get('initiator').setValue(data.initiator);
                     this.evaluateImportForm.get('assignedUser').setValue(data.assignedUser);
                     this.evaluateImportForm.get('company').setValue(data.company);
-                                       this.evaluateImportForm.get('importAuthorizationEntity.medType').setValue(data.importAuthorizationEntity.medType);
+                    this.evaluateImportForm.get('importAuthorizationEntity.medType').setValue(data.importAuthorizationEntity.medType);
                     this.evaluateImportForm.get('importAuthorizationEntity.applicant').setValue(data.company);
                     this.evaluateImportForm.get('type.id').setValue(data.type.id);
                     this.evaluateImportForm.get('requestHistories').setValue(data.requestHistories);
+
+                    this.evaluateImportForm.get('importAuthorizationEntity.seller').setValue(data.importAuthorizationEntity.seller);
+                    this.evaluateImportForm.get('importAuthorizationEntity.importer').setValue(data.importAuthorizationEntity.importer);
+                    this.evaluateImportForm.get('importAuthorizationEntity.basisForImport').setValue(data.importAuthorizationEntity.basisForImport);
+                    this.evaluateImportForm.get('importAuthorizationEntity.conditionsAndSpecification').setValue(data.importAuthorizationEntity.conditionsAndSpecification);
+                    this.evaluateImportForm.get('importAuthorizationEntity.authorizationsNumber').setValue(data.importAuthorizationEntity.authorizationsNumber);
+                    this.evaluateImportForm.get('importAuthorizationEntity.contract').setValue(data.importAuthorizationEntity.contract);
+                    if (data.importAuthorizationEntity.contractDate !== null) {
+                        this.evaluateImportForm.get('importAuthorizationEntity.contractDate').setValue(new Date(data.importAuthorizationEntity.contractDate));
+                    }
+                    this.evaluateImportForm.get('importAuthorizationEntity.anexa').setValue(data.importAuthorizationEntity.anexa);
+                    if (data.importAuthorizationEntity.anexaDate !== null) {
+                        this.evaluateImportForm.get('importAuthorizationEntity.anexaDate').setValue(new Date(data.importAuthorizationEntity.anexaDate));
+                    }
+                    this.evaluateImportForm.get('importAuthorizationEntity.specification').setValue(data.importAuthorizationEntity.specification);
+                    if (data.importAuthorizationEntity.specificationDate !== null) {
+                        this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').setValue(new Date(data.importAuthorizationEntity.specificationDate));
+                    }
+                    this.unitOfImportTable = data.importAuthorizationEntity.importAuthorizationDetailsEntityList;
 
                 },
                 error => console.log(error)
@@ -238,39 +257,40 @@ export class AmbalajComponent implements OnInit {
 
     addUnitOfImport() {
         this.unitOfImportPressed = true;
+        if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').valid) {
+            this.unitOfImportPressed = false;
 
-        this.unitOfImportPressed = false;
+            this.unitOfImportTable.push({
 
-        this.unitOfImportTable.push({
+                customsCode: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').value,
+                name: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').value,
+                quantity: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value,
+                price: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
+                currency: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').value,
+                summ: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
+                * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
+                producer: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').value,
+                atcCode: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').value,
+                expirationDate: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').value
+            });
 
-             customsCode:       this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').value,
-             name:              this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').value,
-             quantity:          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value,
-             price:             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
-             currency:          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').value,
-             summ:              this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
-                              * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
-             producer:          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').value,
-             atcCode:           this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').value,
-             expirationDate:    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').value
-        });
+            this.authorizationSumm = this.authorizationSumm + this.unitSumm;
+            this.authorizationCurrency = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').value;
 
-        this.authorizationSumm = this.authorizationSumm + this.unitSumm;
-        this.authorizationCurrency = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').value;
-
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(null);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(null);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(null);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').setValue(null);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(null);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(null);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(null);
-        this.producerAddress=null;
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(null);
-        if (this.importData.importAuthorizationEntity.medType===3) {
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(null);
+            this.producerAddress = null;
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(null);
+            if (this.importData.importAuthorizationEntity.medType === 3) {
+                this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(null);
+            }
+            console.log("this.unitOfImportTable", this.unitOfImportTable)
         }
-        console.log("this.unitOfImportTable", this.unitOfImportTable)
     }
 
     removeunitOfImport(index: number) {

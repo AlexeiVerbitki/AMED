@@ -37,7 +37,7 @@
 
             </div>
 
-            <app-document [documents]="docs" [nrCerere]="evaluateImportForm.get('requestNumber').value"></app-document>
+            <app-document [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'ATIE', step : 'E'}"></app-document>
             <div *ngIf="formSubmitted && docs && docs.length==0">
                 <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
             </div>
@@ -127,7 +127,7 @@
                                 <mat-datepicker touchUi #picker26></mat-datepicker>
                             </mat-form-field>
                         </div>
-                        <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').invalid">-->
+                        <!--<div *ngIf="unitOfImportPressed && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').invalid">-->
                         <!--<small class="text-muted"><strong class="text-danger">Termenul de valabilitate trebuie selectat</strong></small>-->
                         <!--</div>-->
                     </div>
@@ -151,7 +151,7 @@
                                 <mat-datepicker touchUi #picker25></mat-datepicker>
                             </mat-form-field>
                         </div>
-                        <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').invalid">-->
+                        <!--<div *ngIf="unitOfImportPressed && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').invalid">-->
                         <!--<small class="text-muted"><strong class="text-danger">Termenul de valabilitate trebuie selectat</strong></small>-->
                         <!--</div>-->
                     </div>
@@ -175,7 +175,7 @@
                                 <mat-datepicker touchUi #picker27></mat-datepicker>
                             </mat-form-field>
                         </div>
-                        <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').invalid">-->
+                        <!--<div *ngIf="unitOfImportPressed && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').invalid">-->
                         <!--<small class="text-muted"><strong class="text-danger">Termenul de valabilitate trebuie selectat</strong></small>-->
                         <!--</div>-->
                     </div>
@@ -261,6 +261,9 @@
 
                                         </ng-template>
                                     </ng-select>
+                                    <div *ngIf="unitOfImportPressed && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').invalid">
+                                        <small class="text-muted"><strong class="text-danger">Codul Vamal</strong></small>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-4">
@@ -269,6 +272,9 @@
                                            formControlName="name">
                                     <label for="name">Denumirea materiei prime (DCI)</label>
                                 </div>
+                                <div *ngIf="unitOfImportPressed && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').invalid">
+                                    <small class="text-muted"><strong class="text-danger">Denumirea materiei prime trebuie selectată</strong></small>
+                                </div>
                             </div>
                             <div class="col-4">
                                 <div class="md-form">
@@ -276,12 +282,18 @@
                                            formControlName="quantity">
                                     <label for="quantity">Cantitatea</label>
                                 </div>
+                                <div *ngIf="unitOfImportPressed && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').invalid">
+                                    <small class="text-muted"><strong class="text-danger">Cantitatea trebuie selectată</strong></small>
+                                </div>
                             </div>
                             <div class="col-4">
                                 <div class="md-form">
                                     <input id="price" mdbInputDirective type="number" class="form-control"
                                            formControlName="price">
                                     <label for="price">Pretul</label>
+                                </div>
+                                <div *ngIf="unitOfImportPressed && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').invalid">
+                                    <small class="text-muted"><strong class="text-danger">Prețul trebuie selectat</strong></small>
                                 </div>
                             </div>
                             <div class="col-4">
@@ -293,9 +305,8 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
-                                <div *ngIf="[formSubmitted]==true && !evaluateImportForm.get('currency').valid "> /*!evaluateImportForm.get('currency')=== null &&*/
-                                    <small class="text-muted"><strong class="text-danger">Valuta trebuie introdusă</strong>
-                                    </small>
+                                <div *ngIf="unitOfImportPressed && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').invalid">
+                                    <small class="text-muted"><strong class="text-danger">Valuta trebuie selectată</strong></small>
                                 </div>
                             </div>
                             <div class="col-4">
@@ -319,10 +330,11 @@
                                         <ng-template ng-option-tmp let-item="item">
                                             Denumire: {{item.description}};
                                             <small class="form-text text-muted">{{item.address}}, {{item.country.description}}</small>
-
-
                                         </ng-template>
                                     </ng-select>
+                                    <div *ngIf="unitOfImportPressed && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').invalid">
+                                        <small class="text-muted"><strong class="text-danger">Producătorul trebuie selectat</strong></small>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -350,9 +362,9 @@
                                         </ng-template>
                                     </ng-select>
 
-                                    <!--<div *ngIf="formSubmitted && eForm.get('medicament.atcCode').invalid">-->
-                                        <!--<small class="text-muted"><strong class="text-danger">Codul ATC trebuie introdus</strong></small>-->
-                                    <!--</div>-->
+                                    <div *ngIf="unitOfImportPressed && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').invalid">
+                                        <small class="text-muted"><strong class="text-danger">Codul ATC trebuie selectat</strong></small>
+                                    </div>
                                 </div>
                             </div>
 
@@ -364,6 +376,9 @@
                                         <mat-datepicker-toggle matSuffix [for]="picker23"></mat-datepicker-toggle>
                                         <mat-datepicker touchUi #picker23></mat-datepicker>
                                     </mat-form-field>
+                                </div>
+                                <div *ngIf="unitOfImportPressed && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').invalid">
+                                    <small class="text-muted"><strong class="text-danger">Termenul de valabilitate trebuie selectat</strong></small>
                                 </div>
                             </div>
 

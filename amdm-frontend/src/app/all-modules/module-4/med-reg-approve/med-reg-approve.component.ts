@@ -214,7 +214,7 @@ export class MedRegApproveComponent implements OnInit {
 
                     this.importDetailsList.forEach(item => {
                         item.approved == null ? item.approved = false : (item.approved = item.approved);
-                        this.expirationDate.push(item.expirationDate);
+                        // this.expirationDate.push(item.expirationDate);
                         if (item.approved == true) {
                             this.authorizationSumm = this.authorizationSumm + item.summ
                         }
@@ -742,6 +742,13 @@ export class MedRegApproveComponent implements OnInit {
 
 
         modelToSubmit.medicaments = [];
+
+        this.importDetailsList.forEach(item => {
+            if (item.approved === true) {
+                this.expirationDate.push(item.expirationDate);
+            }
+        })
+
         modelToSubmit.importAuthorizationEntity.expirationDate = new Date(this.expirationDate.reduce(function (a, b) {
             return a < b ? a : b;
         }));
