@@ -237,28 +237,29 @@ export class MedRegComponent implements OnInit {
 
                     //If it's a registered medicament, disable the following fields
 
-                    // if (data.importAuthorizationEntity.medType===1) {
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').disable();
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').disable();
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').disable();
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').disable();
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').disable();
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').disable();
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').disable();
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').disable();
-                    //     // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producerAddress').disable();
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').disable();
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').disable();
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').disable();
-                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').disable();
-                    //
-                    // }
+                    if (data.importAuthorizationEntity.medType===1) {
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').disable();
+                        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producerAddress').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').disable();
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').disable();
+
+                    }
 
                     if (data.importAuthorizationEntity.medType === 2) {
                         if (data.importAuthorizationEntity.medType) {
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setErrors(null);
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setErrors(null);
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setErrors(null);
+                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setErrors(null);
                         }
                     }
                 },
@@ -372,7 +373,7 @@ export class MedRegComponent implements OnInit {
                 }
 
                 //========================================
-                if (val) {
+                if (val && this.importData.importAuthorizationEntity.medType === 1) {
 
                     if (this.userPrice > this.medicamentPrice.price) {
                         this.invalidPrice = true;
@@ -383,26 +384,7 @@ export class MedRegComponent implements OnInit {
                         console.log("invalidPrice", this.invalidPrice)
                     }
 
-                    // if (this.medicamentCurrencyExchangeRate ===1 ) {
-                    //     this.medicamnetMaxPriceValuta = this.medicamentPrice.priceMdl;
-                    // } else{
-                    //     this.medicamnetMaxPriceValuta = this.medicamentPrice.price * this.medicamentCurrencyExchangeRate;
-                    // }
-                    // this.medicamnetMaxPriceMDL = this.medicamentPrice.priceMdl;
-                    //
-                    // console.log(" this.medicamnetMaxPriceValuta", this.medicamnetMaxPriceValuta)
-                    // console.log(" this.medicamnetMaxPriceMDL", this.medicamnetMaxPriceMDL)
-                    //
-                    //
-                    //     if  (this.userPrice > this.medicamnetMaxPriceMDL || this.userPrice * this.medicamentCurrencyExchangeRate > this.medicamnetMaxPriceValuta){
-                    //         this.invalidPrice=true;
-                    //
-                    //        console.log("invalidPrice",this.invalidPrice)
-                    // } else {
-                    //     this.invalidPrice = false;
-                    //     console.log("invalidPrice", this.invalidPrice)
-                    // }
-                }
+                } else if (val) {this.invalidPrice = false}
                 //========================================
 
             }));
@@ -421,14 +403,16 @@ export class MedRegComponent implements OnInit {
             this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').valueChanges.subscribe(val => {
                 //========================================
 
-                if (this.userPrice > this.medicamentPrice.price) {
-                    this.invalidPrice = true;
+                if (val && this.importData.importAuthorizationEntity.medType === 1) {
+                    if (this.userPrice > this.medicamentPrice.price) {
+                        this.invalidPrice = true;
 
-                    console.log("invalidPrice", this.invalidPrice)
-                } else {
-                    this.invalidPrice = false;
-                    console.log("invalidPrice", this.invalidPrice)
-                }
+                        console.log("invalidPrice", this.invalidPrice)
+                    } else {
+                        this.invalidPrice = false;
+                        console.log("invalidPrice", this.invalidPrice)
+                    }
+                } else if (val) {this.invalidPrice = false}
 
                 // if (val) {
                 //     console.log("importAuthorizationEntity.unitOfImportTable.currency",val)

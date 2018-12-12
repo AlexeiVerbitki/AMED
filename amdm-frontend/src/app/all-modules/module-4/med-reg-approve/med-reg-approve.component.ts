@@ -40,6 +40,7 @@ export class MedRegApproveComponent implements OnInit {
     evaluateImportForm: FormGroup;
     // importTypeForm: FormGroup;
     currentDate: Date;
+    futureDate: Date;
     file: any;
     generatedDocNrSeq: number;
     filteredOptions: Observable<any[]>;
@@ -281,6 +282,7 @@ export class MedRegApproveComponent implements OnInit {
 
         this.checked = false;
         this.currentDate = new Date();
+        this.futureDate = new Date();
         this.sellerAddress = '';
         this.producerAddress = '';
         this.importerAddress = '';
@@ -720,6 +722,7 @@ export class MedRegApproveComponent implements OnInit {
         modelToSubmit = this.importData;
         modelToSubmit.endDate = new Date();
         modelToSubmit.importAuthorizationEntity.authorized = aprrovedOrNot;
+        modelToSubmit.currentStep = "AP";
 
         // modelToSubmit.documents = this.docs;
 
@@ -742,6 +745,10 @@ export class MedRegApproveComponent implements OnInit {
         modelToSubmit.importAuthorizationEntity.expirationDate = new Date(this.expirationDate.reduce(function (a, b) {
             return a < b ? a : b;
         }));
+        if (this.importData.importAuthorizationEntity.medType === 2 && modelToSubmit.importAuthorizationEntity.expirationDate > (new Date( this.currentDate.getDate() + 365)) ) {
+            modelToSubmit.importAuthorizationEntity.expirationDate = new Date(this.currentDate.setFullYear(this.currentDate.getFullYear() + 1));
+        }
+
         console.log("modelToSubmit", modelToSubmit);
         alert("before addImportRequest(modelToSubmit)")
         // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {
