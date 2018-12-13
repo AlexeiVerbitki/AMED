@@ -3,7 +3,7 @@ import {FormArray, Validators} from '@angular/forms';
 import {FormGroup, FormBuilder} from '@angular/forms';
 import {Component, OnInit} from '@angular/core';
 import {Observable, Subscription} from "rxjs";
-import {MatDialog} from "@angular/material";
+import {MatDialog, MatDialogConfig} from "@angular/material";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AdministrationService} from "../../../shared/service/administration.service";
 // import {debounceTime, distinctUntilChanged, filter, map, startWith, tap} from "rxjs/operators";
@@ -15,6 +15,7 @@ import {RequestService} from "../../../shared/service/request.service";
 import {Subject} from "rxjs/index";
 import {LoaderService} from "../../../shared/service/loader.service";
 import {AuthService} from "../../../shared/service/authetication.service";
+import {ImportMedDialog} from "../dialog/import-med-dialog";
 
 export interface PeriodicElement {
     name: string;
@@ -331,6 +332,39 @@ export class AmbalajComponent implements OnInit {
                 )
             );
     }
+
+    showunitOfImport(unitOfImport: any) {
+        let dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.height = '900px';
+        dialogConfig2.width = '850px';
+
+        dialogConfig2.data = unitOfImport;
+        dialogConfig2.data.medtType = this.importData.importAuthorizationEntity.medType;
+
+        let dialogRef = this.dialog.open(ImportMedDialog, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('result', result);
+            if (result == null || result == undefined || result.success === false) {
+                return;
+            }
+
+            // let medInst = this.addMediacalInstitutionForm.get('medicalInstitution').value;
+            // medInst.investigators = result.investigators;
+            // console.log('result.investigators', result.investigators);
+            // this.mediacalInstitutionsList.push(medInst);
+            // let intdexToDelete = this.allMediacalInstitutionsList.indexOf(this.addMediacalInstitutionForm.get('medicalInstitution').value);
+            // this.allMediacalInstitutionsList.splice(intdexToDelete, 1);
+            // this.allMediacalInstitutionsList = this.allMediacalInstitutionsList.splice(0);
+            // this.addMediacalInstitutionForm.get('medicalInstitution').setValue('');
+        });
+    }
+
 
     loadCustomsCodes(){
         this.atcCodes =
