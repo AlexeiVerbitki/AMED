@@ -298,8 +298,9 @@ export class MedRegApproveComponent implements OnInit {
         this.loadUnitsOfMeasurement();
         this.loadMedicaments();
         this.loadInternationalMedicamentName();
+
         console.log("importTypeForms.value", this.importTypeForms.value)
-        console.log("this.expirationDate", this.expirationDate)
+        // console.log("this.expirationDate", this.expirationDate)
         // console.log("lowest expiration.date:", this.expirationDate.reduce(function (a, b) { return a < b ? a : b; }) )
     }
 
