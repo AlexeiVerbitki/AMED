@@ -453,7 +453,7 @@ export class AmbalajComponent implements OnInit {
 
         this.formSubmitted = true;
         let modelToSubmit: any ={};
-        this.loadingService.show();
+
 
         modelToSubmit = this.evaluateImportForm.value;
         if (this.importData.importAuthorizationEntity.id){
@@ -480,20 +480,24 @@ export class AmbalajComponent implements OnInit {
 
         console.log("modelToSubmit", modelToSubmit);
         alert("before addImportRequest(modelToSubmit)")
-        // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {
-        this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
-            alert("after addImportRequest(modelToSubmit)")
-            console.log("addImportRequest(modelToSubmit).subscribe(data) ",data)
-                this.loadingService.hide();
-                // this.router.navigate(['dashboard/module']);
-            this.router.navigate(['dashboard/module/import-authorization/registered-medicament-approve/' + data.body.id]);
-            }, error => {
-            alert("Something went wrong while sending the model")
-            console.log("error: ",error)
-            this.loadingService.hide()}
-        ));
+        if (/*&& this.evaluateImportForm.valid && */ this.docs !== null) {
+            this.loadingService.show();
+            this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
+                    alert("after addImportRequest(modelToSubmit)")
+                    console.log("addImportRequest(modelToSubmit).subscribe(data) ", data)
+                    // if (/*&& this.evaluateImportForm.valid && */ this.docs !== null) {
+                    this.loadingService.hide();
+                    // this.router.navigate(['dashboard/module']);
+                    this.router.navigate(['dashboard/module/import-authorization/registered-medicament-approve/' + data.body.id]);
+                }, error => {
+                    alert("Something went wrong while sending the model")
+                    console.log("error: ", error)
+                    this.loadingService.hide()
+                }
+            ));
 
-        this.formSubmitted = false;
+            this.formSubmitted = false;
+        }
     }
 
 
