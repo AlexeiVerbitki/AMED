@@ -58,7 +58,7 @@
 					<i class="fa fa-lg fa-mt" aria-hidden="true" (click)="changeVisibility();" [ngClass]="visibility ? 'fa-touched fa-search-plus' : 'fa-untouched fa-search-minus'"></i>
 					<i (click)="checkFields() ? incarcaFisier.click() : ''" class="fa fa-upload fa-lg fa-mt" aria-hidden="true"></i>
 					<input id="incarcaFisier" #incarcaFisier type="file" style="display:none;" (click)="reset()" (change)="addDocument($event);" attr.disabled="this.disabled"
-					       accept=".pdf,image/*">
+					       accept=".pdf,image/*,xls,xlsx">
 				</div>
 			</div>
 		</div>
