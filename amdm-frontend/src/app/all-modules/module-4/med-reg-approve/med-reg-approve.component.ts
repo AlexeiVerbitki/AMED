@@ -689,7 +689,7 @@ export class MedRegApproveComponent implements OnInit {
                     startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
                     endDate: new Date(),
                     username: this.authService.getUserName(),
-                    step: 'E'
+                    step: 'I'
                 });
                 modelToSubmit.documents = this.docs;
                 this.subscriptions.push(
