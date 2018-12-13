@@ -572,7 +572,7 @@ export class MedRegComponent implements OnInit {
         dialogConfig2.autoFocus = true;
         dialogConfig2.hasBackdrop = true;
 
-        dialogConfig2.height = '900px';
+        // dialogConfig2.height = '900px';
         dialogConfig2.width = '850px';
 
         dialogConfig2.data = unitOfImport;
