@@ -300,8 +300,13 @@ export class ImportMedDialog implements OnInit {
 
         console.log("this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList["+i+"]",this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved)
     }
+
     cancel(): void {
         this.dialog.close();
+    }
+    confirm(): void {
+
+        this.dialog.close(true);
     }
 /*
     onChanges(): void {
