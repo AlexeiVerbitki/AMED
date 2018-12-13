@@ -103,7 +103,7 @@ export class ImportMedDialog implements OnInit {
     constructor(private fb: FormBuilder,
                 @Inject(MAT_DIALOG_DATA) public dialogData: any,
                 private requestService: RequestService,
-                public dialog: MatDialog,
+                public dialog: MatDialogRef<ImportMedDialog>,
                 private router: Router,
                 private activatedRoute: ActivatedRoute,
                 private loadingService: LoaderService,
@@ -299,7 +299,9 @@ export class ImportMedDialog implements OnInit {
 
         console.log("this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList["+i+"]",this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved)
     }
-
+    cancel(): void {
+        this.dialog.close();
+    }
 /*
     onChanges(): void {
         if (this.evaluateImportForm.get('importAuthorizationEntity')) {
@@ -435,18 +437,18 @@ export class ImportMedDialog implements OnInit {
     }
 
 
-    removeunitOfImport(index: number) {
-
-        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-            data: {message: 'Sunteti sigur ca doriti sa stergeti ?', confirm: false}
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.unitOfImportTable.splice(index, 1);
-            }
-        });
-    }
+    // removeunitOfImport(index: number) {
+    //
+    //     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+    //         data: {message: 'Sunteti sigur ca doriti sa stergeti ?', confirm: false}
+    //     });
+    //
+    //     dialogRef.afterClosed().subscribe(result => {
+    //         if (result) {
+    //             this.unitOfImportTable.splice(index, 1);
+    //         }
+    //     });
+    // }
 
 
     loadATCCodes(){
