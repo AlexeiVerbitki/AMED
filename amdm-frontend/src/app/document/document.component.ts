@@ -210,7 +210,7 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         var allowedExtensions =
-            ["jpg", "jpeg", "png", "jfif", "bmp", "svg", "pdf"];
+            ["jpg", "jpeg", "png", "jfif", "bmp", "svg", "pdf","xls", "xlsx"];
         var fileExtension = event.srcElement.files[0].name.split('.').pop();
 
         if (allowedExtensions.indexOf(fileExtension.toLowerCase()) <= -1) {
