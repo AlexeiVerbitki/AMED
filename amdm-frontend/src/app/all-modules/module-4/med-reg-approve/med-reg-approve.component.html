@@ -536,6 +536,7 @@
                             <th scope="col">Termen de valabilitate</th>
                             <th scope="col">Codul Vamal</th>
                             <th scope="col">Aprobat</th>
+                            <th scope="col">Action</th>
 
                         </tr>
                         </thead>
@@ -553,7 +554,7 @@
                             <!--<td>{{ unitOfImport.producer.address }}, {{ unitOfImport.producer.country.description }}</td>-->
                             <td>{{ unitOfImport.expirationDate | date:'mediumDate' }}</td>
                             <td>{{ unitOfImport.customsCode.description }}</td>
-                            <td> <input class="checkbox-rounded" type="checkbox" [checked]="importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved" (change)="setApproved(i)">   </td>
+                            <td> <mat-checkbox [checked]="importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved" (change)="setApproved(i)">  </mat-checkbox> </td>
                             <td>
                                 <button class="btn btn-primary waves-light btn-sm waves-light" (click)="showunitOfImport(unitOfImport)" mdbWavesEffect>Vizualizare</button>
                             </td>
