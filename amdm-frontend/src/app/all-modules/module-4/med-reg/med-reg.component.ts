@@ -200,6 +200,7 @@ export class MedRegComponent implements OnInit {
             this.subscriptions.push(this.requestService.getImportRequest(params['id']).subscribe(data => {
                     console.log('this.requestService.getImportRequest(params[\'id\'])', data);
                     this.importData = data;
+                    this.docs = data.documents;
 
                     this.evaluateImportForm.get('id').setValue(data.id);
                     this.evaluateImportForm.get('requestNumber').setValue(data.requestNumber);
@@ -286,6 +287,7 @@ export class MedRegComponent implements OnInit {
         this.loadInternationalMedicamentName();
         this.invalidPrice = false;
         this.authorizationSumm = 0;
+
         console.log("importTypeForms.value", this.importTypeForms.value)
         console.log("currencies", this.exchengeCurrencies)
 

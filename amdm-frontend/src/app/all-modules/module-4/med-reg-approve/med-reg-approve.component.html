@@ -34,7 +34,7 @@
 
             </div>
 
-            <app-document [documents]="importData.documents" [nrCerere]="evaluateImportForm.get('requestNumber').value"></app-document>
+            <app-document [documents]="docs" [nrCerere]="evaluateImportForm.get('requestNumber').value"></app-document>
             <div *ngIf="formSubmitted && docs && docs.length==0">
                 <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
             </div>

@@ -164,6 +164,7 @@ export class AmbalajComponent implements OnInit {
             this.subscriptions.push(this.requestService.getImportRequest(params['id']).subscribe(data => {
                     console.log('Import data', data);
                     this.importData = data;
+                    this.docs = data.documents;
 
                     this.evaluateImportForm.get('id').setValue(data.id);
                     this.evaluateImportForm.get('requestNumber').setValue(data.requestNumber);
