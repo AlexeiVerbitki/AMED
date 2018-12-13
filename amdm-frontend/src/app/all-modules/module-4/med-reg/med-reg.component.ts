@@ -301,7 +301,8 @@ export class MedRegComponent implements OnInit {
                     this.codeAmed = val.code;
                     console.log("importAuthorizationEntity.unitOfImportTable.medicament", this.medicamentData)
 
-                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode);
+
+                    // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode);
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(val.pharmaceuticalForm);
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').setValue(val.dose);
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').setValue(val.division);
@@ -316,9 +317,15 @@ export class MedRegComponent implements OnInit {
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(val.manufactures[0].manufacture);
                         this.producerAddress = val.manufactures[0].manufacture.address;
                     }
-                    (this.administrationService.getAllAtcCodesByCode( val.atcCode).subscribe(atcCode =>{
+                    (this.subscriptions.push(this.administrationService.getAllAtcCodesByCode( val.atcCode).subscribe(atcCode =>{
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(atcCode[0]);
-                    }));
+                    })));
+
+                    (this.subscriptions.push(this.administrationService.getAllCustomsCodesByDescription( val.customsCode).subscribe(customsCode =>{
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(customsCode[0]);
+                    console.log("customsCode[0]",customsCode[0])
+                    })));
+
                     console.log("this.administrationService.getAllAtcCodesByCode( val.atcCode)",this.administrationService.getAllAtcCodesByCode( val.atcCode))
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(val.registrationNumber);
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(val.registrationDate));
