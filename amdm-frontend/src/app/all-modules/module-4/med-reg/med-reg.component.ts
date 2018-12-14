@@ -326,10 +326,10 @@ export class MedRegComponent implements OnInit {
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(atcCode[0]);
                     })));
 
-                    (this.subscriptions.push(this.administrationService.getAllCustomsCodesByDescription( val.customsCode).subscribe(customsCode =>{
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(customsCode[0]);
-                    console.log("customsCode[0]",customsCode[0])
-                    })));
+                    // (this.subscriptions.push(this.administrationService.getAllCustomsCodesByDescription( val.customsCode).subscribe(customsCode =>{
+                    //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(customsCode[0]);
+                    // console.log("customsCode[0]",customsCode[0])
+                    // })));
 
                     console.log("this.administrationService.getAllAtcCodesByCode( val.atcCode)",this.administrationService.getAllAtcCodesByCode( val.atcCode))
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(val.registrationNumber);

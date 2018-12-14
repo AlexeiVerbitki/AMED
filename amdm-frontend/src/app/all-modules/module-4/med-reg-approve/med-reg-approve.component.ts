@@ -147,12 +147,12 @@ export class MedRegApproveComponent implements OnInit {
                 'seller': [null, Validators.required], // Tara si adresa lui e deja in baza
                 'basisForImport': [],
                 'importer': [null, Validators.required], // Tara si adresa lui e deja in baza
-                'contract':                              [null, Validators.required],
-                'contractDate':                          [null, Validators.required],
-                'anexa':                                 [null, Validators.required],
-                'anexaDate':                             [null, Validators.required],
-                'specification':                         [null, Validators.required],
-                'specificationDate':                     [null, Validators.required],
+                'contract': [null, Validators.required],
+                'contractDate': [null, Validators.required],
+                'anexa': [null, Validators.required],
+                'anexaDate': [null, Validators.required],
+                'specification': [null, Validators.required],
+                'specificationDate': [null, Validators.required],
                 'conditionsAndSpecification': [''],
                 'quantity': [Validators.required],
                 'price': [Validators.required],
@@ -248,20 +248,20 @@ export class MedRegApproveComponent implements OnInit {
                     this.evaluateImportForm.get('importAuthorizationEntity.authorizationsNumber').setValue(data.importAuthorizationEntity.authorizationsNumber);
                     this.evaluateImportForm.get('importAuthorizationEntity.customsNumber').setValue(data.importAuthorizationEntity.customsNumber);
                     this.evaluateImportForm.get('importAuthorizationEntity.customsDeclarationDate').setValue(new Date(data.importAuthorizationEntity.customsDeclarationDate));
-                    this.evaluateImportForm.get('importAuthorizationEntity.contract'         ).setValue(data.importAuthorizationEntity.contract);
-                    this.evaluateImportForm.get('importAuthorizationEntity.contractDate'     ).setValue(new Date(data.importAuthorizationEntity.contractDate));
-                    this.evaluateImportForm.get('importAuthorizationEntity.anexa'            ).setValue(data.importAuthorizationEntity.anexa);
-                    this.evaluateImportForm.get('importAuthorizationEntity.anexaDate'        ).setValue(new Date(data.importAuthorizationEntity.anexaDate));
-                    this.evaluateImportForm.get('importAuthorizationEntity.specification'    ).setValue(data.importAuthorizationEntity.specification);
+                    this.evaluateImportForm.get('importAuthorizationEntity.contract').setValue(data.importAuthorizationEntity.contract);
+                    this.evaluateImportForm.get('importAuthorizationEntity.contractDate').setValue(new Date(data.importAuthorizationEntity.contractDate));
+                    this.evaluateImportForm.get('importAuthorizationEntity.anexa').setValue(data.importAuthorizationEntity.anexa);
+                    this.evaluateImportForm.get('importAuthorizationEntity.anexaDate').setValue(new Date(data.importAuthorizationEntity.anexaDate));
+                    this.evaluateImportForm.get('importAuthorizationEntity.specification').setValue(data.importAuthorizationEntity.specification);
                     this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').setValue(new Date(data.importAuthorizationEntity.specificationDate));
 
                     this.evaluateImportForm.get('startDate').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.seller').disable();
-                    this.evaluateImportForm.get('importAuthorizationEntity.contract'         ).disable();
-                    this.evaluateImportForm.get('importAuthorizationEntity.contractDate'     ).disable();
-                    this.evaluateImportForm.get('importAuthorizationEntity.anexa'            ).disable();
-                    this.evaluateImportForm.get('importAuthorizationEntity.anexaDate'        ).disable();
-                    this.evaluateImportForm.get('importAuthorizationEntity.specification'    ).disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.contract').disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.contractDate').disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.anexa').disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.anexaDate').disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.specification').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.importer').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.basisForImport').disable();
@@ -321,6 +321,26 @@ export class MedRegApproveComponent implements OnInit {
         }
 
         console.log("this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[" + i + "]", this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved)
+    }
+
+    dialogSetApproved(i: any) {
+        if (this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved === false) {
+
+            this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = true
+            this.authorizationSumm = this.authorizationSumm + this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].summ;
+            this.authorizationCurrency = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].currency;
+            console.log("this.authorizationSumm", this.authorizationSumm)
+            console.log("this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[" + i + "]", this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved)
+        }
+    }
+
+    dialogSetReject(i: any) {
+        if (this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved === true) {
+            this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = false;
+            this.authorizationSumm = this.authorizationSumm - this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].summ;
+            console.log("this.authorizationSumm", this.authorizationSumm)
+            console.log("this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[" + i + "]", this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved)
+        }
     }
 
     onChanges(): void {
@@ -467,7 +487,7 @@ export class MedRegApproveComponent implements OnInit {
         });
     }
 
-    showunitOfImport(unitOfImport: any) {
+    showunitOfImport(unitOfImport: any, i:any) {
         let dialogConfig2 = new MatDialogConfig();
 
         dialogConfig2.disableClose = false;
@@ -484,10 +504,15 @@ export class MedRegApproveComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             console.log('result', result);
-            if (result == null || result == undefined || result.success === false) {
-                return;
+            // if (result == null || result == undefined || result.success === false) {
+            //     return;
+            // }
+            // this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approve = result;
+            if (result === true) {
+                this.dialogSetApproved(i);
+            } else {
+                this.dialogSetReject(i)
             }
-
         });
     }
 

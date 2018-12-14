@@ -302,7 +302,7 @@ export class ImportMedDialog implements OnInit {
     }
 
     cancel(): void {
-        this.dialog.close();
+        this.dialog.close(false);
     }
     confirm(): void {
 
