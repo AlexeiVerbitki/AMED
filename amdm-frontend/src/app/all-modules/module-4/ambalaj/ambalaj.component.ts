@@ -91,7 +91,7 @@ export class AmbalajComponent implements OnInit {
             'id': [''],
             'requestNumber': [null],
             'startDate': [new Date()],
-            'currentStep': ['R'],
+            'currentStep': ['E'],
             'company': ['', Validators.required],
             'initiator': [null],
             'assignedUser': [null],
@@ -455,7 +455,7 @@ export class AmbalajComponent implements OnInit {
             if (result) {
                 this.loadingService.show();
                 let modelToSubmit = this.evaluateImportForm.getRawValue();
-                modelToSubmit.currentStep = 'I';
+                modelToSubmit.currentStep = 'C';
                 // modelToSubmit.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
                 modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
                 modelToSubmit.endDate = new Date();
@@ -464,7 +464,7 @@ export class AmbalajComponent implements OnInit {
                     startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
                     endDate: new Date(),
                     username: this.authService.getUserName(),
-                    step: 'E'
+                    step: 'C'
                 });
                 modelToSubmit.documents = this.docs;
                 this.subscriptions.push(
@@ -500,12 +500,13 @@ export class AmbalajComponent implements OnInit {
         modelToSubmit.endDate = new Date();
 
         modelToSubmit.documents = this.docs;
+        modelToSubmit.currentStep ='AP';
 
         modelToSubmit.requestHistories.push({
             startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
             endDate: new Date(),
             username: this.authService.getUserName(),
-            step: 'E'
+            step: 'AP'
         });
 
         console.log("this.evaluateImportForm.value", this.evaluateImportForm.value);
@@ -522,8 +523,8 @@ export class AmbalajComponent implements OnInit {
                     console.log("addImportRequest(modelToSubmit).subscribe(data) ", data)
                     // if (/*&& this.evaluateImportForm.valid && */ this.docs !== null) {
                     this.loadingService.hide();
-                    // this.router.navigate(['dashboard/module']);
-                    this.router.navigate(['dashboard/module/import-authorization/registered-medicament-approve/' + data.body.id]);
+                    this.router.navigate(['dashboard/']);
+                    // this.router.navigate(['dashboard/module/import-authorization/registered-medicament-approve/' + data.body.id]);
                 }, error => {
                     alert("Something went wrong while sending the model")
                     console.log("error: ", error)

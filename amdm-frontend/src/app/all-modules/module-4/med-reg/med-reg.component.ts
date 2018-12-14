@@ -131,7 +131,7 @@ export class MedRegComponent implements OnInit {
             'id': [''],
             'requestNumber': [null],
             'startDate': [new Date()],
-            'currentStep': ['E'],
+            'currentStep': ['F'],
             'company': ['', Validators.required],
             'initiator': [null],
             'assignedUser': [null],
@@ -792,7 +792,7 @@ export class MedRegComponent implements OnInit {
             if (result) {
                 this.loadingService.show();
                 let modelToSubmit = this.evaluateImportForm.getRawValue();
-                modelToSubmit.currentStep = 'F';
+                modelToSubmit.currentStep = 'C';
                 // modelToSubmit.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
                 modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
                 modelToSubmit.endDate = new Date();
@@ -801,7 +801,7 @@ export class MedRegComponent implements OnInit {
                     startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
                     endDate: new Date(),
                     username: this.authService.getUserName(),
-                    step: 'F'
+                    step: 'C'
                 });
                 modelToSubmit.documents = this.docs;
                 this.subscriptions.push(
@@ -834,12 +834,13 @@ export class MedRegComponent implements OnInit {
         modelToSubmit.endDate = new Date();
 
         modelToSubmit.documents = this.docs;
+        modelToSubmit.currentStep = "AP";
 
         modelToSubmit.requestHistories.push({
             startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
             endDate: new Date(),
             username: this.authService.getUserName(),
-            step: 'E'
+            step: 'AP'
         });
 
         console.log("this.evaluateImportForm.value", this.evaluateImportForm.value);
@@ -862,7 +863,8 @@ export class MedRegComponent implements OnInit {
                     alert("after addImportRequest(modelToSubmit)")
                     console.log("addImportRequest(modelToSubmit).subscribe(data) ", data)
                     this.loadingService.hide();
-                    this.router.navigate(['dashboard/module/import-authorization/registered-medicament-approve/' + data.body.id]);
+                    // this.router.navigate(['dashboard/module/import-authorization/registered-medicament-approve/' + data.body.id]);
+                    this.router.navigate(['dashboard/']);
                 }, error => {
                     alert("Something went wrong while sending the model")
                     console.log("error: ", error)
