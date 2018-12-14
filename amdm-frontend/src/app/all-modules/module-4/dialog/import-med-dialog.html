@@ -491,8 +491,9 @@
             <!--</button>-->
             <!--</div>-->
             <!--</div>-->
-            <button class="btn btn-success btn-sm waves-light pull-right" (click)="confirm()">Approb</button>
-            <button class="btn btn-danger btn-sm waves-light pull-right" (click)="cancel()">Inchide</button>
+            <button class="btn btn-success btn-sm waves-light pull-right" (click)="confirm()" *ngIf="importData.currentStep == 'AP'">Approb</button>
+            <button class="btn btn-danger btn-sm waves-light pull-right" (click)="reject()"   *ngIf="importData.currentStep == 'AP'">Resping</button>
+            <button class="btn btn-primary btn-sm waves-light pull-right" (click)="cancel()">Inchide</button>
         </form>
     <!--</div>-->
 <!--</div>-->

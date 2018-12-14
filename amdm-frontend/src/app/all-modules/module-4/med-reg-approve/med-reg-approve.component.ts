@@ -510,7 +510,8 @@ export class MedRegApproveComponent implements OnInit {
             // this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approve = result;
             if (result === true) {
                 this.dialogSetApproved(i);
-            } else {
+            }
+            if (result === false) {
                 this.dialogSetReject(i)
             }
         });

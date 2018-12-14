@@ -307,6 +307,7 @@ export class MedRegComponent implements OnInit {
                     console.log("importAuthorizationEntity.unitOfImportTable.medicament", this.medicamentData)
 
 
+
                     // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode);
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(val.pharmaceuticalForm);
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').setValue(val.dose);
@@ -335,6 +336,8 @@ export class MedRegComponent implements OnInit {
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(val.registrationNumber);
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(val.registrationDate));
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(val.expirationDate);
+                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').setValue("");
+                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue("");
 
                     this.medicamentService.getMedPrice(val.id).subscribe(priceEntity => {
                         this.medicamentPrice = priceEntity;
@@ -346,6 +349,7 @@ export class MedRegComponent implements OnInit {
                         console.log("medicamentValutaList", this.valutaList)
                         console.log("priceEntity.currency.shortDescription", priceEntity.currency.shortDescription)
                     })
+
 
                 }
             }));
@@ -489,6 +493,7 @@ export class MedRegComponent implements OnInit {
 
     addUnitOfImport() {
         this.addMedicamentClicked = true;
+
         //     alert(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').valid),
         // console.log("this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable'",(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').valid),
 
