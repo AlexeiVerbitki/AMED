@@ -33,6 +33,10 @@ const ELEMENT_DATA: Bank[] = [
   styleUrls: ['./manufactures-bank-accounts.component.css']
 })
 export class ManufacturesBankAccountsComponent implements OnInit {
+
+  visibility: boolean = false;
+  title: string = 'Manufactures bank accounts';
+
   displayedColumns: any[] = ['id', 'manufacture_id', 'bank_account_id', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
@@ -52,6 +56,10 @@ export class ManufacturesBankAccountsComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 
   manufacture_idEdit = new FormControl('', Validators.required);

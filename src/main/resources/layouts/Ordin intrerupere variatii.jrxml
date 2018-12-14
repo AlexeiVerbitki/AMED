@@ -54,13 +54,13 @@
 	</subDataset>
 	<parameter name="id" class="java.lang.Integer"/>
 	<parameter name="genDir" class="java.lang.String"/>
-	<parameter name="commercial_name" class="java.lang.String"/>
-	<parameter name="registration_number" class="java.lang.String"/>
-	<parameter name="registration_date" class="java.lang.String"/>
+	<parameter name="commercialName" class="java.lang.String"/>
+	<parameter name="registrationNumber" class="java.lang.String"/>
+	<parameter name="registrationDate" class="java.lang.String"/>
 	<parameter name="dose" class="java.lang.Double"/>
 	<parameter name="volume" class="java.lang.String"/>
 	<parameter name="ordinIntrerupereVariatiiDataSource" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
-	<parameter name="date" class="java.util.Date"/>
+	<parameter name="date" class="java.lang.String"/>
 	<parameter name="nr" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT amed.medicament.id,
@@ -79,7 +79,7 @@ FROM amed.medicament limit 1]]>
 			</image>
 			<image>
 				<reportElement x="220" y="0" width="330" height="70" uuid="11dd8ec7-6404-4cc7-9d59-a7e8f6fd0917"/>
-				<imageExpression><![CDATA["layouts/icons/header_right.PNG"]]></imageExpression>
+				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
 		</band>
 	</pageHeader>
@@ -170,7 +170,7 @@ produselor medicamentoase pentru care se întrerupe procedura de aprobare a modi
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Anexă la ordinul Agenţiei Medicamentului şi Dispozitivelor Medicale Nr. " + $P{registration_number} + " din " + $P{registration_date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Anexă la ordinul Agenţiei Medicamentului şi Dispozitivelor Medicale Nr. " + $P{registrationNumber} + " din " + $P{registrationDate}]]></textFieldExpression>
 			</textField>
 			<componentElement>
 				<reportElement x="3" y="120" width="549" height="60" uuid="4b228aa9-b249-4f08-b590-c06818e231eb">

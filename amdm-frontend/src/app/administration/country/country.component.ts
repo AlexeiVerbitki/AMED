@@ -38,6 +38,9 @@ export class CountryComponent implements OnInit {
   displayedColumns: any[] = ['id', 'code', 'description', 'group_id', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
+  visibility: boolean = false;
+  title: string = 'Country';
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -63,5 +66,9 @@ export class CountryComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 }

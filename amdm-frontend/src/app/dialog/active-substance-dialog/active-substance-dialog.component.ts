@@ -18,6 +18,8 @@ export class ActiveSubstanceDialogComponent implements OnInit {
     formSubmitted: boolean;
     activeSubstanceUnitsOfMeasurement: any[];
     manufactures: any[];
+    protected loadingActiveSubst: boolean = false;
+    protected loadingManufacture: boolean = false;
 
     constructor(private administrationService: AdministrationService,
                 private fb: FormBuilder,
@@ -47,6 +49,7 @@ export class ActiveSubstanceDialogComponent implements OnInit {
             this.aForm.get('activeSubstanceQuantity').setValue(this.dataDialog.quantity);
         }
 
+        this.loadingActiveSubst = true;
         this.subscriptions.push(
             this.administrationService.getAllActiveSubstances().subscribe(data => {
                     this.activeSubstances = data;
@@ -54,8 +57,9 @@ export class ActiveSubstanceDialogComponent implements OnInit {
                         this.aForm.get('activeSubstance').setValue(this.activeSubstances.find(r => r.id === this.dataDialog.activeSubstance.id));
                         this.aForm.get('activeSubstanceCode').setValue(this.aForm.get('activeSubstance').value.code);
                     }
+                    this.loadingActiveSubst = false;
                 },
-                error => console.log(error)
+                error => {console.log(error);  this.loadingActiveSubst = false;}
             )
         );
 
@@ -70,6 +74,7 @@ export class ActiveSubstanceDialogComponent implements OnInit {
             )
         );
 
+        this.loadingManufacture = true;
         this.subscriptions.push(
             this.administrationService.getAllManufactures().subscribe(data => {
                     this.manufactures = data;
@@ -78,8 +83,9 @@ export class ActiveSubstanceDialogComponent implements OnInit {
                         this.aForm.get('manufactureCountrySA').setValue(this.aForm.get('manufactureSA').value.country.description);
                         this.aForm.get('manufactureAddressSA').setValue(this.aForm.get('manufactureSA').value.address);
                     }
+                    this.loadingManufacture = false;
                 },
-                error => console.log(error)
+                error => {console.log(error);  this.loadingManufacture = false;}
             )
         );
 

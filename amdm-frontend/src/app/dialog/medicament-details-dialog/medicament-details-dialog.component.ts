@@ -4,6 +4,7 @@ import {Subscription} from "rxjs";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material";
 import {MedicamentService} from "../../shared/service/medicament.service";
 import {MedicamentHistoryDialogComponent} from "../medicament-history-dialog/medicament-history-dialog.component";
+import {UploadFileService} from "../../shared/service/upload/upload-file.service";
 
 @Component({
     selector: 'app-medicament-details-dialog',
@@ -17,12 +18,16 @@ export class MedicamentDetailsDialogComponent implements OnInit {
     divisions : any[] = [];
     prices : any[] = [];
     activeSubstancesTable : any[] = [];
+    auxiliarySubstancesTable : any[] = [];
     manufacturesTable: any[]= [];
     initialData : any;
+    instructions : any[] = [];
+    machets : any[] = [];
 
     constructor(private fb: FormBuilder,
                 public dialogRef: MatDialogRef<MedicamentDetailsDialogComponent>,
                 private dialog: MatDialog,
+                private uploadService : UploadFileService,
                 @Inject(MAT_DIALOG_DATA) public dataDialog: any,
                 private medicamentService: MedicamentService) {
         this.mForm = fb.group({
@@ -41,6 +46,7 @@ export class MedicamentDetailsDialogComponent implements OnInit {
             'authorizationHolder': [null],
             'authorizationHolderCountry': [null],
             'authorizationHolderAddress': [null],
+            'customsCode': [null],
             'registrationNumber': [null],
             'registrationDate': [null],
             'expirationDate': [null],
@@ -75,6 +81,7 @@ export class MedicamentDetailsDialogComponent implements OnInit {
             this.mForm.get('registrationNumber').setValue(data[0].registrationNumber);
             this.mForm.get('registrationDate').setValue(new Date(data[0].registrationDate));
             this.mForm.get('expirationDate').setValue(data[0].expirationDate);
+            this.mForm.get('customsCode').setValue(data[0].customsCode.description);
             for (let entry of data) {
                 if(entry.division && entry.division.length!=0) {
                     this.divisions.push({
@@ -84,6 +91,15 @@ export class MedicamentDetailsDialogComponent implements OnInit {
                 }
             }
             this.activeSubstancesTable = data[0].activeSubstances;
+            this.auxiliarySubstancesTable = data[0].auxSubstances;
+            for(let x of data) {
+                x.instructions.filter(t => t.type == 'I').forEach(i=>{
+                    this.instructions.push(i);
+                });
+                x.instructions.filter(t => t.type == 'M').forEach(i=>{
+                    this.machets.push(i);
+                });
+            }
             this.manufacturesTable = data[0].manufactures;
         }));
         this.subscriptions.push(this.medicamentService.getMedPrice(this.dataDialog.value.id).subscribe(data => {
@@ -115,6 +131,20 @@ export class MedicamentDetailsDialogComponent implements OnInit {
         };
 
         this.dialog.open(MedicamentHistoryDialogComponent, dialogConfig2);
+    }
+
+    viewFile(instruction: any)
+    {
+        this.subscriptions.push(this.uploadService.loadFile(instruction.path).subscribe(data => {
+                let file = new Blob([data], {type: instruction.typeDoc});
+                var fileURL = URL.createObjectURL(file);
+                window.open(fileURL);
+            },
+            error => {
+                console.log(error);
+            }
+            )
+        );
     }
 
 }

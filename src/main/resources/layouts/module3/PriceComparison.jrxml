@@ -54,7 +54,7 @@
 		<field name="reviewedPriceMDLChangePercent" class="java.lang.Double"/>
 	</subDataset>
 	<parameter name="registrationNumber" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="registrationDate" class="java.util.Date" isForPrompting="false"/>
+	<parameter name="registrationDate" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="dataSource" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource" isForPrompting="false"/>
 	<queryString>
 		<![CDATA[]]>
@@ -92,7 +92,7 @@
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="8" isItalic="true" isUnderline="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["din " + new SimpleDateFormat("dd.MM.yyyy").format($P{registrationDate})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["din " + $P{registrationDate}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="2" y="111" width="817" height="29" uuid="f826c944-10db-42c2-9eb0-e8960d8ba9e3"/>

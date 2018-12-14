@@ -16,6 +16,12 @@ export class ReferencePriceComponent implements OnInit {
     forEvaluation: boolean = false;
     refPrice: Price = new Price();
 
+    priceId: string;
+    divisionId: string;
+    currencyId: string;
+    coutnrId: string;
+    typeId: string;
+
     @Input()
     canRemove: boolean = true;
 
@@ -51,6 +57,12 @@ export class ReferencePriceComponent implements OnInit {
     ngOnInit() {
         // (<any>this.elemRef).setDisabledState(true);
         // console.log(this.elemRef);
+        let uniqueId = new Date().getMilliseconds();
+        this.priceId = 'priceId' + uniqueId;
+        this.divisionId = 'divisionId' + uniqueId;
+        this.currencyId = 'currencyId' + uniqueId;
+        this.coutnrId = 'coutnrId' + uniqueId;
+        this.typeId = 'typeId' + uniqueId;
     }
 
 }

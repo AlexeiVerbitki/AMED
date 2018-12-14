@@ -160,8 +160,8 @@
                     <td scope="row">{{ a.description }}</td>
                     <td scope="row">{{ a.number }}</td>
                     <td scope="row">{{ a.status }}</td>
-                    <td>
-                        <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect [disabled]="true" (click)="viewDoc(a)"><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
+                    <td *ngIf="dataSource.data.length > 0 && a.docType?.category == 'LR'">
+                        <button mdbTooltip="Generare document" class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect [disabled]="false" (click)="viewDoc(a)"><i class="fa fa-puzzle-piece fa-lg" aria-hidden="true"></i></button>
                     </td>
                 </tr>
                 </tbody>

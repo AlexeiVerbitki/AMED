@@ -3,7 +3,6 @@ package com.bass.amed.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @Data
 @Entity
@@ -20,4 +19,7 @@ public class SysParamsEntity
     @Basic
     @Column(name = "description")
     private String description;
+    @Basic
+    @Column(name = "value")
+    private String value;
 }

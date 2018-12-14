@@ -38,6 +38,9 @@ export class ExpertiModifyComponent implements OnInit {
     divisions: any[] = [];
     manufacturesTable: any[] = [];
     medicamentsDetails : any[];
+    auxiliarySubstancesTable: any[] = [];
+    instructions: any[] = [];
+    machets: any[] = [];
 
     constructor(private fb: FormBuilder,
                 private authService: AuthService,
@@ -82,6 +85,7 @@ export class ExpertiModifyComponent implements OnInit {
                     'volumeTo': [null],
                     'volumeQuantityMeasurementTo': [null],
                     'termsOfValidityTo': [null],
+                    'customsCodeTo' :  [null],
                     'code': [null],
                     'medicamentTypeTo': [null],
                     'prescriptionTo': {disabled: true, value: null},
@@ -131,6 +135,7 @@ export class ExpertiModifyComponent implements OnInit {
                         this.expertForm.get('medicament.internationalMedicamentNameTo').setValue(data.medicamentHistory[0].internationalMedicamentNameTo.description);
                         this.expertForm.get('medicament.medicamentTypeTo').setValue(data.medicamentHistory[0].medicamentTypeTo.description);
                         this.expertForm.get('medicament.volumeTo').setValue(data.medicamentHistory[0].volumeTo);
+                        this.expertForm.get('medicament.customsCodeTo').setValue(data.medicamentHistory[0].customsCodeTo.description);
                         if (data.medicamentHistory && data.medicamentHistory.length != 0 && data.medicamentHistory[0].volumeQuantityMeasurementTo) {
                             this.expertForm.get('medicament.volumeQuantityMeasurementTo').setValue(data.medicamentHistory[0].volumeQuantityMeasurementTo.description);
                         }
@@ -152,6 +157,9 @@ export class ExpertiModifyComponent implements OnInit {
                         }
                         this.expertForm.get('medicament.atcCodeTo').setValue(data.medicamentHistory[0].atcCodeTo);
                         this.activeSubstancesTable = data.medicamentHistory[0].activeSubstancesHistory;
+                        this.auxiliarySubstancesTable = data.medicamentHistory[0].auxiliarySubstancesHistory;
+                        this.fillInstructions(data.medicamentHistory[0]);
+                        this.fillMachets(data.medicamentHistory[0]);
                         this.manufacturesTable = data.medicamentHistory[0].manufacturesHistory;
                         this.expertForm.get('type').setValue(data.type);
                         this.expertForm.get('requestHistories').setValue(data.requestHistories);
@@ -415,5 +423,35 @@ export class ExpertiModifyComponent implements OnInit {
         };
 
         this.dialog.open(MedicamentDetailsDialogComponent, dialogConfig2);
+    }
+
+    fillInstructions(medicamentHist: any) {
+        for (let medInstruction of medicamentHist.instructionsHistory) {
+            if (medInstruction.type == 'I') {
+                let pageInstrction = this.instructions.find(value => value.path == medInstruction.path);
+                if (pageInstrction) {
+                    pageInstrction.divisions.push({description: medInstruction.division});
+                } else {
+                    medInstruction.divisions = [];
+                    medInstruction.divisions.push({description: medInstruction.division});
+                    this.instructions.push(medInstruction);
+                }
+            }
+        }
+    }
+
+    fillMachets(medicamentHist: any) {
+        for (let medInstruction of medicamentHist.instructionsHistory) {
+            if (medInstruction.type == 'M') {
+                let pageInstrction = this.machets.find(value => value.path == medInstruction.path);
+                if (pageInstrction) {
+                    pageInstrction.divisions.push({description: medInstruction.division});
+                } else {
+                    medInstruction.divisions = [];
+                    medInstruction.divisions.push({description: medInstruction.division});
+                    this.machets.push(medInstruction);
+                }
+            }
+        }
     }
 }

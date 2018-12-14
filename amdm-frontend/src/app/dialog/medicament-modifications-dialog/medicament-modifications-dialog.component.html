@@ -142,6 +142,37 @@
 			</tbody>
 		</table>
 	</div>
+	<!--Substante auxiliare-->
+	<div class="gradient-card-header bg-sidebar border-gradient" *ngIf="auxiliarySubstancesTable.length!=0">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-6">
+					<div class="card-header-title white-text">Excipienti</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Tabela substante auxiliare -->
+	<div class="card-body card-body-cascade" *ngIf="auxiliarySubstancesTable.length!=0">
+		<table class="table table-widths text-center">
+			<thead class="bg-sidebar white-text">
+			<tr>
+				<th scope="col">Nr.</th>
+				<th scope="col">Denumire</th>
+				<th scope="col">Status</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr *ngFor="let substance of auxiliarySubstancesTable;let i = index">
+				<td>{{ i+1 }}</td>
+				<th scope="row">{{ substance.auxSubstance.description }}</th>
+				<td *ngIf="substance.status=='N'">Excipient adaugat</td>
+				<td *ngIf="substance.status=='R'">Excipient anulat</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
 	<!--Producatori tabela-->
 	<div class="gradient-card-header bg-sidebar border-gradient" *ngIf="manufacturesTable.length!=0">
 		<div class="container-fluid">
@@ -178,6 +209,80 @@
 					</div>
 				</th>
 				<td>{{ manufacture.status == 'R' ? 'Producator anulat' : (manufacture.status == 'N' ? 'Producator nou' : 'Producator modificat')}}</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="gradient-card-header bg-sidebar border-gradient">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-8">
+					<div class="card-header-title white-text">Instructiuni</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="card-body card-body-cascade">
+		<table class="table table-widths text-center table-sm">
+			<thead class="bg-sidebar white-text">
+			<tr>
+				<th scope="col">Denumire</th>
+				<th scope="col">Data incarcarii</th>
+				<th scope="col">Divizare</th>
+				<th scope="col">Status</th>
+				<th scope="col">Actiuni</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr *ngFor="let instruction of instructions; let i = index">
+				<td>{{ instruction.name }}</td>
+				<td>{{ instruction.date | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+				<td>{{ instruction.division }}</td>
+				<td *ngIf="instruction.status=='R'">Instructiune anulata</td>
+				<td *ngIf="instruction.status=='N'">Instructiune noua</td>
+				<td>
+					<button type="button" class="btn btn-mdb-color btn-sm waves-light" (click)="viewFile(instruction)"
+					        mdbWavesEffect><i class="fa fa-file-text fa-lg" aria-hidden="true"></i>
+					</button>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="gradient-card-header bg-sidebar border-gradient">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-8">
+					<div class="card-header-title white-text">Machete</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="card-body card-body-cascade">
+		<table class="table table-widths text-center table-sm">
+			<thead class="bg-sidebar white-text">
+			<tr>
+				<th scope="col">Denumire</th>
+				<th scope="col">Data incarcarii</th>
+				<th scope="col">Divizare</th>
+				<th scope="col">Status</th>
+				<th scope="col">Actiuni</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr *ngFor="let macheta of machets; let i = index">
+				<td>{{ macheta.name }}</td>
+				<td>{{ macheta.date | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+				<td>{{ macheta.division }}</td>
+				<td *ngIf="macheta.status=='R'">Macheta anulata</td>
+				<td *ngIf="macheta.status=='N'">Macheta noua</td>
+				<td>
+					<button type="button" class="btn btn-mdb-color btn-sm waves-light" (click)="viewFile(macheta)"
+					        mdbWavesEffect><i class="fa fa-file-text fa-lg" aria-hidden="true"></i>
+					</button>
+				</td>
 			</tr>
 			</tbody>
 		</table>

@@ -34,6 +34,10 @@ const ELEMENT_DATA: Bank[] = [
   styleUrls: ['./medicament-type.component.css']
 })
 export class MedicamentTypeComponent implements OnInit {
+
+  visibility: boolean = false;
+  title: string = 'Medicament type';
+
   displayedColumns: any[] = ['id', 'code', 'description', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
@@ -53,6 +57,10 @@ export class MedicamentTypeComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 
   codeEdit = new FormControl('', Validators.required);

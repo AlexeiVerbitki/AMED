@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col">
     <div class="md-form">
-      <input id="pretMed9Ref" mdbInputDirective type="number" class="form-control" min="0.1" step="0.1" [(ngModel)]="refPrice.value" (change)="onPriceChange($event)" [disabled]="forEvaluation">
-      <label for="pretMed9Ref">Preț de referință</label>
+      <input [id]="priceId" mdbInputDirective type="number" class="form-control" min="0.1" step="0.1" [(ngModel)]="refPrice.value" (change)="onPriceChange($event)" [disabled]="forEvaluation">
+      <label [for]="priceId">Preț de referință</label>
       <!--<span class="text-danger">*</span>-->
       <div *ngIf="formSubmitted && refPrice.value == undefined">
         <small class="text-muted"><strong class="text-danger">Indicați prețul de referință</strong></small>
@@ -11,8 +11,8 @@
   </div>
   <div class="col">
     <div class="md-form">
-      <input id="division" mdbInputDirective type="text" class="form-control" [(ngModel)]="refPrice.division" (change)="onDivisionChange($event)" [disabled]="forEvaluation">
-      <label for="division">Divizarea medicamentului</label>
+      <input [id]="divisionId" mdbInputDirective type="text" class="form-control" [(ngModel)]="refPrice.division" (change)="onDivisionChange($event)" [disabled]="forEvaluation">
+      <label [for]="divisionId">Divizarea medicamentului</label>
       <!--<span class="text-danger">*</span>-->
       <div *ngIf="formSubmitted && refPrice.division == undefined">
         <small class="text-muted"><strong class="text-danger">Indicați divizarea medicamentului</strong></small>

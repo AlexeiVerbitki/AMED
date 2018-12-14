@@ -7,8 +7,6 @@
         <app-document [documents]="documents" [nrCerere]="cerereSolicAutorForm.get('requestNumber').value"
                       [dcTypes]="docTypes"
                       (documentModified)="documentModified($event)"></app-document>
-        <hr>
-
         <div class="row">
             <div class="col-md-6">
                 <div class="md-form-modified">
@@ -60,6 +58,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
         <div class="text-center">
             <button class="btn btn-primary btn-sm waves-light" mdbWavesEffect data-toggle="collapse"
@@ -116,6 +115,90 @@
                             </small>
                         </div>
                     </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="md-form-modified">
+                    <ng-select id="company" name="filiala" [items]="companies"
+                               bindLabel="name"
+                               placeholder="Filiala *"
+                               formControlName="filiala">
+                        <ng-template ng-option-tmp let-item="item">
+                            {{item.name}} <br />
+                            <small class="form-text text-muted">{{item.code}}</small>
+                        </ng-template>
+                    </ng-select>
+                    <div *ngIf="formSubmitted && cerereSolicAutorForm.get('filiala').invalid">
+                        <small class="text-muted"><strong class="text-danger">Filiala trebuie
+                            selectată</strong></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="gradient-card-header bg-sidebar border-gradient">
+            <div class="container-fluid">
+                <!-- Title -->
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card-header-title white-text">Filiale selectate</div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-right fap text-white">
+                            <i (click)="addFilial()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card-body card-body-cascade">
+            <table class="table table-widths text-center">
+                <thead class="bg-sidebar white-text">
+                <tr>
+                    <th scope="col">Nume</th>
+                    <th scope="col">Cod</th>
+                    <th scope="col">Actiuni</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let filial of selectedFilials;let i = index">
+                    <td>{{ filial.name }}</td>
+                    <td>{{ filial.code }}</td>
+                    <td>
+                        <button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                (click)="removeFilial(i)"
+                                mdbWavesEffect attr.disabled="this.disabled">Stergere
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="md-form" >
+                    <input id="name" mdbInputDirective type="text" class="form-control" required formControlName="resPerson">
+                    <label for="name">Persoana responsabila
+                        <span class="text-danger">*</span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="pickerExp" placeholder="Data expirarii" required
+                               formControlName="dataExp">
+                        <mat-datepicker-toggle matSuffix [for]="pickerExp"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #pickerExp></mat-datepicker>
+                    </mat-form-field>
                 </div>
             </div>
         </div>
@@ -182,7 +265,6 @@
 
         </div>
 
-        <!-- Card content -->
         <div class="card-body card-body-cascade">
             <table class="table table-widths-lg text-center">
                 <thead class="bg-sidebar white-text">

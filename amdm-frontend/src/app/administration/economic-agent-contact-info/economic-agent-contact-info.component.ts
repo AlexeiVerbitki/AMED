@@ -44,6 +44,10 @@ const ELEMENT_DATA: Bank[] = [
   styleUrls: ['./economic-agent-contact-info.component.css']
 })
 export class EconomicAgentContactInfoComponent implements OnInit {
+
+  visibility: boolean = false;
+  title: string = 'Economic agent contact info';
+
   displayedColumns: any[] = ['id', 'economic_agent_id', 'phonenumbers', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
@@ -63,6 +67,10 @@ export class EconomicAgentContactInfoComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 
   economic_agent_idEdit = new FormControl('', Validators.required);

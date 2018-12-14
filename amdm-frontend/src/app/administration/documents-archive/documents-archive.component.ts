@@ -43,6 +43,10 @@ const ELEMENT_DATA: Bank[] = [
   styleUrls: ['./documents-archive.component.css']
 })
 export class DocumentsArchiveComponent implements OnInit {
+
+  visibility: boolean = false;
+  title: string = 'Documents archive';
+
   displayedColumns: any[] = ['id', 'cod', 'description', 'data', 'partner_id', 'analysis_num', 'analysis_date', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
@@ -62,6 +66,10 @@ export class DocumentsArchiveComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 
 

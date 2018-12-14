@@ -33,6 +33,9 @@ export class ProcessInterruptionComponent implements OnInit {
     initialData: any;
     docTypes: any[];
     isNonAttachedDocuments: boolean = false;
+    divisions: any[] = [];
+    manufacturesTable: any[] = [];
+    registrationRequestMandatedContacts: any[];
 
     constructor(private fb: FormBuilder,
                 private modalService: ModalService,
@@ -59,6 +62,13 @@ export class ProcessInterruptionComponent implements OnInit {
             'company': [''],
             'companyValue': [''],
             'medValue': [''],
+            'medicament':
+                fb.group({
+                        'pharmaceuticalForm': [null],
+                        'internationalMedicamentName': [null],
+                        'dose': [null],
+                    }
+                ),
             'motiv': ['', Validators.required],
             'requestHistories': ['']
         });
@@ -78,6 +88,24 @@ export class ProcessInterruptionComponent implements OnInit {
                         this.iForm.get('companyValue').setValue(data.company.name);
                         this.iForm.get('medValue').setValue(data.medicamentName);
                         this.iForm.get('requestHistories').setValue(data.requestHistories);
+                        if (data.medicaments[0] && data.medicaments[0].pharmaceuticalForm) {
+                            this.iForm.get('medicament.pharmaceuticalForm').setValue(data.medicaments[0].pharmaceuticalForm.description);
+                        }
+                        if (data.medicaments[0]) {
+                            this.iForm.get('medicament.dose').setValue(data.medicaments[0].dose);
+                        }
+                        if (data.medicaments[0] && data.medicaments[0].internationalMedicamentName) {
+                            this.iForm.get('medicament.internationalMedicamentName').setValue(data.medicaments[0].internationalMedicamentName.description);
+                        }
+                        this.registrationRequestMandatedContacts = data.registrationRequestMandatedContacts;
+                        this.manufacturesTable = data.medicaments[0].manufactures;
+                        for (let entry of data.medicaments) {
+                            if (entry.division && entry.division.length != 0) {
+                                this.divisions.push({
+                                    description: entry.division
+                                });
+                            }
+                        }
                         this.documents = data.documents;
                         this.outputDocuments = data.outputDocuments;
                         this.checkOutputDocumentsStatus();
@@ -191,7 +219,7 @@ export class ProcessInterruptionComponent implements OnInit {
                     }).subscribe(data => {
                         this.loadingService.hide();
                         this.router.navigate(['dashboard/module']);
-                    }, error =>   this.loadingService.hide())
+                    }, error => this.loadingService.hide())
                 );
             }
         });
@@ -207,12 +235,37 @@ export class ProcessInterruptionComponent implements OnInit {
 
         this.formSubmitted = false;
 
+        let x = this.iForm.get('medValue').value;
+        if(this.iForm.get('medicament.pharmaceuticalForm').value) {
+            x = x + ', ' + this.iForm.get('medicament.pharmaceuticalForm').value;
+        }
+        if(this.iForm.get('medicament.dose').value) {
+           x=x +' ' + this.iForm.get('medicament.dose').value;
+        }
+        if(this.divisions.length!=0) {
+            this.divisions.forEach(elem => x = x + ' ' + elem.description + ';');
+        }
+        if(this.iForm.get('medicament.internationalMedicamentName').value) {
+            x = x + '(DCI:' + this.iForm.get('medicament.internationalMedicamentName').value + ')';
+        }
+        if(this.manufacturesTable.length!=0) {
+            x = x + ', producători: ';
+            this.manufacturesTable.forEach(elem => x = x + ' ' + elem.manufacture.description + ',' + elem.manufacture.country.description + ',' + elem.manufacture.address);
+        }
+
         const dialogRef2 = this.dialogConfirmation.open(RequestAdditionalDataDialogComponent, {
+            width: '1000px',
+            height: '800px',
             data: {
                 requestNumber: this.iForm.get('requestNumber').value,
                 requestId: this.iForm.get('id').value,
                 modalType: 'NOTIFICATION',
-                startDate: this.iForm.get('data').value
+                startDate: this.iForm.get('data').value,
+                medicamentStr: x,
+                companyName: this.iForm.get('company').value.name,
+                address: this.iForm.get('company').value.legalAddress,
+                registrationRequestMandatedContact: this.registrationRequestMandatedContacts[0],
+                motiv: this.iForm.get('motiv').value
             },
             hasBackdrop: false
         });
@@ -241,15 +294,30 @@ export class ProcessInterruptionComponent implements OnInit {
         this.formSubmitted = false;
 
         if (document.docType.category == 'NL') {
-            this.subscriptions.push(this.documentService.viewRequest(document.number,
-                document.content,
-                document.title,
-                document.docType.category).subscribe(data => {
+            let modelToSubmit = {
+                nrDoc: document.number,
+                responsiblePerson: this.registrationRequestMandatedContacts[0].mandatedLastname + ' ' + this.registrationRequestMandatedContacts[0].mandatedFirstname,
+                companyName: this.iForm.get('company').value.name,
+                requestDate: document.date,
+                country: 'Moldova',
+                address: this.iForm.get('company').value.legalAddress,
+                phoneNumber: this.registrationRequestMandatedContacts[0].phoneNumber,
+                email: this.registrationRequestMandatedContacts[0].email,
+                message: document.content,
+                function: document.signerFunction,
+                signerName: document.signerName
+            };
+
+            let observable: Observable<any> = null;
+            observable = this.documentService.viewRequestNew(modelToSubmit);
+
+            this.subscriptions.push(observable.subscribe(data => {
                     let file = new Blob([data], {type: 'application/pdf'});
                     var fileURL = URL.createObjectURL(file);
                     window.open(fileURL);
+                    this.loadingService.hide();
                 }, error => {
-                    console.log('error ', error);
+                    this.loadingService.hide();
                 }
                 )
             );
@@ -291,11 +359,10 @@ export class ProcessInterruptionComponent implements OnInit {
         });
     }
 
-    checkOutputDocumentsStatus()
-    {
+    checkOutputDocumentsStatus() {
         for (let entry of this.outputDocuments) {
             var isMatch = this.documents.some(elem => {
-                return (elem.docType.category == entry.docType.category && elem.number==entry.number ) ? true : false;
+                return (elem.docType.category == entry.docType.category && elem.number == entry.number) ? true : false;
             });
             if (isMatch) {
                 entry.status = 'Atasat';
@@ -348,7 +415,7 @@ export class ProcessInterruptionComponent implements OnInit {
                         } else {
                             this.router.navigate(['dashboard/module/medicament-registration/expert/' + this.initialData.id]);
                         }
-                    }, error =>   this.loadingService.hide())
+                    }, error => this.loadingService.hide())
                 );
             }
         });

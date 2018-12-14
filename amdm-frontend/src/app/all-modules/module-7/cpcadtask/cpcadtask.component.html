@@ -13,11 +13,19 @@
 
             <div class="col-md-4">
                 <div class="md-form-modified">
-                    <ng-select id="company" name="company" [items]="companies"
+                    <ng-select [items]="companies | async"
                                bindLabel="name"
                                placeholder="Compania solicitant"
-                               formControlName="company">
+                               formControlName="company"
+                               [loading]="loadingCompany"
+                               [typeahead]="companyInputs"
+                               >
+                        <ng-template ng-option-tmp let-item="item">
+                            {{item.name}} <br />
+                            <small class="form-text text-muted">{{item.idno}}</small>
+                        </ng-template>
                     </ng-select>
+
                 </div>
             </div>
             <div class="col-md-4">

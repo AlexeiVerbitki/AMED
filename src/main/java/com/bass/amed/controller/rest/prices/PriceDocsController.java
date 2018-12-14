@@ -1,13 +1,12 @@
 package com.bass.amed.controller.rest.prices;
 
+import com.bass.amed.dto.PrevYearAvgPriceDTO;
 import com.bass.amed.dto.prices.evaluation.*;
+import com.bass.amed.dto.prices.registration.annexes.MedicineDataForAnnex2;
+import com.bass.amed.dto.prices.registration.annexes.MedicineDataForAnnex3;
 import com.bass.amed.dto.prices.registration.annexes.MedicineInfoForAnnex1;
-import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
-import com.bass.amed.repository.CurrencyHistoryRepository;
-import com.bass.amed.repository.CurrencyRepository;
-import com.bass.amed.repository.DocumentsRepository;
-import com.bass.amed.repository.ManufactureRepository;
+import com.bass.amed.repository.*;
 import com.bass.amed.repository.prices.*;
 import com.bass.amed.service.PriceEvaluationService;
 import net.sf.jasperreports.engine.*;
@@ -22,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.*;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -66,6 +64,12 @@ public class PriceDocsController {
     private PricesEvaluationRepository pricesEvaluationRepository;
 
     @Autowired
+    private InvoiceDetailsRepository invoiceDetailsRepository;
+
+    @Autowired
+    private PrevYearsPriceAVGInvoiceDetailsRepository prevYearsPriceAVGInvoiceDetailsRepository;
+
+    @Autowired
     private DocumentsRepository documentsRepository;
 
 
@@ -76,14 +80,45 @@ public class PriceDocsController {
         return JasperCompileManager.compileReport(res.getInputStream());
     }
 
-    @RequestMapping(value = "/view-anexa1", method = RequestMethod.POST)
-    public ResponseEntity<byte[]> viewAnexa1(@RequestBody List<MedicineInfoForAnnex1> anex1List) throws CustomException
+    @RequestMapping(value = "/view-approval-order", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> viewApprovalOrder()
     {
         byte[] bytes = null;
 
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("registrationNumber ", "A07.PS-01.Rg04-277");
-        parameters.put("registrationDate", new Date());
+        parameters.put("nr", "_____________________");
+        parameters.put("date", "_____________________");
+        parameters.put("genDir", "_____________________");
+
+        JasperReport report;
+        try {
+
+            report = createReport("layouts/module3/Autorizare pret ordin autorizare.jrxml");
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
+
+            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+        } catch (JRException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=approvalOrder.pdf").body(bytes);
+    }
+
+    @RequestMapping(value = "/view-anexa1", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> viewAnexa1()
+    {
+        List<MedicineInfoForAnnex1> anex1List = priceEvaluationService.getPricesForApproval();
+
+        byte[] bytes = null;
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("registrationNumber", "_____________________");
+        parameters.put("registrationDate", "_____________________");
 
         JasperReport report;
         try {
@@ -104,23 +139,88 @@ public class PriceDocsController {
                 .header("Content-Disposition", "inline; filename=Anexa1.pdf").body(bytes);
     }
 
+    @RequestMapping(value = "/view-anexa2", method = RequestMethod.POST)
+    public ResponseEntity<byte[]> viewAnexa2(@RequestBody List<MedicineDataForAnnex2> anex2List) throws CustomException
+    {
+        byte[] bytes = null;
+
+
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("registrationNr", "_____________________");
+        parameters.put("registrationDate",    "_____________________");
+        parameters.put("dataSource", new JRBeanCollectionDataSource(anex2List));
+
+        JasperReport report;
+        try {
+
+            report = createReport("layouts/module3/Anexa2.jrxml");
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
+
+            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+        } catch (JRException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=Anexa2.pdf").body(bytes);
+    }
+
+
+    @RequestMapping(value = "/view-anexa3", method = RequestMethod.POST)
+    public ResponseEntity<byte[]> viewAnexa3(@RequestBody List<MedicineDataForAnnex3> anex3List) throws CustomException
+    {
+        byte[] bytes = null;
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("registrationNumber", "_____________________");
+        parameters.put("date",    "_____________________");
+        parameters.put("annex3DataSource", new JRBeanCollectionDataSource(anex3List));
+
+        JasperReport report;
+        try {
+
+            report = createReport("layouts/module3/Anexa3.jrxml");
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
+
+            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+        } catch (JRException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=Anexa2.pdf").body(bytes);
+    }
+
 
     @RequestMapping(value = "/view-evaluation-sheet", method = RequestMethod.POST)
     public ResponseEntity<byte[]> viewEvaluationSheet(@RequestBody FisaDeEvaluare fisaDeEvaluare) throws CustomException
     {
         byte[] bytes = null;
 
-        //todo: previousYearsPrices
-        // 15. Preţul mediu de import pentru anii precedenţi, în caz că acesta a fost importat (Se completează pentru medicamentele care nu se regăsesc în ţările de referinţă)
+        Integer medicamentId = fisaDeEvaluare.getMedicamentClaimedPriceList().get(0).getId();
+        List<PrevYearAvgPriceDTO> previousYearsPrices = prevYearsPriceAVGInvoiceDetailsRepository.getPreviousYearsImportPriceAVG(medicamentId);
+
 
         Map<String, Object> parameters = new HashMap<>();
-        TreeMap<Integer, Double> fisaDeEv15Map = getFisaDeEvaluare15Map();
-        JRBeanCollectionDataSource fisaDeEvaluare15 = new JRBeanCollectionDataSource(fisaDeEv15Map.entrySet());
+        TreeMap<Integer, Double> fisaDeEv15Map = new TreeMap<>();// getFisaDeEvaluare15Map();
+
+        previousYearsPrices.forEach(p -> {
+            fisaDeEv15Map.put(p.getYear(), p.getAvgPrice());
+        });
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 
-        parameters.put("nr", "A07.PS-01.Rg04-277");
-        parameters.put("date", new Date());
+        parameters.put("nr", "__________________________");
+        parameters.put("date", "__________________________");
         parameters.put("cimOwner", fisaDeEvaluare.getCimOwner());
         parameters.put("countryOwner", fisaDeEvaluare.getCountryOwner());
         parameters.put("manufacturer", fisaDeEvaluare.getManufacturer());
@@ -153,9 +253,9 @@ public class PriceDocsController {
         parameters.put("fisaDeEvaluare12", new JRBeanCollectionDataSource(fisaDeEvaluare.getMinimalPricesAverages()));
         parameters.put("fisaDeEvaluare13", new JRBeanCollectionDataSource(fisaDeEvaluare.getSimilarRegisteredMedicaments()));
         parameters.put("fisaDeEvaluare14", new JRBeanCollectionDataSource(fisaDeEvaluare.getSourceAveragePrices().entrySet()));// fisaDeEvaluare14); sourceAveragePrices
-        parameters.put("fisaDeEvaluare15", new JRBeanCollectionDataSource(fisaDeEvaluare.getPreviousYearsPrices().entrySet()));
-        parameters.put("expertName", fisaDeEvaluare.getExpertName());
-        parameters.put("creationFileDate", sdf.format(fisaDeEvaluare.getCreationFileDate()));
+        parameters.put("fisaDeEvaluare15", new JRBeanCollectionDataSource(fisaDeEv15Map.entrySet()));
+        parameters.put("expertName",       "_______________________");// fisaDeEvaluare.getExpertName());
+        parameters.put("creationFileDate", "_______________________");//sdf.format(fisaDeEvaluare.getCreationFileDate()));
         parameters.put("chiefSectionName", "_______________________");//fisaDeEvaluare.getChiefSectionName());
 
         JasperReport report;
@@ -176,21 +276,4 @@ public class PriceDocsController {
         return ResponseEntity.ok().header("Content-Type", "application/pdf")
                 .header("Content-Disposition", "inline; filename=evaluationSheet.pdf").body(bytes);
     }
-
-
-    private static TreeMap<Integer, Double> getFisaDeEvaluare15Map() {
-        TreeMap<Integer, Double> map = new TreeMap<Integer, Double>();
-        map.put(2008, 41.09);
-        map.put(2009, 42.02);
-        map.put(2010, 42.13);
-        map.put(2011, 42.56);
-        map.put(2012, 42.49);
-        map.put(2013, 42.721);
-        map.put(2014, 42.81);
-        map.put(2015, 42.83);
-        map.put(2016, 42.91);
-        map.put(2017, 43.01);
-        return map;
-    }
-
 }

@@ -399,7 +399,7 @@
 	<parameter name="fisaDeEvaluare15" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<parameter name="Parameter1" class="java.lang.String"/>
 	<parameter name="nr" class="java.lang.String"/>
-	<parameter name="date" class="java.util.Date"/>
+	<parameter name="date" class="java.lang.String"/>
 	<parameter name="genDir" class="java.lang.String"/>
 	<parameter name="cimOwner" class="java.lang.String"/>
 	<parameter name="countryOwner" class="java.lang.String"/>

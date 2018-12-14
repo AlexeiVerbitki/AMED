@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnInit, Output, SimpleChanges} from '@angular/core';
 import {AdministrationService} from "../shared/service/administration.service";
 import {Subscription} from "rxjs";
 import {MatDialog, MatDialogConfig} from "@angular/material";
@@ -22,7 +22,7 @@ export class PaymentComponent implements OnInit {
 
     additionalBonDePlataList: any;
     process: string;
-    requestNimicire : any;
+    requestNimicire: any;
 
     //Incasari
     receiptsList: any[] = [];
@@ -32,7 +32,9 @@ export class PaymentComponent implements OnInit {
     disabled: boolean = false;
     bonSuplimentarNotRender: boolean = false;
     requestIdP: any;
-
+    isCheckProducator: boolean;
+    manufacturesList: any[];
+    isManufactureAutohton: boolean = false;
 
     constructor(private administrationService: AdministrationService,
                 private dialog: MatDialog,
@@ -43,6 +45,7 @@ export class PaymentComponent implements OnInit {
     }
 
     ngOnInit() {
+
     }
 
     loadPaymentOrders() {
@@ -84,23 +87,48 @@ export class PaymentComponent implements OnInit {
 
     @Input()
     set additionalBonDePlata(additionalBonDePlataList: any) {
-        console.log('dfgdf', additionalBonDePlataList);
         this.additionalBonDePlataList = additionalBonDePlataList;
         this.loadPaymentOrders();
     }
 
 
-    get processModule() : string {
+    get processModule(): string {
         return this.process;
     }
 
     @Input()
-    set processModule(process : string)
-    {
+    set processModule(process: string) {
         this.process = process;
     }
 
+    get checkProducator(): boolean {
+        return this.isCheckProducator;
+    }
+
+    @Input()
+    set checkProducator(isCheckProducator: boolean) {
+        this.isCheckProducator = isCheckProducator;
+    }
+
+    get manufactures(): any[] {
+        return this.manufacturesList;
+    }
+
+    @Input()
+    set manufactures(manufacturesList: any[]) {
+        this.manufacturesList = manufacturesList;
+    }
+
     addTaxes() {
+
+        if (this.checkProducator) {
+            let test = this.manufactures.find(r => r.producatorProdusFinit == true);
+            if (!test) {
+                this.errorHandlerService.showError('Nu a fost selectat producatorul produsului finit');
+                return;
+            }
+        }
+
         const dialogConfig2 = new MatDialogConfig();
 
         dialogConfig2.disableClose = false;
@@ -222,18 +250,15 @@ export class PaymentComponent implements OnInit {
 
             this.loadingService.show();
             let observable;
-            if (this.process && this.process === 'NIMICIRE')
-            {
-                let nimicireList = this.bonDePlataList.filter( bdp => bdp.serviceCharge.category === 'BN')
-                if (nimicireList.length !== 1)
-                {
+            if (this.process && this.process === 'NIMICIRE') {
+                let nimicireList = this.bonDePlataList.filter(bdp => bdp.serviceCharge.category === 'BN')
+                if (nimicireList.length !== 1) {
                     this.errorHandlerService.showError('Trebuie sa exista o singura taxa pentru nimicirea medicamentelor.');
                     this.loadingService.hide();
                     return;
                 }
                 observable = this.documentService.viewBonDePlataNimicire(this.requestNimicire);
-            }
-            else {
+            } else {
                 observable = this.documentService.viewBonDePlata(this.requestIdP);
             }
 
@@ -267,6 +292,32 @@ export class PaymentComponent implements OnInit {
             }
             )
         );
+    }
+
+    manufactureModified()
+    {
+        if (this.isCheckProducator) {
+            if(this.manufacturesList) {
+                this.isManufactureAutohton = this.manufacturesList.find(r => {
+                    return r.manufacture.country.code == 'MD' && r.producatorProdusFinit==1
+                });
+                if (this.isManufactureAutohton) {
+                    let i = 0;
+                    for (let x of this.bonDePlataList) {
+                        this.subscriptions.push(this.administrationService.removePaymentOrder(x.id).subscribe(data => {
+                                this.bonDePlataList.splice(i, 1);
+                                this.recalculateTotalTaxes();
+                            }, error => console.log(error))
+                        );
+                        i++;
+                    }
+                }
+            }
+            else
+            {
+                this.isManufactureAutohton = false;
+            }
+        }
     }
 
 }

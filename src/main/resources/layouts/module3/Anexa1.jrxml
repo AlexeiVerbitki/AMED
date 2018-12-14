@@ -38,22 +38,7 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<subDataset name="Dataset1" uuid="53f9b3b6-752b-4952-af75-37238d950749">
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
-		<parameter name="subReport1" class="net.sf.jasperreports.engine.JRReport">
-			<defaultValueExpression><![CDATA[$P{subReport1}]]></defaultValueExpression>
-		</parameter>
-		<queryString>
-			<![CDATA[]]>
-		</queryString>
-		<field name="companyName" class="java.lang.String"/>
-		<field name="country" class="java.lang.String"/>
-		<field name="currency" class="java.lang.String"/>
-		<field name="drugsPricesDataSource" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
-		<field name="list" class="java.util.List"/>
-	</subDataset>
 	<subDataset name="Dataset" uuid="4d397772-7984-4627-b1be-f58ae2d5deac">
-		<parameter name="currency" class="java.lang.String"/>
 		<queryString>
 			<![CDATA[]]>
 		</queryString>
@@ -64,25 +49,19 @@
 		<field name="division" class="java.lang.String"/>
 		<field name="producerPrice" class="java.lang.Double"/>
 		<field name="priceInCurrency" class="java.lang.Double"/>
+		<field name="currency" class="java.lang.String"/>
 	</subDataset>
 	<parameter name="registrationNumber" class="java.lang.String">
 		<defaultValueExpression><![CDATA[$P{registrationNumber}]]></defaultValueExpression>
 	</parameter>
-	<parameter name="registrationDate" class="java.util.Date">
+	<parameter name="registrationDate" class="java.lang.String">
 		<defaultValueExpression><![CDATA[$P{registrationDate}]]></defaultValueExpression>
-	</parameter>
-	<parameter name="dataSource" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource" isForPrompting="false">
-		<defaultValueExpression><![CDATA[$P{dataSource}]]></defaultValueExpression>
-	</parameter>
-	<parameter name="subReport" class="net.sf.jasperreports.engine.JasperReport" isForPrompting="false">
-		<defaultValueExpression><![CDATA[$P{subReport}]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
 	<field name="companyName" class="java.lang.String"/>
 	<field name="country" class="java.lang.String"/>
-	<field name="currency" class="java.lang.String"/>
 	<field name="registrationPrices" class="java.util.List"/>
 	<pageHeader>
 		<band height="153">
@@ -92,7 +71,7 @@
 			</image>
 			<image>
 				<reportElement x="228" y="7" width="330" height="70" uuid="cfb09f66-7644-4e61-bf89-3b6a973ca10f"/>
-				<imageExpression><![CDATA["file:/C:/Users/vladimir.dubceac/JaspersoftWorkspace/all/layouts/icons/header_right.png"]]></imageExpression>
+				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="286" y="77" width="270" height="20" uuid="c9f0e298-02f3-4325-b388-c3c2ba04fd55"/>
@@ -115,7 +94,7 @@ la ordinul Agenţiei Medicamentului şi Dispozitivelor Medicale
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="8" isItalic="true" isUnderline="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["din " + new SimpleDateFormat("dd.MM.yyyy").format($P{registrationDate})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["din " + $P{registrationDate}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="128" width="550" height="19" uuid="8854caab-081f-4ee1-a64c-02453100b075"/>
@@ -139,9 +118,6 @@ medicamentelor cu preţul de producător aprobat pentru înregistrare
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="Dataset" uuid="a8152234-db39-496e-8497-1de52ae175a6">
-						<datasetParameter name="currency">
-							<datasetParameterExpression><![CDATA[$F{currency}]]></datasetParameterExpression>
-						</datasetParameter>
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{registrationPrices})]]></dataSourceExpression>
 					</datasetRun>
 					<jr:column width="41" uuid="470c370f-3df3-48f2-a36a-abd5fd0ea731">
@@ -295,19 +271,12 @@ medicamentelor cu preţul de producător aprobat pentru înregistrare
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
 						<jr:columnHeader style="Table_CH" height="80" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="70" height="40" uuid="e5068f20-a965-44b8-881e-712e6195af61"/>
-								<textElement textAlignment="Center" verticalAlignment="Bottom">
+								<reportElement x="0" y="0" width="70" height="80" uuid="e5068f20-a965-44b8-881e-712e6195af61"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="8" isBold="true"/>
 								</textElement>
 								<text><![CDATA[Preț aprobat pentru înregistrare în valută]]></text>
 							</staticText>
-							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="40" width="70" height="40" uuid="7f375fee-bedf-468e-8935-5d2be6b8e60a"/>
-								<textElement textAlignment="Center">
-									<font fontName="DejaVu Sans" size="8" isBold="true"/>
-								</textElement>
-								<textFieldExpression><![CDATA["("+$P{currency}+")"]]></textFieldExpression>
-							</textField>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="40">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
@@ -315,7 +284,7 @@ medicamentelor cu preţul de producător aprobat pentru înregistrare
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="8"/>
 								</textElement>
-								<textFieldExpression><![CDATA[String.format("%.2f",$F{priceInCurrency}).replace(".",",")]]></textFieldExpression>
+								<textFieldExpression><![CDATA[String.format("%.2f",$F{priceInCurrency}).replace(".",",")+" "+$F{currency}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

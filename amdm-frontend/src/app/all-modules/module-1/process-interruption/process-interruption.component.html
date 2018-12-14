@@ -21,7 +21,6 @@
     </div>
     <hr>
     <app-document [documents]="documents" [nrCerere]="iForm.get('requestNumber').value" [dcTypes]="docTypes" (documentModified)="documentModified($event)"></app-document>
-    <hr>
     <div class="row">
       <div class="col-md-6">
         <div class="md-form">
@@ -79,7 +78,7 @@
           <th scope="row" *ngIf="a.docType.category=='NL' || a.docType.category=='OI'">{{ a.status }}</th>
           <td *ngIf="a.docType.category=='NL' || a.docType.category=='OI'">
             <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)"><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
-            <button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && a.docType.category=='NL'" class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)">Stergere</button>
+            <button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && a.docType.category=='NL'" class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
           </td>
       </tr>
       </tbody>

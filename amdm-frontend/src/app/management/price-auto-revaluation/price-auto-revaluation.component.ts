@@ -24,6 +24,7 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
     formSubmitted: boolean = false;
     savePrices: boolean = false;
     outputDocuments: any[] = [{
+        docType: {category: 'LR'},
         description: 'Anexa 3:Lista medicamentelor cu prețul revizuit după modificarea valutei',
         number: undefined,
         status: "Nu este atasat"
@@ -155,7 +156,7 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
                 currency: {id: p.currencyId},
                 medicament: {id: p.medicamentId},
                 type: {id: 11}, //Propus dupa modificarea valutei
-                document: uploadedDoc
+                documents: this.documents
             });
         });
 
@@ -163,7 +164,6 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
                 console.log('saved', data.body);
                 this.loadingService.hide();
                 this.route.navigate(['dashboard/homepage']);
-
             },
             error1 => {
                 console.log(error1);
@@ -201,7 +201,46 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
         return ((initialValue - modifiedValue) / modifiedValue) * 100;
     }
 
+    createAnexa3DTO(): any {
+        let anexa3ListDTO: any[] = [];
+
+        this.dataSource.data.forEach(m => {
+            anexa3ListDTO.push({
+                medicineInfo: {
+                    medicineCode: m.medicamentCode,
+                    commercialName: m.commercialName,
+                    pharmaceuticalForm: m.pharmaceuticalForm,
+                    dose: m.dose,
+                    division: m.division
+                },
+                country: m.country,
+                producerCompany: m.manufacture,
+                previousPrice: m.priceMdl,
+                reviewedPrice: m.priceMdlNew,
+                producerPrice: m.price,
+                currency: m.currency
+            });
+        });
+
+        return anexa3ListDTO;
+    }
+
     viewDoc(document: any) {
+        if (document.docType.category != 'LR') { //  Anexa 3:Lista medicamentelor cu prețul revizuit după modificarea valutei
+            return;
+        }
+        this.loadingService.show();
+
+        this.subscriptions.push(this.priceService.viewAnexa3(this.createAnexa3DTO()).subscribe(data => {
+                let file = new Blob([data], {type: 'application/pdf'});
+                var fileURL = URL.createObjectURL(file);
+                window.open(fileURL);
+                this.loadingService.hide();
+            }, error => {
+                this.loadingService.hide();
+            }
+            )
+        );
     }
 
     ngOnDestroy(): void {

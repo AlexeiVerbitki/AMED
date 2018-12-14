@@ -5,7 +5,7 @@ import {Observable, Subject, Subscription} from "rxjs";
 import {MatDialog} from "@angular/material";
 import {Router} from "@angular/router";
 import {AdministrationService} from "../../../shared/service/administration.service";
-import {map, startWith} from "rxjs/operators";
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
 import {saveAs} from 'file-saver';
 import {RequestService} from "../../../shared/service/request.service";
 import {Document} from "../../../models/document";
@@ -13,6 +13,8 @@ import {AuthService} from "../../../shared/service/authetication.service";
 import {MedicamentService} from "../../../shared/service/medicament.service";
 import {LoaderService} from "../../../shared/service/loader.service";
 import {TaskService} from "../../../shared/service/task.service";
+import {LicenseService} from "../../../shared/service/license/license.service";
+import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
 
 @Component({
     selector: 'app-reg-drug-control',
@@ -22,7 +24,6 @@ import {TaskService} from "../../../shared/service/task.service";
 export class RegDrugControl implements OnInit {
     documents: Document [] = [];
     requests: Cerere [] = [];
-    companies: any[];
     rForm: FormGroup;
     dataForm: FormGroup;
     sysDate: string;
@@ -31,17 +32,19 @@ export class RegDrugControl implements OnInit {
     generatedDocNrSeq: number;
     filteredOptions: Observable<any[]>;
     formSubmitted: boolean;
-    isWrongValueCompany: boolean;
     model: string;
     private subscriptions: Subscription[] = [];
     medInputs = new Subject<string>();
     medLoading = false;
     docTypes: any[];
+    companies: Observable<any[]>;
+    loadingCompany: boolean = false;
+    companyInputs = new Subject<string>();
 
     constructor(private fb: FormBuilder, public dialog: MatDialog, private router: Router,
                 private administrationService: AdministrationService, private requestService: RequestService,
                 private authService: AuthService, private medicamentService: MedicamentService,
-                private loadingService: LoaderService, private taskService: TaskService,) {
+                private loadingService: LoaderService, private taskService: TaskService, private licenseService: LicenseService, private errorHandlerService: ErrorHandlerService) {
 
         this.rForm = fb.group({
             'compGet': [null, Validators.required],
@@ -97,19 +100,24 @@ export class RegDrugControl implements OnInit {
 
     getAllCompanies() {
 
-        this.subscriptions.push(
-            this.administrationService.getAllCompanies().subscribe(data => {
-                    this.companies = data;
-                    this.filteredOptions = this.rForm.get('company').valueChanges
-                        .pipe(
-                            startWith<string | any>(''),
-                            map(value => typeof value === 'string' ? value : value.name),
-                            map(name => this._filter(name))
-                        );
-                },
-                error => console.log(error)
-            )
-        );
+        this.companies =
+            this.companyInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) return true;
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingCompany = true;
+
+                }),
+                flatMap(term =>
+
+                    this.administrationService.getCompanyNamesAndIdnoList(term).pipe(
+                        tap(() => this.loadingCompany = false)
+                    )
+                )
+            );
     }
 
     displayFn(user?: any): string | undefined {
@@ -131,9 +139,9 @@ export class RegDrugControl implements OnInit {
     nextStep() {
         this.formSubmitted = true;
 
-        this.isWrongValueCompany = !this.companies.some(elem => {
-            return this.rForm.get('company').value == null ? true : elem.name === this.rForm.get('company').value.name;
-        });
+        if (!this.rForm.valid) {
+            return;
+        }
 
         if (this.documents.length === 0 || (this.rForm.get('company').invalid)) {
             return;
@@ -156,10 +164,7 @@ export class RegDrugControl implements OnInit {
 
         this.setSelectedRequest();
 
-        this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
-                this.router.navigate([this.model + data.body.id]);
-            })
-        );
+        this.goToNextStepOnLicenseValid(modelToSubmit);
 
     }
 
@@ -176,10 +181,44 @@ export class RegDrugControl implements OnInit {
         }
     }
 
-    private _filter(name: string): any[] {
-        const filterValue = name.toLowerCase();
+    private goToNextStepOnLicenseValid(modelToSubmit: any) {
 
-        return this.companies.filter(option => option.name.toLowerCase().includes(filterValue));
+        let company = this.rForm.get('company').value;
+
+        if (company != null && company.licenseId != null) {
+            this.subscriptions.push(
+                this.licenseService.findLicenseById(company.licenseId).subscribe(data => {
+                        if (data != null && data.expirationDate != null) {
+                            let licenseDate = new Date(data.expirationDate);
+                            let date = new Date();
+                            let haveLicence = false;
+                            if (licenseDate.getTime() > date.getTime()) {
+                                haveLicence = true;
+                            }
+                            if (!haveLicence) {
+                                this.errorHandlerService.showError('Licenta nu este valida.');
+                                return;
+                            }
+                            try {
+                                this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
+                                        this.router.navigate([this.model + data.body.id]);
+                                    })
+                                );
+                            } catch (err) {
+                                return;
+                            }
+                        } else {
+                            this.errorHandlerService.showError('Licenta nu este valida.');
+                            return;
+                        }
+                    }
+                )
+            );
+        } else {
+            this.errorHandlerService.showError('Licenta nu este valida.');
+            return;
+        }
+
     }
 
 }

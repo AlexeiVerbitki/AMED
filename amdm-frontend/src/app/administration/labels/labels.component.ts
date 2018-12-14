@@ -41,6 +41,9 @@ export class LabelsComponent implements OnInit {
   displayedColumns: any[] = ['id', 'code', 'name', 'long_name', 'units_of_measurement_id', 'allow_for_ranges', 'start_series', 'end_series', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
+  visibility: boolean = false;
+  title: string = 'Labels';
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -57,6 +60,10 @@ export class LabelsComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 
   codeEdit = new FormControl('', Validators.required);

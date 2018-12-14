@@ -1,18 +1,23 @@
 package com.bass.amed.service;
 
 import com.bass.amed.dto.prices.CatalogPriceDTO;
+import com.bass.amed.dto.prices.registration.annexes.MedicineInfoForAnnex1;
+import com.bass.amed.dto.prices.registration.annexes.RegistrationPriceDataForAnnex1;
 import com.bass.amed.entity.NmCurrenciesEntity;
 import com.bass.amed.entity.NmCurrenciesHistoryEntity;
 import com.bass.amed.projection.GetAVGCurrencyProjection;
 import com.bass.amed.repository.CurrencyHistoryRepository;
 import com.bass.amed.repository.CurrencyRepository;
+import com.bass.amed.repository.prices.PriceRepository;
 import com.bass.amed.repository.prices.PricesEvaluationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -31,6 +36,27 @@ public class PriceEvaluationService {
 
     @Autowired
     private CurrencyRepository currencyRepository;
+
+    @Autowired
+    private PriceRepository priceRepository;
+
+
+    public List<MedicineInfoForAnnex1> getPricesForApproval() {
+        Optional<List<CatalogPriceDTO>> requests = Optional.of(pricesEvaluationRepository.getPriceForAnexa1());
+
+        List<MedicineInfoForAnnex1> pricesDTO = new ArrayList<>();
+
+        if (requests.isPresent()) {
+
+            Map<Pair<String, String>, List<CatalogPriceDTO>> grouped = requests.get().stream().collect(Collectors.groupingBy(p -> Pair.of(p.getCompany(), p.getCountry())));
+            grouped.forEach((p,l) -> {
+                List<RegistrationPriceDataForAnnex1> list = l.stream().map(pp -> new RegistrationPriceDataForAnnex1(pp.getMedicamentCode(), pp.getCommercialName(), pp.getPharmaceuticalForm(), pp.getDose(), pp.getDivision(), pp.getPriceMdlNew(), pp.getPriceNew(), pp.getCurrency())).collect(Collectors.toList());
+                pricesDTO.add(new MedicineInfoForAnnex1(p.getFirst(), p.getSecond(), list));
+            });
+        }
+
+        return pricesDTO;
+    }
 
 
     public List<CatalogPriceDTO> getGenericsPricesForRevaluation(Integer internationalNameId, Double originalMedPriceMdl) {

@@ -1,4 +1,4 @@
-<div mat-dialog-content style="height: 500px">
+<div mat-dialog-content>
         <form [formGroup]='reqForm'>
           <h3 class="text-center my-3 font-weight-bold">{{title}}</h3>
           <div class="row">
@@ -18,52 +18,55 @@
               </div>
             </div>
           </div>
+          <!--<div class="row">-->
+            <!--<div class="col-md-12">-->
+              <!--<div class="md-form">-->
+                <!--<input id="titlu" mdbInputDirective type="text" class="form-control" formControlName="title">-->
+                <!--<label for="titlu">Titlu</label>-->
+              <!--</div>-->
+              <!--<div *ngIf="(isRegisterDoc) && reqForm.get('title').hasError('required')">-->
+                <!--<small class="text-muted"><strong class="text-danger">Titlul trebuie introdus</strong></small>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</div>-->
           <div class="row">
             <div class="col-md-12">
-              <div class="md-form">
-                <input id="titlu" mdbInputDirective type="text" class="form-control" formControlName="title">
-                <label for="titlu">Titlu</label>
+            <div class="md-form-modified">
+              <ng-select id="function" name="function" [items]="functions" [loading]="loadingFunctions"
+                         bindLabel="value"
+                         placeholder="Spre semnare la *"
+                         formControlName="function">
+                <ng-template ng-option-tmp let-item="item">
+                  {{item.value}} <br />
+                  <small class="form-text text-muted">{{item.description}}</small>
+                </ng-template>
+              </ng-select>
+              <div *ngIf="isRegisterDoc && reqForm.get('function').hasError('required')">
+                <small class="text-muted"><strong class="text-danger">Spre semnare trebuie selectat</strong></small>
               </div>
-              <div *ngIf="(isRegisterDoc) && reqForm.get('title').hasError('required')">
-                <small class="text-muted"><strong class="text-danger">Titlul trebuie introdus</strong></small>
-              </div>
+            </div>
             </div>
           </div>
           <div class="row">
             <div class="col-md-12">
               <div class="md-form">
-                <textarea type="text" id="content" class="md-textarea form-control" mdbInputDirective formControlName="content"></textarea>
+                <textarea style="height: 340px" type="text" id="content" class="md-textarea form-control" mdbInputDirective formControlName="content"></textarea>
                 <label for="content">Continut</label>
               </div>
-              <div *ngIf="(isRegisterDoc) && reqForm.get('content').hasError('required')">
+              <div *ngIf="isRegisterDoc && reqForm.get('content').hasError('required')">
                 <small class="text-muted"><strong class="text-danger">Continutul trebuie introdus</strong></small>
               </div>
             </div>
           </div>
-          <!--<div class="row">-->
-            <!--<div class="col-md-12">-->
-              <!--<div class="md-form">-->
-                <!--<input id="email" mdbInputDirective type="text" class="form-control" formControlName="email">-->
-                <!--<label for="email">Poșta electronică</label>-->
-              <!--</div>-->
-              <!--<div *ngIf="isSendEmail && reqForm.get('email').hasError('required')">-->
-                <!--<small class="text-muted"><strong class="text-danger">Poșta electronică trebuie introdusa</strong></small>-->
-              <!--</div>-->
-              <!--<div *ngIf="isSendEmail && reqForm.get('email').hasError('email')">-->
-                <!--<small class="text-muted"><strong class="text-danger">Poșta electronică este invalida</strong></small>-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</div>-->
         </form>
-        <div class="text-center">
-          <div mat-dialog-actions>
-            <div class="w-100">
-            <button class="btn btn-primary btn-sm-bl btn-sm" (click)="view()">Vizualizare</button>
-            <!--<button class="btn btn-primary btn-sm-bl btn-sm" (click)="sendMail()">Expediere prin posta electronica</button>-->
-            <button class="btn btn-dark-green-color btn-sm-bl btn-sm" (click)="ok()">Salvare</button>
-            <button class="btn btn-danger btn-sm-bl btn-sm" (click)="cancel()">Inchidere</button>
-            </div>
-          </div>
-        </div>
+</div>
+<div class="text-center">
+  <div mat-dialog-actions>
+    <div class="w-100">
+      <button class="btn btn-primary btn-sm-bl btn-sm" (click)="view()">Vizualizare</button>
+      <button class="btn btn-dark-green-color btn-sm-bl btn-sm" (click)="save()">Salvare</button>
+      <button class="btn btn-danger btn-sm-bl btn-sm" (click)="cancel()">Inchidere</button>
+    </div>
+  </div>
 </div>
 

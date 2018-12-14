@@ -1,17 +1,15 @@
-import {Injectable} from '@angular/core';
 import {BehaviorSubject} from "rxjs";
+import {Injectable} from "@angular/core";
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class NavbarTitleService {
     public message: BehaviorSubject<string>;
 
     constructor() {
-        this.message = new BehaviorSubject<string>('');
+            this.message = new BehaviorSubject<string>('');
     }
 
     showTitleMsg(titleMsg: string) {
-        this.message.next(titleMsg);
+            this.message.next(titleMsg);
     }
 }

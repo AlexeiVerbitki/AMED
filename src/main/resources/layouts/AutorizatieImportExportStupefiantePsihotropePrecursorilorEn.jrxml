@@ -67,7 +67,7 @@
 		<band height="100">
 			<image>
 				<reportElement x="0" y="2" width="580" height="88" uuid="ae27ee01-a17f-4e89-81b4-1417b9af443c"/>
-				<imageExpression><![CDATA["layouts/icons/stupefiante-header.PNG"]]></imageExpression>
+				<imageExpression><![CDATA["layouts/icons/stupefiante-header.png"]]></imageExpression>
 			</image>
 		</band>
 	</pageHeader>

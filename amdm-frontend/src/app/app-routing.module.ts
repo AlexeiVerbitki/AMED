@@ -12,8 +12,6 @@ import {ModuleDashboardComponent} from "./dashboard/module-dashboard.component";
 import {AuthGuard} from "./shared/auth-guard/auth.guard";
 import {AdminDashboardComponent} from "./dashboard/admin-dashboard.component";
 import {GestDocComponent} from "./document-management/gest-doc/gest-doc.component";
-import {PricesComponent} from "./management/prices/prices.component";
-import {PriceAutoRevaluationComponent} from "./management/price-auto-revaluation/price-auto-revaluation.component";
 
 const routes: Routes = [
     {path: '', redirectTo: '/login', pathMatch: 'full'},

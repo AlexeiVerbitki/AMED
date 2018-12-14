@@ -31,6 +31,10 @@ const ELEMENT_DATA: Bank[] = [
   styleUrls: ['./currencies-history.component.css']
 })
 export class CurrenciesHistoryComponent implements OnInit {
+
+  
+  visibility: boolean = false;
+  title: string = 'Currencies history';
   displayedColumns: any[] = ['id', 'period', 'value', 'multiplicity', 'currency_id', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
@@ -50,6 +54,9 @@ export class CurrenciesHistoryComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 
   periodEdit = new FormControl('', Validators.required);

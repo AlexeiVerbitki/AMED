@@ -1,6 +1,5 @@
 package com.bass.amed.entity;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +18,8 @@ public class ScrUserEntity {
     private String fullname;
     @Column(name = "username")
     private String username;
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")

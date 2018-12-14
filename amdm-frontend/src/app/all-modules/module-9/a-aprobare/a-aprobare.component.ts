@@ -63,8 +63,8 @@ export class AAprobareComponent implements OnInit, OnDestroy {
                 'eudraCtNr': ['', Validators.required],
                 'code': ['code', Validators.required],
                 'medicalInstitutions': [],
-                'trialPopNat': ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-                'trialPopInternat': ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+                'trialPopNat': [''],
+                'trialPopInternat': [''],
                 'medicament': [],
                 'referenceProduct': [],
                 'status': ['P'],
@@ -72,7 +72,8 @@ export class AAprobareComponent implements OnInit, OnDestroy {
                 'placebo': [],
                 'clinicTrialAmendEntities': [],
                 'comissionNr': ['', Validators.required],
-                'comissionDate': ['', Validators.required]
+                'comissionDate': ['', Validators.required],
+                'clinicTrialNotificationEntities':[]
             }),
             'status': [undefined, Validators.required],
         });
@@ -138,6 +139,7 @@ export class AAprobareComponent implements OnInit, OnDestroy {
             console.log(formModel);
             if (this.approveClinicalTrailForm.invalid ) {
                alert('InvalidForm');
+               console.log('this.approveClinicalTrailForm.invalid', this.approveClinicalTrailForm);
                return;
             }
             this.loadingService.show();

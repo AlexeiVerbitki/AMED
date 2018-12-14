@@ -160,8 +160,8 @@
                     <td scope="row">{{ a.description }}</td>
                     <td scope="row">{{ a.number }}</td>
                     <td scope="row">{{ a.status }}</td>
-                    <td>
-                        <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect [disabled]="true" (click)="viewDoc(a)"><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
+                    <td *ngIf="dataSource.data.length > 0 && (a.docType?.category == 'LP' || a.docType?.category == 'OP' || a.docType?.category == 'LG')">
+                        <button mdbTooltip="Generare document" class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect [disabled]="false" (click)="viewDoc(a)"><i class="fa fa-puzzle-piece fa-lg" aria-hidden="true"></i></button>
                     </td>
                 </tr>
                 </tbody>
@@ -169,8 +169,12 @@
         </div>
     </div>
 
-    <div class="alert alert-danger text-center" *ngIf="formSubmitted && documents.length == 0">
+    <div class="alert alert-danger text-center" *ngIf="formSubmitted && !uploadedAllNeeded">
         <strong>Încărcați documentele necesare</strong>
+    </div>
+
+    <div class="alert alert-danger text-center" *ngIf="formSubmitted && this.dataSource.data.length == 0">
+        <strong>Nu exista prețuri pentru salvare</strong>
     </div>
 
     <div class="text-center">

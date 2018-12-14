@@ -21,7 +21,6 @@
 		<hr>
 		<app-expert-comitee [expert]="expert" [formSubmitted]="formSubmitted"></app-expert-comitee>
 		<app-document [documents]="documents" [nrCerere]="expertForm.get('requestNumber').value" [dcTypes]="docTypes" (documentModified)="documentModified($event)"></app-document>
-		<hr>
 		<div class="row">
 			<div class="col-md-4">
 				<div class="md-form">
@@ -85,11 +84,6 @@
 					<div class="col-12">
 						<div class="card-header-title white-text">Substanţe active</div>
 					</div>
-					<!-- <div class="col-6">
-						<div class="text-right fap text-white">
-							<i (click)="addDivision()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
-						</div>
-					</div> -->
 				</div>
 			</div>
 
@@ -122,6 +116,37 @@
 				</tbody>
 			</table>
 		</div>
+		<hr>
+		<!--Substante auxiliare-->
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Excipienti</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- Tabela substante auxiliare -->
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Denumire</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let substance of auxiliarySubstancesTable;let i = index">
+					<td>{{ i+1 }}</td>
+					<th scope="row">{{ substance.auxSubstance.description }}</th>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="auxiliarySubstancesTable.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
 		<hr>
 		<h5 class="text-center font-weight-bold">Informatii generale medicament</h5>
 		<hr>
@@ -195,6 +220,12 @@
 					<label for="medicamentType">Clasificarea medicamentului</label>
 				</div>
 			</div>
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="customsCode" mdbInputDirective type="text" class="form-control" formControlName="customsCode" [attr.disabled]="true">
+					<label for="customsCode">Cod vamal</label>
+				</div>
+			</div>
 		</div>
 		<div class="row" formGroupName="medicament">
 			<div class="col-md-4">
@@ -217,25 +248,17 @@
 			</div>
 		</div>
 		<hr>
-		<!-- <h5 class="text-center font-weight-bold">Producatori</h5> -->
 		<div class="gradient-card-header bg-sidebar border-gradient">
 			<div class="container-fluid">
-				<!-- Title -->
 				<div class="row">
 					<div class="col-12">
 						<div class="card-header-title white-text">Producatori</div>
 					</div>
-					<!-- <div class="col-6">
-						<div class="text-right fap text-white">
-							<i (click)="addDivision()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
-						</div>
-					</div> -->
 				</div>
 			</div>
 
 		</div>
 
-		<!-- Card content -->
 		<div class="card-body card-body-cascade">
 		<table class="table table-widths text-center">
 			<thead class="bg-sidebar white-text">
@@ -259,6 +282,8 @@
 		</table>
 		</div>
 		<hr>
+		<app-instruction [canUpload]="false" [instructions]="instructions"></app-instruction>
+		<app-macheta [canUpload]="false" [machets]="machets"></app-macheta>
 		<div class="gradient-card-header bg-sidebar border-gradient">
 			<div class="container-fluid">
 				<div class="row">

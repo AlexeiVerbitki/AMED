@@ -44,6 +44,10 @@ const ELEMENT_DATA: Bank[] = [
   styleUrls: ['./custom-points.component.css']
 })
 export class CustomPointsComponent implements OnInit {
+
+  visibility: boolean = false;
+  title: string = 'Custom points';
+
   displayedColumns: any[] = ['id', 'code', 'description', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
@@ -70,5 +74,9 @@ export class CustomPointsComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 }

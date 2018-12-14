@@ -1,20 +1,18 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from "rxjs";
 import {Document} from "../../../models/document";
-import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AdministrationService} from "../../../shared/service/administration.service";
 import {MatDialog} from "@angular/material";
 import {AuthService} from "../../../shared/service/authetication.service";
 import {MedicamentService} from "../../../shared/service/medicament.service";
 import {AnnihilationService} from "../../../shared/service/annihilation/annihilation.service";
-import {PaymentOrder} from "../../../models/paymentOrder";
-import {Receipt} from "../../../models/receipt";
 import {LoaderService} from "../../../shared/service/loader.service";
 import {DocumentService} from "../../../shared/service/document.service";
-import {LicenseDecisionDialogComponent} from "../../../dialog/license-decision-dialog/license-decision-dialog.component";
 import {AnnihilationMedDialogComponent} from "../../../dialog/annihilation-med-dialog/annihilation-med-dialog.component";
 import {DecimalPipe} from "@angular/common";
+import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
 
 @Component({
     selector: 'app-drugs-destroy-evaluate',
@@ -47,7 +45,7 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
     endDate: Date;
 
     paymentTotal: number;
-    outDocuments: any[] = [];
+    // outDocuments: any[] = [];
 
     //Validations
     mForm: FormGroup;
@@ -64,10 +62,12 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
                 private annihilationService: AnnihilationService,
                 private loadingService: LoaderService,
                 private documentService: DocumentService,
-                public dialogDetails: MatDialog) {
+                public dialogDetails: MatDialog,
+                private navbarTitleService: NavbarTitleService) {
     }
 
     ngOnInit() {
+        this.navbarTitleService.showTitleMsg('Receptia medicamentelor');
         this.startDate = new Date();
 
         this.initFormData();
@@ -76,7 +76,6 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
             if (params['id']) {
                 this.requestId = params['id'];
-                console.log('sdf', this.requestId);
 
                 this.subscriptions.push(
                     this.annihilationService.retrieveAnnihilationByRequestId(this.requestId).subscribe(data => {
@@ -111,8 +110,7 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
             'nrCererii': [{value: null, disabled: true}],
             'dataCererii': [{value: null, disabled: true}],
             'company': [{value: null, disabled: true}, Validators.required],
-            'firstname': [{value: null}, Validators.required],
-            'lastname': [{value: null}, Validators.required],
+
         });
 
     }
@@ -125,8 +123,7 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
     private patchData(data) {
         this.mForm.get('nrCererii').patchValue(data.requestNumber);
         this.mForm.get('dataCererii').patchValue(new Date(data.startDate));
-        this.mForm.get('firstname').patchValue(data.medicamentAnnihilation.firstname);
-        this.mForm.get('lastname').patchValue(data.medicamentAnnihilation.lastname);
+
         this.mForm.get('company').patchValue(data.medicamentAnnihilation.companyName);
 
         this.docs = data.medicamentAnnihilation.documents;
@@ -147,46 +144,45 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
         this.calculateTotalSum();
 
 
-        this.refreshOutputDocuments();
+        // this.refreshOutputDocuments();
     }
 
-    private refreshOutputDocuments() {
-        this.outDocuments = [];
+    // private refreshOutputDocuments() {
+    //     this.outDocuments = [];
+    //
+    //     let outDocument = {
+    //         name: 'Act de recepţie a medicamentelor pentru nimicirea ulterioară a lor',
+    //         number: 'NA-' + this.oldData.requestNumber,
+    //         status: this.getOutputDocStatus()
+    //     };
+    //
+    //     this.outDocuments.push(outDocument);
+    // }
 
-        let outDocument = {
-            name: 'Act de recepţie a medicamentelor pentru nimicirea ulterioară a lor',
-            number: 'NA-' + this.oldData.requestNumber,
-            status: this.getOutputDocStatus()
-        };
-
-        this.outDocuments.push(outDocument);
-    }
-
-    getOutputDocStatus(): any {
-        let result;
-        result = this.docs.find(doc => {
-            if (doc.docType.category === 'NA' && doc.number === 'NA-' + this.oldData.requestNumber) {
-                return true;
-            }
-        });
-        if (result) {
-            return {
-                mode: 'A',
-                description: 'Atasat'
-            };
-        }
-
-        return {
-            mode: 'N',
-            description: 'Nu este atasat'
-        };
-    }
+    // getOutputDocStatus(): any {
+    //     let result;
+    //     result = this.docs.find(doc => {
+    //         if (doc.docType.category === 'NA' && doc.number === 'NA-' + this.oldData.requestNumber) {
+    //             return true;
+    //         }
+    //     });
+    //     if (result) {
+    //         return {
+    //             mode: 'A',
+    //             description: 'Atasat'
+    //         };
+    //     }
+    //
+    //     return {
+    //         mode: 'N',
+    //         description: 'Nu este atasat'
+    //     };
+    // }
 
 
     submit() {
         this.mFormSubbmitted = true;
-        console.log('sdfsd', this.mForm);
-        if (!this.mForm.valid || this.docs.length == 0) {
+        if ( this.docs.length == 0) {
             return;
         }
 
@@ -238,10 +234,6 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
 
         annihilationModel.medicamentsMedicamentAnnihilationMeds = this.medicamentsToDestroy;
 
-        annihilationModel.firstname = this.mForm.get('firstname').value;
-        annihilationModel.lastname = this.mForm.get('lastname').value;
-
-
         modelToSubmit.requestHistories = [{
             startDate: this.startDate,
             endDate: this.endDate,
@@ -284,7 +276,6 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
                     serviceCharge: data
 
                 };
-                console.log('pay', paymentOrder);
                 this.subscriptions.push(this.administrationService.addPaymentOrder(paymentOrder).subscribe(data => {
                         //Refresh list
                         this.additionalBonDePlata = data;
@@ -297,13 +288,13 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
 
     }
 
-    checkAllDocumentsWasAttached(): boolean {
-        return !this.outDocuments.find(od => od.status.mode === 'N');
-    }
-
-    documentAdded(event) {
-        this.refreshOutputDocuments();
-    }
+    // checkAllDocumentsWasAttached(): boolean {
+    //     return !this.outDocuments.find(od => od.status.mode === 'N');
+    // }
+    //
+    // documentAdded(event) {
+    //     this.refreshOutputDocuments();
+    // }
 
     details(medicamentToDestroy: any) {
         const dialogRef2 = this.dialogDetails.open(AnnihilationMedDialogComponent, {
@@ -338,6 +329,7 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        this.navbarTitleService.showTitleMsg('');
         this.subscriptions.forEach(s => s.unsubscribe());
     }
 

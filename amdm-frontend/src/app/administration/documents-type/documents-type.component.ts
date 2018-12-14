@@ -34,6 +34,9 @@ const ELEMENT_DATA: Bank[] = [
 })
 export class DocumentsTypeComponent implements OnInit {
 
+  visibility: boolean = false;
+  title: string = 'Documents type';
+
   displayedColumns: any[] = ['id', 'description', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
@@ -54,6 +57,12 @@ export class DocumentsTypeComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
+  changeVisibility() {
+    this.visibility = !this.visibility;
+  }
+
+
+
   denumireEdit = new FormControl('', Validators.required);
 
   denumireAdd = new FormControl('', Validators.required);

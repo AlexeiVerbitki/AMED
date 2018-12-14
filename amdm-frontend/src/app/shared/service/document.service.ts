@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpRequest, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpParams, HttpRequest, HttpResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
@@ -61,6 +61,10 @@ export class DocumentService {
             });
     }
 
+    viewRequestNew(model : any): Observable<any> {
+        return this.http.post('/api/documents/view-request-additional-data-new', model,{ responseType: 'blob'});
+    }
+
     viewMedicamentAuthorizationOrder(docNr : any): Observable<any> {
         return this.http.get('/api/documents/view-medicament-authorization-order', {
             params: {
@@ -91,6 +95,19 @@ export class DocumentService {
 
     getDocumentsByIds(documentsIds: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/documents/by-ids', documentsIds, {observe: 'response'});
+    }
+
+    getPricesDocuments(pricesIds: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/documents/by-price-ids', pricesIds, {observe: 'response'});
+    }
+
+    viewTableData(columns : string[], data : any[]): Observable<any> {
+        let object : any = {};
+        object.columns = columns;
+        object.data = data;
+
+        return this.http.post('/api/documents/view-table-pdf', object, { responseType: 'blob'});
+
     }
 
     // generateOrdinDeInrerupereAInregistrariiMedicamentului(nrDocument: any, nrCerere: any): Observable<any> {

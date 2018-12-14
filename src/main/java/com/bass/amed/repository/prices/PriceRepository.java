@@ -2,7 +2,6 @@ package com.bass.amed.repository.prices;
 
 import com.bass.amed.entity.PricesEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -26,4 +25,6 @@ public interface PriceRepository extends JpaRepository<PricesEntity, Integer>
             "  AND type_id = ?2\n" +
             "  AND revision_date = (select MAX(revision_date) from prices)", nativeQuery = true)
     PricesEntity findLast(Integer id, Integer typeId);
+
+    List<PricesEntity> findAllByTypeId(Integer typeId);
 }

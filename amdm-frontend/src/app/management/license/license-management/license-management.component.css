@@ -32,7 +32,7 @@
     justify-content:center;
 }
 
-.table th, .table td {
+table th, .table td {
     text-align: center !important;
 }
 
@@ -41,3 +41,4 @@ table td a {
     color : #488CD3;
     font-weight : bold;
 }
+

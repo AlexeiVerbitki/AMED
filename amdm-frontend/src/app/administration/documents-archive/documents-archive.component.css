@@ -20,3 +20,19 @@ mat-header-cell {
 .modal-open .modal {
   overflow-y: auto;
 }
+
+.fa-touched {
+  font-size: 0.95em;
+}
+
+.fa-untouched {
+  font-size: 1.33em;
+}
+
+.modal-mdb-color {
+  background: #59698d !important;
+}
+
+.modal-dark-green {
+  background: #218c74 !important;
+}

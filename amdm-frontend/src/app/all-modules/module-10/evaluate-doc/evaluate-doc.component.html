@@ -1,97 +1,76 @@
 <div class="container-fluid sky z-depth-2">
-  <form [formGroup]='rForm'>
-    <div class="row">
-      <div class="col-lg-6">
-        <div class="md-form">
-          <input id="nrCererii" mdbInputDirective type="text" class="form-control" formControlName="requestNumber"
-            [attr.disabled]="true">
-          <label for="nrCererii">Nr. cererii</label>
-        </div>
-      </div>
-      <div class="col-lg-6">
-        <div class="md-form-modified">
-          <mat-form-field class="w-100">
-            <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="startDate">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker touchUi #picker></mat-datepicker>
-          </mat-form-field>
-        </div>
-      </div>
-    </div>
-    <hr>
-    <app-document [documents]="documents" [nrCerere]="rForm.get('requestNumber').value" [dcTypes]="docTypes"></app-document>
-    <!--<div *ngIf="formSubmitted && documents.length==0">-->
-      <!--<small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>-->
-    <!--</div>-->
-    <hr>
-    <div class="row" >
-      <div class="col-md-6">
-        <div class="md-form-modified">
-          <ng-select id="expeditor" name="expeditor" [items]="expeditori" bindLabel="name" placeholder="Expeditor"
-            formControlName="sender" required="true">
-          </ng-select>
-          <div *ngIf="formSubmitted && rForm.get('sender').invalid">
-            <small class="text-muted"><strong class="text-danger">Error</strong></small>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="md-form-modified">
-          <ng-select id="termenDeExecutare" name="termenDeExecutare" [items]="termenDeExecutari" bindLabel="name"
-            placeholder="Termen de executare" formControlName="executionDate" required="true">
-          </ng-select>
-          <div *ngIf="formSubmitted && rForm.get('executionDate').invalid">
-            <small class="text-muted"><strong class="text-danger">Error</strong></small>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-12">
-        <div class="md-form">
-          <textarea type="text" id="problematica" class="md-textarea form-control" mdbInputDirective formControlName="problemDescription"></textarea>
-          <label for="problematica">Problematica</label>
-        </div>
-      </div>
+	<form [formGroup]='eForm'>
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="md-form">
+					<input id="nrCererii" mdbInputDirective type="text" class="form-control" formControlName="id"
+					       [attr.disabled]="true">
+					<label for="nrCererii">Nr. cererii</label>
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input matInput [matDatepicker]="picker" placeholder="Data" formControlName="currentDate" >
+						<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #picker></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+		</div>
+		<app-document [documents]="documents" [nrCerere]="eForm.get('id').value" [dcTypes]="docTypes"></app-document>
+		<div *ngIf="formSubmitted && documents.length==0">
+			<small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
+		</div>
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="md-form">
+					<input id="sender" mdbInputDirective type="text" class="form-control" formControlName="sender"
+					       [attr.disabled]="true">
+					<label for="sender">Expeditor</label>
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<div class="md-form">
+					<input id="executionDate" mdbInputDirective type="text" class="form-control" formControlName="executionDateString"
+					       [attr.disabled]="true">
+					<label for="executionDate">Termen de executare</label>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="md-form">
+					<textarea type="text" id="problematica" class="md-textarea form-control" mdbInputDirective formControlName="problemDescription"></textarea>
+					<label for="problematica">Problematica</label>
+				</div>
+			</div>
 
-    </div>
-    <hr>
-    <div class="row">
-      <div class="col-6">
-        <div class="row">
-          <div class="col-8 mt-2">
-            <mat-checkbox>Lorem, ipsum dolor sit amet consectetur adipisicing elit.</mat-checkbox>
-          </div>
-          <div class="col-4"><button class="btn btn-indigo waves-light btn-sm" mdbWavesEffect (click)="evaluateModalOpen()">Edit</button></div>
-        </div>
-        <div class="row">
-          <div class="col-8 mt-2">
-            <mat-checkbox>Lorem, ipsum dolor sit amet consectetur adipisicing elit.</mat-checkbox>
-          </div>
-          <div class="col-4"><button class="btn btn-indigo waves-light btn-sm" mdbWavesEffect (click)="evaluateModalOpen()">Edit</button></div>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="row">
-          <div class="col-8 mt-2">
-            <mat-checkbox>Lorem, ipsum dolor sit amet consectetur adipisicing elit.</mat-checkbox>
-          </div>
-          <div class="col-4"><button class="btn btn-indigo waves-light btn-sm" mdbWavesEffect (click)="evaluateModalOpen()">Edit</button></div>
-        </div>
-        <div class="row">
-          <div class="col-8 mt-2">
-            <mat-checkbox>Lorem, ipsum dolor sit amet consectetur adipisicing elit.</mat-checkbox>
-          </div>
-          <div class="col-4"><button class="btn btn-indigo waves-light btn-sm" mdbWavesEffect (click)="evaluateModalOpen()">Edit</button></div>
-        </div>
-      </div>
-      </div>
-      <hr>
-      <div class="text-center">
-        <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">
-          Salvare
-        </button>
-        <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">
-          Finisare
-        </button>
-      </div>
-  </form>
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-6" *ngFor="let item of eForm.get('recipients').value;">
+				<div class="row">
+					<div class="col-8 mt-2">
+						<mat-checkbox [checked]="item.confirmed" (change)="controllBtn(item);">{{item.name}}</mat-checkbox>
+					</div>
+					<div class="col-4">
+						<button class="btn btn-indigo waves-light btn-sm" mdbWavesEffect [disabled]="!item.confirmed" (click)="addComment(item)">
+							<i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr>
+		<div class="text-center">
+			<button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="cancel()">
+				Întrerupere
+			</button>
+			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">
+				Salvare
+			</button>
+			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="finish()">
+				Finisare
+			</button>
+		</div>
+	</form>
 </div>

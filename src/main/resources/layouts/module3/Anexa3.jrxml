@@ -63,7 +63,7 @@
 	<parameter name="registrationNumber" class="java.lang.String" evaluationTime="Early">
 		<defaultValueExpression><![CDATA[$P{registrationNumber}]]></defaultValueExpression>
 	</parameter>
-	<parameter name="date" class="java.util.Date">
+	<parameter name="date" class="java.lang.String">
 		<defaultValueExpression><![CDATA[$P{date}]]></defaultValueExpression>
 	</parameter>
 	<queryString>
@@ -77,7 +77,7 @@
 			</image>
 			<image>
 				<reportElement x="220" y="0" width="330" height="70" uuid="11dd8ec7-6404-4cc7-9d59-a7e8f6fd0917"/>
-				<imageExpression><![CDATA["layouts/icons/header_right.PNG"]]></imageExpression>
+				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
 		</band>
 	</pageHeader>
@@ -104,7 +104,7 @@ la ordinul Agenţiei Medicamentului şi Dispozitivelor Medicale
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="8" isItalic="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["din " +  new SimpleDateFormat("dd.MM.yyyy" ).format($P{date})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["din " +  $P{date}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="50" width="550" height="60" uuid="366bb4d4-3234-4bee-9a88-4ced3ae8fae6"/>

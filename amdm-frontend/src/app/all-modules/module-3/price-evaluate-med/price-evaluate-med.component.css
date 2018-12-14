@@ -34,6 +34,7 @@ table.table th, td {
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 100px;
+  vertical-align: middle !important;
 }
 mat-header-cell {
   display:flex;

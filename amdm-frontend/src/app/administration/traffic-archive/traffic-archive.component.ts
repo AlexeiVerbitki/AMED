@@ -48,6 +48,9 @@ export class TrafficArchiveComponent implements OnInit {
   displayedColumns: any[] = ['id', 'code', 'medicament_id', 'start_series', 'end_series', 'document_id', 'certificate_number', 'certificate_date', 'medicament_series', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
+  visibility: boolean = false;
+  title: string = 'Traffic archive';
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -64,6 +67,10 @@ export class TrafficArchiveComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 
   codeEdit = new FormControl('', Validators.required);

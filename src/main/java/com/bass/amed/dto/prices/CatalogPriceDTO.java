@@ -43,16 +43,18 @@ public class CatalogPriceDTO {
         setMedicamentId(c.getMedicamentId());
         setPriceNew(c.getPriceNew());
         setPriceRequestType(c.getPriceRequestType());
-        setDocId(c.getDocId());
+        setCompany(c.getCompany());
+        setFolderNr(c.getFolderNr());
     }
 
 
     @Id
     private Integer id;
+    private String folderNr;
+    private String company;
     private Integer priceRequestType;
     private String status;
     private String orderNr;
-    private Integer docId;
     private String medicamentCode;
     private Integer medicamentId;
     private String commercialName;

@@ -18,12 +18,10 @@
 				</div>
 			</div>
 		</div>
-		<hr>
 		<app-document [documents]="documents" [nrCerere]="rForm.get('requestNumber').value" [dcTypes]="docTypes"></app-document>
 		<div *ngIf="formSubmitted && documents.length==0">
 			<small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
 		</div>
-		<hr>
 		<div class="row">
 			<div class="col-md-4">
 				<div class="md-form">

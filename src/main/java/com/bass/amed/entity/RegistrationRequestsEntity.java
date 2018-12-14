@@ -71,6 +71,9 @@ public class RegistrationRequestsEntity
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "registration_request_id")
     private Set<PaymentOrdersEntity> paymentOrders = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "registration_request_id")
+    private Set<RegistrationRequestMandatedContactEntity> registrationRequestMandatedContacts = new HashSet<>();
     @Basic
     @Column(name = "interruption_reason")
     private String interruptionReason;

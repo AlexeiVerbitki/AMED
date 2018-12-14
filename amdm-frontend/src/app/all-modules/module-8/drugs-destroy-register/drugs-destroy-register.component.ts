@@ -1,16 +1,16 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {concat, Observable, of, Subject, Subscription} from "rxjs";
+import {Observable, Subject, Subscription} from "rxjs";
 import {Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AdministrationService} from "../../../shared/service/administration.service";
-import {LicenseService} from "../../../shared/service/license/license.service";
 import {MatDialog} from "@angular/material";
 import {AuthService} from "../../../shared/service/authetication.service";
 import {Document} from "../../../models/document";
 import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {catchError, debounceTime, distinctUntilChanged, filter, flatMap, map, switchMap, tap} from "rxjs/operators";
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
 import {MedicamentService} from "../../../shared/service/medicament.service";
 import {AnnihilationService} from "../../../shared/service/annihilation/annihilation.service";
+import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
 
 @Component({
     selector: 'app-drugs-destroy-register',
@@ -52,12 +52,14 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
                 public dialog: MatDialog,
                 private authService: AuthService,
                 private medicamentService: MedicamentService,
-                private annihilationService : AnnihilationService) {
+                private annihilationService : AnnihilationService,
+                private navbarTitleService: NavbarTitleService) {
 
     }
 
 
     ngOnInit() {
+        this.navbarTitleService.showTitleMsg('Inregistrarea cererii de nimicire a medicamentelor');
         this.startDate = new Date();
         this.subscriptions.push(
             this.administrationService.generateDocNr().subscribe(data => {
@@ -280,6 +282,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
 
 
     ngOnDestroy() {
+        this.navbarTitleService.showTitleMsg('');
         this.subscriptions.forEach(s => s.unsubscribe());
     }
 

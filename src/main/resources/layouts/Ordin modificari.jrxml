@@ -84,7 +84,7 @@
 		<field name="pharmaceutiFormDoseDivision" class="java.lang.String"/>
 		<field name="registrationNrDate" class="java.lang.String"/>
 	</subDataset>
-	<parameter name="date" class="java.util.Date"/>
+	<parameter name="date" class="java.lang.String"/>
 	<parameter name="nr" class="java.lang.String"/>
 	<parameter name="name" class="java.lang.String"/>
 	<parameter name="representant" class="java.lang.String"/>
@@ -92,7 +92,7 @@
 	<parameter name="address" class="java.lang.String"/>
 	<parameter name="phone" class="java.lang.String"/>
 	<parameter name="email" class="java.lang.String"/>
-	<parameter name="NotificationText" class="java.lang.String"/>
+	<parameter name="notificationText" class="java.lang.String"/>
 	<parameter name="genDir" class="java.lang.String"/>
 	<parameter name="ordinModificareAnex1" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<parameter name="ordinModificareAnex2" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
@@ -107,7 +107,7 @@
 			</image>
 			<image>
 				<reportElement x="261" y="4" width="289" height="53" uuid="ae27ee01-a17f-4e89-81b4-1417b9af443c"/>
-				<imageExpression><![CDATA["layouts/icons/header_right.PNG"]]></imageExpression>
+				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
 		</band>
 	</pageHeader>

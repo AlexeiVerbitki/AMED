@@ -18,10 +18,12 @@ public class MedicamentHistoryEntity
     private String productCodeTo;
     @Basic@Column(name = "product_code_from", nullable = true, length = 10)
     private String productCodeFrom;
-    @Basic@Column(name = "customs_code_to", nullable = true, length = 5)
-    private String customsCodeTo;
-    @Basic@Column(name = "customs_code_from", nullable = true, length = 5)
-    private String customsCodeFrom;
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "customs_code_to")
+    private NmCustomsCodesEntity customsCodeTo;
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "customs_code_from")
+    private NmCustomsCodesEntity customsCodeFrom;
     @Basic@Column(name = "barcode_to", nullable = true, length = 15)
     private String barcodeTo;
     @Basic@Column(name = "barcode_from", nullable = true, length = 15)
@@ -48,9 +50,9 @@ public class MedicamentHistoryEntity
     private NmMedicamentTypeEntity medicamentTypeTo;
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})@JoinColumn(name = "type_id_from")
     private NmMedicamentTypeEntity medicamentTypeFrom;
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})@JoinColumn(name = "group_id_to")
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})@JoinColumn(name = "group_id_to")
     private NmMedicamentGroupEntity groupTo;
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})@JoinColumn(name = "group_id_from")
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})@JoinColumn(name = "group_id_from")
     private NmMedicamentGroupEntity groupFrom;
     @Basic@Column(name = "prescription_to", nullable = true)
     private Byte prescriptionTo;
@@ -80,6 +82,10 @@ public class MedicamentHistoryEntity
     private Integer termsOfValidityFrom;
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)@JoinColumn(name = "medicament_history_id")
     private Set<MedicamentActiveSubstancesHistoryEntity> activeSubstancesHistory = new HashSet<>();
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)@JoinColumn(name = "medicament_history_id")
+    private Set<MedicamentAuxiliarySubstancesHistoryEntity> auxiliarySubstancesHistory = new HashSet<>();
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)@JoinColumn(name = "medicament_history_id")
+    private Set<MedicamentInstructionsHistoryEntity> instructionsHistory = new HashSet<>();
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})@JoinColumn(name = "medicament_history_id")
     private Set<MedicamentDivisionHistoryEntity> divisionHistory = new HashSet<>();
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})@JoinColumn(name = "expert_id")
@@ -122,6 +128,12 @@ public class MedicamentHistoryEntity
             MedicamentActiveSubstancesHistoryEntity medicamentActiveSubstancesHistoryEntity = new MedicamentActiveSubstancesHistoryEntity();
             medicamentActiveSubstancesHistoryEntity.assign(medicamentActiveSubstancesEntity);
             this.activeSubstancesHistory.add(medicamentActiveSubstancesHistoryEntity);
+        }
+        for (MedicamentAuxiliarySubstancesEntity medicamentAuxiliarySubstancesEntity : entity.getAuxSubstances())
+        {
+            MedicamentAuxiliarySubstancesHistoryEntity medicamentAuxiliarySubstancesHistoryEntity = new MedicamentAuxiliarySubstancesHistoryEntity();
+            medicamentAuxiliarySubstancesHistoryEntity.assign(medicamentAuxiliarySubstancesEntity);
+            this.auxiliarySubstancesHistory.add(medicamentAuxiliarySubstancesHistoryEntity);
         }
         for (MedicamentManufactureEntity medicamentManufactureEntity : entity.getManufactures())
         {

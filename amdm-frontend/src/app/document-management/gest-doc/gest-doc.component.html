@@ -81,7 +81,7 @@
 		<div class="example-container">
 			<table mat-table [dataSource]="dataSource" matSort>
 				<ng-container matColumnDef="requestNumber">
-					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Numar cerere</th>
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Numar cerere</th>
 					<td mat-cell *matCellDef="let element">
 						<a title="Deschide proces" (click)="navigateToUrl(element)">
 							{{element.requestNumber}}
@@ -90,32 +90,32 @@
 				</ng-container>
 
 				<ng-container matColumnDef="processName">
-					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Nume cerere</th>
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Nume cerere</th>
 					<td mat-cell *matCellDef="let element"> {{element.processName}} </td>
 				</ng-container>
 
 				<ng-container matColumnDef="requestType">
-					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Tip cerere</th>
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Tip cerere</th>
 					<td mat-cell *matCellDef="let element"> {{element.requestType}} </td>
 				</ng-container>
 
 				<ng-container matColumnDef="username">
-					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Username</th>
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Username</th>
 					<td mat-cell *matCellDef="let element"> {{element.username}} </td>
 				</ng-container>
 
 				<ng-container matColumnDef="startDate">
-					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Start date</th>
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Start date</th>
 					<td mat-cell *matCellDef="let element"> {{element.startDate | date: 'dd/MM/yyyy'}} </td>
 				</ng-container>
 
 				<ng-container matColumnDef="endDate">
-					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> End date</th>
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> End date</th>
 					<td mat-cell *matCellDef="let element"> {{element.endDate | date: 'dd/MM/yyyy'}} </td>
 				</ng-container>
 
 				<ng-container matColumnDef="step">
-					<th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Step</th>
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Step</th>
 					<td mat-cell *matCellDef="let element"> {{element.step}} </td>
 				</ng-container>
 

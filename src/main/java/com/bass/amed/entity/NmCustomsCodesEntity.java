@@ -1,10 +1,11 @@
 package com.bass.amed.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "nm_customs_codes", schema = "amed", catalog = "")
-public class NmCustomsCodesEntity
+public class NmCustomsCodesEntity implements Serializable
 {
     private Integer id;
     private String code;

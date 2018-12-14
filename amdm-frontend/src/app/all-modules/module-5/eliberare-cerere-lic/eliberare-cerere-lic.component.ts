@@ -9,6 +9,8 @@ import {MatDialog} from "@angular/material";
 import {AuthService} from "../../../shared/service/authetication.service";
 import {LoaderService} from "../../../shared/service/loader.service";
 import {DocumentService} from "../../../shared/service/document.service";
+import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
+import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
 
 @Component({
     selector: 'app-eliberare-cerere-lic',
@@ -48,10 +50,13 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
                 private activatedRoute: ActivatedRoute,
                 private authService: AuthService,
                 private loadingService: LoaderService,
-                private documentService: DocumentService) {
+                private documentService: DocumentService,
+                private navbarTitleService: NavbarTitleService,
+                private errorHandlerService: ErrorHandlerService) {
     }
 
     ngOnInit() {
+        this.navbarTitleService.showTitleMsg('Eliberare licenta');
         this.startDate = new Date();
         this.initFormData();
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
@@ -110,13 +115,7 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
         let mandatedContact : any;
         let mandatedContacts : any [] = data.license.detail.licenseMandatedContacts;
 
-        console.log('data', data);
-        console.log('gdf', mandatedContacts);
-
         mandatedContact = mandatedContacts.find(mc => data.license.detail.id === mc.licenseDetailId);
-
-        console.log('gdf1', mandatedContact);
-
 
         this.rForm.get('seriaLic').patchValue(data.license.serialNr);
         this.rForm.get('nrLic').patchValue(data.license.nr);
@@ -181,12 +180,9 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
         this.rFormSubbmitted = false;
         let modelToSubmit = this.composeModel('I','A');
 
-        console.log('modelToSubmit', modelToSubmit);
-
-
         this.subscriptions.push(
             this.licenseService.confirmIssueLicense(modelToSubmit).subscribe(data => {
-                    this.router.navigate(['/dashboard/module']);
+                    this.router.navigate(['/dashboard/homepage']);
                 }
             )
         );
@@ -312,6 +308,7 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
         this.rFormSubbmitted = true;
         if (!this.rForm.valid || this.docs.length==0 )
         {
+            this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
             return;
         }
 
@@ -325,7 +322,7 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(
             this.licenseService.finishLicense(modelToSubmit).subscribe(data => {
-                    this.router.navigate(['/dashboard/module']);
+                    this.router.navigate(['/dashboard/homepage']);
                 }
             )
         );
@@ -421,6 +418,7 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        this.navbarTitleService.showTitleMsg('');
         this.subscriptions.forEach(s => s.unsubscribe());
     }
 

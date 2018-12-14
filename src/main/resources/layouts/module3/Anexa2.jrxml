@@ -55,8 +55,8 @@
 		<field name="priceInCurrency" class="java.lang.Double"/>
 		<field name="currency" class="java.lang.String"/>
 	</subDataset>
-	<parameter name="registrationNumber" class="java.lang.String"/>
-	<parameter name="registrationDate" class="java.util.Date"/>
+	<parameter name="registrationNr" class="java.lang.String"/>
+	<parameter name="registrationDate" class="java.lang.String"/>
 	<parameter name="dataSource" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource" isForPrompting="false"/>
 	<queryString>
 		<![CDATA[]]>
@@ -69,7 +69,7 @@
 			</image>
 			<image>
 				<reportElement x="220" y="0" width="330" height="70" uuid="11dd8ec7-6404-4cc7-9d59-a7e8f6fd0917"/>
-				<imageExpression><![CDATA["file:/C:/Users/vladimir.dubceac/JaspersoftWorkspace/all/layouts/icons/header_right.png"]]></imageExpression>
+				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
 		</band>
 	</pageHeader>
@@ -87,16 +87,16 @@ la ordinul Agenţiei Medicamentului şi Dispozitivelor Medicale
 			<textField>
 				<reportElement x="297" y="30" width="253" height="10" uuid="0afe0ce5-2237-4f56-9b00-35adcbe35979"/>
 				<textElement textAlignment="Right">
-					<font fontName="DejaVu Sans" size="8" isItalic="true" isUnderline="true"/>
+					<font fontName="DejaVu Sans" size="8" isItalic="true" isUnderline="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Nr. " + $P{registrationNumber}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Nr. " + $P{registrationNr}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="297" y="40" width="253" height="10" uuid="de6c0da3-8a79-4f38-b3dc-c6ee873064a1"/>
 				<textElement textAlignment="Right">
-					<font fontName="DejaVu Sans" size="8" isItalic="true" isUnderline="true"/>
+					<font fontName="DejaVu Sans" size="8" isItalic="true" isUnderline="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA["din " + new SimpleDateFormat("dd.MM.yyyy").format($P{registrationDate})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["din " + $P{registrationDate}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="50" width="550" height="30" uuid="366bb4d4-3234-4bee-9a88-4ced3ae8fae6"/>

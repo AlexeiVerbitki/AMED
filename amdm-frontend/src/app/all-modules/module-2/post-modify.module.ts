@@ -16,6 +16,8 @@ import {PriceService} from "../../shared/service/prices.service";
 import {EvaluarePrimaraModifyComponent} from "./evaluare-primara-modify/evaluare-primara-modify.component";
 import {ExpertiModifyComponent} from "./experti-modify/experti-modify.component";
 import {ProcessInterruptionModifyComponent} from "./process-interruption-modify/process-interruption-modify.component";
+import {InstructionModule} from "../../common/instruction/instruction.module";
+import {MachetaModule} from "../../common/macheta/macheta.module";
 
 @NgModule({
     imports: [
@@ -23,9 +25,12 @@ import {ProcessInterruptionModifyComponent} from "./process-interruption-modify/
         PostModifyRoutingModule,
         FormsModule,
         ReactiveFormsModule,
+        InstructionModule,
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
         DocumentModule,
+        InstructionModule,
+        MachetaModule,
         PaymentModule,
         ExpertComiteeModule,
     ],

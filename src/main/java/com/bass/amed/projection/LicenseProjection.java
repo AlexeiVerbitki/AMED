@@ -11,10 +11,11 @@ public class LicenseProjection implements Serializable
     private Date releaseDate;
     private Date expirationDate;
     private String status;
+    private String ecAgentLongName;
     private String idno;
 
 
-    public LicenseProjection(Integer licenseId, String nr, String serialNr, Date releaseDate, Date expirationDate, String status, String idno)
+    public LicenseProjection(Integer licenseId, String nr, String serialNr, Date releaseDate, Date expirationDate, String status, String ecAgentLongName, String idno)
     {
         this.licenseId = licenseId;
         this.nr = nr;
@@ -22,8 +23,10 @@ public class LicenseProjection implements Serializable
         this.releaseDate = releaseDate;
         this.expirationDate = expirationDate;
         this.status = status;
+        this.ecAgentLongName = ecAgentLongName;
         this.idno = idno;
     }
+
 
     public Integer getLicenseId()
     {
@@ -53,6 +56,11 @@ public class LicenseProjection implements Serializable
     public String getStatus()
     {
         return status;
+    }
+
+    public String getEcAgentLongName()
+    {
+        return ecAgentLongName;
     }
 
     public String getIdno()

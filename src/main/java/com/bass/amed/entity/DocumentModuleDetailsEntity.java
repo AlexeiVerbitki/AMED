@@ -27,7 +27,7 @@ public class DocumentModuleDetailsEntity
     @Basic
     @Column(name = "problem_description", nullable = true, length = 5000)
     private String problemDescription;
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @MapsId
     @JoinColumn(name = "id")
     private RegistrationRequestsEntity registrationRequestsEntity;

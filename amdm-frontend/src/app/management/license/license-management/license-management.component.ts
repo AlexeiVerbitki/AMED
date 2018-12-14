@@ -7,6 +7,12 @@ import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from "@angular/mat
 import {LicenseService} from "../../../shared/service/license/license.service";
 import {LicenseDetailsComponent} from "../license-details/license-details.component";
 import {NavbarTitleService} from 'src/app/shared/service/navbar-title.service';
+import {Angular5Csv} from "angular5-csv/Angular5-csv";
+import {DatePipe} from "@angular/common";
+import {LicenseStatusPipe} from "../../../shared/pipe/license-status.pipe";
+import * as XLSX from "xlsx";
+import {DocumentService} from "../../../shared/service/document.service";
+import {LoaderService} from "../../../shared/service/loader.service";
 
 @Component({
     selector: 'app-license-management',
@@ -35,13 +41,14 @@ export class LicenseManagementComponent implements OnInit, OnDestroy {
     constructor(private fb: FormBuilder,
                 private administrationService: AdministrationService,
                 private licenseService: LicenseService,
-		private navbarTitleService: NavbarTitleService,
-                public dialogLicense: MatDialog)
-    {
+                private navbarTitleService: NavbarTitleService,
+                public dialogLicense: MatDialog,
+                private documentService : DocumentService,
+                private loadingService : LoaderService) {
     }
 
     ngOnInit() {
-	this.navbarTitleService.showTitleMsg('Gestionare Licente');
+        this.navbarTitleService.showTitleMsg('Gestionare Licente');
 
 
         this.companii =
@@ -98,26 +105,21 @@ export class LicenseManagementComponent implements OnInit, OnDestroy {
         this.dataSource.filter = filterValue;
     }
 
-    findLicente()
-    {
-        let filter  = this.rForm.value;
-        if (this.rForm.get('ecAgent').value)
-        {
+    findLicente() {
+        let filter = this.rForm.value;
+        if (this.rForm.get('ecAgent').value) {
             filter.idno = this.rForm.get('ecAgent').value.idno;
         }
 
-        console.log('filter', filter);
         this.subscriptions.push(this.licenseService.loadLicenseListByFilter(filter).subscribe(data => {
-            console.log('sfsd', data);
             this.dataSource.data = data;
         }))
     }
 
-    openLicenseDetails(licenseId: number)
-    {
-        console.log("sfsd", licenseId);
+    openLicenseDetails(licenseId: number) {
         const dialogRef2 = this.dialogLicense.open(LicenseDetailsComponent, {
             width: '1000px',
+            panelClass: 'materialLicense',
             data: {
                 licenseId: licenseId,
             },
@@ -126,9 +128,95 @@ export class LicenseManagementComponent implements OnInit, OnDestroy {
 
         dialogRef2.afterClosed().subscribe(result => {
             if (result) {
-               //do nothing
+                //do nothing
             }
         });
+    }
+
+    exportToCsv() {
+        let displayData = this.getDisplayData();
+
+        var options = {
+            fieldSeparator: ',',
+            quoteStrings: '"',
+            decimalseparator: '.',
+            showLabels: true,
+            headers: this.createHeaderColumns()
+        };
+        new Angular5Csv(displayData, 'Licente', options);
+    }
+
+
+
+    exportToExcel() {
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+
+        //needed only one shit
+        var arr: any[][] = new Array<Array<any>>();
+        arr.push(this.createHeaderColumns());
+        arr = this.populateDataForXLSXDocument(arr);
+        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(arr);
+        /* generate workbook and add the worksheet */
+        XLSX.utils.book_append_sheet(wb, ws, 'Lista de licente');
+
+        /* save to file */
+        XLSX.writeFile(wb, 'Licente.xlsx');
+
+    }
+
+    exportToPdf(){
+        this.subscriptions.push(this.documentService.viewTableData(this.createHeaderColumns(), this.getDisplayData()).subscribe(data => {
+                let file = new Blob([data], {type: 'application/pdf'});
+                var fileURL = URL.createObjectURL(file);
+                window.open(fileURL);
+                this.loadingService.hide();
+            }, error => {
+                this.loadingService.hide();
+            }
+            )
+        );
+    }
+
+    private getDisplayData() {
+        let dtPipe = new DatePipe("en-US");
+        let stPipe = new LicenseStatusPipe();
+        let displayData: any [] = [];
+        this.dataSource.filteredData.forEach(fd => {
+            let row: any = {};
+
+            row.agentEconomic = fd.ecAgentLongName;
+            row.numar = fd.nr;
+            row.seria = fd.serialNr;
+            row.releaseDate = dtPipe.transform(new Date(fd.releaseDate), 'dd/MM/yyyy');
+            row.expirationDate = dtPipe.transform(new Date(fd.expirationDate), 'dd/MM/yyyy');
+            row.status = stPipe.transform(fd.status);
+
+            displayData.push(row);
+        });
+        return displayData;
+    }
+
+
+    createHeaderColumns(): any[] {
+        return ["Agentul economic", "Numar licenta", "Seria Licenta", "Data eliberarii", "Data expirarii", "Statut Licenta"];
+    }
+
+    populateDataForXLSXDocument(arr: any[][]): any[] {
+        let displayData : any[] = this.getDisplayData();
+        if (displayData) {
+            for (var i = 0; i < displayData.length; i++) {
+                var arrIntern: any[] = new Array<any>();
+                arrIntern[0] = displayData[i].agentEconomic;
+                arrIntern[1] = displayData[i].numar;
+                arrIntern[2] = displayData[i].seria;
+                arrIntern[3] = displayData[i].releaseDate;
+                arrIntern[4] = displayData[i].expirationDate;
+                arrIntern[5] = displayData[i].status;
+                arr.push(arrIntern);
+            }
+        }
+
+        return arr;
     }
 
 

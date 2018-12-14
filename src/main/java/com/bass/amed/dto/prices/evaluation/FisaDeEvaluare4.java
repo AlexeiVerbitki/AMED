@@ -3,6 +3,7 @@ package com.bass.amed.dto.prices.evaluation;
 import java.util.Objects;
 
 public class FisaDeEvaluare4 {
+	private Integer id;
 	private String medicamentCode;
 	private String medicamentName;
 	private String medicamentForm;
@@ -28,6 +29,14 @@ public class FisaDeEvaluare4 {
 		this.priceMdl = priceMdl;
 		this.priceCurrency = priceCurrency;
 		this.currency = currency;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getMedicamentCode() {
@@ -116,12 +125,13 @@ public class FisaDeEvaluare4 {
 				Objects.equals(internationalMedicamentName, that.internationalMedicamentName) &&
 				Objects.equals(priceMdl, that.priceMdl) &&
 				Objects.equals(priceCurrency, that.priceCurrency) &&
+				Objects.equals(id, that.id) &&
 				Objects.equals(currency, that.currency);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(medicamentCode, medicamentName, medicamentForm, doseConcentration, division, internationalMedicamentName, priceMdl, priceCurrency, currency);
+		return Objects.hash(medicamentCode, medicamentName, medicamentForm, doseConcentration, division, internationalMedicamentName, priceMdl, priceCurrency, currency, id);
 	}
 
 	@Override
@@ -129,6 +139,7 @@ public class FisaDeEvaluare4 {
 		return "FisaDeEvaluare4{" +
 				"medicamentCode='" + medicamentCode + '\'' +
 				", medicamentName='" + medicamentName + '\'' +
+				", id='" + id + '\'' +
 				", medicamentForm='" + medicamentForm + '\'' +
 				", doseConcentration='" + doseConcentration + '\'' +
 				", division='" + division + '\'' +

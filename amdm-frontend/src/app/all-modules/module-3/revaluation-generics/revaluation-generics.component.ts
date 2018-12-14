@@ -4,7 +4,6 @@ import {Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {PriceService} from "../../../shared/service/prices.service";
 import {LoaderService} from "../../../shared/service/loader.service";
-import {Document} from "../../../models/document";
 import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
 import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
 import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
@@ -16,20 +15,12 @@ import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.c
 })
 
 export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDestroy {
-    documents: Document[] = [];
     priceId: string ;
-    requestNumber: number;
     containInvalidPrices: boolean = true;
     formSubmitted: boolean = false;
     medicaments: any[] = [];
     avgCurrencies: any[] = [];
     saved: boolean = false;
-
-    outputDocuments: any[] = [{
-        description: 'Anexa 2:Lista medicamentelor generice cu prețuri reevaluate',
-        number: undefined,
-        status: "Nu este atasat"
-    }];
 
     displayedColumns: any[] = [
         'medicamentCode',
@@ -90,17 +81,6 @@ export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDe
 
         this.getGenericMedsPrices();
         this.getOriginalMedDetails();
-
-        this.subscriptions.push(
-            this.priceService.generateDocNumber().subscribe(generatedNumber => {
-                    this.requestNumber = generatedNumber;
-                },
-                error => {console.log(error);}
-            )
-        );
-        // this.taskForm.get('requestNumber').valueChanges.subscribe(val => {
-        //     this.disabledElements(val);
-        // });
     }
 
 
@@ -152,32 +132,13 @@ export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDe
             ));
     }
 
-    documentAdded($event) {
-
-        this.outputDocuments.forEach(outDoc => {
-            outDoc.number = undefined;
-            outDoc.status = "Nu este atasat";
-
-            for(let doc of this.documents){
-                if (doc.docType.description == outDoc.description) {
-                    outDoc.number = doc.number;
-                    outDoc.status = "Atasat";
-                    break;
-                }
-            }
-
-        });
-    }
-
     save(){
         this.loadingService.show();
         this.formSubmitted = true;
 
         let prices: any[] = [];
 
-        let uploadedDoc = this.documents.find(d => d.docType.description == 'Anexa 2:Lista medicamentelor generice cu prețuri reevaluate');
-
-        if (this.containInvalidPrices || this.documents.length == 0) {
+        if (this.containInvalidPrices) {
             this.loadingService.hide();
             return;
         }
@@ -191,7 +152,6 @@ export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDe
                 currency: {id: p.currencyId},
                 medicament: {id: p.medicamentId},
                 type: {id: 9}, //Propus după modificarea originalului
-                document: uploadedDoc
             });
         });
 
@@ -200,7 +160,6 @@ export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDe
                 console.log('saved', data.body);
                 this.loadingService.hide();
                 this.router.navigate(['dashboard/homepage']);
-
             },
             error1 => {
                 console.log(error1);
@@ -232,9 +191,6 @@ export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDe
         this.dataSource.data[i].priceMdlDifferencePercents = percents.toFixed(1);
 
         this.containInvalidPrices = this.dataSource.data.some(p => p.priceMdlNew == undefined || p.priceMdlNew <= 0 || +p.priceMdlDifferencePercents > 75)
-    }
-
-    viewDoc(document: any) {
     }
 
     ngOnDestroy(): void {

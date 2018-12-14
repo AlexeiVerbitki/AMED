@@ -12,6 +12,17 @@ mat-header-cell {
   display:flex;
   justify-content:center;
 }
+.md-form {
+  position: relative;
+  margin-top: 14px !important;
+  margin-bottom: 5px !important;
+}
+
+.md-form-modified {
+  position: relative;
+  margin-top: 2px;
+  margin-bottom: 5px !important;
+}
 
 .pr-search {
   padding-right: 30px;
@@ -32,4 +43,20 @@ table {
 
 .modal {
   overflow-y:auto;
+}
+
+.fa-touched {
+  font-size: 0.95em;
+}
+
+.fa-untouched {
+  font-size: 1.33em;
+}
+
+.modal-mdb-color {
+  background: #59698d !important;
+}
+
+.modal-dark-green {
+  background: #218c74 !important;
 }

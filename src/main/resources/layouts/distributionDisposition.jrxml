@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="999dde17-c597-4348-b714-8d29e08d96aa">
 	<property name="ireport.zoom" value="1.4641000000000008"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="48"/>
-	<field name="dispositionDate" class="java.util.Date"/>
-	<field name="nrDisposition" class="java.lang.String"/>
-	<field name="path" class="java.lang.String"/>
+	<parameter name="dispositionDate" class="java.lang.String"/>
+	<parameter name="nrDisposition" class="java.lang.String"/>
+	<parameter name="path" class="java.lang.String"/>
 	<title>
 		<band height="73" splitType="Stretch">
 			<staticText>
@@ -17,7 +18,7 @@
 			</staticText>
 			<image>
 				<reportElement x="28" y="1" width="92" height="72" uuid="8ec875e3-8cce-4d1e-ba01-8272dffb5509"/>
-				<imageExpression><![CDATA[$F{path}+"\\..\\icons\\logo.png"]]></imageExpression>
+				<imageExpression><![CDATA[layouts/icons/logo.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>
@@ -62,11 +63,11 @@
 			</staticText>
 			<textField>
 				<reportElement x="381" y="182" width="100" height="20" uuid="85e25237-7b4f-4c69-8cab-70fdeeec173e"/>
-				<textFieldExpression><![CDATA[$F{nrDisposition}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{nrDisposition}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="55" y="182" width="100" height="20" uuid="6778ec85-4868-4cc8-b4dd-45486c40c1c0"/>
-				<textFieldExpression><![CDATA[$F{dispositionDate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{dispositionDate}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

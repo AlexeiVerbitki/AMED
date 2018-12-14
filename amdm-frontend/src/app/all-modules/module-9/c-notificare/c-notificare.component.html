@@ -1,5 +1,309 @@
 <div class="container-fluid sky z-depth-2">
-  <h3 class="text-center my-3 font-weight-bold">Inregistrare notificare la Studiu Clinic</h3>
-  <hr>
+    <h3 class="text-center my-3 font-weight-bold">Inregistrare notificare</h3>
+    <hr>
+    <form [formGroup]='clinicTrailNotifForm' #f="ngForm">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="regNr" mdbInputDirective type="text" class="form-control"
+                           formControlName="requestNumber">
+                    <label for="regNr">Nr. cererii
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="regDate" [matDatepicker]="picker" mdbInputDirective type="text" class="form-control"
+                           formControlName="startDate">
+                    <mat-datepicker touchUi #picker></mat-datepicker>
+                    <label for="regDate">Data
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="company" mdbInputDirective type="text" class="form-control"
+                           value={{f.value.company.name}} [attr.disabled]="true">
+                    <label for="company">Compania solicitant
+                    </label>
+                </div>
+            </div>
+        </div>
+        <hr>
 
+        <app-document [documents]="docs" [nrCerere]="f.value.requestNumber"
+                      [dcTypes]="docTypes"></app-document>
+        <h5 class="text-center my-3 font-weight-bold">Studiu Clinic</h5>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="md-form">
+                    <textarea type="text" id="titluStud" class="md-textarea form-control" mdbInputDirective rows="1"
+                              value={{f.value.clinicalTrails?.title}} [attr.disabled]="true"></textarea>
+                    <label for="titluStud">Titlul studiului</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="code" mdbInputDirective type="text" class="form-control"
+                           value={{f.value.clinicalTrails?.code}} [attr.disabled]="true">
+                    <label for="code">Codul studiului</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="eudra" mdbInputDirective type="text" class="form-control"
+                           value={{f.value.clinicalTrails?.eudraCtNr}} [attr.disabled]="true">
+                    <label for="eudra">Eudra Nr.</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="sponsor" mdbInputDirective type="text" class="form-control"
+                           value={{f.value.clinicalTrails?.sponsor}} [attr.disabled]="true">
+                    <label for="sponsor">Sponsor</label>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        <div [formGroup]="addNotificationTypesForm" #f2="ngForm">
+            <div class="row">
+                <div class="col-8">
+                    <div class="md-form-modified">
+                        <ng-select id="allNotificationTypes" name="allNotificationTypes"
+                                   [items]="allNotificationTypesList"
+                                   placeholder="Tip notificare"
+                                   formControlName="notificationType"
+                                   required="true">
+                            <ng-template ng-option-tmp ng-label-tmp let-item="item">
+                                {{item.name}}
+                            </ng-template>
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="col-4">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="md-form">
+                    <textarea type="text" id="titluNotificare" class="md-textarea form-control" mdbInputDirective
+                              rows="1"
+                              formControlName="notificationTitle"></textarea>
+                        <label for="titluNotificare">Titlul notificarii</label>
+                    </div>
+                </div>
+                <hr>
+            </div>
+
+            <div class="row" *ngIf="f2.value.notificationType?.code === 'DDGSC'">
+                <div class="col-md-6">
+                    <div class="md-form-modified">
+                        <mat-form-field class="w-100">
+                            <input matInput [matDatepicker]="picker1"
+                                   placeholder="Data deschiderii globale a studiului clinic"
+                                   formControlName="startDateInternational">
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker1></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="f2.value.notificationType?.code === 'DDLSC'">
+                <div class="col-md-6">
+                    <div class="md-form-modified">
+                        <mat-form-field class="w-100">
+                            <input matInput [matDatepicker]="picker2"
+                                   placeholder="Data deschiderii locale a studiului clinic"
+                                   formControlName="startDateNational">
+                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker2></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="f2.value.notificationType?.code === 'DIGSC'">
+                <div class="col-md-6">
+                    <div class="md-form-modified">
+                        <mat-form-field class="w-100">
+                            <input matInput [matDatepicker]="picker3"
+                                   placeholder="Data inchiderii locale a studiului clinic"
+                                   formControlName="endDateInternational">
+                            <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker3></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="f2.value.notificationType?.code === 'DILSC'">
+                <div class="col-md-6">
+                    <div class="md-form-modified">
+                        <mat-form-field class="w-100">
+                            <input matInput [matDatepicker]="picker4"
+                                   placeholder="Data inchiderii globale a studiului clinic"
+                                   formControlName="endDateNational">
+                            <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker4></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" formGroupName="reportDsurEntity" *ngIf="f2.value.notificationType?.code === 'DSUR'">
+                <h5 class="text-center my-3 font-weight-bold">Forma DSUR</h5>
+                <hr>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="md-form">
+                            <input id="numeMedicament" mdbInputDirective type="text" class="form-control"
+                                   formControlName="drugName" [attr.disabled]="true">
+                            <label for="numeMedicament">Descriere produs de investigat / Doza</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="md-foraddNotificationTypesFormm-modified">
+                            <mat-form-field class="w-100">
+                                <input matInput [matDatepicker]="picker5"
+                                       placeholder="Data raport din"
+                                       formControlName="dateFrom">
+                                <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
+                                <mat-datepicker touchUi #picker5></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="md-form-modified">
+                            <mat-form-field class="w-100">
+                                <input matInput [matDatepicker]="picker6"
+                                       placeholder="Data raport pina la"
+                                       formControlName="dateTo">
+                                <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
+                                <mat-datepicker touchUi #picker6></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="md-form">
+                             <textarea type="text" id="idenRisk" class="md-textarea form-control" mdbInputDirective
+                                       rows="1"
+                                       formControlName="identifiedRisks"></textarea>
+                            <label for="idenRisk">Riscuri identificate</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="md-form">
+                             <textarea type="text" id="potentRisk" class="md-textarea form-control" mdbInputDirective
+                                       rows="1"
+                                       formControlName="potentialRisks"></textarea>
+                            <label for="potentRisk">Riscuri potentiale</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="md-form">
+                    <textarea type="text" id="report" class="md-textarea form-control" mdbInputDirective rows="1"
+                              formControlName="report"></textarea>
+                            <label for="report">Raport</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="md-form">
+                    <textarea type="text" id="otherData" class="md-textarea form-control" mdbInputDirective rows="1"
+                              formControlName="otherRelevantData"></textarea>
+                            <label for="otherData">Date aditionale</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="md-form">
+                    <textarea type="text" id="conclusions" class="md-textarea form-control" mdbInputDirective rows="1"
+                              formControlName="conclusions"></textarea>
+                            <label for="conclusions">Concluzii</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!--SARLLR-->
+            <div class="form-group" formGroupName="reportSarLlrEntity"
+                 *ngIf="f2.value.notificationType?.code === 'LLR'">
+                <h5 class="text-center my-3 font-weight-bold">Forma SAR LLR</h5>
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="md-foraddNotificationTypesFormm-modified">
+                            <mat-form-field class="w-100">
+                                <input matInput [matDatepicker]="picker7"
+                                       placeholder="Data raport din"
+                                       formControlName="dateFrom">
+                                <mat-datepicker-toggle matSuffix [for]="picker7"></mat-datepicker-toggle>
+                                <mat-datepicker touchUi #picker7></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="md-form-modified">
+                            <mat-form-field class="w-100">
+                                <input matInput [matDatepicker]="picker8"
+                                       placeholder="Data raport pina la"
+                                       formControlName="dateTo">
+                                <mat-datepicker-toggle matSuffix [for]="picker8"></mat-datepicker-toggle>
+                                <mat-datepicker touchUi #picker8></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="md-form">
+                            <input id="recordedCases" mdbInputDirective type="number" class="form-control"
+                                   formControlName="recordedCases">
+                            <label for="recordedCases">Cazuri raportate</label>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="md-form">
+                    <textarea type="text" id="report2" class="md-textarea form-control" mdbInputDirective rows="1"
+                              formControlName="report"></textarea>
+                            <label for="report2">Raport</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="md-form">
+                    <textarea type="text" id="conclusions2" class="md-textarea form-control" mdbInputDirective rows="1"
+                              formControlName="conclusions"></textarea>
+                            <label for="conclusions2">Concluzii</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+    <div class="text-center">
+        <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="onSubmit()">
+            Finisare
+        </button>
+    </div>
 </div>

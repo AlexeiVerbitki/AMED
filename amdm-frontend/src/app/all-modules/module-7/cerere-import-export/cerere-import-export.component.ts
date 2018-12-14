@@ -19,6 +19,7 @@ import {MatDialog} from "@angular/material";
 import {TaskService} from "../../../shared/service/task.service";
 import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
 import {DrugSubstanceTypesService} from "../../../shared/service/drugs/drugsubstancetypes.service";
+import {DrugDocumentsService} from "../../../shared/service/drugs/drugdocuments.service";
 
 @Component({
     selector: 'app-cerere-import-export',
@@ -67,7 +68,7 @@ export class CerereImportExportComponent implements OnInit {
                 private requestService: RequestService, private authService: AuthService,
                 private documentService: DocumentService, private loadingService: LoaderService, public dialogConfirmation: MatDialog,
                 private taskService: TaskService, private ref: ChangeDetectorRef, private errorHandlerService: ErrorHandlerService,
-                private drugSubstanceTypesService: DrugSubstanceTypesService) {
+                private drugSubstanceTypesService: DrugSubstanceTypesService, private drugDocumentsService: DrugDocumentsService) {
 
         this.cerereImpExpForm = fb.group({
             'id': [],
@@ -453,7 +454,7 @@ export class CerereImportExportComponent implements OnInit {
         this.populateModelToSubmit(modelToSubmit);
 
         this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
-                this.router.navigate(['dashboard/module']);
+                this.router.navigate(['/dashboard/management/cpcadtask']);
             }, error => console.log(error))
         );
 
@@ -536,32 +537,58 @@ export class CerereImportExportComponent implements OnInit {
 
     viewDoc(document: any) {
         this.loadingService.show();
-        if (document.docType.category == 'SR' || document.docType.category == 'AP') {
-            this.subscriptions.push(this.documentService.viewRequest(document.number,
-                document.content,
-                document.title,
-                document.docType.category).subscribe(data => {
-                    let file = new Blob([data], {type: 'application/pdf'});
-                    var fileURL = URL.createObjectURL(file);
-                    window.open(fileURL);
-                    this.loadingService.hide();
-                }, error => {
-                    this.loadingService.hide();
-                }
-                )
-            );
-        } else {
-            this.subscriptions.push(this.documentService.viewDD(document.number).subscribe(data => {
-                    let file = new Blob([data], {type: 'application/pdf'});
-                    var fileURL = URL.createObjectURL(file);
-                    window.open(fileURL);
-                    this.loadingService.hide();
-                }, error => {
-                    this.loadingService.hide();
-                }
-                )
-            );
-        }
+        // if (document.docType.category == 'SR' || document.docType.category == 'AP') {
+        //     this.subscriptions.push(this.documentService.viewRequest(document.number,
+        //         document.content,
+        //         document.title,
+        //         document.docType.category).subscribe(data => {
+        //             let file = new Blob([data], {type: 'application/pdf'});
+        //             var fileURL = URL.createObjectURL(file);
+        //             window.open(fileURL);
+        //             this.loadingService.hide();
+        //         }, error => {
+        //             this.loadingService.hide();
+        //         }
+        //         )
+        //     );
+        // } else {
+        //     this.subscriptions.push(this.documentService.viewDD(document.number).subscribe(data => {
+        //             let file = new Blob([data], {type: 'application/pdf'});
+        //             var fileURL = URL.createObjectURL(file);
+        //             window.open(fileURL);
+        //             this.loadingService.hide();
+        //         }, error => {
+        //             this.loadingService.hide();
+        //         }
+        //         )
+        //     );
+        // }
+        let data = {
+
+            requestNumber: this.cerereImpExpForm.get('requestNumber').value,
+            // protocolDate: this.cerereSolicAutorForm.get('drugCheckDecision.protocolDate').value,
+            // resPerson: this.cerereSolicAutorForm.get('resPerson').value,
+            // companyValue: this.cerereSolicAutorForm.get('companyValue').value,
+            // street: this.cerereSolicAutorForm.get('street').value,
+            // locality: locality.description,
+            // state: state.description,
+            // dataExp: this.cerereSolicAutorForm.get('dataExp').value,
+            // precursor: this.cerereSolicAutorForm.get('precursor').value,
+            // psihotrop: this.cerereSolicAutorForm.get('psihotrop').value,
+            // stupefiant: this.cerereSolicAutorForm.get('stupefiant').value
+        };
+
+        console.log(data);
+        this.subscriptions.push(this.drugDocumentsService.viewImportExportAuthorization(data).subscribe(data => {
+                let file = new Blob([data], {type: 'application/pdf'});
+                var fileURL = URL.createObjectURL(file);
+                window.open(fileURL);
+                this.loadingService.hide();
+            }, error => {
+                this.loadingService.hide();
+            }
+            )
+        );
     }
 
     remove(doc: any) {
@@ -625,14 +652,17 @@ export class CerereImportExportComponent implements OnInit {
                     currentStep: 'I',
                     id: this.cerereImpExpForm.get('id').value,
                     assignedUser: usernameDB,
-                    initiator: this.authService.getUserName()
+                    initiator: this.authService.getUserName(),
+                    type: this.cerereImpExpForm.get('type').value,
+                    requestNumber: this.cerereImpExpForm.get('requestNumber').value,
+                    startDate: this.cerereImpExpForm.get('startDate').value
                 };
                 modelToSubmit.requestHistories.push({
                     startDate: this.cerereImpExpForm.get('data').value, endDate: new Date(),
                     username: usernameDB, step: 'E'
                 });
 
-                this.subscriptions.push(this.requestService.addMedicamentHistory(modelToSubmit).subscribe(data => {
+                this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
                         this.loadingService.hide();
                         this.router.navigate(['dashboard/module']);
                     }, error => this.loadingService.hide())

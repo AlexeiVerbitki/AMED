@@ -44,6 +44,10 @@ const ELEMENT_DATA: Bank[] = [
   styleUrls: ['./economic-agent-bank-accounts.component.css']
 })
 export class EconomicAgentBankAccountsComponent implements OnInit {
+
+  visibility: boolean = false;
+  title: string = 'Economic agent bank accounts';
+
   displayedColumns: any[] = ['id', 'economic_agent_id', 'bank_account_id', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
@@ -63,6 +67,10 @@ export class EconomicAgentBankAccountsComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 
   economic_agent_idEdit = new FormControl('', Validators.required);

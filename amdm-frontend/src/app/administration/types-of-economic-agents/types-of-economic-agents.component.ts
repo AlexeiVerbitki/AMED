@@ -39,6 +39,9 @@ export class TypesOfEconomicAgentsComponent implements OnInit {
   displayedColumns: any[] = ['id', 'code', 'description', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
+  visibility: boolean = false;
+  title: string = 'Types of economic agents';
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -55,6 +58,10 @@ export class TypesOfEconomicAgentsComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 
   descriptionEdit = new FormControl('', Validators.required);

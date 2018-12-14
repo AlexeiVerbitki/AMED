@@ -43,6 +43,10 @@ const ELEMENT_DATA: Bank[] = [
   styleUrls: ['./custom-groups.component.css']
 })
 export class CustomGroupsComponent implements OnInit {
+
+  
+  visibility: boolean = false;
+  title: string = 'Custom groups';
   displayedColumns: any[] = ['id', 'description', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
@@ -68,6 +72,10 @@ export class CustomGroupsComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 
 }

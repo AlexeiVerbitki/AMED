@@ -37,6 +37,9 @@ export class SubstantaAuxComponent implements OnInit {
   displayedColumns: any[] = ['id', 'cod', 'description', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
+  visibility: boolean = false;
+  title: string = 'Substanta aux';
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -53,6 +56,10 @@ export class SubstantaAuxComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 
 

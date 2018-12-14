@@ -22,6 +22,7 @@ import {MedInstInvestigatorsDialogComponent} from "./dialog/med-inst-investigato
 import { BAprobareComponent } from './b-aprobare/b-aprobare.component';
 import { BIntrerupereComponent } from './b-intrerupere/b-intrerupere.component';
 import { CNotificareComponent } from './c-notificare/c-notificare.component';
+import {ClinicalTrialService} from "../../shared/service/clinical-trial.service";
 
 
 @NgModule({
@@ -43,7 +44,7 @@ import { CNotificareComponent } from './c-notificare/c-notificare.component';
     ],
     declarations: [RegStudCliniceComponent, RegCerereComponent, AEvaluareaPrimaraComponent, AAnalizaComponent, AdditionalDataDialogComponent, AIntrerupereComponent, AAprobareComponent, BEvaluarePrimaraComponent, MedInstInvestigatorsDialogComponent, BAprobareComponent, BIntrerupereComponent, CNotificareComponent],
 
-    providers: [UploadFileService,RequestService],
+    providers: [UploadFileService,RequestService, ClinicalTrialService],
 })
 export class ClinicStudiesModule {
 }

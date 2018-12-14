@@ -51,6 +51,10 @@ export class RequestService {
         return this.http.post<any>('/api/clinical-trails/finish-amendment-request', requestDetails, {observe: 'response'});
     }
 
+    finishClinicalTrailNotificationRequest(requestDetails: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/clinical-trails/finish-notification-request', requestDetails, {observe: 'response'});
+    }
+
     savePostauthorizationMedicament(requestDetails: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/save-postauthorization-medicament', requestDetails, {observe: 'response'});
     }
@@ -114,4 +118,12 @@ export class RequestService {
     getMedPricesHistory(medicamentId: string): Observable<any> {
         return this.http.get('/api/price/med-prev-prices',  {params: {id: medicamentId}});
     }
+    
+     getDocumentModuleRequest(id: string): Observable<any> {
+        return this.http.get('/api/load-document-module-request', {params: {id: id}});
+    }
+    saveDocumentModuleRequest(requestDetails: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/doc-module/save-document-request', requestDetails, {observe: 'response'});
+    }
+    
 }

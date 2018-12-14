@@ -40,6 +40,10 @@ export class AdministrationService {
         return this.http.get('/api/administration/all-medicament-groups', {});
     }
 
+    getAllCustomsCodes(): Observable<any> {
+        return this.http.get('/api/administration/all-customs-codes', {});
+    }
+
     getAllPharamceuticalFormsByName(partialDescr: string): Observable<any> {
         return this.http.get('/api/administration/search-pharamceutical-forms-by-descr', {params: {partialDescr: partialDescr}});
     }
@@ -48,8 +52,16 @@ export class AdministrationService {
         return this.http.get('/api/administration/all-doc-types', {});
     }
 
+    getAllSysParams(): Observable<any> {
+        return this.http.get('/api/administration/all-sys-params', {});
+    }
+
     getAllActiveSubstances(): Observable<any> {
         return this.http.get('/api/administration/all-active-substances', {});
+    }
+
+    getAllAuxiliarySubstances(): Observable<any> {
+        return this.http.get('/api/administration/all-auxiliary-substances', {});
     }
 
     getAllUnitsOfMeasurement(): Observable<any> {
@@ -182,6 +194,12 @@ am
         return this.http.get<any[]>('/api/clinical-trails/all-clinical-trails-by-cod-or-eudra', {params: Params});
     }
 
+    getClinicalTrailNotificationTypes(): Observable<any[]> {
+        let Params = new HttpParams();
+
+        return this.http.get<any[]>('/api/clinical-trails/all-clinical-trail-notification-types');
+    }
+
     getClinicalTrailsPhases(): Observable<any> {
         return this.http.get('/api/administration/all-clinical-trail-phases', {});
     }
@@ -194,7 +212,7 @@ am
         let Params = new HttpParams();
         Params = Params.set('partialCode', partialCode);
 
-        return this.http.get('/api/administration/all-customs-code',{params: Params});
+        return this.http.get('/api/administration/all-customs-code-by-description',{params: Params});
     }
 
     getReceiptsByPaymentOrderNumbers(paymentOrderNumbers: any[]): Observable<any> {
@@ -236,5 +254,12 @@ am
         params = params.set('category', category);
 
         return this.http.get<any[]>('/api/administration/find-service-charge-by-code', {params: params});
+    }
+
+    getCompanyesListByIdno(idno: string): Observable<any[]> {
+        let Params = new HttpParams();
+        Params = Params.set('idno', idno);
+
+        return this.http.get<any[]>('/api/administration/search-companies-by-idno', {params: Params});
     }
 }

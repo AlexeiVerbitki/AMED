@@ -11,6 +11,7 @@ import {AnnihilationService} from "../../../shared/service/annihilation/annihila
 import {LoaderService} from "../../../shared/service/loader.service";
 import {DocumentService} from "../../../shared/service/document.service";
 import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
+import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
 
 @Component({
     selector: 'app-drugs-destroy-actual',
@@ -23,6 +24,7 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
     docs: Document [] = [];
     rFormSubbmitted: boolean = false;
     mFormSubbmitted: boolean = false;
+    kFormSubbmitted: boolean = false;
 
 
     requestId: string;
@@ -44,6 +46,7 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
     //Validations
     mForm: FormGroup;
     rForm: FormGroup;
+    kForm: FormGroup;
 
     constructor(private router: Router,
                 private activatedRoute: ActivatedRoute,
@@ -54,10 +57,12 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
                 private medicamentService: MedicamentService,
                 private annihilationService: AnnihilationService,
                 private loadingService: LoaderService,
-                private documentService: DocumentService) {
+                private documentService: DocumentService,
+                private navbarTitleService: NavbarTitleService) {
     }
 
     ngOnInit() {
+        this.navbarTitleService.showTitleMsg('Nimicirea medicamentelor');
         this.startDate = new Date();
 
         this.responsabilities = [{id: 1, value: 'Președintele comisiei'},
@@ -76,7 +81,6 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
                             this.members = data.medicamentAnnihilation.medicamentAnnihilationInsitutions;
 
                         this.members.forEach(m => {
-                            console.log('sf', m);
                             if (m.president)
                             {
                                 m.memberDescription = 'Președintele comisiei';
@@ -108,9 +112,9 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
 
     private initFormData() {
         this.mForm = this.fb.group({
-            'nrCererii': [{value: null, disabled: true}, Validators.required],
+            'nrCererii': [{value: null, disabled: true}],
             'dataCererii': [{value: null, disabled: true}],
-            'company': [{value: null, disabled: true}, Validators.required],
+            'company': [{value: null, disabled: true}],
         });
 
 
@@ -119,6 +123,12 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
             'responsability': [null, Validators.required],
             'proffesion': [null, Validators.required],
             'name': [null, Validators.required],
+        });
+
+
+        this.kForm = this.fb.group({
+            'firstname': '',
+            'lastname': '',
         });
 
     }
@@ -130,10 +140,11 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
 
 
     private patchData(data) {
-        console.log('sdfsd', data);
         this.mForm.get('nrCererii').patchValue(data.requestNumber);
         this.mForm.get('dataCererii').patchValue(new Date(data.startDate));
         this.mForm.get('company').patchValue(data.medicamentAnnihilation.companyName);
+        this.kForm.get('firstname').patchValue(data.medicamentAnnihilation.firstname);
+        this.kForm.get('lastname').patchValue(data.medicamentAnnihilation.lastname);
 
         this.rForm.get('commision').patchValue(data.medicamentAnnihilation.commisions);
 
@@ -168,7 +179,16 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
             category : 'LN'
         };
 
+
+        let outDocument4 = {
+            name: 'Act de recepţie a medicamentelor pentru nimicirea ulterioară a lor',
+            number: '',
+            status: this.getOutputDocStatus('NA'),
+            category : 'NA'
+        };
+
         // this.outDocuments.push(outDocument1);
+        this.outDocuments.push(outDocument4);
         this.outDocuments.push(outDocument2);
         this.outDocuments.push(outDocument3);
     }
@@ -196,11 +216,18 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
 
     submit() {
         this.mFormSubbmitted = true;
+        this.kFormSubbmitted = true;
         if (this.docs.length == 0 || this.members.length ==0) {
             return;
         }
 
+        if (!this.kForm.valid)
+        {
+            return;
+        }
+
         this.mFormSubbmitted = false;
+        this.kFormSubbmitted = false;
         let modelToSubmit = this.composeModel('F');
 
         this.subscriptions.push(
@@ -245,6 +272,10 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
 
         annihilationModel.medicamentAnnihilationInsitutions = this.members;
 
+
+        annihilationModel.firstname = this.kForm.get('firstname').value;
+        annihilationModel.lastname = this.kForm.get('lastname').value;
+
         // annihilationModel.commisions = this.rForm.get('commision').value;
 
         modelToSubmit.requestHistories = [{
@@ -273,6 +304,10 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
         else if(document.category === 'NP')
         {
             observable = this.annihilationService.viewProcesVerbal(this.composeModel('A'));
+        }
+        else if (document.category === 'NA')
+        {
+            observable = this.annihilationService.viewActDeReceptie(this.composeModel('A'));
         }
 
         this.subscriptions.push(observable.subscribe(data => {
@@ -307,20 +342,7 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
             return;
         }
 
-        // let id = this.rForm.get('medicaments').value.id;
-        // if (this.medicamentsToDestroy.find(md => md.medicamentId === id ))
-        // {
-        //     return;
-        // }
-
-        // 'commision': [null, Validators.required],
-        // 'responsability': [null, Validators.required],
-        // 'proffesion': [null, Validators.required],
-        // 'name': [null, Validators.required],
-
         this.rFormSubbmitted = false;
-
-        console.log('tuiyti',  this.rForm.get('responsability').value);
 
         this.members.push(
             {
@@ -358,6 +380,7 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        this.navbarTitleService.showTitleMsg('');
         this.subscriptions.forEach(s => s.unsubscribe());
     }
 

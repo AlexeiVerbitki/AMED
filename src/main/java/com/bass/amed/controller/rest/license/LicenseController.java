@@ -1,14 +1,15 @@
 package com.bass.amed.controller.rest.license;
 
 import com.bass.amed.common.Constants;
-import com.bass.amed.dto.TasksDTO;
 import com.bass.amed.dto.license.AnexaLaLicenta;
 import com.bass.amed.dto.license.LicenseDTO;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.projection.LicenseProjection;
-import com.bass.amed.projection.TaskDetailsProjectionDTO;
-import com.bass.amed.repository.*;
+import com.bass.amed.repository.EconomicAgentsRepository;
+import com.bass.amed.repository.RequestRepository;
+import com.bass.amed.repository.RequestTypeRepository;
+import com.bass.amed.repository.SysParamsRepository;
 import com.bass.amed.repository.license.LicenseActivityTypeRepository;
 import com.bass.amed.repository.license.LicenseAnnounceMethodsRepository;
 import com.bass.amed.repository.license.LicenseMandatedContactRepository;
@@ -386,13 +387,32 @@ public class LicenseController
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+
+            //Export to word
+
+//            ByteArrayOutputStream xlsReport = new ByteArrayOutputStream();
+//
+//            JRDocxExporter docxExporter = new JRDocxExporter();
+//            docxExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+//            docxExporter.setExporterOutput( new SimpleOutputStreamExporterOutput( xlsReport));
+//            SimpleDocxReportConfiguration config = new SimpleDocxReportConfiguration();
+//            docxExporter.setConfiguration(config);
+//            docxExporter.exportReport();
+//            bytes = xlsReport.toByteArray();
+//
+//
+//            if (xlsReport != null)
+//            {
+//                xlsReport.close();
+//            }
+
         } catch (Exception e)
         {
             throw new CustomException(e.getMessage());
         }
 
-        return ResponseEntity.ok().header("Content-Type", "application/pdf")
-                .header("Content-Disposition", "inline; filename=anexaLicenta.pdf").body(bytes);
+        return ResponseEntity.ok().header("Content-Type", "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+                .header("Content-Disposition", "inline; filename=anexaLicenta.docx").body(bytes);
     }
 
 
@@ -406,21 +426,46 @@ public class LicenseController
             Resource res = resourceLoader.getResource("layouts/module5/Licenta.jrxml");
             JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
 
+            Date releaseDate = request.getLicense().getReleaseDate();
+            Date expirationDate = request.getLicense().getExpirationDate();
+            if (request.getType().getCode().equals("LICEL"))
+            {
+                releaseDate = new Date();
+
+                Calendar c = Calendar.getInstance();
+                c.setTime(releaseDate);
+                c.add(Calendar.YEAR, 5);
+
+                expirationDate = c.getTime();
+            }
+
+            if (request.getType().getCode().equals("LICP"))
+            {
+                Date curExpirationDate = request.getLicense().getExpirationDate();
+
+                Calendar c = Calendar.getInstance();
+                c.setTime(curExpirationDate);
+                c.add(Calendar.YEAR, 5);
+
+                expirationDate = c.getTime();
+            }
+
+
             /* Map to hold Jasper report Parameters */
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("companyName", request.getLicense().getEconomicAgents().stream().findFirst().get().getLongName());
             parameters.put("companyAddress", request.getLicense().getEconomicAgents().stream().findFirst().get().getLegalAddress());
             parameters.put("companyIdno", request.getLicense().getIdno());
-            parameters.put("startDate", new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format(request.getLicense().getReleaseDate()));
-            parameters.put("endDate", new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format(request.getLicense().getExpirationDate()));
-            parameters.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getDescription());
+            parameters.put("startDate", new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format(releaseDate ));
+            parameters.put("endDate", new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format(expirationDate));
+            parameters.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
             parameters.put("dateOfApprovalOfDecision", new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format(request.getLicense().getEconomicAgents().stream().findFirst().get().getRegistrationDate()));
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
         } catch (Exception e)
         {
-            throw new CustomException(e.getMessage());
+            throw new CustomException(e.getMessage(), e);
         }
 
         return ResponseEntity.ok().header("Content-Type", "application/pdf")

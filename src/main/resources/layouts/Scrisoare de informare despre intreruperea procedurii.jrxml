@@ -12,7 +12,7 @@
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
 	<parameter name="La Nr." class="java.lang.String"/>
-	<parameter name="Din: " class="java.util.Date"/>
+	<parameter name="Din: " class="java.lang.String"/>
 	<parameter name="path" class="java.lang.String"/>
 	<parameter name="genDir" class="java.lang.String"/>
 	<parameter name="regRequest" class="java.lang.String"/>
@@ -31,7 +31,7 @@
 			</image>
 			<image>
 				<reportElement x="220" y="0" width="330" height="70" uuid="11dd8ec7-6404-4cc7-9d59-a7e8f6fd0917"/>
-				<imageExpression><![CDATA["layouts/icons/header_right.PNG"]]></imageExpression>
+				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="467" y="70" width="82" height="13" uuid="a8ab1945-d22e-4171-95ce-3d9fdc3195e2"/>

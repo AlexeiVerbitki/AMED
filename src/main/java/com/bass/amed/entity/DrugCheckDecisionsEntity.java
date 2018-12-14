@@ -55,5 +55,8 @@ public class DrugCheckDecisionsEntity
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @JoinColumn(name = "drug_check_decisions_id")
     private Set<MedicamentEntity> medicaments = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @JoinColumn(name = "drug_check_decisions_id")
+    private Set<NmEconomicAgentsEntity> nmEconomicAgents = new HashSet<>();
 
 }

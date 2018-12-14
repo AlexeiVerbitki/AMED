@@ -47,11 +47,11 @@ public class NumberToWordsConverter
         }
 
         if (n < 1000) {
-            return units[n / 100] + " sută" + ((n % 100 != 0) ? " " : "") + convert(n % 100);
+            return units[n / 100] + " sute" + ((n % 100 != 0) ? " " : "") + convert(n % 100);
         }
 
         if (n < 100000) {
-            return convert(n / 1000) + " mie" + ((n % 10000 != 0) ? " " : "") + convert(n % 1000);
+            return convert(n / 1000) + " mii" + ((n % 10000 != 0) ? " " : "") + convert(n % 1000);
         }
 
         if (n < 10000000) {

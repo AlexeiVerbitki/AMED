@@ -1,285 +1,281 @@
 <div class="container-fluid sky z-depth-2">
+	<h5 class="text-center font-weight-bold">Scopul cererii</h5>
+	<hr>
+	<form [formGroup]="mForm">
+		<mat-radio-group formControlName="tipCerere">
 
-    <h3 class="text-center my-3 font-weight-bold">Inregistrarea cererii de licentiere</h3>
-    <hr>
-    <h5 class="text-center font-weight-bold">Scopul cererii</h5>
-    <hr>
-    <form [formGroup]="mForm">
-        <mat-radio-group formControlName="tipCerere">
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<mat-radio-button name="prop1" value="LICEL">Eliberare</mat-radio-button>
+					</div>
+					<div class="col">
+						<mat-radio-button name="prop2" value="LICM">Reperfectare</mat-radio-button>
+					</div>
+					<div class="col">
+						<mat-radio-button name="prop3" value="LICD">Eliberarea duplicatului</mat-radio-button>
+					</div>
+					<div class="col">
+						<mat-radio-button name="prop3" value="LICP">Prelungire</mat-radio-button>
+					</div>
+					<div class="col">
+						<mat-radio-button name="prop3" value="LICS">Suspendare</mat-radio-button>
+					</div>
+					<div class="col">
+						<mat-radio-button name="prop3" value="LICRL">Reluare</mat-radio-button>
+					</div>
+					<div class="col">
+						<mat-radio-button name="prop3" value="LICA">Anulare</mat-radio-button>
+					</div>
+					<div class="col">
+						<mat-radio-button name="prop3" value="LICC">Cesionare</mat-radio-button>
+					</div>
+				</div>
+			</div>
+		</mat-radio-group>
+		<hr>
 
-                <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <mat-radio-button name="prop1" value="LICEL">Eliberare</mat-radio-button>
-                        </div>
-                        <div class="col">
-                            <mat-radio-button name="prop2" value="LICM">Reperfectare</mat-radio-button>
-                        </div>
-                        <div class="col">
-                            <mat-radio-button name="prop3" value="LICD">Eliberarea duplicatului</mat-radio-button>
-                        </div>
-                        <div class="col">
-                            <mat-radio-button name="prop3" value="LICP">Prelungire</mat-radio-button>
-                        </div>
-                        <div class="col">
-                            <mat-radio-button name="prop3" value="LICS">Suspendare</mat-radio-button>
-                        </div>
-                        <div class="col">
-                            <mat-radio-button name="prop3" value="LICRL">Reluare</mat-radio-button>
-                        </div>
-                        <div class="col">
-                            <mat-radio-button name="prop3" value="LICA">Anulare</mat-radio-button>
-                        </div>
-                        <div class="col">
-                            <mat-radio-button name="prop3" value="LICC">Cesionare</mat-radio-button>
-                        </div>
-                    </div>
-                </div>
-        </mat-radio-group>
-        <hr>
+		<div class="row" *ngIf="tipCerere">
+			<div class="col-md-6">
+				<div class="md-form">
+					<input id="nrCererii" mdbInputDirective type="text" class="form-control" formControlName="nrCererii">
+					<label for="nrCererii">Nr. cererii</label>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input matInput [matDatepicker]="picker2" placeholder="Data de inregistrare a cererii" id="dataCerere"
+						       formControlName="dataCerere">
+						<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #picker2></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+		</div>
 
-        <div class="row" *ngIf="tipCerere">
-            <div class="col-md-6">
-                <div class="md-form">
-                    <input id="nrCererii" mdbInputDirective type="text" class="form-control" formControlName="nrCererii">
-                    <label for="nrCererii">Nr. cererii</label>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="md-form-modified">
-                    <mat-form-field class="w-100">
-                        <input matInput [matDatepicker]="picker2" placeholder="Data de inregistrare a cererii" id="dataCerere"
-                               formControlName="dataCerere">
-                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                        <mat-datepicker touchUi #picker2></mat-datepicker>
-                    </mat-form-field>
-                </div>
-            </div>
-        </div>
+		<app-document *ngIf="tipCerere" [documents]="docs" [nrCerere]="mForm.get('nrCererii').value" [dcTypeIdentifier]="docTypeIdentifier"></app-document>
 
-        <app-document *ngIf="tipCerere" [documents]="docs" [nrCerere]="mForm.get('nrCererii').value" [dcTypeIdentifier]="docTypeIdentifier"></app-document>
+	</form>
+	<br>
+	<form [formGroup]="rForm" name="form" #f="ngForm">
+		<section *ngIf="tipCerere">
+			<h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICEL'">Eliberarea licentei</h5>
+			<h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICM'">Reperfectare licentei</h5>
+			<h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICD'">Eliberarea duplicatului licentei</h5>
+			<h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICP'">Prelungire</h5>
+			<h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICS'">Suspendare</h5>
+			<h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICRL'">Reluare</h5>
+			<h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICA'">Anulare</h5>
+			<h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICC'">Cesionare</h5>
 
-    </form>
+			<hr>
+			<div class="row">
+				<div class="col-md-4">
+					<div class="md-form-modified-select">
+						<ng-select class="custom" [items]="companii | async"
+						           bindLabel="name"
+						           placeholder="Companii"
+						           formControlName="compGet"
+						           [required]="true"
+						           [loading]="loadingCompany"
+						           [typeahead]="companyInputs"
+						>
+							<ng-template ng-option-tmp let-item="item">
+								{{item.name}} <br/>
+								<small class="form-text text-muted">{{item.idno}}</small>
+							</ng-template>
+						</ng-select>
+					</div>
+					<div *ngIf="rFormSubbmitted && !rForm.get('compGet').valid">
+						<small class="text-muted"><strong class="text-danger">Agentul economic trebuie introdus</strong>
+						</small>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="md-form">
+						<input id="adresa" mdbInputDirective type="text" class="form-control" formControlName="adresa"
+						>
+						<label for="adresa">Adresa</label>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="md-form">
+						<input id="idno" mdbInputDirective type="text" class="form-control" formControlName="idno"
+						>
+						<label for="idno">IDNO</label>
+					</div>
+				</div>
 
-    <form [formGroup]="rForm" name="form"  #f="ngForm">
-        <section *ngIf="tipCerere">
-            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICEL'">Eliberarea licentei</h5>
-            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICM'">Reperfectare licentei</h5>
-            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICD'">Eliberarea duplicatului licentei</h5>
-            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICP'">Prelungire</h5>
-            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICS'">Suspendare</h5>
-            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICRL'">Reluare</h5>
-            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICA'">Anulare</h5>
-            <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICC'">Cesionare</h5>
+				<!--For Modification and duplicate-->
+				<div class="col-md-12" *ngIf="tipCerere !== 'LICEL' && companyLicenseNotFound === true">
+					<div class="md-form-modified">
+						<strong class="text-danger">Nu a fost gasita nici o licenta pentru compania selectata</strong>
+					</div>
+				</div>
 
-            <hr>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="md-form-modified-select">
-                        <ng-select class="custom"  [items]="companii | async"
-                                   bindLabel="name"
-                                   placeholder = "Companii"
-                                   formControlName="compGet"
-                                   [required]="true"
-                                   [loading]="loadingCompany"
-                                   [typeahead]="companyInputs"
-                        >
-                            <ng-template ng-option-tmp let-item="item">
-                                {{item.name}} <br />
-                                <small class="form-text text-muted">{{item.idno}}</small>
-                            </ng-template>
-                        </ng-select>
-                    </div>
-                    <div *ngIf="rFormSubbmitted && !rForm.get('compGet').valid">
-                        <small class="text-muted"><strong class="text-danger">Agentul economic trebuie introdus</strong>
-                        </small>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="md-form">
-                        <input id="adresa" mdbInputDirective type="text" class="form-control" formControlName="adresa"
-                               >
-                        <label for="adresa">Adresa</label>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="md-form">
-                        <input id="idno" mdbInputDirective type="text" class="form-control" formControlName="idno"
-                               >
-                        <label for="idno">IDNO</label>
-                    </div>
-                </div>
+				<div class="col-md-12" *ngIf="tipCerere === 'LICEL' && oldLicense">
+					<div class="md-form-modified">
+						<strong class="text-danger">Aceasta companie deja are o licenta activa cu nr= {{oldLicense.nr}}</strong>
+					</div>
+				</div>
 
-                <!--For Modification and duplicate-->
-                <div class="col-md-12" *ngIf="tipCerere !== 'LICEL' && companyLicenseNotFound === true">
-                    <div class="md-form-modified">
-                            <strong class="text-danger">Nu a fost gasita nici o licenta pentru compania selectata</strong>
-                    </div>
-                </div>
+				<!-- &lt;!&ndash;For Suspension&ndash;&gt;
+				 <div class="col-md-12" *ngIf="tipCerere === 'LICS' && companyLicenseNotFound === false">
+					 <div class="md-form-modified">
+						 <strong class="text-info">{{titleSuspension}}</strong>
+					 </div>
+				 </div>-->
 
-                <div class="col-md-12" *ngIf="tipCerere === 'LICEL' && oldLicense">
-                    <div class="md-form-modified">
-                        <strong class="text-danger">Aceasta companie deja are o licenta activa cu nr= {{oldLicense.nr}}</strong>
-                    </div>
-                </div>
+				<div class="col-md-3" *ngIf="tipCerere !== 'LICEL'">
+					<div class="md-form">
+						<input id="seria" mdbInputDirective type="text" class="form-control" formControlName="seria"
+						>
+						<label for="seria">Seria Licentei</label>
+					</div>
+				</div>
+				<div class="col-md-3" *ngIf="tipCerere !== 'LICEL'">
+					<div class="md-form">
+						<input id="nrLic" mdbInputDirective type="text" class="form-control" formControlName="nrLic"
+						>
+						<label for="nrLic">Numarul licentei</label>
+					</div>
+				</div>
+				<div class="col-md-3" *ngIf="tipCerere !== 'LICEL'">
+					<div class="md-form-modified">
+						<mat-form-field class="w-100">
+							<input id="dataEliberariiLic" matInput [matDatepicker]="picker9"
+							       placeholder="Data eliberării licentei" formControlName="dataEliberariiLic"
+							>
+							<mat-datepicker-toggle matSuffix [for]="picker9"></mat-datepicker-toggle>
+							<mat-datepicker touchUi #picker9></mat-datepicker>
+						</mat-form-field>
+					</div>
+				</div>
 
-               <!-- &lt;!&ndash;For Suspension&ndash;&gt;
-                <div class="col-md-12" *ngIf="tipCerere === 'LICS' && companyLicenseNotFound === false">
-                    <div class="md-form-modified">
-                        <strong class="text-info">{{titleSuspension}}</strong>
-                    </div>
-                </div>-->
-
-                <div class="col-md-3" *ngIf="tipCerere !== 'LICEL'">
-                    <div class="md-form">
-                        <input id="seria" mdbInputDirective type="text" class="form-control" formControlName="seria"
-                        >
-                        <label for="seria">Seria Licentei</label>
-                    </div>
-                </div>
-                <div class="col-md-3" *ngIf="tipCerere !== 'LICEL'">
-                    <div class="md-form">
-                        <input id="nrLic" mdbInputDirective type="text" class="form-control" formControlName="nrLic"
-                        >
-                        <label for="nrLic">Numarul licentei</label>
-                    </div>
-                </div>
-                <div class="col-md-3" *ngIf="tipCerere !== 'LICEL'">
-                    <div class="md-form-modified">
-                        <mat-form-field class="w-100">
-                            <input id="dataEliberariiLic" matInput [matDatepicker]="picker9"
-                                   placeholder="Data eliberării licentei" formControlName="dataEliberariiLic"
-                             >
-                            <mat-datepicker-toggle matSuffix [for]="picker9"></mat-datepicker-toggle>
-                            <mat-datepicker touchUi #picker9 ></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                </div>
-
-                <div class="col-md-3" *ngIf="tipCerere !== 'LICEL'">
-                    <div class="md-form-modified">
-                        <mat-form-field class="w-100">
-                            <input id="dataExpirariiLic" matInput [matDatepicker]="picker9"
-                                   placeholder="Data expirarii licentei" formControlName="dataExpirariiLic"
-                            >
-                            <mat-datepicker-toggle matSuffix [for]="picker9"></mat-datepicker-toggle>
-                            <mat-datepicker touchUi #picker9 ></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                </div>
+				<div class="col-md-3" *ngIf="tipCerere !== 'LICEL'">
+					<div class="md-form-modified">
+						<mat-form-field class="w-100">
+							<input id="dataExpirariiLic" matInput [matDatepicker]="picker9"
+							       placeholder="Data expirarii licentei" formControlName="dataExpirariiLic"
+							>
+							<mat-datepicker-toggle matSuffix [for]="picker9"></mat-datepicker-toggle>
+							<mat-datepicker touchUi #picker9></mat-datepicker>
+						</mat-form-field>
+					</div>
+				</div>
 
 
-
-                <div class="col-md-12" *ngIf="tipCerere === 'LICS'">
-                    <div class="md-form">
+				<div class="col-md-12" *ngIf="tipCerere === 'LICS'">
+					<div class="md-form">
                         <textarea type="text" id="reasonSuspension" class="md-textarea form-control" mdbInputDirective
                                   rows="2" formControlName="reasonSuspension"></textarea>
-                        <label for="reasonSuspension" >Motivul suspendarii<span class="text-danger">*</span></label>
-                    </div>
-                </div>
+						<label for="reasonSuspension">Motivul suspendarii<span class="text-danger">*</span></label>
+					</div>
+				</div>
 
 
-                <div class="col-md-12" *ngIf="tipCerere === 'LICA'">
-                    <div class="md-form">
+				<div class="col-md-12" *ngIf="tipCerere === 'LICA'">
+					<div class="md-form">
                         <textarea type="text" id="reasonCancel" class="md-textarea form-control" mdbInputDirective
                                   rows="2" formControlName="reasonCancel"></textarea>
-                        <label for="reasonCancel" >Motivul anularii<span class="text-danger">*</span></label>
-                    </div>
-                </div>
+						<label for="reasonCancel">Motivul anularii<span class="text-danger">*</span></label>
+					</div>
+				</div>
 
-                <div class="col-md-12"  *ngIf="rFormSubbmitted && tipCerere === 'LICS' && !rForm.get('reasonSuspension').valid">
-                    <div class="md-form-modified">
-                        <strong class="text-danger">Introduceti motivul suspendarii.</strong>
-                    </div>
-                </div>
+				<div class="col-md-12" *ngIf="rFormSubbmitted && tipCerere === 'LICS' && !rForm.get('reasonSuspension').valid">
+					<div class="md-form-modified">
+						<strong class="text-danger">Introduceti motivul suspendarii.</strong>
+					</div>
+				</div>
 
-                <div class="col-md-12"  *ngIf="rFormSubbmitted && tipCerere === 'LICA' && !rForm.get('reasonCancel').valid">
-                    <div class="md-form-modified">
-                        <strong class="text-danger">Introduceti motivul retragerii.</strong>
-                    </div>
-                </div>
+				<div class="col-md-12" *ngIf="rFormSubbmitted && tipCerere === 'LICA' && !rForm.get('reasonCancel').valid">
+					<div class="md-form-modified">
+						<strong class="text-danger">Introduceti motivul retragerii.</strong>
+					</div>
+				</div>
 
-                <div class="col-md-4">
-                    <div class="md-form">
-                        <input id="persResDepCereriiFirstname" mdbInputDirective type="text" class="form-control"
-                               formControlName="persResDepCereriiFirstname">
-                       <label for="persResDepCereriiFirstname">Nume persoana responsabilă <span class="text-danger">*</span></label>
+				<div class="col-md-4">
+					<div class="md-form">
+						<input id="persResDepCereriiFirstname" mdbInputDirective type="text" class="form-control"
+						       formControlName="persResDepCereriiFirstname">
+						<label for="persResDepCereriiFirstname">Nume persoana responsabilă <span class="text-danger">*</span></label>
 
-                    </div>
-                    <div *ngIf="rFormSubbmitted && !rForm.get('persResDepCereriiFirstname').valid">
-                        <small class="text-muted"><strong class="text-danger">Prenumele persoanei de contact trebuie introdus</strong>
-                        </small>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="md-form">
-                        <input id="persResDepCereriiLastname" mdbInputDirective type="text" class="form-control"
-                               formControlName="persResDepCereriiLastname">
-                        <label for="persResDepCereriiLastname">Prenume persoana responsabilă <span class="text-danger">*</span></label>
+					</div>
+					<div *ngIf="rFormSubbmitted && !rForm.get('persResDepCereriiFirstname').valid">
+						<small class="text-muted"><strong class="text-danger">Prenumele persoanei de contact trebuie introdus</strong>
+						</small>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="md-form">
+						<input id="persResDepCereriiLastname" mdbInputDirective type="text" class="form-control"
+						       formControlName="persResDepCereriiLastname">
+						<label for="persResDepCereriiLastname">Prenume persoana responsabilă <span class="text-danger">*</span></label>
 
-                    </div>
-                    <div *ngIf="rFormSubbmitted && !rForm.get('persResDepCereriiLastname').valid">
-                        <small class="text-muted"><strong class="text-danger">Numele persoanei de ocntact trebuie introdus</strong>
-                        </small>
-                    </div>
-                </div>
+					</div>
+					<div *ngIf="rFormSubbmitted && !rForm.get('persResDepCereriiLastname').valid">
+                        <small class="text-muted"><strong class="text-danger">Numele persoanei de contact trebuie introdus</strong>
+						</small>
+					</div>
+				</div>
 
-                <div class="col-md-4">
-                    <div class="md-form">
-                        <input id="telefonContact" mdbInputDirective type="text" class="form-control"
-                               formControlName="telefonContact" maxlength="9"
-                               >
-                        <label for="telefonContact">Telefon de contact <span class="text-danger">*</span> </label>
-                    </div>
-                    <div *ngIf="rFormSubbmitted && !rForm.get('telefonContact').valid">
-                        <small class="text-muted"><strong class="text-danger">Telefonul trebuie introdus sau nu este valid.</strong>
-                        </small>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="md-form">
-                        <input id="emailContact" mdbInputDirective type="email" class="form-control"
-                               formControlName="emailContact" >
-                        <label for="emailContact">Email de contact</label>
-                    </div>
-                    <div *ngIf="rFormSubbmitted && !rForm.get('emailContact').valid">
-                        <small class="text-muted"><strong class="text-danger">Email ul nu este valid.</strong>
-                        </small>
-                    </div>
-                </div>
+				<div class="col-md-4">
+					<div class="md-form">
+						<input id="telefonContact" mdbInputDirective type="text" class="form-control"
+						       formControlName="telefonContact" maxlength="9"
+						>
+						<label for="telefonContact">Telefon de contact <span class="text-danger">*</span> </label>
+					</div>
+					<div *ngIf="rFormSubbmitted && !rForm.get('telefonContact').valid">
+						<small class="text-muted"><strong class="text-danger">Telefonul trebuie introdus sau nu este valid.</strong>
+						</small>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="md-form">
+						<input id="emailContact" mdbInputDirective type="email" class="form-control"
+						       formControlName="emailContact">
+						<label for="emailContact">Email de contact</label>
+					</div>
+					<div *ngIf="rFormSubbmitted && !rForm.get('emailContact').valid">
+						<small class="text-muted"><strong class="text-danger">Email ul nu este valid.</strong>
+						</small>
+					</div>
+				</div>
 
-                <div class="col-md-4">
-                    <div class="md-form">
-                        <input id="nrProcurii1" mdbInputDirective type="text" class="form-control"
-                               formControlName="nrProcurii1" >
-                        <label for="nrProcurii1">Nr. procurii <span class="text-danger">*</span></label>
-                    </div>
-                    <div *ngIf="rFormSubbmitted && !rForm.get('nrProcurii1').valid">
-                        <small class="text-muted"><strong class="text-danger">Numarul procurii trebuie introdus</strong>
-                        </small>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="md-form-modified">
-                        <mat-form-field class="w-100">
-                            <input id="dataProcurii1" matInput [matDatepicker]="picker3" [max]="maxDate"
-                                   placeholder="Data eliberării procurii" formControlName="dataProcurii1"
-                                   >
-                            <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
-                            <mat-datepicker touchUi #picker3 [disabled]="false"></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                    <div *ngIf="rFormSubbmitted && !rForm.get('dataProcurii1').value">
-                        <small class="text-muted"><strong class="text-danger">Data procurii trebuie introdusa</strong>
-                        </small>
-                    </div>
-                </div>
-            </div>
+				<div class="col-md-4">
+					<div class="md-form">
+						<input id="nrProcurii1" mdbInputDirective type="text" class="form-control"
+						       formControlName="nrProcurii1">
+						<label for="nrProcurii1">Nr. procurii <span class="text-danger">*</span></label>
+					</div>
+					<div *ngIf="rFormSubbmitted && !rForm.get('nrProcurii1').valid">
+						<small class="text-muted"><strong class="text-danger">Numarul procurii trebuie introdus</strong>
+						</small>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="md-form-modified">
+						<mat-form-field class="w-100">
+							<input id="dataProcurii1" matInput [matDatepicker]="picker3" [max]="maxDate"
+							       placeholder="Data eliberării procurii" formControlName="dataProcurii1"
+							>
+							<mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+							<mat-datepicker touchUi #picker3 [disabled]="false"></mat-datepicker>
+						</mat-form-field>
+					</div>
+					<div *ngIf="rFormSubbmitted && !rForm.get('dataProcurii1').value">
+						<small class="text-muted"><strong class="text-danger">Data procurii trebuie introdusa</strong>
+						</small>
+					</div>
+				</div>
+			</div>
 
-            <div class="text-center">
-                <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="submitNew()">Urmatorul pas
-                </button>
-            </div>
-        </section>
-    </form>
+			<div class="text-center">
+				<button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="submitNew()">Urmatorul pas
+				</button>
+			</div>
+		</section>
+	</form>
 </div>

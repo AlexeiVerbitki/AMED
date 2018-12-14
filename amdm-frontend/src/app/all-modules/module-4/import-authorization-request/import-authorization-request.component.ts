@@ -215,8 +215,13 @@ export class ImportAuthorizationRequestComponent implements OnInit {
             console.log("formModel.importAuthorizationEntity.medType", formModel.importAuthorizationEntity.medType);
 
 
+        switch (this.rForm.get('importType').value) {
+            case "1": {formModel.type.id = '15';}
+            case "2": {formModel.type.id = '16';}
+            case "3": {formModel.type.id = '17';}
+            case "4": {formModel.type.id = '18';}
+        }
 
-            formModel.type.id = '11';
             formModel.requestHistories = [{
                 // startDate: this.rForm.get('startDate').value,
                 startDate: formModel.startDate,
@@ -228,9 +233,11 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
             // formModel.importAuthorizationEntity.documents = this.docs;
             formModel.documents = this.docs;
-            formModel.currentStep = 'E';
+            formModel.currentStep = 'R';
             formModel.initiator = this.authService.getUserName();
             formModel.assignedUser = this.authService.getUserName();
+
+
 
             console.log("formModel", formModel)
             console.log("rForm.valid", this.rForm.valid)

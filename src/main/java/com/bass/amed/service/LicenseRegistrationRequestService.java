@@ -2,6 +2,7 @@ package com.bass.amed.service;
 
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
+import com.bass.amed.repository.EconomicAgentsRepository;
 import com.bass.amed.repository.license.LicenseResolutionRepository;
 import com.bass.amed.repository.NmStatesRepository;
 import com.bass.amed.repository.RequestRepository;
@@ -34,6 +35,9 @@ public class LicenseRegistrationRequestService
 
     @Autowired
     private LicenseResolutionRepository licenseResolutionRepository;
+
+    @Autowired
+    private EconomicAgentsRepository economicAgentsRepository;
 
     @Transactional(readOnly = true)
     public RegistrationRequestsEntity findLicenseRegistrationById(Integer id) throws CustomException
@@ -105,9 +109,23 @@ public class LicenseRegistrationRequestService
             detail.setRegistrationId(request.getId());
             request.getLicense().getDetails().add(detail);
 
+
             em.merge(request);
 
 
+            List<NmEconomicAgentsEntity> agentsByIdno = economicAgentsRepository.findAllByIdno(request.getLicense().getIdno());
+
+            for (NmEconomicAgentsEntity ag : agentsByIdno)
+            {
+                if (ag.getLicenseId() != null)
+                {
+                    NmEconomicAgentsEntity r = em.find(NmEconomicAgentsEntity.class, ag.getId());
+
+                    r.setLicenseId(null);
+
+                    em.merge(r);
+                }
+            }
 
             em.getTransaction().commit();
 

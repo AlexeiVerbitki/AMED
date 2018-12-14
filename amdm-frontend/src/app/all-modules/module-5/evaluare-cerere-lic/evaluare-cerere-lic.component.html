@@ -1,7 +1,4 @@
 <div class="container-fluid sky z-depth-2">
-    <h3 class="text-center my-3 font-weight-bold">Evaluarea cererii de licentiere</h3>
-    <hr>
-
     <div class="text-center">
         <div class="container">
             <h5 class="text-center font-weight-bold" *ngIf="tipCerere === 'LICEL'">Eliberarea licentei</h5>
@@ -38,16 +35,15 @@
 
 
         <app-document [documents]="docs" [nrCerere]="mForm.get('nrCererii').value"
-                      (documentModified)="documentAdded($event)" [dcTypeIdentifier]="docTypeIdentifier"></app-document>
-        <div *ngIf="rFormSubbmitted && docs.length==0">
-            <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
-        </div>
+                       [dcTypeIdentifier]="docTypeIdentifier"></app-document>
+        <!--<div *ngIf="rFormSubbmitted && docs.length==0">-->
+            <!--<small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>-->
+        <!--</div>-->
 
     </form>
 
     <form [formGroup]="rForm">
         <section *ngIf="tipCerere">
-            <hr>
             <!--=====================================================================================================================================-->
             <h5 class="text-center font-weight-bold">Obiectele adresarii</h5>
             <hr>
@@ -392,7 +388,7 @@
             </div>
             <hr>
 
-            <hr>
+          <!--  <hr>
             <h5 class="text-center font-weight-bold">Documente de iesire</h5>
             <hr>
 
@@ -417,7 +413,7 @@
                     </td>
                 </tr>
                 </tbody>
-            </table>
+            </table>-->
            <!-- <div *ngIf="mFormSubbmitted && !checkAllDocumentsWasAttached()">
                 <small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong>
                 </small>

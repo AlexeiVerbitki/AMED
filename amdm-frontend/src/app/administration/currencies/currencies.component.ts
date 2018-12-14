@@ -31,6 +31,11 @@ const ELEMENT_DATA: Bank[] = [
   styleUrls: ['./currencies.component.css']
 })
 export class CurrenciesComponent implements OnInit {
+
+  
+  visibility: boolean = false;
+  title: string = 'Currencies';
+
   displayedColumns: any[] = ['id', 'code', 'short_description', 'description', 'symbol', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
@@ -50,6 +55,10 @@ export class CurrenciesComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 
 

@@ -4,7 +4,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="md-form-modified">
-					<ng-select id="activeSubstances" name="activeSubstances" [items]="activeSubstances" bindLabel="description"
+					<ng-select id="activeSubstances" name="activeSubstances" [items]="activeSubstances" bindLabel="description" [loading]="loadingActiveSubst"
 					           placeholder="Denumire *" (ngModelChange)="checkActiveSubstanceValue()" formControlName="activeSubstance">
 					</ng-select>
 
@@ -42,7 +42,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="md-form-modified">
-					<ng-select id="proSubsActiv" name="proSubsActiv" [items]="manufactures"
+					<ng-select id="proSubsActiv" name="proSubsActiv" [items]="manufactures" [loading]="loadingManufacture"
 					           bindLabel="description"
 					           placeholder="Producător *"
 					           (ngModelChange)="checkActiveSubstanceManufacture()"

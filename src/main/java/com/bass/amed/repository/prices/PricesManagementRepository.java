@@ -38,7 +38,7 @@ public interface PricesManagementRepository extends JpaRepository<PricesDTO, Int
             "       LEFT JOIN nm_currencies c on p.currency_id = c.id\n" +
             "       LEFT JOIN request_types rt on rr.type_id = rt.id\n" +
             "WHERE rt.process_id = 5  AND\n" +
-            "   pt.id = 2 AND #acceptat \n" +
+            "  #pt.id = 2 AND #acceptat \n" +
             "  (?1 IS NULL OR rr.request_number = ?1) AND\n" +
             "  (?2 IS NULL OR m.code = ?2) AND\n" +
             "  (?3 IS NULL OR nmp.order_nr = ?3) AND\n" +

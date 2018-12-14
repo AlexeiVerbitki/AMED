@@ -13,7 +13,8 @@ public interface Constants
     }
 
     interface SysParams{
-        String DIRECTOR_GENERAL = "DIR_GEN";
+        String DIRECTOR_GENERAL = "FN_DIR_GEN";
         String ACCOUNTANT = "ACCOUNTANT";
+        String NIMICIRE_DIRECTOR_SERVICE = "NIM_DIR_SERVICE";
     }
 }

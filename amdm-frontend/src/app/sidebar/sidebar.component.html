@@ -29,13 +29,16 @@
 					<a routerLink="/dashboard/module" class="pl-3 nav-link waves-effect waves-light" mdbWavesEffect><i class="fa fa-list fa-lg" aria-hidden="true"></i> Module</a>
 				</li>
 				<li class="nav-item" [routerLinkActive]="['active']">
-					<a routerLink="/dashboard/task" class="pl-3 nav-link waves-effect waves-light" mdbWavesEffect><i class="fa fa-tasks fa-lg" aria-hidden="true"></i> Gestionare procese</a>
+					<a routerLink="/dashboard/task" class="pl-3 nav-link waves-effect waves-light" mdbWavesEffect><i class="fa fa-tasks fa-lg" aria-hidden="true"></i> Gestionare cerere</a>
 				</li>
 				<li class="nav-item" [routerLinkActive]="['active']">
 					<a routerLink="/dashboard/doc-management" class="pl-3 nav-link waves-light" mdbWavesEffect><i class="fa fa-lock fa-lg" aria-hidden="true"></i> Gestionare documente</a>
 				</li>
 				<li class="nav-item" [routerLinkActive]="['active']">
 					<a routerLink="/dashboard/management/medicaments" class="pl-3 nav-link waves-light" mdbWavesEffect><i class="fa fa-medkit fa-lg" aria-hidden="true"></i> Cartela medicament</a>
+				</li>
+				<li class="nav-item" [routerLinkActive]="['active']">
+					<a routerLink="/dashboard/management/clinical-trials" class="pl-3 nav-link waves-light" mdbWavesEffect><i class="fa fa-user-md fa-lg" aria-hidden="true"></i> Cartela studiului clinic</a>
 				</li>
 				<li class="nav-item" [routerLinkActive]="['active']">
 					<a routerLink="/dashboard/management/prices" class="pl-3 nav-link waves-light" mdbWavesEffect><i class="fa fa-money fa-lg" aria-hidden="true"></i> Gestionare Prețuri</a>
@@ -51,7 +54,7 @@
 					   mdbWavesEffect><i class="fa fa-file-text fa-lg" aria-hidden="true"></i> Gestionare Licențe</a>
 				</li>
 				<li class="nav-item" [routerLinkActive]="['active']">
-					<a routerLink="/dashboard/module/drug-control/cpcadtask" class="pl-3 nav-link waves-light"
+					<a routerLink="/dashboard/management/cpcadtask" class="pl-3 nav-link waves-light"
 					   mdbWavesEffect><i class="fa fa-clipboard fa-lg" aria-hidden="true"></i> Autorizari CPCD</a>
 				</li>
 				<li class="nav-item" [routerLinkActive]="['active']">
@@ -77,7 +80,7 @@
 					   mdbWavesEffect><i class="fa fa-list fa-lg" aria-hidden="true"></i></a>
 				</li>
 				<li class="nav-item" [routerLinkActive]="['active']">
-					<a mdbTooltip="Gestionare procese" placement="right" routerLink="/dashboard/task" class="pl-3 nav-link waves-effect waves-light"
+					<a mdbTooltip="Gestionare cerere" placement="right" routerLink="/dashboard/task" class="pl-3 nav-link waves-effect waves-light"
 					   mdbWavesEffect><i class="fa fa-tasks fa-lg" aria-hidden="true"></i></a>
 				</li>
 				<li class="nav-item" [routerLinkActive]="['active']">
@@ -87,6 +90,10 @@
 				<li class="nav-item" [routerLinkActive]="['active']">
 					<a mdbTooltip="Cartela medicament" placement="right" routerLink="/dashboard/management/medicaments" class="pl-3 nav-link waves-light"
 					   mdbWavesEffect><i class="fa fa-medkit fa-lg" aria-hidden="true"></i></a>
+				</li>
+				<li class="nav-item" [routerLinkActive]="['active']">
+					<a mdbTooltip="Cartela studiului clinic" placement="right" routerLink="/dashboard/management/clinical-trials" class="pl-3 nav-link waves-light"
+					   mdbWavesEffect><i class="fa fa-user-md fa-lg" aria-hidden="true"></i></a>
 				</li>
 				<li class="nav-item" [routerLinkActive]="['active']">
 					<a mdbTooltip="Gestionare Prețuri" placement="right" routerLink="/dashboard/management/prices" class="pl-3 nav-link waves-light"

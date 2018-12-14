@@ -14,6 +14,8 @@ export class LicenseDetailsComponent implements OnInit, OnDestroy {
     rFormSubbmitted: boolean = false;
     rForm: FormGroup;
 
+    status : string;
+
     companiiPerIdnoSelected: any[] = [];
 
     private subscriptions: Subscription[] = [];
@@ -43,6 +45,8 @@ export class LicenseDetailsComponent implements OnInit, OnDestroy {
             'nrLicenta': {value: null, disabled : true},
             'dataExpirare': {value: null, disabled : true},
             'dataEliberarii': {value: null, disabled : true},
+            'reasonSuspension': {value: null, disabled : true},
+            'reasonCancel': {value: null, disabled : true},
         });
     }
 
@@ -54,7 +58,16 @@ export class LicenseDetailsComponent implements OnInit, OnDestroy {
         this.rForm.get('companyIdno').patchValue(data.idno);
         this.rForm.get('dataEliberarii').patchValue(new Date(data.releaseDate));
         this.rForm.get('dataExpirare').patchValue(new Date(data.expirationDate));
+        if (data.status === 'S')
+        {
+            this.rForm.get('reasonSuspension').patchValue(data.reason);
+        }
+        else if (data.status === 'R')
+        {
+            this.rForm.get('reasonCancel').patchValue(data.reason);
+        }
 
+        this.status = data.status;
 
         this.companiiPerIdnoSelected = data.economicAgents;
 

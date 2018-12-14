@@ -34,9 +34,11 @@ export class CPCADTaskComponent implements OnInit, AfterViewInit, OnDestroy {
     selectedMedicament: any;
     medicamentNotSelected: boolean;
     medicamentExistInTable: boolean;
-    companies: any[];
+    companies: Observable<any[]>;
     filteredOptions: Observable<any[]>;
     disabled: boolean;
+    loadingCompany : boolean = false;
+    companyInputs = new Subject<string>();
 
     constructor(private fb: FormBuilder, private route: Router, private drugDecisionsService: DrugDecisionsService,
                 private drugSubstanceTypesService: DrugSubstanceTypesService, private administrationService: AdministrationService,
@@ -112,19 +114,24 @@ export class CPCADTaskComponent implements OnInit, AfterViewInit, OnDestroy {
 
     getAllCompanies() {
 
-        this.subscriptions.push(
-            this.administrationService.getAllCompanies().subscribe(data => {
-                    this.companies = data;
-                    this.filteredOptions = this.taskForm.get('company').valueChanges
-                        .pipe(
-                            startWith<string | any>(''),
-                            map(value => typeof value === 'string' ? value : value.name),
-                            map(name => this._filter(name))
-                        );
-                },
-                error => console.log(error)
-            )
-        );
+        this.companies =
+            this.companyInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) return true;
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingCompany = true;
+
+                }),
+                flatMap(term =>
+
+                    this.administrationService.getCompanyNamesAndIdnoList(term).pipe(
+                        tap(() => this.loadingCompany = false)
+                    )
+                )
+            );
     }
 
     findTasks() {
@@ -209,13 +216,7 @@ export class CPCADTaskComponent implements OnInit, AfterViewInit, OnDestroy {
         this.route.navigate(['dashboard/module/drug-control/reg-drug-control/']);
 
     }
-
-    private _filter(name: string): any[] {
-        const filterValue = name.toLowerCase();
-
-        return this.companies.filter(option => option.name.toLowerCase().includes(filterValue));
-    }
-
+    
     showDetails(element: any) {
 
         const dialogConfig2 = new MatDialogConfig();

@@ -27,19 +27,24 @@
         <div *ngIf="formSubmitted && documents.length==0">
             <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
         </div>
-        <hr>
         <div class="row">
 
             <div class="col-md-6">
                 <div class="md-form-modified">
-                    <ng-select id="company" name="company" [items]="companies"
+                    <ng-select [items]="companies | async"
                                bindLabel="name"
-                               placeholder="Compania solicitant *"
-                               formControlName="company">
+                               placeholder="Compania solicitant"
+                               formControlName="company"
+                               [loading]="loadingCompany"
+                               [typeahead]="companyInputs"
+                               required="true">
+                        <ng-template ng-option-tmp let-item="item">
+                            {{item.name}} <br />
+                            <small class="form-text text-muted">{{item.idno}}</small>
+                        </ng-template>
                     </ng-select>
                     <div *ngIf="formSubmitted && rForm.get('company').invalid">
-                        <small class="text-muted"><strong class="text-danger">Compania solicitantă trebuie
-                            selectată</strong></small>
+                        <small class="text-muted"><strong class="text-danger">Compania solicitantă trebuie selectată</strong></small>
                     </div>
                 </div>
             </div>

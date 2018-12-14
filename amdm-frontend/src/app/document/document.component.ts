@@ -162,7 +162,6 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
             if (result) {
                 this.subscriptions.push(this.uploadService.removeFileFromStorage(this.documents[index].path).subscribe(data => {
                         this.documents.splice(index, 1);
-                        console.log('index', index);
                         this.dataSource.data = this.documents.slice();
                         this.table.renderRows();
                         this.documentModified.emit(true);

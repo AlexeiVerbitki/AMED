@@ -43,6 +43,10 @@ const ELEMENT_DATA: Bank[] = [
   styleUrls: ['./state.component.css']
 })
 export class StateComponent implements OnInit {
+
+  visibility: boolean = false;
+  title: string = 'States';
+
   displayedColumns: any[] = ['id', 'description', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
@@ -62,6 +66,10 @@ export class StateComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 
   codeEdit = new FormControl('', Validators.required);

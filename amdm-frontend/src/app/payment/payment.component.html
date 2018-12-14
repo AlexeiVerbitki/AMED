@@ -7,8 +7,8 @@
 			</div>
 			<div class="col-6">
 				<div class="text-right fap text-white">
-					<i (click)="addTaxes()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
-					<i (click)="generateBonDePlataForAll()" mdbTooltip="Generare bon de plata toate taxele" placement="top" class="fa fa-file-text-o fa-lg fa-mt" aria-hidden="true"></i>
+					<i *ngIf="!isManufactureAutohton" (click)="addTaxes()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+					<i *ngIf="!isManufactureAutohton" (click)="generateBonDePlataForAll()" mdbTooltip="Generare bon de plata toate taxele" placement="top" class="fa fa-file-text-o fa-lg fa-mt" aria-hidden="true"></i>
 				</div>
 			</div>
 		</div>
@@ -43,7 +43,8 @@
 		</tbody>
 	</table>
 </div>
-<div *ngIf="bonDePlataList.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+<div *ngIf="!isManufactureAutohton && bonDePlataList.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+<div *ngIf="isManufactureAutohton" class="text-center text-muted mt-3"><strong class="text-danger">Producator autohton</strong></div>
 <br>
 <div class="alert alert-primary text-center w-100">Spre plata : {{bonDePlataTotal}} lei
 </div>

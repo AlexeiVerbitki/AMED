@@ -16,3 +16,19 @@ mat-header-cell {
 .pr-search {
   padding-right: 30px;
 }
+
+.fa-touched {
+  font-size: 0.95em;
+}
+
+.fa-untouched {
+  font-size: 1.33em;
+}
+
+.modal-mdb-color {
+  background: #59698d !important;
+}
+
+.modal-dark-green {
+  background: #218c74 !important;
+}

@@ -2,9 +2,7 @@ package com.bass.amed.controller.rest.annihilation;
 
 import com.bass.amed.common.Constants;
 import com.bass.amed.controller.rest.license.LicenseController;
-import com.bass.amed.dto.annihilation.ActDeReceptieDTO;
-import com.bass.amed.dto.annihilation.ListaMedicamentelorPentruComisie;
-import com.bass.amed.dto.annihilation.ProcesVerbal;
+import com.bass.amed.dto.annihilation.*;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
@@ -28,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping( "/api/annihilation" )
@@ -143,6 +142,8 @@ public class MedAnnihilationController
             obj.setNr(request.getRequestNumber());
             obj.setCompanyName(economicAgentsRepository.findFirstByIdnoEquals(request.getMedicamentAnnihilation().getIdno()).get().getLongName());
             obj.setDate(new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format( request.getStartDate()));
+            obj.setAmedRepresentant(sysParamsRepository.findByCode(Constants.SysParams.NIMICIRE_DIRECTOR_SERVICE).get().getValue());
+            obj.setRepresentatntName(request.getMedicamentAnnihilation().getFirstname() + ", "+ request.getMedicamentAnnihilation().getLastname());
 
             dataList.add(obj);
 
@@ -201,30 +202,29 @@ public class MedAnnihilationController
             Resource res = resourceLoader.getResource("layouts/module8/ProcesVerbal.jrxml");
             JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
 
-            List<ActDeReceptieDTO> dataList = new ArrayList();
-            ActDeReceptieDTO obj = new ActDeReceptieDTO();
-            obj.setNr(request.getRequestNumber());
-            obj.setCompanyName(request.getMedicamentAnnihilation().getCompanyName());
-            obj.setDate(new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format( request.getStartDate()));
+            MedicamentAnnihilationInsitutionEntity president = request.getMedicamentAnnihilation().getMedicamentAnnihilationInsitutions().stream().filter(f -> f.getPresident()).findFirst().orElse(null);
+            Set<MedicamentAnnihilationInsitutionEntity> memberSet = request.getMedicamentAnnihilation().getMedicamentAnnihilationInsitutions().stream().filter(f -> !f.getPresident()).collect(Collectors.toSet());
 
-            dataList.add(obj);
 
-            List<ProcesVerbal> procesVerbals = new ArrayList<>();
-            final AtomicInteger i = new AtomicInteger(1);
+
+
+            List<ProcessVerbalInfo> procesVerbals = new ArrayList<>();
 
             request.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds().forEach(
                     m -> {
                         Optional<MedicamentEntity> med = medicamentRepository.findById(m.getMedicamentId());
                         if (med.isPresent())
                         {
-                            ProcesVerbal p = new ProcesVerbal();
-                            p.setNr(i.getAndIncrement());
+                            ProcessVerbalInfo p = new ProcessVerbalInfo();
+
                             p.setName(med.get().getCommercialName());
                             p.setDoza(String.valueOf(med.get().getDose()));
                             p.setForma(med.get().getPharmaceuticalForm().getDescription());
-                            p.setSeria(med.get().getSerialNr());
+                            p.setSeria(m.getSeria());
                             p.setQuantity(String.valueOf(m.getQuantity()));
                             p.setMethodAnnihilation(m.getDestructionMethod().getDescription());
+                            p.setCompanyName(request.getMedicamentAnnihilation().getCompanyName());
+                            p.setFutilityCause(m.getUselessReason());
 
                             procesVerbals.add(p);
                         }
@@ -233,15 +233,49 @@ public class MedAnnihilationController
             );
 
 
-            /* Convert List to JRBeanCollectionDataSource */
+            List<CommitteeMember> members = new ArrayList<>();
+
+            memberSet.forEach(ms -> {
+                CommitteeMember cm = new CommitteeMember();
+                cm.setFullName(ms.getName());
+                cm.setFunction(ms.getFunction());
+                cm.setInstitution(ms.getInstitution().getDescription());
+                cm.setPresident(false);
+
+
+
+                members.add(cm);
+            } );
+
+
+
+            /* Convert medicaments to JRBeanCollectionDataSource */
             JRBeanCollectionDataSource itemsJRBean = new JRBeanCollectionDataSource(procesVerbals);
+
+            /* Convert members to JRBeanCollectionDataSource */
+            JRBeanCollectionDataSource itemsMembersJRBean = new JRBeanCollectionDataSource(members);
+            JRBeanCollectionDataSource itemsMembersJRBean2 = new JRBeanCollectionDataSource(members);
 
             /* Map to hold Jasper report Parameters */
             Map<String, Object> parameters = new HashMap<>();
-            parameters.put("anihilationDataSource", itemsJRBean);
+            parameters.put("nr", request.getRequestNumber());
+            parameters.put("date", new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format( request.getStartDate()) );
+            parameters.put("companyName", request.getMedicamentAnnihilation().getCompanyName());
+            parameters.put("amedRepresentant", request.getMedicamentAnnihilation().getCompanyName());
 
-            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(dataList);
-            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, beanColDataSource);
+            if (president != null)
+            {
+                parameters.put("committeePresidentName", president.getName());
+                parameters.put("committeePresidentFunction", president.getFunction());
+                parameters.put("committeePresidentInstitution", president.getInstitution().getDescription());
+            }
+
+            parameters.put("annihilationDataSource", itemsJRBean);
+            parameters.put("committeeMembersDataSource", itemsMembersJRBean);
+            parameters.put("committeeMembersDataSource2", itemsMembersJRBean2);
+
+//            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(dataList);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
         }
         catch (Exception e)
@@ -296,7 +330,7 @@ public class MedAnnihilationController
             /* Map to hold Jasper report Parameters */
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("date", new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format(new Date()));
-            parameters.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getDescription());
+            parameters.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
 
             parameters.put("listaMedicamentelorPentruComisieDataset", itemsJRBean);
 

@@ -26,8 +26,8 @@ public class PricesEntity
     @JoinColumn(name = "type_id")
     private PriceTypesEntity type;
 
-    @OneToOne( fetch = FetchType.EAGER)//, cascade = CascadeType.DETACH )
-    @JoinColumn( name = "currency_id" )
+    @OneToOne(fetch = FetchType.EAGER)//, cascade = CascadeType.DETACH )
+    @JoinColumn(name = "currency_id" )
     private NmCurrenciesEntity currency;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
@@ -46,9 +46,16 @@ public class PricesEntity
     @Column(name = "mdl_value")
     private Double mdlValue;
 
-    @OneToOne( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST })
-    @JoinColumn( name = "doc_id" )
-    private DocumentsEntity document;
+//    @OneToOne( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST })
+//    @JoinColumn( name = "doc_id" )
+//    private DocumentsEntity document;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(name = "PRICES_DOCUMENTS", joinColumns = {
+            @JoinColumn(name = "price_id")}, inverseJoinColumns = {
+            @JoinColumn(name = "DOCUMENT_ID")})
+    private Set<DocumentsEntity> documents;
+
 
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "priceRequest")
     @JsonManagedReference

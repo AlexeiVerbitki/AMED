@@ -56,6 +56,24 @@
 			</div>
 		</div>
 	</form>
+	<div class="gradient-card-header bg-sidebar border-gradient">
+		<div class="container-fluid">
+			<!-- Title -->
+			<div class="row">
+				<div class="col-4">
+					<div class="card-header-title white-text">Prețuri</div>
+				</div>
+				<div class="col-8">
+					<div class="text-right fap white-text">
+						<!--<i class="fa fa-lg fa-mt" aria-hidden="true" (click)="changeVisibility();" [ngClass]="visibility ? 'fa-touched fa-search-plus' : 'fa-untouched fa-search-minus'"></i>-->
+						<i class="fa fa-file-excel-o fa-mt fa-lg" aria-hidden="true" mdbTooltip="Export in Excel" (click)="exportToExcel();"></i>
+						<i class="fa fa-files-o fa-mt fa-lg" aria-hidden="true" mdbTooltip="Export in CSV" (click)="exportToCsv();"></i>
+						<i class="fa fa-file-pdf-o fa-mt fa-lg" aria-hidden="true" mdbTooltip="Export in Pdf" (click)="exportToPdf();"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="table-width">
 		<div class="example-container">
 			<table mat-table [dataSource]="dataSource" matSort>

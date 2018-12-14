@@ -38,6 +38,9 @@ export class OrganizationBankAccountsComponent implements OnInit {
   displayedColumns: any[] = ['id', 'code', 'description', 'fiscal_code', 'address', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
+  visibility: boolean = false;
+  title: string = 'Organization bank accounts  ';
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -54,6 +57,10 @@ export class OrganizationBankAccountsComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 
   codeEdit = new FormControl('', Validators.required);

@@ -1,9 +1,7 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
-import {FormBuilder} from '@angular/forms';
 import {Subscription} from "rxjs";
 import {Router} from "@angular/router";
-import {TaskService} from "../../shared/service/task.service";
 import {PriceService} from "../../shared/service/prices.service";
 import {LoaderService} from "../../shared/service/loader.service";
 import {Document} from "../../models/document";
@@ -20,11 +18,22 @@ export class PriceApprovalComponent implements OnInit, AfterViewInit, OnDestroy 
     documents: Document[] = [];
     avgCurrencies: any[] = [];
     requestNumber: number;
-    containInvalidPrices: boolean = false;
+    uploadedAllNeeded: boolean = false;
     formSubmitted: boolean = false;
     savePrices: boolean = false;
     outputDocuments: any[] = [{
+        docType: {category: 'OP'},
         description: 'Ordinul de înregistrare a prețului de producător',
+        number: undefined,
+        status: "Nu este atasat"
+    },{
+        docType: {category: 'LP'},
+        description: 'Anexa 1:Lista medicamentelor cu prețul de producător aprobat pentru înregistrare',
+        number: undefined,
+        status: "Nu este atasat"
+    },{
+        docType: {category: 'LG'},
+        description: 'Anexa 2:Lista medicamentelor generice cu prețuri reevaluate',
         number: undefined,
         status: "Nu este atasat"
     }];
@@ -95,31 +104,43 @@ export class PriceApprovalComponent implements OnInit, AfterViewInit, OnDestroy 
                         });
                     } else {
                         this.dataSource._updateChangeSubscription();
-                        let docIds: any[] = [], priceIds: any[] = [];
+
+                        let anex1Prices = this.dataSource.data.find(p => p.priceRequestType == 2);
+                        let anex2Prices = this.dataSource.data.find(p => p.priceRequestType == 9);
+                        if(!anex1Prices) {
+                            this.outputDocuments.splice(1,1);
+                        }
+                        if(!anex2Prices) {
+                            this.outputDocuments.splice(2,1);
+                        }
+
+                        let pIds: any[] = [], priceIds: any[] = [];
 
                         this.dataSource.data.forEach(p => {
                             if(p.priceRequestType) {
-                                if (p.priceRequestType == 2) {
-                                    priceIds.push(p.id);
-                                } else {
-                                    docIds.push(p.docId);
+                                if (p.priceRequestType != 2) {
+                                    pIds.push(p.id);
                                 }
                             }
                         });
 
-                        this.subscriptions.push(this.priceService.getDocumentsByIds(docIds).subscribe(docs => {
-                            let tempArray: any[] = [];
-                            tempArray.push(...this.documents, ...docs.body);
-                            this.documents = tempArray ;
-                            this.documentAdded(null);
-                        }, error1 => console.log('getDocumentsByIds',error1)));
+                        if(pIds.length > 0) {
+                            this.subscriptions.push(this.priceService.getPricesDocuments(pIds).subscribe(docs => {
+                                let tempArray: any[] = [];
+                                tempArray.push(...this.documents, ...docs.body);
+                                this.documents = tempArray ;
+                                this.documentAdded(null);
+                            }, error1 => console.log('getDocumentsByIds',error1)));
+                        }
 
-                        this.subscriptions.push(this.priceService.documentsByPricesIds(priceIds).subscribe(docs => {
-                            let tempArray: any[] = [];
-                            tempArray.push(...this.documents, ...docs.body);
-                            this.documents = tempArray ;
-                            this.documentAdded(null);
-                        }, error1 => console.log('getDocumentsByIds',error1)));
+                        // if(priceIds.length > 0) {
+                        //     this.subscriptions.push(this.priceService.documentsByPricesIds(priceIds).subscribe(docs => {
+                        //         let tempArray: any[] = [];
+                        //         tempArray.push(...this.documents, ...docs.body);
+                        //         this.documents = tempArray ;
+                        //         this.documentAdded(null);
+                        //     }, error1 => console.log('getDocumentsByIds',error1)));
+                        // }
                     }
                     console.log('prices', prices);
                 },
@@ -135,7 +156,7 @@ export class PriceApprovalComponent implements OnInit, AfterViewInit, OnDestroy 
             outDoc.status = "Nu este atasat";
 
             for(let doc of this.documents){
-                if (doc.docType.description == outDoc.description) {
+                if (doc.docType.category == outDoc.docType.category) {
                     this.dataSource.data.forEach(p => p.orderNr = doc.number);
                     outDoc.number = doc.number;
                     outDoc.status = "Atasat";
@@ -152,14 +173,16 @@ export class PriceApprovalComponent implements OnInit, AfterViewInit, OnDestroy 
 
         let prices: any[] = [];
 
-        let uploadedOrder = this.documents.find(d => d.docType.description == 'Ordinul de înregistrare a prețului de producător');
+        let uploadedOrder = this.documents.find(d => d.docType.category == 'OP');
+        let uploadedAnexa1 = this.documents.find(d => d.docType.category == 'LP');
+        let uploadedAnexa2 = this.documents.find(d => d.docType.category == 'LG');
 
-        if (this.containInvalidPrices || this.documents.length == 0 || !uploadedOrder) {
+        this.uploadedAllNeeded = !this.outputDocuments.find(d =>  d.status == "Nu este atasat");
+
+        if (this.documents.length == 0 || !this.uploadedAllNeeded || this.dataSource.data.length == 0) {
             this.loadingService.hide();
             return;
         }
-
-        this.formSubmitted = false;
 
         let priceNewType: number = 0;
 
@@ -170,17 +193,28 @@ export class PriceApprovalComponent implements OnInit, AfterViewInit, OnDestroy 
                 case 11: priceNewType = 12 ; break; //Acceptat după modificarea valutei
             }
 
+            let newDocs: any[] = [];
+
+            newDocs.push(uploadedOrder);
+
+            if(p.priceRequestType == 2) {
+                newDocs.push(uploadedAnexa1);
+            } else if (p.priceRequestType == 9) {
+                newDocs.push(uploadedAnexa2);
+            }
+
             let expirationDate = new Date();
             expirationDate.setFullYear(expirationDate.getFullYear() + 1);
 
             prices.push({
                 id: p.id,
                 value: p.priceNew,
+                folderNr: p.folderNr,
                 mdlValue: p.priceMdlNew,
                 currency: {id: p.currencyId},
                 medicament: {id: p.medicamentId},
                 type: {id: priceNewType},
-                document: uploadedOrder,
+                documents: newDocs,
                 nmPrice: {
                     orderNr: uploadedOrder.number,
                     expirationDate: expirationDate,
@@ -211,7 +245,65 @@ export class PriceApprovalComponent implements OnInit, AfterViewInit, OnDestroy 
         );
     }
 
+
     viewDoc(document: any) {
+        if (document.docType.category != 'OP' && document.docType.category != 'LP' && document.docType.category != 'LG') { //  Fișa de evaluare a dosarului pentru aprobarea prețului de producător
+            return;
+        }
+        this.loadingService.show();
+
+        let observable;
+
+        if (document.docType.category == 'OP')
+        {
+            observable = this.priceService.viewApprovalOrder();
+        }
+        else if(document.docType.category == 'LP')
+        {
+            observable = this.priceService.viewAnexa1();
+        }
+        else if (document.docType.category == 'LG')
+        {
+            observable = this.priceService.viewAnexa2(this.createAnexa2DTO());
+        }
+
+        this.subscriptions.push(observable.subscribe(data => {
+                let file = new Blob([data], {type: 'application/pdf'});
+                var fileURL = URL.createObjectURL(file);
+                window.open(fileURL);
+                this.loadingService.hide();
+            }, error => {
+                this.loadingService.hide();
+            }
+            )
+        );
+    }
+
+
+    createAnexa2DTO(): any {
+        let anexa2ListDTO: any[] = [];
+
+        this.dataSource.data.forEach(m => {
+            if(m.priceRequestType == 9) {
+                anexa2ListDTO.push({
+                    medicineInfo: {
+                        medicineCode: m.medicamentCode,
+                        commercialName: m.commercialName,
+                        pharmaceuticalForm: m.pharmaceuticalForm,
+                        dose: m.dose,
+                        division: m.division,
+                    },
+                    country: m.country,
+                    producerCompany: m.manufacture,
+                    internationalName: m.internationalName,
+                    producerPrice: m.priceMdlNew,
+                    priceInCurrency: m.priceNew,
+                    currency: m.currency
+                });
+            }
+        });
+        console.log('anexa2ListDTO', anexa2ListDTO);
+        return anexa2ListDTO;
     }
 
     ngOnDestroy(): void {

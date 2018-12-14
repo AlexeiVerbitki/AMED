@@ -35,4 +35,6 @@ public interface EconomicAgentsRepository extends JpaRepository<NmEconomicAgents
     List<NmEconomicAgentsEntity> findAllByIdnoEndsWithAndLicenseIdIsNull(String idno);
 
     Optional<NmEconomicAgentsEntity> findFirstByIdnoEquals(String idno);
+
+    List<NmEconomicAgentsEntity> findAllByIdno(String idno);
 }

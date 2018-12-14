@@ -219,28 +219,28 @@ export class CerereModAutorActComponent implements OnInit {
 
         this.outDocuments = [];
         let outDocumentAP = {
-            name: 'Autorizatia de activitate cu precursori',
+            name: 'Autorizatia de activitate',
             docType: this.docTypesInitial.find(r => r.category == 'AP'),
             number: 'AP-' + this.cerereModAutorForm.get('requestNumber').value,
             date: new Date()
         };
         this.outDocuments.push(outDocumentAP);
 
-        let outDocumentAH = {
-            name: 'Autorizatia de activitate cu psihotrope',
-            docType: this.docTypesInitial.find(r => r.category == 'AH'),
-            number: 'AH-' + this.cerereModAutorForm.get('requestNumber').value,
-            date: new Date()
-        };
-        this.outDocuments.push(outDocumentAH);
-
-        let outDocumentAF = {
-            name: 'Autorizatia de activitate cu stupefiante',
-            docType: this.docTypesInitial.find(r => r.category == 'AF'),
-            number: 'AF-' + this.cerereModAutorForm.get('requestNumber').value,
-            date: new Date()
-        };
-        this.outDocuments.push(outDocumentAF);
+        // let outDocumentAH = {
+        //     name: 'Autorizatia de activitate cu psihotrope',
+        //     docType: this.docTypesInitial.find(r => r.category == 'AH'),
+        //     number: 'AH-' + this.cerereModAutorForm.get('requestNumber').value,
+        //     date: new Date()
+        // };
+        // this.outDocuments.push(outDocumentAH);
+        //
+        // let outDocumentAF = {
+        //     name: 'Autorizatia de activitate cu stupefiante',
+        //     docType: this.docTypesInitial.find(r => r.category == 'AF'),
+        //     number: 'AF-' + this.cerereModAutorForm.get('requestNumber').value,
+        //     date: new Date()
+        // };
+        // this.outDocuments.push(outDocumentAF);
 
         let outDocumentSR = {
             name: 'Scrisoare de refuz',
@@ -323,7 +323,7 @@ export class CerereModAutorActComponent implements OnInit {
         this.populateModelToSubmit(modelToSubmit);
 
         this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
-                this.router.navigate(['dashboard/module']);
+                this.router.navigate(['/dashboard/management/cpcadtask']);
             }, error => console.log(error))
         );
 
@@ -499,14 +499,17 @@ export class CerereModAutorActComponent implements OnInit {
                     currentStep: 'I',
                     id: this.cerereModAutorForm.get('id').value,
                     assignedUser: usernameDB,
-                    initiator: this.authService.getUserName()
+                    initiator: this.authService.getUserName(),
+                    type: this.cerereModAutorForm.get('type').value,
+                    requestNumber: this.cerereModAutorForm.get('requestNumber').value,
+                    startDate: this.cerereModAutorForm.get('startDate').value
                 };
                 modelToSubmit.requestHistories.push({
                     startDate: this.cerereModAutorForm.get('data').value, endDate: new Date(),
                     username: usernameDB, step: 'E'
                 });
 
-                this.subscriptions.push(this.requestService.addMedicamentHistory(modelToSubmit).subscribe(data => {
+                this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
                         this.loadingService.hide();
                         this.router.navigate(['dashboard/module']);
                     }, error => this.loadingService.hide())

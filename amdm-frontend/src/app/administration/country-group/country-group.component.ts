@@ -34,6 +34,10 @@ const ELEMENT_DATA: Bank[] = [
   styleUrls: ['./country-group.component.css']
 })
 export class CountryGroupComponent implements OnInit {
+  
+  visibility: boolean = false;
+  title: string = 'Country group';
+
   displayedColumns: any[] = ['id', 'description', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
@@ -53,6 +57,10 @@ export class CountryGroupComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 
   denumireEdit = new FormControl('', Validators.required);

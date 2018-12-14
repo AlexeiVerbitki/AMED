@@ -90,7 +90,7 @@
 		<field name="presidentCoeficient" class="java.lang.String"/>
 		<field name="total" class="java.lang.String"/>
 	</subDataset>
-	<parameter name="date" class="java.util.Date"/>
+	<parameter name="date" class="java.lang.String"/>
 	<parameter name="contractNr" class="java.lang.String"/>
 	<parameter name="contractDate" class="java.util.Date"/>
 	<parameter name="genDir" class="java.lang.String"/>
@@ -117,7 +117,7 @@
 			</image>
 			<image>
 				<reportElement x="261" y="4" width="289" height="53" uuid="ae27ee01-a17f-4e89-81b4-1417b9af443c"/>
-				<imageExpression><![CDATA["layouts/icons/header_right.PNG"]]></imageExpression>
+				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="468" y="60" width="82" height="13" uuid="2bc53036-b22f-4ede-8bd2-d9f0d553e441"/>

@@ -6,21 +6,18 @@ import java.util.List;
 public class MedicineInfoForAnnex1 {
 	private String companyName;
 	private String country;
-	private String currency;
 	private List<RegistrationPriceDataForAnnex1> registrationPrices;
 
 	public MedicineInfoForAnnex1() {
 		companyName = "";
 		country = "";
-		currency = "";
 		registrationPrices = new ArrayList<RegistrationPriceDataForAnnex1>();
 	}
 
-	public MedicineInfoForAnnex1(String companyName, String country, String currency,
+	public MedicineInfoForAnnex1(String companyName, String country,
 			List<RegistrationPriceDataForAnnex1> registrationPrices) {
 		this.companyName = companyName;
 		this.country = country;
-		this.currency = currency;
 		this.registrationPrices = registrationPrices;
 	}
 
@@ -40,14 +37,6 @@ public class MedicineInfoForAnnex1 {
 		this.country = country;
 	}
 
-	public String getCurrency() {
-		return currency;
-	}
-
-	public void setCurrency(String currency) {
-		this.currency = currency;
-	}
-
 	public List<RegistrationPriceDataForAnnex1> getRegistrationPrices() {
 		return registrationPrices;
 	}
@@ -62,7 +51,6 @@ public class MedicineInfoForAnnex1 {
 		int result = 1;
 		result = prime * result + ((companyName == null) ? 0 : companyName.hashCode());
 		result = prime * result + ((country == null) ? 0 : country.hashCode());
-		result = prime * result + ((currency == null) ? 0 : currency.hashCode());
 		result = prime * result + ((registrationPrices == null) ? 0 : registrationPrices.hashCode());
 		return result;
 	}
@@ -86,11 +74,6 @@ public class MedicineInfoForAnnex1 {
 				return false;
 		} else if (!country.equals(other.country))
 			return false;
-		if (currency == null) {
-			if (other.currency != null)
-				return false;
-		} else if (!currency.equals(other.currency))
-			return false;
 		if (registrationPrices == null) {
 			if (other.registrationPrices != null)
 				return false;
@@ -101,7 +84,7 @@ public class MedicineInfoForAnnex1 {
 
 	@Override
 	public String toString() {
-		return "MedicineInfoForAnnex1 [companyName=" + companyName + ", country=" + country + ", currency=" + currency
+		return "MedicineInfoForAnnex1 [companyName=" + companyName + ", country=" + country
 				+ ", registrationPrices=" + registrationPrices + "]";
 	}
 

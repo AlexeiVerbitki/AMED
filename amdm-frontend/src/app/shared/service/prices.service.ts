@@ -102,6 +102,10 @@ export class PriceService {
         return this.documentService.getDocumentsByIds(requests);
     }
 
+    getPricesDocuments(requests: any): Observable<any> {
+        return this.documentService.getPricesDocuments(requests);
+    }
+
     makeAvailableAgain(prices: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/make-available', prices, {observe: 'response'});
     }
@@ -150,6 +154,10 @@ export class PriceService {
         return this.documentService.getDocumentTypes();
     }
 
+    viewTableData(columns : string[], data : any[]): Observable<any> {
+        return this.documentService.viewTableData(columns, data);
+    }
+
     getPricesRequest(id: string): Observable<any> {
         return this.http.get('/api/load-prices-request', {params: {id: id}});
     }
@@ -181,8 +189,19 @@ export class PriceService {
         return this.http.post('/api/price-docs/view-evaluation-sheet', object,{ responseType: 'blob'});
     }
 
+    viewAnexa2(object: any): Observable<any> {
+        return this.http.post('/api/price-docs/view-anexa2', object,{ responseType: 'blob'});
+    }
 
-    viewAnexa1(object: any): Observable<any> {
-        return this.http.post('/api/license/view-anexa-1', object,{ responseType: 'blob'});
+    viewAnexa3(object: any): Observable<any> {
+        return this.http.post('/api/price-docs/view-anexa3', object,{ responseType: 'blob'});
+    }
+
+    viewAnexa1(): Observable<any> {
+        return this.http.get('/api/price-docs/view-anexa1', { responseType: 'blob'});
+    }
+
+    viewApprovalOrder(): Observable<any> {
+        return this.http.get('/api/price-docs/view-approval-order', { responseType: 'blob'});
     }
 }

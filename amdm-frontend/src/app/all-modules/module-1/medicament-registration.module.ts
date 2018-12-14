@@ -15,6 +15,8 @@ import {ProcessInterruptionComponent} from "./process-interruption/process-inter
 import {ExpertiComponent} from './experti/experti.component';
 import {ExpertComiteeModule} from "../../expert-comitee/expert-comitee.module";
 import {CanDeactivateGuard} from "../../shared/auth-guard/can-deactivate-guard.service";
+import {InstructionModule} from "../../common/instruction/instruction.module";
+import {MachetaModule} from "../../common/macheta/macheta.module";
 
 @NgModule({
     imports: [
@@ -25,8 +27,10 @@ import {CanDeactivateGuard} from "../../shared/auth-guard/can-deactivate-guard.s
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
         DocumentModule,
+        InstructionModule,
+        MachetaModule,
         PaymentModule,
-        ExpertComiteeModule,
+        ExpertComiteeModule
 
     ],
     schemas: [],

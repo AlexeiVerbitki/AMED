@@ -16,10 +16,9 @@ export class SidebarComponent implements OnInit {
   ngOnInit() {
   }
 
-  skipMenu() {
+  skipMenu(shouldOpen: boolean) {
     this.skip = !this.skip;
     this.skipEvent.emit(this.skip);
-    console.log(this.skip);
   }
 
 }

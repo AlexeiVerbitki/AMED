@@ -14,19 +14,8 @@
 	<parameter name="genDir" class="java.lang.String">
 		<parameterDescription><![CDATA[Directorul general adjunct]]></parameterDescription>
 	</parameter>
-	<parameter name="date" class="java.util.Date"/>
+	<parameter name="date" class="java.lang.String"/>
 	<parameter name="nr" class="java.lang.String"/>
-	<parameter name="name" class="java.lang.String"/>
-	<parameter name="representant" class="java.lang.String"/>
-	<parameter name="country" class="java.lang.String"/>
-	<parameter name="address" class="java.lang.String"/>
-	<parameter name="phone" class="java.lang.String"/>
-	<parameter name="email" class="java.lang.String"/>
-	<parameter name="NotificationText" class="java.lang.String"/>
-	<parameter name="medDiscription" class="java.lang.String"/>
-	<parameter name="medProducator" class="java.lang.String"/>
-	<parameter name="user" class="java.lang.String"/>
-	<parameter name="userTel" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -38,7 +27,7 @@
 			</image>
 			<image>
 				<reportElement x="261" y="4" width="289" height="53" uuid="ae27ee01-a17f-4e89-81b4-1417b9af443c"/>
-				<imageExpression><![CDATA["layouts/icons/header_right.PNG"]]></imageExpression>
+				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
 		</band>
 	</pageHeader>

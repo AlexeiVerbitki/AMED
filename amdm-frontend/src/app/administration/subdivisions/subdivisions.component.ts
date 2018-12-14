@@ -44,6 +44,9 @@ const ELEMENT_DATA: Bank[] = [
   styleUrls: ['./subdivisions.component.css']
 })
 export class SubdivisionsComponent implements OnInit {
+
+  visibility: boolean = false;
+  title: string = 'Subdivisions';
   displayedColumns: any[] = ['id', 'code', 'description', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
@@ -63,6 +66,10 @@ export class SubdivisionsComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 
   codeEdit = new FormControl('', Validators.required);

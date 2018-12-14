@@ -34,4 +34,12 @@ public class ClinicTrailNotificationEntity {
     @Basic
     @Column(name = "status", nullable = true, length = 1)
     private String status;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @JoinColumn(name = "report_dsur_id")
+    private CtReportDsurEntity reportDsurEntity;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @JoinColumn(name = "report_sar_llr_id")
+    private CtReportSarLlrEntity reportSarLlrEntity;
 }

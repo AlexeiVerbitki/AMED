@@ -5,7 +5,6 @@ import com.bass.amed.dto.DistributionDispositionDTO;
 import com.bass.amed.dto.RequestAdditionalDataDTO;
 import com.bass.amed.dto.annihilation.BonPlataAnihilare1;
 import com.bass.amed.dto.annihilation.BonPlataAnihilare2;
-import com.bass.amed.dto.license.AnexaLaLicenta;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
@@ -13,6 +12,11 @@ import com.bass.amed.service.GenerateDocNumberService;
 import com.bass.amed.service.StorageService;
 import com.bass.amed.utils.AmountUtils;
 import com.bass.amed.utils.NumberToWordsConverter;
+import com.bass.amed.utils.SecurityUtils;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.slf4j.Logger;
@@ -32,15 +36,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.math.BigDecimal;
+import java.io.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 @RequestMapping("/api/documents")
@@ -60,7 +60,8 @@ public class DocumentsController
     private PaymentOrderRepository paymentOrderRepository;
     @Autowired
     private DocumentsRepository documentsRepository;
-
+    @Autowired
+    private SrcUserRepository srcUserRepository;
     @Autowired
     private EconomicAgentsRepository economicAgentsRepository;
 
@@ -88,7 +89,22 @@ public class DocumentsController
     public ResponseEntity<List<DocumentsEntity>> getDocumentsByIds(@RequestBody Integer[] ids)
     {
         logger.debug("getDocumentsByIds");
-        List<DocumentsEntity> docs  = documentsRepository.findAllByIds(Arrays.asList(ids));
+        List<DocumentsEntity> docs = null;
+        if (ids.length > 0)
+        {
+            docs = documentsRepository.findAllByIds(Arrays.asList(ids));
+        }
+        return new ResponseEntity<>(docs, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/by-price-ids", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<DocumentsEntity>> getDocumentsByPriceIds(@RequestBody Integer[] ids)
+    {
+        logger.debug("getDocumentsByPriceIds");
+        List<DocumentsEntity> docs = null;
+        if(ids.length > 0) {
+            docs = documentsRepository.findAllByPriceIds(Arrays.asList(ids));
+        }
         return new ResponseEntity<>(docs, HttpStatus.OK);
     }
 
@@ -256,6 +272,46 @@ public class DocumentsController
         sb.append("/");
         sb.append(nrCerere);
         sb.append("/");
+    }
+
+    @RequestMapping(value = "/view-request-additional-data-new", method = RequestMethod.POST)
+    public ResponseEntity<byte[]> viewRequestAdditionalData(@RequestBody RequestAdditionalDataDTO requestData) throws CustomException
+    {
+        byte[] bytes = null;
+        try
+        {
+            ResourceLoader resourceLoader = new DefaultResourceLoader();
+            Resource res = resourceLoader.getResource("layouts/Notificare.jrxml");
+            JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
+
+            /* Map to hold Jasper report Parameters */
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("vicDir", requestData.getSignerName());
+            SimpleDateFormat sdf = new SimpleDateFormat(Constants.Layouts.DATE_FORMAT);
+            parameters.put("date", sdf.format(requestData.getRequestDate()));
+            parameters.put("nr", requestData.getNrDoc());
+            parameters.put("name", requestData.getResponsiblePerson());
+            parameters.put("representant", requestData.getCompanyName());
+            parameters.put("country", requestData.getCountry());
+            parameters.put("address", requestData.getAddress());
+            parameters.put("phone", requestData.getPhoneNumber());
+            parameters.put("email", requestData.getEmail());
+            parameters.put("NotificationText", requestData.getMessage());
+            parameters.put("function", requestData.getFunction());
+            ScrUserEntity userEntity = srcUserRepository.findOneWithAuthoritiesByUsername(SecurityUtils.getCurrentUser().orElse("")).orElse(new ScrUserEntity());
+            parameters.put("executor", userEntity.getFullname());
+            parameters.put("executorPhone", userEntity.getPhoneNumber());
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
+            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+        }
+        catch (Exception e)
+        {
+            throw new CustomException(e.getMessage());
+        }
+
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=solicitareDateAditionale.pdf").body(bytes);
     }
 
     @RequestMapping(value = "/view-request-additional-data", method = RequestMethod.GET)
@@ -523,7 +579,6 @@ public class DocumentsController
     }
 
 
-
     @RequestMapping(value = "/view-bon-de-plata-nimicire", method = RequestMethod.POST)
     @Transactional
     public ResponseEntity<byte[]> viewBonDePlataNimicire(@RequestBody RegistrationRequestsEntity request) throws CustomException
@@ -596,8 +651,6 @@ public class DocumentsController
             JRBeanCollectionDataSource itemsBonAnihilare2MedicamenteJRBean = new JRBeanCollectionDataSource(bon2List);
 
 
-
-
             NmEconomicAgentsEntity ecAgent = economicAgentsRepository.findFirstByIdnoEquals(request.getMedicamentAnnihilation().getIdno()).get();
 
             /* Map to hold Jasper report Parameters */
@@ -606,8 +659,8 @@ public class DocumentsController
             parameters.put("nr_invoice", seq.getId().toString());
             parameters.put("payer", ecAgent.getLongName());
             parameters.put("payer_address", ecAgent.getLegalAddress());
-            parameters.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getDescription());
-            parameters.put("accountant", sysParamsRepository.findByCode(Constants.SysParams.ACCOUNTANT).get().getDescription());
+            parameters.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
+            parameters.put("accountant", sysParamsRepository.findByCode(Constants.SysParams.ACCOUNTANT).get().getValue());
 
             parameters.put("bonDePlataAnihilareMedicamenteDataset", itemsBonAnihilareMedicamenteJRBean);
             parameters.put("bonDePlataAnihilareMedicamenteDataset2", itemsBonAnihilare2MedicamenteJRBean);
@@ -618,7 +671,8 @@ public class DocumentsController
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new CustomException(e.getMessage(), e);
         }
@@ -628,15 +682,108 @@ public class DocumentsController
 
     }
 
-	@Transactional
+    @Transactional
     @RequestMapping(value = "/save-docs", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> saveDocuments(@RequestBody List<DocumentsEntity> documents)
     {
-        try {
+        try
+        {
             documentsRepository.saveAll(documents);
             return new ResponseEntity<>(true, HttpStatus.CREATED);
-        }catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             return new ResponseEntity<>(false, HttpStatus.CREATED);
+        }
+    }
+
+
+    @RequestMapping(value = "/view-table-pdf", method = RequestMethod.POST)
+    public ResponseEntity<byte[]> viewTablePdf(@RequestBody TableData tableData) throws CustomException
+    {
+        Document document = new Document();
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        byte[] bytes = null;
+        try
+        {
+            PdfPTable table = new PdfPTable(tableData.getColumns().size());
+            table.setWidthPercentage(90);
+
+            Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+
+            for (String cols : tableData.getColumns())
+            {
+                PdfPCell hcell;
+                hcell = new PdfPCell(new Phrase(cols, headFont));
+                hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                hcell.setBackgroundColor(new BaseColor(0xF0, 0xF8, 0xFF));
+                table.addCell(hcell);
+            }
+
+            for (Object o : tableData.getData())
+            {
+                Map<String, Object> map = (Map<String, Object>) o;
+
+                for (Object o1 : map.values())
+                {
+                    PdfPCell cell;
+
+                    cell = new PdfPCell(new Phrase(String.valueOf(o1)));
+                    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    table.addCell(cell);
+                }
+            }
+
+            PdfWriter.getInstance(document, out);
+
+            document.open();
+            document.add(table);
+
+            document.close();
+
+            bytes = out.toByteArray();
+
+        }
+        catch (DocumentException e)
+        {
+            throw new CustomException(e.getMessage(), e);
+        }
+
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=tableData.pdf").body(bytes);
+
+    }
+
+    public static class TableData
+    {
+        private List<String> columns;
+        private List data;
+
+        public TableData()
+        {
+        }
+
+        public List<String> getColumns()
+        {
+            return columns;
+        }
+
+        public void setColumns(List<String> columns)
+        {
+            this.columns = columns;
+        }
+
+        public List getData()
+        {
+            return data;
+        }
+
+        public void setData(List data)
+        {
+            this.data = data;
         }
     }
 

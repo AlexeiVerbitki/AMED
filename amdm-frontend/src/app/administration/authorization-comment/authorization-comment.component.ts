@@ -33,6 +33,9 @@ export class AuthorizationCommentComponent implements OnInit {
   displayedColumns: any[] = ['id', 'code', 'description', 'comment', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
+  visibility: boolean = false;
+  title: string = 'Authorization comment';
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -51,6 +54,10 @@ export class AuthorizationCommentComponent implements OnInit {
     }
   }
 
+  changeVisibility() {
+    this.visibility = !this.visibility;
+  }
+
 
   codeEdit = new FormControl('', Validators.required);
   descriptionEdit = new FormControl('', Validators.required);
@@ -59,5 +66,7 @@ export class AuthorizationCommentComponent implements OnInit {
   codeAdd = new FormControl('', Validators.required);
   descriptionAdd = new FormControl('', Validators.required);
   commentAdd = new FormControl('', Validators.required);
+
+
 
 }

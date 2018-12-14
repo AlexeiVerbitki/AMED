@@ -1,6 +1,6 @@
-<div mat-dialog-content>
+<h2 mat-dialog-title align="center">Detalii licenta</h2>
+<mat-dialog-content class="mat-typography">
     <form [formGroup]='rForm'>
-        <h3 class="text-center my-3 font-weight-bold">Detalii licenta</h3>
         <div class="row">
             <div class="col-md-6">
                 <div class="md-form">
@@ -36,9 +36,9 @@
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="picker2" placeholder="Data eliberare"
-                               formControlName="dataEliberarii" >
+                               formControlName="dataEliberarii">
                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                        <mat-datepicker touchUi #picker2 ></mat-datepicker>
+                        <mat-datepicker touchUi #picker2></mat-datepicker>
                     </mat-form-field>
                 </div>
             </div>
@@ -47,62 +47,78 @@
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="picker3" placeholder="Data expirare"
-                               formControlName="dataExpirare" >
+                               formControlName="dataExpirare">
                         <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
-                        <mat-datepicker touchUi #picker3 ></mat-datepicker>
+                        <mat-datepicker touchUi #picker3></mat-datepicker>
                     </mat-form-field>
                 </div>
             </div>
 
 
-        </div>
-
-
-
-        <div class="table-width ">
-            <div class="gradient-card-header bg-sidebar border-gradient">
-                <div class="container-fluid">
-                    <!-- Title -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card-header-title white-text">Filiale</div>
-                        </div>
-                    </div>
+            <div class="col-md-12" *ngIf="status === 'S'">
+                <div class="md-form">
+                        <textarea type="text" id="reasonSuspension" class="md-textarea form-control" mdbInputDirective
+                                  rows="2" formControlName="reasonSuspension"></textarea>
+                    <label for="reasonSuspension">Motivul suspendarii</label>
                 </div>
             </div>
-            <div class="card-body card-body-cascade">
-                <div class="table-width">
-                    <div class="example-container">
-                        <table class="table table-widths text-center">
-                            <thead class="bg-sidebar white-text">
-                            <tr>
-                                <th scope="col">Tipul intreprinderii</th>
-                                <th scope="col">Adresa</th>
-                                <th scope="col">Farmacist/Sef de filiala</th>
-                                <th scope="col">Activitatile</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr *ngFor="let objAddr of companiiPerIdnoSelected;let i = index">
-                                <th scope="row">{{ objAddr.companyType }}</th>
-                                <td>{{ objAddr.address }}</td>
-                                <td>{{ objAddr.selectedPharmaceutist ? objAddr.selectedPharmaceutist.fullName : '' }}</td>
-                                <td mdbTooltip="{{objAddr.activitiesStr}}" placement="top">
-                                    {{objAddr.activitiesStr}}
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+
+
+            <div class="col-md-12" *ngIf="status === 'R'">
+                <div class="md-form">
+                        <textarea type="text" id="reasonCancel" class="md-textarea form-control" mdbInputDirective
+                                  rows="2" formControlName="reasonCancel"></textarea>
+                    <label for="reasonCancel">Motivul anularii</label>
                 </div>
             </div>
+
         </div>
     </form>
-    <div class="text-center">
-        <div mat-dialog-actions>
-            <div class="w-100">
-                <button class="btn btn-info btn-sm-bl btn-sm" (click)="cancel()">Inchidere</button>
+
+
+    <div class="gradient-card-header bg-sidebar border-gradient">
+        <div class="container-fluid">
+            <!-- Title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card-header-title white-text card-header-title-mt">Filiale</div>
+                </div>
             </div>
         </div>
     </div>
-</div>
+    <div class="card-body card-body-cascade">
+        <div class="table-width">
+            <div class="example-container">
+                <table class="table table-widths text-center">
+                    <thead class="bg-sidebar white-text">
+                    <tr>
+                        <th scope="col">Tipul intreprinderii</th>
+                        <th scope="col">Adresa</th>
+                        <th scope="col">Farmacist/Sef de filiala</th>
+                        <th scope="col">Activitatile</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let objAddr of companiiPerIdnoSelected;let i = index">
+                        <td class="w-25px" mdbTooltip="{{ objAddr.companyType }}" placement="top">{{ objAddr.companyType
+                            }}
+                        </td>
+                        <td class="w-25px" mdbTooltip="{{ objAddr.address }}" placement="top">{{ objAddr.address }}</td>
+                        <td class="w-25px"
+                            mdbTooltip="{{ objAddr.selectedPharmaceutist ? objAddr.selectedPharmaceutist.fullName : '' }}"
+                            placement="top">{{ objAddr.selectedPharmaceutist ? objAddr.selectedPharmaceutist.fullName :
+                            '' }}
+                        </td>
+                        <td class="w-25px" mdbTooltip="{{objAddr.activitiesStr}}" placement="top">
+                            {{objAddr.activitiesStr}}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+    <button class="btn btn-dark-red-color btn-sm-bl btn-sm" (click)="cancel()">Inchidere</button>
+</mat-dialog-actions>

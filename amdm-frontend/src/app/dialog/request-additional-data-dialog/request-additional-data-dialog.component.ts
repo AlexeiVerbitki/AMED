@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Subscription} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {AdministrationService} from "../../shared/service/administration.service";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
 import {ConfirmationDialogComponent} from "../confirmation-dialog.component";
@@ -21,6 +21,8 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
     isRegisterDoc: boolean;
     docTypes: any[];
     title: string = 'Detalii scrisoare de solicitare date aditionale';
+    functions: any[];
+    loadingFunctions : boolean =false;
 
     constructor(private fb: FormBuilder, private administrationService: AdministrationService,
                 private documentService: DocumentService,
@@ -33,23 +35,30 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
         this.reqForm = this.fb.group({
             'data': {disabled: true, value: new Date()},
             'docNumber': [null],
-            'title': [null, Validators.required],
             'content': [null, Validators.required],
-            'email': [null, [Validators.required, Validators.email]]
+            'function': [null, Validators.required]
         });
     }
 
     ngOnInit() {
 
         var datePipe = new DatePipe("en-US");
-        this.reqForm.get('docNumber').setValue('SL-'+this.dataDialog.requestNumber+'-'+this.dataDialog.nrOrdDoc+'-'+datePipe.transform(new Date(), 'dd/MM/yyyy'));
+        this.reqForm.get('docNumber').setValue('SL-'+this.dataDialog.requestNumber+'-'+this.dataDialog.nrOrdDoc);
 
+        if (this.dataDialog.modalType == 'REQUEST_ADDITIONAL_DATA') {
+            let x = '\tPrin prezenta, Agenția Medicamentului și Dispozitivelor Medicale Vă informează, că în rezultatul expertizei specializate a dosarului produsului medicamentos '+this.dataDialog.medicamentStr+' depus pentru autorizare, s-a constatat că:';
+            let z = '\r\n\t-  c......';
+            let y = '\r\n\tMenţionăm, că în cazul în care obiecţiile expuse nu vor fi înlăturate în termenul stabilit, conform prevederilor pct. 46, sec. 1, capit.III al Regulamentului cu privire la autorizarea medicamentelor, aprobat prin ordinul Ministerului Sănătăţii nr.739 din 23.07.2012 „Cu privire la reglementarea autorizării produselor medicamentoase de uz uman şi introducerea modificărilor postautorizare” procedura de autorizare se va întrerupe.';
+            this.reqForm.get('content').setValue(x+z+y);
+        }
         if (this.dataDialog.modalType == 'NOTIFICATION') {
             this.title = 'Detalii scrisoare de informare';
-            this.reqForm.get('docNumber').setValue('NL-'+this.dataDialog.requestNumber+'-'+datePipe.transform(new Date(), 'dd/MM/yyyy'));
-        } else if (this.dataDialog.modalType == 'LABORATORY_ANALYSIS') {
-            this.title = 'Detalii scrisoare solicitare pentru desfasurarea analizei de laborator ';
-            this.reqForm.get('docNumber').setValue('LA-'+this.dataDialog.requestNumber+'-'+this.dataDialog.nrOrdDoc+'-'+datePipe.transform(new Date(), 'dd/MM/yyyy'));
+            this.reqForm.get('docNumber').setValue('NL-'+this.dataDialog.requestNumber);
+            let x = '\tPrin prezenta, Agenţia Medicamentului şi Dispozitivelor Medicale, Vă informeazăcă în baza ordinului „Cu privire la înregistrarea medicamentelor” Nr. _________';
+            let y = ', a fost întreruptă procedura de înregistrare a medicamentului din motivul: '+this.dataDialog.motiv+', pentru produsul medicamentos:';
+            let z = '\r\n\t - '+this.dataDialog.medicamentStr;
+            let w = '\r\n\tÎntreruperea procedurii nu prejudiciază dreptul deținătorului de a redepune cererea conform pct. _____, capitolul ___ al Ordinului MSRM Nr. ___ din ________ "Cu privire la reglementarea înregistrării produselor medicamentoase", cu modificările şi completările ulterioare.'
+            this.reqForm.get('content').setValue(x+y+z+w);
         }
 
         this.subscriptions.push(
@@ -57,6 +66,17 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
                     this.docTypes = data;
                 },
                 error => console.log(error)
+            )
+        );
+
+        this.loadingFunctions = true;
+        this.subscriptions.push(
+            this.administrationService.getAllSysParams().subscribe(data => {
+                    this.functions = data;
+                    this.functions = this.functions.filter(t=> t.code.startsWith('FN'));
+                    this.loadingFunctions = false;
+                },
+                error => {console.log(error);  this.loadingFunctions = false;}
             )
         );
     }
@@ -68,10 +88,6 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
                 docName = 'Scrisoare de informare Nr ' + this.reqForm.get('docNumber').value + '.pdf';
                 break;
             }
-            case  'LABORATORY_ANALYSIS' : {
-                docName = 'Scrisoare de solicitare desfasurare analize de laborator Nr ' + this.reqForm.get('docNumber').value + '.pdf';
-                break;
-            }
             case  'REQUEST_ADDITIONAL_DATA' : {
                 docName = 'Scrisoare de solicitare date aditionale Nr ' + this.reqForm.get('docNumber').value + '.pdf';
                 break;
@@ -81,10 +97,6 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
         switch (this.dataDialog.modalType) {
             case  'NOTIFICATION' : {
                 docType = 'NL';
-                break;
-            }
-            case  'LABORATORY_ANALYSIS' : {
-                docType = 'LA';
                 break;
             }
             case  'REQUEST_ADDITIONAL_DATA' : {
@@ -106,25 +118,9 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
         return docEntity;
     }
 
-    // generateDoc() {
-    //     this.subscriptions.push(this.documentService.generateRequestAdditionalData(this.reqForm.get('docNumber').value,
-    //         this.dataDialog.requestNumber,
-    //         this.reqForm.get('content').value,
-    //         this.reqForm.get('title').value,
-    //         this.dataDialog.modalType).subscribe(data => {
-    //             //register in db
-    //             this.subscriptions.push(this.medicamentService.saveRequest(this.getDocEntity(data), this.dataDialog.modalType).subscribe(data => {
-    //                     //this.modal.hide();
-    //                     //this.modalService.data.next({action: 'CLOSE_MODAL'});
-    //                 }, error => console.log('Scrisoarea nu a putut fi salvata in baza de date.'))
-    //             );
-    //         }, error => console.log('Scrisoarea nu a putut fi generata.'))
-    //     );
-    // }
-
     view() {
         this.isRegisterDoc = true;
-        if (this.reqForm.get('title').invalid || this.reqForm.get('content').invalid) {
+        if (this.reqForm.invalid) {
             return;
         }
         this.isRegisterDoc = false;
@@ -136,19 +132,19 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
                 docType = 'NL';
                 break;
             }
-            case  'LABORATORY_ANALYSIS' : {
-                docType = 'LA';
-                break;
-            }
             case  'REQUEST_ADDITIONAL_DATA' : {
                 docType = 'SL';
                 break;
             }
         }
-        this.subscriptions.push(this.documentService.viewRequest(this.reqForm.get('docNumber').value,
-            this.reqForm.get('content').value,
-            this.reqForm.get('title').value,
-            docType).subscribe(data => {
+        let modelToSubmit = {nrDoc : this.reqForm.get('docNumber').value, responsiblePerson : this.dataDialog.registrationRequestMandatedContact.mandatedLastname+' '+this.dataDialog.registrationRequestMandatedContact.mandatedFirstname, companyName : this.dataDialog.companyName,
+            requestDate: new Date(),country : 'Moldova',  address : this.dataDialog.address, phoneNumber : this.dataDialog.registrationRequestMandatedContact.phoneNumber, email : this.dataDialog.registrationRequestMandatedContact.email, message : this.reqForm.get('content').value,
+            function : this.reqForm.get('function').value.description, signerName : this.reqForm.get('function').value.value };
+
+        let observable : Observable<any> = null;
+        observable = this.documentService.viewRequestNew(modelToSubmit);
+
+        this.subscriptions.push(observable.subscribe(data => {
                 let file = new Blob([data], {type: 'application/pdf'});
                 var fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
@@ -158,13 +154,14 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
             }
             )
         );
+
     }
 
-    ok() {
+   save() {
         this.isRegisterDoc = true;
-        if (this.reqForm.get('title').invalid || this.reqForm.get('content').invalid) {
-            return;
-        }
+       if (this.reqForm.invalid) {
+           return;
+       }
         this.isRegisterDoc = false;
 
         var response = {};
@@ -176,24 +173,11 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
                     docType: this.docTypes.find(r => r.category == 'NL'),
                     status: 'Nu este atasat',
                     number: this.reqForm.get('docNumber').value,
-                    title: this.reqForm.get('title').value,
                     content: this.reqForm.get('content').value,
                     date: new Date(),
-                    responseReceived : false
-                };
-                break;
-            }
-            case  'LABORATORY_ANALYSIS' : {
-                response = {
-                    success: true,
-                    name: 'Scrisoare de solicitare desfasurare analize de laborator',
-                    docType: this.docTypes.find(r => r.category == 'LA'),
-                    status: 'Nu este atasat',
-                    number: this.reqForm.get('docNumber').value,
-                    title: this.reqForm.get('title').value,
-                    content: this.reqForm.get('content').value,
-                    date: new Date(),
-                    responseReceived : false
+                    responseReceived : false,
+                    signerName :  this.reqForm.get('function').value.value,
+                    signerFunction :  this.reqForm.get('function').value.description
                 };
                 break;
             }
@@ -204,10 +188,11 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
                     docType: this.docTypes.find(r => r.category == 'SL'),
                     status: 'Nu este atasat',
                     number: this.reqForm.get('docNumber').value,
-                    title: this.reqForm.get('title').value,
                     content: this.reqForm.get('content').value,
                     date: new Date(),
-                    responseReceived : false
+                    responseReceived : false,
+                    signerName :  this.reqForm.get('function').value.value,
+                    signerFunction :  this.reqForm.get('function').value.description
                 };
                 break;
             }
@@ -220,10 +205,6 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
         var message = '';
         switch (this.dataDialog.modalType) {
             case  'NOTIFICATION' : {
-                message = 'Sunteti sigur(a)?';
-                break;
-            }
-            case  'LABORATORY_ANALYSIS' : {
                 message = 'Sunteti sigur(a)?';
                 break;
             }
@@ -245,7 +226,6 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
                 this.dialogRef.close({success: false});
             }
         });
-
 
     }
 

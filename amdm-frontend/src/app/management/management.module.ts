@@ -19,8 +19,12 @@ import {XchangeinfoModule} from "../xchangeInfo/xchangeinfo.module";
 import {PriceApprovalComponent} from "./price-approval/price-approval.component";
 import {LicenseService} from "../shared/service/license/license.service";
 import {AdministrationService} from "../shared/service/administration.service";
-import {LicenseDecisionDialogComponent} from "../dialog/license-decision-dialog/license-decision-dialog.component";
 import {LicenseDetailsComponent} from "./license/license-details/license-details.component";
+import {UploadFileService} from "../shared/service/upload/upload-file.service";
+import {DrugAuthorizationDetailsDialogComponent} from "../dialog/drug-authorization-details-dialog/drug-authorization-details-dialog.component";
+import {CPCADTaskComponent} from "../all-modules/module-7/cpcadtask/cpcadtask.component";
+import { ClinicalTrialsComponent } from './clinical-trials/clinical-trials.component';
+import {ClinicalTrialService} from "../shared/service/clinical-trial.service";
 
 @NgModule({
     imports: [
@@ -45,10 +49,13 @@ import {LicenseDetailsComponent} from "./license/license-details/license-details
         PriceApprovalComponent,
         PriceAutoRevaluationComponent,
         LicenseDetailsComponent,
+        CPCADTaskComponent,
+        DrugAuthorizationDetailsDialogComponent,
+        ClinicalTrialsComponent
 
     ],
-    entryComponents: [AddReceiptDialogComponent,PriceReqEditModalComponent,LicenseDetailsComponent],
-    providers: [LicenseService, AdministrationService
+    entryComponents: [AddReceiptDialogComponent,PriceReqEditModalComponent,LicenseDetailsComponent,DrugAuthorizationDetailsDialogComponent],
+    providers: [LicenseService, AdministrationService,UploadFileService, ClinicalTrialService
     ],
 })
 export class ManagementModule {

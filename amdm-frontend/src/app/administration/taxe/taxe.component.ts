@@ -47,6 +47,9 @@ const ELEMENT_DATA: Bank[] = [
   styleUrls: ['./taxe.component.css']
 })
 export class TaxeComponent implements OnInit {
+
+  visibility: boolean = false;
+  title: string = 'Taxe';
   displayedColumns: any[] = ['id', 'code', 'description', 'value', 'currency_id', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
@@ -77,6 +80,10 @@ export class TaxeComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 
 }

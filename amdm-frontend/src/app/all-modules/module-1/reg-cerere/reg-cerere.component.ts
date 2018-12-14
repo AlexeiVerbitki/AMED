@@ -35,6 +35,7 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
     private subscriptions: Subscription[] = [];
     loadingCompany : boolean = false;
     companyInputs = new Subject<string>();
+    maxDate = new Date();
 
     constructor(private fb: FormBuilder,
                 private router: Router,
@@ -53,6 +54,12 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
             'startDate': [new Date()],
             'currentStep': ['E'],
             'medicamentName': [null, Validators.required],
+            'mandatedFirstname': [null, Validators.required],
+            'mandatedLastname': [null, Validators.required],
+            'phoneNumber': [null, [Validators.required, Validators.maxLength(9), Validators.pattern('[0-9]+')]],
+            'email': [null, Validators.email],
+            'requestMandateNr': [null],
+            'requestMandateDate': [{value: null}],
             'company': [null],
             'initiator': [''],
             'assignedUser': [''],
@@ -132,6 +139,13 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
         modelToSubmit.initiator = useranameDB;
         modelToSubmit.assignedUser = useranameDB;
         modelToSubmit.documents = this.documents;
+        modelToSubmit.registrationRequestMandatedContacts = [{mandatedLastname : this.rForm.get('mandatedLastname').value,
+            mandatedFirstname : this.rForm.get('mandatedFirstname').value,
+            phoneNumber : this.rForm.get('phoneNumber').value,
+            email : this.rForm.get('email').value,
+            requestMandateNr : this.rForm.get('requestMandateNr').value,
+            requestMandateDate : this.rForm.get('requestMandateDate').value
+        }];
 
         this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
                 this.loadingService.hide();

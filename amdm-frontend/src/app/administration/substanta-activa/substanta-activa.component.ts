@@ -36,6 +36,8 @@ const ELEMENT_DATA: Bank[] = [
 })
 export class SubstantaActivaComponent implements OnInit {
 
+  visibility: boolean = false;
+  title: string = 'Substanta activa';
   displayedColumns: any[] = ['id', 'cod', 'description', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
@@ -55,6 +57,10 @@ export class SubstantaActivaComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 
 

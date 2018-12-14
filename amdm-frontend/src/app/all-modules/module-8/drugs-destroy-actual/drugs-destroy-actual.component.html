@@ -1,7 +1,4 @@
 <div class="container-fluid sky z-depth-2">
-    <h3 class="text-center my-3 font-weight-bold">Nimicirea medicamentelor</h3>
-    <hr>
-
     <form [formGroup]="mForm">
         <div class="row">
             <div class="col-md-4">
@@ -203,6 +200,35 @@
             <small class="text-muted"><strong class="text-danger">Nici un membru nu a fost adaugat</strong></small>
         </div>
         <hr>
+
+    </form>
+
+    <hr>
+    <form [formGroup]="kForm">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="md-form">
+                <input id="firstname" mdbInputDirective type="text" class="form-control" formControlName="firstname"
+                >
+                <label for="firstname">Prenumele reprezentantului<span class="text-danger">*</span></label>
+            </div>
+            <div *ngIf="kFormSubbmitted && !kForm.get('firstname').valid">
+                <small class="text-muted"><strong class="text-danger">Prenumele trebuie introdus</strong>
+                </small>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="md-form">
+                <input id="lastname" mdbInputDirective type="text" class="form-control" formControlName="lastname"
+                >
+                <label for="lastname">Numele reprezentantului<span class="text-danger">*</span></label>
+            </div>
+            <div *ngIf="kFormSubbmitted && !kForm.get('lastname').valid">
+                <small class="text-muted"><strong class="text-danger">Numele trebuie introdus</strong>
+                </small>
+            </div>
+        </div>
+    </div>
     </form>
 
 

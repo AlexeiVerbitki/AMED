@@ -1,8 +1,6 @@
 package com.bass.amed.repository;
 
-import com.bass.amed.entity.RegistrationRequestStepsEntity;
 import com.bass.amed.entity.RegistrationRequestsEntity;
-import com.bass.amed.projection.LicenseCompanyProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,6 +16,7 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
             "LEFT JOIN FETCH p.outputDocuments " +
             "LEFT JOIN FETCH p.documents " +
             "LEFT JOIN FETCH p.paymentOrders " +
+            "LEFT JOIN FETCH p.registrationRequestMandatedContacts " +
             "WHERE p.id = (:id)")
     Optional<RegistrationRequestsEntity> findMedicamentRequestById(@Param("id") Integer id);
 
@@ -27,6 +26,7 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
             "LEFT JOIN FETCH p.outputDocuments " +
             "LEFT JOIN FETCH p.documents " +
             "LEFT JOIN FETCH p.paymentOrders " +
+            "LEFT JOIN FETCH p.registrationRequestMandatedContacts " +
             "WHERE p.id = (:id)")
     Optional<RegistrationRequestsEntity> findMedicamentHistoryById(@Param("id") Integer id);
 
@@ -66,6 +66,7 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
             "WHERE p.id = (:id)")
     Optional<RegistrationRequestsEntity> findPricesRequestById(@Param("id") Integer id);
 
-    @Query(value = "SELECT r.* FROM registration_requests r join request_types t on r.type_id = t.id and r.license_id = ?1 and r.end_date is not null and t.code = 'LICM'", nativeQuery = true)
+    @Query(value = "SELECT r.* FROM registration_requests r JOIN request_types t ON r.type_id = t.id AND r.license_id = ?1 AND r.end_date IS NOT NULL AND t.code = 'LICM'", nativeQuery = true)
     List<RegistrationRequestsEntity> findAllLicenseModifications(Integer licenseId);
+
 }

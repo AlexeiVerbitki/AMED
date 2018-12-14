@@ -35,8 +35,6 @@ import {AdminDashboardComponent} from "./dashboard/admin-dashboard.component";
 import {GestDocComponent} from "./document-management/gest-doc/gest-doc.component";
 import {NumberOnlyDirective} from "./shared/directive/number-only.directive";
 import {RequestAdditionalDataDialogComponent} from "./dialog/request-additional-data-dialog/request-additional-data-dialog.component";
-import {PricesComponent} from "./management/prices/prices.component";
-import {PriceReqEditModalComponent} from "./management/prices/price-req-edit-modal/price-req-edit-modal.component";
 import {MatDialogModule} from "@angular/material";
 import {ActiveSubstanceDialogComponent} from "./dialog/active-substance-dialog/active-substance-dialog.component";
 import {HomepageModalComponent} from "./homepage/homepage-modal/homepage-modal.component";
@@ -44,6 +42,10 @@ import {MedicamentDetailsDialogComponent} from "./dialog/medicament-details-dial
 import {MedicamentHistoryDialogComponent} from "./dialog/medicament-history-dialog/medicament-history-dialog.component";
 import {MedicamentModificationsDialogComponent} from "./dialog/medicament-modifications-dialog/medicament-modifications-dialog.component";
 import {PipeModule} from "./shared/pipe/pipe.module";
+import {NavbarTitleService} from "./shared/service/navbar-title.service";
+import {DrugAuthorizationDetailsDialogComponent} from "./dialog/drug-authorization-details-dialog/drug-authorization-details-dialog.component";
+import {AuxiliarySubstanceDialogComponent} from "./dialog/auxiliary-substance-dialog/auxiliary-substance-dialog.component";
+import {DivisionSelectDialogComponent} from "./dialog/division-select-dialog/division-select-dialog.component";
 
 const interceptors = [{
     provide: HTTP_INTERCEPTORS,
@@ -83,10 +85,12 @@ const interceptors = [{
         GestDocComponent,
         NumberOnlyDirective,
         ActiveSubstanceDialogComponent,
+        AuxiliarySubstanceDialogComponent,
         HomepageModalComponent,
         MedicamentDetailsDialogComponent,
         MedicamentHistoryDialogComponent,
-        MedicamentModificationsDialogComponent
+        MedicamentModificationsDialogComponent,
+        DivisionSelectDialogComponent
     ],
     imports: [
         BrowserAnimationsModule,
@@ -101,9 +105,9 @@ const interceptors = [{
     ],
     schemas: [],
     entryComponents: [
-        ConfirmationDialogComponent, MedicamentHistoryDialogComponent, MedicamentModificationsDialogComponent, RequestAdditionalDataDialogComponent, ActiveSubstanceDialogComponent, HomepageModalComponent, MedicamentDetailsDialogComponent
+     DivisionSelectDialogComponent,AuxiliarySubstanceDialogComponent,ConfirmationDialogComponent,MedicamentHistoryDialogComponent,MedicamentModificationsDialogComponent,RequestAdditionalDataDialogComponent,ActiveSubstanceDialogComponent, HomepageModalComponent,MedicamentDetailsDialogComponent
     ],
-    providers: [AuthService, AdministrationService, ErrorHandlerService, interceptors,
+    providers: [AuthService, AdministrationService, ErrorHandlerService, NavbarTitleService, interceptors,
     ],
     bootstrap: [AppComponent]
 })

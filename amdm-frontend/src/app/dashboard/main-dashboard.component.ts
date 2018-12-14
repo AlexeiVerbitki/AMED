@@ -1,11 +1,11 @@
-import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import {LoaderService} from "../shared/service/loader.service";
 
 @Component({
     selector: 'app-main-dashboard',
     template: `
 		<app-sidebar (skipEvent)="skipValueChanged($event)"></app-sidebar>
-		<app-navbar></app-navbar>
+		<app-navbar [events]="skipEvent.asObservable()"></app-navbar>
 		<div class="body-loader" *ngIf=loaderActive>
 			<div class="loader">
 				<svg class="circular" viewBox="25 25 50 50">
@@ -28,9 +28,12 @@ import {LoaderService} from "../shared/service/loader.service";
 })
 export class MainDashboardComponent implements OnInit, AfterViewInit {
 
+	@Output()
+	public skipEvent: EventEmitter<any> = new EventEmitter();
 	loaderActive: boolean;
 	skip: boolean;
 	classValue: any;
+	sideBarIsOpened = false;
     constructor(private loadingService: LoaderService) {
     }
 
@@ -42,13 +45,14 @@ export class MainDashboardComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.loaderActive = false;
+	this.sideBarIsOpened = true;
 	}
 	
     skipValueChanged($event) {
 		console.log('event skip', $event)
+		this.classValue = !$event;
+		this.skipEvent.emit($event);
 		this.skip = $event.value;
-
-		this.classValue = !this.classValue;
     }
 
 

@@ -1,5 +1,7 @@
 package com.bass.amed.controller.rest.clinicaltrails;
 
+import com.bass.amed.dto.clinicaltrial.ClinicalTrailFilterDTO;
+import com.bass.amed.dto.clinicaltrial.ClinicalTrialDTO;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
@@ -31,6 +33,8 @@ public class ClinicalTrailsController {
     ClinicTrialAmendRepository clinicTrialAmendRepository;
     @Autowired
     CtAmendMedInstInvestigatorRepository ctAmendMedInstInvestigatorRepository;
+    @Autowired
+    ClinicalTrailNotificationTypeRepository clinicalTrailNotificationTypeRepository;
 
     @PostMapping(value = "/save-request")
     public ResponseEntity<Integer> saveClinicalTrailRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
@@ -160,11 +164,36 @@ public class ClinicalTrailsController {
         return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
     }
 
+    @PostMapping(value = "/finish-notification-request")
+    public ResponseEntity<Integer> finishClinicalTrailNotificationRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
+
+        if (requests.getClinicalTrails() == null) {
+            throw new CustomException("Request was not found");
+        }
+        requestRepository.save(requests);
+        return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
+    }
+
     @RequestMapping("/all-clinical-trails-by-cod-or-eudra")
     public ResponseEntity<List<ClinicalTrialsEntity>> getClinicalTrailByCodeAndEudra(String partialCode) {
         LOGGER.debug("Retrieve clinical trails by code or eudra" + partialCode);
         List<ClinicalTrialsEntity> clinicalTrialsEntities = clinicalTrialsRepository.getClinicalTrailByCodeOrEudra(partialCode, partialCode);
         return new ResponseEntity<>(clinicalTrialsEntities, HttpStatus.OK);
+    }
+
+    @RequestMapping("/all-clinical-trail-notification-types")
+    public ResponseEntity<List<ClinicTrailNotificationTypeEntity>> getAllNotificationTypes(){
+        LOGGER.debug("Retrieve clinical trail notification types");
+        List<ClinicTrailNotificationTypeEntity> clinicTrailNotificationTypeEntities = clinicalTrailNotificationTypeRepository.findAll();
+        return new ResponseEntity<>(clinicTrailNotificationTypeEntities, HttpStatus.OK);
+    }
+
+    @RequestMapping("get-filtered-clinical-trials")
+    public  ResponseEntity<List<ClinicalTrialDTO>> getClinicalTrailsByFilter(@RequestBody ClinicalTrailFilterDTO filter) throws CustomException {
+        LOGGER.debug("Get clinical trails by filter: ", filter.toString());
+
+        List<ClinicalTrialDTO> clinicalTrialsEntities = clinicalTrailsService.retrieveClinicalTrailsByFilter(filter);
+        return new ResponseEntity<> (clinicalTrialsEntities, HttpStatus.OK);
     }
 
 

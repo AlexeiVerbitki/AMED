@@ -89,7 +89,7 @@
 						<td>{{ division.description }}</td>
 						<td>
 							<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
-							        (click)="removeDivision(i)" mdbWavesEffect attr.disabled="this.disabled"><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+							        (click)="removeDivision(i,division)" mdbWavesEffect attr.disabled="this.disabled"><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 							</button>
 						</td>
 					</tr>
@@ -101,6 +101,7 @@
 			<small class="text-muted"><strong class="text-danger">Nici o divizare nu a fost adaugata</strong></small>
 		</div>
 		<hr>
+		<!--Substante active-->
 		<div class="gradient-card-header bg-sidebar border-gradient">
 			<div class="container-fluid">
 				<!-- Title -->
@@ -118,7 +119,7 @@
 
 		</div>
 
-		<!-- Card content -->
+		<!-- Tabela substante active -->
 		<div class="card-body card-body-cascade">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
@@ -156,6 +157,47 @@
 		<div *ngIf="formSubmitted && activeSubstancesTable.length==0">
 			<small class="text-muted"><strong class="text-danger">Nici o substanta activa nu a fost adaugata</strong></small>
 		</div>
+		<hr>
+		<!--Substante auxiliare-->
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Excipienti</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addAuxiliarySubstanceDialog()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- Tabela substante auxiliare -->
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Denumire</th>
+					<th scope="col">Actiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let substance of auxiliarySubstancesTable;let i = index">
+					<td>{{ i+1 }}</td>
+					<th scope="row">{{ substance.auxSubstance.description }}</th>
+					<td>
+						<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeAuxiliarySubstance(i)"
+						        mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="auxiliarySubstancesTable.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
 		<hr>
 		<h5 class="text-center font-weight-bold">Informatii generale medicament</h5>
 		<hr>
@@ -274,6 +316,22 @@
 					</div>
 				</div>
 			</div>
+			<div class="col-md-4">
+				<div class="md-form-modified">
+					<ng-select id="customsCode" name="customCode" [items]="customsCodes"
+					           bindLabel="description"
+					           placeholder="Cod vamal "
+					           formControlName="customsCode">
+						<ng-template ng-option-tmp let-item="item">
+							{{item.description}} <br />
+							<small class="form-text text-muted">{{item.code}}</small>
+						</ng-template>
+					</ng-select>
+					<div *ngIf="formSubmitted && eForm.get('medicament.customsCode').invalid">
+						<small class="text-muted"><strong class="text-danger">Codul vamal trebuie selectat</strong></small>
+					</div>
+				</div>
+			</div>
 		</div>
 		<div class="row" formGroupName="medicament">
 			<div class="col-md-4">
@@ -338,7 +396,6 @@
 
 		<!-- Card content -->
 		<div class="card-body card-body-cascade">
-
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
 					<tr>
@@ -370,7 +427,15 @@
 			<small class="text-muted"><strong class="text-danger">Nici un producator nu a fost adaugat</strong></small>
 		</div>
 		<hr>
-		<app-payment [requestId]="this.eForm.get('id').value" (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
+		<app-instruction [divisions]="divisions" [instructions]="instructions" [nrCerere]="eForm.get('requestNumber').value"></app-instruction>
+		<div *ngIf="formSubmitted && instructions.length==0">
+			<small class="text-muted"><strong class="text-danger">Nici o instructiune nu a fost adaugata</strong></small>
+		</div>
+		<app-macheta [divisions]="divisions" [machets]="machets" [nrCerere]="eForm.get('requestNumber').value"></app-macheta>
+		<div *ngIf="formSubmitted && machets.length==0">
+			<small class="text-muted"><strong class="text-danger">Nici o macheta nu a fost adaugata</strong></small>
+		</div>
+		<app-payment #payment [checkProducator]="true" [manufactures]="manufacturesTable" [requestId]="this.eForm.get('id').value" (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
 		<div *ngIf="formSubmitted && paymentTotal<0">
 			<small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>
 		</div>
@@ -425,6 +490,7 @@
 				</tbody>
 			</table>
 			</div>
+			<div *ngIf="outDocuments.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
 			<!--<div *ngIf="formSubmitted && !isResponseReceived">-->
 			<!--<small class="text-muted"><strong class="text-danger">Exista documente fara raspuns</strong></small>-->
 			<!--</div>-->

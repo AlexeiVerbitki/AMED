@@ -45,6 +45,10 @@ const ELEMENT_DATA: Bank[] = [
   styleUrls: ['./employees.component.css']
 })
 export class EmployeesComponent implements OnInit {
+
+  visibility: boolean = false;
+  title: string = 'Employees';
+
   displayedColumns: any[] = ['id', 'code', 'name', 'lastname', 'firstname', 'middlename', 'birth_date', 'phonenumbers', 'address', 'idnp', 'identification_document_type_id', 'document_series', 'document_number', 'issue_date', 'function', 'science_degree', 'profession_id', 'commision_order', 'chairman_of_experts', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
@@ -64,6 +68,10 @@ export class EmployeesComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 
   codeEdit = new FormControl('', Validators.required);

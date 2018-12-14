@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
-import java.text.ParseException;
 import java.util.List;
 
 @Service
@@ -113,6 +112,7 @@ public class TasksService
             stringBuilder.append(" AND RR.endDate <= :endDate");
         }
 
+        stringBuilder.append(" ORDER BY RR.id desc");
         return stringBuilder.toString();
     }
 

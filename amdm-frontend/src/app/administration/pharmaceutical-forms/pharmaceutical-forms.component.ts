@@ -37,6 +37,9 @@ export class PharmaceuticalFormsComponent implements OnInit {
   displayedColumns: any[] = ['id', 'code', 'description', 'type_id', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
+  visibility: boolean = false;
+  title: string = 'Pharmaceutical forms';
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -53,6 +56,10 @@ export class PharmaceuticalFormsComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 
   codeEdit = new FormControl('', Validators.required);

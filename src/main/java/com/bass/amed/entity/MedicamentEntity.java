@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "medicament", schema = "amed")
+@Table(name = "medicament", schema = "amed", catalog = "")
 public class MedicamentEntity
 {
     @Id
@@ -29,9 +29,9 @@ public class MedicamentEntity
     @Basic
     @Column(name = "product_code", nullable = true, length = 10)
     private String productCode;
-    @Basic
-    @Column(name = "customs_code", nullable = true, length = 5)
-    private String customsCode;
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "customs_code", referencedColumnName = "code")
+    private NmCustomsCodesEntity customsCode;
     @Basic
     @Column(name = "barcode", nullable = true, length = 15)
     private String barcode;
@@ -95,6 +95,12 @@ public class MedicamentEntity
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     @JoinColumn(name = "medicament_id")
     private Set<MedicamentActiveSubstancesEntity> activeSubstances = new HashSet<>();
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @JoinColumn(name = "medicament_id")
+    private Set<MedicamentAuxiliarySubstancesEntity> auxSubstances = new HashSet<>();
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @JoinColumn(name = "medicament_id")
+    private Set<MedicamentInstructionsEntity> instructions = new HashSet<>();
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "registration_number")
     private Set<MedicamentHistoryEntity> medicamentHistory;
@@ -142,6 +148,13 @@ public class MedicamentEntity
             MedicamentActiveSubstancesEntity medicamentActiveSubstancesEntity = new MedicamentActiveSubstancesEntity();
             medicamentActiveSubstancesEntity.assign(medicamentActiveSubstancesHistoryEntity);
             this.activeSubstances.add(medicamentActiveSubstancesEntity);
+        }
+        this.auxSubstances.clear();
+        for (MedicamentAuxiliarySubstancesHistoryEntity medicamentAuxiliarySubstancesHistoryEntity : entity.getAuxiliarySubstancesHistory())
+        {
+            MedicamentAuxiliarySubstancesEntity medicamentAuxiliarySubstancesEntity = new MedicamentAuxiliarySubstancesEntity();
+            medicamentAuxiliarySubstancesEntity.assign(medicamentAuxiliarySubstancesHistoryEntity);
+            this.auxSubstances.add(medicamentAuxiliarySubstancesEntity);
         }
         this.manufactures.clear();
         for (MedicamentManufactureHistoryEntity medicamentManufactureHistoryEntity : entity.getManufacturesHistory())

@@ -171,57 +171,6 @@
         </div>
     </div>
 
-
-    <app-document [title]="'Încărcați actele necesare reevaluării prețurilor'"
-                  [documents]="documents"
-                  [nrCerere]="requestNumber"
-                  [dcTypeIdentifier]="{code:'PMED',step:'E'}"
-                  (documentModified)="documentAdded($event)"></app-document>
-    <div class="my-5">
-        <div class="gradient-card-header bg-sidebar border-gradient">
-            <div class="container-fluid">
-                <!-- Title -->
-                <div class="row">
-                    <div class="col-6">
-                        <div class="card-header-title white-text">Documente necesare</div>
-                    </div>
-                    <!--<div class="col-6">
-                        <div class="text-right fap text-white">
-                            <i (click)="sendInfoLetter()" class="fa fa-envelope fa-lg fa-mt"
-                               aria-hidden="true" mdbTooltip="Scrisoare de informare" placement="top"></i>
-                        </div>
-                    </div>-->
-                </div>
-            </div>
-
-        </div>
-        <div class="card-body card-body-cascade">
-            <table class="table table-widths-lg text-center">
-                <thead class="bg-sidebar white-text">
-                <tr>
-                    <th class="w-50" scope="col">Denumirea</th>
-                    <th class="w-25" scope="col">Numărul</th>
-                    <th class="w-20" scope="col">Statusul documentului</th>
-                    <th class="w-5">Acțiuni</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let a of outputDocuments">
-                    <td scope="row">{{ a.description }}</td>
-                    <td scope="row">{{ a.number }}</td>
-                    <td scope="row">{{ a.status }}</td>
-                    <td>
-                        <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect [disabled]="true" (click)="viewDoc(a)"><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="alert alert-danger text-center" *ngIf="formSubmitted && documents.length == 0">
-        <strong>Încărcați documentele necesare</strong>
-    </div>
     <div class="alert alert-danger text-center" *ngIf="formSubmitted && containInvalidPrices">
         <strong>Indicați valori valide pentru preț</strong>
     </div>

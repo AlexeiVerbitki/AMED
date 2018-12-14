@@ -64,7 +64,7 @@
 			</image>
 			<image>
 				<reportElement x="447" y="0" width="353" height="65" uuid="209083a0-16d0-49cc-b4ba-93c0184879a6"/>
-				<imageExpression><![CDATA["layouts/icons/header_right.PNG"]]></imageExpression>
+				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
 		</band>
 	</pageHeader>

@@ -239,24 +239,27 @@ export class MedRegComponent implements OnInit {
                     //If it's a registered medicament, disable the following fields
 
                     if (data.importAuthorizationEntity.medType===1) {
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').disable();
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').disable();
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').disable();
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').disable();
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').disable();
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').disable();
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').disable();
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').disable();
-                        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producerAddress').disable();
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').disable();
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').disable();
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').disable();
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').disable();
-
+                        if (data.importAuthorizationEntity.medType) {
+                            // this.evaluateImportForm.get('type.id').setValue(15);
+                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').disable();
+                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').disable();
+                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').disable();
+                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').disable();
+                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').disable();
+                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').disable();
+                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').disable();
+                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').disable();
+                            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producerAddress').disable();
+                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').disable();
+                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').disable();
+                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').disable();
+                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').disable();
+                        }
                     }
 
                     if (data.importAuthorizationEntity.medType === 2) {
                         if (data.importAuthorizationEntity.medType) {
+                            // this.evaluateImportForm.get('type.id').setValue(16);
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setErrors(null);
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setErrors(null);
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setErrors(null);
@@ -789,7 +792,7 @@ export class MedRegComponent implements OnInit {
             if (result) {
                 this.loadingService.show();
                 let modelToSubmit = this.evaluateImportForm.getRawValue();
-                modelToSubmit.currentStep = 'I';
+                modelToSubmit.currentStep = 'F';
                 // modelToSubmit.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
                 modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
                 modelToSubmit.endDate = new Date();
@@ -798,7 +801,7 @@ export class MedRegComponent implements OnInit {
                     startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
                     endDate: new Date(),
                     username: this.authService.getUserName(),
-                    step: 'E'
+                    step: 'F'
                 });
                 modelToSubmit.documents = this.docs;
                 this.subscriptions.push(

@@ -58,6 +58,9 @@ export class EconomicAgentsComponent implements OnInit {
   displayedColumns: any[] = ['id', 'code', 'name', 'idno', 'long_name', 'lccm_name', 'tax_code', 'ocpo_code', 'registration_number', 'registration_date', 'parent_id', 'status', 'filiala', 'pharmacy_activity_id', 'can_use_psychotropic_drugs', 'license_series', 'license_number', 'license_issued_date', 'license_expiration_date', 'leader', 'director', 'contract_number', 'contract_date', 'state_id', 'locality_id', 'street', 'legal_address', 'type_id', 'email', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
+  visibility: boolean = false;
+  title: string = 'Economic agents';
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -74,6 +77,10 @@ export class EconomicAgentsComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 
   codeEdit = new FormControl('', Validators.required);

@@ -11,5 +11,14 @@ public class RequestAdditionalDataDTO
     private String nrRequest;
     private String title;
     private String content;
-
+    private String nrDoc;
+    private String responsiblePerson;
+    private String companyName;
+    private String country;
+    private String address;
+    private String phoneNumber;
+    private String email;
+    private String message;
+    private String function;
+    private String signerName;
 }

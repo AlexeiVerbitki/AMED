@@ -14,8 +14,7 @@ import {UploadFileService} from "../../shared/service/upload/upload-file.service
 import {RequestService} from "../../shared/service/request.service";
 import {DocumentModule} from "../../document/document.module";
 import {PaymentModule} from "../../payment/payment.module";
-import {CPCADTaskComponent} from "./cpcadtask/cpcadtask.component";
-import {DrugAuthorizationDetailsDialogComponent} from "../../dialog/drug-authorization-details-dialog/drug-authorization-details-dialog.component";
+import {LicenseService} from "../../shared/service/license/license.service";
 
 @NgModule({
     imports: [
@@ -29,10 +28,9 @@ import {DrugAuthorizationDetailsDialogComponent} from "../../dialog/drug-authori
         DocumentModule,
         PaymentModule
     ],
-    declarations: [CerereDubAutorActComponent, CerereImportExportComponent, CerereModAutorActComponent, CerereSolicAutorComponent, RegDrugControl, CPCADTaskComponent, DrugAuthorizationDetailsDialogComponent],
-    providers: [UploadFileService, RequestService],
-    exports: [CPCADTaskComponent],
-    entryComponents: [DrugAuthorizationDetailsDialogComponent]
+    declarations: [CerereDubAutorActComponent, CerereImportExportComponent, CerereModAutorActComponent, CerereSolicAutorComponent, RegDrugControl],
+    providers: [UploadFileService, RequestService, LicenseService]
+
 })
 export class DrugControlModule {
 }

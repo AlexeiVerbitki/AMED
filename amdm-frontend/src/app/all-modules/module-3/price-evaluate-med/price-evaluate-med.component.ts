@@ -203,7 +203,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                           this.medicaments.push(data.price.medicament);
 
 
-                          if(data.price.medicament.medicamentType.description == 'Generic' && data.price.medicament.internationalMedicamentName){
+                          if(data.price.medicament.medicamentType.code == MedicamentType.Generic && data.price.medicament.internationalMedicamentName){
                               this.subscriptions.push(this.priceService.getOriginalMedsByInternationalName(data.price.medicament.internationalMedicamentName.id).subscribe(m => {
                                   console.log('getOriginalMedsByInternationalName', m);
                                   m.forEach(m => {
@@ -426,7 +426,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
            outDoc.status = "Nu este atasat";
 
            for(let doc of this.documents){
-               if (doc.docType.description == outDoc.description) {
+               if (doc.docType.category == outDoc.docType.category) {
                    outDoc.number = doc.number;
                    outDoc.status = "Atasat";
                    break;
@@ -548,17 +548,12 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
 
 
     viewDoc(document: any) {
+        if (document.docType.category != 'FE') { //  Fișa de evaluare a dosarului pentru aprobarea prețului de producător
+            return;
+        }
         this.loadingService.show();
 
-        let observable: Observable<any> = null;
-
-        if (document.docType.category == 'FE') { //  Fișa de evaluare a dosarului pentru aprobarea prețului de producător
-            observable = this.priceService.viewEvaluationSheet(this.createEvaluationSheetDTO());
-        } else if (document.docType.category == 'A1') { // CERERE-TIP (Anexa 1)
-            observable = this.priceService.viewAnexa1({});
-        }
-
-        this.subscriptions.push(observable.subscribe(data => {
+        this.subscriptions.push(this.priceService.viewEvaluationSheet(this.createEvaluationSheetDTO()).subscribe(data => {
                 let file = new Blob([data], {type: 'application/pdf'});
                 var fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
@@ -690,6 +685,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
             countryManufacturer: this.PriceRegForm.get('medicament.manufactureCountry').value,
             applicationDate: this.PriceRegForm.get('startDate').value,
             medicamentClaimedPriceList: [{
+                id: currMed.id,
                 medicamentCode: currMed.code,
                 medicamentName: currMed.name,
                 medicamentForm: currMed.pharmaceuticalForm.description,
@@ -742,7 +738,18 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         let decision = this.PriceRegForm.get('evaluation')['controls'].decision;
 
         let uploadedEvaluationFile = this.documents.find(d => d.docType.category == 'FE');
-        let priceAcceptCondition: boolean = (decision.valid && decision.value.description == 'Acceptat' && uploadedEvaluationFile != undefined && !this.hasUnloadedDocs());
+
+        let requestStatus: string = '';
+        if(decision.valid && decision.value.description == 'Acceptat') {
+            requestStatus = 'A';
+        } else if (decision.valid && decision.value.description == 'Respins') {
+            requestStatus = 'C';
+
+        } else {
+            requestStatus = 'E';
+        }
+
+        let priceAcceptCondition: boolean = (requestStatus == 'A' && uploadedEvaluationFile != undefined && !this.hasUnloadedDocs());
         let canFinishEvaluate: boolean = this.medicaments[0].price.mdlValue > 0 && (decision.invalid || (decision.valid && decision.value.description == 'Respins') || priceAcceptCondition);
 
 
@@ -752,7 +759,6 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         }
 
         this.formSubmitted = false;
-
         let priceModel : any = {};
         priceModel.id = this.PriceRegForm.get('id').value;
         priceModel.requestNumber = this.PriceRegForm.get('requestNumber').value;
@@ -761,7 +767,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         priceModel.company = this.PriceRegForm.get('company').value;
         priceModel.type = this.PriceRegForm.get('type').value;
         priceModel.endDate = new Date();
-        priceModel.currentStep = priceAcceptCondition ? 'A' : 'C';
+        priceModel.currentStep = requestStatus;
         priceModel.assignedUser = this.priceService.getUsername();
         priceModel.requestHistories = this.PriceRegForm.get('requestHistories').value;
         priceModel.documents = this.documents;
@@ -812,7 +818,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(this.priceService.savePrice(priceModel).subscribe(data => {
 
-                if (priceAcceptCondition && this.medicamentType.description == 'Original') {
+                if (priceAcceptCondition && this.medicamentType.code == MedicamentType.Original) {
                     this.router.navigate(['dashboard/module/price/revaluation-generics/' + data.body.price.id]);
                 } else {
                     this.router.navigate(['dashboard/homepage']);

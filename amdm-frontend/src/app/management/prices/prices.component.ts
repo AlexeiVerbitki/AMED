@@ -9,6 +9,11 @@ import {flatMap} from "rxjs/internal/operators";
 import {PriceService} from "../../shared/service/prices.service";
 import {PriceReqEditModalComponent} from "./price-req-edit-modal/price-req-edit-modal.component";
 import {NavbarTitleService} from "../../shared/service/navbar-title.service";
+import * as XLSX from "xlsx";
+import {DatePipe} from "@angular/common";
+import {LicenseStatusPipe} from "../../shared/pipe/license-status.pipe";
+import {Angular5Csv} from "angular5-csv/Angular5-csv";
+import {LoaderService} from "../../shared/service/loader.service";
 
 @Component({
     selector: 'app-prices',
@@ -44,6 +49,7 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
                 private navbarTitleService: NavbarTitleService,
                 private taskService: TaskService,
                 private priceService: PriceService,
+                private loadingService : LoaderService,
                 public dialog: MatDialog) {
 
         let thisObject = this;
@@ -116,6 +122,92 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
         // this.taskForm.get('requestNumber').valueChanges.subscribe(val => {
         //     this.disabledElements(val);
         // });
+    }
+
+    exportToExcel() {
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+
+        //needed only one shit
+        var arr: any[][] = new Array<Array<any>>();
+        arr.push(this.createHeaderColumns());
+        arr = this.populateDataForXLSXDocument(arr);
+        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(arr);
+        /* generate workbook and add the worksheet */
+        XLSX.utils.book_append_sheet(wb, ws, 'Lista de preturi');
+
+        /* save to file */
+        XLSX.writeFile(wb, 'Prices.xlsx');
+
+    }
+
+    createHeaderColumns(): any[] {
+        return ["Nr ordin", "Nr dosar", "Medicament", "Codul AMED", "Divizare", "Tip medicament", "Data aprobarii", "data expirarii"];
+    }
+
+    populateDataForXLSXDocument(arr: any[][]): any[] {
+        let dtPipe = new DatePipe("en-US");
+        let displayData : any[] = this.getDisplayData();
+        if (displayData) {
+            for (var i = 0; i < displayData.length; i++) {
+                var arrIntern: any[] = new Array<any>();
+                arrIntern[0] = displayData[i].orderNr;
+                arrIntern[1] = displayData[i].folderNr;
+                arrIntern[2] = displayData[i].medicament;
+                arrIntern[3] = displayData[i].medicamentCode;
+                arrIntern[4] = displayData[i].division;
+                arrIntern[5] = displayData[i].medicamentType;
+                arrIntern[6] =  dtPipe.transform(displayData[i].orderApprovDat, 'dd/MM/yyyy');
+                arrIntern[7] = dtPipe.transform(displayData[i].expirationDate, 'dd/MM/yyyy');
+                arr.push(arrIntern);
+            }
+        }
+
+        return arr;
+    }
+
+    exportToCsv() {
+        let displayData = this.getDisplayData();
+
+        var options = {
+            fieldSeparator: ',',
+            quoteStrings: '"',
+            decimalseparator: '.',
+            showLabels: true,
+            headers: this.createHeaderColumns()
+        };
+        new Angular5Csv(displayData, 'Prices', options);
+    }
+
+    exportToPdf(){
+        this.subscriptions.push(this.priceService.viewTableData(this.createHeaderColumns(), this.getDisplayData()).subscribe(data => {
+                let file = new Blob([data], {type: 'application/pdf'});
+                var fileURL = URL.createObjectURL(file);
+                window.open(fileURL);
+                this.loadingService.hide();
+            }, error => {
+                this.loadingService.hide();
+            }
+            )
+        );
+    }
+
+    private getDisplayData() {
+        let dtPipe = new DatePipe("en-US");
+        let displayData: any [] = [];
+        this.dataSource.filteredData.forEach(fd => {
+            let row: any = {};
+
+            row.orderNr = fd.orderNr;
+            row.folderNr = fd.folderNr;
+            row.medicament = fd.medicament;
+            row.medicamentCode = fd.medicamentCode;
+            row.division = fd.division;
+            row.medicamentType = fd.medicamentType;
+            row.orderApprovDate = dtPipe.transform(fd.orderApprovDate, 'dd/MM/yyyy');
+            row.expirationDate = dtPipe.transform(fd.expirationDate, 'dd/MM/yyyy');
+            displayData.push(row);
+        });
+        return displayData;
     }
 
     getPrices() {

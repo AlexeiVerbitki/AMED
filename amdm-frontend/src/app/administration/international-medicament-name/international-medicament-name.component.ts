@@ -32,6 +32,10 @@ const ELEMENT_DATA: Bank[] = [
   styleUrls: ['./international-medicament-name.component.css']
 })
 export class InternationalMedicamentNameComponent implements OnInit {
+
+  visibility: boolean = false;
+  title: string = 'International medicament name';
+
   displayedColumns: any[] = ['id', 'description', 'action'];
   dataSource = new MatTableDataSource<Bank>(ELEMENT_DATA);
 
@@ -51,6 +55,10 @@ export class InternationalMedicamentNameComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  changeVisibility() {
+    this.visibility = !this.visibility;
   }
 
   denumireEdit = new FormControl('', Validators.required);

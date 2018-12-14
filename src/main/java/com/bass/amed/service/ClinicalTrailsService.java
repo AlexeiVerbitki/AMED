@@ -1,8 +1,12 @@
 package com.bass.amed.service;
 
+import com.bass.amed.dto.MedicamentDetailsDTO;
+import com.bass.amed.dto.clinicaltrial.ClinicalTrailFilterDTO;
+import com.bass.amed.dto.clinicaltrial.ClinicalTrialDTO;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
+import com.bass.amed.utils.MedicamentQueryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -28,6 +33,65 @@ public class ClinicalTrailsService {
     RegistrationRequestStepRepository registrationRequestStepRepository;
     @Autowired
     ClinicTrialAmendRepository clinicTrialAmendRepository;
+
+    public List<ClinicalTrialDTO> retrieveClinicalTrailsByFilter(ClinicalTrailFilterDTO filter) throws CustomException {
+        StringBuilder queryString = new StringBuilder(
+                "select ct.id, ct.code, ct.EudraCT_nr, ctt1.description as treatment, ctt2.description as provenance, ct.sponsor, ct.med_comission_nr as cometee,  ct.med_comission_date as cometeeDate "
+                        .concat("FROM amed.clinical_trials ct, amed.clinical_trials_types ctt1, amed.clinical_trials_types ctt2 ")
+                        .concat("where ct.status='F' and ct.treatment_id=ctt1.id and ct.provenance_id=ctt2.id")
+                //.concat(";")
+        );
+
+        EntityManager em = null;
+        List<ClinicalTrialDTO> result = new ArrayList<>();
+        try {
+            em = entityManagerFactory.createEntityManager();
+            em.getTransaction().begin();
+
+            if (filter.getCode() != null && !filter.getCode().isEmpty()) {
+                queryString.append(" and ct.code = :code");
+            }
+            if (filter.getEudraCtNr() != null && !filter.getEudraCtNr().isEmpty()) {
+                queryString.append(" and ct.EudraCT_nr = :eudraCt");
+            }
+            if (filter.getTreatmentId() != null ) {
+                queryString.append(" and ctt1.id = :treatmentId");
+            }
+            if (filter.getProvenanceId() != null ) {
+                queryString.append(" and ctt2.id = :provenanceId");
+            }
+
+            Query query = em.createNativeQuery(queryString.toString(), ClinicalTrialDTO.class);
+
+            if (filter.getCode() != null && !filter.getCode().isEmpty()) {
+                query.setParameter("code", filter.getCode());
+            }
+            if (filter.getEudraCtNr() != null && !filter.getEudraCtNr().isEmpty()) {
+                query.setParameter("eudraCt", filter.getEudraCtNr());
+            }
+            if (filter.getTreatmentId() != null ) {
+                query.setParameter("treatmentId", filter.getTreatmentId());
+            }
+            if (filter.getProvenanceId() != null ) {
+                query.setParameter("provenanceId", filter.getProvenanceId());
+            }
+
+            result = query.getResultList();
+            System.out.println(result);
+
+            em.getTransaction().commit();
+
+        } catch (Exception e) {
+            if (em != null) {
+                em.getTransaction().rollback();
+            }
+            throw new CustomException(e.getMessage());
+        } finally {
+            em.close();
+        }
+
+        return result;
+    }
 
     public void finishNewClinicalTrailAmendment(RegistrationRequestsEntity requests) throws CustomException {
         EntityManager em = null;
@@ -77,8 +141,8 @@ public class ClinicalTrailsService {
             ClinicTrialAmendEntity persistedEntity = em.createQuery("select ctAm from ClinicTrialAmendEntity ctAm where ctAm.id = :id", ClinicTrialAmendEntity.class).setParameter("id", clinicTrialAmendEntity.getId()).getSingleResult();
             List<CtAmendMedInstInvestigatorEntity> amendmentMedInstInvestResult = handelMediclInstitutions(ctAmendMedInstInvestigatorsSet, ctMedInstInvestigatorsSet, persistedEntity);
 
-            Optional<CtAmendMedInstInvestigatorEntity> dasgsgas = amendmentMedInstInvestResult.stream().filter(medInst -> 'N'==medInst.getEmbededId().getStatus() || 'R'==medInst.getEmbededId().getStatus()).findAny();
-            boolean isMedInstModified = amendmentMedInstInvestResult.stream().filter(medInst -> 'N'==medInst.getEmbededId().getStatus() || 'R'==medInst.getEmbededId().getStatus()).findAny().isPresent();
+            Optional<CtAmendMedInstInvestigatorEntity> dasgsgas = amendmentMedInstInvestResult.stream().filter(medInst -> 'N' == medInst.getEmbededId().getStatus() || 'R' == medInst.getEmbededId().getStatus()).findAny();
+            boolean isMedInstModified = amendmentMedInstInvestResult.stream().filter(medInst -> 'N' == medInst.getEmbededId().getStatus() || 'R' == medInst.getEmbededId().getStatus()).findAny().isPresent();
             if (!isMedInstModified) {
                 for (CtAmendMedInstInvestigatorEntity entity : amendmentMedInstInvestResult) {
                     entity.getEmbededId().setStatus('U');
@@ -95,7 +159,7 @@ public class ClinicalTrailsService {
                 }
 
                 for (CtAmendMedInstInvestigatorEntity entity : amendmentMedInstInvestResult) {
-                    if(entity.getEmbededId().getStatus() == 'N'){
+                    if (entity.getEmbededId().getStatus() == 'N') {
                         CtMedInstInvestigatorEntity newMedInstInvestigator = new CtMedInstInvestigatorEntity(clinicalTrialsEntity.getId(), entity.getMedicalInstitutionsEntity().getId(), entity.getInvestigatorsEntity().getId(), entity.getMainInvestigator());
                         newMedInstInvestigator.setClinicalTrialsEntity(persistentClinicalTrialsEntity);
                         newMedInstInvestigator.setMedicalInstitutionsEntity(entity.getMedicalInstitutionsEntity());

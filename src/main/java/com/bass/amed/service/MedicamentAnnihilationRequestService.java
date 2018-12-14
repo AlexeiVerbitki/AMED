@@ -187,6 +187,9 @@ public class MedicamentAnnihilationRequestService
             r.getMedicamentAnnihilation().getMedicamentAnnihilationInsitutions().clear();
             r.getMedicamentAnnihilation().getMedicamentAnnihilationInsitutions().addAll(request.getMedicamentAnnihilation().getMedicamentAnnihilationInsitutions());
 
+            r.getMedicamentAnnihilation().setFirstname(request.getMedicamentAnnihilation().getFirstname());
+            r.getMedicamentAnnihilation().setLastname(request.getMedicamentAnnihilation().getLastname());
+
             em.merge(r);
 
             em.getTransaction().commit();

@@ -21,6 +21,6 @@ public class DocumentModuleRecipientsEntity
     private String comment;
     @Basic
     @Column(name = "confirmed", nullable = true)
-    private boolean confirmed;
+    private Boolean confirmed;
 
 }

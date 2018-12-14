@@ -13,7 +13,7 @@
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<parameter name="Parameter1" class="java.lang.String"/>
 	<parameter name="procVerb" class="java.lang.String"/>
-	<parameter name="date" class="java.util.Date"/>
+	<parameter name="date" class="java.lang.String"/>
 	<parameter name="reqModel" class="java.lang.String"/>
 	<parameter name="medicamentName" class="java.lang.String"/>
 	<parameter name="medicamentProd" class="java.lang.String"/>
@@ -33,7 +33,7 @@
 			</image>
 			<image>
 				<reportElement x="261" y="4" width="289" height="53" uuid="ae27ee01-a17f-4e89-81b4-1417b9af443c"/>
-				<imageExpression><![CDATA["layouts/icons/header_right.PNG"]]></imageExpression>
+				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="0" y="60" width="548" height="20" uuid="9e1c9c81-505f-4a2f-83a1-570a8805f507"/>

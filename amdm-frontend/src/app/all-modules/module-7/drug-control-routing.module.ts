@@ -12,8 +12,7 @@ const routes: Routes = [
     {path: 'transfer-authorization/:id', component: CerereImportExportComponent},
     {path: 'modify-authority/:id', component: CerereModAutorActComponent},
     {path: 'duplicate-authority/:id', component: CerereDubAutorActComponent},
-    {path: 'reg-drug-control', component: RegDrugControl},
-    {path: 'cpcadtask', component: CPCADTaskComponent}
+    {path: 'reg-drug-control', component: RegDrugControl}
 ];
 
 @NgModule({

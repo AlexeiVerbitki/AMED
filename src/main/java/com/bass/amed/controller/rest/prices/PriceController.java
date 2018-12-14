@@ -163,7 +163,7 @@ public class PriceController {
     public ResponseEntity<List<DocumentsEntity>> getDocumentsByPriceIds(@RequestBody Integer[] ids)
     {
         logger.debug("getDocumentsByIds");
-        List<DocumentsEntity> docs  = documentsRepository.findAllByPriceIds(Arrays.asList(ids));
+        List<DocumentsEntity> docs  = documentsRepository.findAllByPriceRequestsIds(Arrays.asList(ids));
         return new ResponseEntity<>(docs, HttpStatus.OK);
     }
 

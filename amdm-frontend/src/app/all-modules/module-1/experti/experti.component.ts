@@ -25,6 +25,7 @@ export class ExpertiComponent implements OnInit {
     expertForm: FormGroup;
     documents: Document [] = [];
     activeSubstancesTable: any[];
+    auxiliarySubstancesTable: any[] = [];
     company: any;
     outputDocuments: any[] = [];
     formSubmitted: boolean;
@@ -34,6 +35,9 @@ export class ExpertiComponent implements OnInit {
     isNonAttachedDocuments: boolean = false;
     divisions: any[] = [];
     manufacturesTable: any[] = [];
+    instructions: any[] = [];
+    machets: any[] = [];
+    registrationRequestMandatedContacts: any[] = [];
 
     constructor(private fb: FormBuilder,
                 private authService: AuthService,
@@ -76,6 +80,7 @@ export class ExpertiComponent implements OnInit {
                     'termsOfValidity': [null],
                     'code': [null],
                     'medicamentType': [null],
+                    'customsCode': [null],
                     'storageQuantityMeasurement': [null],
                     'storageQuantity': [null],
                     'unitsQuantityMeasurement': [null],
@@ -104,6 +109,7 @@ export class ExpertiComponent implements OnInit {
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
                 this.subscriptions.push(this.requestService.getMedicamentRequest(params['id']).subscribe(data => {
                         this.modelToSubmit = Object.assign({}, data);
+                        this.registrationRequestMandatedContacts = data.registrationRequestMandatedContacts;
                         this.outputDocuments = data.outputDocuments;
                         this.checkOutputDocumentsStatus();
                         this.expertForm.get('id').setValue(data.id);
@@ -122,6 +128,7 @@ export class ExpertiComponent implements OnInit {
                         }
                         this.expertForm.get('medicament.internationalMedicamentName').setValue(data.medicaments[0].internationalMedicamentName.description);
                         this.expertForm.get('medicament.medicamentType').setValue(data.medicaments[0].medicamentType.description);
+                        this.expertForm.get('medicament.customsCode').setValue(data.medicaments[0].customsCode.description);
                         this.expertForm.get('medicament.volume').setValue(data.medicaments[0].volume);
                         if (data.medicaments && data.medicaments.length != 0 && data.medicaments[0].volumeQuantityMeasurement) {
                             this.expertForm.get('medicament.volumeQuantityMeasurement').setValue(data.medicaments[0].volumeQuantityMeasurement.description);
@@ -138,6 +145,7 @@ export class ExpertiComponent implements OnInit {
                         this.expertForm.get('medicament.authorizationHolderAddress').setValue(data.medicaments[0].authorizationHolder.address);
                         this.expertForm.get('medicament.atcCode').setValue(data.medicaments[0].atcCode);
                         this.activeSubstancesTable = data.medicaments[0].activeSubstances;
+                        this.auxiliarySubstancesTable = data.medicaments[0].auxSubstances;
                         this.manufacturesTable = data.medicaments[0].manufactures;
                         for (let entry of data.medicaments) {
                             if (entry.division && entry.division.length != 0) {
@@ -145,6 +153,10 @@ export class ExpertiComponent implements OnInit {
                                     description: entry.division
                                 });
                             }
+                        }
+                        for (let x of data.medicaments) {
+                            this.fillInstructions(x);
+                            this.fillMachets(x);
                         }
                         this.expertForm.get('type').setValue(data.type);
                         this.expertForm.get('requestHistories').setValue(data.requestHistories);
@@ -176,6 +188,36 @@ export class ExpertiComponent implements OnInit {
                 error => console.log(error)
             )
         );
+    }
+
+    fillInstructions(medicament: any) {
+        for (let medInstruction of medicament.instructions) {
+            if (medInstruction.type == 'I') {
+                let pageInstrction = this.instructions.find(value => value.path == medInstruction.path);
+                if (pageInstrction) {
+                    pageInstrction.divisions.push({description: medicament.division});
+                } else {
+                    medInstruction.divisions = [];
+                    medInstruction.divisions.push({description: medicament.division});
+                    this.instructions.push(medInstruction);
+                }
+            }
+        }
+    }
+
+    fillMachets(x: any) {
+        for (let y of x.instructions) {
+            if (y.type == 'M') {
+                let z = this.machets.find(value => value.path == y.path);
+                if (z) {
+                    z.divisions.push({description: x.division});
+                } else {
+                    y.divisions = [];
+                    y.divisions.push({description: x.division});
+                    this.machets.push(y);
+                }
+            }
+        }
     }
 
     viewDoc(document: any) {
@@ -272,6 +314,8 @@ export class ExpertiComponent implements OnInit {
             startDate: new Date(),
             username: usernameDB, step: 'F'
         });
+
+        x.registrationRequestMandatedContacts = this.registrationRequestMandatedContacts;
 
         x.documents = this.documents;
         x.outputDocuments = this.outputDocuments;

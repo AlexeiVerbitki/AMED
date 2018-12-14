@@ -11,6 +11,7 @@ import {AuthService} from "../../../shared/service/authetication.service";
 import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
 import {catchError, debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
 import {LocalityService} from "../../../shared/service/locality.service";
+import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
 
 @Component({
     selector: 'app-reg-med-cerere-lic',
@@ -49,11 +50,13 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
                 private localityService: LocalityService,
                 public dialog: MatDialog,
                 private authService: AuthService,
-                private errorHandlerService: ErrorHandlerService) {
+                private errorHandlerService: ErrorHandlerService,
+                private navbarTitleService: NavbarTitleService) {
 
     }
 
     ngOnInit() {
+        this.navbarTitleService.showTitleMsg('Înregistrare cerere');
         this.startDate = new Date();
 
         this.companii =
@@ -121,13 +124,16 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
         this.rFormSubbmitted = true;
 
         if (!this.mForm.valid || !this.rForm.valid) {
+            this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
             return;
         }
 
         if (this.tipCerere === 'LICEL' && this.oldLicense) {
+            this.errorHandlerService.showError('Acest agent economic deja are o licenta activa.');
             return;
         }
         else if (this.tipCerere !== 'LICEL' && this.companyLicenseNotFound) {
+            this.errorHandlerService.showError('Acest agent economic nu are o licenta activa.');
             return;
         }
 
@@ -304,18 +310,8 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
         this.rForm.get('compGet').valueChanges.subscribe(val => {
             this.oldLicense = null;
             if (val) {
-                console.log('dgdfg', val);
                 this.rForm.get('idno').setValue(val.idno);
                 this.rForm.get('adresa').setValue(val.legal_Address);
-                /*if (val.locality) {
-                    this.subscriptions.push(this.localityService.loadLocalityDetails(val.locality.id).subscribe(data => {
-                            console.log('sfsd', data);
-                            let addres = data.stateName + ' ,' + data.description + ' ,' + val.street;
-                            this.rForm.get('adresa').setValue(addres);
-
-                        }
-                    ));
-                }*/
 
                 this.companyLicenseNotFound = false;
                 if (this.tipCerere !== 'LICRL') {
@@ -396,6 +392,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        this.navbarTitleService.showTitleMsg('');
         this.subscriptions.forEach(s => s.unsubscribe());
     }
 

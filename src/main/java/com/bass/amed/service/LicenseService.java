@@ -4,12 +4,10 @@ import com.bass.amed.dto.license.LicenseDTO;
 import com.bass.amed.entity.LicenseAgentPharmaceutistEntity;
 import com.bass.amed.entity.LicensesEntity;
 import com.bass.amed.entity.NmEconomicAgentsEntity;
-import com.bass.amed.entity.RegistrationRequestsEntity;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.projection.LicenseProjection;
 import com.bass.amed.repository.license.LicensesRepository;
 import org.apache.logging.log4j.util.Strings;
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +32,7 @@ public class LicenseService
             "le.releaseDate, " +
             "le.expirationDate, " +
             "le.status, " +
+            "nme.longName as ecAgentLongName, " +
             "le.idno ) " +
             "FROM LicensesEntity le, " +
             "  NmEconomicAgentsEntity nme " +
