@@ -1,0 +1,27 @@
+<form [formGroup]="fForm">
+<div class="md-form-modified">
+  <ng-select id="oneField" name="oneField" [items]="values" bindLabel="description" [multiple]="true"
+             placeholder="{{fieldName}}" formControlName="values">
+  </ng-select>
+  <div *ngIf="formSubmitted && fForm.get('values').invalid">
+    <small class="text-muted"><strong class="text-danger">Nu a fost selectata nici o valoare</strong></small>
+  </div>
+  <div *ngIf="isExtensionInvalid">
+    <small class="text-muted"><strong class="text-danger">Nu se permite atasarea instructiunilor cu aceasta extensie. Extensiile permise: ["jpg", "jpeg", "png", "jfif", "bmp", "svg", "pdf"]</strong></small>
+  </div>
+  <div *ngIf="isFileAlreadyAdded">
+    <small class="text-muted"><strong class="text-danger">Fisierul cu acest nume a fost deja atasat.</strong></small>
+  </div>
+</div>
+</form>
+<div class="text-center">
+  <div mat-dialog-actions>
+    <div class="w-100">
+      <button class="btn btn-danger btn-sm waves-light" (click)="cancel()">Anulare</button>
+      <button *ngIf="dataDialog.type=='edit'" class="btn btn-dark-green-color btn-sm waves-light" (click)="save()">Salvare</button>
+      <button *ngIf="dataDialog.type=='add'" class="btn btn-dark-green-color btn-sm waves-light" (click)="checkFields() ? incarcaInstructiune.click() : ''">Adaugare</button>
+      <input id="incarcaFisier" #incarcaInstructiune type="file" style="display:none;" (click)="resetInstructiune()" (change)="addInstructiune($event);" attr.disabled="this.disabled"
+             accept=".pdf,image/*">
+    </div>
+  </div>
+</div>

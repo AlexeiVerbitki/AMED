@@ -1,0 +1,135 @@
+<div class="container-fluid sky z-depth-2">
+    <hr>
+    <form [formGroup]='ctForm' #f="ngForm">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input id="code" mdbInputDirective type="text" class="form-control"
+                           formControlName="code">
+                    <label for="code">Cod studiu clinic
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input id="eudraCtNr" mdbInputDirective type="text" class="form-control"
+                           formControlName="eudraCtNr">
+                    <label for="eudraCtNr">Numarul Eudra CT nr.
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="col">
+                    <div class="md-form-modified-select">
+                        <ng-select class="treatment" [items]="treatmentList"
+                                   bindLabel="description"
+                                   placeholder="Tratament"
+                                   formControlName="treatment"
+                        >
+                            <ng-template ng-option-tmp let-item="item">
+                                {{item.description}}
+                            </ng-template>
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="col">
+                    <div class="md-form-modified-select">
+                        <ng-select class="treatment" [items]="provenanceList"
+                                   bindLabel="description"
+                                   placeholder="Provenienta"
+                                   formControlName="provenance"
+                        >
+                            <ng-template ng-option-tmp let-item="item">
+                                {{item.description}}
+                            </ng-template>
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="md-form-modified text-center mt-1">
+                <button type="button" class="btn btn-indigo waves-light btn-md btn-rounded-button z-depth-4"
+                        mdbWavesEffect (click)="clear();"><i class="fa fa-undo fa-lg" aria-hidden="true"></i></button>
+            </div>
+            <div class="md-form-modified text-center mt-1">
+                <button type="button" class="btn btn-indigo waves-light btn-md btn-rounded-button z-depth-4"
+                        mdbWavesEffect (click)="getClinicalTrials();"><i class="fa fa-search fa-lg"
+                                                                         aria-hidden="true"></i></button>
+            </div>
+        </div>
+
+        <div class="card-body card-body-cascade">
+            <div class="table-width">
+                <div class="example-container">
+                    <table mat-table [dataSource]="dataSource" matSort id="tableData">
+                        <ng-container matColumnDef="code">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">Cod
+                                studiu clinic
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-center">
+                                {{element.code}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="eudraCt_nr">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">Numarul
+                                Eurda CT
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-center">
+                                {{element.eudraCt_nr}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="treatment">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
+                                Tratament
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-center">
+                                {{element.treatment}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="provenance">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
+                                Provenienta
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-center">
+                                {{element.provenance}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="cometee">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
+                                Nr. Comisiei
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-center">
+                                {{element.cometee}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="cometeeDate">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
+                                Data comisiei
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-center">
+                                {{element.cometeeDate | date: 'dd/MM/yyyy'}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="sponsor">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
+                                Sponsor
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-center">
+                                {{element.sponsor}}
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

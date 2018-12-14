@@ -854,7 +854,6 @@ public class RequestController
         return new ResponseEntity<>(registrationRequestsEntities.orElse(new ArrayList<>()), HttpStatus.CREATED);
     }
 
-<<<<<<< .mine
 
 
 //    @RequestMapping(value = "/add-import-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -923,8 +922,6 @@ public class RequestController
         return new ResponseEntity<>(rrE, HttpStatus.OK);
     }
 
-||||||| .r737
-=======
     @GetMapping(value = "/load-document-module-request")
     public ResponseEntity<DocumentModuleDetailsEntity> getDocumentRequestById(@RequestParam(value = "id") Integer id) throws CustomException
     {
@@ -935,5 +932,4 @@ public class RequestController
         }
         throw new CustomException("Request was not found");
     }
->>>>>>> .r807
 }

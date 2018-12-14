@@ -216,10 +216,10 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
 
         switch (this.rForm.get('importType').value) {
-            case "1": {formModel.type.id = '15';}
-            case "2": {formModel.type.id = '16';}
-            case "3": {formModel.type.id = '17';}
-            case "4": {formModel.type.id = '18';}
+            case "1": {formModel.type.id = '15'; break;}
+            case "2": {formModel.type.id = '16'; break;}
+            case "3": {formModel.type.id = '17'; break;}
+            case "4": {formModel.type.id = '18'; break;}
         }
 
             formModel.requestHistories = [{
@@ -233,7 +233,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
             // formModel.importAuthorizationEntity.documents = this.docs;
             formModel.documents = this.docs;
-            formModel.currentStep = 'R';
+            formModel.currentStep = 'E';
             formModel.initiator = this.authService.getUserName();
             formModel.assignedUser = this.authService.getUserName();
 

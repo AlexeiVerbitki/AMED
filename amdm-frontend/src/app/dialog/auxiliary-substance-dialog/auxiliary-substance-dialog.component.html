@@ -1,0 +1,25 @@
+<div class="mat-dialog-content">
+	<form [formGroup]='aForm'>
+		<h3 class="text-center my-3 font-weight-bold">Adaugare excipient</h3>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form-modified">
+					<ng-select id="auxSubstances" name="auxSubstances" [items]="auxSubstances" bindLabel="description"
+					           placeholder="Denumire *" formControlName="auxSubstance">
+					</ng-select>
+					<div *ngIf="formSubmitted && (aForm.get('auxSubstance').value==null || aForm.get('auxSubstance').value.toString().length==0)">
+						<small class="text-muted"><strong class="text-danger">Denumirea trebuie selectata</strong></small>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="text-center">
+	<div mat-dialog-actions>
+		<div class="w-100">
+			<button class="btn btn-danger btn-sm waves-light" (click)="cancel()">Anulare</button>
+			<button *ngIf="!dataDialog" class="btn btn-dark-green-color btn-sm waves-light" (click)="add()">Adaugare</button>
+		</div>
+	</div>
+</div>
