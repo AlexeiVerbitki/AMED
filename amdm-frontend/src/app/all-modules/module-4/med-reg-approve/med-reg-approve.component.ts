@@ -323,14 +323,15 @@ export class MedRegApproveComponent implements OnInit {
         console.log("this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[" + i + "]", this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved)
     }
 
-    dialogSetApproved(i: any) {
+    dialogSetApproved(i: any, approvedQuantity: any) {
         if (this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved === false) {
 
             this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = true
+            this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approvedQuantity = approvedQuantity;
             this.authorizationSumm = this.authorizationSumm + this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].summ;
             this.authorizationCurrency = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].currency;
             console.log("this.authorizationSumm", this.authorizationSumm)
-            console.log("this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[" + i + "]", this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved)
+            console.log("this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[" + i + "]", this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i]  )
         }
     }
 
@@ -499,6 +500,7 @@ export class MedRegApproveComponent implements OnInit {
 
         dialogConfig2.data = unitOfImport;
         dialogConfig2.data.medtType = this.importData.importAuthorizationEntity.medType;
+        dialogConfig2.data.currentStep = this.importData.currentStep;
 
         let dialogRef = this.dialog.open(ImportMedDialog, dialogConfig2);
 
@@ -508,10 +510,11 @@ export class MedRegApproveComponent implements OnInit {
             //     return;
             // }
             // this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approve = result;
-            if (result === true) {
-                this.dialogSetApproved(i);
+            if (result[0] === true) {
+                this.dialogSetApproved(i, result[1]);
+                console.log("dialog result:",  result)
             }
-            if (result === false) {
+            if (result[0] === false) {
                 this.dialogSetReject(i)
             }
         });

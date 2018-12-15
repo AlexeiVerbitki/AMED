@@ -184,6 +184,7 @@ export class ImportMedDialog implements OnInit {
                     customsCode:                 [null, Validators.required],
                     name:                        [null, Validators.required],
                     quantity:                    [null, Validators.required],
+                    approvedQuantity:            [null, Validators.required],
                     price:                       [null, Validators.required],
                     currency:                    [null, Validators.required],
                     summ:                        [null, Validators.required],
@@ -278,10 +279,10 @@ export class ImportMedDialog implements OnInit {
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').disable();
         }
 
-        if (this.importData.importAuthorizationEntity.medType == 1) {
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').disable();
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').disable();
-        }
+        // if (this.importData.importAuthorizationEntity.medType == 1) {
+        //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').disable();
+        //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').disable();
+        // }
 
 
                     // if (this.dialogData.importAuthorizationEntity.medType === 2) {
@@ -312,11 +313,14 @@ export class ImportMedDialog implements OnInit {
         this.dialog.close();
     }
     reject(): void {
-        this.dialog.close(false);
+        this.dialog.close([false]);
     }
     confirm(): void {
-
-        this.dialog.close(true);
+        if (this.evaluateImportForm.valid) {
+            this.addMedicamentClicked = true;
+        this.dialog.close([true, this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').value]);
+            this.addMedicamentClicked = false;
+        }
     }
 /*
     onChanges(): void {
@@ -407,6 +411,7 @@ export class ImportMedDialog implements OnInit {
             customsCode:                   this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').value,
             name:                          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').value,
             quantity:                      this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value,
+            approvedQuantity:              this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').value,
             price:                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
             currency:                      this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').value,
             summ:                          this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
@@ -429,6 +434,7 @@ export class ImportMedDialog implements OnInit {
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(null);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(null);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').setValue(null);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').setValue(null);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(null);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(null);
