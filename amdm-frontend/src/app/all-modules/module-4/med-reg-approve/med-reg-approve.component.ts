@@ -337,7 +337,7 @@ export class MedRegApproveComponent implements OnInit {
         }
     }
 
-    dialogSetReject(i: any) {
+    dialogSetReject(i: any, approvedQuantity: any) {
         if (this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved === true) {
             this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = false;
             this.authorizationSumm = this.authorizationSumm - this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].price * approvedQuantity;
@@ -517,7 +517,7 @@ export class MedRegApproveComponent implements OnInit {
                 console.log("dialog result:",  result)
             }
             if (result[0] === false) {
-                this.dialogSetReject(i)
+                this.dialogSetReject(i, result[1])
             }
         });
     }
