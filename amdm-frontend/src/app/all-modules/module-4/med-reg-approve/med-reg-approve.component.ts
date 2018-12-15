@@ -254,6 +254,8 @@ export class MedRegApproveComponent implements OnInit {
                     this.evaluateImportForm.get('importAuthorizationEntity.anexaDate').setValue(new Date(data.importAuthorizationEntity.anexaDate));
                     this.evaluateImportForm.get('importAuthorizationEntity.specification').setValue(data.importAuthorizationEntity.specification);
                     this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').setValue(new Date(data.importAuthorizationEntity.specificationDate));
+                    this.evaluateImportForm.get('importAuthorizationEntity.approvedQuantity').setValue(new Date(data.importAuthorizationEntity.approvedQuantity
+                    ));
 
                     this.evaluateImportForm.get('startDate').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.seller').disable();
@@ -328,7 +330,7 @@ export class MedRegApproveComponent implements OnInit {
 
             this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = true
             this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approvedQuantity = approvedQuantity;
-            this.authorizationSumm = this.authorizationSumm + this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].summ;
+            this.authorizationSumm = this.authorizationSumm + this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].price * approvedQuantity;
             this.authorizationCurrency = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].currency;
             console.log("this.authorizationSumm", this.authorizationSumm)
             console.log("this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[" + i + "]", this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i]  )
@@ -338,7 +340,7 @@ export class MedRegApproveComponent implements OnInit {
     dialogSetReject(i: any) {
         if (this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved === true) {
             this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = false;
-            this.authorizationSumm = this.authorizationSumm - this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].summ;
+            this.authorizationSumm = this.authorizationSumm - this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].price * approvedQuantity;
             console.log("this.authorizationSumm", this.authorizationSumm)
             console.log("this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[" + i + "]", this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved)
         }

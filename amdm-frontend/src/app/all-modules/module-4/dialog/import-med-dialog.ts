@@ -316,8 +316,8 @@ export class ImportMedDialog implements OnInit {
         this.dialog.close([false]);
     }
     confirm(): void {
-        if (this.evaluateImportForm.valid) {
             this.addMedicamentClicked = true;
+        if (this.evaluateImportForm.valid) {
         this.dialog.close([true, this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').value]);
             this.addMedicamentClicked = false;
         }
