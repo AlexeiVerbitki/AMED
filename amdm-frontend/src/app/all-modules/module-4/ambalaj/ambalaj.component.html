@@ -415,7 +415,7 @@
                         </thead>
                         <tbody>
                         <tr *ngFor="let unitOfImport of unitOfImportTable;let i = index">
-                            <th scope="row">{{ unitOfImport.customsCode.description }}</th>
+                            <th scope="row">{{ unitOfImport.customsCode.code }}</th>
                             <td>{{ unitOfImport.name }}</td>
                             <td *ngIf="importData.importAuthorizationEntity.medType==3">{{ unitOfImport.atcCode.code}}</td>
                             <td>{{ unitOfImport.quantity }}</td>
