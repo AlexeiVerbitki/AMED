@@ -224,7 +224,7 @@
 
                             <div class="col-4">
                                 <div class="md-form">
-                                    <input id="quantity" mdbInputDirective type="number" class="form-control"
+                                    <input id="quantity" mdbInputDirective type="number" min="0" class="form-control"
                                            [attr.disabled]="true"
                                            formControlName="quantity">
                                     <label for="quantity">Cantitatea solicitată</label>
@@ -235,7 +235,7 @@
                             </div>
                             <div class="col-4">
                                 <div class="md-form">
-                                    <input id="approvedQuantity" mdbInputDirective type="number" class="form-control"
+                                    <input id="approvedQuantity" mdbInputDirective type="number" min="0" class="form-control"
                                            formControlName="approvedQuantity">
                                            <!--[attr.disabled]="true"-->
                                     <label for="approvedQuantity">Cantitatea Aprobată</label>
@@ -246,7 +246,7 @@
                             </div>
                             <div class="col-4">
                                 <div class="md-form">
-                                    <input id="price" mdbInputDirective type="number" class="form-control"
+                                    <input id="price" mdbInputDirective type="number" min="0" class="form-control"
                                            [attr.disabled]="true"
                                            formControlName="price">
                                     <label for="price">Pretul</label>

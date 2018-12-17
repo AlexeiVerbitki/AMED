@@ -37,11 +37,15 @@
 
             </div>
 
-            <app-document [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'ATIE', step : 'E'}"></app-document>
+            <app-document *ngIf="importData.importAuthorizationEntity.medType==3" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMMP', step : 'E'}"></app-document>
             <div *ngIf="formSubmitted && docs && docs.length==0">
                 <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
             </div>
 
+            <app-document *ngIf="importData.importAuthorizationEntity.medType==4" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMAM', step : 'E'}"></app-document>
+            <div *ngIf="formSubmitted && docs && docs.length==0">
+                <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
+            </div>
 
             <div formGroupName="importAuthorizationEntity">
                 <div class="row">
@@ -278,7 +282,7 @@
                             </div>
                             <div class="col-4">
                                 <div class="md-form">
-                                    <input id="quantity" mdbInputDirective type="number" class="form-control"
+                                    <input id="quantity" mdbInputDirective type="number" min="0" class="form-control"
                                            formControlName="quantity">
                                     <label for="quantity">Cantitatea</label>
                                 </div>
@@ -288,7 +292,7 @@
                             </div>
                             <div class="col-4">
                                 <div class="md-form">
-                                    <input id="price" mdbInputDirective type="number" class="form-control"
+                                    <input id="price" mdbInputDirective type="number" min="0" class="form-control"
                                            formControlName="price">
                                     <label for="price">Pretul</label>
                                 </div>
