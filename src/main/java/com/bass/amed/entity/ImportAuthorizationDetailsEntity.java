@@ -9,7 +9,8 @@ import java.sql.Timestamp;
 	private NmPharmaceuticalFormsEntity         pharmaceuticalForm;
 	private String                              dose;
 	private String                              unitsOfMeasurement;
-	private Integer                             quantity;
+	private Double                              quantity;
+	private Double                              approvedQuantity;
 	private Boolean                             approved;
 	private Timestamp                           expirationDate;
 	private Double                              summ;
@@ -84,12 +85,22 @@ import java.sql.Timestamp;
 
 	@Basic
 	@Column(name = "quantity", nullable = true, length = 11)
-	public Integer getQuantity() {
+	public Double getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(Integer quantity) {
+	public void setQuantity(Double quantity) {
 		this.quantity = quantity;
+	}
+
+	@Basic
+	@Column(name = "approvedQuantity", nullable = true, length = 11)
+	public Double getApprovedQuantity() {
+		return approvedQuantity;
+	}
+
+	public void setApprovedQuantity(Double approvedQuantity) {
+		this.approvedQuantity = approvedQuantity;
 	}
 
 	@Basic

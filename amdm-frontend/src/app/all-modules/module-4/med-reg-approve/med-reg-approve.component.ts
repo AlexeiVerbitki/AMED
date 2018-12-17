@@ -328,7 +328,7 @@ export class MedRegApproveComponent implements OnInit {
     dialogSetApproved(i: any, approvedQuantity: any) {
         if (this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved === false) {
 
-            this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = true
+            this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = true;
             this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approvedQuantity = approvedQuantity;
             this.authorizationSumm = this.authorizationSumm + this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].price * approvedQuantity;
             this.authorizationCurrency = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].currency;
