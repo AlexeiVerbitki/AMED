@@ -254,8 +254,7 @@ export class MedRegApproveComponent implements OnInit {
                     this.evaluateImportForm.get('importAuthorizationEntity.anexaDate').setValue(new Date(data.importAuthorizationEntity.anexaDate));
                     this.evaluateImportForm.get('importAuthorizationEntity.specification').setValue(data.importAuthorizationEntity.specification);
                     this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').setValue(new Date(data.importAuthorizationEntity.specificationDate));
-                    this.evaluateImportForm.get('importAuthorizationEntity.approvedQuantity').setValue(new Date(data.importAuthorizationEntity.approvedQuantity
-                    ));
+                    // this.evaluateImportForm.get('importAuthorizationEntity.approvedQuantity').setValue(data.importAuthorizationEntity.approvedQuantity);
 
                     this.evaluateImportForm.get('startDate').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.seller').disable();
@@ -326,24 +325,27 @@ export class MedRegApproveComponent implements OnInit {
     }
 
     dialogSetApproved(i: any, approvedQuantity: any) {
-        if (this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved === false) {
+        // if (this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved === false) {
 
             this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = true;
             this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approvedQuantity = approvedQuantity;
-            this.authorizationSumm = this.authorizationSumm + this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].price * approvedQuantity;
+            // this.authorizationSumm = this.authorizationSumm + this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].price * approvedQuantity;
+            this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].summ = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].price * approvedQuantity;
             this.authorizationCurrency = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].currency;
-            console.log("this.authorizationSumm", this.authorizationSumm)
+            // console.log("this.authorizationSumm", this.authorizationSumm)
             console.log("this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[" + i + "]", this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i]  )
-        }
+        // }
     }
 
     dialogSetReject(i: any, approvedQuantity: any) {
-        if (this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved === true) {
+        // if (this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved === true) {
             this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = false;
-            this.authorizationSumm = this.authorizationSumm - this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].price * approvedQuantity;
-            console.log("this.authorizationSumm", this.authorizationSumm)
+            this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approvedQuantity = 0;
+            this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].summ = 0;
+            // this.authorizationSumm = this.authorizationSumm - this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].price * approvedQuantity;
+            // console.log("this.authorizationSumm", this.authorizationSumm)
             console.log("this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[" + i + "]", this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved)
-        }
+        // }
     }
 
     onChanges(): void {
@@ -713,7 +715,7 @@ export class MedRegApproveComponent implements OnInit {
             if (result) {
                 this.loadingService.show();
                 let modelToSubmit = this.evaluateImportForm.getRawValue();
-                modelToSubmit.currentStep = 'I';
+                modelToSubmit.currentStep = 'C';
                 // modelToSubmit.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
                 modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
                 modelToSubmit.endDate = new Date();
@@ -722,7 +724,7 @@ export class MedRegApproveComponent implements OnInit {
                     startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
                     endDate: new Date(),
                     username: this.authService.getUserName(),
-                    step: 'I'
+                    step: 'C'
                 });
                 modelToSubmit.documents = this.docs;
                 this.subscriptions.push(
@@ -755,7 +757,7 @@ export class MedRegApproveComponent implements OnInit {
         modelToSubmit = this.importData;
         modelToSubmit.endDate = new Date();
         modelToSubmit.importAuthorizationEntity.authorized = aprrovedOrNot;
-        modelToSubmit.currentStep = "AP";
+        modelToSubmit.currentStep = "F";
 
         // modelToSubmit.documents = this.docs;
 
@@ -765,10 +767,12 @@ export class MedRegApproveComponent implements OnInit {
             startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
             endDate: new Date(),
             username: this.authService.getUserName(),
-            step: 'AP'
+            step: 'F'
         });
 
-        modelToSubmit.importAuthorizationEntity.summ = this.authorizationSumm;
+
+
+        // modelToSubmit.importAuthorizationEntity.summ = this.authorizationSumm;
         modelToSubmit.importAuthorizationEntity.currency = this.authorizationCurrency;
         console.log("this.evaluateImportForm.value", this.evaluateImportForm.value);
         //=============
@@ -776,9 +780,13 @@ export class MedRegApproveComponent implements OnInit {
 
         modelToSubmit.medicaments = [];
 
+        //=============
+        modelToSubmit.importAuthorizationEntity.summ = 0;
         this.importDetailsList.forEach(item => {
             if (item.approved === true) {
                 this.expirationDate.push(item.expirationDate);
+                modelToSubmit.importAuthorizationEntity.summ = modelToSubmit.importAuthorizationEntity.summ + item.summ;
+                console.log("modelToSubmit.importAuthorizationEntity.summ");
             }
         })
 

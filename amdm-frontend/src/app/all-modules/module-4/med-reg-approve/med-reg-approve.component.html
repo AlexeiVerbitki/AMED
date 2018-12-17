@@ -543,7 +543,8 @@
                             <th scope="col">Doza</th>
                             <th scope="col">Divizare</th>
                             <th scope="col">Producatorul</th>
-                            <th scope="col">Cantitate</th>
+                            <th scope="col">Cantitatea solicitată</th>
+                            <th scope="col">Cantitate aprobată</th>
                             <th scope="col">Pretul</th>
                             <th scope="col">Valuta</th>
                             <th scope="col">Suma</th>
@@ -563,6 +564,7 @@
                             <td>{{ unitOfImport.unitsOfMeasurement }}</td>
                             <td>{{ unitOfImport.producer.description }}</td>
                             <td>{{ unitOfImport.quantity }}</td>
+                            <td>{{ unitOfImport.approvedQuantity }}</td>
                             <td>{{ unitOfImport.price }}</td>
                             <td>{{ unitOfImport.currency.shortDescription}}</td>
                             <td>{{ unitOfImport.summ | number : '1.2-2'}}</td>
