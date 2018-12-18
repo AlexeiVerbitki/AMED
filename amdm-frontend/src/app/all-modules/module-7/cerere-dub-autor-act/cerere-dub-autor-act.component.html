@@ -38,6 +38,26 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="md-form" >
+                    <input id="name" mdbInputDirective type="text" class="form-control" required formControlName="resPerson">
+                    <label for="name">Persoana responsabila
+                        <span class="text-danger">*</span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="pickerExp" placeholder="Data expirarii" required
+                               formControlName="dataExp">
+                        <mat-datepicker-toggle matSuffix [for]="pickerExp"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #pickerExp></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
         <hr>
         <app-payment [requestId]="cerereDupAutorForm.get('id').value"
                      (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
@@ -53,16 +73,6 @@
                     <div class="col-12">
                         <div class="card-header-title white-text">Documente de iesire</div>
                     </div>
-                    <!-- <div class="col-6">
-                        <div class="position-button">
-                            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                                (click)="requestAdditionalData()">Solicitare
-                                date aditionale</button>
-                            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                                (click)="requestLaboratoryAnalysis()">Solicitare
-                                analiza laborator</button>
-                        </div>
-                    </div> -->
                 </div>
             </div>
 

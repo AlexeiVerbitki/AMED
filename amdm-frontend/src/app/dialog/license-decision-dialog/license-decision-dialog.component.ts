@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Subscription} from "rxjs";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
 import {ConfirmationDialogComponent} from "../confirmation-dialog.component";
+import {AddLicenseFarmacistComponent} from "../../all-modules/module-5/add-license-farmacist/add-license-farmacist.component";
 
 @Component({
     selector: 'app-license-decision-dialog',
@@ -19,13 +20,19 @@ export class LicenseDecisionDialogComponent implements OnInit, OnDestroy {
     type : any;
     activities : any [];
     title : string;
+    ecAgentTypes : any[];
+
+    pharmacyRepresentantProf: any;
+    farmacistiPerAddress: any[] = [];
+
 
     private subscriptions: Subscription[] = [];
 
     constructor( private fb: FormBuilder,
                  public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
                  @Inject(MAT_DIALOG_DATA) public dataDialog: any,
-                 public dialogConfirmation: MatDialog) {
+                 public dialogConfirmation: MatDialog,
+                 public dialogAddFarmacist: MatDialog) {
     }
 
     ngOnInit() {
@@ -39,6 +46,7 @@ export class LicenseDecisionDialogComponent implements OnInit, OnDestroy {
             this.title = 'Activitati';
         }
         this.initFormData();
+        this.onChanges();
     }
 
 
@@ -55,12 +63,41 @@ export class LicenseDecisionDialogComponent implements OnInit, OnDestroy {
         else if (this.type === 'A')
         {
             this.activities = this.dataDialog.activities;
+            this.ecAgentTypes = this.dataDialog.ecAgentTypes;
+            this.farmacistiPerAddress = this.dataDialog.farmacistiPerAddress;
+
+
             this.rForm = this.fb.group({
                 'licenseActivities': [this.dataDialog.selectedActivities, Validators.required],
+                'tipIntreprindere': [this.dataDialog.ecAgentType, Validators.required],
+                'farmDir': [this.dataDialog.selectedPharmaceutist, Validators.required],
             });
+
+            this.pharmacyRepresentantProf = this.dataDialog.ecAgentType.representant;
         }
 
     }
+
+    onChanges(): void {
+        this.rForm.get('farmDir').valueChanges.subscribe(val => {
+            if (val) {
+                val.selectionDate = new Date();
+            }
+        });
+
+
+        this.rForm.get('tipIntreprindere').valueChanges.subscribe(val => {
+            if (val ) {
+                console.log('sfsdf', val);
+                this.pharmacyRepresentantProf = val.representant;
+
+            }
+            else {
+                this.pharmacyRepresentantProf = null;
+            }
+        });
+    }
+
 
     ok()
     {
@@ -91,7 +128,10 @@ export class LicenseDecisionDialogComponent implements OnInit, OnDestroy {
             response = {
                 success : true,
                 type : this.type,
-                selectedActivities : this.rForm.get('licenseActivities').value
+                selectedActivities : this.rForm.get('licenseActivities').value,
+                ecAgentType : this.rForm.get('tipIntreprindere').value,
+                farmacistiPerAddress : this.farmacistiPerAddress,
+                selectedPharmaceutist : this.rForm.get('farmDir').value
             };
         }
 
@@ -110,6 +150,23 @@ export class LicenseDecisionDialogComponent implements OnInit, OnDestroy {
         dialogRef2.afterClosed().subscribe(result => {
             if (result) {
                 this.dialogRef.close({success: false});
+            }
+        });
+    }
+
+
+    newFarmacist(){
+        const dialogRef2 = this.dialogAddFarmacist.open(AddLicenseFarmacistComponent, {
+            data: {
+                //NoData
+            },
+            hasBackdrop: false
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result.success) {
+                this.farmacistiPerAddress = [...this.farmacistiPerAddress, result.farmacist];
+                this.rForm.get('farmDir').setValue(result.farmacist);
             }
         });
     }

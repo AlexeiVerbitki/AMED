@@ -96,6 +96,7 @@ export class EvaluarePrimaraComponent implements OnInit {
             'medicamentName': [],
             'medicaments': [[]],
             'division': [null],
+            'divisionBonDePlata': [null],
             'medicament':
                 fb.group({
                     'id': [],
@@ -172,13 +173,16 @@ export class EvaluarePrimaraComponent implements OnInit {
                             this.initialData.medicaments.activeSubstances = Object.assign([], data.medicaments[0].activeSubstances);
                             this.initialData.medicaments.auxSubstances = Object.assign([], data.medicaments[0].auxSubstances);
 
+                            let divisionBonDePlata = '';
                             for (let entry of data.medicaments) {
                                 if (entry.division && entry.division.length != 0) {
                                     this.divisions.push({
                                         description: entry.division
                                     });
+                                    divisionBonDePlata=divisionBonDePlata+entry.description+'; ';
                                 }
                             }
+                            this.eForm.get('divisionBonDePlata').setValue(divisionBonDePlata);
                             this.eForm.get('medicament.atcCode').setValue(data.medicaments[0].atcCode);
                             this.eForm.get('medicament.dose').setValue(data.medicaments[0].dose);
                             this.eForm.get('medicament.termsOfValidity').setValue(data.medicaments[0].termsOfValidity);
@@ -589,6 +593,12 @@ export class EvaluarePrimaraComponent implements OnInit {
         });
 
         this.eForm.get('division').setValue(null);
+
+        let divisionBonDePlata = '';
+        for (let entry of this.divisions) {
+            divisionBonDePlata=divisionBonDePlata+entry.description+'; ';
+        }
+        this.eForm.get('divisionBonDePlata').setValue(divisionBonDePlata);
     }
 
     addManufacture() {
@@ -682,6 +692,11 @@ export class EvaluarePrimaraComponent implements OnInit {
                 this.removeDivisionFromInstructions(division);
                 this.removeDivisionFromMachets(division);
                 this.divisions.splice(index, 1);
+                let divisionBonDePlata = '';
+                for (let entry of this.divisions) {
+                    divisionBonDePlata=divisionBonDePlata+entry.description+'; ';
+                }
+                this.eForm.get('divisionBonDePlata').setValue(divisionBonDePlata);
             }
         });
     }

@@ -13,8 +13,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "clinic_trial_amend", schema = "amed", catalog = "")
-public class ClinicTrialAmendEntity
-{
+public class ClinicTrialAmendEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -25,6 +24,13 @@ public class ClinicTrialAmendEntity
     @Basic
     @Column(name = "clinical_trails_id")
     private Integer clinicalTrialsEntityId;
+    @Basic
+    @Column(name="amend_code")
+    private String amendCode;
+    @Basic
+    @Column(name = "note")
+    private String note;
+
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "treatment_id_from")
     private ClinicalTrialsTypesEntity treatmentFrom;
@@ -68,13 +74,13 @@ public class ClinicTrialAmendEntity
     @Column(name = "sponsor_to")
     private String sponsorTo;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE, CascadeType.PERSIST }, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     @JoinColumn(name = "medicament_id")
     private CtMedAmendEntity medicament/* = new CtMedAmendRepository()*/;
-    @OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     @JoinColumn(name = "reference_product_id")
     private CtMedAmendEntity referenceProduct /*= new CtMedAmendRepository()*/;
-    @OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     @JoinColumn(name = "placebo_id")
     private CtMedAmendEntity placebo /*= new CtMedAmendRepository()*/;
 
@@ -97,17 +103,22 @@ public class ClinicTrialAmendEntity
     @Basic
     @Column(name = "med_comission_date")
     private Timestamp comissionDate;
+
+//    @Basic
+//    @Column(name = "appr_order_nr")
+//    private String apprOrderNr;
+//    @Basic
+//    @Column(name = "appr_order_date")
+//    private Timestamp apprOrderDate;
+
     @Basic
     @Column(name = "status", nullable = true, length = 1)
     private String status;
 
-//    @Transient
-//    private Set<CtMedicalInstitutionEntity> medicalInstitutionsFrom = new HashSet<>();
-
     @Transient
     private Set<CtMedicalInstitutionEntity> medicalInstitutions = new HashSet<>();
 
-    public void assignTo(ClinicalTrialsEntity entity){
+    public void assignTo(ClinicalTrialsEntity entity) {
         this.clinicalTrialsEntityId = entity.getId();
         this.phaseTo = entity.getPhase();
         this.treatmentTo = entity.getTreatment();
@@ -117,35 +128,9 @@ public class ClinicTrialAmendEntity
         this.titleTo = entity.getTitle();
         this.sponsorTo = entity.getSponsor();
 
-//        this.medicament.asign(entity.getMedicament());
-//        this.referenceProduct.asign(entity.getReferenceProduct());
-//        this.placebo.asign(entity.getPlacebo());
-
         this.trialPopNatTo = entity.getTrialPopNat();
         this.trialPopInternatTo = entity.getTrialPopInternat();
     }
-
-//    public void assignTo(ClinicTrialAmendEntity entity){
-//        this.clinicalTrialsEntityId = entity.getId();
-//        this.treatmentFrom = entity.getTreatmentFrom();
-//        this.provenanceFrom = entity.getProvenance();
-//        this.phaseFrom = entity.getPhase();
-//        this.eudraCtNr = entity.getEudraCtNr();
-//        this.code = entity.getCode();
-//        this.title = entity.getTitle();
-//        this.sponsor = entity.getSponsor();
-//
-//        this.medicament = entity.getMedicament();
-//        this.referenceProduct = entity.getReferenceProduct();
-//        this.placebo = entity.getPlacebo();
-//
-//        this.trialPopNat = entity.getTrialPopNat();
-//        this.trialPopInternat = entity.getTrialPopInternat();
-//        this.comissionNr = entity.getComissionNr();
-//        this.comissionDate = entity.getComissionDate();
-//
-//    }
-
 
     @Override
     public boolean equals(Object o) {

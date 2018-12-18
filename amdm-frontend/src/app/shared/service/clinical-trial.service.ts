@@ -13,4 +13,8 @@ export class ClinicalTrialService {
     loadClinicalTrailListByFilter(filter: any): Observable<any> {
         return this.http.post('/api/clinical-trails/get-filtered-clinical-trials', filter);
     }
+
+    loadClinicalTrailById(id: string): Observable<any> {
+        return this.http.get('/api/clinical-trails/get-clinical-trial-id', {params: {id: id}});
+    }
 }

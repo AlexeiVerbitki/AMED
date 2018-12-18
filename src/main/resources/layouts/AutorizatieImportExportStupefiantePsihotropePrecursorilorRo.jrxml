@@ -44,9 +44,9 @@
 		</queryString>
 		<field name="medicamentName" class="java.lang.String"/>
 		<field name="um" class="java.lang.String"/>
-		<field name="quantety" class="java.lang.String"/>
+		<field name="quantity" class="java.lang.String"/>
 		<field name="activeSubstance" class="java.lang.String"/>
-		<field name="quantetyActiveSubstance" class="java.lang.String"/>
+		<field name="quantityActiveSubstance" class="java.lang.String"/>
 	</subDataset>
 	<parameter name="nr" class="java.lang.String"/>
 	<parameter name="date" class="java.lang.String"/>
@@ -254,7 +254,7 @@
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="11"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{quantety}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -296,7 +296,7 @@
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="11"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{quantetyActiveSubstance}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{quantityActiveSubstance}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

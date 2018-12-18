@@ -1,14 +1,18 @@
 package com.bass.amed.repository;
+
 import com.bass.amed.entity.NmCurrenciesHistoryEntity;
 import com.bass.amed.projection.GetAVGCurrencyProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
 
 public interface CurrencyHistoryRepository extends JpaRepository<NmCurrenciesHistoryEntity, Integer> {
-    List<NmCurrenciesHistoryEntity> getAllByPeriod(Date today);
+
+    @Query(value = "SELECT * FROM nm_currencies_history where period = ?1", nativeQuery = true)
+    List<NmCurrenciesHistoryEntity> findAllByPeriod( @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date now);
 
     @Query(value = "SELECT t.id,\n" +
             "       t.currency_id                                                           currencyId,\n" +

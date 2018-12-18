@@ -3,11 +3,15 @@ package com.bass.amed.controller.rest.annihilation;
 import com.bass.amed.common.Constants;
 import com.bass.amed.controller.rest.license.LicenseController;
 import com.bass.amed.dto.annihilation.*;
+import com.bass.amed.dto.license.LicenseDTO;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
+import com.bass.amed.projection.AnnihilationProjection;
+import com.bass.amed.projection.LicenseProjection;
 import com.bass.amed.repository.*;
 import com.bass.amed.repository.annihilation.AnnihilationCommisionRepository;
 import com.bass.amed.repository.annihilation.AnnihilationDestroyMethodsRepository;
+import com.bass.amed.service.AnnihilationService;
 import com.bass.amed.service.MedicamentAnnihilationRequestService;
 import com.bass.amed.utils.AmountUtils;
 import net.sf.jasperreports.engine.*;
@@ -32,7 +36,7 @@ import java.util.stream.Collectors;
 @RequestMapping( "/api/annihilation" )
 public class MedAnnihilationController
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LicenseController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MedAnnihilationController.class);
 
     @Autowired
     private EconomicAgentsRepository economicAgentsRepository;
@@ -57,6 +61,9 @@ public class MedAnnihilationController
 
     @Autowired
     private SysParamsRepository sysParamsRepository;
+
+    @Autowired
+    private AnnihilationService annihilationService;
 
 
     @RequestMapping(value = "/new-annihilation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -124,6 +131,24 @@ public class MedAnnihilationController
     {
         LOGGER.debug("Retrieve all destruction methods");
         return new ResponseEntity<>(annihilationDestroyMethodsRepository.findAll(), HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/get-filtered-annihilations", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<AnnihilationProjection>> getLicenseByFilter(@RequestBody AnnihilationDTO filter)
+    {
+        LOGGER.debug("Get annihilations by filter: ", filter.toString());
+        List<AnnihilationProjection> annihProjections = annihilationService.retrieveAnnihilationByFilter(filter);
+        return new ResponseEntity<>(annihProjections, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/find-annihilation-by-id", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<MedicamentAnnihilationEntity> getAnnihilationById(@RequestParam("annihilationId") String annihilationId) throws  CustomException
+    {
+        LOGGER.debug("Get annihilation by id: ", annihilationId);
+        MedicamentAnnihilationEntity le = annihilationService.findAnnihilationById(Integer.valueOf(annihilationId));
+        return new ResponseEntity<>(le, HttpStatus.OK);
     }
 
 

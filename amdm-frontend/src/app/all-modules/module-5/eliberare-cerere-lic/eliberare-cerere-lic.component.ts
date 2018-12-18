@@ -105,13 +105,15 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
         this.mForm = this.fb.group({
             'tipCerere': [{value: null}],
             'nrCererii': [{value: null, disabled: true}, Validators.required],
-            'dataEliberarii': [{value: null, disabled: true}]
+            'dataEliberarii': [{value: null, disabled: true}],
+            'company': [{value: null, disabled: true}]
         });
     }
 
     private patchData(data) {
         this.mForm.get('nrCererii').patchValue(data.requestNumber);
         this.mForm.get('dataEliberarii').patchValue(new Date(data.startDate));
+        this.mForm.get('company').patchValue(data.license.companyName);
         let mandatedContact : any;
         let mandatedContacts : any [] = data.license.detail.licenseMandatedContacts;
 
@@ -257,17 +259,13 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
                 this.rForm.get('dataProcurii1Rec').enable();
 
 
-                this.rForm.get('telefonContactRec').setValidators(Validators.required);
+                this.rForm.get('telefonContactRec').setValidators([Validators.maxLength(9), Validators.pattern('[0-9]+')]);
                 this.rForm.get('persResDepCereriiFirstnameRec').setValidators(Validators.required);
                 this.rForm.get('persResDepCereriiLastnameRec').setValidators(Validators.required);
-                this.rForm.get('nrProcurii1Rec').setValidators(Validators.required);
-                this.rForm.get('dataProcurii1Rec').setValidators(Validators.required);
 
                 this.rForm.get('telefonContactRec').updateValueAndValidity();
                 this.rForm.get('persResDepCereriiFirstnameRec').updateValueAndValidity();
                 this.rForm.get('persResDepCereriiLastnameRec').updateValueAndValidity();
-                this.rForm.get('nrProcurii1Rec').updateValueAndValidity();
-                this.rForm.get('dataProcurii1Rec').updateValueAndValidity();
             }
             else
             {
@@ -289,14 +287,10 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
                 this.rForm.get('telefonContactRec').setValidators(null);
                 this.rForm.get('persResDepCereriiFirstnameRec').setValidators(null);
                 this.rForm.get('persResDepCereriiLastnameRec').setValidators(null);
-                this.rForm.get('nrProcurii1Rec').setValidators(null);
-                this.rForm.get('dataProcurii1Rec').setValidators(null);
 
                 this.rForm.get('telefonContactRec').updateValueAndValidity();
                 this.rForm.get('persResDepCereriiFirstnameRec').updateValueAndValidity();
                 this.rForm.get('persResDepCereriiLastnameRec').updateValueAndValidity();
-                this.rForm.get('nrProcurii1Rec').updateValueAndValidity();
-                this.rForm.get('dataProcurii1Rec').updateValueAndValidity();
             }
         });
 

@@ -1,6 +1,5 @@
 package com.bass.amed.controller.rest;
 
-import com.bass.amed.entity.NmEconomicAgentsEntity;
 import com.bass.amed.entity.NmLocalitiesEntity;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.service.LocalityService;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/localities")
 public class LocalitiesController
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AdministrationController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LocalitiesController.class);
 
 
     @Autowired
@@ -25,7 +24,7 @@ public class LocalitiesController
     @RequestMapping("/load-locality")
     public ResponseEntity<NmLocalitiesEntity> getLocalityAndState(Integer id) throws CustomException
     {
-        LOGGER.debug("Retrieve companies by name or idno");
+        LOGGER.debug("Retrieve locality by id");
         NmLocalitiesEntity localityById = localityService.findLocalityById(id);
 
         return new ResponseEntity<>(localityById, HttpStatus.OK);

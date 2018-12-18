@@ -93,7 +93,15 @@
         <div formGroupName="clinicalTrailAmendment">
             <div class="col-md-12">
                 <div class="md-form">
-                    <textarea type="text" id="titluStud" class="md-textarea form-control" mdbInputDirective rows="1"
+                    <textarea type="text" id="note" class="md-textarea form-control" mdbInputDirective rows="2"
+                              formControlName="note"></textarea>
+                    <label for="note">Obiectul amendamentului</label>
+                </div>
+            </div>
+            <hr>
+            <div class="col-md-12">
+                <div class="md-form">
+                    <textarea type="text" id="titluStud" class="md-textarea form-control" mdbInputDirective rows="2"
                               formControlName="titleTo"></textarea>
                     <label for="titluStud">Titlul studiului</label>
                 </div>
@@ -111,10 +119,10 @@
                                                  [value]="clinicTrailAmendForm.value.clinicalTrailAmendment.treatmentTo.id"
                                                  (change)="onTreatmentChange($event)">
                                     <div class="row">
-                                        <div class="col-12">
-                                            <h5 class="text-center font-weight-bold">Tratament</h5>
-                                            <hr>
-                                        </div>
+                                        <!--<div class="col-12">-->
+                                            <!--<h5 class="text-center font-weight-bold">Tratament</h5>-->
+                                            <!--<hr>-->
+                                        <!--</div>-->
                                         <div class="col-12">
                                             <mat-radio-button class="col-12" *ngFor="let treatment of treatmentList"
                                                               [value]="treatment.id">{{treatment.description}}
@@ -135,10 +143,10 @@
                                                  [value]="clinicTrailAmendForm.value.clinicalTrailAmendment.provenanceTo.id"
                                                  (change)="onProvenanceChange($event)">
                                     <div class="row">
-                                        <div class="col-12">
-                                            <h5 class="text-center font-weight-bold">Provenienta</h5>
-                                            <hr>
-                                        </div>
+                                        <!--<div class="col-12">-->
+                                            <!--<h5 class="text-center font-weight-bold">Provenienta</h5>-->
+                                            <!--<hr>-->
+                                        <!--</div>-->
                                         <div class="col-12">
                                             <mat-radio-button class="col-12" *ngFor="let provenance of provenanceList"
                                                               [value]="provenance.id">{{provenance.description}}

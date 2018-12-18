@@ -30,25 +30,18 @@ export class DocumentService {
         });
     }
 
-    viewBonDePlata(requestId: any): Observable<any> {
-        return this.http.get('/api/documents/view-bon-de-plata', {
-            params: {
-                requestId: requestId
-            }, responseType: 'blob'
-        });
+    viewBonDePlata(bonDePlataDetails: any): Observable<any> {
+        return this.http.post('/api/documents/view-bon-de-plata', bonDePlataDetails,{ responseType: 'blob'});
+    }
+
+    viewBonDePlataSuplimentar(bonDePlataDetails: any): Observable<any> {
+        return this.http.post('/api/documents/view-bon-de-plata-suplimentar', bonDePlataDetails,{ responseType: 'blob'});
     }
 
     viewBonDePlataNimicire(requestNimicire: any): Observable<any> {
             return this.http.post('/api/documents/view-bon-de-plata-nimicire', requestNimicire,{ responseType: 'blob'});
     }
 
-    viewBonDePlataForOne(paymentOrderId: any): Observable<any> {
-        return this.http.get('/api/documents/view-bon-de-plata-one', {
-            params: {
-                paymentOrderId: paymentOrderId
-            }, responseType: 'blob'
-        });
-    }
 
     viewRequest(nrDocument: any, content: any, title: any,type : any): Observable<any> {
             return this.http.get('/api/documents/view-request-additional-data', {

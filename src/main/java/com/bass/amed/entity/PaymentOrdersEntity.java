@@ -24,9 +24,18 @@ public class PaymentOrdersEntity
     @JoinColumn(name = "service_charge_id")
     private ServiceChargesEntity serviceCharge;
     @Basic
+    @Column(name = "quantity")
+    private Integer quantity;
+    @Basic
     @Column(name = "amount")
     private Double amount;
     @Basic
     @Column(name = "registration_request_id")
     private Integer registrationRequestId;
+    @Basic
+    @Column(name = "currency")
+    private String currency;
+    @Basic
+    @Column(name = "amount_exchanged")
+    private Double amountExchanged;
 }

@@ -1,20 +1,21 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Document} from "../../../models/document";
-import {Observable, Subscription} from "rxjs";
+import {Observable, Subject, Subscription} from "rxjs";
 import {AdministrationService} from "../../../shared/service/administration.service";
-import {map, startWith} from "rxjs/operators";
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
 import {MedicamentService} from "../../../shared/service/medicament.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {RequestService} from "../../../shared/service/request.service";
 import {AuthService} from "../../../shared/service/authetication.service";
 import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
 import {LoaderService} from "../../../shared/service/loader.service";
-import {DocumentService} from "../../../shared/service/document.service";
 import {MatDialog} from "@angular/material";
 import {TaskService} from "../../../shared/service/task.service";
 import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
 import {DrugSubstanceTypesService} from "../../../shared/service/drugs/drugsubstancetypes.service";
+import {DrugDocumentsService} from "../../../shared/service/drugs/drugdocuments.service";
+import {DrugDecisionsService} from "../../../shared/service/drugs/drugdecisions.service";
 
 @Component({
     selector: 'app-cerere-mod-autor-act',
@@ -29,7 +30,7 @@ export class CerereModAutorActComponent implements OnInit {
     formSubmitted: boolean;
     generatedDocNrSeq: number;
     filteredOptions: Observable<any[]>;
-    companies: any[];
+    companies: Observable<any[]>;
     private subscriptions: Subscription[] = [];
     states: any[] = [];
     localities: any[] = [];
@@ -44,16 +45,22 @@ export class CerereModAutorActComponent implements OnInit {
     drugSubstanceTypes: any[];
     drugCheckDecisions: any[] = [];
     disabled: boolean;
+    companyInputs = new Subject<string>();
+    loadingCompany: boolean = false;
+    company: any;
+    selectedFilials: any[] = [];
+    companyExistInTable: boolean = false;
 
     constructor(private fb: FormBuilder, private administrationService: AdministrationService,
                 private medicamentService: MedicamentService,
                 private activatedRoute: ActivatedRoute, private requestService: RequestService,
                 private ref: ChangeDetectorRef, private authService: AuthService, private router: Router,
                 private loadingService: LoaderService,
-                private documentService: DocumentService,
+                private drugDocumentsService: DrugDocumentsService,
                 public dialogConfirmation: MatDialog,
                 private taskService: TaskService, private errorHandlerService: ErrorHandlerService,
-                private drugSubstanceTypesService: DrugSubstanceTypesService
+                private drugSubstanceTypesService: DrugSubstanceTypesService,
+                private drugDecisionsService: DrugDecisionsService
     ) {
 
         this.cerereModAutorForm = fb.group({
@@ -63,7 +70,7 @@ export class CerereModAutorActComponent implements OnInit {
             'requestNumber': [null, Validators.required],
             'initiator': [''],
             'assignedUser': [''],
-            'dataExp': [null],
+            'dataExp': [''],
             'currentStep': ['E'],
             'startDate': [],
             'company': [],
@@ -81,17 +88,10 @@ export class CerereModAutorActComponent implements OnInit {
                 fb.group({
                     'protocolNr': [null, Validators.required],
                     'protocolDate': Date,
-                    'drugSubstanceTypesId': []
+                    'drugSubstanceTypesId': [],
+                    'nmEconomicAgents': [[]]
                 }),
-            'employee':
-                fb.group({
-                    'id': [],
-                    'name': {disabled: true, value: null},
-                    'lastname': {disabled: true, value: null},
-                    'idnp': {disabled: true, value: null},
-                    'phonenumbers': {disabled: true, value: null},
-                    'email': {disabled: true, value: null}
-                }),
+            'resPerson': {disabled: true, value: null},
             'precursor': [{value: false, disabled: this.disabled}],
             'psihotrop': [{value: false, disabled: this.disabled}],
             'stupefiant': [{value: false, disabled: this.disabled}]
@@ -113,8 +113,6 @@ export class CerereModAutorActComponent implements OnInit {
                 error => console.log(error)
             )
         );
-
-        this.getAllCompanies();
 
         this.getDrugSubstanceTypes();
 
@@ -141,8 +139,16 @@ export class CerereModAutorActComponent implements OnInit {
                         this.cerereModAutorForm.get('documents').setValue(data.documents);
                         this.documents = data.documents;
                         this.outDocuments = data.outputDocuments;
-                        this.companies = data.company;
+                        this.company = data.company;
                         this.locality = data.company.locality;
+                        let resPerson: any;
+                        if (data.registrationRequestMandatedContacts[0].mandatedLastname) {
+                            this.cerereModAutorForm.get('resPerson').setValue(data.registrationRequestMandatedContacts[0].mandatedLastname);
+                            resPerson = data.registrationRequestMandatedContacts[0].mandatedLastname + " ";
+                        }
+                        if (data.registrationRequestMandatedContacts[0].mandatedFirstname) {
+                            this.cerereModAutorForm.get('resPerson').setValue(resPerson + data.registrationRequestMandatedContacts[0].mandatedFirstname);
+                        }
                         this.documents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
                         let xs = this.documents;
                         xs = xs.map(x => {
@@ -159,6 +165,8 @@ export class CerereModAutorActComponent implements OnInit {
                                 }
                             )
                         );
+
+                        this.getAllCompanies();
                     })
                 );
             })
@@ -166,20 +174,25 @@ export class CerereModAutorActComponent implements OnInit {
     }
 
     getAllCompanies() {
+        this.companies =
+            this.companyInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) return true;
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingCompany = true;
 
-        this.subscriptions.push(
-            this.administrationService.getAllCompanies().subscribe(data => {
-                    this.companies = data;
-                    this.filteredOptions = this.cerereModAutorForm.get('company').valueChanges
-                        .pipe(
-                            startWith<string | any>(''),
-                            map(value => typeof value === 'string' ? value : value.name),
-                            map(name => this._filter(name))
-                        );
-                },
-                error => console.log(error)
+                }),
+
+                flatMap(term =>
+                    this.drugDecisionsService.getCompaniesByNameCodeAndIdno(term, this.company.idno).pipe(
+                        tap(() => this.loadingCompany = false)
+                    )
+                )
             )
-        );
+        ;
     }
 
     getDrugSubstanceTypes() {
@@ -226,22 +239,6 @@ export class CerereModAutorActComponent implements OnInit {
         };
         this.outDocuments.push(outDocumentAP);
 
-        // let outDocumentAH = {
-        //     name: 'Autorizatia de activitate cu psihotrope',
-        //     docType: this.docTypesInitial.find(r => r.category == 'AH'),
-        //     number: 'AH-' + this.cerereModAutorForm.get('requestNumber').value,
-        //     date: new Date()
-        // };
-        // this.outDocuments.push(outDocumentAH);
-        //
-        // let outDocumentAF = {
-        //     name: 'Autorizatia de activitate cu stupefiante',
-        //     docType: this.docTypesInitial.find(r => r.category == 'AF'),
-        //     number: 'AF-' + this.cerereModAutorForm.get('requestNumber').value,
-        //     date: new Date()
-        // };
-        // this.outDocuments.push(outDocumentAF);
-
         let outDocumentSR = {
             name: 'Scrisoare de refuz',
             docType: this.docTypesInitial.find(r => r.category == 'SR'),
@@ -274,12 +271,10 @@ export class CerereModAutorActComponent implements OnInit {
                 );
             }
         });
-    }
 
-    private _filter(name: string): any[] {
-        const filterValue = name.toLowerCase();
-
-        return this.companies.filter(option => option.name.toLowerCase().includes(filterValue));
+        this.cerereModAutorForm.get('company').valueChanges.subscribe(val => {
+            this.companyExistInTable = false;
+        });
     }
 
     displayFn(user?: any): string | undefined {
@@ -348,6 +343,7 @@ export class CerereModAutorActComponent implements OnInit {
         modelToSubmit.company.legalAddress = this.cerereModAutorForm.get('legalAddress').value;
         modelToSubmit.documents = this.documents;
         modelToSubmit.outputDocuments = this.outDocuments;
+        modelToSubmit.drugCheckDecision.nmEconomicAgents = this.selectedFilials;
         if (modelToSubmit.medicaments != null && modelToSubmit.medicaments[0]) {
             modelToSubmit.medicaments[0].expirationDate = this.cerereModAutorForm.get('dataExp').value;
         }
@@ -409,23 +405,26 @@ export class CerereModAutorActComponent implements OnInit {
     }
 
     viewDoc(document: any) {
-        this.loadingService.show();
-        if (document.docType.category == 'SR' || document.docType.category == 'AP') {
-            this.subscriptions.push(this.documentService.viewRequest(document.number,
-                document.content,
-                document.title,
-                document.docType.category).subscribe(data => {
-                    let file = new Blob([data], {type: 'application/pdf'});
-                    var fileURL = URL.createObjectURL(file);
-                    window.open(fileURL);
-                    this.loadingService.hide();
-                }, error => {
-                    this.loadingService.hide();
-                }
-                )
-            );
-        } else {
-            this.subscriptions.push(this.documentService.viewDD(document.number).subscribe(data => {
+        if (document.docType.category == 'AP') {
+            this.loadingService.show();
+            let locality = this.cerereModAutorForm.get('locality').value;
+            let state = this.cerereModAutorForm.get('state').value;
+            let data = {
+
+                requestNumber: this.cerereModAutorForm.get('requestNumber').value,
+                protocolDate: this.cerereModAutorForm.get('drugCheckDecision.protocolDate').value,
+                resPerson: this.cerereModAutorForm.get('resPerson').value,
+                companyValue: this.cerereModAutorForm.get('companyValue').value,
+                street: this.cerereModAutorForm.get('street').value,
+                locality: locality.description,
+                state: state.description,
+                dataExp: this.cerereModAutorForm.get('dataExp').value,
+                precursor: this.cerereModAutorForm.get('precursor').value,
+                psihotrop: this.cerereModAutorForm.get('psihotrop').value,
+                stupefiant: this.cerereModAutorForm.get('stupefiant').value
+            };
+
+            this.subscriptions.push(this.drugDocumentsService.viewAuthorization(data).subscribe(data => {
                     let file = new Blob([data], {type: 'application/pdf'});
                     var fileURL = URL.createObjectURL(file);
                     window.open(fileURL);
@@ -514,6 +513,38 @@ export class CerereModAutorActComponent implements OnInit {
                         this.router.navigate(['dashboard/module']);
                     }, error => this.loadingService.hide())
                 );
+            }
+        });
+    }
+
+    addCompany() {
+        this.companyExistInTable = false;
+        if (this.cerereModAutorForm.get('company') && this.cerereModAutorForm.get('company').value) {
+
+            let company = this.selectedFilials.find(r => r.code == this.cerereModAutorForm.get('company').value.code);
+
+            if (company != null) {
+                this.companyExistInTable = true;
+                return;
+            } else {
+                this.selectedFilials.push(this.cerereModAutorForm.get('company').value);
+            }
+        } else {
+            return;
+        }
+    }
+
+    removeCompany(index) {
+
+        const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur(a)?',
+                confirm: false
+            }
+        });
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result) {
+                this.selectedFilials.splice(index, 1);
             }
         });
     }

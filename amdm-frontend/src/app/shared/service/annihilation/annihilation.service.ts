@@ -46,4 +46,12 @@ export class AnnihilationService {
     viewListaPentruComisie(object: any): Observable<any> {
         return this.http.post('/api/annihilation/view-lista-pentru-comisie', object,{ responseType: 'blob'});
     }
+
+    loadAnnihListByFilter(object: any): Observable<any> {
+        return this.http.post('/api/annihilation/get-filtered-annihilations', object);
+    }
+
+    findAnnihilationById(id: string): Observable<any> {
+        return this.http.get('/api/annihilation/find-annihilation-by-id', {params :{ annihilationId : id} });
+    }
 }

@@ -19,4 +19,16 @@ export class DrugDecisionsService {
 
         return this.http.get<any>('/api/drug-decisions/by-id', {params: Params});
     }
+
+    getCompaniesByNameCodeAndIdno(term: string, idno: string): Observable<any> {
+
+        let filter = {
+            name: term,
+            code: term,
+            idno: idno
+        };
+
+        return this.http.post<any>('/api/drug-decisions/search-companies-by-name-or-code-and-idno', filter);
+
+    }
 }

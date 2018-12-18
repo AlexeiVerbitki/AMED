@@ -246,7 +246,7 @@
                 <div class="md-form" formGroupName="drugCheckDecision">
                     <input id="procesVerbal" mdbInputDirective type="text" class="form-control"
                            formControlName="protocolNr">
-                    <label for="procesVerbal">Numarul procesului verbal
+                    <label for="procesVerbal">Numar proces verbal
                         <span class="text-danger">*</span>
                     </label>
                     <div *ngIf="formSubmitted && cerereImpExpForm.get('drugCheckDecision.protocolNr').invalid">
@@ -258,7 +258,7 @@
             <div class="col-md-4">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100" formGroupName="drugCheckDecision">
-                        <input matInput [matDatepicker]="pickerCPCAD" placeholder="Data procesului verbal a CPCAD"
+                        <input matInput [matDatepicker]="pickerCPCAD" placeholder="Data proces verbal"
                                required formControlName="protocolDate">
                         <mat-datepicker-toggle matSuffix [for]="pickerCPCAD"></mat-datepicker-toggle>
                         <mat-datepicker touchUi #pickerCPCAD></mat-datepicker>
@@ -267,8 +267,35 @@
             </div>
             <div class="col-md-4">
                 <div class="md-form">
-                    <input id="reason" mdbInputDirective type="text" class="form-control">
-                    <label for="reason">Motivul refuzului
+                    <input id="reason" mdbInputDirective type="text" class="form-control" >
+                    <label for="reason">Motiv refuz
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="partner" mdbInputDirective type="text" class="form-control" formControlName="partner">
+                    <label for="partner">Compania partener
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="pickerExp" placeholder="Data expirarii"
+                               formControlName="dataExp">
+                        <mat-datepicker-toggle matSuffix [for]="pickerExp"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #pickerExp></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="custom" mdbInputDirective type="text" class="form-control" formControlName="custom">
+                    <label for="custom">Post vamal
                     </label>
                 </div>
             </div>
@@ -289,16 +316,6 @@
                     <div class="col-12">
                         <div class="card-header-title white-text">Documente de iesire</div>
                     </div>
-                    <!-- <div class="col-6">
-                            <div class="position-button">
-                                <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                                    (click)="requestAdditionalData()">Solicitare
-                                    date aditionale</button>
-                                <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                                    (click)="requestLaboratoryAnalysis()">Solicitare
-                                    analiza laborator</button>
-                            </div>
-                        </div> -->
                 </div>
             </div>
 

@@ -36,14 +36,23 @@
             <h5 class="text-center font-weight-bold">Comisia medicamentului</h5>
             <hr>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
+                    <div class="md-form input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text md-addon">{{f.value.clinicalTrailAmendment?.codeTo}} {{'--'}}</span>
+                        </div>
+                        <input id="amendCode" mdbInputDirective type="text" class="form-control" formControlName="amendCode" placeholder="1->99" maxlength="2">
+                        <label for="amendCode">Codul amendamentului</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
                     <div class="md-form">
                         <input id="comisiaNr" mdbInputDirective type="text" class="form-control" formControlName="comissionNr">
                         <label for="regNr">Nr. comisiei medicamentului
                         </label>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="picker2" placeholder="Data" formControlName="comissionDate">
                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>

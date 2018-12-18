@@ -7,6 +7,7 @@ import {LoaderService} from "../shared/service/loader.service";
 import {ConfirmationDialogComponent} from "../dialog/confirmation-dialog.component";
 import {DocumentService} from "../shared/service/document.service";
 import {ErrorHandlerService} from "../shared/service/error-handler.service";
+import {SelectCurrencyBonPlataDialogComponent} from "../dialog/select-currency-bon-plata-dialog/select-currency-bon-plata-dialog.component";
 
 @Component({
     selector: 'app-payment',
@@ -23,6 +24,7 @@ export class PaymentComponent implements OnInit {
     additionalBonDePlataList: any;
     process: string;
     requestNimicire: any;
+    requestDet: any;
 
     //Incasari
     receiptsList: any[] = [];
@@ -182,7 +184,7 @@ export class PaymentComponent implements OnInit {
     private recalculateTotalTaxes() {
         this.bonDePlataTotal = 0;
         this.bonDePlataList.filter(bon => bon.serviceCharge.category != 'BS').forEach(bon => {
-            this.bonDePlataTotal += bon.amount;
+            this.bonDePlataTotal += (bon.amount * bon.quantity);
         });
         this.recalculateTotal();
     }
@@ -233,6 +235,15 @@ export class PaymentComponent implements OnInit {
         this.requestNimicire = requestNimicire;
     }
 
+    get requestDetails(): any {
+        return this.requestDet;
+    }
+
+    @Input()
+    set requestDetails(requestDet: any) {
+        this.requestDet = requestDet;
+    }
+
     get requestId(): any {
         return this.requestIdP;
     }
@@ -247,42 +258,68 @@ export class PaymentComponent implements OnInit {
 
     generateBonDePlataForAll() {
         if (this.bonDePlataList.length != 0) {
-
-            this.loadingService.show();
-            let observable;
-            if (this.process && this.process === 'NIMICIRE') {
-                let nimicireList = this.bonDePlataList.filter(bdp => bdp.serviceCharge.category === 'BN')
-                if (nimicireList.length !== 1) {
-                    this.errorHandlerService.showError('Trebuie sa exista o singura taxa pentru nimicirea medicamentelor.');
-                    this.loadingService.hide();
-                    return;
-                }
-                observable = this.documentService.viewBonDePlataNimicire(this.requestNimicire);
+            if (!this.checkProducator) {
+                this.generateBonCommonParameters('');
             } else {
-                observable = this.documentService.viewBonDePlata(this.requestIdP);
-            }
 
-
-            this.subscriptions.push(observable.subscribe(data => {
-                    let file = new Blob([data], {type: 'application/pdf'});
-                    var fileURL = URL.createObjectURL(file);
-                    window.open(fileURL);
-                    this.loadPaymentOrders();
-                    this.loadingService.hide();
-                }, error => {
-                    this.loadingService.hide();
+                if (this.checkProducator) {
+                    if (!this.requestDet.medicament.pharmaceuticalForm || !this.requestDet.medicament.dose ||
+                        !this.requestDet.divisionBonDePlata) {
+                        this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
+                        return;
+                    }
                 }
-                )
-            );
+                const dialogConfig2 = new MatDialogConfig();
+
+                dialogConfig2.disableClose = false;
+                dialogConfig2.autoFocus = true;
+                dialogConfig2.hasBackdrop = true;
+
+                dialogConfig2.width = '600px';
+
+                let dialogRef = this.dialog.open(SelectCurrencyBonPlataDialogComponent, dialogConfig2);
+                dialogRef.afterClosed().subscribe(result => {
+                    this.generateBonCommonParameters(result.currency);
+                });
+            }
         } else {
             this.errorHandlerService.showError('Nu a fost introdusa nici o taxa spre achitare');
         }
     }
 
-    generateSingleBonDePlata(bonDePlata: any) {
+    generateBonCommonParameters(currency: string) {
         this.loadingService.show();
-        this.subscriptions.push(this.documentService.viewBonDePlataForOne(bonDePlata.id).subscribe(data => {
-                let file = new Blob([data.body], {type: 'application/pdf'});
+        let observable;
+        if (this.process && this.process === 'NIMICIRE') {
+            let nimicireList = this.bonDePlataList.filter(bdp => bdp.serviceCharge.category === 'BN')
+            if (nimicireList.length !== 1) {
+                this.errorHandlerService.showError('Trebuie sa exista o singura taxa pentru nimicirea medicamentelor.');
+                this.loadingService.hide();
+                return;
+            }
+            observable = this.documentService.viewBonDePlataNimicire(this.requestNimicire);
+        } else {
+            let modelToSubmit = {
+                currency: currency,
+                companyName: this.requestDet.company.name,
+                companyCountry: 'Republica Moldova',
+                address: this.requestDet.company.legalAddress,
+                requestId: this.requestIdP,
+                paymentOrders: this.bonDePlataList,
+                medicamentDetails: [{
+                    nr: 1,
+                    medicamentName: this.requestDet.medicamentName,
+                    pharmaceuticForm: this.requestDet.medicament.pharmaceuticalForm.description,
+                    dose: this.requestDet.medicament.dose,
+                    division: this.requestDet.divisionBonDePlata
+                }]
+            };
+            observable = this.documentService.viewBonDePlata(modelToSubmit);
+        }
+
+
+        this.subscriptions.push(observable.subscribe(data => {
+                let file = new Blob([data], {type: 'application/pdf'});
                 var fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
                 this.loadPaymentOrders();
@@ -294,27 +331,100 @@ export class PaymentComponent implements OnInit {
         );
     }
 
-    manufactureModified()
+    generateSingleBonDePlata(bonDePlata: any) {
+
+            if (!this.checkProducator) {
+                this.generateSingleBonCommonParameters(bonDePlata,'');
+            } else {
+
+                if (this.checkProducator) {
+                    if (!this.requestDet.medicament.pharmaceuticalForm || !this.requestDet.medicament.dose ||
+                        !this.requestDet.divisionBonDePlata) {
+                        this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
+                        return;
+                    }
+                }
+
+                if(bonDePlata.serviceCharge.category == 'BS')
+                {
+                    this.generateSingleBonCommonParameters(bonDePlata,'MDL');
+                    return;
+                }
+
+                const dialogConfig2 = new MatDialogConfig();
+
+                dialogConfig2.disableClose = false;
+                dialogConfig2.autoFocus = true;
+                dialogConfig2.hasBackdrop = true;
+
+                dialogConfig2.width = '600px';
+
+                let dialogRef = this.dialog.open(SelectCurrencyBonPlataDialogComponent, dialogConfig2);
+                dialogRef.afterClosed().subscribe(result => {
+                    this.generateSingleBonCommonParameters(bonDePlata,result.currency);
+                });
+            }
+    }
+
+    generateSingleBonCommonParameters(bonDePlata:any,currency : string)
     {
+        this.loadingService.show();
+
+        let modelToSubmit = {
+            currency: currency,
+            companyName: this.requestDet.company.name,
+            companyCountry: 'Republica Moldova',
+            address: this.requestDet.company.legalAddress,
+            requestId: this.requestIdP,
+            paymentOrders: [bonDePlata],
+            medicamentDetails: [{
+                nr: 1,
+                medicamentName: this.requestDet.medicamentName,
+                pharmaceuticForm: this.requestDet.medicament.pharmaceuticalForm.description,
+                dose: this.requestDet.medicament.dose,
+                division: this.requestDet.divisionBonDePlata
+            }]
+        };
+        let observable;
+        if(bonDePlata.serviceCharge.category != 'BS')
+        {
+            observable = this.documentService.viewBonDePlata(modelToSubmit);
+        }
+        else {
+            observable = this.documentService.viewBonDePlataSuplimentar(modelToSubmit);
+        }
+
+
+        this.subscriptions.push(observable.subscribe(data => {
+                let file = new Blob([data], {type: 'application/pdf'});
+                var fileURL = URL.createObjectURL(file);
+                window.open(fileURL);
+                this.loadPaymentOrders();
+                this.loadingService.hide();
+            }, error => {
+                this.loadingService.hide();
+            }
+            )
+        );
+    }
+
+    manufactureModified() {
         if (this.isCheckProducator) {
-            if(this.manufacturesList) {
+            if (this.manufacturesList) {
                 this.isManufactureAutohton = this.manufacturesList.find(r => {
-                    return r.manufacture.country.code == 'MD' && r.producatorProdusFinit==1
+                    return r.manufacture.country.code == 'MD' && r.producatorProdusFinit == 1
                 });
                 if (this.isManufactureAutohton) {
-                    let i = 0;
                     for (let x of this.bonDePlataList) {
                         this.subscriptions.push(this.administrationService.removePaymentOrder(x.id).subscribe(data => {
-                                this.bonDePlataList.splice(i, 1);
                                 this.recalculateTotalTaxes();
                             }, error => console.log(error))
                         );
-                        i++;
+
                     }
+                    this.bonDePlataList = [];
                 }
-            }
-            else
-            {
+            } else {
                 this.isManufactureAutohton = false;
             }
         }

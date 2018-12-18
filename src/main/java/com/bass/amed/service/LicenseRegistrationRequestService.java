@@ -62,6 +62,11 @@ public class LicenseRegistrationRequestService
 
         for (NmEconomicAgentsEntity ece : rrE.getLicense().getEconomicAgents())
         {
+            if (rrE.getLicense().getCompanyName() == null)
+            {
+                rrE.getLicense().setCompanyName(ece.getLongName());
+            }
+
             ece.setLocality(localityService.findLocalityById(ece.getLocality().getId()));
             ece.setSelectedPharmaceutist(ece.getAgentPharmaceutist().stream().filter(af -> af.getSelectionDate() != null).max(Comparator.comparing(LicenseAgentPharmaceutistEntity::getSelectionDate)).get());
         }
@@ -237,6 +242,8 @@ public class LicenseRegistrationRequestService
 
 
                 ec.setLicenseId(request.getLicense().getId());
+
+                ec.setType(ecView.getType());
 
                 //Cesionare
                 if (request.getType().getCode().equals("LICC") && !ecView.getIdno().equals(request.getLicense().getIdno()))

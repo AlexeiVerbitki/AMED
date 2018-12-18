@@ -47,12 +47,6 @@ public class NmEconomicAgentsEntity {
     @Column(name = "parent_id")
     private Integer parentId;
     @Basic
-    @Column(name = "statut")
-    private String statut;
-    @Basic
-    @Column(name = "can_use_psychotropic_drugs")
-    private Byte canUsePsychotropicDrugs;
-    @Basic
     @Column(name = "leader")
     private String leader;
     @Basic
@@ -70,9 +64,6 @@ public class NmEconomicAgentsEntity {
     @Basic
     @Column(name = "legal_address")
     private String legalAddress;
-    @Basic
-    @Column(name = "email")
-    private String email;
     @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
     @JoinColumn( name = "locality_id" )
     private NmLocalitiesEntity locality;

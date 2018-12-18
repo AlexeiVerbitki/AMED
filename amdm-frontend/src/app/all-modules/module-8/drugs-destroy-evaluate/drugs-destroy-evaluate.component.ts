@@ -13,6 +13,7 @@ import {DocumentService} from "../../../shared/service/document.service";
 import {AnnihilationMedDialogComponent} from "../../../dialog/annihilation-med-dialog/annihilation-med-dialog.component";
 import {DecimalPipe} from "@angular/common";
 import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
+import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
 
 @Component({
     selector: 'app-drugs-destroy-evaluate',
@@ -63,7 +64,8 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
                 private loadingService: LoaderService,
                 private documentService: DocumentService,
                 public dialogDetails: MatDialog,
-                private navbarTitleService: NavbarTitleService) {
+                private navbarTitleService: NavbarTitleService,
+                private errorHandlerService: ErrorHandlerService) {
     }
 
     ngOnInit() {
@@ -183,10 +185,12 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
     submit() {
         this.mFormSubbmitted = true;
         if ( this.docs.length == 0) {
+            this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
             return;
         }
 
         if (this.paymentTotal < 0) {
+            this.errorHandlerService.showError('Nu s-a efectuat plata.');
             return;
         }
 

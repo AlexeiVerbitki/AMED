@@ -117,7 +117,10 @@ export class CerereImportExportComponent implements OnInit {
             'substanceType': [],
             'precursor': [{value: false, disabled: this.disabled}],
             'psihotrop': [{value: false, disabled: this.disabled}],
-            'stupefiant': [{value: false, disabled: this.disabled}]
+            'stupefiant': [{value: false, disabled: this.disabled}],
+            'partner': [],
+            'dataExp': [],
+            'custom': []
         });
     }
 
@@ -133,8 +136,6 @@ export class CerereImportExportComponent implements OnInit {
                 error => console.log(error)
             )
         );
-
-        this.getAllCompanies();
 
         this.getDrugSubstanceTypes();
 
@@ -297,56 +298,26 @@ export class CerereImportExportComponent implements OnInit {
 
     initOutExportDocuments() {
         let outDocumentEP = {
-            name: 'Autorizatia de export a precursorilor',
+            name: 'Autorizatia de export',
             docType: this.docTypesInitial.find(r => r.category == 'EP'),
             number: 'EP-' + this.cerereImpExpForm.get('requestNumber').value,
             date: new Date()
         };
         this.outDocuments.push(outDocumentEP);
 
-        let outDocumentEH = {
-            name: 'Autorizatia de export a psihotropelor',
-            docType: this.docTypesInitial.find(r => r.category == 'EH'),
-            number: 'EH-' + this.cerereImpExpForm.get('requestNumber').value,
-            date: new Date()
-        };
-        this.outDocuments.push(outDocumentEH);
-
-        let outDocumentEF = {
-            name: 'Autorizatia de export a stupefiantelor',
-            docType: this.docTypesInitial.find(r => r.category == 'EF'),
-            number: 'EF-' + this.cerereImpExpForm.get('requestNumber').value,
-            date: new Date()
-        };
-        this.outDocuments.push(outDocumentEF);
-        this.docTypes = this.allDocTypes.filter(r => r.category === 'SR' || r.category === 'EP' || r.category === 'EH' || r.category === 'EF');
+        this.docTypes = this.allDocTypes.filter(r => r.category === 'SR' || r.category === 'EP');
     }
 
     initOutImportDocuments() {
         let outDocumentIP = {
-            name: 'Autorizatia de import a precursorilor',
+            name: 'Autorizatia de import',
             docType: this.docTypesInitial.find(r => r.category == 'IP'),
             number: 'IP-' + this.cerereImpExpForm.get('requestNumber').value,
             date: new Date()
         };
         this.outDocuments.push(outDocumentIP);
 
-        let outDocumentIH = {
-            name: 'Autorizatia de import a psihotropelor',
-            docType: this.docTypesInitial.find(r => r.category == 'IH'),
-            number: 'IH-' + this.cerereImpExpForm.get('requestNumber').value,
-            date: new Date()
-        };
-        this.outDocuments.push(outDocumentIH);
-
-        let outDocumentIF = {
-            name: 'Autorizatia de import a stupefiantelor',
-            docType: this.docTypesInitial.find(r => r.category == 'IF'),
-            number: 'IF-' + this.cerereImpExpForm.get('requestNumber').value,
-            date: new Date()
-        };
-        this.outDocuments.push(outDocumentIF);
-        this.docTypes = this.allDocTypes.filter(r => r.category === 'SR' || r.category === 'IP' || r.category === 'IH' || r.category === 'IF');
+        this.docTypes = this.allDocTypes.filter(r => r.category === 'SR' || r.category === 'IP');
     }
 
     getMedicamentDetails() {
@@ -536,59 +507,39 @@ export class CerereImportExportComponent implements OnInit {
     }
 
     viewDoc(document: any) {
-        this.loadingService.show();
-        // if (document.docType.category == 'SR' || document.docType.category == 'AP') {
-        //     this.subscriptions.push(this.documentService.viewRequest(document.number,
-        //         document.content,
-        //         document.title,
-        //         document.docType.category).subscribe(data => {
-        //             let file = new Blob([data], {type: 'application/pdf'});
-        //             var fileURL = URL.createObjectURL(file);
-        //             window.open(fileURL);
-        //             this.loadingService.hide();
-        //         }, error => {
-        //             this.loadingService.hide();
-        //         }
-        //         )
-        //     );
-        // } else {
-        //     this.subscriptions.push(this.documentService.viewDD(document.number).subscribe(data => {
-        //             let file = new Blob([data], {type: 'application/pdf'});
-        //             var fileURL = URL.createObjectURL(file);
-        //             window.open(fileURL);
-        //             this.loadingService.hide();
-        //         }, error => {
-        //             this.loadingService.hide();
-        //         }
-        //         )
-        //     );
-        // }
-        let data = {
 
-            requestNumber: this.cerereImpExpForm.get('requestNumber').value,
-            // protocolDate: this.cerereSolicAutorForm.get('drugCheckDecision.protocolDate').value,
-            // resPerson: this.cerereSolicAutorForm.get('resPerson').value,
-            // companyValue: this.cerereSolicAutorForm.get('companyValue').value,
-            // street: this.cerereSolicAutorForm.get('street').value,
-            // locality: locality.description,
-            // state: state.description,
-            // dataExp: this.cerereSolicAutorForm.get('dataExp').value,
-            // precursor: this.cerereSolicAutorForm.get('precursor').value,
-            // psihotrop: this.cerereSolicAutorForm.get('psihotrop').value,
-            // stupefiant: this.cerereSolicAutorForm.get('stupefiant').value
-        };
-
-        console.log(data);
-        this.subscriptions.push(this.drugDocumentsService.viewImportExportAuthorization(data).subscribe(data => {
-                let file = new Blob([data], {type: 'application/pdf'});
-                var fileURL = URL.createObjectURL(file);
-                window.open(fileURL);
-                this.loadingService.hide();
-            }, error => {
-                this.loadingService.hide();
+        if (document.docType.category == 'IP' || document.docType.category == 'EP') {
+            this.loadingService.show();
+            let company = this.cerereImpExpForm.get('company').value;
+            let localityId = [];
+            if (company != null && company.locality != null) {
+                localityId = company.locality.id;
             }
-            )
-        );
+            let authorizationType = this.cerereImpExpForm.get('authorizationType').value;
+            let data = {
+                requestNumber: this.cerereImpExpForm.get('requestNumber').value,
+                protocolDate: this.cerereImpExpForm.get('drugCheckDecision.protocolDate').value,
+                companyValue: this.cerereImpExpForm.get('companyValue').value,
+                dataExp: this.cerereImpExpForm.get('dataExp').value,
+                medicaments: this.selectedMedicamentsTable,
+                authorizationType: authorizationType.value,
+                custom: this.cerereImpExpForm.get('custom').value,
+                localityId: localityId,
+                partner: this.cerereImpExpForm.get('partner').value
+            };
+
+            console.log(data);
+            this.subscriptions.push(this.drugDocumentsService.viewImportExportAuthorization(data).subscribe(data => {
+                    let file = new Blob([data], {type: 'application/pdf'});
+                    var fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.loadingService.hide();
+                }, error => {
+                    this.loadingService.hide();
+                }
+                )
+            );
+        }
     }
 
     remove(doc: any) {

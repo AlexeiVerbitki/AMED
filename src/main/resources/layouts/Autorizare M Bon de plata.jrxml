@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Autorizare M Bon de plata" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="10" uuid="523fb55a-b7a8-4c3c-86ea-fd79290ecf5e">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -46,20 +46,29 @@
 		<field name="nr" class="java.lang.String"/>
 		<field name="medicamentName" class="java.lang.String"/>
 		<field name="pharmaceuticForm" class="java.lang.String"/>
-		<field name="dose" class="java.lang.Double"/>
+		<field name="dose" class="java.lang.String"/>
 		<field name="division" class="java.lang.String"/>
 		<field name="price" class="java.lang.Double"/>
 	</subDataset>
 	<parameter name="autorizareMbonDePlataDataset" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
-	<parameter name="Parameter1" class="java.lang.String"/>
+	<parameter name="companyName" class="java.lang.String"/>
 	<parameter name="nr_invoice" class="java.lang.String"/>
-	<parameter name="invoice_date" class="java.util.Date"/>
+	<parameter name="invoice_date" class="java.lang.String"/>
 	<parameter name="payer" class="java.lang.String"/>
 	<parameter name="payer_address" class="java.lang.String"/>
-	<parameter name="sum" class="java.lang.String"/>
+	<parameter name="sum" class="java.lang.Double"/>
 	<parameter name="genDir" class="java.lang.String">
 		<parameterDescription><![CDATA[Directorul general adjunct]]></parameterDescription>
 	</parameter>
+	<parameter name="beneficiarBank" class="java.lang.String"/>
+	<parameter name="beneficiarAddress" class="java.lang.String"/>
+	<parameter name="beneficiarBankCode" class="java.lang.String"/>
+	<parameter name="beneficiarBankAccount" class="java.lang.String"/>
+	<parameter name="companyAddress" class="java.lang.String"/>
+	<parameter name="beneficiarIban" class="java.lang.String"/>
+	<parameter name="vatCode" class="java.lang.String"/>
+	<parameter name="beneficiar" class="java.lang.String"/>
+	<parameter name="companyCountry" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -76,7 +85,7 @@
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="224" splitType="Stretch">
+		<band height="103" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="10" width="177" height="50" uuid="5aa0d510-3bac-437a-b035-40a37af58f9b"/>
 				<textElement textAlignment="Center">
@@ -95,24 +104,31 @@ Fax. +373 22 737000; 737002;]]></text>
 Тел. +373 22 737000; 
 Факс. +373 22 737000;  737002]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="373" y="70" width="177" height="60" uuid="5d3152a8-00f8-450a-a626-281a87ec4bcf"/>
-				<textElement textAlignment="Left">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="283" y="65" width="270" height="35" uuid="9c70c393-ac05-4717-bd08-9449c5eb8d99"/>
+				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Dita EstFarm SRL
-Mun. Chişinău str. Burebista 23, MD-2032
-Republica Moldova]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$P{companyName} + " " + $P{companyAddress} + " " + $P{companyCountry}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="65" width="240" height="15" uuid="bac3f48c-3c7a-476c-87ee-7d370d143bbc"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="false" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{invoice_date} + " Nr. "+$P{nr_invoice}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="80">
 			<staticText>
-				<reportElement x="0" y="140" width="550" height="30" uuid="14f051d8-e386-4c45-90c7-0b0ee61ecb09"/>
+				<reportElement x="5" y="4" width="550" height="30" uuid="6b650dd0-409e-4c5e-a38b-0bd4524d82d1"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<text><![CDATA[Prin prezenta, Agenţia Medicamentului şi Dispozitivelor Medicale a Republicii Moldova Vă informează că au fost primite pentru înregistrare următoarele produse medicamentoase:]]></text>
 			</staticText>
 			<componentElement>
-				<reportElement x="0" y="181" width="552" height="30" uuid="dddcff65-75ec-4f4c-af8c-829ee0310717">
+				<reportElement x="5" y="45" width="552" height="30" uuid="1b335b7a-f213-44da-8c8c-dc20b55bf192">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
@@ -120,14 +136,14 @@ Republica Moldova]]></text>
 					<property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="Dataset1" uuid="7d7f9171-2f02-48a5-a447-d03901b1fcb1">
+					<datasetRun subDataset="Dataset1" uuid="e68d18a2-2034-4b73-b6de-b229ef4f4110">
 						<dataSourceExpression><![CDATA[$P{autorizareMbonDePlataDataset}]]></dataSourceExpression>
 					</datasetRun>
-					<jr:column width="40" uuid="a5012809-336f-4cf8-8dd7-725435e26547">
+					<jr:column width="40" uuid="0986ca19-dbb1-4b86-bda0-3736a19fc951">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="40" height="30" uuid="0da49052-f6bd-42d7-b1a1-b7e889f6d3a8"/>
+								<reportElement x="0" y="0" width="40" height="30" uuid="4166b481-70be-448f-8347-b71ade8eb712"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -135,11 +151,11 @@ Republica Moldova]]></text>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="144" uuid="fa4b809d-01e3-4e99-96ca-adf30dcfcd7c">
+					<jr:column width="144" uuid="1b44ebb2-7b71-4c9b-a304-3874259c9461">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="144" height="30" uuid="27835873-ee97-46a7-87ff-da386a244c17"/>
+								<reportElement x="0" y="0" width="144" height="30" uuid="c20cb948-542d-4753-b659-1fec9c15ed84"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -147,11 +163,11 @@ Republica Moldova]]></text>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="92" uuid="ca7c3088-afdf-41ae-adb3-905939937306">
+					<jr:column width="92" uuid="1a54ac0a-aee3-41e5-9c66-99e43b014865">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="92" height="30" uuid="c691047d-dbb1-4d04-8cb0-787c89a20a31"/>
+								<reportElement x="0" y="0" width="92" height="30" uuid="9634efdf-42a7-4433-b479-ec61fedd6980"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -159,11 +175,11 @@ Republica Moldova]]></text>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="92" uuid="d2248bf7-eb90-484b-a8d1-7d8f707400a6">
+					<jr:column width="92" uuid="b1bf6f1a-5523-443b-9842-818bd32385cc">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="92" height="30" uuid="4da7b780-124a-46af-84f7-ae207c669136"/>
+								<reportElement x="0" y="0" width="92" height="30" uuid="c05e843b-7de1-440f-93b1-8fd6ae7eb9e5"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -171,11 +187,11 @@ Republica Moldova]]></text>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="92" uuid="cdaba478-0acd-45d9-9f97-b453ad72c7b1">
+					<jr:column width="92" uuid="c19c2ab8-24e4-4933-b323-9d0ba0956eda">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="92" height="30" uuid="30459abd-bdfa-4589-863a-cf6a48c6b247"/>
+								<reportElement x="0" y="0" width="92" height="30" uuid="0f50c652-a34b-4c42-8b40-b63f33f22eba"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -183,11 +199,11 @@ Republica Moldova]]></text>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="92" uuid="20f2b9b0-2d5b-45ae-8324-ed6d6ae5113b">
+					<jr:column width="92" uuid="4a497717-de4b-4729-b2a1-084b0f50d129">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="92" height="30" uuid="8e346a4e-7fb1-46ad-be38-4f7f1803d27f"/>
+								<reportElement x="0" y="0" width="92" height="30" uuid="9812bee4-0a52-4489-99e9-6c92e7f8b257"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -200,13 +216,6 @@ Republica Moldova]]></text>
 		</band>
 		<band height="125">
 			<staticText>
-				<reportElement x="2" y="10" width="550" height="30" uuid="b09c91e0-a0bb-4f85-8757-ed6f803b5d22"/>
-				<textElement textAlignment="Left">
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<text><![CDATA[Vă aducem la cunoştinţă că în baza Hotărârii Guvernului Republicii Moldova Nr.348 din 26 mai 2014 taxa pentru înregistrarea preparatelor enumerate mai sus constituie:]]></text>
-			</staticText>
-			<staticText>
 				<reportElement x="4" y="50" width="550" height="20" uuid="e7483a0c-88a9-479e-b99e-4f0b50916b43"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
@@ -214,22 +223,29 @@ Republica Moldova]]></text>
 				<text><![CDATA[Contul este valabil timp de 30 zile de la data emiterii!]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="391" y="90" width="160" height="18" uuid="b95d47c7-e211-40ac-bd76-9fe8db9ebb4b"/>
+				<reportElement x="280" y="90" width="271" height="18" uuid="b95d47c7-e211-40ac-bd76-9fe8db9ebb4b"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{genDir}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="3" y="89" width="138" height="20" uuid="e42d0182-e6a0-484a-950c-59b648faf225"/>
+				<reportElement x="3" y="89" width="129" height="20" uuid="e42d0182-e6a0-484a-950c-59b648faf225"/>
 				<textElement textAlignment="Left">
-					<font isBold="true"/>
+					<font fontName="DejaVu Sans" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Directorul general adjunct]]></text>
+				<text><![CDATA[Directorul general]]></text>
 			</staticText>
 			<break>
 				<reportElement x="0" y="120" width="551" height="1" uuid="2b0849a0-d1fa-43e2-9cef-bf9661ac3816"/>
 			</break>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="2" y="6" width="553" height="34" uuid="e2b65ff0-4190-4a8f-9e9b-4afa41c4ffba"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Vă aducem la cunoştinţă că în baza Hotărârii Guvernului Republicii Moldova Nr.348 din 26 mai 2014 taxa pentru înregistrarea preparatelor enumerate mai sus constituie: " + $P{sum} + " MDL"]]></textFieldExpression>
+			</textField>
 		</band>
 		<band height="328">
 			<textField>
@@ -240,86 +256,56 @@ Republica Moldova]]></text>
 				<textFieldExpression><![CDATA["CONT DE PLATĂ Nr. " + $P{nr_invoice} + ' ' + $P{invoice_date}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="3" y="35" width="550" height="20" uuid="49475481-bdb5-4006-ba04-612d58c8da1b"/>
+				<reportElement x="0" y="35" width="555" height="20" uuid="49475481-bdb5-4006-ba04-612d58c8da1b"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["PLĂTITOR: " + $P{payer}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="3" y="56" width="550" height="20" uuid="7f69e4ff-b947-4254-8b46-3a7b34e334ce"/>
+				<reportElement x="0" y="56" width="555" height="20" uuid="7f69e4ff-b947-4254-8b46-3a7b34e334ce"/>
 				<textElement>
-					<font fontName="DejaVu Sans"/>
+					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Adresa: " + $P{payer_address}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="3" y="77" width="550" height="18" uuid="20bebb71-5c0f-4155-aecc-d798edf9c73e"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<text><![CDATA[BENEFICIAR:  MF-Trezoreria de stat, Agenţiei Medicamentului şi Dispozitivelor Medicale]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="3" y="96" width="550" height="20" uuid="f53f7d54-30fe-4d3e-974d-b44fc4ca0398"/>
-				<textElement>
-					<font size="11"/>
-				</textElement>
-				<text><![CDATA[Cod fiscal: 1006601004002]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="4" y="116" width="550" height="18" uuid="76e1967a-cbc1-4235-9631-1c504baa60f5"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<text><![CDATA[Adresa:  MD-2028, str. Korolenko 2/1, Chişinău, Republica Moldova, tel./fax. (+373 22) 884301]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="4" y="136" width="128" height="20" uuid="adffe639-208b-4c5d-9a26-d32b0849af16"/>
+				<reportElement x="0" y="138" width="120" height="20" uuid="adffe639-208b-4c5d-9a26-d32b0849af16"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<text><![CDATA[BANCA BENEFICIARĂ: ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="133" y="136" width="420" height="30" uuid="2c1d4059-4601-41a2-88c2-437485affc92"/>
+				<reportElement x="120" y="136" width="434" height="30" uuid="2c1d4059-4601-41a2-88c2-437485affc92"/>
 				<textElement>
-					<font fontName="DejaVu Sans"/>
+					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA["MF-Trezoreria de stat, Agenţiei Medicamentului şi Dispozitivelor Medicale, Chişinău, Republica Moldova"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{beneficiarBank}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="3" y="166" width="110" height="20" uuid="ad0eceaa-3c01-4a4d-a91a-1641a82b9dc7"/>
-				<textElement>
-					<font size="11"/>
-				</textElement>
-				<text><![CDATA[Cod: TREZMD2X]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="3" y="186" width="160" height="20" uuid="d93876e0-f3b8-4e5e-9810-634330e0dd99"/>
-				<textElement>
-					<font size="11"/>
-				</textElement>
-				<text><![CDATA[Cont bancar: 33114001]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="3" y="206" width="280" height="20" uuid="e38cc97a-068e-4f8f-8920-b263e6f751db"/>
-				<textElement>
-					<font size="11"/>
-				</textElement>
-				<text><![CDATA[Contul IBAN.: MD93TRPAAA142310A15678AA]]></text>
-			</staticText>
 			<textField>
-				<reportElement x="5" y="236" width="448" height="30" uuid="b5adf136-8f6d-40d7-b3ea-8d40d4dc0fc2"/>
+				<reportElement x="0" y="236" width="452" height="30" uuid="b5adf136-8f6d-40d7-b3ea-8d40d4dc0fc2"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
 				<textElement>
-					<font size="11"/>
+					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Destinația plății: Plata pentru autorizarea produselor medicamentoase conform contului de plată Nr. " + $P{nr_invoice}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Destinația plății: Plata pentru autorizarea produselor medicamentoase conform contului de plată Nr. " + $P{nr_invoice} + " din " + $P{invoice_date}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="453" y="236" width="100" height="30" uuid="361dd49a-5658-4e60-8aa8-3fcfaf9a70bb"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
 				<textElement textAlignment="Left">
-					<font size="11"/>
+					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{sum} + " MDL"]]></textFieldExpression>
 			</textField>
@@ -333,7 +319,7 @@ Republica Moldova]]></text>
 			<staticText>
 				<reportElement x="3" y="296" width="180" height="20" uuid="85338f0c-6855-406e-b99a-e552d340977c"/>
 				<textElement>
-					<font size="11" isBold="true"/>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Semnătura Beneficiarului:]]></text>
 			</staticText>
@@ -342,6 +328,48 @@ Republica Moldova]]></text>
 				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
 				<text><![CDATA[______________________________]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="0" y="76" width="555" height="20" uuid="4368bd32-a055-4dff-af81-58b1a3aa31eb"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["BENEFICIAR: " + $P{beneficiar}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="97" width="555" height="20" uuid="152dd042-649e-4d84-b8ef-0950ebf62e7b"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Cod fiscal: " + $P{vatCode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="117" width="555" height="20" uuid="7e5b26ed-53d5-49a7-b87c-219c5d1fbeed"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Adresa: " + $P{beneficiarAddress}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="167" width="555" height="20" uuid="575930f0-eb2a-46e1-b6e3-54ae2e72bed6"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Cod: " + $P{beneficiarBankCode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="187" width="555" height="20" uuid="4be4f74a-cf04-41ce-9029-32d059e0cc9f"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Cont bancar: " + $P{beneficiarBankAccount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="207" width="555" height="20" uuid="80ab7ec3-905f-4b94-a1a3-27c0d18e94cb"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Contul IBAN.:" + $P{beneficiarIban}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<pageFooter>

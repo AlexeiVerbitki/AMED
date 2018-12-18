@@ -435,7 +435,7 @@
 		<div *ngIf="formSubmitted && machets.length==0">
 			<small class="text-muted"><strong class="text-danger">Nici o macheta nu a fost adaugata</strong></small>
 		</div>
-		<app-payment #payment [checkProducator]="true" [manufactures]="manufacturesTable" [requestId]="this.eForm.get('id').value" (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
+		<app-payment #payment [requestDetails]="this.eForm.value" [checkProducator]="true" [manufactures]="manufacturesTable" [requestId]="this.eForm.get('id').value" (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
 		<div *ngIf="formSubmitted && paymentTotal<0">
 			<small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>
 		</div>

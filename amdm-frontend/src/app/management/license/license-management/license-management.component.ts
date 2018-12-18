@@ -50,6 +50,9 @@ export class LicenseManagementComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.navbarTitleService.showTitleMsg('Gestionare Licente');
 
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+
 
         this.companii =
             this.companyInputs.pipe(
@@ -100,9 +103,7 @@ export class LicenseManagementComponent implements OnInit, OnDestroy {
 
 
     applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.dataSource.filter = filterValue;
+        this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
     findLicente() {

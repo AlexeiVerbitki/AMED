@@ -14,14 +14,14 @@
     <form [formGroup]="mForm">
         <hr>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="md-form">
                     <input id="nrCererii" mdbInputDirective type="text" class="form-control"
                            formControlName="nrCererii">
                     <label for="nrCererii">Nr. cererii</label>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="picker2" placeholder="Data adresarii" id="dataEliberarii"
@@ -29,6 +29,13 @@
                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                         <mat-datepicker touchUi #picker2></mat-datepicker>
                     </mat-form-field>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="company" mdbInputDirective type="text" class="form-control"
+                           formControlName="company">
+                    <label for="company">Agentul economic</label>
                 </div>
             </div>
         </div>
@@ -81,7 +88,7 @@
                             >
                                 <ng-template ng-option-tmp let-item="item">
                                     {{item.name}} <br/>
-                                    <small class="form-text text-muted">{{item.addressStr}}</small>
+                                    <small class="form-text text-muted">{{item.address}}</small>
                                 </ng-template>
                             </ng-select>
                         </div>
@@ -91,13 +98,29 @@
                         </div>
                     </div>
 
-                    <div class="col-md-2">
+                    <div class="col-md-3">
+                        <div class="md-form-modified-select">
+                            <ng-select class="custom" [items]="ecAgentTypes"
+                                       bindLabel="description"
+                                       placeholder="Tipul intreprinderii"
+                                       formControlName="tipIntreprindere"
+                                       [required]="true"
+                            >
+                            </ng-select>
+                        </div>
+                        <div *ngIf="oFormSubbmitted && !oForm.get('tipIntreprindere').valid">
+                            <small class="text-muted"><strong class="text-danger">Tip intreprindere trebuie selectata</strong>
+                            </small>
+                        </div>
+                    </div>
+
+                  <!--  <div class="col-md-2">
                         <div class="md-form">
                             <input id="tipIntreprindere" mdbInputDirective type="text" class="form-control"
                                    formControlName="tipIntreprindere">
                             <label for="tipIntreprindere">Tipul intreprinderii</label>
                         </div>
-                    </div>
+                    </div>-->
 
 
                     <div class="col-md-2">
@@ -125,17 +148,12 @@
                     <div class="col-md-2" *ngIf="pharmacyRepresentantProf">
                         <div class="md-form-modified-select">
                             <ng-select class="custom" [items]="farmacistiPerAddress"
-                                       [addTag]="addTagPromise"
                                        bindLabel="fullName"
                                        placeholder="{{pharmacyRepresentantProf}}"
                                        formControlName="farmDir"
                                        [required]="true"
-                                       [hideSelected]="true"
 
                             >
-                                <ng-template ng-tag-tmp let-search="searchTerm">
-                                    <b>Adauga {{pharmacyRepresentantProf}}</b>: {{search}}
-                                </ng-template>
                                 <ng-template ng-option-tmp let-item="item">
                                     <div>{{item.fullName}}</div>
                                     <small class="form-text text-muted">{{item.selectionDate| date: 'dd/MM/yyyy
@@ -150,10 +168,14 @@
                             </small>
                         </div>
                     </div>
+                    <div class="col-md-1" *ngIf="pharmacyRepresentantProf">
+                    <div class="md-form">
+                        <button class="btn btn-mdb-color btn-sm" mdbTooltip="Farmacist nou" (click)="newFarmacist()"><i class="fa fa-plus fa-lg" aria-hidden="true"></i></button>
+                    </div>
+                    </div>
 
 
-                    <div class="col-md-4">
-                        <div class="col">
+                    <div class="col-md-6">
                             <div class="md-form-modified-select">
                                 <ng-select [items]="activities"
                                            bindLabel="description"
@@ -170,11 +192,10 @@
                                     activitate</strong>
                                 </small>
                             </div>
-                        </div>
                     </div>
 
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="text-center">
                             <div class="md-form">
                                 <button type="button" class="btn btn-indigo waves-light btn-sm btn-sm-bl" mdbWavesEffect
@@ -190,6 +211,7 @@
                 <table class="table table-widths text-center">
                     <thead class="bg-sidebar white-text">
                     <tr>
+                        <th scope="col">Nr.</th>
                         <th scope="col">Tipul intreprinderii</th>
                         <th scope="col">Adresa</th>
                         <th scope="col">Farmacist/Sef de filiala</th>
@@ -201,12 +223,13 @@
                     </thead>
                     <tbody>
                     <tr *ngFor="let objAddr of companiiPerIdnoSelected;let i = index">
-                        <th scope="row">{{ objAddr.companyType }}</th>
+                        <th scope="row">{{ i + 1}}</th>
+                        <td>{{ objAddr.companyType }}</td>
                         <td>{{ objAddr.address }}</td>
                         <td>{{ objAddr.selectedPharmaceutist.fullName }}</td>
                         <td mdbTooltip="{{objAddr.activitiesStr}}" placement="top">
-                            <a title="Activitatile" (click)="setActivities(objAddr)" *ngIf="tipCerere !== 'LICD' && tipCerere !== 'LICP' && tipCerere !== 'LICA' && tipCerere !== 'LICS' && tipCerere !== 'LICRL'">{{ objAddr.activitiesStr ?  objAddr.activitiesStr : 'Add'}}</a>
-                            <label *ngIf="tipCerere === 'LICD' || tipCerere === 'LICP' || tipCerere === 'LICA' || tipCerere === 'LICS' || tipCerere === 'LICRL'">{{ objAddr.activitiesStr }} </label>
+                            <!--<a title="Activitatile" (click)="setActivities(objAddr)" *ngIf="tipCerere !== 'LICD' && tipCerere !== 'LICP' && tipCerere !== 'LICA' && tipCerere !== 'LICS' && tipCerere !== 'LICRL'">{{ objAddr.activitiesStr ?  objAddr.activitiesStr : 'Adauga'}}</a>-->
+                            <label >{{ objAddr.activitiesStr }} </label>
                         </td>
                         <td>
                             <a title="Decizia" (click)="addDecision(objAddr)" *ngIf="tipCerere !== 'LICD' && tipCerere !== 'LICP' && tipCerere !== 'LICA' && tipCerere !== 'LICS' && tipCerere !== 'LICRL'">Decizia</a>
@@ -223,7 +246,10 @@
                         </td>
                         <td>
                             <button class="btn btn-dark-red-color waves-light btn-sm waves-light" type="button"
-                                    (click)="removeDocument(i)" mdbWavesEffect [disabled]="tipCerere === 'LICD' || tipCerere === 'LICP' || tipCerere === 'LICA' || tipCerere === 'LICS' || tipCerere === 'LICRL'">Sterge
+                                    (click)="removeDocument(i)" mdbWavesEffect [disabled]="tipCerere === 'LICD' || tipCerere === 'LICP' || tipCerere === 'LICA' || tipCerere === 'LICS' || tipCerere === 'LICRL'"><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+                            </button>
+                            <button class="btn btn-light waves-light btn-sm waves-light" type="button"
+                                    (click)="editFilial(objAddr)" mdbWavesEffect [disabled]="tipCerere === 'LICD' || tipCerere === 'LICP' || tipCerere === 'LICA' || tipCerere === 'LICS' || tipCerere === 'LICRL'"><i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
                             </button>
                         </td>
                     </tr>

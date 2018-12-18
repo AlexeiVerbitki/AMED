@@ -54,33 +54,13 @@ export class BAprobareComponent implements OnInit, OnDestroy {
             'outputDocuments': [],
             'clinicalTrails': [],
             'clinicalTrailAmendment': [],
-            // 'clinicalTrailAmendment': this.fb.group({
-            //     'id': [''],
-            //     'registrationRequestId': [],
-            //     'clinicalTrialsEntityId': [],
-            //     'title': ['title', Validators.required],
-            //     'treatment': ['', Validators.required],
-            //     'provenance': ['', Validators.required],
-            //     'sponsor': ['', Validators.required],
-            //     'phase': ['', Validators.required],
-            //     'eudraCtNr': ['eudraCtNr', Validators.required],
-            //     'code': ['', Validators.required],
-            //     'medicalInstitutionsFrom': [],
-            //     'trialPopNat': ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-            //     'trialPopInternat': ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-            //     'medicament': [],
-            //     'referenceProduct': [],
-            //     'status': ['P'],
-            //     'placebo': [],
-            //     'comissionNr': ['', Validators.required],
-            //     'comissionDate': ['', Validators.required]
-            // }),
             'status': [undefined, Validators.required],
         });
 
         this.clinicalTrailAmendmentForm = this.fb.group({
             'comissionNr': ['', Validators.required],
-            'comissionDate': ['', Validators.required]
+            'comissionDate': ['', Validators.required],
+            'amendCode': ['', Validators.required]
         });
         this.initPage();
     }

@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Document} from "../../../models/document";
 import {Observable, Subject, Subscription} from "rxjs";
 import {AdministrationService} from "../../../shared/service/administration.service";
-import {debounceTime, distinctUntilChanged, filter, flatMap, map, startWith, tap} from "rxjs/operators";
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
 import {MedicamentService} from "../../../shared/service/medicament.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {RequestService} from "../../../shared/service/request.service";
@@ -15,6 +15,7 @@ import {TaskService} from "../../../shared/service/task.service";
 import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
 import {DrugSubstanceTypesService} from "../../../shared/service/drugs/drugsubstancetypes.service";
 import {DrugDocumentsService} from "../../../shared/service/drugs/drugdocuments.service";
+import {DrugDecisionsService} from "../../../shared/service/drugs/drugdecisions.service";
 
 @Component({
     selector: 'app-cerere-solic-autor',
@@ -29,7 +30,7 @@ export class CerereSolicAutorComponent implements OnInit {
     formSubmitted: boolean;
     generatedDocNrSeq: number;
     filteredOptions: Observable<any[]>;
-    companies: any[];
+    companies: Observable<any[]>;
     private subscriptions: Subscription[] = [];
     states: any[] = [];
     localities: any[] = [];
@@ -48,6 +49,7 @@ export class CerereSolicAutorComponent implements OnInit {
     loadingCompany: boolean = false;
     company: any;
     selectedFilials: any[] = [];
+    companyExistInTable: boolean = false;
 
     constructor(private fb: FormBuilder, private administrationService: AdministrationService,
                 private medicamentService: MedicamentService,
@@ -57,7 +59,8 @@ export class CerereSolicAutorComponent implements OnInit {
                 private drugDocumentsService: DrugDocumentsService,
                 public dialogConfirmation: MatDialog,
                 private taskService: TaskService, private errorHandlerService: ErrorHandlerService,
-                private drugSubstanceTypesService: DrugSubstanceTypesService
+                private drugSubstanceTypesService: DrugSubstanceTypesService,
+                private drugDecisionsService: DrugDecisionsService
     ) {
 
         this.cerereSolicAutorForm = fb.group({
@@ -88,11 +91,10 @@ export class CerereSolicAutorComponent implements OnInit {
                     'drugSubstanceTypesId': [],
                     'nmEconomicAgents': [[]]
                 }),
-            'resPerson': {disabled: false, value: null},
+            'resPerson': {disabled: true, value: null},
             'precursor': [{value: false, disabled: this.disabled}],
             'psihotrop': [{value: false, disabled: this.disabled}],
-            'stupefiant': [{value: false, disabled: this.disabled}],
-            'filiala': []
+            'stupefiant': [{value: false, disabled: this.disabled}]
         });
     }
 
@@ -111,8 +113,6 @@ export class CerereSolicAutorComponent implements OnInit {
                 error => console.log(error)
             )
         );
-
-        //this.getAllCompanies();
 
         this.getDrugSubstanceTypes();
 
@@ -141,6 +141,14 @@ export class CerereSolicAutorComponent implements OnInit {
                         this.outDocuments = data.outputDocuments;
                         this.company = data.company;
                         this.locality = data.company.locality;
+                        let resPerson: any;
+                        if (data.registrationRequestMandatedContacts[0].mandatedLastname) {
+                            this.cerereSolicAutorForm.get('resPerson').setValue(data.registrationRequestMandatedContacts[0].mandatedLastname);
+                            resPerson = data.registrationRequestMandatedContacts[0].mandatedLastname + " ";
+                        }
+                        if (data.registrationRequestMandatedContacts[0].mandatedFirstname) {
+                            this.cerereSolicAutorForm.get('resPerson').setValue(resPerson + data.registrationRequestMandatedContacts[0].mandatedFirstname);
+                        }
                         this.documents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
                         let xs = this.documents;
                         xs = xs.map(x => {
@@ -166,22 +174,25 @@ export class CerereSolicAutorComponent implements OnInit {
     }
 
     getAllCompanies() {
-        this.company = this.cerereSolicAutorForm.get('company').value;
-        if (this.company != null && this.company.idno != null) {
-            this.subscriptions.push(
-                this.administrationService.getCompanyesListByIdno(this.company.idno).subscribe(data => {
-                        this.companies = data;
-                        this.filteredOptions = this.cerereSolicAutorForm.get('filiala').valueChanges
-                            .pipe(
-                                startWith<string | any>(''),
-                                map(value => typeof value === 'string' ? value : value.name),
-                                map(name => this._filter(name))
-                            );
-                    },
-                    error => console.log(error)
+        this.companies =
+            this.companyInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) return true;
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingCompany = true;
+
+                }),
+
+                flatMap(term =>
+                    this.drugDecisionsService.getCompaniesByNameCodeAndIdno(term, this.company.idno).pipe(
+                        tap(() => this.loadingCompany = false)
+                    )
                 )
-            );
-        }
+            )
+        ;
     }
 
     getDrugSubstanceTypes() {
@@ -189,7 +200,6 @@ export class CerereSolicAutorComponent implements OnInit {
         this.subscriptions.push(
             this.drugSubstanceTypesService.getDrugSubstanceTypesList().subscribe(data => {
                     this.drugSubstanceTypes = data;
-                    console.log(data);
                 },
                 error => console.log(error)
             )
@@ -229,22 +239,6 @@ export class CerereSolicAutorComponent implements OnInit {
         };
         this.outDocuments.push(outDocumentAP);
 
-        // let outDocumentAH = {
-        //     name: 'Autorizatia de activitate cu psihotrope',
-        //     docType: this.docTypesInitial.find(r => r.category == 'AH'),
-        //     number: 'AH-' + this.cerereSolicAutorForm.get('requestNumber').value,
-        //     date: new Date()
-        // };
-        // this.outDocuments.push(outDocumentAH);
-        //
-        // let outDocumentAF = {
-        //     name: 'Autorizatia de activitate cu stupefiante',
-        //     docType: this.docTypesInitial.find(r => r.category == 'AF'),
-        //     number: 'AF-' + this.cerereSolicAutorForm.get('requestNumber').value,
-        //     date: new Date()
-        // };
-        // this.outDocuments.push(outDocumentAF);
-
         let outDocumentSR = {
             name: 'Scrisoare de refuz',
             docType: this.docTypesInitial.find(r => r.category == 'SR'),
@@ -263,33 +257,6 @@ export class CerereSolicAutorComponent implements OnInit {
         }
     }
 
-    getFilialState() {
-        if (this.cerereSolicAutorForm.get('filiala') && this.cerereSolicAutorForm.get('filiala').value) {
-            this.company = this.cerereSolicAutorForm.get('filiala').value;
-            this.subscriptions.push(
-                this.administrationService.getAllStates().subscribe(data => {
-                        this.states = data;
-                        //this.company = this.cerereSolicAutorForm.get('filiala').value;
-                        if (this.company != null && this.company.stateId != null) {
-                            for (let entry of this.states) {
-                                if (entry.id == this.company.stateId) {
-                                    this.cerereSolicAutorForm.get('state').setValue(entry);
-                                    this.administrationService.getLocalitiesByState(this.cerereSolicAutorForm.get('state').value.id).subscribe(data => {
-                                            this.localities = data;
-                                            this.cerereSolicAutorForm.get('locality').setValue(this.locality);
-                                            this.locality = [];
-                                        },
-                                        error => console.log(error)
-                                    )
-                                }
-                            }
-                        }
-                    }
-                )
-            );
-        }
-    }
-
     onChanges(): void {
         this.cerereSolicAutorForm.get('state').valueChanges.subscribe(val => {
             if (this.cerereSolicAutorForm.get('state') && this.cerereSolicAutorForm.get('state').value) {
@@ -305,12 +272,9 @@ export class CerereSolicAutorComponent implements OnInit {
             }
         });
 
-        // this.cerereSolicAutorForm.get('filiala').valueChanges.subscribe(val => {
-        //
-        //     //this.cerereSolicAutorForm.get('locality').setValue([]);
-        //     this.getFilialState();
-        //
-        // });
+        this.cerereSolicAutorForm.get('company').valueChanges.subscribe(val => {
+            this.companyExistInTable = false;
+        });
     }
 
     displayFn(user?: any): string | undefined {
@@ -441,57 +405,36 @@ export class CerereSolicAutorComponent implements OnInit {
     }
 
     viewDoc(document: any) {
-        this.loadingService.show();
-        // if (document.docType.category == 'NN' || document.docType.category == 'BB') {
-        //     this.subscriptions.push(this.drugDocumentsService.viewAuthorization(document.number,
-        //         document.content,
-        //         document.title,
-        //         document.docType.category).subscribe(data => {
-        //             let file = new Blob([data], {type: 'application/pdf'});
-        //             var fileURL = URL.createObjectURL(file);
-        //             window.open(fileURL);
-        //             this.loadingService.hide();
-        //         }, error => {
-        //             this.loadingService.hide();
-        //         }
-        //         )
-        //     );
-        // } else {
-        // let locality = this.cerereSolicAutorForm.get('locality').value;
-        // let state = this.cerereSolicAutorForm.get('state').value;
-        // let data = {
-        //
-        //     requestNumber: this.cerereSolicAutorForm.get('requestNumber').value,
-        //     protocolDate: this.cerereSolicAutorForm.get('drugCheckDecision.protocolDate').value,
-        //     resPerson: this.cerereSolicAutorForm.get('resPerson').value,
-        //     companyValue: this.cerereSolicAutorForm.get('companyValue').value,
-        //     street: this.cerereSolicAutorForm.get('street').value,
-        //     locality: locality.description,
-        //     state: state.description,
-        //     dataExp: this.cerereSolicAutorForm.get('dataExp').value,
-        //     precursor: this.cerereSolicAutorForm.get('precursor').value,
-        //     psihotrop: this.cerereSolicAutorForm.get('psihotrop').value,
-        //     stupefiant: this.cerereSolicAutorForm.get('stupefiant').value
-        // };
-        //
-        // console.log(data);
-        // this.subscriptions.push(this.drugDocumentsService.viewAuthorization(data).subscribe(data => {
-        //         let file = new Blob([data], {type: 'application/pdf'});
-        //         var fileURL = URL.createObjectURL(file);
-        //         window.open(fileURL);
-        //         this.loadingService.hide();
-        //     }, error => {
-        //         this.loadingService.hide();
-        //     }
-        //     )
-        // );
-        //}
-    }
+        if (document.docType.category == 'AP') {
+            this.loadingService.show();
+            let locality = this.cerereSolicAutorForm.get('locality').value;
+            let state = this.cerereSolicAutorForm.get('state').value;
+            let data = {
 
-    private _filter(name: string): any[] {
-        const filterValue = name.toLowerCase();
+                requestNumber: this.cerereSolicAutorForm.get('requestNumber').value,
+                protocolDate: this.cerereSolicAutorForm.get('drugCheckDecision.protocolDate').value,
+                resPerson: this.cerereSolicAutorForm.get('resPerson').value,
+                companyValue: this.cerereSolicAutorForm.get('companyValue').value,
+                street: this.cerereSolicAutorForm.get('street').value,
+                locality: locality.description,
+                state: state.description,
+                dataExp: this.cerereSolicAutorForm.get('dataExp').value,
+                precursor: this.cerereSolicAutorForm.get('precursor').value,
+                psihotrop: this.cerereSolicAutorForm.get('psihotrop').value,
+                stupefiant: this.cerereSolicAutorForm.get('stupefiant').value
+            };
 
-        return this.companies.filter(option => option.name.toLowerCase().includes(filterValue));
+            this.subscriptions.push(this.drugDocumentsService.viewAuthorization(data).subscribe(data => {
+                    let file = new Blob([data], {type: 'application/pdf'});
+                    var fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.loadingService.hide();
+                }, error => {
+                    this.loadingService.hide();
+                }
+                )
+            );
+        }
     }
 
     remove(doc: any) {
@@ -574,13 +517,24 @@ export class CerereSolicAutorComponent implements OnInit {
         });
     }
 
-    addFilial() {
-        if (this.cerereSolicAutorForm.get('filiala') && this.cerereSolicAutorForm.get('filiala').value) {
-            this.selectedFilials.push(this.cerereSolicAutorForm.get('filiala').value);
+    addCompany() {
+        this.companyExistInTable = false;
+        if (this.cerereSolicAutorForm.get('company') && this.cerereSolicAutorForm.get('company').value) {
+
+            let company = this.selectedFilials.find(r => r.code == this.cerereSolicAutorForm.get('company').value.code);
+
+            if (company != null) {
+                this.companyExistInTable = true;
+                return;
+            } else {
+                this.selectedFilials.push(this.cerereSolicAutorForm.get('company').value);
+            }
+        } else {
+            return;
         }
     }
 
-    removeFilial(index) {
+    removeCompany(index) {
 
         const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
             data: {

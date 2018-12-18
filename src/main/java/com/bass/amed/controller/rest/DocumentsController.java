@@ -1,6 +1,8 @@
 package com.bass.amed.controller.rest;
 
 import com.bass.amed.common.Constants;
+import com.bass.amed.dto.BonDePlataDTO;
+import com.bass.amed.dto.BonDePlataMedicamentDTO;
 import com.bass.amed.dto.DistributionDispositionDTO;
 import com.bass.amed.dto.RequestAdditionalDataDTO;
 import com.bass.amed.dto.annihilation.BonPlataAnihilare1;
@@ -38,6 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
@@ -64,9 +67,10 @@ public class DocumentsController
     private SrcUserRepository srcUserRepository;
     @Autowired
     private EconomicAgentsRepository economicAgentsRepository;
-
     @Autowired
     private SysParamsRepository sysParamsRepository;
+    @Autowired
+    private CurrencyHistoryRepository currencyHistoryRepository;
 
     @Value("${final.documents.folder}")
     private String folder;
@@ -102,7 +106,8 @@ public class DocumentsController
     {
         logger.debug("getDocumentsByPriceIds");
         List<DocumentsEntity> docs = null;
-        if(ids.length > 0) {
+        if (ids.length > 0)
+        {
             docs = documentsRepository.findAllByPriceIds(Arrays.asList(ids));
         }
         return new ResponseEntity<>(docs, HttpStatus.OK);
@@ -149,40 +154,100 @@ public class DocumentsController
                 .header("Content-Disposition", "inline; filename=dd.pdf").body(bytes);
     }
 
-    @RequestMapping(value = "/view-bon-de-plata", method = RequestMethod.GET)
+    @RequestMapping(value = "/view-bon-de-plata", method = RequestMethod.POST)
     @Transactional
-    public ResponseEntity<byte[]> viewBonDePlata(@RequestParam(value = "requestId") Integer requestId) throws CustomException
+    public ResponseEntity<byte[]> viewBonDePlata(@RequestBody BonDePlataDTO bonDePlataDTO) throws CustomException
     {
+
         byte[] bytes = null;
         try
         {
             ResourceLoader resourceLoader = new DefaultResourceLoader();
-            Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts");
-            String classPathWithoutJRXML = res.getFile().getAbsolutePath();
-            res = resourceLoader.getResource("layouts\\distributionDisposition.jrxml");
+            Resource res = null;
+            Double coeficient = 1d;
+            if (!bonDePlataDTO.getCurrency().isEmpty() && !bonDePlataDTO.getCurrency().equals("MDL"))
+            {
+                DateFormat formatter = new SimpleDateFormat(Constants.Layouts.DATE_FORMAT);
+                List<NmCurrenciesHistoryEntity> nmCurrenciesHistoryEntities = currencyHistoryRepository.findAllByPeriod(formatter.parse(formatter.format(new Date())));
+                if(nmCurrenciesHistoryEntities.isEmpty())
+                {
+                    throw new CustomException("Lipseste cursul valutar pentru astazi.");
+                }
+                NmCurrenciesHistoryEntity nmCurrenciesHistoryEntity =
+                        nmCurrenciesHistoryEntities.stream().filter(t -> t.getCurrency().getShortDescription().equals(bonDePlataDTO.getCurrency())).findFirst().orElse(new NmCurrenciesHistoryEntity());
+                if(nmCurrenciesHistoryEntity.getId()<=0)
+                {
+                    throw new CustomException("Nu a fost gasit cursul valutar pentru valuta "+bonDePlataDTO.getCurrency());
+                }
+                coeficient = AmountUtils.round(nmCurrenciesHistoryEntity.getValue() / nmCurrenciesHistoryEntity.getMultiplicity(), 4);
+            }
+            switch (bonDePlataDTO.getCurrency())
+            {
+                case "USD":
+                    res = resourceLoader.getResource("layouts/Autorizare M Bon de plata USD.jrxml");
+                    break;
+                case "EUR":
+                    res = resourceLoader.getResource("layouts/Autorizare M Bon de plata EUR.jrxml");
+                    break;
+                default:
+                    res = resourceLoader.getResource("layouts/Autorizare M Bon de plata.jrxml");
+                    break;
+            }
             JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
 
-            List<DistributionDispositionDTO> dataList = new ArrayList();
-            DistributionDispositionDTO obj = new DistributionDispositionDTO();
-            obj.setDispositionDate(Calendar.getInstance().getTime());
-            obj.setNrDisposition("1");
-            obj.setPath(classPathWithoutJRXML);
-            dataList.add(obj);
-
-            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(dataList);
-            JasperPrint jasperPrint = JasperFillManager.fillReport(report, null, beanColDataSource);
-            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
-
-            List<PaymentOrdersEntity> details = paymentOrderRepository.findByregistrationRequestId(requestId);
-
-            Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
             PaymentOrderNumberSequence seq = new PaymentOrderNumberSequence();
             paymentOrderNumberRepository.save(seq);
+
+            /* Map to hold Jasper report Parameters */
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("nr_invoice", String.valueOf(seq.getId()));
+            SimpleDateFormat sdf = new SimpleDateFormat(Constants.Layouts.DATE_FORMAT);
+            parameters.put("invoice_date", sdf.format(Calendar.getInstance().getTime()));
+            parameters.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
+            parameters.put("companyName", bonDePlataDTO.getCompanyName());
+            parameters.put("companyAddress", bonDePlataDTO.getAddress());
+            parameters.put("companyCountry", bonDePlataDTO.getCompanyCountry());
+            parameters.put("payer", bonDePlataDTO.getCompanyName());
+            parameters.put("payer_address", bonDePlataDTO.getAddress());
+            parameters.put("beneficiarBank", sysParamsRepository.findByCode(Constants.SysParams.BENEFICIARY_BANK).get().getValue());
+            parameters.put("beneficiarAddress", sysParamsRepository.findByCode(Constants.SysParams.BENEFICIARY_ADDRESS).get().getValue());
+            parameters.put("beneficiarBankCode", sysParamsRepository.findByCode(Constants.SysParams.BENEFICIARY_BANK_CODE).get().getValue());
+            parameters.put("beneficiarBankAccount", sysParamsRepository.findByCode(Constants.SysParams.BENEFICIARY_BANK_ACCOUNT).get().getValue());
+            parameters.put("beneficiarIban", sysParamsRepository.findByCode(Constants.SysParams.BENEFICIARY_IBAN).get().getValue());
+            parameters.put("vatCode", sysParamsRepository.findByCode(Constants.SysParams.VAT_CODE).get().getValue());
+            parameters.put("beneficiar", sysParamsRepository.findByCode(Constants.SysParams.BENEFICIARY).get().getValue());
+            List<BonDePlataMedicamentDTO> detailsUpdated = new ArrayList<>();
+            for (PaymentOrdersEntity paymentOrdersEntity : bonDePlataDTO.getPaymentOrders())
+            {
+                if(!"BS".equals(paymentOrdersEntity.getServiceCharge().getCategory()))
+                {
+                    BonDePlataMedicamentDTO b = new BonDePlataMedicamentDTO();
+                    b.assign(bonDePlataDTO.getMedicamentDetails().get(0));
+                    b.setPrice(AmountUtils.round(paymentOrdersEntity.getQuantity() * paymentOrdersEntity.getAmount() / coeficient, 2));
+                    detailsUpdated.add(b);
+                }
+            }
+            Double sum = detailsUpdated.stream().map(t -> t.getPrice()).reduce(0d, Double::sum);
+            parameters.put("sum", sum);
+            JRBeanCollectionDataSource autorizareMbonDePlataDatasetJRBean = new JRBeanCollectionDataSource(detailsUpdated);
+            parameters.put("autorizareMbonDePlataDataset", autorizareMbonDePlataDatasetJRBean);
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
+            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+
+            List<PaymentOrdersEntity> details = paymentOrderRepository.findByregistrationRequestId(bonDePlataDTO.getRequestId());
+
+            Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
             for (PaymentOrdersEntity order : details)
             {
-                order.setDate(now);
-                order.setNumber(String.valueOf(seq.getId()));
-                paymentOrderRepository.save(order);
+                if(bonDePlataDTO.getPaymentOrders().stream().anyMatch(t->t.getId().equals(order.getId())))
+                {
+                    order.setDate(now);
+                    order.setNumber(String.valueOf(seq.getId()));
+                    order.setCurrency(bonDePlataDTO.getCurrency());
+                    order.setAmountExchanged(AmountUtils.round(order.getQuantity() * order.getAmount() / coeficient, 2));
+                    paymentOrderRepository.save(order);
+                }
             }
         }
         catch (Exception e)
@@ -191,43 +256,66 @@ public class DocumentsController
         }
 
         return ResponseEntity.ok().header("Content-Type", "application/pdf")
-                .header("Content-Disposition", "inline; filename=dd.pdf").body(bytes);
+                .header("Content-Disposition", "inline; filename=bonDePlata.pdf").body(bytes);
     }
 
-    @RequestMapping(value = "/view-bon-de-plata-one", method = RequestMethod.GET)
+    @RequestMapping(value = "/view-bon-de-plata-suplimentar", method = RequestMethod.POST)
     @Transactional
-    public ResponseEntity<byte[]> viewBonDePlataOne(@RequestParam(value = "paymentOrderId") Integer paymentOrderId) throws CustomException
+    public ResponseEntity<byte[]> viewBonDePlataSuplimentar(@RequestBody BonDePlataDTO bonDePlataDTO) throws CustomException
     {
+
         byte[] bytes = null;
         try
         {
             ResourceLoader resourceLoader = new DefaultResourceLoader();
-            Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts");
-            String classPathWithoutJRXML = res.getFile().getAbsolutePath();
-            res = resourceLoader.getResource("layouts\\distributionDisposition.jrxml");
+            Resource res = resourceLoader.getResource("layouts/Cont de plata suplimentar.jrxml");
+
             JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
 
-            List<DistributionDispositionDTO> dataList = new ArrayList();
-            DistributionDispositionDTO obj = new DistributionDispositionDTO();
-            obj.setDispositionDate(Calendar.getInstance().getTime());
-            obj.setNrDisposition("1");
-            obj.setPath(classPathWithoutJRXML);
-            dataList.add(obj);
-
-            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(dataList);
-            JasperPrint jasperPrint = JasperFillManager.fillReport(report, null, beanColDataSource);
-            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
-
-            Optional<PaymentOrdersEntity> orderOpt = paymentOrderRepository.findById(paymentOrderId);
-            PaymentOrdersEntity order = orderOpt.orElse(new PaymentOrdersEntity());
-
-            Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
             PaymentOrderNumberSequence seq = new PaymentOrderNumberSequence();
             paymentOrderNumberRepository.save(seq);
-            order.setDate(now);
-            order.setNumber(String.valueOf(seq.getId()));
-            paymentOrderRepository.save(order);
 
+            /* Map to hold Jasper report Parameters */
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("La Nr.", String.valueOf(seq.getId()));
+            SimpleDateFormat sdf = new SimpleDateFormat(Constants.Layouts.DATE_FORMAT);
+            parameters.put("Din: ", sdf.format(Calendar.getInstance().getTime()));
+            parameters.put("Contabil-şef", sysParamsRepository.findByCode(Constants.SysParams.ACCOUNTANT).get().getValue());
+            parameters.put("Spre plată", bonDePlataDTO.getPaymentOrders().get(0).getAmount());
+            parameters.put("medicaments", bonDePlataDTO.getMedicamentDetails().get(0).getMedicamentName()+" "+bonDePlataDTO.getMedicamentDetails().get(0).getPharmaceuticForm()+
+                    " "+bonDePlataDTO.getMedicamentDetails().get(0).getDose()+" "+bonDePlataDTO.getMedicamentDetails().get(0).getDivision());
+
+            parameters.put("companyName", bonDePlataDTO.getCompanyName());
+            parameters.put("companyAddress", bonDePlataDTO.getAddress());
+            parameters.put("companyCountry", bonDePlataDTO.getCompanyCountry());
+            parameters.put("payer", bonDePlataDTO.getCompanyName());
+            parameters.put("payer_address", bonDePlataDTO.getAddress());
+            parameters.put("beneficiarBank", sysParamsRepository.findByCode(Constants.SysParams.BENEFICIARY_BANK).get().getValue());
+            parameters.put("beneficiarAddress", sysParamsRepository.findByCode(Constants.SysParams.BENEFICIARY_ADDRESS).get().getValue());
+            parameters.put("beneficiarBankCode", sysParamsRepository.findByCode(Constants.SysParams.BENEFICIARY_BANK_CODE).get().getValue());
+            parameters.put("beneficiarBankAccount", sysParamsRepository.findByCode(Constants.SysParams.BENEFICIARY_BANK_ACCOUNT).get().getValue());
+            parameters.put("beneficiarIban", sysParamsRepository.findByCode(Constants.SysParams.BENEFICIARY_IBAN).get().getValue());
+            parameters.put("vatCode", sysParamsRepository.findByCode(Constants.SysParams.VAT_CODE).get().getValue());
+            parameters.put("beneficiar", sysParamsRepository.findByCode(Constants.SysParams.BENEFICIARY).get().getValue());
+            parameters.put("sum", bonDePlataDTO.getPaymentOrders().get(0).getAmount());
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
+            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+
+            List<PaymentOrdersEntity> details = paymentOrderRepository.findByregistrationRequestId(bonDePlataDTO.getRequestId());
+
+            Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+            for (PaymentOrdersEntity order : details)
+            {
+                if(bonDePlataDTO.getPaymentOrders().stream().anyMatch(t->t.getId().equals(order.getId())))
+                {
+                    order.setDate(now);
+                    order.setNumber(String.valueOf(seq.getId()));
+                    order.setCurrency(bonDePlataDTO.getCurrency());
+                    order.setAmountExchanged(AmountUtils.round(order.getQuantity() * order.getAmount(), 2));
+                    paymentOrderRepository.save(order);
+                }
+            }
         }
         catch (Exception e)
         {
@@ -235,7 +323,7 @@ public class DocumentsController
         }
 
         return ResponseEntity.ok().header("Content-Type", "application/pdf")
-                .header("Content-Disposition", "inline; filename=dd.pdf").body(bytes);
+                .header("Content-Disposition", "inline; filename=bonDePlata.pdf").body(bytes);
     }
 
     @RequestMapping(value = "/generate-distribution-disposition", method = RequestMethod.GET)

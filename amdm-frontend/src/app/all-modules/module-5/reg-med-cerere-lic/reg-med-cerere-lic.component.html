@@ -225,10 +225,10 @@
 						<input id="telefonContact" mdbInputDirective type="text" class="form-control"
 						       formControlName="telefonContact" maxlength="9"
 						>
-						<label for="telefonContact">Telefon de contact <span class="text-danger">*</span> </label>
+						<label for="telefonContact">Telefon de contact </label>
 					</div>
 					<div *ngIf="rFormSubbmitted && !rForm.get('telefonContact').valid">
-						<small class="text-muted"><strong class="text-danger">Telefonul trebuie introdus sau nu este valid.</strong>
+						<small class="text-muted"><strong class="text-danger">Telefonul nu este valid.</strong>
 						</small>
 					</div>
 				</div>
@@ -248,11 +248,7 @@
 					<div class="md-form">
 						<input id="nrProcurii1" mdbInputDirective type="text" class="form-control"
 						       formControlName="nrProcurii1">
-						<label for="nrProcurii1">Nr. procurii <span class="text-danger">*</span></label>
-					</div>
-					<div *ngIf="rFormSubbmitted && !rForm.get('nrProcurii1').valid">
-						<small class="text-muted"><strong class="text-danger">Numarul procurii trebuie introdus</strong>
-						</small>
+						<label for="nrProcurii1">Nr. procurii </label>
 					</div>
 				</div>
 				<div class="col-md-4">
@@ -264,10 +260,6 @@
 							<mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
 							<mat-datepicker touchUi #picker3 [disabled]="false"></mat-datepicker>
 						</mat-form-field>
-					</div>
-					<div *ngIf="rFormSubbmitted && !rForm.get('dataProcurii1').value">
-						<small class="text-muted"><strong class="text-danger">Data procurii trebuie introdusa</strong>
-						</small>
 					</div>
 				</div>
 			</div>

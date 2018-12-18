@@ -62,6 +62,12 @@ export class RegDrugControl implements OnInit {
                 fb.group({
                     'code': ['ATAC', Validators.required]
                 }),
+            'mandatedFirstname': [null, Validators.required],
+            'mandatedLastname': [null, Validators.required],
+            'phoneNumber': [null, [Validators.required, Validators.maxLength(9), Validators.pattern('[0-9]+')]],
+            'email': [null, Validators.email],
+            'requestMandateNr': [null],
+            'requestMandateDate': [{value: null}],
         });
     }
 
@@ -161,10 +167,23 @@ export class RegDrugControl implements OnInit {
         modelToSubmit.initiator = useranameDB;
         modelToSubmit.assignedUser = useranameDB;
         modelToSubmit.documents = this.documents;
+        modelToSubmit.registrationRequestMandatedContacts = [{
+            mandatedLastname: this.rForm.get('mandatedLastname').value,
+            mandatedFirstname: this.rForm.get('mandatedFirstname').value,
+            phoneNumber: this.rForm.get('phoneNumber').value,
+            email: this.rForm.get('email').value,
+            requestMandateNr: this.rForm.get('requestMandateNr').value,
+            requestMandateDate: this.rForm.get('requestMandateDate').value
+        }];
 
         this.setSelectedRequest();
 
-        this.goToNextStepOnLicenseValid(modelToSubmit);
+        //this.goToNextStepOnLicenseValid(modelToSubmit);
+
+        this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
+                this.router.navigate([this.model + data.body.id]);
+            })
+        );
 
     }
 
@@ -181,44 +200,44 @@ export class RegDrugControl implements OnInit {
         }
     }
 
-    private goToNextStepOnLicenseValid(modelToSubmit: any) {
-
-        let company = this.rForm.get('company').value;
-
-        if (company != null && company.licenseId != null) {
-            this.subscriptions.push(
-                this.licenseService.findLicenseById(company.licenseId).subscribe(data => {
-                        if (data != null && data.expirationDate != null) {
-                            let licenseDate = new Date(data.expirationDate);
-                            let date = new Date();
-                            let haveLicence = false;
-                            if (licenseDate.getTime() > date.getTime()) {
-                                haveLicence = true;
-                            }
-                            if (!haveLicence) {
-                                this.errorHandlerService.showError('Licenta nu este valida.');
-                                return;
-                            }
-                            try {
-                                this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
-                                        this.router.navigate([this.model + data.body.id]);
-                                    })
-                                );
-                            } catch (err) {
-                                return;
-                            }
-                        } else {
-                            this.errorHandlerService.showError('Licenta nu este valida.');
-                            return;
-                        }
-                    }
-                )
-            );
-        } else {
-            this.errorHandlerService.showError('Licenta nu este valida.');
-            return;
-        }
-
-    }
+    // private goToNextStepOnLicenseValid(modelToSubmit: any) {
+    //
+    //     let company = this.rForm.get('company').value;
+    //
+    //     if (company != null && company.licenseId != null) {
+    //         this.subscriptions.push(
+    //             this.licenseService.findLicenseById(company.licenseId).subscribe(data => {
+    //                     if (data != null && data.expirationDate != null) {
+    //                         let licenseDate = new Date(data.expirationDate);
+    //                         let date = new Date();
+    //                         let haveLicence = false;
+    //                         if (licenseDate.getTime() > date.getTime()) {
+    //                             haveLicence = true;
+    //                         }
+    //                         if (!haveLicence) {
+    //                             this.errorHandlerService.showError('Licenta nu este valida.');
+    //                             return;
+    //                         }
+    //                         try {
+    //                             this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
+    //                                     this.router.navigate([this.model + data.body.id]);
+    //                                 })
+    //                             );
+    //                         } catch (err) {
+    //                             return;
+    //                         }
+    //                     } else {
+    //                         this.errorHandlerService.showError('Licenta nu este valida.');
+    //                         return;
+    //                     }
+    //                 }
+    //             )
+    //         );
+    //     } else {
+    //         this.errorHandlerService.showError('Licenta nu este valida.');
+    //         return;
+    //     }
+    //
+    // }
 
 }

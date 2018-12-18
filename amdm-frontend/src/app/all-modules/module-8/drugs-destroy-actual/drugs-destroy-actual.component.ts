@@ -12,6 +12,7 @@ import {LoaderService} from "../../../shared/service/loader.service";
 import {DocumentService} from "../../../shared/service/document.service";
 import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
 import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
+import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
 
 @Component({
     selector: 'app-drugs-destroy-actual',
@@ -58,7 +59,8 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
                 private annihilationService: AnnihilationService,
                 private loadingService: LoaderService,
                 private documentService: DocumentService,
-                private navbarTitleService: NavbarTitleService) {
+                private navbarTitleService: NavbarTitleService,
+                private errorHandlerService: ErrorHandlerService) {
     }
 
     ngOnInit() {
@@ -218,11 +220,13 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
         this.mFormSubbmitted = true;
         this.kFormSubbmitted = true;
         if (this.docs.length == 0 || this.members.length ==0) {
+            this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
             return;
         }
 
         if (!this.kForm.valid)
         {
+            this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
             return;
         }
 

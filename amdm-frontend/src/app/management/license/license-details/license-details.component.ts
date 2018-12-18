@@ -29,12 +29,14 @@ export class LicenseDetailsComponent implements OnInit, OnDestroy {
 
 
     ngOnInit() {
+        this.initFormData();
+
         this.subscriptions.push(this.licenseService.findLicenseById(this.dataDialog.licenseId).subscribe(data => {
             console.log('sfsd', data);
             this.patchValue(data);
         }))
 
-        this.initFormData();
+
     }
 
     private initFormData() {

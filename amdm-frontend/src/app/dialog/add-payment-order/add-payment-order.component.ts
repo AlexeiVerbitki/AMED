@@ -24,6 +24,7 @@ export class AddPaymentOrderComponent implements OnInit {
         this.aForm = fb.group({
             'serviceCharge': [null, Validators.required],
             'amount': [null,Validators.required],
+            'quantity' : [1,[Validators.required,Validators.min(1)]],
             'response' : [null]
         });
     }
@@ -52,6 +53,7 @@ export class AddPaymentOrderComponent implements OnInit {
 
         this.formSubmitted = false;
         this.aForm.get('amount').enable();
+        this.aForm.get('quantity').enable();
         this.aForm.get('response').setValue(true);
         this.dialogRef.close(this.aForm.value);
     }
@@ -64,6 +66,7 @@ export class AddPaymentOrderComponent implements OnInit {
     checkAmount()
     {
         this.aForm.get('amount').disable();
+        this.aForm.get('quantity').enable();
         if(this.aForm.get('serviceCharge').value) {
             this.aForm.get('amount').setValue(this.aForm.get('serviceCharge').value.amount);
         }
@@ -74,6 +77,8 @@ export class AddPaymentOrderComponent implements OnInit {
         if(this.aForm.get('serviceCharge').value && this.aForm.get('serviceCharge').value.category=='BS')
         {
             this.aForm.get('amount').enable();
+            this.aForm.get('quantity').setValue(1);
+            this.aForm.get('quantity').disable();
         }
     }
 

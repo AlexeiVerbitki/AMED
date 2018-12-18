@@ -11,6 +11,7 @@ import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/ope
 import {MedicamentService} from "../../../shared/service/medicament.service";
 import {AnnihilationService} from "../../../shared/service/annihilation/annihilation.service";
 import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
+import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
 
 @Component({
     selector: 'app-drugs-destroy-register',
@@ -53,7 +54,8 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
                 private authService: AuthService,
                 private medicamentService: MedicamentService,
                 private annihilationService : AnnihilationService,
-                private navbarTitleService: NavbarTitleService) {
+                private navbarTitleService: NavbarTitleService,
+                private errorHandlerService: ErrorHandlerService) {
 
     }
 
@@ -180,6 +182,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
         this.mFormSubbmitted = true;
 
         if (!this.mForm.valid) {
+            this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
             return;
         }
 

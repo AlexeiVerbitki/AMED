@@ -39,7 +39,6 @@ public class ClinicalTrailsService {
                 "select ct.id, ct.code, ct.EudraCT_nr, ctt1.description as treatment, ctt2.description as provenance, ct.sponsor, ct.med_comission_nr as cometee,  ct.med_comission_date as cometeeDate "
                         .concat("FROM amed.clinical_trials ct, amed.clinical_trials_types ctt1, amed.clinical_trials_types ctt2 ")
                         .concat("where ct.status='F' and ct.treatment_id=ctt1.id and ct.provenance_id=ctt2.id")
-                //.concat(";")
         );
 
         EntityManager em = null;

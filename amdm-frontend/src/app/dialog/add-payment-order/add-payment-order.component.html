@@ -4,6 +4,16 @@
   <div class="my-5">
     <div class="row">
       <div class="col-md-12">
+        <div class="md-form">
+          <input id="quantity" mdbInputDirective min="1" step="1" type="number" class="form-control" ng formControlName="quantity">
+          <label for="quantity">Cantitatea<span class="text-danger">*</span></label>
+          <div *ngIf="formSubmitted && aForm.get('quantity').invalid">
+            <small class="text-muted"><strong class="text-danger">Cantitatea este invalida</strong></small>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12">
         <div class="md-form-modified">
           <ng-select id="serviceCharge" name="serviceCharge" [items]="serviceCharges"
                      bindLabel="description"

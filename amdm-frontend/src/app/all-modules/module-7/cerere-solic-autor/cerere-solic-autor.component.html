@@ -123,18 +123,25 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="md-form-modified">
-                    <ng-select id="company" name="filiala" [items]="companies"
+                    <ng-select [items]="companies | async"
                                bindLabel="name"
-                               placeholder="Filiala *"
-                               formControlName="filiala">
+                               placeholder="Filiala"
+                               formControlName="company"
+                               [loading]="loadingCompany"
+                               [typeahead]="companyInputs"
+                               required="true">
                         <ng-template ng-option-tmp let-item="item">
-                            {{item.name}} <br />
+                            {{item.name}} <br/>
                             <small class="form-text text-muted">{{item.code}}</small>
                         </ng-template>
                     </ng-select>
-                    <div *ngIf="formSubmitted && cerereSolicAutorForm.get('filiala').invalid">
-                        <small class="text-muted"><strong class="text-danger">Filiala trebuie
+                    <div *ngIf="formSubmitted && cerereSolicAutorForm.get('company').invalid">
+                        <small class="text-muted"><strong class="text-danger">Filiala solicitantă trebuie
                             selectată</strong></small>
+                    </div>
+                    <div *ngIf="companyExistInTable">
+                        <small class="text-muted"><strong class="text-danger">Filiala este deja adaugata
+                        </strong></small>
                     </div>
                 </div>
             </div>
@@ -149,7 +156,7 @@
                     </div>
                     <div class="col-6">
                         <div class="text-right fap text-white">
-                            <i (click)="addFilial()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+                            <i (click)="addCompany()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
                         </div>
                     </div>
                 </div>
@@ -172,7 +179,7 @@
                     <td>{{ filial.code }}</td>
                     <td>
                         <button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
-                                (click)="removeFilial(i)"
+                                (click)="removeCompany(i)"
                                 mdbWavesEffect attr.disabled="this.disabled">Stergere
                         </button>
                     </td>
@@ -183,7 +190,7 @@
         <hr>
 
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="md-form" >
                     <input id="name" mdbInputDirective type="text" class="form-control" required formControlName="resPerson">
                     <label for="name">Persoana responsabila
@@ -250,16 +257,6 @@
                     <div class="col-12">
                         <div class="card-header-title white-text">Documente de iesire</div>
                     </div>
-                    <!-- <div class="col-6">
-                        <div class="position-button">
-                            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                                (click)="requestAdditionalData()">Solicitare
-                                date aditionale</button>
-                            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                                (click)="requestLaboratoryAnalysis()">Solicitare
-                                analiza laborator</button>
-                        </div>
-                    </div> -->
                 </div>
             </div>
 

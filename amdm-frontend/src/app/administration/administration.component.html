@@ -1,509 +1,448 @@
 <div class="container-fluid sky z-depth-2">
   <div class="mt-5">
     <div class="row">
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/authorization-comment">
-          <div class="module-a h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title">Authorization comment</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(1)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Substante active</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/bank">
-          <div class="module-a h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Bank</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(2)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Coduri ATC</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/bank-accounts">
-          <div class="module-a h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Bank accounts</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(3)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Autorizatii</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/country">
-          <div class="module-a h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Countries</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(4)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Substante auxiliare</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/country-group">
-          <div class="module-b h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Country-group</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(5)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Conturi bancare</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/currencies">
-          <div class="module-b h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Currencies</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(6)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Banci</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/currencies-history">
-          <div class="module-b h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Curreciens history</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(7)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Fazele studiilor clinice</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/custom-groups">
-          <div class="module-b h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Custom groups</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(8)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Tari</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/custom-points">
-          <div class="module-c h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Custom points</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(9)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Grupuri de tari</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/customs-codes">
-          <div class="module-c h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Custom codes</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(10)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Valute</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/documents-archive">
-          <div class="module-c h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Documents archive</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(11)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Istoricul Valutar</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/documents-type">
-          <div class="module-c h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Document type</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(12)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Coduri Vamale</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/economic-agent-bank-accounts">
-          <div class="module-d h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title">Economic agent bank accounts</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(13)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Grupuri Vamale</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/economic-agent-contact-info">
-          <div class="module-d h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title">Economic agent contact info</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(14)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Puncte Vamale</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/economic-agents">
-          <div class="module-d h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Economic agents</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(15)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Tipuri de documente</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/employees">
-          <div class="module-d h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Employees</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(16)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Arhiva de documente</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/identification-document-types">
-          <div class="module-e h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title">Identification document types</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(17)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Conturi bancare ale agentilor economici</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/international-medicament-name">
-          <div class="module-e h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title">International medicament name</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(18)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Informatii de contact ale agentilor economici</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/labels">
-          <div class="module-e h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Labels</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(19)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Tipurile de agenti economici</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/localities">
-          <div class="module-e h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Localities</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(20)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Agenti economici</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/manufactures">
-          <div class="module-f h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">manufactures</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(21)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Lista de angajati</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/manufactures-bank-accounts">
-          <div class="module-f h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title">Manufactures bank accounts</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(22)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Identificatori de tipuri de documente</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/medicament-forms">
-          <div class="module-f h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Medicament forms</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(23)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Denumirile internationale ale medicamentelor</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/medicament-group">
-          <div class="module-f h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Medicament group</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(24)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Investigatori</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/medicament-type">
-          <div class="module-g h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Medicament type</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(25)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Etichete</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/organization">
-          <div class="module-g h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Organization</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(26)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Localitati</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/organization-bank-accounts">
-          <div class="module-g h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title">Organization bank accounts</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(27)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Conturile bancare ale producatorilor</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/partners">
-          <div class="module-g h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Partners</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(28)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Producatori de medicamente</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/pharmaceutical-form-types">
-          <div class="module-h h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title">Pharmaceutical form types</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(29)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Institutii medicale</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/pharmaceutical-forms">
-          <div class="module-h h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Pharmaceutical forms</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(30)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Forme medicale</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/professions">
-          <div class="module-h h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Professions</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(31)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Grupe medicale</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/states">
-          <div class="module-h h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">States</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(32)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Tipuri de medicamente</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/subdivisions">
-          <div class="module-i h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Subdivision</div>
-                </div>
-              </div>
-            </div>
-        </a>
-      </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/substanta-activa">
-          <div class="module-i h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Substanta activa</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(33)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Organizatii</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/substanta-aux">
-          <div class="module-i h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Substanta aux</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(34)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Conturi bancare ale organizatiilor</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/taxe">
-          <div class="module-i h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Taxe</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(35)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Parteneri</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/traffic-archive">
-          <div class="module-j h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Traffic archive</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(36)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Tipuri de forme farmaceutice</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/types-of-customs-transactions">
-          <div class="module-j h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title">Types of customs transactions</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(37)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Forme farmaceutice</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/types-of-drugs-changes">
-          <div class="module-j h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title">Types of drugs changes</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(38)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Tipuri de preturi</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/types-of-economic-agents">
-          <div class="module-j h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title">Types of economic agents</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(39)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Preturi</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/types-of-pharmacy-activity">
-          <div class="module-a h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title">Types of pharmacy activity</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(40)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Profesii</div>
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-lg-3 mb-4">
-        <a routerLink="/dashboard/admin/units-of-measure">
-          <div class="module-a h-box">
-            <div class="row">
-              <div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
-              <div class="col">
-                <div class="module-title mt-3">Units of measure</div>
-              </div>
-            </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(41)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">State</div>
           </div>
-        </a>
+        </div>
       </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(42)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Subdiviziuni</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(43)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Taxe</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(44)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Arhiva de trafic</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(45)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Tipuri de activitati farmaceutice</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(46)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Tipuri de tranzactii vamale</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(47)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Tipuri de modificari ale drogurilor</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(48)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Unitati de masura</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <div class="widget widget-stats bg-gradient-red" (click)="navigateTo(49)">
+          <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
+          <div class="stats-content">
+            <div class="stats-number">Variatiile tipurilor de cereri</div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
+</div>

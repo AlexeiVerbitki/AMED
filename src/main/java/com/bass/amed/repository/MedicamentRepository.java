@@ -19,7 +19,7 @@ public interface MedicamentRepository extends JpaRepository<MedicamentEntity, In
 
     MedicamentEntity findByCode(String code);
 
-    Optional<MedicamentEntity> findById(Integer id);
+//    Optional<MedicamentEntity> findById(Integer id);
 
     @Query(value = "SELECT distinct commercial_name commercialName,registration_number as regnr FROM medicament m WHERE registration_number = ?1 and status='F'", nativeQuery =
             true)

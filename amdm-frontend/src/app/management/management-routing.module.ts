@@ -7,6 +7,7 @@ import {PriceAutoRevaluationComponent} from "./price-auto-revaluation/price-auto
 import {PricesComponent} from "./prices/prices.component";
 import {PriceApprovalComponent} from "./price-approval/price-approval.component";
 import {CPCADTaskComponent} from "../all-modules/module-7/cpcadtask/cpcadtask.component";
+import {AnnihilationManagementComponent} from "./annihilation/annihilation-management/annihilation-management.component";
 import {ClinicalTrialsComponent} from "./clinical-trials/clinical-trials.component";
 
 const routes: Routes = [
@@ -17,7 +18,8 @@ const routes: Routes = [
     {path: 'prices-approval',component: PriceApprovalComponent},
     {path: 'prices', component: PricesComponent},
     {path: 'cpcadtask', component: CPCADTaskComponent},
-    {path: 'clinical-trials', component: ClinicalTrialsComponent}
+    {path: 'annihilation/view-all', component: AnnihilationManagementComponent},
+        {path: 'clinical-trials', component: ClinicalTrialsComponent}
 ];
 
 @NgModule({

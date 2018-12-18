@@ -63,71 +63,100 @@
             </div>
         </div>
 
-        <div class="card-body card-body-cascade">
-            <div class="table-width">
-                <div class="example-container">
-                    <table mat-table [dataSource]="dataSource" matSort id="tableData">
-                        <ng-container matColumnDef="code">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">Cod
-                                studiu clinic
-                            </th>
-                            <td mat-cell *matCellDef="let element" class="text-center">
-                                {{element.code}}
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="eudraCt_nr">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">Numarul
-                                Eurda CT
-                            </th>
-                            <td mat-cell *matCellDef="let element" class="text-center">
-                                {{element.eudraCt_nr}}
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="treatment">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
-                                Tratament
-                            </th>
-                            <td mat-cell *matCellDef="let element" class="text-center">
-                                {{element.treatment}}
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="provenance">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
-                                Provenienta
-                            </th>
-                            <td mat-cell *matCellDef="let element" class="text-center">
-                                {{element.provenance}}
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="cometee">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
-                                Nr. Comisiei
-                            </th>
-                            <td mat-cell *matCellDef="let element" class="text-center">
-                                {{element.cometee}}
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="cometeeDate">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
-                                Data comisiei
-                            </th>
-                            <td mat-cell *matCellDef="let element" class="text-center">
-                                {{element.cometeeDate | date: 'dd/MM/yyyy'}}
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="sponsor">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
-                                Sponsor
-                            </th>
-                            <td mat-cell *matCellDef="let element" class="text-center">
-                                {{element.sponsor}}
-                            </td>
-                        </ng-container>
 
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                    </table>
-                    <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+        <div class="table-width">
+            <div class="text-right" *ngIf=visibility>
+                <mat-form-field class="w-25">
+                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtru" class="w-25">
+                </mat-form-field>
+            </div>
+            <div class="gradient-card-header bg-sidebar border-gradient">
+                <div class="container-fluid">
+                    <!-- Title -->
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="card-header-title white-text">Studii clinice</div>
+                        </div>
+                        <div class="col-8">
+                            <div class="text-right fap white-text">
+                                <i class="fa fa-lg fa-mt" aria-hidden="true" (click)="changeVisibility();" [ngClass]="visibility ? 'fa-touched fa-search-plus' : 'fa-untouched fa-search-minus'"></i>
+                                <i class="fa fa-file-excel-o fa-mt fa-lg" aria-hidden="true" mdbTooltip="Export in Excel" (click)="exportToExcel();"></i>
+                                <i class="fa fa-files-o fa-mt fa-lg" aria-hidden="true" mdbTooltip="Export in CSV" (click)="exportToCsv();"></i>
+                                <i class="fa fa-file-pdf-o fa-mt fa-lg" aria-hidden="true" mdbTooltip="Export in Pdf" (click)="exportToPdf();"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body card-body-cascade">
+                <div class="table-width">
+                    <div class="example-container">
+                        <table mat-table [dataSource]="dataSource" matSort id="tableData">
+                            <ng-container matColumnDef="code">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
+                                    Cod studiu clinic
+                                </th>
+                                <td mat-cell *matCellDef="let element" class="text-center">
+                                    <a title="Detalii studiu clinic" (click)="openCLinicatTrialDetails(element.id)">
+                                        {{element.code}}
+                                    </a>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="eudraCt_nr">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
+                                    Numarul Eurda CT
+                                </th>
+                                <td mat-cell *matCellDef="let element" class="text-center">
+                                    {{element.eudraCt_nr}}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="treatment">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
+                                    Tratament
+                                </th>
+                                <td mat-cell *matCellDef="let element" class="text-center">
+                                    {{element.treatment}}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="provenance">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
+                                    Provenienta
+                                </th>
+                                <td mat-cell *matCellDef="let element" class="text-center">
+                                    {{element.provenance}}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="cometee">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
+                                    Nr. Comisiei
+                                </th>
+                                <td mat-cell *matCellDef="let element" class="text-center">
+                                    {{element.cometee}}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="cometeeDate">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
+                                    Data comisiei
+                                </th>
+                                <td mat-cell *matCellDef="let element" class="text-center">
+                                    {{element.cometeeDate | date: 'dd/MM/yyyy'}}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="sponsor">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
+                                    Sponsor
+                                </th>
+                                <td mat-cell *matCellDef="let element" class="text-center">
+                                    {{element.sponsor}}
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                        <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+                    </div>
                 </div>
             </div>
         </div>

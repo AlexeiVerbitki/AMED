@@ -37,4 +37,8 @@ public interface EconomicAgentsRepository extends JpaRepository<NmEconomicAgents
     Optional<NmEconomicAgentsEntity> findFirstByIdnoEquals(String idno);
 
     List<NmEconomicAgentsEntity> findAllByIdno(String idno);
+
+    @Query(value = "SELECT * FROM nm_economic_agents m WHERE (upper(m.name) like upper(CONCAT(?1, '%')) or m.code = ?2 ) and m.idno = ?3", nativeQuery = true)
+    List<NmEconomicAgentsEntity> getCompaniesByNameCodeAndIdno(String name, String code, String idno);
+
 }

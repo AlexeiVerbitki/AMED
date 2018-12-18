@@ -11,12 +11,50 @@
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Dataset1" uuid="f6675ec7-1b01-46ce-8ca2-f8b0c2c6fa8b">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="expertName" class="java.lang.String"/>
+		<field name="medicamentNameDosePharmform" class="java.lang.String"/>
+		<field name="registrationNrDate" class="java.lang.String"/>
+		<field name="autorizationOwner" class="java.lang.String"/>
+		<field name="notes" class="java.lang.String"/>
+	</subDataset>
 	<parameter name="nr" class="java.lang.String"/>
 	<parameter name="date" class="java.lang.String"/>
 	<parameter name="nrOrdin" class="java.lang.String"/>
 	<parameter name="genDir" class="java.lang.String"/>
 	<parameter name="nrOrdinDate" class="java.lang.String"/>
 	<parameter name="ordinName" class="java.lang.String"/>
+	<parameter name="dispozitieAGuvern" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -76,6 +114,116 @@
 				</textElement>
 				<text><![CDATA[DISPOZIȚIE]]></text>
 			</staticText>
+		</band>
+		<band height="107">
+			<componentElement>
+				<reportElement x="0" y="12" width="555" height="90" uuid="6c16ddae-3818-444f-8456-ce52a34975de">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Dataset1" uuid="bf0c9e6c-16ce-48d2-8aad-c5c8fd7fc3e9">
+						<dataSourceExpression><![CDATA[$P{dispozitieAGuvern}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="100" uuid="da0fdee3-1f06-4df2-ab5a-8dd137f5cfa9">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:columnHeader style="Table_CH" height="60" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="60" uuid="47cf220c-f1dd-4b11-a661-7c6e5ed5a1e8"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" isBold="true"/>
+								</textElement>
+								<text><![CDATA[N.P. experţilor]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="100" height="30" uuid="75ce3443-17da-43fc-a148-ce0cb3d8eb5d"/>
+								<textFieldExpression><![CDATA[$F{expertName}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="130" uuid="bf0726c6-ef77-43e5-90b6-24fae4b3cd20">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:columnHeader style="Table_CH" height="60" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="130" height="60" uuid="33011aa5-c49d-4f36-8858-f955ea9072f6"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Denumirea, doza, forma farmaceutică]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="130" height="30" uuid="d50de217-532c-45b8-bc65-96f0d0e22ca5"/>
+								<textFieldExpression><![CDATA[$F{medicamentNameDosePharmform}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="111" uuid="141236e0-f8ac-457c-b3a8-722815b515ab">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<jr:columnHeader style="Table_CH" height="60" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="111" height="60" uuid="6781e4f8-714f-4d07-a188-10efdcafe5cc"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Nr. înreg.  data]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="111" height="30" uuid="52de3760-be1d-427f-8833-937abfe833e3"/>
+								<textFieldExpression><![CDATA[$F{registrationNrDate}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="118" uuid="794aa16d-fbd9-43ab-9394-0b75246e12d5">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+						<jr:columnHeader style="Table_CH" height="60" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="118" height="60" uuid="6e8c98b2-0781-437c-aa54-950413ef302d"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Deţinătorul 
+Autorizaţiei de 
+Punere pe Piaţă/
+producătorul, ţara de producere
+]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="118" height="30" uuid="5f1d5354-6172-48fd-b127-2bbe017b646e"/>
+								<textFieldExpression><![CDATA[$F{autorizationOwner}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="96" uuid="c599483b-cf04-492e-afa1-19720c761ff3">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+						<jr:columnHeader style="Table_CH" height="60" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="96" height="60" uuid="14a024d6-26aa-46a3-88bd-dfc3eaf8b6da"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Note]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="96" height="30" uuid="2e9c02b9-03e5-4aeb-8013-05585b5c1122"/>
+								<textFieldExpression><![CDATA[$F{notes}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
 		</band>
 	</detail>
 	<pageFooter>

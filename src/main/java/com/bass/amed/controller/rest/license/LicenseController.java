@@ -6,10 +6,7 @@ import com.bass.amed.dto.license.LicenseDTO;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.projection.LicenseProjection;
-import com.bass.amed.repository.EconomicAgentsRepository;
-import com.bass.amed.repository.RequestRepository;
-import com.bass.amed.repository.RequestTypeRepository;
-import com.bass.amed.repository.SysParamsRepository;
+import com.bass.amed.repository.*;
 import com.bass.amed.repository.license.LicenseActivityTypeRepository;
 import com.bass.amed.repository.license.LicenseAnnounceMethodsRepository;
 import com.bass.amed.repository.license.LicenseMandatedContactRepository;
@@ -74,6 +71,8 @@ public class LicenseController
 
     @Autowired
     private LicenseService licenseService;
+    @Autowired
+    private NMEconomicAgentTypeRepository nmEconomicAgentTypeRepository;
 
     @RequestMapping(value = "/new-license", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> nextNewLicense(@RequestBody RegistrationRequestsEntity request) throws CustomException
@@ -317,6 +316,14 @@ public class LicenseController
     }
 
 
+    @RequestMapping(value = "/retrieve-economic-agent-type", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<NmTypesOfEconomicAgentsEntity>> loadEconomicAgentsType()
+    {
+        logger.debug("Retrieve economic agents type");
+        return new ResponseEntity<>(nmEconomicAgentTypeRepository.findAll(), HttpStatus.OK);
+    }
+
+
     @RequestMapping(value = "/view-anexa-licenta", method = RequestMethod.POST)
     public ResponseEntity<byte[]> viewAnexaLicenta(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
@@ -456,10 +463,10 @@ public class LicenseController
             parameters.put("companyName", request.getLicense().getEconomicAgents().stream().findFirst().get().getLongName());
             parameters.put("companyAddress", request.getLicense().getEconomicAgents().stream().findFirst().get().getLegalAddress());
             parameters.put("companyIdno", request.getLicense().getIdno());
-            parameters.put("startDate", new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format(releaseDate ));
-            parameters.put("endDate", new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format(expirationDate));
+            parameters.put("startDate", new SimpleDateFormat(Constants.Layouts.POINT_DATE_FORMAT).format(releaseDate ));
+            parameters.put("endDate", new SimpleDateFormat(Constants.Layouts.POINT_DATE_FORMAT).format(expirationDate));
             parameters.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
-            parameters.put("dateOfApprovalOfDecision", new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format(request.getLicense().getEconomicAgents().stream().findFirst().get().getRegistrationDate()));
+            parameters.put("dateOfApprovalOfDecision", new SimpleDateFormat(Constants.Layouts.POINT_DATE_FORMAT).format(request.getLicense().getEconomicAgents().stream().findFirst().get().getRegistrationDate()));
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);

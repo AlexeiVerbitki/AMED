@@ -9,16 +9,19 @@ import {RegMedCerereLicComponent} from "./reg-med-cerere-lic/reg-med-cerere-lic.
 import {EvaluareCerereLicComponent} from "./evaluare-cerere-lic/evaluare-cerere-lic.component";
 import {UploadFileService} from "../../shared/service/upload/upload-file.service";
 import {LicenseService} from "../../shared/service/license/license.service";
-import { EliberareCerereLicComponent } from './eliberare-cerere-lic/eliberare-cerere-lic.component';
+import {EliberareCerereLicComponent} from './eliberare-cerere-lic/eliberare-cerere-lic.component';
 import {DocumentModule} from "../../document/document.module";
 import {PaymentModule} from "../../payment/payment.module";
 import {LicenseDecisionDialogComponent} from "../../dialog/license-decision-dialog/license-decision-dialog.component";
+import {AddLicenseFarmacistComponent} from './add-license-farmacist/add-license-farmacist.component';
+import {MatDialogModule} from "@angular/material";
 
 @NgModule({
     imports: [
         CommonModule,
         LicenseRoutingModule,
         FormsModule,
+        MatDialogModule,
         ReactiveFormsModule,
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
@@ -27,12 +30,14 @@ import {LicenseDecisionDialogComponent} from "../../dialog/license-decision-dial
     ],
     schemas: [],
     entryComponents: [
-        LicenseDecisionDialogComponent
+        LicenseDecisionDialogComponent,
+        AddLicenseFarmacistComponent
     ],
     declarations: [RegMedCerereLicComponent,
         EvaluareCerereLicComponent,
 	 EliberareCerereLicComponent,
-        LicenseDecisionDialogComponent
+        LicenseDecisionDialogComponent,
+        AddLicenseFarmacistComponent
     ]    ,
     providers: [UploadFileService, LicenseService,
     ],

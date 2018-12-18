@@ -7,6 +7,24 @@ export class AdministrationService {
     constructor(private http: HttpClient) {
     }
 
+    getNomenclatureDate(nomenclatureNr: string): Observable<any> {
+        return this.http.get('/api/administration/get-nomenclature', {params: {nomenclature: nomenclatureNr}});
+    }
+
+    removeNomenclatureRow(nomenclatureNr: string, id: string): Observable<any> {
+        return this.http.get('/api/administration/remove-nomenclature-row', {params: {id: id, nomenclature: nomenclatureNr}});
+    }
+
+    updateNomenclatureRow(nomenclatureNr: string, nomenclature: any): Observable<HttpResponse<any>> {
+        nomenclature.tableNr = nomenclatureNr;
+        return this.http.post<any>('/api/administration/update-row', nomenclature, {observe: 'response'});
+    }
+
+    insertNomenclatureRow(nomenclatureNr: string, nomenclature: any): Observable<HttpResponse<any>> {
+        nomenclature.tableNr = nomenclatureNr;
+        return this.http.post<any>('/api/administration/insert-row', nomenclature, {observe: 'response'});
+    }
+
     generateDocNr(): Observable<any> {
         return this.http.get('/api/administration/generate-doc-nr', {});
     }

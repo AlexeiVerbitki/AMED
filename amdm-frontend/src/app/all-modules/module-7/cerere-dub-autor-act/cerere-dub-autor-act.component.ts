@@ -12,6 +12,8 @@ import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.c
 import {MatDialog} from "@angular/material";
 import {TaskService} from "../../../shared/service/task.service";
 import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
+import {DrugDocumentsService} from "../../../shared/service/drugs/drugdocuments.service";
+import {DrugDecisionsService} from "../../../shared/service/drugs/drugdecisions.service";
 
 @Component({
     selector: 'app-cerere-dub-autor-act',
@@ -33,12 +35,15 @@ export class CerereDubAutorActComponent implements OnInit {
     isNonAttachedDocuments: boolean = false;
     isResponseReceived: boolean = false;
     docTypesInitial: any[];
+    disabled: boolean = true;
+    states: any[] = [];
 
     constructor(private fb: FormBuilder, private administrationService: AdministrationService,
                 private authService: AuthService, private requestService: RequestService, private router: Router,
                 private activatedRoute: ActivatedRoute, private documentService: DocumentService,
                 private loadingService: LoaderService, public dialogConfirmation: MatDialog, private taskService: TaskService,
-                private errorHandlerService: ErrorHandlerService) {
+                private errorHandlerService: ErrorHandlerService, private drugDocumentsService: DrugDocumentsService,
+                private drugDecisionsService: DrugDecisionsService) {
 
         this.cerereDupAutorForm = fb.group({
             'id': [],
@@ -56,7 +61,16 @@ export class CerereDubAutorActComponent implements OnInit {
             'medicaments': [[]],
             'requestHistories': [],
             'type': [],
-            'typeValue': {disabled: true, value: null}
+            'typeValue': {disabled: true, value: null},
+            'dataExp': [],
+            'resPerson': {disabled: false, value: null},
+            'drugSubstanceTypesCode': [null],
+            'street': [],
+            'locality': [],
+            'state': [],
+            'precursor': [{value: false, disabled: this.disabled}],
+            'psihotrop': [{value: false, disabled: this.disabled}],
+            'stupefiant': [{value: false, disabled: this.disabled}]
         });
     }
 
@@ -74,6 +88,8 @@ export class CerereDubAutorActComponent implements OnInit {
                         this.cerereDupAutorForm.get('type').setValue(data.type);
                         this.cerereDupAutorForm.get('typeValue').setValue(data.type.code);
                         this.cerereDupAutorForm.get('medicaments').setValue(data.medicaments);
+                        this.cerereDupAutorForm.get('street').setValue(data.company.street);
+                        this.cerereDupAutorForm.get('locality').setValue(data.company.locality);
                         this.documents = data.documents;
                         this.outDocuments = data.outputDocuments;
                         this.documents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
@@ -84,6 +100,18 @@ export class CerereDubAutorActComponent implements OnInit {
                         });
 
                         this.loadDocTypes();
+                        if (data.company != null && data.company.drugCheckDecisionsId != null) {
+                            this.subscriptions.push(this.drugDecisionsService.getDrugDecisionById(data.company.drugCheckDecisionsId).subscribe(data => {
+                                if (data[0].drugSubstanceTypesCode) {
+                                    this.cerereDupAutorForm.get('drugSubstanceTypesCode').setValue(data[0].drugSubstanceTypesCode);
+
+                                    if (this.cerereDupAutorForm.get('drugSubstanceTypesCode')) {
+                                        this.populateTypeOfSubstances();
+                                    }
+                                }
+                            }));
+                        }
+                        this.getAddressDetails();
                     })
                 );
             })
@@ -91,6 +119,54 @@ export class CerereDubAutorActComponent implements OnInit {
 
         this.currentDate = new Date();
 
+    }
+
+    getAddressDetails() {
+
+        this.subscriptions.push(
+            this.administrationService.getAllStates().subscribe(data => {
+                    this.states = data;
+                    if (this.cerereDupAutorForm.value.locality != null) {
+                        this.getCurrentState();
+                    }
+                }
+            )
+        );
+    }
+
+    getCurrentState() {
+
+        for (let entry of this.states) {
+            if (entry.id == this.cerereDupAutorForm.get('locality').value.stateId) {
+                this.cerereDupAutorForm.get('state').setValue(entry);
+            }
+        }
+    }
+
+    populateTypeOfSubstances() {
+
+        if (this.cerereDupAutorForm.get('drugSubstanceTypesCode').value) {
+            if (this.cerereDupAutorForm.get('drugSubstanceTypesCode').value == 'PRECURSOR') {
+                this.cerereDupAutorForm.get('precursor').setValue(true);
+            } else if (this.cerereDupAutorForm.get('drugSubstanceTypesCode').value == 'PSIHOTROP') {
+                this.cerereDupAutorForm.get('psihotrop').setValue(true);
+            } else if (this.cerereDupAutorForm.get('drugSubstanceTypesCode').value == 'STUPEFIANT') {
+                this.cerereDupAutorForm.get('stupefiant').setValue(true);
+            } else if (this.cerereDupAutorForm.get('drugSubstanceTypesCode').value == 'PRECURSOR/PSIHOTROP') {
+                this.cerereDupAutorForm.get('precursor').setValue(true);
+                this.cerereDupAutorForm.get('psihotrop').setValue(true);
+            } else if (this.cerereDupAutorForm.get('drugSubstanceTypesCode').value == 'PRECURSOR/STUPEFIANT') {
+                this.cerereDupAutorForm.get('precursor').setValue(true);
+                this.cerereDupAutorForm.get('stupefiant').setValue(true);
+            } else if (this.cerereDupAutorForm.get('drugSubstanceTypesCode').value == 'PSIHOTROP/STUPEFIANT') {
+                this.cerereDupAutorForm.get('stupefiant').setValue(true);
+                this.cerereDupAutorForm.get('psihotrop').setValue(true);
+            } else if (this.cerereDupAutorForm.get('drugSubstanceTypesCode').value == 'PRECURSOR/PSIHOTROP/STUPEFIANT') {
+                this.cerereDupAutorForm.get('precursor').setValue(true);
+                this.cerereDupAutorForm.get('psihotrop').setValue(true);
+                this.cerereDupAutorForm.get('stupefiant').setValue(true);
+            }
+        }
     }
 
     saveRequest() {
@@ -170,23 +246,28 @@ export class CerereDubAutorActComponent implements OnInit {
     }
 
     viewDoc(document: any) {
-        this.loadingService.show();
-        if (document.docType.category == 'SR' || document.docType.category == 'AP') {
-            this.subscriptions.push(this.documentService.viewRequest(document.number,
-                document.content,
-                document.title,
-                document.docType.category).subscribe(data => {
-                    let file = new Blob([data], {type: 'application/pdf'});
-                    var fileURL = URL.createObjectURL(file);
-                    window.open(fileURL);
-                    this.loadingService.hide();
-                }, error => {
-                    this.loadingService.hide();
-                }
-                )
-            );
-        } else {
-            this.subscriptions.push(this.documentService.viewDD(document.number).subscribe(data => {
+        if (document.docType.category == 'AP') {
+            this.loadingService.show();
+
+            let locality = this.cerereDupAutorForm.get('locality').value;
+            let state = this.cerereDupAutorForm.get('state').value;
+            let data = {
+
+                requestNumber: this.cerereDupAutorForm.get('requestNumber').value,
+                protocolDate: this.cerereDupAutorForm.get('data').value,
+                resPerson: this.cerereDupAutorForm.get('resPerson').value,
+                companyValue: this.cerereDupAutorForm.get('companyValue').value,
+                street: this.cerereDupAutorForm.get('street').value,
+                locality: locality.description,
+                state: state.description,
+                dataExp: this.cerereDupAutorForm.get('dataExp').value,
+                precursor: this.cerereDupAutorForm.get('precursor').value,
+                psihotrop: this.cerereDupAutorForm.get('psihotrop').value,
+                stupefiant: this.cerereDupAutorForm.get('stupefiant').value
+            };
+
+            console.log(data);
+            this.subscriptions.push(this.drugDocumentsService.viewAuthorization(data).subscribe(data => {
                     let file = new Blob([data], {type: 'application/pdf'});
                     var fileURL = URL.createObjectURL(file);
                     window.open(fileURL);
@@ -269,22 +350,6 @@ export class CerereDubAutorActComponent implements OnInit {
             date: new Date()
         };
         this.outDocuments.push(outDocumentAP);
-
-        // let outDocumentAH = {
-        //     name: 'Autorizatia de activitate cu psihotrope',
-        //     docType: this.docTypesInitial.find(r => r.category == 'AH'),
-        //     number: 'AH-' + this.cerereDupAutorForm.get('requestNumber').value,
-        //     date: new Date()
-        // };
-        // this.outDocuments.push(outDocumentAH);
-        //
-        // let outDocumentAF = {
-        //     name: 'Autorizatia de activitate cu stupefiante',
-        //     docType: this.docTypesInitial.find(r => r.category == 'AF'),
-        //     number: 'AF-' + this.cerereDupAutorForm.get('requestNumber').value,
-        //     date: new Date()
-        // };
-        // this.outDocuments.push(outDocumentAF);
 
         let outDocumentSR = {
             name: 'Scrisoare de refuz',

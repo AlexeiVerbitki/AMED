@@ -308,20 +308,11 @@ public class AdministrationController {
         return new ResponseEntity<>(medicalInstitutionsRepository.findAll(), HttpStatus.OK);
     }
 
-
-//    @RequestMapping("/all-atc-codes-by-code")
-//    public ResponseEntity<List<NmAtcCodesEntity>> retrieveAtcCodeByCode(String partialCode)
-//    {
-//        LOGGER.debug("Retrieve all ATC codes by code " + partialCode);
-//        return new ResponseEntity<>(nmAtcCodesRepository.findByCodeStartingWithIgnoreCase(partialCode), HttpStatus.OK);
-//    }
-
     @RequestMapping("/all-atc-codes-by-code")
     public ResponseEntity<List<NmAtcCodesEntity>> retrieveAtcCodeByCode(String partialCode) {
         LOGGER.debug("Retrieve all ATC codes by code " + partialCode);
         return new ResponseEntity<>(nmAtcCodesRepository.findByCodeStartingWithIgnoreCase(partialCode), HttpStatus.OK);
     }
-
 
     @RequestMapping("/all-clinical-trail-phases")
     public ResponseEntity<List<NmClinicTrailPhasesEntity>> getAllClinicalTrailsPhases() {

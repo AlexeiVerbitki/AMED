@@ -56,11 +56,11 @@
 }
 
 .sidebar .sidebar-menu ul li:hover {
-  background: linear-gradient(40deg, #2096ff, #05ffa3)!important;
+  background: linear-gradient(80deg, #1E6D7C, #4CBBAA)!important;
 }
 
 .sidebar-menu ul li.active {
-  background: linear-gradient(40deg, #207be0, #05b361)!important;
+  background: linear-gradient(80deg, #16424F, #3E9484)!important;
 }
 
 .sidebar .sidebar-menu .fa {

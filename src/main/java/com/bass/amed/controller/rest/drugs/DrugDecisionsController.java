@@ -1,6 +1,9 @@
 package com.bass.amed.controller.rest.drugs;
 
+import com.bass.amed.dto.drugs.CompanyDetailsDTO;
 import com.bass.amed.dto.drugs.DrugDecisionsFilterDTO;
+import com.bass.amed.entity.NmEconomicAgentsEntity;
+import com.bass.amed.repository.EconomicAgentsRepository;
 import com.bass.amed.repository.drugs.DrugDecisionsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +25,8 @@ public class DrugDecisionsController {
 
     @Autowired
     DrugDecisionsRepository drugDecisionsRepository;
+    @Autowired
+    private EconomicAgentsRepository economicAgentsRepository;
 
     @PostMapping(value = "/by-filter")
     public ResponseEntity<List<DrugDecisionsFilterDTO>> getDrugDecisionsByFilter(@RequestBody DrugDecisionsFilterDTO filter) {
@@ -44,4 +49,9 @@ public class DrugDecisionsController {
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
+    @RequestMapping("/search-companies-by-name-or-code-and-idno")
+    public ResponseEntity<List<NmEconomicAgentsEntity>> getCompaniesByNameCodeAndIdno(@RequestBody CompanyDetailsDTO filter) {
+        logger.debug("Retrieve companies by name or code and idno");
+        return new ResponseEntity<>(economicAgentsRepository.getCompaniesByNameCodeAndIdno(filter.getName(), filter.getCode(), filter.getIdno()), HttpStatus.OK);
+    }
 }

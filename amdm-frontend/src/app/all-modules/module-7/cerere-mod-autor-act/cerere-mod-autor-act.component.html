@@ -117,7 +117,95 @@
                 </div>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="md-form-modified">
+                    <ng-select [items]="companies | async"
+                               bindLabel="name"
+                               placeholder="Filiala"
+                               formControlName="company"
+                               [loading]="loadingCompany"
+                               [typeahead]="companyInputs"
+                               required="true">
+                        <ng-template ng-option-tmp let-item="item">
+                            {{item.name}} <br/>
+                            <small class="form-text text-muted">{{item.code}}</small>
+                        </ng-template>
+                    </ng-select>
+                    <div *ngIf="formSubmitted && cerereModAutorForm.get('company').invalid">
+                        <small class="text-muted"><strong class="text-danger">Filiala solicitanta trebuie
+                            selectata</strong></small>
+                    </div>
+                    <div *ngIf="companyExistInTable">
+                        <small class="text-muted"><strong class="text-danger">Filiala este deja adaugata
+                        </strong></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="gradient-card-header bg-sidebar border-gradient">
+            <div class="container-fluid">
+                <!-- Title -->
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card-header-title white-text">Filiale selectate</div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-right fap text-white">
+                            <i (click)="addCompany()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card-body card-body-cascade">
+            <table class="table table-widths text-center">
+                <thead class="bg-sidebar white-text">
+                <tr>
+                    <th scope="col">Nume</th>
+                    <th scope="col">Cod</th>
+                    <th scope="col">Actiuni</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let filial of selectedFilials;let i = index">
+                    <td>{{ filial.name }}</td>
+                    <td>{{ filial.code }}</td>
+                    <td>
+                        <button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                (click)="removeCompany(i)"
+                                mdbWavesEffect attr.disabled="this.disabled">Stergere
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
         <hr>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="md-form" >
+                    <input id="name" mdbInputDirective type="text" class="form-control" required formControlName="resPerson">
+                    <label for="name">Persoana responsabila
+                        <span class="text-danger">*</span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="pickerExp" placeholder="Data expirarii" required
+                               formControlName="dataExp">
+                        <mat-datepicker-toggle matSuffix [for]="pickerExp"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #pickerExp></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-4">
                 <div class="md-form" formGroupName="drugCheckDecision">
@@ -165,16 +253,6 @@
                     <div class="col-12">
                         <div class="card-header-title white-text">Documente de iesire</div>
                     </div>
-                    <!-- <div class="col-6">
-                        <div class="position-button">
-                            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                                (click)="requestAdditionalData()">Solicitare
-                                date aditionale</button>
-                            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                                (click)="requestLaboratoryAnalysis()">Solicitare
-                                analiza laborator</button>
-                        </div>
-                    </div> -->
                 </div>
             </div>
 

@@ -135,7 +135,6 @@ export class ImportMedDialog implements OnInit {
         this.loadUnitsOfMeasurement();
         this.loadMedicaments();
         this.loadInternationalMedicamentName();
-        // console.log("importTypeForms.value",this.importTypeForms.value)
 
         this.evaluateImportForm = this.fb.group({
             // 'id':              [''],
@@ -203,31 +202,6 @@ export class ImportMedDialog implements OnInit {
         });
 
 
-        // this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
-        //     this.subscriptions.push(this.requestService.getImportRequest(params['id']).subscribe(data => {
-        //             console.log('this.requestService.getImportRequest(params[\'id\'])', data);
-        // this.importData = data;
-
-
-        // this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList.forEach(item=>{
-        //     if (item.approve === null){
-        //         item.approve = false;
-        //     }
-        // })
-        // console.log("importData", this.importData)
-
-        // this.evaluateImportForm.get('id').setValue(data.id);
-        // this.evaluateImportForm.get('requestNumber').setValue(data.requestNumber);
-        // this.evaluateImportForm.get('startDate').setValue(new Date(data.startDate));
-        // this.evaluateImportForm.get('initiator').setValue(data.initiator);
-        // this.evaluateImportForm.get('assignedUser').setValue(data.assignedUser);
-        // this.evaluateImportForm.get('company').setValue(data.company);
-        // this.evaluateImportForm.get('importAuthorizationEntity.medType').setValue(data.importAuthorizationEntity.medType);
-        // this.evaluateImportForm.get('importAuthorizationEntity.applicant').setValue(data.company);
-        // this.evaluateImportForm.get('type.id').setValue(data.type.id);
-        // this.evaluateImportForm.get('requestHistories').setValue(data.requestHistories);
-        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(this.dialogData.commercialName);
-        //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').setValue(this.dialogData.dose);
         this.codeAmed,
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(this.dialogData.codeAmed);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(this.dialogData.customsCode);
@@ -271,21 +245,6 @@ export class ImportMedDialog implements OnInit {
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').disable();
         }
 
-        // if (this.importData.importAuthorizationEntity.medType == 1) {
-        //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').disable();
-        //     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').disable();
-        // }
-
-
-        // if (this.dialogData.importAuthorizationEntity.medType === 2) {
-        //         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setErrors(null);
-        //         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setErrors(null);
-        //         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setErrors(null);
-        // }
-        //         },
-        //         error => console.log(error)
-        //     ))
-        // }))
 
         this.onChanges();
 
@@ -311,12 +270,14 @@ export class ImportMedDialog implements OnInit {
     }
 
     confirm(): void {
+        if (this.evaluateImportForm.valid) {
         this.addMedicamentClicked = true;
         if (this.evaluateImportForm.valid) {
             this.dialog.close([true, this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').value]);
             this.addMedicamentClicked = false;
         }
     }
+}
 
     onChanges(): void {
         if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity')) {
@@ -330,72 +291,6 @@ export class ImportMedDialog implements OnInit {
         }
     }
 
-/*
-    onChanges(): void {
-        if (this.evaluateImportForm.get('importAuthorizationEntity')) {
-
-            this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').valueChanges.subscribe(val => {
-                if (val) {
-                    this.medicamentData = val;
-                    this.codeAmed = val.code;
-                    console.log("importAuthorizationEntity.unitOfImportTable.medicament", this.medicamentData)
-
-                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode);
-                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(val.pharmaceuticalForm);
-                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').setValue(val.dose);
-                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').setValue(val.division);
-                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').setValue(val.internationalMedicamentName);
-                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(val.commercialName);
-
-                    if (val.customsCode!==null) {
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode);
-                    }
-
-                    if (val.manufactures[0]) {
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(val.manufactures[0].manufacture);
-                        this.producerAddress = val.manufactures[0].manufacture.address;
-                    }
-                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(val.atcCode);
-                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(val.registrationNumber);
-                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(val.registrationDate));
-                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(val.expirationDate);
-                    console.log('val.registrationDate',val.registrationDate)
-                }
-            }));
-            /!*================================================*!/
-            this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.seller').valueChanges.subscribe(val => {
-                if (val) {
-                    this.sellerAddress = val.address + ", " + val.country.description;
-                }
-            }));
-            this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').valueChanges.subscribe(val => {
-                if (this.medicamentData==null && val) {
-                    this.producerAddress = val.address + ", " + val.country.description;
-                    // console.log("producerAddress",this.producerAddress)
-                }
-            }));
-            this.subscriptions.push(  this.evaluateImportForm.get('importAuthorizationEntity.importer').valueChanges.subscribe(val => {
-                if (val) {
-                    this.importerAddress = val.legalAddress /!*+ ", " + val.country.description*!/;
-                }
-            }));
-            this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').valueChanges.subscribe(val => {
-                if (val) {
-                    this.unitSumm = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
-                        * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value;
-                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.unitSumm);
-                }
-            }));
-            this.subscriptions.push(  this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').valueChanges.subscribe(val => {
-                if (val) {
-                    this.unitSumm = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
-                        * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value;
-                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.unitSumm);
-                }
-            }));
-        }
-    }
-*/
 
 
 
@@ -459,7 +354,6 @@ export class ImportMedDialog implements OnInit {
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(null);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(null);
 
-        // this.addMedicamentClicked = false;
 
             this.addMedicamentClicked = false;
         }
@@ -467,18 +361,6 @@ export class ImportMedDialog implements OnInit {
     }
 
 
-    // removeunitOfImport(index: number) {
-    //
-    //     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-    //         data: {message: 'Sunteti sigur ca doriti sa stergeti ?', confirm: false}
-    //     });
-    //
-    //     dialogRef.afterClosed().subscribe(result => {
-    //         if (result) {
-    //             this.unitOfImportTable.splice(index, 1);
-    //         }
-    //     });
-    // }
 
 
     loadATCCodes(){
@@ -653,17 +535,12 @@ export class ImportMedDialog implements OnInit {
     }
 
     loadCurrenciesShort() {
-        // this.subscriptions.push(
             this.administrationService.getCurrenciesShort().subscribe(data => {
                     this.valutaList = data;
-                    // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(this.valutaList.find(r => r === this.dialogData.currency.shortDescription));
-                    // console.log("this.administrationService.getCurrenciesShort().subscribe", data)
-                    // console.log("this.valutaList", this.valutaList)
 
                 },
                 error => console.log("loadCurrenciesShort() ERROR", error)
             )
-        // )
     }
 
     interruptProcess() {
@@ -709,49 +586,45 @@ export class ImportMedDialog implements OnInit {
     nextStep() {
 
         this.formSubmitted = true;
-        let modelToSubmit: any ={};
+        let modelToSubmit: any = {};
         this.loadingService.show();
 
-        // modelToSubmit = this.evaluateImportForm.value;
-        // if (this.importData.importAuthorizationEntity.id){
-        //     modelToSubmit.importAuthorizationEntity.id =  this.importData.importAuthorizationEntity.id;
-        // }
 
 
-        // modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
         modelToSubmit.endDate = new Date();
 
-        // modelToSubmit.documents = this.docs;
 
         modelToSubmit = this.importData;
-        modelToSubmit.requestHistories.push({
-            startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
-            endDate: new Date(),
-            username: this.authService.getUserName(),
-            step: 'E'
-        });
 
-        console.log("this.evaluateImportForm.value", this.evaluateImportForm.value);
-        //=============
+            modelToSubmit.requestHistories.push({
+                startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
+                endDate: new Date(),
+                username: this.authService.getUserName(),
+                step: 'E'
+            });
+
+            console.log("this.evaluateImportForm.value", this.evaluateImportForm.value);
+            //=============
 
 
-        modelToSubmit.medicaments = [];
-        console.log("modelToSubmit", modelToSubmit);
-        alert("before addImportRequest(modelToSubmit)")
-        // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {
-        this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
-                alert("after addImportRequest(modelToSubmit)")
-                console.log("addImportRequest(modelToSubmit).subscribe(data) ",data)
-                this.loadingService.hide();
-                // this.router.navigate(['dashboard/module']); for now to post multiple times
-            }, error => {
-                alert("Something went wrong while sending the model")
-                console.log("error: ",error)
-                this.loadingService.hide()}
-        ));
+            modelToSubmit.medicaments = [];
+            console.log("modelToSubmit", modelToSubmit);
+            alert("before addImportRequest(modelToSubmit)")
+            // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {
+            this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
+                    alert("after addImportRequest(modelToSubmit)")
+                    console.log("addImportRequest(modelToSubmit).subscribe(data) ", data)
+                    this.loadingService.hide();
+                    // this.router.navigate(['dashboard/module']); for now to post multiple times
+                }, error => {
+                    alert("Something went wrong while sending the model")
+                    console.log("error: ", error)
+                    this.loadingService.hide()
+                }
+            ));
 
-        this.formSubmitted = false;
-    }
+            this.formSubmitted = false;
+        }
 
 
     ngOnDestroy(): void {

@@ -184,14 +184,6 @@ public class LicenseService
         }
 
 
-//        RegistrationRequestsEntity rrE = re.get();
-//        rrE.setLicense((LicensesEntity) Hibernate.unproxy(re.get().getLicense()));
-////        rrE.getLicense().getAddresses().forEach(
-////                addr -> addr.setState(statesRepository.findById(addr.getLocality().getStateId()).get())
-////        );
-//
-//        rrE.getLicense().setDetail(rrE.getLicense().getDetails().stream().filter(det -> det.getRegistrationId().equals(rrE.getId())).findFirst().orElse(null));
-
         for (NmEconomicAgentsEntity ece : leOpt.get().getEconomicAgents())
         {
             if (leOpt.get().getCompanyName() == null)
@@ -206,28 +198,6 @@ public class LicenseService
             }
 
         }
-
-//        for (NmEconomicAgentsEntity ne : rrE.getLicense().getEconomicAgents())
-//        {
-//            ne.setCurrentResolution(ne.getResolutions().stream().filter(e -> e.getLicenseDetailId().equals(rrE.getLicense().getDetail().getId())).findFirst().orElse(null));
-//        }
-
-
-
-//        if (rrE.getLicense().getAgentPharmaceutist() != null && !rrE.getLicense().getAgentPharmaceutist().isEmpty())
-//        {
-//            rrE.getLicense().setSelectedPharmaceutist(rrE.getLicense().getAgentPharmaceutist().stream().filter(af -> af.getSelectionDate() != null).max(Comparator.comparing(LicenseAgentPharmaceutistEntity::getSelectionDate)).get());
-//        }
-//
-//
-//        if (rrE.getLicense().getResolutions() != null && !rrE.getLicense().getResolutions().isEmpty())
-//        {
-//            Optional<LicenseResolutionEntity> first = rrE.getLicense().getResolutions().stream().filter(r -> r.getRegistrationId().equals(rrE.getId())).findFirst();
-//            if (first.isPresent())
-//            {
-//                rrE.getLicense().setResolution(first.get());
-//            }
-//        }
 
         return leOpt.get();
     }

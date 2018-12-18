@@ -15,6 +15,7 @@ import {LicenseDecisionDialogComponent} from "../../../dialog/license-decision-d
 import {catchError, debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
 import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
 import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
+import {AddLicenseFarmacistComponent} from "../add-license-farmacist/add-license-farmacist.component";
 
 @Component({
     selector: 'app-evaluare-cerere-lic',
@@ -30,6 +31,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
     announces: any[];
     oldData: any;
     activities: any[];
+    ecAgentTypes: any[];
 
     farmacistiPerAddress: any[] = [];
 
@@ -120,12 +122,10 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
                 );
 
                 this.subscriptions.push(
-                    this.licenseService.loadAnnounces().subscribe(data => {
-                            this.announces = data;
-                        },
-                        error => console.log(error)
-                    )
-                );
+                    this.licenseService.loadAnnounces().subscribe(data => this.announces = data  ));
+
+                this.subscriptions.push(
+                    this.licenseService.loadEcAgentTypes().subscribe(data => this.ecAgentTypes = data));
 
             }
             else {
@@ -145,12 +145,13 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
                         {
                             this.subscriptions.push(
                                 this.localityService.loadLocalityDetails(co.locality.id).subscribe(data => {
-                                        co.addressStr = data.stateName + ', ' + data.description + ', ' + co.street;
+                                        co.address = data.stateName + ', ' + data.description + ', ' + co.street;
                                     }
                                 )
                             );
                         }
                     });
+
                 }
             )
         );
@@ -159,6 +160,8 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
     private patchData(data) {
         this.mForm.get('nrCererii').patchValue(data.requestNumber);
         this.mForm.get('dataEliberarii').patchValue(new Date(data.startDate));
+
+        this.mForm.get('company').patchValue(data.license.companyName);
 
         // this.rForm.get('seriaLic').patchValue(data.license.serialNr);
         // this.rForm.get('nrLic').patchValue(data.license.nr);
@@ -294,14 +297,15 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         this.mForm = this.fb.group({
             'tipCerere': [{value: null}],
             'nrCererii': [{value: null, disabled: true}, Validators.required],
-            'dataEliberarii': [{value: null, disabled: true}]
+            'dataEliberarii': [{value: null, disabled: true}],
+            'company': [{value: null, disabled: true}]
 
 
         });
 
 
         this.oForm = this.fb.group({
-            'tipIntreprindere': [{value: null, disabled: true}],
+            'tipIntreprindere': [null, Validators.required],
             'region': [{value: null, disabled: true}],
             'locality': [{value: null, disabled: true}],
             'street': [{value: null, disabled: true}],
@@ -316,26 +320,30 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         this.oForm.get('farmDir').valueChanges.subscribe(val => {
             if (val) {
                 val.selectionDate = new Date();
-                if (!this.farmacistiPerAddress.includes(val)) {
-                    this.farmacistiPerAddress.push(val);
-                }
+                // if (!this.farmacistiPerAddress.includes(val)) {
+                //     this.farmacistiPerAddress.push(val);
+                // }
             }
         });
 
 
         this.oForm.get('filiala').valueChanges.subscribe(val => {
-            if (val && val.locality) {
-                this.subscriptions.push(
-                    this.localityService.loadLocalityDetails(val.locality.id).subscribe(data => {
-                            this.pharmacyRepresentantProf = val.type.representant;
-                            this.oForm.get('tipIntreprindere').setValue(val.type.description);
-                            this.oForm.get('region').setValue(data.stateName);
-                            this.oForm.get('locality').setValue(data.description);
-                            this.oForm.get('street').setValue(val.street);
-                            this.oForm.get('farmDir').setValue(val.selectedPharmaceutist);
-                        }
-                    )
-                );
+            if (val ) {
+                this.farmacistiPerAddress = val.agentPharmaceutist;
+                if (val.locality)
+                {
+                    this.subscriptions.push(
+                        this.localityService.loadLocalityDetails(val.locality.id).subscribe(data => {
+                                this.pharmacyRepresentantProf = val.type.representant;
+                                this.oForm.get('tipIntreprindere').setValue(val.type);
+                                this.oForm.get('region').setValue(data.stateName);
+                                this.oForm.get('locality').setValue(data.description);
+                                this.oForm.get('street').setValue(val.street);
+                                this.oForm.get('farmDir').setValue(val.selectedPharmaceutist);
+                            }
+                        )
+                    );
+                }
             }
             else {
                 this.pharmacyRepresentantProf = null;
@@ -343,6 +351,16 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
                 this.oForm.get('region').setValue(null);
                 this.oForm.get('locality').setValue(null);
                 this.oForm.get('street').setValue(null);
+            }
+        });
+
+
+        this.oForm.get('tipIntreprindere').valueChanges.subscribe(val => {
+            if (val ) {
+                this.pharmacyRepresentantProf = val.representant;
+            }
+            else {
+                this.pharmacyRepresentantProf = null;
             }
         });
 
@@ -388,12 +406,13 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
         let filiala = this.oForm.get('filiala').value;
 
-        filiala.companyType = this.oForm.get('tipIntreprindere').value;
+        filiala.companyType = this.oForm.get('tipIntreprindere').value.description;
         filiala.address = this.oForm.get('region').value + ', ' + this.oForm.get('locality').value + ', ' + this.oForm.get('street').value;
         filiala.agentPharmaceutist = this.farmacistiPerAddress;
         filiala.selectedPharmaceutist = this.oForm.get('farmDir').value;
         filiala.activities = this.oForm.get('licenseActivities').value;
         filiala.activitiesStr = activitiesStr;
+        filiala.type = this.oForm.get('tipIntreprindere').value;
 
         this.companiiPerIdnoSelected.push(
             filiala
@@ -426,6 +445,11 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+                // console.log('result' , );
+                let anies = this.companiiPerIdnoSelected.slice(index, index + 1)[0];
+
+                this.companiiPerIdnoNotSelected = [...this.companiiPerIdnoNotSelected, anies];
+
                 this.companiiPerIdnoSelected.splice(index, 1);
             }
         });
@@ -545,6 +569,8 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
         licenseModel.detail.commisionResponses = commisionResponses;
 
+        console.log('model', licenseModel);
+
 
         modelToSubmit.license = licenseModel;
 
@@ -591,6 +617,22 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
             }, 500);
 
 
+        });
+    }
+
+    newFarmacist(){
+        const dialogRef2 = this.dialogDecision.open(AddLicenseFarmacistComponent, {
+            data: {
+                //NoData
+            },
+            hasBackdrop: false
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result.success) {
+                this.farmacistiPerAddress = [...this.farmacistiPerAddress, result.farmacist];
+                this.oForm.get('farmDir').setValue(result.farmacist);
+            }
         });
     }
 
@@ -696,6 +738,47 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
                 });
                 selectedFilial.activitiesStr = activitiesStr;
+            }
+        });
+    }
+
+
+    editFilial(selectedFilial : any){
+        const dialogRef2 = this.dialogDecision.open(LicenseDecisionDialogComponent, {
+            width: '550px',
+            height: '550px',
+            data: {
+                type: 'A',
+                activities: this.activities,
+                selectedActivities: selectedFilial.activities,
+                ecAgentTypes: this.ecAgentTypes,
+                ecAgentType : selectedFilial.type,
+                farmacistiPerAddress : selectedFilial.agentPharmaceutist,
+                selectedPharmaceutist : selectedFilial.selectedPharmaceutist,
+            },
+            hasBackdrop: false
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result.success) {
+                selectedFilial.activities = result.selectedActivities;
+
+                let activitiesStr;
+                selectedFilial.activities.forEach(r => {
+                    if (activitiesStr) {
+                        activitiesStr += ', ' + r.description
+                    }
+                    else {
+                        activitiesStr = r.description;
+                    }
+
+                });
+                selectedFilial.activitiesStr = activitiesStr;
+
+                selectedFilial.type = result.ecAgentType;
+                selectedFilial.companyType = selectedFilial.type.description;
+                selectedFilial.agentPharmaceutist = result.farmacistiPerAddress;
+                selectedFilial.selectedPharmaceutist = result.selectedPharmaceutist;
             }
         });
     }

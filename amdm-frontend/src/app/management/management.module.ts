@@ -25,6 +25,11 @@ import {DrugAuthorizationDetailsDialogComponent} from "../dialog/drug-authorizat
 import {CPCADTaskComponent} from "../all-modules/module-7/cpcadtask/cpcadtask.component";
 import { ClinicalTrialsComponent } from './clinical-trials/clinical-trials.component';
 import {ClinicalTrialService} from "../shared/service/clinical-trial.service";
+import { ClinicalTrialsDetailsComponent } from './clinical-trials/dialog/clinical-trials-details/clinical-trials-details.component';
+import {AnnihilationDetailsComponent} from "./annihilation/annihilation-details/annihilation-details.component";
+import {AnnihilationManagementComponent} from "./annihilation/annihilation-management/annihilation-management.component";
+import {AnnihilationService} from "../shared/service/annihilation/annihilation.service";
+import {MedicamentService} from "../shared/service/medicament.service";
 
 @NgModule({
     imports: [
@@ -51,11 +56,13 @@ import {ClinicalTrialService} from "../shared/service/clinical-trial.service";
         LicenseDetailsComponent,
         CPCADTaskComponent,
         DrugAuthorizationDetailsDialogComponent,
-        ClinicalTrialsComponent
-
+        AnnihilationManagementComponent,
+        AnnihilationDetailsComponent,
+	ClinicalTrialsComponent,
+	ClinicalTrialsDetailsComponent
     ],
-    entryComponents: [AddReceiptDialogComponent,PriceReqEditModalComponent,LicenseDetailsComponent,DrugAuthorizationDetailsDialogComponent],
-    providers: [LicenseService, AdministrationService,UploadFileService, ClinicalTrialService
+    entryComponents: [AddReceiptDialogComponent,PriceReqEditModalComponent,LicenseDetailsComponent,DrugAuthorizationDetailsDialogComponent, AnnihilationDetailsComponent, ClinicalTrialsDetailsComponent],
+    providers: [LicenseService, AdministrationService,UploadFileService, AnnihilationService, MedicamentService, ClinicalTrialService
     ],
 })
 export class ManagementModule {

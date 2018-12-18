@@ -60,7 +60,7 @@ public class ClinicalTrailsController {
     }
 
     @GetMapping(value = "/load-request")
-    public ResponseEntity<RegistrationRequestsEntity> getClinicalTrailById(@RequestParam(value = "id") Integer id) throws CustomException {
+    public ResponseEntity<RegistrationRequestsEntity> getRegistrationRequestsById(@RequestParam(value = "id") Integer id) throws CustomException {
         Optional<RegistrationRequestsEntity> regOptional = requestRepository.findClinicalTrailstRequestById(id);
         if (!regOptional.isPresent()) {
             throw new CustomException("Inregistrarea nu a fost gasita");
@@ -182,18 +182,28 @@ public class ClinicalTrailsController {
     }
 
     @RequestMapping("/all-clinical-trail-notification-types")
-    public ResponseEntity<List<ClinicTrailNotificationTypeEntity>> getAllNotificationTypes(){
+    public ResponseEntity<List<ClinicTrailNotificationTypeEntity>> getAllNotificationTypes() {
         LOGGER.debug("Retrieve clinical trail notification types");
         List<ClinicTrailNotificationTypeEntity> clinicTrailNotificationTypeEntities = clinicalTrailNotificationTypeRepository.findAll();
         return new ResponseEntity<>(clinicTrailNotificationTypeEntities, HttpStatus.OK);
     }
 
-    @RequestMapping("get-filtered-clinical-trials")
-    public  ResponseEntity<List<ClinicalTrialDTO>> getClinicalTrailsByFilter(@RequestBody ClinicalTrailFilterDTO filter) throws CustomException {
+    @RequestMapping("/get-filtered-clinical-trials")
+    public ResponseEntity<List<ClinicalTrialDTO>> getClinicalTrailsByFilter(@RequestBody ClinicalTrailFilterDTO filter) throws CustomException {
         LOGGER.debug("Get clinical trails by filter: ", filter.toString());
 
         List<ClinicalTrialDTO> clinicalTrialsEntities = clinicalTrailsService.retrieveClinicalTrailsByFilter(filter);
-        return new ResponseEntity<> (clinicalTrialsEntities, HttpStatus.OK);
+        return new ResponseEntity<>(clinicalTrialsEntities, HttpStatus.OK);
+    }
+
+    @RequestMapping("/get-clinical-trial-id")
+    public ResponseEntity<RegistrationRequestsEntity> getRegReqByClinicTrialId(@RequestParam("id") Integer id) throws CustomException {
+        LOGGER.debug("Get registration request by clinical trial id: ", id.toString());
+
+        Optional<RegistrationRequestsEntity> registrationRequestsEntity2 = requestRepository.findRegRequestByCtId(id);
+        clinicalTrailsService.getCtMedInstInvestigator(registrationRequestsEntity2.get());
+
+        return new ResponseEntity<>(registrationRequestsEntity2.get(), HttpStatus.OK);
     }
 
 

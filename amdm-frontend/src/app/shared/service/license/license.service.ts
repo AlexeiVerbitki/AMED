@@ -123,4 +123,8 @@ export class LicenseService {
         return this.http.get('/api/license/find-license-by-id', {params :{ licenseId : id} });
     }
 
+    loadEcAgentTypes(): Observable<any> {
+        return this.http.get('/api/license/retrieve-economic-agent-type');
+    }
+
 }

@@ -69,4 +69,8 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
     @Query(value = "SELECT r.* FROM registration_requests r JOIN request_types t ON r.type_id = t.id AND r.license_id = ?1 AND r.end_date IS NOT NULL AND t.code = 'LICM'", nativeQuery = true)
     List<RegistrationRequestsEntity> findAllLicenseModifications(Integer licenseId);
 
+    @Query(value = "SELECT p FROM RegistrationRequestsEntity p " +
+            "LEFT JOIN FETCH p.clinicalTrails c " +
+            "WHERE c.id = :id and p.type='3'  ")
+    Optional<RegistrationRequestsEntity> findRegRequestByCtId(@Param("id") Integer ctId);
 }
