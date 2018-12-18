@@ -111,6 +111,10 @@ export class RequestService {
         return this.http.get('/api/load-import-request', {params: {id: id}});
     }
 
+    viewImportAuthorization(object: any): Observable<any> {
+        return this.http.post('/api/view-import-authorization', object,{ responseType: 'blob'});
+    }
+
     getActiveLicenses(id: string): Observable<any> {
         return this.http.get('/api/load-active-licenses', {params: {id: id}});
     }

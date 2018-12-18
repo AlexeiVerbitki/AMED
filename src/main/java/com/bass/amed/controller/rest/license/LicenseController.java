@@ -418,7 +418,7 @@ public class LicenseController
             throw new CustomException(e.getMessage());
         }
 
-        return ResponseEntity.ok().header("Content-Type", "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
                 .header("Content-Disposition", "inline; filename=anexaLicenta.docx").body(bytes);
     }
 

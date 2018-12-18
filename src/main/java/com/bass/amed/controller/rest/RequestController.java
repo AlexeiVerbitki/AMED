@@ -1,5 +1,6 @@
 package com.bass.amed.controller.rest;
 
+import com.bass.amed.dto.license.AnexaLaLicenta;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
@@ -8,10 +9,15 @@ import com.bass.amed.repository.prices.NmPricesRepository;
 import com.bass.amed.repository.prices.PriceRepository;
 import com.bass.amed.repository.prices.PricesHistoryRepository;
 import com.bass.amed.utils.Utils;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +25,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @RestController
@@ -906,6 +914,127 @@ public class RequestController
 
         return new ResponseEntity<>(rrE, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/view-import-authorization")
+    public ResponseEntity<byte[]> viewImportAuthorization(@RequestBody RegistrationRequestsEntity request) throws CustomException
+    {
+        byte[] bytes = null;
+        try
+        {
+            ResourceLoader resourceLoader = new DefaultResourceLoader();
+            Resource       res            = resourceLoader.getResource("layouts/ImportAutorizareDeImport.jrxml");
+            JasperReport   report         = JasperCompileManager.compileReport(res.getInputStream());
+
+    /*        List<AnexaLaLicenta> filiale = new ArrayList<>();
+            final AtomicInteger  i       = new AtomicInteger(1);
+
+            request.getLicense().getEconomicAgents().forEach(
+                    m -> {
+                        AnexaLaLicenta p = new AnexaLaLicenta();
+                        p.setNr(i.getAndIncrement());
+
+                        StringBuilder sb = new StringBuilder();
+                        sb.append(m.getLocality().getStateName()).append(", ");
+                        sb.append(m.getLocality().getDescription()).append(", ");
+                        sb.append(m.getStreet());
+                        p.setAddress(sb.toString());
+
+                        p.setPharmacist((m.getType().getRepresentant() + ": " + m.getSelectedPharmaceutist().getFullName()));
+                        p.setPharmType(m.getType().getDescription());
+
+                        p.setPsychotropicSubstances(false);
+                        for (LicenseActivityTypeEntity type : m.getActivities())
+                        {
+                            if (type.getCanUsePsihotropicDrugs().equals(1))
+                            {
+                                p.setPsychotropicSubstances(true);
+                                break;
+                            }
+                        }
+                        filiale.add(p);
+
+                    }
+                                                            );
+
+
+            *//* Convert List to JRBeanCollectionDataSource *//*
+            JRBeanCollectionDataSource itemsJRBean = new JRBeanCollectionDataSource(filiale);*/
+
+            /* Map to hold Jasper report Parameters */
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("autorizationNr", request.getImportAuthorizationEntity().getAuthorizationsNumber());
+//            parameters.put("productName"							, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+            parameters.put("autorizationDate"						, (new Date()));
+//            parameters.put("importExportSectionDate" 				, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+            parameters.put("sellerAndAddress"						, request.getImportAuthorizationEntity().getSeller() +",  "+ request.getImportAuthorizationEntity().getSeller().getAddress());
+//            parameters.put("sellerCountry"							, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+//            parameters.put("validityTerms" 						    , request.getImportAuthorizationEntity().getAuthorizationsNumber());
+//            parameters.put("transactionType"						, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+//            parameters.put("manufacturerAndAddress" 				, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+//            parameters.put("generalDirectorDate" 					, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+//            parameters.put("destinationCountry" 					, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+//            parameters.put("manufacturerCountry"					, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+//            parameters.put("customs"								, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+//            parameters.put("customsCode" 							, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+//            parameters.put("companyNameAndAddress"					, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+//            parameters.put("codOcpo"								, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+//            parameters.put("registartionDate" 						, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+//            parameters.put("registrationNr" 						, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+//            parameters.put("autorizationImportDataSet" 			    , request.getImportAuthorizationEntity().getAuthorizationsNumber());
+//            parameters.put("autorizationImportDataSet2" 			, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+//            parameters.put("themesForApplicationForAuthorization"   , request.getImportAuthorizationEntity().getAuthorizationsNumber());
+//            parameters.put("geniralDirectorName" 					, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+//            parameters.put("importExportSectionRepresentant" 		, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+            /*parameters.put("licenseNumber", request.getLicense().getNr());
+            parameters.put("companyName", request.getLicense().getEconomicAgents().stream().findFirst().get().getLongName());
+            List<RegistrationRequestsEntity> listOfModifications = requestRepository.findAllLicenseModifications(request.getLicense().getId());
+
+            StringBuilder    sb1 = new StringBuilder();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+            listOfModifications.forEach(lm ->
+                                        {
+                                            if (sb1.length() > 0)
+                                            {
+                                                sb1.append(";");
+                                            }
+                                            sb1.append(sdf.format(lm.getEndDate()));
+                                        }
+
+                                       );
+
+            parameters.put("updatedDates", sb1.toString());
+            parameters.put("parameterAnexaLaLicenta", itemsJRBean);*/
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
+            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+
+            //Export to word
+
+//            ByteArrayOutputStream xlsReport = new ByteArrayOutputStream();
+//
+//            JRDocxExporter docxExporter = new JRDocxExporter();
+//            docxExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+//            docxExporter.setExporterOutput( new SimpleOutputStreamExporterOutput( xlsReport));
+//            SimpleDocxReportConfiguration config = new SimpleDocxReportConfiguration();
+//            docxExporter.setConfiguration(config);
+//            docxExporter.exportReport();
+//            bytes = xlsReport.toByteArray();
+//
+//
+//            if (xlsReport != null)
+//            {
+//                xlsReport.close();
+//            }
+
+        } catch (Exception e)
+        {
+            throw new CustomException(e.getMessage());
+        }
+
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                             .header("Content-Disposition", "inline; filename=importAuthorization.pdf").body(bytes);
+    }
+
 
     @GetMapping(value = "/load-active-licenses")
     public ResponseEntity<LicensesEntity> getActiveLicensesByIdno(@RequestParam(value = "id") String idno) throws CustomException {

@@ -297,6 +297,35 @@ export class MedRegApproveComponent implements OnInit {
     }
 
 
+    viewDoc(document: any) {
+        this.loadingService.show();
+
+        let observable : Observable<any> = null;
+
+        // if (document.category === 'AL')
+        // {
+            observable = this.requestService.viewImportAuthorization(this.evaluateImportForm.value)
+        // }
+        // else if (document.category === 'LI')
+        // {
+        //     observable = this.licenseService.viewLicenta(this.composeModel('A', 'A'));
+        // }
+
+        this.subscriptions.push(observable.subscribe(data => {
+            console.log("observable.subscribe(data =>",data)
+                let file = new Blob([data], {type: 'application/pdf'});
+                var fileURL = URL.createObjectURL(file);
+                window.open(fileURL);
+                this.loadingService.hide();
+            }, error => {
+            console.log("window.open(fileURL) ERROR")
+                this.loadingService.hide();
+            }
+            )
+        );
+    }
+
+
     setApproved(i: any) {
 
         // this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved ? this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = false : this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = true;
