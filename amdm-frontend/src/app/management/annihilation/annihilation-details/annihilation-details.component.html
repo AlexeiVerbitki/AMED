@@ -1,0 +1,105 @@
+<h2 mat-dialog-title align="center">Detalii nimicire</h2>
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]='rForm'>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="md-form">
+                    <input type="text" id="companyName" class="form-control" mdbInputDirective
+                           formControlName="companyName">
+                    <label for="companyName">Agentul economic</label>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+    <div class="gradient-card-header bg-sidebar border-gradient">
+        <div class="container-fluid">
+            <!-- Title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card-header-title white-text">Lista medicamentelor pentru distrugere</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="card-body card-body-cascade">
+        <table class="table table-widths text-center">
+            <thead class="bg-sidebar white-text">
+            <tr>
+                <th scope="col">Medicament</th>
+                <th scope="col">Doza</th>
+                <th scope="col">Forma</th>
+                <th scope="col">Cantitatea</th>
+                <th scope="col">Cauza distrugerii</th>
+                <th scope="col">Metoda de nimicire</th>
+                <th scope="col">Taxa</th>
+                <th scope="col">Taxa totala</th>
+                <th scope="col">Nota</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let meds of medicamentsToDestroy;let i = index">
+                <th scope="row">{{ meds.medicamentName }}</th>
+                <td>{{ meds.dose }}</td>
+                <td>{{ meds.form }}</td>
+                <td>{{ meds.quantity }}</td>
+                <td>{{ meds.uselessReason }}</td>
+                <td>{{ meds.destructionMethod ? meds.destructionMethod.description : '' }}</td>
+                <td>{{ meds.tax }}</td>
+                <td>{{ meds.taxTotal }}</td>
+                <td>{{ meds.note }}</td>
+            </tr>
+            <tr>
+                <td colspan="5">
+
+                </td>
+                <td>
+                    Total:{{totalSum}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="gradient-card-header bg-sidebar border-gradient">
+        <div class="container-fluid">
+            <!-- Title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card-header-title white-text">Comisia</div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="card-body card-body-cascade">
+        <table class="table table-widths text-center">
+            <thead class="bg-sidebar white-text">
+            <tr>
+                <th scope="col">Nume</th>
+                <th scope="col">Responsabilitatea</th>
+                <th scope="col">Institutia</th>
+                <th scope="col">Functia</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let mem of members;let i = index">
+                <td>{{ mem.name }}</td>
+                <th >{{ mem.memberDescription }}</th>
+                <td>{{ mem.institution.description }}</td>
+                <td>{{ mem.function }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+    <button class="btn btn-dark-red-color btn-sm-bl btn-sm" (click)="cancel()">Inchidere</button>
+</mat-dialog-actions>

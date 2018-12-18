@@ -1,0 +1,63 @@
+/* .md-form {
+    position: relative;
+    margin-top: 2px;
+    margin-bottom: 1.5rem;
+} */
+
+.md-form-modified {
+    position: relative;
+    margin-top: 18px;
+    margin-bottom: 1.5rem;
+}
+
+.mt-button {
+    margin-top: 85px !important;
+}
+
+.fa {
+    cursor: pointer;
+}
+
+
+.fa-touched {
+    font-size: 0.95em;
+}
+
+.fa-untouched {
+    font-size: 1.33em;
+}
+
+::ng-deep .mat-sort-header-container {
+    display:flex;
+    justify-content:center;
+}
+
+.table th, .table td {
+    text-align: center !important;
+}
+.example-container {
+    max-height : 250px;
+    width: 100%;
+    overflow: auto;
+}
+
+.w-25px {
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+table td a {
+    text-decoration: underline;
+    color : #488CD3;
+    font-weight : bold;
+}
+
+mat-dialog-content {
+    max-height: 80vh !important;
+}
+
+.card-header-title-mt {
+    margin-top: 10px !important;
+}

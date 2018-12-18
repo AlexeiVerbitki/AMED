@@ -1,0 +1,29 @@
+<div>
+	<form [formGroup]="aForm">
+		<h5>Solicitantul a solicitat generearea bonului de plata pentru urmatoarea valuta:</h5>
+		<div>
+			<mat-radio-group formControlName="currency">
+				<div class="container">
+					<div class="row">
+						<div class="offset-1 col-5">
+							<mat-radio-button name="prop1" value="MDL">Lei moldovenesti</mat-radio-button>
+						</div>
+						<div class="offset-1 col-5">
+							<mat-radio-button name="prop2" value="USD">Dolari S.U.A.</mat-radio-button>
+						</div>
+						<div class="offset-1 col-5">
+							<mat-radio-button name="prop3" value="EUR">Euro</mat-radio-button>
+						</div>
+					</div>
+				</div>
+			</mat-radio-group>
+		</div>
+	</form>
+</div>
+<div class="text-center">
+	<div mat-dialog-actions>
+		<div class="w-100">
+			<button class="btn btn-dark-green-color btn-sm waves-light" (click)="generate()">Generare bon</button>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,418 @@
+<h2 mat-dialog-title align="center">Detalii studiu clinic</h2>
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]='ctForm' #f="ngForm">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="md-form">
+                    <textarea type="text" id="titluStud" class="md-textarea form-control" mdbInputDirective rows="2"
+                              formControlName="title"></textarea>
+                    <label for="titluStud">Titlul studiului</label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input type="text" id="code" class="form-control" mdbInputDirective
+                           formControlName="code">
+                    <label for="code">Codul studiului</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input type="text" id="applicant" class="form-control" mdbInputDirective
+                           formControlName="applicant">
+                    <label for="applicant">Solicitant</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input type="text" id="sponsor" class="form-control" mdbInputDirective
+                           formControlName="sponsor">
+                    <label for="sponsor">Sponsor</label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker1"
+                               placeholder="Data deschidere studiul clinic international"
+                               formControlName="startDateInternational">
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker1></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker2"
+                               placeholder="Data inchiderii studiul clinic international"
+                               formControlName="endDateInternational">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker2></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker3" placeholder="Data deschidere studiul clinic nationa"
+                               formControlName="startDateNational">
+                        <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker3></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker4" placeholder="Data inchiderii studiul clinic national"
+                               formControlName="endDateNational">
+                        <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker4></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input type="text" id="eudraCtNr" class="form-control" mdbInputDirective
+                           formControlName="eudraCtNr">
+                    <label for="eudraCtNr">Numarul Eudra CT</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input type="text" id="phase" class="form-control" mdbInputDirective
+                           formControlName="phase">
+                    <label for="phase">Faza studiului</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input type="text" id="treatment" class="form-control" mdbInputDirective
+                           formControlName="treatment">
+                    <label for="treatment">Tratament</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input type="text" id="provenance" class="form-control" mdbInputDirective
+                           formControlName="provenance">
+                    <label for="provenance">Provenienta</label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input type="text" id="trialPopNat" class="form-control" mdbInputDirective
+                           formControlName="trialPopNat">
+                    <label for="trialPopNat">Populatia national</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input type="text" id="trialPopInternat" class="form-control" mdbInputDirective
+                           formControlName="trialPopInternat">
+                    <label for="trialPopInternat">Populatia international</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input type="text" id="comissionNr" class="form-control" mdbInputDirective
+                           formControlName="comissionNr">
+                    <label for="comissionNr">Comisia nr.</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="md-form">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker5" placeholder="Data comisiei"
+                               formControlName="comissionDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker5></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <div class="gradient-card-header bg-sidebar border-gradient">
+            <div class="container-fluid">
+                <!-- Title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card-header-title white-text center">Instituţii medicale / Locul desfăşurării
+                            studiului
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body card-body-cascade">
+            <div class="container-fluid">
+                <div class="row text-center align-items-center">
+                    <div class="col-4 bg-sidebar white-text">
+                        <div class="ptc">Instituţii medicale / Locul desfăşurării studiului</div>
+                        <div class="row grey darken-3 white-text">
+                            <div class="col-6">
+                                <div class="ptc">Denumire</div>
+                            </div>
+                            <div class="col-6">
+                                <div class="ptc">Adresa</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-8 bg-sidebar white-text">
+                        <div class="ptc">Lista de investigatori</div>
+                        <div class="row text-center">
+                            <div class="col grey darken-3 white-text">
+                                <div class="ptc">Nume</div>
+                            </div>
+                            <div class="col grey darken-3 white-text">
+                                <div class="ptc">Prenume</div>
+                            </div>
+                            <div class="col grey darken-3 white-text">
+                                <div class="ptc">Titlul</div>
+                            </div>
+                            <div class="col grey darken-3 white-text">
+                                <div class="ptc">Status</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row text-center align-items-center">
+                    <div class="col">
+                        <div class="row border-row py-2" *ngFor="let el of f.value.medicalInstitutions; let i = index">
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-6 border-specs ptc">{{el.name}}</div>
+                                    <div class="col-6 border-specs ptc">{{el.address}}</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="row py-2" *ngFor="let x of el.investigators">
+                                    <div class="col border-specs ptc">{{x.firstName}}</div>
+                                    <div class="col border-specs ptc">{{x.lastName}}</div>
+                                    <div class="col border-specs ptc">{{x.title}}</div>
+                                    <div class="col border-specs ptc">
+                                        <span *ngIf="x.main===true">Principal</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <hr>
+
+        <h3 class="text-center">Medicamentul de investigat</h3>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input type="text" id="medicament" class="form-control" mdbInputDirective
+                           value="{{f.value.medicament?.name}}" disabled="true">
+                    <label for="medicament">Nume</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input type="text" id="manufacturer" class="form-control" mdbInputDirective
+                           value="{{f.value.medicament?.manufacture?.description}}" disabled="true">
+                    <label for="manufacturer">Producator</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input type="text" id="adminMode" class="form-control" mdbInputDirective
+                           value="{{f.value.medicament?.administratingMode}}" disabled="true">
+                    <label for="adminMode">Calea de administrare</label>
+                </div>
+            </div>
+        </div>
+        <div class="gradient-card-header bg-sidebar border-gradient">
+            <div class="container-fluid">
+                <!-- Title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card-header-title white-text">Substanţe active</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Card content -->
+        <div class="card-body card-body-cascade">
+            <table class="table table-widths text-center">
+                <thead class="bg-sidebar white-text">
+                <tr>
+                    <th scope="col">Denumire</th>
+                    <th scope="col">Cod CAS</th>
+                    <th scope="col">Concentratie</th>
+                    <th scope="col">Unitate de masură</th>
+                    <th scope="col">Producător</th>
+                    <th scope="col">Ţară producător</th>
+                    <th scope="col">Adresă producător</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let substance of f.value.medicament?.activeSubstances;let i = index">
+                    <th scope="row">{{ substance.activeSubstance.description }}</th>
+                    <td>{{ substance.activeSubstance.code }}</td>
+                    <td>{{ substance.quantity }}</td>
+                    <td>{{ substance.unitsOfMeasurement.description }}</td>
+                    <td>{{ substance.manufacture.description }}</td>
+                    <td>{{ substance.manufacture.country.description }}</td>
+                    <td>{{ substance.manufacture.address }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr>
+
+
+        <h3 class="text-center">Medicamentul de referinta</h3>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input type="text" id="medicamentRef" class="form-control" mdbInputDirective
+                           value="{{f.value.referenceProduct?.name}}" disabled="true">
+                    <label for="medicamentRef">Nume</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input type="text" id="manufacturerRef" class="form-control" mdbInputDirective
+                           value="{{f.value.referenceProduct?.manufacture?.description}}" disabled="true">
+                    <label for="manufacturerRef">Producator</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input type="text" id="adminModeRef" class="form-control" mdbInputDirective
+                           value="{{f.value.referenceProduct?.administratingMode}}" disabled="true">
+                    <label for="adminModeRef">Calea de administrare</label>
+                </div>
+            </div>
+        </div>
+        <div class="gradient-card-header bg-sidebar border-gradient">
+            <div class="container-fluid">
+                <!-- Title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card-header-title white-text">Substanţe active</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Card content -->
+        <div class="card-body card-body-cascade">
+            <table class="table table-widths text-center">
+                <thead class="bg-sidebar white-text">
+                <tr>
+                    <th scope="col">Denumire</th>
+                    <th scope="col">Cod CAS</th>
+                    <th scope="col">Concentratie</th>
+                    <th scope="col">Unitate de masură</th>
+                    <th scope="col">Producător</th>
+                    <th scope="col">Ţară producător</th>
+                    <th scope="col">Adresă producător</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let substance of f.value.referenceProduct?.activeSubstances;let i = index">
+                    <th scope="row">{{ substance.activeSubstance.description }}</th>
+                    <td>{{ substance.activeSubstance.code }}</td>
+                    <td>{{ substance.quantity }}</td>
+                    <td>{{ substance.unitsOfMeasurement.description }}</td>
+                    <td>{{ substance.manufacture.description }}</td>
+                    <td>{{ substance.manufacture.country.description }}</td>
+                    <td>{{ substance.manufacture.address }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr>
+
+        <h3 class="text-center">Placebo</h3>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input type="text" id="placebo" class="form-control" mdbInputDirective
+                           value="{{f.value.placebo?.name}}" disabled="true">
+                    <label for="placebo">Nume</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input type="text" id="dosePlacebo" class="form-control" mdbInputDirective
+                           value="{{f.value.placebo?.dose}}" disabled="true">
+                    <label for="dosePlacebo">Doza</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input type="text" id="adminModePlacebo" class="form-control" mdbInputDirective
+                           value="{{f.value.placebo?.administratingMode}}" disabled="true">
+                    <label for="adminModePlacebo">Calea de administrare</label>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        <h3 class="text-center">Lista amendamente</h3>
+        <!-- Card content -->
+        <div class="card-body card-body-cascade">
+            <table class="table table-widths text-center">
+                <thead class="bg-sidebar white-text">
+                <tr>
+                    <th scope="col">Nr. de inregistrare(La moment Id RegRequest)</th>
+                    <th scope="col">Obiectul amendamentului</th>
+                    <th scope="col">Nr. Comisiei</th>
+                    <th scope="col">Data comisiei</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let amendment of f.value.clinicTrialAmendEntities;let i = index">
+                    <th scope="row">{{ amendment.registrationRequestId}}</th>
+                    <td>{{ amendment.note }}</td>
+                    <td>{{ amendment.comissionNr }}</td>
+                    <td>{{ amendment.comissionDate | date:'shortDate'}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr>
+
+        <h3 class="text-center">Lista notificari</h3>
+        <!-- Card content -->
+        <div class="card-body card-body-cascade">
+            <table class="table table-widths text-center">
+                <thead class="bg-sidebar white-text">
+                <tr>
+                    <th scope="col">Nr. de inregistrare(La moment Id RegRequest)</th>
+                    <th scope="col">Tip notificare</th>
+                    <th scope="col">Titlu</th>
+                    <th scope="col">Statut</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let notiff of f.value.clinicTrialNotificationEntities;let i = index">
+                    <th scope="row">{{ notiff?.registrationRequestId}}</th>
+                    <th>{{ notiff?.clinicTrailNotificationTypeEntity?.name}}</th>
+                    <th>{{ notiff?.title}}</th>
+                    <th>{{ notiff?.status}}</th>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--<pre>@{{ f.value | json}}</pre>-->
+    </form>
+</mat-dialog-content>

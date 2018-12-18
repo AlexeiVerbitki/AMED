@@ -25,6 +25,7 @@ import java.sql.Timestamp;
 	private NmManufacturesEntity                producer;
 	private NmCustomsCodesEntity                customsCode;
 	private String                              name;
+	private MedicamentEntity                    medicament;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -234,6 +235,16 @@ import java.sql.Timestamp;
 		this.customsCode = customsCode;
 	}
 
+	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+	@JoinColumn(name = "medicament_id")
+	public MedicamentEntity getMedicament() {
+		return medicament;
+	}
+
+	public void setMedicament(MedicamentEntity medicament) {
+		this.medicament = medicament;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -262,7 +273,8 @@ import java.sql.Timestamp;
 		if (price != null ? !price.equals(that.price) : that.price != null) return false;
 		if (producer != null ? !producer.equals(that.producer) : that.producer != null) return false;
 		if (customsCode != null ? !customsCode.equals(that.customsCode) : that.customsCode != null) return false;
-		return name != null ? name.equals(that.name) : that.name == null;
+		if (name != null ? !name.equals(that.name) : that.name != null) return false;
+		return medicament != null ? medicament.equals(that.medicament) : that.medicament == null;
 	}
 
 	@Override
@@ -288,6 +300,7 @@ import java.sql.Timestamp;
 		result = 31 * result + (producer != null ? producer.hashCode() : 0);
 		result = 31 * result + (customsCode != null ? customsCode.hashCode() : 0);
 		result = 31 * result + (name != null ? name.hashCode() : 0);
+		result = 31 * result + (medicament != null ? medicament.hashCode() : 0);
 		return result;
 	}
 }

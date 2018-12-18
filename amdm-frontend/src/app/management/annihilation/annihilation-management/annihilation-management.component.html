@@ -1,0 +1,193 @@
+<div class="container-fluid sky z-depth-2">
+    <hr>
+
+    <form [formGroup]='rForm'>
+        <div class="row">
+            <div class="col">
+                <div class="md-form-modified-select">
+                    <ng-select class="custom" [items]="companii | async"
+                               bindLabel="name"
+                               placeholder="Agentul economic"
+                               formControlName="ecAgent"
+                               [loading]="loadingCompany"
+                               [typeahead]="companyInputs"
+                    >
+                        <ng-template ng-option-tmp let-item="item">
+                            {{item.name}} <br/>
+                            <small class="form-text text-muted">{{item.idno}}</small>
+                        </ng-template>
+                    </ng-select>
+                </div>
+            </div>
+
+
+            <div class="col">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input id="dataExecutariiFrom" matInput [matDatepicker]="picker3" [max]="maxDate"
+                               placeholder="De la data executarii" formControlName="dataExecutariiFrom"
+                        >
+                        <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker3 [disabled]="false"></mat-datepicker>
+                    </mat-form-field>
+                </div>
+               <!-- <div *ngIf="rFormSubbmitted && !rForm.get('dataProcurii1').value">
+                    <small class="text-muted"><strong class="text-danger">Data procurii trebuie introdusa</strong>
+                    </small>
+                </div>-->
+            </div>
+
+
+            <div class="col">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input id="dataExecutariiTo" matInput [matDatepicker]="picker4" [max]="maxDate"
+                               placeholder="Pina la data executarii" formControlName="dataExecutariiTo"
+                        >
+                        <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker4 [disabled]="false"></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <!-- <div *ngIf="rFormSubbmitted && !rForm.get('dataProcurii1').value">
+                     <small class="text-muted"><strong class="text-danger">Data procurii trebuie introdusa</strong>
+                     </small>
+                 </div>-->
+            </div>
+
+
+            <div class="col-md-1">
+                <div class="md-form-modified text-center">
+                    <button type="button" class="btn btn-md btn-indigo waves-light btn-large" mdbWavesEffect
+                            (click)="findMedicamenteNimicite();"><i
+                            class="fa fa-search fa-lg" aria-hidden="true"></i></button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+    <div class="table-width">
+        <div class="text-right" *ngIf=visibility>
+            <mat-form-field class="w-25">
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtru" class="w-25">
+            </mat-form-field>
+        </div>
+        <div class="gradient-card-header bg-sidebar border-gradient">
+            <div class="container-fluid">
+                <!-- Title -->
+                <div class="row">
+                    <div class="col-4">
+                        <div class="card-header-title white-text">Licente</div>
+                    </div>
+                    <div class="col-8">
+                        <div class="text-right fap white-text">
+                            <i class="fa fa-lg fa-mt" aria-hidden="true" (click)="changeVisibility();"
+                               [ngClass]="visibility ? 'fa-touched fa-search-plus' : 'fa-untouched fa-search-minus'"></i>
+                            <i class="fa fa-file-excel-o fa-mt fa-lg" aria-hidden="true" mdbTooltip="Export in Excel"
+                               (click)="exportToExcel();"></i>
+                            <i class="fa fa-files-o fa-mt fa-lg" aria-hidden="true" mdbTooltip="Export in CSV"
+                               (click)="exportToCsv();"></i>
+                            <i class="fa fa-file-pdf-o fa-mt fa-lg" aria-hidden="true" mdbTooltip="Export in Pdf"
+                               (click)="exportToPdf();"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body card-body-cascade">
+            <div class="table-width">
+                <div class="example-container">
+                    <table mat-table [dataSource]="dataSource" matSort id="tableData">
+                        <ng-container matColumnDef="agentEconomic">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">Agentul
+                                economic
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-center">
+                                {{element.ecAgentLongName}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="medicamentName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
+                                Medicamentul
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-center"> {{element.medicamentName}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="quantity">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
+                                Cantitatea
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-center">
+                                <!--<a title="Detalii licenta" (click)="openLicenseDetails(element.licenseId)">
+                                    {{element.nr}}
+                                </a>-->
+                                {{element.quantity}}
+                            </td>
+                        </ng-container>
+
+                        <!--   <ng-container matColumnDef="releaseDate" class="text-center">
+                               <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">Data
+                                   eliberare
+                               </th>
+                               <td mat-cell *matCellDef="let element" class="text-center"> {{element.releaseDate | date: 'dd/MM/yyyy'}}</td>
+                           </ng-container>
+
+                           <ng-container matColumnDef="expirationDate">
+                               <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">Data
+                                   expirare
+                               </th>
+                               <td mat-cell *matCellDef="let element" class="text-center"> {{element.expirationDate | date: 'dd/MM/yyyy'}}</td>
+                           </ng-container>-->
+
+                        <ng-container matColumnDef="uselessReason">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">Cauza
+                                inutilitatii
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-center"> {{element.uselessReason}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="seria">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">Cauza
+                                inutilitatii
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-center"> {{element.seria}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="destroyMethod">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">Metoda
+                                de distrugere
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-center"> {{element.destructionMethod}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="executionDate">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">Data
+                                executarii
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-center"> {{element.endDate | date:
+                                'dd/MM/yyyy'}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="details">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
+                                Detalii
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-center">
+                                <a title="Detalii" (click)="openDetails(element.annihilationId)">
+                                    Detalii...
+                                </a>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

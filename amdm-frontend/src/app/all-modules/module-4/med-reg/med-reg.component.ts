@@ -306,7 +306,7 @@ export class MedRegComponent implements OnInit {
                     this.codeAmed = val.code;
                     console.log("importAuthorizationEntity.unitOfImportTable.medicament", this.medicamentData)
 
-
+                    // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(val);
 
                     // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode);
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(val.pharmaceuticalForm);
@@ -521,6 +521,7 @@ export class MedRegComponent implements OnInit {
                 atcCode: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').value,
                 registrationNumber: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').value,
                 registrationDate: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').value,
+                medicament: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').value,
 
 
             });

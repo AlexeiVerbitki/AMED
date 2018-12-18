@@ -1,0 +1,74 @@
+.table-width {
+  width: 100%;
+  }
+table th, td {
+  text-align: center !important;
+    border-right: 1px solid rgba(0,0,0,.12);
+    border-left: 1px solid rgba(0,0,0,.12);
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+}
+
+.button-clear {
+  background-color: Transparent;
+  background-repeat:no-repeat;
+  border: none;
+  cursor:pointer;
+  overflow: hidden;
+}
+
+.button-clear:disabled {
+  cursor: no-drop;
+}
+
+mat-header-cell {
+  display:flex;
+  justify-content:flex-end;
+ }
+
+ ::ng-deep .mat-sort-header-container {
+  display:flex;
+  justify-content:center;
+}
+
+.pr-search {
+  padding-right: 30px;
+}
+
+.modal-open .modal {
+  overflow-y: auto;
+}
+
+.example-container {
+  width: 100%;
+  overflow: auto;
+  height    : 68vh;
+}
+
+table {
+  width: 1200px;
+}
+
+.modal {
+  overflow-y:auto;
+}
+
+.fa-touched {
+  font-size: 0.95em;
+}
+
+.fa-untouched {
+  font-size: 1.33em;
+}
+
+.modal-mdb-color {
+  background: #59698d !important;
+}
+
+.modal-dark-green {
+  background: #218c74 !important;
+}
