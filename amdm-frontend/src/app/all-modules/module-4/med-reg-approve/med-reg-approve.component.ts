@@ -304,7 +304,9 @@ export class MedRegApproveComponent implements OnInit {
 
         // if (document.category === 'AL')
         // {
-            observable = this.requestService.viewImportAuthorization(this.evaluateImportForm.value)
+        console.log("this.evaluateImportForm.value", this.evaluateImportForm.value)
+        console.log("this.evaluateImportForm.getRawValue", this.evaluateImportForm.getRawValue())
+            observable = this.requestService.viewImportAuthorization(this.evaluateImportForm.getRawValue())
         // }
         // else if (document.category === 'LI')
         // {
