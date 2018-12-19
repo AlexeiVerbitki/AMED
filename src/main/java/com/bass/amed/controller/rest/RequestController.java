@@ -967,9 +967,9 @@ public class RequestController
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("autorizationNr", request.getImportAuthorizationEntity().getAuthorizationsNumber());
 //            parameters.put("productName"							, request.getImportAuthorizationEntity().getAuthorizationsNumber());
-            parameters.put("autorizationDate"						, (new Date()));
-            parameters.put("importExportSectionDate" 				, (new Date()));
-            parameters.put("generalDirectorDate" 					, (new Date()));
+            parameters.put("autorizationDate"						, (new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
+            parameters.put("importExportSectionDate" 				, (new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
+            parameters.put("generalDirectorDate" 					, (new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
             parameters.put("sellerAndAddress"						, request.getImportAuthorizationEntity().getSeller().getDescription() +", "+ request.getImportAuthorizationEntity().getSeller().getAddress());
             parameters.put("sellerCountry"							, request.getImportAuthorizationEntity().getSeller().getCountry().getDescription());
             parameters.put("sellerCountryCode"							, request.getImportAuthorizationEntity().getSeller().getCountry().getCode());
