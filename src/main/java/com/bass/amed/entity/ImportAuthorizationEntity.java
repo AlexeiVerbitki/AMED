@@ -303,6 +303,16 @@ import java.util.Set;
 		SpecificationDate = specificationDate;
 	}
 
+//	@Basic
+//	@Column(name = "customs_code", nullable = true)
+//	public NmCustomsCodesEntity getCustomsCode() { return customsCode; }
+//
+//	public void setCustomsCode(NmCustomsCodesEntity customsCode) { this.customsCode = customsCode; }
+//
+//	public Boolean getAuthorized() { return authorized; }
+//
+//	public void setAuthorized(Boolean authorized) { this.authorized = authorized; }
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
