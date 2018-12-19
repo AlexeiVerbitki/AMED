@@ -302,11 +302,29 @@ export class MedRegApproveComponent implements OnInit {
 
         let observable : Observable<any> = null;
 
-        // if (document.category === 'AL')
-        // {
-        console.log("this.evaluateImportForm.value", this.evaluateImportForm.value)
+
+
         console.log("this.evaluateImportForm.getRawValue", this.evaluateImportForm.getRawValue())
-            observable = this.requestService.viewImportAuthorization(this.evaluateImportForm.getRawValue())
+
+        let authorizationModel = this.evaluateImportForm.getRawValue();
+
+        this.importDetailsList.forEach(item => {
+            if (item.approved === true) {
+                this.expirationDate.push(item.expirationDate);
+                authorizationModel.importAuthorizationEntity.summ = authorizationModel.importAuthorizationEntity.summ + item.summ;
+                console.log("modelToSubmit.importAuthorizationEntity.summ");
+            }
+        })
+
+
+        authorizationModel.importAuthorizationEntity.expirationDate = new Date(this.expirationDate.reduce(function (a, b) {
+            return a < b ? a : b;
+        }));
+
+        console.log("authorizationModel",authorizationModel)
+            observable = this.requestService.viewImportAuthorization(authorizationModel)
+            // observable = this.requestService.viewImportAuthorization(this.evaluateImportForm.getRawValue())
+
         // }
         // else if (document.category === 'LI')
         // {

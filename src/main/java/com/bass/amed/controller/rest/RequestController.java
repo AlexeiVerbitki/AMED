@@ -992,7 +992,8 @@ public class RequestController
             parameters.put("geniralDirectorName" 					, sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
             parameters.put("importExportSectionRepresentant" 		, sysParamsRepository.findByCode(Constants.SysParams.IMPORT_REPREZENTANT).get().getValue());
             parameters.put("importExportSectionChief" 		        , sysParamsRepository.findByCode(Constants.SysParams.IMPORT_SEF_SECTIE).get().getValue());
-//            parameters.put("validityTerms" 						    , request.getImportAuthorizationEntity().getExpirationDate());
+            parameters.put("validityTerms" 						    , (new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity()
+                                                                                                                          .getExpirationDate())));
 
 //            parameters.put("manufacturerAndAddress" 				, request.getImportAuthorizationEntity().getProducer().getAddress());
 //            parameters.put("manufacturerCountry"					, request.getImportAuthorizationEntity().getAuthorizationsNumber());
