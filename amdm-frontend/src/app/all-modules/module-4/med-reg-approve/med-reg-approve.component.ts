@@ -237,7 +237,7 @@ export class MedRegApproveComponent implements OnInit {
                     this.evaluateImportForm.get('importAuthorizationEntity.importer').setValue(data.importAuthorizationEntity.importer);
                     this.evaluateImportForm.get('importAuthorizationEntity.basisForImport').setValue(data.importAuthorizationEntity.basisForImport);
                     this.evaluateImportForm.get('importAuthorizationEntity.conditionsAndSpecification').setValue(data.importAuthorizationEntity.conditionsAndSpecification);
-                    this.evaluateImportForm.get('importAuthorizationEntity.authorizationsNumber').setValue(data.importAuthorizationEntity.authorizationsNumber);
+                    this.evaluateImportForm.get('importAuthorizationEntity.authorizationsNumber').setValue(data.id + "/" + new Date().getFullYear() + "-AM");
                     this.evaluateImportForm.get('importAuthorizationEntity.customsNumber').setValue(data.importAuthorizationEntity.customsNumber);
                     this.evaluateImportForm.get('importAuthorizationEntity.customsDeclarationDate').setValue(new Date(data.importAuthorizationEntity.customsDeclarationDate));
                     this.evaluateImportForm.get('importAuthorizationEntity.contract').setValue(data.importAuthorizationEntity.contract);
@@ -799,6 +799,10 @@ export class MedRegApproveComponent implements OnInit {
         if (this.importData.importAuthorizationEntity.medType === 2 && modelToSubmit.importAuthorizationEntity.expirationDate > (new Date(this.currentDate.getDate() + 365))) {
             modelToSubmit.importAuthorizationEntity.expirationDate = new Date(this.currentDate.setFullYear(this.currentDate.getFullYear() + 1));
         }
+
+        // if (this.importData.importAuthorizationEntity.medType === 3 || this.importData.importAuthorizationEntity.medType === 4) {
+        //     modelToSubmit.importAuthorizationEntity.expirationDate = new Date(this.currentDate.setFullYear(this.currentDate.getFullYear() + 1));
+        // }
 
         console.log("modelToSubmit", modelToSubmit);
         alert("before addImportRequest(modelToSubmit)")

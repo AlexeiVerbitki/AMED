@@ -965,7 +965,7 @@ public class RequestController
 
             /* Map to hold Jasper report Parameters */
             Map<String, Object> parameters = new HashMap<>();
-            parameters.put("autorizationNr", request.getImportAuthorizationEntity().getAuthorizationsNumber());
+            parameters.put("autorizationNr",                        request.getImportAuthorizationEntity().getAuthorizationsNumber());
 //            parameters.put("productName"							, request.getImportAuthorizationEntity().getAuthorizationsNumber());
             parameters.put("autorizationDate"						, (new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
             parameters.put("importExportSectionDate" 				, (new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
