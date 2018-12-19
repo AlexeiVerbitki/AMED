@@ -84,7 +84,7 @@
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="543" splitType="Stretch">
+		<band height="619" splitType="Stretch">
 			<textField>
 				<reportElement x="1" y="80" width="273" height="23" uuid="0c09378d-be6f-41ad-ad18-f4c28972e82f"/>
 				<textElement>
@@ -152,7 +152,7 @@ mun. Chișinău
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="65" splitType="Stretch">
+		<band height="82" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="19" width="280" height="45" uuid="62abd8fc-753c-4d82-926d-20153ed31c42"/>
 				<textElement markup="none">
@@ -168,6 +168,20 @@ tel. +373 22 884 301, e-mail: office@amed.md; Web: www.amed.md
 				<reportElement x="483" y="0" width="65" height="60" uuid="36094911-1947-4f9d-a837-51c429be067a"/>
 				<imageExpression><![CDATA["layouts/icons/cer.png"]]></imageExpression>
 			</image>
+			<textField>
+				<reportElement x="402" y="63" width="114" height="18" uuid="cd8bd323-87cc-4987-969a-f081f3b2668c"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Pagina " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="516" y="63" width="38" height="18" uuid="9da69560-e3bf-44a5-80f1-030ab80670bf"/>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" din " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageFooter>
 </jasperReport>

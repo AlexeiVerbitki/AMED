@@ -26,6 +26,8 @@ public interface Constants
         String BENEFICIARY = "BENEFICIARY";
         String PRESEDINTE_CPCD = "PR_CPCD";
         String FARMACIST_CPCD = "FR_CPCD";
+        String IMPORT_REPREZENTANT = "IMPORT_REPREZENTANT";
+        String IMPORT_SEF_SECTIE = "IMPORT_SEF_SECTIE";
     }
 }
 

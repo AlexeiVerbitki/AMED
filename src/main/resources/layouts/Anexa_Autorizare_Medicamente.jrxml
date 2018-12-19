@@ -49,14 +49,13 @@
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
-	<field name="country" class="java.lang.String"/>
-	<field name="companyName" class="java.lang.String"/>
-	<field name="medicamentProducts" class="java.util.List"/>
+	<field name="key" class="java.lang.String"/>
+	<field name="value" class="java.util.List"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<pageHeader>
-		<band height="182" splitType="Stretch">
+		<band height="160" splitType="Stretch">
 			<image>
 				<reportElement x="2" y="2" width="220" height="60" uuid="7c7f5366-152e-444b-bc9f-99e647a8be50"/>
 				<imageExpression><![CDATA["layouts/icons/header_left.jpg"]]></imageExpression>
@@ -87,11 +86,11 @@
 				<textFieldExpression><![CDATA["Anexa " + $P{annexNr} +" la ordinul AMDM"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="0" y="152" width="555" height="18" isPrintWhenDetailOverflows="true" uuid="032a4250-1172-4570-b9b5-1c448985fb34"/>
-				<textElement textAlignment="Center">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="141" width="555" height="18" isPrintWhenDetailOverflows="true" uuid="032a4250-1172-4570-b9b5-1c448985fb34"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font fontName="DejaVu Sans" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{annexTitle}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{annexTitle}.split("\\s")[0]+"\n"+$P{annexTitle}.replace($P{annexTitle}.split("\\s")[0],"")]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -106,20 +105,20 @@
 					<property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="TableDataSet" uuid="080a73a0-dd32-434f-9e35-290a9150811a">
+					<datasetRun subDataset="TableDataSet" uuid="71d99ad9-28b8-4021-80e6-c32e4607674c">
 						<datasetParameter name="country">
-							<datasetParameterExpression><![CDATA[$F{country}]]></datasetParameterExpression>
+							<datasetParameterExpression><![CDATA[$F{key}.split("\\|")[0]]]></datasetParameterExpression>
 						</datasetParameter>
 						<datasetParameter name="companyName">
-							<datasetParameterExpression><![CDATA[$F{companyName}]]></datasetParameterExpression>
+							<datasetParameterExpression><![CDATA[$F{key}.split("\\|")[1]]]></datasetParameterExpression>
 						</datasetParameter>
-						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{medicamentProducts})]]></dataSourceExpression>
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{value})]]></dataSourceExpression>
 					</datasetRun>
 					<jr:columnGroup width="555" uuid="5c2dfb9f-f218-4a88-af91-b7ffa75448b5">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [6]"/>
 						<jr:columnHeader style="Table_TD" height="40" rowSpan="1">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="0" y="0" width="555" height="20" isPrintWhenDetailOverflows="true" uuid="77796cff-bd77-42c5-be24-863411db9b8b"/>
+								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="555" height="20" isPrintWhenDetailOverflows="true" uuid="77796cff-bd77-42c5-be24-863411db9b8b"/>
 								<textElement verticalAlignment="Bottom">
 									<font fontName="DejaVu Sans" isBold="true"/>
 								</textElement>
@@ -265,7 +264,7 @@
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="63" splitType="Stretch">
+		<band height="81" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="9" width="280" height="45" uuid="9ce9e805-c75c-4b10-a60a-67c4dd33f9bd"/>
 				<textElement markup="none">
@@ -281,6 +280,20 @@ tel. +373 22 884 301, e-mail: office@amed.md; Web: www.amed.md
 				<reportElement x="483" y="0" width="65" height="60" uuid="dae430e5-eabe-4d5a-8ebd-0d042b0308f3"/>
 				<imageExpression><![CDATA["layouts/icons/cer.png"]]></imageExpression>
 			</image>
+			<textField>
+				<reportElement x="402" y="63" width="114" height="18" uuid="10b049c4-7e83-42a3-af07-6739461e168a"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Pagina " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="516" y="63" width="38" height="18" uuid="ededf915-e540-4aa9-bd0d-fc24ba1776c8"/>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" din " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageFooter>
 </jasperReport>

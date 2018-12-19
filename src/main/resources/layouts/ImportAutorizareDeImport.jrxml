@@ -121,29 +121,30 @@
 		<field name="amaunt" class="java.lang.Double"/>
 		<field name="total" class="java.lang.Double"/>
 	</subDataset>
-	<parameter name="autorizationNr" 						class="java.lang.String"/>
-	<parameter name="autorizationDate"						class="java.lang.String"/>
-	<parameter name="importExportSectionDate" 				class="java.lang.String"/>
-	<parameter name="sellerAndAddress"						class="java.lang.String"/>
-	<parameter name="sellerCountry"							class="java.lang.String"/>
-	<parameter name="validityTerms" 						class="java.lang.String"/>
-	<parameter name="transactionType"						class="java.lang.String"/>
-	<parameter name="manufacturerAndAddress" 				class="java.lang.String"/>
-	<parameter name="productName"							class="java.lang.String"/>
-	<parameter name="generalDirectorDate" 					class="java.lang.String"/>
-	<parameter name="destinationCountry" 					class="java.lang.String"/>
-	<parameter name="manufacturerCountry"					class="java.lang.String"/>
-	<parameter name="customs"								class="java.lang.String"/>
-	<parameter name="customsCode" 							class="java.lang.String"/>
-	<parameter name="companyNameAndAddress"					class="java.lang.String"/>
-	<parameter name="codOcpo"								class="java.lang.String"/>
-	<parameter name="registartionDate" 						class="java.lang.String"/>
-	<parameter name="registrationNr" 						class="java.lang.String"/>
-	<parameter name="autorizationImportDataSet" 			class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
-	<parameter name="autorizationImportDataSet2" 			class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
-	<parameter name="themesForApplicationForAuthorization" 	class="java.lang.String"/>
-	<parameter name="geniralDirectorName" 					class="java.lang.String"/>
-	<parameter name="importExportSectionRepresentant" 		class="java.lang.String"/>
+	<parameter name="autorizationNr" class="java.lang.String"/>
+	<parameter name="autorizationDate" class="java.lang.String"/>
+	<parameter name="importExportSectionDate" class="java.lang.String"/>
+	<parameter name="sellerAndAddress" class="java.lang.String"/>
+	<parameter name="sellerCountry" class="java.lang.String"/>
+	<parameter name="validityTerms" class="java.lang.String"/>
+	<parameter name="transactionType" class="java.lang.String"/>
+	<parameter name="manufacturerAndAddress" class="java.lang.String"/>
+	<parameter name="productName" class="java.lang.String"/>
+	<parameter name="generalDirectorDate" class="java.lang.String"/>
+	<parameter name="destinationCountry" class="java.lang.String"/>
+	<parameter name="manufacturerCountry" class="java.lang.String"/>
+	<parameter name="customs" class="java.lang.String"/>
+	<parameter name="customsCode" class="java.lang.String"/>
+	<parameter name="companyNameAndAddress" class="java.lang.String"/>
+	<parameter name="codOcpo" class="java.lang.String"/>
+	<parameter name="registartionDate" class="java.lang.String"/>
+	<parameter name="registrationNr" class="java.lang.String"/>
+	<parameter name="autorizationImportDataSet" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="importExportSectionChief" class="java.lang.String"/>
+	<parameter name="autorizationImportDataSet2" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="themesForApplicationForAuthorization" class="java.lang.String"/>
+	<parameter name="geniralDirectorName" class="java.lang.String"/>
+	<parameter name="importExportSectionRepresentant" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -316,7 +317,7 @@
 					<textElement>
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<text><![CDATA[Conform  autoriaţiei]]></text>
+					<text><![CDATA[Conform  autorizaţiei]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="392" y="19" width="132" height="22" uuid="332871a9-e1c8-498e-8698-5cca0a1f1dff"/>
@@ -697,7 +698,7 @@
 					<textElement verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA["N.P. " + $P{importExportSectionRepresentant}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["N.P. " + $P{importExportSectionChief}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="5" y="42" width="257" height="14" uuid="cf2040ea-f6de-41e6-b801-2cf2e0e4a68d"/>

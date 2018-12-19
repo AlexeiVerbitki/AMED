@@ -1,5 +1,6 @@
 package com.bass.amed.controller.rest;
 
+import com.bass.amed.common.Constants;
 import com.bass.amed.dto.license.AnexaLaLicenta;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
@@ -61,6 +62,8 @@ public class RequestController
     private PricesHistoryRepository pricesHistoryRepository;
     @Autowired
     private LicensesRepository licensesRepository;
+    @Autowired
+    private SysParamsRepository sysParamsRepository;
 
     @RequestMapping(value = "/add-medicament-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RegistrationRequestsEntity> saveMedicamentRequest(@RequestBody RegistrationRequestsEntity request) throws CustomException
@@ -964,16 +967,15 @@ public class RequestController
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("autorizationNr", request.getImportAuthorizationEntity().getAuthorizationsNumber());
 //            parameters.put("productName"							, request.getImportAuthorizationEntity().getAuthorizationsNumber());
-//            parameters.put("autorizationDate"						, (new Date()).toString());
+            parameters.put("autorizationDate"						, (new Date()).toString());
 //            parameters.put("importExportSectionDate" 				, request.getImportAuthorizationEntity().getAuthorizationsNumber());
             parameters.put("sellerAndAddress"						, request.getImportAuthorizationEntity().getSeller().getDescription() +", "+ request.getImportAuthorizationEntity().getSeller().getAddress());
             parameters.put("sellerCountry"							, request.getImportAuthorizationEntity().getSeller().getCountry().getDescription());
-            parameters.put("validityTerms" 						    , request.getImportAuthorizationEntity().getExpirationDate());
 //            parameters.put("transactionType"						, request.getImportAuthorizationEntity().getAuthorizationsNumber());
-            parameters.put("manufacturerAndAddress" 				, request.getImportAuthorizationEntity().getProducer().getAddress());
+
 //            parameters.put("generalDirectorDate" 					, request.getImportAuthorizationEntity().getAuthorizationsNumber());
             parameters.put("destinationCountry" 					, "Moldova");
-            parameters.put("manufacturerCountry"					, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+
 //            parameters.put("customs"								, request.getImportAuthorizationEntity().getAuthorizationsNumber());
 //            parameters.put("customsCode" 							, request.getImportAuthorizationEntity().getCustomsNumber());
             parameters.put("companyNameAndAddress"					, request.getImportAuthorizationEntity().getImporter().getLongName() + ", "
@@ -984,8 +986,13 @@ public class RequestController
 //            parameters.put("autorizationImportDataSet" 			    , request.getImportAuthorizationEntity().getAuthorizationsNumber());
 //            parameters.put("autorizationImportDataSet2" 			, request.getImportAuthorizationEntity().getAuthorizationsNumber());
             parameters.put("themesForApplicationForAuthorization"   , request.getImportAuthorizationEntity().getBasisForImport());
-//            parameters.put("geniralDirectorName" 					, request.getImportAuthorizationEntity().getAuthorizationsNumber());
-//            parameters.put("importExportSectionRepresentant" 		, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+            parameters.put("geniralDirectorName" 					, sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
+            parameters.put("importExportSectionRepresentant" 		, sysParamsRepository.findByCode(Constants.SysParams.IMPORT_REPREZENTANT).get().getValue());
+            parameters.put("importExportSectionChief" 		        , sysParamsRepository.findByCode(Constants.SysParams.IMPORT_SEF_SECTIE).get().getValue());
+            parameters.put("validityTerms" 						    , request.getImportAuthorizationEntity().getExpirationDate());
+
+//            parameters.put("manufacturerAndAddress" 				, request.getImportAuthorizationEntity().getProducer().getAddress());
+//            parameters.put("manufacturerCountry"					, request.getImportAuthorizationEntity().getAuthorizationsNumber());
             /*parameters.put("licenseNumber", request.getLicense().getNr());
             parameters.put("companyName", request.getLicense().getEconomicAgents().stream().findFirst().get().getLongName());
             List<RegistrationRequestsEntity> listOfModifications = requestRepository.findAllLicenseModifications(request.getLicense().getId());

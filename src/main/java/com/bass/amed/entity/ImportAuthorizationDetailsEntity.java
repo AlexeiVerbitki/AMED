@@ -205,7 +205,7 @@ import java.sql.Timestamp;
 	}
 
 	@Basic
-	@Column(name = "price_id", nullable = true, length = 11)
+	@Column(name = "price", nullable = true, length = 11)
 	public Double getPrice() {
 		return price;
 	}
