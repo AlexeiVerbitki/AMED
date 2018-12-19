@@ -123,17 +123,20 @@
 	</subDataset>
 	<parameter name="autorizationNr" class="java.lang.String"/>
 	<parameter name="autorizationDate" class="java.lang.String"/>
+	<parameter name="sellerCountryCode" class="java.lang.String"/>
 	<parameter name="importExportSectionDate" class="java.lang.String"/>
 	<parameter name="sellerAndAddress" class="java.lang.String"/>
 	<parameter name="sellerCountry" class="java.lang.String"/>
 	<parameter name="validityTerms" class="java.lang.String"/>
 	<parameter name="transactionType" class="java.lang.String"/>
+	<parameter name="destinationCountryCode" class="java.lang.String"/>
 	<parameter name="manufacturerAndAddress" class="java.lang.String"/>
 	<parameter name="productName" class="java.lang.String"/>
 	<parameter name="generalDirectorDate" class="java.lang.String"/>
 	<parameter name="destinationCountry" class="java.lang.String"/>
 	<parameter name="manufacturerCountry" class="java.lang.String"/>
 	<parameter name="customs" class="java.lang.String"/>
+	<parameter name="manufacturerCountryCode" class="java.lang.String"/>
 	<parameter name="customsCode" class="java.lang.String"/>
 	<parameter name="companyNameAndAddress" class="java.lang.String"/>
 	<parameter name="codOcpo" class="java.lang.String"/>
@@ -259,14 +262,14 @@
 					<textElement>
 						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA["10.Ţara vînzătoare " + $P{sellerCountry}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{sellerCountry}  + "   "+$P{sellerCountryCode}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="264" y="38" width="262" height="16" uuid="d4178b8a-9acc-45d9-b7c5-8968dacf9845"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<text><![CDATA[9. Vinzător, adresa ]]></text>
+					<text><![CDATA[10.Ţara vînzătoare ]]></text>
 				</staticText>
 			</frame>
 			<frame>
@@ -279,7 +282,7 @@
 					<textElement>
 						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$P{destinationCountry}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{destinationCountry} + "   " + $P{destinationCountryCode}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="2" y="1" width="78" height="18" uuid="d80444f5-2964-4ff3-96c8-b67f98c6a962"/>
@@ -300,7 +303,7 @@
 					<textElement verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$P{manufacturerCountry}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{manufacturerCountry} + "   " + $P{manufacturerCountryCode}]]></textFieldExpression>
 				</textField>
 				<line>
 					<reportElement x="385" y="0" width="1" height="42" uuid="02a4e2e5-1ea9-48ac-b0cc-2da59da5d624"/>

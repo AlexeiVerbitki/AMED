@@ -967,29 +967,32 @@ public class RequestController
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("autorizationNr", request.getImportAuthorizationEntity().getAuthorizationsNumber());
 //            parameters.put("productName"							, request.getImportAuthorizationEntity().getAuthorizationsNumber());
-            parameters.put("autorizationDate"						, (new Date()).toString());
-//            parameters.put("importExportSectionDate" 				, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+            parameters.put("autorizationDate"						, (new Date()));
+            parameters.put("importExportSectionDate" 				, (new Date()));
+            parameters.put("generalDirectorDate" 					, (new Date()));
             parameters.put("sellerAndAddress"						, request.getImportAuthorizationEntity().getSeller().getDescription() +", "+ request.getImportAuthorizationEntity().getSeller().getAddress());
             parameters.put("sellerCountry"							, request.getImportAuthorizationEntity().getSeller().getCountry().getDescription());
+            parameters.put("sellerCountryCode"							, request.getImportAuthorizationEntity().getSeller().getCountry().getCode());
 //            parameters.put("transactionType"						, request.getImportAuthorizationEntity().getAuthorizationsNumber());
 
-//            parameters.put("generalDirectorDate" 					, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+
             parameters.put("destinationCountry" 					, "Moldova");
+            parameters.put("destinationCountryCode" 				, "MD");
 
 //            parameters.put("customs"								, request.getImportAuthorizationEntity().getAuthorizationsNumber());
 //            parameters.put("customsCode" 							, request.getImportAuthorizationEntity().getCustomsNumber());
             parameters.put("companyNameAndAddress"					, request.getImportAuthorizationEntity().getImporter().getLongName() + ", "
                                                                         + request.getImportAuthorizationEntity().getImporter().getLegalAddress());
 //            parameters.put("codOcpo"								, request.getImportAuthorizationEntity().getAuthorizationsNumber());
-//            parameters.put("registartionDate" 						, request.getImportAuthorizationEntity().getAuthorizationsNumber());
-//            parameters.put("registrationNr" 						, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+            parameters.put("registartionDate" 						, request.getImportAuthorizationEntity().getApplicant().getRegistrationDate().toString());
+            parameters.put("registrationNr" 						, request.getImportAuthorizationEntity().getApplicant().getIdno());
 //            parameters.put("autorizationImportDataSet" 			    , request.getImportAuthorizationEntity().getAuthorizationsNumber());
 //            parameters.put("autorizationImportDataSet2" 			, request.getImportAuthorizationEntity().getAuthorizationsNumber());
             parameters.put("themesForApplicationForAuthorization"   , request.getImportAuthorizationEntity().getBasisForImport());
             parameters.put("geniralDirectorName" 					, sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
             parameters.put("importExportSectionRepresentant" 		, sysParamsRepository.findByCode(Constants.SysParams.IMPORT_REPREZENTANT).get().getValue());
             parameters.put("importExportSectionChief" 		        , sysParamsRepository.findByCode(Constants.SysParams.IMPORT_SEF_SECTIE).get().getValue());
-            parameters.put("validityTerms" 						    , request.getImportAuthorizationEntity().getExpirationDate());
+//            parameters.put("validityTerms" 						    , request.getImportAuthorizationEntity().getExpirationDate());
 
 //            parameters.put("manufacturerAndAddress" 				, request.getImportAuthorizationEntity().getProducer().getAddress());
 //            parameters.put("manufacturerCountry"					, request.getImportAuthorizationEntity().getAuthorizationsNumber());
