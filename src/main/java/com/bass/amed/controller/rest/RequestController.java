@@ -972,7 +972,7 @@ public class RequestController
             parameters.put("generalDirectorDate" 					, (new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
             parameters.put("sellerAndAddress"						, request.getImportAuthorizationEntity().getSeller().getDescription() +", "+ request.getImportAuthorizationEntity().getSeller().getAddress());
             parameters.put("sellerCountry"							, request.getImportAuthorizationEntity().getSeller().getCountry().getDescription());
-            parameters.put("sellerCountryCode"							, request.getImportAuthorizationEntity().getSeller().getCountry().getCode());
+            parameters.put("sellerCountryCode"						, request.getImportAuthorizationEntity().getSeller().getCountry().getCode());
 //            parameters.put("transactionType"						, request.getImportAuthorizationEntity().getAuthorizationsNumber());
 
 
@@ -995,8 +995,9 @@ public class RequestController
             parameters.put("validityTerms" 						    , (new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity()
                                                                                                                           .getExpirationDate())));
 
-//            parameters.put("manufacturerAndAddress" 				, request.getImportAuthorizationEntity().getProducer().getAddress());
-//            parameters.put("manufacturerCountry"					, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+            parameters.put("manufacturerAndAddress" 				, request.getImportAuthorizationEntity().getSeller().getDescription() +", "+ request.getImportAuthorizationEntity().getSeller().getAddress());
+            parameters.put("manufacturerCountry"					, request.getImportAuthorizationEntity().getSeller().getCountry().getDescription());
+            parameters.put("manufacturerCountryCode"				, request.getImportAuthorizationEntity().getSeller().getCountry().getCode());
             /*parameters.put("licenseNumber", request.getLicense().getNr());
             parameters.put("companyName", request.getLicense().getEconomicAgents().stream().findFirst().get().getLongName());
             List<RegistrationRequestsEntity> listOfModifications = requestRepository.findAllLicenseModifications(request.getLicense().getId());
