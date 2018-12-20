@@ -4,6 +4,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from "rxjs";
 import {TaskService} from "../shared/service/task.service";
 import {Router} from "@angular/router";
+import {NavbarTitleService} from "../shared/service/navbar-title.service";
 
 @Component({
     selector: 'app-task',
@@ -23,7 +24,8 @@ export class TaskComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild(MatSort) sort: MatSort;
     private subscriptions: Subscription[] = [];
 
-    constructor(private fb: FormBuilder, private route: Router, private taskService: TaskService) {
+    constructor(private fb: FormBuilder, private route: Router, private taskService: TaskService,
+                private navbarTitleService: NavbarTitleService,) {
         this.taskForm = fb.group({
             'requestNumber': [null, {validators: Validators.required}],
             'request': [null],
@@ -42,6 +44,8 @@ export class TaskComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.navbarTitleService.showTitleMsg('Gestionare cerere');
+
         this.subscriptions.push(this.taskService.getRequestNames().subscribe(data => {
             this.requests = data;
         }));
@@ -53,6 +57,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.navbarTitleService.showTitleMsg('');
         this.subscriptions.forEach(s => s.unsubscribe());
     }
 

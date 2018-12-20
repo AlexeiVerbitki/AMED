@@ -30,10 +30,6 @@ public class CtAmendMedInstInvestigatorEntity {
     @Column(name = "main_investigator")
     private Boolean mainInvestigator;
 
-//    @Basic
-//    @Column(name = "status")
-//    private Character status;
-
     public boolean meaningfulyEquals(CtMedInstInvestigatorEntity o) {
         if (o == null) return false;
 

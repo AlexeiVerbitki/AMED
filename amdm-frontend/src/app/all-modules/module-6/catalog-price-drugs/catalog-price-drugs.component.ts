@@ -9,7 +9,6 @@ import { MatPaginator, MatTableDataSource } from '@angular/material';
 })
 export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
-        console.log('price component destroy');
     }
 
 
@@ -315,7 +314,6 @@ export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-      console.log('init price');
     this.dataSource.paginator = this.paginator;
 
     this.codMedicamentFilter.valueChanges

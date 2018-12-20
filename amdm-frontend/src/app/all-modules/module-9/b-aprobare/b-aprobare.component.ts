@@ -134,7 +134,9 @@ export class BAprobareComponent implements OnInit, OnDestroy {
 
         formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex].comissionDate = this.clinicalTrailAmendmentForm.get('comissionDate').value;
         formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex].comissionNr = this.clinicalTrailAmendmentForm.get('comissionNr').value;
-        console.log(formModel);
+        let codeBuilder = formModel.clinicalTrailAmendment.codeTo + '-' + this.clinicalTrailAmendmentForm.get('amendCode').value;
+        formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex].amendCode = codeBuilder;
+        // console.log('codeBuilder', codeBuilder);
 
         // return;
 

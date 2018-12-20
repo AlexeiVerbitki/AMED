@@ -1,12 +1,10 @@
 package com.bass.amed.service;
 
-import com.bass.amed.dto.MedicamentDetailsDTO;
 import com.bass.amed.dto.clinicaltrial.ClinicalTrailFilterDTO;
 import com.bass.amed.dto.clinicaltrial.ClinicalTrialDTO;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
-import com.bass.amed.utils.MedicamentQueryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -140,7 +138,6 @@ public class ClinicalTrailsService {
             ClinicTrialAmendEntity persistedEntity = em.createQuery("select ctAm from ClinicTrialAmendEntity ctAm where ctAm.id = :id", ClinicTrialAmendEntity.class).setParameter("id", clinicTrialAmendEntity.getId()).getSingleResult();
             List<CtAmendMedInstInvestigatorEntity> amendmentMedInstInvestResult = handelMediclInstitutions(ctAmendMedInstInvestigatorsSet, ctMedInstInvestigatorsSet, persistedEntity);
 
-            Optional<CtAmendMedInstInvestigatorEntity> dasgsgas = amendmentMedInstInvestResult.stream().filter(medInst -> 'N' == medInst.getEmbededId().getStatus() || 'R' == medInst.getEmbededId().getStatus()).findAny();
             boolean isMedInstModified = amendmentMedInstInvestResult.stream().filter(medInst -> 'N' == medInst.getEmbededId().getStatus() || 'R' == medInst.getEmbededId().getStatus()).findAny().isPresent();
             if (!isMedInstModified) {
                 for (CtAmendMedInstInvestigatorEntity entity : amendmentMedInstInvestResult) {
@@ -211,14 +208,15 @@ public class ClinicalTrailsService {
 
     private void populateMedActiveSubstances(ImportMedNotRegisteredEntity importMed, Set<CtMedAmendActiveSubstEntity> medAmentdActSubst) {
         for (CtMedAmendActiveSubstEntity entity : medAmentdActSubst) {
+            //If active substance modified cleare from Clinical trail med.
             if (entity.getStatus().equals('N') || entity.getStatus().equals('R')) {
                 importMed.getActiveSubstances().clear();
                 break;
             }
         }
-
+        //Fill Clinical trail med with 'N' - New instances
         medAmentdActSubst.forEach(amendEntity -> {
-            if (amendEntity.getStatus().equals('N') || amendEntity.getStatus().equals('U')) {
+            if (amendEntity.getStatus().equals('N') /*|| amendEntity.getStatus().equals('U')*/) {
                 NotRegMedActiveSubstEntity medActiveSubst = new NotRegMedActiveSubstEntity();
                 medActiveSubst.setActiveSubstance(amendEntity.getActiveSubstance());
                 medActiveSubst.setQuantity(amendEntity.getQuantity());
@@ -276,7 +274,7 @@ public class ClinicalTrailsService {
 
     private Set<CtMedAmendActiveSubstEntity> handleActiveSubstances(Set<CtMedAmendActiveSubstEntity> amendMedActSubst, Set<NotRegMedActiveSubstEntity> cteMedActSubst, Integer amendmentMedId) {
         if (!activeSubstSetsEquals(amendMedActSubst, cteMedActSubst)) {
-            Set<CtMedAmendActiveSubstEntity> transformedActiveSubstances = new HashSet<>();
+            List<CtMedAmendActiveSubstEntity> transformedActiveSubstances = new ArrayList<>();
 
             cteMedActSubst.forEach(cteMedEntity -> {
                 CtMedAmendActiveSubstEntity amendEntity = new CtMedAmendActiveSubstEntity();
@@ -285,19 +283,19 @@ public class ClinicalTrailsService {
                 transformedActiveSubstances.add(amendEntity);
             });
 
-            Set<CtMedAmendActiveSubstEntity> unmodifiedSubstances = new HashSet<>(amendMedActSubst);
+            List<CtMedAmendActiveSubstEntity> unmodifiedSubstances = new ArrayList<>(amendMedActSubst);
             unmodifiedSubstances.retainAll(transformedActiveSubstances);
             unmodifiedSubstances.forEach(entity -> {
                 entity.setStatus('U');
             });
 
-            Set<CtMedAmendActiveSubstEntity> newSubstances = new HashSet<>(amendMedActSubst);
+            List<CtMedAmendActiveSubstEntity> newSubstances = new ArrayList<>(amendMedActSubst);
             newSubstances.removeAll(transformedActiveSubstances);
             newSubstances.forEach(entity -> {
                 entity.setStatus('N');
             });
 
-            Set<CtMedAmendActiveSubstEntity> removedSubstances = new HashSet<>(transformedActiveSubstances);
+            List<CtMedAmendActiveSubstEntity> removedSubstances = new ArrayList<>(transformedActiveSubstances);
             removedSubstances.removeAll(amendMedActSubst);
             removedSubstances.forEach(entity -> {
                 entity.setStatus('R');
@@ -306,7 +304,8 @@ public class ClinicalTrailsService {
             //consolidating actSubstances per medicament
             unmodifiedSubstances.addAll(newSubstances);
             unmodifiedSubstances.addAll(removedSubstances);
-            return unmodifiedSubstances;
+//            return new HashSet<>();
+            return new HashSet<>(unmodifiedSubstances);
         }
 
         return amendMedActSubst;
@@ -466,10 +465,10 @@ public class ClinicalTrailsService {
                 entity.getRegistrationRequestId().equals(requests.getId())
         ).findFirst().orElse(null);
 
-        Set<CtAmendMedInstInvestigatorEntity> requestTypesStepEntityList2 = ctAmendMedInstInvestigatorRepository.findCtMedInstInvestigatorById(clinicTrialAmendEntity.getId());
+        Set<CtAmendMedInstInvestigatorEntity> amendmentMedInstInvestResult = ctAmendMedInstInvestigatorRepository.findCtMedInstInvestigatorById(clinicTrialAmendEntity.getId());
 
         Set<CtAmendMedInstInvestigatorEntity> ctMedInstInvestigatorEntities = new HashSet<>();
-        clinicTrialAmendEntity.getMedicalInstitutions().forEach(medInst -> {
+        clinicTrialAmendEntity.getMedicalInstitutionsTo().forEach(medInst -> {
             medInst.getInvestigators().forEach(investig -> {
                 CtAmendMedInstInvestigatorEntity entity = new CtAmendMedInstInvestigatorEntity(requests.getClinicalTrails().getId(), medInst.getId(), investig.getId(), Boolean.TRUE, 'U');
                 entity.setInvestigatorsEntity(investig);
@@ -480,7 +479,7 @@ public class ClinicalTrailsService {
             });
         });
 
-        ctAmendMedInstInvestigatorRepository.deleteAll(requestTypesStepEntityList2);
+        ctAmendMedInstInvestigatorRepository.deleteAll(amendmentMedInstInvestResult);
         ctAmendMedInstInvestigatorRepository.saveAll(ctMedInstInvestigatorEntities);
     }
 

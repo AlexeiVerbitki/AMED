@@ -26,3 +26,9 @@ label.required:not(:empty):after,
 .mt-4s {
     padding-top: 45px;
 }
+
+table td a {
+    text-decoration: underline;
+    color: #488CD3;
+    font-weight: bold;
+}

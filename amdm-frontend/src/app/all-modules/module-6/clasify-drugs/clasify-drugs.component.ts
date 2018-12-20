@@ -10,7 +10,6 @@ import { MatTableDataSource, MatPaginator } from '@angular/material';
 
 export class ClasifyDrugsComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
-        console.log('clasificator onDestroy');
     }
 
 

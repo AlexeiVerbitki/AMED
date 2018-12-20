@@ -103,11 +103,6 @@ export class AdministrationService {
     }
 
     getPrevMonthAVGCurrencies(): Observable<any> {
-        // const httpOptions = {
-        //     headers: new HttpHeaders({
-        //         'Access-Control-Allow-Origin':'*',
-        //     })
-        // };
         return this.http.get('/api/price/prev-month-avg-currencies');//,  httpOptions);
     }
 

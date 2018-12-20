@@ -92,5 +92,7 @@ public class RegistrationRequestsEntity
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "registration_request_id")
     private Set<DrugCheckDecisionsEntity> drugCheckDecisions = new HashSet<>();
-
+    @Basic
+    @Column(name = "dossier_nr")
+    private String dossierNr;
 }

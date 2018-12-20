@@ -116,7 +116,15 @@ public class ClinicTrialAmendEntity {
     private String status;
 
     @Transient
-    private Set<CtMedicalInstitutionEntity> medicalInstitutions = new HashSet<>();
+    private Set<CtMedicalInstitutionEntity> medicalInstitutionsFrom = new HashSet<>();
+
+    @Transient
+    private Set<CtMedicalInstitutionEntity> medicalInstitutionsTo = new HashSet<>();
+
+
+//    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH}, orphanRemoval = true)
+//    @JoinColumn(name = "clinical_trail_amend_id")
+//    private Set<CtAmendMedInstInvestigatorEntity> amendMedInstInvestigators = new HashSet<>();
 
     public void assignTo(ClinicalTrialsEntity entity) {
         this.clinicalTrialsEntityId = entity.getId();

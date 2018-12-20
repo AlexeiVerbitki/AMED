@@ -23,6 +23,10 @@ public class ClinicTrailNotificationEntity {
     @Column(name = "clinical_trails_id")
     private Integer clinicalTrialsEntityId;
 
+    @Basic
+    @Column(name="notif_code")
+    private String notifCode;
+
     @OneToOne
     @JoinColumn(name = "notification_type_id")
     private ClinicTrailNotificationTypeEntity clinicTrailNotificationTypeEntity;

@@ -5,9 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Setter
 @Getter
@@ -91,6 +89,10 @@ public class CtMedAmendEntity {
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     @JoinColumn(name = "med_amend_id")
     private Set<CtMedAmendActiveSubstEntity> activeSubstances = new HashSet<>();
+
+//    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+//    @JoinColumn(name = "med_amend_id")
+//    private List<CtMedAmendActiveSubstEntity> activeSubstances2 = new ArrayList<>();
 
     public void asign(ImportMedNotRegisteredEntity entity){
         this.nameTo = entity.getName();

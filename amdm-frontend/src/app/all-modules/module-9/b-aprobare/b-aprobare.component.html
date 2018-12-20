@@ -37,17 +37,21 @@
             <hr>
             <div class="row">
                 <div class="col-md-4">
-                    <div class="md-form input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text md-addon">{{f.value.clinicalTrailAmendment?.codeTo}} {{'--'}}</span>
-                        </div>
-                        <input id="amendCode" mdbInputDirective type="text" class="form-control" formControlName="amendCode" placeholder="1->99" maxlength="2">
-                        <label for="amendCode">Codul amendamentului</label>
+                    <div class="md-form-modified">
+
+                        <mat-form-field class="w-30">
+                            <input matInput value="{{f.value.clinicalTrailAmendment?.codeTo}}" disabled>
+                        </mat-form-field>
+                        <mat-form-field class="w-70">
+                            <input matInput placeholder="Codul amendamentului" formControlName="amendCode"
+                                   maxlength="2">
+                        </mat-form-field>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="md-form">
-                        <input id="comisiaNr" mdbInputDirective type="text" class="form-control" formControlName="comissionNr">
+                        <input id="comisiaNr" mdbInputDirective type="text" class="form-control"
+                               formControlName="comissionNr">
                         <label for="regNr">Nr. comisiei medicamentului
                         </label>
                     </div>
@@ -80,32 +84,32 @@
 
         <!-- Card content -->
         <div class="card-body card-body-cascade">
-        <table class="table table-widths-lg text-center">
-            <thead class="bg-sidebar white-text">
-            <tr>
-                <th scope="col">Denumirea</th>
-                <th scope="col">Numar</th>
-                <th scope="col">Status document</th>
-                <th>Actiuni</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let doc of outDocuments">
-                <th scope="row">{{ doc.name }}</th>
-                <th scope="row">{{ doc.number }}</th>
-                <th scope="row">{{ doc.status }}</th>
-                <td>
-                    <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(doc)">
-                        <i class="fa fa-file fa-lg" aria-hidden="true"></i>
-                    </button>
-                    <button *ngIf="doc.status=='Nu este atasat' && doc.responseReceived==false && (doc.docType.category=='RA')"
-                            class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(doc)">
+            <table class="table table-widths-lg text-center">
+                <thead class="bg-sidebar white-text">
+                <tr>
+                    <th scope="col">Denumirea</th>
+                    <th scope="col">Numar</th>
+                    <th scope="col">Status document</th>
+                    <th>Actiuni</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let doc of outDocuments">
+                    <th scope="row">{{ doc.name }}</th>
+                    <th scope="row">{{ doc.number }}</th>
+                    <th scope="row">{{ doc.status }}</th>
+                    <td>
+                        <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(doc)">
+                            <i class="fa fa-file fa-lg" aria-hidden="true"></i>
+                        </button>
+                        <button *ngIf="doc.status=='Nu este atasat' && doc.responseReceived==false && (doc.docType.category=='RA')"
+                                class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(doc)">
                             <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
-                    </button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
         <hr>
 

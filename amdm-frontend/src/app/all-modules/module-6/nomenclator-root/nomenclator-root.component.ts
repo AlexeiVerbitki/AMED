@@ -10,7 +10,6 @@ export class NomenclatorRootComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-      console.log('init root');
   }
 
 }

@@ -30,6 +30,7 @@ import {AnnihilationDetailsComponent} from "./annihilation/annihilation-details/
 import {AnnihilationManagementComponent} from "./annihilation/annihilation-management/annihilation-management.component";
 import {AnnihilationService} from "../shared/service/annihilation/annihilation.service";
 import {MedicamentService} from "../shared/service/medicament.service";
+import { AmendmentDetailsComponent } from './clinical-trials/dialog/amendment-details/amendment-details.component';
 
 @NgModule({
     imports: [
@@ -59,9 +60,10 @@ import {MedicamentService} from "../shared/service/medicament.service";
         AnnihilationManagementComponent,
         AnnihilationDetailsComponent,
 	ClinicalTrialsComponent,
-	ClinicalTrialsDetailsComponent
+	ClinicalTrialsDetailsComponent,
+	AmendmentDetailsComponent
     ],
-    entryComponents: [AddReceiptDialogComponent,PriceReqEditModalComponent,LicenseDetailsComponent,DrugAuthorizationDetailsDialogComponent, AnnihilationDetailsComponent, ClinicalTrialsDetailsComponent],
+    entryComponents: [AddReceiptDialogComponent,PriceReqEditModalComponent,LicenseDetailsComponent,DrugAuthorizationDetailsDialogComponent, AnnihilationDetailsComponent, ClinicalTrialsDetailsComponent,AmendmentDetailsComponent],
     providers: [LicenseService, AdministrationService,UploadFileService, AnnihilationService, MedicamentService, ClinicalTrialService
     ],
 })

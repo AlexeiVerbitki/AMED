@@ -68,6 +68,18 @@
 
         <div [formGroup]="addNotificationTypesForm" #f2="ngForm">
             <div class="row">
+                <div class="col-4">
+                    <div class="md-form-modified">
+
+                        <mat-form-field class="w-30">
+                            <input matInput value="{{f.value.clinicalTrails?.code}}-N" disabled>
+                        </mat-form-field>
+                        <mat-form-field class="w-70">
+                            <input matInput placeholder="Codul notificarii" formControlName="notifCode"
+                                   maxlength="2">
+                        </mat-form-field>
+                    </div>
+                </div>
                 <div class="col-8">
                     <div class="md-form-modified">
                         <ng-select id="allNotificationTypes" name="allNotificationTypes"
@@ -81,8 +93,7 @@
                         </ng-select>
                     </div>
                 </div>
-                <div class="col-4">
-                </div>
+
             </div>
             <div class="row">
                 <div class="col-md-12">

@@ -1,6 +1,8 @@
 package com.bass.amed.dto.authorization.annexes;
 
 public class MedicineProduct {
+	private String country;
+	private String companyName;
 	private String name;
 	private String pharmaceuticalForm;
 	private String concentration;
@@ -11,8 +13,9 @@ public class MedicineProduct {
 	public MedicineProduct() {
 	}
 
-	public MedicineProduct(String name, String pharmaceuticalForm, String concentration, String dose,
-			String registrationNumber, String status) {
+	public MedicineProduct(String country, String companyName, String name, String pharmaceuticalForm, String concentration, String dose, String registrationNumber, String status) {
+		this.country = country;
+		this.companyName = companyName;
 		this.name = name;
 		this.pharmaceuticalForm = pharmaceuticalForm;
 		this.concentration = concentration;
@@ -68,5 +71,20 @@ public class MedicineProduct {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
 }

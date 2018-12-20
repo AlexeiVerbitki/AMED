@@ -9,7 +9,7 @@ import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 })
 export class ClasifyEconomicsAgencyComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
-        console.log('ajenti economic onDestroy');
+
     }
 
   @ViewChild(MatPaginator) paginator: MatPaginator;

@@ -129,9 +129,9 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                 'registrationRequestId': [],
                 'clinicalTrialsEntityId': [],
                 'amendCode': [[Validators.required, Validators.pattern("^[1-9][0-9]")]],
-                'note': [],
+                'note': ['', Validators.required],
                 'titleFrom': [''],
-                'titleTo':  [{value: null, disabled: true}],
+                'titleTo': [{value: null, disabled: true}],
                 'treatmentFrom': [''],
                 'treatmentTo': ['', Validators.required],
                 'provenanceFrom': [''],
@@ -141,10 +141,11 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                 'phaseFrom': [''],
                 'phaseTo': ['', Validators.required],
                 'eudraCtNrFrom': [''],
-                'eudraCtNrTo': ['', Validators.required],
+                'eudraCtNrTo': [{value: null, disabled: true}],
                 'codeFrom': [''],
-                'codeTo': ['', Validators.required],
-                'medicalInstitutions': [],
+                'codeTo': [{value: null, disabled: true}],
+                'medicalInstitutionsFrom': [],
+                'medicalInstitutionsTo': [],
                 'trialPopNatFrom': [''],
                 'trialPopNatTo': ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
                 'trialPopInternatFrom': [''],
@@ -489,8 +490,9 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
     initPage() {
         this.subscriptions.push(
             this.activatedRoute.params.subscribe(params => {
+                console.log('params', params);
                 this.subscriptions.push(this.requestService.getClinicalTrailAmendmentRequest(params['id']).subscribe(data => {
-                        console.log(data);
+                        console.log('data', data);
 
                         this.initialData = data;
                         this.isAnalizePage = data.type.id == 4 && data.currentStep == 'A';
@@ -511,7 +513,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
                         this.clinicTrailAmendForm.get('clinicalTrailAmendment').setValue(findAmendment);
 
-                        this.clinicTrailAmendForm.get('clinicalTrailAmendment.medicalInstitutions').setValue(
+                        this.clinicTrailAmendForm.get('clinicalTrailAmendment.medicalInstitutionsTo').setValue(
                             findAmendment.medicalInstitutions == null ? [] : findAmendment.medicalInstitutions);
                         this.clinicTrailAmendForm.get('clinicalTrailAmendment.treatmentTo').setValue(
                             findAmendment.treatmentTo == null ? this.treatmentList[0] : findAmendment.treatmentTo);
@@ -534,7 +536,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                         }
 
                         if (findAmendment.medicalInstitutions !== null) {
-                            this.mediacalInstitutionsList = findAmendment.medicalInstitutions;
+                            this.mediacalInstitutionsList = findAmendment.medicalInstitutionsTo;
                         }
 
                         // console.log(' this.clinicTrailAmendForm', this.clinicTrailAmendForm);
@@ -759,7 +761,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         formModel.receipts = this.receiptsList;
         formModel.paymentOrders = this.paymentOrdersList;
 
-        formModel.clinicalTrailAmendment.medicalInstitutions = this.mediacalInstitutionsList;
+        formModel.clinicalTrailAmendment.medicalInstitutionsTo = this.mediacalInstitutionsList;
 
         formModel.clinicalTrailAmendment.medicament = this.medicamentForm.value;
         formModel.clinicalTrailAmendment.medicament.activeSubstances = this.medActiveSubstances;
@@ -812,7 +814,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         formModel.paymentOrders = this.paymentOrdersList;
 
 
-        formModel.clinicalTrailAmendment.medicalInstitutions = this.mediacalInstitutionsList;
+        formModel.clinicalTrailAmendment.medicalInstitutionsTo = this.mediacalInstitutionsList;
 
         formModel.clinicalTrailAmendment.medicament = this.medicamentForm.value;
         formModel.clinicalTrailAmendment.medicament.activeSubstances = this.medActiveSubstances;

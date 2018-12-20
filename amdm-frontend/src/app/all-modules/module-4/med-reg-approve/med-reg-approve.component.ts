@@ -307,6 +307,7 @@ export class MedRegApproveComponent implements OnInit {
         console.log("this.evaluateImportForm.getRawValue", this.evaluateImportForm.getRawValue())
 
         let authorizationModel = this.evaluateImportForm.getRawValue();
+        authorizationModel.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.importDetailsList;
 
         this.importDetailsList.forEach(item => {
             if (item.approved === true) {

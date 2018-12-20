@@ -6,8 +6,10 @@ import com.bass.amed.projection.MedicamentRegisterNumberProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import javax.persistence.Tuple;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface MedicamentRepository extends JpaRepository<MedicamentEntity, Integer>
 {
@@ -45,4 +47,5 @@ public interface MedicamentRepository extends JpaRepository<MedicamentEntity, In
     @Query(value = "SELECT * FROM medicament m WHERE (upper(m.name) like upper(CONCAT(?1, '%'))or m.code like (CONCAT(?1, '%'))) and m.status = ?2", nativeQuery
             = true)
     List<MedicamentEntity> findAllByName(String name, String status);
+
 }

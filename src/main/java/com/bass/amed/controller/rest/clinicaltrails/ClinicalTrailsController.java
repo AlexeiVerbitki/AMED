@@ -14,9 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 
 @RestController
@@ -91,22 +89,41 @@ public class ClinicalTrailsController {
                 entity.getRegistrationRequestId().equals(registrationRequestsEntity.getId())
         ).findFirst().orElse(null);
 
-//        Set<ClinicTrialAmendEntity> clinicTrialAmendEntities = new HashSet<>();
-//        clinicTrialAmendEntities.add(clinicTrialAmendEntity);
-//        registrationRequestsEntity.getClinicalTrails().setClinicTrialAmendEntities(clinicTrialAmendEntities);
-
         if (clinicTrialAmendEntity != null) {
             Set<CtAmendMedInstInvestigatorEntity> requestTypesStepEntityList = ctAmendMedInstInvestigatorRepository.findCtMedInstInvestigatorById(clinicTrialAmendEntity.getId());
 
             requestTypesStepEntityList.forEach(medInstInvestigator -> {
-                CtMedicalInstitutionEntity medInst = medInstInvestigator.getMedicalInstitutionsEntity();
-                CtInvestigatorEntity ctInvestigatorEntity = new CtInvestigatorEntity();
-                ctInvestigatorEntity.asign(medInstInvestigator.getInvestigatorsEntity());
-                ctInvestigatorEntity.setMain(medInstInvestigator.getMainInvestigator());
-                medInst.getInvestigators().add(ctInvestigatorEntity);
+                if ('U' == medInstInvestigator.getEmbededId().getStatus() || 'N' == medInstInvestigator.getEmbededId().getStatus()) {
+                    CtMedicalInstitutionEntity medInst = medInstInvestigator.getMedicalInstitutionsEntity();
+                    CtInvestigatorEntity ctInvestigatorEntity = new CtInvestigatorEntity();
+                    ctInvestigatorEntity.asign(medInstInvestigator.getInvestigatorsEntity());
+                    ctInvestigatorEntity.setMain(medInstInvestigator.getMainInvestigator());
+                    medInst.getInvestigators().add(ctInvestigatorEntity);
 
-                clinicTrialAmendEntity.getMedicalInstitutions().add(medInst);
+                    clinicTrialAmendEntity.getMedicalInstitutionsTo().add(medInst);
+                }
             });
+
+            boolean isMedInstModified = requestTypesStepEntityList.stream().filter(medInst -> 'N' == medInst.getEmbededId().getStatus() || 'R' == medInst.getEmbededId().getStatus()).findAny().isPresent();
+            List<CtMedicalInstitutionEntity> medicalInstitutionEntitiesList = new ArrayList<>();
+            Map<CtMedicalInstitutionEntity, CtMedicalInstitutionEntity> medicalInstitutionEntitiesMap = new HashMap();
+            if (isMedInstModified) {
+                requestTypesStepEntityList.forEach(entity -> {
+                    if (!medicalInstitutionEntitiesMap.containsKey(entity.getMedicalInstitutionsEntity()) && ('U' == entity.getEmbededId().getStatus() || 'R' == entity.getEmbededId().getStatus())) {
+                        CtMedicalInstitutionEntity newMedInst = new CtMedicalInstitutionEntity();
+                        newMedInst.asign(entity.getMedicalInstitutionsEntity());
+                        medicalInstitutionEntitiesMap.put(entity.getMedicalInstitutionsEntity(), newMedInst);
+                    }
+
+                    if ('U' == entity.getEmbededId().getStatus() || 'R' == entity.getEmbededId().getStatus()) {
+                        entity.getInvestigatorsEntity().setMain(entity.getMainInvestigator());
+                        medicalInstitutionEntitiesMap.get(entity.getMedicalInstitutionsEntity()).getInvestigators().add(entity.getInvestigatorsEntity());
+                    }
+                });
+                clinicTrialAmendEntity.getMedicalInstitutionsFrom().addAll(medicalInstitutionEntitiesMap.values());
+            }
+
+            System.out.println();
         }
 
         return new ResponseEntity<>(registrationRequestsEntity, HttpStatus.OK);

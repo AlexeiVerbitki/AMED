@@ -71,6 +71,7 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
 
     @Query(value = "SELECT p FROM RegistrationRequestsEntity p " +
             "LEFT JOIN FETCH p.clinicalTrails c " +
+            "LEFT JOIN FETCH p.documents " +
             "WHERE c.id = :id and p.type='3'  ")
     Optional<RegistrationRequestsEntity> findRegRequestByCtId(@Param("id") Integer ctId);
 }

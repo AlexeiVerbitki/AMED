@@ -10,6 +10,9 @@ import com.bass.amed.repository.*;
 import com.bass.amed.service.GenerateDocNumberService;
 import com.bass.amed.service.GenerateReceiptNumberService;
 import com.bass.amed.utils.ReceiptsQueryUtils;
+import org.apache.logging.log4j.util.Strings;
+import org.hibernate.JDBCException;
+import org.hibernate.transform.ResultTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +24,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Set;
+import java.math.BigInteger;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -412,5 +413,304 @@ public class AdministrationController {
     public ResponseEntity<List<NmEconomicAgentsEntity>> getCompaniesByIdno(String idno) {
         LOGGER.debug("Retrieve companies by idno");
         return new ResponseEntity<>(economicAgentsRepository.findAllByIdno(idno), HttpStatus.OK);
+    }
+
+    public final static String[] TABLES = new String[]{
+            "nm_active_substances",
+            "nm_atc_codes",
+            "nm_authorization_comment",
+            "nm_auxiliary_substances",
+            "nm_bank_accounts",
+            "nm_banks",
+            "nm_clinic_trail_phases",
+            "nm_countries",
+            "nm_country_group",
+            "nm_currencies",
+            "nm_currencies_history",
+            "nm_customs_codes",
+            "nm_customs_groups",
+            "nm_customs_points",
+            "nm_document_types",
+            "nm_documents_archive",
+            "nm_economic_agent_bank_accounts",
+            "nm_economic_agent_contact_info",
+            "nm_economic_agent_types",
+            "nm_economic_agents",
+            "nm_employees",
+            "nm_identification_document_types",
+            "nm_international_medicament_names",
+            "nm_investigators",
+            "nm_labels",
+            "nm_localities",
+            "nm_manufacture_bank_accounts",
+            "nm_manufactures",
+            "nm_medical_institutions",
+            "nm_medicament_forms",
+            "nm_medicament_group",
+            "nm_medicament_type",
+            "nm_organization",
+            "nm_organization_bank_accounts",
+            "nm_partners",
+            "nm_pharmaceutical_form_types",
+            "nm_pharmaceutical_forms",
+            "nm_price_types",
+            "nm_prices",
+            "nm_professions",
+            "nm_states",
+            "nm_subdivisions",
+            "nm_taxes",
+            "nm_traffic_archive",
+            "nm_type_of_pharmacy_activity",
+            "nm_types_of_customs_transactions",
+            "nm_types_of_drug_changes",
+            "nm_units_of_measurement",
+            "nm_variation_request_type",
+    };
+
+
+    @RequestMapping("/remove-nomenclature-row")
+    public ResponseEntity<Boolean> removeNomenclatureRow(@RequestParam(value = "nomenclature", required = true)Integer nr, @RequestParam(value = "id", required = true)Integer id) throws CustomException {
+
+        String tableName = TABLES[nr-1];
+        int isSuccesful = 0;
+
+        if(!Strings.isEmpty(tableName)) {
+            String sqlQuerry = String.format(SQL_DELETE_TABLE, tableName);
+
+            EntityManager em = null;
+            try {
+                em = entityManagerFactory.createEntityManager();
+                em.getTransaction().begin();
+                isSuccesful =  em.createNativeQuery(sqlQuerry).setParameter("id", id).executeUpdate();
+                em.getTransaction().commit();
+            } catch (Exception e) {
+                if (em != null) {
+                    em.getTransaction().rollback();
+                }
+
+                if(e.getCause() instanceof JDBCException) {
+                    JDBCException sqlCauseEx = (JDBCException)e.getCause();
+                    throw new CustomException(String.format("Inregistrarea nu poate fi stearsa întrucat este utilizata in alt tabel. (%s)",sqlCauseEx.getSQLException().getMessage()));
+                }
+                throw new CustomException(e.getMessage());
+            } finally {
+                em.close();
+            }
+        }
+
+        return new ResponseEntity<>(new Boolean(isSuccesful > 0), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "insert-row")
+    public ResponseEntity<Long> insertNomenclatureRow(@RequestBody Map<String, Object> nomenclature) throws CustomException {
+
+        String tableName = getTableName(nomenclature);
+
+        Long insertedRowId = null;
+
+        Map<String,Object> insertedRow = null;
+
+        if(!Strings.isEmpty(tableName)) {
+
+            nomenclature.remove("tableNr");
+
+            String query = "";
+
+            EntityManager em = null;
+            try {
+                em = entityManagerFactory.createEntityManager();
+                em.getTransaction().begin();
+
+                query = createInsertQuery(nomenclature, tableName);
+                int numberOfAfected = em.createNativeQuery(query).executeUpdate();
+                if(numberOfAfected > 0) {
+                    insertedRowId = ((BigInteger) em.createNativeQuery("SELECT LAST_INSERT_ID()").getSingleResult()).longValue();
+                }
+
+                em.getTransaction().commit();
+            } catch (Exception e) {
+                if (em != null) {
+                    em.getTransaction().rollback();
+                }
+
+                if(e.getCause() instanceof JDBCException) {
+                    JDBCException sqlCauseEx = (JDBCException)e.getCause();
+                    throw new CustomException(String.format("Inregistrarea nu poate fi inserata. (%s)",sqlCauseEx.getSQLException().getMessage()));
+                }
+                throw new CustomException(e.getMessage());
+            } finally {
+                em.close();
+            }
+        }
+
+        return new ResponseEntity<>(insertedRowId, HttpStatus.OK);
+    }
+
+
+    String getTableName(Map<String, Object> nomenclature) {
+        Integer nr = 0;
+        try {
+            nr = Integer.parseInt(nomenclature.get("tableNr").toString());
+        }catch (NumberFormatException e) {
+            return null;
+        }
+
+        return TABLES[nr-1];
+    }
+
+    @PostMapping(value = "update-row")
+    public ResponseEntity<Boolean> updateNomenclatureRow(@RequestBody Map<String, Object> nomenclature) throws CustomException {
+
+        String tableName = getTableName(nomenclature);
+
+        int success = 0;
+
+        if(!Strings.isEmpty(tableName)) {
+
+            nomenclature.remove("tableNr");
+
+            String query = "";
+
+            EntityManager em = null;
+            try {
+                em = entityManagerFactory.createEntityManager();
+                em.getTransaction().begin();
+
+                query = createUpdateQuery(nomenclature, tableName);
+                success = em.createNativeQuery(query).executeUpdate();
+
+                em.getTransaction().commit();
+            } catch (Exception e) {
+                if (em != null) {
+                    em.getTransaction().rollback();
+                }
+
+                if(e.getCause() instanceof JDBCException) {
+                    JDBCException sqlCauseEx = (JDBCException)e.getCause();
+                    throw new CustomException(String.format("Inregistrarea nu poate fi actualizata. (%s)",sqlCauseEx.getSQLException().getMessage()));
+                }
+                throw new CustomException(e.getMessage());
+            } finally {
+                em.close();
+            }
+        }
+
+        return new ResponseEntity<>(success > 0, HttpStatus.OK);
+    }
+
+    String createInsertQuery(Map<String, Object> row, String table){
+        StringBuilder snames = new StringBuilder(100);
+        StringBuilder svalues = new StringBuilder(100);
+        row.forEach((k,v) -> {
+            snames.append(k + ",");
+            svalues.append(String.format("'%s',",v));
+        });
+
+        snames.deleteCharAt(snames.lastIndexOf(","));
+        svalues.deleteCharAt(svalues.lastIndexOf(","));
+
+        String colls = snames.toString();
+        String values = svalues.toString();
+
+        String sqlInsertQuerry = String.format(SQL_INSERT, table, colls, values);
+        return sqlInsertQuerry;
+    }
+
+    String createUpdateQuery(Map<String, Object> row, String table){
+        StringBuilder paramsStringBuilder = new StringBuilder(100);
+        String id = row.get("id").toString();
+
+        row.forEach((k,v) -> {
+            paramsStringBuilder.append(String.format("%s = '%s',",k,v));
+        });
+
+        paramsStringBuilder.deleteCharAt(paramsStringBuilder.lastIndexOf(","));
+
+        String params = paramsStringBuilder.toString();
+
+        String sqlInsertQuerry = String.format(SQL_UPDATE, table, params, id);
+        return sqlInsertQuerry;
+    }
+
+
+    public static String SQL_GET_ALL_BY_TABLE = "SELECT * FROM %s";
+    public static String SQL_GET_BY_ID = "SELECT * FROM %s WHERE id = %s";
+    public static String SQL_DELETE_TABLE = "DELETE FROM %s WHERE ID = :id";
+    public static String SQL_INSERT = "INSERT INTO %s (%s) VALUES(%s)";
+    public static String SQL_UPDATE = "UPDATE %s SET %s WHERE ID = %s";
+    public static String SQL_GET_COLUMNS_NAMES =
+            "SELECT COLUMN_NAME, COLUMN_COMMENT\n" +
+            "FROM INFORMATION_SCHEMA.COLUMNS\n" +
+            "WHERE table_name = '%s'\n" +
+            "AND table_schema = 'amed'";
+
+    @RequestMapping("/get-nomenclature")
+    public ResponseEntity<List<Object>> getNomenclature(@RequestParam(value = "nomenclature", required = true)Integer nr) throws CustomException {
+        String tableName = TABLES[nr-1];
+
+
+        if(!Strings.isEmpty(tableName)) {
+            String sqlColumnsQuery = String.format(SQL_GET_COLUMNS_NAMES, tableName);
+
+            String sqlQuerry = String.format(SQL_GET_ALL_BY_TABLE, tableName);
+
+            List<Object> responseList;
+            EntityManager em = null;
+            try {
+                em = entityManagerFactory.createEntityManager();
+                em.getTransaction().begin();
+
+                Query colNameQuerry = em.createNativeQuery(sqlColumnsQuery).unwrap(org.hibernate.query.Query.class)
+                        .setResultTransformer(new ResultTransformer() {
+                            private Map<String,String> columns = new HashMap<>();
+                            @Override
+                            public Object transformTuple(Object[] tuple, String[] aliases) {
+                                columns.put(tuple[0].toString(), tuple[1].toString());
+                                return null;
+                            }
+
+                            @Override
+                            public List transformList(List collection) {
+                                collection.add(columns);
+                                List<Object> colls = new ArrayList<>(1);
+                                colls.add(columns);
+                                return colls;
+                            }
+                        });
+
+                responseList = colNameQuerry.getResultList();
+
+                Query query = em.createNativeQuery(sqlQuerry).unwrap(org.hibernate.query.Query.class)
+                        .setResultTransformer(new ResultTransformer() {
+                            @Override
+                            public Object transformTuple(Object[] tuple, String[] aliases) {
+                                Map<String, Object> clas = new HashMap<>(tuple.length);
+                                for(int i = 0; i < tuple.length; i++) {
+                                    clas.put(aliases[i], tuple[i]);
+                                }
+                                return clas;
+                            }
+
+                            @Override
+                            public List transformList(List collection) {
+                                return collection;
+                            }
+                        });
+
+                responseList.addAll(query.getResultList());
+                em.getTransaction().commit();
+            } catch (Exception e) {
+                if (em != null) {
+                    em.getTransaction().rollback();
+                }
+                throw new CustomException(e.getMessage());
+            } finally {
+                em.close();
+            }
+
+            return new ResponseEntity<>(responseList, HttpStatus.OK);
+        }
+        LOGGER.debug("getNomenclature");
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }

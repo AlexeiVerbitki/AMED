@@ -53,6 +53,7 @@ export class CNotificareComponent implements OnInit, OnDestroy {
         });
 
         this.addNotificationTypesForm = this.fb.group({
+            'notifCode': ['', Validators.required],
             'notificationType': ['', Validators.required],
             'notificationTitle': ['', Validators.required],
             'startDateInternational': [''],
@@ -99,7 +100,7 @@ export class CNotificareComponent implements OnInit, OnDestroy {
                     this.addNotificationTypesForm.get('reportDsurEntity.drugName').setValue(this.clinicTrailNotifForm.value.clinicalTrails.medicament.name + ' ' + this.clinicTrailNotifForm.value.clinicalTrails.medicament.dose);
                 }
             })
-        )
+        );
     }
 
 
@@ -174,6 +175,7 @@ export class CNotificareComponent implements OnInit, OnDestroy {
         let collectedDataForm = this.addNotificationTypesForm.value;
 
         findAmendment.title = collectedDataForm.notificationTitle;
+        findAmendment.notifCode = formModel.clinicalTrails.code + '-N' + collectedDataForm.notifCode;
         if (collectedDataForm.notificationType != null) {
             findAmendment.clinicTrailNotificationTypeEntity = collectedDataForm.notificationType;
 
@@ -210,7 +212,7 @@ export class CNotificareComponent implements OnInit, OnDestroy {
 
             console.log('formModel', formModel);
             this.subscriptions.push(this.requestService.finishClinicalTrailNotificationRequest(formModel).subscribe(data => {
-                    // this.router.navigate(['/dashboard/module/']);
+                    this.router.navigate(['/dashboard/module/']);
                     this.loadingService.hide();
                 }, error => {
                     this.loadingService.hide();

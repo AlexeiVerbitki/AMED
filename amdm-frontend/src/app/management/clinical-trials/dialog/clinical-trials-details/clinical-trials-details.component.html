@@ -1,6 +1,43 @@
 <h2 mat-dialog-title align="center">Detalii studiu clinic</h2>
 <mat-dialog-content class="mat-typography">
     <form [formGroup]='ctForm' #f="ngForm">
+        <div class="gradient-card-header bg-sidebar border-gradient">
+            <div class="container-fluid">
+                <!-- Title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card-header-title white-text">Documente atashate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Card content -->
+        <div class="card-body card-body-cascade">
+            <table class="table table-widths text-center">
+                <thead class="bg-sidebar white-text">
+                <tr>
+                    <th scope="col">Denumire</th>
+                    <th scope="col">Tip document</th>
+                    <th scope="col">Numar document</th>
+                    <th scope="col">Data cincarcarii</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let document of f.value.documents;let i = index">
+                    <td scope="row">
+                        <a title="Detalii studiu clinic" class="text-center">
+                            {{ document.name }}
+                        </a>
+                    </td>
+                    <td>{{ document.docType?.description }}</td>
+                    <td>{{ document.number }}</td>
+                    <td>{{ document.date | date:'shortDate'}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr>
+
         <div class="row">
             <div class="col-md-12">
                 <div class="md-form">
@@ -373,7 +410,7 @@
             <table class="table table-widths text-center">
                 <thead class="bg-sidebar white-text">
                 <tr>
-                    <th scope="col">Nr. de inregistrare(La moment Id RegRequest)</th>
+                    <th scope="col">Codul amendamentului</th>
                     <th scope="col">Obiectul amendamentului</th>
                     <th scope="col">Nr. Comisiei</th>
                     <th scope="col">Data comisiei</th>
@@ -381,7 +418,12 @@
                 </thead>
                 <tbody>
                 <tr *ngFor="let amendment of f.value.clinicTrialAmendEntities;let i = index">
-                    <th scope="row">{{ amendment.registrationRequestId}}</th>
+                    <td scope="row">
+                        <a title="Detalii studiu clinic" (click)="openAmendmentDetails(amendment.registrationRequestId)"
+                           class="text-center">
+                            {{ amendment.amendCode }}
+                        </a>
+                    </td>
                     <td>{{ amendment.note }}</td>
                     <td>{{ amendment.comissionNr }}</td>
                     <td>{{ amendment.comissionDate | date:'shortDate'}}</td>
@@ -397,7 +439,7 @@
             <table class="table table-widths text-center">
                 <thead class="bg-sidebar white-text">
                 <tr>
-                    <th scope="col">Nr. de inregistrare(La moment Id RegRequest)</th>
+                    <th scope="col">Codul notificarii</th>
                     <th scope="col">Tip notificare</th>
                     <th scope="col">Titlu</th>
                     <th scope="col">Statut</th>
@@ -405,10 +447,14 @@
                 </thead>
                 <tbody>
                 <tr *ngFor="let notiff of f.value.clinicTrialNotificationEntities;let i = index">
-                    <th scope="row">{{ notiff?.registrationRequestId}}</th>
-                    <th>{{ notiff?.clinicTrailNotificationTypeEntity?.name}}</th>
-                    <th>{{ notiff?.title}}</th>
-                    <th>{{ notiff?.status}}</th>
+                    <td scope="row">
+                        <a title="Detalii notificare" (click)="openNotifDetails(notiff.notifCode)" class="text-center">
+                            {{ notiff?.notifCode}}
+                        </a>
+                    </td>
+                    <td>{{ notiff?.clinicTrailNotificationTypeEntity?.name}}</td>
+                    <td>{{ notiff?.title}}</td>
+                    <td>{{ notiff?.status}}</td>
                 </tr>
                 </tbody>
             </table>
@@ -416,3 +462,6 @@
         <!--<pre>@{{ f.value | json}}</pre>-->
     </form>
 </mat-dialog-content>
+<mat-dialog-actions align="center">
+    <button class="btn btn-dark-red-color btn-sm-bl btn-sm" (click)="cancel()">Inchidere</button>
+</mat-dialog-actions>
