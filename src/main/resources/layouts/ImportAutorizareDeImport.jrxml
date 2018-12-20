@@ -10,7 +10,7 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="background.image.path" value="C:\Users\hp bass\Downloads\image (2).png"/>
 	<property name="background.image.x" value="30"/>
 	<property name="background.image.y" value="132"/>
@@ -109,16 +109,18 @@
 		<field name="price" class="java.lang.Double"/>
 	</subDataset>
 	<subDataset name="Dataset2" uuid="ef47dbc8-208e-4a62-a1d9-c992b63bc3d1">
-		<parameter name="autorizationImportDataSet2" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+		<parameter name="autorizationImportDataSet2" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource">
+			<defaultValueExpression><![CDATA[$P{autorizationImportDataSet2}]]></defaultValueExpression>
+		</parameter>
 		<queryString>
 			<![CDATA[]]>
 		</queryString>
-		<field name="prodductName" class="java.lang.String"/>
+		<field name="productName" class="java.lang.String"/>
 		<field name="productCode" class="java.lang.String"/>
 		<field name="unitMeasure" class="java.lang.String"/>
-		<field name="quantety" class="java.lang.String"/>
-		<field name="18" class="java.lang.String"/>
-		<field name="amaunt" class="java.lang.Double"/>
+		<field name="quantity" class="java.lang.String"/>
+		<field name="field18" class="java.lang.String"/>
+		<field name="amount" class="java.lang.Double"/>
 		<field name="total" class="java.lang.Double"/>
 	</subDataset>
 	<parameter name="autorizationNr" class="java.lang.String"/>
@@ -144,7 +146,7 @@
 	<parameter name="registrationNr" class="java.lang.String"/>
 	<parameter name="autorizationImportDataSet" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<parameter name="importExportSectionChief" class="java.lang.String"/>
-	<parameter name="autorizationImportDataSet2" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="autorizationImportDataSet2" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource" isForPrompting="false"/>
 	<parameter name="themesForApplicationForAuthorization" class="java.lang.String"/>
 	<parameter name="geniralDirectorName" class="java.lang.String"/>
 	<parameter name="importExportSectionRepresentant" class="java.lang.String"/>
@@ -336,8 +338,11 @@
 						<property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
 						<property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
 					</reportElement>
-					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-						<datasetRun subDataset="Dataset1" uuid="022ff0c0-4d7d-49a1-8730-f5af32a1d410">
+					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
+						<datasetRun subDataset="Dataset1" uuid="29970eab-8af0-47cb-8a97-7dedc6a68029">
+							<datasetParameter name="autorizationImportDataSet">
+								<datasetParameterExpression><![CDATA[$P{autorizationImportDataSet}]]></datasetParameterExpression>
+							</datasetParameter>
 							<dataSourceExpression><![CDATA[$P{autorizationImportDataSet}]]></dataSourceExpression>
 						</datasetRun>
 						<jr:column width="110" uuid="cf878708-ca95-457d-9661-672d30e4e189">
@@ -421,9 +426,13 @@
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
 					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
 				</reportElement>
-				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="Dataset2" uuid="88ddac47-1009-4cf1-9835-b25efd42af60">
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
+					<datasetRun subDataset="Dataset2" uuid="01995c54-e83e-4f63-b689-8b3d310d7528">
+						<datasetParameter name="autorizationImportDataSet2">
+							<datasetParameterExpression><![CDATA[$P{autorizationImportDataSet2}]]></datasetParameterExpression>
+						</datasetParameter>
 						<dataSourceExpression><![CDATA[$P{autorizationImportDataSet2}]]></dataSourceExpression>
 					</datasetRun>
 					<jr:column width="128" uuid="5b430a3b-a20b-461e-b620-049bc2543b47">
@@ -445,7 +454,7 @@
 								<textElement>
 									<font fontName="DejaVu Sans" size="8" isBold="true"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{prodductName}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{productName}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -513,7 +522,7 @@
 								<textElement>
 									<font fontName="DejaVu Sans" size="8" isBold="true"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{quantety}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -543,7 +552,7 @@
 								<textElement>
 									<font fontName="DejaVu Sans" size="8" isBold="true"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{18}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{field18}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -574,7 +583,7 @@
 								<textElement>
 									<font fontName="DejaVu Sans" size="8" isBold="true"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{amaunt}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

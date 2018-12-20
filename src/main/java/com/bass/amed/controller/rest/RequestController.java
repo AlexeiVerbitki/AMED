@@ -1,7 +1,6 @@
 package com.bass.amed.controller.rest;
 
 import com.bass.amed.common.Constants;
-import com.bass.amed.dto.license.AnexaLaLicenta;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
@@ -10,6 +9,7 @@ import com.bass.amed.repository.prices.NmPricesRepository;
 import com.bass.amed.repository.prices.PriceRepository;
 import com.bass.amed.repository.prices.PricesHistoryRepository;
 import com.bass.amed.utils.Utils;
+import lombok.Data;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.hibernate.Hibernate;
@@ -30,7 +30,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @RestController
@@ -965,6 +964,38 @@ public class RequestController
 
             /* Map to hold Jasper report Parameters */
             Map<String, Object> parameters = new HashMap<>();
+
+
+
+	        AutorizationImportDataSet dataSet = new AutorizationImportDataSet();
+	        dataSet.setCustom("Nord");
+	        dataSet.setCustomCode("1000");
+	        dataSet.setTransactionType("Cumparare/Vinzare ferma");
+	        dataSet.setCurrencyPpayment("MDL");
+	        dataSet.setPrice(100.00);
+
+	        ArrayList<AutorizationImportDataSet> autorizationImportDataSetArrayList = new ArrayList<>();
+	        autorizationImportDataSetArrayList.add(dataSet);
+
+	        JRBeanCollectionDataSource autorizationImportDataSet = new JRBeanCollectionDataSource(autorizationImportDataSetArrayList);
+
+//=====================================================================================================
+	        AutorizationImportDataSet2 dataSet2 = new AutorizationImportDataSet2();
+	        dataSet2.setAmount(200.00);
+	        dataSet2.setField18("Test");
+	        dataSet2.setProductCode("3004");
+	        dataSet2.setProductName("Ampicilin");
+	        dataSet2.setProductCode("1234");
+	        dataSet2.setTotal(300.00);
+	        dataSet2.setQuantity("10");
+	        dataSet2.setUnitMeasure("20 UI");
+
+	        ArrayList<AutorizationImportDataSet2> autorizationImportDataSet2ArrayList = new ArrayList<>();
+	        autorizationImportDataSet2ArrayList.add(dataSet2);
+
+	        JRBeanCollectionDataSource autorizationImportDataSet2 = new JRBeanCollectionDataSource(autorizationImportDataSet2ArrayList);
+
+
             parameters.put("autorizationNr",                        request.getImportAuthorizationEntity().getAuthorizationsNumber());
 //            parameters.put("productName"							, request.getImportAuthorizationEntity().getAuthorizationsNumber());
             parameters.put("autorizationDate"						, (new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
@@ -973,7 +1004,7 @@ public class RequestController
             parameters.put("sellerAndAddress"						, request.getImportAuthorizationEntity().getSeller().getDescription() +", "+ request.getImportAuthorizationEntity().getSeller().getAddress());
             parameters.put("sellerCountry"							, request.getImportAuthorizationEntity().getSeller().getCountry().getDescription());
             parameters.put("sellerCountryCode"						, request.getImportAuthorizationEntity().getSeller().getCountry().getCode());
-//            parameters.put("transactionType"						, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+            parameters.put("transactionType"						, "Cumparare/Vinzare ferma          11");
 
 
             parameters.put("destinationCountry" 					, "Moldova");
@@ -986,8 +1017,8 @@ public class RequestController
 //            parameters.put("codOcpo"								, request.getImportAuthorizationEntity().getAuthorizationsNumber());
             parameters.put("registartionDate" 						, request.getImportAuthorizationEntity().getApplicant().getRegistrationDate().toString());
             parameters.put("registrationNr" 						, request.getImportAuthorizationEntity().getApplicant().getIdno());
-//            parameters.put("autorizationImportDataSet" 			    , request.getImportAuthorizationEntity().getAuthorizationsNumber());
-//            parameters.put("autorizationImportDataSet2" 			, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+
+
             parameters.put("themesForApplicationForAuthorization"   , request.getImportAuthorizationEntity().getBasisForImport());
             parameters.put("geniralDirectorName" 					, sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
             parameters.put("importExportSectionRepresentant" 		, sysParamsRepository.findByCode(Constants.SysParams.IMPORT_REPREZENTANT).get().getValue());
@@ -998,6 +1029,8 @@ public class RequestController
             parameters.put("manufacturerAndAddress" 				, request.getImportAuthorizationEntity().getSeller().getDescription() +", "+ request.getImportAuthorizationEntity().getSeller().getAddress());
             parameters.put("manufacturerCountry"					, request.getImportAuthorizationEntity().getSeller().getCountry().getDescription());
             parameters.put("manufacturerCountryCode"				, request.getImportAuthorizationEntity().getSeller().getCountry().getCode());
+//	        parameters.put("autorizationImportDataSet" 			    , autorizationImportDataSet);
+	        parameters.put("autorizationImportDataSet2" 			, autorizationImportDataSet2);
             /*parameters.put("licenseNumber", request.getLicense().getNr());
             parameters.put("companyName", request.getLicense().getEconomicAgents().stream().findFirst().get().getLongName());
             List<RegistrationRequestsEntity> listOfModifications = requestRepository.findAllLicenseModifications(request.getLicense().getId());
@@ -1074,4 +1107,24 @@ public class RequestController
         }
         throw new CustomException("Request was not found");
     }
+}
+
+@Data class AutorizationImportDataSet {
+	String custom;
+	String customCode;
+	String transactionType;
+	String currencyPpayment;
+	Double price;
+}
+
+@Data class AutorizationImportDataSet2 {
+	String productName;
+	String productCode;
+	String unitMeasure;
+	String quantity;
+	String field18;
+	Double amount;
+	Double total;
+
+
 }
