@@ -11,11 +11,6 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<parameter name="nrInvoice" class="java.lang.String"/>
-	<parameter name="invoice_date" class="java.util.Date"/>
-	<parameter name="payer" class="java.lang.String"/>
-	<parameter name="payerAddress" class="java.lang.String"/>
-	<parameter name="sum" class="java.lang.String"/>
 	<parameter name="medName" class="java.lang.String"/>
 	<parameter name="formFarmDosePakageSize" class="java.lang.String"/>
 	<parameter name="composition" class="java.lang.String"/>
@@ -26,10 +21,13 @@
 	<parameter name="registrationNumberDateIssue" class="java.lang.String"/>
 	<parameter name="summary" class="java.lang.String"/>
 	<parameter name="instructions" class="java.lang.String"/>
-	<parameter name="labeling " class="java.lang.String"/>
+	<parameter name="labeling" class="java.lang.String"/>
 	<parameter name="genDir" class="java.lang.String">
 		<parameterDescription><![CDATA[Directorul general adjunct]]></parameterDescription>
 	</parameter>
+	<parameter name="orderNumber" class="java.lang.String"/>
+	<parameter name="orderDateMD" class="java.lang.String"/>
+	<parameter name="orderDateEN" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -81,20 +79,6 @@
 					<font fontName="DejaVu Sans" size="14" isBold="false"/>
 				</textElement>
 				<text><![CDATA[MARKETING AUTHORIZATION OF MEDICINAL PRODUCT]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="90" width="548" height="20" uuid="54a290dc-e6fc-4a1e-b0d3-8e9d2d73a455"/>
-				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[în baza ordinului AMDM RM (nr. A07.PS-01.Rg04-259 din 13 septembrie 2018)]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="110" width="548" height="20" uuid="1c1b9dfc-7a48-4908-b16e-4c9900631172"/>
-				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" size="9" isBold="false"/>
-				</textElement>
-				<text><![CDATA[in accordance with order of MMDA RM (nr. A07.PS-01.Rg04-259 from September 13, 2018)]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="130" width="430" height="18" uuid="3c5ba92f-9e06-4e5b-9351-4b633c19ca0c"/>
@@ -167,9 +151,9 @@
 				<text><![CDATA[Composition:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="78" y="220" width="471" height="30" uuid="a064e3db-076e-4203-8a79-615b9674a300"/>
+				<reportElement x="279" y="220" width="270" height="30" uuid="a064e3db-076e-4203-8a79-615b9674a300"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="8"/>
+					<font fontName="DejaVu Sans" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{composition}]]></textFieldExpression>
 			</textField>
@@ -339,7 +323,7 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{labeling }]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{labeling}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="500" width="548" height="59" uuid="876baf1c-4679-480b-94bc-91d41b4f87d5"/>
@@ -355,6 +339,20 @@
 				</textElement>
 				<text><![CDATA[The quality of the product is that which is stipulated by the documentations which were the basis for giving this particular Marketing Authorization. Any modification of the data stipulated by the Marketing Authorization or documentation must be reported to the Medicines and Medical Devices Agency and have ]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="0" y="90" width="555" height="19" uuid="8731f0a0-2e3c-4f5c-9212-a8b5f64ac937"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["în baza ordinului AMDM RM (nr. "+$P{orderNumber}+" din "+$P{orderDateMD}+" )"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="109" width="555" height="20" uuid="626abd8f-7ce6-49ea-8a4e-d6bf021e4d7b"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA["in accordance with order of MMDA RM (nr. "+$P{orderNumber}+" from "+$P{orderDateEN}+")"]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<pageFooter>

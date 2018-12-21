@@ -31,6 +31,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController @RequestMapping("/api") public class RequestController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RequestController.class);
@@ -309,7 +310,7 @@ import java.util.stream.Collectors;
 		if (pricesRequests != null && pricesRequests.size() > 0) {
 			for (PricesEntity p : pricesRequests) {
 				if (p.getMedicament() != null && p.getMedicament().getId() != null) {
-					int          type     = p.getType().getId();
+					int type = p.getType().getId();
 					PricesEntity oldPrice = priceRepository.findOneByMedicamentIdAndType(p.getMedicament().getId(),
 					                                                                     type); //9 - Propus după modificarea originalului / 11 - Propus dupa modificarea valutei
 					if (oldPrice != null) {
@@ -429,10 +430,10 @@ import java.util.stream.Collectors;
 		Optional<MedicamentHistoryEntity> medicamentHistoryEntityOpt = request.getMedicamentHistory().stream().findFirst();
 		MedicamentHistoryEntity           medicamentHistoryEntity    = medicamentHistoryEntityOpt.orElse(new MedicamentHistoryEntity());
 		//in medicament history save old changes
-		Optional<MedicamentEntity> medicamentEntityOpt              = medicamentEntities.stream().findFirst();
-		MedicamentEntity           medicamentEntityForUpdate        = medicamentEntityOpt.orElse(new MedicamentEntity());
-		MedicamentHistoryEntity    medicamentHistoryEntityForUpdate = fillMedicamentHistoryDetails(request.getMedicamentPostauthorizationRegisterNr(),
-		                                                                                           medicamentHistoryEntity, medicamentEntityForUpdate);
+		Optional<MedicamentEntity> medicamentEntityOpt       = medicamentEntities.stream().findFirst();
+		MedicamentEntity           medicamentEntityForUpdate = medicamentEntityOpt.orElse(new MedicamentEntity());
+		MedicamentHistoryEntity medicamentHistoryEntityForUpdate = fillMedicamentHistoryDetails(request.getMedicamentPostauthorizationRegisterNr(),
+		                                                                                        medicamentHistoryEntity, medicamentEntityForUpdate);
 		fillHistoryDetailsTo(medicamentHistoryEntity, medicamentHistoryEntityForUpdate);
 		checkInstructionsHistory(medicamentEntities, medicamentHistoryEntity, medicamentHistoryEntityForUpdate);
 		addMedicamentDivisionHistory(medicamentEntities, medicamentHistoryEntity, medicamentHistoryEntityForUpdate, request);
@@ -504,7 +505,7 @@ import java.util.stream.Collectors;
 	private void addMedicamentDivisionHistory(List<MedicamentEntity> medicamentEntities, MedicamentHistoryEntity medicamentHistoryEntity,
 	                                          MedicamentHistoryEntity medicamentHistoryEntityForUpdate, RegistrationRequestsEntity request) {
 		for (MedicamentEntity med : medicamentEntities) {
-			boolean                         isExistingDivisionInHistory     = medicamentHistoryEntity.getDivisionHistory().stream().anyMatch(
+			boolean isExistingDivisionInHistory = medicamentHistoryEntity.getDivisionHistory().stream().anyMatch(
 					e -> e.getDescription().equals(med.getDivision()));
 			MedicamentDivisionHistoryEntity medicamentDivisionHistoryEntity = new MedicamentDivisionHistoryEntity();
 			medicamentDivisionHistoryEntity.setDescription(med.getDivision());
@@ -872,6 +873,10 @@ import java.util.stream.Collectors;
 			Map<String, Object>                   parameters                          = new HashMap<>();
 			ArrayList<AutorizationImportDataSet>  autorizationImportDataSetArrayList  = new ArrayList<>();
 			ArrayList<AutorizationImportDataSet2> autorizationImportDataSet2ArrayList = new ArrayList<>();
+
+			JRBeanCollectionDataSource autorizationImportDataSet  = new JRBeanCollectionDataSource(autorizationImportDataSetArrayList);
+			JRBeanCollectionDataSource autorizationImportDataSet2 = new JRBeanCollectionDataSource(autorizationImportDataSet2ArrayList);
+
 			HashMap<String, Double> map = new HashMap();
 
 			for (ImportAuthorizationDetailsEntity entity : request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList()) {
@@ -879,14 +884,41 @@ import java.util.stream.Collectors;
 				 *
 				 * if the jey exists add the sum, if id doesn't creaet the key and add the value*/
 
-
-				if (map.get(entity.getCustomsCode().getCode()) == null){
-					map.put(entity.getCustomsCode().getCode(), entity.getSumm());
+				if (autorizationImportDataSet2ArrayList.stream().anyMatch(x -> x.getProductCode().equalsIgnoreCase(entity.getCustomsCode().getCode()))) {
+					for (int i = 0; i < autorizationImportDataSet2ArrayList.size(); i++) {
+						if (autorizationImportDataSet2ArrayList.get(i).getProductCode().equals(entity.getCustomsCode().getCode())) {
+							autorizationImportDataSet2ArrayList.get(i).setAmount(autorizationImportDataSet2ArrayList.get(i).getAmount()+entity.getSumm());
+						}
+					}
 				} else{
+
+					AutorizationImportDataSet2 dataSet2 = new AutorizationImportDataSet2();
+					dataSet2.setAmount(entity.getSumm());
+					dataSet2.setField18("");
+					dataSet2.setProductCode(entity.getCustomsCode().getCode());
+					dataSet2.setProductName(entity.getCustomsCode().getDescription());
+//					dataSet2.setTotal();
+					dataSet2.setQuantity("");
+					dataSet2.setUnitMeasure("");
+
+					autorizationImportDataSet2ArrayList.add(dataSet2);
+				}
+
+				//====================================
+
+				if (map.get(entity.getCustomsCode().getCode()) == null) {
+					map.put(entity.getCustomsCode().getCode(), entity.getSumm());
+				} else {
 					map.put(entity.getCustomsCode().getCode(), map.get(entity.getCustomsCode().getCode()) + entity.getSumm());
 				}
 
+				//====================================
+
+
 			}
+
+
+			System.out.println(autorizationImportDataSet2ArrayList);
 
 			AutorizationImportDataSet dataSet = new AutorizationImportDataSet();
 			dataSet.setCustom("Nord");
@@ -898,23 +930,20 @@ import java.util.stream.Collectors;
 
 			autorizationImportDataSetArrayList.add(dataSet);
 
-			JRBeanCollectionDataSource autorizationImportDataSet = new JRBeanCollectionDataSource(autorizationImportDataSetArrayList);
 
 //=====================================================================================================
-			AutorizationImportDataSet2 dataSet2 = new AutorizationImportDataSet2();
-			dataSet2.setAmount(200.00);
-			dataSet2.setField18("Test");
-			dataSet2.setProductCode("3004");
-			dataSet2.setProductName("Ampicilin");
-			dataSet2.setProductCode("1234");
-			dataSet2.setTotal(300.00);
-			dataSet2.setQuantity("10");
-			dataSet2.setUnitMeasure("20 UI");
-
-
-			autorizationImportDataSet2ArrayList.add(dataSet2);
-
-			JRBeanCollectionDataSource autorizationImportDataSet2 = new JRBeanCollectionDataSource(autorizationImportDataSet2ArrayList);
+//			AutorizationImportDataSet2 dataSet2 = new AutorizationImportDataSet2();
+//			dataSet2.setAmount(200.00);
+//			dataSet2.setField18("Test");
+//			dataSet2.setProductCode("3004");
+//			dataSet2.setProductName("Ampicilin");
+//			dataSet2.setProductCode("1234");
+//			dataSet2.setTotal(300.00);
+//			dataSet2.setQuantity("10");
+//			dataSet2.setUnitMeasure("20 UI");
+//
+//
+//			autorizationImportDataSet2ArrayList.add(dataSet2);
 
 
 			parameters.put("autorizationNr", request.getImportAuthorizationEntity().getAuthorizationsNumber());
