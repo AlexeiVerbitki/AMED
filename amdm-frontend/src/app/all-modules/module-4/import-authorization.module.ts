@@ -22,6 +22,8 @@ import {ImportMedDialog} from "./dialog/import-med-dialog";
 import {MedInstInvestigatorsDialogComponent} from "../module-9/dialog/med-inst-investigators-dialog/med-inst-investigators-dialog.component";
 import {AdditionalDataDialogComponent} from "../module-9/dialog/additional-data-dialog/additional-data-dialog.component";
 import {XchangeinfoModule} from "../../xchangeInfo/xchangeinfo.module";
+import {ImportManagement} from "./import-management/import-management";
+import {ImportManagementDialog} from "./import-management/import-management-dialog/import-management-dialog";
 
 
 @NgModule({
@@ -36,11 +38,11 @@ import {XchangeinfoModule} from "../../xchangeInfo/xchangeinfo.module";
         XchangeinfoModule
     ],
     entryComponents: [
-       ImportMedDialog,
+       ImportMedDialog, ImportManagementDialog
     ],
     declarations: [ImportAuthorizationEvaluateComponent,ImportAuthorizationRequestComponent,
                     MedRegComponent, MedNeregComponent, MateriaPrimaComponent, AmbalajComponent,
-                    MedRegApproveComponent, ImportMedDialog],
+                    MedRegApproveComponent, ImportMedDialog, ImportManagement, ImportManagementDialog],
     providers: [UploadFileService,RequestService]
 })
 export class ImportAuthorizationModule {

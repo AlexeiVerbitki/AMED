@@ -1,0 +1,300 @@
+<form [formGroup]="evaluateImportForm">
+
+    <div formGroupName="importAuthorizationEntity">
+        <div class="row">
+
+
+        </div>
+
+
+        <h5 class="text-center font-weight-bold">Specificaţia tehnică şi de preţ a obiectului importului</h5>
+        <hr>
+        <div formArrayName="unitOfImportTable">
+            <div class="row">
+
+                <div class="col-4" *ngIf="medType==1">
+                    <div class="md-form-modified">
+                        <ng-select [items]="medicaments | async"
+                                   bindLabel="name"
+                                   placeholder="Codul medicamentului"
+                                   formControlName="medicament"
+                                   [loading]="loadingmedicaments"
+                                   [typeahead]="medicamentsInputs"
+                                   [attr.disabled]="true"
+                                   required="true">
+                            <ng-template ng-option-tmp let-item="item">
+                                {{item.name}};
+                                <small class="form-text text-muted">Cod: {{item.code}}</small>
+                            </ng-template>
+                        </ng-select>
+                        <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').invalid">-->
+                        <!--<small class="text-muted"><strong class="text-danger">Medicamentul trebuie selectat</strong></small>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="md-form">
+                        <input id="name" mdbInputDirective type="text" class="form-control"
+                               formControlName="name">
+                        <label for="name">Denumirea comercială a medicamentului</label>
+                    </div>
+                    <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').invalid">
+                        <small class="text-muted"><strong class="text-danger">Denumirea trebuie selectata</strong></small>
+                    </div>
+                </div>
+
+                <div class="col-md-4" *ngIf="importData.medType == 1 || importData.medType == 2">
+                    <div class="md-form-modified">
+                        <ng-select
+                                [items]="internationalMedicamentNames | async"
+                                bindLabel="description"
+                                placeholder="Denumirea comună internaționala"
+                                formControlName="internationalMedicamentName"
+                                [loading]="loadinginternationalMedicamentName"
+                                [typeahead]="internationalMedicamentNameInputs"
+                                [attr.disabled]="true"
+                                required="true">
+                            <ng-template ng-option-tmp let-item="item">
+                                {{item.description}} <br/>
+                                <small class="form-text text-muted">Cod: {{item.code}}</small>
+                            </ng-template>
+                        </ng-select>
+
+                        <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').invalid">-->
+                        <!--<small class="text-muted"><strong class="text-danger">Denumirea trebuie selectata</strong></small>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="md-form">
+                        <input id="quantity" mdbInputDirective type="number" min="0" class="form-control"
+                               [attr.disabled]="true"
+                               formControlName="quantity">
+                        <label for="quantity">Cantitatea solicitată</label>
+                    </div>
+                    <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').invalid">-->
+                    <!--<small class="text-muted"><strong class="text-danger">Cantitatea trebuie selectată</strong></small>-->
+                    <!--</div>-->
+                </div>
+                <div class="col-4">
+                    <div class="md-form">
+                        <input id="approvedQuantity" mdbInputDirective type="number" min="0" class="form-control"
+                               formControlName="approvedQuantity">
+                        <!--[attr.disabled]="true"-->
+                        <label for="approvedQuantity">Cantitatea Aprobată</label>
+                    </div>
+                    <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').invalid">
+                        <small class="text-muted"><strong class="text-danger">Cantitatea aprobată trebuie selectată</strong></small>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="md-form">
+                        <input id="price" mdbInputDirective type="number" min="0" class="form-control"
+                               [attr.disabled]="true"
+                               formControlName="price">
+                        <label for="price">Pretul</label>
+                    </div>
+                    <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').invalid">-->
+                    <!--<small class="text-muted"><strong class="text-danger">Prețul trebuie selectat</strong></small>-->
+                    <!--</div>-->
+                </div>
+                <div class="col-4">
+                    <div class="md-form-modified">
+                        <ng-select id="currency" placeholder="Valuta"
+                                   formControlName="currency">
+                            <ng-option *ngFor="let valuta of valutaList" [value]="valuta">{{ valuta.shortDescription }}</ng-option>
+                        </ng-select>
+                    </div>
+                    <!--<div *ngIf="[formSubmitted]==true && !evaluateImportForm.get('currency').valid "> /*!evaluateImportForm.get('currency')=== null &&*/-->
+                    <!--<small class="text-muted"><strong class="text-danger">Valuta trebuie introdusă</strong>-->
+                    <!--</small>-->
+                    <!--</div>-->
+                </div>
+                <div class="col-4">
+                    <div class="md-form">
+                        <input id="summ" mdbInputDirective type="text" class="form-control"
+                               [attr.disabled]="true"
+                               [value]="unitSumm | number : '1.2-2'"
+                               formControlName="summ">
+                        <label for="summ">Suma</label>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="md-form-modified">
+                        <ng-select [items]="customsCodes | async"
+                                   bindLabel="description"
+                                   placeholder="Codul Vamal"
+                                   formControlName="customsCode"
+                                   [loading]="loadingcustomsCodes"
+                                   [typeahead]="customsCodesInputs"
+                                   [attr.disabled]="true"
+                                   required="true">
+                            <ng-template ng-option-tmp let-item="item">
+                                {{item.description}};
+                                <small class="form-text text-muted">Cod : {{item.code}}</small>
+                            </ng-template>
+                        </ng-select>
+                        <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').invalid">-->
+                        <!--<small class="text-muted"><strong class="text-danger">Codul trebuie selectat</strong></small>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+
+                <!--======================================================================-->
+                <div class="col-4" *ngIf="importData.medType == 1 || importData.medType == 2">
+                    <div class="md-form-modified">
+                        <ng-select [items]="pharmaceuticalForm | async"
+                                   bindLabel="description"
+                                   placeholder="Forma medicamentoasă"
+                                   formControlName="pharmaceuticalForm"
+                                   [loading]="loadingpharmaceuticalForm"
+                                   [typeahead]="pharmaceuticalFormInputs"
+                                   [attr.disabled]="true"
+                                   required="true">
+                            <ng-template ng-option-tmp let-item="item">
+                                {{item.description}};
+                                <!--<small class="form-text text-muted">Cod: {{item.code}}</small>-->
+                            </ng-template>
+                        </ng-select>
+                        <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').invalid">-->
+                        <!--<small class="text-muted"><strong class="text-danger">Forma medicamentoasă trebuie selectată</strong></small>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+
+                <div class="col-4" *ngIf="importData.medType == 1 || importData.medType == 2">
+                    <div class="md-form">
+                        <input id="dose" mdbInputDirective type="text" class="form-control"
+                               [attr.disabled]="true"
+                               formControlName="dose">
+                        <label for="dose">Doza</label>
+                    </div>
+                    <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').invalid">
+                        <small class="text-muted"><strong class="text-danger">Doza trebuie selectată</strong></small>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="md-form">
+                        <input id="unitsOfMeasurement" mdbInputDirective type="text" class="form-control"
+                               [attr.disabled]="true"
+                               formControlName="unitsOfMeasurement">
+                        <label for="dose">Divizare (Unitatea  de măsură)</label>
+                    </div>
+                    <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').invalid">-->
+                    <!--<small class="text-muted"><strong class="text-danger">Divizarea trebuie selectată</strong></small>-->
+                    <!--</div>-->
+                </div>
+                <!--======================================================================-->
+
+
+                <div class="col-md-4" *ngIf="importData.medType!==4">
+                    <div class="md-form-modified">
+                        <ng-select [items]="atcCodes | async"
+                                   bindLabel="code"
+                                   placeholder="Cod ATC"
+                                   formControlName="atcCode"
+                                   [loading]="loadingAtcCodes"
+                                   [typeahead]="atcCodesInputs"
+                                   [attr.disabled]="true"
+                                   required="true">
+                            <ng-template ng-option-tmp let-item="item">
+                                {{item.code}} <br/>
+                                <small class="form-text text-muted">Denumire: {{item.description}}</small>
+                            </ng-template>
+                        </ng-select>
+                        <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').invalid">-->
+                        <!--<small class="text-muted"><strong class="text-danger">Codul trebuie selectat</strong></small>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="md-form-modified">
+                        <ng-select [items]="manufacturersRfPr | async"
+                                   bindLabel="description"
+                                   placeholder="Producatorul"
+                                   formControlName="producer"
+                                   [loading]="loadingManufacturerRfPr"
+                                   [typeahead]="manufacturerInputsRfPr"
+                                   [attr.disabled]="true"
+                                   required="true">
+                            <ng-template ng-option-tmp let-item="item">
+                                Denumire: {{item.description}};
+                                <small class="form-text text-muted">{{item.address}}, {{item.country.description}}</small>
+                            </ng-template>
+                        </ng-select>
+                        <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').invalid">-->
+                        <!--<small class="text-muted"><strong class="text-danger">Producatorul trebuie selectat</strong></small>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="md-form">
+                        <input id="producerAddress" mdbInputDirective type="text" class="form-control"
+                               [value]="producerAddress" [attr.disabled]="true">
+                        <label for="producerAddress">Ţara şi adresa producătorului
+                            <span class="text-danger">*</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-md-4" *ngIf="medType==1">
+                    <div class="md-form">
+                        <input id="registrationRmNumber" mdbInputDirective type="text" class="form-control"
+                               [attr.disabled]="true"
+                               formControlName="registrationRmNumber">
+                        <label for="registrationRmNumber">Nr. de înregistrare în RM
+                            <span class="text-danger">*</span>
+                        </label>
+                    </div>
+                    <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').invalid">-->
+                    <!--<small class="text-muted"><strong class="text-danger">Nr. de înregistrare în RM trebuie selectat</strong></small>-->
+                    <!--</div>-->
+                </div>
+                <div class="col-4" *ngIf="medType==1">
+                    <div class="md-form-modified">
+                        <mat-form-field class="w-100">
+                            <input matInput [matDatepicker]="picker22" placeholder="Data de înregistrare în RM"
+                                   [attr.disabled]="true"
+                                   formControlName="registrationRmDate">
+                            <mat-datepicker-toggle matSuffix [for]="picker22"></mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker22></mat-datepicker>
+                        </mat-form-field>
+                        <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').invalid">-->
+                        <!--<small class="text-muted"><strong class="text-danger">Data de înregistrare în RM trebuie selectată</strong></small>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="md-form-modified">
+                        <mat-form-field class="w-100">
+                            <input matInput [matDatepicker]="picker23" placeholder="Termen de valabilitate"
+                                   [attr.disabled]="true"
+                                   formControlName="expirationDate">
+                            <mat-datepicker-toggle matSuffix [for]="picker23"></mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker23></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').invalid">-->
+                    <!--<small class="text-muted"><strong class="text-danger">Termenul de valabilitate trebuie selectat</strong></small>-->
+                    <!--</div>-->
+                </div>
+
+            </div>
+            <!--<div class="text-right">-->
+            <!--<button type="submit" class="btn btn-indigo waves-light btn-md" mdbWavesEffect (click)="addUnitOfImport()">Adauga</button>-->
+            <!--</div>-->
+        </div>
+    </div>
+
+    <button class="btn btn-success btn-sm waves-light pull-right" (click)="confirm()" *ngIf="importData.currentStep == 'AP'">Approb</button>
+    <button class="btn btn-danger btn-sm waves-light pull-right" (click)="reject()" *ngIf="importData.currentStep == 'AP'">Resping</button>
+    <button class="btn btn-primary btn-sm waves-light pull-right" (click)="cancel()">Inchide</button>
+</form>
+

@@ -6,6 +6,7 @@ import {MateriaPrimaComponent} from './materia-prima/materia-prima.component';
 import {AmbalajComponent} from './ambalaj/ambalaj.component';
 import {NgModule} from "@angular/core";
 import {MedRegApproveComponent} from "./med-reg-approve/med-reg-approve.component";
+import {ImportManagement} from "./import-management/import-management";
 
 const routes: Routes = [
     {path: 'register', component: ImportAuthorizationRequestComponent},
@@ -20,6 +21,8 @@ const routes: Routes = [
 
     {path: 'materia-prima/:id', component: AmbalajComponent},
     {path: 'ambalaj/:id', component: AmbalajComponent},
+
+    {path: 'import-management/:id', component: ImportManagement},
 ];
 
 @NgModule({

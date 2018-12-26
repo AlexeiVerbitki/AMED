@@ -20,7 +20,7 @@
 //
 // @Component({
 //   selector: 'app-med-reg',
-//   templateUrl: './med-reg-approve.component.html',
+//   templateUrl: './import-management.html',
 //   styleUrls: ['./med-reg-approve.component.css']
 // })
 // export class MedRegComponent implements OnInit {

@@ -988,6 +988,7 @@ import java.util.stream.Stream;
 			parameters.put("manufacturerCountryCode", request.getImportAuthorizationEntity().getSeller().getCountry().getCode());
 			parameters.put("autorizationImportDataSet", autorizationImportDataSet);
 			parameters.put("autorizationImportDataSet2", autorizationImportDataSet2);
+			System.out.println("parameters: " + parameters.toString());
             /*parameters.put("licenseNumber", request.getLicense().getNr());
             parameters.put("companyName", request.getLicense().getEconomicAgents().stream().findFirst().get().getLongName());
             List<RegistrationRequestsEntity> listOfModifications = requestRepository.findAllLicenseModifications(request.getLicense().getId());
