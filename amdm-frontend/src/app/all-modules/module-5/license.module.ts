@@ -15,6 +15,7 @@ import {PaymentModule} from "../../payment/payment.module";
 import {LicenseDecisionDialogComponent} from "../../dialog/license-decision-dialog/license-decision-dialog.component";
 import {AddLicenseFarmacistComponent} from './add-license-farmacist/add-license-farmacist.component';
 import {MatDialogModule} from "@angular/material";
+import {EcAgentModule} from "../../administration/economic-agent/ec-agent.module";
 
 @NgModule({
     imports: [
@@ -26,18 +27,19 @@ import {MatDialogModule} from "@angular/material";
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
         DocumentModule,
-        PaymentModule
+        PaymentModule,
+        EcAgentModule
     ],
     schemas: [],
     entryComponents: [
         LicenseDecisionDialogComponent,
-        AddLicenseFarmacistComponent
+        AddLicenseFarmacistComponent,
     ],
     declarations: [RegMedCerereLicComponent,
         EvaluareCerereLicComponent,
 	 EliberareCerereLicComponent,
         LicenseDecisionDialogComponent,
-        AddLicenseFarmacistComponent
+        AddLicenseFarmacistComponent,
     ]    ,
     providers: [UploadFileService, LicenseService,
     ],

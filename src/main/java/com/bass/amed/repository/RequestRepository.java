@@ -2,6 +2,7 @@ package com.bass.amed.repository;
 
 import com.bass.amed.entity.RegistrationRequestsEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -74,4 +75,30 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
             "LEFT JOIN FETCH p.documents " +
             "WHERE c.id = :id and p.type='3'  ")
     Optional<RegistrationRequestsEntity> findRegRequestByCtId(@Param("id") Integer ctId);
+
+    @Query("SELECT p FROM RegistrationRequestsEntity p WHERE p.ddIncluded = true and p.ddNumber is null and p.currentStep not in ('C','F')")
+    List<RegistrationRequestsEntity> findRequestsForDD();
+
+    @Query("SELECT p FROM RegistrationRequestsEntity p WHERE p.oiIncluded = true and p.oiNumber is null and p.currentStep not in ('C','F')")
+    List<RegistrationRequestsEntity> findRequestsForOI();
+
+    @Modifying
+    @Query("UPDATE RegistrationRequestsEntity p SET p.ddNumber = :ddNumber WHERE p.id in (:ids)")
+    void setDDNumber(@Param("ids")List<Integer> ids, @Param("ddNumber")String ddNumber);
+
+    @Modifying
+    @Query("UPDATE RegistrationRequestsEntity p SET p.oiNumber = :oiNumber WHERE p.id in (:ids)")
+    void setOINumber(@Param("ids")List<Integer> ids, @Param("oiNumber")String oiNumber);
+
+    @Query("SELECT p FROM RegistrationRequestsEntity p WHERE p.ddNumber = :ddNumber")
+    List<RegistrationRequestsEntity> findRequestsByDDNumber( @Param("ddNumber")String ddNumber);
+
+    @Query("SELECT p FROM RegistrationRequestsEntity p WHERE p.oiNumber = :oiNumber")
+    List<RegistrationRequestsEntity> findRequestsByOINumber( @Param("oiNumber")String oiNumber);
+
+    @Query("SELECT distinct p FROM RegistrationRequestsEntity p " +
+            "LEFT JOIN FETCH p.medicaments " +
+            " WHERE p.id in (:ids)")
+    List<RegistrationRequestsEntity> findRequestWithMedicamentInfo(@Param("ids")List<Integer> ids);
+
 }

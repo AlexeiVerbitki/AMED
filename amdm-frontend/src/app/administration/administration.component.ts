@@ -20,4 +20,8 @@ export class AdministrationComponent implements OnInit {
     navigateTo(id: number) {
         this.router.navigate(['/dashboard/admin/generic-nomenclature/' + id], { skipLocationChange: true });
     }
+
+    navigateToEconomicAgents(){
+        this.router.navigate(['/dashboard/admin/ec-agent/view-all/'], { skipLocationChange: true });
+    }
 }

@@ -4,7 +4,7 @@
 			<div class="col-md-6">
 				<div class="md-form">
 					<input id="nrCererii" mdbInputDirective type="text" class="form-control" formControlName="requestNumber"
-					 [attr.disabled]="true">
+					       [attr.disabled]="true">
 					<label for="nrCererii">Nr. cererii</label>
 				</div>
 			</div>
@@ -20,7 +20,7 @@
 		</div>
 		<div class="my-3">
 			<app-document [documents]="documents" [nrCerere]="eForm.get('requestNumber').value" [dcTypes]="docTypes"
-			 (documentModified)="documentModified($event)"></app-document>
+			              (documentModified)="documentModified($event)"></app-document>
 		</div>
 		<div class="row">
 			<div class="col-md-4">
@@ -77,22 +77,22 @@
 		<div class="card-body card-body-cascade">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
-					<tr>
-						<th scope="col">Nr.</th>
-						<th scope="col">Denumire</th>
-						<th scope="col">Actiuni</th>
-					</tr>
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Denumire</th>
+					<th scope="col">Actiuni</th>
+				</tr>
 				</thead>
 				<tbody>
-					<tr *ngFor="let division of divisions;let i = index">
-						<td>{{ i+1 }}</td>
-						<td>{{ division.description }}</td>
-						<td>
-							<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
-							        (click)="removeDivision(i,division)" mdbWavesEffect attr.disabled="this.disabled"><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
-							</button>
-						</td>
-					</tr>
+				<tr *ngFor="let division of divisions;let i = index">
+					<td>{{ i + 1 }}</td>
+					<td>{{ division.description }}</td>
+					<td>
+						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+						        (click)="removeDivision(i,division)" mdbWavesEffect attr.disabled="this.disabled"><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
 				</tbody>
 			</table>
 		</div>
@@ -123,33 +123,29 @@
 		<div class="card-body card-body-cascade">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
-					<tr>
-						<th scope="col">Denumire</th>
-						<th scope="col">Cod CAS</th>
-						<th scope="col">Concentratie</th>
-						<th scope="col">Unitate de masură</th>
-						<th scope="col">Producător</th>
-						<th scope="col">Ţară producător</th>
-						<th scope="col">Adresă producător</th>
-						<th scope="col">Actiuni</th>
-					</tr>
+				<tr>
+					<th scope="col">Denumire</th>
+					<th scope="col">Cod CAS</th>
+					<th scope="col">Concentratie</th>
+					<th scope="col">Unitate de masură</th>
+					<th scope="col">Producători</th>
+					<th scope="col">Actiuni</th>
+				</tr>
 				</thead>
 				<tbody>
-					<tr *ngFor="let substance of activeSubstancesTable;let i = index">
-						<th scope="row">{{ substance.activeSubstance.description }}</th>
-						<td>{{ substance.activeSubstance.code }}</td>
-						<td>{{ substance.quantity }}</td>
-						<td>{{ substance.unitsOfMeasurement.description }}</td>
-						<td>{{ substance.manufacture.description }}</td>
-						<td>{{ substance.manufacture.country.description }}</td>
-						<td>{{ substance.manufacture.address }}</td>
-						<td>
-							<button class="btn btn-mdb-color waves-light btn-sm waves-light" (click)="editSubstance(substance,i)"
-							 mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></button>
-							<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeSubstance(i)"
-							 mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
-						</td>
-					</tr>
+				<tr *ngFor="let substance of activeSubstancesTable;let i = index">
+					<th scope="row">{{ substance.activeSubstance.description }}</th>
+					<td>{{ substance.activeSubstance.code }}</td>
+					<td>{{ substance.quantity }}</td>
+					<td>{{ substance.unitsOfMeasurement.description }}</td>
+					<td>{{ manufacturesStr(substance)}}</td>
+					<td>
+						<button class="btn btn-mdb-color waves-light btn-sm waves-light" (click)="editSubstance(substance,i)"
+						        mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></button>
+						<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeSubstance(i)"
+						        mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+					</td>
+				</tr>
 				</tbody>
 			</table>
 		</div>
@@ -187,7 +183,7 @@
 				</thead>
 				<tbody>
 				<tr *ngFor="let substance of auxiliarySubstancesTable;let i = index">
-					<td>{{ i+1 }}</td>
+					<td>{{ i + 1 }}</td>
 					<th scope="row">{{ substance.auxSubstance.description }}</th>
 					<td>
 						<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeAuxiliarySubstance(i)"
@@ -204,7 +200,7 @@
 		<div class="row" formGroupName="medicament">
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="dose" mdbInputDirective type="text" class="form-control" formControlName="dose" [attr.disabled]="true">
+					<input id="dose" mdbInputDirective type="text" class="form-control" formControlName="dose">
 					<label for="dose">Doza</label>
 				</div>
 			</div>
@@ -233,7 +229,7 @@
 					           [typeahead]="atcCodesInputs"
 					           required="true">
 						<ng-template ng-option-tmp let-item="item">
-							{{item.code}} <br />
+							{{item.code}} <br/>
 							<small class="form-text text-muted">{{item.description}}</small>
 						</ng-template>
 					</ng-select>
@@ -323,13 +319,22 @@
 					           placeholder="Cod vamal "
 					           formControlName="customsCode">
 						<ng-template ng-option-tmp let-item="item">
-							{{item.description}} <br />
+							{{item.description}} <br/>
 							<small class="form-text text-muted">{{item.code}}</small>
 						</ng-template>
 					</ng-select>
 					<div *ngIf="formSubmitted && eForm.get('medicament.customsCode').invalid">
 						<small class="text-muted"><strong class="text-danger">Codul vamal trebuie selectat</strong></small>
 					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row" formGroupName="medicament">
+			<div class="col-md-12">
+				<div class="md-form-modified">
+					<ng-select id="medType2" name="medType2" [items]="medicamentTypes2" bindLabel="description" [multiple]="true"
+					           placeholder="Tipul medicamentului" formControlName="medTypesValues">
+					</ng-select>
 				</div>
 			</div>
 		</div>
@@ -362,21 +367,21 @@
 		</div>
 		<hr>
 
-		<div class="row">
-			<div class="col-6">
-				<div class="md-form-modified">
-					<ng-select id="manufacture" name="manufacture" [items]="manufactures" bindLabel="description" placeholder="Producător "
-					 formControlName="manufacture">
-					</ng-select>
-					<div *ngIf="isAddManufacture && (!eForm.get('manufacture').value || eForm.get('manufacture').value.toString().length == 0)">
-						<small class="text-muted"><strong class="text-danger">Producatorul trebuie selectat</strong></small>
-					</div>
-					<div *ngIf="isAddManufacture && wasFoundManufacture">
-						<small class="text-muted"><strong class="text-danger">Aceast producator a fost deja introdus</strong></small>
-					</div>
-				</div>
-			</div>
-		</div>
+		<!--<div class="row">-->
+		<!--<div class="col-6">-->
+		<!--<div class="md-form-modified">-->
+		<!--<ng-select id="manufacture" name="manufacture" [items]="manufactures" bindLabel="description" placeholder="Producător "-->
+		<!--formControlName="manufacture">-->
+		<!--</ng-select>-->
+		<!--<div *ngIf="isAddManufacture && (!eForm.get('manufacture').value || eForm.get('manufacture').value.toString().length == 0)">-->
+		<!--<small class="text-muted"><strong class="text-danger">Producatorul trebuie selectat</strong></small>-->
+		<!--</div>-->
+		<!--<div *ngIf="isAddManufacture && wasFoundManufacture">-->
+		<!--<small class="text-muted"><strong class="text-danger">Aceast producator a fost deja introdus</strong></small>-->
+		<!--</div>-->
+		<!--</div>-->
+		<!--</div>-->
+		<!--</div>-->
 		<div class="gradient-card-header bg-sidebar border-gradient">
 			<div class="container-fluid">
 				<!-- Title -->
@@ -398,27 +403,29 @@
 		<div class="card-body card-body-cascade">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
-					<tr>
-						<th scope="col">Denumire</th>
-						<th scope="col">Tara</th>
-						<th scope="col">Adresa</th>
-						<th scope="col">Producator produs finit</th>
-						<th scope="col">Actiuni</th>
-					</tr>
+				<tr>
+					<th scope="col">Denumire</th>
+					<th scope="col">Tara</th>
+					<th scope="col">Adresa</th>
+					<th scope="col">Comentariu</th>
+					<th scope="col">Producator produs finit</th>
+					<th scope="col">Actiuni</th>
+				</tr>
 				</thead>
 				<tbody>
-					<tr *ngFor="let manufacture of manufacturesTable;let i = index">
-						<td>{{ manufacture.manufacture. description }}</td>
-						<td>{{ manufacture.manufacture.country.description }}</td>
-						<td>{{ manufacture.manufacture.address }}</td>
-						<th scope="row">
-							<mat-checkbox #checkBoxProducatorProdusFinit [checked]="manufacture.producatorProdusFinit" (change)="checkProducatorProdusFinit(manufacture,checkBoxProducatorProdusFinit)"></mat-checkbox>
-						</th>
-						<td>
-							<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeManufacture(i)"
-							        mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
-						</td>
-					</tr>
+				<tr *ngFor="let manufacture of manufacturesTable;let i = index">
+					<td>{{ manufacture.manufacture.description }}</td>
+					<td>{{ manufacture.manufacture.country.description }}</td>
+					<td>{{ manufacture.manufacture.address }}</td>
+					<td>{{ manufacture.comment }}</td>
+					<th scope="row">
+						<mat-checkbox #checkBoxProducatorProdusFinit [checked]="manufacture.producatorProdusFinit" (change)="checkProducatorProdusFinit(manufacture,checkBoxProducatorProdusFinit)"></mat-checkbox>
+					</th>
+					<td>
+						<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeManufacture(i)"
+						        mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+					</td>
+				</tr>
 				</tbody>
 			</table>
 		</div>
@@ -428,13 +435,7 @@
 		</div>
 		<hr>
 		<app-instruction [divisions]="divisions" [instructions]="instructions" [nrCerere]="eForm.get('requestNumber').value"></app-instruction>
-		<div *ngIf="formSubmitted && instructions.length==0">
-			<small class="text-muted"><strong class="text-danger">Nici o instructiune nu a fost adaugata</strong></small>
-		</div>
 		<app-macheta [divisions]="divisions" [machets]="machets" [nrCerere]="eForm.get('requestNumber').value"></app-macheta>
-		<div *ngIf="formSubmitted && machets.length==0">
-			<small class="text-muted"><strong class="text-danger">Nici o macheta nu a fost adaugata</strong></small>
-		</div>
 		<app-payment #payment [requestDetails]="this.eForm.value" [checkProducator]="true" [manufactures]="manufacturesTable" [requestId]="this.eForm.get('id').value" (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
 		<div *ngIf="formSubmitted && paymentTotal<0">
 			<small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>
@@ -450,9 +451,11 @@
 					<div class="col-6">
 						<div class="position-button">
 							<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="requestAdditionalData()">Solicitare
-								date aditionale</button>
-							<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="requestLaboratoryAnalysis()">Solicitare
-								analiza laborator</button>
+								date aditionale
+							</button>
+							<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" [disabled]="isDisabledLabButton()" mdbWavesEffect (click)="requestLaboratoryAnalysis()">Solicitare
+								analiza laborator
+							</button>
 						</div>
 					</div>
 				</div>
@@ -464,44 +467,59 @@
 		<div class="card-body card-body-cascade">
 			<table class="table table-widths-lg text-center">
 				<thead class="bg-sidebar white-text">
-					<tr>
-						<th scope="col">Denumirea</th>
-						<th scope="col">Numar</th>
-						<th scope="col">Status document</th>
-						<th scope="col">Status raspuns</th>
-						<th>Actiuni</th>
-					</tr>
+				<tr>
+					<th scope="col">Denumirea</th>
+					<th scope="col">Numar</th>
+					<th scope="col">Status document</th>
+					<th scope="col">Status raspuns</th>
+					<th>Actiuni</th>
+				</tr>
 				</thead>
 				<tbody>
-					<tr *ngFor="let a of outDocuments">
-						<th scope="row">{{ a.name }}</th>
-						<th scope="row">{{ a.number }}</th>
-						<th scope="row">{{ a.status }}</th>
-						<th scope="row">
-							<mat-checkbox *ngIf="a.docType && (a.docType.category=='SL' || a.docType.category=='LA')" #checkBoxResponse
-							 [checked]="a.responseReceived" (change)="checkResponseReceived(a,checkBoxResponse)">Raspuns primit</mat-checkbox>
-						</th>
-						<td>
-							<button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)"><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
-							<button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && (a.docType.category=='SL' || a.docType.category=='LA')"
-							 class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
-						</td>
-					</tr>
+				<tr *ngFor="let a of outDocuments">
+					<th scope="row">{{ a.name }}</th>
+					<th scope="row">{{ a.number }}</th>
+					<th scope="row">{{ a.status }}</th>
+					<th scope="row">
+						<mat-checkbox *ngIf="a.docType && (a.docType.category=='SL')" #checkBoxResponse
+						              [checked]="a.responseReceived==1" (change)="checkResponseReceived(a,checkBoxResponse)">Raspuns primit
+						</mat-checkbox>
+						<mat-radio-group *ngIf="a.docType && (a.docType.category=='RL')" formControlName="labResponse">
+							<div style="margin-left: 200px">
+								<div class="row">
+									<mat-radio-button name="prop1" value="1">Inregistrare acceptata</mat-radio-button>
+								</div>
+								<div class="row">
+									<mat-radio-button name="prop2" value="0">Inregistrare respinsa</mat-radio-button>
+								</div>
+								<div class="row">
+									<mat-radio-button name="prop3" value="2">Inregistrare acceptata conditionat</mat-radio-button>
+								</div>
+							</div>
+						</mat-radio-group>
+					</th>
+					<td>
+						<button *ngIf="a.docType && (a.docType.category=='SL')" class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)">
+							<i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
+						<button *ngIf="(a.status=='Nu este atasat' && a.responseReceived==false && a.docType.category=='SL') ||( a.docType.category=='RL' && a.status=='Nu este atasat')"
+						        class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+					</td>
+				</tr>
 				</tbody>
 			</table>
-			</div>
-			<div *ngIf="outDocuments.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
-			<!--<div *ngIf="formSubmitted && !isResponseReceived">-->
-			<!--<small class="text-muted"><strong class="text-danger">Exista documente fara raspuns</strong></small>-->
-			<!--</div>-->
-			<!--<div *ngIf="formSubmitted && isNonAttachedDocuments">-->
-			<!--<small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong></small>-->
-			<!--</div>-->
-			<hr>
-			<div class="text-center">
-				<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>
-				<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Urmatorul pas</button>
-				<button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>
-			</div>
+		</div>
+		<div *ngIf="outDocuments.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<!--<div *ngIf="formSubmitted && !isResponseReceived">-->
+		<!--<small class="text-muted"><strong class="text-danger">Exista documente fara raspuns</strong></small>-->
+		<!--</div>-->
+		<!--<div *ngIf="formSubmitted && isNonAttachedDocuments">-->
+		<!--<small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong></small>-->
+		<!--</div>-->
+		<hr>
+		<div class="text-center">
+			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>
+			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Urmatorul pas</button>
+			<button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>
+		</div>
 	</form>
 </div>

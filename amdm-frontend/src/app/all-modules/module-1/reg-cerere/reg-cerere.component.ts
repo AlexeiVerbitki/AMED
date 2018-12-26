@@ -56,11 +56,11 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
             'medicamentName': [null, Validators.required],
             'mandatedFirstname': [null, Validators.required],
             'mandatedLastname': [null, Validators.required],
-            'phoneNumber': [null, [Validators.required, Validators.maxLength(9), Validators.pattern('[0-9]+')]],
+            'phoneNumber': [null, [Validators.maxLength(9), Validators.pattern('[0-9]+')]],
             'email': [null, Validators.email],
             'requestMandateNr': [null],
-            'requestMandateDate': [{value: null}],
-            'company': [null],
+            'requestMandateDate': [null],
+            'company': [null, Validators.required],
             'initiator': [''],
             'assignedUser': [''],
             'type':
@@ -121,7 +121,20 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
 
 
         this.formSubmitted = true;
-        if (!this.rForm.valid) {
+        if (this.rForm.get('medicamentName').invalid || this.rForm.get('mandatedFirstname').invalid || this.rForm.get('mandatedLastname').invalid || this.rForm.get('company').invalid
+        || this.rForm.get('type.code').invalid) {
+            return;
+        }
+
+        if(this.rForm.get('requestMandateNr').value && !this.rForm.get('requestMandateDate').value)
+        {
+            this.errorHandlerService.showError("Data eliberarii procurii trebuie introdusa.");
+            return;
+        }
+
+        if(this.rForm.get('requestMandateDate').value && !this.rForm.get('requestMandateNr').value)
+        {
+            this.errorHandlerService.showError("Numarul procurii trebuie introdus.");
             return;
         }
 
@@ -146,6 +159,8 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
             requestMandateNr : this.rForm.get('requestMandateNr').value,
             requestMandateDate : this.rForm.get('requestMandateDate').value
         }];
+
+        console.log(modelToSubmit);
 
         this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
                 this.loadingService.hide();

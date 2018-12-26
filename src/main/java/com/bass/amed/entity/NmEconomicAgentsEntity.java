@@ -15,7 +15,7 @@ public class NmEconomicAgentsEntity {
     @Id
     @Column(name = "id")
     @GeneratedValue( strategy = GenerationType.IDENTITY )
-    private int id;
+    private Integer id;
     @Basic
     @Column(name = "code")
     private String code;
@@ -61,6 +61,9 @@ public class NmEconomicAgentsEntity {
     @Basic
     @Column(name = "street")
     private String street;
+    @Basic
+    @Column(name = "filiala")
+    private Integer filiala;
     @Basic
     @Column(name = "legal_address")
     private String legalAddress;

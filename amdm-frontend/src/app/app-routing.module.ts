@@ -84,6 +84,10 @@ const routes: Routes = [
                     {
                         path: 'admin/generic-nomenclature/:id',
                         loadChildren: '../app/administration/generic-nomenclature/generic-nomenclature.module#GenericNomenclatureModule'
+                    },
+                    {
+                        path: 'admin',
+                        loadChildren: '../app/administration/economic-agent/ec-agent.module#EcAgentModule'
                     }
                 ],
             },

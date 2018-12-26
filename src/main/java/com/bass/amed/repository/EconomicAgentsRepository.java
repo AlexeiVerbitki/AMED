@@ -38,7 +38,19 @@ public interface EconomicAgentsRepository extends JpaRepository<NmEconomicAgents
 
     List<NmEconomicAgentsEntity> findAllByIdno(String idno);
 
-    @Query(value = "SELECT * FROM nm_economic_agents m WHERE (upper(m.name) like upper(CONCAT(?1, '%')) or m.code = ?2 ) and m.idno = ?3", nativeQuery = true)
+
+    @Query(value = "select b.* from  (select idno,min(code) as code from nm_economic_agents group by idno) a  inner join nm_economic_agents b using (idno,code) order by b.code desc", nativeQuery = true)
+    List<NmEconomicAgentsEntity> loadAllAgentsGroupByIdno();
+
+
+    @Query(value = "SELECT * FROM nm_economic_agents m WHERE m.idno = ?1 order by code asc LIMIT 1", nativeQuery = true)
+    Optional<NmEconomicAgentsEntity> getParentForIdno(String idno);
+
+
+    @Query(value = "select * from nm_economic_agents where idno = ?1 and code not in (select  min(e.code) as code from nm_economic_agents e where idno = ?1) order by code", nativeQuery = true)
+    List<NmEconomicAgentsEntity> loadFilialsForIdno(String idno);
+	
+	@Query(value = "SELECT * FROM nm_economic_agents m WHERE (upper(m.name) like upper(CONCAT(?1, '%')) or m.code = ?2 ) and m.idno = ?3", nativeQuery = true)
     List<NmEconomicAgentsEntity> getCompaniesByNameCodeAndIdno(String name, String code, String idno);
 
 }

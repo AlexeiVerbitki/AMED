@@ -624,12 +624,12 @@ import java.util.stream.Stream;
 			if (medicamentActiveSubstancesHistoryEntityOpt.isPresent()) {
 				MedicamentActiveSubstancesHistoryEntity medicamentActiveSubstancesHistoryEntity = medicamentActiveSubstancesHistoryEntityOpt.get();
 				medicamentActiveSubstancesHistoryForUpdateEntity.setActiveSubstance(medicamentActiveSubstancesEntity.getActiveSubstance());
-				medicamentActiveSubstancesHistoryForUpdateEntity.setManufactureFrom(medicamentActiveSubstancesEntity.getManufacture());
+//				medicamentActiveSubstancesHistoryForUpdateEntity.setManufactureFrom(medicamentActiveSubstancesEntity.getManufacture());
 				medicamentActiveSubstancesHistoryForUpdateEntity.setQuantityFrom(medicamentActiveSubstancesEntity.getQuantity());
 				medicamentActiveSubstancesHistoryForUpdateEntity.setUnitsOfMeasurementFrom(medicamentActiveSubstancesEntity.getUnitsOfMeasurement());
 				medicamentActiveSubstancesHistoryForUpdateEntity.setStatus("M");
 				if (!medicamentActiveSubstancesHistoryEntity.getManufactureTo().equals(
-						medicamentActiveSubstancesEntity.getManufacture()) || !medicamentActiveSubstancesHistoryEntity.getQuantityTo().equals(
+//						medicamentActiveSubstancesEntity.getManufacture()) || !medicamentActiveSubstancesHistoryEntity.getQuantityTo().equals(
 						medicamentActiveSubstancesEntity.getQuantity()) || !medicamentActiveSubstancesHistoryEntity.getUnitsOfMeasurementTo().equals(
 						medicamentActiveSubstancesEntity.getUnitsOfMeasurement())) {
 					medicamentActiveSubstancesHistoryForUpdateEntity.setManufactureTo(medicamentActiveSubstancesHistoryEntity.getManufactureTo());
@@ -639,7 +639,7 @@ import java.util.stream.Stream;
 				}
 			} else {
 				medicamentActiveSubstancesHistoryForUpdateEntity.setActiveSubstance(medicamentActiveSubstancesEntity.getActiveSubstance());
-				medicamentActiveSubstancesHistoryForUpdateEntity.setManufactureFrom(medicamentActiveSubstancesEntity.getManufacture());
+//				medicamentActiveSubstancesHistoryForUpdateEntity.setManufactureFrom(medicamentActiveSubstancesEntity.getManufacture());
 				medicamentActiveSubstancesHistoryForUpdateEntity.setQuantityFrom(medicamentActiveSubstancesEntity.getQuantity());
 				medicamentActiveSubstancesHistoryForUpdateEntity.setUnitsOfMeasurementFrom(medicamentActiveSubstancesEntity.getUnitsOfMeasurement());
 				medicamentActiveSubstancesHistoryForUpdateEntity.setStatus("R");
@@ -746,7 +746,7 @@ import java.util.stream.Stream;
 		for (MedicamentActiveSubstancesHistoryEntity medicamentActiveSubstancesHistEntity : medicamentHistoryEntity.getActiveSubstancesHistory()) {
 			MedicamentActiveSubstancesEntity medicamentActiveSubstancesEntity = new MedicamentActiveSubstancesEntity();
 			medicamentActiveSubstancesEntity.setActiveSubstance(medicamentActiveSubstancesHistEntity.getActiveSubstance());
-			medicamentActiveSubstancesEntity.setManufacture(medicamentActiveSubstancesHistEntity.getManufactureTo());
+//			medicamentActiveSubstancesEntity.setManufacture(medicamentActiveSubstancesHistEntity.getManufactureTo());
 			medicamentActiveSubstancesEntity.setQuantity(medicamentActiveSubstancesHistEntity.getQuantityTo());
 			medicamentActiveSubstancesEntity.setUnitsOfMeasurement(medicamentActiveSubstancesHistEntity.getUnitsOfMeasurementTo());
 			medicamentEntity.getActiveSubstances().add(medicamentActiveSubstancesEntity);

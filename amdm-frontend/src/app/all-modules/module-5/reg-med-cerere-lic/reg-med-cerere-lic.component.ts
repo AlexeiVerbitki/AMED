@@ -12,6 +12,7 @@ import {ErrorHandlerService} from "../../../shared/service/error-handler.service
 import {catchError, debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
 import {LocalityService} from "../../../shared/service/locality.service";
 import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
+import {AddEcAgentComponent} from "../../../administration/economic-agent/add-ec-agent/add-ec-agent.component";
 
 @Component({
     selector: 'app-reg-med-cerere-lic',
@@ -390,6 +391,28 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
         this.rForm.get('dataEliberariiLic').setValue(null);
         this.rForm.get('dataExpirariiLic').setValue(null);
     }
+
+    newAgent()
+    {
+        const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
+            width: '1000px',
+            panelClass: 'materialLicense',
+            data: {
+            },
+            hasBackdrop: false
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result && result.success) {
+                //Do nothing
+            }
+        });
+    }
+
+
+
+
+
 
     ngOnDestroy() {
         this.navbarTitleService.showTitleMsg('');

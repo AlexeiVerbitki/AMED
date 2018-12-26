@@ -1,7 +1,7 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
-import {ManagementRoutingModule} from './management-routing.module';
+import { ManagementRoutingModule } from './management-routing.module';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MDBBootstrapModule} from "angular-bootstrap-md";
 import {MaterialSharedModule} from "../material-shared.module";
@@ -31,6 +31,15 @@ import {AnnihilationManagementComponent} from "./annihilation/annihilation-manag
 import {AnnihilationService} from "../shared/service/annihilation/annihilation.service";
 import {MedicamentService} from "../shared/service/medicament.service";
 import { AmendmentDetailsComponent } from './clinical-trials/dialog/amendment-details/amendment-details.component';
+import { GenerateDocumentsComponent } from './generate-documents/generate-documents.component';
+import { DdListComponent } from './generate-documents/dd-list/dd-list.component';
+import { OaListComponent } from './generate-documents/oa-list/oa-list.component';
+import { RequestsDdComponent } from './generate-documents/requests-dd/requests-dd.component';
+import { MedicamentsOaComponent } from './generate-documents/medicaments-oa/medicaments-oa.component';
+import {SelectIssueDateDialogComponent} from "../dialog/select-issue-date-dialog/select-issue-date-dialog.component";
+import { RequestsOiComponent } from './generate-documents/requests-oi/requests-oi.component';
+import { OiListComponent } from './generate-documents/oi-list/oi-list.component';
+
 
 @NgModule({
     imports: [
@@ -59,12 +68,21 @@ import { AmendmentDetailsComponent } from './clinical-trials/dialog/amendment-de
         DrugAuthorizationDetailsDialogComponent,
         AnnihilationManagementComponent,
         AnnihilationDetailsComponent,
+        DdListComponent,
+        OaListComponent,
 	ClinicalTrialsComponent,
+	GenerateDocumentsComponent,
 	ClinicalTrialsDetailsComponent,
+	OaListComponent,
+	RequestsDdComponent,
+	MedicamentsOaComponent,
+	SelectIssueDateDialogComponent,
+	RequestsOiComponent,
+	OiListComponent,
 	AmendmentDetailsComponent
     ],
-    entryComponents: [AddReceiptDialogComponent,PriceReqEditModalComponent,LicenseDetailsComponent,DrugAuthorizationDetailsDialogComponent, AnnihilationDetailsComponent, ClinicalTrialsDetailsComponent,AmendmentDetailsComponent],
-    providers: [LicenseService, AdministrationService,UploadFileService, AnnihilationService, MedicamentService, ClinicalTrialService
+    entryComponents: [AddReceiptDialogComponent,PriceReqEditModalComponent,LicenseDetailsComponent,DrugAuthorizationDetailsDialogComponent, AnnihilationDetailsComponent, ClinicalTrialsDetailsComponent,SelectIssueDateDialogComponent,AmendmentDetailsComponent],
+    providers: [LicenseService, AdministrationService,UploadFileService, AnnihilationService, MedicamentService, ClinicalTrialService,DdListComponent,OaListComponent
     ],
 })
 export class ManagementModule {

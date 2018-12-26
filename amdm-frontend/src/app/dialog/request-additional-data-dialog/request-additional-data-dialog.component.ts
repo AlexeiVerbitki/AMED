@@ -175,7 +175,7 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
                     number: this.reqForm.get('docNumber').value,
                     content: this.reqForm.get('content').value,
                     date: new Date(),
-                    responseReceived : false,
+                    responseReceived : 0,
                     signerName :  this.reqForm.get('function').value.value,
                     signerFunction :  this.reqForm.get('function').value.description
                 };
@@ -190,7 +190,7 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
                     number: this.reqForm.get('docNumber').value,
                     content: this.reqForm.get('content').value,
                     date: new Date(),
-                    responseReceived : false,
+                    responseReceived : 0,
                     signerName :  this.reqForm.get('function').value.value,
                     signerFunction :  this.reqForm.get('function').value.description
                 };

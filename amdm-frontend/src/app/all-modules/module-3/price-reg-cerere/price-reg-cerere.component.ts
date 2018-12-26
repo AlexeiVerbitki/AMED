@@ -16,6 +16,7 @@ import {TaskService} from "../../../shared/service/task.service";
 import {CanModuleDeactivate} from "../../../shared/auth-guard/can-deactivate-guard.service";
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
 import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
+import {PriceService} from "../../../shared/service/prices.service";
 
 @Component({
     selector: 'app-reg-cerere',
@@ -28,7 +29,6 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
     documents: Document [] = [];
     companii: Observable<any[]>;
     rForm: FormGroup;
-    docTypes: any[];
 
     generatedDocNrSeq: number;
     formSubmitted: boolean;
@@ -39,11 +39,8 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
 
     constructor(private fb: FormBuilder,
                 private router: Router,
-                private requestService: RequestService,
-                private authService: AuthService,
-                private administrationService: AdministrationService,
+                private priceService: PriceService,
                 private navbarTitleService: NavbarTitleService,
-                private taskService: TaskService,
                 private errorHandlerService: ErrorHandlerService,
                 private loadingService: LoaderService,
                 public dialog: MatDialog,
@@ -51,14 +48,17 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
         this.rForm = fb.group({
             'data': {disabled: true, value: new Date()},
             'requestNumber': [null],
+            'id': [null],
+            'folderNumber': [null, Validators.required],
             'startDate': [new Date()],
-            'currentStep': ['RR'],
+            'currentStep': ['R'],
             'mandatedFirstname': [null, Validators.required],
             'mandatedLastname': [null, Validators.required],
             'phoneNumber': [null, [Validators.required, Validators.maxLength(9), Validators.pattern('[0-9]+')]],
             'email': [null, Validators.email],
-            'requestMandateNr': [null],
-            'requestMandateDate': [{value: null}],
+            'requestMandateNr': [null, Validators.required],
+            'requestMandateDate': [{value: null}, Validators.required],
+            'registrationRequestMandatedContactsId': [null],
             'company': [null],
             'initiator': [''],
             'assignedUser': [''],
@@ -73,7 +73,7 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
         this.navbarTitleService.showTitleMsg('Înregistrarea cererii de stabilire a prețului');
 
         this.subscriptions.push(
-            this.administrationService.generateDocNr().subscribe(data => {
+            this.priceService.generateDocNumber().subscribe(data => {
                     this.generatedDocNrSeq = data;
                     this.rForm.get('requestNumber').setValue(this.generatedDocNrSeq);
                 },
@@ -94,30 +94,14 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
                 }),
                 flatMap(term =>
 
-                    this.administrationService.getCompanyNamesAndIdnoList(term).pipe(
+                    this.priceService.getCompanyNamesAndIdnoList(term).pipe(
                         tap(() => this.loadingCompany = false)
                     )
                 )
             );
-
-        this.subscriptions.push(
-            this.taskService.getRequestStepByIdAndCode('1', 'R').subscribe(step => {
-                    this.subscriptions.push(
-                        this.administrationService.getAllDocTypes().subscribe(data => {
-                                this.docTypes = data;
-                                this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
-                            },
-                            error => console.log(error)
-                        )
-                    );
-                },
-                error => console.log(error)
-            )
-        );
     }
 
     nextStep() {
-
 
         this.formSubmitted = true;
         if (!this.rForm.valid) {
@@ -128,7 +112,7 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
 
         this.loadingService.show();
 
-        var useranameDB = this.authService.getUserName();
+        var useranameDB = this.priceService.getUsername();
 
         var modelToSubmit: any = this.rForm.value;
         modelToSubmit.requestHistories = [{
@@ -138,18 +122,26 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
         modelToSubmit.initiator = useranameDB;
         modelToSubmit.assignedUser = useranameDB;
         modelToSubmit.documents = this.documents;
+        modelToSubmit.endDate = new Date();
+        modelToSubmit.dossierNr = this.rForm.get('folderNumber').value;
         modelToSubmit.registrationRequestMandatedContacts = [{
             mandatedLastname : this.rForm.get('mandatedLastname').value,
             mandatedFirstname : this.rForm.get('mandatedFirstname').value,
             phoneNumber : this.rForm.get('phoneNumber').value,
             email : this.rForm.get('email').value,
             requestMandateNr : this.rForm.get('requestMandateNr').value,
-            requestMandateDate : this.rForm.get('requestMandateDate').value
+            requestMandateDate : this.rForm.get('requestMandateDate').value,
+            id : this.rForm.get('registrationRequestMandatedContactsId').value
         }];
 
-        this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
+        this.subscriptions.push(this.priceService.addRegistrationRequestForPrice(modelToSubmit).subscribe(req => {
+
+                this.rForm.get('id').setValue(req.body.id);
+                if(req.body.registrationRequestMandatedContacts[0]) {
+                    this.rForm.get('registrationRequestMandatedContactsId').setValue(req.body.registrationRequestMandatedContacts[0].id);
+                }
+
                 this.loadingService.hide();
-                alert('salvat');
             }, error => this.loadingService.hide())
         );
     }

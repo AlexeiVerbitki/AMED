@@ -25,10 +25,15 @@ public class OutputDocumentsEntity
     @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )@JoinColumn( name = "type_id" )
     private NmDocumentTypesEntity docType;
     @Basic@Column(name = "response_received")
-    private boolean responseReceived;
+    private Integer responseReceived;
     @Basic@Column(name = "signer_name")
     private String signerName;
     @Basic@Column(name = "signer_function")
     private String signerFunction;
-
+    @Basic@Column(name = "path")
+    private String path;
+    @Basic@Column(name = "attached")
+    private Boolean attached;
+    @Basic@Column(name = "date_of_issue")
+    private Timestamp dateOfIssue;
 }

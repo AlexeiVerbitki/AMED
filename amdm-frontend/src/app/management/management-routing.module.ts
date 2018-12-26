@@ -9,6 +9,7 @@ import {PriceApprovalComponent} from "./price-approval/price-approval.component"
 import {CPCADTaskComponent} from "../all-modules/module-7/cpcadtask/cpcadtask.component";
 import {AnnihilationManagementComponent} from "./annihilation/annihilation-management/annihilation-management.component";
 import {ClinicalTrialsComponent} from "./clinical-trials/clinical-trials.component";
+import {GenerateDocumentsComponent} from "./generate-documents/generate-documents.component";
 
 const routes: Routes = [
     {path: 'license/view-all', component: LicenseManagementComponent},
@@ -19,7 +20,8 @@ const routes: Routes = [
     {path: 'prices', component: PricesComponent},
     {path: 'cpcadtask', component: CPCADTaskComponent},
     {path: 'annihilation/view-all', component: AnnihilationManagementComponent},
-        {path: 'clinical-trials', component: ClinicalTrialsComponent}
+    {path: 'clinical-trials', component: ClinicalTrialsComponent},
+    {path: 'generate-documents', component: GenerateDocumentsComponent}
 ];
 
 @NgModule({

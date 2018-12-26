@@ -1,13 +1,16 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AdministrationService} from "../../shared/service/administration.service";
 import {Subscription} from "rxjs";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material";
+import {ConfirmationDialogComponent} from "../confirmation-dialog.component";
+import {ErrorHandlerService} from "../../shared/service/error-handler.service";
+import {AddManufactureComponent} from "../add-manufacture/add-manufacture.component";
 
 @Component({
-  selector: 'app-active-substance-dialog',
-  templateUrl: './active-substance-dialog.component.html',
-  styleUrls: ['./active-substance-dialog.component.css']
+    selector: 'app-active-substance-dialog',
+    templateUrl: './active-substance-dialog.component.html',
+    styleUrls: ['./active-substance-dialog.component.css']
 })
 
 export class ActiveSubstanceDialogComponent implements OnInit {
@@ -17,56 +20,58 @@ export class ActiveSubstanceDialogComponent implements OnInit {
     activeSubstances: any[];
     formSubmitted: boolean;
     activeSubstanceUnitsOfMeasurement: any[];
-    manufactures: any[];
     protected loadingActiveSubst: boolean = false;
-    protected loadingManufacture: boolean = false;
+    manufacturesTable: any[] = [];
 
     constructor(private administrationService: AdministrationService,
                 private fb: FormBuilder,
+                public dialog: MatDialog,
+                private errorService: ErrorHandlerService,
                 public dialogRef: MatDialogRef<ActiveSubstanceDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) public dataDialog: any) {
         this.aForm = fb.group({
             'activeSubstance': [null, Validators.required],
             'activeSubstanceCode': [null],
-            'activeSubstanceQuantity': [null,Validators.required],
-            'activeSubstanceUnit': [null,Validators.required],
-            'manufactureSA': [null,Validators.required],
-            'manufactureCountrySA': [null],
-            'manufactureAddressSA': [null],
-            'status' : [null],
-            'response' : [null]
+            'activeSubstanceQuantity': [null, Validators.required],
+            'activeSubstanceUnit': [null, Validators.required],
+            'manufactures': [null],
+            'status': [null],
+            'response': [null]
         });
     }
 
     ngOnInit() {
 
-        if(this.dataDialog && this.dataDialog.disableSubstance)
-        {
+        if (this.dataDialog && this.dataDialog.disableSubstance) {
             this.aForm.get('activeSubstance').disable();
         }
 
-        if(this.dataDialog) {
+        if (this.dataDialog) {
             this.aForm.get('activeSubstanceQuantity').setValue(this.dataDialog.quantity);
+            this.manufacturesTable = this.dataDialog.manufactures;
         }
 
         this.loadingActiveSubst = true;
         this.subscriptions.push(
             this.administrationService.getAllActiveSubstances().subscribe(data => {
                     this.activeSubstances = data;
-                    if(this.dataDialog) {
+                    if (this.dataDialog) {
                         this.aForm.get('activeSubstance').setValue(this.activeSubstances.find(r => r.id === this.dataDialog.activeSubstance.id));
                         this.aForm.get('activeSubstanceCode').setValue(this.aForm.get('activeSubstance').value.code);
                     }
                     this.loadingActiveSubst = false;
                 },
-                error => {console.log(error);  this.loadingActiveSubst = false;}
+                error => {
+                    console.log(error);
+                    this.loadingActiveSubst = false;
+                }
             )
         );
 
         this.subscriptions.push(
             this.administrationService.getAllUnitsOfMeasurement().subscribe(data => {
                     this.activeSubstanceUnitsOfMeasurement = data;
-                    if(this.dataDialog) {
+                    if (this.dataDialog) {
                         this.aForm.get('activeSubstanceUnit').setValue(this.activeSubstanceUnitsOfMeasurement.find(r => r.id === this.dataDialog.unitsOfMeasurement.id));
                     }
                 },
@@ -74,22 +79,22 @@ export class ActiveSubstanceDialogComponent implements OnInit {
             )
         );
 
-        this.loadingManufacture = true;
-        this.subscriptions.push(
-            this.administrationService.getAllManufactures().subscribe(data => {
-                    this.manufactures = data;
-                    if(this.dataDialog) {
-                        this.aForm.get('manufactureSA').setValue(this.manufactures.find(r => r.id === this.dataDialog.manufacture.id));
-                        this.aForm.get('manufactureCountrySA').setValue(this.aForm.get('manufactureSA').value.country.description);
-                        this.aForm.get('manufactureAddressSA').setValue(this.aForm.get('manufactureSA').value.address);
-                    }
-                    this.loadingManufacture = false;
-                },
-                error => {console.log(error);  this.loadingManufacture = false;}
-            )
-        );
+        // this.loadingManufacture = true;
+        // this.subscriptions.push(
+        //     this.administrationService.getAllManufactures().subscribe(data => {
+        //             this.manufactures = data;
+        //             if(this.dataDialog) {
+        //                 this.aForm.get('manufactureSA').setValue(this.manufactures.find(r => r.id === this.dataDialog.manufacture.id));
+        //                 this.aForm.get('manufactureCountrySA').setValue(this.aForm.get('manufactureSA').value.country.description);
+        //                 this.aForm.get('manufactureAddressSA').setValue(this.aForm.get('manufactureSA').value.address);
+        //             }
+        //             this.loadingManufacture = false;
+        //         },
+        //         error => {console.log(error);  this.loadingManufacture = false;}
+        //     )
+        // );
 
-        if(this.dataDialog) {
+        if (this.dataDialog) {
             this.title = 'Editare substanta activa'
             this.aForm.get('status').setValue(this.dataDialog.status);
         }
@@ -106,8 +111,8 @@ export class ActiveSubstanceDialogComponent implements OnInit {
     add() {
         this.formSubmitted = true;
 
-        if(this.aForm.invalid)
-        {
+        console.log(this.manufacturesTable.length==0);
+        if (this.aForm.invalid || this.manufacturesTable.length==0) {
             return;
         }
 
@@ -115,6 +120,7 @@ export class ActiveSubstanceDialogComponent implements OnInit {
 
         this.aForm.get('response').setValue(true);
         this.aForm.get('activeSubstance').enable();
+        this.aForm.get('manufactures').setValue(this.manufacturesTable);
         this.dialogRef.close(this.aForm.value);
     }
 
@@ -123,14 +129,38 @@ export class ActiveSubstanceDialogComponent implements OnInit {
         this.dialogRef.close(this.aForm.value);
     }
 
-    checkActiveSubstanceManufacture()
-    {
-        if (this.aForm.get('manufactureSA').value == null) {
-            return;
-        }
+    addManufacture() {
 
-        this.aForm.get('manufactureCountrySA').setValue(this.aForm.get('manufactureSA').value.country.description);
-        this.aForm.get('manufactureAddressSA').setValue(this.aForm.get('manufactureSA').value.address);
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.width = '600px';
+
+        dialogConfig2.data = {manufacturesTable : this.manufacturesTable};
+
+        let dialogRef = this.dialog.open(AddManufactureComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+                if (result && result.response) {
+                    this.manufacturesTable.push({manufacture: result.manufacture});
+                }
+            }
+        );
+    }
+
+    removeManufacture(index: number) {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {message: 'Sunteti sigur ca doriti sa stergeti aceast producator?', confirm: false}
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.manufacturesTable.splice(index, 1);
+            }
+        });
     }
 }
 

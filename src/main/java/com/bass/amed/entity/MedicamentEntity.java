@@ -84,6 +84,9 @@ public class MedicamentEntity
     @Column(name = "status", nullable = true, length = 1)
     private String status;
     @Basic
+    @Column(name = "originale", nullable = true)
+    private Boolean originale;
+    @Basic
     @Column(name = "volume")
     private String volume;
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
@@ -121,9 +124,17 @@ public class MedicamentEntity
     private Integer requestId;
     @Column(name = "drug_check_decisions_id")
     private Integer drugCheckDecisionsId;
+    @Column(name = "approved")
+    private Boolean approved;
+    @Column(name = "oa_number")
+    private String oaNumber;
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "medicament_id")
+    private Set<MedicamentTypesEntity> medicamentTypes;
 
     public void assign(MedicamentHistoryEntity entity)
     {
+        // TODO: entity.originale ???
         this.commercialName = entity.getCommercialNameTo();
         this.dose = entity.getDoseTo();
         this.atcCode = entity.getAtcCodeTo();

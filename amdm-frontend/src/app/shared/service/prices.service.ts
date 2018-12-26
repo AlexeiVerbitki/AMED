@@ -90,6 +90,10 @@ export class PriceService {
         return this.http.post<any>('/api/add-prices', requests, {observe: 'response'});
     }
 
+    addRegistrationRequestForPrice(request: any): Observable<any> {
+        return this.http.post<any>('/api/add-reg-request-price', request, {observe: 'response'});
+    }
+
     approvePrices(requests: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/approve-prices', requests, {observe: 'response'});
     }

@@ -83,9 +83,11 @@
       </tr>
       </tbody>
     </table>
+    <div *ngIf="outputDocuments.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+    <hr>
     <div class="text-center">
-      <button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="back()">Inapoi</button>
-      <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interrupt()">Intrerupere</button>
+      <button *ngIf="iForm.get('oiIncluded').value!=1" class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="back()">Inapoi</button>
+      <button [disabled]="iForm.get('oiIncluded').value==1" class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interrupt()">Include in ordinul de intrerupere</button>
     </div>
   </form>
 </div>

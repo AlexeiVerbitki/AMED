@@ -45,6 +45,19 @@ public class StorageService
         }
     }
 
+    public void store(String relativeFolder, MultipartFile file, String fileName) throws CustomException
+    {
+        Path rootLocation = Paths.get(rootFolder);
+        initIfNeeded(rootLocation, relativeFolder);
+        try
+        {
+            Files.copy(file.getInputStream(), rootLocation.resolve(relativeFolder).resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
+        } catch (Exception e)
+        {
+            throw new CustomException("Failed to store file!", e);
+        }
+    }
+
     public void remove(String relativeFolder)
     {
         Path rootLocation = Paths.get(rootFolder);
@@ -77,7 +90,7 @@ public class StorageService
         }
 
     }
-    private void initIfNeeded(Path rootFolder, String relativeFolder) throws CustomException
+    public void initIfNeeded(Path rootFolder, String relativeFolder) throws CustomException
     {
         try
         {
@@ -125,5 +138,30 @@ public class StorageService
         {
             throw new CustomException(e.getMessage());
         }
+    }
+
+    public String storePDFFile(JasperPrint jasperPrint,String filePath) throws CustomException
+    {
+        try
+        {
+            //create folders
+            String fullPath = rootFolder + "/"+filePath.substring(0,filePath.lastIndexOf('/'));
+            Path path = Paths.get(fullPath);
+            if (!Files.exists(path)) {
+                Files.createDirectories(path);
+            }
+
+            JasperExportManager.exportReportToPdfFile(jasperPrint, rootFolder + "/"+filePath);
+            return rootFolder + "/"+filePath;
+        }
+        catch (Exception e)
+        {
+            throw new CustomException(e.getMessage());
+        }
+    }
+
+    public String getRootFolder()
+    {
+        return rootFolder;
     }
 }

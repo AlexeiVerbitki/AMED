@@ -21,6 +21,7 @@ import {AdministrationService} from "../shared/service/administration.service";
 import {ErrorHandlerService} from "../shared/service/error-handler.service";
 import {TaskService} from "../shared/service/task.service";
 import {DatePipe} from "@angular/common";
+import {Doc} from "../models/Doc";
 
 @Component({
     selector: 'app-document',
@@ -32,6 +33,7 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input()
     title: string = 'Documente atasate';
     documentList: Document [];
+    currentDocDetails : Document = new Document();
     numarCerere: string;
     enableUploading: boolean = true;
     result: any;
@@ -88,6 +90,15 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
         this.dataSource.data = this.documentList.slice();
 
         this.dataSource.filterPredicate = this.createFilter();
+    }
+
+    get docDetails(): Document{
+        return this.currentDocDetails;
+    }
+
+    @Input()
+    set docDetails(currentDocDetails: Document) {
+        this.currentDocDetails = currentDocDetails;
     }
 
     get nrCerere(): string {
@@ -210,11 +221,22 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
 
         var allowedExtensions =
             ["jpg", "jpeg", "png", "jfif", "bmp", "svg", "pdf","xls", "xlsx","doc","docx"];
+        if(this.docForm.get('docType').value.category=='RL')
+        {
+            allowedExtensions = ["xml"];
+        }
+
         var fileExtension = event.srcElement.files[0].name.split('.').pop();
 
         if (allowedExtensions.indexOf(fileExtension.toLowerCase()) <= -1) {
             this.errorHandlerService.showError('Nu se permite atasarea documentelor cu aceasta extensie. Extensiile permise: ' + allowedExtensions);
             return;
+        }
+
+        if(this.docForm.get('docType').value.category=='CA')
+        {
+            this.docForm.get('nrDoc').setValue(this.currentDocDetails.number);
+            this.docForm.get('dateDoc').setValue(this.currentDocDetails.dateOfIssue);
         }
 
         this.subscriptions.push(this.uploadService.pushFileToStorage(event.srcElement.files[0], this.numarCerere).subscribe(event => {

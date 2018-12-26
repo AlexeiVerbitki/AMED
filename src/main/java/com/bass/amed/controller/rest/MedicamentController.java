@@ -120,7 +120,7 @@ public class MedicamentController
         Optional<RegistrationRequestsEntity> regReqOpt = requestRepository.findById(interruptDetailsDTO.getRequestId());
 
         RegistrationRequestsEntity registrationRequestsEntity = regReqOpt.get();
-        registrationRequestsEntity.setCurrentStep("C");
+        //registrationRequestsEntity.setCurrentStep("C");
         registrationRequestsEntity.setAssignedUser(interruptDetailsDTO.getUsername());
         registrationRequestsEntity.setInterruptionReason(interruptDetailsDTO.getReason());
 
@@ -131,13 +131,15 @@ public class MedicamentController
         historyEntity.setEndDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
         registrationRequestsEntity.getRequestHistories().add(historyEntity);
 
-        historyEntity = new RegistrationRequestHistoryEntity();
-        historyEntity.setUsername(interruptDetailsDTO.getUsername());
-        historyEntity.setStep("C");
-        historyEntity.setStartDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
-        registrationRequestsEntity.getRequestHistories().add(historyEntity);
+//        historyEntity = new RegistrationRequestHistoryEntity();
+//        historyEntity.setUsername(interruptDetailsDTO.getUsername());
+//        historyEntity.setStep("C");
+//        historyEntity.setStartDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
+//        registrationRequestsEntity.getRequestHistories().add(historyEntity);
 
-        registrationRequestsEntity.setEndDate(new Timestamp(new Date().getTime()));
+       // registrationRequestsEntity.setEndDate(new Timestamp(new Date().getTime()));
+
+        registrationRequestsEntity.setOiIncluded(true);
 
         requestRepository.save(registrationRequestsEntity);
 

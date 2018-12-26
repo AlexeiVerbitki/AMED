@@ -13,7 +13,7 @@ import {DocumentModule} from "../../document/document.module";
 import {PaymentModule} from "../../payment/payment.module";
 import {ProcessInterruptionComponent} from "./process-interruption/process-interruption.component";
 import {ExpertiComponent} from './experti/experti.component';
-import {ExpertComiteeModule} from "../../expert-comitee/expert-comitee.module";
+import {ExpertComiteeModule} from "../../common/expert-comitee/expert-comitee.module";
 import {CanDeactivateGuard} from "../../shared/auth-guard/can-deactivate-guard.service";
 import {InstructionModule} from "../../common/instruction/instruction.module";
 import {MachetaModule} from "../../common/macheta/macheta.module";

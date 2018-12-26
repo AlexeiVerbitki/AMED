@@ -1,10 +1,7 @@
 package com.bass.amed.controller.rest;
 
 import com.bass.amed.common.Constants;
-import com.bass.amed.dto.BonDePlataDTO;
-import com.bass.amed.dto.BonDePlataMedicamentDTO;
-import com.bass.amed.dto.DistributionDispositionDTO;
-import com.bass.amed.dto.RequestAdditionalDataDTO;
+import com.bass.amed.dto.*;
 import com.bass.amed.dto.annihilation.BonPlataAnihilare1;
 import com.bass.amed.dto.annihilation.BonPlataAnihilare2;
 import com.bass.amed.entity.*;
@@ -21,6 +18,10 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,11 +40,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/documents")
@@ -71,6 +75,14 @@ public class DocumentsController
     private SysParamsRepository sysParamsRepository;
     @Autowired
     private CurrencyHistoryRepository currencyHistoryRepository;
+    @Autowired
+    private RequestRepository regRequestRepository;
+    @Autowired
+    private OutputDocumentsRepository outputDocumentsRepository;
+    @Autowired
+    private MedicamentRepository medicamentRepository;
+    @Autowired
+    private GenerateMedicamentRegistrationNumberRepository generateMedicamentRegistrationNumberRepository;
 
     @Value("${final.documents.folder}")
     private String folder;
@@ -122,28 +134,168 @@ public class DocumentsController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/view-distribution-disposition", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> viewDistributionDisposition(@RequestParam(value = "nrDoc") String nrDoc) throws CustomException
+    @RequestMapping(value = "/add-dd", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    public ResponseEntity<Void> addDD(@RequestParam("id") Integer id, @RequestParam("file") MultipartFile file) throws CustomException
     {
+        addOutputDocuments("DD", id, file);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/add-oi", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    public ResponseEntity<Void> addOI(@RequestParam("id") Integer id, @RequestParam("file") MultipartFile file) throws CustomException
+    {
+        addOutputDocuments("OI", id, file);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    void addOutputDocuments(String category, Integer id, MultipartFile file) throws CustomException
+    {
+        Optional<OutputDocumentsEntity> outputDocumentsEntityOpt = outputDocumentsRepository.findById(id);
+        OutputDocumentsEntity outDocument = outputDocumentsEntityOpt.orElse(new OutputDocumentsEntity());
+        storageService.remove(outDocument.getPath());
+        storageService.store(outDocument.getPath().substring(0, outDocument.getPath().lastIndexOf('/')), file, outDocument.getName());
+        outDocument.setAttached(true);
+        outputDocumentsRepository.save(outDocument);
+        List<RegistrationRequestsEntity> requests = new ArrayList<>();
+        switch (category)
+        {
+            case "OI":
+                requests = regRequestRepository.findRequestsByOINumber(outDocument.getNumber());
+                break;
+            case "DD":
+                requests = regRequestRepository.findRequestsByDDNumber(outDocument.getNumber());
+                break;
+            default:
+        }
+        for (RegistrationRequestsEntity request : requests)
+        {
+            DocumentsEntity d = new DocumentsEntity();
+            d.setDocType(outDocument.getDocType());
+            d.setPath(outDocument.getPath());
+            d.setName(outDocument.getName());
+            d.setDate(new Timestamp(new Date().getTime()));
+            d.setNumber(outDocument.getNumber());
+            d.setRegistrationRequestId(request.getId());
+            documentsRepository.save(d);
+            if (category.equals("OI"))
+            {
+                request.getMedicaments().stream().forEach(t -> t.setStatus("C"));
+                request.setCurrentStep("C");
+                RegistrationRequestHistoryEntity historyEntity = new RegistrationRequestHistoryEntity();
+                historyEntity.setUsername(SecurityUtils.getCurrentUser().orElse(""));
+                historyEntity.setStep("C");
+                historyEntity.setStartDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
+                request.getRequestHistories().add(historyEntity);
+                request.setEndDate(new Timestamp(new Date().getTime()));
+                regRequestRepository.save(request);
+            }
+        }
+    }
+
+    @RequestMapping(value = "/add-oa", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    public ResponseEntity<Void> addOA(@RequestParam("id") Integer id, @RequestParam("dateOfIssue") Date dateOfIssue, @RequestParam("file") MultipartFile file) throws CustomException
+    {
+        Optional<OutputDocumentsEntity> outputDocumentsEntityOpt = outputDocumentsRepository.findById(id);
+        OutputDocumentsEntity outDocument = outputDocumentsEntityOpt.orElse(new OutputDocumentsEntity());
+        storageService.remove(outDocument.getPath());
+        storageService.store(outDocument.getPath().substring(0, outDocument.getPath().lastIndexOf('/')), file, outDocument.getName());
+        outDocument.setAttached(true);
+        outDocument.setDateOfIssue(new Timestamp(dateOfIssue.getTime()));
+        outputDocumentsRepository.save(outDocument);
+        List<Integer> requestIds = medicamentRepository.findRequestsIDByOANumber(outDocument.getNumber());
+        for (Integer reqId : requestIds)
+        {
+            DocumentsEntity d = new DocumentsEntity();
+            d.setDocType(outDocument.getDocType());
+            d.setPath(outDocument.getPath());
+            d.setName(outDocument.getName());
+            d.setDate(new Timestamp(new Date().getTime()));
+            d.setNumber(outDocument.getNumber());
+            d.setDateOfIssue(outDocument.getDateOfIssue());
+            d.setRegistrationRequestId(reqId);
+            documentsRepository.save(d);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/generate-dd", method = RequestMethod.POST)
+    @Transactional
+    public ResponseEntity<byte[]> generateDD(@RequestBody List<RegistrationRequestsEntity> requests) throws CustomException
+    {
+
         byte[] bytes = null;
         try
         {
             ResourceLoader resourceLoader = new DefaultResourceLoader();
-            Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts");
-            String classPathWithoutJRXML = res.getFile().getAbsolutePath();
-            res = resourceLoader.getResource("layouts\\distributionDisposition.jrxml");
+            Resource res = resourceLoader.getResource("layouts/Dispozitie A Guvern.jrxml");
             JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
 
-            List<DistributionDispositionDTO> dataList = new ArrayList();
-            DistributionDispositionDTO obj = new DistributionDispositionDTO();
-            obj.setDispositionDate(Calendar.getInstance().getTime());
-            obj.setNrDisposition(nrDoc);
-            obj.setPath(classPathWithoutJRXML);
-            dataList.add(obj);
+            /* Map to hold Jasper report Parameters */
+            PaymentOrderNumberSequence seq = new PaymentOrderNumberSequence();
+            paymentOrderNumberRepository.save(seq);
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("nr", String.valueOf(seq.getId()));
+            SimpleDateFormat sdf = new SimpleDateFormat(Constants.Layouts.DATE_FORMAT);
+            parameters.put("date", sdf.format(new Date()));
+            parameters.put("nrOrdin", "A07.PS-01.Rg04-12");
+            parameters.put("nrOrdinDate", "19.01.2018");
+            parameters.put("ordinName", "„Despre aprobarea listei de experţi din cadrul Agenţiei Medicamentului şi Dispozitivelor Medicale”");
+            parameters.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
 
-            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(dataList);
-            JasperPrint jasperPrint = JasperFillManager.fillReport(report, null, beanColDataSource);
+            List<DispozitieDeDistribuireDTO> ddListDTO = new ArrayList<>();
+            List<Integer> ids = new ArrayList<>();
+            for (RegistrationRequestsEntity req : requests)
+            {
+                ids.add(req.getId());
+            }
+            //load full info about requests
+            List<RegistrationRequestsEntity> fullInfoRequests = regRequestRepository.findRequestWithMedicamentInfo(ids);
+            for (RegistrationRequestsEntity req : fullInfoRequests)
+            {
+                DispozitieDeDistribuireDTO ddDTO = new DispozitieDeDistribuireDTO();
+                MedicamentEntity medicamentEntity = req.getMedicaments().stream().findFirst().orElse(new MedicamentEntity());
+                if (medicamentEntity != null && medicamentEntity.getId() != null)
+                {
+                    NmManufacturesEntity manufacture =
+                            medicamentEntity.getManufactures().stream().filter(t -> t.getProducatorProdusFinit()).findFirst().orElse(new MedicamentManufactureEntity()).getManufacture();
+                    if (manufacture == null)
+                    {
+                        ddDTO.setAutorizationOwner(medicamentEntity.getAuthorizationHolder().getDescription());
+                    }
+                    else
+                    {
+                        ddDTO.setAutorizationOwner(medicamentEntity.getAuthorizationHolder().getDescription() + "/" + manufacture.getDescription() + " " + manufacture.getCountry().getDescription());
+                    }
+                    ddDTO.setExpertName(medicamentEntity.getExperts().getChairman().getName() + "; " + medicamentEntity.getExperts().getFarmacolog().getName() + "; "
+                            + medicamentEntity.getExperts().getFarmacist().getName() + "; " + medicamentEntity.getExperts().getMedic().getName());
+                    ddDTO.setMedicamentNameDosePharmform(medicamentEntity.getCommercialName() + " " + medicamentEntity.getDose() + " " + medicamentEntity.getPharmaceuticalForm().getDescription());
+                    ddDTO.setNotes(medicamentEntity.getExperts().getComment());
+                    ddDTO.setRegistrationNrDate(medicamentEntity.getExperts().getNumber() + " " + sdf.format(medicamentEntity.getExperts().getDate()));
+                    ddListDTO.add(ddDTO);
+                }
+            }
+            JRBeanCollectionDataSource ddListJRBean = new JRBeanCollectionDataSource(ddListDTO);
+            parameters.put("dispozitieAGuvern", ddListJRBean);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+
+            //save to storage
+            String docPath = storageService.storePDFFile(jasperPrint, "dispozitii_de_distribuire/Dispozitie de distribuire Nr " + seq.getId() + ".pdf");
+
+            //update requests
+            regRequestRepository.setDDNumber(ids, String.valueOf(seq.getId()));
+
+            // save in db
+            OutputDocumentsEntity outputDocumentsEntity = new OutputDocumentsEntity();
+            outputDocumentsEntity.setDocType(documentTypeRepository.findByCategory("DD").orElse(new NmDocumentTypesEntity()));
+            outputDocumentsEntity.setNumber(String.valueOf(seq.getId()));
+            outputDocumentsEntity.setName("Dispozitie de distribuire Nr " + seq.getId() + ".pdf");
+            outputDocumentsEntity.setDate(new Timestamp(new Date().getTime()));
+            outputDocumentsEntity.setPath(docPath);
+            outputDocumentsRepository.save(outputDocumentsEntity);
         }
         catch (Exception e)
         {
@@ -151,7 +303,378 @@ public class DocumentsController
         }
 
         return ResponseEntity.ok().header("Content-Type", "application/pdf")
-                .header("Content-Disposition", "inline; filename=dd.pdf").body(bytes);
+                .header("Content-Disposition", "inline; filename=dispozitieDeDistribuire.pdf").body(bytes);
+    }
+
+    @RequestMapping(value = "/generate-oi", method = RequestMethod.POST)
+    @Transactional
+    public ResponseEntity<byte[]> generateOI(@RequestBody List<RegistrationRequestsEntity> requests) throws CustomException
+    {
+
+        byte[] bytes = null;
+        try
+        {
+            ResourceLoader resourceLoader = new DefaultResourceLoader();
+            Resource res = resourceLoader.getResource("layouts/Ordin_intrerupere_autorizare.jrxml");
+            JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
+
+            /* Map to hold Jasper report Parameters */
+            PaymentOrderNumberSequence seq = new PaymentOrderNumberSequence();
+            paymentOrderNumberRepository.save(seq);
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("orderNumber", String.valueOf(seq.getId()));
+            SimpleDateFormat sdf = new SimpleDateFormat(Constants.Layouts.DATE_FORMAT);
+            parameters.put("orderDate", sdf.format(new Date()));
+            parameters.put("chiefAccountant", sysParamsRepository.findByCode(Constants.SysParams.ACCOUNTANT).get().getValue());
+            parameters.put("generalDirector", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
+            JasperPrint jasperPrint1 = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
+            List<JasperPrint> jasperPrints = new ArrayList<>();
+            jasperPrints.add(jasperPrint1);
+
+            ResourceLoader resourceLoader2 = new DefaultResourceLoader();
+            Resource res2 = resourceLoader2.getResource("layouts/Anexa_Intrerupere_Autorizare.jrxml");
+            JasperReport report2 = JasperCompileManager.compileReport(res2.getInputStream());
+            HashMap<String, Object> report2Params = new HashMap<>();
+            report2Params.put("registrationNumber", String.valueOf(seq.getId()));
+            report2Params.put("registrationDate", sdf.format(new Date()));
+
+            List<Integer> ids = new ArrayList<>();
+            for (RegistrationRequestsEntity req : requests)
+            {
+                ids.add(req.getId());
+            }
+            List<MedicamentePentruOrdinDTO> medMD = new ArrayList<>();
+            int i = 1;
+            List<RegistrationRequestsEntity> fullInfoRequests = regRequestRepository.findRequestWithMedicamentInfo(ids);
+            for (RegistrationRequestsEntity req : fullInfoRequests)
+            {
+                MedicamentePentruOrdinDTO dto = new MedicamentePentruOrdinDTO();
+                MedicamentEntity med = req.getMedicaments().stream().findFirst().orElse(new MedicamentEntity());
+                dto.setName(med.getCommercialName());
+                dto.setPharmaceuticalForm(med.getPharmaceuticalForm().getDescription());
+                dto.setConcentration(med.getDose());
+                dto.setDose(req.getMedicaments().stream().map(t -> t.getDivision()).collect(Collectors.joining("; ")));
+                MedicamentManufactureEntity manufacture =
+                        med.getManufactures().stream().filter(t -> t.getProducatorProdusFinit()).findFirst().orElse(new MedicamentManufactureEntity());
+                dto.setCompanyName(med.getAuthorizationHolder().getDescription() + "(prod: " + manufacture.getManufacture().getDescription() + " " + manufacture.getManufacture().getAddress() + " " +
+                        manufacture.getManufacture().getCountry().getDescription() + ")");
+                dto.setCountry(med.getAuthorizationHolder().getCountry().getDescription());
+                dto.setRowCounter(i++);
+                medMD.add(dto);
+            }
+
+            Map<String, List<MedicamentePentruOrdinDTO>> mapTest =
+                    medMD.stream().collect(Collectors.groupingBy((MedicamentePentruOrdinDTO m) -> {
+                        return m.getCountry() + "|" + m.getCompanyName();
+                    }));
+            Set<Map.Entry<String, List<MedicamentePentruOrdinDTO>>> entries = mapTest.entrySet();
+            JasperPrint jasperPrint2 = JasperFillManager.fillReport(report2, report2Params, new JRBeanCollectionDataSource(entries));
+            jasperPrints.add(jasperPrint2);
+
+            storageService.initIfNeeded(Paths.get(storageService.getRootFolder()), "ordine_de_intrerupere_autorizare_medicament");
+            String outputFile =
+                    storageService.getRootFolder() + "/ordine_de_intrerupere_autorizare_medicament/Ordin de intrerupere a procedurii de autorizare medicament Nr " + seq.getId() + ".pdf";
+            OutputStream outputStream = new FileOutputStream(new File(outputFile));
+            JRPdfExporter jrPdfExporter = new JRPdfExporter();
+            jrPdfExporter.setExporterInput(SimpleExporterInput.getInstance(jasperPrints));
+            jrPdfExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+            SimplePdfExporterConfiguration configuration = new SimplePdfExporterConfiguration();
+            configuration.setCreatingBatchModeBookmarks(true);
+            jrPdfExporter.setConfiguration(configuration);
+            jrPdfExporter.exportReport();
+            outputStream.close();
+
+            bytes = Files.readAllBytes(new File(outputFile).toPath());
+
+            //update requests
+            regRequestRepository.setOINumber(ids, String.valueOf(seq.getId()));
+
+
+            // save in db
+            OutputDocumentsEntity outputDocumentsEntity = new OutputDocumentsEntity();
+            outputDocumentsEntity.setDocType(documentTypeRepository.findByCategory("OI").orElse(new NmDocumentTypesEntity()));
+            outputDocumentsEntity.setNumber(String.valueOf(seq.getId()));
+            outputDocumentsEntity.setName("Ordin de intrerupere a procedurii de autorizare medicament Nr " + seq.getId() + ".pdf");
+            outputDocumentsEntity.setDate(new Timestamp(new Date().getTime()));
+            outputDocumentsEntity.setPath(outputFile);
+            outputDocumentsRepository.save(outputDocumentsEntity);
+        }
+        catch (Exception e)
+        {
+            throw new CustomException(e.getMessage());
+        }
+
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=dispozitieDeDistribuire.pdf").body(bytes);
+    }
+
+    @RequestMapping(value = "/generate-oa", method = RequestMethod.POST)
+    @Transactional
+    public ResponseEntity<byte[]> generateOA(@RequestBody List<MedicamentEntity> medicamentEntities) throws CustomException
+    {
+
+        byte[] bytes = null;
+        try
+        {
+            ResourceLoader resourceLoader1 = new DefaultResourceLoader();
+            Resource res1 = resourceLoader1.getResource("layouts/Ordin autorizare.jrxml");
+            JasperReport report1 = JasperCompileManager.compileReport(res1.getInputStream());
+
+            /* Map to hold Jasper report Parameters */
+            PaymentOrderNumberSequence seq = new PaymentOrderNumberSequence();
+            paymentOrderNumberRepository.save(seq);
+            Map<String, Object> parameters1 = new HashMap<>();
+            SimpleDateFormat sdf = new SimpleDateFormat(Constants.Layouts.DATE_FORMAT);
+            parameters1.put("date", sdf.format(new Date()));
+            parameters1.put("nr", String.valueOf(seq.getId()));
+            parameters1.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
+            JasperPrint jasperPrint1 = JasperFillManager.fillReport(report1, parameters1, new JREmptyDataSource());
+
+            List<MedicamentePentruOrdinDTO> medMD = new ArrayList<>();
+            List<MedicamentePentruOrdinDTO> medImport = new ArrayList<>();
+            List<MedicamentePentruOrdinDTO> medRepetatMD = new ArrayList<>();
+            List<MedicamentePentruOrdinDTO> medRepetatImport = new ArrayList<>();
+            MedicamentRegistrationNumberSequence medicamentRegistrationNumberSequence = new MedicamentRegistrationNumberSequence();
+            medicamentEntities.sort(Comparator.comparing(o -> o.getRequestId()));
+            List<Integer> ids = new ArrayList<>();
+            for (MedicamentEntity med : medicamentEntities)
+            {
+                ids.add(med.getId());
+            }
+            List<MedicamentEntity> mergedEntities = new ArrayList<>();
+            Integer requestId = 0;
+            MedicamentEntity temp = new MedicamentEntity();
+            for (MedicamentEntity med : medicamentEntities)
+            {
+                if (!requestId.equals(med.getRequestId()))
+                {
+                    generateMedicamentRegistrationNumberRepository.save(medicamentRegistrationNumberSequence);
+                    if (temp.getId() != null)
+                    {
+                        mergedEntities.add(temp);
+                    }
+                    temp = med;
+                }
+                else
+                {
+                    temp.setDivision(temp.getDivision() + "; " + med.getDivision());
+                }
+                medicamentRepository.setRegistrationNumber(med.getId(), medicamentRegistrationNumberSequence.getId());
+                med.setRegistrationNumber(medicamentRegistrationNumberSequence.getId());
+            }
+            if (temp.getId() != null)
+            {
+                mergedEntities.add(temp);
+            }
+            for (MedicamentEntity med : mergedEntities)
+            {
+                MedicamentePentruOrdinDTO dto = new MedicamentePentruOrdinDTO();
+                dto.setName(med.getCommercialName());
+                dto.setPharmaceuticalForm(med.getPharmaceuticalForm().getDescription());
+                dto.setConcentration(med.getDose());
+                dto.setRegistrationNumber(String.valueOf(med.getRegistrationNumber()));
+                dto.setStatus(med.getMedicamentType().getCode().equals("1") ? "Original" : "");
+                dto.setDose(med.getDivision());
+                MedicamentManufactureEntity manufacture =
+                        med.getManufactures().stream().filter(t -> t.getProducatorProdusFinit()).findFirst().orElse(new MedicamentManufactureEntity());
+                dto.setCompanyName(med.getAuthorizationHolder().getDescription() + "(prod: " + manufacture.getManufacture().getDescription() + " " + manufacture.getManufacture().getAddress() + " " +
+                        manufacture.getManufacture().getCountry().getDescription() + ")");
+                dto.setCountry(med.getAuthorizationHolder().getCountry().getDescription());
+                if (med.getStatus().equals("R"))
+                {
+                    //Repetate moldova
+                    if (med.getAuthorizationHolder().getCountry().getCode().equals("MD"))
+                    {
+                        medRepetatMD.add(dto);
+                    }
+                    //repetate import
+                    else
+                    {
+                        medRepetatImport.add(dto);
+                    }
+                }
+                else
+                {
+                    // primare moldova
+                    if (med.getAuthorizationHolder().getCountry().getCode().equals("MD"))
+                    {
+                        medMD.add(dto);
+                    }
+                    // primare import
+                    else
+                    {
+                        medImport.add(dto);
+                    }
+                }
+            }
+
+            List<JasperPrint> jasperPrints = new ArrayList<>();
+            jasperPrints.add(jasperPrint1);
+            if (!medMD.isEmpty())
+            {
+                ResourceLoader resourceLoader2 = new DefaultResourceLoader();
+                Resource res2 = resourceLoader2.getResource("layouts/Anexa_Autorizare_Medicamente.jrxml");
+                JasperReport report2 = JasperCompileManager.compileReport(res2.getInputStream());
+                HashMap<String, Object> report2Params = new HashMap<>();
+                report2Params.put("annexNr", "1");
+                report2Params.put("registrationNumber", String.valueOf(seq.getId()));
+                report2Params.put("registrationDate", sdf.format(new Date()));
+                report2Params.put("annexTitle", "LISTA produselor medicamentoase autohtone autorizate în Republica Moldova");
+                Map<String, List<MedicamentePentruOrdinDTO>> mapTest =
+                        medMD.stream().collect(Collectors.groupingBy((MedicamentePentruOrdinDTO m) -> {
+                            return m.getCountry() + "|" + m.getCompanyName();
+                        }));
+                Set<Map.Entry<String, List<MedicamentePentruOrdinDTO>>> entries = mapTest.entrySet();
+                JasperPrint jasperPrint2 = JasperFillManager.fillReport(report2, report2Params, new JRBeanCollectionDataSource(entries));
+                jasperPrints.add(jasperPrint2);
+            }
+
+            if (!medImport.isEmpty())
+            {
+                ResourceLoader resourceLoader3 = new DefaultResourceLoader();
+                Resource res3 = resourceLoader3.getResource("layouts/Anexa_Autorizare_Medicamente.jrxml");
+                JasperReport report3 = JasperCompileManager.compileReport(res3.getInputStream());
+                HashMap<String, Object> report3Params = new HashMap<>();
+                report3Params.put("annexNr", "2");
+                report3Params.put("registrationNumber", String.valueOf(seq.getId()));
+                report3Params.put("registrationDate", sdf.format(new Date()));
+                report3Params.put("annexTitle", "LISTA produselor medicamentoase de import autorizate în Republica Moldova  ");
+                Map<String, List<MedicamentePentruOrdinDTO>> mapTest1 =
+                        medImport.stream().collect(Collectors.groupingBy((MedicamentePentruOrdinDTO m) -> {
+                            return m.getCountry() + "|" + m.getCompanyName();
+                        }));
+                Set<Map.Entry<String, List<MedicamentePentruOrdinDTO>>> entries1 = mapTest1.entrySet();
+                JasperPrint jasperPrint3 = JasperFillManager.fillReport(report3, report3Params, new JRBeanCollectionDataSource(entries1));
+                jasperPrints.add(jasperPrint3);
+            }
+
+            if (!medRepetatMD.isEmpty())
+            {
+                ResourceLoader resourceLoader4 = new DefaultResourceLoader();
+                Resource res4 = resourceLoader4.getResource("layouts/Anexa_Autorizare_Medicamente.jrxml");
+                JasperReport report4 = JasperCompileManager.compileReport(res4.getInputStream());
+                HashMap<String, Object> report4Params = new HashMap<>();
+                report4Params.put("annexNr", "3");
+                report4Params.put("registrationNumber", String.valueOf(seq.getId()));
+                report4Params.put("registrationDate", sdf.format(new Date()));
+                report4Params.put("annexTitle", "LISTA produselor medicamentoase autohtone autorizate repetat în Republica Moldova  ");
+                Map<String, List<MedicamentePentruOrdinDTO>> mapTest2 =
+                        medRepetatMD.stream().collect(Collectors.groupingBy((MedicamentePentruOrdinDTO m) -> {
+                            return m.getCountry() + "|" + m.getCompanyName();
+                        }));
+                Set<Map.Entry<String, List<MedicamentePentruOrdinDTO>>> entries2 = mapTest2.entrySet();
+                JasperPrint jasperPrint4 = JasperFillManager.fillReport(report4, report4Params, new JRBeanCollectionDataSource(entries2));
+                jasperPrints.add(jasperPrint4);
+            }
+
+            if (!medRepetatImport.isEmpty())
+            {
+                ResourceLoader resourceLoader5 = new DefaultResourceLoader();
+                Resource res5 = resourceLoader5.getResource("layouts/Anexa_Autorizare_Medicamente.jrxml");
+                JasperReport report5 = JasperCompileManager.compileReport(res5.getInputStream());
+                HashMap<String, Object> report5Params = new HashMap<>();
+                report5Params.put("annexNr", "4");
+                report5Params.put("registrationNumber", String.valueOf(seq.getId()));
+                report5Params.put("registrationDate", sdf.format(new Date()));
+                report5Params.put("annexTitle", "LISTA produselor medicamentoase de import autorizate repetat în Republica Moldova");
+                Map<String, List<MedicamentePentruOrdinDTO>> mapTest3 =
+                        medRepetatImport.stream().collect(Collectors.groupingBy((MedicamentePentruOrdinDTO m) -> {
+                            return m.getCountry() + "|" + m.getCompanyName();
+                        }));
+                Set<Map.Entry<String, List<MedicamentePentruOrdinDTO>>> entries3 = mapTest3.entrySet();
+                JasperPrint jasperPrint5 = JasperFillManager.fillReport(report5, report5Params, new JRBeanCollectionDataSource(entries3));
+                jasperPrints.add(jasperPrint5);
+            }
+
+            storageService.initIfNeeded(Paths.get(storageService.getRootFolder()), "ordine_de_autorizare_medicament");
+            String outputFile = storageService.getRootFolder() + "/ordine_de_autorizare_medicament/Ordin de autorizare medicament Nr " + seq.getId() + ".pdf";
+            OutputStream outputStream = new FileOutputStream(new File(outputFile));
+            JRPdfExporter jrPdfExporter = new JRPdfExporter();
+            jrPdfExporter.setExporterInput(SimpleExporterInput.getInstance(jasperPrints));
+            jrPdfExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+            SimplePdfExporterConfiguration configuration = new SimplePdfExporterConfiguration();
+            configuration.setCreatingBatchModeBookmarks(true);
+            jrPdfExporter.setConfiguration(configuration);
+            jrPdfExporter.exportReport();
+            outputStream.close();
+
+            bytes = Files.readAllBytes(new File(outputFile).toPath());
+
+            //bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+
+            //save to storage
+            //String docPath = storageService.storePDFFile(jasperPrint, "ordine_de_autorizare_medicament/Ordin de autorizare medicament Nr " + seq.getId() + ".pdf");
+
+            //update requests
+            medicamentRepository.setOANumber(ids, String.valueOf(seq.getId()));
+
+            // save in db
+            OutputDocumentsEntity outputDocumentsEntity = new OutputDocumentsEntity();
+            outputDocumentsEntity.setDocType(documentTypeRepository.findByCategory("OA").orElse(new NmDocumentTypesEntity()));
+            outputDocumentsEntity.setNumber(String.valueOf(seq.getId()));
+            outputDocumentsEntity.setName("Ordin de autorizare medicament Nr " + seq.getId() + ".pdf");
+            outputDocumentsEntity.setDate(new Timestamp(new Date().getTime()));
+            outputDocumentsEntity.setPath(outputFile);
+            outputDocumentsRepository.save(outputDocumentsEntity);
+        }
+        catch (Exception e)
+        {
+            throw new CustomException(e.getMessage());
+        }
+
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=ordinDeAutorizare.pdf").body(bytes);
+    }
+
+    @RequestMapping(value = "/remove-dd", method = RequestMethod.POST)
+    @Transactional
+    public ResponseEntity<Void> removeDD(@RequestBody OutputDocumentsEntity document) throws CustomException
+    {
+        storageService.remove(document.getPath());
+        List<RegistrationRequestsEntity> requests = regRequestRepository.findRequestsByDDNumber(document.getNumber());
+        List<Integer> ids = new ArrayList<>();
+        for (RegistrationRequestsEntity req : requests)
+        {
+            ids.add(req.getId());
+        }
+        regRequestRepository.setDDNumber(ids, null);
+        outputDocumentsRepository.deleteById(document.getId());
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/remove-oi", method = RequestMethod.POST)
+    @Transactional
+    public ResponseEntity<Void> removeOI(@RequestBody OutputDocumentsEntity document) throws CustomException
+    {
+        storageService.remove(document.getPath());
+        List<RegistrationRequestsEntity> requests = regRequestRepository.findRequestsByOINumber(document.getNumber());
+        List<Integer> ids = new ArrayList<>();
+        for (RegistrationRequestsEntity req : requests)
+        {
+            ids.add(req.getId());
+        }
+        regRequestRepository.setOINumber(ids, null);
+        outputDocumentsRepository.deleteById(document.getId());
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/remove-oa", method = RequestMethod.POST)
+    @Transactional
+    public ResponseEntity<Void> removeOA(@RequestBody OutputDocumentsEntity document) throws CustomException
+    {
+        storageService.remove(document.getPath());
+        List<MedicamentEntity> medicaments = medicamentRepository.findMedicamentsByOANumber(document.getNumber());
+        List<Integer> ids = new ArrayList<>();
+        for (MedicamentEntity med : medicaments)
+        {
+            ids.add(med.getId());
+        }
+        MedicamentEntity medMin = medicaments.stream().min(Comparator.comparing(MedicamentEntity::getRegistrationNumber)).get();
+        generateMedicamentRegistrationNumberRepository.deleteSeq(medMin.getRegistrationNumber());
+        generateMedicamentRegistrationNumberRepository.changeAutoIncrementFormMedicamentRegNr(medMin.getRegistrationNumber());
+        medicamentRepository.clearOANumber(ids);
+        outputDocumentsRepository.deleteById(document.getId());
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/view-bon-de-plata", method = RequestMethod.POST)
@@ -169,15 +692,15 @@ public class DocumentsController
             {
                 DateFormat formatter = new SimpleDateFormat(Constants.Layouts.DATE_FORMAT);
                 List<NmCurrenciesHistoryEntity> nmCurrenciesHistoryEntities = currencyHistoryRepository.findAllByPeriod(formatter.parse(formatter.format(new Date())));
-                if(nmCurrenciesHistoryEntities.isEmpty())
+                if (nmCurrenciesHistoryEntities.isEmpty())
                 {
                     throw new CustomException("Lipseste cursul valutar pentru astazi.");
                 }
                 NmCurrenciesHistoryEntity nmCurrenciesHistoryEntity =
                         nmCurrenciesHistoryEntities.stream().filter(t -> t.getCurrency().getShortDescription().equals(bonDePlataDTO.getCurrency())).findFirst().orElse(new NmCurrenciesHistoryEntity());
-                if(nmCurrenciesHistoryEntity.getId()<=0)
+                if (nmCurrenciesHistoryEntity.getId() <= 0)
                 {
-                    throw new CustomException("Nu a fost gasit cursul valutar pentru valuta "+bonDePlataDTO.getCurrency());
+                    throw new CustomException("Nu a fost gasit cursul valutar pentru valuta " + bonDePlataDTO.getCurrency());
                 }
                 coeficient = AmountUtils.round(nmCurrenciesHistoryEntity.getValue() / nmCurrenciesHistoryEntity.getMultiplicity(), 4);
             }
@@ -219,7 +742,7 @@ public class DocumentsController
             List<BonDePlataMedicamentDTO> detailsUpdated = new ArrayList<>();
             for (PaymentOrdersEntity paymentOrdersEntity : bonDePlataDTO.getPaymentOrders())
             {
-                if(!"BS".equals(paymentOrdersEntity.getServiceCharge().getCategory()))
+                if (!"BS".equals(paymentOrdersEntity.getServiceCharge().getCategory()))
                 {
                     BonDePlataMedicamentDTO b = new BonDePlataMedicamentDTO();
                     b.assign(bonDePlataDTO.getMedicamentDetails().get(0));
@@ -240,7 +763,7 @@ public class DocumentsController
             Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
             for (PaymentOrdersEntity order : details)
             {
-                if(bonDePlataDTO.getPaymentOrders().stream().anyMatch(t->t.getId().equals(order.getId())))
+                if (bonDePlataDTO.getPaymentOrders().stream().anyMatch(t -> t.getId().equals(order.getId())))
                 {
                     order.setDate(now);
                     order.setNumber(String.valueOf(seq.getId()));
@@ -282,8 +805,6 @@ public class DocumentsController
             parameters.put("Din: ", sdf.format(Calendar.getInstance().getTime()));
             parameters.put("Contabil-şef", sysParamsRepository.findByCode(Constants.SysParams.ACCOUNTANT).get().getValue());
             parameters.put("Spre plată", bonDePlataDTO.getPaymentOrders().get(0).getAmount());
-            parameters.put("medicaments", bonDePlataDTO.getMedicamentDetails().get(0).getMedicamentName()+" "+bonDePlataDTO.getMedicamentDetails().get(0).getPharmaceuticForm()+
-                    " "+bonDePlataDTO.getMedicamentDetails().get(0).getDose()+" "+bonDePlataDTO.getMedicamentDetails().get(0).getDivision());
 
             parameters.put("companyName", bonDePlataDTO.getCompanyName());
             parameters.put("companyAddress", bonDePlataDTO.getAddress());
@@ -297,7 +818,15 @@ public class DocumentsController
             parameters.put("beneficiarIban", sysParamsRepository.findByCode(Constants.SysParams.BENEFICIARY_IBAN).get().getValue());
             parameters.put("vatCode", sysParamsRepository.findByCode(Constants.SysParams.VAT_CODE).get().getValue());
             parameters.put("beneficiar", sysParamsRepository.findByCode(Constants.SysParams.BENEFICIARY).get().getValue());
-            parameters.put("sum", bonDePlataDTO.getPaymentOrders().get(0).getAmount());
+
+            List<ContPlataSuplimentarDTO> contPlataSuplimentarList = new ArrayList<>();
+            ContPlataSuplimentarDTO cps = new ContPlataSuplimentarDTO();
+            cps.setName(bonDePlataDTO.getMedicamentDetails().get(0).getMedicamentName() + " " + bonDePlataDTO.getMedicamentDetails().get(0).getPharmaceuticForm() +
+                    " " + bonDePlataDTO.getMedicamentDetails().get(0).getDose() + " " + bonDePlataDTO.getMedicamentDetails().get(0).getDivision());
+            cps.setSumValut(bonDePlataDTO.getPaymentOrders().get(0).getAmount());
+            contPlataSuplimentarList.add(cps);
+            JRBeanCollectionDataSource contPlataSuplimentarDatasetJRBean = new JRBeanCollectionDataSource(contPlataSuplimentarList);
+            parameters.put("contPlataSuplimentarDataset", contPlataSuplimentarDatasetJRBean);
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
@@ -307,7 +836,7 @@ public class DocumentsController
             Timestamp now = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
             for (PaymentOrdersEntity order : details)
             {
-                if(bonDePlataDTO.getPaymentOrders().stream().anyMatch(t->t.getId().equals(order.getId())))
+                if (bonDePlataDTO.getPaymentOrders().stream().anyMatch(t -> t.getId().equals(order.getId())))
                 {
                     order.setDate(now);
                     order.setNumber(String.valueOf(seq.getId()));
@@ -326,31 +855,6 @@ public class DocumentsController
                 .header("Content-Disposition", "inline; filename=bonDePlata.pdf").body(bytes);
     }
 
-    @RequestMapping(value = "/generate-distribution-disposition", method = RequestMethod.GET)
-    public ResponseEntity<String> generateDistributionDisposition(@RequestParam(value = "nrCerere") String nrCerere) throws CustomException, IOException
-    {
-        logger.debug("Generate Distribution Disposition");
-
-        ResourceLoader resourceLoader = new DefaultResourceLoader();
-        Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts");
-
-        List<DistributionDispositionDTO> dataList = new ArrayList();
-        DistributionDispositionDTO obj = new DistributionDispositionDTO();
-        obj.setDispositionDate(Calendar.getInstance().getTime());
-        String nrDisposition = String.valueOf(generateDocNumberService.getDocumentNumber());
-        obj.setNrDisposition(nrDisposition);
-        obj.setPath(res.getFile().getAbsolutePath());
-        dataList.add(obj);
-
-        StringBuilder sb = new StringBuilder(folder);
-        createRootPath(nrCerere, sb);
-        sb.append("Dispozitie de distribuire Nr " + nrDisposition + ".pdf");
-
-        storageService.storePDFFile(dataList, sb.toString(), "classpath:..\\resources\\layouts\\distributionDisposition.jrxml");
-
-        return new ResponseEntity<>(sb.toString(), HttpStatus.OK);
-    }
-
     private void createRootPath(String nrCerere, StringBuilder sb)
     {
         sb.append("/");
@@ -362,33 +866,37 @@ public class DocumentsController
         sb.append("/");
     }
 
-    @RequestMapping(value = "/view-request-additional-data-new", method = RequestMethod.POST)
-    public ResponseEntity<byte[]> viewRequestAdditionalData(@RequestBody RequestAdditionalDataDTO requestData) throws CustomException
+    @RequestMapping(value = "/view-medicament-authorization-certificate", method = RequestMethod.POST)
+    public ResponseEntity<byte[]> viewMedicamentAuthorizationCertificate(@RequestBody AuthorizationCertificateDTO certificateDTO) throws CustomException
     {
         byte[] bytes = null;
         try
         {
             ResourceLoader resourceLoader = new DefaultResourceLoader();
-            Resource res = resourceLoader.getResource("layouts/Notificare.jrxml");
+            Resource res = resourceLoader.getResource("layouts/Autorizare M Certificat de autorizare.jrxml");
             JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
 
             /* Map to hold Jasper report Parameters */
             Map<String, Object> parameters = new HashMap<>();
-            parameters.put("vicDir", requestData.getSignerName());
-            SimpleDateFormat sdf = new SimpleDateFormat(Constants.Layouts.DATE_FORMAT);
-            parameters.put("date", sdf.format(requestData.getRequestDate()));
-            parameters.put("nr", requestData.getNrDoc());
-            parameters.put("name", requestData.getResponsiblePerson());
-            parameters.put("representant", requestData.getCompanyName());
-            parameters.put("country", requestData.getCountry());
-            parameters.put("address", requestData.getAddress());
-            parameters.put("phone", requestData.getPhoneNumber());
-            parameters.put("email", requestData.getEmail());
-            parameters.put("NotificationText", requestData.getMessage());
-            parameters.put("function", requestData.getFunction());
-            ScrUserEntity userEntity = srcUserRepository.findOneWithAuthoritiesByUsername(SecurityUtils.getCurrentUser().orElse("")).orElse(new ScrUserEntity());
-            parameters.put("executor", userEntity.getFullname());
-            parameters.put("executorPhone", userEntity.getPhoneNumber());
+            parameters.put("medName", certificateDTO.getMedName());
+            parameters.put("formFarmDosePakageSize", certificateDTO.getPharmaceuticalPhorm() + " " + certificateDTO.getDose() + " " + certificateDTO.getDivisions());
+            String composition = "substanţe active: " + certificateDTO.getActiveSubstances().stream().collect(Collectors.joining("; "));
+            composition += "\r\nexcipienţi: anexa 1";
+            parameters.put("composition", composition);
+            parameters.put("marketingAutorizationHolder", certificateDTO.getAuthorizationHolder() + "," + certificateDTO.getAuthorizationHolderCountry());
+            parameters.put("manufacturer", certificateDTO.getManufacture() + "," + certificateDTO.getManufactureCountry());
+            parameters.put("atcClassification", certificateDTO.getAtcCode());
+            parameters.put("shelfLife", certificateDTO.getTermsOfValidity() + " luni");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", new Locale("ro", "RO"));
+            parameters.put("registrationNumberDateIssue", certificateDTO.getRegistrationNumber() + " din " + sdf.format(certificateDTO.getRegistrationDate()));
+            parameters.put("summary", "anexa 1");
+            parameters.put("instructions", "anexa 2");
+            parameters.put("labeling", "anexa 2");
+            parameters.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
+            parameters.put("orderNumber", certificateDTO.getOrderNumber());
+            parameters.put("orderDateMD", sdf.format(certificateDTO.getOrderDate()));
+            SimpleDateFormat sdfEn = new SimpleDateFormat("dd MMMM yyyy", new Locale("en", "EN"));
+            parameters.put("orderDateEN", sdfEn.format(certificateDTO.getOrderDate()));
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
@@ -456,17 +964,17 @@ public class DocumentsController
             Resource res = resourceLoader.getResource("layouts\\medicamentAuthorizationOrder.jrxml");
             JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
 
-            List<DistributionDispositionDTO> dataList = new ArrayList();
-            DistributionDispositionDTO obj = new DistributionDispositionDTO();
-            obj.setDispositionDate(Calendar.getInstance().getTime());
-            obj.setNrDisposition(nrDocument);
-            obj.setPath(res.getFile().getAbsolutePath());
-            dataList.add(obj);
+            //            List<DistributionDispositionDTO> dataList = new ArrayList();
+            //            DistributionDispositionDTO obj = new DistributionDispositionDTO();
+            //            obj.setDispositionDate(Calendar.getInstance().getTime());
+            //            obj.setNrDisposition(nrDocument);
+            //            obj.setPath(res.getFile().getAbsolutePath());
+            //            dataList.add(obj);
+            //
+            //            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(dataList);
 
-            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(dataList);
-
-            JasperPrint jasperPrint = JasperFillManager.fillReport(report, null, beanColDataSource);
-            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+            //            JasperPrint jasperPrint = JasperFillManager.fillReport(report, null, null);
+            //            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
         }
         catch (Exception e)
         {
@@ -477,27 +985,35 @@ public class DocumentsController
                 .header("Content-Disposition", "inline; filename=request.pdf").body(bytes);
     }
 
-    @RequestMapping(value = "/view-medicament-authorization-certificate", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> viewMedicamentAuthorizationCertificate(@RequestParam(value = "nrDocument") String nrDocument) throws CustomException
+    @RequestMapping(value = "/view-request-additional-data-new", method = RequestMethod.POST)
+    public ResponseEntity<byte[]> viewRequestAdditionalData(@RequestBody RequestAdditionalDataDTO requestData) throws CustomException
     {
         byte[] bytes = null;
         try
         {
             ResourceLoader resourceLoader = new DefaultResourceLoader();
+            Resource res = resourceLoader.getResource("layouts/Notificare.jrxml");
+            JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
 
-            Resource res = resourceLoader.getResource("classpath:..\\resources\\layouts\\medicamentAuthorizationCertificate.jrxml");
-            JasperReport report = JasperCompileManager.compileReport(new FileInputStream(res.getFile()));
+            /* Map to hold Jasper report Parameters */
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("vicDir", requestData.getSignerName());
+            SimpleDateFormat sdf = new SimpleDateFormat(Constants.Layouts.DATE_FORMAT);
+            parameters.put("date", sdf.format(requestData.getRequestDate()));
+            parameters.put("nr", requestData.getNrDoc());
+            parameters.put("name", requestData.getResponsiblePerson());
+            parameters.put("representant", requestData.getCompanyName());
+            parameters.put("country", requestData.getCountry());
+            parameters.put("address", requestData.getAddress());
+            parameters.put("phone", requestData.getPhoneNumber());
+            parameters.put("email", requestData.getEmail());
+            parameters.put("NotificationText", requestData.getMessage());
+            parameters.put("function", requestData.getFunction());
+            ScrUserEntity userEntity = srcUserRepository.findOneWithAuthoritiesByUsername(SecurityUtils.getCurrentUser().orElse("")).orElse(new ScrUserEntity());
+            parameters.put("executor", userEntity.getFullname());
+            parameters.put("executorPhone", userEntity.getPhoneNumber());
 
-            List<DistributionDispositionDTO> dataList = new ArrayList();
-            DistributionDispositionDTO obj = new DistributionDispositionDTO();
-            obj.setDispositionDate(Calendar.getInstance().getTime());
-            obj.setNrDisposition(nrDocument);
-            obj.setPath(res.getFile().getAbsolutePath());
-            dataList.add(obj);
-
-            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(dataList);
-
-            JasperPrint jasperPrint = JasperFillManager.fillReport(report, null, beanColDataSource);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
         }
         catch (Exception e)
@@ -506,7 +1022,7 @@ public class DocumentsController
         }
 
         return ResponseEntity.ok().header("Content-Type", "application/pdf")
-                .header("Content-Disposition", "inline; filename=request.pdf").body(bytes);
+                .header("Content-Disposition", "inline; filename=solicitareDateAditionale.pdf").body(bytes);
     }
 
     @RequestMapping(value = "/view-interrupt-order-of-medicament-registration", method = RequestMethod.GET)

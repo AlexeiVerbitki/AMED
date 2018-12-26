@@ -1,25 +1,4 @@
 <div class="container-fluid sky z-depth-2">
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="md-form">
-                <input id="nrDosar" mdbInputDirective type="text" class="form-control" [(ngModel)]="folderNumber">
-                <label for="nrDosar">Nr. dosar</label>
-            </div>
-            <div *ngIf="formSubmitted && !folderNumber">
-                <small class="text-muted"><strong class="text-danger">Introduceți numărul dosarului</strong></small>
-            </div>
-        </div>
-
-        <div class="col-lg-6">
-            <div class="md-form-modified">
-                <mat-form-field class="w-100">
-                    <input matInput [matDatepicker]="picker" placeholder="Data" [value]="startRecDate">
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker touchUi #picker></mat-datepicker>
-                </mat-form-field>
-            </div>
-        </div>
-    </div>
 
     <!--<h5 class="text-center font-weight-bold">Documente necesar a fi încărcate</h5>
     <table class="table table-widths-lg text-center">
@@ -38,7 +17,8 @@
         </tr>
         </tbody>
     </table>-->
-    <app-document [title]="'Documente comune'"
+
+   <!-- <app-document [title]="'Documente comune'"
                   [dcTypeIdentifier]="{code:'PMED',step:'R'}"
                   [documents]="commonDocuments"
                   [nrCerere]="folderNumber"
@@ -47,7 +27,123 @@
     <div *ngIf="formSubmitted && commonDocuments.length == 0">
         <small class="text-muted"><strong class="text-danger">Încărcați actele comune necesare înregistrării prețului la
             medicament</strong></small>
-    </div>
+    </div>-->
+
+    <form [formGroup]='rForm'>
+        <div class="row">
+
+            <div class="col-lg-4">
+                <div class="md-form">
+                    <input id="nrDosar" mdbInputDirective type="text" class="form-control" formControlName="folderNumber">
+                    <label for="nrDosar">Nr. dosar</label>
+                </div>
+                <div *ngIf="formSubmitted && rForm.get('folderNumber').invalid">
+                    <small class="text-muted"><strong class="text-danger">Introduceți numărul dosarului</strong></small>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="md-form" formGroupName="company">
+                    <input id="comp" mdbInputDirective type="text" class="form-control" formControlName="name">
+                    <label for="comp">Compania solicitant</label>
+                </div>
+                <div *ngIf="formSubmitted && rForm.get('company').invalid">
+                    <small class="text-muted"><strong class="text-danger">Compania solicitantă trebuie selectată</strong></small>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="reqData">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <!--<div class="row align-items-center">-->
+
+        <!--</div>-->
+        <div class="row">
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="persResDepCereriiFirstname" mdbInputDirective type="text" class="form-control"
+                           formControlName="mandatedFirstname">
+                    <label for="persResDepCereriiFirstname">Nume persoana responsabilă</label>
+
+                </div>
+                <div *ngIf="formSubmitted && rForm.get('mandatedFirstname').invalid">
+                    <small class="text-muted"><strong class="text-danger">Prenumele persoanei de contact trebuie introdus</strong>
+                    </small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="persResDepCereriiLastname" mdbInputDirective type="text" class="form-control"
+                           formControlName="mandatedLastname">
+                    <label for="persResDepCereriiLastname">Prenume persoana responsabilă</label>
+
+                </div>
+                <div *ngIf="formSubmitted && rForm.get('mandatedLastname').invalid">
+                    <small class="text-muted"><strong class="text-danger">Numele persoanei de contact trebuie introdus</strong>
+                    </small>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="telefonContact" mdbInputDirective type="text" class="form-control"
+                           formControlName="phoneNumber" maxlength="9"
+                    >
+                    <label for="telefonContact">Telefon de contact</label>
+                </div>
+                <div *ngIf="formSubmitted && rForm.get('phoneNumber').invalid">
+                    <small class="text-muted"><strong class="text-danger">Telefonul trebuie introdus sau nu este valid.</strong>
+                    </small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="emailContact" mdbInputDirective type="email" class="form-control"
+                           formControlName="email">
+                    <label for="emailContact">Email de contact</label>
+                </div>
+                <div *ngIf="formSubmitted && rForm.get('email').invalid">
+                    <small class="text-muted"><strong class="text-danger">Email ul nu este valid.</strong>
+                    </small>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="nrProcurii1" mdbInputDirective type="text" class="form-control"
+                           formControlName="requestMandateNr">
+                    <label for="nrProcurii1">Nr. procurii</label>
+                </div>
+                <div *ngIf="formSubmitted && rForm.get('requestMandateNr').invalid">
+                    <small class="text-muted"><strong class="text-danger">Numarul procurii trebuie introdus</strong>
+                    </small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input id="dataProcurii1" matInput [matDatepicker]="picker3" [max]="maxDate"
+                               placeholder="Data eliberării procurii" formControlName="requestMandateDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker3></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div *ngIf="formSubmitted && rForm.get('requestMandateDate').invalid">
+                    <small class="text-muted"><strong class="text-danger">Data procurii trebuie introdusa</strong>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </form>
+
+   <!--------------------------------------------------------------------------------->
 
     <div class="text-right mt-5">
         <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
@@ -71,7 +167,8 @@
                                    [currencies]="currencies"
                                    [priceTypes]="priceTypes"
                                    [formSubmitted]="formSubmitted"
-                                   (submit)="onFormChange($event)"
+                                   (medicamentChange)="onMedChange($event)"
+                                   [(priceDTO)]="requests[index]"
                                    [medIndex]="index"></app-one-med-price>
             </div>
         </mat-tab>
@@ -79,7 +176,7 @@
 
     <div class="text-center">
         <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                (click)="nextStep()">Salvează cererea
+                (click)="nextStep()">Salvează
         </button>
     </div>
 </div>

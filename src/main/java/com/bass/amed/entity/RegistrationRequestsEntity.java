@@ -95,4 +95,16 @@ public class RegistrationRequestsEntity
     @Basic
     @Column(name = "dossier_nr")
     private String dossierNr;
+    @Basic
+    @Column(name = "dd_included")
+    private Boolean ddIncluded;
+    @Basic
+    @Column(name = "dd_number")
+    private String ddNumber;
+    @Basic
+    @Column(name = "oi_included")
+    private Boolean oiIncluded;
+    @Basic
+    @Column(name = "oi_number")
+    private String oiNumber;
 }

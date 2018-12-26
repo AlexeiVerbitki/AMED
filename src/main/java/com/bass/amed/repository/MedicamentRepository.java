@@ -4,12 +4,12 @@ import com.bass.amed.entity.MedicamentEntity;
 import com.bass.amed.projection.MedicamentNamesListProjection;
 import com.bass.amed.projection.MedicamentRegisterNumberProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-import javax.persistence.Tuple;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface MedicamentRepository extends JpaRepository<MedicamentEntity, Integer>
 {
@@ -48,4 +48,30 @@ public interface MedicamentRepository extends JpaRepository<MedicamentEntity, In
             = true)
     List<MedicamentEntity> findAllByName(String name, String status);
 
+    @Modifying
+    @Query("UPDATE MedicamentEntity m SET m.approved=:approved WHERE m.id in (:ids)")
+    void approveMedicament(@Param("ids")List<Integer> ids,@Param("approved")Boolean approved);
+
+    @Query("SELECT m FROM MedicamentEntity m " +
+            "LEFT JOIN FETCH m.manufactures " +
+            "WHERE m.approved = true and m.oaNumber is null and m.status = 'P'")
+    List<MedicamentEntity> getMedicamentsForOA();
+
+    @Query("SELECT p FROM MedicamentEntity p WHERE p.oaNumber = :oaNumber")
+    List<MedicamentEntity> findMedicamentsByOANumber(@Param("oaNumber")String oaNumber);
+
+    @Modifying
+    @Query("UPDATE MedicamentEntity p SET p.oaNumber = :oaNumber WHERE p.id in (:ids)")
+    void setOANumber(@Param("ids")List<Integer> ids, @Param("oaNumber")String oaNumber);
+
+    @Modifying
+    @Query("UPDATE MedicamentEntity p SET p.oaNumber = null,p.registrationNumber = null WHERE p.id in (:ids)")
+    void clearOANumber(@Param("ids")List<Integer> ids);
+
+    @Query("SELECT distinct p.requestId FROM MedicamentEntity p WHERE p.oaNumber = :oaNumber")
+    List<Integer> findRequestsIDByOANumber(@Param("oaNumber")String oaNumber);
+
+    @Modifying
+    @Query("UPDATE MedicamentEntity p SET p.registrationNumber = :registrationNumber WHERE p.id = :id")
+    void setRegistrationNumber(@Param("id")Integer id, @Param("registrationNumber")Integer registrationNumber);
 }

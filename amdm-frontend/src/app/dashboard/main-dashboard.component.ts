@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit, Output, EventEmitter, OnDestroy} from '@angular/core';
 import {LoaderService} from "../shared/service/loader.service";
+import {Subscription} from "rxjs";
 
 @Component({
     selector: 'app-main-dashboard',
@@ -26,7 +27,7 @@ import {LoaderService} from "../shared/service/loader.service";
     `,
     // style: ``,
 })
-export class MainDashboardComponent implements OnInit, AfterViewInit {
+export class MainDashboardComponent implements OnInit, AfterViewInit, OnDestroy  {
 
 	@Output()
 	public skipEvent: EventEmitter<any> = new EventEmitter();
@@ -34,12 +35,14 @@ export class MainDashboardComponent implements OnInit, AfterViewInit {
 	skip: boolean;
 	classValue: any;
 	sideBarIsOpened = false;
+    private subscriptions: Subscription[] = [];
+
     constructor(private loadingService: LoaderService) {
     }
 
     ngAfterViewInit(): void {
-        this.loadingService.loading.asObservable().subscribe(value => {
-            this.loaderActive = value;
+        this.loadingService.loading.asObservable().subscribe(async value => {
+            this.loaderActive = await value;
         });
     }
 
@@ -53,6 +56,11 @@ export class MainDashboardComponent implements OnInit, AfterViewInit {
 		this.classValue = !$event;
 		this.skipEvent.emit($event);
 		this.skip = $event.value;
+    }
+
+
+    ngOnDestroy() {
+        this.subscriptions.forEach(s => s.unsubscribe());
     }
 
 

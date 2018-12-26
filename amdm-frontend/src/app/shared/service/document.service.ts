@@ -31,47 +31,43 @@ export class DocumentService {
     }
 
     viewBonDePlata(bonDePlataDetails: any): Observable<any> {
-        return this.http.post('/api/documents/view-bon-de-plata', bonDePlataDetails,{ responseType: 'blob'});
+        return this.http.post('/api/documents/view-bon-de-plata', bonDePlataDetails, {responseType: 'blob'});
     }
 
     viewBonDePlataSuplimentar(bonDePlataDetails: any): Observable<any> {
-        return this.http.post('/api/documents/view-bon-de-plata-suplimentar', bonDePlataDetails,{ responseType: 'blob'});
+        return this.http.post('/api/documents/view-bon-de-plata-suplimentar', bonDePlataDetails, {responseType: 'blob'});
     }
 
     viewBonDePlataNimicire(requestNimicire: any): Observable<any> {
-            return this.http.post('/api/documents/view-bon-de-plata-nimicire', requestNimicire,{ responseType: 'blob'});
+        return this.http.post('/api/documents/view-bon-de-plata-nimicire', requestNimicire, {responseType: 'blob'});
     }
 
 
-    viewRequest(nrDocument: any, content: any, title: any,type : any): Observable<any> {
-            return this.http.get('/api/documents/view-request-additional-data', {
-                params: {
-                    nrDocument: nrDocument,
-                    content: content,
-                    title: title,
-                    type : type,
-                }, responseType: 'blob'
-            });
+    viewRequest(nrDocument: any, content: any, title: any, type: any): Observable<any> {
+        return this.http.get('/api/documents/view-request-additional-data', {
+            params: {
+                nrDocument: nrDocument,
+                content: content,
+                title: title,
+                type: type,
+            }, responseType: 'blob'
+        });
     }
 
-    viewRequestNew(model : any): Observable<any> {
-        return this.http.post('/api/documents/view-request-additional-data-new', model,{ responseType: 'blob'});
+    viewRequestNew(model: any): Observable<any> {
+        return this.http.post('/api/documents/view-request-additional-data-new', model, {responseType: 'blob'});
     }
 
-    viewMedicamentAuthorizationOrder(docNr : any): Observable<any> {
+    viewMedicamentAuthorizationOrder(docNr: any): Observable<any> {
         return this.http.get('/api/documents/view-medicament-authorization-order', {
             params: {
-                nrDocument : docNr
+                nrDocument: docNr
             }, responseType: 'blob'
         });
     }
 
-    viewMedicamentAuthorizationCertificate(docNr : any): Observable<any> {
-        return this.http.get('/api/documents/view-medicament-authorization-certificate', {
-            params: {
-                nrDocument : docNr
-            }, responseType: 'blob'
-        });
+    viewMedicamentAuthorizationCertificate(model: any): Observable<any> {
+        return this.http.post('/api/documents/view-medicament-authorization-certificate', model, {responseType: 'blob'});
     }
 
     viewOrdinDeInrerupereAInregistrariiMedicamentului(nrDocument: any): Observable<any> {
@@ -94,26 +90,59 @@ export class DocumentService {
         return this.http.post<any>('/api/documents/by-price-ids', pricesIds, {observe: 'response'});
     }
 
-    viewTableData(columns : string[], data : any[]): Observable<any> {
-        let object : any = {};
+    viewTableData(columns: string[], data: any[]): Observable<any> {
+        let object: any = {};
         object.columns = columns;
         object.data = data;
 
-        return this.http.post('/api/documents/view-table-pdf', object, { responseType: 'blob'});
+        return this.http.post('/api/documents/view-table-pdf', object, {responseType: 'blob'});
 
     }
 
-    // generateOrdinDeInrerupereAInregistrariiMedicamentului(nrDocument: any, nrCerere: any): Observable<any> {
-    //     return this.http.get('/api/documents/generate-interrupt-order-of-medicament-registration', {
-    //         params: {nrDocument: nrDocument, nrCerere: nrCerere},
-    //         responseType: 'text'
-    //     });
-    // }
-    //
-    // generateCertificatulDeAutorizare(nrCerere: any): Observable<any> {
-    //     return this.http.get('/api/documents/generate-certificatul-de-autorizare', {
-    //         params: {nrCerere : nrCerere},
-    //         responseType: 'text'
-    //     });
-    // }
+    generateDD(ddDetails: any): Observable<any> {
+        return this.http.post('/api/documents/generate-dd', ddDetails, {responseType: 'blob'});
+    }
+
+    generateOI(oiDetails: any): Observable<any> {
+        return this.http.post('/api/documents/generate-oi', oiDetails, {responseType: 'blob'});
+    }
+
+    generateOA(oaDetails: any): Observable<any> {
+        return this.http.post('/api/documents/generate-oa', oaDetails, {responseType: 'blob'});
+    }
+
+    removeDD(element: any): Observable<any> {
+        return this.http.post('/api/documents/remove-dd', element, {observe: 'response'});
+    }
+
+    removeOI(element: any): Observable<any> {
+        return this.http.post('/api/documents/remove-oi', element, {observe: 'response'});
+    }
+
+    removeOA(element: any): Observable<any> {
+        return this.http.post('/api/documents/remove-oa', element, {observe: 'response'});
+    }
+
+    addDD(document : any,file: File): Observable<any> {
+        const formdata: FormData = new FormData();
+        formdata.append('id', document.id);
+        formdata.append('file', file);
+        return this.http.post('/api/documents/add-dd', formdata, {observe: 'response'});
+    }
+
+    addOI(document : any,file: File): Observable<any> {
+        const formdata: FormData = new FormData();
+        formdata.append('id', document.id);
+        formdata.append('file', file);
+        return this.http.post('/api/documents/add-oi', formdata, {observe: 'response'});
+    }
+
+    addOA(document : any,file: File): Observable<any> {
+        const formdata: FormData = new FormData();
+        formdata.append('id', document.id);
+        formdata.append('dateOfIssue', document.dateOfIssue);
+        formdata.append('file', file);
+        return this.http.post('/api/documents/add-oa', formdata, {observe: 'response'});
+    }
+
 }

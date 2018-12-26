@@ -16,6 +16,7 @@ import {catchError, debounceTime, distinctUntilChanged, filter, flatMap, tap} fr
 import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
 import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
 import {AddLicenseFarmacistComponent} from "../add-license-farmacist/add-license-farmacist.component";
+import {AddEcAgentComponent} from "../../../administration/economic-agent/add-ec-agent/add-ec-agent.component";
 
 @Component({
     selector: 'app-evaluare-cerere-lic',
@@ -632,6 +633,55 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
             if (result.success) {
                 this.farmacistiPerAddress = [...this.farmacistiPerAddress, result.farmacist];
                 this.oForm.get('farmDir').setValue(result.farmacist);
+            }
+        });
+    }
+
+    newFilial()
+    {
+        const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
+            width: '1000px',
+            panelClass: 'materialLicense',
+            data: {
+                idno : this.oldData.license.idno,
+                onlyNewFilial : true
+            },
+            hasBackdrop: false
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result && result.success) {
+                //Reload list
+                this.subscriptions.push(
+                    this.licenseService.retrieveAgentsByIdnoWithoutLicense(this.oldData.license.idno).subscribe(data => {
+                           /* let incData : any[] = data;
+                            if (result.onlyAddedFilialCodes)
+                            {
+                                let sd : any [] = result.onlyAddedFilialCodes
+                                incData.filter( inn => sd.includes(inn.code));
+                            }*/
+
+                        this.companiiPerIdnoNotSelected = data;
+
+                        let cSelectedIds : any[] = this.companiiPerIdnoSelected.map(cps => cps.id);
+
+                        this.companiiPerIdnoNotSelected = this.companiiPerIdnoNotSelected.filter(cpns => !cSelectedIds.includes(cpns.id));
+
+                        this.companiiPerIdnoNotSelected.forEach(co => {
+                                if (co.locality)
+                                {
+                                    this.subscriptions.push(
+                                        this.localityService.loadLocalityDetails(co.locality.id).subscribe(data => {
+                                                co.address = data.stateName + ', ' + data.description + ', ' + co.street;
+                                            }
+                                        )
+                                    );
+                                }
+                            });
+
+                        }
+                    )
+                );
             }
         });
     }

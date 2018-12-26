@@ -28,7 +28,6 @@ export class RequestService {
         return this.http.post<any>('/api/clinical-trails/save-request', requestDetails, {observe: 'response'});
     }
 
-
     addClinicalTrailRequest(requestDetails: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/clinical-trails/add-request', requestDetails, {observe: 'response'});
     }
@@ -96,7 +95,7 @@ export class RequestService {
         console.log(requestDetails);
         return this.http.post<any>('/api/add-medicament-postauthorization-history', requestDetails, {observe: 'response'});
     }
-    
+
     addDocumentRequest(requestDetails: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/add-document-request', requestDetails, {observe: 'response'});
     }
@@ -120,14 +119,49 @@ export class RequestService {
     }
 
     getMedPricesHistory(medicamentId: string): Observable<any> {
-        return this.http.get('/api/price/med-prev-prices',  {params: {id: medicamentId}});
+        return this.http.get('/api/price/med-prev-prices', {params: {id: medicamentId}});
     }
-    
-     getDocumentModuleRequest(id: string): Observable<any> {
+
+    getDocumentModuleRequest(id: string): Observable<any> {
         return this.http.get('/api/load-document-module-request', {params: {id: id}});
     }
+
     saveDocumentModuleRequest(requestDetails: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/doc-module/save-document-request', requestDetails, {observe: 'response'});
     }
-    
+
+    includeExpertsInDD(requestDetails: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/include-experts-dd', requestDetails, {observe: 'response'});
+    }
+
+    getRequestsForDD(): Observable<any> {
+        return this.http.get('/api/get-request-dd');
+    }
+
+    getRequestsForOI(): Observable<any> {
+        return this.http.get('/api/get-request-oi');
+    }
+
+    getMedicamentsForOA(): Observable<any> {
+        return this.http.get('/api/get-medicaments-oa');
+    }
+
+    getDDs(): Observable<any> {
+        return this.http.get('/api/get-dds');
+    }
+
+    getOIs(): Observable<any> {
+        return this.http.get('/api/get-ois');
+    }
+
+
+    getOAs(): Observable<any> {
+        return this.http.get('/api/get-oas');
+    }
+
+    setMedicamentApproved(ids: any): Observable<HttpResponse<any>> {
+        console.log(ids);
+        return this.http.post<any>('/api/medicament-approved', ids, {observe: 'response'});
+    }
+
 }

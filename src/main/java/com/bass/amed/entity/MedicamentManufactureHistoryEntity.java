@@ -17,6 +17,10 @@ public class MedicamentManufactureHistoryEntity
     private Boolean producatorProdusFinitTo;
     @Basic@Column(name = "producator_produs_finit_from")
     private Boolean producatorProdusFinitFrom;
+    @Basic@Column(name = "comment_from")
+    private String commentFrom;
+    @Basic@Column(name = "comment_to")
+    private String commentTo;
     @Basic@Column(name = "status")
     private String status;
 
@@ -24,6 +28,7 @@ public class MedicamentManufactureHistoryEntity
     {
         this.manufacture = entity.getManufacture();
         this.producatorProdusFinitTo = entity.getProducatorProdusFinit();
+        this.commentTo = entity.getComment();
         this.status = "O";
     }
 

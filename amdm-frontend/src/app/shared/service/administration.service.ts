@@ -275,4 +275,31 @@ am
 
         return this.http.get<any[]>('/api/administration/search-companies-by-idno', {params: Params});
     }
+
+
+    saveEcAgent (model : any): Observable<HttpResponse<any>>
+    {
+        return this.http.post<any>('/api/nomenclature/agent/save', model, {observe: 'response'});
+    }
+
+    updateEcAgent (model : any): Observable<HttpResponse<any>>
+    {
+        return this.http.post<any>('/api/nomenclature/agent/update', model, {observe: 'response'});
+    }
+
+    generateEcAgentCode(): Observable<any> {
+        return this.http.get('/api/nomenclature/agent/generate-code-agent')
+    }
+
+    getAllEcAgentsGroupByIdno(): Observable<any> {
+        return this.http.get('/api/nomenclature/all-economic-agents-by-idno', {observe: 'response'});
+    }
+
+    getParentAgentEcForIdno(idno : string): Observable<any> {
+        return this.http.get('/api/nomenclature/parent-for-idno', {observe: 'response', params: {idno : idno}});
+    }
+
+    getFilialsForIdno(idno : string): Observable<any> {
+        return this.http.get('/api/nomenclature/filials-for-idno', {observe: 'response', params: {idno : idno}});
+    }
 }

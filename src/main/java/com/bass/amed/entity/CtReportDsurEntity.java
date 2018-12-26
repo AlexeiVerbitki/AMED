@@ -4,7 +4,6 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Objects;
 
 @Data
 @Entity
@@ -22,6 +21,10 @@ public class CtReportDsurEntity {
     @Basic
     @Column(name = "registration_request_id")
     private Integer registrationRequestId;
+
+    @Basic
+    @Column(name = "register_type")
+    private Integer registerModeCode;
 
     @Basic
     @Column(name = "date_from")
@@ -44,8 +47,8 @@ public class CtReportDsurEntity {
     private String potentialRisks;
 
     @Basic
-    @Column(name = "report")
-    private String report;
+    @Column(name = "reporter")
+    private String reporter;
 
     @Basic
     @Column(name = "other_relevant_data")

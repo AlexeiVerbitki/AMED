@@ -1,33 +1,10 @@
 <h3 class="text-center my-3 font-weight-bold">Cererea Nr. {{PriceRegForm.get('requestNumber').value}}</h3>
 
+<div>
+
 <form [formGroup]='PriceRegForm'>
 
     <div class="row">
-        <div class="col-md-6">
-            <div class="md-form-modified">
-                <ng-select class="w-100"
-                           [items]="companies | async"
-                           [required]="true"
-                           formControlName="company"
-                           bindLabel="name"
-                           placeholder="Compania solicitant "
-                           [typeahead]="companyInputs"
-                           [loading]="loadingCompany"
-                           required="true"
-                           (change)="onCompanySelected($event)"
-                           (clear)="onRemoveCompany()">
-                    <ng-template ng-option-tmp let-item="item">
-                        {{item.name}} <br/>
-                        <small class="form-text text-muted">{{item.idno}}</small>
-                    </ng-template>
-                </ng-select>
-                <div *ngIf="formSubmitted && PriceRegForm.get('company').invalid">
-                    <small class="text-muted"><strong class="text-danger">Selectați compania solicitantă</strong>
-                    </small>
-                </div>
-            </div>
-        </div>
-
         <div class="col-md-6">
             <div class="md-form-modified">
                 <div class="md-form-modified-select">
@@ -49,6 +26,15 @@
                     <small class="text-muted"><strong class="text-danger">Selectați medicamentul companiei</strong>
                     </small>
                 </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-6">
+            <div class="md-form">
+                <input id="prod" mdbInputDirective type="text" class="form-control" [value]="manufacture?.manufacture?.description"
+                       [attr.disabled]="true">
+                <label for="prod">Producătorul medicamentului</label>
             </div>
         </div>
 
@@ -115,9 +101,11 @@
         </div>
         <div class="col-md-4">
             <div class="md-form">
-                <input id="typeMed" mdbInputDirective type="text" class="form-control"
-                       [value]="medicamentType?.description" [attr.disabled]="true">
-                <label for="typeMed">Tipul medicamentului</label>
+                <input [hidden]="originale" mdbInputDirective type="text" class="form-control"
+                       value="Generic" [attr.disabled]="true">
+                <input [hidden]="!originale" mdbInputDirective type="text" class="form-control"
+                       value="Original" [attr.disabled]="true">
+                <label>Tipul medicamentului</label>
             </div>
         </div>
     </div>
@@ -127,9 +115,9 @@
         <div class="col">
             <div class="md-form">
                 <input id="pretMed9Ref" mdbInputDirective type="number" class="form-control" min="0.1" step="0.1"
-                       formControlName="price" (change)="onPriceChange($event)">
+                       formControlName="value" (ngModelChange)="sendDTO()">
                 <label for="pretMed9Ref">Prețul propus de solicitant<span class="text-danger">*</span></label>
-                <div *ngIf="formSubmitted && this.PriceRegForm.get('price').invalid">
+                <div *ngIf="formSubmitted && this.PriceRegForm.get('value').invalid">
                     <small class="text-muted"><strong class="text-danger">Indicați prețul solicitat</strong></small>
                 </div>
             </div>
@@ -139,7 +127,7 @@
                 <ng-select class="w-100"
                            [items]="currencies"
                            [required]="true"
-                           (change)="onCurrencyChange($event)"
+                           (ngModelChange)="sendDTO()"
                            formControlName="currency"
                            bindLabel="shortDescription"
                            placeholder="Valuta">
@@ -150,11 +138,95 @@
             </div>
         </div>
     </div>
+</form>
 
     <div>
         <hr>
         <h5 class="text-center font-weight-bold">Prețul medicamentului în țările de referință </h5>
-        <template #priceReferenceContainer ></template>
+        <!--<template #priceReferenceContainer ></template>-->
+<!------------------------------------------>
+        <div *ngFor="let p of priceDTO?.price?.referencePrices; let i = index">
+            <div class="row">
+                <div class="col">
+                    <div class="md-form">
+                        <input [id]="'priceId'+i" mdbInputDirective type="number" class="form-control" min="0.1" step="0.1" [(ngModel)]="p.value" (ngModelChange)="sendDTO()">
+                        <label [for]="'priceId'+i">Preț de referință</label>
+                        <div *ngIf="formSubmitted && p.value == undefined">
+                            <small class="text-muted"><strong class="text-danger">Indicați prețul de referință</strong></small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="md-form">
+                        <input [id]="'divisionId'+i" mdbInputDirective type="text" class="form-control" [(ngModel)]="p.division" (ngModelChange)="sendDTO()">
+                        <label [for]="'divisionId'+i">Divizarea medicamentului</label>
+                        <div *ngIf="formSubmitted && p.division == undefined">
+                            <small class="text-muted"><strong class="text-danger">Indicați divizarea medicamentului</strong></small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="md-form-modified">
+                        <ng-select class="w-100"
+                                   [dropdownPosition]="'top'"
+                                   [items]="currencies"
+                                   [required]="true"
+                                   [(ngModel)]="p.currency"
+                                   (ngModelChange)="sendDTO()"
+                                   bindLabel="shortDescription"
+                                   placeholder="Valuta">
+                        </ng-select>
+                        <div *ngIf="formSubmitted && p.currency == undefined">
+                            <small class="text-muted"><strong class="text-danger">Selectați valuta de referință</strong></small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="md-form-modified">
+                        <ng-select #changeProp
+                                   class="w-100"
+                                   [dropdownPosition]="'top'"
+                                   [items]="countries"
+                                   [required]="true"
+                                   [(ngModel)]="p.country"
+                                   (ngModelChange)="sendDTO()"
+                                   bindLabel="description"
+                                   placeholder="Țara de referință">
+                        </ng-select>
+                        <div *ngIf="formSubmitted && p.country == undefined">
+                            <small class="text-muted"><strong class="text-danger">Selectați țara de referință</strong></small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="md-form-modified">
+                        <ng-select class="w-100"
+                                   [dropdownPosition]="'top'"
+                                   [items]="priceTypes"
+                                   [required]="true"
+                                   [(ngModel)]="p.type"
+                                   (ngModelChange)="sendDTO()"
+                                   bindLabel="description"
+                                   placeholder="Tipul">
+                        </ng-select>
+                        <div *ngIf="formSubmitted && p.type == undefined">
+                            <small class="text-muted"><strong class="text-danger">Selectați tipul prețului</strong></small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="mt-4">
+                        <!--<button type="button" class="btn btn-danger btn-circle" (click)="this.remove.emit(formNr)" ><i class="fa fa-times fa-lg" aria-hidden="true"></i>
+                        </button>-->
+                        <button type="button" class="btn btn-dark-red-color btn-sm" (click)="removeReferencePrice(i)">
+                            <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!------------------------------------------->
         <div>
             <div class="position-button">
                 <button (click)="addReferencePriceRow()" class="btn btn-mdb-color waves-light btn-sm btn-sm-bl"
@@ -163,14 +235,14 @@
             </div>
         </div>
     </div>
-    <div *ngIf="(medicamentType != undefined && medicamentType.code == MedType.Generic) && formSubmitted && priceReferenceComponentRef.length == 0">
-        <small class="text-muted"><strong class="text-danger">Introduceți prețurile de referință</strong></small>
-    </div>
+    <!--<div *ngIf="(medicamentType != undefined && medicamentType.code == MedType.Generic) && formSubmitted && priceReferenceComponentRef.length == 0">-->
+        <!--<small class="text-muted"><strong class="text-danger">Introduceți prețurile de referință</strong></small>-->
+    <!--</div>-->
     <app-document [title]="'Documente necesare înregistrării prețului medicamentului curent'"
-                  [documents]="documents"
+                  [documents]="priceDTO?.documents"
                   [nrCerere]="this.PriceRegForm.get('requestNumber').value"
                   [dcTypeIdentifier]="{code:'PMED',step:'R'}"
                   (documentModified)="documentAdded($event)">
     </app-document>
 
-</form>
+</div>

@@ -7,9 +7,9 @@ import {PriceRegCerereComponent} from "./price-reg-cerere/price-reg-cerere.compo
 
 const routes: Routes = [
     { path: 'reg-cerere', component: PriceRegCerereComponent},
-    { path: 'register', component: PriceRegMedComponent},
+    // { path: 'register', component: PriceRegMedComponent},
+    { path: 'register/:id', component: PriceRegMedComponent},
     // { path: 'auto-revaluation', component: PriceAutoRevaluationComponent},
-    // { path: 'register/:id', component: PriceRegMedComponent},
     { path: 'evaluate/:id', component: PriceEvaluateMedComponent},
     { path: 'revaluation-generics/:id', component: RevaluationGenericsComponent},
 ];

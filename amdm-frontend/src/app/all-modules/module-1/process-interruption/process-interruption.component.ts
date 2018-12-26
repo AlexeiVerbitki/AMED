@@ -62,6 +62,7 @@ export class ProcessInterruptionComponent implements OnInit {
             'company': [''],
             'companyValue': [''],
             'medValue': [''],
+            'oiIncluded': [''],
             'medicament':
                 fb.group({
                         'pharmaceuticalForm': [null],
@@ -87,6 +88,8 @@ export class ProcessInterruptionComponent implements OnInit {
                         this.iForm.get('company').setValue(data.company);
                         this.iForm.get('companyValue').setValue(data.company.name);
                         this.iForm.get('medValue').setValue(data.medicamentName);
+                        this.iForm.get('oiIncluded').setValue(data.oiIncluded);
+                        this.iForm.get('motiv').setValue(data.interruptionReason);
                         this.iForm.get('requestHistories').setValue(data.requestHistories);
                         if (data.medicaments[0] && data.medicaments[0].pharmaceuticalForm) {
                             this.iForm.get('medicament.pharmaceuticalForm').setValue(data.medicaments[0].pharmaceuticalForm.description);
@@ -177,25 +180,7 @@ export class ProcessInterruptionComponent implements OnInit {
 
         this.formSubmitted = true;
 
-        let isFormInvalid = false;
-        let isOutputDocInvalid = false;
-
         if (this.iForm.get('motiv').invalid) {
-            isFormInvalid = true;
-        }
-
-        // for (let entry of this.outputDocuments) {
-        //     if (entry.status == 'Nu este atasat' && (entry.docType.category=='OI' || entry.docType.category=='NL')) {
-        //         this.isNonAttachedDocuments = true;
-        //         isOutputDocInvalid = true;
-        //     }
-        // }
-        //
-        // if (!isOutputDocInvalid) {
-        //     this.isNonAttachedDocuments = false;
-        // }
-
-        if (isOutputDocInvalid || isFormInvalid) {
             return;
         }
 

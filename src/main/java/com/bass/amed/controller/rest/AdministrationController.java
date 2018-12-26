@@ -711,6 +711,6 @@ public class AdministrationController {
             return new ResponseEntity<>(responseList, HttpStatus.OK);
         }
         LOGGER.debug("getNomenclature");
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

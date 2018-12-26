@@ -44,7 +44,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-4" *ngIf="importData.medType == 1 || importData.medType == 2">
+                <div class="col-md-4" *ngIf="medType == 1 || medType == 2">
                     <div class="md-form-modified">
                         <ng-select
                                 [items]="internationalMedicamentNames | async"
@@ -165,7 +165,7 @@
                     </div>
                 </div>
 
-                <div class="col-4" *ngIf="importData.medType == 1 || importData.medType == 2">
+                <div class="col-4" *ngIf="medType === 1 || medType === 2">
                     <div class="md-form">
                         <input id="dose" mdbInputDirective type="text" class="form-control"
                                [attr.disabled]="true"

@@ -105,6 +105,7 @@ public class MedicamentHistoryEntity
 
     public void assign(MedicamentEntity entity)
     {
+        // TODO: entity.originale
         this.atcCodeTo = entity.getAtcCode();
         this.doseTo = entity.getDose();
         this.commercialNameTo = entity.getCommercialName();

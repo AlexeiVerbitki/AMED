@@ -167,14 +167,16 @@
                 <h5 class="text-center my-3 font-weight-bold">Forma DSUR</h5>
                 <hr>
                 <div class="row">
-                    <div class="col-md-4">
-                        <div class="md-form">
-                            <input id="numeMedicament" mdbInputDirective type="text" class="form-control"
-                                   formControlName="drugName" [attr.disabled]="true">
-                            <label for="numeMedicament">Descriere produs de investigat / Doza</label>
-                        </div>
+                    <div class="col-md-3">
+                        <ng-select id="registerModesDSUR" name="registerModesDSUR"
+                                   [items]="registerTypeValues"
+                                   placeholder="Mod inregistrare"
+                                   formControlName="registerTypeValue">
+                        </ng-select>
                     </div>
-                    <div class="col-md-4">
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
                         <div class="md-foraddNotificationTypesFormm-modified">
                             <mat-form-field class="w-100">
                                 <input matInput [matDatepicker]="picker5"
@@ -185,7 +187,7 @@
                             </mat-form-field>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
                                 <input matInput [matDatepicker]="picker6"
@@ -195,6 +197,25 @@
                                 <mat-datepicker touchUi #picker6></mat-datepicker>
                             </mat-form-field>
                         </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="md-form">
+                            <input id="reporter" mdbInputDirective type="text" class="form-control"
+                                   formControlName="reporter">
+                            <label for="reporter">Raportor</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="md-form">
+                            <input id="numeMedicament" mdbInputDirective type="text" class="form-control"
+                                   formControlName="drugName" [attr.disabled]="true">
+                            <label for="numeMedicament">Descriere produs de investigat / Doza</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
                     </div>
                 </div>
 
@@ -216,15 +237,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="md-form">
-                    <textarea type="text" id="report" class="md-textarea form-control" mdbInputDirective rows="1"
-                              formControlName="report"></textarea>
-                            <label for="report">Raport</label>
-                        </div>
-                    </div>
-                </div>
+
                 <div class="row">
                     <div class="col-md-12">
                         <div class="md-form">
@@ -251,6 +264,15 @@
                  *ngIf="f2.value.notificationType?.code === 'LLR'">
                 <h5 class="text-center my-3 font-weight-bold">Forma SAR LLR</h5>
                 <hr>
+                <div class="row">
+                    <div class="col-md-3">
+                        <ng-select id="registerModesSARLLR" name="registerModesSARLLR"
+                                   [items]="registerTypeValues"
+                                   placeholder="Mod inregistrare"
+                                   formControlName="registerTypeValue">
+                        </ng-select>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="md-foraddNotificationTypesFormm-modified">
@@ -279,22 +301,19 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="md-form">
+                            <input id="reporter2" mdbInputDirective type="text" class="form-control"
+                                   formControlName="reporter">
+                            <label for="reporter2">Raportor</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="md-form">
                             <input id="recordedCases" mdbInputDirective type="number" class="form-control"
                                    formControlName="recordedCases">
                             <label for="recordedCases">Cazuri raportate</label>
                         </div>
                     </div>
-                    <div class="col-md-8">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="md-form">
-                    <textarea type="text" id="report2" class="md-textarea form-control" mdbInputDirective rows="1"
-                              formControlName="report"></textarea>
-                            <label for="report2">Raport</label>
-                        </div>
+                    <div class="col-md-4">
                     </div>
                 </div>
 
@@ -307,6 +326,337 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!--SAE/SUSAR-->
+            <div class="form-group" formGroupName="reportSaeSusarEntity"
+                 *ngIf="f2.value.notificationType?.code === 'SUSAR/SAE'">
+
+                <h5 class="text-center my-3 font-weight-bold">Forma SAE/SUSAR</h5>
+                <hr>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="md-form-modified">
+                            <ng-select id="registerModes" name="registerModes"
+                                       [items]="registerTypeValues"
+                                       placeholder="Mod inregistrare"
+                                       formControlName="registerTypeValue">
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="md-form">
+                            <input id="reporter3" mdbInputDirective type="text" class="form-control"
+                                   formControlName="reporter">
+                            <label for="reporter3">Raportor</label>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="row">
+                            <div class="col">
+                                <div class="md-form-modified">
+                                    <ng-select id="reportType" name="reportType" class="w-70"
+                                               [items]="reportTypeValues"
+                                               placeholder="Report Type"
+                                               formControlName="reportTypeValue">
+                                    </ng-select>
+                                </div>
+                            </div>
+                            <div *ngIf="showReportType">
+                                <div class="col-12">
+                                    <div class="md-form-modified">
+                                        <mat-form-field class="w-100">
+                                            <input matInput placeholder="Follow up nr." formControlName="reportType"
+                                                   maxlength="2">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="md-form-modified">
+                            <ng-select id="level" name="level"
+                                       [items]="levelValues"
+                                       placeholder="Level"
+                                       formControlName="level">
+                            </ng-select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="md-form">
+                            <input id="study" mdbInputDirective type="text" class="form-control"
+                                   formControlName="studyId">
+                            <label for="study">Study ID</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="md-form">
+                            <input id="patient" mdbInputDirective type="text" class="form-control"
+                                   formControlName="patientId">
+                            <label for="patient">Patient ID</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="md-form">
+                            <input id="center" mdbInputDirective type="text" class="form-control"
+                                   formControlName="centerId">
+                            <label for="center">Center ID</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="md-form-modified">
+                            <ng-select id="Causality" name="Causality"
+                                       [items]="casualityValues"
+                                       placeholder="Causality"
+                                       formControlName="casualityValue">
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="md-form">
+                             <textarea type="text" id="actionTakenDrug" class="md-textarea form-control"
+                                       mdbInputDirective
+                                       rows="1"
+                                       formControlName="actionTakenDrug"></textarea>
+                            <label for="actionTakenDrug">Action(s) taken with drug</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="md-form">
+                             <textarea type="text" id="companyRemarks" class="md-textarea form-control"
+                                       mdbInputDirective
+                                       rows="1"
+                                       formControlName="companyRemarks"></textarea>
+                            <label for="companyRemarks">Company remarks</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="md-form">
+                            <input id="patientInitials" mdbInputDirective type="text" class="form-control"
+                                   formControlName="patientInitials">
+                            <label for="patientInitials">PATIENT INITIALS</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="md-form-modified">
+                            <mat-form-field class="w-100">
+                                <input matInput [matDatepicker]="picker" placeholder="DATE OF BIRTH"
+                                       formControlName="dateOfBirth">
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker touchUi #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="md-form">
+                            <input id="age" mdbInputDirective type="text" class="form-control"
+                                   formControlName="age">
+                            <label for="age">AGE</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="md-form-modified">
+                            <ng-select id="gender" name="gender"
+                                       [items]="reportGenderValues"
+                                       placeholder="SEX"
+                                       formControlName="sexValue">
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 mt-45">
+                        <mat-form-field class="w-100">
+                            <input matInput [matDatepicker]="picker9" placeholder="REACTION ONSET"
+                                   formControlName="reactionOnSet">
+                            <mat-datepicker-toggle matSuffix [for]="picker9"></mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker9></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="md-form">
+                             <textarea type="text" id="describeReactions" class="md-textarea form-control"
+                                       mdbInputDirective
+                                       rows="1"
+                                       formControlName="describeReactions"></textarea>
+                            <label for="describeReactions">Company remarks</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6 mt-36">
+                        <div class="row">
+                            <div class="col">
+                                <div class="md-form-modified">
+                                    <ng-select id="reportTypeSaesusar" name="reportTypeSaesusar" class="w-70"
+                                               [items]="reportTypeSaesusarValues"
+                                               placeholder="TYPES OF SAE / SUSAR"
+                                               formControlName="typeSaesusarValue">
+                                    </ng-select>
+                                </div>
+                            </div>
+                            <div *ngIf="showDiedDate">
+                                <div class="col-12">
+                                    <div class="md-form-modified">
+                                        <mat-form-field class="w-100">
+                                            <input matInput [matDatepicker]="picker10" placeholder="DIED DATE"
+                                                   formControlName="patientDiedDate">
+                                            <mat-datepicker-toggle matSuffix [for]="picker10"></mat-datepicker-toggle>
+                                            <mat-datepicker touchUi #picker10></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="md-form">
+                             <textarea type="text" id="suspectDrug" class="md-textarea form-control"
+                                       mdbInputDirective rows="1"
+                                       formControlName="suspectDrug"></textarea>
+                            <label for="suspectDrug">SUSPECT DRUG(S) (include generic name)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3 mt-36">
+                        <div class="md-form">
+                            <input id="dailyDose" mdbInputDirective type="text" class="form-control"
+                                   formControlName="dailyDose">
+                            <label for="dailyDose">DAILY DOSE(S)</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mt-36">
+                        <div class="md-form">
+                            <input id="routesOfAdmin" mdbInputDirective type="text" class="form-control"
+                                   formControlName="routesOfAdmin">
+                            <label for="routesOfAdmin">ROUTE(S) OF ADMINISTRATION)</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="md-form">
+                             <textarea type="text" id="indicationForUse" class="md-textarea form-control"
+                                       mdbInputDirective rows="1"
+                                       formControlName="indicationForUse"></textarea>
+                            <label for="indicationForUse">INDICATION(S) FOR USE</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <mat-form-field class="w-100">
+                            <input matInput [matDatepicker]="picker11" placeholder="THERAPY DATES (from)"
+                                   formControlName="therapyDateFrom">
+                            <mat-datepicker-toggle matSuffix [for]="picker11"></mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker11></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="w-100">
+                            <input matInput [matDatepicker]="picker12" placeholder="THERAPY DATES (to)"
+                                   formControlName="therapyDateTo">
+                            <mat-datepicker-toggle matSuffix [for]="picker12"></mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker12></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="md-form">
+                            <input id="therapyDuration" mdbInputDirective type="text" class="form-control"
+                                   formControlName="therapyDuration">
+                            <label for="therapyDuration">THERAPY DURATION</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="md-form-modified">
+                            <ng-select id="reactionAbated" name="reactionAbated"
+                                       [items]="reportResponseTypeValues"
+                                       placeholder="DID REACTION ABATE AFTER STOPPING DRUG?"
+                                       formControlName="reactionAbatedValue">
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="md-form-modified">
+                            <ng-select id="eventReappear" name="eventReappear"
+                                       [items]="reportResponseTypeValues"
+                                       placeholder="DID EVENT REAPPEAR AFTER REINTRODUCTION?"
+                                       formControlName="eventReappearValue">
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="md-form">
+                             <textarea type="text" id="concDrugDates" class="md-textarea form-control"
+                                       mdbInputDirective
+                                       rows="1"
+                                       formControlName="concDrugDates"></textarea>
+                            <label for="concDrugDates">CONCOMITANT DRUGS AND DATES OF ADMINISTRATION (Exclude those used to treat event)</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="md-form">
+                             <textarea type="text" id="otherRelevantHistory" class="md-textarea form-control"
+                                       mdbInputDirective
+                                       rows="1"
+                                       formControlName="otherRelevantHistory"></textarea>
+                            <label for="otherRelevantHistory">OTHER RELEVANT HISTORY</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="md-form">
+                            <input id="nameAdressManufacturer" mdbInputDirective type="text" class="form-control"
+                                   formControlName="nameAdressManufacturer">
+                            <label for="nameAdressManufacturer">NAME AND ADDRESS OF MANUFACTURER</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="md-form">
+                            <input id="mfrControlNo" mdbInputDirective type="text" class="form-control"
+                                   formControlName="mfrControlNo">
+                            <label for="mfrControlNo">MFR. CONTROL NO.</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="w-100">
+                            <input matInput [matDatepicker]="picker13" placeholder="DATE RECEIVED BY"
+                                   formControlName="dateManufactReceived">
+                            <mat-datepicker-toggle matSuffix [for]="picker13"></mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker13></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="md-form-modified">
+                            <ng-select id="reportSource" name="reportSource"
+                                       [items]="reportResponseTypeValues"
+                                       placeholder="DID EVENT REAPPEAR AFTER REINTRODUCTION?"
+                                       formControlName="reportSource">
+                            </ng-select>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
 
         </div>

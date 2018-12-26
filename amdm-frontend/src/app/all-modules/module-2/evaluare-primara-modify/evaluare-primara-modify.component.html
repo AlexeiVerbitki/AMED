@@ -437,7 +437,7 @@
 		<hr>
 		<app-instruction [modify]="true" [divisions]="divisions" [instructions]="instructions" [nrCerere]="eForm.get('requestNumber').value"></app-instruction>
 		<div *ngIf="formSubmitted && instructions.length==0">
-			<small class="text-muted"><strong class="text-danger">Nici o instructiune nu a fost adaugata</strong></small>
+			<small class="text-muted"><strong class="text-danger">Nici o informatie nu a fost adaugata</strong></small>
 		</div>
 		<app-macheta [modify]="true" [divisions]="divisions" [machets]="machets" [nrCerere]="eForm.get('requestNumber').value"></app-macheta>
 		<div *ngIf="formSubmitted && machets.length==0">

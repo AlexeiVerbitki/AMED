@@ -46,6 +46,7 @@ import {NavbarTitleService} from "./shared/service/navbar-title.service";
 import {DrugAuthorizationDetailsDialogComponent} from "./dialog/drug-authorization-details-dialog/drug-authorization-details-dialog.component";
 import {AuxiliarySubstanceDialogComponent} from "./dialog/auxiliary-substance-dialog/auxiliary-substance-dialog.component";
 import {DivisionSelectDialogComponent} from "./dialog/division-select-dialog/division-select-dialog.component";
+import {AddManufactureComponent} from "./dialog/add-manufacture/add-manufacture.component";
 
 const interceptors = [{
     provide: HTTP_INTERCEPTORS,
@@ -85,6 +86,7 @@ const interceptors = [{
         GestDocComponent,
         NumberOnlyDirective,
         ActiveSubstanceDialogComponent,
+        AddManufactureComponent,
         AuxiliarySubstanceDialogComponent,
         HomepageModalComponent,
         MedicamentDetailsDialogComponent,
@@ -105,7 +107,7 @@ const interceptors = [{
     ],
     schemas: [],
     entryComponents: [
-     DivisionSelectDialogComponent,AuxiliarySubstanceDialogComponent,ConfirmationDialogComponent,MedicamentHistoryDialogComponent,MedicamentModificationsDialogComponent,RequestAdditionalDataDialogComponent,ActiveSubstanceDialogComponent, HomepageModalComponent,MedicamentDetailsDialogComponent
+     DivisionSelectDialogComponent,AuxiliarySubstanceDialogComponent,ConfirmationDialogComponent,MedicamentHistoryDialogComponent,MedicamentModificationsDialogComponent,RequestAdditionalDataDialogComponent,ActiveSubstanceDialogComponent, HomepageModalComponent,MedicamentDetailsDialogComponent, AddManufactureComponent
     ],
     providers: [AuthService, AdministrationService, ErrorHandlerService, NavbarTitleService, interceptors,
     ],

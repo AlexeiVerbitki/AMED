@@ -39,34 +39,50 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-md-12">
-				<div class="md-form-modified">
-					<ng-select id="proSubsActiv" name="proSubsActiv" [items]="manufactures" [loading]="loadingManufacture"
-					           bindLabel="description"
-					           placeholder="Producător *"
-					           (ngModelChange)="checkActiveSubstanceManufacture()"
-					           formControlName="manufactureSA">
-					</ng-select>
-					<div *ngIf="formSubmitted && (aForm.get('manufactureSA').value==null || aForm.get('manufactureSA').value.toString().length==0)">
-						<small class="text-muted"><strong class="text-danger">Producatorul trebuie selectat</strong></small>
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Producatori</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addManufacture()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
 					</div>
 				</div>
 			</div>
-			<div class="col-md-12">
-				<div class="md-form">
-					<input id="taraProSubsActiv" mdbInputDirective type="text" formControlName="manufactureCountrySA" class="form-control"
-					       [attr.disabled]="true">
-					<label for="taraProSubsActiv">Ţară producător</label>
-				</div>
-			</div>
-			<div class="col-md-12">
-				<div class="md-form">
-					<input id="adresaProdSubsActive" mdbInputDirective type="text" formControlName="manufactureAddressSA" class="form-control"
-					       [attr.disabled]="true">
-					<label for="adresaProdSubsActive">Adresă producător</label>
-				</div>
-			</div>
+		</div>
+
+		<!-- Card content -->
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Denumire</th>
+					<th scope="col">Tara</th>
+					<th scope="col">Adresa</th>
+					<th scope="col">Actiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let manufacture of manufacturesTable;let i = index">
+					<td>{{ manufacture.manufacture.description }}</td>
+					<td>{{ manufacture.manufacture.country.description }}</td>
+					<td>{{ manufacture.manufacture.address }}</td>
+					<td>
+						<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeManufacture(i)"
+						        mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="manufacturesTable.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<hr>
+		<div *ngIf="formSubmitted && manufacturesTable.length==0">
+			<small class="text-muted"><strong class="text-danger">Nu a fost introdus nici un producator</strong></small>
 		</div>
 	</form>
 </div>

@@ -15,6 +15,7 @@ export class Medicament {
   dose: string;
   division: string;
   expirationDate: Date;
+  manufactures: any[];
   unitsQuantity: number;
   unitsQuantityMeasurement: UnitOfMeasure; // for units
   storageQuantity: number;
@@ -23,5 +24,5 @@ export class Medicament {
   prices: Price[];
   referencePrices: Price[];
   volume: number;
-  medicamentType: any;
+  originale: boolean;
 }

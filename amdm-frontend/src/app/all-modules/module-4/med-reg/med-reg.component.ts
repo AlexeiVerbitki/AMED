@@ -341,7 +341,9 @@ export class MedRegComponent implements OnInit {
 
                     this.medicamentService.getMedPrice(val.id).subscribe(priceEntity => {
                         this.medicamentPrice = priceEntity;
-                        this.valutaList = [/*this.valutaList.find(i=> i.shortDescription === "MDL"), */ priceEntity.currency];
+                        if (priceEntity.currency != null) {
+                            this.valutaList = [/*this.valutaList.find(i=> i.shortDescription === "MDL"), */ priceEntity.currency];
+                        }
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(this.valutaList.find(r => r === priceEntity.currency));
 
 

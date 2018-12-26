@@ -8,7 +8,7 @@ import {MaterialSharedModule} from "../../material-shared.module";
 import { RegModifyCerereComponent } from './reg-modify-cerere/reg-modify-cerere.component';
 import {DocumentModule} from "../../document/document.module";
 import {PaymentModule} from "../../payment/payment.module";
-import {ExpertComiteeModule} from "../../expert-comitee/expert-comitee.module";
+import {ExpertComiteeModule} from "../../common/expert-comitee/expert-comitee.module";
 import {UploadFileService} from "../../shared/service/upload/upload-file.service";
 import {RequestService} from "../../shared/service/request.service";
 import {CanDeactivateGuard} from "../../shared/auth-guard/can-deactivate-guard.service";

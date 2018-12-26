@@ -14,7 +14,7 @@ public class ReferencePricesEntity
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     @Basic
     @Column(name = "value")
     private BigDecimal value;
