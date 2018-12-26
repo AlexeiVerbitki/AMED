@@ -97,6 +97,9 @@ export class ImportManagementDialog implements OnInit {
     checked: boolean;
     medType: any;
 
+    invalidPrice: boolean;
+    approvedPrice: any;
+
 
     constructor(private fb: FormBuilder,
                 @Inject(MAT_DIALOG_DATA) public dialogData: any,
@@ -125,6 +128,9 @@ export class ImportManagementDialog implements OnInit {
         this.importerAddress = '';
         this.formSubmitted = false;
         this.addMedicamentClicked = false;
+        this.unitSumm = 0;
+        this.approvedPrice = this.dialogData.price;
+        this.invalidPrice = false;
         this.loadEconomicAgents();
         this.loadManufacturersRfPr();
 
@@ -181,8 +187,10 @@ export class ImportManagementDialog implements OnInit {
                     quantity: [null, Validators.required],
                     approvedQuantity: [null, Validators.required],
                     price: [null, Validators.required],
+                    approvedPrice: [null, Validators.required],
                     currency: [null, Validators.required],
                     summ: [null, Validators.required],
+                    importSumm: [null, Validators.required],
                     producer: [null, Validators.required],
                     expirationDate: [null, Validators.required],
                     atcCode: [null, Validators.required],
@@ -205,33 +213,35 @@ export class ImportManagementDialog implements OnInit {
         this.codeAmed;
 
         if (this.dialogData.medicament !== null) {
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(this.dialogData.codeAmed);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(this.dialogData.customsCode);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(this.dialogData.name);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(this.dialogData.quantity);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').setValue(this.dialogData.approvedQuantity);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').setValue(this.dialogData.price);
-            this.unitSumm = this.dialogData.summ;
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(this.dialogData.currency.shortDescription);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(this.dialogData.producer);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(new Date(this.dialogData.expirationDate));
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(this.dialogData.pharmaceuticalForm);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').setValue(this.dialogData.dose);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').setValue(this.dialogData.unitsOfMeasurement);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').setValue(this.dialogData.internationalMedicamentName);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(this.dialogData.atcCode);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(this.dialogData.registrationNumber);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(this.dialogData.registrationDate));
-            this.producerAddress = this.dialogData.producer.address + ", " + this.dialogData.producer.country.description;
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(this.dialogData.medicament.codeAmed);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(this.dialogData.medicament.customsCode);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(this.dialogData.medicament.name);
+            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(this.dialogData.medicament.quantity);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').setValue(this.dialogData.medicament.approvedQuantity);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedPrice').setValue(this.dialogData.medicament.price);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.dialogData.summ);
+            // this.unitSumm = this.dialogData.medicament.summ;
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(this.dialogData.medicament.currency.shortDescription);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(this.dialogData.medicament.producer);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(new Date(this.dialogData.medicament.expirationDate));
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(this.dialogData.medicament.pharmaceuticalForm);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').setValue(this.dialogData.medicament.dose);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').setValue(this.dialogData.medicament.unitsOfMeasurement);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').setValue(this.dialogData.medicament.internationalMedicamentName);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(this.dialogData.medicament.atcCode);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(this.dialogData.medicament.registrationNumber);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(this.dialogData.medicament.registrationDate));
+            this.producerAddress = this.dialogData.medicament.producer.address + ", " + this.dialogData.medicament.producer.country.description;
         } else {
 
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(this.dialogData.codeAmed);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(this.dialogData.customsCode);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(this.dialogData.name);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(this.dialogData.quantity);
+        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(this.dialogData.quantity);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').setValue(this.dialogData.approvedQuantity);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').setValue(this.dialogData.price);
-        this.unitSumm = this.dialogData.summ;
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedPrice').setValue(this.dialogData.price);
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.dialogData.summ);
+        // this.unitSumm = this.dialogData.summ;
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(this.dialogData.currency.shortDescription);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(this.dialogData.producer);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(new Date(this.dialogData.expirationDate));
@@ -248,15 +258,15 @@ export class ImportManagementDialog implements OnInit {
         console.log("this.dialogData.producer.country.description", this.dialogData.producer.country.description);
 
 
-        if (this.importData.currentStep == "AP") {
+        // if (this.importData.currentStep == "AP") {
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').disable();
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').disable();
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').disable();
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').disable();
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').disable();
+            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').disable();
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedPrice').disable();
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').disable();
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').disable();
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').disable();
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').disable();
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').disable();
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').disable();
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').disable();
@@ -266,7 +276,7 @@ export class ImportManagementDialog implements OnInit {
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').disable();
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').disable();
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').disable();
-        }
+        // }
 
 
         this.onChanges();
@@ -293,24 +303,48 @@ export class ImportManagementDialog implements OnInit {
     }
 
     confirm(): void {
-        if (this.evaluateImportForm.valid) {
-            this.addMedicamentClicked = true;
-            if (this.evaluateImportForm.valid) {
+        // if (this.evaluateImportForm.valid ) {
+        //     this.addMedicamentClicked = true;
+        let validPrice = this.evaluateImportForm.get("importAuthorizationEntity.unitOfImportTable.price").valid;
+        let validQuantity = this.evaluateImportForm.get("importAuthorizationEntity.unitOfImportTable.quantity").valid;
+            if (validPrice && validQuantity && this.invalidPrice === false) {
                 this.dialog.close([true, this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').value]);
                 this.addMedicamentClicked = false;
+            } else {
+                console.log("INVALID PRICE, invalidPrice = ", this.invalidPrice)
             }
         }
-    }
+    // }
 
     onChanges(): void {
-        if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity')) {
+        if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity')) {
 
-            this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').valueChanges.subscribe(val => {
+            this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').valueChanges.subscribe(val => {
                 if (val) {
                     this.unitSumm = val * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value;
-                    console.log("this,this.unitSumm", this.unitSumm)
+                    console.log("this.unitSumm", this.unitSumm)
                 }
             }))
+        }
+
+        if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price')) {
+
+            this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').valueChanges.subscribe(val => {
+                if (val) {
+                    this.unitSumm = val * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value;
+                    console.log("this.unitSumm", this.unitSumm)
+                    console.log("approvedPrice", this.approvedPrice)
+                }
+
+                if (val > this.approvedPrice){
+                    this.invalidPrice = true;
+                    console.log("approvedPrice", this.approvedPrice)
+                } else {
+                    this.invalidPrice = false;
+                }
+            }))
+
+
         }
     }
 
@@ -355,7 +389,7 @@ export class ImportManagementDialog implements OnInit {
 
             console.log("this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable'", (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').value)),
 
-                this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(null);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(null);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(null);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').setValue(null);
