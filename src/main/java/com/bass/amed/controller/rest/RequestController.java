@@ -883,14 +883,14 @@ import java.util.stream.Stream;
 				/*Create a map Key is the code value is the amount
 				 *
 				 * if the jey exists add the sum, if id doesn't creaet the key and add the value*/
-
+				if (entity != null) {
 				if (autorizationImportDataSet2ArrayList.stream().anyMatch(x -> x.getProductCode().equalsIgnoreCase(entity.getCustomsCode().getCode()))) {
 					for (int i = 0; i < autorizationImportDataSet2ArrayList.size(); i++) {
 						if (autorizationImportDataSet2ArrayList.get(i).getProductCode().equals(entity.getCustomsCode().getCode())) {
-							autorizationImportDataSet2ArrayList.get(i).setAmount(autorizationImportDataSet2ArrayList.get(i).getAmount()+entity.getSumm());
+							autorizationImportDataSet2ArrayList.get(i).setAmount(autorizationImportDataSet2ArrayList.get(i).getAmount() + entity.getSumm());
 						}
 					}
-				} else{
+				} else {
 
 					AutorizationImportDataSet2 dataSet2 = new AutorizationImportDataSet2();
 					dataSet2.setAmount(entity.getSumm());
@@ -913,7 +913,7 @@ import java.util.stream.Stream;
 				}
 
 				//====================================
-
+			}
 
 			}
 
@@ -986,8 +986,8 @@ import java.util.stream.Stream;
 			                                                                                                   .getAddress());
 			parameters.put("manufacturerCountry", request.getImportAuthorizationEntity().getSeller().getCountry().getDescription());
 			parameters.put("manufacturerCountryCode", request.getImportAuthorizationEntity().getSeller().getCountry().getCode());
-			parameters.put("autorizationImportDataSet", autorizationImportDataSet);
-			parameters.put("autorizationImportDataSet2", autorizationImportDataSet2);
+//			parameters.put("autorizationImportDataSet", autorizationImportDataSet);
+//			parameters.put("autorizationImportDataSet2", autorizationImportDataSet2);
 			System.out.println("parameters: " + parameters.toString());
             /*parameters.put("licenseNumber", request.getLicense().getNr());
             parameters.put("companyName", request.getLicense().getEconomicAgents().stream().findFirst().get().getLongName());

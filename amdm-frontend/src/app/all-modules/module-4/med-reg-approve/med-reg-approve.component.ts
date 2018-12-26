@@ -313,7 +313,7 @@ export class MedRegApproveComponent implements OnInit {
             if (item.approved === true) {
                 this.expirationDate.push(item.expirationDate);
                 authorizationModel.importAuthorizationEntity.summ = authorizationModel.importAuthorizationEntity.summ + item.summ;
-                console.log("modelToSubmit.importAuthorizationEntity.summ");
+                console.log("modelToSubmit.importAuthorizationEntity.summ", authorizationModel.importAuthorizationEntity.summ );
             }
         })
 
@@ -323,7 +323,8 @@ export class MedRegApproveComponent implements OnInit {
         }));
 
         console.log("authorizationModel",authorizationModel)
-            observable = this.requestService.viewImportAuthorization(authorizationModel)
+
+        observable = this.requestService.viewImportAuthorization(authorizationModel)
             // observable = this.requestService.viewImportAuthorization(this.evaluateImportForm.getRawValue())
 
         // }
