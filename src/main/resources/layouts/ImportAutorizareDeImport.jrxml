@@ -358,7 +358,7 @@
 								</staticText>
 							</jr:columnHeader>
 							<jr:detailCell style="Table 1_TD" height="30">
-								<textField>
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 									<reportElement x="0" y="0" width="110" height="30" uuid="01141ac0-eec6-4932-bb5d-df70885ceed6"/>
 									<textElement>
 										<font fontName="DejaVu Sans" size="8" isBold="true"/>
@@ -379,7 +379,7 @@
 								</staticText>
 							</jr:columnHeader>
 							<jr:detailCell style="Table 1_TD" height="30">
-								<textField>
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 									<reportElement x="0" y="0" width="130" height="30" uuid="0fe1eb9e-840f-4100-a5db-10ef35fc96ae"/>
 									<textElement>
 										<font fontName="DejaVu Sans" size="8" isBold="true"/>
@@ -400,14 +400,14 @@
 								</staticText>
 							</jr:columnHeader>
 							<jr:detailCell style="Table 1_TD" height="30">
-								<textField>
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 									<reportElement x="0" y="0" width="292" height="15" uuid="e981a950-edac-4f1d-8c25-335179540ddb"/>
 									<textElement>
 										<font fontName="DejaVu Sans" size="8" isBold="true"/>
 									</textElement>
 									<textFieldExpression><![CDATA[$F{transactionType}]]></textFieldExpression>
 								</textField>
-								<textField>
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 									<reportElement x="0" y="15" width="292" height="15" uuid="6c50ac41-312d-4977-a67d-c9a138eb266b"/>
 									<textElement>
 										<font fontName="DejaVu Sans" size="8"/>

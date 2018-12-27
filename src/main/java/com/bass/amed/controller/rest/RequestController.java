@@ -977,7 +977,7 @@ public class RequestController
 				/*Create a map Key is the code value is the amount
 				 *
 				 * if the jey exists add the sum, if id doesn't creaet the key and add the value*/
-				if (entity != null) {
+				if (entity != null && entity.getApproved() == true ) {
 				if (autorizationImportDataSet2ArrayList.stream().anyMatch(x -> x.getProductCode().equalsIgnoreCase(entity.getCustomsCode().getCode()))) {
 					for (int i = 0; i < autorizationImportDataSet2ArrayList.size(); i++) {
 						if (autorizationImportDataSet2ArrayList.get(i).getProductCode().equals(entity.getCustomsCode().getCode())) {
