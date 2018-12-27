@@ -836,7 +836,7 @@ export class MedRegComponent implements OnInit {
                 modelToSubmit.currentStep = 'C';
                 // modelToSubmit.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
                 modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
-                modelToSubmit.endDate = new Date();
+                // modelToSubmit.endDate = new Date();
                 modelToSubmit.documents = this.docs;
                 modelToSubmit.requestHistories.push({
                     startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,

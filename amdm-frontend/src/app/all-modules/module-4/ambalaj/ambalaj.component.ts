@@ -196,6 +196,10 @@ export class AmbalajComponent implements OnInit {
                         this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').setValue(new Date(data.importAuthorizationEntity.specificationDate));
                     }
                     this.unitOfImportTable = data.importAuthorizationEntity.importAuthorizationDetailsEntityList;
+                    if (this.importData.importAuthorizationEntity.medType === 4) {
+
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setErrors(null);
+                    }
 
                 },
                 error => console.log(error)
@@ -290,6 +294,7 @@ export class AmbalajComponent implements OnInit {
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(null);
             if (this.importData.importAuthorizationEntity.medType === 3) {
                 this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(null);
+                this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setErrors(null);
             }
             console.log("this.unitOfImportTable", this.unitOfImportTable)
         }
@@ -458,7 +463,7 @@ export class AmbalajComponent implements OnInit {
                 modelToSubmit.currentStep = 'C';
                 // modelToSubmit.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
                 modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
-                modelToSubmit.endDate = new Date();
+                // modelToSubmit.endDate = new Date();
                 modelToSubmit.documents = this.docs;
                 modelToSubmit.requestHistories.push({
                     startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
