@@ -1,0 +1,152 @@
+<h5 class="text-center font-weight-bold">Comisia de experti</h5>
+<hr>
+<form [formGroup]="expertForm">
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="md-form">
+        <input id="nrCererii" mdbInputDirective type="text" class="form-control" (ngModelChange)="checkComiteeNr()"
+               formControlName="comiteeNr">
+        <label for="nrCererii">Nr. comisie</label>
+      </div>
+      <div *ngIf="isFormSubmitted && expertForm.get('comiteeNr').invalid">
+        <small class="text-muted"><strong class="text-danger">Numarul comisiei trebuie introdus</strong></small>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="md-form-modified">
+        <mat-form-field class="w-100">
+          <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data" (ngModelChange)="checkData()">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker touchUi #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div *ngIf="isFormSubmitted && expertForm.get('data').invalid">
+        <small class="text-muted"><strong class="text-danger">Data comisiei trebuie introdusa</strong></small>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-3">
+      <div class="md-form-modified">
+        <ng-select id="chairman" name="chairman" [items]="chairmans"
+                   bindLabel="name"
+                   (ngModelChange)="checkChairman()"
+                   placeholder="Presedintele comisiei *"
+                   formControlName="chairman">
+        </ng-select>
+        <div *ngIf="isFormSubmitted && expertForm.get('chairman').invalid">
+          <small class="text-muted"><strong class="text-danger">Presedintele comisiei trebuie selectat</strong></small>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3">
+      <div class="md-form">
+        <input id="decisionChairman" mdbInputDirective type="text" class="form-control"
+               formControlName="decisionChairman">
+        <label for="decisionChairman">Decizia presedintelui</label>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="md-form-modified">
+        <ng-select id="farmacolog" name="farmacolog" [items]="farmacologs"
+                   bindLabel="name"
+                   (ngModelChange)="checkFarmacolog()"
+                   placeholder="Farmacolog *"
+                   formControlName="farmacolog">
+        </ng-select>
+        <div *ngIf="isFormSubmitted && expertForm.get('farmacolog').invalid">
+          <small class="text-muted"><strong class="text-danger">Farmacologul trebuie selectat</strong></small>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3">
+      <div class="md-form">
+        <input id="decisionFarmacolog" mdbInputDirective type="text" class="form-control"
+               formControlName="decisionFarmacolog">
+        <label for="decisionFarmacolog">Decizia farmacologului</label>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-3">
+      <div class="md-form-modified">
+        <ng-select id="farmacist" name="farmacist" [items]="farmacists"
+                   bindLabel="name"
+                   (ngModelChange)="checkFarmacist()"
+                   placeholder="Farmacist *"
+                   formControlName="farmacist">
+        </ng-select>
+        <div *ngIf="isFormSubmitted && expertForm.get('farmacist').invalid">
+          <small class="text-muted"><strong class="text-danger">Farmacistul trebuie selectat</strong></small>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3">
+      <div class="md-form">
+        <input id="decisionFarmacist" mdbInputDirective type="text" class="form-control"
+               formControlName="decisionFarmacist">
+        <label for="decisionFarmacist">Decizia farmacistului</label>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="md-form-modified">
+        <ng-select id="medic" name="medic" [items]="medics"
+                   bindLabel="name"
+                   (ngModelChange)="checkMedic()"
+                   placeholder="Clinician *"
+                   formControlName="medic">
+        </ng-select>
+        <div *ngIf="isFormSubmitted && expertForm.get('medic').invalid">
+          <small class="text-muted"><strong class="text-danger">Clinicianul trebuie selectat</strong></small>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3">
+      <div class="md-form">
+        <input id="decisionMedic" mdbInputDirective type="text" class="form-control"
+               formControlName="decisionMedic">
+        <label for="decisionMedic">Decizia clinicianului</label>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="md-form">
+        <textarea type="text" id="comment" class="md-textarea form-control" mdbInputDirective formControlName="comment" (ngModelChange)="checkComment()"></textarea>
+        <label for="comment">Comentariu</label>
+      </div>
+    </div>
+  </div>
+  <div class="position-button">
+    <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="dd()">Include expertii in dispozitia de distribuire</button>
+  </div>
+  <div class="col-md-12">
+    <div class="md-form">
+      <h5 class="text-center font-weight-bold">
+        {{title}}
+      </h5>
+      <hr>
+      <mat-radio-group formControlName="status" (ngModelChange)="checkStatus()">
+        <div class="container">
+          <div class="row">
+            <div class="offset-3">
+            </div>
+            <div class="col-5">
+              <mat-radio-button name="prop1" value="1">Acceptată</mat-radio-button>
+            </div>
+            <div class="col-4">
+              <mat-radio-button name="prop2" value="0">Respinsă</mat-radio-button>
+            </div>
+          </div>
+        </div>
+      </mat-radio-group>
+    </div>
+    <br/>
+    <div *ngIf="isFormSubmitted && expertForm.get('status').invalid">
+      <small class="text-muted"><strong class="text-danger">Status inregistrare trebuie selectat</strong></small>
+    </div>
+  </div>
+  <hr>
+</form>
+
+

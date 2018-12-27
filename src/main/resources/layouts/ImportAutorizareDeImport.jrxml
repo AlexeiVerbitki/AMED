@@ -140,9 +140,7 @@
 	<parameter name="generalDirectorDate" class="java.lang.String"/>
 	<parameter name="destinationCountry" class="java.lang.String"/>
 	<parameter name="manufacturerCountry" class="java.lang.String"/>
-	<parameter name="customs" class="java.lang.String"/>
 	<parameter name="manufacturerCountryCode" class="java.lang.String"/>
-	<parameter name="customsCode" class="java.lang.String"/>
 	<parameter name="companyNameAndAddress" class="java.lang.String"/>
 	<parameter name="codOcpo" class="java.lang.String"/>
 	<parameter name="registartionDate" class="java.lang.String"/>

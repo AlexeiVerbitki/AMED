@@ -1,0 +1,51 @@
+<div class="mat-dialog-content">
+	<form [formGroup]='aForm'>
+		<h3 class="text-center my-3 font-weight-bold">Adaugare producator</h3>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form-modified">
+					<ng-select id="proSubsActiv" name="proSubsActiv" [items]="manufactures" [loading]="loadingManufacture"
+					           bindLabel="description"
+					           placeholder="Producător *"
+					           (ngModelChange)="checkActiveSubstanceManufacture()"
+					           formControlName="manufacture">
+					</ng-select>
+					<div *ngIf="formSubmitted && (aForm.get('manufacture').value==null || aForm.get('manufacture').value.toString().length==0)">
+						<small class="text-muted"><strong class="text-danger">Producatorul trebuie selectat</strong></small>
+					</div>
+					<div *ngIf="wasManufactureAdded">
+						<small class="text-muted"><strong class="text-danger">Acest producator a fost deja introdus</strong></small>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="md-form">
+					<input id="taraProSubsActiv" mdbInputDirective type="text" formControlName="manufactureCountry" class="form-control"
+					       [attr.disabled]="true">
+					<label for="taraProSubsActiv">Ţară producător</label>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="md-form">
+					<input id="adresaProdSubsActive" mdbInputDirective type="text" formControlName="manufactureAddress" class="form-control"
+					       [attr.disabled]="true">
+					<label for="adresaProdSubsActive">Adresă producător</label>
+				</div>
+			</div>
+			<div *ngIf="dataDialog.comment" class="col-md-12">
+				<div class="md-form">
+					<input id="comment" mdbInputDirective type="text" formControlName="comment" class="form-control">
+					<label for="comment">Comentariu</label>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="text-center">
+	<div mat-dialog-actions>
+		<div class="w-100">
+			<button class="btn btn-danger btn-sm waves-light" (click)="cancel()">Anulare</button>
+			<button class="btn btn-dark-green-color btn-sm waves-light" (click)="add()">Adaugare</button>
+		</div>
+	</div>
+</div>

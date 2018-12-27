@@ -1,0 +1,274 @@
+<h2 mat-dialog-title align="center">Agent economic</h2>
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]="rForm">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="idno" mdbInputDirective type="text" class="form-control" formControlName="idno"
+                    >
+                    <label for="idno">IDNO<span class="text-danger">*</span></label>
+                </div>
+                <div *ngIf="rFormSubbmitted && !rForm.get('idno').valid">
+                    <small class="text-muted"><strong class="text-danger">IDNO trebuie introdus sau nu este
+                        valid</strong>
+                    </small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="code" mdbInputDirective type="text" class="form-control" formControlName="code"
+                    >
+                    <label for="code">Codul<span class="text-danger">*</span></label>
+                </div>
+                <div *ngIf="rFormSubbmitted && !rForm.get('code').valid">
+                    <small class="text-muted"><strong class="text-danger">Codul trebuie introdus</strong>
+                    </small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input id="registrationDate" matInput [matDatepicker]="picker1"
+                               placeholder="Data inregistrarii agentului economic" formControlName="registrationDate"
+                        >
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker1></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div *ngIf="rFormSubbmitted && !rForm.get('registrationDate').valid">
+                    <small class="text-muted"><strong class="text-danger">Data inregistrarii trebuie introdusa</strong>
+                    </small>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="shortName" mdbInputDirective type="text" class="form-control" formControlName="shortName"
+                    >
+                    <label for="shortName">Numele<span class="text-danger">*</span></label>
+                </div>
+                <div *ngIf="rFormSubbmitted && !rForm.get('shortName').valid">
+                    <small class="text-muted"><strong class="text-danger">Numele trebuie introdusa</strong>
+                    </small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="longName" mdbInputDirective type="text" class="form-control" formControlName="longName"
+                    >
+                    <label for="longName">Numele in intregime</label>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="legalAddress" mdbInputDirective type="text" class="form-control"
+                           formControlName="legalAddress"
+                    >
+                    <label for="legalAddress">Adresa juridica<span class="text-danger">*</span></label>
+                </div>
+                <div *ngIf="rFormSubbmitted && !rForm.get('legalAddress').valid">
+                    <small class="text-muted"><strong class="text-danger">Adresa juridica trebuie introdusa</strong>
+                    </small>
+                </div>
+            </div>
+
+
+            <div class="col-md-4">
+                <div class="md-form-modified-select">
+                    <ng-select class="custom" [items]="ecAgentTypes"
+                               bindLabel="description"
+                               placeholder="Tipul intreprinderii"
+                               formControlName="tipIntreprindereMain"
+                               [required]="true"
+                    >
+                    </ng-select>
+                </div>
+                <div *ngIf="rFormSubbmitted && !rForm.get('tipIntreprindereMain').valid">
+                    <small class="text-muted"><strong class="text-danger">Tip intreprindere trebuie selectata</strong>
+                    </small>
+                </div>
+            </div>
+
+
+            <div class="col-md-4">
+                <div class="md-form-modified-select">
+                    <ng-select class="custom" [items]="states"
+                               bindLabel="description"
+                               placeholder="Regiunea"
+                               formControlName="stateMain"
+                               [required]="true"
+                    >
+                    </ng-select>
+                </div>
+                <div *ngIf="rFormSubbmitted && !rForm.get('stateMain').valid">
+                    <small class="text-muted"><strong class="text-danger">Regiunea trebuie introdusa</strong>
+                    </small>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="md-form-modified-select">
+                    <ng-select class="custom" [items]="localitiesForStateMain"
+                               bindLabel="description"
+                               placeholder="Localitatea"
+                               formControlName="localityForStateMain"
+                               [required]="true"
+                    >
+                    </ng-select>
+                </div>
+                <div *ngIf="rFormSubbmitted && !rForm.get('localityForStateMain').valid">
+                    <small class="text-muted"><strong class="text-danger">Localitatea trebuie introdusa</strong>
+                    </small>
+                </div>
+            </div>
+
+
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="streetMain" mdbInputDirective type="text" class="form-control"
+                           formControlName="streetMain"
+                    >
+                    <label for="streetMain">Strada</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="directorMain" mdbInputDirective type="text" class="form-control"
+                           formControlName="directorMain"
+                    >
+                    <label for="directorMain">Director</label>
+                </div>
+            </div>
+
+
+        </div>
+
+    </form>
+
+
+    <form [formGroup]="oForm">
+        <h5 class="text-center font-weight-bold">Filiale</h5>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="md-form-modified-select">
+                    <ng-select class="custom" [items]="ecAgentTypes"
+                               bindLabel="description"
+                               placeholder="Tipul intreprinderii"
+                               formControlName="tipIntreprindere"
+                               [required]="true"
+                    >
+                    </ng-select>
+                </div>
+                <div *ngIf="oFormSubbmitted && !oForm.get('tipIntreprindere').valid">
+                    <small class="text-muted"><strong class="text-danger">Tip intreprindere trebuie selectata</strong>
+                    </small>
+                </div>
+            </div>
+
+
+            <div class="col-md-4">
+                <div class="md-form-modified-select">
+                    <ng-select class="custom" [items]="states"
+                               bindLabel="description"
+                               placeholder="Regiunea"
+                               formControlName="state"
+                               [required]="true"
+                    >
+                    </ng-select>
+                </div>
+                <div *ngIf="oFormSubbmitted && !oForm.get('state').valid">
+                    <small class="text-muted"><strong class="text-danger">Regiunea trebuie introdusa</strong>
+                    </small>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="md-form-modified-select">
+                    <ng-select class="custom" [items]="localitiesForState"
+                               bindLabel="description"
+                               placeholder="Localitatea"
+                               formControlName="localityForState"
+                               [required]="true"
+                    >
+                    </ng-select>
+                </div>
+                <div *ngIf="oFormSubbmitted && !oForm.get('localityForState').valid">
+                    <small class="text-muted"><strong class="text-danger">Localitatea trebuie introdusa</strong>
+                    </small>
+                </div>
+            </div>
+
+
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="street" mdbInputDirective type="text" class="form-control"
+                           formControlName="street"
+                    >
+                    <label for="street">Strada</label>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="director" mdbInputDirective type="text" class="form-control"
+                           formControlName="director"
+                    >
+                    <label for="director">Director</label>
+                </div>
+            </div>
+
+
+            <div class="col-md-3">
+                <div class="text-center">
+                    <div class="md-form">
+                        <button type="button" class="btn btn-indigo waves-light btn-sm btn-sm-bl" mdbWavesEffect
+                                (click)="addNewFilial()">Adauga
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+
+    <div class="example-container">
+        <table class="table table-widths text-center">
+            <thead class="bg-sidebar white-text">
+            <tr>
+                <th scope="col">Nr.</th>
+                <th scope="col">Tipul intreprinderii</th>
+                <th scope="col">Adresa</th>
+                <th scope="col">Codul</th>
+                <th scope="col">Actiuni</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let fil of filiale;let i = index">
+                <th scope="row">{{ i + 1}}</th>
+                <td>{{ fil.companyType }}</td>
+                <td>{{ fil.address }}</td>
+                <td>{{ fil.code }}</td>
+                <td>
+                    <button class="btn btn-dark-red-color waves-light btn-sm waves-light" type="button"
+                            (click)="removeFilial(i)" mdbWavesEffect><i class="fa fa-trash fa-lg"
+                                                                        aria-hidden="true"></i>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div *ngIf="rFormSubbmitted && filiale?.length==0">
+        <small class="text-muted"><strong class="text-danger">Nici un obiect nu a fost adaugat</strong></small>
+    </div>
+
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+    <button type="button" (click)="save()" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
+            mdbWavesEffect>Salvare date </button>
+    <button class="btn btn-dark-red-color btn-sm-bl btn-sm" (click)="cancel()">Inchidere</button>
+</mat-dialog-actions>

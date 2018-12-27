@@ -1,6 +1,8 @@
 package com.bass.amed.controller.rest;
 
 import com.bass.amed.common.Constants;
+import com.bass.amed.dto.AutorizationImportDataSet;
+import com.bass.amed.dto.AutorizationImportDataSet2;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
@@ -966,81 +968,124 @@ public class RequestController
 
 			/* Map to hold Jasper report Parameters */
 			Map<String, Object>                   parameters                          = new HashMap<>();
-			ArrayList<AutorizationImportDataSet>  autorizationImportDataSetArrayList  = new ArrayList<>();
-			ArrayList<AutorizationImportDataSet2> autorizationImportDataSet2ArrayList = new ArrayList<>();
+//			ArrayList<AutorizationImportDataSet>  autorizationImportDataSetArrayList  = new ArrayList<>();
+//			ArrayList<AutorizationImportDataSet2> autorizationImportDataSet2ArrayList = new ArrayList<>();
 
 
 
 			HashMap<String, Double> map = new HashMap();
 
-			for (ImportAuthorizationDetailsEntity entity : request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList()) {
-				/*Create a map Key is the code value is the amount
-				 *
-				 * if the jey exists add the sum, if id doesn't creaet the key and add the value*/
-				if (entity != null) {
-				if (autorizationImportDataSet2ArrayList.stream().anyMatch(x -> x.getProductCode().equalsIgnoreCase(entity.getCustomsCode().getCode()))) {
-					for (int i = 0; i < autorizationImportDataSet2ArrayList.size(); i++) {
-						if (autorizationImportDataSet2ArrayList.get(i).getProductCode().equals(entity.getCustomsCode().getCode())) {
-							autorizationImportDataSet2ArrayList.get(i).setAmount(autorizationImportDataSet2ArrayList.get(i).getAmount() + entity.getSumm());
-						}
-					}
-				} else {
-
-					AutorizationImportDataSet2 dataSet2 = new AutorizationImportDataSet2();
-					dataSet2.setAmount(entity.getSumm());
-					dataSet2.setField18("");
-					dataSet2.setProductCode(entity.getCustomsCode().getCode());
-					dataSet2.setProductName(entity.getCustomsCode().getDescription());
-//					dataSet2.setTotal();
-					dataSet2.setQuantity("");
-					dataSet2.setUnitMeasure("");
-
-					autorizationImportDataSet2ArrayList.add(dataSet2);
-				}
-
-				//====================================
-
-				if (map.get(entity.getCustomsCode().getCode()) == null) {
-					map.put(entity.getCustomsCode().getCode(), entity.getSumm());
-				} else {
-					map.put(entity.getCustomsCode().getCode(), map.get(entity.getCustomsCode().getCode()) + entity.getSumm());
-				}
-
-				//====================================
-			}
-
-			}
-
-
-			System.out.println(autorizationImportDataSet2ArrayList);
-
-			AutorizationImportDataSet dataSet = new AutorizationImportDataSet();
-			dataSet.setCustom("Nord");
-			dataSet.setCustomCode("1000");
-			dataSet.setTransactionType("Cumparare/Vinzare ferma");
-			dataSet.setCurrencyPpayment("MDL");
-			dataSet.setPrice(100.00);
+//			for (ImportAuthorizationDetailsEntity entity : request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList()) {
+//				/*Create a map Key is the code value is the amount
+//				 *
+//				 * if the jey exists add the sum, if id doesn't creaet the key and add the value*/
+//				if (entity != null) {
+//				if (autorizationImportDataSet2ArrayList.stream().anyMatch(x -> x.getProductCode().equalsIgnoreCase(entity.getCustomsCode().getCode()))) {
+//					for (int i = 0; i < autorizationImportDataSet2ArrayList.size(); i++) {
+//						if (autorizationImportDataSet2ArrayList.get(i).getProductCode().equals(entity.getCustomsCode().getCode())) {
+//							autorizationImportDataSet2ArrayList.get(i).setAmount(autorizationImportDataSet2ArrayList.get(i).getAmount() + entity.getSumm());
+//						}
+//					}
+//				} else {
+//
+//					AutorizationImportDataSet2 dataSet2 = new AutorizationImportDataSet2();
+//					dataSet2.setAmount(entity.getSumm());
+//					dataSet2.setField18("");
+//					dataSet2.setProductCode(entity.getCustomsCode().getCode());
+//					dataSet2.setProductName(entity.getCustomsCode().getDescription());
+////					dataSet2.setTotal();
+//					dataSet2.setQuantity("");
+//					dataSet2.setUnitMeasure("");
+//
+//					autorizationImportDataSet2ArrayList.add(dataSet2);
+//				}
+//
+//				//====================================
+//
+//				if (map.get(entity.getCustomsCode().getCode()) == null) {
+//					map.put(entity.getCustomsCode().getCode(), entity.getSumm());
+//				} else {
+//					map.put(entity.getCustomsCode().getCode(), map.get(entity.getCustomsCode().getCode()) + entity.getSumm());
+//				}
+//
+//				//====================================
+//			}
+//
+//			}
 
 
-			autorizationImportDataSetArrayList.add(dataSet);
-
-
-//=====================================================================================================
+//			System.out.println(autorizationImportDataSet2ArrayList);
+//
+//			AutorizationImportDataSet dataSet = new AutorizationImportDataSet();
+//			dataSet.setCustom("Nord");
+//			dataSet.setCustomCode("1000");
+//			dataSet.setTransactionType("Cumparare/Vinzare ferma");
+//			dataSet.setCurrencyPpayment("MDL");
+//			dataSet.setPrice(100.00);
+//
+//
+//			autorizationImportDataSetArrayList.add(dataSet);
+//
+//
+//
+//
+////=====================================================================================================
 //			AutorizationImportDataSet2 dataSet2 = new AutorizationImportDataSet2();
-//			dataSet2.setAmount(200.00);
-//			dataSet2.setField18("Test");
-//			dataSet2.setProductCode("3004");
-//			dataSet2.setProductName("Ampicilin");
-//			dataSet2.setProductCode("1234");
-//			dataSet2.setTotal(300.00);
-//			dataSet2.setQuantity("10");
-//			dataSet2.setUnitMeasure("20 UI");
-//
-//
-//			autorizationImportDataSet2ArrayList.add(dataSet2);
+//			dataSet2.setAmount(null);
+//			dataSet2.setField18(null);
+//			dataSet2.setProductCode(null);
+//			dataSet2.setProductName(null);
+//			dataSet2.setProductCode(null);
+//			dataSet2.setTotal(null);
+//			dataSet2.setQuantity(null);
+//			dataSet2.setUnitMeasure(null);
 
-            JRBeanCollectionDataSource autorizationImportDataSet  = new JRBeanCollectionDataSource(autorizationImportDataSetArrayList);
+            AutorizationImportDataSet dataSet = new AutorizationImportDataSet();
+            dataSet.setCustom("Nord");
+            dataSet.setCustomCode("1000");
+            dataSet.setTransactionType("Cumparare/Vinzare ferma");
+            dataSet.setCurrencyPpayment("MDL");
+            dataSet.setPrice(100.00);
+
+            ArrayList<AutorizationImportDataSet> autorizationImportDataSetArrayList = new ArrayList<AutorizationImportDataSet>();
+            autorizationImportDataSetArrayList.add(dataSet);
+
+
+
+
+            AutorizationImportDataSet2 dataSet2 = new AutorizationImportDataSet2();
+            dataSet2.setAmount(200.00);
+            dataSet2.setField18("Test");
+            dataSet2.setProductCode("3004");
+            dataSet2.setProductName("Ampicilin");
+            dataSet2.setProductCode("1234");
+            dataSet2.setTotal(300.00);
+            dataSet2.setQuantity("10");
+            dataSet2.setUnitMeasure("20 UI");
+
+            AutorizationImportDataSet2 dataSet2_1 = new AutorizationImportDataSet2();
+            dataSet2_1.setAmount(200.00);
+            dataSet2_1.setField18("Test 1");
+            dataSet2_1.setProductCode("300400");
+            dataSet2_1.setProductName("Ampicilina");
+            dataSet2_1.setProductCode("12345");
+            dataSet2_1.setTotal(320.00);
+            dataSet2_1.setQuantity("10");
+            dataSet2_1.setUnitMeasure("210 UI");
+
+            ArrayList<AutorizationImportDataSet2> autorizationImportDataSet2ArrayList = new ArrayList<AutorizationImportDataSet2>();
+            autorizationImportDataSet2ArrayList.add(dataSet2);
+            autorizationImportDataSet2ArrayList.add(dataSet2_1);
+
+
+
+			autorizationImportDataSet2ArrayList.add(dataSet2);
+
+            JRBeanCollectionDataSource autorizationImportDataSet = new JRBeanCollectionDataSource(autorizationImportDataSetArrayList);
             JRBeanCollectionDataSource autorizationImportDataSet2 = new JRBeanCollectionDataSource(autorizationImportDataSet2ArrayList);
+
+//            JRBeanCollectionDataSource autorizationImportDataSet  = new JRBeanCollectionDataSource(autorizationImportDataSetArrayList);
+//            JRBeanCollectionDataSource autorizationImportDataSet2 = new JRBeanCollectionDataSource(autorizationImportDataSet2ArrayList);
 
 			parameters.put("autorizationNr", request.getImportAuthorizationEntity().getAuthorizationsNumber());
 //            parameters.put("productName"							, request.getImportAuthorizationEntity().getAuthorizationsNumber());
@@ -1059,8 +1104,6 @@ public class RequestController
 			parameters.put("destinationCountry", "Moldova");
 			parameters.put("destinationCountryCode", "MD");
 
-            parameters.put("customs"								, request.getImportAuthorizationEntity().getAuthorizationsNumber());
-            parameters.put("customsCode" 							, request.getImportAuthorizationEntity().getCustomsNumber());
 			parameters.put("companyNameAndAddress",
 			               request.getImportAuthorizationEntity().getImporter().getLongName() + ", " + request.getImportAuthorizationEntity()
 			                                                                                                  .getImporter()
@@ -1084,7 +1127,7 @@ public class RequestController
 			parameters.put("manufacturerCountryCode", request.getImportAuthorizationEntity().getSeller().getCountry().getCode());
 
 
-//			parameters.put("autorizationImportDataSet", autorizationImportDataSet);
+			parameters.put("autorizationImportDataSet", autorizationImportDataSet);
 			parameters.put("autorizationImportDataSet2", autorizationImportDataSet2);
 //			System.out.println("parameters: " + parameters.toString());
             /*parameters.put("licenseNumber", request.getLicense().getNr());
@@ -1219,64 +1262,6 @@ public class RequestController
 }
 
 
-class AutorizationImportDataSet {
-	String custom;
-	String customCode;
-	String transactionType;
-	String currencyPpayment;
-	Double price;
-
-	public String getCustom() {
-		return custom;
-	}
-
-	public void setCustom(String custom) {
-		this.custom = custom;
-	}
-
-	public String getCustomCode() {
-		return customCode;
-	}
-
-	public void setCustomCode(String customCode) {
-		this.customCode = customCode;
-	}
-
-	public String getTransactionType() {
-		return transactionType;
-	}
-
-	public void setTransactionType(String transactionType) {
-		this.transactionType = transactionType;
-	}
-
-	public String getCurrencyPpayment() {
-		return currencyPpayment;
-	}
-
-	public void setCurrencyPpayment(String currencyPpayment) {
-		this.currencyPpayment = currencyPpayment;
-	}
-
-	public Double getPrice() {
-		return price;
-	}
-
-	public void setPrice(Double price) {
-		this.price = price;
-	}
 
 
-}
 
-@Data class AutorizationImportDataSet2 {
-	String productName;
-	String productCode;
-	String unitMeasure;
-	String quantity;
-	String field18;
-	Double amount;
-	Double total;
-
-
-}

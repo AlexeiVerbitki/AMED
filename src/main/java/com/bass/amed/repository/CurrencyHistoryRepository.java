@@ -16,13 +16,16 @@ public interface CurrencyHistoryRepository extends JpaRepository<NmCurrenciesHis
 
     @Query(value = "SELECT t.id,\n" +
             "       t.currency_id                                                           currencyId,\n" +
-            "       AVG(t.value)                                                            avgValue,\n" +
             "       DATE_ADD(DATE_ADD(LAST_DAY(NOW()), INTERVAL 1 DAY), INTERVAL - 2 MONTH) firstDayOfLastMonth,\n" +
-            "       LAST_DAY(DATE_ADD(NOW(), INTERVAL - 1 MONTH))                           lastDayOfLastMonth\n" +
+            "       LAST_DAY(DATE_ADD(NOW(), INTERVAL - 1 MONTH))                           lastDayOfLastMonth,\n" +
+            "       AVG(CASE\n" +
+            "               WHEN t.multiplicity > 0 THEN t.value / t.multiplicity\n" +
+            "               ELSE t.value\n" +
+            "           END)                                                                avgValue\n" +
             "FROM nm_currencies_history t\n" +
-            "       LEFT JOIN nm_currencies c ON t.currency_id = c.id\n" +
+            "            LEFT JOIN nm_currencies c ON t.currency_id = c.id\n" +
             "WHERE (t.period <= LAST_DAY(DATE_ADD(NOW(), INTERVAL - 1 MONTH)) AND\n" +
             "       t.period >= DATE_ADD(DATE_ADD(LAST_DAY(NOW()), INTERVAL 1 DAY), INTERVAL - 2 MONTH))\n" +
-            "GROUP BY t.currency_id;", nativeQuery = true)
+            "GROUP BY t.currency_id", nativeQuery = true)
     List<GetAVGCurrencyProjection> getPrevMonthAVGCurrencies();
 }

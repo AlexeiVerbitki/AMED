@@ -1,0 +1,31 @@
+<div>
+  <form [formGroup]="aForm">
+    <div class="col-md-6 offset-2">
+      <div class="md-form-modified">
+        <mat-form-field class="w-100">
+          <input id="dataProcurii1" matInput [matDatepicker]="picker3" [max]="maxDate"
+                 placeholder="Data emiterii" formControlName="dateOfIssue">
+          <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+          <mat-datepicker touchUi #picker3></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div *ngIf="formSubmitted && !aForm.get('dateOfIssue').value">
+        <small class="text-muted"><strong class="text-danger">Data emiterii trebuie introdusa</strong>
+        </small>
+      </div>
+      <div *ngIf="isExtensionInvalid">
+        <small class="text-muted"><strong class="text-danger">Nu se permite atasarea instructiunilor cu aceasta extensie. Extensiile permise: ["jpg", "jpeg", "png", "jfif", "bmp", "svg", "pdf"]</strong></small>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="text-center">
+  <div mat-dialog-actions>
+    <div class="w-100">
+      <button class="btn btn-dark-green-color btn-sm waves-light" (click)="checkFields() ? incarcaDoc.click() : ''">Incarca document</button>
+      <input id="incarcaFisier" #incarcaDoc type="file" style="display:none;" (click)="resetDoc()" (change)="addDoc($event);" attr.disabled="this.disabled"
+             accept=".pdf,image/*">
+      <button class="btn btn-danger btn-sm waves-light" (click)="cancel()">Anulare</button>
+    </div>
+  </div>
+</div>

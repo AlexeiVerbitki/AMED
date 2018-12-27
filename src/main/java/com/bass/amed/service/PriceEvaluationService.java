@@ -37,9 +37,6 @@ public class PriceEvaluationService {
     @Autowired
     private CurrencyRepository currencyRepository;
 
-    @Autowired
-    private PriceRepository priceRepository;
-
 
     public List<MedicineInfoForAnnex1> getPricesForApproval() {
         Optional<List<CatalogPriceDTO>> requests = Optional.of(pricesEvaluationRepository.getPriceForAnexa1());

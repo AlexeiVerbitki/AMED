@@ -1,0 +1,28 @@
+<div class="container-fluid sky z-depth-2">
+  <h5 class="text-center font-weight-bold">Generare documente</h5>
+  <hr>
+  <form [formGroup]="gForm">
+    <mat-radio-group formControlName="tipGenerare">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <mat-radio-button name="prop1" value="DD">Dispozitie de distribuire</mat-radio-button>
+          </div>
+          <div class="col">
+            <mat-radio-button name="prop2" value="OA">Ordin de autorizare al medicamentului</mat-radio-button>
+          </div>
+          <div class="col">
+            <mat-radio-button name="prop2" value="OI">Ordin de intreupere a procedurii de autorizare a medicamentului</mat-radio-button>
+          </div>
+        </div>
+      </div>
+    </mat-radio-group>
+    <app-requests-dd [displayTable]="typeG=='DD'" #requestDD (loadDDs)="loadDDs($event)"></app-requests-dd>
+    <app-medicaments-oa [displayTable]="typeG=='OA'" #medicamentsOA (loadOAs)="loadOAs($event)"></app-medicaments-oa>
+    <app-requests-oi [displayTable]="typeG=='OI'" #requestOI (loadOIs)="loadOIs($event)"></app-requests-oi>
+    <hr>
+    <app-dd-list [displayTable]="typeG=='DD'" #ddList (ddListModified)="ddListModified($event)"></app-dd-list>
+    <app-oa-list [displayTable]="typeG=='OA'" #oaList (oaListModified)="oaListModified($event)"></app-oa-list>
+    <app-oi-list [displayTable]="typeG=='OI'" #oiList (oiListModified)="oiListModified($event)"></app-oi-list>
+  </form>
+</div>
