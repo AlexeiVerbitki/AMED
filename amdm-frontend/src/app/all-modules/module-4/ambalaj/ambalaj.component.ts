@@ -515,11 +515,9 @@ export class AmbalajComponent implements OnInit {
         modelToSubmit.importAuthorizationEntity.currency = this.authorizationCurrency;
 
         console.log("modelToSubmit", modelToSubmit);
-        alert("before addImportRequest(modelToSubmit)")
         if (/*&& this.evaluateImportForm.valid && */ this.docs !== null) {
             this.loadingService.show();
             this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
-                    alert("after addImportRequest(modelToSubmit)")
                     console.log("addImportRequest(modelToSubmit).subscribe(data) ", data)
                     // if (/*&& this.evaluateImportForm.valid && */ this.docs !== null) {
                     this.loadingService.hide();

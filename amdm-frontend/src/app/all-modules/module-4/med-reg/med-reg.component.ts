@@ -891,7 +891,6 @@ export class MedRegComponent implements OnInit {
         modelToSubmit.importAuthorizationEntity.summ = this.authorizationSumm;
         modelToSubmit.importAuthorizationEntity.currency = this.authorizationCurrency;
         console.log("modelToSubmit", modelToSubmit);
-        alert("before addImportRequest(modelToSubmit)")
         // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {
 
         console.log("this.evaluateImportForm.valid", this.evaluateImportForm.valid)
@@ -901,7 +900,6 @@ export class MedRegComponent implements OnInit {
             this.loadingService.show();
 
             this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
-                    alert("after addImportRequest(modelToSubmit)")
                     console.log("addImportRequest(modelToSubmit).subscribe(data) ", data)
                     this.loadingService.hide();
                     // this.router.navigate(['dashboard/module/import-authorization/registered-medicament-approve/' + data.body.id]);

@@ -826,10 +826,8 @@ export class MedRegApproveComponent implements OnInit {
         // }
 
         console.log("modelToSubmit", modelToSubmit);
-        alert("before addImportRequest(modelToSubmit)")
         // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {
         this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
-                alert("after addImportRequest(modelToSubmit)")
                 console.log("addImportRequest(modelToSubmit).subscribe(data) ", data)
                 this.loadingService.hide();
                 this.router.navigate(['dashboard/homepage']);
