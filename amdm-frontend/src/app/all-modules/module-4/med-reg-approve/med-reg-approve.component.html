@@ -287,7 +287,7 @@
                         <thead class="black white-text">
                         <tr>
                             <th scope="col">Denumirea comercială a medicamentului</th>
-                            <th scope="col">Codul ATC</th>
+                            <th scope="col" *ngIf="importData.importAuthorizationEntity.medType!==4">Codul ATC</th>
                             <th scope="col">Doza</th>
                             <th scope="col">Divizare</th>
                             <th scope="col">Producatorul</th>
