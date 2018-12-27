@@ -302,11 +302,11 @@
                             </div>
                             <div class="col-4">
                                 <div class="md-form">
-                                    <input id="price" mdbInputDirective type="number" min="0" class="form-control"
-                                           formControlName="price">
-                                    <label for="price">Pretul</label>
+                                    <input id="currencyCode" mdbInputDirective type="number" min="0" class="form-control"
+                                           formControlName="currencyCode">
+                                    <label for="currencyCode">Pretul</label>
                                 </div>
-                                <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').invalid">
+                                <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currencyCode').invalid">
                                     <small class="text-muted"><strong class="text-danger">Prețul trebuie selectat</strong></small>
                                 </div>
                                 <div *ngIf="invalidPrice">
@@ -535,7 +535,7 @@
                             <td>{{ unitOfImport.unitsOfMeasurement }}</td>
                             <td>{{ unitOfImport.producer.description }}</td>
                             <td>{{ unitOfImport.quantity }}</td>
-                            <td>{{ unitOfImport.price }}</td>
+                            <td>{{ unitOfImport.currencyCode }}</td>
                             <td>{{ unitOfImport.currency.shortDescription}}</td>
                             <td>{{ unitOfImport.summ |  number : '1.2-2'}}</td>
                             <!--<td>{{ unitOfImport.producer.address }}, {{ unitOfImport.producer.country.description }}</td>-->

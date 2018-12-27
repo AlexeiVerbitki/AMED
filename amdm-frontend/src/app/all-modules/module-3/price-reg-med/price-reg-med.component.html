@@ -163,13 +163,13 @@
             </div>
 
             <!--Contents for {{tab}} tab-->
-                <app-one-med-price [countries]="countries"
+                <app-one-med-currencyCode [countries]="countries"
                                    [currencies]="currencies"
                                    [priceTypes]="priceTypes"
                                    [formSubmitted]="formSubmitted"
                                    (medicamentChange)="onMedChange($event)"
                                    [(priceDTO)]="requests[index]"
-                                   [medIndex]="index"></app-one-med-price>
+                                   [medIndex]="index"></app-one-med-currencyCode>
             </div>
         </mat-tab>
     </mat-tab-group>

@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="md-form" formGroupName="price">
+                <div class="md-form" formGroupName="currencyCode">
                     <input id="nrFolder" mdbInputDirective type="text" class="form-control"
                            formControlName="folderNr" [attr.disabled]="true">
                     <label for="nrFolder">Numarul dosarului</label>
@@ -107,13 +107,13 @@
                 <td class="align-middle" mdbTooltip="{{el.dose}}" placement="top">{{el.dose}}</td>
                 <td class="align-middle" mdbTooltip="{{el.division}}" placement="top">{{el.division}}</td>
                 <td class="align-middle" mdbTooltip="{{el.internationalMedicamentName.description}}" placement="top">{{el.internationalMedicamentName.description}}</td>
-                <td class="align-middle" mdbTooltip="{{el.price.mdlValue | digitsAfterDecimal:4}}" placement="top">
-                    <input type="number" #newMdlPriceInput [value]="el.price.mdlValue | digitsAfterDecimal:4"
+                <td class="align-middle" mdbTooltip="{{el.currencyCode.mdlValue | digitsAfterDecimal:4}}" placement="top">
+                    <input type="number" #newMdlPriceInput [value]="el.currencyCode.mdlValue | digitsAfterDecimal:4"
                            (change)="currentMedPriceChanged(i, newMdlPriceInput.value)" id="priceMdlNew" [disabled]="el.rowType == 2"
-                           class="form-control text-center form-control-sm input-price"/>
+                           class="form-control text-center form-control-sm input-currencyCode"/>
                 </td>
 
-                <td class="align-middle" mdbTooltip="{{el.price.value | digitsAfterDecimal:4}} {{el.price.currency.shortDescription}}" placement="top">{{el.price.value | digitsAfterDecimal:4}} {{el.price.currency.shortDescription}}</td>
+                <td class="align-middle" mdbTooltip="{{el.currencyCode.value | digitsAfterDecimal:4}} {{el.currencyCode.currency.shortDescription}}" placement="top">{{el.currencyCode.value | digitsAfterDecimal:4}} {{el.currencyCode.currency.shortDescription}}</td>
                 <td class="align-middle w-40" *ngIf="el.rowType == 2">
                     <button type="button" class="btn btn-dark-red-color btn-sm" (click)="deleteRelatedOriginalMed(i)">
                         <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
@@ -122,7 +122,7 @@
             </tr>
             </tbody>
         </table>
-        <div *ngIf="this.medicaments[0]?.price?.mdlValue <= 0">
+        <div *ngIf="this.medicaments[0]?.currencyCode?.mdlValue <= 0">
             <small class="text-muted"><strong class="text-danger">Introduceți un preț valid</strong></small>
         </div>
 
@@ -251,7 +251,7 @@
                             <td scope="row">{{el.orderApprovDate | date: 'dd/MM/yyyy'}}</td>
                             <td>{{el.revisionDate | date: 'dd/MM/yyyy'}}</td>
                             <td>{{el.priceMdl | digitsAfterDecimal:4}}</td>
-                            <td>{{el.price | digitsAfterDecimal:4}} {{el.currency?.shortDescription}}</td>
+                            <td>{{el.currencyCode | digitsAfterDecimal:4}} {{el.currency?.shortDescription}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -454,7 +454,7 @@
                             <td class="align-middle" mdbTooltip="{{m.manufacture}}">{{m.manufacture}}</td>
                             <td class="align-middle" mdbTooltip="{{m.internationalName}}">{{m.internationalName}}</td>
                             <td class="align-middle">{{m.mdlValue | digitsAfterDecimal:4}}</td>
-                            <td class="align-middle">{{m.price | digitsAfterDecimal:4}} {{m.currency}}</td>
+                            <td class="align-middle">{{m.currencyCode | digitsAfterDecimal:4}} {{m.currency}}</td>
                             <td class="align-middle w-40">
                                 <button type="button" class="btn btn-dark-red-color btn-sm" (click)="deleteRelatedMed(i)">
                                     <i class="fa fa-trash fa-lg" aria-hidden="true"></i>

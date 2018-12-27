@@ -48,7 +48,7 @@
 		<field name="pharmaceuticForm" class="java.lang.String"/>
 		<field name="dose" class="java.lang.String"/>
 		<field name="division" class="java.lang.String"/>
-		<field name="price" class="java.lang.Double"/>
+		<field name="currencyCode" class="java.lang.Double"/>
 	</subDataset>
 	<parameter name="autorizareMbonDePlataDataset" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<parameter name="companyName" class="java.lang.String"/>
@@ -207,7 +207,7 @@ Fax. +373 22 737000; 737002;]]></text>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{price} + " EUR"]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{currencyCode} + " EUR"]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

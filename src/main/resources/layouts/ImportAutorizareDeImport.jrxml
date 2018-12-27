@@ -10,12 +10,12 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="background.image.path" value="C:\Users\hp bass\Downloads\image (2).png"/>
 	<property name="background.image.x" value="30"/>
 	<property name="background.image.y" value="132"/>
 	<property name="background.image.widht" value="550"/>
 	<property name="background.image.height" value="571"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
 	<style name="Table 1_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -106,7 +106,7 @@
 		<field name="customCode" class="java.lang.String"/>
 		<field name="transactionType" class="java.lang.String"/>
 		<field name="currencyPpayment" class="java.lang.String"/>
-		<field name="price" class="java.lang.Double"/>
+		<field name="currencyCode" class="java.lang.String"/>
 	</subDataset>
 	<subDataset name="Dataset2" uuid="ef47dbc8-208e-4a62-a1d9-c992b63bc3d1">
 		<parameter name="autorizationImportDataSet2" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource">
@@ -412,7 +412,7 @@
 									<textElement>
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
-									<textFieldExpression><![CDATA["T13. Valuta plăţii     " + $F{currencyPpayment} + "        " + $F{price}]]></textFieldExpression>
+									<textFieldExpression><![CDATA["13. Valuta plăţii     " + $F{currencyPpayment} + "        " + $F{currencyCode}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
@@ -420,9 +420,9 @@
 				</componentElement>
 			</frame>
 		</band>
-		<band height="64">
+		<band height="62">
 			<componentElement>
-				<reportElement x="11" y="3" width="532" height="59" uuid="08d29d22-a64f-4d37-80a7-120329734f0e">
+				<reportElement x="11" y="0" width="532" height="59" uuid="08d29d22-a64f-4d37-80a7-120329734f0e">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>

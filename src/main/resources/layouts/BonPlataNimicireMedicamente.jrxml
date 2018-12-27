@@ -74,7 +74,7 @@
 		<field name="series" class="java.lang.String"/>
 		<field name="futilityCause" class="java.lang.String"/>
 		<field name="quantity" class="java.lang.Double"/>
-		<field name="price" class="java.lang.Double"/>
+		<field name="currencyCode" class="java.lang.Double"/>
 		<field name="amount" class="java.lang.Double"/>
 	</subDataset>
 	<subDataset name="Dataset2" uuid="9add47ee-9164-45e8-86e1-90676f783ab5">
@@ -414,7 +414,7 @@
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="9"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{currencyCode}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

@@ -81,12 +81,12 @@
                             *matCellDef="let element"> {{element.registrationDate | date: 'dd/MM/yyyy'}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="price">
+                    <ng-container matColumnDef="currencyCode">
                         <th mdbTooltip="Prețul vechi valuta" mat-header-cell *matHeaderCellDef mat-sort-header
                             class="bg-sidebar white-text"> Preț vechi Valută
                         </th>
-                        <td mdbTooltip="{{element.price}} {{element.currency}}" mat-cell
-                            *matCellDef="let element"> {{element.price}} {{element.currency}}</td>
+                        <td mdbTooltip="{{element.currencyCode}} {{element.currency}}" mat-cell
+                            *matCellDef="let element"> {{element.currencyCode}} {{element.currency}}</td>
                     </ng-container>
 
                     <ng-container matColumnDef="priceNew">

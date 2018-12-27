@@ -12,7 +12,6 @@ import com.bass.amed.repository.prices.PriceRepository;
 import com.bass.amed.repository.prices.PricesHistoryRepository;
 import com.bass.amed.utils.SecurityUtils;
 import com.bass.amed.utils.Utils;
-import lombok.Data;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.hibernate.Hibernate;
@@ -30,11 +29,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 @RestController
 @RequestMapping("/api")
 public class RequestController
@@ -968,63 +966,63 @@ public class RequestController
 
 			/* Map to hold Jasper report Parameters */
 			Map<String, Object>                   parameters                          = new HashMap<>();
-//			ArrayList<AutorizationImportDataSet>  autorizationImportDataSetArrayList  = new ArrayList<>();
-//			ArrayList<AutorizationImportDataSet2> autorizationImportDataSet2ArrayList = new ArrayList<>();
+			ArrayList<AutorizationImportDataSet>  autorizationImportDataSetArrayList  = new ArrayList<>();
+			ArrayList<AutorizationImportDataSet2> autorizationImportDataSet2ArrayList = new ArrayList<>();
 
 
 
 			HashMap<String, Double> map = new HashMap();
 
-//			for (ImportAuthorizationDetailsEntity entity : request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList()) {
-//				/*Create a map Key is the code value is the amount
-//				 *
-//				 * if the jey exists add the sum, if id doesn't creaet the key and add the value*/
-//				if (entity != null) {
-//				if (autorizationImportDataSet2ArrayList.stream().anyMatch(x -> x.getProductCode().equalsIgnoreCase(entity.getCustomsCode().getCode()))) {
-//					for (int i = 0; i < autorizationImportDataSet2ArrayList.size(); i++) {
-//						if (autorizationImportDataSet2ArrayList.get(i).getProductCode().equals(entity.getCustomsCode().getCode())) {
-//							autorizationImportDataSet2ArrayList.get(i).setAmount(autorizationImportDataSet2ArrayList.get(i).getAmount() + entity.getSumm());
-//						}
-//					}
-//				} else {
-//
-//					AutorizationImportDataSet2 dataSet2 = new AutorizationImportDataSet2();
-//					dataSet2.setAmount(entity.getSumm());
-//					dataSet2.setField18("");
-//					dataSet2.setProductCode(entity.getCustomsCode().getCode());
-//					dataSet2.setProductName(entity.getCustomsCode().getDescription());
-////					dataSet2.setTotal();
-//					dataSet2.setQuantity("");
-//					dataSet2.setUnitMeasure("");
-//
-//					autorizationImportDataSet2ArrayList.add(dataSet2);
-//				}
-//
-//				//====================================
-//
-//				if (map.get(entity.getCustomsCode().getCode()) == null) {
-//					map.put(entity.getCustomsCode().getCode(), entity.getSumm());
-//				} else {
-//					map.put(entity.getCustomsCode().getCode(), map.get(entity.getCustomsCode().getCode()) + entity.getSumm());
-//				}
-//
-//				//====================================
-//			}
-//
-//			}
+			for (ImportAuthorizationDetailsEntity entity : request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList()) {
+				/*Create a map Key is the code value is the amount
+				 *
+				 * if the jey exists add the sum, if id doesn't creaet the key and add the value*/
+				if (entity != null) {
+				if (autorizationImportDataSet2ArrayList.stream().anyMatch(x -> x.getProductCode().equalsIgnoreCase(entity.getCustomsCode().getCode()))) {
+					for (int i = 0; i < autorizationImportDataSet2ArrayList.size(); i++) {
+						if (autorizationImportDataSet2ArrayList.get(i).getProductCode().equals(entity.getCustomsCode().getCode())) {
+							autorizationImportDataSet2ArrayList.get(i).setAmount(autorizationImportDataSet2ArrayList.get(i).getAmount() + entity.getSumm());
+						}
+					}
+				} else {
+
+					AutorizationImportDataSet2 dataSet2 = new AutorizationImportDataSet2();
+					dataSet2.setAmount(entity.getSumm());
+					dataSet2.setField18("");
+					dataSet2.setProductCode(entity.getCustomsCode().getCode());
+					dataSet2.setProductName(entity.getCustomsCode().getDescription());
+//					dataSet2.setTotal();
+					dataSet2.setQuantity("");
+					dataSet2.setUnitMeasure("");
+
+					autorizationImportDataSet2ArrayList.add(dataSet2);
+				}
+
+				//====================================
+
+				if (map.get(entity.getCustomsCode().getCode()) == null) {
+					map.put(entity.getCustomsCode().getCode(), entity.getSumm());
+				} else {
+					map.put(entity.getCustomsCode().getCode(), map.get(entity.getCustomsCode().getCode()) + entity.getSumm());
+				}
+
+				//====================================
+			}
+
+			}
 
 
 //			System.out.println(autorizationImportDataSet2ArrayList);
 //
-//			AutorizationImportDataSet dataSet = new AutorizationImportDataSet();
-//			dataSet.setCustom("Nord");
-//			dataSet.setCustomCode("1000");
-//			dataSet.setTransactionType("Cumparare/Vinzare ferma");
-//			dataSet.setCurrencyPpayment("MDL");
-//			dataSet.setPrice(100.00);
-//
-//
-//			autorizationImportDataSetArrayList.add(dataSet);
+			AutorizationImportDataSet dataSet = new AutorizationImportDataSet();
+			dataSet.setCustom("Nord");
+			dataSet.setCustomCode("1000");
+			dataSet.setTransactionType("Cumparare/Vinzare ferma");
+			dataSet.setCurrencyPpayment(request.getImportAuthorizationEntity().getCurrency().getShortDescription());
+			dataSet.setCurrencyCode(request.getImportAuthorizationEntity().getCurrency().getCode().toString());
+
+
+			autorizationImportDataSetArrayList.add(dataSet);
 //
 //
 //
@@ -1040,46 +1038,46 @@ public class RequestController
 //			dataSet2.setQuantity(null);
 //			dataSet2.setUnitMeasure(null);
 
-            AutorizationImportDataSet dataSet = new AutorizationImportDataSet();
-            dataSet.setCustom("Nord");
-            dataSet.setCustomCode("1000");
-            dataSet.setTransactionType("Cumparare/Vinzare ferma");
-            dataSet.setCurrencyPpayment("MDL");
-            dataSet.setPrice(100.00);
-
-            ArrayList<AutorizationImportDataSet> autorizationImportDataSetArrayList = new ArrayList<AutorizationImportDataSet>();
-            autorizationImportDataSetArrayList.add(dataSet);
-
-
-
-
-            AutorizationImportDataSet2 dataSet2 = new AutorizationImportDataSet2();
-            dataSet2.setAmount(200.00);
-            dataSet2.setField18("Test");
-            dataSet2.setProductCode("3004");
-            dataSet2.setProductName("Ampicilin");
-            dataSet2.setProductCode("1234");
-            dataSet2.setTotal(300.00);
-            dataSet2.setQuantity("10");
-            dataSet2.setUnitMeasure("20 UI");
-
-            AutorizationImportDataSet2 dataSet2_1 = new AutorizationImportDataSet2();
-            dataSet2_1.setAmount(200.00);
-            dataSet2_1.setField18("Test 1");
-            dataSet2_1.setProductCode("300400");
-            dataSet2_1.setProductName("Ampicilina");
-            dataSet2_1.setProductCode("12345");
-            dataSet2_1.setTotal(320.00);
-            dataSet2_1.setQuantity("10");
-            dataSet2_1.setUnitMeasure("210 UI");
-
-            ArrayList<AutorizationImportDataSet2> autorizationImportDataSet2ArrayList = new ArrayList<AutorizationImportDataSet2>();
-            autorizationImportDataSet2ArrayList.add(dataSet2);
-            autorizationImportDataSet2ArrayList.add(dataSet2_1);
-
-
-
-			autorizationImportDataSet2ArrayList.add(dataSet2);
+//            AutorizationImportDataSet dataSet = new AutorizationImportDataSet();
+//            dataSet.setCustom("Nord");
+//            dataSet.setCustomCode("1000");
+//            dataSet.setTransactionType("Cumparare/Vinzare ferma");
+//            dataSet.setCurrencyPpayment("MDL");
+//            dataSet.setCurrencyCode(100.00);
+//
+//            ArrayList<AutorizationImportDataSet> autorizationImportDataSetArrayList = new ArrayList<AutorizationImportDataSet>();
+//            autorizationImportDataSetArrayList.add(dataSet);
+//
+//
+//
+//
+//            AutorizationImportDataSet2 dataSet2 = new AutorizationImportDataSet2();
+//            dataSet2.setAmount(200.00);
+//            dataSet2.setField18("Test");
+//            dataSet2.setProductCode("3004");
+//            dataSet2.setProductName("Ampicilin");
+//            dataSet2.setProductCode("1234");
+//            dataSet2.setTotal(300.00);
+//            dataSet2.setQuantity("10");
+//            dataSet2.setUnitMeasure("20 UI");
+//
+//            AutorizationImportDataSet2 dataSet2_1 = new AutorizationImportDataSet2();
+//            dataSet2_1.setAmount(200.00);
+//            dataSet2_1.setField18("Test 1");
+//            dataSet2_1.setProductCode("300400");
+//            dataSet2_1.setProductName("Ampicilina");
+//            dataSet2_1.setProductCode("12345");
+//            dataSet2_1.setTotal(320.00);
+//            dataSet2_1.setQuantity("10");
+//            dataSet2_1.setUnitMeasure("210 UI");
+//
+//            ArrayList<AutorizationImportDataSet2> autorizationImportDataSet2ArrayList = new ArrayList<AutorizationImportDataSet2>();
+//            autorizationImportDataSet2ArrayList.add(dataSet2);
+//            autorizationImportDataSet2ArrayList.add(dataSet2_1);
+//
+//
+//
+//			autorizationImportDataSet2ArrayList.add(dataSet2);
 
             JRBeanCollectionDataSource autorizationImportDataSet = new JRBeanCollectionDataSource(autorizationImportDataSetArrayList);
             JRBeanCollectionDataSource autorizationImportDataSet2 = new JRBeanCollectionDataSource(autorizationImportDataSet2ArrayList);
@@ -1113,7 +1111,10 @@ public class RequestController
 			parameters.put("registrationNr", request.getImportAuthorizationEntity().getApplicant().getIdno());
 
 
-			parameters.put("themesForApplicationForAuthorization", request.getImportAuthorizationEntity().getBasisForImport());
+			parameters.put("themesForApplicationForAuthorization",
+                           "Contract: " + request.getImportAuthorizationEntity().getContract() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getContractDate()) +
+                           "\n" + "Specificația: " + request.getImportAuthorizationEntity().getAnexa() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getAnexaDate()) +
+                           "\n" + "Alte: " + request.getImportAuthorizationEntity().getBasisForImport());
 			parameters.put("geniralDirectorName", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
 			parameters.put("importExportSectionRepresentant", sysParamsRepository.findByCode(Constants.SysParams.IMPORT_REPREZENTANT).get().getValue());
 			parameters.put("importExportSectionChief", sysParamsRepository.findByCode(Constants.SysParams.IMPORT_SEF_SECTIE).get().getValue());

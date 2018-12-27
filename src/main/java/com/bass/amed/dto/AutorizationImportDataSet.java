@@ -5,7 +5,7 @@ public class AutorizationImportDataSet {
 	String customCode;
 	String transactionType;
 	String currencyPpayment;
-	Double price;
+	String currencyCode;
 
 	public String getCustom() {
 		return custom;
@@ -39,12 +39,12 @@ public class AutorizationImportDataSet {
 		this.currencyPpayment = currencyPpayment;
 	}
 
-	public Double getPrice() {
-		return price;
+	public String getCurrencyCode() {
+		return currencyCode;
 	}
 
-	public void setPrice(Double price) {
-		this.price = price;
+	public void setCurrencyCode(String currencyCode) {
+		this.currencyCode = currencyCode;
 	}
 
 
