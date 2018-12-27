@@ -969,8 +969,7 @@ public class RequestController
 			ArrayList<AutorizationImportDataSet>  autorizationImportDataSetArrayList  = new ArrayList<>();
 			ArrayList<AutorizationImportDataSet2> autorizationImportDataSet2ArrayList = new ArrayList<>();
 
-			JRBeanCollectionDataSource autorizationImportDataSet  = new JRBeanCollectionDataSource(autorizationImportDataSetArrayList);
-			JRBeanCollectionDataSource autorizationImportDataSet2 = new JRBeanCollectionDataSource(autorizationImportDataSet2ArrayList);
+
 
 			HashMap<String, Double> map = new HashMap();
 
@@ -1040,6 +1039,8 @@ public class RequestController
 //
 //			autorizationImportDataSet2ArrayList.add(dataSet2);
 
+            JRBeanCollectionDataSource autorizationImportDataSet  = new JRBeanCollectionDataSource(autorizationImportDataSetArrayList);
+            JRBeanCollectionDataSource autorizationImportDataSet2 = new JRBeanCollectionDataSource(autorizationImportDataSet2ArrayList);
 
 			parameters.put("autorizationNr", request.getImportAuthorizationEntity().getAuthorizationsNumber());
 //            parameters.put("productName"							, request.getImportAuthorizationEntity().getAuthorizationsNumber());
@@ -1084,7 +1085,7 @@ public class RequestController
 
 
 //			parameters.put("autorizationImportDataSet", autorizationImportDataSet);
-//			parameters.put("autorizationImportDataSet2", autorizationImportDataSet2);
+			parameters.put("autorizationImportDataSet2", autorizationImportDataSet2);
 //			System.out.println("parameters: " + parameters.toString());
             /*parameters.put("licenseNumber", request.getLicense().getNr());
             parameters.put("companyName", request.getLicense().getEconomicAgents().stream().findFirst().get().getLongName());
