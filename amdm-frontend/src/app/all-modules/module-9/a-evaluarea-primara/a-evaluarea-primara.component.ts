@@ -404,7 +404,6 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
                             this.evaluateClinicalTrailForm.get('typeCode').setValue(data.type.code);
                             this.evaluateClinicalTrailForm.get('initiator').setValue(data.initiator);
                             this.evaluateClinicalTrailForm.get('requestHistories').setValue(data.requestHistories);
-                    console.log("data.requestHistories",data.requestHistories)
 
 
                             this.evaluateClinicalTrailForm.get('clinicalTrails').setValue(data.clinicalTrails);

@@ -9,7 +9,7 @@ import java.util.List;
 public interface NmPricesRepository extends JpaRepository<NmPricesEntity, Integer>
 {
     NmPricesEntity findOneByMedicamentIdAndStatus(Integer mId, String status);
-    NmPricesEntity findOneByMedicamentId(Integer medId);
+    List<NmPricesEntity> findOneByMedicamentId(Integer medId);
 
 
     @Query(value = "SELECT np.*\n" +

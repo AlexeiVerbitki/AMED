@@ -159,7 +159,7 @@ export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDe
                 this.saved = true;
                 console.log('saved', data.body);
                 this.loadingService.hide();
-                this.router.navigate(['dashboard/homepage']);
+                // this.router.navigate(['dashboard/homepage']);
             },
             error1 => {
                 console.log(error1);

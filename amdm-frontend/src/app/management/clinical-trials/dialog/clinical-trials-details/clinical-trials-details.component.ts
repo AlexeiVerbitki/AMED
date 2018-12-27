@@ -4,6 +4,7 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
 import {ClinicalTrialService} from "../../../../shared/service/clinical-trial.service";
 import {Subscription} from "rxjs/index";
 import {AmendmentDetailsComponent} from "../amendment-details/amendment-details.component";
+import {NotificationDetailslsComponent} from "../notification-detailsls/notification-detailsls.component";
 
 @Component({
     selector: 'app-clinical-trials-details',
@@ -118,6 +119,17 @@ export class ClinicalTrialsDetailsComponent implements OnInit, OnDestroy {
     }
 
     private openNotifDetails(id: number) {
+        const dialogRef = this.dialogAmendment.open(NotificationDetailslsComponent, {
+            width: '1200px',
+            data: {
+                id: id,
+            }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                //do nothing
+            }
+        });
         console.log('ct Id', id);
     }
 

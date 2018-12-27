@@ -14,7 +14,9 @@ import {ReportType} from "../../../shared/enum/report-type.enum";
 import {Casuality} from "../../../shared/enum/report-casuality.enum";
 import {ReportGender} from "../../../shared/enum/report-gender.enum";
 import {ReportTypeSaesusar} from "../../../shared/enum/report-type-saesusar.enum";
-import {ReportResponseTypeV} from "../../../shared/enum/report-response-type.enum";
+import {ReportResponseType} from "../../../shared/enum/report-response-type.enum";
+import {ReportSource} from "../../../shared/enum/report-source.enum";
+import {SpecificReportType} from "../../../shared/enum/specific-report-type.enum";
 
 @Component({
     selector: 'app-c-notificare',
@@ -53,8 +55,14 @@ export class CNotificareComponent implements OnInit, OnDestroy {
     reportTypeSaesusarValues: any[] = ReportTypeSaesusar.values();
     showDiedDate: boolean = false;
 
-    reportResponseType = ReportResponseTypeV;
-    reportResponseTypeValues: any[] = ReportResponseTypeV.values();
+    reportResponseType = ReportResponseType;
+    reportResponseTypeValues: any[] = ReportResponseType.values();
+
+    reportSource = ReportSource;
+    reportSourceValues = ReportSource.values();
+
+    specificReportType = SpecificReportType;
+    specificReportTypeValues = SpecificReportType.values();
 
 
     constructor(private fb: FormBuilder,
@@ -116,6 +124,10 @@ export class CNotificareComponent implements OnInit, OnDestroy {
                 'conclusions': []
             }),
             'reportSaeSusarEntity': this.fb.group({
+                'specificReportTypeValue': [],
+                'specificReportType': [],
+                'thisReportDate': [],
+
                 'clinicalTrailsId': [],
                 'registrationRequestId': [],
                 'registerTypeValue': [],
@@ -155,10 +167,10 @@ export class CNotificareComponent implements OnInit, OnDestroy {
                 'eventReappearValue': [],
                 'concDrugDates': [],
                 'otherRelevantHistory': [],
-
                 'nameAdressManufacturer': [],
                 'mfrControlNo': [],
                 'dateManufactReceived': [],
+                'reportSourceValue': [],
                 'reportSource': [],
 
             })
@@ -169,8 +181,8 @@ export class CNotificareComponent implements OnInit, OnDestroy {
         this.loadNotificationTypes();
         this.subscribeToEvents();
 
-        console.log('reportResponseType', this.reportResponseType);
-        console.log('reportResponseTypeValues', this.reportResponseTypeValues);
+        console.log('specificReportType', this.specificReportType);
+        console.log('specificReportTypeValues', this.specificReportTypeValues);
     }
 
     subscribeToEvents() {
@@ -184,6 +196,7 @@ export class CNotificareComponent implements OnInit, OnDestroy {
                 this.addNotificationTypesForm.get('endDateNational').reset();
                 this.addNotificationTypesForm.get('endDateInternational').reset();
                 console.log('notificationTypeChange', value);
+                console.log('reportSaeSusarEntity', this.addNotificationTypesForm.get('reportSaeSusarEntity'));
                 if (value && value.code == 'DSUR') {
                     this.addNotificationTypesForm.get('reportDsurEntity.drugName').setValue(this.clinicTrailNotifForm.value.clinicalTrails.medicament.name + ' ' + this.clinicTrailNotifForm.value.clinicalTrails.medicament.dose);
                 }
@@ -221,10 +234,10 @@ export class CNotificareComponent implements OnInit, OnDestroy {
         );
         this.subscriptions.push(
             this.addNotificationTypesForm.get('reportSaeSusarEntity.reportTypeValue').valueChanges.subscribe(value => {
+                this.addNotificationTypesForm.get('reportSaeSusarEntity.reportType').setValue('');
                 if (value) {
                     this.showReportType = (this.reportType[value] == this.reportType.FOLLOW_UP.toString());
-                    //TODO Compose code in case of FOLLOW_UP
-                    this.addNotificationTypesForm.get('reportSaeSusarEntity.reportType').setValue(this.reportType[value]);
+                    this.addNotificationTypesForm.get('reportSaeSusarEntity.reportType').setValue(value);
                     // console.log('reportSaeSusarEntity.reportType', this.addNotificationTypesForm.get('reportSaeSusarEntity'));
                 }
             })
@@ -241,7 +254,7 @@ export class CNotificareComponent implements OnInit, OnDestroy {
             this.addNotificationTypesForm.get('reportSaeSusarEntity.sexValue').valueChanges.subscribe(value => {
                 if (value) {
                     this.addNotificationTypesForm.get('reportSaeSusarEntity.sex').setValue(this.reportGender[value]);
-                    console.log('this.addNotificationTypesForm', this.addNotificationTypesForm);
+                    // console.log('this.addNotificationTypesForm', this.addNotificationTypesForm);
                 }
             })
         );
@@ -249,24 +262,40 @@ export class CNotificareComponent implements OnInit, OnDestroy {
             this.addNotificationTypesForm.get('reportSaeSusarEntity.typeSaesusarValue').valueChanges.subscribe(value => {
                 this.addNotificationTypesForm.get('reportSaeSusarEntity.patientDiedDate').reset();
                 if (value) {
-                    this.showDiedDate = (value==this.reportTypeSaesusar[0]);
-                    console.log('this.addNotificationTypesForm', this.addNotificationTypesForm);
+                    this.showDiedDate = (value == this.reportTypeSaesusar[0]);
+                    this.addNotificationTypesForm.get('reportSaeSusarEntity.typeSaesusar').setValue(this.reportTypeSaesusar[value]);
+                    // console.log('this.addNotificationTypesForm', this.addNotificationTypesForm);
                 }
             })
         );
         this.subscriptions.push(
             this.addNotificationTypesForm.get('reportSaeSusarEntity.reactionAbatedValue').valueChanges.subscribe(value => {
                 if (value) {
-                    this.addNotificationTypesForm.get('reportSaeSusarEntity.reactionAbated').setValue(this.reportResponseTypeValues[value]);
-                    console.log('reactionAbated', this.reportResponseType[value]);
+                    this.addNotificationTypesForm.get('reportSaeSusarEntity.reactionAbated').setValue(this.reportResponseType[value]);
+                    // console.log('reactionAbated', this.reportResponseType[value]);
                 }
             })
         );
         this.subscriptions.push(
             this.addNotificationTypesForm.get('reportSaeSusarEntity.eventReappearValue').valueChanges.subscribe(value => {
                 if (value) {
-
-                    console.log('eventReappearValue', this.reportResponseType[value]);
+                    this.addNotificationTypesForm.get('reportSaeSusarEntity.eventReappear').setValue(this.reportResponseType[value]);
+                    // console.log('eventReappearValue', this.reportResponseType[value]);
+                }
+            })
+        );
+        this.subscriptions.push(
+            this.addNotificationTypesForm.get('reportSaeSusarEntity.reportSourceValue').valueChanges.subscribe(value => {
+                if (value) {
+                    this.addNotificationTypesForm.get('reportSaeSusarEntity.reportSource').setValue(this.reportSource[value]);
+                    // console.log('eventReappearValue', this.reportSource[value]);
+                }
+            })
+        );
+        this.subscriptions.push(
+            this.addNotificationTypesForm.get('reportSaeSusarEntity.specificReportTypeValue').valueChanges.subscribe(value => {
+                if (value) {
+                    this.addNotificationTypesForm.get('reportSaeSusarEntity.specificReportType').setValue(this.specificReportType[value]);
                 }
             })
         );
@@ -335,12 +364,13 @@ export class CNotificareComponent implements OnInit, OnDestroy {
             console.log('this.addNotificationTypesForm', this.addNotificationTypesForm);
             return;
         }
-        this.loadingService.show();
+        // this.loadingService.show();
 
         let formModel = this.clinicTrailNotifForm.getRawValue();
         let findAmendment = formModel.clinicalTrails.clinicTrialNotificationEntities.find(notif => notif.registrationRequestId == formModel.id)
         let collectedDataForm = this.addNotificationTypesForm.value;
 
+        console.log('findAmendment', findAmendment);
         findAmendment.title = collectedDataForm.notificationTitle;
         findAmendment.notifCode = formModel.clinicalTrails.code + '-N' + collectedDataForm.notifCode;
         if (collectedDataForm.notificationType != null) {
@@ -365,6 +395,11 @@ export class CNotificareComponent implements OnInit, OnDestroy {
             collectedDataForm.reportSarLlrEntity.clinicalTrailsId = formModel.clinicalTrails.id;
             collectedDataForm.reportSarLlrEntity.registrationRequestId = formModel.id;
             findAmendment.reportSarLlrEntity = collectedDataForm.reportSarLlrEntity;
+        } else if (collectedDataForm.notificationType.code == 'SUSAR/SAE') {
+            collectedDataForm.reportSaeSusarEntity.clinicalTrailsId = formModel.clinicalTrails.id;
+            collectedDataForm.reportSaeSusarEntity.registrationRequestId = formModel.id;
+            findAmendment.reportSaeSusarEntity = collectedDataForm.reportSaeSusarEntity;
+            console.log('this.addNotificationTypesForm', this.addNotificationTypesForm);
         }
 
         formModel.requestHistories = [{

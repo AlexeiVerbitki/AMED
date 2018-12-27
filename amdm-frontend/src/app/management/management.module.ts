@@ -39,6 +39,7 @@ import { MedicamentsOaComponent } from './generate-documents/medicaments-oa/medi
 import {SelectIssueDateDialogComponent} from "../dialog/select-issue-date-dialog/select-issue-date-dialog.component";
 import { RequestsOiComponent } from './generate-documents/requests-oi/requests-oi.component';
 import { OiListComponent } from './generate-documents/oi-list/oi-list.component';
+import { NotificationDetailslsComponent } from './clinical-trials/dialog/notification-detailsls/notification-detailsls.component';
 
 
 @NgModule({
@@ -79,9 +80,10 @@ import { OiListComponent } from './generate-documents/oi-list/oi-list.component'
 	SelectIssueDateDialogComponent,
 	RequestsOiComponent,
 	OiListComponent,
-	AmendmentDetailsComponent
+	AmendmentDetailsComponent,
+	NotificationDetailslsComponent
     ],
-    entryComponents: [AddReceiptDialogComponent,PriceReqEditModalComponent,LicenseDetailsComponent,DrugAuthorizationDetailsDialogComponent, AnnihilationDetailsComponent, ClinicalTrialsDetailsComponent,SelectIssueDateDialogComponent,AmendmentDetailsComponent],
+    entryComponents: [AddReceiptDialogComponent,PriceReqEditModalComponent,LicenseDetailsComponent,DrugAuthorizationDetailsDialogComponent, AnnihilationDetailsComponent, ClinicalTrialsDetailsComponent,SelectIssueDateDialogComponent,AmendmentDetailsComponent,NotificationDetailslsComponent],
     providers: [LicenseService, AdministrationService,UploadFileService, AnnihilationService, MedicamentService, ClinicalTrialService,DdListComponent,OaListComponent
     ],
 })

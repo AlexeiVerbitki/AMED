@@ -116,9 +116,6 @@ public class MedicamentEntity
     @Basic
     @Column(name = "division")
     private String division;
-//    @Basic
-//    @Column(name = "original_medicament_name")
-//    private String originalMedicamentName;
     @Basic
     @Column(name = "request_id")
     private Integer requestId;

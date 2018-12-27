@@ -175,6 +175,10 @@ export class PriceService {
         return this.http.get('/api/price/original-meds-prices', {params: {id: id}});
     }
 
+    getPrevYearsPrices(id: string): Observable<any> {
+        return this.http.get('/api/price/prev-years-prices', {params: {id: id}});
+    }
+
     getMedPrice(medId: string): Observable<Price> {
         return this.http.get<Price>('/api/price/med-price', {params: {id: medId}});
     }

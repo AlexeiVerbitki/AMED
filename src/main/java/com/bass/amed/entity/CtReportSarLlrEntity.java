@@ -25,7 +25,7 @@ public class CtReportSarLlrEntity {
 
     @Basic
     @Column(name = "register_type")
-    private Integer registerModeCode;
+    private Byte registerType;
 
     @Basic
     @Column(name = "date_from")

@@ -109,7 +109,7 @@ export class EvaluarePrimaraComponent implements OnInit {
                     'pharmaceuticalForm': [null, Validators.required],
                     'pharmaceuticalFormType': [null, Validators.required],
                     'dose': [null],
-                    'unitsO fMeasurement': [null],
+                    'unitsOfMeasurement': [null],
                     'internationalMedicamentName': [null, Validators.required],
                     'volume': [null],
                     'volumeQuantityMeasurement': [null],
@@ -515,44 +515,6 @@ export class EvaluarePrimaraComponent implements OnInit {
         });
 
         this.fillMedicamentDetails(modelToSubmit);
-
-        for (let division of this.divisions) {
-            let medicamentToSubmit: any;
-            medicamentToSubmit = Object.assign({}, this.eForm.get('medicament').value);
-            medicamentToSubmit.activeSubstances = this.activeSubstancesTable;
-            medicamentToSubmit.division = division.description;
-            if (this.eForm.get('medicament.atcCode').value) {
-                if (this.eForm.get('medicament.atcCode').value.code) {
-                    medicamentToSubmit.atcCode = this.eForm.get('medicament.atcCode').value.code;
-                } else {
-                    medicamentToSubmit.atcCode = this.eForm.get('medicament.atcCode').value;
-                }
-            }
-            if (this.eForm.get('medicament.prescription').value) {
-                medicamentToSubmit.prescription = this.eForm.get('medicament.prescription').value.value;
-            }
-            medicamentToSubmit.manufactures = [];
-            for (let x of this.manufacturesTable) {
-                x.id = null;
-                medicamentToSubmit.manufactures.push(x);
-            }
-            modelToSubmit.medicaments.push(medicamentToSubmit);
-            modelToSubmit.medicaments.push(medicamentToSubmit);
-        }
-
-        if (this.divisions.length == 0) {
-            let medicamentToSubmit: any;
-            medicamentToSubmit = Object.assign({}, this.eForm.get('medicament').value);
-            medicamentToSubmit.activeSubstances = this.activeSubstancesTable;
-            if (this.eForm.get('medicament.atcCode').value) {
-                medicamentToSubmit.atcCode = this.eForm.get('medicament.atcCode').value.code;
-            }
-            if (this.eForm.get('medicament.prescription').value) {
-                medicamentToSubmit.prescription = this.eForm.get('medicament.prescription').value.value;
-            }
-            medicamentToSubmit.manufactures = this.manufacturesTable;
-            modelToSubmit.medicaments.push(medicamentToSubmit);
-        }
 
         modelToSubmit.documents = this.documents;
         modelToSubmit.outputDocuments = this.outDocuments;

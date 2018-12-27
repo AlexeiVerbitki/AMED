@@ -50,24 +50,33 @@
 
             <div class="col-md-4" formGroupName="medicament">
                 <div class="md-form">
+                    <input id="medN" mdbInputDirective type="text" class="form-control"
+                           formControlName="name"  [attr.disabled]="true">
+                    <label for="medN">Medicamentul</label>
+                </div>
+            </div>
+
+
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="typeMed" mdbInputDirective type="text" class="form-control" [value]="medicamentOriginalType ? 'Original' : 'Generic'" [attr.disabled]="true">
+                    <label for="typeMed">Tipul medicamentului</label>
+                </div>
+            </div>
+
+            <div class="col-md-2" formGroupName="medicament">
+                <div class="md-form">
                     <input id="valab" mdbInputDirective type="number" class="form-control"
                            formControlName="termsOfValidity"  [attr.disabled]="true">
                     <label for="valab">Termen de valabilitate (luni)</label>
                 </div>
             </div>
 
-            <div class="col-md-4" formGroupName="medicament">
+            <div class="col-md-2" formGroupName="medicament">
                 <div class="md-form">
                     <input id="expiration" mdbInputDirective type="text" class="form-control"
                            formControlName="expirationDate"  [attr.disabled]="true">
                     <label for="expiration">Data expirării licenței</label>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input id="typeMed" mdbInputDirective type="text" class="form-control" [value]="medicamentType.description" [attr.disabled]="true">
-                    <label for="typeMed">Tipul medicamentului</label>
                 </div>
             </div>
         </div>
@@ -117,7 +126,7 @@
             <small class="text-muted"><strong class="text-danger">Introduceți un preț valid</strong></small>
         </div>
 
-        <div [hidden]="!hasReferencePrices">
+        <div>
             <div class="gradient-card-header bg-sidebar border-gradient mt-5">
                 <div class="container-fluid">
                     <!-- Title -->
@@ -213,7 +222,7 @@
             </div>
         </div>
 
-        <div [hidden]="prevPrices == undefined || prevPrices.length == 0">
+        <div>
 
             <div class="my-5">
                 <div class="gradient-card-header bg-sidebar border-gradient">
@@ -251,7 +260,7 @@
 
         </div>
 
-        <div [hidden]="!hasOriginCountryPrices">
+        <div>
 
             <div class="my-5">
                 <div class="gradient-card-header bg-sidebar border-gradient">
@@ -305,7 +314,7 @@
 
         </div>
 
-        <div [hidden]="!hasOtherCountriesPrices">
+        <div>
             <div class="my-5">
                 <div class="gradient-card-header bg-sidebar border-gradient">
                     <div class="container-fluid">
@@ -367,15 +376,6 @@
 
 
             <div class="my-5">
-                <!--<div class="cascade-header bg-sidebar">-->
-                    <!--&lt;!&ndash; Title &ndash;&gt;-->
-                    <!--<div class="row">-->
-                        <!--<div class="col-12">-->
-                            <!--<div class="card-header-title white-text mt-2">Media celor mai mici preţuri de pe cataloagele în care medicamentul este plasat pe piaţă</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-
-                <!--</div>-->
                 <div class="gradient-card-header bg-sidebar border-gradient">
                     <div class="container-fluid">
                         <!-- Title -->
@@ -412,7 +412,7 @@
 
         </div>
 
-        <div [hidden]="relatedMeds == undefined || relatedMeds.length == 0">
+        <div>
             <div class="my-5">
                 <div class="gradient-card-header bg-sidebar border-gradient">
                     <div class="container-fluid">
@@ -473,7 +473,7 @@
 
         </div>
 
-        <div [hidden]="(relatedMeds == undefined || relatedMeds.length == 0) && !hasOriginCountryPrices" >
+        <div>
             <div class="my-5">
                 <div class="gradient-card-header bg-sidebar border-gradient">
                     <div class="container-fluid">
@@ -499,6 +499,41 @@
                         <tr mdbTableCol *ngFor="let m of dciAndOriginAvgs ">
                             <td scope="row">{{m.source}}</td>
                             <td>{{m.avg | digitsAfterDecimal:4}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div>
+            <div class="my-5">
+                <div class="gradient-card-header bg-sidebar border-gradient">
+                    <div class="container-fluid">
+                        <!-- Title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card-header-title white-text">Preţul mediu de import pentru anii precedenţi, în caz că acesta a fost importat</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-body card-body-cascade z-depth-1">
+
+                    <table mdbTable striped="true" hover="true" small="true" class="text-center">
+                        <thead class="bg-sidebar white-text">
+                        <tr>
+                            <th scope="col">Anul</th>
+                            <th>Media MDL</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr mdbTableCol *ngFor="let p of prevYearsImportPrices ">
+                            <td scope="row">{{p.year}}</td>
+                            <td>{{p.avgPrice | digitsAfterDecimal:4}}</td>
                         </tr>
                         </tbody>
                     </table>

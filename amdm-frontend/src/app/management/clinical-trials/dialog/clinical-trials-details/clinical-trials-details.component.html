@@ -448,7 +448,7 @@
                 <tbody>
                 <tr *ngFor="let notiff of f.value.clinicTrialNotificationEntities;let i = index">
                     <td scope="row">
-                        <a title="Detalii notificare" (click)="openNotifDetails(notiff.notifCode)" class="text-center">
+                        <a title="Detalii notificare" (click)="openNotifDetails(notiff.registrationRequestId)" class="text-center">
                             {{ notiff?.notifCode}}
                         </a>
                     </td>

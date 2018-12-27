@@ -1,17 +1,16 @@
 import {Component, OnDestroy, OnInit,} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Observable, Subscription} from "rxjs";
+import {Subscription} from "rxjs";
 import {Document} from "../../../models/document";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Price} from "../../../models/price";
-import {ModalService} from "../../../shared/service/modal.service";
 import {Country} from "../../../models/country";
 import {LoaderService} from "../../../shared/service/loader.service";
 import {RequestAdditionalDataDialogComponent} from "../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component";
 import {MatDialog} from "@angular/material";
 import {PriceService} from "../../../shared/service/prices.service";
 import {PriceEditModalComponent} from "../modal/price-edit-modal/price-edit-modal.component";
-import {Decision, MedicamentType, PriceReferenceType} from "../price-constants";
+import {Decision, PriceReferenceType} from "../price-constants";
 import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
 
 @Component({
@@ -30,29 +29,22 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
     PriceRefType = PriceReferenceType;
 
     PriceRegForm: FormGroup;
-    expirationReasons: any[] = [];
-
-    proposedPrices:      Price[] = [];
     selectedPrice : any = {};
     refPrices:      any[] = [];
     prevPrices:     any[] = [];
+    prevYearsImportPrices:     any[] = [];
     relatedMeds:     any[] = [];
     avgRelatedMeds:     number = 0;
     minRefPrices:   any[] = [];
     dciAndOriginAvgs:   any[] = [];
     minOtherCountriesCatPrices:   any[] = [];
     priceTypes: any[];
-    MedType = MedicamentType;
     needSelectPrice: boolean = false;
 
-    hasReferencePrices: boolean = false;
-    hasOriginCountryPrices: boolean = false;
-    hasOtherCountriesPrices: boolean = false;
-
     requiredOutputDocs: any[] = [];
-    medicamentType: any = {code:MedicamentType.Generic, description: 'Generic'};
+    medicamentOriginalType: boolean = false;
 
-     priceModuleAvaibleDocTypes: any[] = ['OP', 'A1', 'A2', 'DP', 'CP', 'RF', 'RC', 'FE'];
+    priceModuleAvaibleDocTypes: any[] = ['OP', 'A1', 'A2', 'DP', 'CP', 'RF', 'RC', 'FE'];
 
     decisions: any[] = [
         {description: 'Acceptat', id: 1},
@@ -70,8 +62,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
               private navbarTitleService: NavbarTitleService,
               private router: Router,
               public dialog: MatDialog,
-              private loadingService: LoaderService,
-              private modalService: ModalService) {
+              private loadingService: LoaderService) {
 
       this.PriceRegForm = fb.group({
           'id': [],
@@ -155,16 +146,18 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
             console.log('The dialog was closed', result);
 
             if(result) {
-                if(!~index) {
+                if(index == -1) {
                     price.country = result.country;
                     price.value = result.price;
                     price.currency = result.currency;
+                    price.division = result.division;
                     this.refPrices.push(price);
                     index = this.refPrices.length - 1;
                 } else {
                     this.refPrices[index].country = result.country;
                     this.refPrices[index].value = result.price;
                     this.refPrices[index].currency = result.currency;
+                    this.refPrices[index].division = result.division;
                 }
                 this.calculateCurrencyConversion(this.refPrices[index]);
                 this.processAveragePrices();
@@ -203,7 +196,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                           this.medicaments.push(data.price.medicament);
 
 
-                          if(data.price.medicament.medicamentType.code == MedicamentType.Generic && data.price.medicament.internationalMedicamentName){
+                          if(!data.price.medicament.originale && data.price.medicament.internationalMedicamentName){
                               this.subscriptions.push(this.priceService.getOriginalMedsByInternationalName(data.price.medicament.internationalMedicamentName.id).subscribe(m => {
                                   console.log('getOriginalMedsByInternationalName', m);
                                   m.forEach(m => {
@@ -215,6 +208,11 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                                   });
                               }));
                           }
+
+                          this.subscriptions.push(this.priceService.getPrevYearsPrices(data.price.medicament.id).subscribe(meds => {
+                              console.log('getPrevYearsPrices', meds);
+                              this.prevYearsImportPrices = meds;
+                          }));
                       }
 
                       if(data.price != undefined) {
@@ -253,7 +251,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
 
                       this.processReferencePrices(data.price.referencePrices);
 
-                      this.medicamentType = data.price.medicament.medicamentType;
+                      this.medicamentOriginalType = data.price.medicament.originale;
                       this.PriceRegForm.get('company.name').setValue(data.company.name);
                       this.PriceRegForm.get('company.id').setValue(data.company.id);
                       this.PriceRegForm.get('id').setValue(data.id);
@@ -470,9 +468,9 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         this.initAverageMinPrice(this.minRefPrices, PriceReferenceType.ReferenceCountry);
         this.initAverageMinPrice(this.minOtherCountriesCatPrices, PriceReferenceType.OtherCountriesCatalog);
 
-        this.hasReferencePrices = this.refPrices.some(p => p.type.description == 'În țara de referintă');
-        this.hasOriginCountryPrices = this.refPrices.some(p => p.type.description == 'În țara de origine');
-        this.hasOtherCountriesPrices = this.refPrices.some(p => p.type.description == 'În catalogul de piață a altor țări');
+        // this.hasReferencePrices = this.refPrices.some(p => p.type.description == 'În țara de referintă');
+        // this.hasOriginCountryPrices = this.refPrices.some(p => p.type.description == 'În țara de origine');
+        // this.hasOtherCountriesPrices = this.refPrices.some(p => p.type.description == 'În catalogul de piață a altor țări');
     }
 
     initAverageMinPrice(array: any[], type: PriceReferenceType) {
@@ -708,7 +706,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
             medMdl: this.minRefPrices[3]?this.minRefPrices[3].xchRateRefVal:0,
             medEur: this.minRefPrices[3]?this.minRefPrices[3].xchRateEurVal:0,
             medUsd: this.minRefPrices[3]?this.minRefPrices[3].xchRateUsdVal:0,
-            medicamentStatus: this.medicamentType.description,
+            medicamentStatus: this.medicamentOriginalType ? 'Original' : 'Generic',
             medicamentOriginalPriceList: originalMeds,
             averageRateEuro: averageRateEuro ? averageRateEuro.value : undefined,
             averageRateUsd: averageRateUsd ? averageRateUsd.value : undefined,
@@ -744,13 +742,12 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
             requestStatus = 'A';
         } else if (decision.valid && decision.value.description == 'Respins') {
             requestStatus = 'C';
-
         } else {
             requestStatus = 'E';
         }
 
-        let priceAcceptCondition: boolean = (requestStatus == 'A' && uploadedEvaluationFile != undefined && !this.hasUnloadedDocs());
-        let canFinishEvaluate: boolean = this.medicaments[0].price.mdlValue > 0 && (decision.invalid || (decision.valid && decision.value.description == 'Respins') || priceAcceptCondition);
+        let priceAcceptCondition: boolean = ((requestStatus == 'A' || requestStatus == 'C') && uploadedEvaluationFile != undefined && !this.hasUnloadedDocs());
+        let canFinishEvaluate: boolean = this.medicaments[0].price.mdlValue > 0 && (decision.invalid || priceAcceptCondition);
 
 
         if (!canFinishEvaluate) {
@@ -801,27 +798,17 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
             mdlValue: this.medicaments[0].price.mdlValue,
             referencePrices: this.refPrices,
             medicament: {id: this.PriceRegForm.get('medicament.id').value},
-            // nmPrice:{
-            //     currency: price.currency,
-            //     orderApprovDate: aprovDate,
-            //     revisionDate: revisionDate,
-            //     expirationDate: expDate.value,
-            //     medicament: {id: this.PriceRegForm.get('medicament.id').value},
-            //     price: price.value,
-            //     priceMdl:price.nationalPrice,
-            //     orderNr: 4546,//orderNr.number,
-            //     id: this.PriceRegForm.get('price.nmPriceId').value
-            // }
         };
 
         console.log('priceModel:', JSON.stringify(priceModel));
 
         this.subscriptions.push(this.priceService.savePrice(priceModel).subscribe(data => {
 
-                if (priceAcceptCondition && this.medicamentType.code == MedicamentType.Original) {
+                if (priceAcceptCondition && this.medicamentOriginalType) {
                     this.router.navigate(['dashboard/module/price/revaluation-generics/' + data.body.price.id]);
                 } else {
-                    this.router.navigate(['dashboard/homepage']);
+                    // this.router.navigate(['dashboard/homepage']);
+                    alert('salvat');
                 }
 
                 this.loadingService.hide();

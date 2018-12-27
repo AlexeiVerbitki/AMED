@@ -305,8 +305,9 @@ export class MedRegApproveComponent implements OnInit {
 
         console.log("this.evaluateImportForm.getRawValue", this.evaluateImportForm.getRawValue())
 
-        let authorizationModel = this.evaluateImportForm.getRawValue();
-        authorizationModel.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.importDetailsList;
+        // let authorizationModel = this.evaluateImportForm.getRawValue();
+        let authorizationModel = this.importData;
+        // authorizationModel.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.importDetailsList;
 
         this.importDetailsList.forEach(item => {
             if (item.approved === true) {
@@ -371,7 +372,6 @@ export class MedRegApproveComponent implements OnInit {
 
         this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = true;
         this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approvedQuantity = approvedQuantity;
-        // this.authorizationSumm = this.authorizationSumm + this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].price * approvedQuantity;
         this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].summ = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].price * approvedQuantity;
         this.authorizationCurrency = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].currency;
         // console.log("this.authorizationSumm", this.authorizationSumm)

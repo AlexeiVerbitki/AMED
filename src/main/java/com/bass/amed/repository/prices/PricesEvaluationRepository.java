@@ -38,6 +38,7 @@ public interface PricesEvaluationRepository extends JpaRepository<CatalogPriceDT
             "       ncur.short_description currency,\n" +
             "       ncur.id                currencyId,\n" +
             "       p.price_mdl            priceMdl,\n" +
+            "       null                   folderNr,\n" +
             "       null                   priceMdlNew,\n" +
             "       null                   priceRequestType,\n" +
             "       p.price                priceNew,\n" +
@@ -104,7 +105,7 @@ public interface PricesEvaluationRepository extends JpaRepository<CatalogPriceDT
             "  p.order_approv_date < DATE_ADD(LAST_DAY(NOW()), INTERVAL - 1 MONTH) AND\n" +
             "  p.expiration_date > LAST_DAY(NOW()) AND\n" +
             "  m.expiration_date > LAST_DAY(NOW()) AND\n" +
-            "  m.type_id != 2 AND\n" +
+            "  m.originale = 0 AND\n" +
             "  p.status = 'V' AND\n" +
             "  p.medicament_id NOT IN (SELECT medicament_id FROM prices pr WHERE pr.medicament_id = p.medicament_id AND pr.type_id IN (1,9,11))\n" +
             "  AND nmint.id = ?1", nativeQuery = true)

@@ -1,5 +1,6 @@
 package com.bass.amed.controller.rest.prices;
 
+import com.bass.amed.dto.PrevYearAvgPriceDTO;
 import com.bass.amed.dto.prices.CatalogPriceDTO;
 import com.bass.amed.dto.prices.PricesDTO;
 import com.bass.amed.entity.*;
@@ -8,6 +9,7 @@ import com.bass.amed.projection.GetMinimalCurrencyProjection;
 import com.bass.amed.repository.CurrencyHistoryRepository;
 import com.bass.amed.repository.CurrencyRepository;
 import com.bass.amed.repository.DocumentsRepository;
+import com.bass.amed.repository.PrevYearsPriceAVGInvoiceDetailsRepository;
 import com.bass.amed.repository.prices.*;
 import com.bass.amed.service.PriceEvaluationService;
 import org.slf4j.Logger;
@@ -59,6 +61,9 @@ public class PriceController {
 
     @Autowired
     private DocumentsRepository documentsRepository;
+
+    @Autowired
+    private PrevYearsPriceAVGInvoiceDetailsRepository prevYearsPriceAVGInvoiceDetailsRepository;
 
     @RequestMapping("/all-currencies-short")
     public ResponseEntity<List<GetMinimalCurrencyProjection>> getCurrencyShort() throws CustomException {
@@ -122,6 +127,13 @@ public class PriceController {
         logger.debug("getOriginalMedsPrices");
         List<NmPricesEntity> pricesCNP = nmPricesRepository.findAllOriginalMedsSource(internationalNameId, 2, "F"); //2 = acceptat
         return new ResponseEntity<>(pricesCNP, HttpStatus.OK);
+    }
+
+    @RequestMapping("/prev-years-prices")
+    public ResponseEntity<List<PrevYearAvgPriceDTO>> getPrevYearsPrices(@RequestParam(value = "id", required = true) Integer internationalNameId) {
+        logger.debug("getPrevYearsPrices");
+        List<PrevYearAvgPriceDTO> previousYearsPrices = prevYearsPriceAVGInvoiceDetailsRepository.getPreviousYearsImportPriceAVG(internationalNameId);
+        return new ResponseEntity<>(previousYearsPrices, HttpStatus.OK);
     }
 
     @RequestMapping("/med-current-price")

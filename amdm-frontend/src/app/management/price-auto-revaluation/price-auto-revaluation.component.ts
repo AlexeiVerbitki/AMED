@@ -163,7 +163,7 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
         this.subscriptions.push(this.priceService.modifyPrices(prices).subscribe(data => {
                 console.log('saved', data.body);
                 this.loadingService.hide();
-                this.route.navigate(['dashboard/homepage']);
+                // this.route.navigate(['dashboard/homepage']);
             },
             error1 => {
                 console.log(error1);

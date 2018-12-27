@@ -140,11 +140,6 @@ export class AdministrationService {
         return this.http.get('/api/administration/all-international-names', {});
     }
 
-
-
-
-
-
     sendEmail(title: string, content: string, mailAddress: string): Observable<any> {
         return this.http.get('/api/administration/send-email', {
             params: {
@@ -166,7 +161,7 @@ export class AdministrationService {
     getAllInvestigators(): Observable<any> {
         return this.http.get('/api/administration/all-investigators', {});
     }
-am
+
     getAllMedicalInstitutions(): Observable<any> {
         return this.http.get('/api/administration/all-medical-institutions', {});
     }

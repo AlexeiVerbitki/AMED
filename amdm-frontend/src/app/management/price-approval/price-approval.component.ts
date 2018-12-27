@@ -165,6 +165,8 @@ export class PriceApprovalComponent implements OnInit, AfterViewInit, OnDestroy 
             }
 
         });
+
+        this.uploadedAllNeeded = !this.outputDocuments.find(d =>  d.status == "Nu este atasat");
     }
 
     save(){
@@ -176,8 +178,6 @@ export class PriceApprovalComponent implements OnInit, AfterViewInit, OnDestroy 
         let uploadedOrder = this.documents.find(d => d.docType.category == 'OP');
         let uploadedAnexa1 = this.documents.find(d => d.docType.category == 'LP');
         let uploadedAnexa2 = this.documents.find(d => d.docType.category == 'LG');
-
-        this.uploadedAllNeeded = !this.outputDocuments.find(d =>  d.status == "Nu este atasat");
 
         if (this.documents.length == 0 || !this.uploadedAllNeeded || this.dataSource.data.length == 0) {
             this.loadingService.hide();
@@ -235,7 +235,7 @@ export class PriceApprovalComponent implements OnInit, AfterViewInit, OnDestroy 
         this.subscriptions.push(this.priceService.approvePrices(prices).subscribe(data => {
                 console.log('saved', data.body);
                 this.loadingService.hide();
-                this.route.navigate(['dashboard/homepage']);
+                // this.route.navigate(['dashboard/homepage']);
 
             },
             error1 => {

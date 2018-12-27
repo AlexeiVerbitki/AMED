@@ -59,7 +59,7 @@ public class RegistrationRequestsEntity
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @JoinColumn(name = "request_id")
     private Set<MedicamentEntity> medicaments = new HashSet<>();
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "request_id")
     private Set<MedicamentHistoryEntity> medicamentHistory = new HashSet<>();
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
