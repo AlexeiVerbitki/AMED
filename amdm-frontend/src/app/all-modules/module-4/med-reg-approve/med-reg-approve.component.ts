@@ -300,8 +300,7 @@ export class MedRegApproveComponent implements OnInit {
     viewDoc(document: any) {
         this.loadingService.show();
 
-        let observable : Observable<any> = null;
-
+        let observable: Observable<any> = null;
 
 
         console.log("this.evaluateImportForm.getRawValue", this.evaluateImportForm.getRawValue())
@@ -313,15 +312,16 @@ export class MedRegApproveComponent implements OnInit {
             if (item.approved === true) {
                 this.expirationDate.push(item.expirationDate);
                 authorizationModel.importAuthorizationEntity.summ = authorizationModel.importAuthorizationEntity.summ + item.summ;
-                console.log("modelToSubmit.importAuthorizationEntity.summ", authorizationModel.importAuthorizationEntity.summ );
+                console.log("modelToSubmit.importAuthorizationEntity.summ", authorizationModel.importAuthorizationEntity.summ);
             }
         })
 
+        if (this.expirationDate.length > 0 && this.expirationDate.length!== null) {
 
         authorizationModel.importAuthorizationEntity.expirationDate = new Date(this.expirationDate.reduce(function (a, b) {
             return a < b ? a : b;
         }));
-
+    }
         console.log("authorizationModel",authorizationModel)
 
         observable = this.requestService.viewImportAuthorization(authorizationModel)

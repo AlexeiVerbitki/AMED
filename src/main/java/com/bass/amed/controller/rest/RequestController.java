@@ -970,7 +970,7 @@ import java.util.stream.Stream;
 			                                                                                                  .getImporter()
 			                                                                                                  .getLegalAddress());
 //            parameters.put("codOcpo"								, request.getImportAuthorizationEntity().getAuthorizationsNumber());
-			parameters.put("registartionDate", request.getImportAuthorizationEntity().getApplicant().getRegistrationDate().toString());
+//			parameters.put("registartionDate", request.getImportAuthorizationEntity().getApplicant().getRegistrationDate().toString());
 			parameters.put("registrationNr", request.getImportAuthorizationEntity().getApplicant().getIdno());
 
 
@@ -978,7 +978,7 @@ import java.util.stream.Stream;
 			parameters.put("geniralDirectorName", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
 			parameters.put("importExportSectionRepresentant", sysParamsRepository.findByCode(Constants.SysParams.IMPORT_REPREZENTANT).get().getValue());
 			parameters.put("importExportSectionChief", sysParamsRepository.findByCode(Constants.SysParams.IMPORT_SEF_SECTIE).get().getValue());
-			parameters.put("validityTerms", (new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getExpirationDate())));
+//			parameters.put("validityTerms", (new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getExpirationDate())));
 
 			parameters.put("manufacturerAndAddress",
 			               request.getImportAuthorizationEntity().getSeller().getDescription() + ", " + request.getImportAuthorizationEntity()
@@ -986,9 +986,11 @@ import java.util.stream.Stream;
 			                                                                                                   .getAddress());
 			parameters.put("manufacturerCountry", request.getImportAuthorizationEntity().getSeller().getCountry().getDescription());
 			parameters.put("manufacturerCountryCode", request.getImportAuthorizationEntity().getSeller().getCountry().getCode());
+
+
 //			parameters.put("autorizationImportDataSet", autorizationImportDataSet);
 //			parameters.put("autorizationImportDataSet2", autorizationImportDataSet2);
-			System.out.println("parameters: " + parameters.toString());
+//			System.out.println("parameters: " + parameters.toString());
             /*parameters.put("licenseNumber", request.getLicense().getNr());
             parameters.put("companyName", request.getLicense().getEconomicAgents().stream().findFirst().get().getLongName());
             List<RegistrationRequestsEntity> listOfModifications = requestRepository.findAllLicenseModifications(request.getLicense().getId());
