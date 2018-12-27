@@ -1015,7 +1015,7 @@ public class RequestController
 //			System.out.println(autorizationImportDataSet2ArrayList);
 //
 			AutorizationImportDataSet dataSet = new AutorizationImportDataSet();
-			dataSet.setCustom("Nord \nSud \nAeroport \nChișinau");
+			dataSet.setCustom("Nord \nSud \nAeroport \nCentru \nChișinau");
 			dataSet.setCustomCode("1000 \n3000 \n2300 \n2000 \n2090");
 			dataSet.setTransactionType("Cumparare/Vinzare ferma");
 			dataSet.setCurrencyPpayment(request.getImportAuthorizationEntity().getCurrency().getShortDescription());
