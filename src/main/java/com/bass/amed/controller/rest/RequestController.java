@@ -1058,14 +1058,14 @@ public class RequestController
 			parameters.put("destinationCountry", "Moldova");
 			parameters.put("destinationCountryCode", "MD");
 
-//            parameters.put("customs"								, request.getImportAuthorizationEntity().getAuthorizationsNumber());
-//            parameters.put("customsCode" 							, request.getImportAuthorizationEntity().getCustomsNumber());
+            parameters.put("customs"								, request.getImportAuthorizationEntity().getAuthorizationsNumber());
+            parameters.put("customsCode" 							, request.getImportAuthorizationEntity().getCustomsNumber());
 			parameters.put("companyNameAndAddress",
 			               request.getImportAuthorizationEntity().getImporter().getLongName() + ", " + request.getImportAuthorizationEntity()
 			                                                                                                  .getImporter()
 			                                                                                                  .getLegalAddress());
 //            parameters.put("codOcpo"								, request.getImportAuthorizationEntity().getAuthorizationsNumber());
-//			parameters.put("registartionDate", request.getImportAuthorizationEntity().getApplicant().getRegistrationDate().toString());
+			parameters.put("registartionDate", request.getImportAuthorizationEntity().getApplicant().getRegistrationDate().toString());
 			parameters.put("registrationNr", request.getImportAuthorizationEntity().getApplicant().getIdno());
 
 
@@ -1073,7 +1073,7 @@ public class RequestController
 			parameters.put("geniralDirectorName", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
 			parameters.put("importExportSectionRepresentant", sysParamsRepository.findByCode(Constants.SysParams.IMPORT_REPREZENTANT).get().getValue());
 			parameters.put("importExportSectionChief", sysParamsRepository.findByCode(Constants.SysParams.IMPORT_SEF_SECTIE).get().getValue());
-//			parameters.put("validityTerms", (new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getExpirationDate())));
+			parameters.put("validityTerms", (new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getExpirationDate())));
 
 			parameters.put("manufacturerAndAddress",
 			               request.getImportAuthorizationEntity().getSeller().getDescription() + ", " + request.getImportAuthorizationEntity()
