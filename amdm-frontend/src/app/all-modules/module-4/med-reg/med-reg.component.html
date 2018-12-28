@@ -37,12 +37,12 @@
 
             </div>
 
-            <app-document *ngIf="importData.importAuthorizationEntity.medType==1" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMMA', step : 'E'}" ></app-document>
+            <app-document *ngIf="importData !== null && importData.importAuthorizationEntity.medType==1" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMMA', step : 'E'}" ></app-document>
             <div *ngIf="formSubmitted && docs && docs.length==0">
                 <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
             </div>
 
-            <app-document *ngIf="importData.importAuthorizationEntity.medType==2" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMMN', step : 'E'}" ></app-document>
+            <app-document *ngIf="importData !== null && importData.importAuthorizationEntity.medType==2" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMMN', step : 'E'}" ></app-document>
             <div *ngIf="formSubmitted && docs && docs.length==0">
                 <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
             </div>
@@ -191,7 +191,7 @@
                     </div>
 
 
-                    <div class="col-md-4" *ngIf="importData.importAuthorizationEntity.medType==1">
+                    <div class="col-md-4" *ngIf="importData !== null && importData.importAuthorizationEntity.medType==1">
                         <div class="md-form">
                             <input id="customsNumber" mdbInputDirective type="text" class="form-control" formControlName="customsNumber">
                             <label for="customsNumber">Nr. declaraţiei vamale
@@ -200,7 +200,7 @@
                         </div>
                     </div>
 
-                    <div class="col-4" *ngIf="importData.importAuthorizationEntity.medType==1">
+                    <div class="col-4" *ngIf="importData !== null && importData.importAuthorizationEntity.medType==1">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
                                 <input matInput [matDatepicker]="picker22" placeholder="Data declaraţiei  vamale"
@@ -230,13 +230,13 @@
 
                 <section>
 
-                    <h5 class="text-center font-weight-bold" *ngIf="importData.importAuthorizationEntity.medType===1">Informația despre Medicamentul Înregistrat</h5>
-                    <h5 class="text-center font-weight-bold" *ngIf="importData.importAuthorizationEntity.medType===2">Informația despre Medicamentul Neînregistrat</h5>
+                    <h5 class="text-center font-weight-bold" *ngIf="importData !== null && importData.importAuthorizationEntity.medType===1">Informația despre Medicamentul Înregistrat</h5>
+                    <h5 class="text-center font-weight-bold" *ngIf="importData !== null && importData.importAuthorizationEntity.medType===2">Informația despre Medicamentul Neînregistrat</h5>
                     <hr>
                     <div formArrayName="unitOfImportTable">
                         <div class="row">
 
-                            <div class="col-4" *ngIf="importData.importAuthorizationEntity.medType==1">
+                            <div class="col-4" *ngIf="importData !== null && importData.importAuthorizationEntity.medType==1">
                                 <!--<div class="col-4">-->
                                 <div class="md-form-modified">
                                     <ng-select [items]="medicaments | async"
@@ -302,11 +302,11 @@
                             </div>
                             <div class="col-4">
                                 <div class="md-form">
-                                    <input id="currencyCode" mdbInputDirective type="number" min="0" class="form-control"
-                                           formControlName="currencyCode">
-                                    <label for="currencyCode">Pretul</label>
+                                    <input id="price" mdbInputDirective type="number" min="0" class="form-control"
+                                           formControlName="price">
+                                    <label for="price">Pretul</label>
                                 </div>
-                                <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currencyCode').invalid">
+                                <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').invalid">
                                     <small class="text-muted"><strong class="text-danger">Prețul trebuie selectat</strong></small>
                                 </div>
                                 <div *ngIf="invalidPrice">
@@ -470,7 +470,7 @@
                             <!--</label>-->
                             <!--</div>-->
                             <!--</div>-->
-                            <div class="col-4" *ngIf="importData.importAuthorizationEntity.medType==1">
+                            <div class="col-4" *ngIf="importData !== null && importData.importAuthorizationEntity.medType==1">
                                 <div class="md-form-modified">
                                     <mat-form-field class="w-100">
                                         <input matInput [matDatepicker]="picker32" placeholder="Data de înregistrare în RM"
@@ -535,7 +535,7 @@
                             <td>{{ unitOfImport.unitsOfMeasurement }}</td>
                             <td>{{ unitOfImport.producer.description }}</td>
                             <td>{{ unitOfImport.quantity }}</td>
-                            <td>{{ unitOfImport.currencyCode }}</td>
+                            <td>{{ unitOfImport.price }}</td>
                             <td>{{ unitOfImport.currency.shortDescription}}</td>
                             <td>{{ unitOfImport.summ |  number : '1.2-2'}}</td>
                             <!--<td>{{ unitOfImport.producer.address }}, {{ unitOfImport.producer.country.description }}</td>-->
