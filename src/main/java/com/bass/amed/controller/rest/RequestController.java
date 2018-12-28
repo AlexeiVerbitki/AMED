@@ -1168,7 +1168,7 @@ public class RequestController
     @GetMapping(value = "/load-import-authorization-details")
     public ResponseEntity<List<ImportAuthorizationDetailsEntity>> getAuthorizationDetailsByNameOrCode(@RequestParam(value = "id") Integer id) throws
                                                                                                                                               CustomException {
-        List<ImportAuthorizationDetailsEntity> regOptional = importAuthorizationRepository.getAuthorizationDetailsByNameOrCode(id, true);
+        List<ImportAuthorizationDetailsEntity> regOptional = importAuthorizationRepository.getAuthorizationDetailsByNameOrCode(id, true, 2240);
         if (regOptional.isEmpty()) {
             throw new CustomException("Inregistrarea de Import Details nu a fost gasita");
         }
