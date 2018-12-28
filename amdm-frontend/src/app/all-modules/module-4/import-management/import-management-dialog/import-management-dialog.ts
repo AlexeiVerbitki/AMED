@@ -90,6 +90,10 @@ export class ImportManagementDialog implements OnInit {
     loadingmedicaments: boolean = false;
     medicamentsInputs = new Subject<string>();
 
+    authorizations: Observable<any[]>;
+    loadingAuthorizations: boolean = false;
+    authorizationsInputs = new Subject<string>();
+
     internationalMedicamentNames: Observable<any[]>;
     loadinginternationalMedicamentName: boolean = false;
     internationalMedicamentNameInputs = new Subject<string>();
@@ -144,6 +148,7 @@ export class ImportManagementDialog implements OnInit {
         this.loadUnitsOfMeasurement();
         this.loadMedicaments();
         this.loadInternationalMedicamentName();
+        this.loadAuthorizationDetails()
 
         this.evaluateImportForm = this.fb.group({
             // 'id':              [''],
@@ -429,6 +434,29 @@ export class ImportManagementDialog implements OnInit {
         console.log("this.unitOfImportTable", this.unitOfImportTable)
     }
 
+    loadAuthorizationDetails() {
+        this.authorizations =
+            this.authorizationsInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 0) {
+                        return true;
+                    }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingAuthorizations = true;
+
+                }),
+                flatMap(term =>
+                    // this.medicamentService.getMedicamentByName(term).pipe(
+                    this.requestService.getAuthorizationDetailsByNameOrCode(term, this.importData.importimportAuthorizationEntity.id).pipe(
+                        tap(() => this.loadingAuthorizations = false)
+                    )
+                )
+            );
+    }
+
 
     loadATCCodes() {
         this.customsCodes =
@@ -670,8 +698,6 @@ export class ImportManagementDialog implements OnInit {
 
         modelToSubmit.medicaments = [];
         console.log("modelToSubmit", modelToSubmit);
-        alert("before addImportRequest(modelToSubmit)")
-        // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {
         this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
                 alert("after addImportRequest(modelToSubmit)")
                 console.log("addImportRequest(modelToSubmit).subscribe(data) ", data)

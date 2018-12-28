@@ -66,6 +66,8 @@ public class RequestController
 	private SysParamsRepository                            sysParamsRepository;
 	@Autowired
 	private LicensesRepository                             licensesRepository;
+	@Autowired
+    private ImportAuthorizationRepository importAuthorizationRepository;
 	
 	
     @RequestMapping(value = "/add-medicament-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -1154,23 +1156,6 @@ public class RequestController
 			JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
 			bytes = JasperExportManager.exportReportToPdf(jasperPrint);
 
-			//Export to word
-
-//            ByteArrayOutputStream xlsReport = new ByteArrayOutputStream();
-//
-//            JRDocxExporter docxExporter = new JRDocxExporter();
-//            docxExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-//            docxExporter.setExporterOutput( new SimpleOutputStreamExporterOutput( xlsReport));
-//            SimpleDocxReportConfiguration config = new SimpleDocxReportConfiguration();
-//            docxExporter.setConfiguration(config);
-//            docxExporter.exportReport();
-//            bytes = xlsReport.toByteArray();
-//
-//
-//            if (xlsReport != null)
-//            {
-//                xlsReport.close();
-//            }
 
 		} catch (Exception e) {
 			throw new CustomException(e.getMessage());
@@ -1180,6 +1165,17 @@ public class RequestController
 				bytes);
 	}
 
+    @GetMapping(value = "/load-import-authorization-details")
+    public ResponseEntity<List<ImportAuthorizationDetailsEntity>> getAuthorizationDetailsByNameOrCode(@RequestParam(value = "id") Integer id) throws
+                                                                                                                                              CustomException {
+        List<ImportAuthorizationDetailsEntity> regOptional = importAuthorizationRepository.getAuthorizationDetailsByNameOrCode(id, true);
+        if (regOptional.isEmpty()) {
+            throw new CustomException("Inregistrarea de Import Details nu a fost gasita");
+        }
+        List<ImportAuthorizationDetailsEntity> rrE = regOptional;
+
+        return new ResponseEntity<>(rrE, HttpStatus.OK);
+    }
 
 	@GetMapping(value = "/load-active-licenses")
 	public ResponseEntity<LicensesEntity> getActiveLicensesByIdno(@RequestParam(value = "id") String idno) throws CustomException {

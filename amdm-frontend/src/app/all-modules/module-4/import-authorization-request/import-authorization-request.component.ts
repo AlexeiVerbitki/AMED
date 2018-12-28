@@ -264,7 +264,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
                             break;
                         }
                         case "5": {
-                            this.router.navigate(['dashboard/module/import-authorization/import-management/' + data.body.id]);
+                            this.router.navigate(['dashboard/module/import-authorization/import-management/' + 2420 /*data.body.id*/]);
                             break;
                         }
                     }

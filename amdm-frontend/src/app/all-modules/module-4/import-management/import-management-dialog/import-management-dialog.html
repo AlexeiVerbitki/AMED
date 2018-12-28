@@ -109,6 +109,28 @@
                     </div>
                 </div>
 
+                <div class="col-md-4">
+                    <div class="md-form-modified">
+                        <ng-select
+                                [items]="authorizations | async"
+                                bindLabel="codeAmed"
+                                placeholder="Pozitie"
+                                formControlName="pozitie"
+                                [loading]="loadingAuthorizations"
+                                [typeahead]="authorizationsInputs"
+                                required="true">
+                            <ng-template ng-option-tmp let-item="item">
+                                {{item.name}} <br/>
+                                <small class="form-text text-muted">Cod: {{item.codeAmed}}</small>
+                            </ng-template>
+                        </ng-select>
+
+                        <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').invalid">-->
+                        <!--<small class="text-muted"><strong class="text-danger">Denumirea trebuie selectata</strong></small>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+
 
 
                 <div class="col-4">
