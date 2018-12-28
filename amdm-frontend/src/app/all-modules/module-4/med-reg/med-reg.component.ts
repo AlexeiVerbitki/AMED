@@ -869,7 +869,7 @@ export class MedRegComponent implements OnInit {
 
 
         modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
-        modelToSubmit.endDate = new Date();
+        // modelToSubmit.endDate = new Date();
 
         modelToSubmit.documents = this.docs;
         modelToSubmit.currentStep = "AP";
