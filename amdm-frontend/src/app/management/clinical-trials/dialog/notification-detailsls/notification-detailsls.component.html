@@ -1,3 +1,109 @@
-<p>
-  notification-detailsls works!
-</p>
+<h2 mat-dialog-title align="center">Detalii notificare la studiu clinic</h2>
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]='ctNotifForm' #f="ngForm">
+        <div class="gradient-card-header bg-sidebar border-gradient">
+            <div class="container-fluid">
+                <!-- Title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card-header-title white-text">Documente atasate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card content -->
+        <div class="card-body card-body-cascade">
+            <table class="table table-widths text-center">
+                <thead class="bg-sidebar white-text">
+                <tr>
+                    <th scope="col">Denumire</th>
+                    <th scope="col">Tip document</th>
+                    <th scope="col">Numar document</th>
+                    <th scope="col">Data incarcarii</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let document of f.value.documents;let i = index">
+                    <td scope="row">
+                        <a title="Detalii studiu clinic" class="text-center">
+                            {{ document.name }}
+                        </a>
+                    </td>
+                    <td>{{ document.docType?.description }}</td>
+                    <td>{{ document.number }}</td>
+                    <td>{{ document.date | date:'shortDate'}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="md-form">
+                    <textarea type="text" id="titluStud" class="md-textarea form-control" mdbInputDirective rows="2"
+                              formControlName="title"></textarea>
+                    <label for="titluStud">Obiectul notificarii</label>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        <div class="row" *ngIf="f.value.clinicTrailNotificationTypeEntity?.code === 'DDGSC'">
+            <div class="col-md-6">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker"
+                               placeholder="Data deschiderii globale a studiului clinic"
+                               formControlName="startDateInternational">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="f.value.clinicTrailNotificationTypeEntity?.code === 'DDLSC'">
+            <div class="col-md-6">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker1"
+                               placeholder="Data deschiderii locale a studiului clinic"
+                               formControlName="startDateNational">
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker1></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="f.value.clinicTrailNotificationTypeEntity?.code === 'DIGSC'">
+            <div class="col-md-6">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker2"
+                               placeholder="Data inchiderii locale a studiului clinic"
+                               formControlName="endDateInternational">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker2></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="f.value.clinicTrailNotificationTypeEntity?.code === 'DILSC'">
+            <div class="col-md-6">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker3"
+                               placeholder="Data inchiderii globale a studiului clinic"
+                               formControlName="endDateNational">
+                        <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker3></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+    <button class="btn btn-dark-red-color btn-sm-bl btn-sm" (click)="cancel()">Inchidere</button>
+</mat-dialog-actions>

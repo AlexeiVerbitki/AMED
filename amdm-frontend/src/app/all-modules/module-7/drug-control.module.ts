@@ -15,6 +15,7 @@ import {RequestService} from "../../shared/service/request.service";
 import {DocumentModule} from "../../document/document.module";
 import {PaymentModule} from "../../payment/payment.module";
 import {LicenseService} from "../../shared/service/license/license.service";
+import {EcAgentModule} from "../../administration/economic-agent/ec-agent.module";
 
 @NgModule({
     imports: [
@@ -26,7 +27,8 @@ import {LicenseService} from "../../shared/service/license/license.service";
         MaterialSharedModule.forRoot(),
         CollapseModule,
         DocumentModule,
-        PaymentModule
+        PaymentModule,
+        EcAgentModule
     ],
     declarations: [CerereDubAutorActComponent, CerereImportExportComponent, CerereModAutorActComponent, CerereSolicAutorComponent, RegDrugControl],
     providers: [UploadFileService, RequestService, LicenseService]

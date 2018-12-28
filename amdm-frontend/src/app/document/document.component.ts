@@ -1,18 +1,8 @@
-import {
-    AfterViewInit,
-    Component,
-    ElementRef,
-    EventEmitter,
-    Input,
-    OnDestroy,
-    OnInit,
-    Output,
-    ViewChild
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Document} from "../models/document";
 import {ConfirmationDialogComponent} from "../dialog/confirmation-dialog.component";
 import {MatDialog, MatSort, MatTable, MatTableDataSource} from "@angular/material";
-import { Subscription} from "rxjs";
+import {Subscription} from "rxjs";
 import {HttpResponse} from "@angular/common/http";
 import {UploadFileService} from "../shared/service/upload/upload-file.service";
 import {saveAs} from "file-saver";
@@ -21,7 +11,6 @@ import {AdministrationService} from "../shared/service/administration.service";
 import {ErrorHandlerService} from "../shared/service/error-handler.service";
 import {TaskService} from "../shared/service/task.service";
 import {DatePipe} from "@angular/common";
-import {Doc} from "../models/Doc";
 
 @Component({
     selector: 'app-document',
@@ -33,7 +22,7 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input()
     title: string = 'Documente atasate';
     documentList: Document [];
-    currentDocDetails : Document = new Document();
+    currentDocDetails: Document = new Document();
     numarCerere: string;
     enableUploading: boolean = true;
     result: any;
@@ -45,14 +34,12 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('incarcaFisier')
     incarcaFisierVariable: ElementRef;
     @Output() documentModified = new EventEmitter();
-    private subscriptions: Subscription[] = [];
     visibility: boolean = false;
-
     displayedColumns: any[] = ['name', 'docType', 'docNumber', 'date', 'actions'];
     dataSource = new MatTableDataSource<any>();
-
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatTable) table: MatTable<any>;
+    private subscriptions: Subscription[] = [];
 
     constructor(public dialog: MatDialog, private uploadService: UploadFileService, private fb: FormBuilder,
                 private errorHandlerService: ErrorHandlerService,
@@ -65,10 +52,6 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
         });
 
 
-    }
-
-    ngAfterViewInit(): void {
-        this.dataSource.sort = this.sort;
     }
 
     get canUpload(): boolean {
@@ -92,7 +75,7 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
         this.dataSource.filterPredicate = this.createFilter();
     }
 
-    get docDetails(): Document{
+    get docDetails(): Document {
         return this.currentDocDetails;
     }
 
@@ -151,8 +134,12 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
+    ngAfterViewInit(): void {
+        this.dataSource.sort = this.sort;
+    }
+
     ngOnInit() {
-        //To remove it in future
+        // To remove it in future
         // if (!this.docTypes || this.docTypes.length == 0) {
         //     this.subscriptions.push(
         //         this.administrationService.getAllDocTypes().subscribe(data => {
@@ -220,9 +207,8 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         var allowedExtensions =
-            ["jpg", "jpeg", "png", "jfif", "bmp", "svg", "pdf","xls", "xlsx","doc","docx"];
-        if(this.docForm.get('docType').value.category=='RL')
-        {
+            ["jpg", "jpeg", "png", "jfif", "bmp", "svg", "pdf", "xls", "xlsx", "doc", "docx"];
+        if (this.docForm.get('docType').value.category == 'RL') {
             allowedExtensions = ["xml"];
         }
 
@@ -233,8 +219,7 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
             return;
         }
 
-        if(this.docForm.get('docType').value.category=='CA')
-        {
+        if (this.docForm.get('docType').value.category == 'CA') {
             this.docForm.get('nrDoc').setValue(this.currentDocDetails.number);
             this.docForm.get('dateDoc').setValue(this.currentDocDetails.dateOfIssue);
         }
@@ -284,18 +269,11 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
         this.subscriptions.forEach(s => s.unsubscribe());
     }
 
-    private saveToFileSystem(response: any, docName: string) {
-        const blob = new Blob([response]);
-        saveAs(blob, docName);
-    }
-
-
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
         this.dataSource.filter = filterValue;
     }
-
 
     createFilter(): (data: any, filter: string) => boolean {
         let filterFunction = function (data, filter): boolean {
@@ -308,5 +286,10 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
 
     changeVisibility() {
         this.visibility = !this.visibility;
+    }
+
+    private saveToFileSystem(response: any, docName: string) {
+        const blob = new Blob([response]);
+        saveAs(blob, docName);
     }
 }

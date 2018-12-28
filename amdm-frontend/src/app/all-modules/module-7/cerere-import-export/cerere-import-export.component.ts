@@ -4,8 +4,7 @@ import {Select} from '../../../models/select';
 import {Document} from "../../../models/document";
 import {Observable, Subject, Subscription} from "rxjs";
 import {AdministrationService} from "../../../shared/service/administration.service";
-import {debounceTime, distinctUntilChanged, filter, map, startWith, tap, flatMap} from "rxjs/operators";
-import {MedicamentService} from "../../../shared/service/medicament.service";
+import {debounceTime, distinctUntilChanged, filter, tap, flatMap} from "rxjs/operators";
 import {MedicamentTypeService} from "../../../shared/service/medicamenttype.service";
 import {MedicamentGroupService} from "../../../shared/service/medicamentgroup.service";
 import {PharmaceuticalFormsService} from "../../../shared/service/pharmaceuticalforms.service";
@@ -20,6 +19,7 @@ import {TaskService} from "../../../shared/service/task.service";
 import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
 import {DrugSubstanceTypesService} from "../../../shared/service/drugs/drugsubstancetypes.service";
 import {DrugDocumentsService} from "../../../shared/service/drugs/drugdocuments.service";
+import {DrugDecisionsService} from "../../../shared/service/drugs/drugdecisions.service";
 
 @Component({
     selector: 'app-cerere-import-export',
@@ -47,14 +47,15 @@ export class CerereImportExportComponent implements OnInit {
     docTypesInitial: any[];
     drugCheckDecisions: any[] = [];
     drugSubstanceTypes: any[];
-    medicamente: Observable<any[]>;
+    authorizedSubstances: Observable<any[]>;
     medInputs = new Subject<string>();
     medLoading = false;
-    selectedMedicament: any;
-    selectedMedicamentsTable: any[] = [];
-    medicamentNotSelected: boolean;
-    medicamentExistInTable: boolean;
+    selectedSubstance: any;
+    selectedSubstancesTable: any[] = [];
+    substanceNotSelected: boolean;
+    substanceExistInTable: boolean;
     disabled: boolean;
+    hasError: boolean;
 
     authorizationTypes: Select[] = [
         {value: 'none', viewValue: '(None)'},
@@ -62,13 +63,14 @@ export class CerereImportExportComponent implements OnInit {
         {value: 'Export', viewValue: 'Export'},
     ];
 
-    constructor(private fb: FormBuilder, private administrationService: AdministrationService, private medicamentService: MedicamentService,
+    constructor(private fb: FormBuilder, private administrationService: AdministrationService,
                 private medicamentTypeService: MedicamentTypeService, private medicamentGroupService: MedicamentGroupService,
                 private pharmaceuticalFormsService: PharmaceuticalFormsService, private activatedRoute: ActivatedRoute, private router: Router,
                 private requestService: RequestService, private authService: AuthService,
                 private documentService: DocumentService, private loadingService: LoaderService, public dialogConfirmation: MatDialog,
                 private taskService: TaskService, private ref: ChangeDetectorRef, private errorHandlerService: ErrorHandlerService,
-                private drugSubstanceTypesService: DrugSubstanceTypesService, private drugDocumentsService: DrugDocumentsService) {
+                private drugSubstanceTypesService: DrugSubstanceTypesService, private drugDocumentsService: DrugDocumentsService,
+                private drugDecisionsService: DrugDecisionsService) {
 
         this.cerereImpExpForm = fb.group({
             'id': [],
@@ -81,27 +83,12 @@ export class CerereImportExportComponent implements OnInit {
             'companyValue': [],
             'currentStep': ['E'],
             'documents': [],
-            'medicamentName': [],
-            'medicament':
-                fb.group({
-                    'id': [],
-                    'name': [''],
-                    'pharmaceuticalForm': {disabled: true, value: null},
-                    'documents': [],
-                    'volume': {disabled: true, value: [null]},
-                    'volumeQuantityMeasurement': {disabled: true, value: []},
-                    'dose': {disabled: true, value: [null]},
-                    'serialNr': {disabled: true, value: [null]},
-                    'medicamentType': {disabled: true, value: []},
-                    'activeSubstances': [],
-                    'code': {disabled: true, value: []},
-                }),
             'drugCheckDecision':
                 fb.group({
                     'id': null,
                     'protocolNr': [null, Validators.required],
                     'protocolDate': Date,
-                    'medicaments': [[]],
+                    'drugImportExportDetails': [[]],
                     'drugSubstanceTypesId': []
                 }),
             'drugCheckDecisions': [],
@@ -109,18 +96,20 @@ export class CerereImportExportComponent implements OnInit {
             'type': [],
             'typeValue': {disabled: true, value: null},
             'authorizationType': [null, Validators.required],
-            'selectedMedicaments':
-                fb.group({
-                    'selectedMedicament': [null]
-
-                }),
             'substanceType': [],
             'precursor': [{value: false, disabled: this.disabled}],
             'psihotrop': [{value: false, disabled: this.disabled}],
             'stupefiant': [{value: false, disabled: this.disabled}],
             'partner': [],
             'dataExp': [],
-            'custom': []
+            'custom': [],
+            'substance': [],
+            'authorizedQuantity': [],
+            'availableQuantity': {disabled: true, value: []},
+            'commercialName': [],
+            'packaging': [],
+            'packagingQuantity': [],
+            'unitOfMeasurement': [null]
         });
     }
 
@@ -128,35 +117,13 @@ export class CerereImportExportComponent implements OnInit {
 
         this.populateRequestDetails();
 
-        this.subscriptions.push(
-            this.administrationService.generateDocNr().subscribe(data => {
-                    this.generatedDocNrSeq = data;
-                    this.cerereImpExpForm.get('requestNumber').setValue(this.generatedDocNrSeq);
-                },
-                error => console.log(error)
-            )
-        );
+        this.generateDocNumber();
+
+        this.getAuthorizedSubstances();
 
         this.getDrugSubstanceTypes();
 
-        this.medicamente =
-            this.medInputs.pipe(
-                filter((result: string) => {
-                    if (result && result.length > 2) return true;
-                }),
-                debounceTime(400),
-                distinctUntilChanged(),
-                tap((val: string) => {
-                    this.medLoading = true;
-
-                }),
-                flatMap(term =>
-
-                    this.medicamentService.getMedicamentNamesAndCodeList(term).pipe(
-                        tap(() => this.medLoading = false)
-                    )
-                )
-            );
+        this.getAllUnitsOfMeasurement();
 
         this.onChanges();
     }
@@ -166,7 +133,6 @@ export class CerereImportExportComponent implements OnInit {
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
                 this.subscriptions.push(this.requestService.getMedicamentRequest(params['id']).subscribe(data => {
                         this.initialData = Object.assign({}, data);
-                        this.initialData.medicaments = Object.assign([], data.medicaments);
                         this.cerereImpExpForm.get('id').setValue(data.id);
                         this.cerereImpExpForm.get('initiator').setValue(data.initiator);
                         this.cerereImpExpForm.get('startDate').setValue(data.startDate);
@@ -192,21 +158,50 @@ export class CerereImportExportComponent implements OnInit {
         );
     }
 
-    getAllCompanies() {
+    getAuthorizedSubstances() {
+
+        this.authorizedSubstances =
+            this.medInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) return true;
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.medLoading = true;
+
+                }),
+                flatMap(term =>
+
+                    this.drugDecisionsService.getAuthorizedSubstancesByNameOrCode(term).pipe(
+                        tap(() => this.medLoading = false)
+                    )
+                )
+            );
+    }
+
+    generateDocNumber() {
 
         this.subscriptions.push(
-            this.administrationService.getAllCompanies().subscribe(data => {
-                    this.companies = data;
-                    this.filteredOptions = this.cerereImpExpForm.get('company').valueChanges
-                        .pipe(
-                            startWith<string | any>(''),
-                            map(value => typeof value === 'string' ? value : value.name),
-                            map(name => this._filter(name))
-                        );
+            this.administrationService.generateDocNr().subscribe(data => {
+                    this.generatedDocNrSeq = data;
+                    this.cerereImpExpForm.get('requestNumber').setValue(this.generatedDocNrSeq);
                 },
                 error => console.log(error)
             )
         );
+    }
+
+    getAllUnitsOfMeasurement() {
+
+        this.subscriptions.push(
+            this.administrationService.getAllUnitsOfMeasurement().subscribe(data => {
+                    this.unitsOfMeasurement = data;
+                },
+                error => console.log(error)
+            )
+        );
+
     }
 
     getDrugSubstanceTypes() {
@@ -243,14 +238,6 @@ export class CerereImportExportComponent implements OnInit {
         );
     }
 
-    private _filter(name: string): any[] {
-
-        const filterValue = name.toLowerCase();
-
-        return this.companies.filter(option => option.name.toLowerCase().includes(filterValue));
-
-    }
-
     private initOutputDocuments() {
 
         let outDocumentSR = {
@@ -265,6 +252,14 @@ export class CerereImportExportComponent implements OnInit {
     }
 
     onChanges(): void {
+
+        this.getDocumentsForSelectedAuthorizationType();
+
+        this.getSelectedSubstanceDetails();
+    }
+
+    getDocumentsForSelectedAuthorizationType() {
+
         this.cerereImpExpForm.get('authorizationType').valueChanges.subscribe(val => {
             this.outDocuments = [];
             if (val.value == 'Import') {
@@ -282,15 +277,21 @@ export class CerereImportExportComponent implements OnInit {
             };
             this.outDocuments.push(outDocumentSR);
             this.checkOutputDocumentsStatus();
+
         });
-        this.cerereImpExpForm.get('selectedMedicaments.selectedMedicament').valueChanges.subscribe(val => {
-            this.medicamentExistInTable = false;
-            this.selectedMedicament = this.cerereImpExpForm.get('selectedMedicaments.selectedMedicament').value;
-            if (this.selectedMedicament != null) {
-                this.medicamentNotSelected = false;
-                this.getMedicamentDetails();
+
+    }
+
+    getSelectedSubstanceDetails() {
+
+        this.cerereImpExpForm.get('substance').valueChanges.subscribe(val => {
+            this.substanceExistInTable = false;
+            this.selectedSubstance = this.cerereImpExpForm.get('substance').value;
+            if (this.selectedSubstance != null) {
+                this.substanceNotSelected = false;
+                this.getSubstanceDetails();
             } else {
-                this.initMedicamentData();
+                this.initSubstanceData();
             }
 
         });
@@ -320,59 +321,113 @@ export class CerereImportExportComponent implements OnInit {
         this.docTypes = this.allDocTypes.filter(r => r.category === 'SR' || r.category === 'IP');
     }
 
-    getMedicamentDetails() {
+    getSubstanceDetails() {
+
+        this.activeSubstancesTable = [];
+        this.activeSubstancesTable.push(this.selectedSubstance);
+        this.cerereImpExpForm.get('availableQuantity').setValue(0);
+        if (this.selectedSubstance.toDate != null && this.selectedSubstance.fromDate != null) {
+
+            let toDate = new Date(this.selectedSubstance.toDate);
+            let fromDate = new Date(this.selectedSubstance.fromDate);
+            let date = new Date();
+            if (toDate.getTime() > date.getTime() && date.getTime() >= fromDate.getTime()) {
+                this.cerereImpExpForm.get('availableQuantity').setValue(this.selectedSubstance.quantity);
+                this.calculateSubstanceAvailableQuantity();
+            }
+        }
+    }
+
+    calculateSubstanceAvailableQuantity() {
 
         this.subscriptions.push(
-            this.medicamentService.getMedicamentById(this.selectedMedicament.id).subscribe(data => {
-                this.cerereImpExpForm.get('medicament.serialNr').setValue(data.serialNr);
-                this.activeSubstancesTable = data.activeSubstances;
-                this.cerereImpExpForm.get('medicament.code').setValue(data.code);
-                this.cerereImpExpForm.get('medicament.dose').setValue(data.dose);
-                this.cerereImpExpForm.get('medicament.volume').setValue(data.volume);
-                this.cerereImpExpForm.get('medicament.volumeQuantityMeasurement').setValue(data.volumeQuantityMeasurement);
-                if (data.medicamentType != null) {
-                    this.cerereImpExpForm.get('medicament.medicamentType').setValue(data.medicamentType.description);
-                }
-                if (data.pharmaceuticalForm != null) {
-                    this.cerereImpExpForm.get('medicament.pharmaceuticalForm').setValue(data.pharmaceuticalForm.description);
-                }
-                this.selectedMedicament = data;
-            })
+            this.drugDecisionsService.getImportExportDetailsBySubstanceId(this.selectedSubstance.id).subscribe(data => {
+
+                    let availableQuantity = this.selectedSubstance.quantity;
+                    for (let entry of data) {
+                        if (entry.toDate != null && entry.authorizedQuantity != null) {
+                            let toDate = new Date(entry.toDate);
+                            let date = new Date();
+                            if (toDate.getTime() > date.getTime()) {
+
+                                availableQuantity = availableQuantity - entry.authorizedQuantity;
+                            } else {
+                                if (entry.usedQuantity != null) {
+                                    availableQuantity = availableQuantity - entry.authorizedQuantity;
+                                    let remainQuantity = entry.authorizedQuantity - entry.usedQuantity;
+                                    availableQuantity = availableQuantity + remainQuantity;
+                                }
+                            }
+                        }
+                    }
+
+                    if (availableQuantity > 0) {
+
+                        this.cerereImpExpForm.get('availableQuantity').setValue(availableQuantity);
+
+                    }
+
+                },
+                error => console.log(error)
+            )
         );
 
     }
 
-    initMedicamentData() {
-        this.cerereImpExpForm.get('medicament.serialNr').setValue([null]);
+    initSubstanceData() {
         this.activeSubstancesTable = [];
-        this.cerereImpExpForm.get('medicament.code').setValue([]);
-        this.cerereImpExpForm.get('medicament.dose').setValue([null]);
-        this.cerereImpExpForm.get('medicament.volume').setValue([null]);
-        this.cerereImpExpForm.get('medicament.volumeQuantityMeasurement').setValue([]);
-        this.cerereImpExpForm.get('medicament.medicamentType').setValue([]);
-        this.cerereImpExpForm.get('medicament.pharmaceuticalForm').setValue(null);
     }
 
-    addMedicament() {
+    addSubstance() {
 
-        this.medicamentNotSelected = true;
-        this.medicamentExistInTable = false;
-        if (this.selectedMedicament != null) {
-            this.medicamentNotSelected = false;
-            let medicamnet = this.selectedMedicamentsTable.find(r => r.id == this.selectedMedicament.id);
+        this.substanceNotSelected = true;
+        this.substanceExistInTable = false;
+        this.hasError = false;
+        if (this.selectedSubstance != null) {
+            this.substanceNotSelected = false;
+            let substance = this.selectedSubstancesTable.find(r => r.authorizedDrugSubstancesId == this.selectedSubstance.id);
 
-            if (medicamnet != null) {
-                this.medicamentExistInTable = true;
-                return
+            if (substance != null) {
+                this.substanceExistInTable = true;
+                return;
             } else {
-                this.selectedMedicamentsTable.push(this.selectedMedicament);
+                this.validateAuthorizedQuantity();
+                this.validateAuthorizationDates();
+
+                if (this.hasError) {
+                    return;
+                } else {
+                    this.populateSelectedSubstanceDetails();
+                }
             }
         } else {
             return;
         }
     }
 
-    removeMedicament(index) {
+    populateSelectedSubstanceDetails() {
+
+        let unitOfMeasurement = this.cerereImpExpForm.get('unitOfMeasurement').value;
+        let unitDescription = '';
+        if (unitOfMeasurement != null && unitOfMeasurement.description != null) {
+            unitDescription = unitOfMeasurement.description;
+        }
+
+        let substanceDetails = {
+            authorizedDrugSubstancesId: this.selectedSubstance.id,
+            substanceName: this.selectedSubstance.substanceName,
+            substanceCode: this.selectedSubstance.substanceCode,
+            commercialName: this.cerereImpExpForm.get('commercialName').value,
+            packaging: this.cerereImpExpForm.get('packaging').value,
+            packagingQuantity: this.cerereImpExpForm.get('packagingQuantity').value,
+            authorizedQuantity: this.cerereImpExpForm.get('authorizedQuantity').value,
+            authorizedQuantityUnit: unitDescription
+        };
+
+        this.selectedSubstancesTable.push(substanceDetails);
+    }
+
+    removeSubstance(index) {
 
         const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
             data: {
@@ -382,7 +437,7 @@ export class CerereImportExportComponent implements OnInit {
         });
         dialogRef2.afterClosed().subscribe(result => {
             if (result) {
-                this.selectedMedicamentsTable.splice(index, 1);
+                this.selectedSubstancesTable.splice(index, 1);
             }
         });
 
@@ -394,6 +449,7 @@ export class CerereImportExportComponent implements OnInit {
         let isFormInvalid = false;
         this.isResponseReceived = false;
         this.isNonAttachedDocuments = false;
+        this.hasError = false;
 
         if (this.cerereImpExpForm.invalid || this.paymentTotal < 0) {
             isFormInvalid = true;
@@ -411,7 +467,10 @@ export class CerereImportExportComponent implements OnInit {
             return;
         }
 
-        if (isFormInvalid) {
+        this.validateAuthorizedQuantity();
+        this.validateAuthorizationDates();
+
+        if (isFormInvalid || this.hasError) {
             return;
         }
 
@@ -424,10 +483,42 @@ export class CerereImportExportComponent implements OnInit {
 
         this.populateModelToSubmit(modelToSubmit);
 
-        this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
+        this.subscriptions.push(this.drugDecisionsService.addAuthorizationDetails(modelToSubmit).subscribe(data => {
                 this.router.navigate(['/dashboard/management/cpcadtask']);
             }, error => console.log(error))
         );
+
+    }
+
+    validateAuthorizationDates() {
+
+        if (this.cerereImpExpForm.value.drugCheckDecision.protocolDate != null && this.cerereImpExpForm.value.dataExp != null) {
+
+            let fromDate = new Date(this.cerereImpExpForm.value.drugCheckDecision.protocolDate);
+            let toDate = new Date(this.cerereImpExpForm.value.dataExp);
+            let date = new Date();
+            if (date.getDate() > fromDate.getDate()) {
+                this.errorHandlerService.showError('Data procesului nu este valida.');
+                this.hasError = true;
+                return;
+            }
+            if (fromDate.getTime() >= toDate.getTime()) {
+                this.errorHandlerService.showError('Data expirarii nu poate fi mai mica ca data procesului.');
+                this.hasError = true;
+                return;
+            }
+        }
+
+    }
+
+    validateAuthorizedQuantity() {
+
+        if (this.cerereImpExpForm.value.authorizedQuantity != null && this.cerereImpExpForm.get('availableQuantity').value != null && this.cerereImpExpForm.value.authorizedQuantity > this.cerereImpExpForm.get('availableQuantity').value) {
+
+            this.hasError = true;
+            this.errorHandlerService.showError('Cantitatea autorizata nu poate fi mai mare ca cantitatea admisibila.');
+            return;
+        }
 
     }
 
@@ -441,13 +532,38 @@ export class CerereImportExportComponent implements OnInit {
         modelToSubmit.assignedUser = this.authService.getUserName();
 
         this.populateSelectedSubstances(modelToSubmit);
-        modelToSubmit.drugCheckDecision.medicaments = this.selectedMedicamentsTable;
+        this.populateImportExportDetails(modelToSubmit);
 
         this.drugCheckDecisions = [];
         this.drugCheckDecisions.push(this.cerereImpExpForm.get('drugCheckDecision').value);
         modelToSubmit.drugCheckDecisions = this.drugCheckDecisions;
         modelToSubmit.documents = this.documents;
         modelToSubmit.outputDocuments = this.outDocuments;
+
+    }
+
+    populateImportExportDetails(modelToSubmit: any) {
+
+        for (let entry of this.selectedSubstancesTable) {
+
+            let details = {
+                companyCode: this.cerereImpExpForm.value.company.code,
+                companyName: this.cerereImpExpForm.value.company.name,
+                substanceName: entry.substanceName,
+                authorizationType: this.cerereImpExpForm.value.authorizationType.value,
+                authorizedDrugSubstancesId: entry.authorizedDrugSubstancesId,
+                fromDate: this.cerereImpExpForm.value.drugCheckDecision.protocolDate,
+                toDate: this.cerereImpExpForm.value.dataExp,
+                authorizedQuantity: entry.authorizedQuantity,
+                usedQuantity: '',
+                packaging: entry.packaging,
+                packagingQuantity: entry.packagingQuantity,
+                commercialName: entry.commercialName,
+                authorizedQuantityUnit: entry.authorizedQuantityUnit
+            };
+
+            modelToSubmit.drugCheckDecision.drugImportExportDetails.push(details);
+        }
 
     }
 
@@ -511,24 +627,24 @@ export class CerereImportExportComponent implements OnInit {
         if (document.docType.category == 'IP' || document.docType.category == 'EP') {
             this.loadingService.show();
             let company = this.cerereImpExpForm.get('company').value;
-            let localityId = [];
+            let localityId = '';
             if (company != null && company.locality != null) {
                 localityId = company.locality.id;
             }
             let authorizationType = this.cerereImpExpForm.get('authorizationType').value;
+
             let data = {
                 requestNumber: this.cerereImpExpForm.get('requestNumber').value,
                 protocolDate: this.cerereImpExpForm.get('drugCheckDecision.protocolDate').value,
                 companyValue: this.cerereImpExpForm.get('companyValue').value,
                 dataExp: this.cerereImpExpForm.get('dataExp').value,
-                medicaments: this.selectedMedicamentsTable,
+                details: this.selectedSubstancesTable,
                 authorizationType: authorizationType.value,
                 custom: this.cerereImpExpForm.get('custom').value,
                 localityId: localityId,
-                partner: this.cerereImpExpForm.get('partner').value
+                partner: this.cerereImpExpForm.get('partner').value,
             };
 
-            console.log(data);
             this.subscriptions.push(this.drugDocumentsService.viewImportExportAuthorization(data).subscribe(data => {
                     let file = new Blob([data], {type: 'application/pdf'});
                     var fileURL = URL.createObjectURL(file);
@@ -558,7 +674,7 @@ export class CerereImportExportComponent implements OnInit {
                 });
                 this.initialData.outputDocuments = this.outDocuments;
 
-                this.subscriptions.push(this.requestService.addMedicamentRequest(this.initialData).subscribe(data => {
+                this.subscriptions.push(this.drugDecisionsService.addAuthorizationDetails(this.initialData).subscribe(data => {
                         this.outDocuments = data.body.outputDocuments;
                         this.checkOutputDocumentsStatus();
                         this.loadingService.hide();
@@ -613,7 +729,7 @@ export class CerereImportExportComponent implements OnInit {
                     username: usernameDB, step: 'E'
                 });
 
-                this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
+                this.subscriptions.push(this.drugDecisionsService.addAuthorizationDetails(modelToSubmit).subscribe(data => {
                         this.loadingService.hide();
                         this.router.navigate(['dashboard/module']);
                     }, error => this.loadingService.hide())

@@ -207,7 +207,7 @@ export class CerereDubAutorActComponent implements OnInit {
 
         this.populateModelToSubmit(modelToSubmit);
 
-        this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
+        this.subscriptions.push(this.drugDecisionsService.addAuthorizationDetails(modelToSubmit).subscribe(data => {
                 this.router.navigate(['/dashboard/management/cpcadtask']);
             }, error => console.log(error))
         );
@@ -296,7 +296,7 @@ export class CerereDubAutorActComponent implements OnInit {
                 });
                 this.initialData.outputDocuments = this.outDocuments;
 
-                this.subscriptions.push(this.requestService.addMedicamentRequest(this.initialData).subscribe(data => {
+                this.subscriptions.push(this.drugDecisionsService.addAuthorizationDetails(this.initialData).subscribe(data => {
                         this.outDocuments = data.body.outputDocuments;
                         this.checkOutputDocumentsStatus();
                         this.loadingService.hide();
@@ -392,7 +392,7 @@ export class CerereDubAutorActComponent implements OnInit {
                     username: usernameDB, step: 'E'
                 });
 
-                this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
+                this.subscriptions.push(this.drugDecisionsService.addAuthorizationDetails(modelToSubmit).subscribe(data => {
                         this.loadingService.hide();
                         this.router.navigate(['dashboard/module']);
                     }, error => this.loadingService.hide())

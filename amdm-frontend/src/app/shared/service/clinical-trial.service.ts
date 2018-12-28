@@ -17,4 +17,8 @@ export class ClinicalTrialService {
     loadClinicalTrailById(id: string): Observable<any> {
         return this.http.get('/api/clinical-trails/get-clinical-trial-id', {params: {id: id}});
     }
+
+    loadRegistrationRequestById(id: string): Observable<any> {
+        return this.http.get('/api/clinical-trails/load-request', {params: {id: id}});
+    }
 }

@@ -8,6 +8,8 @@
         <app-document [documents]="documents" [nrCerere]="cerereImpExpForm.get('requestNumber').value"
                       [dcTypes]="docTypes"
                       (documentModified)="documentModified($event)"></app-document>
+
+        <hr>
         <div class="row">
 
             <div class="col-md-4">
@@ -55,116 +57,97 @@
             </div>
 
             <div class="col-md-4">
-                <div class="row">
-                    <div class="col-4">
-                        <div class="md-form">
-                            <mat-checkbox formControlName="precursor">Precursori</mat-checkbox>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="md-form">
-                            <mat-checkbox formControlName="psihotrop">Psihotrope</mat-checkbox>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="md-form">
-                            <mat-checkbox formControlName="stupefiant">Stupefiante</mat-checkbox>
-                        </div>
-                    </div>
+                <div class="md-form">
+                    <input id="comName" mdbInputDirective type="text" class="form-control"
+                           formControlName="commercialName">
+                    <label for="comName">Denumire comerciala
+                    </label>
                 </div>
             </div>
 
             <div class="col-md-4">
-                <div class="md-form-modified" formGroupName="selectedMedicaments">
-                    <ng-select class="custom" [items]="medicamente | async" bindLabel="name" placeholder="Medicamente"
-                               formControlName="selectedMedicament" [required]="false" [typeahead]="medInputs"
+                <div class="md-form">
+                    <input id="packaging" mdbInputDirective type="text" class="form-control"
+                           formControlName="packaging">
+                    <label for="packaging">Divizare
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="md-form">
+                    <input id="packagingQuantity" mdbInputDirective type="text" class="form-control"
+                           formControlName="packagingQuantity">
+                    <label for="packagingQuantity">Cantitatea
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="md-form-modified">
+                    <ng-select class="custom" [items]="authorizedSubstances | async" bindLabel="substanceName"
+                               placeholder="Substante"
+                               formControlName="substance" [required]="false" [typeahead]="medInputs"
                                [loading]="medLoading">
                         <ng-template ng-option-tmp let-item="item">
-                            {{item.name}} <br/>
-                            <small>{{item.code}}</small>
+                            {{item.substanceName}} <br/>
+                            <small>{{item.substanceCode}}</small>
                         </ng-template>
                     </ng-select>
-                    <div *ngIf="medicamentNotSelected">
-                        <small class="text-muted"><strong class="text-danger">Medicamentul trebuie
-                            selectat</strong></small>
+                    <div *ngIf="substanceNotSelected">
+                        <small class="text-muted"><strong class="text-danger">Substanta trebuie
+                            selectata</strong></small>
                     </div>
-                    <div *ngIf="medicamentExistInTable">
-                        <small class="text-muted"><strong class="text-danger">Medicamentul este deja adaugat
+                    <div *ngIf="substanceExistInTable">
+                        <small class="text-muted"><strong class="text-danger">Substanta este deja adaugata
                         </strong></small>
                     </div>
                 </div>
             </div>
+
+            <div class="col-md-2">
+                <div class="md-form">
+                    <input id="availableQuantity" mdbInputDirective type="number" class="form-control"
+                           formControlName="availableQuantity">
+                    <label for="availableQuantity">Cantitatea disponibila
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="md-form">
+                    <input id="authorizedQuantity" mdbInputDirective type="number" class="form-control"
+                           formControlName="authorizedQuantity">
+                    <label for="authorizedQuantity">Cantitatea autorizata
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-2">
+                <div class="md-form">
+                    <ng-select class="w-100"
+                               [items]="unitsOfMeasurement"
+                               bindLabel="description"
+                               formControlName="unitOfMeasurement"
+                               placeholder="Unitate de masura">
+                    </ng-select>
+                </div>
+            </div>
+
         </div>
 
         <hr>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="md-form" formGroupName="medicament">
-                    <input id="tipMedicament" mdbInputDirective type="text" class="form-control"
-                           formControlName="medicamentType">
-                    <label for="tipMedicament">Tipul medicamentului
-                    </label>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="md-form" formGroupName="medicament">
-                    <input id="cod" mdbInputDirective type="text" class="form-control" formControlName="code">
-                    <label for="cod">Codul medicamentului
-                    </label>
-                </div>
-            </div>
 
-            <div class="col-md-4">
-                <div class="md-form" formGroupName="medicament">
-                    <input id="cantitateMed" mdbInputDirective type="text" class="form-control"
-                           formControlName="volume">
-                    <label for="cantitateMed">Cantitatea medicamentului
-                    </label>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="md-form" formGroupName="medicament">
-                    <input id="forma" mdbInputDirective type="text" class="form-control"
-                           formControlName="pharmaceuticalForm">
-                    <label for="forma">Forma
-                    </label>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="md-form" formGroupName="medicament">
-                    <input id="doza" mdbInputDirective type="text" class="form-control" formControlName="dose">
-                    <label for="doza">Doza
-                    </label>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="md-form" formGroupName="medicament">
-                    <input id="volum" mdbInputDirective type="text" class="form-control"
-                           formControlName="volumeQuantityMeasurement">
-                    <label for="volum">Volum
-                    </label>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="md-form" formGroupName="medicament">
-                    <input id="seria" mdbInputDirective type="text" class="form-control" formControlName="serialNr">
-                    <label for="seria">Seria
-                    </label>
-                </div>
-            </div>
-        </div>
-
-        <hr>
         <div class="gradient-card-header bg-sidebar border-gradient">
             <div class="container-fluid">
                 <!-- Title -->
                 <div class="row">
                     <div class="col-6">
-                        <div class="card-header-title white-text">Substante active</div>
+                        <div class="card-header-title white-text">Substanta activa</div>
                     </div>
                     <div class="col-6">
                         <div class="text-right fap text-white">
-                            <i (click)="addMedicament()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+                            <i (click)="addSubstance()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
                         </div>
                     </div>
                 </div>
@@ -172,22 +155,24 @@
 
         </div>
 
-        <!-- Card content -->
         <div class="card-body card-body-cascade">
-            <!-- <h6 class="text-center font-weight-normal">Substante active</h6> -->
             <table class="table table-widths text-center">
                 <thead class="bg-sidebar white-text">
                 <tr>
                     <th scope="col">Denumire</th>
-                    <th scope="col">Cantitate</th>
-                    <th scope="col">Unitate de masură</th>
+                    <th scope="col">Cod</th>
+                    <th scope="col">Cantitate admisibila</th>
+                    <th scope="col">Disponibila din data</th>
+                    <th scope="col">Valabila pana la data</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr *ngFor="let substance of activeSubstancesTable;let i = index">
-                    <th scope="row">{{ substance.activeSubstance.description }}</th>
-                    <td>{{ substance.quantity }}</td>
-                    <td>{{ substance.unitsOfMeasurement.description }}</td>
+                    <th scope="row">{{ substance.substanceName }}</th>
+                    <td>{{ substance.substanceCode }}</td>
+                    <td>{{ substance.quantity  }}</td>
+                    <td>{{ substance.fromDate | date: 'dd/MM/yyyy' }}</td>
+                    <td>{{ substance.toDate | date: 'dd/MM/yyyy' }}</td>
                 </tr>
                 </tbody>
             </table>
@@ -198,40 +183,39 @@
                 <!-- Title -->
                 <div class="row">
                     <div class="col-12">
-                        <div class="card-header-title white-text">Medicamente selectate</div>
+                        <div class="card-header-title white-text">Substante selectate</div>
                     </div>
-                    <!-- <div class="col-6">
-                            <div class="position-button">
-                                <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                                    (click)="requestAdditionalData()">Solicitare
-                                    date aditionale</button>
-                                <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                                    (click)="requestLaboratoryAnalysis()">Solicitare
-                                    analiza laborator</button>
-                            </div>
-                        </div> -->
                 </div>
             </div>
 
         </div>
 
-        <!-- Card content -->
         <div class="card-body card-body-cascade">
             <table class="table table-widths text-center">
                 <thead class="bg-sidebar white-text">
                 <tr>
                     <th scope="col">Denumire</th>
                     <th scope="col">Cod</th>
+                    <th scope="col">Denumire comerciala</th>
+                    <th scope="col">Divizare</th>
+                    <th scope="col">Cantitatea</th>
+                    <th scope="col">Cantitate autorizata</th>
+                    <th scope="col">Unitate de masura</th>
                     <th scope="col">Actiuni</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let medicament of selectedMedicamentsTable;let i = index">
-                    <td>{{ medicament.name }}</td>
-                    <td>{{ medicament.code }}</td>
+                <tr *ngFor="let susbstance of selectedSubstancesTable;let i = index">
+                    <td>{{ susbstance.substanceName }}</td>
+                    <td>{{ susbstance.substanceCode }}</td>
+                    <td>{{ susbstance.commercialName }}</td>
+                    <td>{{ susbstance.packaging }}</td>
+                    <td>{{ susbstance.packagingQuantity }}</td>
+                    <td>{{ susbstance.authorizedQuantity }}</td>
+                    <td>{{ susbstance.authorizedQuantityUnit }}</td>
                     <td>
                         <button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
-                                (click)="removeMedicament(i)"
+                                (click)="removeSubstance(i)"
                                 mdbWavesEffect attr.disabled="this.disabled">Stergere
                         </button>
                     </td>
@@ -267,7 +251,7 @@
             </div>
             <div class="col-md-4">
                 <div class="md-form">
-                    <input id="reason" mdbInputDirective type="text" class="form-control" >
+                    <input id="reason" mdbInputDirective type="text" class="form-control">
                     <label for="reason">Motiv refuz
                     </label>
                 </div>
@@ -285,7 +269,7 @@
             <div class="col-md-4">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
-                        <input matInput [matDatepicker]="pickerExp" placeholder="Data expirarii"
+                        <input matInput [matDatepicker]="pickerExp" placeholder="Data expirarii" required
                                formControlName="dataExp">
                         <mat-datepicker-toggle matSuffix [for]="pickerExp"></mat-datepicker-toggle>
                         <mat-datepicker touchUi #pickerExp></mat-datepicker>
@@ -321,7 +305,6 @@
 
         </div>
 
-        <!-- Card content -->
         <div class="card-body card-body-cascade">
             <table class="table table-widths-lg text-center">
                 <thead class="bg-sidebar white-text">

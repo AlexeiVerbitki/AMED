@@ -5,7 +5,7 @@
 				<th class="header rgba-header" mat-header-cell *matHeaderCellDef>
             <mat-form-field class="filter" [ngStyle]="{'width': '152px'}">
               <mat-label>Codul medicamentului</mat-label>
-              <input matInput [formControl]="codulMedFilter">
+              <input matInput [formControl]="codulMedFilter" maxlength="10">
             </mat-form-field>
           </th>
           <td mat-cell *matCellDef="let x" mdbTooltip="{{x.codulMedMed}}" placement="top">{{x.codulMed}}</td>
@@ -40,7 +40,7 @@
         <ng-container matColumnDef="doza">
           <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
             <mat-form-field class="filter" [ngStyle]="{'width': '127px'}">
-              <mat-label>Doza, concentratia</mat-label>
+              <mat-label>Doza</mat-label>
               <input matInput [formControl]="dozaFilter">
             </mat-form-field>
           </th>
@@ -73,14 +73,14 @@
           </th>
           <td mat-cell *matCellDef="let x" mdbTooltip="{{x.atc}}" placement="top">{{x.atc}}</td>
         </ng-container>
-        <ng-container matColumnDef="termenDeValabilitate">
+        <ng-container matColumnDef="firmaProducatoare">
           <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
             <mat-form-field class="filter" [ngStyle]="{'width': '132px'}">
               <mat-label>Firma producatoare </mat-label>
-              <input matInput [formControl]="termenDeValabilitateFilter">
+              <input matInput [formControl]="firmaProducatoareFilter">
             </mat-form-field>
           </th>
-          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.termenDeValabilitate}}" placement="top">{{x.termenDeValabilitate}}</td>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.firmaProducatoare}}" placement="top">{{x.firmaProducatoare}}</td>
         </ng-container>
         <ng-container matColumnDef="nrDeInregistrare">
           <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
@@ -136,15 +136,15 @@
           </th>
           <td mat-cell *matCellDef="let x" mdbTooltip="{{x.original}}" placement="top">{{x.original}}</td>
         </ng-container>
-        <ng-container matColumnDef="informatiaDespreProducator">
-          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
-            <mat-form-field class="filter" [ngStyle]="{'width': '196px'}">
-              <mat-label>Informatia despre producator</mat-label>
-              <input matInput [formControl]="informatiaDespreProducatorFilter">
-            </mat-form-field>
-          </th>
-          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.informatiaDespreProducator}}" placement="top">{{x.informatiaDespreProducator}}</td>
-        </ng-container>
+        <!--<ng-container matColumnDef="informatiaDespreProducator">-->
+          <!--<th class="header rgba-header" mat-header-cell *matHeaderCellDef>-->
+            <!--<mat-form-field class="filter" [ngStyle]="{'width': '196px'}">-->
+              <!--<mat-label>Informatia despre producator</mat-label>-->
+              <!--<input matInput [formControl]="informatiaDespreProducatorFilter">-->
+            <!--</mat-form-field>-->
+          <!--</th>-->
+          <!--<td mat-cell *matCellDef="let x" mdbTooltip="{{x.informatiaDespreProducator}}" placement="top">{{x.informatiaDespreProducator}}</td>-->
+        <!--</ng-container>-->
         <ng-container matColumnDef="instructiunea">
           <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
             <mat-form-field class="filter" [ngStyle]="{'width': '90px'}">
@@ -176,6 +176,6 @@
 			<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
 			<tr mat-row *matRowDef="let x; columns: columnsToDisplay"></tr>
 		</table>
-		<mat-paginator [pageSizeOptions]="[50, 200,500,1000]" showFirstLastButtons></mat-paginator>
+		<mat-paginator [pageSizeOptions]="[25, 50, 200]" showFirstLastButtons></mat-paginator>
 	</div>
 </div>

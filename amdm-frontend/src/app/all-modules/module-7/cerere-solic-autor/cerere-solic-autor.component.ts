@@ -16,6 +16,7 @@ import {ErrorHandlerService} from "../../../shared/service/error-handler.service
 import {DrugSubstanceTypesService} from "../../../shared/service/drugs/drugsubstancetypes.service";
 import {DrugDocumentsService} from "../../../shared/service/drugs/drugdocuments.service";
 import {DrugDecisionsService} from "../../../shared/service/drugs/drugdecisions.service";
+import {AddEcAgentComponent} from "../../../administration/economic-agent/add-ec-agent/add-ec-agent.component";
 
 @Component({
     selector: 'app-cerere-solic-autor',
@@ -60,7 +61,8 @@ export class CerereSolicAutorComponent implements OnInit {
                 public dialogConfirmation: MatDialog,
                 private taskService: TaskService, private errorHandlerService: ErrorHandlerService,
                 private drugSubstanceTypesService: DrugSubstanceTypesService,
-                private drugDecisionsService: DrugDecisionsService
+                private drugDecisionsService: DrugDecisionsService,
+                public dialog: MatDialog
     ) {
 
         this.cerereSolicAutorForm = fb.group({
@@ -317,7 +319,7 @@ export class CerereSolicAutorComponent implements OnInit {
 
         this.populateModelToSubmit(modelToSubmit);
 
-        this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
+        this.subscriptions.push(this.drugDecisionsService.addAuthorizationDetails(modelToSubmit).subscribe(data => {
                 this.router.navigate(['/dashboard/management/cpcadtask']);
             }, error => console.log(error))
         );
@@ -453,7 +455,7 @@ export class CerereSolicAutorComponent implements OnInit {
                 });
                 this.initialData.outputDocuments = this.outDocuments;
 
-                this.subscriptions.push(this.requestService.addMedicamentRequest(this.initialData).subscribe(data => {
+                this.subscriptions.push(this.drugDecisionsService.addAuthorizationDetails(this.initialData).subscribe(data => {
                         this.outDocuments = data.body.outputDocuments;
                         this.checkOutputDocumentsStatus();
                         this.loadingService.hide();
@@ -508,7 +510,7 @@ export class CerereSolicAutorComponent implements OnInit {
                     username: usernameDB, step: 'E'
                 });
 
-                this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
+                this.subscriptions.push(this.drugDecisionsService.addAuthorizationDetails(modelToSubmit).subscribe(data => {
                         this.loadingService.hide();
                         this.router.navigate(['dashboard/module']);
                     }, error => this.loadingService.hide())
@@ -546,6 +548,19 @@ export class CerereSolicAutorComponent implements OnInit {
             if (result) {
                 this.selectedFilials.splice(index, 1);
             }
+        });
+    }
+
+    newFilial()
+    {
+        const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
+            width: '1000px',
+            panelClass: 'materialLicense',
+            data: {
+                idno : this.company.idno,
+                onlyNewFilial : true
+            },
+            hasBackdrop: false
         });
     }
 }

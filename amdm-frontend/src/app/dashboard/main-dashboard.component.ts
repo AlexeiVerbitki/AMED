@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnInit, Output, EventEmitter, OnDestroy} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {LoaderService} from "../shared/service/loader.service";
 import {Subscription} from "rxjs";
 
@@ -17,7 +17,8 @@ import {Subscription} from "rxjs";
 		<div class="mt-5">
 			<div class="container-fluid">
 				<div class="row">
-					<div [ngClass]="classValue ? 'offset-xxl-1 offset-xl-1 skip-offset-lg col-xxl-11 col-xl-11 skip-col-lg' : 'offset-lg-3 offset-xl-3 col-xl-9 col-lg-9 offset-xxl-2 col-xxl-10'">
+					<div [ngClass]="classValue ? 'offset-xxl-1 offset-xl-1 skip-offset-lg col-xxl-11 col-xl-11 skip-col-lg' : 
+					'offset-lg-3 offset-xl-3 col-xl-9 col-lg-9 offset-xxl-2 col-xxl-10'">
 						<router-outlet></router-outlet>
 					</div>
 				</div>
@@ -27,14 +28,14 @@ import {Subscription} from "rxjs";
     `,
     // style: ``,
 })
-export class MainDashboardComponent implements OnInit, AfterViewInit, OnDestroy  {
+export class MainDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
-	@Output()
-	public skipEvent: EventEmitter<any> = new EventEmitter();
-	loaderActive: boolean;
-	skip: boolean;
-	classValue: any;
-	sideBarIsOpened = false;
+    @Output()
+    public skipEvent: EventEmitter<any> = new EventEmitter();
+    loaderActive: boolean;
+    skip: boolean;
+    classValue: any;
+    sideBarIsOpened = false;
     private subscriptions: Subscription[] = [];
 
     constructor(private loadingService: LoaderService) {
@@ -48,14 +49,14 @@ export class MainDashboardComponent implements OnInit, AfterViewInit, OnDestroy 
 
     ngOnInit() {
         this.loaderActive = false;
-	this.sideBarIsOpened = true;
-	}
-	
+        this.sideBarIsOpened = true;
+    }
+
     skipValueChanged($event) {
-		console.log('event skip', $event)
-		this.classValue = !$event;
-		this.skipEvent.emit($event);
-		this.skip = $event.value;
+        console.log('event skip', $event)
+        this.classValue = !$event;
+        this.skipEvent.emit($event);
+        this.skip = $event.value;
     }
 
 

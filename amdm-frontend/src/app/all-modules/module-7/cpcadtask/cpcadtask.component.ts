@@ -216,7 +216,7 @@ export class CPCADTaskComponent implements OnInit, AfterViewInit, OnDestroy {
         this.route.navigate(['dashboard/module/drug-control/reg-drug-control/']);
 
     }
-    
+
     showDetails(element: any) {
 
         const dialogConfig2 = new MatDialogConfig();
@@ -225,7 +225,7 @@ export class CPCADTaskComponent implements OnInit, AfterViewInit, OnDestroy {
         dialogConfig2.autoFocus = true;
         dialogConfig2.hasBackdrop = true;
 
-        dialogConfig2.width = '1100px';
+        dialogConfig2.width = '1600px';
 
         dialogConfig2.data = {
             value: element.id

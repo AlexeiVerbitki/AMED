@@ -411,6 +411,7 @@ export class CNotificareComponent implements OnInit, OnDestroy {
 
         formModel.assignedUser = this.authService.getUserName();
         formModel.currentStep = 'F';
+        formModel.documents = this.docs;
 
         console.log('formModel', formModel);
         this.subscriptions.push(this.requestService.finishClinicalTrailNotificationRequest(formModel).subscribe(data => {

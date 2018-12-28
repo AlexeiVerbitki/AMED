@@ -28,30 +28,30 @@
 
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="md-form-modified">
-                    <ng-select class="custom" [items]="medicamente | async"
-                               bindLabel="name"
-                               placeholder="Medicamente"
-                               formControlName="selectedMedicament"
-                               [required]="false"
-                               [typeahead]="medInputs"
-                               [loading]="medLoading">
-                        <ng-template ng-option-tmp let-item="item">
-                            {{item.name}} <br/>
-                            <small>{{item.code}}</small>
-                        </ng-template>
-                    </ng-select>
-                    <div *ngIf="medicamentNotSelected">
-                        <small class="text-muted"><strong class="text-danger">Medicamentul trebuie
-                            selectat</strong></small>
-                    </div>
-                    <div *ngIf="medicamentExistInTable">
-                        <small class="text-muted"><strong class="text-danger">Medicamentul este deja adaugat
-                        </strong></small>
-                    </div>
-                </div>
-            </div>
+            <!--<div class="col-md-4">-->
+                <!--<div class="md-form-modified">-->
+                    <!--<ng-select class="custom" [items]="medicamente | async"-->
+                               <!--bindLabel="name"-->
+                               <!--placeholder="Medicamente"-->
+                               <!--formControlName="selectedMedicament"-->
+                               <!--[required]="false"-->
+                               <!--[typeahead]="medInputs"-->
+                               <!--[loading]="medLoading">-->
+                        <!--<ng-template ng-option-tmp let-item="item">-->
+                            <!--{{item.name}} <br/>-->
+                            <!--<small>{{item.code}}</small>-->
+                        <!--</ng-template>-->
+                    <!--</ng-select>-->
+                    <!--<div *ngIf="medicamentNotSelected">-->
+                        <!--<small class="text-muted"><strong class="text-danger">Medicamentul trebuie-->
+                            <!--selectat</strong></small>-->
+                    <!--</div>-->
+                    <!--<div *ngIf="medicamentExistInTable">-->
+                        <!--<small class="text-muted"><strong class="text-danger">Medicamentul este deja adaugat-->
+                        <!--</strong></small>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
             <div class="col-4">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
