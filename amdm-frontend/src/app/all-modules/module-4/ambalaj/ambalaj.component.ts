@@ -223,19 +223,19 @@ export class AmbalajComponent implements OnInit {
     onChanges(): void {
         if (this.evaluateImportForm.get('importAuthorizationEntity')) {
             this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.seller').valueChanges.subscribe(val => {
-                if (val) {
+                if (val && val.address !== null && val.country !== null) {
                     this.sellerAddress = val.address + ", " + val.country.description;
                 }
             }));
             this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').valueChanges.subscribe(val => {
                 // console.log("val",val)
-                if (val) {
+                if (val && val.address !== null && val.country !== null) {
                     this.producerAddress = val.address + ", " + val.country.description;
                     // console.log("producerAddress",this.producerAddress)
                 }
             }));
             this.subscriptions.push(  this.evaluateImportForm.get('importAuthorizationEntity.importer').valueChanges.subscribe(val => {
-                if (val) {
+                if (val && val.address !== null && val.country !== null) {
                     this.importerAddress = val.legalAddress /*+ ", " + val.country.description*/;
                 }
             }));

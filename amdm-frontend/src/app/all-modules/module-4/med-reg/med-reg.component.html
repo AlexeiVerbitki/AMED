@@ -411,7 +411,7 @@
                                                [typeahead]="manufacturerInputsRfPr"
                                                required="true">
                                         <ng-template ng-option-tmp let-item="item">
-                                            Denumire: {{item.description}};
+                                            {{item.description}};
                                             <small class="form-text text-muted">{{item.address}}, {{item.country.description}}</small>
                                         </ng-template>
                                     </ng-select>
