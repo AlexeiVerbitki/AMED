@@ -131,7 +131,7 @@
                         <!--[attr.disabled]="true"-->
                         <label for="approvedPrice">Prețul autorizat</label>
                     </div>
-                    <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currencyCode').invalid">-->
+                    <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').invalid">-->
                     <!--<small class="text-muted"><strong class="text-danger">Prețul trebuie selectat</strong></small>-->
                     <!--</div>-->
                 </div>
@@ -153,17 +153,17 @@
                         <!--[attr.disabled]="true"-->
                         <label for="quantity">Cantitatea importată</label>
                     </div>
-                    <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').invalid">-->
-                    <!--<small class="text-muted"><strong class="text-danger">Cantitatea trebuie selectată</strong></small>-->
-                    <!--</div>-->
+                    <div *ngIf="invalidQuantity">
+                        <small class="text-muted"><strong class="text-danger">Prețul nu poate depăși prețul aprobat</strong></small>
+                    </div>
                 </div>
 
                 <div class="col-4">
                     <div class="md-form">
-                        <input id="currencyCode" mdbInputDirective type="number" min="0" class="form-control"
-                               formControlName="currencyCode">
+                        <input id="price" mdbInputDirective type="number" min="0" class="form-control"
+                               formControlName="price">
                         <!--[attr.disabled]="true"-->
-                        <label for="currencyCode">Prețul importului</label>
+                        <label for="price">Prețul importului</label>
                     </div>
                     <!--<div *ngIf="addMedicamentClicked && invalidPrice">-->
                     <div *ngIf="invalidPrice">
@@ -173,11 +173,11 @@
 
                 <div class="col-4">
                     <div class="md-form">
-                        <input id="importSumm" mdbInputDirective type="text" class="form-control"
+                        <input id="unitSumm" mdbInputDirective type="text" class="form-control"
                                [attr.disabled]="true"
                                [value]="unitSumm | number : '1.2-2'"
-                               formControlName="importSumm">
-                        <label for="importSumm">Suma importului</label>
+                               formControlName="unitSumm">
+                        <label for="unitSumm">Suma importului</label>
                     </div>
                 </div>
 

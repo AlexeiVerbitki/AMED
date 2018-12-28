@@ -1,6 +1,6 @@
 <div>
     <div class="container-fluid sky z-depth-2">
-        <h3 class="text-center my-3 font-weight-bold">Aprobare autorizației</h3>
+        <h3 class="text-center my-3 font-weight-bold">Declarare importului</h3>
 
         <form [formGroup]="evaluateImportForm">
             <div class="row">
@@ -323,7 +323,7 @@
                                 <mat-checkbox [disabled]="true" [checked]="importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved" (change)="setApproved(i)"></mat-checkbox>
                             </td>
                             <td>
-                                <button class="btn btn-primary waves-light btn-sm waves-light" (click)="showunitOfImport(unitOfImport, i)" mdbWavesEffect>Vizualizare</button>
+                                <button class="btn btn-primary waves-light btn-sm waves-light" (click)="showunitOfImport(unitOfImport, i)" mdbWavesEffect>Adaugă</button>
                             </td>
                         </tr>
                         </tbody>

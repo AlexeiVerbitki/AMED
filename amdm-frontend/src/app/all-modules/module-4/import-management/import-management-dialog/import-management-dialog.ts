@@ -319,9 +319,11 @@ export class ImportManagementDialog implements OnInit {
 
     onChanges(): void {
         if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity')) {
+        // this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').valueChanges.subscribe(val => {alert("Quantity has changed")}));
 
             this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').valueChanges.subscribe(val => {
                 if (val) {
+                    console.log("unitOfImportTable.quantity:", val);
                     this.unitSumm = val * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value;
                     console.log("this.unitSumm", this.unitSumm)
                 }
@@ -330,6 +332,7 @@ export class ImportManagementDialog implements OnInit {
                     console.log("invalidQuantity", this.invalidQuantity)
                 } else {
                     this.invalidQuantity = false;
+                    console.log("invalidQuantity", this.invalidQuantity)
                 }
 
             }))
@@ -339,6 +342,8 @@ export class ImportManagementDialog implements OnInit {
 
             this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').valueChanges.subscribe(val => {
                 if (val) {
+                    console.log("unitOfImportTable.quantity:", val);
+
                     this.unitSumm = val * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value;
                     console.log("this.unitSumm", this.unitSumm)
                     console.log("approvedPrice", this.approvedPrice)
@@ -346,9 +351,10 @@ export class ImportManagementDialog implements OnInit {
 
                 if (val > this.approvedPrice){
                     this.invalidPrice = true;
-                    console.log("approvedPrice", this.approvedPrice)
+                    console.log("invalidPrice", this.invalidPrice)
                 } else {
                     this.invalidPrice = false;
+                    console.log("invalidPrice", this.invalidPrice)
                 }
             }))
 

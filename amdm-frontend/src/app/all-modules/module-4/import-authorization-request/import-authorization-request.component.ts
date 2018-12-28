@@ -220,6 +220,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
             case "2": {formModel.type.id = '16'; break;}
             case "3": {formModel.type.id = '17'; break;}
             case "4": {formModel.type.id = '18'; break;}
+            case "5": {formModel.type.id = '18'; break;}
         }
 
             formModel.requestHistories = [{
@@ -260,6 +261,10 @@ export class ImportAuthorizationRequestComponent implements OnInit {
                         }
                         case "4": {
                             this.router.navigate(['dashboard/module/import-authorization/ambalaj/' + data.body.id]);
+                            break;
+                        }
+                        case "5": {
+                            this.router.navigate(['dashboard/module/import-authorization/import-management/' + data.body.id]);
                             break;
                         }
                     }

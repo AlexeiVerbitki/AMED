@@ -202,6 +202,77 @@ export class ImportManagement implements OnInit {
                     this.importData = data;
                     this.docs = data.documents;
 
+                    this.evaluateImportForm = this.fb.group({
+                        'id': [''],
+                        'requestNumber': [null],
+                        'startDate': [new Date()],
+                        'currentStep': ['AP'],
+                        'company': ['', Validators.required],
+                        'initiator': [null],
+                        'assignedUser': [null],
+                        'data': {disabled: true, value: null},
+                        'importType': [null, Validators.required],
+                        'type':
+                            this.fb.group({
+                                'id': ['']
+                            }),
+
+                        'requestHistories': [],
+                        'medicaments': [],
+
+                        'importAuthorizationEntity': this.fb.group({
+                            'id': [Validators.required],
+                            'applicationDate': [new Date()],
+                            'applicant': ['', Validators.required],
+                            'seller': [null, Validators.required], // Tara si adresa lui e deja in baza
+                            'basisForImport': [],
+                            'importer': [null, Validators.required], // Tara si adresa lui e deja in baza
+                            'contract': [null, Validators.required],
+                            'contractDate': [null, Validators.required],
+                            'anexa': [null, Validators.required],
+                            'anexaDate': [null, Validators.required],
+                            'specification': [null, Validators.required],
+                            'specificationDate': [null, Validators.required],
+                            'conditionsAndSpecification': [''],
+                            'quantity': [Validators.required],
+                            'price': [Validators.required],
+                            'currency': [Validators.required],
+                            'summ': [Validators.required],
+                            'producer_id': [Validators.required], // to be deleted
+                            'stuff_type_id': [Validators.required], // to delete
+                            'expiration_date': [Validators.required],
+                            'customsNumber': [],
+                            'customsDeclarationDate': [],
+                            'authorizationsNumber': [], // inca nu exista la pasul acesta
+                            'medType': [''],
+                            'importAuthorizationDetailsEntityList': [],
+                            'authorized': [],
+                            'unitOfImportTable': this.fb.group({
+
+                                customsCode: [null, Validators.required],
+                                name: [null, Validators.required],
+                                quantity: [null, Validators.required],
+                                price: [null, Validators.required],
+                                currency: [null, Validators.required],
+                                summ: [null, Validators.required],
+                                producer: [null, Validators.required],
+                                expirationDate: [null, Validators.required],
+                                atcCode: [null, Validators.required],
+                                medicament: [null, Validators.required],
+                                pharmaceuticalForm: [null, Validators.required],
+                                dose: [null, Validators.required],
+                                registrationRmNumber: [null, Validators.required],
+                                unitsOfMeasurement: [null, Validators.required],
+                                registrationRmDate: [null, Validators.required],
+                                internationalMedicamentName: [null, Validators.required]
+
+                            }),
+
+
+                        }),
+
+                    })
+
 
                     this.importDetailsList = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList;
 
