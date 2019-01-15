@@ -1,13 +1,13 @@
 import {Component, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatPaginator, MatSort, MatTable, MatTableDataSource} from "@angular/material";
-import {Subscription} from "rxjs";
-import {NomenclatureConstants} from "../../administration.constants";
-import {ActivatedRoute, Router} from "@angular/router";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
-import {AddEcAgentComponent} from "../add-ec-agent/add-ec-agent.component";
-import {LoaderService} from "../../../shared/service/loader.service";
+import {MAT_DIALOG_DATA, MatDialog, MatPaginator, MatSort, MatTable, MatTableDataSource} from '@angular/material';
+import {Subscription} from 'rxjs';
+import {NomenclatureConstants} from '../../administration.constants';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {AddEcAgentComponent} from '../add-ec-agent/add-ec-agent.component';
+import {LoaderService} from '../../../shared/service/loader.service';
 
 @Component({
     selector: 'app-ec-agent-list',
@@ -19,9 +19,9 @@ export class EcAgentListComponent implements OnInit, OnDestroy {
     ecAgents: any [] = [];
 
 
-    displayedColumns: any[] = ['code', 'idno', 'longName', 'name', 'registrationDate', 'legalAddress','actions'];
+    displayedColumns: any[] = ['code', 'idno', 'longName', 'name', 'registrationDate', 'legalAddress', 'actions'];
     dataSource = new MatTableDataSource<any>();
-    visibility: boolean = false;
+    visibility = false;
 
     private subscriptions: Subscription[] = [];
     nomenclatures = NomenclatureConstants;
@@ -55,8 +55,8 @@ export class EcAgentListComponent implements OnInit, OnDestroy {
 
                 // this.dataSource.filterPredicate = this.createFilter();
                 this.loadingService.hide();
-            },error => this.loadingService.hide()
-        ))
+            }, error => this.loadingService.hide()
+        ));
 
 
     }
@@ -64,11 +64,11 @@ export class EcAgentListComponent implements OnInit, OnDestroy {
 
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
-        this.dataSource.paginator._intl.itemsPerPageLabel = "Agenti economici per pagina: ";
+        this.dataSource.paginator._intl.itemsPerPageLabel = 'Agenti economici per pagina: ';
         this.dataSource.sort = this.sort;
     }
 
-    applyFilter(filterValue:string) {
+    applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
@@ -99,22 +99,22 @@ export class EcAgentListComponent implements OnInit, OnDestroy {
                     this.dataSource.filterPredicate = this.createFilter();
                     this.loadingService.hide();
                 }, () => this.loadingService.hide()
-                ))
+                ));
             }
         });
 
 
     }
 
-    createFilter():(data: any, filter: string) => boolean {
-        let filterFunction = function (data, filter): boolean {
+    createFilter(): (data: any, filter: string) => boolean {
+        const filterFunction = function (data, filter): boolean {
             const dataStr = data.code.toLowerCase() + data.idno ? data.idno.toLowerCase() : '' + data.name ? data.name.toLowerCase() : '' + data.longName ? data.longName.toLowerCase() : '' + data.legalAddress ? data.legalAddress.toLowerCase() : '';
             return dataStr.indexOf(filter) != -1;
         };
         return filterFunction;
     }
 
-    editAgent(element : any){
+    editAgent(element: any) {
         const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
             width: '1000px',
             panelClass: 'materialLicense',
@@ -135,12 +135,12 @@ export class EcAgentListComponent implements OnInit, OnDestroy {
                     this.table.renderRows();
 
                     this.dataSource.filterPredicate = this.createFilter();
-                }))
+                }));
             }
         });
     }
 
-    clearFilter(){
+    clearFilter() {
         this.dataSource.data = this.ecAgents.slice();
         this.table.renderRows();
 

@@ -1,8 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Subscription} from "rxjs";
-import {Expert} from "../models/expert";
-import {AdministrationService} from "../shared/service/administration.service";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Subscription} from 'rxjs';
+import {Expert} from '../models/expert';
+import {AdministrationService} from '../shared/service/administration.service';
 
 @Component({
     selector: 'app-expert-comitee',
@@ -17,28 +17,27 @@ export class ExpertComiteeComponent implements OnInit {
     farmacists: any[];
     medics: any[];
     expertObj: Expert = new Expert();
-    isFormSubmitted : boolean;
-    typeObj : any;
-    title : any = 'Cerere inregistrare medicament';
+    isFormSubmitted: boolean;
+    typeObj: any;
+    title: any = 'Cerere inregistrare medicament';
 
     constructor(private fb: FormBuilder,
                 private administrationService: AdministrationService) {
         this.expertForm = fb.group({
             'data': {disabled: true, value: new Date()},
             'comiteeNr': [null],
-            'chairman': [null,Validators.required],
-            'farmacolog': [null,Validators.required],
-            'farmacist': [null,Validators.required],
-            'medic': [null,Validators.required],
+            'chairman': [null, Validators.required],
+            'farmacolog': [null, Validators.required],
+            'farmacist': [null, Validators.required],
+            'medic': [null, Validators.required],
             'comment': [null],
-            'status': [null,Validators.required]
+            'status': [null, Validators.required]
         });
     }
 
     ngOnInit() {
 
-        if(this.typeObj == 'POST_AUTHORIZATION')
-        {
+        if (this.typeObj == 'POST_AUTHORIZATION') {
             this.title = 'Modificare postautorizare medicament';
         }
 
@@ -77,34 +76,28 @@ export class ExpertComiteeComponent implements OnInit {
         this.typeObj = type;
     }
 
-    checkChairman()
-    {
-        this.expertObj.chairman =this.expertForm.get('chairman').value;
+    checkChairman() {
+        this.expertObj.chairman = this.expertForm.get('chairman').value;
     }
 
-    checkFarmacolog()
-    {
-        this.expertObj.farmacolog=this.expertForm.get('farmacolog').value;
+    checkFarmacolog() {
+        this.expertObj.farmacolog = this.expertForm.get('farmacolog').value;
     }
 
-    checkFarmacist()
-    {
-        this.expertObj.farmacist=this.expertForm.get('farmacist').value;
+    checkFarmacist() {
+        this.expertObj.farmacist = this.expertForm.get('farmacist').value;
     }
 
-    checkMedic()
-    {
-        this.expertObj.medic=this.expertForm.get('medic').value;
+    checkMedic() {
+        this.expertObj.medic = this.expertForm.get('medic').value;
     }
 
-    checkComment()
-    {
-        this.expertObj.comment=this.expertForm.get('comment').value;
+    checkComment() {
+        this.expertObj.comment = this.expertForm.get('comment').value;
     }
 
-    checkStatus()
-    {
-        this.expertObj.status=this.expertForm.get('status').value;
+    checkStatus() {
+        this.expertObj.status = this.expertForm.get('status').value;
     }
 
     get expert(): Expert {

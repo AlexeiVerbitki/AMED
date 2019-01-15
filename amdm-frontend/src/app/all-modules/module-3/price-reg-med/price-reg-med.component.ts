@@ -1,15 +1,15 @@
-import {Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild,} from '@angular/core';
+import {Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild, } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {Document} from '../../../models/document';
 import {MatDialog, MatTabGroup} from '@angular/material';
 import {saveAs} from 'file-saver';
-import {ActivatedRoute, Router} from "@angular/router";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {PriceService} from "../../../shared/service/prices.service";
-import {Country} from "../../../models/country";
-import {Currency} from "../../../models/currency";
-import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
+import {ActivatedRoute, Router} from '@angular/router';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {PriceService} from '../../../shared/service/prices.service';
+import {Country} from '../../../models/country';
+import {Currency} from '../../../models/currency';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 
 @Component({
   selector: 'app-price-reg-med',
@@ -26,7 +26,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
       currencies: Currency[] = [];
       priceTypes: any[];
 
-      requests: any[] = [{documents: this.commonDocuments, price: { referencePrices:[]}}];
+      requests: any[] = [{documents: this.commonDocuments, price: { referencePrices: []}}];
       rForm: FormGroup;
 
       formSubmitted: boolean;
@@ -116,7 +116,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
       this.getCurrencies();
       this.getPriceTypes();
 
-      if(this.registrationRequestId != undefined) {
+      if (this.registrationRequestId != undefined) {
           this.subscriptions.push(
               this.priceService.getPricesRequest(this.registrationRequestId).subscribe(r => {
                   r.valid = true;
@@ -129,7 +129,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
                   this.rForm.get('initiator').setValue(r.initiator);
                   this.rForm.get('company.name').setValue(r.company.name);
                   this.rForm.get('company.id').setValue(r.company.id);
-                  if(r.registrationRequestMandatedContacts && r.registrationRequestMandatedContacts[0]) {
+                  if (r.registrationRequestMandatedContacts && r.registrationRequestMandatedContacts[0]) {
                       this.rForm.get('contactId').setValue(r.registrationRequestMandatedContacts[0].id);
                       this.rForm.get('mandatedFirstname').setValue(r.registrationRequestMandatedContacts[0].mandatedFirstname);
                       this.rForm.get('mandatedLastname').setValue(r.registrationRequestMandatedContacts[0].mandatedLastname);
@@ -148,7 +148,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
                       r.price.type = {id: 1};
                   });
 
-                  this.commonDocuments.forEach(d => {d.id = null; d.registrationRequestId = null;});
+                  this.commonDocuments.forEach(d => {d.id = null; d.registrationRequestId = null; });
           }, e => console.log(e)));
       } else {
           this.subscriptions.push(
@@ -166,7 +166,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
             this.priceService.getPriceTypes('2').subscribe(priceTypes => {
                     this.priceTypes = priceTypes;
 
-                    var i = 0;
+                    let i = 0;
                     while (i < this.priceTypes.length) {
                         if (this.priceTypes[i].description == 'Propus' || this.priceTypes[i].description == 'Acceptat') {
                             this.priceTypes.splice(i, 1);
@@ -207,17 +207,16 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
         this.loadingService.show();
         this.formSubmitted = true;
 
-        let canSave: boolean = //this.commonDocuments.length > 0 && //this.rForm.get('folderNumber').valid &&
+        const canSave: boolean = //this.commonDocuments.length > 0 && //this.rForm.get('folderNumber').valid &&
             ((this.requests.length) == this.tabs.length &&
             this.requests.every(value => value.valid)); //&& this.mandatoryDocuments.length == 0;
 
-        if(!canSave)
-        {
+        if (!canSave) {
             this.loadingService.hide();
 
-            for(let i = 0; i < this.tabs.length; i++) {
-                let r = this.requests[i];
-                if(r == undefined || r.valid == undefined || !r.valid) {
+            for (let i = 0; i < this.tabs.length; i++) {
+                const r = this.requests[i];
+                if (r == undefined || r.valid == undefined || !r.valid) {
                     this.selected.setValue(i);
                 }
             }
@@ -226,16 +225,16 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
 
         this.formSubmitted = false;
 
-        let user: string = this.priceService.getUsername();
+        const user: string = this.priceService.getUsername();
 
-        let requestHistory: any = {
+        const requestHistory: any = {
             startDate : this.startRecDate,
             endDate: new Date(),
             username : user,
             step : 'E'
         };
 
-        let contacts = {
+        const contacts = {
             mandatedFirstname: this.rForm.get('mandatedFirstname').value,
             mandatedLastname: this.rForm.get('mandatedLastname').value,
             phoneNumber: this.rForm.get('phoneNumber').value,
@@ -245,7 +244,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
         };
 
         this.requests.forEach(req => {
-            if(!req.registrationRequestMandatedContacts) {
+            if (!req.registrationRequestMandatedContacts) {
                 req.registrationRequestMandatedContacts = [contacts];
             }
 
@@ -253,17 +252,17 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
             req.assignedUser = user;
             req.startDate = this.startRecDate;
             req.endDate = new Date();
-            if(!req.requestHistories) {
+            if (!req.requestHistories) {
                 req.requestHistories = [];
             }
             req.requestHistories = [...req.requestHistories, requestHistory];
             req.company = this.rForm.get('company').value;
             req.dossierNr = this.rForm.get('folderNumber').value;
             req.currentStep = 'E';
-            if(!req.type) {
+            if (!req.type) {
                 req.type = { code: 'PMED' };
             }
-            if(!req.requestNumber) {
+            if (!req.requestNumber) {
                 req.requestNumber = req.price.requestNumber;
             }
         });
@@ -297,16 +296,16 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
     ngAfterViewInit() {
         console.log('ngAfterViewInit', this.tabGroup);
         // this.subscriptions.push(this.tabGroup.selectedIndexChange.subscribe(index => console.log("selectedIndexChange", index)));
-        this.subscriptions.push(this.tabGroup.selectedIndexChange.subscribe(index => console.log("selectedIndexChange", index)));
+        this.subscriptions.push(this.tabGroup.selectedIndexChange.subscribe(index => console.log('selectedIndexChange', index)));
     }
 
     onMedChange($event) {
-      if($event.index != undefined) {
+      if ($event.index != undefined) {
           // let tab = this.tabGroup._tabs.find(tab => tab.position == $event.index);
-          let tab = this.tabGroup._tabs.toArray()[$event.index];
-          if($event.commercialName) {
-              let tabName = $event.commercialName.substring(0, 40);
-              tab.textLabel = tabName + ($event.code?' [' + $event.code + ']':'');
+          const tab = this.tabGroup._tabs.toArray()[$event.index];
+          if ($event.commercialName) {
+              const tabName = $event.commercialName.substring(0, 40);
+              tab.textLabel = tabName + ($event.code ? ' [' + $event.code + ']' : '');
           } else {
               tab.textLabel = 'Medicamentul ' + ($event.index + 1);
           }

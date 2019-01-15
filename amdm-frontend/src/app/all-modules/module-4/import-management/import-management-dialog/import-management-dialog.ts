@@ -2,22 +2,22 @@ import {Cerere} from './../../../../models/cerere';
 import {FormArray, Validators} from '@angular/forms';
 import {FormGroup, FormBuilder} from '@angular/forms';
 import {Component, Inject, OnInit} from '@angular/core';
-import {Observable, Subscription} from "rxjs";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
-import {ActivatedRoute, Router} from "@angular/router";
-import {AdministrationService} from "../../../../shared/service/administration.service";
+import {Observable, Subscription} from 'rxjs';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AdministrationService} from '../../../../shared/service/administration.service';
 // import {debounceTime, distinctUntilChanged, filter, map, startWith, tap} from "rxjs/operators";
-import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
-import {ConfirmationDialogComponent} from "../../../../dialog/confirmation-dialog.component";
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
+import {ConfirmationDialogComponent} from '../../../../dialog/confirmation-dialog.component';
 import {saveAs} from 'file-saver';
-import {Document} from "../../../../models/document";
-import {RequestService} from "../../../../shared/service/request.service";
-import {Subject} from "rxjs/index";
-import {LoaderService} from "../../../../shared/service/loader.service";
-import {AuthService} from "../../../../shared/service/authetication.service";
-import {MedicamentService} from "../../../../shared/service/medicament.service";
-import {Utils} from "angular-bootstrap-md/angular-bootstrap-md/utils/utils.class";
-import {forEach} from "@angular/router/src/utils/collection";
+import {Document} from '../../../../models/document';
+import {RequestService} from '../../../../shared/service/request.service';
+import {Subject} from 'rxjs/index';
+import {LoaderService} from '../../../../shared/service/loader.service';
+import {AuthService} from '../../../../shared/service/authetication.service';
+import {MedicamentService} from '../../../../shared/service/medicament.service';
+import {Utils} from 'angular-bootstrap-md/angular-bootstrap-md/utils/utils.class';
+import {forEach} from '@angular/router/src/utils/collection';
 
 export interface PeriodicElement {
     name: string;
@@ -51,11 +51,11 @@ export class ImportManagementDialog implements OnInit {
     unitOfImportTable: any[] = [];
 
     protected manufacturersRfPr: Observable<any[]>;
-    protected loadingManufacturerRfPr: boolean = false;
+    protected loadingManufacturerRfPr = false;
     protected manufacturerInputsRfPr = new Subject<string>();
 
     importer: Observable<any[]>;
-    loadingCompany: boolean = false;
+    loadingCompany = false;
     protected companyInputs = new Subject<string>();
 
     sellerAddress: any;
@@ -73,29 +73,29 @@ export class ImportManagementDialog implements OnInit {
     medicamentData: any;
 
     atcCodes: Observable<any[]>;
-    loadingAtcCodes: boolean = false;
+    loadingAtcCodes = false;
     atcCodesInputs = new Subject<string>();
 
     customsCodes: Observable<any[]>;
-    loadingcustomsCodes: boolean = false;
+    loadingcustomsCodes = false;
     customsCodesInputs = new Subject<string>();
 
     pharmaceuticalForm: Observable<any[]>;
-    loadingpharmaceuticalForm: boolean = false;
+    loadingpharmaceuticalForm = false;
     pharmaceuticalFormInputs = new Subject<string>();
 
     unitsOfMeasurement: Observable<any[]>;
 
     medicaments: Observable<any[]>;
-    loadingmedicaments: boolean = false;
+    loadingmedicaments = false;
     medicamentsInputs = new Subject<string>();
 
     authorizations: Observable<any[]>;
-    loadingAuthorizations: boolean = false;
+    loadingAuthorizations = false;
     authorizationsInputs = new Subject<string>();
 
     internationalMedicamentNames: Observable<any[]>;
-    loadinginternationalMedicamentName: boolean = false;
+    loadinginternationalMedicamentName = false;
     internationalMedicamentNameInputs = new Subject<string>();
 
     checked: boolean;
@@ -123,7 +123,7 @@ export class ImportManagementDialog implements OnInit {
     }
 
     ngOnInit() {
-        console.log("dialogData: ", this.dialogData)
+        console.log('dialogData: ', this.dialogData);
         this.importData = this.dialogData;
         this.medType = this.dialogData.medtType;
         this.valutaList = [];
@@ -135,8 +135,8 @@ export class ImportManagementDialog implements OnInit {
         this.formSubmitted = false;
         this.addMedicamentClicked = false;
         this.unitSumm = 0;
-        this.approvedPrice = this.dialogData.price;
-        this.approvedQuantity = this.dialogData.quantity;
+        this.approvedPrice = '';
+        this.approvedQuantity = '';
         this.invalidPrice = false;
         this.loadEconomicAgents();
         this.loadManufacturersRfPr();
@@ -148,7 +148,7 @@ export class ImportManagementDialog implements OnInit {
         this.loadUnitsOfMeasurement();
         this.loadMedicaments();
         this.loadInternationalMedicamentName();
-        this.loadAuthorizationDetails()
+        this.loadAuthorizationDetails();
 
         this.evaluateImportForm = this.fb.group({
             // 'id':              [''],
@@ -208,7 +208,8 @@ export class ImportManagementDialog implements OnInit {
                     registrationRmNumber: [null, Validators.required],
                     unitsOfMeasurement: [null, Validators.required],
                     registrationRmDate: [null, Validators.required],
-                    internationalMedicamentName: [null, Validators.required]
+                    internationalMedicamentName: [null, Validators.required],
+                    pozitie : [null]
 
                 }),
 
@@ -221,49 +222,49 @@ export class ImportManagementDialog implements OnInit {
         this.codeAmed;
 
         if (this.dialogData.medicament !== null) {
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(this.dialogData.medicament.code);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(this.dialogData.medicament.customsCode);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(this.dialogData.medicament.name);
-            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(this.dialogData.medicament.quantity);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').setValue(this.dialogData.approvedQuantity);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedPrice').setValue(this.dialogData.price);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.dialogData.summ);
-            // this.unitSumm = this.dialogData.medicament.summ;
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(this.dialogData.currency.shortDescription);
+            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(this.dialogData.medicament.code);
+            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(this.dialogData.medicament.customsCode);
+            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(this.dialogData.medicament.name);
+            // // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(this.dialogData.medicament.quantity);
+            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').setValue(this.dialogData.approvedQuantity);
+            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedPrice').setValue(this.dialogData.price);
+            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.dialogData.summ);
+            // // this.unitSumm = this.dialogData.medicament.summ;
+            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(this.dialogData.currency.shortDescription);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(this.dialogData.medicament.medicament.manufactures[0].manufacture);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(new Date(this.dialogData.medicament.expirationDate));
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(this.dialogData.medicament.pharmaceuticalForm);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').setValue(this.dialogData.medicament.dose);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').setValue(this.dialogData.medicament.division);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').setValue(this.dialogData.medicament.internationalMedicamentName);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(this.dialogData.medicament.atcCode);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(this.dialogData.medicament.registrationNumber);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(this.dialogData.medicament.registrationDate));
-            this.producerAddress = this.dialogData.medicament.manufactures[0].manufacture.address + ", " + this.dialogData.medicament.manufactures[0].manufacture.country.description;
+            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(new Date(this.dialogData.medicament.expirationDate));
+            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(this.dialogData.medicament.pharmaceuticalForm);
+            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').setValue(this.dialogData.medicament.dose);
+            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').setValue(this.dialogData.medicament.division);
+            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').setValue(this.dialogData.medicament.internationalMedicamentName);
+            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(this.dialogData.medicament.atcCode);
+            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(this.dialogData.medicament.registrationNumber);
+            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(this.dialogData.medicament.registrationDate));
+            this.producerAddress = this.dialogData.medicament.manufactures[0].manufacture.address + ', ' + this.dialogData.medicament.manufactures[0].manufacture.country.description;
         } else {
 
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(this.dialogData.codeAmed);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(this.dialogData.customsCode);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(this.dialogData.name);
-        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(this.dialogData.quantity);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').setValue(this.dialogData.approvedQuantity);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedPrice').setValue(this.dialogData.price);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.dialogData.summ);
-        // this.unitSumm = this.dialogData.summ;
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(this.dialogData.currency.shortDescription);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(this.dialogData.producer);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(new Date(this.dialogData.expirationDate));
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(this.dialogData.pharmaceuticalForm);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').setValue(this.dialogData.dose);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').setValue(this.dialogData.unitsOfMeasurement);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').setValue(this.dialogData.internationalMedicamentName);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(this.dialogData.atcCode);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(this.dialogData.registrationNumber);
-        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(this.dialogData.registrationDate));
-        this.producerAddress = this.dialogData.producer.address + ", " + this.dialogData.producer.country.description;
+        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(this.dialogData.codeAmed);
+        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(this.dialogData.customsCode);
+        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(this.dialogData.name);
+        // // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(this.dialogData.quantity);
+        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').setValue(this.dialogData.approvedQuantity);
+        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedPrice').setValue(this.dialogData.price);
+        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.dialogData.summ);
+        // // this.unitSumm = this.dialogData.summ;
+        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(this.dialogData.currency.shortDescription);
+        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(this.dialogData.producer);
+        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(new Date(this.dialogData.expirationDate));
+        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(this.dialogData.pharmaceuticalForm);
+        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').setValue(this.dialogData.dose);
+        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').setValue(this.dialogData.unitsOfMeasurement);
+        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').setValue(this.dialogData.internationalMedicamentName);
+        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(this.dialogData.atcCode);
+        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(this.dialogData.registrationNumber);
+        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(this.dialogData.registrationDate));
+        this.producerAddress = this.dialogData.producer.address + ', ' + this.dialogData.producer.country.description;
     }
-        console.log("this.dialogData.producer.address", this.dialogData.producer.address);
-        console.log("this.dialogData.producer.country.description", this.dialogData.producer.country.description);
+        console.log('this.dialogData.producer.address', this.dialogData.producer.address);
+        console.log('this.dialogData.producer.country.description', this.dialogData.producer.country.description);
 
 
         // if (this.importData.currentStep == "AP") {
@@ -296,10 +297,10 @@ export class ImportManagementDialog implements OnInit {
 
         // this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved ? this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = false : this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = true;
         if (this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved == false) {
-            this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = true
-        } else this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = false;
+            this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = true;
+        } else { this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = false; }
 
-        console.log("this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[" + i + "]", this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved)
+        console.log('this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[' + i + ']', this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved);
     }
 
     cancel(): void {
@@ -311,13 +312,13 @@ export class ImportManagementDialog implements OnInit {
     }
 
     confirm(): void {
-        let validPrice = this.evaluateImportForm.get("importAuthorizationEntity.unitOfImportTadialog resultble.price").valid;
-        let validQuantity = this.evaluateImportForm.get("importAuthorizationEntity.unitOfImportTable.quantity").valid;
+        const validPrice = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTadialog resultble.price').valid;
+        const validQuantity = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').valid;
             if (validPrice && validQuantity && this.invalidPrice === false && this.invalidQuantity === false) {
-                this.dialog.close([true, this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value,this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value ]);
+                this.dialog.close([true, this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value, this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value ]);
                 this.addMedicamentClicked = false;
             } else {
-                console.log("INVALID PRICE, invalidPrice = ", this.invalidPrice)
+                console.log('INVALID PRICE, invalidPrice = ', this.invalidPrice);
             }
         }
     // }
@@ -328,48 +329,111 @@ export class ImportManagementDialog implements OnInit {
 
             this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').valueChanges.subscribe(val => {
                 if (val) {
-                    console.log("unitOfImportTable.quantity:", val);
+                    console.log('unitOfImportTable.quantity:', val);
                     this.unitSumm = val * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value;
-                    console.log("this.unitSumm", this.unitSumm)
+                    console.log('this.unitSumm', this.unitSumm);
                 }
-                if (val > this.approvedQuantity){
+                if (val > this.approvedQuantity) {
                     this.invalidQuantity = true;
-                    console.log("invalidQuantity", this.invalidQuantity)
+                    console.log('invalidQuantity', this.invalidQuantity);
                 } else {
                     this.invalidQuantity = false;
-                    console.log("invalidQuantity", this.invalidQuantity)
+                    console.log('invalidQuantity', this.invalidQuantity);
                 }
 
-            }))
+            }));
         }
 
         if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price')) {
 
             this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').valueChanges.subscribe(val => {
                 if (val) {
-                    console.log("unitOfImportTable.quantity:", val);
+                    console.log('unitOfImportTable.quantity:', val);
 
                     this.unitSumm = val * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value;
-                    console.log("this.unitSumm", this.unitSumm)
-                    console.log("approvedPrice", this.approvedPrice)
+                    console.log('this.unitSumm', this.unitSumm);
+                    console.log('approvedPrice', this.approvedPrice);
                 }
 
-                if (val > this.approvedPrice){
+                if (val > this.approvedPrice) {
                     this.invalidPrice = true;
-                    console.log("invalidPrice", this.invalidPrice)
+                    console.log('invalidPrice', this.invalidPrice);
                 } else {
                     this.invalidPrice = false;
-                    console.log("invalidPrice", this.invalidPrice)
+                    console.log('invalidPrice', this.invalidPrice);
                 }
-            }))
+            }));
 
 
         }
+
+        if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pozitie')) {
+
+            this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pozitie').valueChanges.subscribe(val => {
+                if (val) {
+                    console.log('pozitie:', val);
+
+                    if (val.medicament !== null) {
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(val.medicament.code);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.medicament.customsCode);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(val.medicament.name);
+                        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(val.quantity);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').setValue(val.quantity);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedPrice').setValue(val.price);
+                        this.approvedQuantity = val.quantity;
+                        this.approvedPrice = val.price;
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(val.summ);
+                        // this.unitSumm = val.summ;
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(val.currency.shortDescription);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(val.medicament.manufactures[0].manufacture);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(new Date(val.medicament.expirationDate));
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(val.medicament.pharmaceuticalForm);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').setValue(val.medicament.dose);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').setValue(val.medicament.division);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').setValue(val.medicament.internationalMedicamentName);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(val.medicament.atcCode);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(val.medicament.registrationNumber);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(val.medicament.registrationDate));
+                        this.producerAddress = val.medicament.manufactures[0].manufacture.address + ', ' + val.medicament.manufactures[0].manufacture.country.description;
+                    } else {
+
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(val.codeAmed);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(val.name);
+                        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(val.quantity);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').setValue(val.quantity);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedPrice').setValue(val.price);
+                        this.approvedQuantity = val.quantity;
+                        this.approvedPrice = val.price;
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(val.summ);
+                        // this.unitSumm = val.summ;
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(val.currency.shortDescription);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(val.producer);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(new Date(val.expirationDate));
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(val.pharmaceuticalForm);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').setValue(val.dose);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').setValue(val.unitsOfMeasurement);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').setValue(val.internationalMedicamentName);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(val.atcCode);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(val.registrationNumber);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(val.registrationDate));
+                        this.producerAddress = val.producer.address + ', ' + val.producer.country.description;
+                    }
+
+
+                }
+
+
+            }));
+
+
+        }
+
     }
 
 
     get importTypeForms() {
-        return this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable') as FormArray
+        return this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable') as FormArray;
     }
 
 
@@ -406,7 +470,7 @@ export class ImportManagementDialog implements OnInit {
 
             });
 
-            console.log("this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable'", (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').value)),
+            console.log('this.evaluateImportForm.get(\'importAuthorizationEntity.unitOfImportTable\'', (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').value)),
 
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(null);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(null);
@@ -431,7 +495,7 @@ export class ImportManagementDialog implements OnInit {
 
             this.addMedicamentClicked = false;
         }
-        console.log("this.unitOfImportTable", this.unitOfImportTable)
+        console.log('this.unitOfImportTable', this.unitOfImportTable);
     }
 
     loadAuthorizationDetails() {
@@ -450,12 +514,16 @@ export class ImportManagementDialog implements OnInit {
                 }),
                 flatMap(term =>
                     // this.medicamentService.getMedicamentByName(term).pipe(
-                    // this.requestService.getAuthorizationDetailsByNameOrCode(term, this.importData.importimportAuthorizationEntity.id).pipe(
-                    this.requestService.getAuthorizationDetailsByNameOrCode(term).pipe(
+                    this.requestService.getAuthorizationDetailsByNameOrCode(term/*, this.importData.importimportAuthorizationEntity.id*/).pipe(
                         tap(() => this.loadingAuthorizations = false)
                     )
                 )
+
+
             );
+
+
+
     }
 
 
@@ -557,7 +625,7 @@ export class ImportManagementDialog implements OnInit {
                 },
                 error => console.log(error)
             )
-        )
+        );
     }
 
     loadCustomsCodes() {
@@ -588,7 +656,7 @@ export class ImportManagementDialog implements OnInit {
         this.importer =
             this.companyInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 0) return true;
+                    if (result && result.length > 0) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -610,7 +678,7 @@ export class ImportManagementDialog implements OnInit {
         this.manufacturersRfPr =
             this.manufacturerInputsRfPr.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 0) return true;
+                    if (result && result.length > 0) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -631,8 +699,8 @@ export class ImportManagementDialog implements OnInit {
                 this.valutaList = data;
 
             },
-            error => console.log("loadCurrenciesShort() ERROR", error)
-        )
+            error => console.log('loadCurrenciesShort() ERROR', error)
+        );
     }
 
     interruptProcess() {
@@ -647,7 +715,7 @@ export class ImportManagementDialog implements OnInit {
             // console.log('result', result);
             if (result) {
                 this.loadingService.show();
-                let modelToSubmit = this.evaluateImportForm.getRawValue();
+                const modelToSubmit = this.evaluateImportForm.getRawValue();
                 modelToSubmit.currentStep = 'I';
                 // modelToSubmit.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
                 modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
@@ -666,9 +734,9 @@ export class ImportManagementDialog implements OnInit {
                         this.loadingService.hide();
                     }, error => {
                         this.loadingService.hide();
-                        console.log(error)
+                        console.log(error);
                     })
-                )
+                );
             }
         });
     }
@@ -693,21 +761,21 @@ export class ImportManagementDialog implements OnInit {
             step: 'E'
         });
 
-        console.log("this.evaluateImportForm.value", this.evaluateImportForm.value);
+        console.log('this.evaluateImportForm.value', this.evaluateImportForm.value);
         //=============
 
 
         modelToSubmit.medicaments = [];
-        console.log("modelToSubmit", modelToSubmit);
+        console.log('modelToSubmit', modelToSubmit);
         this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
-                alert("after addImportRequest(modelToSubmit)")
-                console.log("addImportRequest(modelToSubmit).subscribe(data) ", data)
+                alert('after addImportRequest(modelToSubmit)');
+                console.log('addImportRequest(modelToSubmit).subscribe(data) ', data);
                 this.loadingService.hide();
                 // this.router.navigate(['dashboard/module']); for now to post multiple times
             }, error => {
-                alert("Something went wrong while sending the model")
-                console.log("error: ", error)
-                this.loadingService.hide()
+                alert('Something went wrong while sending the model');
+                console.log('error: ', error);
+                this.loadingService.hide();
             }
         ));
 
@@ -718,7 +786,7 @@ export class ImportManagementDialog implements OnInit {
     ngOnDestroy(): void {
         this.subscriptions.forEach(subscription => {
             subscription.unsubscribe();
-        })
+        });
     }
 
 }

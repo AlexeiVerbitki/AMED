@@ -1,5 +1,5 @@
 export enum Casuality {
-    'Causality as per reporter'=0,'Causality as per Mfr'=1
+    'Causality as per reporter' = 0, 'Causality as per Mfr' = 1
 }
 
 export namespace Casuality {

@@ -1,19 +1,19 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {RequestService} from "../../../shared/service/request.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {Document} from "../../../models/document";
-import {Subscription} from "rxjs";
-import {DocumentService} from "../../../shared/service/document.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {MatDialog} from "@angular/material";
-import {TaskService} from "../../../shared/service/task.service";
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
-import {DrugDocumentsService} from "../../../shared/service/drugs/drugdocuments.service";
-import {DrugDecisionsService} from "../../../shared/service/drugs/drugdecisions.service";
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {RequestService} from '../../../shared/service/request.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Document} from '../../../models/document';
+import {Subscription} from 'rxjs';
+import {DocumentService} from '../../../shared/service/document.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {MatDialog} from '@angular/material';
+import {TaskService} from '../../../shared/service/task.service';
+import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {DrugDocumentsService} from '../../../shared/service/drugs/drugdocuments.service';
+import {DrugDecisionsService} from '../../../shared/service/drugs/drugdecisions.service';
 
 @Component({
     selector: 'app-cerere-dub-autor-act',
@@ -32,10 +32,10 @@ export class CerereDubAutorActComponent implements OnInit {
     paymentTotal: number;
     outDocuments: any[] = [];
     initialData: any;
-    isNonAttachedDocuments: boolean = false;
-    isResponseReceived: boolean = false;
+    isNonAttachedDocuments = false;
+    isResponseReceived = false;
     docTypesInitial: any[];
-    disabled: boolean = true;
+    disabled = true;
     states: any[] = [];
 
     constructor(private fb: FormBuilder, private administrationService: AdministrationService,
@@ -136,7 +136,7 @@ export class CerereDubAutorActComponent implements OnInit {
 
     getCurrentState() {
 
-        for (let entry of this.states) {
+        for (const entry of this.states) {
             if (entry.id == this.cerereDupAutorForm.get('locality').value.stateId) {
                 this.cerereDupAutorForm.get('state').setValue(entry);
             }
@@ -203,7 +203,7 @@ export class CerereDubAutorActComponent implements OnInit {
         this.cerereDupAutorForm.get('endDate').setValue(new Date());
         this.cerereDupAutorForm.get('company').setValue(this.cerereDupAutorForm.value.company);
 
-        let modelToSubmit: any = this.cerereDupAutorForm.value;
+        const modelToSubmit: any = this.cerereDupAutorForm.value;
 
         this.populateModelToSubmit(modelToSubmit);
 
@@ -234,7 +234,7 @@ export class CerereDubAutorActComponent implements OnInit {
 
     checkSelectedDocumentsStatus() {
 
-        for (let entry of this.outDocuments) {
+        for (const entry of this.outDocuments) {
 
             if (entry.responseReceived || entry.status == 'Atasat') {
                 this.isResponseReceived = true;
@@ -249,9 +249,9 @@ export class CerereDubAutorActComponent implements OnInit {
         if (document.docType.category == 'AP') {
             this.loadingService.show();
 
-            let locality = this.cerereDupAutorForm.get('locality').value;
-            let state = this.cerereDupAutorForm.get('state').value;
-            let data = {
+            const locality = this.cerereDupAutorForm.get('locality').value;
+            const state = this.cerereDupAutorForm.get('state').value;
+            const data = {
 
                 requestNumber: this.cerereDupAutorForm.get('requestNumber').value,
                 protocolDate: this.cerereDupAutorForm.get('data').value,
@@ -268,8 +268,8 @@ export class CerereDubAutorActComponent implements OnInit {
 
             console.log(data);
             this.subscriptions.push(this.drugDocumentsService.viewAuthorization(data).subscribe(data => {
-                    let file = new Blob([data], {type: 'application/pdf'});
-                    var fileURL = URL.createObjectURL(file);
+                    const file = new Blob([data], {type: 'application/pdf'});
+                    const fileURL = URL.createObjectURL(file);
                     window.open(fileURL);
                     this.loadingService.hide();
                 }, error => {
@@ -292,7 +292,7 @@ export class CerereDubAutorActComponent implements OnInit {
             if (result) {
                 this.loadingService.show();
                 this.outDocuments.forEach((item, index) => {
-                    if (item === doc) this.outDocuments.splice(index, 1);
+                    if (item === doc) { this.outDocuments.splice(index, 1); }
                 });
                 this.initialData.outputDocuments = this.outDocuments;
 
@@ -307,8 +307,8 @@ export class CerereDubAutorActComponent implements OnInit {
     }
 
     checkOutputDocumentsStatus() {
-        for (let entry of this.outDocuments) {
-            var isMatch = this.documents.some(elem => {
+        for (const entry of this.outDocuments) {
+            const isMatch = this.documents.some(elem => {
                 return (elem.docType.category == entry.docType.category && elem.number == entry.number) ? true : false;
             });
             if (isMatch) {
@@ -343,7 +343,7 @@ export class CerereDubAutorActComponent implements OnInit {
     private initOutputDocuments() {
 
         this.outDocuments = [];
-        let outDocumentAP = {
+        const outDocumentAP = {
             name: 'Autorizatia de activitate',
             docType: this.docTypesInitial.find(r => r.category == 'AP'),
             number: 'AP-' + this.cerereDupAutorForm.get('requestNumber').value,
@@ -351,7 +351,7 @@ export class CerereDubAutorActComponent implements OnInit {
         };
         this.outDocuments.push(outDocumentAP);
 
-        let outDocumentSR = {
+        const outDocumentSR = {
             name: 'Scrisoare de refuz',
             docType: this.docTypesInitial.find(r => r.category == 'SR'),
             number: 'SR-' + this.cerereDupAutorForm.get('requestNumber').value,
@@ -376,8 +376,8 @@ export class CerereDubAutorActComponent implements OnInit {
         dialogRef2.afterClosed().subscribe(result => {
             if (result) {
                 this.loadingService.show();
-                let usernameDB = this.authService.getUserName();
-                var modelToSubmit = {
+                const usernameDB = this.authService.getUserName();
+                const modelToSubmit = {
                     requestHistories: [],
                     currentStep: 'I',
                     id: this.cerereDupAutorForm.get('id').value,

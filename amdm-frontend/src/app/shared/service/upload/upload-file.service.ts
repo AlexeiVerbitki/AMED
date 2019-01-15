@@ -1,12 +1,13 @@
-import { Injectable } from '@angular/core';
-import {HttpClient, HttpEvent, HttpHeaders, HttpParams, HttpRequest, HttpResponse} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpEvent, HttpRequest} from '@angular/common/http';
+import {Observable} from 'rxjs';
 
 
 @Injectable()
 export class UploadFileService {
 
-  constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) {
+    }
 
 
     pushFileToStorage(file: File, nrCerere: string): Observable<HttpEvent<{}>> {
@@ -23,8 +24,8 @@ export class UploadFileService {
         return this.http.request(req);
     }
 
-    removeFileFromStorage(relativeFolder : string): Observable<any>{
-        return this.http.get('/api/documents/removeFile', {params :{ relativeFolder : relativeFolder}, observe: 'response'  });
+    removeFileFromStorage(relativeFolder: string): Observable<any> {
+        return this.http.get('/api/documents/removeFile', {params: {relativeFolder: relativeFolder}, observe: 'response'});
     }
 
     loadFile(relativePath: string): Observable<any> {

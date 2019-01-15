@@ -31,4 +31,5 @@ public class DrugDecisionsFilterDTO implements Serializable {
     private String medicamentId;
     private String medicamentCommercialName;
     private String medicamentCode;
+
 }

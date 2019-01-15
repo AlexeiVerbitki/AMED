@@ -1,9 +1,9 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {Subscription} from "rxjs";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
-import {DrugDecisionsService} from "../../shared/service/drugs/drugdecisions.service";
-import {ConfirmationDialogComponent} from "../confirmation-dialog.component";
+import {Subscription} from 'rxjs';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
+import {DrugDecisionsService} from '../../shared/service/drugs/drugdecisions.service';
+import {ConfirmationDialogComponent} from '../confirmation-dialog.component';
 
 @Component({
     selector: 'app-drug-authorization-details-dialog',
@@ -15,7 +15,7 @@ export class DrugAuthorizationDetailsDialogComponent implements OnInit {
     private subscriptions: Subscription[] = [];
     mForm: FormGroup;
     nForm: FormGroup;
-    disabled: boolean = true;
+    disabled = true;
     authorizedSubstancesTable: any[] = [];
     hasError: boolean;
     hasErrorUsedQuantity: boolean;
@@ -64,7 +64,7 @@ export class DrugAuthorizationDetailsDialogComponent implements OnInit {
             this.subscriptions.push(
                 this.drugDecisionsService.getImportExportDetailsByDecisionId(this.dataDialog.value).subscribe(data => {
 
-                        for (let entry of data) {
+                        for (const entry of data) {
 
                             this.authorizedSubstancesTable.push(entry);
                         }
@@ -125,9 +125,9 @@ export class DrugAuthorizationDetailsDialogComponent implements OnInit {
 
         if (substance.toDate != null && substance.fromDate != null) {
 
-            let fromDate = new Date(substance.fromDate);
-            let toDate = new Date(substance.toDate);
-            let date = new Date();
+            const fromDate = new Date(substance.fromDate);
+            const toDate = new Date(substance.toDate);
+            const date = new Date();
             if (date.getTime() < fromDate.getTime()) {
                 this.authorizationNotValid = true;
                 return;

@@ -1,6 +1,6 @@
-import {UnitOfMeasure} from "./unitOfMeasure";
-import {Price} from "./price";
-import {Country} from "./country";
+import {UnitOfMeasure} from './unitOfMeasure';
+import {Price} from './price';
+import {Country} from './country';
 
 export class Medicament {
   name: string;

@@ -2,22 +2,22 @@ import {Cerere} from './../../../models/cerere';
 import {FormArray, Validators} from '@angular/forms';
 import {FormGroup, FormBuilder} from '@angular/forms';
 import {Component, Inject, OnInit} from '@angular/core';
-import {Observable, Subscription} from "rxjs";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
-import {ActivatedRoute, Router} from "@angular/router";
-import {AdministrationService} from "../../../shared/service/administration.service";
+import {Observable, Subscription} from 'rxjs';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AdministrationService} from '../../../shared/service/administration.service';
 // import {debounceTime, distinctUntilChanged, filter, map, startWith, tap} from "rxjs/operators";
-import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 import {saveAs} from 'file-saver';
-import {Document} from "../../../models/document";
-import {RequestService} from "../../../shared/service/request.service";
-import {Subject} from "rxjs/index";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {MedicamentService} from "../../../shared/service/medicament.service";
-import {Utils} from "angular-bootstrap-md/angular-bootstrap-md/utils/utils.class";
-import {forEach} from "@angular/router/src/utils/collection";
+import {Document} from '../../../models/document';
+import {RequestService} from '../../../shared/service/request.service';
+import {Subject} from 'rxjs/index';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {MedicamentService} from '../../../shared/service/medicament.service';
+import {Utils} from 'angular-bootstrap-md/angular-bootstrap-md/utils/utils.class';
+import {forEach} from '@angular/router/src/utils/collection';
 
 export interface PeriodicElement {
     name: string;
@@ -51,11 +51,11 @@ export class ImportMedDialog implements OnInit {
     unitOfImportTable: any[] = [];
 
     protected manufacturersRfPr: Observable<any[]>;
-    protected loadingManufacturerRfPr: boolean = false;
+    protected loadingManufacturerRfPr = false;
     protected manufacturerInputsRfPr = new Subject<string>();
 
     importer: Observable<any[]>;
-    loadingCompany: boolean = false;
+    loadingCompany = false;
     protected companyInputs = new Subject<string>();
 
     sellerAddress: any;
@@ -73,25 +73,25 @@ export class ImportMedDialog implements OnInit {
     medicamentData: any;
 
     atcCodes: Observable<any[]>;
-    loadingAtcCodes: boolean = false;
+    loadingAtcCodes = false;
     atcCodesInputs = new Subject<string>();
 
     customsCodes: Observable<any[]>;
-    loadingcustomsCodes: boolean = false;
+    loadingcustomsCodes = false;
     customsCodesInputs = new Subject<string>();
 
     pharmaceuticalForm: Observable<any[]>;
-    loadingpharmaceuticalForm: boolean = false;
+    loadingpharmaceuticalForm = false;
     pharmaceuticalFormInputs = new Subject<string>();
 
     unitsOfMeasurement: Observable<any[]>;
 
     medicaments: Observable<any[]>;
-    loadingmedicaments: boolean = false;
+    loadingmedicaments = false;
     medicamentsInputs = new Subject<string>();
 
     internationalMedicamentNames: Observable<any[]>;
-    loadinginternationalMedicamentName: boolean = false;
+    loadinginternationalMedicamentName = false;
     internationalMedicamentNameInputs = new Subject<string>();
 
     checked: boolean;
@@ -114,7 +114,7 @@ export class ImportMedDialog implements OnInit {
     }
 
     ngOnInit() {
-        console.log("dialogData: ", this.dialogData)
+        console.log('dialogData: ', this.dialogData);
         this.importData = this.dialogData;
         this.medType = this.dialogData.medtType;
         this.valutaList = [];
@@ -222,7 +222,7 @@ export class ImportMedDialog implements OnInit {
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(this.dialogData.medicament.atcCode);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(this.dialogData.medicament.registrationNumber);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(this.dialogData.medicament.registrationDate));
-            this.producerAddress = this.dialogData.medicament.manufactures[0].manufacture.address + ", " + this.dialogData.medicament.manufactures[0].manufacture.country.description;
+            this.producerAddress = this.dialogData.medicament.manufactures[0].manufacture.address + ', ' + this.dialogData.medicament.manufactures[0].manufacture.country.description;
         } else {
 
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(this.dialogData.codeAmed);
@@ -242,13 +242,13 @@ export class ImportMedDialog implements OnInit {
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(this.dialogData.atcCode);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(this.dialogData.registrationNumber);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(this.dialogData.registrationDate));
-        this.producerAddress = this.dialogData.producer.address + ", " + this.dialogData.producer.country.description;
+        this.producerAddress = this.dialogData.producer.address + ', ' + this.dialogData.producer.country.description;
     }
-        console.log("this.dialogData.producer.address", this.dialogData.producer.address);
-        console.log("this.dialogData.producer.country.description", this.dialogData.producer.country.description);
+        console.log('this.dialogData.producer.address', this.dialogData.producer.address);
+        console.log('this.dialogData.producer.country.description', this.dialogData.producer.country.description);
 
 
-        if (this.importData.currentStep == "AP") {
+        if (this.importData.currentStep == 'AP') {
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').disable();
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').disable();
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').disable();
@@ -278,10 +278,10 @@ export class ImportMedDialog implements OnInit {
 
         // this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved ? this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = false : this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = true;
         if (this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved == false) {
-            this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = true
-        } else this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = false;
+            this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = true;
+        } else { this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = false; }
 
-        console.log("this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[" + i + "]", this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved)
+        console.log('this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[' + i + ']', this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved);
     }
 
     cancel(): void {
@@ -308,15 +308,15 @@ export class ImportMedDialog implements OnInit {
             this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').valueChanges.subscribe(val => {
                 if (val) {
                     this.unitSumm = val * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value;
-                    console.log("this,this.unitSumm", this.unitSumm)
+                    console.log('this,this.unitSumm', this.unitSumm);
                 }
-            }))
+            }));
         }
     }
 
 
     get importTypeForms() {
-        return this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable') as FormArray
+        return this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable') as FormArray;
     }
 
 
@@ -353,7 +353,7 @@ export class ImportMedDialog implements OnInit {
 
             });
 
-            console.log("this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable'", (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').value)),
+            console.log('this.evaluateImportForm.get(\'importAuthorizationEntity.unitOfImportTable\'', (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').value)),
 
                 this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(null);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(null);
@@ -378,7 +378,7 @@ export class ImportMedDialog implements OnInit {
 
             this.addMedicamentClicked = false;
         }
-        console.log("this.unitOfImportTable", this.unitOfImportTable)
+        console.log('this.unitOfImportTable', this.unitOfImportTable);
     }
 
 
@@ -480,7 +480,7 @@ export class ImportMedDialog implements OnInit {
                 },
                 error => console.log(error)
             )
-        )
+        );
     }
 
     loadCustomsCodes() {
@@ -511,7 +511,7 @@ export class ImportMedDialog implements OnInit {
         this.importer =
             this.companyInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 0) return true;
+                    if (result && result.length > 0) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -533,7 +533,7 @@ export class ImportMedDialog implements OnInit {
         this.manufacturersRfPr =
             this.manufacturerInputsRfPr.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 0) return true;
+                    if (result && result.length > 0) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -554,8 +554,8 @@ export class ImportMedDialog implements OnInit {
                 this.valutaList = data;
 
             },
-            error => console.log("loadCurrenciesShort() ERROR", error)
-        )
+            error => console.log('loadCurrenciesShort() ERROR', error)
+        );
     }
 
     interruptProcess() {
@@ -570,7 +570,7 @@ export class ImportMedDialog implements OnInit {
             // console.log('result', result);
             if (result) {
                 this.loadingService.show();
-                let modelToSubmit = this.evaluateImportForm.getRawValue();
+                const modelToSubmit = this.evaluateImportForm.getRawValue();
                 modelToSubmit.currentStep = 'I';
                 // modelToSubmit.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
                 modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
@@ -589,9 +589,9 @@ export class ImportMedDialog implements OnInit {
                         this.loadingService.hide();
                     }, error => {
                         this.loadingService.hide();
-                        console.log(error)
+                        console.log(error);
                     })
-                )
+                );
             }
         });
     }
@@ -616,23 +616,23 @@ export class ImportMedDialog implements OnInit {
             step: 'E'
         });
 
-        console.log("this.evaluateImportForm.value", this.evaluateImportForm.value);
+        console.log('this.evaluateImportForm.value', this.evaluateImportForm.value);
         //=============
 
 
         modelToSubmit.medicaments = [];
-        console.log("modelToSubmit", modelToSubmit);
-        alert("before addImportRequest(modelToSubmit)")
+        console.log('modelToSubmit', modelToSubmit);
+        alert('before addImportRequest(modelToSubmit)');
         // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {
         this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
-                alert("after addImportRequest(modelToSubmit)")
-                console.log("addImportRequest(modelToSubmit).subscribe(data) ", data)
+                alert('after addImportRequest(modelToSubmit)');
+                console.log('addImportRequest(modelToSubmit).subscribe(data) ', data);
                 this.loadingService.hide();
                 // this.router.navigate(['dashboard/module']); for now to post multiple times
             }, error => {
-                alert("Something went wrong while sending the model")
-                console.log("error: ", error)
-                this.loadingService.hide()
+                alert('Something went wrong while sending the model');
+                console.log('error: ', error);
+                this.loadingService.hide();
             }
         ));
 
@@ -643,7 +643,7 @@ export class ImportMedDialog implements OnInit {
     ngOnDestroy(): void {
         this.subscriptions.forEach(subscription => {
             subscription.unsubscribe();
-        })
+        });
     }
 
 }

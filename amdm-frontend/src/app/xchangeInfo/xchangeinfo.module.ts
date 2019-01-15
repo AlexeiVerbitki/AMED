@@ -1,11 +1,11 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MDBBootstrapModule} from "angular-bootstrap-md";
-import {MaterialSharedModule} from "../material-shared.module";
-import {PipeModule} from "../shared/pipe/pipe.module";
-import {MatDialogModule} from "@angular/material";
-import {XchangeInfoComponent} from "./xchangeinfo.component";
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MDBBootstrapModule} from 'angular-bootstrap-md';
+import {MaterialSharedModule} from '../material-shared.module';
+import {PipeModule} from '../shared/pipe/pipe.module';
+import {MatDialogModule} from '@angular/material';
+import {XchangeInfoComponent} from './xchangeinfo.component';
 
 @NgModule({
     imports: [

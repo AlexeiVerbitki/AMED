@@ -1,12 +1,12 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
-import {Subscription} from "rxjs";
-import {ActivatedRoute, Router} from "@angular/router";
-import {PriceService} from "../../../shared/service/prices.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
-import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
+import {Subscription} from 'rxjs';
+import {ActivatedRoute, Router} from '@angular/router';
+import {PriceService} from '../../../shared/service/prices.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 
 @Component({
     selector: 'app-prices-revaluation-generics',
@@ -16,11 +16,11 @@ import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.c
 
 export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDestroy {
     priceId: string ;
-    containInvalidPrices: boolean = true;
-    formSubmitted: boolean = false;
+    containInvalidPrices = true;
+    formSubmitted = false;
     medicaments: any[] = [];
     avgCurrencies: any[] = [];
-    saved: boolean = false;
+    saved = false;
 
     displayedColumns: any[] = [
         'medicamentCode',
@@ -54,7 +54,7 @@ export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDe
 
         this.saved = false;
 
-        let thisObject = this;
+        const thisObject = this;
         window.onbeforeunload = function(e) {
             thisObject.onCloseWindow();
             return 'onbeforeunload';
@@ -72,7 +72,7 @@ export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDe
 
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
-        this.dataSource.paginator._intl.itemsPerPageLabel = "Medicamente pe pagina: ";
+        this.dataSource.paginator._intl.itemsPerPageLabel = 'Medicamente pe pagina: ';
         this.dataSource.sort = this.sort;
     }
 
@@ -84,7 +84,7 @@ export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDe
     }
 
 
-    currencyChanged($event){
+    currencyChanged($event) {
         this.avgCurrencies = $event;
     }
 
@@ -111,7 +111,7 @@ export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDe
             this.priceService.getGenericsPricesForRevaluation(this.priceId).subscribe(prices => {
                     this.dataSource.data = prices;
 
-                    if(this.dataSource.data.length == 0) {
+                    if (this.dataSource.data.length == 0) {
                         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
                             data: {
                                 message: 'Nu exista prețuri necesare a fi reevaluate. Mergeți la pagina principală?',
@@ -132,11 +132,11 @@ export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDe
             ));
     }
 
-    save(){
+    save() {
         this.loadingService.show();
         this.formSubmitted = true;
 
-        let prices: any[] = [];
+        const prices: any[] = [];
 
         if (this.containInvalidPrices) {
             this.loadingService.hide();
@@ -170,7 +170,7 @@ export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDe
     }
 
     onCloseWindow() {
-        if(!this.saved) {
+        if (!this.saved) {
             // this.priceService.makeAvailableAgain(this.dataSource.data);
 
             // let win = window.open('http://localhost:4200/dashboard/module/price/revaluation-generics/61', '_blank');
@@ -183,14 +183,14 @@ export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDe
         console.log('newPriceModified', newValue);
         this.dataSource.data[i].priceMdlNew = +newValue;
 
-        let avgCur = this.avgCurrencies.find(cur => cur.currency.shortDescription == this.dataSource.data[i].currency);
+        const avgCur = this.avgCurrencies.find(cur => cur.currency.shortDescription == this.dataSource.data[i].currency);
         this.dataSource.data[i].priceNew = (+newValue / avgCur.value);
 
-        let percents = (+newValue * 100) / this.medicaments[0].mdlValue;
+        const percents = (+newValue * 100) / this.medicaments[0].mdlValue;
 
         this.dataSource.data[i].priceMdlDifferencePercents = percents.toFixed(1);
 
-        this.containInvalidPrices = this.dataSource.data.some(p => p.priceMdlNew == undefined || p.priceMdlNew <= 0 || +p.priceMdlDifferencePercents > 75)
+        this.containInvalidPrices = this.dataSource.data.some(p => p.priceMdlNew == undefined || p.priceMdlNew <= 0 || +p.priceMdlDifferencePercents > 75);
     }
 
     ngOnDestroy(): void {

@@ -1,5 +1,5 @@
 import {Component, Inject, Input, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 @Component({
     selector: 'app-evaluate-modal',
@@ -8,7 +8,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 })
 export class EvaluateModalComponent implements OnInit {
 
-    problemDescription :string;
+    problemDescription: string;
     constructor(@Inject(MAT_DIALOG_DATA) public dataDialog: any,
                 public dialogConfirmation: MatDialogRef<EvaluateModalComponent>) {
     }

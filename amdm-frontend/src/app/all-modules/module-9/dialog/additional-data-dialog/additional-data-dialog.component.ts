@@ -1,12 +1,12 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Subscription} from "rxjs";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
-import {AdministrationService} from "../../../../shared/service/administration.service";
-import {DocumentService} from "../../../../shared/service/document.service";
-import {AuthService} from "../../../../shared/service/authetication.service";
-import {ConfirmationDialogComponent} from "../../../../dialog/confirmation-dialog.component";
-import {LoaderService} from "../../../../shared/service/loader.service";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Subscription} from 'rxjs';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
+import {AdministrationService} from '../../../../shared/service/administration.service';
+import {DocumentService} from '../../../../shared/service/document.service';
+import {AuthService} from '../../../../shared/service/authetication.service';
+import {ConfirmationDialogComponent} from '../../../../dialog/confirmation-dialog.component';
+import {LoaderService} from '../../../../shared/service/loader.service';
 
 @Component({
     selector: 'app-additional-data-dialog',
@@ -19,7 +19,7 @@ export class AdditionalDataDialogComponent implements OnInit {
     isRegisterDoc: boolean;
     docTypes: any[];
     docTypeRA: any[];
-    title: string = 'Detalii scrisoare de solicitare date aditionale';
+    title = 'Detalii scrisoare de solicitare date aditionale';
 
     constructor(private fb: FormBuilder,
                 private administrationService: AdministrationService,
@@ -28,7 +28,7 @@ export class AdditionalDataDialogComponent implements OnInit {
                 public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) public dataDialog: any,
                 public dialogConfirmation: MatDialog,
-                private loadingService: LoaderService,) {
+                private loadingService: LoaderService, ) {
     }
 
 
@@ -42,7 +42,7 @@ export class AdditionalDataDialogComponent implements OnInit {
             'email': [null, [Validators.required, Validators.email]]
         });
 
-        console.log('dataDialog',this.dataDialog);
+        console.log('dataDialog', this.dataDialog);
 
         this.subscriptions.push(
             this.administrationService.getAllDocTypes().subscribe(data => {
@@ -55,7 +55,7 @@ export class AdditionalDataDialogComponent implements OnInit {
     }
 
     getDocEntity(path: string): any {
-        var docName = '';
+        let docName = '';
         switch (this.dataDialog.modalType) {
             case  'NOTIFICATION' : {
                 docName = 'Scrisoare de informare Nr ' + this.reqForm.get('docNumber').value + '.pdf';
@@ -66,7 +66,7 @@ export class AdditionalDataDialogComponent implements OnInit {
                 break;
             }
         }
-        var docType = '';
+        let docType = '';
         switch (this.dataDialog.modalType) {
             case  'NOTIFICATION' : {
                 docType = 'NL';
@@ -77,7 +77,7 @@ export class AdditionalDataDialogComponent implements OnInit {
                 break;
             }
         }
-        var docEntity = {
+        const docEntity = {
             date: new Date(),
             name: docName,
             path: path,
@@ -98,7 +98,7 @@ export class AdditionalDataDialogComponent implements OnInit {
         }
         this.isRegisterDoc = false;
 
-        var response = {};
+        let response = {};
         switch (this.dataDialog.modalType) {
             case  'NOTIFICATION' : {
                 break;
@@ -124,7 +124,7 @@ export class AdditionalDataDialogComponent implements OnInit {
 
     cancel(): void {
 
-        var message = '';
+        let message = '';
         switch (this.dataDialog.modalType) {
             case  'NOTIFICATION' : {
                 message = 'Sunteti sigur(a)?';
@@ -158,7 +158,7 @@ export class AdditionalDataDialogComponent implements OnInit {
         this.isRegisterDoc = false;
 
         this.loadingService.show();
-        var docType = '';
+        let docType = '';
         switch (this.dataDialog.modalType) {
             case  'NOTIFICATION' : {
                 docType = 'NL';
@@ -173,8 +173,8 @@ export class AdditionalDataDialogComponent implements OnInit {
             this.reqForm.get('content').value,
             this.reqForm.get('title').value,
             docType).subscribe(data => {
-                let file = new Blob([data], {type: 'application/pdf'});
-                var fileURL = URL.createObjectURL(file);
+                const file = new Blob([data], {type: 'application/pdf'});
+                const fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
                 this.loadingService.hide();
             }, error => {

@@ -1,22 +1,22 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Observable, of, Subject, Subscription} from "rxjs";
-import {Document} from "../../../models/document";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {LicenseService} from "../../../shared/service/license/license.service";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {MatDialog} from "@angular/material";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {DocumentService} from "../../../shared/service/document.service";
-import {LocalityService} from "../../../shared/service/locality.service";
-import {LicenseDecisionDialogComponent} from "../../../dialog/license-decision-dialog/license-decision-dialog.component";
-import {catchError, debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
-import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
-import {AddLicenseFarmacistComponent} from "../add-license-farmacist/add-license-farmacist.component";
-import {AddEcAgentComponent} from "../../../administration/economic-agent/add-ec-agent/add-ec-agent.component";
+import {Observable, of, Subject, Subscription} from 'rxjs';
+import {Document} from '../../../models/document';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {LicenseService} from '../../../shared/service/license/license.service';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {MatDialog} from '@angular/material';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {DocumentService} from '../../../shared/service/document.service';
+import {LocalityService} from '../../../shared/service/locality.service';
+import {LicenseDecisionDialogComponent} from '../../../dialog/license-decision-dialog/license-decision-dialog.component';
+import {catchError, debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {AddLicenseFarmacistComponent} from '../add-license-farmacist/add-license-farmacist.component';
+import {AddEcAgentComponent} from '../../../administration/economic-agent/add-ec-agent/add-ec-agent.component';
 
 @Component({
     selector: 'app-evaluare-cerere-lic',
@@ -44,7 +44,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
     pharmacyRepresentantProf: any;
 
     companii: Observable<any[]>;
-    loadingCompany: boolean = false;
+    loadingCompany = false;
     companyInputs = new Subject<string>();
 
     CPCDId: string;
@@ -52,10 +52,10 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
     maxDate = new Date();
 
-    rFormSubbmitted: boolean = false;
-    oFormSubbmitted: boolean = false;
+    rFormSubbmitted = false;
+    oFormSubbmitted = false;
 
-    nextSubmit: boolean = false;
+    nextSubmit = false;
 
     docTypeIdentifier: any;
 
@@ -98,14 +98,13 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
             if (params['id']) {
                 this.requestId = params['id'];
-
+                console.log('13');
                 this.subscriptions.push(
                     this.licenseService.retrieveLicenseByRequestId(this.requestId).subscribe(data => {
                             this.oldData = data;
                             this.patchData(data);
 
-                            if (this.tipCerere !== 'LICC')
-                            {
+                            if (this.tipCerere !== 'LICC') {
                                 this.retrieveNotSelectedFilials(this.oldData.license.idno);
                             }
 
@@ -122,14 +121,15 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
                     )
                 );
 
+                console.log('23');
+
                 this.subscriptions.push(
                     this.licenseService.loadAnnounces().subscribe(data => this.announces = data  ));
 
                 this.subscriptions.push(
                     this.licenseService.loadEcAgentTypes().subscribe(data => this.ecAgentTypes = data));
 
-            }
-            else {
+            } else {
                 return;
             }
         }));
@@ -137,13 +137,12 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
     }
 
 
-    private retrieveNotSelectedFilials(idno : string ) {
+    private retrieveNotSelectedFilials(idno: string ) {
         this.subscriptions.push(
             this.licenseService.retrieveAgentsByIdnoWithoutLicense(idno).subscribe(data => {
                     this.companiiPerIdnoNotSelected = data;
                     this.companiiPerIdnoNotSelected.forEach(co => {
-                        if (co.locality)
-                        {
+                        if (co.locality) {
                             this.subscriptions.push(
                                 this.localityService.loadLocalityDetails(co.locality.id).subscribe(data => {
                                         co.address = data.stateName + ', ' + data.description + ', ' + co.street;
@@ -170,7 +169,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         this.tipCerere = data.type.code;
         this.docTypeIdentifier = {code: this.tipCerere, step: 'E'};
 
-        this.docs = data.license.detail.documents;
+        this.docs = data.documents;
         if (this.docs) {
             this.docs.forEach(doc => doc.isOld = true);
         }
@@ -191,8 +190,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
                     this.rForm.get('CPCDMethod').patchValue(csr.announcedMethods);
                     if (csr.announcedMethods.code === 'email') {
                         this.rForm.get('CPCDEmail').patchValue(csr.extraData);
-                    }
-                    else {
+                    } else {
                         this.rForm.get('CPCDPhone').patchValue(csr.extraData);
                     }
                 }
@@ -203,12 +201,11 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
                     this.rForm.get('ASPMethod').patchValue(csr.announcedMethods);
                     if (csr.announcedMethods.code === 'email') {
                         this.rForm.get('ASPEmail').patchValue(csr.extraData);
-                    }
-                    else {
+                    } else {
                         this.rForm.get('ASPPhone').patchValue(csr.extraData);
                     }
                 }
-            })
+            });
         }
 
         if (this.tipCerere === 'LICD' || this.tipCerere === 'LICP' || this.tipCerere === 'LICA' || this.tipCerere === 'LICS' || this.tipCerere === 'LICRL' ) {
@@ -228,13 +225,16 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
         this.companiiPerIdnoSelected.forEach(cis => {
             cis.companyType = cis.type.description;
-            cis.address = cis.locality.stateName + ', ' + cis.locality.description + ', ' + cis.street;
+            if (cis.locality)
+            {
+                cis.address = cis.locality.stateName + ', ' + cis.locality.description + ', ' + cis.street;
+            }
+
             let activitiesStr;
             cis.activities.forEach(r => {
                 if (activitiesStr) {
-                    activitiesStr += ', ' + r.description
-                }
-                else {
+                    activitiesStr += ', ' + r.description;
+                } else {
                     activitiesStr = r.description;
                 }
 
@@ -245,7 +245,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         this.companii =
             this.companyInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) return true;
+                    if (result && result.length > 2) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -260,7 +260,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
                         catchError(() => {
                             this.loadingCompany = false;
                             return of([]);
-                            ;
+
                         })
                     )
                 )
@@ -331,8 +331,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         this.oForm.get('filiala').valueChanges.subscribe(val => {
             if (val ) {
                 this.farmacistiPerAddress = val.agentPharmaceutist;
-                if (val.locality)
-                {
+                if (val.locality) {
                     this.subscriptions.push(
                         this.localityService.loadLocalityDetails(val.locality.id).subscribe(data => {
                                 this.pharmacyRepresentantProf = val.type.representant;
@@ -345,8 +344,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
                         )
                     );
                 }
-            }
-            else {
+            } else {
                 this.pharmacyRepresentantProf = null;
                 this.oForm.get('tipIntreprindere').setValue(null);
                 this.oForm.get('region').setValue(null);
@@ -359,8 +357,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         this.oForm.get('tipIntreprindere').valueChanges.subscribe(val => {
             if (val ) {
                 this.pharmacyRepresentantProf = val.representant;
-            }
-            else {
+            } else {
                 this.pharmacyRepresentantProf = null;
             }
         });
@@ -371,8 +368,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         this.oForm.get('compGet').valueChanges.subscribe(val => {
             if (val) {
                 this.retrieveNotSelectedFilials(val.idno);
-            }
-            else {
+            } else {
                 this.companiiPerIdnoNotSelected = [];
                 this.oForm.get('filiala').setValue(null);
             }
@@ -393,19 +389,18 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
         this.oFormSubbmitted = false;
 
-        let activities: any[] = this.oForm.get('licenseActivities').value;
+        const activities: any[] = this.oForm.get('licenseActivities').value;
         let activitiesStr;
         activities.forEach(r => {
             if (activitiesStr) {
-                activitiesStr += ', ' + r.description
-            }
-            else {
+                activitiesStr += ', ' + r.description;
+            } else {
                 activitiesStr = r.description;
             }
 
         });
 
-        let filiala = this.oForm.get('filiala').value;
+        const filiala = this.oForm.get('filiala').value;
 
         filiala.companyType = this.oForm.get('tipIntreprindere').value.description;
         filiala.address = this.oForm.get('region').value + ', ' + this.oForm.get('locality').value + ', ' + this.oForm.get('street').value;
@@ -447,7 +442,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 // console.log('result' , );
-                let anies = this.companiiPerIdnoSelected.slice(index, index + 1)[0];
+                const anies = this.companiiPerIdnoSelected.slice(index, index + 1)[0];
 
                 this.companiiPerIdnoNotSelected = [...this.companiiPerIdnoNotSelected, anies];
 
@@ -465,7 +460,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         }
 
         this.rFormSubbmitted = false;
-        let modelToSubmit = this.composeModel('E');
+        const modelToSubmit = this.composeModel('E');
 
         this.subscriptions.push(
             this.licenseService.saveEvaluateLicense(modelToSubmit).subscribe(data => {
@@ -494,7 +489,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         // }
 
         this.rFormSubbmitted = false;
-        let modelToSubmit = this.composeModel('I');
+        const modelToSubmit = this.composeModel('I');
 
 
         this.subscriptions.push(
@@ -509,16 +504,13 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
     private composeModel(currentStep: string) {
         this.endDate = new Date();
-        let modelToSubmit: any = this.oldData;
-        let licenseModel: any = modelToSubmit.license;
+        const modelToSubmit: any = this.oldData;
+        const licenseModel: any = modelToSubmit.license;
         // let detail: any = {};
         // let resolution: any = {};
-        let commisionResponses: any[] = [];
+        const commisionResponses: any[] = [];
 
         modelToSubmit.id = this.requestId;
-
-        licenseModel.detail.documents = this.docs;
-
 
         licenseModel.economicAgents = this.companiiPerIdnoSelected;
 
@@ -526,8 +518,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
             let extraData: any;
             if (this.rForm.get('CPCDMethod').value.code === 'email') {
                 extraData = this.rForm.get('CPCDEmail').value;
-            }
-            else {
+            } else {
                 extraData = this.rForm.get('CPCDPhone').value;
             }
             commisionResponses.push({
@@ -543,8 +534,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
             let extraData: any;
             if (this.rForm.get('ASPMethod').value.code === 'email') {
                 extraData = this.rForm.get('ASPEmail').value;
-            }
-            else {
+            } else {
                 extraData = this.rForm.get('ASPPhone').value;
             }
             commisionResponses.push({
@@ -570,16 +560,10 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
         licenseModel.detail.commisionResponses = commisionResponses;
 
-        console.log('model', licenseModel);
-
-
+        modelToSubmit.documents = this.docs;
         modelToSubmit.license = licenseModel;
 
         return modelToSubmit;
-    }
-
-    closePage() {
-        this.router.navigate(['/dashboard/homepage']);
     }
 
     cancelRequest() {
@@ -621,7 +605,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         });
     }
 
-    newFarmacist(){
+    newFarmacist() {
         const dialogRef2 = this.dialogDecision.open(AddLicenseFarmacistComponent, {
             data: {
                 //NoData
@@ -637,8 +621,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         });
     }
 
-    newFilial()
-    {
+    newFilial() {
         const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
             width: '1000px',
             panelClass: 'materialLicense',
@@ -663,13 +646,12 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
                         this.companiiPerIdnoNotSelected = data;
 
-                        let cSelectedIds : any[] = this.companiiPerIdnoSelected.map(cps => cps.id);
+                        const cSelectedIds: any[] = this.companiiPerIdnoSelected.map(cps => cps.id);
 
                         this.companiiPerIdnoNotSelected = this.companiiPerIdnoNotSelected.filter(cpns => !cSelectedIds.includes(cpns.id));
 
                         this.companiiPerIdnoNotSelected.forEach(co => {
-                                if (co.locality)
-                                {
+                                if (co.locality) {
                                     this.subscriptions.push(
                                         this.localityService.loadLocalityDetails(co.locality.id).subscribe(data => {
                                                 co.address = data.stateName + ', ' + data.description + ', ' + co.street;
@@ -710,8 +692,8 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
     viewDoc(document: any) {
         this.loadingService.show();
         this.subscriptions.push(this.documentService.viewDD(document.number).subscribe(data => {
-                let file = new Blob([data], {type: 'application/pdf'});
-                var fileURL = URL.createObjectURL(file);
+                const file = new Blob([data], {type: 'application/pdf'});
+                const fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
                 this.loadingService.hide();
             }, error => {
@@ -780,9 +762,8 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
                 let activitiesStr;
                 selectedFilial.activities.forEach(r => {
                     if (activitiesStr) {
-                        activitiesStr += ', ' + r.description
-                    }
-                    else {
+                        activitiesStr += ', ' + r.description;
+                    } else {
                         activitiesStr = r.description;
                     }
 
@@ -793,7 +774,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
     }
 
 
-    editFilial(selectedFilial : any){
+    editFilial(selectedFilial: any) {
         const dialogRef2 = this.dialogDecision.open(LicenseDecisionDialogComponent, {
             width: '550px',
             height: '550px',
@@ -816,9 +797,8 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
                 let activitiesStr;
                 selectedFilial.activities.forEach(r => {
                     if (activitiesStr) {
-                        activitiesStr += ', ' + r.description
-                    }
-                    else {
+                        activitiesStr += ', ' + r.description;
+                    } else {
                         activitiesStr = r.description;
                     }
 

@@ -47,18 +47,12 @@
 		</queryString>
 		<field name="id" class="java.lang.String"/>
 		<field name="commercialName" class="java.lang.String"/>
-		<field name="pharmaceuticForm" class="java.lang.String"/>
+		<field name="pharmaceuticalForm" class="java.lang.String"/>
 		<field name="modificationType" class="java.lang.String"/>
-		<field name="serialNr" class="java.lang.String"/>
-		<field name="registrationDate" class="java.lang.String"/>
+		<field name="registrationNumber" class="java.lang.String"/>
+		<field name="registrationNrDate" class="java.lang.String"/>
 	</subDataset>
-	<parameter name="id" class="java.lang.Integer"/>
 	<parameter name="genDir" class="java.lang.String"/>
-	<parameter name="commercialName" class="java.lang.String"/>
-	<parameter name="registrationNumber" class="java.lang.String"/>
-	<parameter name="registrationDate" class="java.lang.String"/>
-	<parameter name="dose" class="java.lang.Double"/>
-	<parameter name="volume" class="java.lang.String"/>
 	<parameter name="ordinIntrerupereVariatiiDataSource" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<parameter name="date" class="java.lang.String"/>
 	<parameter name="nr" class="java.lang.String"/>
@@ -170,7 +164,7 @@ produselor medicamentoase pentru care se întrerupe procedura de aprobare a modi
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Anexă la ordinul Agenţiei Medicamentului şi Dispozitivelor Medicale Nr. " + $P{registrationNumber} + " din " + $P{registrationDate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Anexă la ordinul Agenţiei Medicamentului şi Dispozitivelor Medicale Nr. " + $P{nr} + " din " + $P{date}]]></textFieldExpression>
 			</textField>
 			<componentElement>
 				<reportElement x="3" y="120" width="549" height="60" uuid="4b228aa9-b249-4f08-b590-c06818e231eb">
@@ -244,7 +238,7 @@ produselor medicamentoase pentru care se întrerupe procedura de aprobare a modi
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{pharmaceuticForm}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{pharmaceuticalForm}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -286,7 +280,7 @@ produselor medicamentoase pentru care se întrerupe procedura de aprobare a modi
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{serialNr}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{registrationNrDate}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -307,7 +301,7 @@ produselor medicamentoase pentru care se întrerupe procedura de aprobare a modi
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{registrationDate}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{registrationNumber}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

@@ -1,11 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Document} from "../../../models/document";
-import {Subscription} from "rxjs/index";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
-import {RequestService} from "../../../shared/service/request.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {AuthService} from "../../../shared/service/authetication.service";
+import {Document} from '../../../models/document';
+import {Subscription} from 'rxjs/index';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
+import {RequestService} from '../../../shared/service/request.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {AuthService} from '../../../shared/service/authetication.service';
 
 @Component({
     selector: 'app-a-intrerupere',
@@ -69,17 +69,17 @@ export class AIntrerupereComponent implements OnInit, OnDestroy {
                     this.outDocuments = data.outputDocuments;
                 },
                 error => console.log(error)
-            ))
-        }))
+            ));
+        }));
     }
 
     doSubmit() {
-        let formModel = this.cancelClinicalTrailForm.getRawValue();
-        console.log("Submit data", formModel);
+        const formModel = this.cancelClinicalTrailForm.getRawValue();
+        console.log('Submit data', formModel);
 
         if (this.cancelClinicalTrailForm.invalid) {
             alert('Invalid Form!!');
-            console.log("Not submitted data", formModel);
+            console.log('Not submitted data', formModel);
             return;
         }
 
@@ -94,21 +94,21 @@ export class AIntrerupereComponent implements OnInit, OnDestroy {
         });
         formModel.documents = this.docs;
 
-        console.log("evaluareaPrimaraObjectLet", JSON.stringify(formModel));
+        console.log('evaluareaPrimaraObjectLet', JSON.stringify(formModel));
 
         formModel.currentStep = 'C';
         formModel.assignedUser = this.authService.getUserName();
         formModel.endDate = new Date();
-        formModel.clinicalTrails.status='C';
+        formModel.clinicalTrails.status = 'C';
         this.subscriptions.push(
             this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
                 this.router.navigate(['/dashboard/module/']);
                 this.loadingService.hide();
             }, error => {
                 this.loadingService.hide();
-                console.log(error)
+                console.log(error);
             })
-        )
+        );
     }
 
     requestNL() {

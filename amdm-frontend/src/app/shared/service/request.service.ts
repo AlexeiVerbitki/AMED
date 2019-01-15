@@ -1,6 +1,6 @@
-import {Observable} from "rxjs";
-import {HttpClient, HttpResponse} from "@angular/common/http";
-import {Injectable} from "@angular/core";
+import {Observable} from 'rxjs';
+import {HttpClient, HttpResponse} from '@angular/common/http';
+import {Injectable} from '@angular/core';
 
 @Injectable({providedIn: 'root'})
 export class RequestService {
@@ -111,7 +111,7 @@ export class RequestService {
     }
 
     viewImportAuthorization(object: any): Observable<any> {
-        return this.http.post('/api/view-import-authorization', object,{ responseType: 'blob'});
+        return this.http.post('/api/view-import-authorization', object, { responseType: 'blob'});
     }
 
     getAuthorizationDetailsByNameOrCode(id: string): Observable<any> {
@@ -142,30 +142,57 @@ export class RequestService {
         return this.http.get('/api/get-request-dd');
     }
 
+    getRequestsForDDM(): Observable<any> {
+        return this.http.get('/api/get-request-ddm');
+    }
+
     getRequestsForOI(): Observable<any> {
         return this.http.get('/api/get-request-oi');
+    }
+
+    getRequestsForOIM(): Observable<any> {
+        return this.http.get('/api/get-request-oim');
     }
 
     getMedicamentsForOA(): Observable<any> {
         return this.http.get('/api/get-medicaments-oa');
     }
 
+    getMedicamentsForOM(): Observable<any> {
+        return this.http.get('/api/get-medicaments-om');
+    }
+
     getDDs(): Observable<any> {
         return this.http.get('/api/get-dds');
     }
+
+    getDDMs(): Observable<any> {
+        return this.http.get('/api/get-ddms');
+    }
+
 
     getOIs(): Observable<any> {
         return this.http.get('/api/get-ois');
     }
 
+    getOIMs(): Observable<any> {
+        return this.http.get('/api/get-oims');
+    }
 
     getOAs(): Observable<any> {
         return this.http.get('/api/get-oas');
     }
 
+    getOMs(): Observable<any> {
+        return this.http.get('/api/get-oms');
+    }
+
     setMedicamentApproved(ids: any): Observable<HttpResponse<any>> {
-        console.log(ids);
         return this.http.post<any>('/api/medicament-approved', ids, {observe: 'response'});
+    }
+
+    setMedicamentModifyApproved(id: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/medicament-modify-approved', id, {observe: 'response'});
     }
 
 }

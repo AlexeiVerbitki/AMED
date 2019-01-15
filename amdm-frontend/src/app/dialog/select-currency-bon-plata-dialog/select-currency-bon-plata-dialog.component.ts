@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {MatDialogRef} from "@angular/material";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MatDialogRef} from '@angular/material';
 
 @Component({
   selector: 'app-select-currency-bon-plata-dialog',
@@ -22,8 +22,7 @@ export class SelectCurrencyBonPlataDialogComponent implements OnInit {
   ngOnInit() {
   }
 
-  generate()
-  {
+  generate() {
     this.aForm.get('response').setValue(true);
     this.dialogRef.close(this.aForm.value);
   }

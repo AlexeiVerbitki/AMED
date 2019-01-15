@@ -14,4 +14,9 @@ public class MedicamentTypesEntity
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "type_id")
     private NmMedicamentTypeEntity type;
+
+    public void assign(MedicamentTypesHistoryEntity entity)
+    {
+        this.type = entity.getType();
+    }
 }

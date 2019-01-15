@@ -51,7 +51,7 @@ export class ImportAuthorizationEvaluateComponent implements OnInit {
     {value: 'forma-2', viewValue: 'Forma 2'},
     {value: 'forma-3', viewValue: 'Forma 3'},
     {value: 'forma-4', viewValue: 'Forma 4'}
-  ]
+  ];
 
   medReg = false;
   medUnreg = false;

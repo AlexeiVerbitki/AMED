@@ -1,8 +1,9 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
-import {Subscription} from "rxjs";
-import {LicenseService} from "../../../shared/service/license/license.service";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
+import {Subscription} from 'rxjs';
+import {LicenseService} from '../../../shared/service/license/license.service';
+import {LicenseHistoryDialogComponent} from "../license-history-dialog/license-history-dialog.component";
 
 @Component({
     selector: 'app-license-details',
@@ -11,10 +12,10 @@ import {LicenseService} from "../../../shared/service/license/license.service";
 })
 export class LicenseDetailsComponent implements OnInit, OnDestroy {
 
-    rFormSubbmitted: boolean = false;
+    rFormSubbmitted = false;
     rForm: FormGroup;
 
-    status : string;
+    status: string;
 
     companiiPerIdnoSelected: any[] = [];
 
@@ -24,7 +25,8 @@ export class LicenseDetailsComponent implements OnInit, OnDestroy {
     constructor(private fb: FormBuilder,
                 public dialogRef: MatDialogRef<LicenseDetailsComponent>,
                 @Inject(MAT_DIALOG_DATA) public dataDialog: any,
-                private licenseService: LicenseService,) {
+                private licenseService: LicenseService,
+                public dialogHistory: MatDialog) {
     }
 
 
@@ -34,7 +36,7 @@ export class LicenseDetailsComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.licenseService.findLicenseById(this.dataDialog.licenseId).subscribe(data => {
             console.log('sfsd', data);
             this.patchValue(data);
-        }))
+        }));
 
 
     }
@@ -53,19 +55,16 @@ export class LicenseDetailsComponent implements OnInit, OnDestroy {
     }
 
 
-    private patchValue(data : any){
+    private patchValue(data: any) {
         this.rForm.get('seriaLicenta').patchValue(data.serialNr);
         this.rForm.get('nrLicenta').patchValue(data.nr);
         this.rForm.get('companyName').patchValue(data.companyName);
         this.rForm.get('companyIdno').patchValue(data.idno);
         this.rForm.get('dataEliberarii').patchValue(new Date(data.releaseDate));
         this.rForm.get('dataExpirare').patchValue(new Date(data.expirationDate));
-        if (data.status === 'S')
-        {
+        if (data.status === 'S') {
             this.rForm.get('reasonSuspension').patchValue(data.reason);
-        }
-        else if (data.status === 'R')
-        {
+        } else if (data.status === 'R') {
             this.rForm.get('reasonCancel').patchValue(data.reason);
         }
 
@@ -76,13 +75,16 @@ export class LicenseDetailsComponent implements OnInit, OnDestroy {
 
         this.companiiPerIdnoSelected.forEach(cis => {
             cis.companyType = cis.type.description;
-            cis.address = cis.locality.stateName + ', ' + cis.locality.description + ', ' + cis.street;
+            if (cis.locality)
+            {
+                cis.address = cis.locality.stateName + ', ' + cis.locality.description + ', ' + cis.street;
+            }
+
             let activitiesStr;
             cis.activities.forEach(r => {
                 if (activitiesStr) {
-                    activitiesStr += ', ' + r.description
-                }
-                else {
+                    activitiesStr += ', ' + r.description;
+                } else {
                     activitiesStr = r.description;
                 }
 
@@ -93,6 +95,23 @@ export class LicenseDetailsComponent implements OnInit, OnDestroy {
 
     cancel() {
         this.dialogRef.close();
+    }
+
+    showLicenseHistory(){
+        const dialogRef2 = this.dialogHistory.open(LicenseHistoryDialogComponent, {
+            width: '1000px',
+            panelClass: 'materialLicense',
+            data: {
+                licenseId: this.dataDialog.licenseId,
+            },
+            hasBackdrop: false
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result) {
+                //do nothing
+            }
+        });
     }
 
 

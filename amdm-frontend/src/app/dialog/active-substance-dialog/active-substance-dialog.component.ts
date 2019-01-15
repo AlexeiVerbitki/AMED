@@ -1,11 +1,11 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AdministrationService} from "../../shared/service/administration.service";
-import {Subscription} from "rxjs";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material";
-import {ConfirmationDialogComponent} from "../confirmation-dialog.component";
-import {ErrorHandlerService} from "../../shared/service/error-handler.service";
-import {AddManufactureComponent} from "../add-manufacture/add-manufacture.component";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AdministrationService} from '../../shared/service/administration.service';
+import {Subscription} from 'rxjs';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material';
+import {ConfirmationDialogComponent} from '../confirmation-dialog.component';
+import {ErrorHandlerService} from '../../shared/service/error-handler.service';
+import {AddManufactureComponent} from '../add-manufacture/add-manufacture.component';
 
 @Component({
     selector: 'app-active-substance-dialog',
@@ -16,11 +16,11 @@ import {AddManufactureComponent} from "../add-manufacture/add-manufacture.compon
 export class ActiveSubstanceDialogComponent implements OnInit {
     private subscriptions: Subscription[] = [];
     aForm: FormGroup;
-    title: string = 'Adaugare substanta activa';
+    title = 'Adaugare substanta activa';
     activeSubstances: any[];
     formSubmitted: boolean;
     activeSubstanceUnitsOfMeasurement: any[];
-    protected loadingActiveSubst: boolean = false;
+    protected loadingActiveSubst = false;
     manufacturesTable: any[] = [];
 
     constructor(private administrationService: AdministrationService,
@@ -95,7 +95,7 @@ export class ActiveSubstanceDialogComponent implements OnInit {
         // );
 
         if (this.dataDialog) {
-            this.title = 'Editare substanta activa'
+            this.title = 'Editare substanta activa';
             this.aForm.get('status').setValue(this.dataDialog.status);
         }
     }
@@ -111,8 +111,8 @@ export class ActiveSubstanceDialogComponent implements OnInit {
     add() {
         this.formSubmitted = true;
 
-        console.log(this.manufacturesTable.length==0);
-        if (this.aForm.invalid || this.manufacturesTable.length==0) {
+        console.log(this.manufacturesTable.length == 0);
+        if (this.aForm.invalid || this.manufacturesTable.length == 0) {
             return;
         }
 
@@ -141,7 +141,7 @@ export class ActiveSubstanceDialogComponent implements OnInit {
 
         dialogConfig2.data = {manufacturesTable : this.manufacturesTable};
 
-        let dialogRef = this.dialog.open(AddManufactureComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(AddManufactureComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
                 if (result && result.response) {

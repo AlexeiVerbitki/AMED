@@ -1,11 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {Subscription} from "rxjs";
-import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
-import {AdministrationService} from "../../shared/service/administration.service";
-import {MedicamentService} from "../../shared/service/medicament.service";
-import {MedicamentDetailsDialogComponent} from "../../dialog/medicament-details-dialog/medicament-details-dialog.component";
-import {NavbarTitleService} from "../../shared/service/navbar-title.service";
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {Subscription} from 'rxjs';
+import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {AdministrationService} from '../../shared/service/administration.service';
+import {MedicamentService} from '../../shared/service/medicament.service';
+import {MedicamentDetailsDialogComponent} from '../../dialog/medicament-details-dialog/medicament-details-dialog.component';
+import {NavbarTitleService} from '../../shared/service/navbar-title.service';
 
 @Component({
     selector: 'app-medicaments',
@@ -65,7 +65,7 @@ export class MedicamentsComponent implements OnInit {
 
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
-        this.dataSource.paginator._intl.itemsPerPageLabel = "Prorcese pe pagina: ";
+        this.dataSource.paginator._intl.itemsPerPageLabel = 'Prorcese pe pagina: ';
         this.dataSource.sort = this.sort;
     }
 
@@ -182,7 +182,7 @@ export class MedicamentsComponent implements OnInit {
     }
 
     getMedicaments(valueOne: any, valueAll: any, valueExpirated: any) {
-        let dto = this.mForm.value;
+        const dto = this.mForm.value;
         dto.allSA = valueAll.checked;
         dto.atLeastOneSA = valueOne.checked;
         dto.expiratedMedicaments = valueExpirated.checked;

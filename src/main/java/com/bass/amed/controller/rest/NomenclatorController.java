@@ -1,7 +1,6 @@
 package com.bass.amed.controller.rest;
 
-import com.bass.amed.entity.MedicamentEntity;
-import com.bass.amed.repository.MedicamentRepository;
+import com.bass.amed.dto.DrugsNomenclator;
 import com.bass.amed.service.MedicamentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/nomenclator")
@@ -25,11 +23,11 @@ public class NomenclatorController
     MedicamentService medicamentService;
 
     @GetMapping("/medicaments")
-    public ResponseEntity<List<String>> getMedicamentNomenclator()
+    public ResponseEntity<List<DrugsNomenclator>> getMedicamentNomenclator()
     {
         LOGGER.info("Start loading medicamnet nomenclator");
 
-        List<String> medicamentEntities = medicamentService.retreiveAllMedicamentDetails();
+        List<DrugsNomenclator> medicamentEntities = medicamentService.retreiveAllMedicamentDetails();
 
         LOGGER.debug("Retrieved medicament details: ", medicamentEntities.toString());
 

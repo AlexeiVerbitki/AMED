@@ -4,13 +4,13 @@ import {
     OnDestroy,
     OnInit
 } from '@angular/core';
-import {MatDialog, MatDialogConfig} from "@angular/material";
-import { Subscription} from "rxjs";
-import {saveAs} from "file-saver";
-import {UploadFileService} from "../../shared/service/upload/upload-file.service";
-import {ErrorHandlerService} from "../../shared/service/error-handler.service";
-import {ConfirmationDialogComponent} from "../../dialog/confirmation-dialog.component";
-import {DivisionSelectDialogComponent} from "../../dialog/division-select-dialog/division-select-dialog.component";
+import {MatDialog, MatDialogConfig} from '@angular/material';
+import { Subscription} from 'rxjs';
+import {saveAs} from 'file-saver';
+import {UploadFileService} from '../../shared/service/upload/upload-file.service';
+import {ErrorHandlerService} from '../../shared/service/error-handler.service';
+import {ConfirmationDialogComponent} from '../../dialog/confirmation-dialog.component';
+import {DivisionSelectDialogComponent} from '../../dialog/division-select-dialog/division-select-dialog.component';
 
 @Component({
     selector: 'app-macheta',
@@ -22,8 +22,8 @@ export class MachetaComponent implements OnInit, OnDestroy {
     machetaList: any[];
     divisionList: any[];
     numarCerere: string;
-    enableUploading: boolean = true;
-    isModify: boolean = false;
+    enableUploading = true;
+    isModify = false;
     private subscriptions: Subscription[] = [];
 
     constructor(public dialog: MatDialog,
@@ -100,8 +100,8 @@ export class MachetaComponent implements OnInit, OnDestroy {
 
     viewFile(macheta: any) {
         this.subscriptions.push(this.uploadService.loadFile(macheta.path).subscribe(data => {
-                let file = new Blob([data], {type: macheta.typeDoc });
-                var fileURL = URL.createObjectURL(file);
+                const file = new Blob([data], {type: macheta.typeDoc });
+                const fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
             },
             error => {
@@ -132,12 +132,12 @@ export class MachetaComponent implements OnInit, OnDestroy {
         dialogConfig2.data = {
             type: 'add',
             values: this.divisions,
-            fieldName: "Divizare",
+            fieldName: 'Divizare',
             instructions: this.machets,
             numarCerere: this.numarCerere
         };
 
-        let dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.response) {
@@ -167,12 +167,12 @@ export class MachetaComponent implements OnInit, OnDestroy {
             type: 'edit',
             values: this.divisions,
             value: macheta.divisions,
-            fieldName: "Divizare",
+            fieldName: 'Divizare',
             instructions: this.machets,
             numarCerere: this.numarCerere
         };
 
-        let dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.response) {

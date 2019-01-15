@@ -1,18 +1,18 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Document} from "../../../models/document";
-import {Observable, of, Subject, Subscription} from "rxjs";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {LicenseService} from "../../../shared/service/license/license.service";
-import {Router} from "@angular/router";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {MatDialog} from "@angular/material";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
-import {catchError, debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
-import {LocalityService} from "../../../shared/service/locality.service";
-import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
-import {AddEcAgentComponent} from "../../../administration/economic-agent/add-ec-agent/add-ec-agent.component";
+import {Document} from '../../../models/document';
+import {Observable, of, Subject, Subscription} from 'rxjs';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {LicenseService} from '../../../shared/service/license/license.service';
+import {Router} from '@angular/router';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {MatDialog} from '@angular/material';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {catchError, debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
+import {LocalityService} from '../../../shared/service/locality.service';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {AddEcAgentComponent} from '../../../administration/economic-agent/add-ec-agent/add-ec-agent.component';
 
 @Component({
     selector: 'app-reg-med-cerere-lic',
@@ -22,14 +22,14 @@ import {AddEcAgentComponent} from "../../../administration/economic-agent/add-ec
 export class RegMedCerereLicComponent implements OnInit, OnDestroy {
 
     companii: Observable<any[]>;
-    loadingCompany: boolean = false;
+    loadingCompany = false;
     companyInputs = new Subject<string>();
 
     docs: Document [] = [];
     tipCerere: string;
 
     private subscriptions: Subscription[] = [];
-    rFormSubbmitted: boolean = false;
+    rFormSubbmitted = false;
     companyLicenseNotFound = false;
     oldLicense: any;
     docTypeIdentifier: any;
@@ -63,7 +63,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
         this.companii =
             this.companyInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) return true;
+                    if (result && result.length > 2) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -78,7 +78,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
                         catchError(() => {
                             this.loadingCompany = false;
                             return of([]);
-                            ;
+
                         })
                     )
                 )
@@ -132,8 +132,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
         if (this.tipCerere === 'LICEL' && this.oldLicense) {
             this.errorHandlerService.showError('Acest agent economic deja are o licenta activa.');
             return;
-        }
-        else if (this.tipCerere !== 'LICEL' && this.companyLicenseNotFound) {
+        } else if (this.tipCerere !== 'LICEL' && this.companyLicenseNotFound) {
             this.errorHandlerService.showError('Acest agent economic nu are o licenta activa.');
             return;
         }
@@ -142,11 +141,11 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
 
         this.rFormSubbmitted = false;
 
-        let modelToSubmit: any = {};
-        let licenseModel: any = {};
-        let licenseDetail: any = {};
-        let mandatedContact: any = {};
-        let licenseMandatedContacts: any[] = [];
+        const modelToSubmit: any = {};
+        const licenseModel: any = {};
+        const licenseDetail: any = {};
+        const mandatedContact: any = {};
+        const licenseMandatedContacts: any[] = [];
 
 
         mandatedContact.requestPersonFirstname = this.rForm.get('persResDepCereriiFirstname').value;
@@ -157,8 +156,6 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
         mandatedContact.email = this.rForm.get('emailContact').value;
         licenseMandatedContacts.push(mandatedContact);
         licenseDetail.licenseMandatedContacts = licenseMandatedContacts;
-
-        licenseDetail.documents = this.docs;
 
         if (this.tipCerere !== 'LICEL') {
             licenseModel.id = this.oldLicense.id;
@@ -175,6 +172,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
         licenseModel.idno = this.rForm.get('idno').value;
         modelToSubmit.license = licenseModel;
         modelToSubmit.requestNumber = this.mForm.get('nrCererii').value;
+        modelToSubmit.documents = this.docs;
         // modelToSubmit.company = {id: this.rForm.get('compGet').value.id};
 
 
@@ -193,70 +191,63 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
         if (this.tipCerere === 'LICEL') {
             this.subscriptions.push(
                 this.licenseService.confirmRegisterLicense(modelToSubmit).subscribe(data => {
-                        let result = data.body;
+                        const result = data.body;
                         this.router.navigate(['/dashboard/module/license/evaluate', result]);
                     }
                 )
             );
-        }
-        else if (this.tipCerere === 'LICM') {
+        } else if (this.tipCerere === 'LICM') {
             this.subscriptions.push(
                 this.licenseService.confirmModifyLicense(modelToSubmit).subscribe(data => {
-                        let result = data.body;
+                        const result = data.body;
                         this.router.navigate(['/dashboard/module/license/evaluate', result]);
                     }
                 )
             );
-        }
-        else if (this.tipCerere === 'LICD') {
+        } else if (this.tipCerere === 'LICD') {
             this.subscriptions.push(
                 this.licenseService.confirmDuplicateLicense(modelToSubmit).subscribe(data => {
-                        let result = data.body;
+                        const result = data.body;
                         this.router.navigate(['/dashboard/module/license/evaluate', result]);
                     }
                 )
             );
-        }
-        else if (this.tipCerere === 'LICP') {
+        } else if (this.tipCerere === 'LICP') {
             this.subscriptions.push(
                 this.licenseService.confirmPrelungireLicense(modelToSubmit).subscribe(data => {
-                        let result = data.body;
+                        const result = data.body;
                         this.router.navigate(['/dashboard/module/license/evaluate', result]);
                     }
                 )
             );
-        }
-        else if (this.tipCerere === 'LICA') {
+        } else if (this.tipCerere === 'LICA') {
             this.subscriptions.push(
                 this.licenseService.confirmAnulareLicense(modelToSubmit).subscribe(data => {
-                        let result = data.body;
+                        const result = data.body;
                         this.router.navigate(['/dashboard/module/license/evaluate', result]);
                     }
                 )
             );
-        }
-        else if (this.tipCerere === 'LICS') {
+        } else if (this.tipCerere === 'LICS') {
             this.subscriptions.push(
                 this.licenseService.confirmSuspendareLicense(modelToSubmit).subscribe(data => {
-                        let result = data.body;
+                        const result = data.body;
                         this.router.navigate(['/dashboard/module/license/evaluate', result]);
                     }
                 )
             );
-        }
-        else if (this.tipCerere === 'LICRL') {
+        } else if (this.tipCerere === 'LICRL') {
             this.subscriptions.push(
                 this.licenseService.confirmReluareLicense(modelToSubmit).subscribe(data => {
-                        let result = data.body;
+                        const result = data.body;
                         this.router.navigate(['/dashboard/module/license/evaluate', result]);
                     }
                 )
             );
-        }
-        else if (this.tipCerere === 'LICC') {
+        } else if (this.tipCerere === 'LICC') {
             this.subscriptions.push(
                 this.licenseService.confirmCesionareLicense(modelToSubmit).subscribe(data => {
-                        let result = data.body;
+                        const result = data.body;
                         this.router.navigate(['/dashboard/module/license/evaluate', result]);
                     }
                 )
@@ -287,13 +278,11 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
                                 }
                             )
                         );
-                    }
-                    else {
+                    } else {
                         this.mForm.get('tipCerere').setValue(this.tipCerere);
                     }
                 });
-            }
-            else if (this.tipCerere !== val) {
+            } else if (this.tipCerere !== val) {
                 this.tipCerere = val;
                 this.updateReasonValidation(this.tipCerere);
                 this.subscriptions.push(
@@ -324,16 +313,14 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
                                     this.rForm.get('nrLic').setValue(data.nr);
                                     this.rForm.get('dataEliberariiLic').setValue(new Date(data.releaseDate));
                                     this.rForm.get('dataExpirariiLic').setValue(new Date(data.expirationDate));
-                                }
-                                else {
+                                } else {
                                     this.companyLicenseNotFound = true;
                                     this.resetAgentDetails();
                                 }
                             }
                         )
                     );
-                }
-                else {
+                } else {
                     this.subscriptions.push(
                         this.licenseService.retrieveSuspendedLicenseByIdno(val.idno).subscribe(data => {
                                 if (data) {
@@ -342,8 +329,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
                                     this.rForm.get('nrLic').setValue(data.nr);
                                     this.rForm.get('dataEliberariiLic').setValue(new Date(data.releaseDate));
                                     this.rForm.get('dataExpirariiLic').setValue(new Date(data.expirationDate));
-                                }
-                                else {
+                                } else {
                                     this.companyLicenseNotFound = true;
                                     this.resetAgentDetails();
                                 }
@@ -353,8 +339,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
                 }
 
 
-            }
-            else {
+            } else {
                 this.rForm.get('adresa').setValue(null);
                 this.rForm.get('idno').setValue(null);
                 if (this.tipCerere !== 'LICEL') {
@@ -365,18 +350,14 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
         });
     }
 
-    private updateReasonValidation(tipCerere : string) {
-        if (tipCerere === 'LICS')
-        {
+    private updateReasonValidation(tipCerere: string) {
+        if (tipCerere === 'LICS') {
             this.rForm.get('reasonSuspension').setValidators(Validators.required);
             this.rForm.get('reasonSuspension').updateValueAndValidity();
-        }
-        else if (tipCerere === 'LICA')
-        {
+        } else if (tipCerere === 'LICA') {
             this.rForm.get('reasonCancel').setValidators(Validators.required);
             this.rForm.get('reasonCancel').updateValueAndValidity();
-        }
-        else {
+        } else {
             this.rForm.get('reasonSuspension').setValidators(null);
             this.rForm.get('reasonSuspension').updateValueAndValidity();
             this.rForm.get('reasonCancel').setValidators(null);
@@ -392,8 +373,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
         this.rForm.get('dataExpirariiLic').setValue(null);
     }
 
-    newAgent()
-    {
+    newAgent() {
         const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
             width: '1000px',
             panelClass: 'materialLicense',

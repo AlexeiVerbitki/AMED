@@ -1,16 +1,16 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Subscription} from "rxjs/index";
-import {NavbarTitleService} from "../../shared/service/navbar-title.service";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ClinicalTrialService} from "../../shared/service/clinical-trial.service";
-import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
-import * as XLSX from "xlsx";
-import {LicenseStatusPipe} from "../../shared/pipe/license-status.pipe";
-import {DatePipe} from "@angular/common";
-import {Angular5Csv} from "angular5-csv/Angular5-csv";
-import {DocumentService} from "../../shared/service/document.service";
-import {LoaderService} from "../../shared/service/loader.service";
-import {ClinicalTrialsDetailsComponent} from "./dialog/clinical-trials-details/clinical-trials-details.component";
+import {Subscription} from 'rxjs/index';
+import {NavbarTitleService} from '../../shared/service/navbar-title.service';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ClinicalTrialService} from '../../shared/service/clinical-trial.service';
+import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import * as XLSX from 'xlsx';
+import {LicenseStatusPipe} from '../../shared/pipe/license-status.pipe';
+import {DatePipe} from '@angular/common';
+import {Angular5Csv} from 'angular5-csv/Angular5-csv';
+import {DocumentService} from '../../shared/service/document.service';
+import {LoaderService} from '../../shared/service/loader.service';
+import {ClinicalTrialsDetailsComponent} from './dialog/clinical-trials-details/clinical-trials-details.component';
 
 @Component({
     selector: 'app-clinical-trials',
@@ -28,7 +28,7 @@ export class ClinicalTrialsComponent implements OnInit, OnDestroy {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
-    visibility: boolean = false;
+    visibility = false;
 
     //Treatments
     treatmentList: any[] = [
@@ -73,7 +73,7 @@ export class ClinicalTrialsComponent implements OnInit, OnDestroy {
 
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
-        this.dataSource.paginator._intl.itemsPerPageLabel = "Studii clinice per pagina: ";
+        this.dataSource.paginator._intl.itemsPerPageLabel = 'Studii clinice per pagina: ';
         this.dataSource.sort = this.sort;
     }
 
@@ -83,7 +83,7 @@ export class ClinicalTrialsComponent implements OnInit, OnDestroy {
 
     private getClinicalTrials(): void {
 
-        let submitForm = this.ctForm.value;
+        const submitForm = this.ctForm.value;
         if (submitForm.treatment) {
             submitForm.treatmentId = submitForm.treatment.id;
         }
@@ -96,7 +96,7 @@ export class ClinicalTrialsComponent implements OnInit, OnDestroy {
                 //this.dataSource.data = data;
             }, error => {
                 // this.loadingService.hide();
-                console.log(error)
+                console.log(error);
             })
         );
 
@@ -106,7 +106,7 @@ export class ClinicalTrialsComponent implements OnInit, OnDestroy {
         const wb: XLSX.WorkBook = XLSX.utils.book_new();
 
         //needed only one shit
-        var arr: any[][] = new Array<Array<any>>();
+        let arr: any[][] = new Array<Array<any>>();
         arr.push(this.createHeaderColumns());
         arr = this.populateDataForXLSXDocument(arr);
         const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(arr);
@@ -119,14 +119,14 @@ export class ClinicalTrialsComponent implements OnInit, OnDestroy {
     }
 
     createHeaderColumns(): any[] {
-        return ["Codul studiului", "Numar Eudra", "Tratament", "Provenienta", "Numarul comisiei", "Data comisiei", "Sponsor"];
+        return ['Codul studiului', 'Numar Eudra', 'Tratament', 'Provenienta', 'Numarul comisiei', 'Data comisiei', 'Sponsor'];
     }
 
     populateDataForXLSXDocument(arr: any[][]): any[] {
-        let displayData: any[] = this.getDisplayData();
+        const displayData: any[] = this.getDisplayData();
         if (displayData) {
-            for (var i = 0; i < displayData.length; i++) {
-                var arrIntern: any[] = new Array<any>();
+            for (let i = 0; i < displayData.length; i++) {
+                const arrIntern: any[] = new Array<any>();
                 arrIntern[0] = displayData[i].code;
                 arrIntern[1] = displayData[i].eudraCt_nr;
                 arrIntern[2] = displayData[i].treatment;
@@ -142,10 +142,10 @@ export class ClinicalTrialsComponent implements OnInit, OnDestroy {
     }
 
     private getDisplayData() {
-        let dtPipe = new DatePipe("en-US");
-        let displayData: any [] = [];
+        const dtPipe = new DatePipe('en-US');
+        const displayData: any [] = [];
         this.dataSource.filteredData.forEach(fd => {
-            let row: any = {};
+            const row: any = {};
 
             row.code = fd.code;
             row.eudraCt_nr = fd.eudraCt_nr;
@@ -161,9 +161,9 @@ export class ClinicalTrialsComponent implements OnInit, OnDestroy {
     }
 
     exportToCsv() {
-        let displayData = this.getDisplayData();
+        const displayData = this.getDisplayData();
 
-        var options = {
+        const options = {
             fieldSeparator: ',',
             quoteStrings: '"',
             decimalseparator: '.',
@@ -175,8 +175,8 @@ export class ClinicalTrialsComponent implements OnInit, OnDestroy {
 
     exportToPdf() {
         this.subscriptions.push(this.documentService.viewTableData(this.createHeaderColumns(), this.getDisplayData()).subscribe(data => {
-                let file = new Blob([data], {type: 'application/pdf'});
-                var fileURL = URL.createObjectURL(file);
+                const file = new Blob([data], {type: 'application/pdf'});
+                const fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
                 this.loadingService.hide();
             }, error => {

@@ -1,19 +1,19 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {Observable, Subject, Subscription} from "rxjs";
-import {TaskService} from "../../shared/service/task.service";
-import {Router} from "@angular/router";
-import {debounceTime, distinctUntilChanged, filter, tap} from "rxjs/operators";
-import {flatMap} from "rxjs/internal/operators";
-import {PriceService} from "../../shared/service/prices.service";
-import {PriceReqEditModalComponent} from "./price-req-edit-modal/price-req-edit-modal.component";
-import {NavbarTitleService} from "../../shared/service/navbar-title.service";
-import * as XLSX from "xlsx";
-import {DatePipe} from "@angular/common";
-import {LicenseStatusPipe} from "../../shared/pipe/license-status.pipe";
-import {Angular5Csv} from "angular5-csv/Angular5-csv";
-import {LoaderService} from "../../shared/service/loader.service";
+import {Observable, Subject, Subscription} from 'rxjs';
+import {TaskService} from '../../shared/service/task.service';
+import {Router} from '@angular/router';
+import {debounceTime, distinctUntilChanged, filter, tap} from 'rxjs/operators';
+import {flatMap} from 'rxjs/internal/operators';
+import {PriceService} from '../../shared/service/prices.service';
+import {PriceReqEditModalComponent} from './price-req-edit-modal/price-req-edit-modal.component';
+import {NavbarTitleService} from '../../shared/service/navbar-title.service';
+import * as XLSX from 'xlsx';
+import {DatePipe} from '@angular/common';
+import {LicenseStatusPipe} from '../../shared/pipe/license-status.pipe';
+import {Angular5Csv} from 'angular5-csv/Angular5-csv';
+import {LoaderService} from '../../shared/service/loader.service';
 
 @Component({
     selector: 'app-prices',
@@ -31,7 +31,7 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
         {short: 'C', description: 'Întrerupt'},
         {short: 'A', description: 'Acceptat'},
         {short: 'F', description: 'Finisat'},
-    ]
+    ];
 
     companyMedicaments: Observable<any[]>;
     medInputs = new Subject<string>();
@@ -49,10 +49,10 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
                 private navbarTitleService: NavbarTitleService,
                 private taskService: TaskService,
                 private priceService: PriceService,
-                private loadingService : LoaderService,
+                private loadingService: LoaderService,
                 public dialog: MatDialog) {
 
-        let thisObject = this;
+        const thisObject = this;
         window.onbeforeunload = function(e) {
             thisObject.onCloseWindow();
             return 'onbeforeunload';
@@ -73,7 +73,7 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
-        this.dataSource.paginator._intl.itemsPerPageLabel = "Procese pe pagină: ";
+        this.dataSource.paginator._intl.itemsPerPageLabel = 'Procese pe pagină: ';
         this.dataSource.sort = this.sort;
     }
 
@@ -83,7 +83,7 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
         this.companyMedicaments =
             this.medInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) return true;
+                    if (result && result.length > 2) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -128,7 +128,7 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
         const wb: XLSX.WorkBook = XLSX.utils.book_new();
 
         //needed only one shit
-        var arr: any[][] = new Array<Array<any>>();
+        let arr: any[][] = new Array<Array<any>>();
         arr.push(this.createHeaderColumns());
         arr = this.populateDataForXLSXDocument(arr);
         const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(arr);
@@ -141,15 +141,15 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     createHeaderColumns(): any[] {
-        return ["Nr ordin", "Nr dosar", "Medicament", "Codul AMED", "Divizare", "Tip medicament", "Data aprobarii", "data expirarii"];
+        return ['Nr ordin', 'Nr dosar', 'Medicament', 'Codul AMED', 'Divizare', 'Tip medicament', 'Data aprobarii', 'data expirarii'];
     }
 
     populateDataForXLSXDocument(arr: any[][]): any[] {
-        let dtPipe = new DatePipe("en-US");
-        let displayData : any[] = this.getDisplayData();
+        const dtPipe = new DatePipe('en-US');
+        const displayData: any[] = this.getDisplayData();
         if (displayData) {
-            for (var i = 0; i < displayData.length; i++) {
-                var arrIntern: any[] = new Array<any>();
+            for (let i = 0; i < displayData.length; i++) {
+                const arrIntern: any[] = new Array<any>();
                 arrIntern[0] = displayData[i].orderNr;
                 arrIntern[1] = displayData[i].folderNr;
                 arrIntern[2] = displayData[i].medicament;
@@ -166,9 +166,9 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     exportToCsv() {
-        let displayData = this.getDisplayData();
+        const displayData = this.getDisplayData();
 
-        var options = {
+        const options = {
             fieldSeparator: ',',
             quoteStrings: '"',
             decimalseparator: '.',
@@ -178,10 +178,10 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
         new Angular5Csv(displayData, 'Prices', options);
     }
 
-    exportToPdf(){
+    exportToPdf() {
         this.subscriptions.push(this.priceService.viewTableData(this.createHeaderColumns(), this.getDisplayData()).subscribe(data => {
-                let file = new Blob([data], {type: 'application/pdf'});
-                var fileURL = URL.createObjectURL(file);
+                const file = new Blob([data], {type: 'application/pdf'});
+                const fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
                 this.loadingService.hide();
             }, error => {
@@ -192,10 +192,10 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private getDisplayData() {
-        let dtPipe = new DatePipe("en-US");
-        let displayData: any [] = [];
+        const dtPipe = new DatePipe('en-US');
+        const displayData: any [] = [];
         this.dataSource.filteredData.forEach(fd => {
-            let row: any = {};
+            const row: any = {};
 
             row.orderNr = fd.orderNr;
             row.folderNr = fd.folderNr;
@@ -211,11 +211,11 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getPrices() {
-        let dto = this.taskForm.value;
-        dto.medicamentCode = dto.medicament?dto.medicament.code:undefined;
+        const dto = this.taskForm.value;
+        dto.medicamentCode = dto.medicament ? dto.medicament.code : undefined;
         dto.medicament = undefined;
-        dto.medicamentType = dto.medicamentType?dto.medicamentType.description:undefined;
-        dto.priceType = dto.priceType?dto.priceType.description:undefined;
+        dto.medicamentType = dto.medicamentType ? dto.medicamentType.description : undefined;
+        dto.priceType = dto.priceType ? dto.priceType.description : undefined;
 
         this.taskForm.reset();
         this.subscriptions.push(
@@ -260,12 +260,12 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
         dialogRef.afterClosed().subscribe(result => {
             console.log('The dialog was closed', result);
 
-            if(result) {
+            if (result) {
                 this.dataSource.data[index] = result;
                 this.dataSource._updateChangeSubscription();
             }
         });
-    };
+    }
 
     onCloseWindow() {
         // this.priceService.makeAvailableAgain(this.dataSource.data);

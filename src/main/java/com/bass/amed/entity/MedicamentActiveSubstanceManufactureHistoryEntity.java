@@ -11,10 +11,8 @@ public class MedicamentActiveSubstanceManufactureHistoryEntity
 {
     @Id@GeneratedValue(strategy = GenerationType.IDENTITY)@Column(name = "id", nullable = false)
     private Integer id;
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})@JoinColumn(name = "active_substance_id")
-    private NmActiveSubstancesEntity activeSubstance;
     @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )@JoinColumn( name = "manufacture_id" )
-    private NmManufacturesEntity manufactureTo;
+    private NmManufacturesEntity manufacture;
     @Basic@Column(name = "status")
     private String status;
 }

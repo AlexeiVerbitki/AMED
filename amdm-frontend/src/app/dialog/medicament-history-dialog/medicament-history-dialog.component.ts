@@ -1,8 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material";
-import {Subscription} from "rxjs";
-import {RequestService} from "../../shared/service/request.service";
-import {MedicamentModificationsDialogComponent} from "../medicament-modifications-dialog/medicament-modifications-dialog.component";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material';
+import {Subscription} from 'rxjs';
+import {RequestService} from '../../shared/service/request.service';
+import {MedicamentModificationsDialogComponent} from '../medicament-modifications-dialog/medicament-modifications-dialog.component';
 
 @Component({
     selector: 'app-medicament-history-dialog',
@@ -19,14 +19,14 @@ export class MedicamentHistoryDialogComponent implements OnInit {
     constructor(public dialogRef: MatDialogRef<MedicamentHistoryDialogComponent>,
                 private dialog: MatDialog,
                 @Inject(MAT_DIALOG_DATA) public dataDialog: any,
-                private requestService : RequestService) {
+                private requestService: RequestService) {
     }
 
     ngOnInit() {
         this.subscriptions.push(this.requestService.getRequestsByRegNumber(this.dataDialog.value[0].registrationNumber).subscribe(data => {
             this.initialData = Object.assign([], data.body);
-            for (let d of data.body) {
-                let ar = d.documents.filter(r => r.docType.category == 'OM');
+            for (const d of data.body) {
+                const ar = d.documents.filter(r => r.docType.category == 'OM');
                 if (ar && ar.length != 0) {
                     this.orders.push(ar[0]);
                 }
@@ -56,7 +56,7 @@ export class MedicamentHistoryDialogComponent implements OnInit {
         dialogConfig2.autoFocus = true;
         dialogConfig2.hasBackdrop = true;
 
-        dialogConfig2.width='1100px';
+        dialogConfig2.width = '1100px';
 
         dialogConfig2.data = {
             order: order,

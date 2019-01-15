@@ -1,12 +1,12 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
-import {AdministrationService} from "../../shared/service/administration.service";
-import {ModalDirective} from "angular-bootstrap-md";
-import {NomenclatureConstants} from "../administration.constants";
-import {Subscription} from "rxjs";
-import {NavbarTitleService} from "../../shared/service/navbar-title.service";
-import {LoaderService} from "../../shared/service/loader.service";
-import {ActivatedRoute} from "@angular/router";
+import {AdministrationService} from '../../shared/service/administration.service';
+import {ModalDirective} from 'angular-bootstrap-md';
+import {NomenclatureConstants} from '../administration.constants';
+import {Subscription} from 'rxjs';
+import {NavbarTitleService} from '../../shared/service/navbar-title.service';
+import {LoaderService} from '../../shared/service/loader.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-generic-nomenclature',
@@ -17,7 +17,7 @@ export class GenericNomenclatureComponent implements OnInit {
   displayedColumns: any[] = [];
   dataSource = new MatTableDataSource<any>();
 
-  visibility: boolean = false;
+  visibility = false;
   forEdit: boolean;
   selectedRow: any = {};
   selectedRowIndex: number;
@@ -38,14 +38,14 @@ export class GenericNomenclatureComponent implements OnInit {
   constructor(private administrationService: AdministrationService,
               private navbarTitleService: NavbarTitleService,
               private loadingService: LoaderService,
-              private activatedRoute: ActivatedRoute,) {
+              private activatedRoute: ActivatedRoute, ) {
   }
 
   ngOnInit() {
     this.navbarTitleService.showTitleMsg('Lista de nomenclatoare');
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    console.log('NomenclatureConstants',NomenclatureConstants);
+    console.log('NomenclatureConstants', NomenclatureConstants);
     this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
        this.pageId = params['id'];
        this.selectedNomenclature = this.nomenclatures[+this.pageId - 1];
@@ -69,11 +69,11 @@ export class GenericNomenclatureComponent implements OnInit {
     this.subscriptions.push(this.administrationService.getNomenclatureDate(nomenclatureNr).subscribe(data => {
         this.dataSource.data = data;
 
-        let elem = data[0];
-        this.dataSource.data.splice(0,1);
-        let cols = [];
+        const elem = data[0];
+        this.dataSource.data.splice(0, 1);
+        const cols = [];
 
-        Object.keys(elem).forEach(function(key,index, value) {
+        Object.keys(elem).forEach(function(key, index, value) {
           console.log(key, index, elem[key]);
           cols.push({
             columnDef: key,
@@ -93,21 +93,21 @@ export class GenericNomenclatureComponent implements OnInit {
     }, error1 => this.loadingService.hide()));
   }
 
-  addNew(){
+  addNew() {
     this.selectedRow = {};
     this.forEdit = false;
     this.basicModal.show();
   }
 
-  edit(index: number, element){
+  edit(index: number, element) {
     this.selectedRowIndex = index;
-    let objValue = {};
+    const objValue = {};
     Object.keys(element).forEach(function (key, index, value) {
       if (element[key] && element[key] != null) {
         objValue[key] = element[key];
       }
     });
-    this.selectedRow = objValue;//Object.assign({}, element);
+    this.selectedRow = objValue; //Object.assign({}, element);
     this.forEdit = true;
     this.basicModal.show();
   }
@@ -123,7 +123,7 @@ export class GenericNomenclatureComponent implements OnInit {
       this.loadingService.show();
       this.subscriptions.push(this.administrationService.removeNomenclatureRow(this.selectedNomenclature.nr, row.id).subscribe(deleted => {
         console.log('removeNomenclatureRow', deleted);
-        if(deleted) {
+        if (deleted) {
           this.dataSource.data.splice(index, 1);
           this.dataSource._updateChangeSubscription();
         }
@@ -138,9 +138,9 @@ export class GenericNomenclatureComponent implements OnInit {
     if (this.selectedRow.id) {
       this.subscriptions.push(this.administrationService.updateNomenclatureRow(this.selectedNomenclature.nr, this.selectedRow).subscribe(res => {
         if (res.body) {
-          let addedRow = this.selectedRow;
+          const addedRow = this.selectedRow;
           this.columns.forEach(c => {
-              if(addedRow[c.columnDef] == undefined) {
+              if (addedRow[c.columnDef] == undefined) {
                   addedRow[c.columnDef] = null;
               }
           });
@@ -155,13 +155,13 @@ export class GenericNomenclatureComponent implements OnInit {
     } else {
       this.subscriptions.push(this.administrationService.insertNomenclatureRow(this.selectedNomenclature.nr, this.selectedRow).subscribe(res => {
         if (res.body && res.body > 0) {
-          let addedRow = this.selectedRow;
+          const addedRow = this.selectedRow;
             this.columns.forEach(c => {
-                if(addedRow[c.columnDef] == undefined) {
+                if (addedRow[c.columnDef] == undefined) {
                     addedRow[c.columnDef] = null;
                 }
             });
-          this.selectedRow.id = res.body
+          this.selectedRow.id = res.body;
           this.dataSource.data.push(this.selectedRow);
           this.dataSource._updateChangeSubscription();
         }

@@ -1,22 +1,22 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Document} from "../../../models/document";
-import {Observable, Subject, Subscription} from "rxjs";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
-import {MedicamentService} from "../../../shared/service/medicament.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {RequestService} from "../../../shared/service/request.service";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {MatDialog} from "@angular/material";
-import {TaskService} from "../../../shared/service/task.service";
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
-import {DrugSubstanceTypesService} from "../../../shared/service/drugs/drugsubstancetypes.service";
-import {DrugDocumentsService} from "../../../shared/service/drugs/drugdocuments.service";
-import {DrugDecisionsService} from "../../../shared/service/drugs/drugdecisions.service";
-import {AddEcAgentComponent} from "../../../administration/economic-agent/add-ec-agent/add-ec-agent.component";
+import {Document} from '../../../models/document';
+import {Observable, Subject, Subscription} from 'rxjs';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
+import {MedicamentService} from '../../../shared/service/medicament.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {RequestService} from '../../../shared/service/request.service';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {MatDialog} from '@angular/material';
+import {TaskService} from '../../../shared/service/task.service';
+import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {DrugSubstanceTypesService} from '../../../shared/service/drugs/drugsubstancetypes.service';
+import {DrugDocumentsService} from '../../../shared/service/drugs/drugdocuments.service';
+import {DrugDecisionsService} from '../../../shared/service/drugs/drugdecisions.service';
+import {AddEcAgentComponent} from '../../../administration/economic-agent/add-ec-agent/add-ec-agent.component';
 
 @Component({
     selector: 'app-cerere-solic-autor',
@@ -40,17 +40,17 @@ export class CerereSolicAutorComponent implements OnInit {
     docTypes: any[];
     docTypesInitial: any[];
     outDocuments: any[] = [];
-    isNonAttachedDocuments: boolean = false;
+    isNonAttachedDocuments = false;
     initialData: any;
-    isResponseReceived: boolean = false;
+    isResponseReceived = false;
     drugSubstanceTypes: any[];
     drugCheckDecisions: any[] = [];
     disabled: boolean;
     companyInputs = new Subject<string>();
-    loadingCompany: boolean = false;
+    loadingCompany = false;
     company: any;
     selectedFilials: any[] = [];
-    companyExistInTable: boolean = false;
+    companyExistInTable = false;
 
     constructor(private fb: FormBuilder, private administrationService: AdministrationService,
                 private medicamentService: MedicamentService,
@@ -146,7 +146,7 @@ export class CerereSolicAutorComponent implements OnInit {
                         let resPerson: any;
                         if (data.registrationRequestMandatedContacts[0].mandatedLastname) {
                             this.cerereSolicAutorForm.get('resPerson').setValue(data.registrationRequestMandatedContacts[0].mandatedLastname);
-                            resPerson = data.registrationRequestMandatedContacts[0].mandatedLastname + " ";
+                            resPerson = data.registrationRequestMandatedContacts[0].mandatedLastname + ' ';
                         }
                         if (data.registrationRequestMandatedContacts[0].mandatedFirstname) {
                             this.cerereSolicAutorForm.get('resPerson').setValue(resPerson + data.registrationRequestMandatedContacts[0].mandatedFirstname);
@@ -179,7 +179,7 @@ export class CerereSolicAutorComponent implements OnInit {
         this.companies =
             this.companyInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) return true;
+                    if (result && result.length > 2) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -233,7 +233,7 @@ export class CerereSolicAutorComponent implements OnInit {
     private initOutputDocuments() {
 
         this.outDocuments = [];
-        let outDocumentAP = {
+        const outDocumentAP = {
             name: 'Autorizatia de activitate',
             docType: this.docTypesInitial.find(r => r.category == 'AP'),
             number: 'AP-' + this.cerereSolicAutorForm.get('requestNumber').value,
@@ -241,7 +241,7 @@ export class CerereSolicAutorComponent implements OnInit {
         };
         this.outDocuments.push(outDocumentAP);
 
-        let outDocumentSR = {
+        const outDocumentSR = {
             name: 'Scrisoare de refuz',
             docType: this.docTypesInitial.find(r => r.category == 'SR'),
             number: 'SR-' + this.cerereSolicAutorForm.get('requestNumber').value,
@@ -252,7 +252,7 @@ export class CerereSolicAutorComponent implements OnInit {
 
     getCurrentState() {
 
-        for (let entry of this.states) {
+        for (const entry of this.states) {
             if (entry.id == this.cerereSolicAutorForm.get('locality').value.stateId) {
                 this.cerereSolicAutorForm.get('state').setValue(entry);
             }
@@ -315,7 +315,7 @@ export class CerereSolicAutorComponent implements OnInit {
 
         this.cerereSolicAutorForm.get('company').setValue(this.cerereSolicAutorForm.value.company);
 
-        let modelToSubmit: any = this.cerereSolicAutorForm.value;
+        const modelToSubmit: any = this.cerereSolicAutorForm.value;
 
         this.populateModelToSubmit(modelToSubmit);
 
@@ -355,30 +355,30 @@ export class CerereSolicAutorComponent implements OnInit {
 
         if (this.cerereSolicAutorForm.get('precursor').value || this.cerereSolicAutorForm.get('psihotrop').value || this.cerereSolicAutorForm.get('stupefiant').value) {
 
-            let precursor = this.cerereSolicAutorForm.get('precursor').value;
-            let psihotrop = this.cerereSolicAutorForm.get('psihotrop').value;
-            let stupefiant = this.cerereSolicAutorForm.get('stupefiant').value
+            const precursor = this.cerereSolicAutorForm.get('precursor').value;
+            const psihotrop = this.cerereSolicAutorForm.get('psihotrop').value;
+            const stupefiant = this.cerereSolicAutorForm.get('stupefiant').value;
 
             if (precursor && !psihotrop && !stupefiant) {
-                let medicamnet = this.drugSubstanceTypes.find(r => r.code == 'PRECURSOR');
+                const medicamnet = this.drugSubstanceTypes.find(r => r.code == 'PRECURSOR');
                 modelToSubmit.drugCheckDecision.drugSubstanceTypesId = medicamnet.id;
             } else if (!precursor && psihotrop && !stupefiant) {
-                let medicamnet = this.drugSubstanceTypes.find(r => r.code == 'PSIHOTROP');
+                const medicamnet = this.drugSubstanceTypes.find(r => r.code == 'PSIHOTROP');
                 modelToSubmit.drugCheckDecision.drugSubstanceTypesId = medicamnet.id;
             } else if (!precursor && !psihotrop && stupefiant) {
-                let medicamnet = this.drugSubstanceTypes.find(r => r.code == 'STUPEFIANT');
+                const medicamnet = this.drugSubstanceTypes.find(r => r.code == 'STUPEFIANT');
                 modelToSubmit.drugCheckDecision.drugSubstanceTypesId = medicamnet.id;
             } else if (precursor && psihotrop && !stupefiant) {
-                let medicamnet = this.drugSubstanceTypes.find(r => r.code == 'PRECURSOR/PSIHOTROP');
+                const medicamnet = this.drugSubstanceTypes.find(r => r.code == 'PRECURSOR/PSIHOTROP');
                 modelToSubmit.drugCheckDecision.drugSubstanceTypesId = medicamnet.id;
             } else if (precursor && !psihotrop && stupefiant) {
-                let medicamnet = this.drugSubstanceTypes.find(r => r.code == 'PRECURSOR/STUPEFIANT');
+                const medicamnet = this.drugSubstanceTypes.find(r => r.code == 'PRECURSOR/STUPEFIANT');
                 modelToSubmit.drugCheckDecision.drugSubstanceTypesId = medicamnet.id;
             } else if (!precursor && psihotrop && stupefiant) {
-                let medicamnet = this.drugSubstanceTypes.find(r => r.code == 'PSIHOTROP/STUPEFIANT');
+                const medicamnet = this.drugSubstanceTypes.find(r => r.code == 'PSIHOTROP/STUPEFIANT');
                 modelToSubmit.drugCheckDecision.drugSubstanceTypesId = medicamnet.id;
             } else if (precursor && psihotrop && stupefiant) {
-                let medicamnet = this.drugSubstanceTypes.find(r => r.code == 'PRECURSOR/PSIHOTROP/STUPEFIANT');
+                const medicamnet = this.drugSubstanceTypes.find(r => r.code == 'PRECURSOR/PSIHOTROP/STUPEFIANT');
                 modelToSubmit.drugCheckDecision.drugSubstanceTypesId = medicamnet.id;
             }
 
@@ -395,7 +395,7 @@ export class CerereSolicAutorComponent implements OnInit {
 
     checkSelectedDocumentsStatus() {
 
-        for (let entry of this.outDocuments) {
+        for (const entry of this.outDocuments) {
 
             if (entry.responseReceived || entry.status == 'Atasat') {
                 this.isResponseReceived = true;
@@ -409,9 +409,9 @@ export class CerereSolicAutorComponent implements OnInit {
     viewDoc(document: any) {
         if (document.docType.category == 'AP') {
             this.loadingService.show();
-            let locality = this.cerereSolicAutorForm.get('locality').value;
-            let state = this.cerereSolicAutorForm.get('state').value;
-            let data = {
+            const locality = this.cerereSolicAutorForm.get('locality').value;
+            const state = this.cerereSolicAutorForm.get('state').value;
+            const data = {
 
                 requestNumber: this.cerereSolicAutorForm.get('requestNumber').value,
                 protocolDate: this.cerereSolicAutorForm.get('drugCheckDecision.protocolDate').value,
@@ -427,8 +427,8 @@ export class CerereSolicAutorComponent implements OnInit {
             };
 
             this.subscriptions.push(this.drugDocumentsService.viewAuthorization(data).subscribe(data => {
-                    let file = new Blob([data], {type: 'application/pdf'});
-                    var fileURL = URL.createObjectURL(file);
+                    const file = new Blob([data], {type: 'application/pdf'});
+                    const fileURL = URL.createObjectURL(file);
                     window.open(fileURL);
                     this.loadingService.hide();
                 }, error => {
@@ -451,7 +451,7 @@ export class CerereSolicAutorComponent implements OnInit {
             if (result) {
                 this.loadingService.show();
                 this.outDocuments.forEach((item, index) => {
-                    if (item === doc) this.outDocuments.splice(index, 1);
+                    if (item === doc) { this.outDocuments.splice(index, 1); }
                 });
                 this.initialData.outputDocuments = this.outDocuments;
 
@@ -466,8 +466,8 @@ export class CerereSolicAutorComponent implements OnInit {
     }
 
     checkOutputDocumentsStatus() {
-        for (let entry of this.outDocuments) {
-            var isMatch = this.documents.some(elem => {
+        for (const entry of this.outDocuments) {
+            const isMatch = this.documents.some(elem => {
                 return (elem.docType.category == entry.docType.category && elem.number == entry.number) ? true : false;
             });
             if (isMatch) {
@@ -494,8 +494,8 @@ export class CerereSolicAutorComponent implements OnInit {
         dialogRef2.afterClosed().subscribe(result => {
             if (result) {
                 this.loadingService.show();
-                let usernameDB = this.authService.getUserName();
-                var modelToSubmit = {
+                const usernameDB = this.authService.getUserName();
+                const modelToSubmit = {
                     requestHistories: [],
                     currentStep: 'I',
                     id: this.cerereSolicAutorForm.get('id').value,
@@ -523,7 +523,7 @@ export class CerereSolicAutorComponent implements OnInit {
         this.companyExistInTable = false;
         if (this.cerereSolicAutorForm.get('company') && this.cerereSolicAutorForm.get('company').value) {
 
-            let company = this.selectedFilials.find(r => r.code == this.cerereSolicAutorForm.get('company').value.code);
+            const company = this.selectedFilials.find(r => r.code == this.cerereSolicAutorForm.get('company').value.code);
 
             if (company != null) {
                 this.companyExistInTable = true;
@@ -551,8 +551,7 @@ export class CerereSolicAutorComponent implements OnInit {
         });
     }
 
-    newFilial()
-    {
+    newFilial() {
         const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
             width: '1000px',
             panelClass: 'materialLicense',

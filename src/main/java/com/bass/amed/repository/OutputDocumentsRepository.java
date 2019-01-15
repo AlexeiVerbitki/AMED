@@ -11,9 +11,18 @@ public interface OutputDocumentsRepository extends JpaRepository<OutputDocuments
     @Query("SELECT p FROM OutputDocumentsEntity p WHERE p.docType.category = 'DD'")
     List<OutputDocumentsEntity> findDD();
 
+    @Query("SELECT p FROM OutputDocumentsEntity p WHERE p.docType.category = 'DDM'")
+    List<OutputDocumentsEntity> findDDM();
+
     @Query("SELECT p FROM OutputDocumentsEntity p WHERE p.docType.category = 'OI'")
     List<OutputDocumentsEntity> findOI();
 
+    @Query("SELECT p FROM OutputDocumentsEntity p WHERE p.docType.category = 'OIM'")
+    List<OutputDocumentsEntity> findOIM();
+
     @Query("SELECT p FROM OutputDocumentsEntity p WHERE p.docType.category = 'OA'")
     List<OutputDocumentsEntity> findOA();
+
+    @Query("SELECT p FROM OutputDocumentsEntity p WHERE p.docType.category = 'OM'")
+    List<OutputDocumentsEntity> findOM();
 }

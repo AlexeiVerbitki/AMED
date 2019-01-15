@@ -1,21 +1,21 @@
 import {Component, OnInit} from '@angular/core';
-import {Observable, Subscription} from "rxjs";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Document} from "../../../models/document";
-import {ModalService} from "../../../shared/service/modal.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {RequestService} from "../../../shared/service/request.service";
-import {DocumentService} from "../../../shared/service/document.service";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {MedicamentService} from "../../../shared/service/medicament.service";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {MatDialog} from "@angular/material";
-import {RequestAdditionalDataDialogComponent} from "../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component";
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
-import {TaskService} from "../../../shared/service/task.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
+import {Observable, Subscription} from 'rxjs';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Document} from '../../../models/document';
+import {ModalService} from '../../../shared/service/modal.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {RequestService} from '../../../shared/service/request.service';
+import {DocumentService} from '../../../shared/service/document.service';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {MedicamentService} from '../../../shared/service/medicament.service';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {MatDialog} from '@angular/material';
+import {RequestAdditionalDataDialogComponent} from '../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component';
+import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {TaskService} from '../../../shared/service/task.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 
 @Component({
     selector: 'app-process-interruption',
@@ -32,7 +32,7 @@ export class ProcessInterruptionComponent implements OnInit {
     outputDocuments: any[] = [];
     initialData: any;
     docTypes: any[];
-    isNonAttachedDocuments: boolean = false;
+    isNonAttachedDocuments = false;
     divisions: any[] = [];
     manufacturesTable: any[] = [];
     registrationRequestMandatedContacts: any[];
@@ -102,7 +102,7 @@ export class ProcessInterruptionComponent implements OnInit {
                         }
                         this.registrationRequestMandatedContacts = data.registrationRequestMandatedContacts;
                         this.manufacturesTable = data.medicaments[0].manufactures;
-                        for (let entry of data.medicaments) {
+                        for (const entry of data.medicaments) {
                             if (entry.division && entry.division.length != 0) {
                                 this.divisions.push({
                                     description: entry.division
@@ -161,13 +161,13 @@ export class ProcessInterruptionComponent implements OnInit {
                     });
                 }));
             }
-        })
+        });
     }
 
     viewOrdin() {
         this.subscriptions.push(this.documentService.viewOrdinDeInrerupereAInregistrariiMedicamentului(this.generatedDocNrSeq).subscribe(data => {
-                let file = new Blob([data], {type: 'application/pdf'});
-                var fileURL = URL.createObjectURL(file);
+                const file = new Blob([data], {type: 'application/pdf'});
+                const fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
             }, error => {
                 console.log('error ', error);
@@ -221,19 +221,19 @@ export class ProcessInterruptionComponent implements OnInit {
         this.formSubmitted = false;
 
         let x = this.iForm.get('medValue').value;
-        if(this.iForm.get('medicament.pharmaceuticalForm').value) {
+        if (this.iForm.get('medicament.pharmaceuticalForm').value) {
             x = x + ', ' + this.iForm.get('medicament.pharmaceuticalForm').value;
         }
-        if(this.iForm.get('medicament.dose').value) {
-           x=x +' ' + this.iForm.get('medicament.dose').value;
+        if (this.iForm.get('medicament.dose').value) {
+           x = x + ' ' + this.iForm.get('medicament.dose').value;
         }
-        if(this.divisions.length!=0) {
+        if (this.divisions.length != 0) {
             this.divisions.forEach(elem => x = x + ' ' + elem.description + ';');
         }
-        if(this.iForm.get('medicament.internationalMedicamentName').value) {
+        if (this.iForm.get('medicament.internationalMedicamentName').value) {
             x = x + '(DCI:' + this.iForm.get('medicament.internationalMedicamentName').value + ')';
         }
-        if(this.manufacturesTable.length!=0) {
+        if (this.manufacturesTable.length != 0) {
             x = x + ', producători: ';
             this.manufacturesTable.forEach(elem => x = x + ' ' + elem.manufacture.description + ',' + elem.manufacture.country.description + ',' + elem.manufacture.address);
         }
@@ -279,7 +279,7 @@ export class ProcessInterruptionComponent implements OnInit {
         this.formSubmitted = false;
 
         if (document.docType.category == 'NL') {
-            let modelToSubmit = {
+            const modelToSubmit = {
                 nrDoc: document.number,
                 responsiblePerson: this.registrationRequestMandatedContacts[0].mandatedLastname + ' ' + this.registrationRequestMandatedContacts[0].mandatedFirstname,
                 companyName: this.iForm.get('company').value.name,
@@ -297,8 +297,8 @@ export class ProcessInterruptionComponent implements OnInit {
             observable = this.documentService.viewRequestNew(modelToSubmit);
 
             this.subscriptions.push(observable.subscribe(data => {
-                    let file = new Blob([data], {type: 'application/pdf'});
-                    var fileURL = URL.createObjectURL(file);
+                    const file = new Blob([data], {type: 'application/pdf'});
+                    const fileURL = URL.createObjectURL(file);
                     window.open(fileURL);
                     this.loadingService.hide();
                 }, error => {
@@ -308,8 +308,8 @@ export class ProcessInterruptionComponent implements OnInit {
             );
         } else {
             this.subscriptions.push(this.documentService.viewOrdinDeInrerupereAInregistrariiMedicamentului(document.number).subscribe(data => {
-                    let file = new Blob([data], {type: 'application/pdf'});
-                    var fileURL = URL.createObjectURL(file);
+                    const file = new Blob([data], {type: 'application/pdf'});
+                    const fileURL = URL.createObjectURL(file);
                     window.open(fileURL);
                 }, error => {
                     console.log('error ', error);
@@ -331,7 +331,7 @@ export class ProcessInterruptionComponent implements OnInit {
             if (result) {
 
                 this.outputDocuments.forEach((item, index) => {
-                    if (item === doc) this.outputDocuments.splice(index, 1);
+                    if (item === doc) { this.outputDocuments.splice(index, 1); }
                 });
                 this.initialData.outputDocuments = this.outputDocuments;
 
@@ -345,8 +345,8 @@ export class ProcessInterruptionComponent implements OnInit {
     }
 
     checkOutputDocumentsStatus() {
-        for (let entry of this.outputDocuments) {
-            var isMatch = this.documents.some(elem => {
+        for (const entry of this.outputDocuments) {
+            const isMatch = this.documents.some(elem => {
                 return (elem.docType.category == entry.docType.category && elem.number == entry.number) ? true : false;
             });
             if (isMatch) {
@@ -376,17 +376,17 @@ export class ProcessInterruptionComponent implements OnInit {
             if (result) {
                 this.loadingService.show();
                 this.outputDocuments.forEach((item, index) => {
-                    if (item.docType.category === 'NL' || item.docType.category === 'OI') this.outputDocuments.splice(index, 1);
+                    if (item.docType.category === 'NL' || item.docType.category === 'OI') { this.outputDocuments.splice(index, 1); }
                 });
                 this.initialData.outputDocuments = this.outputDocuments;
 
                 this.documents.forEach((item, index) => {
-                    if (item.docType.category === 'NL' || item.docType.category === 'OI') this.documents.splice(index, 1);
+                    if (item.docType.category === 'NL' || item.docType.category === 'OI') { this.documents.splice(index, 1); }
                 });
                 this.initialData.outputDocuments = this.outputDocuments;
                 this.initialData.documents = this.documents;
 
-                var reqHist = this.initialData.requestHistories.reduce((p, n) => p.id > n.id ? p : n);
+                const reqHist = this.initialData.requestHistories.reduce((p, n) => p.id > n.id ? p : n);
 
                 this.initialData.requestHistories.push({
                     startDate: this.iForm.get('data').value, endDate: new Date(),

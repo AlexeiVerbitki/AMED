@@ -41,6 +41,7 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok:1.18.4'
 //    annotationProcessor 'org.projectlombok:lombok:1.18.4'
+    compile group: 'org.apache.poi', name: 'poi', version: '4.0.1'
 
     compile("org.springframework.ldap:spring-ldap-core")
     compile('org.springframework.security:spring-security-ldap')
@@ -51,6 +52,7 @@ dependencies {
     compile group: 'net.sf.jasperreports', name: 'jasperreports-fonts', version: '6.0.0'
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-hibernate5', version: '2.9.7'
     compile group: 'com.itextpdf', name: 'itextpdf', version: '5.5.13'
+    compile('org.springframework.boot:spring-boot-starter-actuator')
 
 
     runtime('org.springframework.boot:spring-boot-starter-tomcat')

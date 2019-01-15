@@ -1,21 +1,21 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Document} from "../../../models/document";
-import {BehaviorSubject, Observable, Subject, Subscription} from "rxjs/index";
-import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
-import {RequestService} from "../../../shared/service/request.service";
-import {MatDialog, MatDialogConfig, MatRadioChange} from "@angular/material";
-import {MedicamentService} from "../../../shared/service/medicament.service";
-import {ModalService} from "../../../shared/service/modal.service";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {DocumentService} from "../../../shared/service/document.service";
-import {AdditionalDataDialogComponent} from "../dialog/additional-data-dialog/additional-data-dialog.component";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {TaskService} from "../../../shared/service/task.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {MedInstInvestigatorsDialogComponent} from "../dialog/med-inst-investigators-dialog/med-inst-investigators-dialog.component";
-import {ActiveSubstanceDialogComponent} from "../../../dialog/active-substance-dialog/active-substance-dialog.component";
+import {Document} from '../../../models/document';
+import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs/index';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
+import {RequestService} from '../../../shared/service/request.service';
+import {MatDialog, MatDialogConfig, MatRadioChange} from '@angular/material';
+import {MedicamentService} from '../../../shared/service/medicament.service';
+import {ModalService} from '../../../shared/service/modal.service';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {DocumentService} from '../../../shared/service/document.service';
+import {AdditionalDataDialogComponent} from '../dialog/additional-data-dialog/additional-data-dialog.component';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {TaskService} from '../../../shared/service/task.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {MedInstInvestigatorsDialogComponent} from '../dialog/med-inst-investigators-dialog/med-inst-investigators-dialog.component';
+import {ActiveSubstanceDialogComponent} from '../../../dialog/active-substance-dialog/active-substance-dialog.component';
 
 @Component({
     selector: 'app-a-analiza',
@@ -63,36 +63,36 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
     investigatorsList: any[] = [];
 
     //Payments control
-    paymentTotal: number = 0;
+    paymentTotal = 0;
 
     initialData: any;
     outDocuments: any[] = [];
 
     protected manufacturers: Observable<any[]>;
-    protected loadingManufacturer: boolean = false;
+    protected loadingManufacturer = false;
     protected manufacturerInputs = new Subject<string>();
 
     medActiveSubstances: any[] = [];
     refProdActiveSubstances: any[] = [];
 
     protected farmForms: Observable<any[]>;
-    protected loadingFarmForms: boolean = false;
+    protected loadingFarmForms = false;
     protected farmFormsInputs = new Subject<string>();
 
     protected atcCodes: Observable<any[]>;
-    protected loadingAtcCodes: boolean = false;
+    protected loadingAtcCodes = false;
     protected atcCodesInputs = new Subject<string>();
 
     protected manufacturersRfPr: Observable<any[]>;
-    protected loadingManufacturerRfPr: boolean = false;
+    protected loadingManufacturerRfPr = false;
     protected manufacturerInputsRfPr = new Subject<string>();
 
     protected farmFormsRfPr: Observable<any[]>;
-    protected loadingFarmFormsRfPr: boolean = false;
+    protected loadingFarmFormsRfPr = false;
     protected farmFormsInputsRfPr = new Subject<string>();
 
     protected atcCodesRfPr: Observable<any[]>;
-    protected loadingAtcCodesRfPr: boolean = false;
+    protected loadingAtcCodesRfPr = false;
     protected atcCodesInputsRfPr = new Subject<string>();
 
     protected measureUnitsPlacebo: any[] = [];
@@ -128,10 +128,10 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             'outputDocuments': [],
             'clinicalTrails': this.fb.group({
                 'id': [''],
-                'startDateInternational':[''],
-                'startDateNational':[''],
-                'endDateNational':[''],
-                'endDateInternational':[''],
+                'startDateInternational': [''],
+                'startDateNational': [''],
+                'endDateNational': [''],
+                'endDateInternational': [''],
                 'title': [{value: '', disabled: this.isWaitingStep}],
                 'treatment': ['', Validators.required],
                 'provenance': ['', Validators.required],
@@ -140,17 +140,17 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                 'eudraCtNr': ['', Validators.required],
                 'code': ['code', Validators.required],
                 'medicalInstitutions': [],
-                'trialPopNat': ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-                'trialPopInternat': ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+                'trialPopNat': ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
+                'trialPopInternat': ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
                 'medicament': [],
                 'referenceProduct': [],
                 'status': ['P'],
                 'pharmacovigilance': [],
                 'placebo': [],
-                'clinicTrialAmendEntities':[],
+                'clinicTrialAmendEntities': [],
                 'comissionNr': [],
                 'comissionDate': [],
-                'clinicTrialNotificationEntities':[]
+                'clinicTrialNotificationEntities': []
             })
         });
 
@@ -221,7 +221,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             this.administrationService.getClinicalTrailsPhases().subscribe(data => {
                 this.phaseList = data;
             }, error => console.log(error))
-        )
+        );
     }
 
     loadDocTypes() {
@@ -243,13 +243,13 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
     disableEnablePage() {
         this.isWaitingStep.asObservable().subscribe(value => {
-            let clinicalTrailFGroup = <FormArray>this.analyzeClinicalTrailForm.get('clinicalTrails');
-            for (var control in clinicalTrailFGroup.controls) {
+            const clinicalTrailFGroup = <FormArray>this.analyzeClinicalTrailForm.get('clinicalTrails');
+            for (const control in clinicalTrailFGroup.controls) {
                 value ? clinicalTrailFGroup.controls[control].disable() : clinicalTrailFGroup.controls[control].enable();
             }
-            ;
 
-            for (var control in  this.addInvestigatorForm.controls) {
+
+            for (const control in  this.addInvestigatorForm.controls) {
                 value ? this.addInvestigatorForm.controls[control].disable() : this.addInvestigatorForm.controls[control].enable();
             }
         });
@@ -278,12 +278,12 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                         data.clinicalTrails.treatment == null ? this.treatmentList[0] : data.clinicalTrails.treatment);
 
 
-                    if(data.clinicalTrails.provenance == null){
+                    if (data.clinicalTrails.provenance == null) {
                         this.analyzeClinicalTrailForm.get('clinicalTrails.provenance').setValue(this.provenanceList[0]);
                         this.analyzeClinicalTrailForm.get('clinicalTrails.trialPopInternat').disable();
-                    }else {
+                    } else {
                         this.analyzeClinicalTrailForm.get('clinicalTrails.provenance').setValue(data.clinicalTrails.provenance);
-                        data.clinicalTrails.provenance.id!=4 ?
+                        data.clinicalTrails.provenance.id != 4 ?
                             this.analyzeClinicalTrailForm.get('clinicalTrails.trialPopInternat').disable() :
                             this.analyzeClinicalTrailForm.get('clinicalTrails.trialPopInternat').enable();
                     }
@@ -314,8 +314,8 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                     this.loadMedicalInstitutionsList();
                 },
                 error => console.log(error)
-            ))
-        }))
+            ));
+        }));
     }
 
     loadMedicalInstitutionsList() {
@@ -324,12 +324,12 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                 this.allMediacalInstitutionsList = data;
 
                 if (this.mediacalInstitutionsList.length > 0) {
-                    let missing = this.allMediacalInstitutionsList.filter(item =>
+                    const missing = this.allMediacalInstitutionsList.filter(item =>
                         !this.mediacalInstitutionsList.some(other => item.id === other.id));
                     this.allMediacalInstitutionsList = missing;
                 }
             }, error => console.log(error))
-        )
+        );
     }
 
     addMedicalInstitution() {
@@ -339,7 +339,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         // this.allMediacalInstitutionsList = this.allMediacalInstitutionsList.splice(0);
         // this.addMediacalInstitutionForm.get('medicalInstitution').setValue('');
 
-        let dialogConfig2 = new MatDialogConfig();
+        const dialogConfig2 = new MatDialogConfig();
 
         dialogConfig2.disableClose = false;
         dialogConfig2.autoFocus = true;
@@ -351,9 +351,9 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         dialogConfig2.data = {
             medicalInstitution: this.addMediacalInstitutionForm.get('medicalInstitution').value,
             investigatorsList: this.allInvestigatorsList
-        }
+        };
 
-        let dialogRef = this.dialog.open(MedInstInvestigatorsDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(MedInstInvestigatorsDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
             console.log('result', result);
@@ -361,10 +361,10 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                 return;
             }
 
-            let medInst = this.addMediacalInstitutionForm.get('medicalInstitution').value;
+            const medInst = this.addMediacalInstitutionForm.get('medicalInstitution').value;
             medInst.investigators = result.investigators;
             this.mediacalInstitutionsList.push(medInst);
-            let intdexToDelete = this.allMediacalInstitutionsList.indexOf(this.addMediacalInstitutionForm.get('medicalInstitution').value);
+            const intdexToDelete = this.allMediacalInstitutionsList.indexOf(this.addMediacalInstitutionForm.get('medicalInstitution').value);
             this.allMediacalInstitutionsList.splice(intdexToDelete, 1);
             this.allMediacalInstitutionsList = this.allMediacalInstitutionsList.splice(0);
             this.addMediacalInstitutionForm.get('medicalInstitution').setValue('');
@@ -399,19 +399,19 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
                 }, error => console.log(error)
             )
-        )
+        );
     }
 
     addInvestigator() {
         this.investigatorsList.push(this.addInvestigatorForm.get('investigator').value);
-        let intdexToDelete = this.allInvestigatorsList.indexOf(this.addInvestigatorForm.get('investigator').value);
+        const intdexToDelete = this.allInvestigatorsList.indexOf(this.addInvestigatorForm.get('investigator').value);
         this.allInvestigatorsList.splice(intdexToDelete, 1);
         this.allInvestigatorsList = this.allInvestigatorsList.splice(0);
         this.addInvestigatorForm.get('investigator').setValue('');
     }
 
     deleteInvestigator(investigator) {
-        var intdexToDelete = this.investigatorsList.indexOf(investigator);
+        const intdexToDelete = this.investigatorsList.indexOf(investigator);
         this.investigatorsList.splice(intdexToDelete, 1);
         this.allInvestigatorsList.push(investigator);
         this.allInvestigatorsList = this.allInvestigatorsList.splice(0);
@@ -423,9 +423,9 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
     onProvenanceChange(mrChange: MatRadioChange) {
         this.analyzeClinicalTrailForm.get('clinicalTrails.provenance').setValue(this.provenanceList[mrChange.value - 3]);
-        if(mrChange.value === 4) {
-            this.analyzeClinicalTrailForm.get('clinicalTrails.trialPopInternat').enable()
-        } else{
+        if (mrChange.value === 4) {
+            this.analyzeClinicalTrailForm.get('clinicalTrails.trialPopInternat').enable();
+        } else {
             this.analyzeClinicalTrailForm.get('clinicalTrails.trialPopInternat').reset();
             this.analyzeClinicalTrailForm.get('clinicalTrails.trialPopInternat').disable();
         }
@@ -478,7 +478,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                 console.log('this.initialData.', this.initialData);
 
                 this.initialData.outputDocuments.forEach((item, index) => {
-                    if (item === doc) this.initialData.outputDocuments.splice(index, 1);
+                    if (item === doc) { this.initialData.outputDocuments.splice(index, 1); }
                 });
 
                 this.subscriptions.push(this.requestService.saveClinicalTrailRequest(this.initialData).subscribe(data => {
@@ -495,8 +495,8 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                 document.content,
                 document.title,
                 document.docType.category).subscribe(data => {
-                    let file = new Blob([data], {type: 'application/pdf'});
-                    var fileURL = URL.createObjectURL(file);
+                    const file = new Blob([data], {type: 'application/pdf'});
+                    const fileURL = URL.createObjectURL(file);
                     window.open(fileURL);
                 }, error => {
                     console.log('error ', error);
@@ -505,8 +505,8 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             );
         } else if (document.docType.category == 'DD') {
             this.subscriptions.push(this.documentService.viewDD(document.number).subscribe(data => {
-                    let file = new Blob([data], {type: 'application/pdf'});
-                    var fileURL = URL.createObjectURL(file);
+                    const file = new Blob([data], {type: 'application/pdf'});
+                    const fileURL = URL.createObjectURL(file);
                     window.open(fileURL);
                 }, error => {
                     console.log('error ', error);
@@ -518,32 +518,32 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
     save() {
         this.loadingService.show();
-        let formModel = this.analyzeClinicalTrailForm.getRawValue();
+        const formModel = this.analyzeClinicalTrailForm.getRawValue();
         formModel.currentStep = 'A';
         formModel.documents = this.docs;
         formModel.outputDocuments = this.outDocuments;
         formModel.clinicalTrails.medicalInstitutions = this.mediacalInstitutionsList;
 
         formModel.assignedUser = this.authService.getUserName();
-        console.log("Save data", formModel);
+        console.log('Save data', formModel);
         this.subscriptions.push(
             this.requestService.saveClinicalTrailRequest(formModel).subscribe(data => {
                 this.loadingService.hide();
                 this.router.navigate(['dashboard/module']);
             }, error => {
                 this.loadingService.hide();
-                console.log(error)
+                console.log(error);
             })
-        )
+        );
     }
 
     onSubmit() {
-        let formModel = this.analyzeClinicalTrailForm.getRawValue();
-        console.log("Submit data", formModel);
+        const formModel = this.analyzeClinicalTrailForm.getRawValue();
+        console.log('Submit data', formModel);
 
         if (this.analyzeClinicalTrailForm.invalid || this.paymentTotal < 0) {
             alert('Invalid Form!!');
-            console.log("Not submitted data", formModel);
+            console.log('Not submitted data', formModel);
             return;
         }
 
@@ -561,7 +561,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         formModel.clinicalTrails.investigators = this.investigatorsList;
         formModel.clinicalTrails.medicalInstitutions = this.mediacalInstitutionsList;
 
-        console.log("evaluareaPrimaraObjectLet", JSON.stringify(formModel));
+        console.log('evaluareaPrimaraObjectLet', JSON.stringify(formModel));
 
         formModel.currentStep = 'AP';
         formModel.assignedUser = this.authService.getUserName();
@@ -571,9 +571,9 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                 this.loadingService.hide();
             }, error => {
                 this.loadingService.hide();
-                console.log(error)
+                console.log(error);
             })
-        )
+        );
     }
 
     interruptProcess() {
@@ -588,7 +588,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             console.log('result', result);
             if (result) {
                 this.loadingService.show();
-                let formModel = this.analyzeClinicalTrailForm.getRawValue();
+                const formModel = this.analyzeClinicalTrailForm.getRawValue();
                 formModel.currentStep = 'I';
                 formModel.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
                 formModel.requestHistories.push({
@@ -604,9 +604,9 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                         this.loadingService.hide();
                     }, error => {
                         this.loadingService.hide();
-                        console.log(error)
+                        console.log(error);
                     })
-                )
+                );
             }
         });
     }
@@ -616,7 +616,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
     }
 
     editMedicalInstitution(i) {
-        let dialogConfig2 = new MatDialogConfig();
+        const dialogConfig2 = new MatDialogConfig();
 
         dialogConfig2.disableClose = false;
         dialogConfig2.autoFocus = true;
@@ -629,9 +629,9 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             medicalInstitution: this.addMediacalInstitutionForm.get('medicalInstitution').value,
             investigatorsList: this.allInvestigatorsList,
             collectedInvestigators: this.mediacalInstitutionsList[i].investigators
-        }
+        };
 
-        let dialogRef = this.dialog.open(MedInstInvestigatorsDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(MedInstInvestigatorsDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
             console.log('result', result);
@@ -654,7 +654,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         dialogConfig2.height = '650px';
         dialogConfig2.width = '600px';
 
-        let dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
             console.log('result', result);
@@ -680,7 +680,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         dialogConfig2.width = '600px';
         dialogConfig2.data = substance;
 
-        let dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result !== undefined && result.response) {
@@ -718,7 +718,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         dialogConfig2.height = '650px';
         dialogConfig2.width = '600px';
 
-        let dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result.response) {
@@ -743,7 +743,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         dialogConfig2.width = '600px';
         dialogConfig2.data = substance;
 
-        let dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result.response) {

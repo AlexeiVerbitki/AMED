@@ -1,19 +1,19 @@
 package com.bass.amed;
 
-import org.bouncycastle.util.IPAddress;
+import com.bass.amed.service.XchangeUpdateService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.net.Inet4Address;
 import java.net.UnknownHostException;
-import java.util.Properties;
 
 @SpringBootApplication
 public class AmedApplication implements CommandLineRunner
 {
 
+    @Autowired
+    XchangeUpdateService xchangeUpdateService;
 
     public static void main(String[] args) throws UnknownHostException
     {
@@ -32,6 +32,6 @@ public class AmedApplication implements CommandLineRunner
     @Override
     public void run(String... args) throws Exception
     {
-
+//        xchangeUpdateService.updateCurrencies();
     }
 }

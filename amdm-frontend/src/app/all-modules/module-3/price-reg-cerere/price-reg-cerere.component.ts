@@ -7,16 +7,16 @@ import {saveAs} from 'file-saver';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {AdministrationService} from '../../../shared/service/administration.service';
 import {Router} from '@angular/router';
-import {Document} from "../../../models/document";
-import {RequestService} from "../../../shared/service/request.service";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {TaskService} from "../../../shared/service/task.service";
-import {CanModuleDeactivate} from "../../../shared/auth-guard/can-deactivate-guard.service";
-import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
-import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
-import {PriceService} from "../../../shared/service/prices.service";
+import {Document} from '../../../models/document';
+import {RequestService} from '../../../shared/service/request.service';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {TaskService} from '../../../shared/service/task.service';
+import {CanModuleDeactivate} from '../../../shared/auth-guard/can-deactivate-guard.service';
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {PriceService} from '../../../shared/service/prices.service';
 
 @Component({
     selector: 'app-reg-cerere',
@@ -33,7 +33,7 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
     generatedDocNrSeq: number;
     formSubmitted: boolean;
     private subscriptions: Subscription[] = [];
-    loadingCompany : boolean = false;
+    loadingCompany = false;
     companyInputs = new Subject<string>();
     maxDate = new Date();
 
@@ -84,7 +84,7 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
         this.companii =
             this.companyInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) return true;
+                    if (result && result.length > 2) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -112,9 +112,9 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
 
         this.loadingService.show();
 
-        var useranameDB = this.priceService.getUsername();
+        const useranameDB = this.priceService.getUsername();
 
-        var modelToSubmit: any = this.rForm.value;
+        const modelToSubmit: any = this.rForm.value;
         modelToSubmit.requestHistories = [{
             startDate: this.rForm.get('startDate').value, endDate: new Date(),
             username: useranameDB, step: 'R'
@@ -137,7 +137,7 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
         this.subscriptions.push(this.priceService.addRegistrationRequestForPrice(modelToSubmit).subscribe(req => {
 
                 this.rForm.get('id').setValue(req.body.id);
-                if(req.body.registrationRequestMandatedContacts[0]) {
+                if (req.body.registrationRequestMandatedContacts[0]) {
                     this.rForm.get('registrationRequestMandatedContactsId').setValue(req.body.registrationRequestMandatedContacts[0].id);
                 }
 

@@ -1,9 +1,9 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Subscription} from "rxjs";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
-import {ConfirmationDialogComponent} from "../confirmation-dialog.component";
-import {AddLicenseFarmacistComponent} from "../../all-modules/module-5/add-license-farmacist/add-license-farmacist.component";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Subscription} from 'rxjs';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
+import {ConfirmationDialogComponent} from '../confirmation-dialog.component';
+import {AddLicenseFarmacistComponent} from '../../all-modules/module-5/add-license-farmacist/add-license-farmacist.component';
 
 @Component({
     selector: 'app-license-decision-dialog',
@@ -12,15 +12,15 @@ import {AddLicenseFarmacistComponent} from "../../all-modules/module-5/add-licen
 })
 export class LicenseDecisionDialogComponent implements OnInit, OnDestroy {
 
-    rFormSubbmitted: boolean = false;
+    rFormSubbmitted = false;
     rForm: FormGroup;
 
     maxDate = new Date();
 
-    type : any;
-    activities : any [];
-    title : string;
-    ecAgentTypes : any[];
+    type: any;
+    activities: any [];
+    title: string;
+    ecAgentTypes: any[];
 
     pharmacyRepresentantProf: any;
     farmacistiPerAddress: any[] = [];
@@ -37,12 +37,9 @@ export class LicenseDecisionDialogComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.type = this.dataDialog.type;
-        if (this.type === 'D')
-        {
+        if (this.type === 'D') {
             this.title = 'Decizia';
-        }
-        else if(this.type === 'A')
-        {
+        } else if (this.type === 'A') {
             this.title = 'Activitati';
         }
         this.initFormData();
@@ -51,17 +48,14 @@ export class LicenseDecisionDialogComponent implements OnInit, OnDestroy {
 
 
     private initFormData() {
-        if (this.type === 'D')
-        {
-            let currentResolution = this.dataDialog.currentResolution;
+        if (this.type === 'D') {
+            const currentResolution = this.dataDialog.currentResolution;
             this.rForm = this.fb.group({
                 'decizieLuata': [currentResolution ? currentResolution.resolution : null, Validators.required],
-                'decisionDate': [{value : currentResolution ? new Date(currentResolution.date) : null, disabled:true}, Validators.required],
+                'decisionDate': [{value : currentResolution ? new Date(currentResolution.date) : null, disabled: true}, Validators.required],
                 'argumentDec': currentResolution ? currentResolution.reason : null,
             });
-        }
-        else if (this.type === 'A')
-        {
+        } else if (this.type === 'A') {
             this.activities = this.dataDialog.activities;
             this.ecAgentTypes = this.dataDialog.ecAgentTypes;
             this.farmacistiPerAddress = this.dataDialog.farmacistiPerAddress;
@@ -91,28 +85,24 @@ export class LicenseDecisionDialogComponent implements OnInit, OnDestroy {
                 console.log('sfsdf', val);
                 this.pharmacyRepresentantProf = val.representant;
 
-            }
-            else {
+            } else {
                 this.pharmacyRepresentantProf = null;
             }
         });
     }
 
 
-    ok()
-    {
+    ok() {
         this.rFormSubbmitted = true;
 
-        if (!this.rForm.valid)
-        {
+        if (!this.rForm.valid) {
             return;
         }
 
         this.rFormSubbmitted = false;
 
         let response;
-        if (this.type === 'D')
-        {
+        if (this.type === 'D') {
             response = {
                 success : true,
                 type : this.type,
@@ -122,9 +112,7 @@ export class LicenseDecisionDialogComponent implements OnInit, OnDestroy {
                     reason : this.rForm.get('argumentDec').value,
                 }
             };
-        }
-
-        else if (this.type === 'A') {
+        } else if (this.type === 'A') {
             response = {
                 success : true,
                 type : this.type,
@@ -138,8 +126,7 @@ export class LicenseDecisionDialogComponent implements OnInit, OnDestroy {
         this.dialogRef.close(response);
     }
 
-    cancel()
-    {
+    cancel() {
         const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
             data: {
                 message: 'Sunteti sigur(a)?',
@@ -155,7 +142,7 @@ export class LicenseDecisionDialogComponent implements OnInit, OnDestroy {
     }
 
 
-    newFarmacist(){
+    newFarmacist() {
         const dialogRef2 = this.dialogAddFarmacist.open(AddLicenseFarmacistComponent, {
             data: {
                 //NoData

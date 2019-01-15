@@ -1,17 +1,17 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Observable, Subject, Subscription} from "rxjs";
-import {Router} from "@angular/router";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {MatDialog} from "@angular/material";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {Document} from "../../../models/document";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
-import {MedicamentService} from "../../../shared/service/medicament.service";
-import {AnnihilationService} from "../../../shared/service/annihilation/annihilation.service";
-import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
+import {Observable, Subject, Subscription} from 'rxjs';
+import {Router} from '@angular/router';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {MatDialog} from '@angular/material';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {Document} from '../../../models/document';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
+import {MedicamentService} from '../../../shared/service/medicament.service';
+import {AnnihilationService} from '../../../shared/service/annihilation/annihilation.service';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
 
 @Component({
     selector: 'app-drugs-destroy-register',
@@ -21,13 +21,13 @@ import {ErrorHandlerService} from "../../../shared/service/error-handler.service
 export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
 
     companii: Observable<any[]>;
-    loadingCompany : boolean = false;
+    loadingCompany = false;
     companyInputs = new Subject<string>();
     private subscriptions: Subscription[] = [];
     docs: Document [] = [];
-    rFormSubbmitted: boolean = false;
-    mFormSubbmitted: boolean = false;
-    fFormSubbmitted: boolean = false;
+    rFormSubbmitted = false;
+    mFormSubbmitted = false;
+    fFormSubbmitted = false;
 
     medicamentsToDestroy: any[];
 
@@ -37,11 +37,11 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
     medLoading = false;
 
 
-    //count time
+    // count time
     startDate: Date;
     endDate: Date;
 
-    //Validations
+    // Validations
     mForm: FormGroup;
     rForm: FormGroup;
     // fForm: FormGroup;
@@ -53,7 +53,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
                 public dialog: MatDialog,
                 private authService: AuthService,
                 private medicamentService: MedicamentService,
-                private annihilationService : AnnihilationService,
+                private annihilationService: AnnihilationService,
                 private navbarTitleService: NavbarTitleService,
                 private errorHandlerService: ErrorHandlerService) {
 
@@ -73,7 +73,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
         this.medicamente =
             this.medInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) return true;
+                    if (result && result.length > 2) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -93,7 +93,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
         this.companii =
             this.companyInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) return true;
+                    if (result && result.length > 2) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -167,8 +167,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
                         }
                     )
                 );
-            }
-            else {
+            } else {
                 this.rForm.get('forma').setValue(null);
                 this.rForm.get('doza').setValue(null);
                 this.rForm.get('ambalajPrimar').setValue(null);
@@ -191,8 +190,8 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
         this.fFormSubbmitted = false;
         this.mFormSubbmitted = false;
 
-        let modelToSubmit: any = {};
-        let annihilationModel: any = {};
+        const modelToSubmit: any = {};
+        const annihilationModel: any = {};
 
 
         annihilationModel.documents = this.docs;
@@ -219,7 +218,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(
             this.annihilationService.confirmRegisterAnnihilation(modelToSubmit).subscribe(data => {
-                    let result = data.body;
+                    const result = data.body;
                     this.router.navigate(['/dashboard/module/medicament-destruction/evaluate', result]);
                 }
             )
@@ -233,13 +232,11 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
             this.medicamentsToDestroy = [];
         }
 
-        if (!this.rForm.valid)
-        {
+        if (!this.rForm.valid) {
             return;
         }
-        let id = this.rForm.get('medicaments').value.id;
-        if (this.medicamentsToDestroy.find(md => md.medicamentId === id ))
-        {
+        const id = this.rForm.get('medicaments').value.id;
+        if (this.medicamentsToDestroy.find(md => md.medicamentId === id )) {
             return;
         }
 
@@ -272,7 +269,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.medicamentsToDestroy.splice(index,1);
+                this.medicamentsToDestroy.splice(index, 1);
             }
         });
     }

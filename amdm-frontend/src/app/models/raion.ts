@@ -1,1 +1,1 @@
-export interface Raion{}
+export interface Raion {}

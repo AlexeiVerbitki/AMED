@@ -1,5 +1,5 @@
 export enum ReportType {
-    INITIAL=0, FOLLOW_UP=1, FINAL=2
+    INITIAL = 0, FOLLOW_UP = 1, FINAL = 2
 }
 
 export namespace ReportType {

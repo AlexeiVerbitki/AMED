@@ -1,6 +1,6 @@
-import {Currency} from "./currency";
-import {Country} from "./country";
-import {Document} from "./document";
+import {Currency} from './currency';
+import {Country} from './country';
+import {Document} from './document';
 
 export class Price {
     id: number;

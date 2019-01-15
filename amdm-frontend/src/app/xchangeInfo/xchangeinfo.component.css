@@ -96,3 +96,8 @@ table {
 .p-0 {
     padding: 0 !important;
 }
+
+.scrolling {
+    max-height: 650px;
+    overflow-y: auto;
+}

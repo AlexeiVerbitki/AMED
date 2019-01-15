@@ -1,18 +1,18 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from "rxjs";
-import {Document} from "../../../models/document";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {MatDialog} from "@angular/material";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {MedicamentService} from "../../../shared/service/medicament.service";
-import {AnnihilationService} from "../../../shared/service/annihilation/annihilation.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {DocumentService} from "../../../shared/service/document.service";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
+import {Subscription} from 'rxjs';
+import {Document} from '../../../models/document';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {MatDialog} from '@angular/material';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {MedicamentService} from '../../../shared/service/medicament.service';
+import {AnnihilationService} from '../../../shared/service/annihilation/annihilation.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {DocumentService} from '../../../shared/service/document.service';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
 
 @Component({
     selector: 'app-drugs-destroy-actual',
@@ -23,9 +23,9 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
 
     private subscriptions: Subscription[] = [];
     docs: Document [] = [];
-    rFormSubbmitted: boolean = false;
-    mFormSubbmitted: boolean = false;
-    kFormSubbmitted: boolean = false;
+    rFormSubbmitted = false;
+    mFormSubbmitted = false;
+    kFormSubbmitted = false;
 
 
     requestId: string;
@@ -35,7 +35,7 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
     commisions: any[];
     responsabilities: any[];
 
-    members : any[];
+    members: any[];
 
 
     //count time
@@ -83,14 +83,12 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
                             this.members = data.medicamentAnnihilation.medicamentAnnihilationInsitutions;
 
                         this.members.forEach(m => {
-                            if (m.president)
-                            {
+                            if (m.president) {
                                 m.memberDescription = 'Președintele comisiei';
-                            }
-                            else {
+                            } else {
                                 m.memberDescription = 'Membru comisiei';
                             }
-                        })
+                        });
                             this.patchData(data);
                             this.subscriptions.push(
                                 this.annihilationService.retrieveCommisions().subscribe(data => {
@@ -101,8 +99,7 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
                         }
                     )
                 );
-            }
-            else {
+            } else {
                 return;
             }
         }));
@@ -160,21 +157,21 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
     private refreshOutputDocuments() {
         this.outDocuments = [];
 
-        let outDocument1 = {
+        const outDocument1 = {
             name: 'Scrisoare de solicitare a persoanelor pentru Comisia de NIM',
             number: '',
             status: this.getOutputDocStatus('NS'),
             category : 'NS'
         };
 
-        let outDocument2 = {
+        const outDocument2 = {
             name: 'Procesul-verbal de NIM',
             number: '',
             status: this.getOutputDocStatus('NP'),
             category : 'NP'
         };
 
-        let outDocument3 = {
+        const outDocument3 = {
             name: 'Lista medicamentelor pentru comisie',
             number: '',
             status: this.getOutputDocStatus('LN'),
@@ -182,7 +179,7 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
         };
 
 
-        let outDocument4 = {
+        const outDocument4 = {
             name: 'Act de recepţie a medicamentelor pentru nimicirea ulterioară a lor',
             number: '',
             status: this.getOutputDocStatus('NA'),
@@ -219,20 +216,19 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
     submit() {
         this.mFormSubbmitted = true;
         this.kFormSubbmitted = true;
-        if (this.docs.length == 0 || this.members.length ==0) {
+        if (this.docs.length == 0 || this.members.length == 0) {
             this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
             return;
         }
 
-        if (!this.kForm.valid)
-        {
+        if (!this.kForm.valid) {
             this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
             return;
         }
 
         this.mFormSubbmitted = false;
         this.kFormSubbmitted = false;
-        let modelToSubmit = this.composeModel('F');
+        const modelToSubmit = this.composeModel('F');
 
         this.subscriptions.push(
             this.annihilationService.finishAnnihilation(modelToSubmit).subscribe(data => {
@@ -249,7 +245,7 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
         }
 
         this.mFormSubbmitted = false;
-        let modelToSubmit = this.composeModel('A');
+        const modelToSubmit = this.composeModel('A');
 
         this.subscriptions.push(
             this.annihilationService.confirmEvaluateAnnihilation(modelToSubmit).subscribe(data => {
@@ -264,8 +260,8 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
 
         this.endDate = new Date();
 
-        let modelToSubmit: any = this.oldData;
-        let annihilationModel: any = this.oldData.medicamentAnnihilation;
+        const modelToSubmit: any = this.oldData;
+        const annihilationModel: any = this.oldData.medicamentAnnihilation;
 
 
         modelToSubmit.id = this.requestId;
@@ -301,22 +297,17 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
 
         let observable;
 
-        if (document.category === 'LN')
-        {
+        if (document.category === 'LN') {
             observable = this.annihilationService.viewListaPentruComisie(this.composeModel('A'));
-        }
-        else if(document.category === 'NP')
-        {
+        } else if (document.category === 'NP') {
             observable = this.annihilationService.viewProcesVerbal(this.composeModel('A'));
-        }
-        else if (document.category === 'NA')
-        {
+        } else if (document.category === 'NA') {
             observable = this.annihilationService.viewActDeReceptie(this.composeModel('A'));
         }
 
         this.subscriptions.push(observable.subscribe(data => {
-                let file = new Blob([data], {type: 'application/pdf'});
-                var fileURL = URL.createObjectURL(file);
+                const file = new Blob([data], {type: 'application/pdf'});
+                const fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
                 this.loadingService.hide();
             }, error => {
@@ -334,15 +325,13 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
         this.refreshOutputDocuments();
     }
 
-    addMember()
-    {
+    addMember() {
         this.rFormSubbmitted = true;
         if (this.members == null) {
             this.members = [];
         }
 
-        if (!this.rForm.valid || (this.rForm.get('responsability').value.id && this.checkIfPresidentAlreadyAdded()))
-        {
+        if (!this.rForm.valid || (this.rForm.get('responsability').value.id && this.checkIfPresidentAlreadyAdded())) {
             return;
         }
 
@@ -373,13 +362,12 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.members.splice(index,1);
+                this.members.splice(index, 1);
             }
         });
     }
 
-    checkIfPresidentAlreadyAdded()
-    {
+    checkIfPresidentAlreadyAdded() {
         return this.members.find( m => m.president);
     }
 

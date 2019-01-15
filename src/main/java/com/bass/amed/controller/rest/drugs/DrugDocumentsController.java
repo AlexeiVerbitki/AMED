@@ -3,8 +3,7 @@ package com.bass.amed.controller.rest.drugs;
 import com.bass.amed.common.Constants;
 import com.bass.amed.dto.drugs.AuthorizedSubstancesDetails;
 import com.bass.amed.dto.drugs.DrugDecisionsDetailsDTO;
-import com.bass.amed.entity.MedicamentActiveSubstancesEntity;
-import com.bass.amed.entity.MedicamentEntity;
+import com.bass.amed.entity.DrugImportExportDetailsEntity;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.SysParamsRepository;
 import net.sf.jasperreports.engine.*;
@@ -86,8 +85,7 @@ public class DrugDocumentsController {
             parameters.put("importExport", data.getAuthorizationType().toLowerCase());
             if (data.getDataExp() != null) {
                 parameters.put("validUntil", new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format(new Date(data.getDataExp().getTime())));
-            }
-            else {
+            } else {
                 parameters.put("validUntil", "");
             }
             setImportExportDetails(data, parameters);
@@ -185,23 +183,18 @@ public class DrugDocumentsController {
     }
 
     private void setSubstanceDetails(DrugDecisionsDetailsDTO data, Map<String, Object> parameters) {
-        if (data.getMedicaments() != null && !data.getMedicaments().isEmpty()) {
+        if (data.getDetails() != null && !data.getDetails().isEmpty()) {
             List<AuthorizedSubstancesDetails> authorizedSubstancesDetails = new ArrayList<>();
 
-            for (MedicamentEntity medicament : data.getMedicaments()) {
-                if (medicament.getActiveSubstances() != null && !medicament.getActiveSubstances().isEmpty()) {
-                    for (MedicamentActiveSubstancesEntity activeSubstance : medicament.getActiveSubstances()) {
-                        AuthorizedSubstancesDetails details = new AuthorizedSubstancesDetails();
-                        if (activeSubstance.getActiveSubstance() != null && activeSubstance.getActiveSubstance().getDescription() != null) {
-                            details.setActiveSubstance(activeSubstance.getActiveSubstance().getDescription());
-                        }
-                        details.setQuantityActiveSubstance(String.valueOf(activeSubstance.getQuantity()));
-                        setMedicamentDetails(authorizedSubstancesDetails, details, medicament);
-                    }
-                } else {
-                    AuthorizedSubstancesDetails details = new AuthorizedSubstancesDetails();
-                    setMedicamentDetails(authorizedSubstancesDetails, details, medicament);
+            for (DrugImportExportDetailsEntity substanceDetails : data.getDetails()) {
+
+                AuthorizedSubstancesDetails details = new AuthorizedSubstancesDetails();
+                if (substanceDetails.getSubstanceName() != null) {
+                    details.setActiveSubstance(substanceDetails.getSubstanceName());
                 }
+                details.setQuantityActiveSubstance(String.valueOf(substanceDetails.getAuthorizedQuantity()) + substanceDetails.getAuthorizedQuantityUnit());
+                setMedicamentDetails(authorizedSubstancesDetails, details, substanceDetails);
+
             }
 
             JRBeanCollectionDataSource autorizationImportExportDataSetJRBean = new JRBeanCollectionDataSource(authorizedSubstancesDetails);
@@ -209,15 +202,15 @@ public class DrugDocumentsController {
         }
     }
 
-    private void setMedicamentDetails(List<AuthorizedSubstancesDetails> authorizedSubstancesDetails, AuthorizedSubstancesDetails details, MedicamentEntity medicament) {
-        if (medicament.getCommercialName() != null) {
-            details.setMedicamentName(medicament.getCommercialName());
+    private void setMedicamentDetails(List<AuthorizedSubstancesDetails> authorizedSubstancesDetails, AuthorizedSubstancesDetails details, DrugImportExportDetailsEntity substanceDetails) {
+        if (substanceDetails.getCommercialName() != null) {
+            details.setMedicamentName(substanceDetails.getCommercialName());
         }
-        if (medicament.getDose() != null) {
-            details.setQuantity(medicament.getDose());
+        if (substanceDetails.getPackaging() != null) {
+            details.setQuantity(substanceDetails.getPackaging());
         }
-        if (medicament.getVolume() != null) {
-            details.setUm(medicament.getVolume());
+        if (substanceDetails.getPackagingQuantity() != null) {
+            details.setUm(substanceDetails.getPackagingQuantity());
         }
         authorizedSubstancesDetails.add(details);
     }

@@ -10,4 +10,5 @@ public class DispozitieDeDistribuireDTO
     private String registrationNrDate;
     private String autorizationOwner;
     private String notes;
+    private String medification;
 }

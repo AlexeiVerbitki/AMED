@@ -1,22 +1,22 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from "rxjs/index";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Document} from "../../../models/document";
-import {ActivatedRoute, Router} from "@angular/router";
-import {RequestService} from "../../../shared/service/request.service";
-import {TaskService} from "../../../shared/service/task.service";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {ReportRegisterMode} from "../../../shared/enum/report-register-mode.enum";
-import {ReportLevel} from "../../../shared/enum/report-level.enum";
-import {ReportType} from "../../../shared/enum/report-type.enum";
-import {Casuality} from "../../../shared/enum/report-casuality.enum";
-import {ReportGender} from "../../../shared/enum/report-gender.enum";
-import {ReportTypeSaesusar} from "../../../shared/enum/report-type-saesusar.enum";
-import {ReportResponseType} from "../../../shared/enum/report-response-type.enum";
-import {ReportSource} from "../../../shared/enum/report-source.enum";
-import {SpecificReportType} from "../../../shared/enum/specific-report-type.enum";
+import {Subscription} from 'rxjs/index';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Document} from '../../../models/document';
+import {ActivatedRoute, Router} from '@angular/router';
+import {RequestService} from '../../../shared/service/request.service';
+import {TaskService} from '../../../shared/service/task.service';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {ReportRegisterMode} from '../../../shared/enum/report-register-mode.enum';
+import {ReportLevel} from '../../../shared/enum/report-level.enum';
+import {ReportType} from '../../../shared/enum/report-type.enum';
+import {Casuality} from '../../../shared/enum/report-casuality.enum';
+import {ReportGender} from '../../../shared/enum/report-gender.enum';
+import {ReportTypeSaesusar} from '../../../shared/enum/report-type-saesusar.enum';
+import {ReportResponseType} from '../../../shared/enum/report-response-type.enum';
+import {ReportSource} from '../../../shared/enum/report-source.enum';
+import {SpecificReportType} from '../../../shared/enum/specific-report-type.enum';
 
 @Component({
     selector: 'app-c-notificare',
@@ -27,7 +27,7 @@ export class CNotificareComponent implements OnInit, OnDestroy {
 
     private subscriptions: Subscription[] = [];
     clinicTrailNotifForm: FormGroup;
-    private notificationIndex: number = -1;
+    private notificationIndex = -1;
 
     docs: Document[] = [];
     docTypes: any[] = [];
@@ -43,7 +43,7 @@ export class CNotificareComponent implements OnInit, OnDestroy {
 
     reportType = ReportType;
     reportTypeValues: any[] = ReportType.values();
-    showReportType: boolean = false;
+    showReportType = false;
 
     casuality = Casuality;
     casualityValues: any[] = Casuality.values();
@@ -53,7 +53,7 @@ export class CNotificareComponent implements OnInit, OnDestroy {
 
     reportTypeSaesusar = ReportTypeSaesusar;
     reportTypeSaesusarValues: any[] = ReportTypeSaesusar.values();
-    showDiedDate: boolean = false;
+    showDiedDate = false;
 
     reportResponseType = ReportResponseType;
     reportResponseTypeValues: any[] = ReportResponseType.values();
@@ -323,7 +323,7 @@ export class CNotificareComponent implements OnInit, OnDestroy {
                         // console.log('this.clinicTrailNotifForm', this.clinicTrailNotifForm);
                     },
                     error => console.log(error)
-                ))
+                ));
             })
         );
     }
@@ -336,7 +336,7 @@ export class CNotificareComponent implements OnInit, OnDestroy {
                     this.subscriptions.push(
                         this.administrationService.getAllDocTypes().subscribe(data => {
                                 this.docTypes = data;
-                                let docCodesList: string[] = step.availableDocTypes.split(',');
+                                const docCodesList: string[] = step.availableDocTypes.split(',');
                                 this.docTypes = this.docTypes.filter(r => docCodesList.includes(r.category));
                             },
                             error => console.log(error)
@@ -366,9 +366,9 @@ export class CNotificareComponent implements OnInit, OnDestroy {
         }
         // this.loadingService.show();
 
-        let formModel = this.clinicTrailNotifForm.getRawValue();
-        let findAmendment = formModel.clinicalTrails.clinicTrialNotificationEntities.find(notif => notif.registrationRequestId == formModel.id)
-        let collectedDataForm = this.addNotificationTypesForm.value;
+        const formModel = this.clinicTrailNotifForm.getRawValue();
+        const findAmendment = formModel.clinicalTrails.clinicTrialNotificationEntities.find(notif => notif.registrationRequestId == formModel.id);
+        const collectedDataForm = this.addNotificationTypesForm.value;
 
         console.log('findAmendment', findAmendment);
         findAmendment.title = collectedDataForm.notificationTitle;
@@ -419,7 +419,7 @@ export class CNotificareComponent implements OnInit, OnDestroy {
                 this.loadingService.hide();
             }, error => {
                 this.loadingService.hide();
-                console.log(error)
+                console.log(error);
             })
         );
 

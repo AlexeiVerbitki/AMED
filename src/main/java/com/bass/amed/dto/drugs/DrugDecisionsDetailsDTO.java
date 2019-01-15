@@ -1,6 +1,6 @@
 package com.bass.amed.dto.drugs;
 
-import com.bass.amed.entity.MedicamentEntity;
+import com.bass.amed.entity.DrugImportExportDetailsEntity;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -25,6 +25,6 @@ public class DrugDecisionsDetailsDTO  {
     private String partner;
     private String custom;
     private String localityId;
-    List<MedicamentEntity> medicaments = new ArrayList<>();
+    List<DrugImportExportDetailsEntity> details = new ArrayList<>();
 
 }

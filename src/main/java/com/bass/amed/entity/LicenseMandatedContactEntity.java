@@ -1,231 +1,57 @@
 package com.bass.amed.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
 
+@Data
 @Entity
 @Table(name = "license_mandated_contact", schema = "amed")
 public class LicenseMandatedContactEntity
 {
-    private Integer id;
-    private String phoneNumber;
-    private String email;
-    private String requestPersonFirstname;
-    private String requestPersonLastname;
-    private String requestMandateNr;
-    private Date requestMandateDate;
-    private String newMandatedFirstname;
-    private String newMandatedLastname;
-    private String newMandatedNr;
-    private Date newMandatedDate;
-    private String newPhoneNumber;
-    private String newEmail;
-    private Integer licenseDetailId;
-
     @Id
     @Column(name = "id")
     @GeneratedValue( strategy = GenerationType.IDENTITY )
-    public Integer getId()
-    {
-        return id;
-    }
-
-    public void setId(Integer id)
-    {
-        this.id = id;
-    }
-
+    private Integer id;
     @Basic
     @Column(name = "phone_number")
-    public String getPhoneNumber()
-    {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber)
-    {
-        this.phoneNumber = phoneNumber;
-    }
-
+    private String phoneNumber;
     @Basic
     @Column(name = "email")
-    public String getEmail()
-    {
-        return email;
-    }
-
-    public void setEmail(String email)
-    {
-        this.email = email;
-    }
-
+    private String email;
     @Basic
     @Column(name = "request_person_firstname")
-    public String getRequestPersonFirstname()
-    {
-        return requestPersonFirstname;
-    }
-
-    public void setRequestPersonFirstname(String requestPersonFirstname)
-    {
-        this.requestPersonFirstname = requestPersonFirstname;
-    }
-
+    private String requestPersonFirstname;
     @Basic
     @Column(name = "request_person_lastname")
-    public String getRequestPersonLastname()
-    {
-        return requestPersonLastname;
-    }
-
-    public void setRequestPersonLastname(String requestPersonLastname)
-    {
-        this.requestPersonLastname = requestPersonLastname;
-    }
-
+    private String requestPersonLastname;
     @Basic
     @Column(name = "request_mandate_nr")
-    public String getRequestMandateNr()
-    {
-        return requestMandateNr;
-    }
-
-    public void setRequestMandateNr(String requestMandateNr)
-    {
-        this.requestMandateNr = requestMandateNr;
-    }
-
+    private String requestMandateNr;
     @Basic
     @Column(name = "request_mandate_date")
-    public Date getRequestMandateDate()
-    {
-        return requestMandateDate;
-    }
-
-    public void setRequestMandateDate(Date requestMandateDate)
-    {
-        this.requestMandateDate = requestMandateDate;
-    }
-
+    private Date requestMandateDate;
     @Basic
     @Column(name = "new_mandated_firstname")
-    public String getNewMandatedFirstname()
-    {
-        return newMandatedFirstname;
-    }
-
-    public void setNewMandatedFirstname(String newMandatedFirstname)
-    {
-        this.newMandatedFirstname = newMandatedFirstname;
-    }
-
+    private String newMandatedFirstname;
     @Basic
     @Column(name = "new_mandated_lastname")
-    public String getNewMandatedLastname()
-    {
-        return newMandatedLastname;
-    }
-
-    public void setNewMandatedLastname(String newMandatedLastname)
-    {
-        this.newMandatedLastname = newMandatedLastname;
-    }
-
+    private String newMandatedLastname;
     @Basic
     @Column(name = "new_mandated_nr")
-    public String getNewMandatedNr()
-    {
-        return newMandatedNr;
-    }
-
-//    @OneToOne( mappedBy = "mandatedContact")
-//    public LicensesEntity getLicensesEntity()
-//    {
-//        return licensesEntity;
-//    }
-//
-//    public void setLicensesEntity(LicensesEntity licensesEntity)
-//    {
-//        this.licensesEntity = licensesEntity;
-//    }
-
-    public void setNewMandatedNr(String newMandatedNr)
-    {
-        this.newMandatedNr = newMandatedNr;
-    }
-
+    private String newMandatedNr;
     @Basic
     @Column(name = "new_mandated_date")
-    public Date getNewMandatedDate()
-    {
-        return newMandatedDate;
-    }
-
-    public void setNewMandatedDate(Date newMandatedDate)
-    {
-        this.newMandatedDate = newMandatedDate;
-    }
-
-    @Basic
-    @Column(name = "license_detail_id")
-    public Integer getLicenseDetailId()
-    {
-        return licenseDetailId;
-    }
-
-    public void setLicenseDetailId(Integer licenseDetailId)
-    {
-        this.licenseDetailId = licenseDetailId;
-    }
-
-    @Override
-    public boolean equals(Object o)
-    {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        LicenseMandatedContactEntity that = (LicenseMandatedContactEntity) o;
-        return id == that.id &&
-                Objects.equals(phoneNumber, that.phoneNumber) &&
-                Objects.equals(email, that.email) &&
-                Objects.equals(requestPersonFirstname, that.requestPersonFirstname) &&
-                Objects.equals(requestPersonLastname, that.requestPersonLastname) &&
-                Objects.equals(requestMandateNr, that.requestMandateNr) &&
-                Objects.equals(requestMandateDate, that.requestMandateDate) &&
-                Objects.equals(newMandatedFirstname, that.newMandatedFirstname) &&
-                Objects.equals(newMandatedLastname, that.newMandatedLastname) &&
-                Objects.equals(newMandatedNr, that.newMandatedNr) &&
-                Objects.equals(newMandatedDate, that.newMandatedDate);
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return Objects.hash(id, phoneNumber, email, requestPersonFirstname, requestPersonLastname, requestMandateNr, requestMandateDate, newMandatedFirstname, newMandatedLastname, newMandatedNr, newMandatedDate);
-    }
-
+    private Date newMandatedDate;
     @Basic
     @Column(name = "new_phone_number")
-    public String getNewPhoneNumber()
-    {
-        return newPhoneNumber;
-    }
-
-    public void setNewPhoneNumber(String newPhoneNumber)
-    {
-        this.newPhoneNumber = newPhoneNumber;
-    }
-
+    private String newPhoneNumber;
     @Basic
     @Column(name = "new_email")
-    public String getNewEmail()
-    {
-        return newEmail;
-    }
-
-    public void setNewEmail(String newEmail)
-    {
-        this.newEmail = newEmail;
-    }
-
+    private String newEmail;
+    @Basic
+    @Column(name = "license_detail_id")
+    private Integer licenseDetailId;
 }

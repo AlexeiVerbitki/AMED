@@ -1,5 +1,5 @@
 export enum ReportRegisterMode {
-    OneWindow=3, eMail=2, Curier=1
+    OneWindow = 3, eMail = 2, Curier = 1
 }
 
 export namespace ReportRegisterMode {

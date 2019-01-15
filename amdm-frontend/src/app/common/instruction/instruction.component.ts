@@ -4,13 +4,13 @@ import {
     OnDestroy,
     OnInit
 } from '@angular/core';
-import {MatDialog, MatDialogConfig} from "@angular/material";
-import { Subscription} from "rxjs";
-import {saveAs} from "file-saver";
-import {UploadFileService} from "../../shared/service/upload/upload-file.service";
-import {ErrorHandlerService} from "../../shared/service/error-handler.service";
-import {ConfirmationDialogComponent} from "../../dialog/confirmation-dialog.component";
-import {DivisionSelectDialogComponent} from "../../dialog/division-select-dialog/division-select-dialog.component";
+import {MatDialog, MatDialogConfig} from '@angular/material';
+import { Subscription} from 'rxjs';
+import {saveAs} from 'file-saver';
+import {UploadFileService} from '../../shared/service/upload/upload-file.service';
+import {ErrorHandlerService} from '../../shared/service/error-handler.service';
+import {ConfirmationDialogComponent} from '../../dialog/confirmation-dialog.component';
+import {DivisionSelectDialogComponent} from '../../dialog/division-select-dialog/division-select-dialog.component';
 
 
 @Component({
@@ -23,13 +23,13 @@ export class InstructionComponent implements OnInit, OnDestroy {
     instructionList: any[];
     divisionList: any[];
     numarCerere: string;
-    isModify : boolean = false;
-    enableUploading: boolean = true;
+    isModify = false;
+    enableUploading = true;
     private subscriptions: Subscription[] = [];
 
     constructor(public dialog: MatDialog,
                 private errorHandlerService: ErrorHandlerService,
-                private uploadService : UploadFileService) {
+                private uploadService: UploadFileService) {
     }
 
     get canUpload(): boolean {
@@ -99,11 +99,10 @@ export class InstructionComponent implements OnInit, OnDestroy {
         });
     }
 
-    viewFile(instruction: any)
-    {
+    viewFile(instruction: any) {
             this.subscriptions.push(this.uploadService.loadFile(instruction.path).subscribe(data => {
-                    let file = new Blob([data], {type: instruction.typeDoc});
-                    var fileURL = URL.createObjectURL(file);
+                    const file = new Blob([data], {type: instruction.typeDoc});
+                    const fileURL = URL.createObjectURL(file);
                     window.open(fileURL);
                 },
                 error => {
@@ -119,8 +118,7 @@ export class InstructionComponent implements OnInit, OnDestroy {
 
     checkFields(): boolean {
 
-        if(this.divisions.length==0)
-        {
+        if (this.divisions.length == 0) {
             this.errorHandlerService.showError('Nici o divizare nu a fost introdusa.');
             return false;
         }
@@ -132,9 +130,9 @@ export class InstructionComponent implements OnInit, OnDestroy {
 
         dialogConfig2.width = '600px';
 
-        dialogConfig2.data = {type: 'add',values: this.divisions, fieldName : "Divizare", instructions : this.instructions, numarCerere : this.numarCerere};
+        dialogConfig2.data = {type: 'add', values: this.divisions, fieldName : 'Divizare', instructions : this.instructions, numarCerere : this.numarCerere};
 
-        let dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.response) {
@@ -151,8 +149,7 @@ export class InstructionComponent implements OnInit, OnDestroy {
         });
     }
 
-    edit(instruction : any)
-    {
+    edit(instruction: any) {
         const dialogConfig2 = new MatDialogConfig();
 
         dialogConfig2.disableClose = false;
@@ -161,16 +158,15 @@ export class InstructionComponent implements OnInit, OnDestroy {
 
         dialogConfig2.width = '600px';
 
-        dialogConfig2.data = {type: 'edit', values: this.divisions,value: instruction.divisions, fieldName : "Divizare", instructions : this.instructions, numarCerere : this.numarCerere};
+        dialogConfig2.data = {type: 'edit', values: this.divisions, value: instruction.divisions, fieldName : 'Divizare', instructions : this.instructions, numarCerere : this.numarCerere};
 
-        let dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.response) {
                 instruction.divisions = result.values;
-                if(instruction.status=='O')
-                {
-                    instruction.status='M';
+                if (instruction.status == 'O') {
+                    instruction.status = 'M';
                 }
             }
         });

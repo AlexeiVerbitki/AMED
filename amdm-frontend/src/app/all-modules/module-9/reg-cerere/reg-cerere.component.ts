@@ -1,15 +1,15 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Observable, Subject, Subscription} from "rxjs/index";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {MatDialog} from "@angular/material";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Router} from "@angular/router";
-import {Document} from "../../../models/document";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {RequestService} from "../../../shared/service/request.service";
-import {TaskService} from "../../../shared/service/task.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
+import {Observable, Subject, Subscription} from 'rxjs/index';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {MatDialog} from '@angular/material';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
+import {Document} from '../../../models/document';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {RequestService} from '../../../shared/service/request.service';
+import {TaskService} from '../../../shared/service/task.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 
 enum Pages {
     CLAP = '3',
@@ -37,15 +37,15 @@ export class RegCerereComponent implements OnInit, OnDestroy {
     phaseList: any[] = [];
 
     companii: Observable<any[]>;
-    loadingCompany: boolean = false;
+    loadingCompany = false;
     protected companyInputs = new Subject<string>();
 
     clinicalTrails: Observable<any[]>;
-    loadingClinicalTrail: boolean = false;
+    loadingClinicalTrail = false;
     protected clinicalTrailInputs = new Subject<string>();
 
     clinicalTrailForm: FormGroup;
-    showClinicTrail: boolean = false;
+    showClinicTrail = false;
 
     constructor(private fb: FormBuilder,
                 private dialog: MatDialog,
@@ -95,12 +95,12 @@ export class RegCerereComponent implements OnInit, OnDestroy {
     manageClinicalTrailForm() {
         this.subscriptions.push(
             this.registerClinicalTrailForm.controls['flowControl'].valueChanges.subscribe(value => {
-                this.showClinicTrail = value === "CLPSC" || value === "CLNP";
+                this.showClinicTrail = value === 'CLPSC' || value === 'CLNP';
                 if (!this.showClinicTrail) {
                     this.clinicalTrailForm.reset();
                 }
             })
-        )
+        );
     }
 
     autocompleteClinicalTrailSearch() {
@@ -112,8 +112,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                     this.clinicalTrailForm.get('phase').reset();
                     this.phaseList = [];
                     this.clinicalTrailForm.get('treatment').reset();
-                }
-                else {
+                } else {
                     console.log('Changed value', changedValue);
                     this.clinicalTrailForm.get('title').setValue(changedValue.title);
                     this.clinicalTrailForm.get('sponsor').setValue(changedValue.sponsor);
@@ -123,14 +122,14 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                     this.clinicalTrailForm.get('treatment').setValue(changedValue.treatment.description);
                 }
             })
-        )
+        );
     }
 
     loadClinicalTrails() {
         this.clinicalTrails =
             this.clinicalTrailInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) return true;
+                    if (result && result.length > 2) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -152,7 +151,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                 // console.log('Pages[changedValue]', Pages[changedValue]);
                 this.loadDocTypes(Pages[changedValue]);
             })
-        )
+        );
     }
 
     loadDocTypes(stepId: string) {
@@ -182,7 +181,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
         this.companii =
             this.companyInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) return true;
+                    if (result && result.length > 2) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -212,10 +211,10 @@ export class RegCerereComponent implements OnInit, OnDestroy {
 
     onSubmit() {
         if (this.registerClinicalTrailForm.invalid) {
-            alert('Invalid Form1!!')
+            alert('Invalid Form1!!');
             return;
         }
-        let formModel = this.registerClinicalTrailForm.value;
+        const formModel = this.registerClinicalTrailForm.value;
 
         if (formModel.flowControl === 'CLAP') {
             this.loadingService.show();
@@ -240,11 +239,10 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                     this.loadingService.hide();
                 }, error => {
                     this.loadingService.hide();
-                    console.log(error)
+                    console.log(error);
                 })
             );
-        }
-        else if (formModel.flowControl === 'CLPSC') {
+        } else if (formModel.flowControl === 'CLPSC') {
             if (this.clinicalTrailForm.invalid) {
                 alert('Invalid Form2!!');
                 return;
@@ -271,11 +269,10 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                     this.loadingService.hide();
                 }, error => {
                     this.loadingService.hide();
-                    console.log(error)
+                    console.log(error);
                 })
             );
-        }
-        else if (formModel.flowControl === 'CLNP') {
+        } else if (formModel.flowControl === 'CLNP') {
             if (this.clinicalTrailForm.invalid) {
                 alert('Invalid Form2!!');
                 return;
@@ -300,20 +297,18 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                     this.loadingService.hide();
                 }, error => {
                     this.loadingService.hide();
-                    console.log(error)
+                    console.log(error);
                 })
             );
 
             console.log('clinicTrail', this.clinicalTrailForm.value);
-            console.log('Going to -> Înregistrarea Notificărilor privind Protocolul studiului clinic cu medicamente')
+            console.log('Going to -> Înregistrarea Notificărilor privind Protocolul studiului clinic cu medicamente');
             this.loadingService.hide();
-        }
-        else if (formModel.flowControl === 'CLISP') {
-            console.log('Going to -> Înregistrarea informației privind siguranța produsului de investigație clinică')
+        } else if (formModel.flowControl === 'CLISP') {
+            console.log('Going to -> Înregistrarea informației privind siguranța produsului de investigație clinică');
             this.loadingService.hide();
-        }
-        else {
-            console.log('Going to -> HZ')
+        } else {
+            console.log('Going to -> HZ');
         }
     }
 

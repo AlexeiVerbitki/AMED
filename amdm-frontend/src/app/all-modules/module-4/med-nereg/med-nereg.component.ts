@@ -2,12 +2,12 @@ import { Cerere } from './../../../models/cerere';
 import { Validators } from '@angular/forms';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import { Observable, Subscription } from "rxjs";
-import { MatDialog } from "@angular/material";
-import { Router } from "@angular/router";
-import { AdministrationService } from "../../../shared/service/administration.service";
-import { map, startWith } from "rxjs/operators";
-import { ConfirmationDialogComponent } from "../../../dialog/confirmation-dialog.component";
+import { Observable, Subscription } from 'rxjs';
+import { MatDialog } from '@angular/material';
+import { Router } from '@angular/router';
+import { AdministrationService } from '../../../shared/service/administration.service';
+import { map, startWith } from 'rxjs/operators';
+import { ConfirmationDialogComponent } from '../../../dialog/confirmation-dialog.component';
 import { saveAs } from 'file-saver';
 
 export interface PeriodicElement {

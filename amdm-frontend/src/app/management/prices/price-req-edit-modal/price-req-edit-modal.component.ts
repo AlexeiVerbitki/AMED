@@ -1,9 +1,9 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
-import {Observable, Subject, Subscription} from "rxjs";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {PriceService} from "../../../shared/service/prices.service";
-import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {Observable, Subject, Subscription} from 'rxjs';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {PriceService} from '../../../shared/service/prices.service';
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-price-edit-modal',
@@ -36,8 +36,8 @@ export class PriceReqEditModalComponent implements OnInit {
       console.log('request', this.priceReqEntity.value);
   }
 
-    medChanged(){
-      let m = this.priceReqEntity.get('medicament').value;
+    medChanged() {
+      const m = this.priceReqEntity.get('medicament').value;
         this.priceReqEntity.get('medicament').setValue(m.name);
         this.priceReqEntity.get('medicamentCode').setValue(m.code);
     }
@@ -46,7 +46,7 @@ export class PriceReqEditModalComponent implements OnInit {
       this.companyMedicaments =
           this.medInputs.pipe(
               filter((result: string) => {
-                  if (result && result.length > 2) return true;
+                  if (result && result.length > 2) { return true; }
               }),
               debounceTime(400),
               distinctUntilChanged(),

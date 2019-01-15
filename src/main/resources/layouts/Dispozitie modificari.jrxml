@@ -41,10 +41,8 @@
 		<field name="autorizationOwner" class="java.lang.String"/>
 		<field name="notes" class="java.lang.String"/>
 	</subDataset>
-	<parameter name="Title" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="La Nr." class="java.lang.String"/>
-	<parameter name="Din: " class="java.lang.String"/>
-	<parameter name="path" class="java.lang.String"/>
+	<parameter name="Din:" class="java.lang.String"/>
 	<parameter name="genDir" class="java.lang.String"/>
 	<parameter name="totalPreparations" class="java.lang.String"/>
 	<parameter name="europ" class="java.lang.String"/>
@@ -79,13 +77,13 @@
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="484" splitType="Stretch">
+		<band height="397" splitType="Stretch">
 			<textField>
 				<reportElement x="250" y="10" width="299" height="20" uuid="b8809fc8-2a40-4a5a-988b-18213e70bf00"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA["La Nr. " + $P{La Nr.} + " din " +$P{Din: }]]></textFieldExpression>
+				<textFieldExpression><![CDATA["La Nr. " + $P{La Nr.} + " din " +$P{Din:}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="3" y="40" width="549" height="20" uuid="17daf0f6-a76a-4e3a-b457-f2e228d883a5"/>
@@ -139,7 +137,7 @@ prezentate pentru modificări postautorizare
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="7_dsipozitia modificare tabel" uuid="22424e40-de12-4cb0-9f87-ebd214907166">
-						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
+						<dataSourceExpression><![CDATA[$P{dsipozitiaModificareDataset}]]></dataSourceExpression>
 					</datasetRun>
 					<jr:column width="60" uuid="b8b2b737-98be-4a23-bae6-3f067f91c2fa">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
@@ -273,68 +271,70 @@ producătorul, ţara de producere
 					</jr:column>
 				</jr:table>
 			</componentElement>
-			<textField>
-				<reportElement x="3" y="400" width="127" height="20" uuid="7d1ca081-57e3-4dfc-a250-6b408b0ed4c4"/>
+		</band>
+		<band height="92">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="3" y="5" width="127" height="20" uuid="c4074ee8-ef44-4215-9cd6-d126e349e8a9"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Total preparate – " + $P{totalPreparations}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="130" y="400" width="150" height="20" uuid="475698d0-3b4a-4ba3-a173-9cb144251baa"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="130" y="5" width="150" height="20" uuid="6fe62aba-ec40-489b-a4aa-45a46a7fb52e"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Europene – " + $P{europ}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="280" y="400" width="130" height="20" uuid="bfd5cfdd-4eee-4d72-92ec-0ad3c5f4a956"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="280" y="5" width="130" height="20" uuid="0ee40e1c-151e-4d2e-8ef4-38b2a6aadb3a"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Total variaţii – " + $P{totalVariations}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="410" y="400" width="142" height="20" uuid="ac260763-4027-4ed1-9175-34ea661a312a"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="410" y="5" width="142" height="20" uuid="7e3a7b1e-92b8-4009-84b3-2c8331344163"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Variaţii tip I – " + $P{variations1}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="130" y="420" width="150" height="20" uuid="c0fb8976-2602-4683-b57a-43c5332375a6"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA["CSI – " + $P{csi}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="130" y="440" width="150" height="20" uuid="e70acb18-d3e5-4489-8ce2-b96f2aa6f9eb"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Autohtone – " + $P{autohton}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="130" y="460" width="150" height="20" uuid="a958e9c8-f678-467e-94a8-3b4ac4227757"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Altele – " + $P{others}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="410" y="420" width="142" height="20" uuid="d60923e2-c489-47e5-87d2-fe17cd1c64ac"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="410" y="25" width="142" height="20" uuid="8a50c97b-1622-4c09-addb-c56e8914c8ca"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Variaţii tip II – " + $P{variations2}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="410" y="440" width="142" height="20" uuid="8b69b778-bc02-4d99-b1ee-f4663d72a42a"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="410" y="45" width="142" height="20" uuid="bea2aba7-411f-48e6-96da-4e14deb54dbe"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Transfer de Certificat – " + $P{transfCert}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="130" y="45" width="150" height="20" uuid="349f5342-6c06-496b-b897-d8a01f64a2e3"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Autohtone – " + $P{autohton}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="130" y="25" width="150" height="20" uuid="c3cc2121-85ac-4db5-b5e4-88d7568f13c6"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CSI – " + $P{csi}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="130" y="65" width="150" height="20" uuid="2e91b376-1ae6-4458-a1e1-3cda67e23ca1"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Altele – " + $P{others}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

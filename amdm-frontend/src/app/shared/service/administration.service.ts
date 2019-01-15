@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams, HttpResponse} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
+import {Observable} from 'rxjs';
 
 @Injectable()
 export class AdministrationService {
@@ -103,13 +103,13 @@ export class AdministrationService {
     }
 
     getPrevMonthAVGCurrencies(): Observable<any> {
-        return this.http.get('/api/price/prev-month-avg-currencies');//,  httpOptions);
+        return this.http.get('/api/price/prev-month-avg-currencies');
     }
 
     getCurrencyHistory(day: Date): Observable<any> {
         let params: HttpParams;
 
-        if (day != undefined) {
+        if (day !== undefined) {
             params = new HttpParams();
             params.append('from', day.getDay() + '-' + day.getMonth() + '-' + day.getFullYear());
         }
@@ -118,7 +118,7 @@ export class AdministrationService {
     }
 
     generateReceiptNr(): Observable<any> {
-        return this.http.get('/api/administration/generate-receipt-nr')
+        return this.http.get('/api/administration/generate-receipt-nr');
     }
 
     getAllMedicamentTypes(): Observable<any> {
@@ -190,7 +190,7 @@ export class AdministrationService {
     getAllInternationalNamesByName(partialName: string): Observable<any> {
         let Params = new HttpParams();
         Params = Params.set('partialName', partialName);
-        console.log("partialName: ",partialName);
+        console.log('partialName: ', partialName);
 
         return this.http.get<any[]>('/api/administration/all-international-names-by-name', {params: Params});
     }
@@ -203,8 +203,6 @@ export class AdministrationService {
     }
 
     getClinicalTrailNotificationTypes(): Observable<any[]> {
-        let Params = new HttpParams();
-
         return this.http.get<any[]>('/api/clinical-trails/all-clinical-trail-notification-types');
     }
 
@@ -220,7 +218,7 @@ export class AdministrationService {
         let Params = new HttpParams();
         Params = Params.set('partialCode', partialCode);
 
-        return this.http.get('/api/administration/all-customs-code-by-description',{params: Params});
+        return this.http.get('/api/administration/all-customs-code-by-description', {params: Params});
     }
 
     getReceiptsByPaymentOrderNumbers(paymentOrderNumbers: any[]): Observable<any> {
@@ -272,29 +270,27 @@ export class AdministrationService {
     }
 
 
-    saveEcAgent (model : any): Observable<HttpResponse<any>>
-    {
+    saveEcAgent(model: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/nomenclature/agent/save', model, {observe: 'response'});
     }
 
-    updateEcAgent (model : any): Observable<HttpResponse<any>>
-    {
+    updateEcAgent(model: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/nomenclature/agent/update', model, {observe: 'response'});
     }
 
     generateEcAgentCode(): Observable<any> {
-        return this.http.get('/api/nomenclature/agent/generate-code-agent')
+        return this.http.get('/api/nomenclature/agent/generate-code-agent');
     }
 
     getAllEcAgentsGroupByIdno(): Observable<any> {
         return this.http.get('/api/nomenclature/all-economic-agents-by-idno', {observe: 'response'});
     }
 
-    getParentAgentEcForIdno(idno : string): Observable<any> {
-        return this.http.get('/api/nomenclature/parent-for-idno', {observe: 'response', params: {idno : idno}});
+    getParentAgentEcForIdno(idno: string): Observable<any> {
+        return this.http.get('/api/nomenclature/parent-for-idno', {observe: 'response', params: {idno: idno}});
     }
 
-    getFilialsForIdno(idno : string): Observable<any> {
-        return this.http.get('/api/nomenclature/filials-for-idno', {observe: 'response', params: {idno : idno}});
+    getFilialsForIdno(idno: string): Observable<any> {
+        return this.http.get('/api/nomenclature/filials-for-idno', {observe: 'response', params: {idno: idno}});
     }
 }

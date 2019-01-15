@@ -2,6 +2,7 @@ package com.bass.amed.controller.rest.license;
 
 import com.bass.amed.common.Constants;
 import com.bass.amed.dto.license.AnexaLaLicenta;
+import com.bass.amed.dto.license.DiffLicense;
 import com.bass.amed.dto.license.LicenseDTO;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
@@ -236,9 +237,15 @@ public class LicenseController
     public ResponseEntity<RegistrationRequestsEntity> loadLicenseById(@RequestParam("id") String id) throws CustomException
     {
         logger.debug("Retrieve license by request id", id);
-        RegistrationRequestsEntity r = licenseRegistrationRequestService.findLicenseRegistrationById(Integer.valueOf(id));
+        RegistrationRequestsEntity r = licenseRegistrationRequestService.findLicenseRegistrationById(Integer.valueOf(id), false);
+        return new ResponseEntity<>(r, HttpStatus.OK);
+    }
 
-
+    @RequestMapping(value = "/retrieve-license-by-request-id-completed", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RegistrationRequestsEntity> loadLicenseByIdCompleted(@RequestParam("id") String id) throws CustomException
+    {
+        logger.debug("Retrieve license by request id", id);
+        RegistrationRequestsEntity r = licenseRegistrationRequestService.findLicenseRegistrationById(Integer.valueOf(id), true);
         return new ResponseEntity<>(r, HttpStatus.OK);
     }
 
@@ -313,6 +320,21 @@ public class LicenseController
         logger.debug("Get license by id: ", licenseId);
         LicensesEntity le = licenseService.findLicenseById(Integer.valueOf(licenseId));
         return new ResponseEntity<>(le, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/find-requests-by-license-id", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<RegistrationRequestsEntity>> getRequestsForLicense(@RequestParam("licenseId") String licenseId) throws  CustomException
+    {
+        logger.debug("Get requests for license id: ", licenseId);
+        return new ResponseEntity<>(requestRepository.getRequestsForLicense(Integer.valueOf(licenseId)), HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/compare-with-previous-rev", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<DiffLicense>> compareRevisions(@RequestParam("licenseId") String licenseId, @RequestParam("reqId") String requestId) throws  CustomException
+    {
+        logger.debug("Compare revision with previous: ", requestId);
+        return new ResponseEntity<>(licenseRegistrationRequestService.compareRevisions(Integer.valueOf(licenseId), Integer.valueOf(requestId)), HttpStatus.OK);
     }
 
 

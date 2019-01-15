@@ -1,27 +1,27 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Observable, Subject, Subscription} from "rxjs";
-import {MatDialog} from "@angular/material";
-import {Router} from "@angular/router";
-import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Observable, Subject, Subscription} from 'rxjs';
+import {MatDialog} from '@angular/material';
+import {Router} from '@angular/router';
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 import {saveAs} from 'file-saver';
-import {Document} from "../../../models/document";
-import {RequestService} from "../../../shared/service/request.service";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {TaskService} from "../../../shared/service/task.service";
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {CanModuleDeactivate} from "../../../shared/auth-guard/can-deactivate-guard.service";
-import {MedicamentService} from "../../../shared/service/medicament.service";
-import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
+import {Document} from '../../../models/document';
+import {RequestService} from '../../../shared/service/request.service';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {TaskService} from '../../../shared/service/task.service';
+import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {CanModuleDeactivate} from '../../../shared/auth-guard/can-deactivate-guard.service';
+import {MedicamentService} from '../../../shared/service/medicament.service';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 
 @Component({
     selector: 'app-reg-modify-cerere',
     templateUrl: './reg-modify-cerere.component.html',
     styleUrls: ['./reg-modify-cerere.component.css']
 })
-export class RegModifyCerereComponent implements OnInit, CanModuleDeactivate {
+export class RegModifyCerereComponent implements OnInit, OnDestroy, CanModuleDeactivate {
     documents: Document [] = [];
     companii: Observable<any[]>;
     rForm: FormGroup;
@@ -29,13 +29,13 @@ export class RegModifyCerereComponent implements OnInit, CanModuleDeactivate {
 
     generatedDocNrSeq: number;
     formSubmitted: boolean;
-    private subscriptions: Subscription[] = [];
-    loadingCompany: boolean = false;
+    loadingCompany = false;
     companyInputs = new Subject<string>();
-
+    maxDate = new Date();
     companyMedicaments: Observable<any[]>;
     medInputs = new Subject<string>();
     medLoading = false;
+    private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder,
                 private router: Router,
@@ -55,6 +55,12 @@ export class RegModifyCerereComponent implements OnInit, CanModuleDeactivate {
             'startDate': [new Date()],
             'currentStep': ['E'],
             'medicament': [null, Validators.required],
+            'mandatedFirstname': [null, Validators.required],
+            'mandatedLastname': [null, Validators.required],
+            'phoneNumber': [null, [Validators.maxLength(9), Validators.pattern('[0-9]+')]],
+            'email': [null, Validators.email],
+            'requestMandateNr': [null],
+            'requestMandateDate': [null],
             'company': [null, Validators.required],
             'initiator': [''],
             'assignedUser': [''],
@@ -80,7 +86,9 @@ export class RegModifyCerereComponent implements OnInit, CanModuleDeactivate {
         this.companii =
             this.companyInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) return true;
+                    if (result && result.length > 2) {
+                        return true;
+                    }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -99,7 +107,9 @@ export class RegModifyCerereComponent implements OnInit, CanModuleDeactivate {
         this.companyMedicaments =
             this.medInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) return true;
+                    if (result && result.length > 2) {
+                        return true;
+                    }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -110,7 +120,9 @@ export class RegModifyCerereComponent implements OnInit, CanModuleDeactivate {
                 flatMap(term =>
 
                     this.medicamentService.getMedicamentByRegisterNumber(term).pipe(
-                        tap((r) => {this.medLoading = false; })
+                        tap((r) => {
+                            this.medLoading = false;
+                        })
                     )
                 )
             );
@@ -134,17 +146,29 @@ export class RegModifyCerereComponent implements OnInit, CanModuleDeactivate {
 
     nextStep() {
         this.formSubmitted = true;
-        if (!this.rForm.valid) {
+        if (this.rForm.get('medicament').invalid || this.rForm.get('mandatedFirstname').invalid || this.rForm.get('mandatedLastname').invalid
+            || this.rForm.get('company').invalid || this.rForm.get('type.code').invalid) {
             return;
         }
+
+        if (this.rForm.get('requestMandateNr').value && !this.rForm.get('requestMandateDate').value) {
+            this.errorHandlerService.showError('Data eliberarii procurii trebuie introdusa.');
+            return;
+        }
+
+        if (this.rForm.get('requestMandateDate').value && !this.rForm.get('requestMandateNr').value) {
+            this.errorHandlerService.showError('Numarul procurii trebuie introdus.');
+            return;
+        }
+
 
         this.formSubmitted = false;
 
         this.loadingService.show();
 
-        var useranameDB = this.authService.getUserName()
+        const useranameDB = this.authService.getUserName();
 
-        var modelToSubmit: any = this.rForm.value;
+        const modelToSubmit: any = this.rForm.value;
         modelToSubmit.requestHistories = [{
             startDate: this.rForm.get('startDate').value, endDate: new Date(),
             username: useranameDB, step: 'R'
@@ -153,6 +177,14 @@ export class RegModifyCerereComponent implements OnInit, CanModuleDeactivate {
         modelToSubmit.assignedUser = useranameDB;
         modelToSubmit.documents = this.documents;
         modelToSubmit.medicamentPostauthorizationRegisterNr = this.rForm.get('medicament').value.regnr;
+        modelToSubmit.registrationRequestMandatedContacts = [{
+            mandatedLastname: this.rForm.get('mandatedLastname').value,
+            mandatedFirstname: this.rForm.get('mandatedFirstname').value,
+            phoneNumber: this.rForm.get('phoneNumber').value,
+            email: this.rForm.get('email').value,
+            requestMandateNr: this.rForm.get('requestMandateNr').value,
+            requestMandateDate: this.rForm.get('requestMandateDate').value
+        }];
         modelToSubmit.medicament = null;
 
         this.subscriptions.push(this.requestService.addMedicamentHistoryRequest(modelToSubmit).subscribe(data => {

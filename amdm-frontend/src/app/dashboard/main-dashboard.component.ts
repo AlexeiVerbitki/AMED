@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {LoaderService} from "../shared/service/loader.service";
-import {Subscription} from "rxjs";
+import {LoaderService} from '../shared/service/loader.service';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-main-dashboard',
@@ -17,7 +17,7 @@ import {Subscription} from "rxjs";
 		<div class="mt-5">
 			<div class="container-fluid">
 				<div class="row">
-					<div [ngClass]="classValue ? 'offset-xxl-1 offset-xl-1 skip-offset-lg col-xxl-11 col-xl-11 skip-col-lg' : 
+					<div [ngClass]="classValue ? 'offset-xxl-1 offset-xl-1 skip-offset-lg col-xxl-11 col-xl-11 skip-col-lg' :
 					'offset-lg-3 offset-xl-3 col-xl-9 col-lg-9 offset-xxl-2 col-xxl-10'">
 						<router-outlet></router-outlet>
 					</div>
@@ -53,7 +53,7 @@ export class MainDashboardComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     skipValueChanged($event) {
-        console.log('event skip', $event)
+        console.log('event skip', $event);
         this.classValue = !$event;
         this.skipEvent.emit($event);
         this.skip = $event.value;

@@ -1,10 +1,10 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {RegModifyCerereComponent} from "./reg-modify-cerere/reg-modify-cerere.component";
-import {CanDeactivateGuard} from "../../shared/auth-guard/can-deactivate-guard.service";
-import {EvaluarePrimaraModifyComponent} from "./evaluare-primara-modify/evaluare-primara-modify.component";
-import {ExpertiModifyComponent} from "./experti-modify/experti-modify.component";
-import {ProcessInterruptionModifyComponent} from "./process-interruption-modify/process-interruption-modify.component";
+import {RegModifyCerereComponent} from './reg-modify-cerere/reg-modify-cerere.component';
+import {CanDeactivateGuard} from '../../shared/auth-guard/can-deactivate-guard.service';
+import {EvaluarePrimaraModifyComponent} from './evaluare-primara-modify/evaluare-primara-modify.component';
+import {ExpertiModifyComponent} from './experti-modify/experti-modify.component';
+import {ProcessInterruptionModifyComponent} from './process-interruption-modify/process-interruption-modify.component';
 
 const routes: Routes = [
     { path: 'register', component: RegModifyCerereComponent,  canDeactivate: [CanDeactivateGuard]},

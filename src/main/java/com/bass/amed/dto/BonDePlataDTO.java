@@ -8,11 +8,11 @@ import java.util.List;
 @Data
 public class BonDePlataDTO
 {
-    private String currency;
-    private String companyName;
-    private String companyCountry;
-    private List<PaymentOrdersEntity> paymentOrders;
-    private String address;
-    private Integer requestId;
-    List<BonDePlataMedicamentDTO> medicamentDetails;
+    private String                        currency;
+    private String                        companyName;
+    private String                        companyCountry;
+    private List<PaymentOrdersEntity>     paymentOrders;
+    private String                        address;
+    private Integer                       requestId;
+    private List<BonDePlataMedicamentDTO> medicamentDetails;
 }

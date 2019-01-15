@@ -1,13 +1,13 @@
 import {Component, OnDestroy, OnInit, Inject} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
-import {Subscription} from "rxjs";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {LicenseService} from "../../../shared/service/license/license.service";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {LocalityService} from "../../../shared/service/locality.service";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {Subscription} from 'rxjs';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {LicenseService} from '../../../shared/service/license/license.service';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {LocalityService} from '../../../shared/service/locality.service';
 
 @Component({
     selector: 'app-add-ec-agent',
@@ -17,14 +17,14 @@ import {LocalityService} from "../../../shared/service/locality.service";
 export class AddEcAgentComponent implements OnInit, OnDestroy {
 
     private subscriptions: Subscription[] = [];
-    forEdit: boolean = false;
+    forEdit = false;
 
     ecAgentTypes: any[];
     states: any[];
     localitiesForState: any[];
     localitiesForStateMain: any[];
-    ecAgentParentInitial : any;
-    ecAgentFilialsInitial : any[];
+    ecAgentParentInitial: any;
+    ecAgentFilialsInitial: any[];
 
     pharmacyRepresentantProf: any;
     // farmacistiPerAddress: any[] = [];
@@ -34,8 +34,8 @@ export class AddEcAgentComponent implements OnInit, OnDestroy {
     //Validations
     rForm: FormGroup;
     oForm: FormGroup;
-    rFormSubbmitted: boolean = false;
-    oFormSubbmitted: boolean = false;
+    rFormSubbmitted = false;
+    oFormSubbmitted = false;
 
     constructor(private router: Router,
                 private activatedRoute: ActivatedRoute,
@@ -68,8 +68,7 @@ export class AddEcAgentComponent implements OnInit, OnDestroy {
                     }
                 }
             ));
-        if (!this.dataDialog.idno)
-        {
+        if (!this.dataDialog.idno) {
             this.subscriptions.push(
                 this.administrationService.generateEcAgentCode().subscribe(data => this.rForm.get('code').setValue(data)));
         }
@@ -115,8 +114,7 @@ export class AddEcAgentComponent implements OnInit, OnDestroy {
         this.rForm.get('tipIntreprindereMain').patchValue(data.type);
         this.rForm.get('streetMain').patchValue(data.street);
         this.rForm.get('directorMain').patchValue(data.director);
-        if (data.locality)
-        {
+        if (data.locality) {
             this.rForm.get('stateMain').patchValue(this.states.find(st => st.id === data.locality.stateId));
             this.rForm.get('localityForStateMain').patchValue(data.locality);
         }
@@ -130,12 +128,11 @@ export class AddEcAgentComponent implements OnInit, OnDestroy {
                 this.filiale.forEach(fl => {
                     fl.companyType = fl.type.description;
                     fl.address = this.states.find(st => st.id === fl.locality.stateId).description + ', ' + fl.locality.description + ', ' + fl.street;
-                })
+                });
             }));
 
 
-        if (this.dataDialog.onlyNewFilial)
-        {
+        if (this.dataDialog.onlyNewFilial) {
             console.log('sfsd');
             this.rForm.get('idno').setValidators(null);
             this.rForm.get('shortName').setValidators(null);
@@ -164,8 +161,7 @@ export class AddEcAgentComponent implements OnInit, OnDestroy {
             if (val) {
                 this.subscriptions.push(
                     this.administrationService.getLocalitiesByState(val.id).subscribe(data => this.localitiesForState = data));
-            }
-            else {
+            } else {
                 this.localitiesForState = [];
                 this.oForm.get('localityForState').setValue(null);
             }
@@ -176,8 +172,7 @@ export class AddEcAgentComponent implements OnInit, OnDestroy {
             if (val) {
                 this.subscriptions.push(
                     this.administrationService.getLocalitiesByState(val.id).subscribe(data => this.localitiesForStateMain = data));
-            }
-            else {
+            } else {
                 this.localitiesForStateMain = [];
                 this.rForm.get('localityForStateMain').setValue(null);
             }
@@ -186,8 +181,7 @@ export class AddEcAgentComponent implements OnInit, OnDestroy {
         this.oForm.get('tipIntreprindere').valueChanges.subscribe(val => {
             if (val) {
                 this.pharmacyRepresentantProf = val.representant;
-            }
-            else {
+            } else {
                 this.pharmacyRepresentantProf = null;
             }
         });
@@ -222,7 +216,7 @@ export class AddEcAgentComponent implements OnInit, OnDestroy {
 
         this.oFormSubbmitted = false;
 
-        let filiala: any = {};
+        const filiala: any = {};
 
         filiala.companyType = this.oForm.get('tipIntreprindere').value.description;
         filiala.address = this.oForm.get('state').value.description + ', ' + this.oForm.get('localityForState').value.description + ', ' + this.oForm.get('street').value;
@@ -260,15 +254,14 @@ export class AddEcAgentComponent implements OnInit, OnDestroy {
 
         this.rFormSubbmitted = false;
 
-        let modelToSubmit: any[] = this.composeModel();
+        const modelToSubmit: any[] = this.composeModel();
 
         console.log('model', modelToSubmit);
 
 
         let response;
 
-        if (this.forEdit)
-        {
+        if (this.forEdit) {
             this.subscriptions.push(
                 this.administrationService.updateEcAgent(modelToSubmit).subscribe(data => {
                     response = {
@@ -280,8 +273,7 @@ export class AddEcAgentComponent implements OnInit, OnDestroy {
                     success: false
                 };
                 }));
-        }
-        else {
+        } else {
             this.subscriptions.push(
                 this.administrationService.saveEcAgent(modelToSubmit).subscribe(data => {
                     response = {
@@ -300,12 +292,11 @@ export class AddEcAgentComponent implements OnInit, OnDestroy {
 
 
     private composeModel() {
-        let modelToSubmit: any [] = [];
+        const modelToSubmit: any [] = [];
 
         let mainAgent: any = {};
 
-        if (this.forEdit)
-        {
+        if (this.forEdit) {
             mainAgent = this.ecAgentParentInitial;
         }
 

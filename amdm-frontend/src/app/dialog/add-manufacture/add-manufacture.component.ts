@@ -1,8 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
-import {Subscription} from "rxjs";
-import {AdministrationService} from "../../shared/service/administration.service";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {Subscription} from 'rxjs';
+import {AdministrationService} from '../../shared/service/administration.service';
 
 @Component({
   selector: 'app-add-manufacture',
@@ -14,9 +14,9 @@ export class AddManufactureComponent implements OnInit {
   private subscriptions: Subscription[] = [];
   aForm: FormGroup;
   manufactures: any[];
-  protected loadingManufacture: boolean = false;
+  protected loadingManufacture = false;
   formSubmitted: boolean;
-  wasManufactureAdded : boolean = false;
+  wasManufactureAdded = false;
 
   constructor(    private fb: FormBuilder,
                   public dialogRef: MatDialogRef<AddManufactureComponent>,
@@ -38,21 +38,19 @@ export class AddManufactureComponent implements OnInit {
                 this.manufactures = data;
                 this.loadingManufacture = false;
             },
-            error => {console.log(error);  this.loadingManufacture = false;}
+            error => {console.log(error);  this.loadingManufacture = false; }
         )
     );
   }
 
-  checkActiveSubstanceManufacture()
-  {
+  checkActiveSubstanceManufacture() {
     if (this.aForm.get('manufacture').value == null) {
       return;
     }
 
     this.wasManufactureAdded = false;
-    let test = this.dataDialog.manufacturesTable.find(r => r.manufacture.id == this.aForm.get('manufacture').value.id);
-    if(test)
-    {
+    const test = this.dataDialog.manufacturesTable.find(r => r.manufacture.id == this.aForm.get('manufacture').value.id);
+    if (test) {
        this.wasManufactureAdded = true;
     }
 
@@ -63,8 +61,7 @@ export class AddManufactureComponent implements OnInit {
   add() {
     this.formSubmitted = true;
 
-    if(this.aForm.invalid || this.wasManufactureAdded)
-    {
+    if (this.aForm.invalid || this.wasManufactureAdded) {
       return;
     }
 

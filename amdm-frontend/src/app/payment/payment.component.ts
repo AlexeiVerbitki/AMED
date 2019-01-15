@@ -1,13 +1,13 @@
 import {Component, EventEmitter, HostListener, Input, OnInit, Output, SimpleChanges} from '@angular/core';
-import {AdministrationService} from "../shared/service/administration.service";
-import {Subscription} from "rxjs";
-import {MatDialog, MatDialogConfig} from "@angular/material";
-import {AddPaymentOrderComponent} from "../dialog/add-payment-order/add-payment-order.component";
-import {LoaderService} from "../shared/service/loader.service";
-import {ConfirmationDialogComponent} from "../dialog/confirmation-dialog.component";
-import {DocumentService} from "../shared/service/document.service";
-import {ErrorHandlerService} from "../shared/service/error-handler.service";
-import {SelectCurrencyBonPlataDialogComponent} from "../dialog/select-currency-bon-plata-dialog/select-currency-bon-plata-dialog.component";
+import {AdministrationService} from '../shared/service/administration.service';
+import {Subscription} from 'rxjs';
+import {MatDialog, MatDialogConfig} from '@angular/material';
+import {AddPaymentOrderComponent} from '../dialog/add-payment-order/add-payment-order.component';
+import {LoaderService} from '../shared/service/loader.service';
+import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog.component';
+import {DocumentService} from '../shared/service/document.service';
+import {ErrorHandlerService} from '../shared/service/error-handler.service';
+import {SelectCurrencyBonPlataDialogComponent} from '../dialog/select-currency-bon-plata-dialog/select-currency-bon-plata-dialog.component';
 
 @Component({
     selector: 'app-payment',
@@ -19,7 +19,7 @@ export class PaymentComponent implements OnInit {
     //Bon de plata
     private subscriptions: Subscription[] = [];
     bonDePlataList: any[] = [];
-    bonDePlataTotal: number = 0;
+    bonDePlataTotal = 0;
 
     additionalBonDePlataList: any;
     process: string;
@@ -28,15 +28,16 @@ export class PaymentComponent implements OnInit {
 
     //Incasari
     receiptsList: any[] = [];
-    receiptsTotal: number = 0;
-    total: number = 0;
+    receiptsTotal = 0;
+    total = 0;
 
-    disabled: boolean = false;
-    bonSuplimentarNotRender: boolean = false;
+    disabled = false;
+    rOnly = false;
+    bonSuplimentarNotRender = false;
     requestIdP: any;
     isCheckProducator: boolean;
     manufacturesList: any[];
-    isManufactureAutohton: boolean = false;
+    isManufactureAutohton = false;
 
     constructor(private administrationService: AdministrationService,
                 private dialog: MatDialog,
@@ -82,6 +83,15 @@ export class PaymentComponent implements OnInit {
         this.disabled = disabled;
     }
 
+    get readOnly(): boolean {
+        return this.disabled;
+    }
+
+    @Input()
+    set readOnly(readonly: boolean) {
+        this.rOnly = readonly;
+    }
+
 
     get additionalBonDePlata(): any {
         return this.additionalBonDePlataList;
@@ -122,10 +132,10 @@ export class PaymentComponent implements OnInit {
     }
 
     addTaxes() {
-
         if (this.checkProducator) {
-            let test = this.manufactures.find(r => r.producatorProdusFinit == true);
-            if (!test) {
+            const test = this.manufactures.find(r => r.producatorProdusFinit == true);
+            const test2 = this.manufactures.find(r => r.producatorProdusFinitTo == true);
+            if (!test && !test2) {
                 this.errorHandlerService.showError('Nu a fost selectat producatorul produsului finit');
                 return;
             }
@@ -140,7 +150,7 @@ export class PaymentComponent implements OnInit {
         dialogConfig2.width = '600px';
         dialogConfig2.data = {bonSuplimentarNotRender: this.isBonSuplimentarNotRender};
 
-        let dialogRef = this.dialog.open(AddPaymentOrderComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(AddPaymentOrderComponent, dialogConfig2);
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.response) {
                 result.registrationRequestId = this.requestIdP;
@@ -203,8 +213,8 @@ export class PaymentComponent implements OnInit {
     }
 
     checkReceipts() {
-        let ar: any[] = [];
-        for (let bon of this.bonDePlataList) {
+        const ar: any[] = [];
+        for (const bon of this.bonDePlataList) {
             ar.push(bon.number);
         }
 
@@ -263,7 +273,8 @@ export class PaymentComponent implements OnInit {
             } else {
 
                 if (this.checkProducator) {
-                    if (!this.requestDet.medicament.pharmaceuticalForm || !this.requestDet.medicament.dose ||
+                    if ((!this.requestDet.medicament.pharmaceuticalForm && !this.requestDet.medicament.pharmaceuticalFormTo) ||
+                        (!this.requestDet.medicament.dose && !this.requestDet.medicament.doseTo) ||
                         !this.requestDet.divisionBonDePlata) {
                         this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
                         return;
@@ -277,7 +288,7 @@ export class PaymentComponent implements OnInit {
 
                 dialogConfig2.width = '600px';
 
-                let dialogRef = this.dialog.open(SelectCurrencyBonPlataDialogComponent, dialogConfig2);
+                const dialogRef = this.dialog.open(SelectCurrencyBonPlataDialogComponent, dialogConfig2);
                 dialogRef.afterClosed().subscribe(result => {
                     this.generateBonCommonParameters(result.currency);
                 });
@@ -291,7 +302,7 @@ export class PaymentComponent implements OnInit {
         this.loadingService.show();
         let observable;
         if (this.process && this.process === 'NIMICIRE') {
-            let nimicireList = this.bonDePlataList.filter(bdp => bdp.serviceCharge.category === 'BN')
+            const nimicireList = this.bonDePlataList.filter(bdp => bdp.serviceCharge.category === 'BN');
             if (nimicireList.length !== 1) {
                 this.errorHandlerService.showError('Trebuie sa exista o singura taxa pentru nimicirea medicamentelor.');
                 this.loadingService.hide();
@@ -299,7 +310,19 @@ export class PaymentComponent implements OnInit {
             }
             observable = this.documentService.viewBonDePlataNimicire(this.requestNimicire);
         } else {
-            let modelToSubmit = {
+            let pharmaceuticForm = '';
+            if (this.requestDet.medicament.pharmaceuticalForm) {
+                pharmaceuticForm = this.requestDet.medicament.pharmaceuticalForm.description;
+            } else {
+                pharmaceuticForm = this.requestDet.medicament.pharmaceuticalFormTo.description;
+            }
+            let dose = '';
+            if (this.requestDet.medicament.dose) {
+                dose = this.requestDet.medicament.dose;
+            } else {
+                dose = this.requestDet.medicament.doseTo;
+            }
+            const modelToSubmit = {
                 currency: currency,
                 companyName: this.requestDet.company.name,
                 companyCountry: 'Republica Moldova',
@@ -309,8 +332,8 @@ export class PaymentComponent implements OnInit {
                 medicamentDetails: [{
                     nr: 1,
                     medicamentName: this.requestDet.medicamentName,
-                    pharmaceuticForm: this.requestDet.medicament.pharmaceuticalForm.description,
-                    dose: this.requestDet.medicament.dose,
+                    pharmaceuticForm: pharmaceuticForm,
+                    dose: dose,
                     division: this.requestDet.divisionBonDePlata
                 }]
             };
@@ -319,8 +342,8 @@ export class PaymentComponent implements OnInit {
 
 
         this.subscriptions.push(observable.subscribe(data => {
-                let file = new Blob([data], {type: 'application/pdf'});
-                var fileURL = URL.createObjectURL(file);
+                const file = new Blob([data], {type: 'application/pdf'});
+                const fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
                 this.loadPaymentOrders();
                 this.loadingService.hide();
@@ -333,44 +356,54 @@ export class PaymentComponent implements OnInit {
 
     generateSingleBonDePlata(bonDePlata: any) {
 
-            if (!this.checkProducator) {
-                this.generateSingleBonCommonParameters(bonDePlata,'');
-            } else {
+        if (!this.checkProducator) {
+            this.generateSingleBonCommonParameters(bonDePlata, '');
+        } else {
 
-                if (this.checkProducator) {
-                    if (!this.requestDet.medicament.pharmaceuticalForm || !this.requestDet.medicament.dose ||
-                        !this.requestDet.divisionBonDePlata) {
-                        this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
-                        return;
-                    }
-                }
-
-                if(bonDePlata.serviceCharge.category == 'BS')
-                {
-                    this.generateSingleBonCommonParameters(bonDePlata,'MDL');
+            if (this.checkProducator) {
+                if ((!this.requestDet.medicament.pharmaceuticalForm && !this.requestDet.medicament.pharmaceuticalFormTo) ||
+                    (!this.requestDet.medicament.dose && !this.requestDet.medicament.doseTo) ||
+                    !this.requestDet.divisionBonDePlata) {
+                    this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
                     return;
                 }
-
-                const dialogConfig2 = new MatDialogConfig();
-
-                dialogConfig2.disableClose = false;
-                dialogConfig2.autoFocus = true;
-                dialogConfig2.hasBackdrop = true;
-
-                dialogConfig2.width = '600px';
-
-                let dialogRef = this.dialog.open(SelectCurrencyBonPlataDialogComponent, dialogConfig2);
-                dialogRef.afterClosed().subscribe(result => {
-                    this.generateSingleBonCommonParameters(bonDePlata,result.currency);
-                });
             }
+
+            if (bonDePlata.serviceCharge.category == 'BS') {
+                this.generateSingleBonCommonParameters(bonDePlata, 'MDL');
+                return;
+            }
+
+            const dialogConfig2 = new MatDialogConfig();
+
+            dialogConfig2.disableClose = false;
+            dialogConfig2.autoFocus = true;
+            dialogConfig2.hasBackdrop = true;
+
+            dialogConfig2.width = '600px';
+
+            const dialogRef = this.dialog.open(SelectCurrencyBonPlataDialogComponent, dialogConfig2);
+            dialogRef.afterClosed().subscribe(result => {
+                this.generateSingleBonCommonParameters(bonDePlata, result.currency);
+            });
+        }
     }
 
-    generateSingleBonCommonParameters(bonDePlata:any,currency : string)
-    {
+    generateSingleBonCommonParameters(bonDePlata: any, currency: string) {
         this.loadingService.show();
-
-        let modelToSubmit = {
+        let pharmaceuticForm = '';
+        if (this.requestDet.medicament.pharmaceuticalForm) {
+            pharmaceuticForm = this.requestDet.medicament.pharmaceuticalForm.description;
+        } else {
+            pharmaceuticForm = this.requestDet.medicament.pharmaceuticalFormTo.description;
+        }
+        let dose = '';
+        if (this.requestDet.medicament.dose) {
+            dose = this.requestDet.medicament.dose;
+        } else {
+            dose = this.requestDet.medicament.doseTo;
+        }
+        const modelToSubmit = {
             currency: currency,
             companyName: this.requestDet.company.name,
             companyCountry: 'Republica Moldova',
@@ -380,24 +413,22 @@ export class PaymentComponent implements OnInit {
             medicamentDetails: [{
                 nr: 1,
                 medicamentName: this.requestDet.medicamentName,
-                pharmaceuticForm: this.requestDet.medicament.pharmaceuticalForm.description,
-                dose: this.requestDet.medicament.dose,
+                pharmaceuticForm: pharmaceuticForm,
+                dose: dose,
                 division: this.requestDet.divisionBonDePlata
             }]
         };
         let observable;
-        if(bonDePlata.serviceCharge.category != 'BS')
-        {
+        if (bonDePlata.serviceCharge.category != 'BS') {
             observable = this.documentService.viewBonDePlata(modelToSubmit);
-        }
-        else {
+        } else {
             observable = this.documentService.viewBonDePlataSuplimentar(modelToSubmit);
         }
 
 
         this.subscriptions.push(observable.subscribe(data => {
-                let file = new Blob([data], {type: 'application/pdf'});
-                var fileURL = URL.createObjectURL(file);
+                const file = new Blob([data], {type: 'application/pdf'});
+                const fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
                 this.loadPaymentOrders();
                 this.loadingService.hide();
@@ -412,10 +443,10 @@ export class PaymentComponent implements OnInit {
         if (this.isCheckProducator) {
             if (this.manufacturesList) {
                 this.isManufactureAutohton = this.manufacturesList.find(r => {
-                    return r.manufacture.country.code == 'MD' && r.producatorProdusFinit == 1
+                    return r.manufacture.country.code == 'MD' && r.producatorProdusFinit == 1;
                 });
                 if (this.isManufactureAutohton) {
-                    for (let x of this.bonDePlataList) {
+                    for (const x of this.bonDePlataList) {
                         this.subscriptions.push(this.administrationService.removePaymentOrder(x.id).subscribe(data => {
                                 this.recalculateTotalTaxes();
                             }, error => console.log(error))

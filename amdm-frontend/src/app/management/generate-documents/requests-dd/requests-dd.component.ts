@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {Observable, Subscription} from "rxjs";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
-import {DocumentService} from "../../../shared/service/document.service";
-import {RequestService} from "../../../shared/service/request.service";
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
+import {Observable, Subscription} from 'rxjs';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {DocumentService} from '../../../shared/service/document.service';
+import {RequestService} from '../../../shared/service/request.service';
+import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
 
 @Component({
     selector: 'app-requests-dd',
@@ -13,7 +13,6 @@ import {ErrorHandlerService} from "../../../shared/service/error-handler.service
 })
 export class RequestsDdComponent implements OnInit {
 
-    @Input() displayTable: boolean;
     private subscriptions: Subscription[] = [];
     dataSource = new MatTableDataSource<any>();
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -28,6 +27,7 @@ export class RequestsDdComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.loadRequestForDD();
     }
 
     generateDocument() {
@@ -37,22 +37,22 @@ export class RequestsDdComponent implements OnInit {
             return;
         }
 
-        if (!this.dataSource.data.find(t=>t.included==1)) {
+        if (!this.dataSource.data.find(t => t.included == 1)) {
             this.errorHandlerService.showError('Nu a fost selectata nici o cerere.');
             return;
         }
 
         this.loadingService.show();
         let observable: Observable<any> = null;
-        let y: any[] = [];
-        for (let x of this.dataSource.data.filter(t => t.included == true)) {
+        const y: any[] = [];
+        for (const x of this.dataSource.data.filter(t => t.included == true)) {
             y.push(x);
         }
         observable = this.documentService.generateDD(y);
 
         this.subscriptions.push(observable.subscribe(data => {
-                let file = new Blob([data], {type: 'application/pdf'});
-                var fileURL = URL.createObjectURL(file);
+                const file = new Blob([data], {type: 'application/pdf'});
+                const fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
                 this.loadingService.hide();
                 this.loadRequestForDD();
@@ -82,7 +82,7 @@ export class RequestsDdComponent implements OnInit {
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
         if (this.dataSource.paginator) {
-            this.dataSource.paginator._intl.itemsPerPageLabel = "Rinduri pe pagina: ";
+            this.dataSource.paginator._intl.itemsPerPageLabel = 'Rinduri pe pagina: ';
         }
         this.dataSource.sort = this.sort;
     }

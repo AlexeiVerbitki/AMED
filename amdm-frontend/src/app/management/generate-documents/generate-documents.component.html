@@ -1,28 +1,46 @@
 <div class="container-fluid sky z-depth-2">
-  <h5 class="text-center font-weight-bold">Generare documente</h5>
-  <hr>
-  <form [formGroup]="gForm">
-    <mat-radio-group formControlName="tipGenerare">
-      <div class="container">
-        <div class="row">
-          <div class="col">
-            <mat-radio-button name="prop1" value="DD">Dispozitie de distribuire</mat-radio-button>
-          </div>
-          <div class="col">
-            <mat-radio-button name="prop2" value="OA">Ordin de autorizare al medicamentului</mat-radio-button>
-          </div>
-          <div class="col">
-            <mat-radio-button name="prop2" value="OI">Ordin de intreupere a procedurii de autorizare a medicamentului</mat-radio-button>
-          </div>
-        </div>
-      </div>
-    </mat-radio-group>
-    <app-requests-dd [displayTable]="typeG=='DD'" #requestDD (loadDDs)="loadDDs($event)"></app-requests-dd>
-    <app-medicaments-oa [displayTable]="typeG=='OA'" #medicamentsOA (loadOAs)="loadOAs($event)"></app-medicaments-oa>
-    <app-requests-oi [displayTable]="typeG=='OI'" #requestOI (loadOIs)="loadOIs($event)"></app-requests-oi>
-    <hr>
-    <app-dd-list [displayTable]="typeG=='DD'" #ddList (ddListModified)="ddListModified($event)"></app-dd-list>
-    <app-oa-list [displayTable]="typeG=='OA'" #oaList (oaListModified)="oaListModified($event)"></app-oa-list>
-    <app-oi-list [displayTable]="typeG=='OI'" #oiList (oiListModified)="oiListModified($event)"></app-oi-list>
-  </form>
+  <mat-tab-group>
+    <mat-tab label="Dispozitie de distribuire pentru autorizarea medicamentului">
+      <ng-template matTabContent><br>
+        <app-requests-dd #requestDD (loadDDs)="loadDDs($event)"></app-requests-dd>
+        <hr>
+        <app-dd-list #ddList (ddListModified)="ddListModified($event)"></app-dd-list>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Ordin de autorizare al medicamentului">
+      <ng-template matTabContent><br>
+        <app-medicaments-oa #medicamentsOA (loadOAs)="loadOAs($event)"></app-medicaments-oa>
+        <hr>
+        <app-oa-list #oaList (oaListModified)="oaListModified($event)"></app-oa-list>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Ordin de intreupere a procedurii de autorizare a medicamentului">
+      <ng-template matTabContent><br>
+        <app-requests-oi #requestOI (loadOIs)="loadOIs($event)"></app-requests-oi>
+        <hr>
+        <app-oi-list #oiList (oiListModified)="oiListModified($event)"></app-oi-list>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Dispozitie de distribuire pentru modificarile postautorizare">
+      <ng-template matTabContent><br>
+        <app-requests-dd-modify #requestDDM (loadDDMs)="loadDDMs($event)"></app-requests-dd-modify>
+        <hr>
+        <app-dd-modify-list #ddmList (ddmListModified)="ddmListModified($event)"></app-dd-modify-list>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Ordin de aprobare al modificarilor postautorizare">
+      <ng-template matTabContent><br>
+        <app-medicaments-om #medicamentsOM (loadOMs)="loadOMs($event)"></app-medicaments-om>
+        <hr>
+        <app-om-list #omList (omListModified)="omListModified($event)"></app-om-list>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Ordin de intreupere a procedurii de aprobare a modificarilor postautorizare">
+      <ng-template matTabContent><br>
+        <app-requests-oi-modify #requestOIM (loadOIMs)="loadOIMs($event)"></app-requests-oi-modify>
+        <hr>
+        <app-oi-modify-list #oimList (oimListModified)="oimListModified($event)"></app-oi-modify-list>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
 </div>

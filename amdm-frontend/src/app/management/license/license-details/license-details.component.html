@@ -1,6 +1,11 @@
 <h2 mat-dialog-title align="center">Detalii licenta</h2>
 <mat-dialog-content class="mat-typography">
     <form [formGroup]='rForm'>
+        <div class="position-button">
+            <button type="button" class="btn btn-mdb-color btn-sm" title="Istoric" (click)="showLicenseHistory()">
+                <i class="fa fa-history fa-lg" aria-hidden="true"></i>
+            </button>
+        </div>
         <div class="row">
             <div class="col-md-6">
                 <div class="md-form">

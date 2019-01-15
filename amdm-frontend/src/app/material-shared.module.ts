@@ -25,9 +25,9 @@ import {
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule
-} from "@angular/material";
-import {TooltipModule, WavesModule} from "angular-bootstrap-md";
-import {APP_DATE_FORMATS, AppDateAdapter} from "./shared/adapter/date.adapter";
+} from '@angular/material';
+import {TooltipModule, WavesModule} from 'angular-bootstrap-md';
+import {APP_DATE_FORMATS, AppDateAdapter} from './shared/adapter/date.adapter';
 
 @NgModule({
     imports: [
@@ -124,6 +124,6 @@ export class MaterialSharedModule {
                     provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS
                 }
             ]
-        }
+        };
     }
 }

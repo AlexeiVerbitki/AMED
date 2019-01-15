@@ -7,15 +7,15 @@ import {saveAs} from 'file-saver';
 import {Observable, Subscription} from 'rxjs';
 import {AdministrationService} from '../../../shared/service/administration.service';
 import {Router} from '@angular/router';
-import {Document} from "../../../models/document";
-import {RequestService} from "../../../shared/service/request.service";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {TaskService} from "../../../shared/service/task.service";
-import {CanModuleDeactivate} from "../../../shared/auth-guard/can-deactivate-guard.service";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
+import {Document} from '../../../models/document';
+import {RequestService} from '../../../shared/service/request.service';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {TaskService} from '../../../shared/service/task.service';
+import {CanModuleDeactivate} from '../../../shared/auth-guard/can-deactivate-guard.service';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 
 @Component({
     selector: 'app-reg-doc',
@@ -30,8 +30,8 @@ export class RegDocComponent implements OnInit, CanModuleDeactivate {
     recipients: any[];
 
     generatedDocNrSeq: number;
-    formSubmitted: boolean = false;
-    canBeDeactivated: boolean = false;
+    formSubmitted = false;
+    canBeDeactivated = false;
     private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder, public dialog: MatDialog, private router: Router,
@@ -100,9 +100,9 @@ export class RegDocComponent implements OnInit, CanModuleDeactivate {
         this.formSubmitted = false;
 
         this.loadingService.show();
-        let currentUser = this.authService.getUserName()
+        const currentUser = this.authService.getUserName();
 
-        let modelToSubmit: any = {recipients: [], registrationRequestsEntity: {requestHistories: {}, type: {}, documents: {}}};
+        const modelToSubmit: any = {recipients: [], registrationRequestsEntity: {requestHistories: {}, type: {}, documents: {}}};
 
 
         modelToSubmit.registrationRequestsEntity.requestNumber = this.rForm.get('requestNumber').value;

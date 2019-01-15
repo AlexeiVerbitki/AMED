@@ -86,13 +86,6 @@
 	</subDataset>
 	<parameter name="date" class="java.lang.String"/>
 	<parameter name="nr" class="java.lang.String"/>
-	<parameter name="name" class="java.lang.String"/>
-	<parameter name="representant" class="java.lang.String"/>
-	<parameter name="country" class="java.lang.String"/>
-	<parameter name="address" class="java.lang.String"/>
-	<parameter name="phone" class="java.lang.String"/>
-	<parameter name="email" class="java.lang.String"/>
-	<parameter name="notificationText" class="java.lang.String"/>
 	<parameter name="genDir" class="java.lang.String"/>
 	<parameter name="ordinModificareAnex1" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<parameter name="ordinModificareAnex2" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>

@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "medicament", schema = "amed", catalog = "")
+@Table(name = "medicament", schema = "amed")
 public class MedicamentEntity
 {
     @Id
@@ -131,7 +131,6 @@ public class MedicamentEntity
 
     public void assign(MedicamentHistoryEntity entity)
     {
-        // TODO: entity.originale ???
         this.commercialName = entity.getCommercialNameTo();
         this.dose = entity.getDoseTo();
         this.atcCode = entity.getAtcCodeTo();
@@ -163,6 +162,13 @@ public class MedicamentEntity
             MedicamentAuxiliarySubstancesEntity medicamentAuxiliarySubstancesEntity = new MedicamentAuxiliarySubstancesEntity();
             medicamentAuxiliarySubstancesEntity.assign(medicamentAuxiliarySubstancesHistoryEntity);
             this.auxSubstances.add(medicamentAuxiliarySubstancesEntity);
+        }
+        this.medicamentTypes.clear();
+        for (MedicamentTypesHistoryEntity medicamentTypesHistoryEntity : entity.getMedicamentTypesHistory())
+        {
+            MedicamentTypesEntity medicamentTypesEntity = new MedicamentTypesEntity();
+            medicamentTypesEntity.assign(medicamentTypesHistoryEntity);
+            this.medicamentTypes.add(medicamentTypesEntity);
         }
         this.manufactures.clear();
         for (MedicamentManufactureHistoryEntity medicamentManufactureHistoryEntity : entity.getManufacturesHistory())

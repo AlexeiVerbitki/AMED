@@ -131,6 +131,12 @@
 					<label for="customsCode">Cod vamal</label>
 				</div>
 			</div>
+			<div class="col-md-8">
+				<div class="md-form">
+					<input id="medType2" mdbInputDirective type="text" class="form-control" formControlName="medTypesValues" [attr.disabled]="true">
+					<label for="medType2">Tipul medicamentului</label>
+				</div>
+			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-4">
@@ -198,9 +204,7 @@
 					<th scope="col">Cod CAS</th>
 					<th scope="col">Concentratie</th>
 					<th scope="col">Unitate de masură</th>
-					<th scope="col">Producător</th>
-					<th scope="col">Ţară producător</th>
-					<th scope="col">Adresă producător</th>
+					<th scope="col">Producători</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -209,9 +213,7 @@
 					<td>{{ substance.activeSubstance.code }}</td>
 					<td>{{ substance.quantity }}</td>
 					<td>{{ substance.unitsOfMeasurement.description }}</td>
-					<td>{{ substance.manufacture.description }}</td>
-					<td>{{ substance.manufacture.country.description }}</td>
-					<td>{{ substance.manufacture.address }}</td>
+					<td>{{ manufacturesStr(substance)}}</td>
 				</tr>
 				</tbody>
 			</table>

@@ -1,15 +1,15 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Document} from "../../../models/document";
-import {Subscription} from "rxjs/index";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
-import {RequestService} from "../../../shared/service/request.service";
-import {TaskService} from "../../../shared/service/task.service";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {MatDialog} from "@angular/material";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {AuthService} from "../../../shared/service/authetication.service";
+import {Document} from '../../../models/document';
+import {Subscription} from 'rxjs/index';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
+import {RequestService} from '../../../shared/service/request.service';
+import {TaskService} from '../../../shared/service/task.service';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {MatDialog} from '@angular/material';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {AuthService} from '../../../shared/service/authetication.service';
 
 @Component({
     selector: 'app-b-aprobare',
@@ -24,7 +24,7 @@ export class BAprobareComponent implements OnInit, OnDestroy {
     protected docs: Document[] = [];
     docTypes: any[];
     outDocuments: any[] = [];
-    private amendmentIndex: number = -1;
+    private amendmentIndex = -1;
 
     constructor(private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
@@ -102,7 +102,7 @@ export class BAprobareComponent implements OnInit, OnDestroy {
 
                     this.approveClinicalTrailAmendForm.get('clinicalTrails').setValue(data.clinicalTrails);
 
-                    let findAmendment = data.clinicalTrails.clinicTrialAmendEntities.find(amendment => data.id == amendment.registrationRequestId);
+                    const findAmendment = data.clinicalTrails.clinicTrialAmendEntities.find(amendment => data.id == amendment.registrationRequestId);
                     this.amendmentIndex = data.clinicalTrails.clinicTrialAmendEntities.indexOf(findAmendment);
 
                     findAmendment.comissionDate = '';
@@ -119,8 +119,8 @@ export class BAprobareComponent implements OnInit, OnDestroy {
                     console.log('this.approveClinicalTrailForm', this.approveClinicalTrailAmendForm);
                 },
                 error => console.log(error)
-            ))
-        }))
+            ));
+        }));
     }
 
     onSubmit() {
@@ -130,11 +130,11 @@ export class BAprobareComponent implements OnInit, OnDestroy {
             return;
         }
 
-        let formModel = this.approveClinicalTrailAmendForm.getRawValue();
+        const formModel = this.approveClinicalTrailAmendForm.getRawValue();
 
         formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex].comissionDate = this.clinicalTrailAmendmentForm.get('comissionDate').value;
         formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex].comissionNr = this.clinicalTrailAmendmentForm.get('comissionNr').value;
-        let codeBuilder = formModel.clinicalTrailAmendment.codeTo + '-' + this.clinicalTrailAmendmentForm.get('amendCode').value;
+        const codeBuilder = formModel.clinicalTrailAmendment.codeTo + '-' + this.clinicalTrailAmendmentForm.get('amendCode').value;
         formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex].amendCode = codeBuilder;
         // console.log('codeBuilder', codeBuilder);
 
@@ -167,11 +167,10 @@ export class BAprobareComponent implements OnInit, OnDestroy {
                     this.loadingService.hide();
                 }, error => {
                     this.loadingService.hide();
-                    console.log(error)
+                    console.log(error);
                 })
-            )
-        }
-        else if (formModel.status === '1') {
+            );
+        } else if (formModel.status === '1') {
             const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
                 data: {
                     message: 'Sunteti sigur(a)?',
@@ -196,7 +195,7 @@ export class BAprobareComponent implements OnInit, OnDestroy {
                     formModel.assignedUser = this.authService.getUserName();
                     formModel.documents = this.docs;
 
-                    let currentAmendment = formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex];
+                    const currentAmendment = formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex];
 
                     console.log('currentAmendment', currentAmendment);
                     this.subscriptions.push(
@@ -205,9 +204,9 @@ export class BAprobareComponent implements OnInit, OnDestroy {
                             this.router.navigate(['/dashboard/module/clinic-studies/interrupt-amendment/' + data.body]);
                         }, error => {
                             this.loadingService.hide();
-                            console.log(error)
+                            console.log(error);
                         })
-                    )
+                    );
                 }
             });
         }
@@ -216,7 +215,7 @@ export class BAprobareComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.subscriptions.forEach(subscription => {
             subscription.unsubscribe();
-        })
+        });
     }
 
 }

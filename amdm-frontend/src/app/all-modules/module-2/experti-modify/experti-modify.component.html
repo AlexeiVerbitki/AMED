@@ -26,8 +26,149 @@
 			</div>
 		</div>
 		<hr>
-		<app-expert-comitee [expert]="expert" [formSubmitted]="formSubmitted" [type]="type"></app-expert-comitee>
-		<app-document [documents]="documents" [nrCerere]="expertForm.get('requestNumber').value" [dcTypes]="docTypes"
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="md-form">
+					<input id="comiteeNr" mdbInputDirective type="text" class="form-control"
+					       formControlName="comiteeNr">
+					<label for="comiteeNr">Nr. comisie</label>
+				</div>
+				<!--<div *ngIf="formSubmitted && expertForm.get('comiteeNr').invalid">-->
+				<!--<small class="text-muted"><strong class="text-danger">Numarul comisiei trebuie introdus</strong></small>-->
+				<!--</div>-->
+			</div>
+			<div class="col-lg-6">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input matInput [matDatepicker]="picker2" placeholder="Data comisiei" formControlName="expertDate">
+						<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #picker2></mat-datepicker>
+					</mat-form-field>
+				</div>
+				<!--<div *ngIf="formSubmitted && expertForm.get('expertDate').invalid">-->
+				<!--<small class="text-muted"><strong class="text-danger">Data comisiei trebuie introdusa</strong></small>-->
+				<!--</div>-->
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-3">
+				<div class="md-form-modified">
+					<ng-select id="chairman" name="chairman" [items]="chairmans"
+					           bindLabel="name"
+					           placeholder="Presedintele comisiei *"
+					           formControlName="chairman">
+					</ng-select>
+					<!--<div *ngIf="formSubmitted && expertForm.get('chairman').invalid">-->
+					<!--<small class="text-muted"><strong class="text-danger">Presedintele comisiei trebuie selectat</strong></small>-->
+					<!--</div>-->
+				</div>
+			</div>
+			<div class="col-lg-3">
+				<div class="md-form">
+					<input id="decisionChairman" mdbInputDirective type="text" class="form-control"
+					       formControlName="decisionChairman">
+					<label for="decisionChairman">Decizia presedintelui</label>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="md-form-modified">
+					<ng-select id="farmacolog" name="farmacolog" [items]="farmacologs"
+					           bindLabel="name"
+					           placeholder="Farmacolog *"
+					           formControlName="farmacolog">
+					</ng-select>
+					<!--<div *ngIf="formSubmitted && expertForm.get('farmacolog').invalid">-->
+					<!--<small class="text-muted"><strong class="text-danger">Farmacologul trebuie selectat</strong></small>-->
+					<!--</div>-->
+				</div>
+			</div>
+			<div class="col-lg-3">
+				<div class="md-form">
+					<input id="decisionFarmacolog" mdbInputDirective type="text" class="form-control"
+					       formControlName="decisionFarmacolog">
+					<label for="decisionFarmacolog">Decizia farmacologului</label>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-3">
+				<div class="md-form-modified">
+					<ng-select id="farmacist" name="farmacist" [items]="farmacists"
+					           bindLabel="name"
+					           placeholder="Farmacist *"
+					           formControlName="farmacist">
+					</ng-select>
+					<!--<div *ngIf="formSubmitted && expertForm.get('farmacist').invalid">-->
+					<!--<small class="text-muted"><strong class="text-danger">Farmacistul trebuie selectat</strong></small>-->
+					<!--</div>-->
+				</div>
+			</div>
+			<div class="col-lg-3">
+				<div class="md-form">
+					<input id="decisionFarmacist" mdbInputDirective type="text" class="form-control"
+					       formControlName="decisionFarmacist">
+					<label for="decisionFarmacist">Decizia farmacistului</label>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="md-form-modified">
+					<ng-select id="medic" name="medic" [items]="medics"
+					           bindLabel="name"
+					           placeholder="Clinician *"
+					           formControlName="medic">
+					</ng-select>
+					<!--<div *ngIf="formSubmitted && expertForm.get('medic').invalid">-->
+					<!--<small class="text-muted"><strong class="text-danger">Clinicianul trebuie selectat</strong></small>-->
+					<!--</div>-->
+				</div>
+			</div>
+			<div class="col-lg-3">
+				<div class="md-form">
+					<input id="decisionMedic" mdbInputDirective type="text" class="form-control"
+					       formControlName="decisionMedic">
+					<label for="decisionMedic">Decizia clinicianului</label>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form">
+					<textarea type="text" id="comment" class="md-textarea form-control" mdbInputDirective formControlName="commentExperts"></textarea>
+					<label for="comment">Comentariu</label>
+				</div>
+			</div>
+		</div>
+		<div class="position-button">
+			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="dd()" [disabled]="modelToSubmit && modelToSubmit.ddIncluded">Include expertii in dispozitia de distribuire</button>
+		</div>
+		<div class="col-md-12">
+			<div class="md-form">
+				<h5 class="text-center font-weight-bold">
+					Cerere inregistrare medicament
+				</h5>
+				<hr>
+				<mat-radio-group formControlName="statusExperts">
+					<div class="container">
+						<div class="row">
+							<div class="offset-3">
+							</div>
+							<div class="col-5">
+								<mat-radio-button name="prop1" value="1">Acceptată</mat-radio-button>
+							</div>
+							<div class="col-4">
+								<mat-radio-button name="prop2" value="0">Respinsă</mat-radio-button>
+							</div>
+						</div>
+					</div>
+				</mat-radio-group>
+			</div>
+			<br/>
+			<div *ngIf="formSubmitted && expertForm.get('statusExperts').invalid">
+				<small class="text-muted"><strong class="text-danger">Status inregistrare trebuie selectat</strong></small>
+			</div>
+		</div>
+		<hr>
+		<app-document [docDetails]="docDetails" [documents]="documents" [nrCerere]="expertForm.get('requestNumber').value" [dcTypes]="docTypes"
 		              (documentModified)="documentModified($event)"></app-document>
 		<h5 class="text-center font-weight-bold">Detalii medicament</h5>
 		<div class="row">
@@ -49,8 +190,13 @@
 			<div class="container-fluid">
 				<!-- Title -->
 				<div class="row">
-					<div class="col-12">
+					<div class="col-6">
 						<div class="card-header-title white-text">Divizari</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="addToAuthorizationOrder()" [disabled]="expertForm.get('statusExperts').value!=1 || omAttached || omApproved">Include in ordinul de aprobare</button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -63,6 +209,7 @@
 					<th scope="col">Nr.</th>
 					<th scope="col">Denumire</th>
 					<th scope="col">Status</th>
+					<!--<th scope="col">Aprobat</th>-->
 				</tr>
 				</thead>
 				<tbody>
@@ -71,6 +218,7 @@
 					<td>{{ division.description }}</td>
 					<td *ngIf="division.old==1">Divizare existenta</td>
 					<td *ngIf="division.old==0">Divizare noua</td>
+					<!--<td>  <mat-checkbox #checkboxApproved  [checked]="division.approved" (change)="checkApproved(division,checkboxApproved)"></mat-checkbox></td>-->
 				</tr>
 				</tbody>
 			</table>
@@ -96,9 +244,8 @@
 					<th scope="col">Cod CAS</th>
 					<th scope="col">Concentratie</th>
 					<th scope="col">Unitate de masură</th>
-					<th scope="col">Producător</th>
-					<th scope="col">Ţară producător</th>
-					<th scope="col">Adresă producător</th>
+					<th scope="col">Producători</th>
+					<th scope="col">Status</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -107,9 +254,9 @@
 					<td>{{ substance.activeSubstance.code }}</td>
 					<td>{{ substance.quantityTo }}</td>
 					<td>{{ substance.unitsOfMeasurementTo.description }}</td>
-					<td>{{ substance.manufactureTo.description }}</td>
-					<td>{{ substance.manufactureTo.country.description }}</td>
-					<td>{{ substance.manufactureTo.address }}</td>
+					<td>{{ manufacturesStr(substance)}}</td>
+					<td *ngIf="substance.status=='O'">Substanta existenta</td>
+					<td *ngIf="substance.status!='O'">Substanta noua</td>
 				</tr>
 				</tbody>
 			</table>
@@ -160,7 +307,7 @@
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="volum" mdbInputDirective type="text" class="form-control" formControlName="volumeTo">
+					<input id="volum" mdbInputDirective type="text" class="form-control" formControlName="volumeTo" [attr.disabled]="true">
 					<label for="volum">Volum </label>
 				</div>
 			</div>
@@ -236,6 +383,14 @@
 			</div>
 		</div>
 		<div class="row" formGroupName="medicament">
+			<div class="col-md-12">
+				<div class="md-form">
+					<input id="medType2" mdbInputDirective type="text" class="form-control" formControlName="medTypesValues" [attr.disabled]="true">
+					<label for="medType2">Tipul medicamentului</label>
+				</div>
+			</div>
+		</div>
+		<div class="row" formGroupName="medicament">
 			<div class="col-md-4">
 				<div class="md-form">
 					<input id="authorizationHolder" mdbInputDirective type="text" class="form-control" formControlName="authorizationHolderTo"
@@ -279,7 +434,9 @@
 					<th scope="col">Denumire</th>
 					<th scope="col">Tara</th>
 					<th scope="col">Adresa</th>
+					<th scope="col">Comentariu</th>
 					<th scope="col">Producator produs finit</th>
+					<th scope="col">Status</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -287,16 +444,19 @@
 					<td>{{ manufacture.manufacture.description }}</td>
 					<td>{{ manufacture.manufacture.country.description }}</td>
 					<td>{{ manufacture.manufacture.address }}</td>
+					<td>{{ manufacture.comment }}</td>
 					<th scope="row">
 						<mat-checkbox [checked]="manufacture.producatorProdusFinitTo" [disabled]="true"></mat-checkbox>
 					</th>
+					<td *ngIf="manufacture.status=='O'">Producator existent</td>
+					<td *ngIf="manufacture.status!='O'">Producator nou</td>
 				</tr>
 				</tbody>
 			</table>
 		</div>
 		<hr>
-		<app-instruction [modify]="true" [canUpload]="false" [instructions]="instructions"></app-instruction>
-		<app-macheta [modify]="true" [canUpload]="false" [machets]="machets"></app-macheta>
+		<app-instruction  [divisions]="divisions" [nrCerere]="expertForm.get('requestNumber').value" [modify]="true" [instructions]="instructions"></app-instruction>
+		<app-macheta [divisions]="divisions" [nrCerere]="expertForm.get('requestNumber').value" [modify]="true" [machets]="machets"></app-macheta>
 		<div class="gradient-card-header bg-sidebar border-gradient">
 			<div class="container-fluid">
 				<!-- Title -->
@@ -322,10 +482,10 @@
 				</thead>
 				<tbody>
 				<tr *ngFor="let a of outputDocuments">
-					<th scope="row" *ngIf="a.docType && (a.docType.category=='OM' || a.docType.category=='MP')">{{ a.name }}</th>
-					<th scope="row" *ngIf="a.docType && (a.docType.category=='OM' || a.docType.category=='MP')">{{ a.number }}</th>
-					<th scope="row" *ngIf="a.docType && (a.docType.category=='OM' || a.docType.category=='MP')">{{ a.status }}</th>
-					<td *ngIf="a.docType && (a.docType.category=='OM' || a.docType.category=='MP')">
+					<th scope="row" *ngIf="a.docType && a.docType.category=='MP'">{{ a.name }}</th>
+					<th scope="row" *ngIf="a.docType && a.docType.category=='MP'">{{ a.number }}</th>
+					<th scope="row" *ngIf="a.docType && a.docType.category=='MP'">{{ a.status }}</th>
+					<td *ngIf="a.docType && a.docType.category=='MP'">
 						<button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)"><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
 					</td>
 				</tr>
@@ -337,6 +497,8 @@
 		<!--</div>-->
 		<hr>
 		<div class="text-center">
+			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>
+			<button [disabled]="omAttached" class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="back()">Inapoi</button>
 			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="finish()">Finisare</button>
 			<!--<button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>-->
 		</div>

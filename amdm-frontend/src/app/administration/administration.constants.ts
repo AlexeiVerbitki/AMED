@@ -48,4 +48,5 @@ export const NomenclatureConstants = [
     {nr: 47, title: 'Tipri de modificari ale drogurilor', name: 'typeOfDrugChanges'},
     {nr: 48, title: 'Unitati de masura', name: 'unitsOfMeasurement'},
     {nr: 49, title: 'Variatiile tipurilor de cereri', name: 'variationRequestType'},
-]
+    {nr: 50, title: 'Substante psihotrope autorizate', name: 'authorizedDrugSubstances'},
+];

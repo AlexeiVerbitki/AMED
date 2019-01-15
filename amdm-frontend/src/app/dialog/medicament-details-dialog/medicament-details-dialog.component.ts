@@ -1,10 +1,10 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {Subscription} from "rxjs";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material";
-import {MedicamentService} from "../../shared/service/medicament.service";
-import {MedicamentHistoryDialogComponent} from "../medicament-history-dialog/medicament-history-dialog.component";
-import {UploadFileService} from "../../shared/service/upload/upload-file.service";
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {Subscription} from 'rxjs';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material';
+import {MedicamentService} from '../../shared/service/medicament.service';
+import {MedicamentHistoryDialogComponent} from '../medicament-history-dialog/medicament-history-dialog.component';
+import {UploadFileService} from '../../shared/service/upload/upload-file.service';
 
 @Component({
     selector: 'app-medicament-details-dialog',
@@ -15,19 +15,19 @@ export class MedicamentDetailsDialogComponent implements OnInit {
 
     private subscriptions: Subscription[] = [];
     mForm: FormGroup;
-    divisions : any[] = [];
-    prices : any[] = [];
-    activeSubstancesTable : any[] = [];
-    auxiliarySubstancesTable : any[] = [];
-    manufacturesTable: any[]= [];
-    initialData : any;
-    instructions : any[] = [];
-    machets : any[] = [];
+    divisions: any[] = [];
+    prices: any[] = [];
+    activeSubstancesTable: any[] = [];
+    auxiliarySubstancesTable: any[] = [];
+    manufacturesTable: any[] = [];
+    initialData: any;
+    instructions: any[] = [];
+    machets: any[] = [];
 
     constructor(private fb: FormBuilder,
                 public dialogRef: MatDialogRef<MedicamentDetailsDialogComponent>,
                 private dialog: MatDialog,
-                private uploadService : UploadFileService,
+                private uploadService: UploadFileService,
                 @Inject(MAT_DIALOG_DATA) public dataDialog: any,
                 private medicamentService: MedicamentService) {
         this.mForm = fb.group({
@@ -47,6 +47,7 @@ export class MedicamentDetailsDialogComponent implements OnInit {
             'authorizationHolderCountry': [null],
             'authorizationHolderAddress': [null],
             'customsCode': [null],
+            'medTypesValues' : [null],
             'registrationNumber': [null],
             'registrationDate': [null],
             'expirationDate': [null],
@@ -64,7 +65,7 @@ export class MedicamentDetailsDialogComponent implements OnInit {
             this.mForm.get('commercialName').setValue(data[0].commercialName);
             this.mForm.get('dose').setValue(data[0].dose);
             this.mForm.get('volume').setValue(data[0].volume);
-            if(data[0].volumeQuantityMeasurement) {
+            if (data[0].volumeQuantityMeasurement) {
                 this.mForm.get('volumeQuantityMeasurement').setValue(data[0].volumeQuantityMeasurement.description);
             }
             this.mForm.get('atcCode').setValue(data[0].atcCode);
@@ -82,8 +83,13 @@ export class MedicamentDetailsDialogComponent implements OnInit {
             this.mForm.get('registrationDate').setValue(new Date(data[0].registrationDate));
             this.mForm.get('expirationDate').setValue(data[0].expirationDate);
             this.mForm.get('customsCode').setValue(data[0].customsCode.description);
-            for (let entry of data) {
-                if(entry.division && entry.division.length!=0) {
+            let medTypes = '';
+            for (const mt of data[0].medicamentTypes) {
+                medTypes = medTypes + mt.type.description + '; ';
+            }
+            this.mForm.get('medTypesValues').setValue(medTypes);
+            for (const entry of data) {
+                if (entry.division && entry.division.length != 0) {
                     this.divisions.push({
                         code : entry.code,
                         description: entry.division
@@ -92,21 +98,23 @@ export class MedicamentDetailsDialogComponent implements OnInit {
             }
             this.activeSubstancesTable = data[0].activeSubstances;
             this.auxiliarySubstancesTable = data[0].auxSubstances;
-            for(let x of data) {
-                x.instructions.filter(t => t.type == 'I').forEach(i=>{
+            for (const x of data) {
+                x.instructions.filter(t => t.type == 'I').forEach(i => {
                     this.instructions.push(i);
                 });
-                x.instructions.filter(t => t.type == 'M').forEach(i=>{
+                x.instructions.filter(t => t.type == 'M').forEach(i => {
                     this.machets.push(i);
                 });
             }
             this.manufacturesTable = data[0].manufactures;
         }));
         this.subscriptions.push(this.medicamentService.getMedPrice(this.dataDialog.value.id).subscribe(data => {
-            let currentPrice = data;
-            this.mForm.get('priceMdl').setValue(currentPrice.priceMdl);
-            this.mForm.get('price').setValue(currentPrice.price);
-            this.mForm.get('currency').setValue(currentPrice.currency.shortDescription);
+            const currentPrice = data;
+            if (currentPrice) {
+                this.mForm.get('priceMdl').setValue(currentPrice.priceMdl);
+                this.mForm.get('price').setValue(currentPrice.price);
+                this.mForm.get('currency').setValue(currentPrice.currency.shortDescription);
+            }
         }));
     }
 
@@ -123,7 +131,7 @@ export class MedicamentDetailsDialogComponent implements OnInit {
         dialogConfig2.autoFocus = true;
         dialogConfig2.hasBackdrop = true;
 
-        dialogConfig2.width='1100px';
+        dialogConfig2.width = '1100px';
 
         dialogConfig2.data = {
             value: this.initialData,
@@ -133,11 +141,10 @@ export class MedicamentDetailsDialogComponent implements OnInit {
         this.dialog.open(MedicamentHistoryDialogComponent, dialogConfig2);
     }
 
-    viewFile(instruction: any)
-    {
+    viewFile(instruction: any) {
         this.subscriptions.push(this.uploadService.loadFile(instruction.path).subscribe(data => {
-                let file = new Blob([data], {type: instruction.typeDoc});
-                var fileURL = URL.createObjectURL(file);
+                const file = new Blob([data], {type: instruction.typeDoc});
+                const fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
             },
             error => {
@@ -145,6 +152,15 @@ export class MedicamentDetailsDialogComponent implements OnInit {
             }
             )
         );
+    }
+
+    manufacturesStr(substance: any) {
+        if (substance && substance.manufactures) {
+            let s = Array.prototype.map.call(substance.manufactures, s => s.manufacture.description + ' ' + (s.manufacture.country ? s.manufacture.country.description : '') + ' ' + s.manufacture.address + 'NRQW').toString();
+            s = s.replace(/NRQW/gi, ';');
+            return s.replace(';,', '; ');
+        }
+        return '';
     }
 
 }

@@ -3,6 +3,7 @@ package com.bass.amed.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -102,6 +103,19 @@ public class MedicamentHistoryEntity
     private String commercialNameTo;
     @Basic@Column(name = "commercial_name_from")
     private String commercialNameFrom;
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "medicament_history_id")
+    private Set<MedicamentTypesHistoryEntity> medicamentTypesHistory = new HashSet<>();
+    @Basic
+    @Column(name = "registration_date", nullable = true)
+    private Timestamp registrationDate;
+    @Column(name = "approved")
+    private Boolean approved;
+    @Column(name = "om_number")
+    private String omNumber;
+    @Basic
+    @Column(name = "request_id")
+    private Integer requestId;
 
     public void assign(MedicamentEntity entity)
     {
@@ -124,6 +138,7 @@ public class MedicamentHistoryEntity
         this.volumeTo = entity.getVolume();
         this.volumeQuantityMeasurementTo = entity.getVolumeQuantityMeasurement();
         this.termsOfValidityTo = entity.getTermsOfValidity();
+        this.registrationDate = entity.getRegistrationDate();
         for (MedicamentActiveSubstancesEntity medicamentActiveSubstancesEntity : entity.getActiveSubstances())
         {
             MedicamentActiveSubstancesHistoryEntity medicamentActiveSubstancesHistoryEntity = new MedicamentActiveSubstancesHistoryEntity();
@@ -142,7 +157,12 @@ public class MedicamentHistoryEntity
             medicamentManufactureHistoryEntity.assign(medicamentManufactureEntity);
             this.manufacturesHistory.add(medicamentManufactureHistoryEntity);
         }
-        this.experts = entity.getExperts();
+        for (MedicamentTypesEntity types : entity.getMedicamentTypes())
+        {
+            MedicamentTypesHistoryEntity typesHistory = new MedicamentTypesHistoryEntity();
+            typesHistory.assign(types);
+            this.medicamentTypesHistory.add(typesHistory);
+        }
         this.registrationNumber = entity.getRegistrationNumber();
     }
 

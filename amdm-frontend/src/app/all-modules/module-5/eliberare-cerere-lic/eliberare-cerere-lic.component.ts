@@ -1,16 +1,16 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Observable, Subscription} from "rxjs";
-import {Document} from "../../../models/document";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {LicenseService} from "../../../shared/service/license/license.service";
-import {MatDialog} from "@angular/material";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {DocumentService} from "../../../shared/service/document.service";
-import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
+import {Observable, Subscription} from 'rxjs';
+import {Document} from '../../../models/document';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {LicenseService} from '../../../shared/service/license/license.service';
+import {MatDialog} from '@angular/material';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {DocumentService} from '../../../shared/service/document.service';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
 
 @Component({
     selector: 'app-eliberare-cerere-lic',
@@ -22,18 +22,18 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
     docs: Document [] = [];
     tipCerere: string;
     requestId: string;
-    oldData : any;
+    oldData: any;
 
     private subscriptions: Subscription[] = [];
-    startDate : Date;
-    endDate : Date;
+    startDate: Date;
+    endDate: Date;
 
     maxDate = new Date();
 
 
     outDocuments: any[] = [];
 
-    rFormSubbmitted: boolean = false;
+    rFormSubbmitted = false;
 
     docTypeIdentifier: any;
 
@@ -62,7 +62,7 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
             if (params['id']) {
                 this.requestId = params['id'];
-
+                console.log('11');
                 this.subscriptions.push(
                     this.licenseService.retrieveLicenseByRequestId(this.requestId).subscribe(data => {
                             this.oldData = data;
@@ -70,6 +70,8 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
                         }
                     )
                 );
+
+                console.log('12');
             }
         }));
 
@@ -114,8 +116,8 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
         this.mForm.get('nrCererii').patchValue(data.requestNumber);
         this.mForm.get('dataEliberarii').patchValue(new Date(data.startDate));
         this.mForm.get('company').patchValue(data.license.companyName);
-        let mandatedContact : any;
-        let mandatedContacts : any [] = data.license.detail.licenseMandatedContacts;
+        let mandatedContact: any;
+        const mandatedContacts: any [] = data.license.detail.licenseMandatedContacts;
 
         mandatedContact = mandatedContacts.find(mc => data.license.detail.id === mc.licenseDetailId);
 
@@ -132,8 +134,7 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
         this.rForm.get('nrProcurii1').patchValue(mandatedContact.requestMandateNr);
         this.rForm.get('dataProcurii1').patchValue(mandatedContact.requestMandateDate);
 
-        if (mandatedContact.newMandatedLastname !== null)
-        {
+        if (mandatedContact.newMandatedLastname !== null) {
             this.rForm.get('telefonContactRec').patchValue(mandatedContact.newPhoneNumber);
             this.rForm.get('emailContactRec').patchValue(mandatedContact.newEmail);
             this.rForm.get('persResDepCereriiFirstnameRec').patchValue(mandatedContact.newMandatedFirstname);
@@ -142,8 +143,7 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
             this.rForm.get('dataProcurii1Rec').patchValue(mandatedContact.newMandatedDate);
 
             this.rForm.get('otherPerson').patchValue(true);
-        }
-        else {
+        } else {
             this.rForm.get('telefonContactRec').patchValue(mandatedContact.phoneNumber);
             this.rForm.get('emailContactRec').patchValue(mandatedContact.email);
             this.rForm.get('persResDepCereriiFirstnameRec').patchValue(mandatedContact.requestPersonFirstname);
@@ -156,15 +156,14 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
 
 
         this.tipCerere = data.type.code;
-        if (this.tipCerere === 'LICM' || this.tipCerere === 'LICD' || this.tipCerere === 'LICP' || this.tipCerere === 'LICA'|| this.tipCerere === 'LICS' || this.tipCerere === 'LICRL')
-        {
+        if (this.tipCerere === 'LICM' || this.tipCerere === 'LICD' || this.tipCerere === 'LICP' || this.tipCerere === 'LICA' || this.tipCerere === 'LICS' || this.tipCerere === 'LICRL') {
             this.rForm.get('seriaLic').disable();
             this.rForm.get('nrLic').disable();
         }
 
         this.docTypeIdentifier = {code: this.tipCerere, step: 'I'};
 
-        this.docs = data.license.detail.documents;
+        this.docs = data.documents;
         this.docs.forEach(doc => doc.isOld = true);
 
         this.refreshOutputDocuments();
@@ -174,13 +173,12 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
 
     save() {
         this.rFormSubbmitted = true;
-        if (!this.rForm.valid || this.docs.length==0 )
-        {
+        if (!this.rForm.valid || this.docs.length == 0 ) {
             return;
         }
 
         this.rFormSubbmitted = false;
-        let modelToSubmit = this.composeModel('I','A');
+        const modelToSubmit = this.composeModel('I', 'A');
 
         this.subscriptions.push(
             this.licenseService.confirmIssueLicense(modelToSubmit).subscribe(data => {
@@ -191,7 +189,7 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
 
     }
 
-    private composeModel(currentStep:string, status : string) {
+    private composeModel(currentStep: string, status: string) {
         this.endDate = new Date();
         let modelToSubmit: any = {};
         let mandatedContact: any = {};
@@ -218,8 +216,6 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
         modelToSubmit.license.serialNr = this.rForm.get('seriaLic').value;
         modelToSubmit.license.nr = this.rForm.get('nrLic').value;
 
-        modelToSubmit.license.documents = this.docs;
-
         modelToSubmit.license.status = status;
 
         modelToSubmit.requestHistories = [{
@@ -229,7 +225,7 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
             step: 'I'
         }];
 
-
+        modelToSubmit.documents = this.docs;
         modelToSubmit.assignedUser = this.authService.getUserName();
         modelToSubmit.currentStep = currentStep;
 
@@ -238,8 +234,8 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
 
     onChanges(): void {
         this.rForm.get('otherPerson').valueChanges.subscribe(val => {
-            let mandatedContact : any;
-            let mandatedContacts : any [] = this.oldData.license.detail.licenseMandatedContacts;
+            let mandatedContact: any;
+            const mandatedContacts: any [] = this.oldData.license.detail.licenseMandatedContacts;
 
             mandatedContact = mandatedContacts.find(mc => mc.licenseDetailId === this.oldData.license.detail.id);
 
@@ -266,9 +262,7 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
                 this.rForm.get('telefonContactRec').updateValueAndValidity();
                 this.rForm.get('persResDepCereriiFirstnameRec').updateValueAndValidity();
                 this.rForm.get('persResDepCereriiLastnameRec').updateValueAndValidity();
-            }
-            else
-            {
+            } else {
                 this.rForm.get('telefonContactRec').patchValue(mandatedContact.phoneNumber);
                 this.rForm.get('emailContactRec').patchValue(mandatedContact.email);
                 this.rForm.get('persResDepCereriiFirstnameRec').patchValue(mandatedContact.requestPersonFirstname);
@@ -297,11 +291,9 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
 
     }
 
-    submitFinish()
-    {
+    submitFinish() {
         this.rFormSubbmitted = true;
-        if (!this.rForm.valid || this.docs.length==0 )
-        {
+        if (!this.rForm.valid || this.docs.length == 0 ) {
             this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
             return;
         }
@@ -312,7 +304,7 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
         // }
 
         this.rFormSubbmitted = false;
-        let modelToSubmit = this.composeModel('F','F');
+        const modelToSubmit = this.composeModel('F', 'F');
 
         this.subscriptions.push(
             this.licenseService.finishLicense(modelToSubmit).subscribe(data => {
@@ -328,14 +320,14 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
     private refreshOutputDocuments() {
         this.outDocuments = [];
 
-        let outDocument = {
+        const outDocument = {
             name: 'Licenta',
             number: '',
             status: this.getOutputDocStatus(),
             category : 'LI'
         };
 
-        let outDocumentAnexa = {
+        const outDocumentAnexa = {
             name: 'Anexa Licenta',
             number: '',
             status: this.getOutputDocStatus(),
@@ -352,27 +344,21 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
     }
 
 
-    checkAllDocumentsWasAttached(): boolean
-    {
+    checkAllDocumentsWasAttached(): boolean {
         return !this.outDocuments.find(od => od.status.mode === 'N');
     }
 
-    getOutputDocStatus(): any
-    {
+    getOutputDocStatus(): any {
         let result;
-        result = this.docs.find( doc =>
-        {
-            if (doc.docType.category === 'LI')
-            {
+        result = this.docs.find( doc => {
+            if (doc.docType.category === 'LI') {
                 return true;
             }
-            if (doc.docType.category === 'AL')
-            {
+            if (doc.docType.category === 'AL') {
                 return true;
             }
         });
-        if (result)
-        {
+        if (result) {
             return {
                 mode : 'A',
                 description : 'Atasat'
@@ -388,20 +374,17 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
     viewDoc(document: any) {
         this.loadingService.show();
 
-        let observable : Observable<any> = null;
+        let observable: Observable<any> = null;
 
-        if (document.category === 'AL')
-        {
+        if (document.category === 'AL') {
             observable = this.licenseService.viewAnexaLicenta(this.composeModel('A', 'A'));
-        }
-        else if (document.category === 'LI')
-        {
+        } else if (document.category === 'LI') {
             observable = this.licenseService.viewLicenta(this.composeModel('A', 'A'));
         }
 
         this.subscriptions.push(observable.subscribe(data => {
-                let file = new Blob([data], {type: 'application/pdf'});
-                var fileURL = URL.createObjectURL(file);
+                const file = new Blob([data], {type: 'application/pdf'});
+                const fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
                 this.loadingService.hide();
             }, error => {

@@ -1,6 +1,6 @@
 <form [formGroup]='docForm' *ngIf="canUpload">
-	<div class="row">
-		<div class="col">
+	<div class="row" >
+		<div class="col" *ngIf="!disabled">
 			<div class="md-form-modified">
 				<ng-select id="docType" name="docType" [items]="docTypes"
 				           bindLabel="description"
@@ -12,7 +12,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-3">
+		<div class="col-3" *ngIf="!disabled">
 			<div class="md-form">
 				<input id="nrDocInvisibil" *ngIf="!this.docForm.get('docType').value || !this.docForm.get('docType').value.needDocNr" style="display:none;" mdbInputDirective type="text">
 				<input id="nrDoc" *ngIf="this.docForm.get('docType').value && this.docForm.get('docType').value.needDocNr" mdbInputDirective type="text" class="form-control" formControlName="nrDoc">
@@ -22,7 +22,7 @@
 				<small class="text-muted"><strong class="text-danger">Numar document trebuie introdus</strong></small>
 			</div>
 		</div>
-		<div class="col-3">
+		<div class="col-3" *ngIf="!disabled">
 			<div class="md-form"  *ngIf="!this.docForm.get('docType').value || !this.docForm.get('docType').value.needDate">
 				<input id="nrDateInvisibil" style="display:none;" mdbInputDirective type="text">
 			</div>
@@ -56,7 +56,7 @@
 			<div class="col-4">
 				<div class="text-right fap text-white">
 					<i class="fa fa-lg fa-mt" aria-hidden="true" (click)="changeVisibility();" [ngClass]="visibility ? 'fa-touched fa-search-plus' : 'fa-untouched fa-search-minus'"></i>
-					<i (click)="checkFields() ? incarcaFisier.click() : ''" class="fa fa-upload fa-lg fa-mt" aria-hidden="true"></i>
+					<i (click)="checkFields() ? incarcaFisier.click() : ''" class="fa fa-upload fa-lg fa-mt" aria-hidden="true" *ngIf="!disabled"></i>
 					<input id="incarcaFisier" #incarcaFisier type="file" style="display:none;" (click)="reset()" (change)="addDocument($event);" attr.disabled="this.disabled"
 					       accept=".pdf,image/*,.xls,.xlsx,.doc,.docx">
 				</div>
@@ -94,8 +94,8 @@
 					<button type="button" class="btn btn-mdb-color btn-sm waves-light" (click)="loadFile(element.path)"
 					        mdbWavesEffect><i class="fa fa-download fa-lg" aria-hidden="true"></i>
 					</button>
-					<button type="button" *ngIf="!element.isOld" class="btn btn-dark-red-color waves-light btn-sm waves-light"
-					        (click)="removeDocument(i)" mdbWavesEffect attr.disabled="this.disabled"><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+					<button type="button" *ngIf="!element.isOld && !disabled" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+					        (click)="removeDocument(i)" mdbWavesEffect attr.disabled="disabled"><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 					</button>
 				</td>
 			</ng-container>

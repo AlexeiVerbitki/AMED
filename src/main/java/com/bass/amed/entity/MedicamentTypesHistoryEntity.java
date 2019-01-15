@@ -17,4 +17,10 @@ public class MedicamentTypesHistoryEntity
     @Basic@Column(name = "status")
     private String status;
 
+    public void assign(MedicamentTypesEntity entity)
+    {
+        this.type = entity.getType();
+        this.status = "O";
+    }
+
 }

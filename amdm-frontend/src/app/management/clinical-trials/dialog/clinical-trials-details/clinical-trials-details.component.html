@@ -25,7 +25,7 @@
                 <tbody>
                 <tr *ngFor="let document of f.value.documents;let i = index">
                     <td scope="row">
-                        <a title="Detalii studiu clinic" class="text-center">
+                        <a title="Detalii studiu clinic" class="text-center" (click)="loadFileFrom(document.path)">
                             {{ document.name }}
                         </a>
                     </td>
@@ -168,7 +168,7 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="md-form">
+                <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="picker5" placeholder="Data comisiei"
                                formControlName="comissionDate">
@@ -225,14 +225,14 @@
 
                 <div class="row text-center align-items-center">
                     <div class="col">
-                        <div class="row border-row py-2" *ngFor="let el of f.value.medicalInstitutions; let i = index">
-                            <div class="col-6">
+                        <div class="row border-row py-2 border-bottom" *ngFor="let el of f.value.medicalInstitutions; let i = index">
+                            <div class="col-4">
                                 <div class="row">
                                     <div class="col-6 border-specs ptc">{{el.name}}</div>
                                     <div class="col-6 border-specs ptc">{{el.address}}</div>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-8">
                                 <div class="row py-2" *ngFor="let x of el.investigators">
                                     <div class="col border-specs ptc">{{x.firstName}}</div>
                                     <div class="col border-specs ptc">{{x.lastName}}</div>
@@ -251,7 +251,7 @@
         </div>
         <hr>
 
-        <h3 class="text-center">Medicamentul de investigat</h3>
+        <h3 class="text-center font-weight-bold">Medicamentul de investigat</h3>
         <div class="row">
             <div class="col-md-4">
                 <div class="md-form">
@@ -315,7 +315,7 @@
         <hr>
 
 
-        <h3 class="text-center">Medicamentul de referinta</h3>
+        <h3 class="text-center font-weight-bold">Medicamentul de referinta</h3>
         <div class="row">
             <div class="col-md-4">
                 <div class="md-form">
@@ -378,7 +378,7 @@
         </div>
         <hr>
 
-        <h3 class="text-center">Placebo</h3>
+        <h3 class="text-center font-weight-bold">Placebo</h3>
         <div class="row">
             <div class="col-md-4">
                 <div class="md-form">
@@ -404,7 +404,7 @@
         </div>
         <hr>
 
-        <h3 class="text-center">Lista amendamente</h3>
+        <h3 class="text-center font-weight-bold">Lista amendamente</h3>
         <!-- Card content -->
         <div class="card-body card-body-cascade">
             <table class="table table-widths text-center">
@@ -433,7 +433,7 @@
         </div>
         <hr>
 
-        <h3 class="text-center">Lista notificari</h3>
+        <h3 class="text-center font-weight-bold">Lista notificari</h3>
         <!-- Card content -->
         <div class="card-body card-body-cascade">
             <table class="table table-widths text-center">

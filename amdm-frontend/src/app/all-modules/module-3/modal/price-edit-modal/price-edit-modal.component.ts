@@ -1,11 +1,11 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
-import {PriceReferenceType} from "../../price-constants";
-import {Country} from "../../../../models/country";
-import {Currency} from "../../../../models/currency";
-import {Subscription} from "rxjs";
-import {PriceService} from "../../../../shared/service/prices.service";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {PriceReferenceType} from '../../price-constants';
+import {Country} from '../../../../models/country';
+import {Currency} from '../../../../models/currency';
+import {Subscription} from 'rxjs';
+import {PriceService} from '../../../../shared/service/prices.service';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-price-edit-modal',
@@ -13,8 +13,8 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
   styleUrls: ['./price-edit-modal.component.css']
 })
 export class PriceEditModalComponent implements OnInit {
-  title: string = '';
-  countries : Country[] = [];
+  title = '';
+  countries: Country[] = [];
   currencies: Currency[];
   priceEntity: FormGroup;
 
@@ -24,7 +24,7 @@ export class PriceEditModalComponent implements OnInit {
               private priceService: PriceService,
               private fb: FormBuilder,
               @Inject(MAT_DIALOG_DATA) public data: any) {
-      if(data.type.id == PriceReferenceType.ReferenceCountry){
+      if (data.type.id == PriceReferenceType.ReferenceCountry) {
          this.title = 'Editați prețul țării de referință';
       } else if (data.type.id == PriceReferenceType.OtherCountriesCatalog) {
           this.title = 'Editați prețul țării în care medicamentul este plasat pe piaţă';

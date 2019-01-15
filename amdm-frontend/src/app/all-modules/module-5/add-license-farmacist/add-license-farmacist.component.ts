@@ -1,7 +1,7 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {Subscription} from "rxjs";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {Subscription} from 'rxjs';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 @Component({
     selector: 'app-add-license-farmacist',
@@ -10,7 +10,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 })
 export class AddLicenseFarmacistComponent implements OnInit, OnDestroy {
 
-    rFormSubbmitted: boolean = false;
+    rFormSubbmitted = false;
     rForm: FormGroup;
 
     private subscriptions: Subscription[] = [];
@@ -24,18 +24,16 @@ export class AddLicenseFarmacistComponent implements OnInit, OnDestroy {
         this.initFormData();
     }
 
-    ok()
-    {
+    ok() {
         this.rFormSubbmitted = true;
 
-        if (!this.rForm.valid)
-        {
+        if (!this.rForm.valid) {
             return;
         }
 
         this.rFormSubbmitted = false;
 
-        let response = {
+        const response = {
                 success : true,
                 farmacist : {
                         fullName: this.rForm.get('farm').value,
@@ -48,7 +46,7 @@ export class AddLicenseFarmacistComponent implements OnInit, OnDestroy {
     }
 
     cancel() {
-        let response = {
+        const response = {
             success : false
         };
 

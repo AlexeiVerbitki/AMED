@@ -1,5 +1,5 @@
 export enum ReportLevel {
-    International=0, National=1
+    International = 0, National = 1
 }
 
 export namespace ReportLevel {

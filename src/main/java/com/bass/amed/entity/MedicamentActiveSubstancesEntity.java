@@ -28,6 +28,13 @@ public class MedicamentActiveSubstancesEntity
         this.activeSubstance = entity.getActiveSubstance();
         this.quantity = entity.getQuantityTo();
         this.unitsOfMeasurement = entity.getUnitsOfMeasurementTo();
+        this.manufactures.clear();
+        for (MedicamentActiveSubstanceManufactureHistoryEntity manufactureHistoryEntity : entity.getManufactures())
+        {
+            MedicamentActiveSubstanceManufacturesEntity substanceManufacturesEntity = new MedicamentActiveSubstanceManufacturesEntity();
+            substanceManufacturesEntity.setManufacture(manufactureHistoryEntity.getManufacture());
+            this.manufactures.add(substanceManufacturesEntity);
+        }
     }
 
 }

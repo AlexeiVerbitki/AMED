@@ -1,16 +1,26 @@
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {Document} from "../models/document";
-import {ConfirmationDialogComponent} from "../dialog/confirmation-dialog.component";
-import {MatDialog, MatSort, MatTable, MatTableDataSource} from "@angular/material";
-import {Subscription} from "rxjs";
-import {HttpResponse} from "@angular/common/http";
-import {UploadFileService} from "../shared/service/upload/upload-file.service";
-import {saveAs} from "file-saver";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AdministrationService} from "../shared/service/administration.service";
-import {ErrorHandlerService} from "../shared/service/error-handler.service";
-import {TaskService} from "../shared/service/task.service";
-import {DatePipe} from "@angular/common";
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
+import {Document} from '../models/document';
+import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog.component';
+import {MatDialog, MatSort, MatTable, MatTableDataSource} from '@angular/material';
+import { Subscription} from 'rxjs';
+import {HttpResponse} from '@angular/common/http';
+import {UploadFileService} from '../shared/service/upload/upload-file.service';
+import {saveAs} from 'file-saver';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AdministrationService} from '../shared/service/administration.service';
+import {ErrorHandlerService} from '../shared/service/error-handler.service';
+import {TaskService} from '../shared/service/task.service';
+import {DatePipe} from '@angular/common';
 
 @Component({
     selector: 'app-document',
@@ -20,26 +30,28 @@ import {DatePipe} from "@angular/common";
 export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @Input()
-    title: string = 'Documente atasate';
+    title = 'Documente atasate';
     documentList: Document [];
     currentDocDetails: Document = new Document();
     numarCerere: string;
-    enableUploading: boolean = true;
+    enableUploading = true;
     result: any;
     docForm: FormGroup;
     docTypes: any[];
     docTypeIdentifier: any;
     formSubmitted: boolean;
-    disabled: boolean = false;
+    disabled = false;
     @ViewChild('incarcaFisier')
     incarcaFisierVariable: ElementRef;
     @Output() documentModified = new EventEmitter();
-    visibility: boolean = false;
+    private subscriptions: Subscription[] = [];
+    visibility = false;
+
     displayedColumns: any[] = ['name', 'docType', 'docNumber', 'date', 'actions'];
     dataSource = new MatTableDataSource<any>();
+
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatTable) table: MatTable<any>;
-    private subscriptions: Subscription[] = [];
 
     constructor(public dialog: MatDialog, private uploadService: UploadFileService, private fb: FormBuilder,
                 private errorHandlerService: ErrorHandlerService,
@@ -52,6 +64,10 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
         });
 
 
+    }
+
+    ngAfterViewInit(): void {
+        this.dataSource.sort = this.sort;
     }
 
     get canUpload(): boolean {
@@ -69,10 +85,12 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @Input()
     set documents(docList: Document []) {
-        this.documentList = docList;
-        this.dataSource.data = this.documentList.slice();
-
-        this.dataSource.filterPredicate = this.createFilter();
+        if (docList)
+        {
+            this.documentList = docList;
+            this.dataSource.data = this.documentList.slice();
+            this.dataSource.filterPredicate = this.createFilter();
+        }
     }
 
     get docDetails(): Document {
@@ -134,12 +152,8 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    ngAfterViewInit(): void {
-        this.dataSource.sort = this.sort;
-    }
-
     ngOnInit() {
-        // To remove it in future
+        //To remove it in future
         // if (!this.docTypes || this.docTypes.length == 0) {
         //     this.subscriptions.push(
         //         this.administrationService.getAllDocTypes().subscribe(data => {
@@ -206,20 +220,20 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
             return;
         }
 
-        var allowedExtensions =
-            ["jpg", "jpeg", "png", "jfif", "bmp", "svg", "pdf", "xls", "xlsx", "doc", "docx"];
+        let allowedExtensions =
+            ['jpg', 'jpeg', 'png', 'jfif', 'bmp', 'svg', 'pdf', 'xls', 'xlsx', 'doc', 'docx'];
         if (this.docForm.get('docType').value.category == 'RL') {
-            allowedExtensions = ["xml"];
+            allowedExtensions = ['xml'];
         }
 
-        var fileExtension = event.srcElement.files[0].name.split('.').pop();
+        const fileExtension = event.srcElement.files[0].name.split('.').pop();
 
         if (allowedExtensions.indexOf(fileExtension.toLowerCase()) <= -1) {
             this.errorHandlerService.showError('Nu se permite atasarea documentelor cu aceasta extensie. Extensiile permise: ' + allowedExtensions);
             return;
         }
 
-        if (this.docForm.get('docType').value.category == 'CA') {
+        if (this.docForm.get('docType').value.category == 'CA' || this.docForm.get('docType').value.category == 'MP') {
             this.docForm.get('nrDoc').setValue(this.currentDocDetails.number);
             this.docForm.get('dateDoc').setValue(this.currentDocDetails.dateOfIssue);
         }
@@ -230,7 +244,7 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
                     const indexForName = this.result.path.lastIndexOf('/');
                     // const indexForFormat = this.result.path.lastIndexOf('.');
 
-                    let fileName = this.result.path.substring(indexForName + 1);
+                    const fileName = this.result.path.substring(indexForName + 1);
 
                     this.documents.push({
                         id: null,
@@ -262,12 +276,18 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     reset() {
-        this.incarcaFisierVariable.nativeElement.value = "";
+        this.incarcaFisierVariable.nativeElement.value = '';
     }
 
     ngOnDestroy() {
         this.subscriptions.forEach(s => s.unsubscribe());
     }
+
+    private saveToFileSystem(response: any, docName: string) {
+        const blob = new Blob([response]);
+        saveAs(blob, docName);
+    }
+
 
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
@@ -275,9 +295,10 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
         this.dataSource.filter = filterValue;
     }
 
+
     createFilter(): (data: any, filter: string) => boolean {
-        let filterFunction = function (data, filter): boolean {
-            var datePipe = new DatePipe("en-US");
+        const filterFunction = function (data, filter): boolean {
+            const datePipe = new DatePipe('en-US');
             const dataStr = data.name.toLowerCase() + data.docType.description.toLowerCase() + data.number + datePipe.transform(data.date, 'dd/MM/yyyy HH:mm:ss');
             return dataStr.indexOf(filter) != -1;
         };
@@ -286,10 +307,5 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
 
     changeVisibility() {
         this.visibility = !this.visibility;
-    }
-
-    private saveToFileSystem(response: any, docName: string) {
-        const blob = new Blob([response]);
-        saveAs(blob, docName);
     }
 }

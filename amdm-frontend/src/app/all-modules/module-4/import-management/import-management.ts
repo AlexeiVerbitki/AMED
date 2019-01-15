@@ -2,25 +2,25 @@ import {Cerere} from './../../../models/cerere';
 import {FormArray, Validators} from '@angular/forms';
 import {FormGroup, FormBuilder} from '@angular/forms';
 import {Component, OnInit} from '@angular/core';
-import {Observable, Subscription} from "rxjs";
-import {MatDialog, MatDialogConfig} from "@angular/material";
-import {ActivatedRoute, Router} from "@angular/router";
-import {AdministrationService} from "../../../shared/service/administration.service";
+import {Observable, Subscription} from 'rxjs';
+import {MatDialog, MatDialogConfig} from '@angular/material';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AdministrationService} from '../../../shared/service/administration.service';
 // import {debounceTime, distinctUntilChanged, filter, map, startWith, tap} from "rxjs/operators";
-import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 import {saveAs} from 'file-saver';
-import {Document} from "../../../models/document";
-import {RequestService} from "../../../shared/service/request.service";
-import {Subject} from "rxjs/index";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {MedicamentService} from "../../../shared/service/medicament.service";
-import {Utils} from "angular-bootstrap-md/angular-bootstrap-md/utils/utils.class";
-import {forEach} from "@angular/router/src/utils/collection";
-import {ImportMedDialog} from "../dialog/import-med-dialog";
-import {Timestamp} from "rxjs/internal/operators/timestamp";
-import {ImportManagementDialog} from "./import-management-dialog/import-management-dialog";
+import {Document} from '../../../models/document';
+import {RequestService} from '../../../shared/service/request.service';
+import {Subject} from 'rxjs/index';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {MedicamentService} from '../../../shared/service/medicament.service';
+import {Utils} from 'angular-bootstrap-md/angular-bootstrap-md/utils/utils.class';
+import {forEach} from '@angular/router/src/utils/collection';
+import {ImportMedDialog} from '../dialog/import-med-dialog';
+import {Timestamp} from 'rxjs/internal/operators/timestamp';
+import {ImportManagementDialog} from './import-management-dialog/import-management-dialog';
 
 export interface PeriodicElement {
     name: string;
@@ -53,11 +53,11 @@ export class ImportManagement implements OnInit {
     unitOfImportTable: any[] = [];
 
     protected manufacturersRfPr: Observable<any[]>;
-    protected loadingManufacturerRfPr: boolean = false;
+    protected loadingManufacturerRfPr = false;
     protected manufacturerInputsRfPr = new Subject<string>();
 
     importer: Observable<any[]>;
-    loadingCompany: boolean = false;
+    loadingCompany = false;
     protected companyInputs = new Subject<string>();
 
     sellerAddress: any;
@@ -75,25 +75,25 @@ export class ImportManagement implements OnInit {
     medicamentData: any;
 
     atcCodes: Observable<any[]>;
-    loadingAtcCodes: boolean = false;
+    loadingAtcCodes = false;
     atcCodesInputs = new Subject<string>();
 
     customsCodes: Observable<any[]>;
-    loadingcustomsCodes: boolean = false;
+    loadingcustomsCodes = false;
     customsCodesInputs = new Subject<string>();
 
     pharmaceuticalForm: Observable<any[]>;
-    loadingpharmaceuticalForm: boolean = false;
+    loadingpharmaceuticalForm = false;
     pharmaceuticalFormInputs = new Subject<string>();
 
     unitsOfMeasurement: Observable<any[]>;
 
     medicaments: Observable<any[]>;
-    loadingmedicaments: boolean = false;
+    loadingmedicaments = false;
     medicamentsInputs = new Subject<string>();
 
     internationalMedicamentNames: Observable<any[]>;
-    loadinginternationalMedicamentName: boolean = false;
+    loadinginternationalMedicamentName = false;
     internationalMedicamentNameInputs = new Subject<string>();
 
     expirationDate: any[] = [];
@@ -271,27 +271,27 @@ export class ImportManagement implements OnInit {
 
                         }),
 
-                    })
+                    });
 
 
                     this.importDetailsList = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList;
 
                     this.requestService.getActiveLicenses(data.importAuthorizationEntity.applicant.idno).subscribe(data => {
-                        console.log("this.requestService.getActiveLicenses(data.applicant.idno).subscribe", data)
+                        console.log('this.requestService.getActiveLicenses(data.applicant.idno).subscribe', data);
                         this.activeLicenses = data;
-                        console.log("this.activeLicenses", this.activeLicenses);
+                        console.log('this.activeLicenses', this.activeLicenses);
                         this.expirationDate.push(this.activeLicenses.expirationDate);
 
-                    })
+                    });
 
 
                     this.importDetailsList.forEach(item => {
                         item.approved == null ? item.approved = false : (item.approved = item.approved);
                         // this.expirationDate.push(item.expirationDate);
                         if (item.approved == true) {
-                            this.authorizationSumm = this.authorizationSumm + item.summ
+                            this.authorizationSumm = this.authorizationSumm + item.summ;
                         }
-                    })
+                    });
 
 
                     this.evaluateImportForm.get('id').setValue(data.id);
@@ -309,7 +309,7 @@ export class ImportManagement implements OnInit {
                     this.evaluateImportForm.get('importAuthorizationEntity.importer').setValue(data.importAuthorizationEntity.importer);
                     this.evaluateImportForm.get('importAuthorizationEntity.basisForImport').setValue(data.importAuthorizationEntity.basisForImport);
                     this.evaluateImportForm.get('importAuthorizationEntity.conditionsAndSpecification').setValue(data.importAuthorizationEntity.conditionsAndSpecification);
-                    this.evaluateImportForm.get('importAuthorizationEntity.authorizationsNumber').setValue(data.id + "/" + new Date().getFullYear() + "-AM");
+                    this.evaluateImportForm.get('importAuthorizationEntity.authorizationsNumber').setValue(data.id + '/' + new Date().getFullYear() + '-AM');
                     this.evaluateImportForm.get('importAuthorizationEntity.customsNumber').setValue(data.importAuthorizationEntity.customsNumber);
                     this.evaluateImportForm.get('importAuthorizationEntity.customsDeclarationDate').setValue(new Date(data.importAuthorizationEntity.customsDeclarationDate));
                     this.evaluateImportForm.get('importAuthorizationEntity.contract').setValue(data.importAuthorizationEntity.contract);
@@ -343,8 +343,8 @@ export class ImportManagement implements OnInit {
                     }
                 },
                 error => console.log(error)
-            ))
-        }))
+            ));
+        }));
 
         this.checked = false;
         this.currentDate = new Date();
@@ -365,37 +365,37 @@ export class ImportManagement implements OnInit {
         this.loadMedicaments();
         this.loadInternationalMedicamentName();
 
-        console.log("importTypeForms.value", this.importTypeForms.value)
+        console.log('importTypeForms.value', this.importTypeForms.value);
     }
 
 
     viewDoc(document: any) {
         this.loadingService.show();
 
-        let observable : Observable<any> = null;
+        let observable: Observable<any> = null;
 
 
 
-        console.log("this.evaluateImportForm.getRawValue", this.evaluateImportForm.getRawValue())
+        console.log('this.evaluateImportForm.getRawValue', this.evaluateImportForm.getRawValue());
 
-        let authorizationModel = this.evaluateImportForm.getRawValue();
+        const authorizationModel = this.evaluateImportForm.getRawValue();
         authorizationModel.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.importDetailsList;
 
         this.importDetailsList.forEach(item => {
             if (item.approved === true) {
                 this.expirationDate.push(item.expirationDate);
                 authorizationModel.importAuthorizationEntity.summ = authorizationModel.importAuthorizationEntity.summ + item.summ;
-                console.log("modelToSubmit.importAuthorizationEntity.summ");
+                console.log('modelToSubmit.importAuthorizationEntity.summ');
             }
-        })
+        });
 
 
         authorizationModel.importAuthorizationEntity.expirationDate = new Date(this.expirationDate.reduce(function (a, b) {
             return a < b ? a : b;
         }));
 
-        console.log("authorizationModel",authorizationModel)
-            observable = this.requestService.viewImportAuthorization(authorizationModel)
+        console.log('authorizationModel', authorizationModel);
+            observable = this.requestService.viewImportAuthorization(authorizationModel);
             // observable = this.requestService.viewImportAuthorization(this.evaluateImportForm.getRawValue())
 
         // }
@@ -405,13 +405,13 @@ export class ImportManagement implements OnInit {
         // }
 
         this.subscriptions.push(observable.subscribe(data => {
-            console.log("observable.subscribe(data =>",data)
-                let file = new Blob([data], {type: 'application/pdf'});
-                var fileURL = URL.createObjectURL(file);
+            console.log('observable.subscribe(data =>', data);
+                const file = new Blob([data], {type: 'application/pdf'});
+                const fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
                 this.loadingService.hide();
             }, error => {
-            console.log("window.open(fileURL) ERROR")
+            console.log('window.open(fileURL) ERROR');
                 this.loadingService.hide();
             }
             )
@@ -423,17 +423,17 @@ export class ImportManagement implements OnInit {
 
         // this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved ? this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = false : this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = true;
         if (this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved == false) {
-            this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = true
+            this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = true;
             this.authorizationSumm = this.authorizationSumm + this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].summ;
             this.authorizationCurrency = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].currency;
-            console.log("this.authorizationSumm", this.authorizationSumm)
+            console.log('this.authorizationSumm', this.authorizationSumm);
         } else {
             this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved = false;
             this.authorizationSumm = this.authorizationSumm - this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].summ;
-            console.log("this.authorizationSumm", this.authorizationSumm)
+            console.log('this.authorizationSumm', this.authorizationSumm);
         }
 
-        console.log("this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[" + i + "]", this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved)
+        console.log('this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[' + i + ']', this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved);
     }
 
     dialogSetApproved(i: any, approvedQuantity: any) {
@@ -445,7 +445,7 @@ export class ImportManagement implements OnInit {
         this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].summ = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].price * approvedQuantity;
         this.authorizationCurrency = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].currency;
         // console.log("this.authorizationSumm", this.authorizationSumm)
-        console.log("this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[" + i + "]", this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i])
+        console.log('this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[' + i + ']', this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i]);
         // }
     }
 
@@ -456,7 +456,7 @@ export class ImportManagement implements OnInit {
         this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].summ = 0;
         // this.authorizationSumm = this.authorizationSumm - this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].price * approvedQuantity;
         // console.log("this.authorizationSumm", this.authorizationSumm)
-        console.log("this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[" + i + "]", this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved)
+        console.log('this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[' + i + ']', this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved);
         // }
     }
 
@@ -467,7 +467,7 @@ export class ImportManagement implements OnInit {
                 if (val) {
                     this.medicamentData = val;
                     this.codeAmed = val.code;
-                    console.log("importAuthorizationEntity.unitOfImportTable.medicament", this.medicamentData)
+                    console.log('importAuthorizationEntity.unitOfImportTable.medicament', this.medicamentData);
 
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode);
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(val.pharmaceuticalForm);
@@ -488,18 +488,18 @@ export class ImportManagement implements OnInit {
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(val.registrationNumber);
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(val.registrationDate));
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(val.expirationDate);
-                    console.log('val.registrationDate', val.registrationDate)
+                    console.log('val.registrationDate', val.registrationDate);
                 }
             }));
             /*================================================*/
             this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.seller').valueChanges.subscribe(val => {
                 if (val) {
-                    this.sellerAddress = val.address + ", " + val.country.description;
+                    this.sellerAddress = val.address + ', ' + val.country.description;
                 }
             }));
             this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').valueChanges.subscribe(val => {
                 if (this.medicamentData == null && val) {
-                    this.producerAddress = val.address + ", " + val.country.description;
+                    this.producerAddress = val.address + ', ' + val.country.description;
                     // console.log("producerAddress",this.producerAddress)
                 }
             }));
@@ -527,7 +527,7 @@ export class ImportManagement implements OnInit {
 
 
     get importTypeForms() {
-        return this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable') as FormArray
+        return this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable') as FormArray;
     }
 
     // addUnitOfImport() {
@@ -602,7 +602,7 @@ export class ImportManagement implements OnInit {
     // }
 
     showunitOfImport(unitOfImport: any, i: any) {
-        let dialogConfig2 = new MatDialogConfig();
+        const dialogConfig2 = new MatDialogConfig();
 
         dialogConfig2.disableClose = false;
         dialogConfig2.autoFocus = true;
@@ -615,16 +615,16 @@ export class ImportManagement implements OnInit {
         dialogConfig2.data.medtType = this.importData.importAuthorizationEntity.medType;
         dialogConfig2.data.currentStep = this.importData.currentStep;
 
-        let dialogRef = this.dialog.open(ImportManagementDialog, dialogConfig2);
+        const dialogRef = this.dialog.open(ImportManagementDialog, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
             console.log('result', result);
             if (result && result[0] === true) {
                 this.dialogSetApproved(i, result[1]);
-                console.log("dialog result:", result)
+                console.log('dialog result:', result);
             }
             if (result && result[0] === false) {
-                this.dialogSetReject(i, result[1])
+                this.dialogSetReject(i, result[1]);
             }
         });
     }
@@ -727,7 +727,7 @@ export class ImportManagement implements OnInit {
                 },
                 error => console.log(error)
             )
-        )
+        );
     }
 
     loadCustomsCodes() {
@@ -758,7 +758,7 @@ export class ImportManagement implements OnInit {
         this.importer =
             this.companyInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 0) return true;
+                    if (result && result.length > 0) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -780,7 +780,7 @@ export class ImportManagement implements OnInit {
         this.manufacturersRfPr =
             this.manufacturerInputsRfPr.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 0) return true;
+                    if (result && result.length > 0) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -804,7 +804,7 @@ export class ImportManagement implements OnInit {
                 },
                 error => console.log(error)
             )
-        )
+        );
     }
 
     interruptProcess() {
@@ -819,7 +819,7 @@ export class ImportManagement implements OnInit {
             // console.log('result', result);
             if (result) {
                 this.loadingService.show();
-                let modelToSubmit = this.evaluateImportForm.getRawValue();
+                const modelToSubmit = this.evaluateImportForm.getRawValue();
                 modelToSubmit.currentStep = 'C';
                 // modelToSubmit.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
                 modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
@@ -838,9 +838,9 @@ export class ImportManagement implements OnInit {
                         this.loadingService.hide();
                     }, error => {
                         this.loadingService.hide();
-                        console.log(error)
+                        console.log(error);
                     })
-                )
+                );
             }
         });
     }
@@ -855,10 +855,10 @@ export class ImportManagement implements OnInit {
         modelToSubmit = this.importData;
         modelToSubmit.endDate = new Date();
         modelToSubmit.importAuthorizationEntity.authorized = aprrovedOrNot;
-        modelToSubmit.currentStep = "F";
+        modelToSubmit.currentStep = 'F';
 
 
-        modelToSubmit.importAuthorizationEntity.authorizationsNumber = this.importData.importAuthorizationEntity.id + "/" + new Date().getFullYear() + "-AM"
+        modelToSubmit.importAuthorizationEntity.authorizationsNumber = this.importData.importAuthorizationEntity.id + '/' + new Date().getFullYear() + '-AM';
         modelToSubmit.requestHistories.push({
             startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
             endDate: new Date(),
@@ -868,7 +868,7 @@ export class ImportManagement implements OnInit {
 
 
         modelToSubmit.importAuthorizationEntity.currency = this.authorizationCurrency;
-        console.log("this.evaluateImportForm.value", this.evaluateImportForm.value);
+        console.log('this.evaluateImportForm.value', this.evaluateImportForm.value);
         //=============
 
 
@@ -880,9 +880,9 @@ export class ImportManagement implements OnInit {
             if (item.approved === true) {
                 this.expirationDate.push(item.expirationDate);
                 modelToSubmit.importAuthorizationEntity.summ = modelToSubmit.importAuthorizationEntity.summ + item.summ;
-                console.log("modelToSubmit.importAuthorizationEntity.summ");
+                console.log('modelToSubmit.importAuthorizationEntity.summ');
             }
-        })
+        });
 
         modelToSubmit.importAuthorizationEntity.expirationDate = new Date(this.expirationDate.reduce(function (a, b) {
             return a < b ? a : b;
@@ -895,18 +895,18 @@ export class ImportManagement implements OnInit {
         //     modelToSubmit.importAuthorizationEntity.expirationDate = new Date(this.currentDate.setFullYear(this.currentDate.getFullYear() + 1));
         // }
 
-        console.log("modelToSubmit", modelToSubmit);
-        alert("before addImportRequest(modelToSubmit)")
+        console.log('modelToSubmit', modelToSubmit);
+        alert('before addImportRequest(modelToSubmit)');
         // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {
         this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
-                alert("after addImportRequest(modelToSubmit)")
-                console.log("addImportRequest(modelToSubmit).subscribe(data) ", data)
+                alert('after addImportRequest(modelToSubmit)');
+                console.log('addImportRequest(modelToSubmit).subscribe(data) ', data);
                 this.loadingService.hide();
                 this.router.navigate(['dashboard/homepage']);
             }, error => {
-                alert("Something went wrong while sending the model")
-                console.log("error: ", error)
-                this.loadingService.hide()
+                alert('Something went wrong while sending the model');
+                console.log('error: ', error);
+                this.loadingService.hide();
             }
         ));
 
@@ -917,7 +917,7 @@ export class ImportManagement implements OnInit {
     ngOnDestroy(): void {
         this.subscriptions.forEach(subscription => {
             subscription.unsubscribe();
-        })
+        });
     }
 
 

@@ -2,9 +2,9 @@ import {Injectable} from '@angular/core';
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
-import {AuthService} from "../service/authetication.service";
-import {Router} from "@angular/router";
-import {ErrorHandlerService} from "../service/error-handler.service";
+import {AuthService} from '../service/authetication.service';
+import {Router} from '@angular/router';
+import {ErrorHandlerService} from '../service/error-handler.service';
 
 
 @Injectable()
@@ -33,12 +33,10 @@ export class ErrorInterceptor implements HttpInterceptor {
                         errMsg = 'No such method on the server';
                     } else if (error.status === 405) {
                         errMsg = 'Http method not allowed !!! (GET,POST,DELETE,UPDATE...)';
-                    }
-                    // Client Side Error
-                    else if (error.error instanceof ErrorEvent) {
+                    } else if (error.error instanceof ErrorEvent) {  // Client Side Error
                         errMsg = 'Client error' + error.error.message;
                     } else {  // Server Side Error
-                        errMsg = this.getErrorMessage(error); //`Server error Code: ${error.status},  Message: ${error.message}`;
+                        errMsg = this.getErrorMessage(error); // `Server error Code: ${error.status},  Message: ${error.message}`;
                     }
                     this.errorHandlerService.showError(errMsg);
                     return throwError(errMsg);

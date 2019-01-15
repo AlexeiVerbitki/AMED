@@ -172,6 +172,7 @@
                 <div class="col-10">
                     <div class="md-form-modified" [formGroup]="addMediacalInstitutionForm">
                         <ng-select id="allMediacalInstitutions" name="allMediacalInstitutions"
+                                   bindLabel="name"
                                    [items]="allMediacalInstitutionsList"
                                    placeholder="Instituţia medicala"
                                    formControlName="medicalInstitution"
@@ -565,22 +566,21 @@
             </div>
             <hr>
 
-            <app-payment [requestId]="evaluateClinicalTrailForm.get('id').value"
-                         (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
+            <!--<app-payment [requestId]="evaluateClinicalTrailForm.get('id').value" (totalValueChanged)="paymentTotalUpdate($event)" [checkProducator]="false"-->
+                         <!--[processModule]="'STUDIUCLINIC'"></app-payment>-->
+
+            <app-payment-clinical-trial [registrationReqestId]="evaluateClinicalTrailForm.get('id').value">
+
+            </app-payment-clinical-trial>
 
         </div>
         <hr>
     </form>
 
     <div class="text-center">
-        <button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date
-        </button>
-        <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="onSubmit()">
-            Urmatorul pas
-        </button>
-        <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">
-            Intrerupere
-        </button>
+        <button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>
+        <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="onSubmit()">Urmatorul pas</button>
+        <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>
     </div>
 </div>
 

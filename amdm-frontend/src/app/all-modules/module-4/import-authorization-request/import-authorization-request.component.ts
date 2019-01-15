@@ -1,20 +1,20 @@
 import {Component, OnInit} from '@angular/core';
-import {Cerere} from "../../../models/cerere";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Observable, Subscription} from "rxjs";
-import {MatDialog} from "@angular/material";
-import {Router} from "@angular/router";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
+import {Cerere} from '../../../models/cerere';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Observable, Subscription} from 'rxjs';
+import {MatDialog} from '@angular/material';
+import {Router} from '@angular/router';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 import {saveAs} from 'file-saver';
-import {Document} from "../../../models/document";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {RequestService} from "../../../shared/service/request.service";
-import {TaskService} from "../../../shared/service/task.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
-import {Subject} from "rxjs/index";
+import {Document} from '../../../models/document';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {RequestService} from '../../../shared/service/request.service';
+import {TaskService} from '../../../shared/service/task.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {Subject} from 'rxjs/index';
 
 
 
@@ -25,13 +25,13 @@ import {Subject} from "rxjs/index";
     styleUrls: ['./import-authorization-request.component.css']
 })
 export class ImportAuthorizationRequestComponent implements OnInit {
-    requestNumber
+    requestNumber;
     generatedDocNrSeq: number;
     rForm: FormGroup;
     solicitantCompanyList: Observable<any[]>;
     formSubmitted: boolean;
     docs: Document [] = [];
-    docTypes : any[];
+    docTypes: any[];
 
     cereri: Cerere [] = [];
     dataForm: FormGroup;
@@ -42,7 +42,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
     applicationRegistrationNumber: any;
 
     importer: Observable<any[]>;
-    loadingCompany: boolean = false;
+    loadingCompany = false;
     protected companyInputs = new Subject<string>();
 
 
@@ -64,8 +64,8 @@ export class ImportAuthorizationRequestComponent implements OnInit {
             'startDate': [new Date()],
             'currentStep': ['R'],
             'company': ['', Validators.required],
-            'initiator':[null],
-            'assignedUser':[null],
+            'initiator': [null],
+            'assignedUser': [null],
             'data': {disabled: true, value: new Date()},
             'importType': [null, Validators.required],
             'type':
@@ -107,7 +107,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
 
         this.subscriptions.push(
-            this.taskService.getRequestStepByIdAndCode('3','R').subscribe(step => {
+            this.taskService.getRequestStepByIdAndCode('3', 'R').subscribe(step => {
                     this.subscriptions.push(
                         this.administrationService.getAllDocTypes().subscribe(data => {
                                 this.docTypes = data;
@@ -123,9 +123,9 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
     }
 
-    loadDocTypes(){
+    loadDocTypes() {
         this.subscriptions.push(
-            this.taskService.getRequestStepByIdAndCode('3','R').subscribe(step => {
+            this.taskService.getRequestStepByIdAndCode('3', 'R').subscribe(step => {
                     //console.log('getRequestStepByIdAndCode', step);
                     this.subscriptions.push(
                         this.administrationService.getAllDocTypes().subscribe(data => {
@@ -147,7 +147,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         this.importer =
             this.companyInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) return true;
+                    if (result && result.length > 2) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -205,22 +205,22 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
 
 
-            this.medType = this.rForm.get('importType').value
-            console.log("this.medType", this.medType);
+            this.medType = this.rForm.get('importType').value;
+            console.log('this.medType', this.medType);
             // this.rForm.get('importAuthorizationEntity.medType').setValue(this.medType);
 
 
-            let formModel: any = this.rForm.value;
+            const formModel: any = this.rForm.value;
             formModel.importAuthorizationEntity.medType = this.medType;
-            console.log("formModel.importAuthorizationEntity.medType", formModel.importAuthorizationEntity.medType);
+            console.log('formModel.importAuthorizationEntity.medType', formModel.importAuthorizationEntity.medType);
 
 
         switch (this.rForm.get('importType').value) {
-            case "1": {formModel.type.id = '15'; break;}
-            case "2": {formModel.type.id = '16'; break;}
-            case "3": {formModel.type.id = '17'; break;}
-            case "4": {formModel.type.id = '18'; break;}
-            case "5": {formModel.type.id = '18'; break;}
+            case '1': {formModel.type.id = '15'; break; }
+            case '2': {formModel.type.id = '16'; break; }
+            case '3': {formModel.type.id = '17'; break; }
+            case '4': {formModel.type.id = '18'; break; }
+            case '5': {formModel.type.id = '18'; break; }
         }
 
             formModel.requestHistories = [{
@@ -240,30 +240,30 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
 
 
-            console.log("formModel", formModel)
-            console.log("rForm.valid", this.rForm.valid)
+            console.log('formModel', formModel);
+            console.log('rForm.valid', this.rForm.valid);
 
         if (this.rForm.valid && this.docs.length > 0 ) {
             this.loadingService.show();
             this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
                     switch (this.rForm.get('importType').value) {
-                        case "1": {
+                        case '1': {
                             this.router.navigate(['dashboard/module/import-authorization/registered-medicament/' + data.body.id]);
                             break;
                         }
-                        case "2": {
+                        case '2': {
                             this.router.navigate(['dashboard/module/import-authorization/unregistered-medicament/' + data.body.id]);
                             break;
                         }
-                        case "3": {
+                        case '3': {
                             this.router.navigate(['dashboard/module/import-authorization/materia-prima/' + data.body.id]);
                             break;
                         }
-                        case "4": {
+                        case '4': {
                             this.router.navigate(['dashboard/module/import-authorization/ambalaj/' + data.body.id]);
                             break;
                         }
-                        case "5": {
+                        case '5': {
                             this.router.navigate(['dashboard/module/import-authorization/import-management/' + 2420 /*data.body.id*/]);
                             break;
                         }

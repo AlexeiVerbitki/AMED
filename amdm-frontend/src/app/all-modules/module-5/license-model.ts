@@ -1,12 +1,12 @@
-import {Document} from "../../models/document";
+import {Document} from '../../models/document';
 
 export class LicenseModel {
     step: string;
     number?: string;
     requestStartDate?: any;
-    company? : any;
+    company?: any;
     solicitant?: any;
     tipCerere?: string;
-    licenseRequestType : any;
-    documents? : Document[];
+    licenseRequestType: any;
+    documents?: Document[];
 }

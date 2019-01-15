@@ -6,7 +6,7 @@
 				<div class="card-header-title white-text">Taxe spre achitare</div>
 			</div>
 			<div class="col-6">
-				<div class="text-right fap text-white">
+				<div class="text-right fap text-white" *ngIf="!rOnly">
 					<i *ngIf="!isManufactureAutohton" (click)="addTaxes()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 					<i *ngIf="!isManufactureAutohton" (click)="generateBonDePlataForAll()" mdbTooltip="Generare bon de plata toate taxele" placement="top" class="fa fa-file-text-o fa-lg fa-mt" aria-hidden="true"></i>
 				</div>
@@ -34,12 +34,12 @@
 			<th scope="row">{{ bonDePlata.number }}</th>
 			<td>{{ bonDePlata.date | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
 			<td>
-				<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="deleteBonDePlata(bonDePlata,i)"
+				<button *ngIf="!rOnly" class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="deleteBonDePlata(bonDePlata,i)"
 				        [disabled] = "isDisableDeleteBonDePlata(bonDePlata)"
 				        mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
 				<button class="btn btn-mdb-color waves-light btn-sm waves-light" mdbTooltip="Generare bon de plata pentru o singura taxa" placement="top" (click)="generateSingleBonDePlata(bonDePlata)"
 				        [disabled] = "isDisableDeleteBonDePlata(bonDePlata)"
-				        mdbWavesEffect *ngIf="process !== 'NIMICIRE'"><i class="fa fa-file-text-o fa-lg" aria-hidden="true"></i></button>
+				        mdbWavesEffect *ngIf="process !== 'NIMICIRE' && !rOnly"><i class="fa fa-file-text-o fa-lg" aria-hidden="true"></i></button>
 			</td>
 		</tr>
 		</tbody>
@@ -58,7 +58,7 @@
 				<div class="card-header-title white-text">Incasari</div>
 			</div>
 			<div class="col-6">
-				<div class="text-right fap text-white">
+				<div class="text-right fap text-white" *ngIf="!rOnly">
 					<i (click)="checkReceipts()" mdbTooltip="Verificare incasari" placement="top" class="fa fa-refresh fa-lg fa-mt" aria-hidden="true"></i>
 				</div>
 			</div>

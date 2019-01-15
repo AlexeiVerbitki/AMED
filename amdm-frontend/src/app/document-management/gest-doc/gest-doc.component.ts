@@ -2,9 +2,9 @@ import { TaskService } from './../../shared/service/task.service';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subscription } from "rxjs";
-import { Router } from "@angular/router";
-import { LoaderService } from "./../../shared/service/loader.service";
+import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
+import { LoaderService } from './../../shared/service/loader.service';
 
 @Component({
   selector: 'app-gest-doc',
@@ -16,10 +16,10 @@ export class GestDocComponent {
   requests: any[];
   requestTypes: any[];
   steps: any[];
-    expeditors : any[];
-    destinatars : any[];
-    termenDeExecutares : any[];
-    tipDocs : any[];
+    expeditors: any[];
+    destinatars: any[];
+    termenDeExecutares: any[];
+    tipDocs: any[];
 
   displayedColumns: any[] = ['requestNumber', 'processName', 'requestType', 'username', 'startDate', 'endDate', 'step'];
   dataSource = new MatTableDataSource<any>();
@@ -42,7 +42,7 @@ export class GestDocComponent {
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
-    this.dataSource.paginator._intl.itemsPerPageLabel = "Prorcese pe pagina: ";
+    this.dataSource.paginator._intl.itemsPerPageLabel = 'Prorcese pe pagina: ';
     this.dataSource.sort = this.sort;
   }
 
@@ -91,7 +91,7 @@ export class GestDocComponent {
 
     this.subscriptions.push(this.taskService.getRequestTypeSteps(this.taskForm.get('requestType').value.id).subscribe(data => {
       this.steps = data;
-    }))
+    }));
   }
 
   findTasks() {
@@ -99,11 +99,11 @@ export class GestDocComponent {
     // this.requestNumber.nativeElement.focus();
     this.subscriptions.push(this.taskService.getTasksByFilter(this.taskForm.value).subscribe(data => {
       this.dataSource.data = data.body;
-    }))
+    }));
   }
 
   navigateToUrl(rowDetails: any) {
-    const urlToNavigate = rowDetails.navigationUrl + rowDetails.id
+    const urlToNavigate = rowDetails.navigationUrl + rowDetails.id;
     this.route.navigate([urlToNavigate]);
   }
 

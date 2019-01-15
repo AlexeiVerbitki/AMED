@@ -1,5 +1,24 @@
 table td a {
     text-decoration: underline;
-    color : #488CD3;
-    font-weight : bold;
+    color: #488CD3;
+    font-weight: bold;
+}
+
+.md-form {
+    position: relative;
+    margin-top: 14px !important;
+    margin-bottom: 5px !important;
+}
+
+.md-form-modified {
+    position: relative;
+    margin-top: 8px;
+    margin-bottom: 5px !important;
+}
+
+
+.md-form-modified-select {
+    position: relative;
+    margin-top: 1px;
+    margin-bottom: 5px !important;
 }

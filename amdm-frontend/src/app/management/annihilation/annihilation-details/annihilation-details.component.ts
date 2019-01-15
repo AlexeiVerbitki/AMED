@@ -1,10 +1,10 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {Subscription} from "rxjs";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
-import {AnnihilationService} from "../../../shared/service/annihilation/annihilation.service";
-import {MedicamentService} from "../../../shared/service/medicament.service";
-import {DecimalPipe} from "@angular/common";
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {Subscription} from 'rxjs';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {AnnihilationService} from '../../../shared/service/annihilation/annihilation.service';
+import {MedicamentService} from '../../../shared/service/medicament.service';
+import {DecimalPipe} from '@angular/common';
 
 @Component({
     selector: 'app-annihilation-details',
@@ -13,7 +13,7 @@ import {DecimalPipe} from "@angular/common";
 })
 export class AnnihilationDetailsComponent implements OnInit, OnDestroy {
 
-    rFormSubbmitted: boolean = false;
+    rFormSubbmitted = false;
     rForm: FormGroup;
 
 
@@ -21,10 +21,10 @@ export class AnnihilationDetailsComponent implements OnInit, OnDestroy {
 
 
     medicamentsToDestroy: any[];
-    members : any[];
+    members: any[];
 
     totalSum: number;
-    numberPipe : DecimalPipe = new DecimalPipe('en-US');
+    numberPipe: DecimalPipe = new DecimalPipe('en-US');
 
 
     constructor(private fb: FormBuilder,
@@ -40,7 +40,7 @@ export class AnnihilationDetailsComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.annihilationService.findAnnihilationById(this.dataDialog.annihilationId).subscribe(data => {
             console.log('sfsd', data);
             this.patchValue(data);
-        }))
+        }));
     }
 
 
@@ -51,7 +51,7 @@ export class AnnihilationDetailsComponent implements OnInit, OnDestroy {
     }
 
 
-    private patchValue(data : any){
+    private patchValue(data: any) {
         this.rForm.get('companyName').patchValue(data.companyName);
 
         this.medicamentsToDestroy = data.medicamentsMedicamentAnnihilationMeds;
@@ -70,14 +70,12 @@ export class AnnihilationDetailsComponent implements OnInit, OnDestroy {
         this.members = data.medicamentAnnihilationInsitutions;
 
         this.members.forEach(m => {
-            if (m.president)
-            {
+            if (m.president) {
                 m.memberDescription = 'Președintele comisiei';
-            }
-            else {
+            } else {
                 m.memberDescription = 'Membru comisiei';
             }
-        })
+        });
 
         this.calculateTotalSum();
     }

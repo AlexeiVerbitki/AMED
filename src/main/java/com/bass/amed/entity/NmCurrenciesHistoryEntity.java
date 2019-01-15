@@ -9,8 +9,8 @@ import java.util.Date;
 @Table(name = "nm_currencies_history", schema = "amed", catalog = "")
 public class NmCurrenciesHistoryEntity
 {
-
     @Id
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
     @Column(name = "id")
     private Integer id;
 
@@ -29,5 +29,4 @@ public class NmCurrenciesHistoryEntity
     @OneToOne
     @JoinColumn(name = "currency_id", referencedColumnName = "id")
     private NmCurrenciesEntity currency;
-
 }

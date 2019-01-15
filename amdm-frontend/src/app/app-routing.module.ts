@@ -2,16 +2,16 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {NotFoundComponent} from './not-found/not-found.component';
 import {LoginComponent} from './login/login.component';
-import {ModuleComponent} from "./all-modules/module.component";
-import {HomepageComponent} from "./homepage/homepage.component";
-import {TaskComponent} from "./task/task.component";
-import {AdministrationComponent} from "./administration/administration.component";
-import {HistoryComponent} from "./history/history.component";
-import {MainDashboardComponent} from "./dashboard/main-dashboard.component";
-import {ModuleDashboardComponent} from "./dashboard/module-dashboard.component";
-import {AuthGuard} from "./shared/auth-guard/auth.guard";
-import {AdminDashboardComponent} from "./dashboard/admin-dashboard.component";
-import {GestDocComponent} from "./document-management/gest-doc/gest-doc.component";
+import {ModuleComponent} from './all-modules/module.component';
+import {HomepageComponent} from './homepage/homepage.component';
+import {TaskComponent} from './task/task.component';
+import {AdministrationComponent} from './administration/administration.component';
+import {HistoryComponent} from './history/history.component';
+import {MainDashboardComponent} from './dashboard/main-dashboard.component';
+import {ModuleDashboardComponent} from './dashboard/module-dashboard.component';
+import {AuthGuard} from './shared/auth-guard/auth.guard';
+import {AdminDashboardComponent} from './dashboard/admin-dashboard.component';
+import {GestDocComponent} from './document-management/gest-doc/gest-doc.component';
 
 const routes: Routes = [
     {path: '', redirectTo: '/login', pathMatch: 'full'},

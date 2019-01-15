@@ -1,6 +1,7 @@
 package com.bass.amed.repository;
 
 import com.bass.amed.entity.MedicamentEntity;
+import com.bass.amed.entity.MedicamentHistoryEntity;
 import com.bass.amed.projection.MedicamentNamesListProjection;
 import com.bass.amed.projection.MedicamentRegisterNumberProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -46,24 +47,47 @@ public interface MedicamentRepository extends JpaRepository<MedicamentEntity, In
     @Query("UPDATE MedicamentEntity m SET m.approved=:approved WHERE m.id in (:ids)")
     void approveMedicament(@Param("ids")List<Integer> ids,@Param("approved")Boolean approved);
 
-    @Query("SELECT m FROM MedicamentEntity m " +
+    @Modifying
+    @Query("UPDATE MedicamentHistoryEntity m SET m.approved=:approved WHERE m.id = :id")
+    void approveMedicamentModify(@Param("id") Integer id,@Param("approved")Boolean approved);
+
+    @Query("SELECT distinct m FROM MedicamentEntity m " +
             "LEFT JOIN FETCH m.manufactures " +
             "WHERE m.approved = true and m.oaNumber is null and m.status = 'P'")
     List<MedicamentEntity> getMedicamentsForOA();
 
+    @Query("SELECT distinct m FROM MedicamentHistoryEntity m " +
+            "LEFT JOIN FETCH m.manufacturesHistory " +
+            "WHERE m.approved = true and m.omNumber is null and m.status = 'P'")
+    List<MedicamentHistoryEntity> getMedicamentsForOM();
+
     @Query("SELECT p FROM MedicamentEntity p WHERE p.oaNumber = :oaNumber")
     List<MedicamentEntity> findMedicamentsByOANumber(@Param("oaNumber")String oaNumber);
+
+    @Query("SELECT p FROM MedicamentHistoryEntity p WHERE p.omNumber = :omNumber")
+    List<MedicamentHistoryEntity> findMedicamentsByOMNumber(@Param("omNumber")String omNumber);
 
     @Modifying
     @Query("UPDATE MedicamentEntity p SET p.oaNumber = :oaNumber WHERE p.id in (:ids)")
     void setOANumber(@Param("ids")List<Integer> ids, @Param("oaNumber")String oaNumber);
 
     @Modifying
+    @Query("UPDATE MedicamentHistoryEntity p SET p.omNumber = :omNumber WHERE p.id in (:ids)")
+    void setOMNumber(@Param("ids")List<Integer> ids, @Param("omNumber")String omNumber);
+
+    @Modifying
     @Query("UPDATE MedicamentEntity p SET p.oaNumber = null,p.registrationNumber = null WHERE p.id in (:ids)")
     void clearOANumber(@Param("ids")List<Integer> ids);
 
+    @Modifying
+    @Query("UPDATE MedicamentHistoryEntity p SET p.omNumber = null WHERE p.id in (:ids)")
+    void clearOMNumber(@Param("ids")List<Integer> ids);
+
     @Query("SELECT distinct p.requestId FROM MedicamentEntity p WHERE p.oaNumber = :oaNumber")
     List<Integer> findRequestsIDByOANumber(@Param("oaNumber")String oaNumber);
+
+    @Query("SELECT distinct p.requestId FROM MedicamentHistoryEntity p WHERE p.omNumber = :omNumber")
+    List<Integer> findRequestsIDByOMNumber(@Param("omNumber")String omNumber);
 
     @Modifying
     @Query("UPDATE MedicamentEntity p SET p.registrationNumber = :registrationNumber WHERE p.id = :id")

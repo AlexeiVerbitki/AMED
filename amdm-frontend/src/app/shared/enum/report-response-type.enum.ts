@@ -1,5 +1,5 @@
 export enum ReportResponseType {
-    NA=0, YES=1, NO=2
+    NA = 0, YES = 1, NO = 2
 }
 
 export namespace ReportResponseType {

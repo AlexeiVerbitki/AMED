@@ -1,12 +1,12 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
-import {Subscription} from "rxjs";
-import {Router} from "@angular/router";
-import {PriceService} from "../../shared/service/prices.service";
-import {LoaderService} from "../../shared/service/loader.service";
-import {Document} from "../../models/document";
-import {NavbarTitleService} from "../../shared/service/navbar-title.service";
-import {ConfirmationDialogComponent} from "../../dialog/confirmation-dialog.component";
+import {Subscription} from 'rxjs';
+import {Router} from '@angular/router';
+import {PriceService} from '../../shared/service/prices.service';
+import {LoaderService} from '../../shared/service/loader.service';
+import {Document} from '../../models/document';
+import {NavbarTitleService} from '../../shared/service/navbar-title.service';
+import {ConfirmationDialogComponent} from '../../dialog/confirmation-dialog.component';
 
 @Component({
     selector: 'app-prices-approval',
@@ -18,24 +18,24 @@ export class PriceApprovalComponent implements OnInit, AfterViewInit, OnDestroy 
     documents: Document[] = [];
     avgCurrencies: any[] = [];
     requestNumber: number;
-    uploadedAllNeeded: boolean = false;
-    formSubmitted: boolean = false;
-    savePrices: boolean = false;
+    uploadedAllNeeded = false;
+    formSubmitted = false;
+    savePrices = false;
     outputDocuments: any[] = [{
         docType: {category: 'OP'},
         description: 'Ordinul de înregistrare a prețului de producător',
         number: undefined,
-        status: "Nu este atasat"
-    },{
+        status: 'Nu este atasat'
+    }, {
         docType: {category: 'LP'},
         description: 'Anexa 1:Lista medicamentelor cu prețul de producător aprobat pentru înregistrare',
         number: undefined,
-        status: "Nu este atasat"
-    },{
+        status: 'Nu este atasat'
+    }, {
         docType: {category: 'LG'},
         description: 'Anexa 2:Lista medicamentelor generice cu prețuri reevaluate',
         number: undefined,
-        status: "Nu este atasat"
+        status: 'Nu este atasat'
     }];
 
     displayedColumns: any[] = [
@@ -69,7 +69,7 @@ export class PriceApprovalComponent implements OnInit, AfterViewInit, OnDestroy 
 
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
-        this.dataSource.paginator._intl.itemsPerPageLabel = "Preturi pe pagina: ";
+        this.dataSource.paginator._intl.itemsPerPageLabel = 'Preturi pe pagina: ';
         this.dataSource.sort = this.sort;
     }
 
@@ -79,7 +79,7 @@ export class PriceApprovalComponent implements OnInit, AfterViewInit, OnDestroy 
         this.getPrices();
     }
 
-    currencyChanged($event){
+    currencyChanged($event) {
         console.log('currencyChanged', $event);
         this.avgCurrencies = $event;
     }
@@ -90,7 +90,7 @@ export class PriceApprovalComponent implements OnInit, AfterViewInit, OnDestroy 
             this.priceService.getPricesForApproval().subscribe(prices => {
                     this.dataSource.data = prices;
 
-                    if(this.dataSource.data.length == 0) {
+                    if (this.dataSource.data.length == 0) {
                         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
                             data: {
                                 message: 'Nu exista prețuri necesare a fi aprobate. Mergeți la pagina principală?',
@@ -105,32 +105,32 @@ export class PriceApprovalComponent implements OnInit, AfterViewInit, OnDestroy 
                     } else {
                         this.dataSource._updateChangeSubscription();
 
-                        let anex1Prices = this.dataSource.data.find(p => p.priceRequestType == 2);
-                        let anex2Prices = this.dataSource.data.find(p => p.priceRequestType == 9);
-                        if(!anex1Prices) {
-                            this.outputDocuments.splice(1,1);
+                        const anex1Prices = this.dataSource.data.find(p => p.priceRequestType == 2);
+                        const anex2Prices = this.dataSource.data.find(p => p.priceRequestType == 9);
+                        if (!anex1Prices) {
+                            this.outputDocuments.splice(1, 1);
                         }
-                        if(!anex2Prices) {
-                            this.outputDocuments.splice(2,1);
+                        if (!anex2Prices) {
+                            this.outputDocuments.splice(2, 1);
                         }
 
-                        let pIds: any[] = [], priceIds: any[] = [];
+                        const pIds: any[] = [], priceIds: any[] = [];
 
                         this.dataSource.data.forEach(p => {
-                            if(p.priceRequestType) {
+                            if (p.priceRequestType) {
                                 if (p.priceRequestType != 2) {
                                     pIds.push(p.id);
                                 }
                             }
                         });
 
-                        if(pIds.length > 0) {
+                        if (pIds.length > 0) {
                             this.subscriptions.push(this.priceService.getPricesDocuments(pIds).subscribe(docs => {
-                                let tempArray: any[] = [];
+                                const tempArray: any[] = [];
                                 tempArray.push(...this.documents, ...docs.body);
                                 this.documents = tempArray ;
                                 this.documentAdded(null);
-                            }, error1 => console.log('getDocumentsByIds',error1)));
+                            }, error1 => console.log('getDocumentsByIds', error1)));
                         }
 
                         // if(priceIds.length > 0) {
@@ -153,57 +153,57 @@ export class PriceApprovalComponent implements OnInit, AfterViewInit, OnDestroy 
 
         this.outputDocuments.forEach(outDoc => {
             outDoc.number = undefined;
-            outDoc.status = "Nu este atasat";
+            outDoc.status = 'Nu este atasat';
 
-            for(let doc of this.documents){
+            for (const doc of this.documents) {
                 if (doc.docType.category == outDoc.docType.category) {
                     this.dataSource.data.forEach(p => p.orderNr = doc.number);
                     outDoc.number = doc.number;
-                    outDoc.status = "Atasat";
+                    outDoc.status = 'Atasat';
                     break;
                 }
             }
 
         });
 
-        this.uploadedAllNeeded = !this.outputDocuments.find(d =>  d.status == "Nu este atasat");
+        this.uploadedAllNeeded = !this.outputDocuments.find(d =>  d.status == 'Nu este atasat');
     }
 
-    save(){
+    save() {
         this.loadingService.show();
         this.formSubmitted = true;
 
-        let prices: any[] = [];
+        const prices: any[] = [];
 
-        let uploadedOrder = this.documents.find(d => d.docType.category == 'OP');
-        let uploadedAnexa1 = this.documents.find(d => d.docType.category == 'LP');
-        let uploadedAnexa2 = this.documents.find(d => d.docType.category == 'LG');
+        const uploadedOrder = this.documents.find(d => d.docType.category == 'OP');
+        const uploadedAnexa1 = this.documents.find(d => d.docType.category == 'LP');
+        const uploadedAnexa2 = this.documents.find(d => d.docType.category == 'LG');
 
         if (this.documents.length == 0 || !this.uploadedAllNeeded || this.dataSource.data.length == 0) {
             this.loadingService.hide();
             return;
         }
 
-        let priceNewType: number = 0;
+        let priceNewType = 0;
 
         this.dataSource.data.forEach(p => {
-            switch(p.priceRequestType){
+            switch (p.priceRequestType) {
                 case 2: priceNewType = 13 ; break; //Preț nou aprobat
                 case 9: priceNewType = 10 ; break; //Aprobat după modificarea originalului
                 case 11: priceNewType = 12 ; break; //Acceptat după modificarea valutei
             }
 
-            let newDocs: any[] = [];
+            const newDocs: any[] = [];
 
             newDocs.push(uploadedOrder);
 
-            if(p.priceRequestType == 2) {
+            if (p.priceRequestType == 2) {
                 newDocs.push(uploadedAnexa1);
             } else if (p.priceRequestType == 9) {
                 newDocs.push(uploadedAnexa2);
             }
 
-            let expirationDate = new Date();
+            const expirationDate = new Date();
             expirationDate.setFullYear(expirationDate.getFullYear() + 1);
 
             prices.push({
@@ -254,22 +254,17 @@ export class PriceApprovalComponent implements OnInit, AfterViewInit, OnDestroy 
 
         let observable;
 
-        if (document.docType.category == 'OP')
-        {
+        if (document.docType.category == 'OP') {
             observable = this.priceService.viewApprovalOrder();
-        }
-        else if(document.docType.category == 'LP')
-        {
+        } else if (document.docType.category == 'LP') {
             observable = this.priceService.viewAnexa1();
-        }
-        else if (document.docType.category == 'LG')
-        {
+        } else if (document.docType.category == 'LG') {
             observable = this.priceService.viewAnexa2(this.createAnexa2DTO());
         }
 
         this.subscriptions.push(observable.subscribe(data => {
-                let file = new Blob([data], {type: 'application/pdf'});
-                var fileURL = URL.createObjectURL(file);
+                const file = new Blob([data], {type: 'application/pdf'});
+                const fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
                 this.loadingService.hide();
             }, error => {
@@ -281,10 +276,10 @@ export class PriceApprovalComponent implements OnInit, AfterViewInit, OnDestroy 
 
 
     createAnexa2DTO(): any {
-        let anexa2ListDTO: any[] = [];
+        const anexa2ListDTO: any[] = [];
 
         this.dataSource.data.forEach(m => {
-            if(m.priceRequestType == 9) {
+            if (m.priceRequestType == 9) {
                 anexa2ListDTO.push({
                     medicineInfo: {
                         medicineCode: m.medicamentCode,

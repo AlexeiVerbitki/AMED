@@ -1,12 +1,12 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
-import {Subscription} from "rxjs";
-import {Router} from "@angular/router";
-import {PriceService} from "../../shared/service/prices.service";
-import {LoaderService} from "../../shared/service/loader.service";
-import {Document} from "../../models/document";
-import {NavbarTitleService} from "../../shared/service/navbar-title.service";
-import {ConfirmationDialogComponent} from "../../dialog/confirmation-dialog.component";
+import {Subscription} from 'rxjs';
+import {Router} from '@angular/router';
+import {PriceService} from '../../shared/service/prices.service';
+import {LoaderService} from '../../shared/service/loader.service';
+import {Document} from '../../models/document';
+import {NavbarTitleService} from '../../shared/service/navbar-title.service';
+import {ConfirmationDialogComponent} from '../../dialog/confirmation-dialog.component';
 
 @Component({
     selector: 'app-prices-auto-revaluation',
@@ -20,14 +20,14 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
     documents: Document[] = [];
     avgCurrencies: any[] = [];
     requestNumber: number;
-    containInvalidPrices: boolean = true;
-    formSubmitted: boolean = false;
-    savePrices: boolean = false;
+    containInvalidPrices = true;
+    formSubmitted = false;
+    savePrices = false;
     outputDocuments: any[] = [{
         docType: {category: 'LR'},
         description: 'Anexa 3:Lista medicamentelor cu prețul revizuit după modificarea valutei',
         number: undefined,
-        status: "Nu este atasat"
+        status: 'Nu este atasat'
     }];
 
     displayedColumns: any[] = [
@@ -61,11 +61,11 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
 
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
-        this.dataSource.paginator._intl.itemsPerPageLabel = "Medicamente pe pagina: ";
+        this.dataSource.paginator._intl.itemsPerPageLabel = 'Medicamente pe pagina: ';
         this.dataSource.sort = this.sort;
     }
 
-    savePricesCheck($event){
+    savePricesCheck($event) {
         this.savePrices = $event.checked;
     }
 
@@ -77,7 +77,7 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
             this.priceService.generateDocNumber().subscribe(generatedNumber => {
                     this.requestNumber = generatedNumber;
                 },
-                error => {console.log(error); alert(error);}
+                error => {console.log(error); alert(error); }
             )
         );
         // this.taskForm.get('requestNumber').valueChanges.subscribe(val => {
@@ -85,7 +85,7 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
         // });
     }
 
-    currencyChanged($event){
+    currencyChanged($event) {
         console.log('currencyChanged', $event);
         this.avgCurrencies = $event;
     }
@@ -96,7 +96,7 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
             this.priceService.getPricesForRevaluation().subscribe(prices => {
                     this.dataSource.data = prices;
 
-                    if(this.dataSource.data.length == 0) {
+                    if (this.dataSource.data.length == 0) {
                         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
                             data: {
                                 message: 'Nu exista prețuri necesare a fi reevaluate. Mergeți la pagina principală?',
@@ -121,12 +121,12 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
 
         this.outputDocuments.forEach(outDoc => {
             outDoc.number = undefined;
-            outDoc.status = "Nu este atasat";
+            outDoc.status = 'Nu este atasat';
 
-            for(let doc of this.documents){
+            for (const doc of this.documents) {
                 if (doc.docType.description == outDoc.description) {
                     outDoc.number = doc.number;
-                    outDoc.status = "Atasat";
+                    outDoc.status = 'Atasat';
                     break;
                 }
             }
@@ -134,13 +134,13 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
         });
     }
 
-    save(){
+    save() {
         this.loadingService.show();
         this.formSubmitted = true;
 
-        let prices: any[] = [];
+        const prices: any[] = [];
 
-        let uploadedDoc = this.documents.find(d => d.docType.description == 'Anexa 3:Lista medicamentelor cu prețul revizuit după modificarea valutei');
+        const uploadedDoc = this.documents.find(d => d.docType.description == 'Anexa 3:Lista medicamentelor cu prețul revizuit după modificarea valutei');
 
         if (this.containInvalidPrices || this.documents.length == 0) {
             this.loadingService.hide();
@@ -175,26 +175,26 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
     newPriceModified(i: number, newValue: any) {
         console.log('newPriceModified', newValue);
         this.dataSource.data[i].priceMdlNew = +newValue;
-        this.containInvalidPrices = this.dataSource.data.some(p => p.priceMdlNew == undefined || p.priceMdlNew <= 0 )
+        this.containInvalidPrices = this.dataSource.data.some(p => p.priceMdlNew == undefined || p.priceMdlNew <= 0 );
 
-        let avgCur = this.avgCurrencies.find(cur => cur.currency.shortDescription == this.dataSource.data[i].currency);
+        const avgCur = this.avgCurrencies.find(cur => cur.currency.shortDescription == this.dataSource.data[i].currency);
 
         this.dataSource.data[i].priceNew = +newValue / avgCur.value;
-        let increasePercentDifference = this.calculateIncreaseRate(newValue, this.dataSource.data[i].priceMdl);
-        let decreasePercentDifference = this.calculateIncreaseRate(this.dataSource.data[i].priceMdl, newValue);
+        const increasePercentDifference = this.calculateIncreaseRate(newValue, this.dataSource.data[i].priceMdl);
+        const decreasePercentDifference = this.calculateIncreaseRate(this.dataSource.data[i].priceMdl, newValue);
 
-        let afterLimit: boolean = false;
-        if (increasePercentDifference > PriceAutoRevaluationComponent.INCREASE_PERCENT_LIMIT ){
+        let afterLimit = false;
+        if (increasePercentDifference > PriceAutoRevaluationComponent.INCREASE_PERCENT_LIMIT ) {
             this.dataSource.data[i].priceMdlDifferencePercents = '↑' + increasePercentDifference.toFixed(1).toString() + '%';
             afterLimit = true;
-        } else if(decreasePercentDifference > PriceAutoRevaluationComponent.DECREASE_PERCENT_LIMIT) {
+        } else if (decreasePercentDifference > PriceAutoRevaluationComponent.DECREASE_PERCENT_LIMIT) {
             this.dataSource.data[i].priceMdlDifferencePercents = '↓' + decreasePercentDifference.toFixed(1).toString() + '%';
             afterLimit = true;
         } else {
             this.dataSource.data[i].priceMdlDifferencePercents = decreasePercentDifference < 0 ? '↑' + increasePercentDifference.toFixed(1).toString() + '%' : '↓' + decreasePercentDifference.toFixed(1).toString() + '%';
         }
 
-        this.containInvalidPrices = this.dataSource.data.some(p => p.priceMdlNew == undefined || p.priceMdlNew <= 0 || afterLimit)
+        this.containInvalidPrices = this.dataSource.data.some(p => p.priceMdlNew == undefined || p.priceMdlNew <= 0 || afterLimit);
     }
 
     calculateIncreaseRate(initialValue: number, modifiedValue: number) {
@@ -202,7 +202,7 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
     }
 
     createAnexa3DTO(): any {
-        let anexa3ListDTO: any[] = [];
+        const anexa3ListDTO: any[] = [];
 
         this.dataSource.data.forEach(m => {
             anexa3ListDTO.push({
@@ -232,8 +232,8 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
         this.loadingService.show();
 
         this.subscriptions.push(this.priceService.viewAnexa3(this.createAnexa3DTO()).subscribe(data => {
-                let file = new Blob([data], {type: 'application/pdf'});
-                var fileURL = URL.createObjectURL(file);
+                const file = new Blob([data], {type: 'application/pdf'});
+                const fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
                 this.loadingService.hide();
             }, error => {

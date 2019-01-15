@@ -25,7 +25,7 @@
                 <tbody>
                 <tr *ngFor="let document of f.value.documents;let i = index">
                     <td scope="row">
-                        <a title="Detalii studiu clinic" class="text-center">
+                        <a title="Detalii studiu clinic" class="text-center" (click)="loadFileFrom(document.path)">
                             {{ document.name }}
                         </a>
                     </td>
@@ -133,7 +133,7 @@
                                         <div class="col-6 border-specs ptc">{{el.address}}</div>
                                     </div>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-8">
                                     <div class="row py-2" *ngFor="let x of el.investigators">
                                         <div class="col border-specs ptc">{{x.firstName}}</div>
                                         <div class="col border-specs ptc">{{x.lastName}}</div>
@@ -202,7 +202,7 @@
                                         <div class="col-6 border-specs ptc">{{el.address}}</div>
                                     </div>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-8">
                                     <div class="row py-2" *ngFor="let x of el.investigators">
                                         <div class="col border-specs ptc">{{x.firstName}}</div>
                                         <div class="col border-specs ptc">{{x.lastName}}</div>
@@ -232,7 +232,7 @@
                     </div>
                 </div>
                 <div class="col-4">
-                    <div class="md-form-modified">
+                    <div class="md-form-modified-select">
                         <ng-select
                                    bindLabel="description"
                                    placeholder="Producatorul"
@@ -290,7 +290,7 @@
             </div>
             <div class="row">
                 <div class="col-4">
-                    <div class="md-form-modified">
+                    <div class="md-form-modified-select">
                         <ng-select
                                    bindLabel="description"
                                    placeholder="Forma farmaceutica"
@@ -299,7 +299,7 @@
                     </div>
                 </div>
                 <div class="col-4">
-                    <div class="md-form-modified">
+                    <div class="md-form-modified-select">
                         <ng-select
                                    bindLabel="description"
                                    placeholder="Grupa farmaceutica"
@@ -328,7 +328,7 @@
                     </div>
                 </div>
                 <div class="col-4">
-                    <div class="md-form-modified">
+                    <div class="md-form-modified-select">
                         <ng-select
                                 bindLabel="description"
                                 placeholder="Producatorul"
@@ -386,7 +386,7 @@
             </div>
             <div class="row">
                 <div class="col-4">
-                    <div class="md-form-modified">
+                    <div class="md-form-modified-select">
                         <ng-select
                                 bindLabel="description"
                                 placeholder="Forma farmaceutica"
@@ -395,7 +395,7 @@
                     </div>
                 </div>
                 <div class="col-4">
-                    <div class="md-form-modified">
+                    <div class="md-form-modified-select">
                         <ng-select
                                 bindLabel="description"
                                 placeholder="Grupa farmaceutica"
@@ -427,7 +427,7 @@
                     </div>
                 </div>
                 <div class="col-4">
-                    <div class="md-form-modified">
+                    <div class="md-form-modified-select">
                         <ng-select
                                 bindLabel="description"
                                 placeholder="Producatorul"
@@ -485,7 +485,7 @@
             </div>
             <div class="row">
                 <div class="col-4">
-                    <div class="md-form-modified">
+                    <div class="md-form-modified-select">
                         <ng-select
                                 bindLabel="description"
                                 placeholder="Forma farmaceutica"
@@ -494,7 +494,7 @@
                     </div>
                 </div>
                 <div class="col-4">
-                    <div class="md-form-modified">
+                    <div class="md-form-modified-select">
                         <ng-select
                                 bindLabel="description"
                                 placeholder="Grupa farmaceutica"
@@ -523,7 +523,7 @@
                     </div>
                 </div>
                 <div class="col-4">
-                    <div class="md-form-modified">
+                    <div class="md-form-modified-select">
                         <ng-select
                                 bindLabel="description"
                                 placeholder="Producatorul"
@@ -581,7 +581,7 @@
             </div>
             <div class="row">
                 <div class="col-4">
-                    <div class="md-form-modified">
+                    <div class="md-form-modified-select">
                         <ng-select
                                 bindLabel="description"
                                 placeholder="Forma farmaceutica"
@@ -590,7 +590,7 @@
                     </div>
                 </div>
                 <div class="col-4">
-                    <div class="md-form-modified">
+                    <div class="md-form-modified-select">
                         <ng-select
                                 bindLabel="description"
                                 placeholder="Grupa farmaceutica"

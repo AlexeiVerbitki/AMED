@@ -9,8 +9,8 @@ export class SidebarComponent implements OnInit {
   @Output()
   public skipEvent: EventEmitter<any> = new EventEmitter();
 
-  skip: boolean = true;
-  
+  skip = true;
+
   constructor() { }
 
   ngOnInit() {

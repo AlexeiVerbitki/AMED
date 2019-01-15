@@ -1,10 +1,10 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Subscription} from "rxjs";
-import {TaskService} from "../shared/service/task.service";
-import {Router} from "@angular/router";
-import {NavbarTitleService} from "../shared/service/navbar-title.service";
+import {Subscription} from 'rxjs';
+import {TaskService} from '../shared/service/task.service';
+import {Router} from '@angular/router';
+import {NavbarTitleService} from '../shared/service/navbar-title.service';
 
 @Component({
     selector: 'app-task',
@@ -25,7 +25,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnDestroy {
     private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder, private route: Router, private taskService: TaskService,
-                private navbarTitleService: NavbarTitleService,) {
+                private navbarTitleService: NavbarTitleService, ) {
         this.taskForm = fb.group({
             'requestNumber': [null, {validators: Validators.required}],
             'request': [null],
@@ -39,7 +39,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
-        this.dataSource.paginator._intl.itemsPerPageLabel = "Prorcese pe pagina: ";
+        this.dataSource.paginator._intl.itemsPerPageLabel = 'Prorcese pe pagina: ';
         this.dataSource.sort = this.sort;
     }
 
@@ -91,7 +91,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.subscriptions.push(this.taskService.getRequestTypeSteps(this.taskForm.get('requestType').value.id).subscribe(data => {
             this.steps = data;
-        }))
+        }));
     }
 
     findTasks() {
@@ -99,11 +99,11 @@ export class TaskComponent implements OnInit, AfterViewInit, OnDestroy {
         // this.requestNumber.nativeElement.focus();
         this.subscriptions.push(this.taskService.getTasksByFilter(this.taskForm.value).subscribe(data => {
             this.dataSource.data = data.body;
-        }))
+        }));
     }
 
     navigateToUrl(rowDetails: any) {
-        const urlToNavigate = rowDetails.navigationUrl + rowDetails.id
+        const urlToNavigate = rowDetails.navigationUrl + rowDetails.id;
         if (urlToNavigate !== '') {
             this.route.navigate([urlToNavigate]);
         }

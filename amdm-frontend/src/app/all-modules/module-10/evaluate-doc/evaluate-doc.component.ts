@@ -8,16 +8,16 @@ import {saveAs} from 'file-saver';
 import {Observable, Subscription} from 'rxjs';
 import {AdministrationService} from '../../../shared/service/administration.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Document} from "../../../models/document";
-import {RequestService} from "../../../shared/service/request.service";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {TaskService} from "../../../shared/service/task.service";
-import {CanModuleDeactivate} from "../../../shared/auth-guard/can-deactivate-guard.service";
-import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
-import {DatePipe} from "@angular/common";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
+import {Document} from '../../../models/document';
+import {RequestService} from '../../../shared/service/request.service';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {TaskService} from '../../../shared/service/task.service';
+import {CanModuleDeactivate} from '../../../shared/auth-guard/can-deactivate-guard.service';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {DatePipe} from '@angular/common';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 
 @Component({
     selector: 'app-evaluate-doc',
@@ -32,7 +32,7 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, CanModuleDea
     generatedDocNrSeq: number;
     formSubmitted: boolean;
 
-    canBeDeactivated: boolean = false;
+    canBeDeactivated = false;
     private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder, public dialog: MatDialog, private router: Router,
@@ -43,7 +43,7 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, CanModuleDea
                 private errorHandlerService: ErrorHandlerService,
                 private loadingService: LoaderService,
                 private navbarTitleService: NavbarTitleService,
-                private activatedRoute: ActivatedRoute,) {
+                private activatedRoute: ActivatedRoute, ) {
         this.eForm = fb.group({
             'id': null,
             'currentDate': {disabled: true, value: new Date()},
@@ -67,7 +67,7 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, CanModuleDea
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
                 this.subscriptions.push(this.requestService.getDocumentModuleRequest(params['id']).subscribe(data => {
                         this.recipientList = data.recipientList;
-                        let pipe = new DatePipe('en-US');
+                        const pipe = new DatePipe('en-US');
                         this.eForm.get('id').setValue(data.id);
                         this.eForm.get('startDate').setValue(new Date(data.registrationRequestsEntity.startDate));
                         this.eForm.get('sender').setValue(data.sender);
@@ -81,7 +81,7 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, CanModuleDea
 
                     }
                     )
-                )
+                );
             }, error1 => console.log('error  ', error1)
             )
         );
@@ -129,7 +129,7 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, CanModuleDea
     finish(): void {
 
         this.loadingService.show();
-        let modelToCommit: any = this.eForm.value;
+        const modelToCommit: any = this.eForm.value;
 
         modelToCommit.registrationRequestsEntity.currentStep = 'F';
         modelToCommit.registrationRequestsEntity.assignedUser = this.authService.getUserName();
@@ -153,7 +153,7 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, CanModuleDea
 
     save(): void {
         this.loadingService.show();
-        let modelToCommit: any = this.eForm.value;
+        const modelToCommit: any = this.eForm.value;
 
         modelToCommit.registrationRequestsEntity.currentStep = 'E';
         modelToCommit.registrationRequestsEntity.assignedUser = this.authService.getUserName();
@@ -176,7 +176,7 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, CanModuleDea
 
     cancel(): void {
         this.loadingService.show();
-        let modelToCommit: any = this.eForm.value;
+        const modelToCommit: any = this.eForm.value;
 
         modelToCommit.registrationRequestsEntity.currentStep = 'C';
         modelToCommit.registrationRequestsEntity.assignedUser = this.authService.getUserName();

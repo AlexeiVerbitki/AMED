@@ -9,4 +9,5 @@ import java.util.List;
 public interface CurrencyRepository extends JpaRepository<NmCurrenciesEntity, Integer>
 {
     List<GetMinimalCurrencyProjection> findAllOnlyIdAndAndShortDescriptionBy();
+    NmCurrenciesEntity findByCode(String code);
 }

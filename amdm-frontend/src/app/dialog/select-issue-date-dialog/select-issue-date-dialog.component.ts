@@ -1,10 +1,10 @@
 import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
-import {HttpResponse} from "@angular/common/http";
-import {Subscription} from "rxjs";
-import {UploadFileService} from "../../shared/service/upload/upload-file.service";
-import {DocumentService} from "../../shared/service/document.service";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {HttpResponse} from '@angular/common/http';
+import {Subscription} from 'rxjs';
+import {UploadFileService} from '../../shared/service/upload/upload-file.service';
+import {DocumentService} from '../../shared/service/document.service';
 
 @Component({
     selector: 'app-select-issue-date-dialog',
@@ -15,7 +15,7 @@ export class SelectIssueDateDialogComponent implements OnInit {
 
     maxDate = new Date();
     aForm: FormGroup;
-    formSubmitted: boolean = false;
+    formSubmitted = false;
     @ViewChild('incarcaDoc')
     incarcaDocVariable: ElementRef;
     isExtensionInvalid: boolean;
@@ -51,15 +51,15 @@ export class SelectIssueDateDialogComponent implements OnInit {
     }
 
     resetDoc() {
-        this.incarcaDocVariable.nativeElement.value = "";
+        this.incarcaDocVariable.nativeElement.value = '';
     }
 
     addDoc(eventHtml) {
         this.isExtensionInvalid = false;
 
-        var allowedExtensions =
-            ["jpg", "jpeg", "png", "jfif", "bmp", "svg", "pdf"];
-        var fileExtension = eventHtml.srcElement.files[0].name.split('.').pop();
+        const allowedExtensions =
+            ['jpg', 'jpeg', 'png', 'jfif', 'bmp', 'svg', 'pdf'];
+        const fileExtension = eventHtml.srcElement.files[0].name.split('.').pop();
 
         if (allowedExtensions.indexOf(fileExtension.toLowerCase()) <= -1) {
             this.isExtensionInvalid = true;
@@ -68,17 +68,31 @@ export class SelectIssueDateDialogComponent implements OnInit {
 
         this.dataDialog.document.dateOfIssue = this.aForm.get('dateOfIssue').value;
 
-        this.subscriptions.push(this.documentService.addOA(this.dataDialog.document, eventHtml.srcElement.files[0]).subscribe(event => {
-                if (event instanceof HttpResponse) {
-                    this.aForm.get('response').setValue(true);
-                    this.dialogRef.close(this.aForm.value);
+        if (this.dataDialog.type == 'OM') {
+            this.subscriptions.push(this.documentService.addOM(this.dataDialog.document, eventHtml.srcElement.files[0]).subscribe(event => {
+                    if (event instanceof HttpResponse) {
+                        this.aForm.get('response').setValue(true);
+                        this.dialogRef.close(this.aForm.value);
+                    }
+                },
+                error => {
+                    console.log(error);
                 }
-            },
-            error => {
-                console.log(error);
-            }
-            )
-        );
+                )
+            );
+        } else {
+            this.subscriptions.push(this.documentService.addOA(this.dataDialog.document, eventHtml.srcElement.files[0]).subscribe(event => {
+                    if (event instanceof HttpResponse) {
+                        this.aForm.get('response').setValue(true);
+                        this.dialogRef.close(this.aForm.value);
+                    }
+                },
+                error => {
+                    console.log(error);
+                }
+                )
+            );
+        }
 
     }
 

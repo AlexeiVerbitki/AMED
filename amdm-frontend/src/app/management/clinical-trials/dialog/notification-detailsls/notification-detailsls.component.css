@@ -3,3 +3,34 @@ table td a {
     color : #488CD3;
     font-weight : bold;
 }
+.md-form-modified {
+    position: relative;
+    margin-top: 10px;
+    margin-bottom: 1.5rem;
+}
+.mt-45 {
+    margin-top: 45px !important;
+}
+.mt-36 {
+    margin-top: 36px !important;
+}
+
+
+.md-form {
+    position: relative;
+    margin-top: 14px !important;
+    margin-bottom: 5px !important;
+}
+
+.md-form-modified {
+    position: relative;
+    margin-top: 8px;
+    margin-bottom: 5px !important;
+}
+
+
+.md-form-modified-select {
+    position: relative;
+    margin-top: 1px;
+    margin-bottom: 5px !important;
+}

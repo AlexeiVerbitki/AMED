@@ -1,4 +1,4 @@
-<div class="gradient-card-header bg-sidebar border-gradient" *ngIf="displayTable">
+<div class="gradient-card-header bg-sidebar border-gradient">
   <div class="container-fluid">
     <!-- Title -->
     <div class="row">
@@ -14,7 +14,7 @@
   </div>
 </div>
 <!-- Tabela cereri -->
-<div class="table-width" *ngIf="displayTable">
+<div class="table-width">
   <div>
     <table mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="number">

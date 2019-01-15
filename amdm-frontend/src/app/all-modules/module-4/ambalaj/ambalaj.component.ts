@@ -2,20 +2,20 @@ import {Cerere} from './../../../models/cerere';
 import {FormArray, Validators} from '@angular/forms';
 import {FormGroup, FormBuilder} from '@angular/forms';
 import {Component, OnInit} from '@angular/core';
-import {Observable, Subscription} from "rxjs";
-import {MatDialog, MatDialogConfig} from "@angular/material";
-import {ActivatedRoute, Router} from "@angular/router";
-import {AdministrationService} from "../../../shared/service/administration.service";
+import {Observable, Subscription} from 'rxjs';
+import {MatDialog, MatDialogConfig} from '@angular/material';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AdministrationService} from '../../../shared/service/administration.service';
 // import {debounceTime, distinctUntilChanged, filter, map, startWith, tap} from "rxjs/operators";
-import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 import {saveAs} from 'file-saver';
-import {Document} from "../../../models/document";
-import {RequestService} from "../../../shared/service/request.service";
-import {Subject} from "rxjs/index";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {ImportMedDialog} from "../dialog/import-med-dialog";
+import {Document} from '../../../models/document';
+import {RequestService} from '../../../shared/service/request.service';
+import {Subject} from 'rxjs/index';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {ImportMedDialog} from '../dialog/import-med-dialog';
 
 export interface PeriodicElement {
     name: string;
@@ -46,11 +46,11 @@ export class AmbalajComponent implements OnInit {
     unitOfImportTable: any[] = [];
 
     protected manufacturersRfPr: Observable<any[]>;
-    protected loadingManufacturerRfPr: boolean = false;
+    protected loadingManufacturerRfPr = false;
     protected manufacturerInputsRfPr = new Subject<string>();
 
     importer: Observable<any[]>;
-    loadingCompany: boolean = false;
+    loadingCompany = false;
     protected companyInputs = new Subject<string>();
 
     sellerAddress: any;
@@ -59,19 +59,19 @@ export class AmbalajComponent implements OnInit {
 
     solicitantCompanyList: Observable<any[]>;
     unitSumm: any;
-    unitOfImportPressed : boolean;
+    unitOfImportPressed: boolean;
 
     formModel: any;
     valutaList: Observable<any[]>;
 
-    importData : any;
+    importData: any;
 
     atcCodes: Observable<any[]>;
-    loadingAtcCodes: boolean = false;
+    loadingAtcCodes = false;
     atcCodesInputs = new Subject<string>();
 
     customsCodes: Observable<any[]>;
-    loadingcustomsCodes: boolean = false;
+    loadingcustomsCodes = false;
     customsCodesInputs = new Subject<string>();
 
     authorizationSumm: any;
@@ -133,9 +133,9 @@ export class AmbalajComponent implements OnInit {
 
                 // 'customsNumber':[],
                 // 'customsDeclarationDate':[],
-                'authorizationsNumber':[], // inca nu exista la pasul acesta
+                'authorizationsNumber': [], // inca nu exista la pasul acesta
                 'medType': [''],
-                'importAuthorizationDetailsEntityList' :[],
+                'importAuthorizationDetailsEntityList' : [],
                 'unitOfImportTable': this.fb.group({
 
                     customsCode:    [null, Validators.required],
@@ -203,13 +203,13 @@ export class AmbalajComponent implements OnInit {
 
                 },
                 error => console.log(error)
-            ))
-        }))
+            ));
+        }));
 
         this.currentDate = new Date();
-        this.sellerAddress='';
-        this.producerAddress='';
-        this.importerAddress='';
+        this.sellerAddress = '';
+        this.producerAddress = '';
+        this.importerAddress = '';
         this.formSubmitted = false;
         this.loadEconomicAgents();
         this.loadManufacturersRfPr();
@@ -217,20 +217,20 @@ export class AmbalajComponent implements OnInit {
         this.loadCurrenciesShort();
         this.loadCustomsCodes();
         this.loadATCCodes();
-        this.authorizationSumm=0;
+        this.authorizationSumm = 0;
     }
 
     onChanges(): void {
         if (this.evaluateImportForm.get('importAuthorizationEntity')) {
             this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.seller').valueChanges.subscribe(val => {
                 if (val && val.address !== null && val.country !== null) {
-                    this.sellerAddress = val.address + ", " + val.country.description;
+                    this.sellerAddress = val.address + ', ' + val.country.description;
                 }
             }));
             this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').valueChanges.subscribe(val => {
                 // console.log("val",val)
                 if (val && val.address !== null && val.country !== null) {
-                    this.producerAddress = val.address + ", " + val.country.description;
+                    this.producerAddress = val.address + ', ' + val.country.description;
                     // console.log("producerAddress",this.producerAddress)
                 }
             }));
@@ -258,7 +258,7 @@ export class AmbalajComponent implements OnInit {
 
 
     get importTypeForms() {
-        return this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable') as FormArray
+        return this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable') as FormArray;
     }
 
     addUnitOfImport() {
@@ -296,7 +296,7 @@ export class AmbalajComponent implements OnInit {
                 this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(null);
                 this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setErrors(null);
             }
-            console.log("this.unitOfImportTable", this.unitOfImportTable)
+            console.log('this.unitOfImportTable', this.unitOfImportTable);
         }
     }
 
@@ -315,7 +315,7 @@ export class AmbalajComponent implements OnInit {
     }
 
 
-    loadATCCodes(){
+    loadATCCodes() {
         this.customsCodes =
             this.customsCodesInputs.pipe(
                 filter((result: string) => {
@@ -339,7 +339,7 @@ export class AmbalajComponent implements OnInit {
     }
 
     showunitOfImport(unitOfImport: any) {
-        let dialogConfig2 = new MatDialogConfig();
+        const dialogConfig2 = new MatDialogConfig();
 
         dialogConfig2.disableClose = false;
         dialogConfig2.autoFocus = true;
@@ -351,7 +351,7 @@ export class AmbalajComponent implements OnInit {
         dialogConfig2.data = unitOfImport;
         dialogConfig2.data.medtType = this.importData.importAuthorizationEntity.medType;
 
-        let dialogRef = this.dialog.open(ImportMedDialog, dialogConfig2);
+        const dialogRef = this.dialog.open(ImportMedDialog, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
             console.log('result', result);
@@ -371,7 +371,7 @@ export class AmbalajComponent implements OnInit {
     }
 
 
-    loadCustomsCodes(){
+    loadCustomsCodes() {
         this.atcCodes =
             this.atcCodesInputs.pipe(
                 filter((result: string) => {
@@ -399,7 +399,7 @@ export class AmbalajComponent implements OnInit {
         this.importer =
             this.companyInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 0) return true;
+                    if (result && result.length > 0) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -417,11 +417,11 @@ export class AmbalajComponent implements OnInit {
     }
 
 
-    loadManufacturersRfPr(){
+    loadManufacturersRfPr() {
         this.manufacturersRfPr =
             this.manufacturerInputsRfPr.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 0) return true;
+                    if (result && result.length > 0) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -444,7 +444,7 @@ export class AmbalajComponent implements OnInit {
                 },
                 error => console.log(error)
             )
-        )
+        );
     }
 
     interruptProcess() {
@@ -459,7 +459,7 @@ export class AmbalajComponent implements OnInit {
             // console.log('result', result);
             if (result) {
                 this.loadingService.show();
-                let modelToSubmit = this.evaluateImportForm.getRawValue();
+                const modelToSubmit = this.evaluateImportForm.getRawValue();
                 modelToSubmit.currentStep = 'C';
                 // modelToSubmit.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
                 modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
@@ -478,9 +478,9 @@ export class AmbalajComponent implements OnInit {
                         this.loadingService.hide();
                     }, error => {
                         this.loadingService.hide();
-                        console.log(error)
+                        console.log(error);
                     })
-                )
+                );
             }
         });
     }
@@ -492,11 +492,11 @@ export class AmbalajComponent implements OnInit {
 
 
         this.formSubmitted = true;
-        let modelToSubmit: any ={};
+        let modelToSubmit: any = {};
 
 
         modelToSubmit = this.evaluateImportForm.value;
-        if (this.importData.importAuthorizationEntity.id){
+        if (this.importData.importAuthorizationEntity.id) {
             modelToSubmit.importAuthorizationEntity.id =  this.importData.importAuthorizationEntity.id;
         }
 
@@ -505,7 +505,7 @@ export class AmbalajComponent implements OnInit {
         // modelToSubmit.endDate = new Date();
 
         modelToSubmit.documents = this.docs;
-        modelToSubmit.currentStep ='AP';
+        modelToSubmit.currentStep = 'AP';
 
         modelToSubmit.requestHistories.push({
             startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
@@ -514,24 +514,24 @@ export class AmbalajComponent implements OnInit {
             step: 'AP'
         });
 
-        console.log("this.evaluateImportForm.value", this.evaluateImportForm.value);
+        console.log('this.evaluateImportForm.value', this.evaluateImportForm.value);
         //=============
         modelToSubmit.importAuthorizationEntity.summ = this.authorizationSumm;
         modelToSubmit.importAuthorizationEntity.currency = this.authorizationCurrency;
 
-        console.log("modelToSubmit", modelToSubmit);
+        console.log('modelToSubmit', modelToSubmit);
         if (/*&& this.evaluateImportForm.valid && */ this.docs !== null) {
             this.loadingService.show();
             this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
-                    console.log("addImportRequest(modelToSubmit).subscribe(data) ", data)
+                    console.log('addImportRequest(modelToSubmit).subscribe(data) ', data);
                     // if (/*&& this.evaluateImportForm.valid && */ this.docs !== null) {
                     this.loadingService.hide();
                     this.router.navigate(['dashboard/']);
                     // this.router.navigate(['dashboard/module/import-authorization/registered-medicament-approve/' + data.body.id]);
                 }, error => {
-                    alert("Something went wrong while sending the model")
-                    console.log("error: ", error)
-                    this.loadingService.hide()
+                    alert('Something went wrong while sending the model');
+                    console.log('error: ', error);
+                    this.loadingService.hide();
                 }
             ));
 
@@ -543,7 +543,7 @@ export class AmbalajComponent implements OnInit {
     ngOnDestroy(): void {
         this.subscriptions.forEach(subscription => {
             subscription.unsubscribe();
-        })
+        });
     }
 
 

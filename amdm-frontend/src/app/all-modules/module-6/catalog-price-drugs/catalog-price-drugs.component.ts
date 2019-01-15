@@ -1,6 +1,10 @@
+import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
+import { NavbarTitleService } from '../../../shared/service/navbar-title.service';
+import { NomenclatorService } from '../../../shared/service/nomenclator.service';
+import { LoaderService } from '../../../shared/service/loader.service';
 
 @Component({
   selector: 'app-catalog-price-drugs',
@@ -8,257 +12,9 @@ import { MatPaginator, MatTableDataSource } from '@angular/material';
   styleUrls: ['../nomenclator.component.css']
 })
 export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
-    ngOnDestroy(): void {
-    }
 
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-
-  clasifyDrugsTable = [
-    {
-      codMedicament: 'Cl1231',
-      codVamal: 'CV112345',
-      denumireComerciala: 'DM112345',
-      formaFarmaceutica: 'FM123445',
-      dozaConcentratia: '100ml',
-      volum: '5g',
-      divizarea: 'Divizare',
-      tara: 'MD',
-      firmaProducatoare: 'Zaporojie pikinez',
-      nrDeInregistrare: 'Nr112345',
-      dataDeInregistrare: new Date(),
-      codulATC: 'CATC112345',
-      denumireaComunaInternationala: 'DCI1',
-      termenulDeValabilitate: '24 luni',
-      codulDeBare: 'CB112345',
-      pretDeProducatorMDL: 25,
-      pretDeProducatorValuta: 75,
-      valuta: 'Lei',
-      nrOrdinuluiDeAprobareAPretului: 'Nr12345',
-      dataOrdinuluiDeAprobareAPretului: 'D12345'
-
-    },
-    {
-      codMedicament: 'Cl1231',
-      codVamal: 'CV112345',
-      denumireComerciala: 'DM112345',
-      formaFarmaceutica: 'FM123445',
-      dozaConcentratia: '100ml',
-      volum: '5g',
-      divizarea: 'Divizare',
-      tara: 'MD',
-      firmaProducatoare: 'Zaporojie pikinez',
-      nrDeInregistrare: 'Nr112345',
-      dataDeInregistrare: new Date(),
-      codulATC: 'CATC112345',
-      denumireaComunaInternationala: 'DCI1',
-      termenulDeValabilitate: '24 luni',
-      codulDeBare: 'CB112345',
-      pretDeProducatorMDL: 25,
-      pretDeProducatorValuta: 75,
-      valuta: 'Lei',
-      nrOrdinuluiDeAprobareAPretului: 'Nr12345',
-      dataOrdinuluiDeAprobareAPretului: 'D12345'
-    },
-    {
-      codMedicament: 'Cl1231',
-      codVamal: 'CV112345',
-      denumireComerciala: 'DM112345',
-      formaFarmaceutica: 'FM123445',
-      dozaConcentratia: '100ml',
-      volum: '5g',
-      divizarea: 'Divizare',
-      tara: 'MD',
-      firmaProducatoare: 'Zaporojie pikinez',
-      nrDeInregistrare: 'Nr112345',
-      dataDeInregistrare: new Date(),
-      codulATC: 'CATC112345',
-      denumireaComunaInternationala: 'DCI1',
-      termenulDeValabilitate: '24 luni',
-      codulDeBare: 'CB112345',
-      pretDeProducatorMDL: 25,
-      pretDeProducatorValuta: 75,
-      valuta: 'Lei',
-      nrOrdinuluiDeAprobareAPretului: 'Nr12345',
-      dataOrdinuluiDeAprobareAPretului: 'D12345'
-    },
-    {
-      codMedicament: 'Cl1231',
-      codVamal: 'CV112345',
-      denumireComerciala: 'DM112345',
-      formaFarmaceutica: 'FM123445',
-      dozaConcentratia: '100ml',
-      volum: '5g',
-      divizarea: 'Divizare',
-      tara: 'MD',
-      firmaProducatoare: 'Zaporojie pikinez',
-      nrDeInregistrare: 'Nr112345',
-      dataDeInregistrare: new Date(),
-      codulATC: 'CATC112345',
-      denumireaComunaInternationala: 'DCI1',
-      termenulDeValabilitate: '24 luni',
-      codulDeBare: 'CB112345',
-      pretDeProducatorMDL: 25,
-      pretDeProducatorValuta: 75,
-      valuta: 'Lei',
-      nrOrdinuluiDeAprobareAPretului: 'Nr12345',
-      dataOrdinuluiDeAprobareAPretului: 'D12345'
-    },
-    {
-      codMedicament: 'Cl1231',
-      codVamal: 'CV112345',
-      denumireComerciala: 'DM112345',
-      formaFarmaceutica: 'FM123445',
-      dozaConcentratia: '100ml',
-      volum: '5g',
-      divizarea: 'Divizare',
-      tara: 'MD',
-      firmaProducatoare: 'Zaporojie pikinez',
-      nrDeInregistrare: 'Nr112345',
-      dataDeInregistrare: new Date(),
-      codulATC: 'CATC112345',
-      denumireaComunaInternationala: 'DCI1',
-      termenulDeValabilitate: '24 luni',
-      codulDeBare: 'CB112345',
-      pretDeProducatorMDL: 25,
-      pretDeProducatorValuta: 75,
-      valuta: 'Lei',
-      nrOrdinuluiDeAprobareAPretului: 'Nr12345',
-      dataOrdinuluiDeAprobareAPretului: 'D12345'
-    },
-    {
-      codMedicament: 'Cl1231',
-      codVamal: 'CV112345',
-      denumireComerciala: 'DM112345',
-      formaFarmaceutica: 'FM123445',
-      dozaConcentratia: '100ml',
-      volum: '5g',
-      divizarea: 'Divizare',
-      tara: 'MD',
-      firmaProducatoare: 'Zaporojie pikinez',
-      nrDeInregistrare: 'Nr112345',
-      dataDeInregistrare: new Date(),
-      codulATC: 'CATC112345',
-      denumireaComunaInternationala: 'DCI1',
-      termenulDeValabilitate: '24 luni',
-      codulDeBare: 'CB112345',
-      pretDeProducatorMDL: 25,
-      pretDeProducatorValuta: 75,
-      valuta: 'Lei',
-      nrOrdinuluiDeAprobareAPretului: 'Nr12345',
-      dataOrdinuluiDeAprobareAPretului: 'D12345'
-    },
-    {
-      codMedicament: 'Cl1231',
-      codVamal: 'CV112345',
-      denumireComerciala: 'DM112345',
-      formaFarmaceutica: 'FM123445',
-      dozaConcentratia: '100ml',
-      volum: '5g',
-      divizarea: 'Divizare',
-      tara: 'MD',
-      firmaProducatoare: 'Zaporojie pikinez',
-      nrDeInregistrare: 'Nr112345',
-      dataDeInregistrare: new Date(),
-      codulATC: 'CATC112345',
-      denumireaComunaInternationala: 'DCI1',
-      termenulDeValabilitate: '24 luni',
-      codulDeBare: 'CB112345',
-      pretDeProducatorMDL: 25,
-      pretDeProducatorValuta: 75,
-      valuta: 'Lei',
-      nrOrdinuluiDeAprobareAPretului: 'Nr12345',
-      dataOrdinuluiDeAprobareAPretului: 'D12345'
-    },
-    {
-      codMedicament: 'Cl1231',
-      codVamal: 'CV112345',
-      denumireComerciala: 'DM112345',
-      formaFarmaceutica: 'FM123445',
-      dozaConcentratia: '100ml',
-      volum: '5g',
-      divizarea: 'Divizare',
-      tara: 'MD',
-      firmaProducatoare: 'Zaporojie pikinez',
-      nrDeInregistrare: 'Nr112345',
-      dataDeInregistrare: new Date(),
-      codulATC: 'CATC112345',
-      denumireaComunaInternationala: 'DCI1',
-      termenulDeValabilitate: '24 luni',
-      codulDeBare: 'CB112345',
-      pretDeProducatorMDL: 25,
-      pretDeProducatorValuta: 75,
-      valuta: 'Lei',
-      nrOrdinuluiDeAprobareAPretului: 'Nr12345',
-      dataOrdinuluiDeAprobareAPretului: 'D12345'
-    },
-    {
-      codMedicament: 'CM212345',
-      codVamal: 'CV212345',
-      denumireComerciala: 'DM212345',
-      formaFarmaceutica: 'FM223445',
-      dozaConcentratia: '100ml',
-      volum: '5g',
-      divizarea: 'Divizare',
-      tara: 'MD',
-      firmaProducatoare: 'Zaporojie pikinez',
-      nrDeInregistrare: 'Nr212345',
-      dataDeInregistrare: new Date(),
-      codulATC: 'CATC212345',
-      denumireaComunaInternationala: 'DCI2',
-      termenulDeValabilitate: '24 luni',
-      codulDeBare: 'CB212345',
-      pretDeProducatorMDL: 25,
-      pretDeProducatorValuta: 75,
-      valuta: 'Lei',
-      nrOrdinuluiDeAprobareAPretului: 'Nr12345',
-      dataOrdinuluiDeAprobareAPretului: 'D12345'
-    },
-    {
-      codMedicament: 'CM312345',
-      codVamal: 'CV312345',
-      denumireComerciala: 'DM312345',
-      formaFarmaceutica: 'F3123445',
-      dozaConcentratia: '100ml',
-      volum: '5g',
-      divizarea: 'Divizare',
-      tara: 'MD',
-      firmaProducatoare: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita nobis et corporis sapiente voluptate molestias maxime numquam sequi doloribus harum?',
-      nrDeInregistrare: 'Nr312345',
-      dataDeInregistrare: new Date(),
-      codulATC: 'CATC312345',
-      denumireaComunaInternationala: 'DCI3',
-      termenulDeValabilitate: '24 luni',
-      codulDeBare: 'CB312345',
-      pretDeProducatorMDL: 25,
-      pretDeProducatorValuta: 75,
-      valuta: 'Lei',
-      nrOrdinuluiDeAprobareAPretului: 'Nr12345',
-      dataOrdinuluiDeAprobareAPretului: 'D12345'
-    },
-    {
-      codMedicament: 'CM412345',
-      codVamal: 'CV412345',
-      denumireComerciala: 'DM412345',
-      formaFarmaceutica: 'F4123445',
-      dozaConcentratia: '100ml',
-      volum: '5g',
-      divizarea: 'Divizare',
-      tara: 'MD',
-      firmaProducatoare: 'Zaporojie pikinez',
-      nrDeInregistrare: 'Nr412345',
-      dataDeInregistrare: new Date(),
-      codulATC: 'CATC412345',
-      denumireaComunaInternationala: 'DCI4',
-      termenulDeValabilitate: '24 luni',
-      codulDeBare: 'CB412345',
-      pretDeProducatorMDL: 25,
-      pretDeProducatorValuta: 75,
-      valuta: 'Lei',
-      nrOrdinuluiDeAprobareAPretului: 'Nr12345',
-      dataOrdinuluiDeAprobareAPretului: 'D12345'
-    }
-  ];
 
   codMedicamentFilter = new FormControl('');
   codVamalFilter = new FormControl('');
@@ -285,196 +41,165 @@ export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
 
   columnsToDisplay = ['codMedicament', 'codVamal', 'denumireComerciala', 'formaFarmaceutica', 'dozaConcentratia', 'volum', 'divizarea', 'tara', 'firmaProducatoare', 'nrDeInregistrare', 'dataDeInregistrare', 'codulATC', 'denumireaComunaInternationala', 'termenulDeValabilitate', 'codulDeBare', 'pretDeProducatorMDL', 'pretDeProducatorValuta', 'valuta', 'nrOrdinuluiDeAprobareAPretului', 'dataOrdinuluiDeAprobareAPretului'];
 
-  filterValues = {
-    codMedicament: '',
-    codVamal: '',
-    denumireComerciala: '',
-    formaFarmaceutica: '',
-    dozaConcentratia: '',
-    volum: '',
-    divizarea: '',
-    tara: '',
-    firmaProducatoare: '',
-    nrDeInregistrare: '',
-    dataDeInregistrare: '',
-    codulATC: '',
-    denumireaComunaInternationala: '',
-    termenulDeValabilitate: '',
-    codulDeBare: '',
-    pretDeProducatorMDL: '',
-    pretDeProducatorValuta: '',
-    valuta: '',
-    nrOrdinuluiDeAprobareAPretului: '',
-    dataOrdinuluiDeAprobareAPretului: ''
-  };
+  private subscriptions: Subscription[] = [];
 
-  constructor() {
-    this.dataSource.data = this.clasifyDrugsTable;
-    this.dataSource.filterPredicate = this.createFilter();
+  constructor(private navbarTitleService: NavbarTitleService,
+    private nomenclatorService: NomenclatorService,
+    private loadingService: LoaderService) {
+
+  }
+
+  ngOnDestroy(): void {
+    this.navbarTitleService.showTitleMsg('');
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   ngOnInit() {
-    this.dataSource.paginator = this.paginator;
 
-    this.codMedicamentFilter.valueChanges
+    this.navbarTitleService.showTitleMsg('Catalogul național de prețuri de producător la medicamente');
+    this.loadingService.show();
+
+    this.subscriptions.push(this.nomenclatorService.getAllMedicaments().subscribe(data => {
+      this.loadingService.hide();
+      this.dataSource.data = data;
+    },
+      error => {
+        console.log('error => ', error);
+        this.loadingService.hide();
+      }
+    ));
+
+
+    // this.dataSource.data = this.clasifyDrugsTable;
+
+    this.subscriptions.push(this.codMedicamentFilter.valueChanges
       .subscribe(
         codMedicament => {
-          this.filterValues.codMedicament = codMedicament;
-          this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.filterTable(codMedicament);
         }
-      )
-    this.codVamalFilter.valueChanges
+      ));
+    this.subscriptions.push(this.codVamalFilter.valueChanges
       .subscribe(
         codVamal => {
-          this.filterValues.codVamal = codVamal;
-          this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.filterTable(codVamal);
         }
-      )
-    this.denumireComercialaFilter.valueChanges
+      ));
+    this.subscriptions.push(this.denumireComercialaFilter.valueChanges
       .subscribe(
         denumireComerciala => {
-          this.filterValues.denumireComerciala = denumireComerciala;
-          this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.filterTable(denumireComerciala);
         }
-      )
-    this.formaFarmaceuticaFilter.valueChanges
+      ));
+    this.subscriptions.push(this.formaFarmaceuticaFilter.valueChanges
       .subscribe(
         formaFarmaceutica => {
-          this.filterValues.formaFarmaceutica = formaFarmaceutica;
-          this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.filterTable(formaFarmaceutica);
         }
-      )
-    this.dozaConcentratiaFilter.valueChanges
+      ));
+    this.subscriptions.push(this.dozaConcentratiaFilter.valueChanges
       .subscribe(
         dozaConcentratia => {
-          this.filterValues.dozaConcentratia = dozaConcentratia;
-          this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.filterTable(dozaConcentratia);
         }
-      )
-    this.volumFilter.valueChanges
+      ));
+    this.subscriptions.push(this.volumFilter.valueChanges
       .subscribe(
         volum => {
-          this.filterValues.volum = volum;
-          this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.filterTable(volum);
         }
-      )
-    this.divizareaFilter.valueChanges
+      ));
+    this.subscriptions.push(this.divizareaFilter.valueChanges
       .subscribe(
         divizarea => {
-          this.filterValues.divizarea = divizarea;
-          this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.filterTable(divizarea);
         }
-      )
-    this.taraFilter.valueChanges
+      ));
+    this.subscriptions.push(this.taraFilter.valueChanges
       .subscribe(
         tara => {
-          this.filterValues.tara = tara;
-          this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.filterTable(tara);
         }
-      )
-    this.firmaProducatoareFilter.valueChanges
+      ));
+    this.subscriptions.push(this.firmaProducatoareFilter.valueChanges
       .subscribe(
         firmaProducatoare => {
-          this.filterValues.firmaProducatoare = firmaProducatoare;
-          this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.filterTable(firmaProducatoare);
         }
-      )
-    this.nrDeInregistrareFilter.valueChanges
+      ));
+    this.subscriptions.push(this.nrDeInregistrareFilter.valueChanges
       .subscribe(
         nrDeInregistrare => {
-          this.filterValues.nrDeInregistrare = nrDeInregistrare;
-          this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.filterTable(nrDeInregistrare);
         }
-      )
-    this.dataDeInregistrareFilter.valueChanges
+      ));
+    this.subscriptions.push(this.dataDeInregistrareFilter.valueChanges
       .subscribe(
         dataDeInregistrare => {
-          this.filterValues.dataDeInregistrare = dataDeInregistrare;
-          this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.filterTable(dataDeInregistrare);
         }
-      )
-    this.codulATCFilter.valueChanges
+      ));
+    this.subscriptions.push(this.codulATCFilter.valueChanges
       .subscribe(
         codulATC => {
-          this.filterValues.codulATC = codulATC;
-          this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.filterTable(codulATC);
         }
-      )
-    this.denumireaComunaInternationalaFilter.valueChanges
+      ));
+    this.subscriptions.push(this.denumireaComunaInternationalaFilter.valueChanges
       .subscribe(
         denumireaComunaInternationala => {
-          this.filterValues.denumireaComunaInternationala = denumireaComunaInternationala;
-          this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.filterTable(denumireaComunaInternationala);
         }
-      )
-    this.termenulDeValabilitateFilter.valueChanges
+      ));
+    this.subscriptions.push(this.termenulDeValabilitateFilter.valueChanges
       .subscribe(
         termenulDeValabilitate => {
-          this.filterValues.termenulDeValabilitate = termenulDeValabilitate;
-          this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.filterTable(termenulDeValabilitate);
         }
-      )
-    this.pretDeProducatorMDLFilter.valueChanges
+      ));
+    this.subscriptions.push(this.codulDeBareFilter.valueChanges
+      .subscribe(
+        codulDeBare => {
+          this.filterTable(codulDeBare);
+        }
+      ));
+    this.subscriptions.push(this.pretDeProducatorMDLFilter.valueChanges
       .subscribe(
         pretDeProducatorMDL => {
-          this.filterValues.pretDeProducatorMDL = pretDeProducatorMDL;
-          this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.filterTable(pretDeProducatorMDL);
         }
-      )
-    this.pretDeProducatorValutaFilter.valueChanges
+      ));
+    this.subscriptions.push(this.pretDeProducatorValutaFilter.valueChanges
       .subscribe(
         pretDeProducatorValuta => {
-          this.filterValues.pretDeProducatorValuta = pretDeProducatorValuta;
-          this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.filterTable(pretDeProducatorValuta);
         }
-      )
-    this.valutaFilter.valueChanges
+      ));
+    this.subscriptions.push(this.valutaFilter.valueChanges
       .subscribe(
         valuta => {
-          this.filterValues.valuta = valuta;
-          this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.filterTable(valuta);
         }
-      )
-    this.nrOrdinuluiDeAprobareAPretuluiFilter.valueChanges
+      ));
+    this.subscriptions.push(this.nrOrdinuluiDeAprobareAPretuluiFilter.valueChanges
       .subscribe(
         nrOrdinuluiDeAprobareAPretului => {
-          this.filterValues.nrOrdinuluiDeAprobareAPretului = nrOrdinuluiDeAprobareAPretului;
-          this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.filterTable(nrOrdinuluiDeAprobareAPretului);
         }
-      )
-    this.dataOrdinuluiDeAprobareAPretuluiFilter.valueChanges
+      ));
+    this.subscriptions.push(this.dataOrdinuluiDeAprobareAPretuluiFilter.valueChanges
       .subscribe(
         dataOrdinuluiDeAprobareAPretului => {
-          this.filterValues.dataOrdinuluiDeAprobareAPretului = dataOrdinuluiDeAprobareAPretului;
-          this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.filterTable(dataOrdinuluiDeAprobareAPretului);
         }
-      )
+      ));
   }
 
-  createFilter(): (data: any, filter: string) => boolean {
-    let filterFunction = function (data, filter): boolean {
-      let searchTerms = JSON.parse(filter);
-      return data.codMedicament.toString().toLowerCase().indexOf(searchTerms.codMedicament) !== -1
-        && data.codVamal.toLowerCase().indexOf(searchTerms.codVamal) !== -1
-        && data.denumireComerciala.toLowerCase().indexOf(searchTerms.denumireComerciala) !== -1
-        && data.formaFarmaceutica.toLowerCase().indexOf(searchTerms.formaFarmaceutica) !== -1
-        && data.dozaConcentratia.toLowerCase().indexOf(searchTerms.dozaConcentratia) !== -1
-        && data.volum.toLowerCase().indexOf(searchTerms.volum) !== -1
-        && data.divizarea.toLowerCase().indexOf(searchTerms.divizarea) !== -1
-        && data.tara.toLowerCase().indexOf(searchTerms.tara) !== -1
-        && data.firmaProducatoare.toLowerCase().indexOf(searchTerms.firmaProducatoare) !== -1
-        && data.nrDeInregistrare.toLowerCase().indexOf(searchTerms.nrDeInregistrare) !== -1
-        && data.codulATC.toLowerCase().indexOf(searchTerms.codulATC) !== -1
-        && data.denumireaComunaInternationala.toLowerCase().indexOf(searchTerms.denumireaComunaInternationala) !== -1
-        && data.termenulDeValabilitate.toLowerCase().indexOf(searchTerms.termenulDeValabilitate) !== -1
-        && data.codulDeBare.toLowerCase().indexOf(searchTerms.codulDeBare) !== -1
-        && data.pretDeProducatorMDL.toLowerCase().indexOf(searchTerms.pretDeProducatorMDL) !== -1
-        && data.pretDeProducatorValuta.toLowerCase().indexOf(searchTerms.pretDeProducatorValuta) !== -1
-        && data.valuta.toLowerCase().indexOf(searchTerms.valuta) !== -1
-        && data.nrOrdinuluiDeAprobareAPretului.toLowerCase().indexOf(searchTerms.nrOrdinuluiDeAprobareAPretului) !== -1
-        && data.dataOrdinuluiDeAprobareAPretului.toLowerCase().indexOf(searchTerms.dataOrdinuluiDeAprobareAPretului) !== -1
+  filterTable(element: string) {
+    if (element.toLocaleString().length >= 3) {
+      this.dataSource.filter = element;
+    } else {
+      this.dataSource.filter = '';
     }
-    return filterFunction;
   }
 
 }

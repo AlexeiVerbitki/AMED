@@ -1,6 +1,6 @@
-import {Observable} from "rxjs";
-import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
+import {Observable} from 'rxjs';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable({providedIn: 'root'})
 export class DrugDocumentsService {
@@ -13,6 +13,6 @@ export class DrugDocumentsService {
     }
 
     viewImportExportAuthorization(data: any): Observable<any> {
-        return this.http.post('/api/documents/view-import-export-authorization-data', data,{ responseType: 'blob'});
+        return this.http.post('/api/documents/view-import-export-authorization-data', data, { responseType: 'blob'});
     }
 }

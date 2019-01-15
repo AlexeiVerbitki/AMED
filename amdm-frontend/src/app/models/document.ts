@@ -5,7 +5,7 @@ export class Document {
   path?: string;
   docType?: any;
   isOld?: boolean;
-  number? :  string;
+  number?:  string;
   dateOfIssue?: any;
   registrationRequestId?: number;
 }

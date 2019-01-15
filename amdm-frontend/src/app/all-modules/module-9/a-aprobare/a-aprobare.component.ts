@@ -1,15 +1,15 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from "rxjs/index";
-import {FormBuilder, FormGroup, Validator, Validators} from "@angular/forms";
-import {Document} from "../../../models/document";
-import {ActivatedRoute, Router} from "@angular/router";
-import {RequestService} from "../../../shared/service/request.service";
-import {TaskService} from "../../../shared/service/task.service";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {MatDialog} from "@angular/material";
+import {Subscription} from 'rxjs/index';
+import {FormBuilder, FormGroup, Validator, Validators} from '@angular/forms';
+import {Document} from '../../../models/document';
+import {ActivatedRoute, Router} from '@angular/router';
+import {RequestService} from '../../../shared/service/request.service';
+import {TaskService} from '../../../shared/service/task.service';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {MatDialog} from '@angular/material';
 
 @Component({
     selector: 'app-a-aprobare',
@@ -51,10 +51,10 @@ export class AAprobareComponent implements OnInit, OnDestroy {
             'outputDocuments': [],
             'clinicalTrails': this.fb.group({
                 'id': [''],
-                'startDateInternational':[''],
-                'startDateNational':[''],
-                'endDateNational':[''],
-                'endDateInternational':[''],
+                'startDateInternational': [''],
+                'startDateNational': [''],
+                'endDateNational': [''],
+                'endDateInternational': [''],
                 'title': ['', Validators.required],
                 'treatment': ['', Validators.required],
                 'provenance': ['', Validators.required],
@@ -73,7 +73,7 @@ export class AAprobareComponent implements OnInit, OnDestroy {
                 'clinicTrialAmendEntities': [],
                 'comissionNr': ['', Validators.required],
                 'comissionDate': ['', Validators.required],
-                'clinicTrialNotificationEntities':[]
+                'clinicTrialNotificationEntities': []
             }),
             'status': [undefined, Validators.required],
         });
@@ -116,7 +116,7 @@ export class AAprobareComponent implements OnInit, OnDestroy {
                     this.approveClinicalTrailForm.get('requestHistories').setValue(data.requestHistories);
 
                     this.approveClinicalTrailForm.get('clinicalTrails').setValue(data.clinicalTrails);
-                    if(data.clinicalTrails.comissionDate !== null) {
+                    if (data.clinicalTrails.comissionDate !== null) {
                         this.approveClinicalTrailForm.get('clinicalTrails.comissionDate').setValue(new Date(data.clinicalTrails.comissionDate));
                     }
 
@@ -127,12 +127,12 @@ export class AAprobareComponent implements OnInit, OnDestroy {
                     console.log('this.approveClinicalTrailForm', this.approveClinicalTrailForm);
                 },
                 error => console.log(error)
-            ))
-        }))
+            ));
+        }));
     }
 
     onSubmit() {
-        let formModel = this.approveClinicalTrailForm.getRawValue();
+        const formModel = this.approveClinicalTrailForm.getRawValue();
 
         console.log(formModel.status);
         if (formModel.status === '0') {
@@ -154,7 +154,7 @@ export class AAprobareComponent implements OnInit, OnDestroy {
             });
             formModel.documents = this.docs;
 
-            console.log("evaluareaPrimaraObjectLet", JSON.stringify(formModel));
+            console.log('evaluareaPrimaraObjectLet', JSON.stringify(formModel));
 
             formModel.currentStep = 'F';
             formModel.endDate = new Date();
@@ -168,11 +168,10 @@ export class AAprobareComponent implements OnInit, OnDestroy {
                     this.loadingService.hide();
                 }, error => {
                     this.loadingService.hide();
-                    console.log(error)
+                    console.log(error);
                 })
-            )
-        }
-        else if (formModel.status === '1') {
+            );
+        } else if (formModel.status === '1') {
             const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
                 data: {
                     message: 'Sunteti sigur(a)?',
@@ -184,7 +183,7 @@ export class AAprobareComponent implements OnInit, OnDestroy {
                 console.log('result', result);
                 if (result) {
                     this.loadingService.show();
-                    let formModel = this.approveClinicalTrailForm.getRawValue();
+                    const formModel = this.approveClinicalTrailForm.getRawValue();
                     formModel.currentStep = 'I';
                     formModel.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
                     formModel.requestHistories.push({
@@ -202,9 +201,9 @@ export class AAprobareComponent implements OnInit, OnDestroy {
                             this.router.navigate(['/dashboard/module/clinic-studies/interrupt/' + data.body]);
                         }, error => {
                             this.loadingService.hide();
-                            console.log(error)
+                            console.log(error);
                         })
-                    )
+                    );
                 }
             });
         }
@@ -213,7 +212,7 @@ export class AAprobareComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.subscriptions.forEach(subscription => {
             subscription.unsubscribe();
-        })
+        });
     }
 
 }

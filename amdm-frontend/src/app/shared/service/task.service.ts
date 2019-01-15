@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {Observable} from "rxjs";
-import {HttpClient} from "@angular/common/http";
+import {Observable} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
@@ -27,11 +27,11 @@ export class TaskService {
         return this.http.post<any>('/api/tasks/get-filtered-tasks', request, {observe: 'response'});
     }
 
-    getRequestStepByIdAndCode(requestTypeId: string,code : string): Observable<any> {
+    getRequestStepByIdAndCode(requestTypeId: string, code: string): Observable<any> {
         return this.http.get('/api/tasks/request-step-by-id-and-code', {params: {id: requestTypeId, code : code}});
     }
 
-    getRequestStepByCodeAndStep(code: string,step : string): Observable<any> {
+    getRequestStepByCodeAndStep(code: string, step: string): Observable<any> {
         return this.http.get('/api/tasks/request-step-by-code-and-step', {params: {code: code, step : step}});
     }
 }

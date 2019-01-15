@@ -42,7 +42,7 @@ public class PriceController {
     private PriceTypesRepository priceTypesRepository;
 
     @Autowired
-    PricesManagementRepository pricesManagementRepository;
+    private PricesManagementRepository pricesManagementRepository;
 
     @Autowired
     private PriceRepository priceRepository;

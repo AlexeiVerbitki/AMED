@@ -1,19 +1,19 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Observable, Subject, Subscription} from "rxjs";
-import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {LicenseService} from "../../../shared/service/license/license.service";
-import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
-import {DocumentService} from "../../../shared/service/document.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
-import {MedicamentService} from "../../../shared/service/medicament.service";
-import {AnnihilationService} from "../../../shared/service/annihilation/annihilation.service";
-import {Angular5Csv} from "angular5-csv/Angular5-csv";
-import * as XLSX from "xlsx";
-import {LicenseDetailsComponent} from "../../license/license-details/license-details.component";
-import {AnnihilationDetailsComponent} from "../annihilation-details/annihilation-details.component";
+import {Observable, Subject, Subscription} from 'rxjs';
+import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {LicenseService} from '../../../shared/service/license/license.service';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {DocumentService} from '../../../shared/service/document.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
+import {MedicamentService} from '../../../shared/service/medicament.service';
+import {AnnihilationService} from '../../../shared/service/annihilation/annihilation.service';
+import {Angular5Csv} from 'angular5-csv/Angular5-csv';
+import * as XLSX from 'xlsx';
+import {LicenseDetailsComponent} from '../../license/license-details/license-details.component';
+import {AnnihilationDetailsComponent} from '../annihilation-details/annihilation-details.component';
 
 @Component({
   selector: 'app-annihilation-management',
@@ -23,12 +23,12 @@ import {AnnihilationDetailsComponent} from "../annihilation-details/annihilation
 export class AnnihilationManagementComponent implements OnInit, OnDestroy {
 
     companii: Observable<any[]>;
-    loadingCompany: boolean = false;
+    loadingCompany = false;
     companyInputs = new Subject<string>();
     private subscriptions: Subscription[] = [];
-    visibility: boolean = false;
+    visibility = false;
 
-    maxDate : Date = new Date();
+    maxDate: Date = new Date();
 
 
     //Datasource table
@@ -37,7 +37,7 @@ export class AnnihilationManagementComponent implements OnInit, OnDestroy {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
-    rFormSubbmitted: boolean = false;
+    rFormSubbmitted = false;
     rForm: FormGroup;
 
   constructor(private fb: FormBuilder,
@@ -45,8 +45,8 @@ export class AnnihilationManagementComponent implements OnInit, OnDestroy {
               private licenseService: LicenseService,
               private navbarTitleService: NavbarTitleService,
               public dialogLicense: MatDialog,
-              private documentService : DocumentService,
-              private loadingService : LoaderService,
+              private documentService: DocumentService,
+              private loadingService: LoaderService,
               private medicamentService: MedicamentService,
               private annihilationService: AnnihilationService) { }
 
@@ -59,7 +59,7 @@ export class AnnihilationManagementComponent implements OnInit, OnDestroy {
       this.companii =
           this.companyInputs.pipe(
               filter((result: string) => {
-                  if (result && result.length > 2) return true;
+                  if (result && result.length > 2) { return true; }
               }),
               debounceTime(400),
               distinctUntilChanged(),
@@ -88,20 +88,16 @@ export class AnnihilationManagementComponent implements OnInit, OnDestroy {
         });
     }
 
-    findMedicamenteNimicite()
-    {
-        let filter : any = {};
-        if (this.rForm.get('ecAgent').value)
-        {
+    findMedicamenteNimicite() {
+        const filter: any = {};
+        if (this.rForm.get('ecAgent').value) {
             filter.idno = this.rForm.get('ecAgent').value.idno;
         }
 
-        if (this.rForm.get('dataExecutariiFrom').value)
-        {
+        if (this.rForm.get('dataExecutariiFrom').value) {
             filter.fromDate = this.rForm.get('dataExecutariiFrom').value;
         }
-        if (this.rForm.get('dataExecutariiTo').value)
-        {
+        if (this.rForm.get('dataExecutariiTo').value) {
             filter.toDate = this.rForm.get('dataExecutariiTo').value;
         }
 
@@ -109,7 +105,7 @@ export class AnnihilationManagementComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(this.annihilationService.loadAnnihListByFilter(filter).subscribe(data => {
             this.dataSource.data = data;
-        }))
+        }));
     }
 
     applyFilter(filterValue: string) {
@@ -122,9 +118,9 @@ export class AnnihilationManagementComponent implements OnInit, OnDestroy {
 
 
     exportToCsv() {
-        let displayData = this.getDisplayData();
+        const displayData = this.getDisplayData();
 
-        var options = {
+        const options = {
             fieldSeparator: ',',
             quoteStrings: '"',
             decimalseparator: '.',
@@ -140,7 +136,7 @@ export class AnnihilationManagementComponent implements OnInit, OnDestroy {
         const wb: XLSX.WorkBook = XLSX.utils.book_new();
 
         //needed only one shit
-        var arr: any[][] = new Array<Array<any>>();
+        let arr: any[][] = new Array<Array<any>>();
         arr.push(this.createHeaderColumns());
         arr = this.populateDataForXLSXDocument(arr);
         const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(arr);
@@ -152,10 +148,10 @@ export class AnnihilationManagementComponent implements OnInit, OnDestroy {
 
     }
 
-    exportToPdf(){
+    exportToPdf() {
         this.subscriptions.push(this.documentService.viewTableData(this.createHeaderColumns(), this.getDisplayData()).subscribe(data => {
-                let file = new Blob([data], {type: 'application/pdf'});
-                var fileURL = URL.createObjectURL(file);
+                const file = new Blob([data], {type: 'application/pdf'});
+                const fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
                 this.loadingService.hide();
             }, error => {
@@ -166,16 +162,16 @@ export class AnnihilationManagementComponent implements OnInit, OnDestroy {
     }
 
     private getDisplayData() {
-        let displayData: any [] = [];
+        const displayData: any [] = [];
         this.dataSource.filteredData.forEach(fd => {
-            let row: any = {};
+            const row: any = {};
 
             row.agentEconomic = fd.ecAgentLongName != null ? fd.ecAgentLongName : '';
-            row.medicamentName = fd.medicamentName!= null ? fd.medicamentName : '';
-            row.quantity = fd.quantity!= null ? fd.quantity : '';
-            row.seria = fd.seria!= null ? fd.seria : '';
-            row.uselessReason = fd.uselessReason!= null ? fd.uselessReason : '';
-            row.destructionMethod = fd.destructionMethod!= null ? fd.destructionMethod : '';
+            row.medicamentName = fd.medicamentName != null ? fd.medicamentName : '';
+            row.quantity = fd.quantity != null ? fd.quantity : '';
+            row.seria = fd.seria != null ? fd.seria : '';
+            row.uselessReason = fd.uselessReason != null ? fd.uselessReason : '';
+            row.destructionMethod = fd.destructionMethod != null ? fd.destructionMethod : '';
 
             displayData.push(row);
         });
@@ -184,14 +180,14 @@ export class AnnihilationManagementComponent implements OnInit, OnDestroy {
 
 
     createHeaderColumns(): any[] {
-        return ["Agentul economic", "Medicament", "Cantitatea", "Cauza inutilitatii", "Seria medicament", "Metoda de distrugere"];
+        return ['Agentul economic', 'Medicament', 'Cantitatea', 'Cauza inutilitatii', 'Seria medicament', 'Metoda de distrugere'];
     }
 
     populateDataForXLSXDocument(arr: any[][]): any[] {
-        let displayData : any[] = this.getDisplayData();
+        const displayData: any[] = this.getDisplayData();
         if (displayData) {
-            for (var i = 0; i < displayData.length; i++) {
-                var arrIntern: any[] = new Array<any>();
+            for (let i = 0; i < displayData.length; i++) {
+                const arrIntern: any[] = new Array<any>();
                 arrIntern[0] = displayData[i].agentEconomic;
                 arrIntern[1] = displayData[i].medicamentName;
                 arrIntern[2] = displayData[i].quantity;
@@ -205,8 +201,7 @@ export class AnnihilationManagementComponent implements OnInit, OnDestroy {
         return arr;
     }
 
-    openDetails(annihilationId : number)
-    {
+    openDetails(annihilationId: number) {
         const dialogRef2 = this.dialogLicense.open(AnnihilationDetailsComponent, {
             width: '1000px',
             panelClass: 'materialLicense',

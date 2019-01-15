@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams, HttpRequest, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
@@ -70,6 +70,10 @@ export class DocumentService {
         return this.http.post('/api/documents/view-medicament-authorization-certificate', model, {responseType: 'blob'});
     }
 
+    viewMedicamentModificationCertificate(model: any): Observable<any> {
+        return this.http.post('/api/documents/view-medicament-modification-certificate', model, {responseType: 'blob'});
+    }
+
     viewOrdinDeInrerupereAInregistrariiMedicamentului(nrDocument: any): Observable<any> {
         return this.http.get('/api/documents/view-interrupt-order-of-medicament-registration', {
             params: {
@@ -91,7 +95,7 @@ export class DocumentService {
     }
 
     viewTableData(columns: string[], data: any[]): Observable<any> {
-        let object: any = {};
+        const object: any = {};
         object.columns = columns;
         object.data = data;
 
@@ -103,46 +107,92 @@ export class DocumentService {
         return this.http.post('/api/documents/generate-dd', ddDetails, {responseType: 'blob'});
     }
 
+    generateDDM(ddDetails: any): Observable<any> {
+        return this.http.post('/api/documents/generate-ddm', ddDetails, {responseType: 'blob'});
+    }
+
     generateOI(oiDetails: any): Observable<any> {
         return this.http.post('/api/documents/generate-oi', oiDetails, {responseType: 'blob'});
+    }
+
+    generateOIM(oiDetails: any): Observable<any> {
+        return this.http.post('/api/documents/generate-oim', oiDetails, {responseType: 'blob'});
     }
 
     generateOA(oaDetails: any): Observable<any> {
         return this.http.post('/api/documents/generate-oa', oaDetails, {responseType: 'blob'});
     }
 
+    generateOM(oaDetails: any): Observable<any> {
+        return this.http.post('/api/documents/generate-om', oaDetails, {responseType: 'blob'});
+    }
+
     removeDD(element: any): Observable<any> {
         return this.http.post('/api/documents/remove-dd', element, {observe: 'response'});
+    }
+
+    removeDDM(element: any): Observable<any> {
+        return this.http.post('/api/documents/remove-ddm', element, {observe: 'response'});
     }
 
     removeOI(element: any): Observable<any> {
         return this.http.post('/api/documents/remove-oi', element, {observe: 'response'});
     }
 
+    removeOIM(element: any): Observable<any> {
+        return this.http.post('/api/documents/remove-oim', element, {observe: 'response'});
+    }
+
     removeOA(element: any): Observable<any> {
         return this.http.post('/api/documents/remove-oa', element, {observe: 'response'});
     }
 
-    addDD(document : any,file: File): Observable<any> {
+    removeOM(element: any): Observable<any> {
+        return this.http.post('/api/documents/remove-om', element, {observe: 'response'});
+    }
+
+    addDD(document: any, file: File): Observable<any> {
         const formdata: FormData = new FormData();
         formdata.append('id', document.id);
         formdata.append('file', file);
         return this.http.post('/api/documents/add-dd', formdata, {observe: 'response'});
     }
 
-    addOI(document : any,file: File): Observable<any> {
+    addDDM(document: any, file: File): Observable<any> {
+        const formdata: FormData = new FormData();
+        formdata.append('id', document.id);
+        formdata.append('file', file);
+        return this.http.post('/api/documents/add-ddm', formdata, {observe: 'response'});
+    }
+
+    addOI(document: any, file: File): Observable<any> {
         const formdata: FormData = new FormData();
         formdata.append('id', document.id);
         formdata.append('file', file);
         return this.http.post('/api/documents/add-oi', formdata, {observe: 'response'});
     }
 
-    addOA(document : any,file: File): Observable<any> {
+    addOIM(document: any, file: File): Observable<any> {
+        const formdata: FormData = new FormData();
+        formdata.append('id', document.id);
+        formdata.append('file', file);
+        return this.http.post('/api/documents/add-oim', formdata, {observe: 'response'});
+    }
+
+    addOA(document: any, file: File): Observable<any> {
         const formdata: FormData = new FormData();
         formdata.append('id', document.id);
         formdata.append('dateOfIssue', document.dateOfIssue);
         formdata.append('file', file);
         return this.http.post('/api/documents/add-oa', formdata, {observe: 'response'});
+    }
+
+    addOM(document: any, file: File): Observable<any> {
+        const formdata: FormData = new FormData();
+        formdata.append('id', document.id);
+        formdata.append('dateOfIssue', document.dateOfIssue);
+        formdata.append('file', file);
+        return this.http.post('/api/documents/add-om', formdata, {observe: 'response'});
     }
 
 }

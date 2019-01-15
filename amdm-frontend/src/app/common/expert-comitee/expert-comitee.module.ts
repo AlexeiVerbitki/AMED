@@ -1,12 +1,12 @@
-import {NgModule} from "@angular/core";
-import {CommonModule} from "@angular/common";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MaterialSharedModule} from "../../material-shared.module";
-import {MDBBootstrapModule} from "angular-bootstrap-md";
-import {ExpertComiteeComponent} from "./expert-comitee.component";
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MaterialSharedModule} from '../../material-shared.module';
+import {MDBBootstrapModule} from 'angular-bootstrap-md';
+import {ExpertComiteeComponent} from './expert-comitee.component';
 
 @NgModule({
-    imports:[
+    imports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
@@ -14,8 +14,8 @@ import {ExpertComiteeComponent} from "./expert-comitee.component";
         MDBBootstrapModule.forRoot(),
     ],
 
-    declarations:[ExpertComiteeComponent],
+    declarations: [ExpertComiteeComponent],
 
-    exports:[ExpertComiteeComponent,CommonModule, FormsModule, ReactiveFormsModule]
+    exports: [ExpertComiteeComponent, CommonModule, FormsModule, ReactiveFormsModule]
 })
 export class ExpertComiteeModule { }

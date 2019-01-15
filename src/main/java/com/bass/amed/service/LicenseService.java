@@ -191,7 +191,11 @@ public class LicenseService
                 leOpt.get().setCompanyName(ece.getLongName());
             }
 
-            ece.setLocality(localityService.findLocalityById(ece.getLocality().getId()));
+            if (ece.getLocality() != null)
+            {
+                ece.setLocality(localityService.findLocalityById(ece.getLocality().getId()));
+            }
+
             if (!ece.getAgentPharmaceutist().isEmpty())
             {
                 ece.setSelectedPharmaceutist(ece.getAgentPharmaceutist().stream().filter(af -> af.getSelectionDate() != null).max(Comparator.comparing(LicenseAgentPharmaceutistEntity::getSelectionDate)).get());

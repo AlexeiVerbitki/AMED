@@ -1,12 +1,12 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
-import {Subscription} from "rxjs";
-import {RequestService} from "../../../shared/service/request.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {UploadFileService} from "../../../shared/service/upload/upload-file.service";
-import {DocumentService} from "../../../shared/service/document.service";
-import {HttpResponse} from "@angular/common/http";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
+import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {Subscription} from 'rxjs';
+import {RequestService} from '../../../shared/service/request.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {UploadFileService} from '../../../shared/service/upload/upload-file.service';
+import {DocumentService} from '../../../shared/service/document.service';
+import {HttpResponse} from '@angular/common/http';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-oi-list',
@@ -23,7 +23,6 @@ export class OiListComponent implements OnInit {
   incarcaFisierVariable: ElementRef;
   private subscriptions: Subscription[] = [];
   @Output() oiListModified = new EventEmitter();
-  @Input() displayTable: boolean;
 
   constructor(private requestService: RequestService,
               private loadingService: LoaderService,
@@ -33,6 +32,7 @@ export class OiListComponent implements OnInit {
   }
 
   ngOnInit() {
+      this.loadOIs();
   }
 
   loadOIs() {
@@ -48,13 +48,13 @@ export class OiListComponent implements OnInit {
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     if (this.dataSource.paginator) {
-      this.dataSource.paginator._intl.itemsPerPageLabel = "Rinduri pe pagina: ";
+      this.dataSource.paginator._intl.itemsPerPageLabel = 'Rinduri pe pagina: ';
     }
     this.dataSource.sort = this.sort;
   }
 
   reset() {
-    this.incarcaFisierVariable.nativeElement.value = "";
+    this.incarcaFisierVariable.nativeElement.value = '';
   }
 
   addDocument(element: any, event) {
@@ -104,8 +104,8 @@ export class OiListComponent implements OnInit {
 
   viewOI(element: any) {
     this.subscriptions.push(this.uploadService.loadFile(element.path).subscribe(data => {
-          let file = new Blob([data], {type: 'application/pdf'});
-          var fileURL = URL.createObjectURL(file);
+          const file = new Blob([data], {type: 'application/pdf'});
+          const fileURL = URL.createObjectURL(file);
           window.open(fileURL);
         },
         error => {

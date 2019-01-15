@@ -1,7 +1,7 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {Country} from "../../../models/country";
-import {Currency} from "../../../models/currency";
-import {Price} from "../../../models/price";
+import {Country} from '../../../models/country';
+import {Currency} from '../../../models/currency';
+import {Price} from '../../../models/price';
 
 @Component({
   selector: 'app-reference-price',
@@ -13,7 +13,7 @@ export class ReferencePriceComponent implements OnInit {
     @ViewChild ('changeProp') elemRef: ElementRef;
 
     formNr: number;
-    forEvaluation: boolean = false;
+    forEvaluation = false;
     refPrice: Price = new Price();
 
     priceId: string;
@@ -23,7 +23,7 @@ export class ReferencePriceComponent implements OnInit {
     typeId: string;
 
     @Input()
-    canRemove: boolean = true;
+    canRemove = true;
 
     @Output()
     public remove: EventEmitter<number> = new EventEmitter();
@@ -32,7 +32,7 @@ export class ReferencePriceComponent implements OnInit {
     public change: EventEmitter<any> = new EventEmitter();
 
     @Input()
-    formSubmitted: boolean = false;
+    formSubmitted = false;
 
     @Input()
     countries: Country[] = [];
@@ -56,7 +56,7 @@ export class ReferencePriceComponent implements OnInit {
     ngOnInit() {
         // (<any>this.elemRef).setDisabledState(true);
         // console.log(this.elemRef);
-        let uniqueId = new Date().getMilliseconds();
+        const uniqueId = new Date().getMilliseconds();
         this.priceId = 'priceId' + uniqueId;
         this.divisionId = 'divisionId' + uniqueId;
         this.currencyId = 'currencyId' + uniqueId;

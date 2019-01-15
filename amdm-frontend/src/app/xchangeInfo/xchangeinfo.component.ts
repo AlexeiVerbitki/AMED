@@ -1,8 +1,8 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {MatDialog} from '@angular/material';
 import {FormBuilder} from '@angular/forms';
-import {Subscription} from "rxjs";
-import {PriceService} from "../shared/service/prices.service";
+import {Subscription} from 'rxjs';
+import {PriceService} from '../shared/service/prices.service';
 
 @Component({
     selector: 'app-xchangeinfo',
@@ -21,7 +21,7 @@ export class XchangeInfoComponent implements OnInit, OnDestroy {
 
     constructor(private fb: FormBuilder,
                 private priceService: PriceService,
-                public dialog: MatDialog,) {
+                public dialog: MatDialog, ) {
     }
 
     ngOnInit() {
@@ -29,8 +29,8 @@ export class XchangeInfoComponent implements OnInit, OnDestroy {
     }
 
 
-    getPrevMonthAVGCurrencies(){
-        this.subscriptions.push(this.priceService.getPrevMonthAVGCurrencies().subscribe(data =>{
+    getPrevMonthAVGCurrencies() {
+        this.subscriptions.push(this.priceService.getPrevMonthAVGCurrencies().subscribe(data => {
             this.currencies = data;
             console.log('currencies', this.currencies);
             this.changed.emit(this.currencies);

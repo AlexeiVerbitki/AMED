@@ -107,4 +107,7 @@ public class RegistrationRequestsEntity
     @Basic
     @Column(name = "oi_number")
     private String oiNumber;
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @JoinColumn(name = "registration_request_id")
+    private Set<CtPaymentOrdersEntity> ctPaymentOrdersEntities = new HashSet<>();
 }

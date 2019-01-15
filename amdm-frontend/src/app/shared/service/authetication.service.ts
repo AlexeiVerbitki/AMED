@@ -57,18 +57,16 @@ export class AuthService implements OnInit {
         return false;
     }
 
-    getUserName() : string
-    {
+    getUserName(): string {
         const token = localStorage.getItem('authenticationToken');
-        if (!token)
-        {
+        if (!token) {
             return '';
         }
-        let jwtHelper = new JwtHelperService();
+        const jwtHelper = new JwtHelperService();
         // decode the token to get its payload
-        let tokenPayload = jwtHelper.decodeToken(token);
+        const tokenPayload = jwtHelper.decodeToken(token);
 
-        if (this.isAuthenticated() ) {
+        if (this.isAuthenticated()) {
             return tokenPayload.sub;
         }
         return '';

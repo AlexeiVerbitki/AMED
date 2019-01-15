@@ -1,9 +1,9 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from "rxjs";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
-import {ConfirmationDialogComponent} from "../confirmation-dialog.component";
-import {DecimalPipe} from "@angular/common";
+import {Subscription} from 'rxjs';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
+import {ConfirmationDialogComponent} from '../confirmation-dialog.component';
+import {DecimalPipe} from '@angular/common';
 
 @Component({
     selector: 'app-annihilation-med-dialog',
@@ -13,14 +13,14 @@ import {DecimalPipe} from "@angular/common";
 export class AnnihilationMedDialogComponent implements OnInit, OnDestroy {
 
     private subscriptions: Subscription[] = [];
-    rFormSubbmitted: boolean = false;
+    rFormSubbmitted = false;
     rForm: FormGroup;
 
-    numberPipe : DecimalPipe = new DecimalPipe('en-US');
+    numberPipe: DecimalPipe = new DecimalPipe('en-US');
 
-    destroyMethods : any[];
+    destroyMethods: any[];
 
-    annihilationMedInitial : any;
+    annihilationMedInitial: any;
 
     constructor(private fb: FormBuilder,
                 public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
@@ -58,8 +58,7 @@ export class AnnihilationMedDialogComponent implements OnInit, OnDestroy {
         this.rForm.get('tax').valueChanges.subscribe(val => {
             if (val) {
                 this.rForm.get('taxTotal').setValue(this.numberPipe.transform(val * this.rForm.get('quantity').value, '1.2-2'));
-            }
-            else {
+            } else {
                 this.rForm.get('taxTotal').setValue(null);
             }
         });
@@ -67,23 +66,21 @@ export class AnnihilationMedDialogComponent implements OnInit, OnDestroy {
 
 
 
-    ok()
-    {
+    ok() {
         this.rFormSubbmitted = true;
 
-        if (!this.rForm.valid)
-        {
+        if (!this.rForm.valid) {
             return;
         }
 
         this.rFormSubbmitted = false;
 
-        let annihilationMed = this.annihilationMedInitial;
+        const annihilationMed = this.annihilationMedInitial;
         annihilationMed.destructionMethod = this.rForm.get('destroyMethod').value;
         annihilationMed.tax = this.rForm.get('tax').value;
         annihilationMed.taxTotal = this.rForm.get('taxTotal').value;
 
-        let  response = {
+        const  response = {
                 success : true,
                 annihilationMed : annihilationMed
             };
@@ -91,8 +88,7 @@ export class AnnihilationMedDialogComponent implements OnInit, OnDestroy {
         this.dialogRef.close(response);
     }
 
-    cancel()
-    {
+    cancel() {
         const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
             data: {
                 message: 'Sunteti sigur(a)?',

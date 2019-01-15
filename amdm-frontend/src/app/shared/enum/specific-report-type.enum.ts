@@ -1,5 +1,5 @@
 export enum SpecificReportType {
-    SAE=0, SUSAR=1
+    SAE = 0, SUSAR = 1
 }
 
 export namespace SpecificReportType {

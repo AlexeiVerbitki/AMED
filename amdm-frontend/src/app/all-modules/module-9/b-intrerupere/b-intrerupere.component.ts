@@ -1,11 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AuthService} from "../../../shared/service/authetication.service";
-import {Document} from "../../../models/document";
-import {ActivatedRoute, Router} from "@angular/router";
-import {RequestService} from "../../../shared/service/request.service";
-import {Subscription} from "rxjs/index";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {LoaderService} from "../../../shared/service/loader.service";
+import {AuthService} from '../../../shared/service/authetication.service';
+import {Document} from '../../../models/document';
+import {ActivatedRoute, Router} from '@angular/router';
+import {RequestService} from '../../../shared/service/request.service';
+import {Subscription} from 'rxjs/index';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {LoaderService} from '../../../shared/service/loader.service';
 
 @Component({
     selector: 'app-b-intrerupere',
@@ -69,17 +69,17 @@ export class BIntrerupereComponent implements OnInit, OnDestroy {
                     this.outDocuments = data.outputDocuments;
                 },
                 error => console.log(error)
-            ))
-        }))
+            ));
+        }));
     }
 
     doSubmit() {
-        let formModel = this.cancelClinicalTrailAmendmentForm.getRawValue();
-        console.log("Submit data", formModel);
+        const formModel = this.cancelClinicalTrailAmendmentForm.getRawValue();
+        console.log('Submit data', formModel);
 
         if (this.cancelClinicalTrailAmendmentForm.invalid) {
             alert('Invalid Form!!');
-            console.log("Not submitted data", formModel);
+            console.log('Not submitted data', formModel);
             return;
         }
 
@@ -98,7 +98,7 @@ export class BIntrerupereComponent implements OnInit, OnDestroy {
         formModel.assignedUser = this.authService.getUserName();
         formModel.endDate = new Date();
 
-        let findAmendment = formModel.clinicalTrails.clinicTrialAmendEntities.find(amendment => formModel.id == amendment.registrationRequestId);
+        const findAmendment = formModel.clinicalTrails.clinicTrialAmendEntities.find(amendment => formModel.id == amendment.registrationRequestId);
         findAmendment.status = 'C';
         this.subscriptions.push(
             this.requestService.addClinicalTrailAmendmentNextRequest(formModel).subscribe(data => {
@@ -108,7 +108,7 @@ export class BIntrerupereComponent implements OnInit, OnDestroy {
                 this.loadingService.hide();
                 console.log(error);
             })
-        )
+        );
     }
 
     ngOnDestroy(): void {

@@ -1,21 +1,21 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Observable, Subject, Subscription} from "rxjs/index";
-import {ActivatedRoute, Router} from "@angular/router";
-import {RequestService} from "../../../shared/service/request.service";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Document} from "../../../models/document";
-import {TaskService} from "../../../shared/service/task.service";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {MatDialog, MatDialogConfig, MatRadioChange} from "@angular/material";
-import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
-import {MedInstInvestigatorsDialogComponent} from "../dialog/med-inst-investigators-dialog/med-inst-investigators-dialog.component";
-import {ActiveSubstanceDialogComponent} from "../../../dialog/active-substance-dialog/active-substance-dialog.component";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {PaymentOrder} from "../../../models/paymentOrder";
-import {Receipt} from "../../../models/receipt";
-import {AdditionalDataDialogComponent} from "../dialog/additional-data-dialog/additional-data-dialog.component";
+import {Observable, Subject, Subscription} from 'rxjs/index';
+import {ActivatedRoute, Router} from '@angular/router';
+import {RequestService} from '../../../shared/service/request.service';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Document} from '../../../models/document';
+import {TaskService} from '../../../shared/service/task.service';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {MatDialog, MatDialogConfig, MatRadioChange} from '@angular/material';
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
+import {MedInstInvestigatorsDialogComponent} from '../dialog/med-inst-investigators-dialog/med-inst-investigators-dialog.component';
+import {ActiveSubstanceDialogComponent} from '../../../dialog/active-substance-dialog/active-substance-dialog.component';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {PaymentOrder} from '../../../models/paymentOrder';
+import {Receipt} from '../../../models/receipt';
+import {AdditionalDataDialogComponent} from '../dialog/additional-data-dialog/additional-data-dialog.component';
 
 @Component({
     selector: 'app-b-evaluare-primara',
@@ -36,7 +36,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
     private subscriptions: Subscription[] = [];
     clinicTrailAmendForm: FormGroup;
-    private amendmentIndex: number = -1;
+    private amendmentIndex = -1;
 
     protected stepName: string;
 
@@ -55,38 +55,38 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
     placeboFormn: FormGroup;
 
     protected manufacturers: Observable<any[]>;
-    protected loadingManufacturer: boolean = false;
+    protected loadingManufacturer = false;
     protected manufacturerInputs = new Subject<string>();
 
     protected measureUnits: any[] = [];
     protected measureUnitsRfPr: any[] = [];
     protected measureUnitsPlacebo: any[] = [];
-    protected loadingMeasureUnits: boolean = false;
+    protected loadingMeasureUnits = false;
 
     protected farmForms: Observable<any[]>;
-    protected loadingFarmForms: boolean = false;
+    protected loadingFarmForms = false;
     protected farmFormsInputs = new Subject<string>();
 
     protected atcCodes: Observable<any[]>;
-    protected loadingAtcCodes: boolean = false;
+    protected loadingAtcCodes = false;
     protected atcCodesInputs = new Subject<string>();
 
     protected manufacturersRfPr: Observable<any[]>;
-    protected loadingManufacturerRfPr: boolean = false;
+    protected loadingManufacturerRfPr = false;
     protected manufacturerInputsRfPr = new Subject<string>();
 
     protected farmFormsRfPr: Observable<any[]>;
-    protected loadingFarmFormsRfPr: boolean = false;
+    protected loadingFarmFormsRfPr = false;
     protected farmFormsInputsRfPr = new Subject<string>();
 
     protected atcCodesRfPr: Observable<any[]>;
-    protected loadingAtcCodesRfPr: boolean = false;
+    protected loadingAtcCodesRfPr = false;
     protected atcCodesInputsRfPr = new Subject<string>();
 
     //Payments control
     receiptsList: Receipt[] = [];
     paymentOrdersList: PaymentOrder[] = [];
-    paymentTotal: number = 0;
+    paymentTotal = 0;
 
 
     medActiveSubstances: any[] = [];
@@ -95,7 +95,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
     phaseList: any[] = [];
     allInvestigatorsList: any[] = [];
 
-    isAnalizePage: boolean = false;
+    isAnalizePage = false;
     private typeId: string;
     private currentStep: string;
 
@@ -109,7 +109,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                 private loadingService: LoaderService,
                 private authService: AuthService,
                 private router: Router,
-                private dialogConfirmation: MatDialog,) {
+                private dialogConfirmation: MatDialog, ) {
     }
 
     ngOnInit() {
@@ -128,7 +128,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                 'id': [''],
                 'registrationRequestId': [],
                 'clinicalTrialsEntityId': [],
-                'amendCode': [[Validators.required, Validators.pattern("^[1-9][0-9]")]],
+                'amendCode': [[Validators.required, Validators.pattern('^[1-9][0-9]')]],
                 'note': ['', Validators.required],
                 'titleFrom': [''],
                 'titleTo': [{value: null, disabled: true}],
@@ -147,9 +147,9 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                 'medicalInstitutionsFrom': [],
                 'medicalInstitutionsTo': [],
                 'trialPopNatFrom': [''],
-                'trialPopNatTo': ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+                'trialPopNatTo': ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
                 'trialPopInternatFrom': [''],
-                'trialPopInternatTo': ['', [Validators.pattern("^[0-9]*$")]],
+                'trialPopInternatTo': ['', [Validators.pattern('^[0-9]*$')]],
                 'medicament': [],
                 'referenceProduct': [],
                 'status': ['P'],
@@ -255,7 +255,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
                 }, error => console.log(error)
             )
-        )
+        );
     }
 
     loadPhasesList() {
@@ -263,7 +263,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
             this.administrationService.getClinicalTrailsPhases().subscribe(data => {
                 this.phaseList = data;
             }, error => console.log(error))
-        )
+        );
     }
 
     paymentTotalUpdate(event) {
@@ -275,7 +275,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
             this.atcCodesInputsRfPr.pipe(
                 filter((result: string) => {
                     if (result && result.length > 0) {
-                        console.log("result && result.length > 0", result);
+                        console.log('result && result.length > 0', result);
                         return true;
                     }
                 }),
@@ -297,7 +297,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         this.farmFormsRfPr =
             this.farmFormsInputsRfPr.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) return true;
+                    if (result && result.length > 2) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -317,7 +317,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         this.manufacturersRfPr =
             this.manufacturerInputsRfPr.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) return true;
+                    if (result && result.length > 2) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -338,7 +338,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
             this.atcCodesInputs.pipe(
                 filter((result: string) => {
                     if (result && result.length > 0) {
-                        console.log("result && result.length > 0", result);
+                        console.log('result && result.length > 0', result);
                         return true;
                     }
                 }),
@@ -359,7 +359,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         this.farmForms =
             this.farmFormsInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) return true;
+                    if (result && result.length > 2) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -391,7 +391,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         this.manufacturers =
             this.manufacturerInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) return true;
+                    if (result && result.length > 2) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -409,7 +409,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
     addMedicalInstitution() {
         // console.log( 'this.addMediacalInstitutionForm',  this.addMediacalInstitutionForm);
 
-        let dialogConfig2 = new MatDialogConfig();
+        const dialogConfig2 = new MatDialogConfig();
 
         dialogConfig2.disableClose = false;
         dialogConfig2.autoFocus = true;
@@ -421,9 +421,9 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         dialogConfig2.data = {
             medicalInstitution: this.addMediacalInstitutionForm.get('medicalInstitution').value.name,
             investigatorsList: this.allInvestigatorsList
-        }
+        };
 
-        let dialogRef = this.dialog.open(MedInstInvestigatorsDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(MedInstInvestigatorsDialogComponent, dialogConfig2);
 
         this.subscriptions.push(
             dialogRef.afterClosed().subscribe(result => {
@@ -432,15 +432,15 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                     return;
                 }
 
-                let medInst = this.addMediacalInstitutionForm.get('medicalInstitution').value;
+                const medInst = this.addMediacalInstitutionForm.get('medicalInstitution').value;
                 medInst.investigators = result.investigators;
                 this.mediacalInstitutionsList.push(medInst);
-                let intdexToDelete = this.allMediacalInstitutionsList.indexOf(this.addMediacalInstitutionForm.get('medicalInstitution').value);
+                const intdexToDelete = this.allMediacalInstitutionsList.indexOf(this.addMediacalInstitutionForm.get('medicalInstitution').value);
                 this.allMediacalInstitutionsList.splice(intdexToDelete, 1);
                 this.allMediacalInstitutionsList = this.allMediacalInstitutionsList.splice(0);
                 this.addMediacalInstitutionForm.get('medicalInstitution').setValue('');
             })
-        )
+        );
     }
 
     deleteMedicalInstitution(i) {
@@ -460,12 +460,12 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                 this.allMediacalInstitutionsList = data;
 
                 if (this.mediacalInstitutionsList.length > 0) {
-                    let missing = this.allMediacalInstitutionsList.filter(item =>
+                    const missing = this.allMediacalInstitutionsList.filter(item =>
                         !this.mediacalInstitutionsList.some(other => item.id === other.id));
                     this.allMediacalInstitutionsList = missing;
                 }
             }, error => console.log(error))
-        )
+        );
     }
 
     loadDocTypes(data) {
@@ -508,7 +508,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                         this.clinicTrailAmendForm.get('requestHistories').setValue(data.requestHistories);
                         this.clinicTrailAmendForm.get('clinicalTrails').setValue(data.clinicalTrails);
 
-                        let findAmendment = data.clinicalTrails.clinicTrialAmendEntities.find(amendment => data.id == amendment.registrationRequestId);
+                        const findAmendment = data.clinicalTrails.clinicTrialAmendEntities.find(amendment => data.id == amendment.registrationRequestId);
                         this.amendmentIndex = data.clinicalTrails.clinicTrialAmendEntities.indexOf(findAmendment);
 
                         this.clinicTrailAmendForm.get('clinicalTrailAmendment').setValue(findAmendment);
@@ -554,13 +554,13 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                         this.loadMedicalInstitutionsList();
                     },
                     error => console.log(error)
-                ))
+                ));
             })
         );
     }
 
     editMedicalInstitution(i) {
-        let dialogConfig2 = new MatDialogConfig();
+        const dialogConfig2 = new MatDialogConfig();
 
         dialogConfig2.disableClose = false;
         dialogConfig2.autoFocus = true;
@@ -575,9 +575,9 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
             medicalInstitution: this.mediacalInstitutionsList[i].name,
             investigatorsList: this.allInvestigatorsList,
             collectedInvestigators: this.mediacalInstitutionsList[i].investigators
-        }
+        };
 
-        let dialogRef = this.dialog.open(MedInstInvestigatorsDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(MedInstInvestigatorsDialogComponent, dialogConfig2);
 
         this.subscriptions.push(
             dialogRef.afterClosed().subscribe(result => {
@@ -587,7 +587,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                 }
                 this.mediacalInstitutionsList[i].investigators = result.investigators;
             })
-        )
+        );
     }
 
     addMedActiveSubstanceDialog() {
@@ -601,7 +601,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         dialogConfig2.height = '650px';
         dialogConfig2.width = '600px';
 
-        let dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
         this.subscriptions.push(
             dialogRef.afterClosed().subscribe(result => {
@@ -615,7 +615,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                     });
                 }
             })
-        )
+        );
     }
 
     editMedActiveSubstance(substance: any, index: number) {
@@ -636,7 +636,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
             manufacture: substance.manufacture
         };
 
-        let dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
         this.subscriptions.push(
             dialogRef.afterClosed().subscribe(result => {
@@ -649,7 +649,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                     };
                 }
             })
-        )
+        );
     }
 
     removeMedActiveSubstance(index: number) {
@@ -664,7 +664,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                     this.medActiveSubstances.splice(index, 1);
                 }
             })
-        )
+        );
     }
 
     addRefProdActiveSubstanceDialog() {
@@ -678,7 +678,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         dialogConfig2.height = '650px';
         dialogConfig2.width = '600px';
 
-        let dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
         this.subscriptions.push(
             dialogRef.afterClosed().subscribe(result => {
@@ -692,7 +692,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                     });
                 }
             })
-        )
+        );
     }
 
     editRefProdActiveSubstance(substance: any, index: number) {
@@ -711,7 +711,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
             manufacture: substance.manufacture
         };
 
-        let dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
         this.subscriptions.push(
             dialogRef.afterClosed().subscribe(result => {
@@ -724,7 +724,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                     };
                 }
             })
-        )
+        );
     }
 
     removeRefProdActiveSubstance(index: number) {
@@ -739,7 +739,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                     this.refProdActiveSubstances.splice(index, 1);
                 }
             })
-        )
+        );
     }
 
 
@@ -753,9 +753,9 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
     save() {
         this.loadingService.show();
-        console.log("formData", this.clinicTrailAmendForm);
+        console.log('formData', this.clinicTrailAmendForm);
 
-        let formModel = this.clinicTrailAmendForm.getRawValue();
+        const formModel = this.clinicTrailAmendForm.getRawValue();
         formModel.currentStep = 'E';
         formModel.documents = this.docs;
         formModel.receipts = this.receiptsList;
@@ -773,35 +773,35 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
         formModel.assignedUser = this.authService.getUserName();
 
-        let currentAmendment = formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex];
+        const currentAmendment = formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex];
         console.log('currentAmendment', currentAmendment);
 
         formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex] = formModel.clinicalTrailAmendment;
 
-        console.log("Save data", formModel);
+        console.log('Save data', formModel);
         this.subscriptions.push(
             this.requestService.saveClinicalTrailAmendmentRequest(formModel).subscribe(data => {
                 this.loadingService.hide();
                 this.router.navigate(['dashboard/module']);
             }, error => {
                 this.loadingService.hide();
-                console.log(error)
+                console.log(error);
             })
-        )
+        );
     }
 
     onSubmit() {
-        let formModel = this.clinicTrailAmendForm.getRawValue();
+        const formModel = this.clinicTrailAmendForm.getRawValue();
 
         if (this.clinicTrailAmendForm.invalid /*|| this.paymentTotal < 0*/) {
             alert('Invalid Form1!');
-            console.log("Not submitted data", this.clinicTrailAmendForm);
+            console.log('Not submitted data', this.clinicTrailAmendForm);
             return;
         }
 
         if (this.medicamentForm.invalid || this.referenceProductFormn.invalid) {
-            console.log("this.medicamentForm", this.medicamentForm);
-            console.log("this.referenceProductFormn", this.referenceProductFormn);
+            console.log('this.medicamentForm', this.medicamentForm);
+            console.log('this.referenceProductFormn', this.referenceProductFormn);
             alert('Invalid Form2!');
             return;
         }
@@ -835,23 +835,23 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         formModel.assignedUser = this.authService.getUserName();
         formModel.currentStep = this.isAnalizePage ? 'AP' : 'A';
 
-        let currentAmendment = formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex];
+        const currentAmendment = formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex];
         console.log('currentAmendment', currentAmendment);
         formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex] = formModel.clinicalTrailAmendment;
 
-        console.log("Next page data", formModel);
+        console.log('Next page data', formModel);
 
-        let pagePath = this.isAnalizePage ? '/dashboard/module/clinic-studies/approval-amendment/' : '/dashboard/module/clinic-studies/analyze-amendment/';
-        console.log("pagePath", pagePath);
+        const pagePath = this.isAnalizePage ? '/dashboard/module/clinic-studies/approval-amendment/' : '/dashboard/module/clinic-studies/analyze-amendment/';
+        console.log('pagePath', pagePath);
         this.subscriptions.push(
             this.requestService.addClinicalTrailAmendmentNextRequest(formModel).subscribe(data => {
                 this.router.navigate([pagePath + data.body]);
                 this.loadingService.hide();
             }, error => {
                 this.loadingService.hide();
-                console.log(error)
+                console.log(error);
             })
-        )
+        );
     }
 
     interruptProcess() {
@@ -867,7 +867,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                 // console.log('result', result);
                 if (result) {
                     this.loadingService.show();
-                    let formModel = this.clinicTrailAmendForm.getRawValue();
+                    const formModel = this.clinicTrailAmendForm.getRawValue();
                     formModel.currentStep = 'I';
                     formModel.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
                     formModel.requestHistories.push({
@@ -883,12 +883,12 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                             this.loadingService.hide();
                         }, error => {
                             this.loadingService.hide();
-                            console.log(error)
+                            console.log(error);
                         })
-                    )
+                    );
                 }
             })
-        )
+        );
     }
 
     requestAdditionalData() {
@@ -915,12 +915,12 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                     );
                 }
             })
-        )
+        );
     }
 
     ngOnDestroy(): void {
         this.subscriptions.forEach(subscription => {
             subscription.unsubscribe();
-        })
+        });
     }
 }

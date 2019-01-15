@@ -1,10 +1,12 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
-import {ClinicalTrialService} from "../../../../shared/service/clinical-trial.service";
-import {Subscription} from "rxjs/index";
-import {AmendmentDetailsComponent} from "../amendment-details/amendment-details.component";
-import {NotificationDetailslsComponent} from "../notification-detailsls/notification-detailsls.component";
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
+import {ClinicalTrialService} from '../../../../shared/service/clinical-trial.service';
+import {Subscription} from 'rxjs/index';
+import {AmendmentDetailsComponent} from '../amendment-details/amendment-details.component';
+import {NotificationDetailslsComponent} from '../notification-detailsls/notification-detailsls.component';
+import {saveAs} from 'file-saver';
+import {UploadFileService} from '../../../../shared/service/upload/upload-file.service';
 
 @Component({
     selector: 'app-clinical-trials-details',
@@ -20,7 +22,8 @@ export class ClinicalTrialsDetailsComponent implements OnInit, OnDestroy {
                 public dialogRef: MatDialogRef<ClinicalTrialsDetailsComponent>,
                 @Inject(MAT_DIALOG_DATA) public dataDialog: any,
                 private ctService: ClinicalTrialService,
-                public dialogAmendment: MatDialog,) {
+                public dialogAmendment: MatDialog,
+                private uploadService: UploadFileService) {
     }
 
     ngOnInit() {
@@ -91,14 +94,15 @@ export class ClinicalTrialsDetailsComponent implements OnInit, OnDestroy {
                 this.ctForm.get('clinicTrialAmendEntities').setValue(data.clinicalTrails.clinicTrialAmendEntities);
 
                 data.clinicalTrails.clinicTrialNotificationEntities.sort((one, two) => (one.id < two.id ? 1 : -1));
-                this.ctForm.get('clinicTrialNotificationEntities').setValue(data.clinicalTrails.clinicTrialNotificationEntities);
+                const filteredNotif = data.clinicalTrails.clinicTrialNotificationEntities.filter(notiff => notiff.status == 'F');
+                this.ctForm.get('clinicTrialNotificationEntities').setValue(filteredNotif);
                 // this.ctForm.get('medicament').disable();
 
                 // console.log('this.ctForm', this.ctForm);
                 //this.dataSource.data = data;
             }, error => {
                 // this.loadingService.hide();
-                console.log(error)
+                console.log(error);
             })
         );
     }
@@ -141,6 +145,21 @@ export class ClinicalTrialsDetailsComponent implements OnInit, OnDestroy {
         this.subscriptions.forEach(s => {
             s.unsubscribe();
         });
+    }
+
+    loadFileFrom(path: string) {
+        this.subscriptions.push(this.uploadService.loadFile(path).subscribe(data => {
+                this.saveToFileSystem(data, path.substring(path.lastIndexOf('/') + 1));
+            },
+            error => {
+                console.log(error);
+            })
+        );
+    }
+
+    private saveToFileSystem(response: any, docName: string) {
+        const blob = new Blob([response]);
+        saveAs(blob, docName);
     }
 
 }

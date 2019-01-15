@@ -1,26 +1,15 @@
-import {
-    Component,
-    ComponentFactory,
-    ComponentFactoryResolver,
-    EventEmitter,
-    Input,
-    OnDestroy,
-    OnInit,
-    Output
-} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {Medicament} from '../../../models/medicament';
 import {MatDialog} from '@angular/material';
 import {saveAs} from 'file-saver';
-import {ReferencePriceComponent} from "../reference-price/reference-price.component";
-import {Country} from "../../../models/country";
-import {Currency} from "../../../models/currency";
-import {UnitOfMeasure} from "../../../models/unitOfMeasure";
-import {ActivatedRoute, Router} from "@angular/router";
-import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
-import {PriceService} from "../../../shared/service/prices.service";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
+import {Country} from '../../../models/country';
+import {Currency} from '../../../models/currency';
+import {UnitOfMeasure} from '../../../models/unitOfMeasure';
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
+import {PriceService} from '../../../shared/service/prices.service';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 
 @Component({
     selector: 'app-one-med-price',
@@ -61,21 +50,21 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
     @Input()
     priceTypes: any[];
 
-    medCode: string = '';
-    internationalName: string = '';
+    medCode = '';
+    internationalName = '';
     termsOfValidity: number;
-    dose: string = '';
-    division: string = '';
-    expirationDate: string = '';
-    volumeQuantityMeasurement: string = '';
-    manufacture: string = '';
+    dose = '';
+    division = '';
+    expirationDate = '';
+    volumeQuantityMeasurement = '';
+    manufacture = '';
     originale: boolean;
     volumeProp: number;
 
 
     constructor(private fb: FormBuilder,
                 public dialog: MatDialog,
-                private priceService: PriceService,) {
+                private priceService: PriceService, ) {
 
 
         this.PriceRegForm = fb.group({
@@ -91,7 +80,7 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
         this.companyMedicaments =
             this.medInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) return true;
+                    if (result && result.length > 2) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -126,7 +115,7 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
     }
 
     addReferencePriceRow() {
-        if(!this.priceDTO.price.referencePrices) {
+        if (!this.priceDTO.price.referencePrices) {
             this.priceDTO.price.referencePrices = [];
         }
         this.priceDTO.valid = false;
@@ -149,9 +138,9 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
         this.priceDTO.price.medicament = this.PriceRegForm.get('medicament').value;
         this.priceDTO.price.requestNumber = this.PriceRegForm.get('requestNumber').value;
         this.priceDTO.valid = this.PriceRegForm.valid;
-        if(this.priceDTO.valid) {
+        if (this.priceDTO.valid) {
             this.priceDTO.price.referencePrices.forEach(p => {
-                if(!p.value || !p.division || !p.currency || !p.country || !p.type) {
+                if (!p.value || !p.division || !p.currency || !p.country || !p.type) {
                     this.priceDTO.valid = false;
                     return;
                 }
@@ -164,14 +153,14 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
 
     checkMedExpiration(med: Medicament) {
 
-        if (med.expirationDate == undefined) return;
+        if (med.expirationDate == undefined) { return; }
 
-        let expDate: Date = new Date();
+        const expDate: Date = new Date();
         expDate.setMonth(expDate.getMonth() + 2);
-        let expMedDate = new Date(med.expirationDate);
+        const expMedDate = new Date(med.expirationDate);
 
-        let diffInMs: number = Date.parse(expMedDate.toDateString()) - Date.parse(expDate.toDateString());
-        let diffInHours: number = diffInMs / 1000 / 60 / 60;
+        const diffInMs: number = Date.parse(expMedDate.toDateString()) - Date.parse(expDate.toDateString());
+        const diffInHours: number = diffInMs / 1000 / 60 / 60;
 
         if (expMedDate < expDate) {
             const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
@@ -192,7 +181,7 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
 
     private onMedSelected(newMed: any) {
         console.log(newMed);
-        if (newMed == undefined) return;
+        if (newMed == undefined) { return; }
 
         this.onRemoveMed();
         this.checkMedExpiration(newMed);
@@ -200,7 +189,7 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
 
         this.medCode = newMed.code;
 
-        let volumeQuantityMeas: UnitOfMeasure = newMed.volumeQuantityMeasurement;
+        const volumeQuantityMeas: UnitOfMeasure = newMed.volumeQuantityMeasurement;
         if (volumeQuantityMeas != undefined) {
             this.volumeQuantityMeasurement = volumeQuantityMeas.description;
         }
@@ -209,16 +198,16 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
             this.manufacture = newMed.manufactures.find(m => m.producatorProdusFinit);
         }
 
-        let internationalName: any = newMed.internationalMedicamentName;
+        const internationalName: any = newMed.internationalMedicamentName;
         if (internationalName != undefined) {
             this.internationalName = internationalName.description;
         }
 
         this.originale = newMed.originale;
 
-        let expDate: Date = newMed.expirationDate;
+        const expDate: Date = newMed.expirationDate;
         if (expDate != undefined) {
-            let d: Date = new Date(expDate);
+            const d: Date = new Date(expDate);
             this.expirationDate = d.getDay() + '/' + d.getMonth() + '/' + d.getFullYear();
         }
 
@@ -253,7 +242,7 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
             return;
         }
 
-        let id = $event.id;
+        const id = $event.id;
         if (id !== undefined) {
             if (this.getMedSubscr !== undefined) {
                 this.getMedSubscr.unsubscribe();

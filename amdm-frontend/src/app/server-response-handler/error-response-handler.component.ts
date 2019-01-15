@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ErrorHandlerService} from "../shared/service/error-handler.service";
-import {ModalDirective} from "angular-bootstrap-md";
+import {ErrorHandlerService} from '../shared/service/error-handler.service';
+import {ModalDirective} from 'angular-bootstrap-md';
 
 @Component({
     selector: 'app-server-response-handler',

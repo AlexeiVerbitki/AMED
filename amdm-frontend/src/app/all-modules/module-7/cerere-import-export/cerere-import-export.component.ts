@@ -1,25 +1,24 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Select} from '../../../models/select';
-import {Document} from "../../../models/document";
-import {Observable, Subject, Subscription} from "rxjs";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {debounceTime, distinctUntilChanged, filter, tap, flatMap} from "rxjs/operators";
-import {MedicamentTypeService} from "../../../shared/service/medicamenttype.service";
-import {MedicamentGroupService} from "../../../shared/service/medicamentgroup.service";
-import {PharmaceuticalFormsService} from "../../../shared/service/pharmaceuticalforms.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {RequestService} from "../../../shared/service/request.service";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {DocumentService} from "../../../shared/service/document.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {MatDialog} from "@angular/material";
-import {TaskService} from "../../../shared/service/task.service";
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
-import {DrugSubstanceTypesService} from "../../../shared/service/drugs/drugsubstancetypes.service";
-import {DrugDocumentsService} from "../../../shared/service/drugs/drugdocuments.service";
-import {DrugDecisionsService} from "../../../shared/service/drugs/drugdecisions.service";
+import {Document} from '../../../models/document';
+import {Observable, Subject, Subscription} from 'rxjs';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
+import {MedicamentTypeService} from '../../../shared/service/medicamenttype.service';
+import {PharmaceuticalFormsService} from '../../../shared/service/pharmaceuticalforms.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {RequestService} from '../../../shared/service/request.service';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {DocumentService} from '../../../shared/service/document.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {MatDialog} from '@angular/material';
+import {TaskService} from '../../../shared/service/task.service';
+import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {DrugSubstanceTypesService} from '../../../shared/service/drugs/drugsubstancetypes.service';
+import {DrugDocumentsService} from '../../../shared/service/drugs/drugdocuments.service';
+import {DrugDecisionsService} from '../../../shared/service/drugs/drugdecisions.service';
 
 @Component({
     selector: 'app-cerere-import-export',
@@ -31,7 +30,6 @@ export class CerereImportExportComponent implements OnInit {
     cerereImpExpForm: FormGroup;
     documents: Document [] = [];
     formSubmitted: boolean;
-    private subscriptions: Subscription[] = [];
     generatedDocNrSeq: number;
     companies: any[];
     filteredOptions: Observable<any[]>;
@@ -42,8 +40,8 @@ export class CerereImportExportComponent implements OnInit {
     activeSubstancesTable: any[] = [];
     initialData: any;
     outDocuments: any[] = [];
-    isNonAttachedDocuments: boolean = false;
-    isResponseReceived: boolean = false;
+    isNonAttachedDocuments = false;
+    isResponseReceived = false;
     docTypesInitial: any[];
     drugCheckDecisions: any[] = [];
     drugSubstanceTypes: any[];
@@ -56,15 +54,15 @@ export class CerereImportExportComponent implements OnInit {
     substanceExistInTable: boolean;
     disabled: boolean;
     hasError: boolean;
-
     authorizationTypes: Select[] = [
         {value: 'none', viewValue: '(None)'},
         {value: 'Import', viewValue: 'Import'},
         {value: 'Export', viewValue: 'Export'},
     ];
+    private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder, private administrationService: AdministrationService,
-                private medicamentTypeService: MedicamentTypeService, private medicamentGroupService: MedicamentGroupService,
+                private medicamentTypeService: MedicamentTypeService,
                 private pharmaceuticalFormsService: PharmaceuticalFormsService, private activatedRoute: ActivatedRoute, private router: Router,
                 private requestService: RequestService, private authService: AuthService,
                 private documentService: DocumentService, private loadingService: LoaderService, public dialogConfirmation: MatDialog,
@@ -163,7 +161,9 @@ export class CerereImportExportComponent implements OnInit {
         this.authorizedSubstances =
             this.medInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) return true;
+                    if (result && result.length > 2) {
+                        return true;
+                    }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -238,19 +238,6 @@ export class CerereImportExportComponent implements OnInit {
         );
     }
 
-    private initOutputDocuments() {
-
-        let outDocumentSR = {
-            name: 'Scrisoare de refuz',
-            docType: this.docTypesInitial.find(r => r.category == 'SR'),
-            number: 'SR-' + this.cerereImpExpForm.get('requestNumber').value,
-            date: new Date()
-        };
-        this.outDocuments.push(outDocumentSR);
-
-        this.outDocuments = this.outDocuments.filter(r => r.category === 'SR');
-    }
-
     onChanges(): void {
 
         this.getDocumentsForSelectedAuthorizationType();
@@ -262,16 +249,16 @@ export class CerereImportExportComponent implements OnInit {
 
         this.cerereImpExpForm.get('authorizationType').valueChanges.subscribe(val => {
             this.outDocuments = [];
-            if (val.value == 'Import') {
+            if (val.value === 'Import') {
                 this.initOutImportDocuments();
-            } else if (val.value == 'Export') {
+            } else if (val.value === 'Export') {
                 this.initOutExportDocuments();
             } else {
                 this.docTypes = this.allDocTypes.filter(r => r.category === 'SR');
             }
-            let outDocumentSR = {
+            const outDocumentSR = {
                 name: 'Scrisoare de refuz',
-                docType: this.docTypesInitial.find(r => r.category == 'SR'),
+                docType: this.docTypesInitial.find(r => r.category === 'SR'),
                 number: 'SR-' + this.cerereImpExpForm.get('requestNumber').value,
                 date: new Date()
             };
@@ -298,9 +285,9 @@ export class CerereImportExportComponent implements OnInit {
     }
 
     initOutExportDocuments() {
-        let outDocumentEP = {
+        const outDocumentEP = {
             name: 'Autorizatia de export',
-            docType: this.docTypesInitial.find(r => r.category == 'EP'),
+            docType: this.docTypesInitial.find(r => r.category === 'EP'),
             number: 'EP-' + this.cerereImpExpForm.get('requestNumber').value,
             date: new Date()
         };
@@ -310,9 +297,9 @@ export class CerereImportExportComponent implements OnInit {
     }
 
     initOutImportDocuments() {
-        let outDocumentIP = {
+        const outDocumentIP = {
             name: 'Autorizatia de import',
-            docType: this.docTypesInitial.find(r => r.category == 'IP'),
+            docType: this.docTypesInitial.find(r => r.category === 'IP'),
             number: 'IP-' + this.cerereImpExpForm.get('requestNumber').value,
             date: new Date()
         };
@@ -328,9 +315,9 @@ export class CerereImportExportComponent implements OnInit {
         this.cerereImpExpForm.get('availableQuantity').setValue(0);
         if (this.selectedSubstance.toDate != null && this.selectedSubstance.fromDate != null) {
 
-            let toDate = new Date(this.selectedSubstance.toDate);
-            let fromDate = new Date(this.selectedSubstance.fromDate);
-            let date = new Date();
+            const toDate = new Date(this.selectedSubstance.toDate);
+            const fromDate = new Date(this.selectedSubstance.fromDate);
+            const date = new Date();
             if (toDate.getTime() > date.getTime() && date.getTime() >= fromDate.getTime()) {
                 this.cerereImpExpForm.get('availableQuantity').setValue(this.selectedSubstance.quantity);
                 this.calculateSubstanceAvailableQuantity();
@@ -344,17 +331,17 @@ export class CerereImportExportComponent implements OnInit {
             this.drugDecisionsService.getImportExportDetailsBySubstanceId(this.selectedSubstance.id).subscribe(data => {
 
                     let availableQuantity = this.selectedSubstance.quantity;
-                    for (let entry of data) {
+                    for (const entry of data) {
                         if (entry.toDate != null && entry.authorizedQuantity != null) {
-                            let toDate = new Date(entry.toDate);
-                            let date = new Date();
+                            const toDate = new Date(entry.toDate);
+                            const date = new Date();
                             if (toDate.getTime() > date.getTime()) {
 
                                 availableQuantity = availableQuantity - entry.authorizedQuantity;
                             } else {
                                 if (entry.usedQuantity != null) {
                                     availableQuantity = availableQuantity - entry.authorizedQuantity;
-                                    let remainQuantity = entry.authorizedQuantity - entry.usedQuantity;
+                                    const remainQuantity = entry.authorizedQuantity - entry.usedQuantity;
                                     availableQuantity = availableQuantity + remainQuantity;
                                 }
                             }
@@ -385,7 +372,7 @@ export class CerereImportExportComponent implements OnInit {
         this.hasError = false;
         if (this.selectedSubstance != null) {
             this.substanceNotSelected = false;
-            let substance = this.selectedSubstancesTable.find(r => r.authorizedDrugSubstancesId == this.selectedSubstance.id);
+            const substance = this.selectedSubstancesTable.find(r => r.authorizedDrugSubstancesId === this.selectedSubstance.id);
 
             if (substance != null) {
                 this.substanceExistInTable = true;
@@ -407,13 +394,13 @@ export class CerereImportExportComponent implements OnInit {
 
     populateSelectedSubstanceDetails() {
 
-        let unitOfMeasurement = this.cerereImpExpForm.get('unitOfMeasurement').value;
+        const unitOfMeasurement = this.cerereImpExpForm.get('unitOfMeasurement').value;
         let unitDescription = '';
         if (unitOfMeasurement != null && unitOfMeasurement.description != null) {
             unitDescription = unitOfMeasurement.description;
         }
 
-        let substanceDetails = {
+        const substanceDetails = {
             authorizedDrugSubstancesId: this.selectedSubstance.id,
             substanceName: this.selectedSubstance.substanceName,
             substanceCode: this.selectedSubstance.substanceCode,
@@ -479,7 +466,7 @@ export class CerereImportExportComponent implements OnInit {
 
         this.cerereImpExpForm.get('company').setValue(this.cerereImpExpForm.value.company);
 
-        let modelToSubmit: any = this.cerereImpExpForm.value;
+        const modelToSubmit: any = this.cerereImpExpForm.value;
 
         this.populateModelToSubmit(modelToSubmit);
 
@@ -494,9 +481,9 @@ export class CerereImportExportComponent implements OnInit {
 
         if (this.cerereImpExpForm.value.drugCheckDecision.protocolDate != null && this.cerereImpExpForm.value.dataExp != null) {
 
-            let fromDate = new Date(this.cerereImpExpForm.value.drugCheckDecision.protocolDate);
-            let toDate = new Date(this.cerereImpExpForm.value.dataExp);
-            let date = new Date();
+            const fromDate = new Date(this.cerereImpExpForm.value.drugCheckDecision.protocolDate);
+            const toDate = new Date(this.cerereImpExpForm.value.dataExp);
+            const date = new Date();
             if (date.getDate() > fromDate.getDate()) {
                 this.errorHandlerService.showError('Data procesului nu este valida.');
                 this.hasError = true;
@@ -513,8 +500,8 @@ export class CerereImportExportComponent implements OnInit {
 
     validateAuthorizedQuantity() {
 
-        if (this.cerereImpExpForm.value.authorizedQuantity != null && this.cerereImpExpForm.get('availableQuantity').value != null && this.cerereImpExpForm.value.authorizedQuantity > this.cerereImpExpForm.get('availableQuantity').value) {
-
+        if (this.cerereImpExpForm.value.authorizedQuantity != null && this.cerereImpExpForm.get('availableQuantity').value != null
+            && this.cerereImpExpForm.value.authorizedQuantity > this.cerereImpExpForm.get('availableQuantity').value) {
             this.hasError = true;
             this.errorHandlerService.showError('Cantitatea autorizata nu poate fi mai mare ca cantitatea admisibila.');
             return;
@@ -544,9 +531,9 @@ export class CerereImportExportComponent implements OnInit {
 
     populateImportExportDetails(modelToSubmit: any) {
 
-        for (let entry of this.selectedSubstancesTable) {
+        for (const entry of this.selectedSubstancesTable) {
 
-            let details = {
+            const details = {
                 companyCode: this.cerereImpExpForm.value.company.code,
                 companyName: this.cerereImpExpForm.value.company.name,
                 substanceName: entry.substanceName,
@@ -571,30 +558,30 @@ export class CerereImportExportComponent implements OnInit {
 
         if (this.cerereImpExpForm.get('precursor').value || this.cerereImpExpForm.get('psihotrop').value || this.cerereImpExpForm.get('stupefiant').value) {
 
-            let precursor = this.cerereImpExpForm.get('precursor').value;
-            let psihotrop = this.cerereImpExpForm.get('psihotrop').value;
-            let stupefiant = this.cerereImpExpForm.get('stupefiant').value;
+            const precursor = this.cerereImpExpForm.get('precursor').value;
+            const psihotrop = this.cerereImpExpForm.get('psihotrop').value;
+            const stupefiant = this.cerereImpExpForm.get('stupefiant').value;
 
             if (precursor && !psihotrop && !stupefiant) {
-                let medicamnet = this.drugSubstanceTypes.find(r => r.code == 'PRECURSOR');
+                const medicamnet = this.drugSubstanceTypes.find(r => r.code === 'PRECURSOR');
                 modelToSubmit.drugCheckDecision.drugSubstanceTypesId = medicamnet.id;
             } else if (!precursor && psihotrop && !stupefiant) {
-                let medicamnet = this.drugSubstanceTypes.find(r => r.code == 'PSIHOTROP');
+                const medicamnet = this.drugSubstanceTypes.find(r => r.code === 'PSIHOTROP');
                 modelToSubmit.drugCheckDecision.drugSubstanceTypesId = medicamnet.id;
             } else if (!precursor && !psihotrop && stupefiant) {
-                let medicamnet = this.drugSubstanceTypes.find(r => r.code == 'STUPEFIANT');
+                const medicamnet = this.drugSubstanceTypes.find(r => r.code === 'STUPEFIANT');
                 modelToSubmit.drugCheckDecision.drugSubstanceTypesId = medicamnet.id;
             } else if (precursor && psihotrop && !stupefiant) {
-                let medicamnet = this.drugSubstanceTypes.find(r => r.code == 'PRECURSOR/PSIHOTROP');
+                const medicamnet = this.drugSubstanceTypes.find(r => r.code === 'PRECURSOR/PSIHOTROP');
                 modelToSubmit.drugCheckDecision.drugSubstanceTypesId = medicamnet.id;
             } else if (precursor && !psihotrop && stupefiant) {
-                let medicamnet = this.drugSubstanceTypes.find(r => r.code == 'PRECURSOR/STUPEFIANT');
+                const medicamnet = this.drugSubstanceTypes.find(r => r.code === 'PRECURSOR/STUPEFIANT');
                 modelToSubmit.drugCheckDecision.drugSubstanceTypesId = medicamnet.id;
             } else if (!precursor && psihotrop && stupefiant) {
-                let medicamnet = this.drugSubstanceTypes.find(r => r.code == 'PSIHOTROP/STUPEFIANT');
+                const medicamnet = this.drugSubstanceTypes.find(r => r.code === 'PSIHOTROP/STUPEFIANT');
                 modelToSubmit.drugCheckDecision.drugSubstanceTypesId = medicamnet.id;
             } else if (precursor && psihotrop && stupefiant) {
-                let medicamnet = this.drugSubstanceTypes.find(r => r.code == 'PRECURSOR/PSIHOTROP/STUPEFIANT');
+                const medicamnet = this.drugSubstanceTypes.find(r => r.code === 'PRECURSOR/PSIHOTROP/STUPEFIANT');
                 modelToSubmit.drugCheckDecision.drugSubstanceTypesId = medicamnet.id;
             }
 
@@ -611,11 +598,10 @@ export class CerereImportExportComponent implements OnInit {
 
     checkSelectedDocumentsStatus() {
 
-        for (let entry of this.outDocuments) {
-
-            if (entry.responseReceived || entry.status == 'Atasat') {
+        for (const entry of this.outDocuments) {
+            if (entry.responseReceived || entry.status === 'Atasat') {
                 this.isResponseReceived = true;
-                if (entry.status == 'Nu este atasat') {
+                if (entry.status === 'Nu este atasat') {
                     this.isNonAttachedDocuments = true;
                 }
             }
@@ -624,16 +610,16 @@ export class CerereImportExportComponent implements OnInit {
 
     viewDoc(document: any) {
 
-        if (document.docType.category == 'IP' || document.docType.category == 'EP') {
+        if (document.docType.category === 'IP' || document.docType.category === 'EP') {
             this.loadingService.show();
-            let company = this.cerereImpExpForm.get('company').value;
+            const company = this.cerereImpExpForm.get('company').value;
             let localityId = '';
             if (company != null && company.locality != null) {
                 localityId = company.locality.id;
             }
-            let authorizationType = this.cerereImpExpForm.get('authorizationType').value;
+            const authorizationType = this.cerereImpExpForm.get('authorizationType').value;
 
-            let data = {
+            const data = {
                 requestNumber: this.cerereImpExpForm.get('requestNumber').value,
                 protocolDate: this.cerereImpExpForm.get('drugCheckDecision.protocolDate').value,
                 companyValue: this.cerereImpExpForm.get('companyValue').value,
@@ -646,8 +632,8 @@ export class CerereImportExportComponent implements OnInit {
             };
 
             this.subscriptions.push(this.drugDocumentsService.viewImportExportAuthorization(data).subscribe(data => {
-                    let file = new Blob([data], {type: 'application/pdf'});
-                    var fileURL = URL.createObjectURL(file);
+                    const file = new Blob([data], {type: 'application/pdf'});
+                    const fileURL = URL.createObjectURL(file);
                     window.open(fileURL);
                     this.loadingService.hide();
                 }, error => {
@@ -670,7 +656,9 @@ export class CerereImportExportComponent implements OnInit {
             if (result) {
                 this.loadingService.show();
                 this.outDocuments.forEach((item, index) => {
-                    if (item === doc) this.outDocuments.splice(index, 1);
+                    if (item === doc) {
+                        this.outDocuments.splice(index, 1);
+                    }
                 });
                 this.initialData.outputDocuments = this.outDocuments;
 
@@ -685,9 +673,9 @@ export class CerereImportExportComponent implements OnInit {
     }
 
     checkOutputDocumentsStatus() {
-        for (let entry of this.outDocuments) {
-            var isMatch = this.documents.some(elem => {
-                return (elem.docType.category == entry.docType.category && elem.number == entry.number) ? true : false;
+        for (const entry of this.outDocuments) {
+            const isMatch = this.documents.some(elem => {
+                return (elem.docType.category === entry.docType.category && elem.number === entry.number) ? true : false;
             });
             if (isMatch) {
                 entry.status = 'Atasat';
@@ -713,8 +701,8 @@ export class CerereImportExportComponent implements OnInit {
         dialogRef2.afterClosed().subscribe(result => {
             if (result) {
                 this.loadingService.show();
-                let usernameDB = this.authService.getUserName();
-                var modelToSubmit = {
+                const usernameDB = this.authService.getUserName();
+                const modelToSubmit = {
                     requestHistories: [],
                     currentStep: 'I',
                     id: this.cerereImpExpForm.get('id').value,
@@ -736,5 +724,18 @@ export class CerereImportExportComponent implements OnInit {
                 );
             }
         });
+    }
+
+    private initOutputDocuments() {
+
+        const outDocumentSR = {
+            name: 'Scrisoare de refuz',
+            docType: this.docTypesInitial.find(r => r.category === 'SR'),
+            number: 'SR-' + this.cerereImpExpForm.get('requestNumber').value,
+            date: new Date()
+        };
+        this.outDocuments.push(outDocumentSR);
+
+        this.outDocuments = this.outDocuments.filter(r => r.category === 'SR');
     }
 }

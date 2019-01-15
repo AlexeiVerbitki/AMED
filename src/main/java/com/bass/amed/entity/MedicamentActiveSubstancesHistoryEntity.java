@@ -28,7 +28,7 @@ public class MedicamentActiveSubstancesHistoryEntity
     @Basic@Column(name = "status")
     private String status;
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "manufacture_id")
+    @JoinColumn(name = "active_substance_id")
     private Set<MedicamentActiveSubstanceManufactureHistoryEntity> manufactures = new HashSet<>();
 
     public void assign(MedicamentActiveSubstancesEntity entity)
@@ -36,6 +36,13 @@ public class MedicamentActiveSubstancesHistoryEntity
         this.activeSubstance = entity.getActiveSubstance();
         this.quantityTo = entity.getQuantity();
         this.unitsOfMeasurementTo = entity.getUnitsOfMeasurement();
+        for (MedicamentActiveSubstanceManufacturesEntity substanceManufacturesEntity : entity.getManufactures())
+        {
+            MedicamentActiveSubstanceManufactureHistoryEntity manufactureHistoryEntity = new MedicamentActiveSubstanceManufactureHistoryEntity();
+            manufactureHistoryEntity.setManufacture(substanceManufacturesEntity.getManufacture());
+            manufactureHistoryEntity.setStatus("O");
+            this.manufactures.add(manufactureHistoryEntity);
+        }
         this.status = "O";
     }
 

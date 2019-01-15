@@ -1,12 +1,12 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
-import {Subscription} from "rxjs";
-import {AdministrationService} from "../../shared/service/administration.service";
-import {AddReceiptDialogComponent} from "../../dialog/add-receipt-dialog/add-receipt-dialog.component";
-import {LoaderService} from "../../shared/service/loader.service";
-import {ConfirmationDialogComponent} from "../../dialog/confirmation-dialog.component";
-import {NavbarTitleService} from "../../shared/service/navbar-title.service";
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {Subscription} from 'rxjs';
+import {AdministrationService} from '../../shared/service/administration.service';
+import {AddReceiptDialogComponent} from '../../dialog/add-receipt-dialog/add-receipt-dialog.component';
+import {LoaderService} from '../../shared/service/loader.service';
+import {ConfirmationDialogComponent} from '../../dialog/confirmation-dialog.component';
+import {NavbarTitleService} from '../../shared/service/navbar-title.service';
 
 @Component({
     selector: 'app-receipts',
@@ -63,7 +63,7 @@ export class ReceiptsComponent implements OnInit {
 
         dialogConfig2.width = '600px';
 
-        let dialogRef = this.dialog.open(AddReceiptDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(AddReceiptDialogComponent, dialogConfig2);
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.response) {
                 this.loadingService.show();
@@ -83,8 +83,7 @@ export class ReceiptsComponent implements OnInit {
 
     }
 
-    editReceipt(receipt : any)
-    {
+    editReceipt(receipt: any) {
         const dialogConfig2 = new MatDialogConfig();
 
         dialogConfig2.disableClose = false;
@@ -92,9 +91,9 @@ export class ReceiptsComponent implements OnInit {
         dialogConfig2.hasBackdrop = true;
 
         dialogConfig2.width = '600px';
-        dialogConfig2.data=receipt;
+        dialogConfig2.data = receipt;
 
-        let dialogRef = this.dialog.open(AddReceiptDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(AddReceiptDialogComponent, dialogConfig2);
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.response) {
                 this.loadingService.show();
@@ -113,8 +112,7 @@ export class ReceiptsComponent implements OnInit {
         });
     }
 
-    removeReceipt(receipt:any)
-    {
+    removeReceipt(receipt: any) {
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             data: {message: 'Sunteti sigur ca doriti sa stergeti aceasta incasare?', confirm: false}
         });
@@ -138,7 +136,7 @@ export class ReceiptsComponent implements OnInit {
 
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
-        this.dataSource.paginator._intl.itemsPerPageLabel = "Prorcese pe pagina: ";
+        this.dataSource.paginator._intl.itemsPerPageLabel = 'Prorcese pe pagina: ';
         this.dataSource.sort = this.sort;
     }
 

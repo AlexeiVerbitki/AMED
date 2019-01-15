@@ -1,14 +1,14 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewChildren} from '@angular/core';
-import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
-import {Subscription} from "rxjs";
-import {RequestService} from "../../../shared/service/request.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {UploadFileService} from "../../../shared/service/upload/upload-file.service";
-import {DocumentService} from "../../../shared/service/document.service";
-import {HttpResponse} from "@angular/common/http";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {SelectCurrencyBonPlataDialogComponent} from "../../../dialog/select-currency-bon-plata-dialog/select-currency-bon-plata-dialog.component";
-import {SelectIssueDateDialogComponent} from "../../../dialog/select-issue-date-dialog/select-issue-date-dialog.component";
+import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {Subscription} from 'rxjs';
+import {RequestService} from '../../../shared/service/request.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {UploadFileService} from '../../../shared/service/upload/upload-file.service';
+import {DocumentService} from '../../../shared/service/document.service';
+import {HttpResponse} from '@angular/common/http';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {SelectCurrencyBonPlataDialogComponent} from '../../../dialog/select-currency-bon-plata-dialog/select-currency-bon-plata-dialog.component';
+import {SelectIssueDateDialogComponent} from '../../../dialog/select-issue-date-dialog/select-issue-date-dialog.component';
 
 @Component({
   selector: 'app-oa-list',
@@ -17,7 +17,7 @@ import {SelectIssueDateDialogComponent} from "../../../dialog/select-issue-date-
 })
 export class OaListComponent implements OnInit {
 
-  displayedColumns: any[] = ['number', 'date','dateOfIssue', 'name','status', 'actions'];
+  displayedColumns: any[] = ['number', 'date', 'dateOfIssue', 'name', 'status', 'actions'];
   dataSource = new MatTableDataSource<any>();
   @ViewChild('pag3') paginator3: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -25,20 +25,19 @@ export class OaListComponent implements OnInit {
   incarcaFisierVariable: ElementRef;
   private subscriptions: Subscription[] = [];
   @Output() oaListModified = new EventEmitter();
-  @Input() displayTable : boolean;
 
   constructor( private requestService: RequestService,
                private loadingService: LoaderService,
                public dialogConfirmation: MatDialog,
                private dialog: MatDialog,
-               private uploadService : UploadFileService,
+               private uploadService: UploadFileService,
                private documentService: DocumentService) { }
 
   ngOnInit() {
+      this.loadOAs();
   }
 
-  loadOAs()
-  {
+  loadOAs() {
     this.subscriptions.push(
         this.requestService.getOAs().subscribe(data => {
               this.dataSource.data = data;
@@ -50,34 +49,17 @@ export class OaListComponent implements OnInit {
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator3;
-    if(this.dataSource.paginator) {
-        this.dataSource.paginator._intl.itemsPerPageLabel = "Rinduri pe pagina: ";
+    if (this.dataSource.paginator) {
+        this.dataSource.paginator._intl.itemsPerPageLabel = 'Rinduri pe pagina: ';
     }
     this.dataSource.sort = this.sort;
   }
 
   reset() {
-    this.incarcaFisierVariable.nativeElement.value = "";
+    this.incarcaFisierVariable.nativeElement.value = '';
   }
 
-  // addDocument(element:any,event) {
-  //   this.loadingService.show();
-  //   this.subscriptions.push(this.documentService.addOA(element,event.srcElement.files[0]).subscribe(event => {
-  //         if (event instanceof HttpResponse) {
-  //           this.oaListModified.emit(true);
-  //           this.loadOAs();
-  //           this.loadingService.hide();
-  //         }
-  //       },
-  //       error => {
-  //         this.loadingService.hide();
-  //         console.log(error);
-  //       }
-  //       )
-  //   );
-  // }
-
-    addDocument(element:any) {
+    addDocument(element: any) {
         const dialogConfig2 = new MatDialogConfig();
 
         dialogConfig2.disableClose = false;
@@ -88,15 +70,14 @@ export class OaListComponent implements OnInit {
 
         dialogConfig2.data = {document : element};
 
-        let dialogRef = this.dialog.open(SelectIssueDateDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(SelectIssueDateDialogComponent, dialogConfig2);
         dialogRef.afterClosed().subscribe(result => {
             this.oaListModified.emit(true);
             this.loadOAs();
         });
     }
 
-  removeOA(element : any)
-  {
+  removeOA(element: any) {
     const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
       data: {
         message: 'Sunteti sigur(a)?',
@@ -124,11 +105,10 @@ export class OaListComponent implements OnInit {
     });
   }
 
-  viewOA(element : any)
-  {
+  viewOA(element: any) {
     this.subscriptions.push(this.uploadService.loadFile(element.path).subscribe(data => {
-          let file = new Blob([data], {type:'application/pdf' });
-          var fileURL = URL.createObjectURL(file);
+          const file = new Blob([data], {type: 'application/pdf' });
+          const fileURL = URL.createObjectURL(file);
           window.open(fileURL);
         },
         error => {

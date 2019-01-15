@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AdministrationService} from "../../shared/service/administration.service";
-import {Subscription} from "rxjs";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AdministrationService} from '../../shared/service/administration.service';
+import {Subscription} from 'rxjs';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 @Component({
   selector: 'app-active-substance-dialog',
@@ -41,8 +41,7 @@ export class AuxiliarySubstanceDialogComponent implements OnInit {
     add() {
         this.formSubmitted = true;
 
-        if(this.aForm.invalid)
-        {
+        if (this.aForm.invalid) {
             return;
         }
 

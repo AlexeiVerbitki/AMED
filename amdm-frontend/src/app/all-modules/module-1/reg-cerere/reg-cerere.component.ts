@@ -7,15 +7,15 @@ import {saveAs} from 'file-saver';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {AdministrationService} from '../../../shared/service/administration.service';
 import {Router} from '@angular/router';
-import {Document} from "../../../models/document";
-import {RequestService} from "../../../shared/service/request.service";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {TaskService} from "../../../shared/service/task.service";
-import {CanModuleDeactivate} from "../../../shared/auth-guard/can-deactivate-guard.service";
-import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
-import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
+import {Document} from '../../../models/document';
+import {RequestService} from '../../../shared/service/request.service';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {TaskService} from '../../../shared/service/task.service';
+import {CanModuleDeactivate} from '../../../shared/auth-guard/can-deactivate-guard.service';
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 
 @Component({
     selector: 'app-reg-cerere',
@@ -33,7 +33,7 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
     generatedDocNrSeq: number;
     formSubmitted: boolean;
     private subscriptions: Subscription[] = [];
-    loadingCompany : boolean = false;
+    loadingCompany = false;
     companyInputs = new Subject<string>();
     maxDate = new Date();
 
@@ -85,7 +85,7 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
         this.companii =
             this.companyInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) return true;
+                    if (result && result.length > 2) { return true; }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -126,15 +126,13 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
             return;
         }
 
-        if(this.rForm.get('requestMandateNr').value && !this.rForm.get('requestMandateDate').value)
-        {
-            this.errorHandlerService.showError("Data eliberarii procurii trebuie introdusa.");
+        if (this.rForm.get('requestMandateNr').value && !this.rForm.get('requestMandateDate').value) {
+            this.errorHandlerService.showError('Data eliberarii procurii trebuie introdusa.');
             return;
         }
 
-        if(this.rForm.get('requestMandateDate').value && !this.rForm.get('requestMandateNr').value)
-        {
-            this.errorHandlerService.showError("Numarul procurii trebuie introdus.");
+        if (this.rForm.get('requestMandateDate').value && !this.rForm.get('requestMandateNr').value) {
+            this.errorHandlerService.showError('Numarul procurii trebuie introdus.');
             return;
         }
 
@@ -142,9 +140,9 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
 
         this.loadingService.show();
 
-        var useranameDB = this.authService.getUserName();
+        const useranameDB = this.authService.getUserName();
 
-        var modelToSubmit: any = this.rForm.value;
+        const modelToSubmit: any = this.rForm.value;
         modelToSubmit.requestHistories = [{
             startDate: this.rForm.get('startDate').value, endDate: new Date(),
             username: useranameDB, step: 'R'
@@ -159,8 +157,6 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
             requestMandateNr : this.rForm.get('requestMandateNr').value,
             requestMandateDate : this.rForm.get('requestMandateDate').value
         }];
-
-        console.log(modelToSubmit);
 
         this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
                 this.loadingService.hide();

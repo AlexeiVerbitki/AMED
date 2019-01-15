@@ -1,19 +1,19 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from "rxjs";
-import {Document} from "../../../models/document";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {MatDialog} from "@angular/material";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {MedicamentService} from "../../../shared/service/medicament.service";
-import {AnnihilationService} from "../../../shared/service/annihilation/annihilation.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {DocumentService} from "../../../shared/service/document.service";
-import {AnnihilationMedDialogComponent} from "../../../dialog/annihilation-med-dialog/annihilation-med-dialog.component";
-import {DecimalPipe} from "@angular/common";
-import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
+import {Subscription} from 'rxjs';
+import {Document} from '../../../models/document';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {MatDialog} from '@angular/material';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {MedicamentService} from '../../../shared/service/medicament.service';
+import {AnnihilationService} from '../../../shared/service/annihilation/annihilation.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {DocumentService} from '../../../shared/service/document.service';
+import {AnnihilationMedDialogComponent} from '../../../dialog/annihilation-med-dialog/annihilation-med-dialog.component';
+import {DecimalPipe} from '@angular/common';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
 
 @Component({
     selector: 'app-drugs-destroy-evaluate',
@@ -24,7 +24,7 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
 
     private subscriptions: Subscription[] = [];
     docs: Document [] = [];
-    mFormSubbmitted: boolean = false;
+    mFormSubbmitted = false;
     // fFormSubbmitted: boolean = false;
 
     requestId: string;
@@ -37,9 +37,9 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
 
     totalSum: number;
 
-    additionalBonDePlata : any;
+    additionalBonDePlata: any;
 
-    numberPipe : DecimalPipe = new DecimalPipe('en-US');
+    numberPipe: DecimalPipe = new DecimalPipe('en-US');
 
     //count time
     startDate: Date;
@@ -95,8 +95,7 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
                         }
                     )
                 );
-            }
-            else {
+            } else {
                 return;
             }
         }));
@@ -195,11 +194,11 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
         }
 
         this.mFormSubbmitted = false;
-        let modelToSubmit = this.composeModel('A');
+        const modelToSubmit = this.composeModel('A');
 
         this.subscriptions.push(
             this.annihilationService.confirmEvaluateAnnihilation(modelToSubmit).subscribe(data => {
-                    let result = data.body;
+                    const result = data.body;
                     this.router.navigate(['/dashboard/module/medicament-destruction/actual', result]);
                 }
             )
@@ -213,7 +212,7 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
         }
 
         this.mFormSubbmitted = false;
-        let modelToSubmit = this.composeModel('E');
+        const modelToSubmit = this.composeModel('E');
 
         this.subscriptions.push(
             this.annihilationService.confirmEvaluateAnnihilation(modelToSubmit).subscribe(data => {
@@ -228,8 +227,8 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
 
         this.endDate = new Date();
 
-        let modelToSubmit: any = this.oldData;
-        let annihilationModel: any = this.oldData.medicamentAnnihilation;
+        const modelToSubmit: any = this.oldData;
+        const annihilationModel: any = this.oldData.medicamentAnnihilation;
 
 
         modelToSubmit.id = this.requestId;
@@ -260,8 +259,8 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
     viewDoc(document: any) {
         this.loadingService.show();
         this.subscriptions.push(this.annihilationService.viewActDeReceptie(this.composeModel('E')).subscribe(data => {
-                let file = new Blob([data], {type: 'application/pdf'});
-                var fileURL = URL.createObjectURL(file);
+                const file = new Blob([data], {type: 'application/pdf'});
+                const fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
                 this.loadingService.hide();
             }, error => {
@@ -273,7 +272,7 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
 
     generareTax() {
         this.subscriptions.push(this.administrationService.getServiceChargeByCategory('BN').subscribe(data => {
-                let paymentOrder = {
+                const paymentOrder = {
                     date: new Date(),
                     amount: this.totalSum,
                     registrationRequestId: this.requestId,

@@ -2,8 +2,8 @@ import { HomepageModalComponent } from './homepage-modal/homepage-modal.componen
 import { HomepageComponent } from './homepage.component';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MDBBootstrapModule} from "angular-bootstrap-md";
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MDBBootstrapModule} from 'angular-bootstrap-md';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 @NgModule({
@@ -13,8 +13,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
       FormsModule,
       ReactiveFormsModule,
       MDBBootstrapModule.forRoot()
-  
+
   ],
-  declarations: [HomepageComponent,HomepageModalComponent]
+  declarations: [HomepageComponent, HomepageModalComponent]
 })
 export class HomepageModule { }

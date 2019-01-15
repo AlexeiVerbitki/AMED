@@ -1,8 +1,10 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from "rxjs/index";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
-import {RequestService} from "../../../../shared/service/request.service";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {Subscription} from 'rxjs/index';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {RequestService} from '../../../../shared/service/request.service';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {saveAs} from 'file-saver';
+import {UploadFileService} from '../../../../shared/service/upload/upload-file.service';
 
 @Component({
     selector: 'app-amendment-details',
@@ -21,9 +23,9 @@ export class AmendmentDetailsComponent implements OnInit, OnDestroy {
     mediacalInstitutionsFromList: any[] = [];
     mediacalInstitutionsToList: any[] = [];
 
-    isMedModified: boolean = false;
-    isRefProdModified: boolean = false;
-    isPlaceboModified: boolean = false;
+    isMedModified = false;
+    isRefProdModified = false;
+    isPlaceboModified = false;
 
     medActiveSubstancesFromList: any[] = [];
     medActiveSubstancesToList: any[] = [];
@@ -34,7 +36,8 @@ export class AmendmentDetailsComponent implements OnInit, OnDestroy {
     constructor(private fb: FormBuilder,
                 @Inject(MAT_DIALOG_DATA) public dataDialog: any,
                 private requestService: RequestService,
-                public dialogRef: MatDialogRef<AmendmentDetailsComponent>) {
+                public dialogRef: MatDialogRef<AmendmentDetailsComponent>,
+                private uploadService: UploadFileService) {
     }
 
     ngOnInit() {
@@ -116,7 +119,7 @@ export class AmendmentDetailsComponent implements OnInit, OnDestroy {
                 console.log('data', data);
                 this.ctAmendForm.get('documents').setValue(data.documents);
 
-                let currentAmendment = data.clinicalTrails.clinicTrialAmendEntities.find(amendment => this.dataDialog.id == amendment.registrationRequestId);
+                const currentAmendment = data.clinicalTrails.clinicTrialAmendEntities.find(amendment => this.dataDialog.id == amendment.registrationRequestId);
                 this.ctAmendForm.get('note').setValue(currentAmendment.note);
 
                 console.log('currentAmendment', currentAmendment);
@@ -173,21 +176,21 @@ export class AmendmentDetailsComponent implements OnInit, OnDestroy {
                     //this.medicamentForm.manufactureFrom = currentAmendment.medicament.manufactureFrom.description;
                     // console.log('medicamnet modified');
                     // console.log('this.medicamentForm', this.medicamentForm);
-                }else{
+                } else {
                     // console.log('medicamnet not modified');
                 }
                 if (this.isReferenceProductModified(currentAmendment.referenceProduct)) {
                     this.isRefProdModified = true;
                     this.refProdForm.setValue(currentAmendment.referenceProduct);
                     // console.log('isRefProd modified');
-                }else{
+                } else {
                     // console.log('isRefProd not modified');
                 }
                 if (this.isPlacebFormModified(currentAmendment.placebo)) {
                     this.isPlaceboModified = true;
                     this.placebForm.setValue(currentAmendment.placebo);
                     console.log('isPlaceboModified modified');
-                }else{
+                } else {
                     console.log('isPlaceboModified not modified');
                 }
 
@@ -197,9 +200,9 @@ export class AmendmentDetailsComponent implements OnInit, OnDestroy {
     }
 
     isMedicamentModified(medicament: any) {
-        if(medicament.activeSubstances.some(as=> as.status == 'N' || as.status == 'R')){
-            this.medActiveSubstancesFromList = medicament.activeSubstances.filter(as=> as.status=='U' || as.status=='R');
-            this.medActiveSubstancesToList = medicament.activeSubstances.filter(as=> as.status=='U' || as.status=='N');
+        if (medicament.activeSubstances.some(as => as.status == 'N' || as.status == 'R')) {
+            this.medActiveSubstancesFromList = medicament.activeSubstances.filter(as => as.status == 'U' || as.status == 'R');
+            this.medActiveSubstancesToList = medicament.activeSubstances.filter(as => as.status == 'U' || as.status == 'N');
             return true;
         }
         return !(medicament.nameFrom == medicament.nameTo && medicament.manufactureFrom.id == medicament.manufactureTo.id && medicament.doseFrom == medicament.doseTo
@@ -207,9 +210,9 @@ export class AmendmentDetailsComponent implements OnInit, OnDestroy {
     }
 
     isReferenceProductModified(refProd: any) {
-        if(refProd.activeSubstances.some(as=> as.status == 'N' || as.status == 'R')){
-            this.refProdActiveSubstancesFromList = refProd.activeSubstances.filter(as=> as.status=='U' || as.status=='R');
-            this.refProdActiveSubstancesToList = refProd.activeSubstances.filter(as=> as.status=='U' || as.status=='N');
+        if (refProd.activeSubstances.some(as => as.status == 'N' || as.status == 'R')) {
+            this.refProdActiveSubstancesFromList = refProd.activeSubstances.filter(as => as.status == 'U' || as.status == 'R');
+            this.refProdActiveSubstancesToList = refProd.activeSubstances.filter(as => as.status == 'U' || as.status == 'N');
             return true;
         }
         return !(refProd.nameFrom == refProd.nameTo && refProd.manufactureFrom.id == refProd.manufactureTo.id && refProd.doseFrom == refProd.doseTo
@@ -222,6 +225,21 @@ export class AmendmentDetailsComponent implements OnInit, OnDestroy {
 
     cancel() {
         this.dialogRef.close();
+    }
+
+    loadFileFrom(path: string) {
+        this.subscriptions.push(this.uploadService.loadFile(path).subscribe(data => {
+                this.saveToFileSystem(data, path.substring(path.lastIndexOf('/') + 1));
+            },
+            error => {
+                console.log(error);
+            })
+        );
+    }
+
+    private saveToFileSystem(response: any, docName: string) {
+        const blob = new Blob([response]);
+        saveAs(blob, docName);
     }
 
     ngOnDestroy(): void {

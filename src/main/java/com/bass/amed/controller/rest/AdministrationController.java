@@ -465,6 +465,7 @@ public class AdministrationController {
             "nm_types_of_drug_changes",
             "nm_units_of_measurement",
             "nm_variation_request_type",
+            "authorized_drug_substances",
     };
 
 

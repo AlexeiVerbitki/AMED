@@ -1,9 +1,12 @@
 package com.bass.amed.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "license_details", schema = "amed")
 public class LicenseDetailsEntity
@@ -20,12 +23,6 @@ public class LicenseDetailsEntity
     @JoinColumn(name = "license_detail_id")
     private Set<LicenseResolutionEntity> resolutions;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinTable(name = "LICENSE_DOCUMENTS", joinColumns = {
-            @JoinColumn(name = "license_detail_id")}, inverseJoinColumns = {
-            @JoinColumn(name = "DOCUMENT_ID")})
-    private Set<DocumentsEntity> documents;
-
     @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "license_detail_id")
     private Set<LicenseCommisionResponseEntity> commisionResponses;
@@ -34,86 +31,7 @@ public class LicenseDetailsEntity
     @JoinColumn(name = "license_detail_id")
     private Set<LicenseMandatedContactEntity> licenseMandatedContacts;
 
-
-    public Integer getId()
+    public LicenseDetailsEntity()
     {
-        return id;
-    }
-
-    public void setId(Integer id)
-    {
-        this.id = id;
-    }
-
-
-    public Integer getRegistrationId()
-    {
-        return registrationId;
-    }
-
-    public void setRegistrationId(Integer registrationId)
-    {
-        this.registrationId = registrationId;
-    }
-
-
-    public Set<LicenseResolutionEntity> getResolutions()
-    {
-        return resolutions;
-    }
-
-    public void setResolutions(Set<LicenseResolutionEntity> resolutions)
-    {
-        this.resolutions = resolutions;
-    }
-
-    public Set<DocumentsEntity> getDocuments()
-    {
-        return documents;
-    }
-
-    public void setDocuments(Set<DocumentsEntity> documents)
-    {
-        this.documents = documents;
-    }
-
-    public Set<LicenseCommisionResponseEntity> getCommisionResponses()
-    {
-        return commisionResponses;
-    }
-
-    public void setCommisionResponses(Set<LicenseCommisionResponseEntity> commisionResponses)
-    {
-        this.commisionResponses = commisionResponses;
-    }
-
-    public Set<LicenseMandatedContactEntity> getLicenseMandatedContacts()
-    {
-        return licenseMandatedContacts;
-    }
-
-    public void setLicenseMandatedContacts(Set<LicenseMandatedContactEntity> licenseMandatedContacts)
-    {
-        this.licenseMandatedContacts = licenseMandatedContacts;
-    }
-
-    @Override
-    public boolean equals(Object o)
-    {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        LicenseDetailsEntity that = (LicenseDetailsEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(registrationId, that.registrationId) &&
-                Objects.equals(resolutions, that.resolutions) &&
-                Objects.equals(documents, that.documents) &&
-                Objects.equals(commisionResponses, that.commisionResponses) &&
-                Objects.equals(licenseMandatedContacts, that.licenseMandatedContacts);
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return Objects.hash(id, registrationId, resolutions, documents, commisionResponses, licenseMandatedContacts);
     }
 }

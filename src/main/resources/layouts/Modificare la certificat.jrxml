@@ -16,15 +16,18 @@
 			<![CDATA[]]>
 		</queryString>
 	</subDataset>
-	<parameter name="Title" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="La Nr." class="java.lang.String"/>
-	<parameter name="Din: " class="java.lang.String"/>
-	<parameter name="path" class="java.lang.String"/>
+	<parameter name="regDate" class="java.lang.String">
+		<parameterDescription><![CDATA[Registration date]]></parameterDescription>
+	</parameter>
 	<parameter name="genDir" class="java.lang.String"/>
 	<parameter name="regRequest" class="java.lang.String"/>
 	<parameter name="medicamentName" class="java.lang.String"/>
 	<parameter name="variationTip" class="java.lang.String"/>
 	<parameter name="amedOrderNr" class="java.lang.String"/>
+	<parameter name="reqDate" class="java.lang.String">
+		<parameterDescription><![CDATA[Request Date]]></parameterDescription>
+	</parameter>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -75,14 +78,14 @@
 				<textElement>
 					<font fontName="DejaVu Sans" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["a Certificatului de Înregistrare nr. " + $P{regRequest} + " din " + $P{Din: } + ", emis pentru medicamentul " + $P{medicamentName} + " ca urmare a aprobării variaţiilor tip " + $P{variationTip}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["a Certificatului de Înregistrare nr. " + $P{regRequest} + " din " + $P{regDate} + ", emis pentru medicamentul " + $P{medicamentName} + " ca urmare a aprobării variaţiilor tip " + $P{variationTip}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="0" y="120" width="551" height="90" uuid="7639238d-8bd8-4dcc-9925-a1c71fe52685"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["	Agenţia Medicamentului şi Dispozitivelor Medicale, în baza Regulamentului cu privire la gestionarea variaţiilor postautorizare, aprobat prin ordinul MSnr. 739 din 23.07.12 Cu privire la reglementarea autorizării produselor medicamentoase de uz uman şi întroducerea modificărilor postautorizare, examinând cererea nr. " + $P{La Nr.} + " din " + $P{Din: } + " a Deţinătorului Certificatului de Înregistrare " + $P{regRequest} + " decide următoarele modificări: "]]></textFieldExpression>
+				<textFieldExpression><![CDATA["	Agenţia Medicamentului şi Dispozitivelor Medicale, în baza Regulamentului cu privire la gestionarea variaţiilor postautorizare, aprobat prin ordinul MSnr. 739 din 23.07.12 Cu privire la reglementarea autorizării produselor medicamentoase de uz uman şi întroducerea modificărilor postautorizare, examinând cererea nr. " + $P{La Nr.} + " din " + $P{reqDate} + " a Deţinătorului Certificatului de Înregistrare " + $P{regRequest} + " decide următoarele modificări: "]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="3" y="250" width="300" height="90" uuid="2e33816d-797b-40ce-b8fa-5ce7990338cd"/>

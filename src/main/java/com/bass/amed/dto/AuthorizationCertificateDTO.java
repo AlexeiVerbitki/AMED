@@ -23,4 +23,7 @@ public class AuthorizationCertificateDTO
     private Date registrationDate;
     private String orderNumber;
     private Date orderDate;
+    private String requestNumber;
+    private Date requestDate;
+    private String variationTip;
 }

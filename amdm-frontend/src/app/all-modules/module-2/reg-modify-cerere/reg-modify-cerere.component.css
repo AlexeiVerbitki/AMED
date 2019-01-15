@@ -22,3 +22,9 @@ label.required:not(:empty):after,
     margin-top: 10px;
     margin-bottom: 1.5rem;
 }
+
+.font-w400 {
+  font-weight : 400;
+  margin-left: 15px;
+  margin-top: 35px;
+}
