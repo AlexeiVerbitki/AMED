@@ -312,10 +312,14 @@ export class ImportManagementDialog implements OnInit {
     }
 
     confirm(): void {
-        const validPrice = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTadialog resultble.price').valid;
+        const validPrice = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').valid;
         const validQuantity = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').valid;
             if (validPrice && validQuantity && this.invalidPrice === false && this.invalidQuantity === false) {
-                this.dialog.close([true, this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value, this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value ]);
+                this.dialog.close([true,
+                                               this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value,
+                                               this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
+                                               this.unitSumm,
+                ]);
                 this.addMedicamentClicked = false;
             } else {
                 console.log('INVALID PRICE, invalidPrice = ', this.invalidPrice);

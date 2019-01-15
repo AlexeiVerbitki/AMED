@@ -106,6 +106,7 @@ export class ImportManagement implements OnInit {
 
     authorizationSumm: any;
     authorizationCurrency: any;
+    dialogResult: any;
 
 
     constructor(private fb: FormBuilder,
@@ -601,7 +602,7 @@ export class ImportManagement implements OnInit {
     //     });
     // }
 
-    showunitOfImport(unitOfImport: any, i: any) {
+    showunitOfImport() {
         const dialogConfig2 = new MatDialogConfig();
 
         dialogConfig2.disableClose = false;
@@ -611,21 +612,23 @@ export class ImportManagement implements OnInit {
         // dialogConfig2.height = '900px';
         dialogConfig2.width = '850px';
 
-        dialogConfig2.data = unitOfImport;
+        dialogConfig2.data = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[0];
         dialogConfig2.data.medtType = this.importData.importAuthorizationEntity.medType;
         dialogConfig2.data.currentStep = this.importData.currentStep;
 
         const dialogRef = this.dialog.open(ImportManagementDialog, dialogConfig2);
 
-        dialogRef.afterClosed().subscribe(result => {
-            console.log('result', result);
-            if (result && result[0] === true) {
-                this.dialogSetApproved(i, result[1]);
-                console.log('dialog result:', result);
-            }
-            if (result && result[0] === false) {
-                this.dialogSetReject(i, result[1]);
-            }
+        dialogRef.afterClosed().subscribe(dialogResult => {
+            this.dialogResult = dialogResult;
+            console.log('dialogResult', dialogResult);
+
+            // if (dialogResult && dialogResult[0] === true) {
+            //     this.dialogSetApproved(i, dialogResult[1]);
+            //     console.log('dialog dialogResult:', dialogResult);
+            // }
+            // if (dialogResult && dialogResult[0] === false) {
+            //     this.dialogSetReject(i, dialogResult[1]);
+            // }
         });
     }
 
@@ -852,13 +855,20 @@ export class ImportManagement implements OnInit {
         let modelToSubmit: any = {};
         this.loadingService.show();
 
-        modelToSubmit = this.importData;
-        modelToSubmit.endDate = new Date();
-        modelToSubmit.importAuthorizationEntity.authorized = aprrovedOrNot;
-        modelToSubmit.currentStep = 'F';
+        // modelToSubmit = this.importData;
+        // modelToSubmit.endDate = new Date();
+        // modelToSubmit.importAuthorizationEntity.authorized = aprrovedOrNot;
+        // modelToSubmit.currentStep = 'F';
 
 
-        modelToSubmit.importAuthorizationEntity.authorizationsNumber = this.importData.importAuthorizationEntity.id + '/' + new Date().getFullYear() + '-AM';
+        // modelToSubmit.importAuthorizationEntity.authorizationsNumber = this.importData.importAuthorizationEntity.id + '/' + new Date().getFullYear() + '-AM';
+
+        modelToSubmit.data = new Date();
+        modelToSubmit.quantity = this.dialogResult[1]
+        modelToSubmit.price = this.dialogResult[2]
+        modelToSubmit.summ = this.dialogResult[3]
+
+
         modelToSubmit.requestHistories.push({
             startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
             endDate: new Date(),

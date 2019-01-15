@@ -1,0 +1,106 @@
+<h2 mat-dialog-title align="center">Modificarile</h2>
+<mat-dialog-content class="mat-typography">
+  <div class="gradient-card-header bg-sidebar border-gradient" *ngIf="removedList?.length > 0">
+    <div class="container-fluid">
+      <!-- Title -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card-header-title white-text card-header-title-mt">Obiecte sterse</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body card-body-cascade" *ngIf="removedList?.length > 0">
+    <div class="table-width">
+      <div class="example-container">
+        <table class="table table-widths text-center">
+          <thead class="bg-sidebar white-text">
+          <tr>
+            <th scope="col">Campul</th>
+            <th scope="col">Valoarea veche</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let version of removedList;">
+            <td class="w-25px">{{ version.fieldDesc }}</td>
+            <td class="w-25px">{{ version.oldValue }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="gradient-card-header bg-sidebar border-gradient" *ngIf="addedList?.length > 0">
+    <div class="container-fluid">
+      <!-- Title -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card-header-title white-text card-header-title-mt">Obiecte adaugate</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body card-body-cascade" *ngIf="addedList?.length > 0">
+    <div class="table-width">
+      <div class="example-container">
+        <table class="table table-widths text-center">
+          <thead class="bg-sidebar white-text">
+          <tr>
+            <th scope="col">Campul</th>
+            <th scope="col">Valoarea noua</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let version of addedList;">
+            <td class="w-25px">{{ version.fieldDesc }}</td>
+            <td class="w-25px">{{ version.newValue }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="gradient-card-header bg-sidebar border-gradient" *ngIf="modifiedList?.length > 0">
+    <div class="container-fluid">
+      <!-- Title -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card-header-title white-text card-header-title-mt">Obiecte modificate</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body card-body-cascade" *ngIf="modifiedList?.length > 0">
+    <div class="table-width">
+      <div class="example-container">
+        <table class="table table-widths text-center">
+          <thead class="bg-sidebar white-text">
+          <tr>
+            <th scope="col">Campul</th>
+            <th scope="col">Valoarea veche</th>
+            <th scope="col">Valoarea noua</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let version of modifiedList;">
+            <td class="w-25px">{{ version.fieldDesc }}</td>
+            <td class="w-25px">{{ version.oldValue }}</td>
+            <td class="w-25px">{{ version.newValue }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+  <button class="btn btn-dark-green-color btn-sm-bl btn-sm" (click)="cancel()">Ok</button>
+</mat-dialog-actions>

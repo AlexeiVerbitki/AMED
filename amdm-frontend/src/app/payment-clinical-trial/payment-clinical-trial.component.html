@@ -1,0 +1,136 @@
+<div class="gradient-card-header bg-sidebar border-gradient">
+    <div class="container-fluid">
+        <!-- Title -->
+        <div class="row">
+            <div class="col-6">
+                <div class="card-header-title white-text">Bonuri spre achitare</div>
+            </div>
+            <div class="col-6">
+                <div class="text-right fap text-white">
+                    <i mdbTooltip="Adauga bon de plata" placement="top" class="fa fa-plus-circle fa-lg fa-mt"
+                       aria-hidden="true" (click)="addTaxes()"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Card content -->
+<div class="card-body card-body-cascade">
+    <div class="container-fluid">
+        <div class="row bg-sidebar white-text text-center">
+            <div class="col-3">Taxa</div>
+            <div class="col-1">Cantitate</div>
+            <div class="col-1">Suma</div>
+            <div class="col-1">Total</div>
+            <div class="col-1">Numar bon</div>
+            <div class="col-2">Data emitere</div>
+            <div class="col-3">Actiuni</div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row border-bottom align-items-center" *ngFor="let bonDePlata of bonDePlataList; let i = index">
+            <div class="col-6">
+                <div class="row text-center align-items-center" *ngFor="let service of bonDePlata.ctPayOrderServices">
+                    <ng-container *ngIf="service.serviceCharge.category!='BS'; else additionalPayment">
+                        <div class="col-6">{{service.serviceCharge.description}}</div>
+                        <div class="col-2">{{service.quantity}}</div>
+                        <div class="col-2">{{service.serviceCharge.amount}}</div>
+                        <div class="col-2">{{service.quantity * service.serviceCharge.amount}}</div>
+                    </ng-container>
+
+                    <ng-template #additionalPayment>
+                        <div class="col-6">{{service.serviceCharge.description}}</div>
+                        <div class="col-2">{{service.quantity}}</div>
+                        <div class="col-2">{{service.additionalPayment}}</div>
+                        <div class="col-2">{{service.quantity * service.additionalPayment}}</div>
+                    </ng-template>
+
+                    <!--<div class="col-6">{{service.serviceCharge.description}}</div>-->
+                    <!--<div class="col-2">{{service.quantity}}</div>-->
+
+                    <!--<div *ngIf="service.serviceCharge.category!='BS'" class="col-2">{{service.serviceCharge.amount}}-->
+                    <!--</div>-->
+                    <!--<div *ngIf="service.serviceCharge.category!='BS'" class="col-2">{{service.quantity *-->
+                    <!--service.serviceCharge.amount}}-->
+                    <!--</div>-->
+
+                    <!--<div *ngIf="service.serviceCharge.category=='BS'" class="col-2">{{service.serviceCharge.amount}}</div>-->
+                    <!--<div *ngIf="service.serviceCharge.category=='BS'" class="col-2">{{service.quantity * service.serviceCharge.amount}}</div>-->
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="row text-center align-items-center">
+                    <div class="col-2">{{bonDePlata.number}}</div>
+                    <div class="col-4">{{bonDePlata.date | date: 'dd/MM/yyyy HH:mm:ss'}}</div>
+                    <div class="col-6">
+                        <button class="btn btn-dark-red-color btn-sm" mdbTooltip="Sterge"
+                                (click)="delete(bonDePlata,i)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+                        </button>
+                        <button class="btn btn-mdb-color btn-sm" mdbTooltip="Editeaza" (click)="editTaxes(bonDePlata)">
+                            <i class="fa fa-pencil fa-lg" aria-hidden="true"></i></button>
+                        <button class="btn btn-mdb-color btn-sm" mdbTooltip="Genereaza nota"><i
+                                class="fa fa-file-text-o fa-lg" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="bonDePlataList.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+<br>
+<div class="alert alert-primary text-center w-100">Spre plata : {{bonDePlataTotal}} lei
+</div>
+
+<div class="gradient-card-header bg-sidebar border-gradient">
+    <div class="container-fluid">
+        <!-- Title -->
+        <div class="row">
+            <div class="col-6">
+                <div class="card-header-title white-text">Incasari</div>
+            </div>
+            <div class="col-6">
+                <div class="text-right fap text-white">
+                    <i (click)="checkReceipts()" mdbTooltip="Verificare incasari" placement="top"
+                       class="fa fa-refresh fa-lg fa-mt" aria-hidden="true"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card-body card-body-cascade">
+    <table class="table table-widths text-center table-sm">
+        <thead class="bg-sidebar white-text">
+        <tr>
+            <th scope="col">Numar incasare</th>
+            <th scope="col">Data incasarii</th>
+            <th scope="col">Numar bon de plata</th>
+            <th scope="col">Suma</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let receipt of receiptsList">
+            <th scope="row">{{ receipt.number }}</th>
+            <td>{{ receipt.paymentDate | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ receipt.paymentOrderNumber }}</td>
+            <td>{{ receipt.amount }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div *ngIf="receiptsList.length === 0" class="text-center text-muserviceChargeted mt-3"> Nu sunt inregistrari gasite!
+</div>
+<br>
+<div class="alert alert-primary text-center w-100">Achitat : {{receiptsTotal}} lei</div>
+<div class="row">
+    <div class="col-12">
+        <div *ngIf="total < 0">
+            <div class="alert alert-danger text-center">Datorii: {{-total | number : '1.2-2'}} lei
+            </div>
+        </div>
+        <div *ngIf="total >= 0">
+            <div class="alert alert-success text-center">Datorii : {{0 | number : '1.2-2'}} lei
+            </div>
+        </div>
+    </div>
+</div>
+

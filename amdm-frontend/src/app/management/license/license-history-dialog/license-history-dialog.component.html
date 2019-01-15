@@ -1,0 +1,51 @@
+<h2 mat-dialog-title align="center">Istoria modificarilor</h2>
+<mat-dialog-content class="mat-typography">
+    <div class="gradient-card-header bg-sidebar border-gradient">
+        <div class="container-fluid">
+            <!-- Title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card-header-title white-text card-header-title-mt"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body card-body-cascade">
+        <div class="table-width">
+            <div class="example-container">
+                <table class="table table-widths text-center">
+                    <thead class="bg-sidebar white-text">
+                    <tr>
+                        <th scope="col">Nr</th>
+                        <th scope="col">Numarul Cererii</th>
+                        <th scope="col">Data executarii</th>
+                        <th scope="col">Tipul executiei</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let req of requests;let i = index">
+                        <td class="w-25px" placement="top">{{ i + 1}}
+                        </td>
+                        <td class="w-25px">
+                            <a title="{{req.requestNumber}}" (click)="showDetails(req.id)">{{ req.requestNumber }}</a>
+                        </td>
+                        <td class="w-25px">{{ req.endDate | date: 'dd/MM/yyyy' }}</td>
+                        <td class="w-25px">{{ req.type.description }}</td>
+                        <!--   <td class="w-25px"
+                               mdbTooltip="{{ objAddr.selectedPharmaceutist ? objAddr.selectedPharmaceutist.fullName : '' }}"
+                               placement="top">{{ objAddr.selectedPharmaceutist ? objAddr.selectedPharmaceutist.fullName :
+                             '' }}
+                           </td>
+                           <td class="w-25px" mdbTooltip="{{objAddr.activitiesStr}}" placement="top">
+                             {{objAddr.activitiesStr}}
+                           </td>-->
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+    <button class="btn btn-dark-green-color btn-sm-bl btn-sm" (click)="cancel()">Ok</button>
+</mat-dialog-actions>

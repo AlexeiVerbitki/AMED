@@ -1,0 +1,126 @@
+<h3 class="text-center my-3 font-weight-bold">{{this.pageName}} bon de plata</h3>
+<div class="mat-dialog-content">
+    <form [formGroup]='addBonForm' #f="ngForm">
+
+        <!--<pre>{{f.value | json}}</pre>-->
+
+        <div class="row">
+            <div class="col-6">
+                <div class="md-form">
+                    <input type="text" id="bonNr" class="form-control" mdbInputDirective formControlName="bonNr">
+                    <label for="bonNr" class="disabled">Numar bon de plata</label>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="md-form">
+                    <input type="text" id="date" class="form-control" mdbInputDirective formControlName="date">
+                    <label for="date" class="disabled">Data</label>
+                </div>
+            </div>
+        </div>
+        <div class="row" [formGroup]='addChargeForm' #f2="ngForm">
+
+            <!--<pre>{{f2.value | json}}</pre>f2-->
+
+            <div class="col-6">
+                <div class="md-form-modified">
+                    <ng-select id="serviceCharges" name="serviceCharges"
+                               bindLabel="description"
+                               [items]="serviceChargesList"
+                               placeholder="Taxa de acordare servicii*"
+                               formControlName="serviceCharge"
+                               required="true">
+                        <ng-template ng-option-tmp let-item="item">
+                            {{item.description}} - {{item.amount}}
+                        </ng-template>
+                        <ng-template ng-label-tmp let-item="item">
+                            {{item.description}}
+                        </ng-template>
+                    </ng-select>
+                </div>
+            </div>
+
+            <div class="col-2">
+                <div class="md-form">
+                    <input type="number" id="quantity" class="form-control" mdbInputDirective formControlName="quantity"
+                           (change)="recalc()" max="10" min="0" onkeydown="return false">
+                    <label for="quantity">Cantitatea</label>
+                </div>
+            </div>
+
+            <div class="col-2">
+                <div class="md-form">
+                    <input type="number" id="total" class="form-control" mdbInputDirective formControlName="total">
+                    <label for="total">Total</label>
+                </div>
+            </div>
+
+            <div class="col-2">
+                <div class="md-form">
+                    <div class="text-center">
+                        <button mdbTooltip="Adauga serviciu" type="button" class="btn btn-mdb-color waves-light btn-sm"
+                                mdbWavesEffect (click)="addService()"
+                                [disabled]="!this.addChargeForm.controls.serviceCharge.valid">
+                            <i class="fa fa-plus fa-lg" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        <!-- Card content -->
+        <h5 class="text-center font-weight-bold">Lista taxe</h5>
+        <div class="card-body card-body-cascade">
+            <div class="container-fluid">
+                <div class="row bg-sidebar white-text text-center">
+                    <div class="col-6">Taxa</div>
+                    <div class="col-2">Cantitate</div>
+                    <div class="col-1">Suma</div>
+                    <div class="col-1">Total</div>
+                    <div class="col-2">Actiuni</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row text-center align-items-center" *ngFor="let service of ctPayOrderServices; let i = index">
+                <div class="col-6">{{service.serviceCharge.description}}</div>
+                <div class="col-2">{{service.quantity}}</div>
+                <ng-container *ngIf="service.serviceCharge.category!='BS'; else additionalPayment">
+                    <div class="col-1">{{service.serviceCharge.amount}}</div>
+                    <div class="col-1">{{service.quantity * service.serviceCharge.amount}}</div>
+                </ng-container>
+                <ng-template #additionalPayment>
+                    <div class="col-1">{{service.additionalPayment}}</div>
+                    <div class="col-1">{{service.quantity * service.additionalPayment}}</div>
+                </ng-template>
+                <div class="col-2">
+                    <button class="btn btn-dark-red-color btn-sm" mdbTooltip="Sterge" (click)="deleteSerevice(i)"><i
+                            class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                </div>
+            </div>
+            <!--<div *ngIf="ctPayOrderServices.length !== 0" class="row text-center align-items-center">
+                <div class="col-6"><b>Total</b></div>
+                <div class="col-2"><b>&#45;&#45;</b></div>
+                <div class="col-1"><b>&#45;&#45;</b></div>
+                <div class="col-1"><b>Mult</b></div>
+                <div class="col-2"></div>
+            </div>-->
+            <div *ngIf="ctPayOrderServices.length === 0" class="text-center text-muted mt-3">Nu sunt inregistrari
+                gasite!
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="text-center">
+    <div class="mat-dialog-actions">
+        <div class="w-100">
+            <!--<button class="btn btn-danger btn-sm waves-light" (click)="cancel()">Anulare</button>-->
+            <!--<button class="btn btn-dark-green-color btn-sm waves-light" (click)="add()">Adaugare</button>-->
+            <button class="btn btn-danger btn-sm waves-light" (click)="close()">Anulare</button>
+            <button class="btn btn-dark-green-color btn-sm waves-light" (click)="add()" [disabled]="this.ctPayOrderServices.length==0">Adaugare</button>
+        </div>
+    </div>
+</div>
