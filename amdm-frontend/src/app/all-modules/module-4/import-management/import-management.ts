@@ -112,6 +112,8 @@ export class ImportManagement implements OnInit {
 
 
 
+
+
     constructor(private fb: FormBuilder,
                 private requestService: RequestService,
                 public dialog: MatDialog,
@@ -624,6 +626,7 @@ export class ImportManagement implements OnInit {
         dialogConfig2.data = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[0];
         dialogConfig2.data.medtType = this.importData.importAuthorizationEntity.medType;
         dialogConfig2.data.currentStep = this.importData.currentStep;
+        dialogConfig2.data.invoiceDetails = this.invoiceDetails;
 
         const dialogRef = this.dialog.open(ImportManagementDialog, dialogConfig2);
 
@@ -637,11 +640,11 @@ export class ImportManagement implements OnInit {
             // invoiceDetails.price =    this.dialogResult[2]
             // invoiceDetails.summ =     this.dialogResult[3]
 
-            invoiceDetails.quantity = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.quantity;
-            invoiceDetails.price = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.price;
-            invoiceDetails.summ = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.summ;
-            invoiceDetails.codeAmed = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.codeAmed;
-            invoiceDetails.name = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.name;
+            invoiceDetails.quantity = this.dialogResult.importAuthorizationEntity.unitOfImportTable.quantity;
+            invoiceDetails.price = this.dialogResult.importAuthorizationEntity.unitOfImportTable.price;
+            invoiceDetails.unitSumm = this.dialogResult.importAuthorizationEntity.unitOfImportTable.unitSumm;
+            invoiceDetails.codeAmed = this.dialogResult.importAuthorizationEntity.unitOfImportTable.medicament;
+            invoiceDetails.name = this.dialogResult.importAuthorizationEntity.unitOfImportTable.name;
 
 
             this.invoiceDetails.push(invoiceDetails);

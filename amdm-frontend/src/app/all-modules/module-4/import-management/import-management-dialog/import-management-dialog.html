@@ -31,6 +31,9 @@
                         <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').invalid">-->
                         <!--<small class="text-muted"><strong class="text-danger">Denumirea trebuie selectata</strong></small>-->
                         <!--</div>-->
+                        <div *ngIf="invoiceDetailAdded">
+                        <small class="text-muted"><strong class="text-danger">Importul pentru acest medicament a fost deja adaugat</strong></small>
+                        </div>
                     </div>
                 </div>
 

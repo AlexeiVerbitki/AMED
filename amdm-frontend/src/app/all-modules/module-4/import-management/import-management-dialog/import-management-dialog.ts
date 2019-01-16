@@ -106,6 +106,8 @@ export class ImportManagementDialog implements OnInit {
     approvedPrice: any;
     approvedQuantity: any;
 
+    invoiceDetailAdded: boolean ;
+
 
     constructor(private fb: FormBuilder,
                 @Inject(MAT_DIALOG_DATA) public dialogData: any,
@@ -138,6 +140,7 @@ export class ImportManagementDialog implements OnInit {
         this.approvedPrice = '';
         this.approvedQuantity = '';
         this.invalidPrice = false;
+        this.invoiceDetailAdded = false;
         this.loadEconomicAgents();
         this.loadManufacturersRfPr();
 
@@ -315,7 +318,8 @@ export class ImportManagementDialog implements OnInit {
         const validPrice = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').valid;
         const validQuantity = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').valid;
         let dialogValues = this.evaluateImportForm.getRawValue();
-            if (validPrice && validQuantity && this.invalidPrice === false && this.invalidQuantity === false) {
+        dialogValues.importAuthorizationEntity.unitOfImportTable.unitSumm  = this.unitSumm;
+            if (validPrice && validQuantity && this.invalidPrice === false && this.invalidQuantity === false /*&& this.invoiceDetailAdded === false*/) {
                 // this.dialog.close([true,
                 //                                this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value,
                 //                                this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
@@ -380,6 +384,12 @@ export class ImportManagementDialog implements OnInit {
                     console.log('pozitie:', val);
 
                     if (val.medicament !== null) {
+                        
+                        if (this.dialogData.invoiceDetails.find(x => x.codeAmed == val.medicament.code)) {
+                            this.invoiceDetailAdded = true
+                        } else {
+                            this.invoiceDetailAdded = false}
+                        
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(val.medicament.code);
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.medicament.customsCode);
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(val.medicament.name);
@@ -402,6 +412,12 @@ export class ImportManagementDialog implements OnInit {
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(val.medicament.registrationDate));
                         this.producerAddress = val.medicament.manufactures[0].manufacture.address + ', ' + val.medicament.manufactures[0].manufacture.country.description;
                     } else {
+
+
+                            if (this.dialogData.invoiceDetails.find(x => x.codeAmed == val.codeAmed)) {
+                                this.invoiceDetailAdded = true
+                            } else {
+                                this.invoiceDetailAdded = false}
 
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(val.codeAmed);
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode);
