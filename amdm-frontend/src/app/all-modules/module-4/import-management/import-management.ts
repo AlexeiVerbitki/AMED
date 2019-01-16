@@ -107,6 +107,9 @@ export class ImportManagement implements OnInit {
     authorizationSumm: any;
     authorizationCurrency: any;
     dialogResult: any;
+    invoice: any ;
+    invoiceDetails : any =[];
+
 
 
     constructor(private fb: FormBuilder,
@@ -194,6 +197,10 @@ export class ImportManagement implements OnInit {
             }),
 
         });
+
+        this.invoice = this.fb.group({
+            invoiceDetails : []
+        })
 
         this.authorizationSumm = 0;
 
@@ -307,7 +314,9 @@ export class ImportManagement implements OnInit {
                     this.evaluateImportForm.get('requestHistories').setValue(data.requestHistories);
 
                     this.evaluateImportForm.get('importAuthorizationEntity.seller').setValue(data.importAuthorizationEntity.seller);
+                    this.sellerAddress = (data.importAuthorizationEntity.seller.address + ', ' + data.importAuthorizationEntity.seller.country.description);
                     this.evaluateImportForm.get('importAuthorizationEntity.importer').setValue(data.importAuthorizationEntity.importer);
+                    this.importerAddress = data.importAuthorizationEntity.importer.legalAddress + ', Moldova';
                     this.evaluateImportForm.get('importAuthorizationEntity.basisForImport').setValue(data.importAuthorizationEntity.basisForImport);
                     this.evaluateImportForm.get('importAuthorizationEntity.conditionsAndSpecification').setValue(data.importAuthorizationEntity.conditionsAndSpecification);
                     this.evaluateImportForm.get('importAuthorizationEntity.authorizationsNumber').setValue(data.id + '/' + new Date().getFullYear() + '-AM');
@@ -493,22 +502,22 @@ export class ImportManagement implements OnInit {
                 }
             }));
             /*================================================*/
-            this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.seller').valueChanges.subscribe(val => {
-                if (val) {
-                    this.sellerAddress = val.address + ', ' + val.country.description;
-                }
-            }));
+            // this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.seller').valueChanges.subscribe(val => {
+            //     if (val) {
+            //         this.sellerAddress = val.address + ', ' + val.country.description;
+            //     }
+            // }));
             this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').valueChanges.subscribe(val => {
                 if (this.medicamentData == null && val) {
                     this.producerAddress = val.address + ', ' + val.country.description;
                     // console.log("producerAddress",this.producerAddress)
                 }
             }));
-            this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.importer').valueChanges.subscribe(val => {
-                if (val) {
-                    this.importerAddress = val.legalAddress /*+ ", " + val.country.description*/;
-                }
-            }));
+            // this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.importer').valueChanges.subscribe(val => {
+            //     if (val) {
+            //         this.importerAddress = val.legalAddress /*+ ", " + val.country.description*/;
+            //     }
+            // }));
             this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').valueChanges.subscribe(val => {
                 if (val) {
                     this.unitSumm = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
@@ -620,7 +629,23 @@ export class ImportManagement implements OnInit {
 
         dialogRef.afterClosed().subscribe(dialogResult => {
             this.dialogResult = dialogResult;
-            console.log('dialogResult', dialogResult);
+            console.log(this.dialogResult);
+
+            let invoiceDetails: any = [];
+            invoiceDetails.data = new Date();
+            // invoiceDetails.quantity = this.dialogResult[1]
+            // invoiceDetails.price =    this.dialogResult[2]
+            // invoiceDetails.summ =     this.dialogResult[3]
+
+            invoiceDetails.quantity = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.quantity;
+            invoiceDetails.price = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.price;
+            invoiceDetails.summ = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.summ;
+            invoiceDetails.codeAmed = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.codeAmed;
+            invoiceDetails.name = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.name;
+
+
+            this.invoiceDetails.push(invoiceDetails);
+            console.log('invoiceDetails', this.invoiceDetails);
 
             // if (dialogResult && dialogResult[0] === true) {
             //     this.dialogSetApproved(i, dialogResult[1]);
@@ -867,39 +892,45 @@ export class ImportManagement implements OnInit {
         modelToSubmit.quantity = this.dialogResult[1]
         modelToSubmit.price = this.dialogResult[2]
         modelToSubmit.summ = this.dialogResult[3]
+        modelToSubmit.requestHistories = [];
+
+        this.invoice.invoiceDetails = this.invoiceDetails;
+        modelToSubmit.invoice = this.invoice;
 
 
         modelToSubmit.requestHistories.push({
-            startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
+
+            // startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
+            startDate: new Date(),
             endDate: new Date(),
             username: this.authService.getUserName(),
             step: 'F'
         });
 
 
-        modelToSubmit.importAuthorizationEntity.currency = this.authorizationCurrency;
-        console.log('this.evaluateImportForm.value', this.evaluateImportForm.value);
+        // modelToSubmit.importAuthorizationEntity.currency = this.authorizationCurrency;
+        // console.log('this.evaluateImportForm.value', this.evaluateImportForm.value);
         //=============
 
 
-        modelToSubmit.medicaments = [];
+        // modelToSubmit.medicaments = [];
 
         //=============
-        modelToSubmit.importAuthorizationEntity.summ = 0;
-        this.importDetailsList.forEach(item => {
-            if (item.approved === true) {
-                this.expirationDate.push(item.expirationDate);
-                modelToSubmit.importAuthorizationEntity.summ = modelToSubmit.importAuthorizationEntity.summ + item.summ;
-                console.log('modelToSubmit.importAuthorizationEntity.summ');
-            }
-        });
+        // modelToSubmit.importAuthorizationEntity.summ = 0;
+        // this.importDetailsList.forEach(item => {
+        //     if (item.approved === true) {
+        //         this.expirationDate.push(item.expirationDate);
+        //         modelToSubmit.importAuthorizationEntity.summ = modelToSubmit.importAuthorizationEntity.summ + item.summ;
+        //         console.log('modelToSubmit.importAuthorizationEntity.summ');
+        //     }
+        // });
 
-        modelToSubmit.importAuthorizationEntity.expirationDate = new Date(this.expirationDate.reduce(function (a, b) {
-            return a < b ? a : b;
-        }));
-        if (this.importData.importAuthorizationEntity.medType === 2 && modelToSubmit.importAuthorizationEntity.expirationDate > (new Date(this.currentDate.getDate() + 365))) {
-            modelToSubmit.importAuthorizationEntity.expirationDate = new Date(this.currentDate.setFullYear(this.currentDate.getFullYear() + 1));
-        }
+        // modelToSubmit.importAuthorizationEntity.expirationDate = new Date(this.expirationDate.reduce(function (a, b) {
+        //     return a < b ? a : b;
+        // }));
+        // if (this.importData.importAuthorizationEntity.medType === 2 && modelToSubmit.importAuthorizationEntity.expirationDate > (new Date(this.currentDate.getDate() + 365))) {
+        //     modelToSubmit.importAuthorizationEntity.expirationDate = new Date(this.currentDate.setFullYear(this.currentDate.getFullYear() + 1));
+        // }
 
         // if (this.importData.importAuthorizationEntity.medType === 3 || this.importData.importAuthorizationEntity.medType === 4) {
         //     modelToSubmit.importAuthorizationEntity.expirationDate = new Date(this.currentDate.setFullYear(this.currentDate.getFullYear() + 1));
