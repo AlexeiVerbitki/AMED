@@ -70,6 +70,8 @@ public class RequestController
 	private LicensesRepository                             licensesRepository;
 	@Autowired
     private ImportAuthorizationRepository importAuthorizationRepository;
+	@Autowired
+    private InvoiceDetailsRepository invoiceDetailsRepository;
 	
 	
     @RequestMapping(value = "/add-medicament-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -1033,6 +1035,13 @@ public class RequestController
 //        addDDDocument(requests);
 		LOGGER.debug("\n\n\n\n=====================\nImport saved\n=====================\n\n\n");
 
+
+		List<InvoiceDetailsEntity> list = new ArrayList<>();
+		list = invoiceDetailsRepository.findInvoicesByAuthorization("0023/2010-AM");
+//		Integer importedQuantity  = list.stream().reduce(0, (a,b) -> a.getQuantity() + b.getQuantity());
+
+        System.out
+                .println("\n\n\n\n=====================\n"+ list +"\n=====================\n\n\n");
 		return new ResponseEntity<>(requests, HttpStatus.CREATED);
 	}
 	@GetMapping(value = "/load-import-request")

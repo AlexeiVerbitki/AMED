@@ -27,4 +27,10 @@ public class InvoiceDetailsEntity {
     @OneToOne
     @JoinColumn(name = "currency_id")
     private NmCurrenciesEntity currency;
+    @Basic
+    @Column(name = "authorizations_number")
+    private String authorizationsNumber;
+    @Basic
+    @Column(name = "quantity")
+    private Integer quantity;
 }
