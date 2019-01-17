@@ -150,6 +150,22 @@
                     </div>
                 </div>
 
+
+                <div class="col-4">
+                    <div class="md-form">
+                        <input id="remainingQuantity" mdbInputDirective type="number" min="0" class="form-control"
+                               [value]="remainingUnits"
+                               formControlName="remainingQuantity">
+                        <!--[attr.disabled]="true"-->
+
+                        <label for="approvedQuantity">Cantitatea ramasă</label>
+                    </div>
+                    <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').invalid">-->
+                    <!--<small class="text-muted"><strong class="text-danger">Cantitatea aprobată trebuie selectată</strong></small>-->
+                    <!--</div>-->
+                </div>
+
+
                 <div class="col-4">
                     <div class="md-form">
                         <input id="approvedPrice" mdbInputDirective type="number" min="0" class="form-control"
@@ -177,7 +193,7 @@
                         <input id="quantity" mdbInputDirective type="number" min="0" class="form-control"
                                formControlName="quantity">
                         <!--[attr.disabled]="true"-->
-                        <label for="quantity">Cantitatea importată</label>
+                        <label for="quantity">Cantitatea spre import</label>
                     </div>
                     <div *ngIf="invalidQuantity">
                         <small class="text-muted"><strong class="text-danger">Cantitatea nu poate depăși cantitatea total autorizată</strong></small>

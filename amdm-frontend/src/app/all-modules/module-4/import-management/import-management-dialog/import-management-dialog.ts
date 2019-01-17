@@ -109,6 +109,7 @@ export class ImportManagementDialog implements OnInit {
     invoiceDetailAdded: boolean  = false;
     importReachedLimit: boolean = false;
     addedUnits: number = 0;
+    remainingUnits: number = 0;
 
 
     constructor(private fb: FormBuilder,
@@ -390,13 +391,23 @@ export class ImportManagementDialog implements OnInit {
                     console.log('pozitie:', val);
 
                     if (val.medicament !== null) {
-                        
-                            if (this.dialogData.invoiceDetails.find(x => x.codeAmed == val.medicament.code)) {
-                            this.invoiceDetailAdded = true;
-                            this.addedUnits = this.dialogData.invoiceDetails.filter(x => x.codeAmed == val.medicament.code).map(x => x.quantity).reduce((a,b) => a+b );
-                                console.log("addedUnits:", this.addedUnits)
-                        } else {
-                            this.invoiceDetailAdded = false}
+
+                        // if (this.dialogData.invoiceDetails.find(x => x.codeAmed == val.medicament.codeAmed)) {
+                        //     this.invoiceDetailAdded = true
+                        //
+                        //     this.addedUnits = this.dialogData.invoiceDetails.filter(x => x.codeAmed == val.medicament.codeAmed).map(x => x.quantity).reduce((a,b) => a+b );
+                        //
+                        //     if (this.addedUnits!==0) {
+                        //         this.remainingUnits = this.approvedQuantity - this.addedUnits;
+                        //     } else{
+                        //         this.remainingUnits = this.approvedQuantity;
+                        //     }
+                        //     console.log("addedUnits:", this.addedUnits)
+                        //
+                        // } else {
+                        //     this.invoiceDetailAdded = false
+                        //     console.log("addedUnits:", this.addedUnits)
+                        // }
                         
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(val.medicament.code);
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.medicament.customsCode);
@@ -419,22 +430,26 @@ export class ImportManagementDialog implements OnInit {
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(val.medicament.registrationNumber);
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(val.medicament.registrationDate));
                         this.producerAddress = val.medicament.manufactures[0].manufacture.address + ', ' + val.medicament.manufactures[0].manufacture.country.description;
+
+                        if (this.dialogData.invoiceDetails.find(x => x.codeAmed == val.medicament.codeAmed)) {
+                            this.invoiceDetailAdded = true
+
+                            this.addedUnits = this.dialogData.invoiceDetails.filter(x => x.codeAmed == val.medicament.codeAmed).map(x => x.quantity).reduce((a,b) => a+b );
+
+
+                            this.remainingUnits = this.approvedQuantity - this.addedUnits;
+
+
+
+                            console.log("addedUnits:", this.addedUnits)
+
+                        } else {
+                            this.invoiceDetailAdded = false
+                            this.remainingUnits = this.approvedQuantity;
+                            console.log("addedUnits:", this.addedUnits)
+                        }
+
                     } else {
-
-
-                            if (this.dialogData.invoiceDetails.find(x => x.codeAmed == val.codeAmed)) {
-                                this.invoiceDetailAdded = true
-
-                                this.addedUnits = this.dialogData.invoiceDetails.filter(x => x.codeAmed == val.codeAmed).map(x => x.quantity).reduce((a,b) => a+b );
-
-                                console.log("addedUnits:", this.addedUnits)
-
-                            } else {
-                                this.invoiceDetailAdded = false
-                                console.log("addedUnits:", this.addedUnits)
-                            }
-
-
 
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(val.codeAmed);
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode);
@@ -457,6 +472,26 @@ export class ImportManagementDialog implements OnInit {
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(val.registrationNumber);
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(val.registrationDate));
                         this.producerAddress = val.producer.address + ', ' + val.producer.country.description;
+
+                        if (this.dialogData.invoiceDetails.find(x => x.codeAmed == val.codeAmed)) {
+                            this.invoiceDetailAdded = true
+
+                            this.addedUnits = this.dialogData.invoiceDetails.filter(x => x.codeAmed == val.codeAmed).map(x => x.quantity).reduce((a,b) => a+b );
+
+
+                            this.remainingUnits = this.approvedQuantity - this.addedUnits;
+
+
+
+                            console.log("addedUnits:", this.addedUnits)
+
+                        } else {
+                            this.invoiceDetailAdded = false
+                            this.remainingUnits = this.approvedQuantity;
+                            console.log("addedUnits:", this.addedUnits)
+                        }
+
+
                     }
 
 
