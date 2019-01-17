@@ -106,7 +106,9 @@ export class ImportManagementDialog implements OnInit {
     approvedPrice: any;
     approvedQuantity: any;
 
-    invoiceDetailAdded: boolean ;
+    invoiceDetailAdded: boolean  = false;
+    importReachedLimit: boolean = false;
+    addedUnits: number = 0;
 
 
     constructor(private fb: FormBuilder,
@@ -343,7 +345,11 @@ export class ImportManagementDialog implements OnInit {
                     this.unitSumm = val * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value;
                     console.log('this.unitSumm', this.unitSumm);
                 }
-                if (val > this.approvedQuantity) {
+
+
+
+
+                if (val + this.addedUnits > this.approvedQuantity) {
                     this.invalidQuantity = true;
                     console.log('invalidQuantity', this.invalidQuantity);
                 } else {
@@ -385,8 +391,10 @@ export class ImportManagementDialog implements OnInit {
 
                     if (val.medicament !== null) {
                         
-                        if (this.dialogData.invoiceDetails.find(x => x.codeAmed == val.medicament.code)) {
-                            this.invoiceDetailAdded = true
+                            if (this.dialogData.invoiceDetails.find(x => x.codeAmed == val.medicament.code)) {
+                            this.invoiceDetailAdded = true;
+                            this.addedUnits = this.dialogData.invoiceDetails.filter(x => x.codeAmed == val.medicament.code).map(x => x.quantity).reduce((a,b) => a+b );
+                                console.log("addedUnits:", this.addedUnits)
                         } else {
                             this.invoiceDetailAdded = false}
                         
@@ -416,8 +424,17 @@ export class ImportManagementDialog implements OnInit {
 
                             if (this.dialogData.invoiceDetails.find(x => x.codeAmed == val.codeAmed)) {
                                 this.invoiceDetailAdded = true
+
+                                this.addedUnits = this.dialogData.invoiceDetails.filter(x => x.codeAmed == val.codeAmed).map(x => x.quantity).reduce((a,b) => a+b );
+
+                                console.log("addedUnits:", this.addedUnits)
+
                             } else {
-                                this.invoiceDetailAdded = false}
+                                this.invoiceDetailAdded = false
+                                console.log("addedUnits:", this.addedUnits)
+                            }
+
+
 
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(val.codeAmed);
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode);
