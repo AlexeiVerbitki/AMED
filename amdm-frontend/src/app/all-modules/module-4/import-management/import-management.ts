@@ -600,18 +600,18 @@ export class ImportManagement implements OnInit {
     //     console.log("this.unitOfImportTable", this.unitOfImportTable)
     // }
 
-    // removeunitOfImport(index: number) {
-    //
-    //     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-    //         data: {message: 'Sunteti sigur ca doriti sa stergeti ?', confirm: false}
-    //     });
-    //
-    //     dialogRef.afterClosed().subscribe(result => {
-    //         if (result) {
-    //             this.unitOfImportTable.splice(index, 1);
-    //         }
-    //     });
-    // }
+    removeunitOfImport(index: number) {
+
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {message: 'Sunteti sigur ca doriti sa stergeti ?', confirm: false}
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.invoiceDetails.splice(index, 1);
+            }
+        });
+    }
 
     showunitOfImport() {
         const dialogConfig2 = new MatDialogConfig();

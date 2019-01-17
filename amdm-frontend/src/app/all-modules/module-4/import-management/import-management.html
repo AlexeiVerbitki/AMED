@@ -42,61 +42,61 @@
 <br>
 <br>
 
-            <div class="gradient-card-header bg-sidebar border-gradient">
-                <div class="container-fluid">
-                    <!-- Title -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card-header-title white-text">Documente de iesire</div>
-                        </div>
-                    </div>
-                </div>
+            <!--<div class="gradient-card-header bg-sidebar border-gradient">-->
+                <!--<div class="container-fluid">-->
+                    <!--&lt;!&ndash; Title &ndash;&gt;-->
+                    <!--<div class="row">-->
+                        <!--<div class="col-12">-->
+                            <!--<div class="card-header-title white-text">Documente de iesire</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
 
-            </div>
+            <!--</div>-->
 
             <!--=================================================================-->
             <!-- Card content -->
-            <div class="card-body card-body-cascade">
-                <table class="table table-widths-lg text-center">
-                    <thead class="bg-sidebar white-text">
-                    <tr>
-                        <th scope="col">Denumirea</th>
-                        <th scope="col">Numar</th>
-                        <th scope="col">Statut document</th>
-                        <th scope="col">Statut emitere</th>
-                        <th>Actiuni</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr *ngFor="let a of outDocuments">
-                        <th scope="row">{{ a.name }}</th>
-                        <th scope="row">{{ a.number }}</th>
-                        <th scope="row">{{ a.status }}</th>
-                        <th scope="row">
-                            <mat-checkbox
-                                    *ngIf="a.docType && (a.docType.category=='SR' || a.docType.category=='AP' || a.docType.category=='AH' || a.docType.category=='AF')"
-                                    #checkBoxResponse [checked]="a.responseReceived || a.status=='Atasat'"
-                                    (change)="checkResponseReceived(a,checkBoxResponse)"
-                                    [disabled]="a.status=='Atasat'">Emitere document
-                            </mat-checkbox>
-                        </th>
-                        <td>
-                            <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)"><i
-                                    class="fa fa-file fa-lg" aria-hidden="true"></i>
-                            </button>
-                            <button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && (a.docType.category=='SR' || a.docType.category=='AP' || a.docType.category=='AH' || a.docType.category=='AF')"
-                                    class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)">
-                                <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div *ngIf="formSubmitted && !isResponseReceived">
-                <small class="text-muted"><strong class="text-danger">Nici un document pentru emitere nu a fost
-                    selectat</strong></small>
-            </div>
+            <!--<div class="card-body card-body-cascade">-->
+                <!--<table class="table table-widths-lg text-center">-->
+                    <!--<thead class="bg-sidebar white-text">-->
+                    <!--<tr>-->
+                        <!--<th scope="col">Denumirea</th>-->
+                        <!--<th scope="col">Numar</th>-->
+                        <!--<th scope="col">Statut document</th>-->
+                        <!--<th scope="col">Statut emitere</th>-->
+                        <!--<th>Actiuni</th>-->
+                    <!--</tr>-->
+                    <!--</thead>-->
+                    <!--<tbody>-->
+                    <!--<tr *ngFor="let a of outDocuments">-->
+                        <!--<th scope="row">{{ a.name }}</th>-->
+                        <!--<th scope="row">{{ a.number }}</th>-->
+                        <!--<th scope="row">{{ a.status }}</th>-->
+                        <!--<th scope="row">-->
+                            <!--<mat-checkbox-->
+                                    <!--*ngIf="a.docType && (a.docType.category=='SR' || a.docType.category=='AP' || a.docType.category=='AH' || a.docType.category=='AF')"-->
+                                    <!--#checkBoxResponse [checked]="a.responseReceived || a.status=='Atasat'"-->
+                                    <!--(change)="checkResponseReceived(a,checkBoxResponse)"-->
+                                    <!--[disabled]="a.status=='Atasat'">Emitere document-->
+                            <!--</mat-checkbox>-->
+                        <!--</th>-->
+                        <!--<td>-->
+                            <!--<button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)"><i-->
+                                    <!--class="fa fa-file fa-lg" aria-hidden="true"></i>-->
+                            <!--</button>-->
+                            <!--<button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && (a.docType.category=='SR' || a.docType.category=='AP' || a.docType.category=='AH' || a.docType.category=='AF')"-->
+                                    <!--class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)">-->
+                                <!--<i class="fa fa-trash fa-lg" aria-hidden="true"></i>-->
+                            <!--</button>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <!--</tbody>-->
+                <!--</table>-->
+            <!--</div>-->
+            <!--<div *ngIf="formSubmitted && !isResponseReceived">-->
+                <!--<small class="text-muted"><strong class="text-danger">Nici un document pentru emitere nu a fost-->
+                    <!--selectat</strong></small>-->
+            <!--</div>-->
             <!--=================================================================-->
 
             <br>
@@ -138,7 +138,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="md-form">
-                            <input id="basisForImport" mdbInputDirective type="text" class="form-control" formControlName="basisForImport">
+                            <input id="basisForImport" mdbInputDirective type="text" class="form-control" formControlName="basisForImport" >
                             <label for="basisForImport">Temeiul pentru autorizație de import (Contract)
                                 <span class="text-danger">*</span>
                             </label>
@@ -299,6 +299,7 @@
                             <th scope="col">Pretul</th>
                             <!--<th scope="col">Valuta</th>-->
                             <th scope="col">Suma</th>
+                            <th scope="col">Actiuni</th>
                             <!--<th scope="col">Ţara şi adresa producătorului materiei prime</th>-->
                             <!--<th scope="col">Termen de valabilitate</th>-->
                             <!--<th scope="col">Codul Vamal</th>-->
@@ -337,6 +338,7 @@
                             <td>{{ invoiceDetail.quantity }}</td>
                             <td>{{ invoiceDetail.price }}</td>
                             <td>{{ invoiceDetail.unitSumm | number : '1.2-2'}}</td>
+                            <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeunitOfImport(i)" mdbWavesEffect>Sterge</button>
 
                         </tr>
                         </tbody>
