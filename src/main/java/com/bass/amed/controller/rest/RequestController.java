@@ -72,8 +72,8 @@ public class RequestController
     private ImportAuthorizationRepository importAuthorizationRepository;
 	@Autowired
     private InvoiceDetailsRepository invoiceDetailsRepository;
-	
-	
+
+
     @RequestMapping(value = "/add-medicament-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RegistrationRequestsEntity> saveMedicamentRequest(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
@@ -1008,6 +1008,54 @@ public class RequestController
         Optional<List<RegistrationRequestsEntity>> registrationRequestsEntities = requestRepository.findMedicamentHistoryByRegistrationNumber(registrationNumber);
         return new ResponseEntity<>(registrationRequestsEntities.orElse(new ArrayList<>()), HttpStatus.CREATED);
 	}
+
+	@RequestMapping(value = "/add-invoice"/*, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE*/)
+	public ResponseEntity<RegistrationRequestsEntity> saveInvoice(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
+		LOGGER.debug("\n\n\n\n=====================\nAdd Import\n=====================\n\n\n");
+
+
+		if (requests.getInvoice() == null) {
+			throw new CustomException("/add-invoice Threw an error, requests.getInvoice() == null");
+		}
+
+		if (requests.getInvoice().getInvoiceDetails != null) {
+			requestRepository.save(requests);
+
+		} else {
+			System.out.println("\n\n\n\n=====================\ngetImportAuthorizationEntity is null\n=====================\n\n\n");
+		}
+
+
+		LOGGER.debug("\n\n\n\n=====================\nInvoice saved\n=====================\n\n\n");
+
+
+//		List<InvoiceDetailsEntity> list = new ArrayList<>();
+//		list = invoiceDetailsRepository.findInvoicesByAuthorization("0023/2010-AM");
+//		int importedQuantity  = list.stream().map(emp -> emp.getQuantity()).reduce(0, (x , y) -> x + y);
+//		list.forEach(x -> System.out.println(x.getQuantity()));
+//
+//		System.out
+//				.println("\n\n\n\n=====================\nlist.stream: "+ importedQuantity +"\n=====================\n\n\n");
+		return new ResponseEntity<>(requests, HttpStatus.CREATED);
+	}
+
+	@PostMapping(value = "/get-invoice-quota")
+	public ResponseEntity<Integer> getInvoiceQuota(@RequestBody Integer authorizationDetailsId, String authorizationNumber) throws CustomException
+	{
+//		Optional<List<RegistrationRequestsEntity>> registrationRequestsEntities = requestRepository.findMedicamentHistoryByRegistrationNumber(registrationNumber);
+
+		List<InvoiceDetailsEntity> list = new ArrayList<>();
+		list = invoiceDetailsRepository.findInvoicesByAuthorization(authorizationNumber, authorizationDetailsId);
+		int importedQuantity  = list.stream().map(emp -> emp.getQuantity()).reduce(0, (x,y) -> x+y);
+        list.forEach(x -> System.out.println(x.getQuantity()));
+
+        System.out.println("\n\n\n\n=====================\nlist.stream: "+ importedQuantity +"\n=====================\n\n\n");
+
+
+		return new ResponseEntity<>(importedQuantity, HttpStatus.CREATED);
+	}
+
+
 	@RequestMapping(value = "/add-import-request"/*, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE*/)
 	public ResponseEntity<RegistrationRequestsEntity> saveImportRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
 		LOGGER.debug("\n\n\n\n=====================\nAdd Import\n=====================\n\n\n");
@@ -1036,12 +1084,13 @@ public class RequestController
 		LOGGER.debug("\n\n\n\n=====================\nImport saved\n=====================\n\n\n");
 
 
-		List<InvoiceDetailsEntity> list = new ArrayList<>();
-		list = invoiceDetailsRepository.findInvoicesByAuthorization("0023/2010-AM");
-//		Integer importedQuantity  = list.stream().reduce(0, (a,b) -> a.getQuantity() + b.getQuantity());
+//		List<InvoiceDetailsEntity> list = new ArrayList<>();
+//		list = invoiceDetailsRepository.findInvoicesByAuthorization("0023/2010-AM");
+//		int importedQuantity  = list.stream().map(emp -> emp.getQuantity()).reduce(0, (x,y) -> x+y);
+//        list.forEach(x -> System.out.println(x.getQuantity()));
+//
+//        System.out.println("\n\n\n\n=====================\nlist.stream: "+ importedQuantity +"\n=====================\n\n\n");
 
-        System.out
-                .println("\n\n\n\n=====================\n"+ list +"\n=====================\n\n\n");
 		return new ResponseEntity<>(requests, HttpStatus.CREATED);
 	}
 	@GetMapping(value = "/load-import-request")
