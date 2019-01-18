@@ -1009,7 +1009,7 @@ public class RequestController
         return new ResponseEntity<>(registrationRequestsEntities.orElse(new ArrayList<>()), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/add-invoice"/*, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE*/)
+	@RequestMapping(value = "/add-invoice-request"/*, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE*/)
 	public ResponseEntity<RegistrationRequestsEntity> saveInvoice(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
 		LOGGER.debug("\n\n\n\n=====================\nAdd Import\n=====================\n\n\n");
 

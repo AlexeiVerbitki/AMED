@@ -109,7 +109,9 @@ export class RequestService {
     getImportRequest(id: string): Observable<any> {
         return this.http.get('/api/load-import-request', {params: {id: id}});
     }
-
+    addInvoiceRequest(requestDetails: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/add-invoice-request', requestDetails, {observe: 'response'});
+    }
     viewImportAuthorization(object: any): Observable<any> {
         return this.http.post('/api/view-import-authorization', object, { responseType: 'blob'});
     }

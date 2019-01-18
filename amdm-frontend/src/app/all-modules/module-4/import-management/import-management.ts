@@ -635,16 +635,16 @@ export class ImportManagement implements OnInit {
             console.log(this.dialogResult);
 
             let invoiceDetails: any = [];
-            invoiceDetails.data = new Date();
+            // invoiceDetails.data = new Date();
             // invoiceDetails.quantity = this.dialogResult[1]
             // invoiceDetails.price =    this.dialogResult[2]
             // invoiceDetails.summ =     this.dialogResult[3]
 
             invoiceDetails.quantity = this.dialogResult.importAuthorizationEntity.unitOfImportTable.quantity;
             invoiceDetails.price = this.dialogResult.importAuthorizationEntity.unitOfImportTable.price;
-            invoiceDetails.unitSumm = this.dialogResult.importAuthorizationEntity.unitOfImportTable.unitSumm;
-            invoiceDetails.codeAmed = this.dialogResult.importAuthorizationEntity.unitOfImportTable.medicament;
-            invoiceDetails.name = this.dialogResult.importAuthorizationEntity.unitOfImportTable.name;
+            invoiceDetails.sum = this.dialogResult.importAuthorizationEntity.unitOfImportTable.unitSumm;
+            // invoiceDetails.codeAmed = this.dialogResult.importAuthorizationEntity.unitOfImportTable.medicament;
+            // invoiceDetails.name = this.dialogResult.importAuthorizationEntity.unitOfImportTable.name;
 
 
             this.invoiceDetails.push(invoiceDetails);
@@ -891,14 +891,20 @@ export class ImportManagement implements OnInit {
 
         // modelToSubmit.importAuthorizationEntity.authorizationsNumber = this.importData.importAuthorizationEntity.id + '/' + new Date().getFullYear() + '-AM';
 
-        modelToSubmit.data = new Date();
-        modelToSubmit.quantity = this.dialogResult[1]
-        modelToSubmit.price = this.dialogResult[2]
-        modelToSubmit.summ = this.dialogResult[3]
+        // modelToSubmit.data = new Date();
+        // modelToSubmit.quantity = this.dialogResult[1]
+        // modelToSubmit.price = this.dialogResult[2]
+        // modelToSubmit.summ = this.dialogResult[3]
         modelToSubmit.requestHistories = [];
 
-        this.invoice.invoiceDetails = this.invoiceDetails;
-        modelToSubmit.invoice = this.invoice;
+        this.invoice.invoiceDetailsEntity = this.invoiceDetails;
+
+         this.invoice.invoiceDetailsEntity.data = new Date();    ;
+         this.invoice.invoiceDetailsEntity.quantity = this.dialogResult[1]    ;
+         this.invoice.invoiceDetailsEntity.price = this.dialogResult[2]    ;
+         this.invoice.invoiceDetailsEntity.summ = this.dialogResult[3]    ;
+
+        modelToSubmit.invoiceEntity = this.invoice;
 
 
         modelToSubmit.requestHistories.push({
@@ -942,9 +948,9 @@ export class ImportManagement implements OnInit {
         console.log('modelToSubmit', modelToSubmit);
         alert('before addImportRequest(modelToSubmit)');
         // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {
-        this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
-                alert('after addImportRequest(modelToSubmit)');
-                console.log('addImportRequest(modelToSubmit).subscribe(data) ', data);
+        this.subscriptions.push(this.requestService.addInvoiceRequest(modelToSubmit).subscribe(data => {
+                alert('after addInvoiceRequest(modelToSubmit)');
+                console.log('addInvoiceRequest(modelToSubmit).subscribe(data) ', data);
                 this.loadingService.hide();
                 this.router.navigate(['dashboard/homepage']);
             }, error => {
