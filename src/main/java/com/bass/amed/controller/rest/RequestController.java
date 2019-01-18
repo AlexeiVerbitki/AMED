@@ -1014,11 +1014,11 @@ public class RequestController
 		LOGGER.debug("\n\n\n\n=====================\nAdd Import\n=====================\n\n\n");
 
 
-		if (requests.getInvoice() == null) {
+		if (requests.getInvoiceEntity() == null) {
 			throw new CustomException("/add-invoice Threw an error, requests.getInvoice() == null");
 		}
 
-		if (requests.getInvoice().getInvoiceDetails != null) {
+		if (requests.getInvoiceEntity().getInvoiceDetailsEntitySet() != null) {
 			requestRepository.save(requests);
 
 		} else {

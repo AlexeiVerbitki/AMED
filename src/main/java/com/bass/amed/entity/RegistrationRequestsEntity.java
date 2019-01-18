@@ -33,6 +33,10 @@ public class RegistrationRequestsEntity
     @JoinColumn( name = "import_id" )
     private ImportAuthorizationEntity importAuthorizationEntity;
 
+    @OneToOne( fetch = FetchType.LAZY, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
+    @JoinColumn( name = "invoice_id" )
+    private InvoiceEntity invoiceEntity;
+
 
     @Basic
     @Column(name = "current_step")
