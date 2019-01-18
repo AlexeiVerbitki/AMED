@@ -69,7 +69,7 @@
 
                 <div class="col-4">
                     <div class="md-form">
-                        <input id="quantity" mdbInputDirective type="number" min="0" class="form-control"
+                        <input id="quantity" mdbInputDirective type="number" min="0" onkeypress="return event.charCode >= 48"  class="form-control"
                                [attr.disabled]="true"
                                formControlName="quantity">
                         <label for="quantity">Cantitatea solicitată</label>
@@ -80,7 +80,7 @@
                 </div>
                 <div class="col-4">
                     <div class="md-form">
-                        <input id="approvedQuantity" mdbInputDirective type="number" min="0" class="form-control"
+                        <input id="approvedQuantity" mdbInputDirective type="number" min="0" onkeypress="return event.charCode >= 48"  class="form-control"
                                formControlName="approvedQuantity">
                         <!--[attr.disabled]="true"-->
                         <label for="approvedQuantity">Cantitatea Aprobată</label>
@@ -91,7 +91,7 @@
                 </div>
                 <div class="col-4">
                     <div class="md-form">
-                        <input id="currencyCode" mdbInputDirective type="number" min="0" class="form-control"
+                        <input id="currencyCode" mdbInputDirective type="number" min="0" onkeypress="return event.charCode >= 48"  class="form-control"
                                [attr.disabled]="true"
                                formControlName="currencyCode">
                         <label for="currencyCode">Pretul</label>

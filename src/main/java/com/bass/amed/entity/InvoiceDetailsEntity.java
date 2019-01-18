@@ -9,28 +9,34 @@ import java.sql.Date;
 @Data
 @Table(name = "invoice_details", schema = "amed", catalog = "")
 public class InvoiceDetailsEntity {
-    @Id
-    @Column(name = "id")
-    private Integer id;
-    @Basic
-    @Column(name = "approve_date")
-    private Date approveDate;
-    @OneToOne
-    @JoinColumn(name = "medicament_id")
-    private MedicamentEntity medicament;
-    @Basic
-    @Column(name = "price")
-    private Double price;
-    @Basic
-    @Column(name = "priceMdl")
-    private Double priceMdl;
-    @OneToOne
-    @JoinColumn(name = "currency_id")
-    private NmCurrenciesEntity currency;
-    @Basic
-    @Column(name = "authorizations_number")
-    private String authorizationsNumber;
-    @Basic
-    @Column(name = "quantity")
-    private Integer quantity;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false)
+	private Integer id;
+
+	@Basic
+	@Column(name = "quantity")
+	private Integer quantity;
+
+	@Basic
+	@Column(name = "price")
+	private Double price;
+
+	@Basic
+	@Column(name = "sum")
+	private Double sum;
+
+	@Basic
+	@Column(name = "authorizations_number")
+	private String authorizationsNumber;
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+	@JoinColumn(name = "medicament_id")
+	private MedicamentEntity medicament;
+
+//	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+//	@JoinColumn(name = "invoices_id")
+//	private ImportAuthorizationDetailsEntity authorizationDetailsId;
+
 }
