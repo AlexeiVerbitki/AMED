@@ -897,7 +897,7 @@ export class ImportManagement implements OnInit {
         // modelToSubmit.summ = this.dialogResult[3]
         modelToSubmit.requestHistories = [];
 
-        this.invoice.invoiceDetailsEntity = this.invoiceDetails;
+        // this.invoice.invoiceDetailsEntity = this.invoiceDetails;
 
          this.invoice.invoiceDetailsEntity.data = new Date();    ;
          this.invoice.invoiceDetailsEntity.quantity = this.dialogResult[1]    ;
