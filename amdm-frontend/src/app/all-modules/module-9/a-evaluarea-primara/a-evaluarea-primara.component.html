@@ -198,7 +198,8 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="card-header-title white-text">Instituţii medicale / Locul desfăşurării
-                                studiului</div>
+                                studiului
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -261,11 +262,13 @@
                                     </div>
                                 </div>
                                 <div class="col-2 border-specs ptc">
-                                    <button class="btn btn-mdb-color waves-light btn-sm waves-light" (click)="editMedicalInstitution(i)"
-                                        mdbWavesEffect><i class="fa fa-pencil" aria-hidden="true"></i>
+                                    <button class="btn btn-mdb-color waves-light btn-sm waves-light"
+                                            (click)="editMedicalInstitution(i)"
+                                            mdbWavesEffect><i class="fa fa-pencil" aria-hidden="true"></i>
                                     </button>
-                                    <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="deleteMedicalInstitution(i)"
-                                        mdbWavesEffect><i class="fa fa-trash" aria-hidden="true"></i>
+                                    <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                            (click)="deleteMedicalInstitution(i)"
+                                            mdbWavesEffect><i class="fa fa-trash" aria-hidden="true"></i>
                                     </button>
                                 </div>
                             </div>
@@ -319,7 +322,7 @@
                             <div class="col-6">
                                 <div class="text-right fap text-white">
                                     <i (click)="addMedActiveSubstanceDialog()" class="fa fa-plus-circle fa-lg fa-mt"
-                                        aria-hidden="true"></i>
+                                       aria-hidden="true"></i>
                                 </div>
                             </div>
                         </div>
@@ -330,35 +333,37 @@
                 <div class="card-body card-body-cascade">
                     <table class="table table-widths text-center">
                         <thead class="bg-sidebar white-text">
-                            <tr>
-                                <th scope="col">Denumire</th>
-                                <th scope="col">Cod CAS</th>
-                                <th scope="col">Concentratie</th>
-                                <th scope="col">Unitate de masură</th>
-                                <th scope="col">Producător</th>
-                                <th scope="col">Ţară producător</th>
-                                <th scope="col">Adresă producător</th>
-                                <th scope="col">Actiuni</th>
-                            </tr>
+                        <tr>
+                            <th scope="col">Denumire</th>
+                            <th scope="col">Cod CAS</th>
+                            <th scope="col">Concentratie</th>
+                            <th scope="col">Unitate de masură</th>
+                            <th scope="col">Producător</th>
+                            <th scope="col">Ţară producător</th>
+                            <th scope="col">Adresă producător</th>
+                            <th scope="col">Actiuni</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let substance of medActiveSubstances;let i = index">
-                                <th scope="row">{{ substance.activeSubstance.description }}</th>
-                                <td>{{ substance.activeSubstance.code }}</td>
-                                <td>{{ substance.quantity }}</td>
-                                <td>{{ substance.unitsOfMeasurement.description }}</td>
-                                <td>{{ substance.manufacture.description }}</td>
-                                <td>{{ substance.manufacture.country.description }}</td>
-                                <td>{{ substance.manufacture.address }}</td>
-                                <td>
-                                    <button class="btn btn-mdb-color waves-light btn-sm waves-light" (click)="editMedActiveSubstance(substance,i)"
+                        <tr *ngFor="let substance of medActiveSubstances;let i = index">
+                            <th scope="row">{{ substance.activeSubstance.description }}</th>
+                            <td>{{ substance.activeSubstance.code }}</td>
+                            <td>{{ substance.quantity }}</td>
+                            <td>{{ substance.unitsOfMeasurement.description }}</td>
+                            <td>{{ substance.manufacture.description }}</td>
+                            <td>{{ substance.manufacture.country.description }}</td>
+                            <td>{{ substance.manufacture.address }}</td>
+                            <td>
+                                <button class="btn btn-mdb-color waves-light btn-sm waves-light"
+                                        (click)="editMedActiveSubstance(substance,i)"
                                         mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
-                                    </button>
-                                    <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeMedActiveSubstance(i)"
+                                </button>
+                                <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                        (click)="removeMedActiveSubstance(i)"
                                         mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
-                                    </button>
-                                </td>
-                            </tr>
+                                </button>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -441,26 +446,27 @@
                     </div>
                 </div>
                 <div class="gradient-card-header bg-sidebar border-gradient">
-                        <div class="container-fluid">
-                            <!-- Title -->
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="card-header-title white-text">Substanţe active</div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="text-right fap text-white">
-                                        <i (click)="addRefProdActiveSubstanceDialog()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
-                                    </div>
+                    <div class="container-fluid">
+                        <!-- Title -->
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="card-header-title white-text">Substanţe active</div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-right fap text-white">
+                                    <i (click)="addRefProdActiveSubstanceDialog()" class="fa fa-plus-circle fa-lg fa-mt"
+                                       aria-hidden="true"></i>
                                 </div>
                             </div>
                         </div>
-            
                     </div>
-            
-                    <!-- Card content -->
-                    <div class="card-body card-body-cascade">
-                <table class="table table-widths text-center">
-                    <thead class="bg-sidebar white-text">
+
+                </div>
+
+                <!-- Card content -->
+                <div class="card-body card-body-cascade">
+                    <table class="table table-widths text-center">
+                        <thead class="bg-sidebar white-text">
                         <tr>
                             <th scope="col">Denumire</th>
                             <th scope="col">Cod CAS</th>
@@ -471,8 +477,8 @@
                             <th scope="col">Adresă producător</th>
                             <th scope="col">Actiuni</th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         <tr *ngFor="let substance of refProdActiveSubstances;let i = index">
                             <th scope="row">{{ substance.activeSubstance.description }}</th>
                             <td>{{ substance.activeSubstance.code }}</td>
@@ -482,17 +488,19 @@
                             <td>{{ substance.manufacture.country.description }}</td>
                             <td>{{ substance.manufacture.address }}</td>
                             <td>
-                                <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="editRefProdActiveSubstance(substance,i)"
-                                    mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+                                <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                        (click)="editRefProdActiveSubstance(substance,i)"
+                                        mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
                                 </button>
-                                <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeRefProdActiveSubstance(i)"
-                                    mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+                                <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                        (click)="removeRefProdActiveSubstance(i)"
+                                        mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
                                 </button>
                             </td>
                         </tr>
-                    </tbody>
-                </table>
-                    </div>
+                        </tbody>
+                    </table>
+                </div>
                 <div class="row">
                     <div class="col-4">
                         <div class="md-form-modified">
@@ -566,21 +574,21 @@
             </div>
             <hr>
 
-            <!--<app-payment [requestId]="evaluateClinicalTrailForm.get('id').value" (totalValueChanged)="paymentTotalUpdate($event)" [checkProducator]="false"-->
-                         <!--[processModule]="'STUDIUCLINIC'"></app-payment>-->
-
-            <app-payment-clinical-trial [registrationReqestId]="evaluateClinicalTrailForm.get('id').value">
-
-            </app-payment-clinical-trial>
+            <app-payment-clinical-trial [registrationReqest]="reqReqInitData"></app-payment-clinical-trial>
 
         </div>
         <hr>
     </form>
 
     <div class="text-center">
-        <button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>
-        <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="onSubmit()">Urmatorul pas</button>
-        <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>
+        <button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date
+        </button>
+        <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="onSubmit()">
+            Urmatorul pas
+        </button>
+        <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">
+            Intrerupere
+        </button>
     </div>
 </div>
 

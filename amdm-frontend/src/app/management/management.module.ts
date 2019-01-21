@@ -39,16 +39,19 @@ import {MedicamentsOaComponent} from './generate-documents/medicaments-oa/medica
 import {SelectIssueDateDialogComponent} from '../dialog/select-issue-date-dialog/select-issue-date-dialog.component';
 import {RequestsOiComponent} from './generate-documents/requests-oi/requests-oi.component';
 import {OiListComponent} from './generate-documents/oi-list/oi-list.component';
-import { NotificationDetailslsComponent } from './clinical-trials/dialog/notification-detailsls/notification-detailsls.component';
+import {NotificationDetailslsComponent} from './clinical-trials/dialog/notification-detailsls/notification-detailsls.component';
 import {DdModifyListComponent} from './generate-documents/dd-modify-list/dd-modify-list.component';
 import {MedicamentsOmComponent} from './generate-documents/medicaments-om/medicaments-om.component';
 import {OmListComponent} from './generate-documents/om-list/om-list.component';
 import {OiModifyListComponent} from './generate-documents/oi-modify-list/oi-modify-list.component';
 import {RequestsDdModifyComponent} from './generate-documents/requests-dd-modify/requests-dd-modify.component';
 import {RequestsOiModifyComponent} from './generate-documents/requests-oi-modify/requests-oi-modify.component';
-import { LicenseHistoryDialogComponent } from './license/license-history-dialog/license-history-dialog.component';
-import { LicenseHistoryDetailComponent } from './license/license-history-detail/license-history-detail.component';
-
+import {LicenseHistoryDialogComponent} from './license/license-history-dialog/license-history-dialog.component';
+import {LicenseHistoryDetailComponent} from './license/license-history-detail/license-history-detail.component';
+import {SelectDocumentNumberComponent} from "../dialog/select-document-number/select-document-number.component";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {DdCtListComponent} from './generate-documents/dd-ct-list/dd-ct-list.component';
+import {RequestDdCtComponent} from './generate-documents/request-dd-ct/request-dd-ct.component';
 
 
 @NgModule({
@@ -87,20 +90,23 @@ import { LicenseHistoryDetailComponent } from './license/license-history-detail/
         RequestsDdComponent,
         MedicamentsOaComponent,
         SelectIssueDateDialogComponent,
+        SelectDocumentNumberComponent,
         RequestsOiComponent,
         OiListComponent,
         AmendmentDetailsComponent,
-	    NotificationDetailslsComponent,
+        NotificationDetailslsComponent,
         DdModifyListComponent,
         MedicamentsOmComponent,
         OmListComponent,
         OiModifyListComponent,
         RequestsDdModifyComponent,
         RequestsOiModifyComponent,
-	LicenseHistoryDialogComponent,
-	LicenseHistoryDetailComponent
+        LicenseHistoryDialogComponent,
+        LicenseHistoryDetailComponent,
+        DdCtListComponent,
+        RequestDdCtComponent
     ],
-    entryComponents: [AddReceiptDialogComponent, PriceReqEditModalComponent, LicenseDetailsComponent, DrugAuthorizationDetailsDialogComponent, AnnihilationDetailsComponent, ClinicalTrialsDetailsComponent, SelectIssueDateDialogComponent, AmendmentDetailsComponent,NotificationDetailslsComponent,LicenseHistoryDialogComponent, LicenseHistoryDetailComponent],
+    entryComponents: [AddReceiptDialogComponent, PriceReqEditModalComponent, LicenseDetailsComponent, DrugAuthorizationDetailsDialogComponent, AnnihilationDetailsComponent, ClinicalTrialsDetailsComponent, SelectIssueDateDialogComponent, AmendmentDetailsComponent, NotificationDetailslsComponent, LicenseHistoryDialogComponent, LicenseHistoryDetailComponent, SelectDocumentNumberComponent],
     providers: [LicenseService, AdministrationService, UploadFileService, AnnihilationService, MedicamentService, ClinicalTrialService, DdListComponent, OaListComponent],
 })
 export class ManagementModule {

@@ -1,8 +1,8 @@
 import {
-    Component,
+    Component, EventEmitter,
     Input,
     OnDestroy,
-    OnInit
+    OnInit, Output
 } from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material';
 import { Subscription} from 'rxjs';
@@ -22,9 +22,12 @@ export class MachetaComponent implements OnInit, OnDestroy {
     machetaList: any[];
     divisionList: any[];
     numarCerere: string;
-    enableUploading = true;
-    isModify = false;
+    isModify: boolean = false;
+    enableUploading: boolean = true;
+   
     private subscriptions: Subscription[] = [];
+    @Output() removeMaket = new EventEmitter();
+    @Output() addMaket = new EventEmitter();
 
     constructor(public dialog: MatDialog,
                 private errorHandlerService: ErrorHandlerService,
@@ -86,8 +89,10 @@ export class MachetaComponent implements OnInit, OnDestroy {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.subscriptions.push(this.uploadService.removeFileFromStorage(this.machets[index].path).subscribe(data => {
+		let path = this.machets[index].path;
+                this.subscriptions.push(this.uploadService.removeFileFromStorage(path).subscribe(data => {
                         this.machets.splice(index, 1);
+			 this.removeMaket.emit(path);
                     },
                     error => {
                         console.log(error);
@@ -100,8 +105,8 @@ export class MachetaComponent implements OnInit, OnDestroy {
 
     viewFile(macheta: any) {
         this.subscriptions.push(this.uploadService.loadFile(macheta.path).subscribe(data => {
-                const file = new Blob([data], {type: macheta.typeDoc });
-                const fileURL = URL.createObjectURL(file);
+                let file = new Blob([data], {type: macheta.typeDoc });
+                var fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
             },
             error => {
@@ -129,27 +134,20 @@ export class MachetaComponent implements OnInit, OnDestroy {
 
         dialogConfig2.width = '600px';
 
+        this.divisions.forEach(t=>t.include=false);
         dialogConfig2.data = {
             type: 'add',
             values: this.divisions,
-            fieldName: 'Divizare',
+            fieldName: "macheta",
             instructions: this.machets,
             numarCerere: this.numarCerere
         };
 
-        const dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
+        let dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.response) {
-                this.machets.push({
-                    id: null,
-                    name: result.fileName,
-                    date: new Date(),
-                    path: result.path,
-                    divisions: result.values,
-                    typeDoc : result.type,
-                    status: 'N'
-                });
+                  this.addMaket.emit(result.divisions);
             }
         });
     }
@@ -162,26 +160,56 @@ export class MachetaComponent implements OnInit, OnDestroy {
         dialogConfig2.hasBackdrop = true;
 
         dialogConfig2.width = '600px';
+	
+	 for(let div of this.divisions)
+        {
+            if(div.machets.find(t=>t.path==macheta.path))
+            {
+                div.include = true;
+            }
+            else
+            {
+                div.include = false;
+            }
+        }
 
         dialogConfig2.data = {
             type: 'edit',
             values: this.divisions,
-            value: macheta.divisions,
-            fieldName: 'Divizare',
+            value: macheta,
+            fieldName: "macheta",
             instructions: this.machets,
             numarCerere: this.numarCerere
         };
 
-        const dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
+        let dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.response) {
-                macheta.divisions = result.values;
-                if (macheta.status == 'O') {
-                    macheta.status = 'M';
-                }
+                this.addMaket.emit(result.divisions);
             }
         });
+    }
+    
+      getConcatenatedDivision(divisions : any[])
+    {
+        let concatenatedDivision = '';
+        for (let entry of divisions) {
+            if(entry.description && entry.volume && entry.volumeQuantityMeasurement)
+            {
+                concatenatedDivision = concatenatedDivision + entry.description +' '+ entry.volume+' '+entry.volumeQuantityMeasurement.description+ '; ';
+            }
+            else if(entry.volume && entry.volumeQuantityMeasurement)
+            {
+                concatenatedDivision = concatenatedDivision + entry.volume+' '+entry.volumeQuantityMeasurement.description + '; ';
+            }
+            else
+            {
+                concatenatedDivision = concatenatedDivision + entry.description + '; ';
+            }
+
+        }
+        return concatenatedDivision;
     }
 
 }

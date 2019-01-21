@@ -28,7 +28,6 @@ public class RegistrationRequestsEntity
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "company_id")
     private NmEconomicAgentsEntity company;
-
     @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
     @JoinColumn( name = "import_id" )
     private ImportAuthorizationEntity importAuthorizationEntity;
@@ -59,7 +58,6 @@ public class RegistrationRequestsEntity
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "registration_request_id")
     private Set<RegistrationRequestHistoryEntity> requestHistories = new HashSet<>();
-
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @JoinColumn(name = "request_id")
     private Set<MedicamentEntity> medicaments = new HashSet<>();
@@ -111,7 +109,7 @@ public class RegistrationRequestsEntity
     @Basic
     @Column(name = "oi_number")
     private String oiNumber;
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
-    @JoinColumn(name = "registration_request_id")
-    private Set<CtPaymentOrdersEntity> ctPaymentOrdersEntities = new HashSet<>();
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "request_id")
+    private Set<ExpertListEntity> expertList = new HashSet<>();
 }

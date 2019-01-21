@@ -92,4 +92,8 @@ public interface MedicamentRepository extends JpaRepository<MedicamentEntity, In
     @Modifying
     @Query("UPDATE MedicamentEntity p SET p.registrationNumber = :registrationNumber WHERE p.id = :id")
     void setRegistrationNumber(@Param("id")Integer id, @Param("registrationNumber")Integer registrationNumber);
+
+    @Modifying
+    @Query("UPDATE MedicamentEntity p SET p.status = 'E' WHERE p.code = :code and p.status='F'")
+    void setStatusExpiredForOldMedicament(@Param("code")String code);
 }

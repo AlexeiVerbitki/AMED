@@ -31,6 +31,8 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
     docs: Document[] = [];
     docTypes: any[];
 
+    reqReqInitData: any;
+
     phaseList: any[] = [];
 
     //Treatments
@@ -395,7 +397,8 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
             this.activatedRoute.params.subscribe(params => {
                 this.subscriptions.push(
                     this.requestService.getClinicalTrailRequest(params['id']).subscribe(data => {
-                            // console.log('clinicalTrails', data);
+                            this.reqReqInitData = data;
+                            console.log('clinicalTrails', data);
 
                             this.evaluateClinicalTrailForm.get('id').setValue(data.id);
                             this.evaluateClinicalTrailForm.get('requestNumber').setValue(data.requestNumber);
@@ -674,7 +677,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         // formModel.clinicalTrails.investigators = this.investigatorsList;
 
         formModel.assignedUser = this.authService.getUserName();
-        console.log('formModel', JSON.stringify(formModel));
+        // console.log('formModel', JSON.stringify(formModel));
 
         formModel.currentStep = 'A';
         this.subscriptions.push(
@@ -746,8 +749,9 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
                         activeSubstance: result.activeSubstance,
                         quantity: result.activeSubstanceQuantity,
                         unitsOfMeasurement: result.activeSubstanceUnit,
-                        manufacture: result.manufactureSA
+                        manufacture: result.manufactures[0].manufacture
                     });
+                    console.log('this.medActiveSubstances', this.medActiveSubstances);
                 }
             })
         );
@@ -774,7 +778,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
                         activeSubstance: result.activeSubstance,
                         quantity: result.activeSubstanceQuantity,
                         unitsOfMeasurement: result.activeSubstanceUnit,
-                        manufacture: result.manufactureSA
+                        manufacture: result.manufactures[0].manufacture
                     });
                 }
             })

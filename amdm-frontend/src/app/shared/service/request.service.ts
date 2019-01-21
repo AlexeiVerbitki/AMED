@@ -20,6 +20,10 @@ export class RequestService {
         return this.http.get('/api/load-medicament-request', {params: {id: id}});
     }
 
+    getOldRequestIdByMedicamentRegNr(regNr: string): Observable<any> {
+        return this.http.get('/api/get-old-request-id-by-medicament-regnr', {params: {regNr: regNr}});
+    }
+
     getMedicamentHistory(id: string): Observable<any> {
         return this.http.get('/api/load-medicament-history', {params: {id: id}});
     }
@@ -119,6 +123,9 @@ export class RequestService {
     getAuthorizationDetailsByNameOrCode(id: string): Observable<any> {
         return this.http.get('/api/load-import-authorization-details', {params: {id: id}});
     }
+    getAuthorizationByAuth(id: string): Observable<any> {
+        return this.http.get('/api/load-import-authorization-byAuth', {params: {id: id}});
+    }
 
     getActiveLicenses(id: string): Observable<any> {
         return this.http.get('/api/load-active-licenses', {params: {id: id}});
@@ -195,6 +202,18 @@ export class RequestService {
 
     setMedicamentModifyApproved(id: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/medicament-modify-approved', id, {observe: 'response'});
+    }
+
+    getOldRequestTerm(code: string): Observable<any>  {
+        return this.http.get('/api/get-old-request-term', {params: {code: code}});
+    }
+
+    getRequestsForDDCt(): Observable<any> {
+        return this.http.get('/api/get-request-dd-ct');
+    }
+
+    getDDCs(): Observable<any> {
+        return this.http.get('/api/get-ddcs');
     }
 
 }

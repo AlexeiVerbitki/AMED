@@ -1,0 +1,57 @@
+<div>
+  <form [formGroup]='dForm'>
+    <h3 class="text-center my-3 font-weight-bold">Adaugare divizare</h3>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="md-form">
+          <input id="division" mdbInputDirective type="text" formControlName="division" class="form-control">
+          <label for="division">Numărul de unități</label>
+          <div *ngIf="wasDivisionAdded">
+            <small class="text-muted"><strong class="text-danger">Aceasta divizare a fost deja introdusa</strong></small>
+          </div>
+          <div *ngIf="formSubmitted && !dForm.get('division').value && !dForm.get('volume').value && !dForm.get('volumeQuantityMeasurement').value ">
+            <small class="text-muted"><strong class="text-danger">Numarul de unitati trebuie introdus</strong></small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="md-form">
+          <input id="volume" mdbInputDirective type="text" formControlName="volume" class="form-control">
+          <label for="volume">Volum</label>
+          <div *ngIf="wasVolumeAdded">
+            <small class="text-muted"><strong class="text-danger">Aceasta volum a fost deja introdus</strong></small>
+          </div>
+          <div *ngIf="formSubmitted && !dForm.get('volume').value && dForm.get('volumeQuantityMeasurement').value">
+            <small class="text-muted"><strong class="text-danger">Volumul trebuie introdus</strong></small>
+          </div>
+          <div *ngIf="formSubmitted && !dForm.get('division').value && !dForm.get('volume').value && !dForm.get('volumeQuantityMeasurement').value ">
+            <small class="text-muted"><strong class="text-danger">Volumul trebuie introdus</strong></small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="md-form-modified">
+          <ng-select id="volumUnit" name="medUnit" [items]="volumeUnitsOfMeasurement"
+                     bindLabel="description"
+                     placeholder="Unitate de masura (volum)"
+                     formControlName="volumeQuantityMeasurement">
+          </ng-select>
+          <div *ngIf="formSubmitted && dForm.get('volume').value && !dForm.get('volumeQuantityMeasurement').value">
+            <small class="text-muted"><strong class="text-danger">Unitatea de masura trebuie selectata</strong></small>
+          </div>
+          <div *ngIf="formSubmitted && !dForm.get('division').value && !dForm.get('volume').value && !dForm.get('volumeQuantityMeasurement').value ">
+            <small class="text-muted"><strong class="text-danger">Unitatea de masura trebuie selectata</strong></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="text-center">
+  <div mat-dialog-actions>
+    <div class="w-100">
+      <button class="btn btn-danger btn-sm waves-light" (click)="cancel()">Anulare</button>
+      <button class="btn btn-dark-green-color btn-sm waves-light" (click)="add()">Adaugare</button>
+    </div>
+  </div>
+</div>

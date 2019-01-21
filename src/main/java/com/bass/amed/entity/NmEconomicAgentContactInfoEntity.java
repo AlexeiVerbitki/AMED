@@ -4,51 +4,54 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "nm_economic_agent_contact_info", schema = "amed", catalog = "")
-public class NmEconomicAgentContactInfoEntity
-{
+public class NmEconomicAgentContactInfoEntity {
     private Integer id;
     private Integer economicAgentId;
     private String phonenumbers;
+    private String email;
 
     @Id
     @Column(name = "id")
-    public Integer getId()
-    {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id)
-    {
+    public void setId(Integer id) {
         this.id = id;
     }
 
     @Basic
     @Column(name = "economic_agent_id")
-    public Integer getEconomicAgentId()
-    {
+    public Integer getEconomicAgentId() {
         return economicAgentId;
     }
 
-    public void setEconomicAgentId(Integer economicAgentId)
-    {
+    public void setEconomicAgentId(Integer economicAgentId) {
         this.economicAgentId = economicAgentId;
     }
 
     @Basic
     @Column(name = "phonenumbers")
-    public String getPhonenumbers()
-    {
+    public String getPhonenumbers() {
         return phonenumbers;
     }
 
-    public void setPhonenumbers(String phonenumbers)
-    {
+    @Basic
+    @Column(name = "email")
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPhonenumbers(String phonenumbers) {
         this.phonenumbers = phonenumbers;
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (economicAgentId != null ? economicAgentId.hashCode() : 0);
         result = 31 * result + (phonenumbers != null ? phonenumbers.hashCode() : 0);
@@ -56,29 +59,23 @@ public class NmEconomicAgentContactInfoEntity
     }
 
     @Override
-    public boolean equals(Object o)
-    {
-        if (this == o)
-        {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass())
-        {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
 
         NmEconomicAgentContactInfoEntity that = (NmEconomicAgentContactInfoEntity) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null)
-        {
+        if (id != null ? !id.equals(that.id) : that.id != null) {
             return false;
         }
-        if (economicAgentId != null ? !economicAgentId.equals(that.economicAgentId) : that.economicAgentId != null)
-        {
+        if (economicAgentId != null ? !economicAgentId.equals(that.economicAgentId) : that.economicAgentId != null) {
             return false;
         }
-        if (phonenumbers != null ? !phonenumbers.equals(that.phonenumbers) : that.phonenumbers != null)
-        {
+        if (phonenumbers != null ? !phonenumbers.equals(that.phonenumbers) : that.phonenumbers != null) {
             return false;
         }
 

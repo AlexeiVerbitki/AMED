@@ -19,146 +19,59 @@
 			</div>
 		</div>
 		<hr>
-		<div class="row">
-			<div class="col-lg-6">
-				<div class="md-form">
-					<input id="comiteeNr" mdbInputDirective type="text" class="form-control"
-					       formControlName="comiteeNr">
-					<label for="comiteeNr">Nr. comisie</label>
-				</div>
-				<!--<div *ngIf="formSubmitted && expertForm.get('comiteeNr').invalid">-->
-					<!--<small class="text-muted"><strong class="text-danger">Numarul comisiei trebuie introdus</strong></small>-->
-				<!--</div>-->
-			</div>
-			<div class="col-lg-6">
-				<div class="md-form-modified">
-					<mat-form-field class="w-100">
-						<input matInput [matDatepicker]="picker2" placeholder="Data comisiei" formControlName="expertDate">
-						<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-						<mat-datepicker touchUi #picker2></mat-datepicker>
-					</mat-form-field>
-				</div>
-				<!--<div *ngIf="formSubmitted && expertForm.get('expertDate').invalid">-->
-					<!--<small class="text-muted"><strong class="text-danger">Data comisiei trebuie introdusa</strong></small>-->
-				<!--</div>-->
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-3">
-				<div class="md-form-modified">
-					<ng-select id="chairman" name="chairman" [items]="chairmans"
-					           bindLabel="name"
-					           placeholder="Presedintele comisiei *"
-					           formControlName="chairman">
-					</ng-select>
-					<!--<div *ngIf="formSubmitted && expertForm.get('chairman').invalid">-->
-						<!--<small class="text-muted"><strong class="text-danger">Presedintele comisiei trebuie selectat</strong></small>-->
-					<!--</div>-->
-				</div>
-			</div>
-			<div class="col-lg-3">
-				<div class="md-form">
-					<input id="decisionChairman" mdbInputDirective type="text" class="form-control"
-					       formControlName="decisionChairman">
-					<label for="decisionChairman">Decizia presedintelui</label>
-				</div>
-			</div>
-			<div class="col-3">
-				<div class="md-form-modified">
-					<ng-select id="farmacolog" name="farmacolog" [items]="farmacologs"
-					           bindLabel="name"
-					           placeholder="Farmacolog *"
-					           formControlName="farmacolog">
-					</ng-select>
-					<!--<div *ngIf="formSubmitted && expertForm.get('farmacolog').invalid">-->
-						<!--<small class="text-muted"><strong class="text-danger">Farmacologul trebuie selectat</strong></small>-->
-					<!--</div>-->
-				</div>
-			</div>
-			<div class="col-lg-3">
-				<div class="md-form">
-					<input id="decisionFarmacolog" mdbInputDirective type="text" class="form-control"
-					       formControlName="decisionFarmacolog">
-					<label for="decisionFarmacolog">Decizia farmacologului</label>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-3">
-				<div class="md-form-modified">
-					<ng-select id="farmacist" name="farmacist" [items]="farmacists"
-					           bindLabel="name"
-					           placeholder="Farmacist *"
-					           formControlName="farmacist">
-					</ng-select>
-					<!--<div *ngIf="formSubmitted && expertForm.get('farmacist').invalid">-->
-						<!--<small class="text-muted"><strong class="text-danger">Farmacistul trebuie selectat</strong></small>-->
-					<!--</div>-->
-				</div>
-			</div>
-			<div class="col-lg-3">
-				<div class="md-form">
-					<input id="decisionFarmacist" mdbInputDirective type="text" class="form-control"
-					       formControlName="decisionFarmacist">
-					<label for="decisionFarmacist">Decizia farmacistului</label>
-				</div>
-			</div>
-			<div class="col-3">
-				<div class="md-form-modified">
-					<ng-select id="medic" name="medic" [items]="medics"
-					           bindLabel="name"
-					           placeholder="Clinician *"
-					           formControlName="medic">
-					</ng-select>
-					<!--<div *ngIf="formSubmitted && expertForm.get('medic').invalid">-->
-						<!--<small class="text-muted"><strong class="text-danger">Clinicianul trebuie selectat</strong></small>-->
-					<!--</div>-->
-				</div>
-			</div>
-			<div class="col-lg-3">
-				<div class="md-form">
-					<input id="decisionMedic" mdbInputDirective type="text" class="form-control"
-					       formControlName="decisionMedic">
-					<label for="decisionMedic">Decizia clinicianului</label>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-12">
-				<div class="md-form">
-					<textarea type="text" id="comment" class="md-textarea form-control" mdbInputDirective formControlName="commentExperts"></textarea>
-					<label for="comment">Comentariu</label>
-				</div>
-			</div>
-		</div>
-		<div class="position-button">
-			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="dd()" [disabled]="modelToSubmit && modelToSubmit.ddIncluded">Include expertii in dispozitia de distribuire</button>
-		</div>
-		<div class="col-md-12">
-			<div class="md-form">
-				<h5 class="text-center font-weight-bold">
-					Cerere inregistrare medicament
-				</h5>
-				<hr>
-				<mat-radio-group formControlName="statusExperts">
-					<div class="container">
-						<div class="row">
-							<div class="offset-3">
-							</div>
-							<div class="col-5">
-								<mat-radio-button name="prop1" value="1">Acceptată</mat-radio-button>
-							</div>
-							<div class="col-4">
-								<mat-radio-button name="prop2" value="0">Respinsă</mat-radio-button>
-							</div>
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Experti</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white" *ngIf="modelToSubmit && !modelToSubmit.ddIncluded">
+							<i (click)="addExpert()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
 					</div>
-				</mat-radio-group>
+				</div>
 			</div>
-			<br/>
-			<div *ngIf="formSubmitted && expertForm.get('statusExperts').invalid">
-				<small class="text-muted"><strong class="text-danger">Status inregistrare trebuie selectat</strong></small>
-			</div>
+		</div>
+		<!-- Card content -->
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Expert intern</th>
+					<th scope="col">Nume</th>
+					<th scope="col">Decizie</th>
+					<th scope="col">Data adaugare</th>
+					<th scope="col">Inclus in scrisoare de solicitare date aditionale</th>
+					<th scope="col">Numarul solicitarii date aditionale</th>
+					<th scope="col">Actiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let expert of expertList;let i = index">
+					<td>{{ i + 1 }}</td>
+					<td>{{ expert.intern==1 ? 'Da' : 'Nu' }}</td>
+					<td>{{ expert.intern==1 ? expert.expert.name :  expert.expertName}}</td>
+					<td>{{ expert.decision }}</td>
+					<td>{{ expert.date| date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+					<td>{{ expert.requestAdditionalDataNumber ? 'Da' : 'Nu'}}</td>
+					<td>{{ expert.requestAdditionalDataNumber }}</td>
+					<td>
+						<button class="btn btn-mdb-color waves-light btn-sm waves-light" (click)="editExpert(expert,i)" *ngIf="!expert.requestAdditionalDataNumber"
+						        mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></button>
+						<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeExpert(i)" *ngIf="!expert.requestAdditionalDataNumber"
+						        mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="expertList.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<hr>
+		<div class="position-button">
+			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="dd()" [disabled]="modelToSubmit && modelToSubmit.ddIncluded">Include expertii in dispozitia de distribuire</button>
 		</div>
 		<hr>
 		<app-document [docDetails]="docDetails" [documents]="documents" [nrCerere]="expertForm.get('requestNumber').value" [dcTypes]="docTypes" (documentModified)="documentModified($event)"></app-document>
@@ -170,15 +83,15 @@
 				</div>
 			</div>
 			<div class="col-md-4">
-				<div class="md-form" formGroupName="medicament">
-					<input id="med" mdbInputDirective type="text" class="form-control" formControlName="commercialName" [attr.disabled]="true">
-					<label for="med">Denumire comerciala medicament</label>
-				</div>
-			</div>
-			<div class="col-md-4">
 				<div class="md-form">
 					<input id="typeValue" mdbInputDirective type="text" class="form-control" formControlName="typeValue" [attr.disabled]="true">
 					<label for="typeValue">Inregistrare</label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form" formGroupName="medicament">
+					<input id="med" mdbInputDirective type="text" class="form-control" formControlName="commercialName" [attr.disabled]="true">
+					<label for="med">Denumire comerciala medicament</label>
 				</div>
 			</div>
 		</div>
@@ -192,7 +105,7 @@
 					</div>
 					<div class="col-6">
 						<div class="text-right fap text-white">
-							<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="addToAuthorizationOrder()" [disabled]="expertForm.get('statusExperts').value!=1 || oaAttached">Include in ordinul de autorizare</button>
+							<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="addToAuthorizationOrder()" [disabled]="oaAttached">Include in ordinul de autorizare</button>
 						</div>
 					</div>
 				</div>
@@ -205,7 +118,10 @@
 				<thead class="bg-sidebar white-text">
 					<tr>
 						<th scope="col">Nr.</th>
-						<th scope="col">Denumire</th>
+						<th scope="col">Numărul de unități</th>
+						<th scope="col">Volum</th>
+						<th scope="col">Unitate de masura (volum)</th>
+						<th scope="col" *ngIf="expertForm.get('type').value && expertForm.get('type').value.code=='MEDR'">Cod medicament</th>
 						<th scope="col">Aprobat</th>					
 					</tr>
 				</thead>
@@ -213,6 +129,9 @@
 					<tr *ngFor="let division of divisions;let i = index">
 						<td>{{ i + 1 }}</td>
 						<td>{{ division.description }}</td>
+						<td>{{ division.volume }}</td>
+						<td>{{ division.volumeQuantityMeasurement ? division.volumeQuantityMeasurement.description : '' }}</td>
+						<td *ngIf="expertForm.get('type').value && expertForm.get('type').value.code=='MEDR'">{{ division.code }}</td>
 						<td>  <mat-checkbox #checkboxApproved  [checked]="division.approved" (change)="checkApproved(division,checkboxApproved)"></mat-checkbox></td>
 					</tr>
 				</tbody>
@@ -297,24 +216,6 @@
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="volum" mdbInputDirective type="text" class="form-control" formControlName="volume">
-					<label for="volum">Volum </label>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="md-form">
-					<input id="volumeQuantityMeasurement" mdbInputDirective type="text" class="form-control" formControlName="volumeQuantityMeasurement" [attr.disabled]="true">
-					<label for="volumeQuantityMeasurement">Unitate de masura (volum)</label>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="md-form">
-					<input id="atcCode" mdbInputDirective type="text" class="form-control" formControlName="atcCode" [attr.disabled]="true">
-					<label for="atcCode">Cod ATC</label>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="md-form">
 					<input id="pharmaceuticalFormType" mdbInputDirective type="text" class="form-control" formControlName="pharmaceuticalFormType" [attr.disabled]="true">
 					<label for="pharmaceuticalFormType">Tip forma farmaceutica</label>
 				</div>
@@ -323,6 +224,12 @@
 				<div class="md-form">
 					<input id="pharmaceuticalForm" mdbInputDirective type="text" class="form-control" formControlName="pharmaceuticalForm" [attr.disabled]="true">
 					<label for="pharmaceuticalForm">Denumire forma farmaceutica</label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="atcCode" mdbInputDirective type="text" class="form-control" formControlName="atcCode" [attr.disabled]="true">
+					<label for="atcCode">Cod ATC</label>
 				</div>
 			</div>
 			<div class="col-md-4">
@@ -345,23 +252,21 @@
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="termenVal" mdbInputDirective type="number" class="form-control" formControlName="termsOfValidity">
+					<input id="termenVal" mdbInputDirective type="number" class="form-control" formControlName="termsOfValidity" [attr.disabled]="true">
 					<label for="termenVal">Termen de valabilitate (luni) <span class="text-danger">*</span></label>
 				</div>
 				<div *ngIf="formSubmitted && expertForm.get('medicament.termsOfValidity').invalid">
 					<small class="text-muted"><strong class="text-danger">Termenul de valabilitate trebuie introdus</strong></small>
 				</div>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-2">
 				<div class="md-form">
-					<input id="medicamentType" mdbInputDirective type="text" class="form-control" formControlName="medicamentType" [attr.disabled]="true">
-					<label for="medicamentType">Clasificarea medicamentului</label>
+					<mat-checkbox [disabled]="true" [checked]="expertForm.get('medicament.originale').value">Original</mat-checkbox>
 				</div>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-2">
 				<div class="md-form">
-					<input id="customsCode" mdbInputDirective type="text" class="form-control" formControlName="customsCode" [attr.disabled]="true">
-					<label for="customsCode">Cod vamal</label>
+					<mat-checkbox [disabled]="true" [checked]="expertForm.get('medicament.orphan').value">Orfan</mat-checkbox>
 				</div>
 			</div>
 		</div>
@@ -369,7 +274,7 @@
 			<div class="col-md-12">
 				<div class="md-form">
 					<input id="medType2" mdbInputDirective type="text" class="form-control" formControlName="medTypesValues" [attr.disabled]="true">
-					<label for="medType2">Tipul medicamentului</label>
+					<label for="medType2">Tip cerere</label>
 				</div>
 			</div>
 		</div>
@@ -377,7 +282,7 @@
 			<div class="col-md-4">
 				<div class="md-form">
 					<input id="authorizationHolder" mdbInputDirective type="text" class="form-control" formControlName="authorizationHolder" [attr.disabled]="true">
-					<label for="medicamentType">Deţinătorul certificatului de inregistrare</label>
+					<label for="authorizationHolder">Deţinătorul certificatului de inregistrare</label>
 				</div>
 			</div>
 			<div class="col-md-4">
@@ -430,13 +335,23 @@
 		</table>
 		</div>
 		<hr>
-		<app-instruction [divisions]="divisions" [instructions]="instructions" [nrCerere]="expertForm.get('requestNumber').value"></app-instruction>
-		<app-macheta [divisions]="divisions" [machets]="machets" [nrCerere]="expertForm.get('requestNumber').value"></app-macheta>
+		<app-instruction (removeInstr)="removeInstr($event)" (addInstr)="addInstr($event)" [canUpload]="expertForm.get('type').value && expertForm.get('type').value.code!='MEDR'" [divisions]="divisions" [instructions]="instructions" [nrCerere]="expertForm.get('requestNumber').value"></app-instruction>
+		<app-macheta (removeMaket)="removeMacheta($event)" (addMaket)="addMacheta($event)" [canUpload]="expertForm.get('type').value && expertForm.get('type').value.code!='MEDR'" [divisions]="divisions" [machets]="machets" [nrCerere]="expertForm.get('requestNumber').value"></app-macheta>
 		<div class="gradient-card-header bg-sidebar border-gradient">
 			<div class="container-fluid">
 				<div class="row">
-					<div class="col-12">
+					<div class="col-6">
 						<div class="card-header-title white-text">Documente de iesire</div>
+					</div>
+					<div class="col-6">
+						<div class="position-button">
+							<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="requestAdditionalData()">Solicitare
+								date aditionale
+							</button>
+							<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" [disabled]="isDisabledLabButton()" mdbWavesEffect (click)="requestLaboratoryAnalysis()">Solicitare
+								analiza laborator
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -449,16 +364,37 @@
 					<th scope="col">Denumirea</th>
 					<th scope="col">Numar</th>
 					<th scope="col">Status document</th>
+					<th scope="col">Status raspuns</th>
 					<th>Actiuni</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr *ngFor="let a of outputDocuments">
-					<th scope="row" *ngIf="a.docType && (a.docType.category=='CA')">{{ a.name }}</th>
-					<th scope="row" *ngIf="a.docType && (a.docType.category=='CA')">{{ a.number }}</th>
-					<th scope="row" *ngIf="a.docType && (a.docType.category=='CA')">{{ a.status }}</th>
-					<td *ngIf="a.docType && (a.docType.category=='CA')">
+					<th scope="row">{{ a.name }}</th>
+					<th scope="row">{{ a.number }}</th>
+					<th scope="row">{{ a.status }}</th>
+					<th scope="row">
+						<mat-checkbox *ngIf="a.docType && (a.docType.category=='SL')" #checkBoxResponse
+						              [checked]="a.responseReceived==1" (change)="checkResponseReceived(a,checkBoxResponse)">Raspuns primit
+						</mat-checkbox>
+						<mat-radio-group *ngIf="a.docType && (a.docType.category=='RL')" formControlName="labResponse">
+							<div style="margin-left: 200px">
+								<div class="row">
+									<mat-radio-button name="prop1" value="1">Inregistrare acceptata</mat-radio-button>
+								</div>
+								<div class="row">
+									<mat-radio-button name="prop2" value="0">Inregistrare respinsa</mat-radio-button>
+								</div>
+								<div class="row">
+									<mat-radio-button name="prop3" value="2">Inregistrare acceptata conditionat</mat-radio-button>
+								</div>
+							</div>
+						</mat-radio-group>
+					</th>
+					<td>
 						<button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)"><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
+						<button *ngIf="(a.status=='Nu este atasat' && a.responseReceived==false && a.docType.category=='SL' && modelToSubmit && !modelToSubmit.ddIncluded) ||( a.docType.category=='RL' && a.status=='Nu este atasat')"
+						        class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
 					</td>
 				</tr>
 			</tbody>
@@ -471,8 +407,8 @@
 		<div class="text-center">
 			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>
 			<button [disabled]="oaAttached" class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="back()">Inapoi</button>
-			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="finish()">Finisare</button>
-			<!--<button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>-->
+			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="success()">Finisare</button>
+			<button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>
 		</div>
 	</form>
 </div>

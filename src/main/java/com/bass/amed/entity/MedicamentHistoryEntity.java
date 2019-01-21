@@ -47,14 +47,6 @@ public class MedicamentHistoryEntity
     private NmManufacturesEntity authorizationHolderTo;
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})@JoinColumn(name = "authorization_holder_id_from")
     private NmManufacturesEntity authorizationHolderFrom;
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})@JoinColumn(name = "type_id_to")
-    private NmMedicamentTypeEntity medicamentTypeTo;
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})@JoinColumn(name = "type_id_from")
-    private NmMedicamentTypeEntity medicamentTypeFrom;
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})@JoinColumn(name = "group_id_to")
-    private NmMedicamentGroupEntity groupTo;
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})@JoinColumn(name = "group_id_from")
-    private NmMedicamentGroupEntity groupFrom;
     @Basic@Column(name = "prescription_to", nullable = true)
     private Byte prescriptionTo;
     @Basic@Column(name = "prescription_from", nullable = true)
@@ -116,10 +108,39 @@ public class MedicamentHistoryEntity
     @Basic
     @Column(name = "request_id")
     private Integer requestId;
+    @Basic
+    @Column(name = "originale_to", nullable = true)
+    private Boolean originaleTo;
+    @Basic
+    @Column(name = "originale_from", nullable = true)
+    private Boolean originaleFrom;
+    @Basic
+    @Column(name = "orphan_to", nullable = true)
+    private Boolean orphanTo;
+    @Basic
+    @Column(name = "orphan_from", nullable = true)
+    private Boolean orphanFrom;
+    @Basic
+    @Column(name = "vitale_to", nullable = true)
+    private Boolean vitaleTo;
+    @Basic
+    @Column(name = "vitale_from", nullable = true)
+    private Boolean vitaleFrom;
+    @Basic
+    @Column(name = "esentiale_to", nullable = true)
+    private Boolean esentialeTo;
+    @Basic
+    @Column(name = "esentiale_from", nullable = true)
+    private Boolean esentialeFrom;
+    @Basic
+    @Column(name = "nonesentiale_to", nullable = true)
+    private Boolean nonesentialeTo;
+    @Basic
+    @Column(name = "nonesentiale_from", nullable = true)
+    private Boolean nonesentialeFrom;
 
     public void assign(MedicamentEntity entity)
     {
-        // TODO: entity.originale
         this.atcCodeTo = entity.getAtcCode();
         this.doseTo = entity.getDose();
         this.commercialNameTo = entity.getCommercialName();
@@ -129,8 +150,6 @@ public class MedicamentHistoryEntity
         this.internationalMedicamentNameTo = entity.getInternationalMedicamentName();
         this.pharmaceuticalFormTo = entity.getPharmaceuticalForm();
         this.authorizationHolderTo = entity.getAuthorizationHolder();
-        this.medicamentTypeTo = entity.getMedicamentType();
-        this.groupTo = entity.getGroup();
         this.prescriptionTo = entity.getPrescription();
         this.primarePackageTo = entity.getPrimarePackage();
         this.administeringModeTo = entity.getAdministeringMode();
@@ -139,6 +158,8 @@ public class MedicamentHistoryEntity
         this.volumeQuantityMeasurementTo = entity.getVolumeQuantityMeasurement();
         this.termsOfValidityTo = entity.getTermsOfValidity();
         this.registrationDate = entity.getRegistrationDate();
+        this.originaleTo = entity.getOriginale();
+        this.orphanTo = entity.getOrphan();
         for (MedicamentActiveSubstancesEntity medicamentActiveSubstancesEntity : entity.getActiveSubstances())
         {
             MedicamentActiveSubstancesHistoryEntity medicamentActiveSubstancesHistoryEntity = new MedicamentActiveSubstancesHistoryEntity();

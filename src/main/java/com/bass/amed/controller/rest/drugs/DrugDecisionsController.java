@@ -45,7 +45,7 @@ public class DrugDecisionsController {
         List<DrugDecisionsFilterDTO> dtos = drugDecisionsRepository.getDrugDecisionsByFilter(filter.getProtocolNr(),
                 filter.getProtocolDate(),
                 filter.getDrugSubstanceTypesId(),
-                filter.getMedicamentId(),
+                filter.getSubstanceId(),
                 filter.getCompanyId()
         );
 

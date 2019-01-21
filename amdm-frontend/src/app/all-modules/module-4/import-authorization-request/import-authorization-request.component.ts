@@ -45,10 +45,15 @@ export class ImportAuthorizationRequestComponent implements OnInit {
     loadingCompany = false;
     protected companyInputs = new Subject<string>();
 
+    authorizationNumber: any = '';
+
+    importRadioButton: any;
+
 
 
 
     private subscriptions: Subscription[] = [];
+    importManagementId: any = "";
 
     constructor(private fb: FormBuilder,
                 public dialog: MatDialog,
@@ -88,7 +93,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         this.generateDocNr();
         this.loadDocTypes();
         this.loadEconomicAgents();
-        // this.onChanges();
+        this.onChanges();
         // this.activeLicenses=false;
 
         this.currentDate = new Date();
@@ -176,18 +181,15 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         );
     }
 
-    // onChanges(): void {
-    //     this.subscriptions.push( this.rForm.get('company').valueChanges.subscribe(val => {
-    //         if (val) {
-    //             console.log("company has changed to: " , val)
-    //             this.requestService.getActiveLicenses(val.idno).subscribe(data=>{
-    //                 console.log("this.requestService.getActiveLicenses(val.idno).subscribe", data)
-    //                 this.activeLicenses = data;
-    //
-    //             })
-    //         }
-    //     }));
-    // }
+    onChanges(): void {
+        this.subscriptions.push( this.rForm.get('importType').valueChanges.subscribe(val => {
+            if (val) {
+                console.log("Radio Button: " , val)
+                this.importRadioButton = val;
+
+            }
+        }));
+    }
 
     nextStep() {
         this.formSubmitted = true;
@@ -246,6 +248,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         if (this.rForm.valid && this.docs.length > 0 ) {
             this.loadingService.show();
             this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
+                console.log("this.requestService.addImportRequest(formModel)", data)
                     switch (this.rForm.get('importType').value) {
                         case '1': {
                             this.router.navigate(['dashboard/module/import-authorization/registered-medicament/' + data.body.id]);
@@ -264,7 +267,12 @@ export class ImportAuthorizationRequestComponent implements OnInit {
                             break;
                         }
                         case '5': {
-                            this.router.navigate(['dashboard/module/import-authorization/import-management/' + 2420 /*data.body.id*/]);
+                            this.authorizationNumber = "1614/2016-AM";
+                            this.subscriptions.push(this.requestService.getAuthorizationByAuth(this.authorizationNumber).subscribe(data =>{
+                                console.log("authorization",data)
+                                this.importManagementId = data.body.id;
+                            }));
+                            this.router.navigate(['dashboard/module/import-authorization/import-management/' + this.importManagementId]);
                             break;
                         }
                     }

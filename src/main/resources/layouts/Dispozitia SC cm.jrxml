@@ -253,7 +253,7 @@ studiilor clinice cu medicamente]]></text>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="8"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{institution}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{institution}.toString().replace("\\|","\n")]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -274,7 +274,7 @@ studiilor clinice cu medicamente]]></text>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="8"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{investigaotrs}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{investigaotrs}.toString().replace("\\|","\n")]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

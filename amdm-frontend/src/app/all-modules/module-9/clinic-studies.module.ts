@@ -24,6 +24,7 @@ import { BIntrerupereComponent } from './b-intrerupere/b-intrerupere.component';
 import { CNotificareComponent } from './c-notificare/c-notificare.component';
 import {ClinicalTrialService} from '../../shared/service/clinical-trial.service';
 import {PaymentClinicalTrialModule} from "../../payment-clinical-trial/payment-clinical-trial.module";
+import { AddCtExpertComponent } from './dialog/add-ct-expert/add-ct-expert.component';
 
 
 @NgModule({
@@ -43,8 +44,9 @@ import {PaymentClinicalTrialModule} from "../../payment-clinical-trial/payment-c
     entryComponents: [
         AdditionalDataDialogComponent,
         MedInstInvestigatorsDialogComponent,
+        AddCtExpertComponent
     ],
-    declarations: [RegStudCliniceComponent, RegCerereComponent, AEvaluareaPrimaraComponent, AAnalizaComponent, AdditionalDataDialogComponent, AIntrerupereComponent, AAprobareComponent, BEvaluarePrimaraComponent, MedInstInvestigatorsDialogComponent, BAprobareComponent, BIntrerupereComponent, CNotificareComponent],
+    declarations: [RegStudCliniceComponent, RegCerereComponent, AEvaluareaPrimaraComponent, AAnalizaComponent, AdditionalDataDialogComponent, AIntrerupereComponent, AAprobareComponent, BEvaluarePrimaraComponent, MedInstInvestigatorsDialogComponent, BAprobareComponent, BIntrerupereComponent, CNotificareComponent, AddCtExpertComponent],
 
     providers: [UploadFileService, RequestService, ClinicalTrialService],
 })

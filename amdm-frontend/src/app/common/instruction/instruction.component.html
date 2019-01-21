@@ -28,7 +28,7 @@
 		<tr *ngFor="let instruction of instructions; let i = index">
 			<td>{{ instruction.name }}</td>
 			<td>{{ instruction.date | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
-			<td>{{ instruction.divisions | divisionsToString }}</td>
+			<td>{{ getConcatenatedDivision(instruction.divisions) }}</td>
 			<td *ngIf="isModify">{{ instruction.status=='O' ? 'Instructiune existenta' : (instruction.status=='N' ? 'Instructiune noua' : 'Instructiune  modificata') }}</td>
 			<td>
 				<button type="button" class="btn btn-mdb-color btn-sm waves-light" (click)="viewFile(instruction)"

@@ -92,6 +92,8 @@ public class AdministrationController {
     private EntityManagerFactory entityManagerFactory;
     @Autowired
     private PaymentOrderNumberRepository paymentOrderNumberRepository;
+    @Autowired
+    private RequestTypeRepository requestTypeRepository;
 
     @RequestMapping(value = "/generate-doc-nr")
     public ResponseEntity<Integer> generateDocNr() {
@@ -164,6 +166,12 @@ public class AdministrationController {
     public ResponseEntity<List<NmCustomsCodesEntity>> retrieveAllCustomCodes() {
         LOGGER.debug("Retrieve all custom codes");
         return new ResponseEntity<>(nmCustomsCodesRepository.findAll().stream().filter(r -> r.getCode().length() >= 9).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
+    @RequestMapping("/all-request-types")
+    public ResponseEntity<List<RequestTypesEntity>> retrieveAllRequestTypes() {
+        LOGGER.debug("Retrieve request types");
+        return new ResponseEntity<>(requestTypeRepository.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping("/search-pharamceutical-forms-by-descr")

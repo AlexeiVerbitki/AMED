@@ -1,59 +1,95 @@
-import { HomepageModalComponent } from './homepage-modal/homepage-modal.component';
-import { MatDialog, MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
-import { Component, OnInit, ViewChild } from '@angular/core';
-
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-  {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-  {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-  {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-  {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-  {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-  {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-  {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
-  {position: 11, name: 'Sodium', weight: 22.9897, symbol: 'Na'},
-  {position: 12, name: 'Magnesium', weight: 24.305, symbol: 'Mg'},
-  {position: 13, name: 'Aluminum', weight: 26.9815, symbol: 'Al'},
-  {position: 14, name: 'Silicon', weight: 28.0855, symbol: 'Si'},
-  {position: 15, name: 'Phosphorus', weight: 30.9738, symbol: 'P'},
-  {position: 16, name: 'Sulfur', weight: 32.065, symbol: 'S'},
-  {position: 17, name: 'Chlorine', weight: 35.453, symbol: 'Cl'},
-  {position: 18, name: 'Argon', weight: 39.948, symbol: 'Ar'},
-  {position: 19, name: 'Potassium', weight: 39.0983, symbol: 'K'},
-  {position: 20, name: 'Calcium', weight: 40.078, symbol: 'Ca'},
-];
+import {MatDialog, MatSort, MatTableDataSource, MatPaginator} from '@angular/material';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {Subscription} from "rxjs";
+import {TaskService} from "../shared/service/task.service";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {Router} from "@angular/router";
+import {RequestService} from "../shared/service/request.service";
 
 @Component({
-  selector: 'app-homepage',
-  templateUrl: './homepage.component.html',
-  styleUrls: ['./homepage.component.css']
+    selector: 'app-homepage',
+    templateUrl: './homepage.component.html',
+    styleUrls: ['./homepage.component.css']
 })
 export class HomepageComponent implements OnInit {
 
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+    taskForm: FormGroup;
+    displayedColumns: any[] = ['requestNumber', 'processName', 'requestType', 'username', 'startDate', 'endDate', 'step'];
+    OLD_REQUEST_DAYS = "OLD_REQUEST_DAYS";
+    dataSource = new MatTableDataSource<any>();
+    private subscriptions: Subscription[] = [];
+    requestsNumber;
+    oldRequestsNumber;
 
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(public dialog: MatDialog) { }
-  filterModalTable(): void {
-    const MatDialogRef = this.dialog.open(HomepageModalComponent, {
-      width: '650px'
-    });
-  }
+    constructor(private fb: FormBuilder, public dialog: MatDialog, private route: Router, private taskService: TaskService, private requestService: RequestService) {
+        this.taskForm = fb.group({
+            'requestNumber': [null, {validators: Validators.required}],
+            'request': [null],
+            'requestType': [null],
+            'assignedPerson': [null],
+            'startDate': [null],
+            'endDate': [null],
+            'step': [null],
+        });
+    }
 
-  ngOnInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-  }
+    ngAfterViewInit(): void {
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.paginator._intl.itemsPerPageLabel = 'Procese pe pagina: ';
+        this.dataSource.sort = this.sort;
+    }
+
+    ngOnInit() {
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+
+        this.getRequestsInWork();
+
+    }
+
+    getRequestsInWork() {
+        this.subscriptions.push(this.taskService.getTasksByFilter(this.taskForm.value).subscribe(data => {
+
+            const source = data.body.filter(r => r.step !== 'Proces finisat' && r.step !== 'Finisat' && r.step !== 'Proces anulat');
+            this.dataSource.data = source.sort((a, b) => a.startDate.localeCompare(b.startDate));
+
+            this.requestsNumber = this.dataSource.data.length;
+
+            this.subscriptions.push(this.requestService.getOldRequestTerm(this.OLD_REQUEST_DAYS).subscribe(data2 => {
+                    this.calculateOldRequests(this.dataSource.data, data2);
+                })
+            );
+
+        }));
+    }
+
+    calculateOldRequests(data: any, oldRequestTerm: number) {
+
+        const date = new Date();
+        date.setDate(date.getDate() - oldRequestTerm);
+        const requests = data.filter(r => new Date(r.startDate).getTime() <= date.getTime());
+        this.oldRequestsNumber = requests.length;
+    }
+
+    isLink(rowDetails: any): boolean {
+        return rowDetails.navigationUrl !== '';
+    }
+
+    navigateToUrl(rowDetails: any) {
+        const urlToNavigate = rowDetails.navigationUrl + rowDetails.id;
+        if (urlToNavigate !== '') {
+            this.route.navigate([urlToNavigate]);
+        }
+    }
+
+    applyFilter(filterValue: string) {
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+
+        if (this.dataSource.paginator) {
+            this.dataSource.paginator.firstPage();
+        }
+    }
 }

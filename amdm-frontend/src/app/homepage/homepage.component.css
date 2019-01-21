@@ -1427,3 +1427,9 @@
 .white-subtext {
   color: rgba(255, 255, 255, .62);
 }
+
+table td a {
+  text-decoration: underline;
+  color : #488CD3;
+  font-weight : bold;
+}

@@ -86,7 +86,7 @@ export class MedicamentsOaComponent implements OnInit {
             this.requestService.getMedicamentsForOA().subscribe(data => {
                     this.dataSource.data = data;
                     this.dataSource.data.forEach(t => t.manufacture = t.manufactures.find(x => x.producatorProdusFinit == true));
-                    this.dataSource.data.forEach(t => t.included = true);
+                    this.dataSource.data.forEach(t => {t.included = true; t.divisionStr = this.getConcatenatedDivision(t);});
                 },
                 error => console.log(error)
             )
@@ -103,6 +103,19 @@ export class MedicamentsOaComponent implements OnInit {
             this.dataSource.paginator._intl.itemsPerPageLabel = 'Rinduri pe pagina: ';
         }
         this.dataSource.sort = this.sort;
+    }
+
+    getConcatenatedDivision(entry : any) {
+        let concatenatedDivision = '';
+            if (entry.division && entry.volume && entry.volumeQuantityMeasurement) {
+                concatenatedDivision = concatenatedDivision + entry.division + ' ' + entry.volume + ' ' + entry.volumeQuantityMeasurement.description;
+            } else if (entry.volume && entry.volumeQuantityMeasurement) {
+                concatenatedDivision = concatenatedDivision + entry.volume + ' ' + entry.volumeQuantityMeasurement.description;
+            } else {
+                concatenatedDivision = concatenatedDivision + entry.division;
+            }
+
+        return concatenatedDivision;
     }
 
 }

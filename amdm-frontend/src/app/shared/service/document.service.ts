@@ -127,6 +127,10 @@ export class DocumentService {
         return this.http.post('/api/documents/generate-om', oaDetails, {responseType: 'blob'});
     }
 
+    generateDDCt(ddCtDetails: any): Observable<any> {
+        return this.http.post('/api/documents/generate-dd-ct', ddCtDetails, {responseType: 'blob'});
+    }
+
     removeDD(element: any): Observable<any> {
         return this.http.post('/api/documents/remove-dd', element, {observe: 'response'});
     }
@@ -151,9 +155,14 @@ export class DocumentService {
         return this.http.post('/api/documents/remove-om', element, {observe: 'response'});
     }
 
+    removeDDC(element: any): Observable<any> {
+        return this.http.post('/api/documents/remove-ddc', element, {observe: 'response'});
+    }
+
     addDD(document: any, file: File): Observable<any> {
         const formdata: FormData = new FormData();
         formdata.append('id', document.id);
+        formdata.append('dateOfIssue', document.dateOfIssue);
         formdata.append('file', file);
         return this.http.post('/api/documents/add-dd', formdata, {observe: 'response'});
     }
@@ -193,6 +202,14 @@ export class DocumentService {
         formdata.append('dateOfIssue', document.dateOfIssue);
         formdata.append('file', file);
         return this.http.post('/api/documents/add-om', formdata, {observe: 'response'});
+    }
+
+    addDDC(document: any, file: File): Observable<any> {
+        const formdata: FormData = new FormData();
+        formdata.append('id', document.id);
+        formdata.append('dateOfIssue', document.dateOfIssue);
+        formdata.append('file', file);
+        return this.http.post('/api/documents/add-ddc', formdata, {observe: 'response'});
     }
 
 }

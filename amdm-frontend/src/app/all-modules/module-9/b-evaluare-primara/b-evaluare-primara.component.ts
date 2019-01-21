@@ -611,7 +611,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                         activeSubstance: result.activeSubstance,
                         quantity: result.activeSubstanceQuantity,
                         unitsOfMeasurement: result.activeSubstanceUnit,
-                        manufacture: result.manufactureSA
+                        manufacture: result.manufactures[0].manufacture
                     });
                 }
             })
@@ -633,7 +633,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
             activeSubstance: substance.activeSubstance,
             quantity: substance.quantity,
             unitsOfMeasurement: substance.unitsOfMeasurement,
-            manufacture: substance.manufacture
+            manufacture: substance.manufactures[0].manufacture
         };
 
         const dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);

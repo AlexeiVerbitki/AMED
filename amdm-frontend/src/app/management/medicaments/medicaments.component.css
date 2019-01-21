@@ -45,3 +45,7 @@ table {
     padding-left: 75px !important;
     padding-right: 75px !important;
 }
+
+.mt-checkbox {
+    padding-top: 12px;
+}

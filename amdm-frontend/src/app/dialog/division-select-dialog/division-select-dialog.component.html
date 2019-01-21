@@ -1,9 +1,44 @@
 <form [formGroup]="fForm">
 <div class="md-form-modified">
-  <ng-select id="oneField" name="oneField" [items]="values" bindLabel="description" [multiple]="true"
-             placeholder="{{fieldName}}" formControlName="values">
-  </ng-select>
-  <div *ngIf="formSubmitted && fForm.get('values').invalid">
+  <div class="gradient-card-header bg-sidebar border-gradient">
+    <div class="container-fluid">
+      <!-- Title -->
+      <div class="row">
+        <div class="col-6">
+          <div class="card-header-title white-text">Divizari</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Card content -->
+  <div class="card-body card-body-cascade">
+    <table class="table table-widths text-center">
+      <thead class="bg-sidebar white-text">
+      <tr>
+        <th scope="col">Nr.</th>
+        <th scope="col">Numărul de unități</th>
+        <th scope="col">Volum</th>
+        <th scope="col">Unitate de masura (volum)</th>
+        <th scope="col">Include</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let division of divisions;let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ division.description }}</td>
+        <td>{{ division.volume }}</td>
+        <td>{{ division.volumeQuantityMeasurement ? division.volumeQuantityMeasurement.description : '' }}</td>
+        <td>
+          <mat-checkbox #include [checked]="division.include" (change)="checkInclude(include,division)"></mat-checkbox>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div *ngIf="divisions.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+  <div *ngIf="notIncluded">
     <small class="text-muted"><strong class="text-danger">Nu a fost selectata nici o valoare</strong></small>
   </div>
   <div *ngIf="isExtensionInvalid">

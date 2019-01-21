@@ -58,6 +58,10 @@ export class AdministrationService {
         return this.http.get('/api/administration/all-medicament-groups', {});
     }
 
+    getAllRequestTypes(): Observable<any> {
+        return this.http.get('/api/administration/all-request-types', {});
+    }
+
     getAllCustomsCodes(): Observable<any> {
         return this.http.get('/api/administration/all-customs-codes', {});
     }

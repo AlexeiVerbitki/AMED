@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
+import {NavbarTitleService} from "../shared/service/navbar-title.service";
 
 @Component({
     selector: 'app-administration',
@@ -10,11 +11,11 @@ export class AdministrationComponent implements OnInit {
 
     // private subscriptions: Subscription[] = [];
 
-    constructor(private router: Router, ) {
+    constructor(private router: Router, private navbarTitleService: NavbarTitleService) {
     }
 
     ngOnInit() {
-
+        this.navbarTitleService.showTitleMsg('Administrare');
     }
 
     navigateTo(id: number) {
@@ -23,5 +24,9 @@ export class AdministrationComponent implements OnInit {
 
     navigateToEconomicAgents() {
         this.router.navigate(['/dashboard/admin/ec-agent/view-all/'], { skipLocationChange: true });
+    }
+
+    ngOnDestroy() {
+        this.navbarTitleService.showTitleMsg('');
     }
 }

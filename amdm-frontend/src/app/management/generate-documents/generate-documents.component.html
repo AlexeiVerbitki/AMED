@@ -42,5 +42,12 @@
         <app-oi-modify-list #oimList (oimListModified)="oimListModified($event)"></app-oi-modify-list>
       </ng-template>
     </mat-tab>
+    <mat-tab label="Dispozitie de distribuire pentru studiu clinic">
+      <ng-template matTabContent><br>
+        <app-request-dd-ct #requestDDCt (loadDDCts)="loadDDCts($event)"></app-request-dd-ct>
+        <hr>
+        <app-dd-ct-list #ddCtList (ddListCtModified)="ddListCtModified($event)"></app-dd-ct-list>
+      </ng-template>
+    </mat-tab>
   </mat-tab-group>
 </div>

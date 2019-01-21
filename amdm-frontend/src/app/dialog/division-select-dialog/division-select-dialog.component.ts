@@ -14,14 +14,14 @@ import {UploadFileService} from '../../shared/service/upload/upload-file.service
 export class DivisionSelectDialogComponent implements OnInit {
 
     fForm: FormGroup;
-    fieldName: string;
-    values: any[];
+    divisions: any[];
     formSubmitted: boolean;
     @ViewChild('incarcaInstructiune')
     incarcaInstructiuneVariable: ElementRef;
     private subscriptions: Subscription[] = [];
-    isExtensionInvalid = false;
-    isFileAlreadyAdded = false;
+    isExtensionInvalid: boolean = false;
+    isFileAlreadyAdded: boolean = false;
+    notIncluded : boolean = false;
 
     constructor(private fb: FormBuilder,
                 public dialogRef: MatDialogRef<DivisionSelectDialogComponent>,
@@ -29,7 +29,7 @@ export class DivisionSelectDialogComponent implements OnInit {
                 private errorHandlerService: ErrorHandlerService,
                 @Inject(MAT_DIALOG_DATA) public dataDialog: any) {
         this.fForm = fb.group({
-            'values': [[], Validators.required],
+            'divisions' : [],
             'fileName': [null],
             'path': [null],
             'type': [null],
@@ -38,19 +38,16 @@ export class DivisionSelectDialogComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.values = this.dataDialog.values;
-        this.fieldName = this.dataDialog.fieldName;
-
-        if (this.dataDialog.type == 'edit') {
-            this.fForm.get('values').setValue(this.dataDialog.value);
-        }
+        this.divisions = this.dataDialog.values;
     }
 
     checkFields(): boolean {
         this.formSubmitted = true;
 
-        if (this.fForm.invalid) {
-            return false;
+        if(!this.divisions.find(t=>t.include==true))
+        {
+            this.notIncluded = true;
+            return;
         }
 
         this.formSubmitted = false;
@@ -63,7 +60,7 @@ export class DivisionSelectDialogComponent implements OnInit {
     }
 
     resetInstructiune() {
-        this.incarcaInstructiuneVariable.nativeElement.value = '';
+        this.incarcaInstructiuneVariable.nativeElement.value = "";
     }
 
     save() {
@@ -72,8 +69,78 @@ export class DivisionSelectDialogComponent implements OnInit {
             return;
         }
 
+        for(let div of this.divisions)
+        {
+            if(this.dataDialog.fieldName=='instr') {
+                this.fillInstructions(div);
+            }
+            else if (this.dataDialog.fieldName=='macheta')
+            {
+                this.fillMacheta(div);
+            }
+        }
+
         this.fForm.get('response').setValue(true);
-        this.dialogRef.close(this.fForm.value);
+        this.fForm.get('divisions').setValue(this.divisions);
+        this.dialogRef.close(this.fForm.value)
+    }
+
+    fillInstructions(div : any)
+    {
+        let instr = div.instructions.find(t => t.path == this.dataDialog.value.path);
+        if(div.include==true) {
+            if (instr) {
+                if (instr.status == 'O') {
+                    instr.status == 'M';
+                }
+            } else {
+                div.instructions.push({
+                    name: this.dataDialog.value.name,
+                    date: new Date(),
+                    path: this.dataDialog.value.path,
+                    typeDoc: this.dataDialog.value.typeDoc,
+                    status: 'N',
+                    division : div.description,
+                    volume : div.volume, volumeQuantityMeasurement : div.volumeQuantityMeasurement
+                });
+            }
+        }
+        else
+        {
+            if(instr)
+            {
+                div.instructions = div.instructions.filter(t=>t.path!=this.dataDialog.value.path);
+            }
+        }
+    }
+
+    fillMacheta(div : any)
+    {
+        let instr = div.machets.find(t => t.path == this.dataDialog.value.path);
+        if(div.include==true) {
+            if (instr) {
+                if (instr.status == 'O') {
+                    instr.status == 'M';
+                }
+            } else {
+                div.machets.push({
+                    name: this.dataDialog.value.name,
+                    date: new Date(),
+                    path: this.dataDialog.value.path,
+                    typeDoc: this.dataDialog.value.typeDoc,
+                    status: 'N',
+                    division : div.description,
+                    volume : div.volume, volumeQuantityMeasurement : div.volumeQuantityMeasurement
+                });
+            }
+        }
+        else
+        {
+            if(instr)
+            {
+                div.machets = div.machets.filter(t=>t.path!=this.dataDialog.value.path);
+            }
+        }
     }
 
     addInstructiune(eventHtml) {
@@ -86,9 +153,9 @@ export class DivisionSelectDialogComponent implements OnInit {
             return;
         }
 
-        const allowedExtensions =
-            ['jpg', 'jpeg', 'png', 'jfif', 'bmp', 'svg', 'pdf'];
-        const fileExtension = eventHtml.srcElement.files[0].name.split('.').pop();
+        var allowedExtensions =
+            ["jpg", "jpeg", "png", "jfif", "bmp", "svg", "pdf"];
+        var fileExtension = eventHtml.srcElement.files[0].name.split('.').pop();
 
         if (allowedExtensions.indexOf(fileExtension.toLowerCase()) <= -1) {
             this.isExtensionInvalid = true;
@@ -97,14 +164,32 @@ export class DivisionSelectDialogComponent implements OnInit {
 
         this.subscriptions.push(this.uploadService.pushFileToStorage(eventHtml.srcElement.files[0], this.dataDialog.numarCerere).subscribe(event => {
                 if (event instanceof HttpResponse) {
-                    const result: any = event.body;
-                    const fileName = eventHtml.srcElement.files[0].name;
-                    const type = eventHtml.srcElement.files[0].type;
-
+                    let result: any = event.body;
+                    let fileName = eventHtml.srcElement.files[0].name;
+                    let type = eventHtml.srcElement.files[0].type;
+                    for(let div of this.divisions)
+                    {
+                        if(this.dataDialog.fieldName=='instr' && div.include==true)
+                        {
+                            if(!div.instructions)
+                            {
+                                div.instructions = [];
+                            }
+                            div.instructions.push({name:fileName, date: new Date(),path:result.path,typeDoc : type, status : 'N',division : div.description,
+                            volume : div.volume, volumeQuantityMeasurement : div.volumeQuantityMeasurement});
+                        }
+                        else if(this.dataDialog.fieldName=='macheta' && div.include==true)
+                        {
+                            if(!div.machets)
+                            {
+                                div.machets = [];
+                            }
+                            div.machets.push({name:fileName, date: new Date(),path:result.path,typeDoc : type, status : 'N',division : div.description,
+                                volume : div.volume, volumeQuantityMeasurement : div.volumeQuantityMeasurement});
+                        }
+                    }
+                    this.fForm.get('divisions').setValue(this.divisions);
                     this.fForm.get('response').setValue(true);
-                    this.fForm.get('fileName').setValue(fileName);
-                    this.fForm.get('path').setValue(result.path);
-                    this.fForm.get('type').setValue(type);
                     this.dialogRef.close(this.fForm.value);
                 }
             },
@@ -113,6 +198,11 @@ export class DivisionSelectDialogComponent implements OnInit {
             }
             )
         );
+    }
+
+    checkInclude(box: any, division: any) {
+        this.notIncluded = false;
+        division.include = box.checked;
     }
 
 }

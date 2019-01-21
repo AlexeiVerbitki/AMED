@@ -46,6 +46,8 @@ import {NavbarTitleService} from './shared/service/navbar-title.service';
 import {AuxiliarySubstanceDialogComponent} from './dialog/auxiliary-substance-dialog/auxiliary-substance-dialog.component';
 import {DivisionSelectDialogComponent} from './dialog/division-select-dialog/division-select-dialog.component';
 import {AddManufactureComponent} from './dialog/add-manufacture/add-manufacture.component';
+import {AddDivisionComponent} from "./dialog/add-division/add-division.component";
+import {AddExpertComponent} from "./dialog/add-expert/add-expert.component";
 
 const interceptors = [{
     provide: HTTP_INTERCEPTORS,
@@ -86,6 +88,8 @@ const interceptors = [{
         NumberOnlyDirective,
         ActiveSubstanceDialogComponent,
         AddManufactureComponent,
+        AddDivisionComponent,
+        AddExpertComponent,
         AuxiliarySubstanceDialogComponent,
         HomepageModalComponent,
         MedicamentDetailsDialogComponent,
@@ -105,10 +109,9 @@ const interceptors = [{
         PipeModule.forRoot()
     ],
     schemas: [],
-    entryComponents: [DivisionSelectDialogComponent, AuxiliarySubstanceDialogComponent, ConfirmationDialogComponent, MedicamentHistoryDialogComponent,
-        MedicamentModificationsDialogComponent, RequestAdditionalDataDialogComponent, ActiveSubstanceDialogComponent, HomepageModalComponent,
-        MedicamentDetailsDialogComponent,
-        AddManufactureComponent],
+    entryComponents: [
+     DivisionSelectDialogComponent,AuxiliarySubstanceDialogComponent,ConfirmationDialogComponent,MedicamentHistoryDialogComponent,MedicamentModificationsDialogComponent,RequestAdditionalDataDialogComponent,ActiveSubstanceDialogComponent, HomepageModalComponent,MedicamentDetailsDialogComponent, AddManufactureComponent, AddDivisionComponent, AddExpertComponent
+    ],
     providers: [AuthService, AdministrationService, ErrorHandlerService, NavbarTitleService, interceptors,
     ],
     bootstrap: [AppComponent]

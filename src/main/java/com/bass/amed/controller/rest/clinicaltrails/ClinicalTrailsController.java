@@ -51,7 +51,7 @@ public class ClinicalTrailsController {
         if (requests.getClinicalTrails() == null) {
             throw new CustomException("Request was not found");
         }
-        clinicalTrailsService.addDDClinicalTrailsDocument(requests);
+//        clinicalTrailsService.addDDClinicalTrailsDocument(requests);
         clinicalTrailsService.handeMedicalInstitutions(requests);
         requestRepository.save(requests);
         return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
@@ -158,7 +158,7 @@ public class ClinicalTrailsController {
             throw new CustomException("Request was not found");
         }
 
-        clinicalTrailsService.addDDClinicalTrailsDocument(requests);
+//        clinicalTrailsService.addDDClinicalTrailsDocument(requests);
         clinicalTrailsService.handeMedicalInstitutionsForAmendments(requests);
 
 //        ClinicTrialAmendEntity clinicTrialAmendEntity = requests.getClinicalTrails().getClinicTrialAmendEntities().stream().filter(entity ->
