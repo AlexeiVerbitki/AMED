@@ -45,12 +45,12 @@ public class InvoiceEntity {
 	@Column(name = "specification")
 	private String specification;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
-	@JoinColumn(name = "medicament_id")
-	private MedicamentEntity medicament;
+//	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+//	@JoinColumn(name = "medicament_id")
+//	private MedicamentEntity medicament;
 
 	@OneToMany( fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-	@JoinColumn(name = "invoice_id")
+	@JoinColumn(name = "invoices_id")
 	private Set<InvoiceDetailsEntity> invoiceDetailsEntitySet;
 
 }

@@ -43,7 +43,7 @@ export class ImportManagement implements OnInit {
     currentDate: Date;
     futureDate: Date;
     file: any;
-    generatedDocNrSeq: number;
+    requestNumber: number;
     filteredOptions: Observable<any[]>;
     formSubmitted: boolean;
     addMedicamentClicked: boolean;
@@ -107,7 +107,7 @@ export class ImportManagement implements OnInit {
     authorizationSumm: any;
     authorizationCurrency: any;
     dialogResult: any;
-    invoice: any ;
+    invoice: any = {};
     invoiceDetails : any =[];
 
 
@@ -210,6 +210,8 @@ export class ImportManagement implements OnInit {
             this.subscriptions.push(this.requestService.getImportRequest(params['id']).subscribe(data => {
                     console.log('this.requestService.getImportRequest(params[\'id\'])', data);
                     this.importData = data;
+                    console.log("this.importData:", this.importData)
+
                     this.docs = data.documents;
 
                     this.evaluateImportForm = this.fb.group({
@@ -305,7 +307,7 @@ export class ImportManagement implements OnInit {
 
 
                     this.evaluateImportForm.get('id').setValue(data.id);
-                    this.evaluateImportForm.get('requestNumber').setValue(data.requestNumber);
+                    // this.evaluateImportForm.get('requestNumber').setValue(data.requestNumber);
                     this.evaluateImportForm.get('startDate').setValue(new Date(data.startDate));
                     this.evaluateImportForm.get('initiator').setValue(data.initiator);
                     this.evaluateImportForm.get('assignedUser').setValue(data.assignedUser);
@@ -376,6 +378,7 @@ export class ImportManagement implements OnInit {
         this.loadUnitsOfMeasurement();
         this.loadMedicaments();
         this.loadInternationalMedicamentName();
+        this.generateDocNr();
 
         console.log('importTypeForms.value', this.importTypeForms.value);
     }
@@ -537,6 +540,16 @@ export class ImportManagement implements OnInit {
         }
     }
 
+    generateDocNr() {
+        this.subscriptions.push(
+            this.administrationService.generateDocNr().subscribe(data => {
+                    this.requestNumber = data;
+                    this.evaluateImportForm.get('requestNumber').setValue(this.requestNumber);
+                },
+                error => console.log(error)
+            )
+        );
+    }
 
     get importTypeForms() {
         return this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable') as FormArray;
@@ -899,13 +912,31 @@ export class ImportManagement implements OnInit {
 
         // this.invoice.invoiceDetailsEntity = this.invoiceDetails;
 
-         this.invoice.invoiceDetailsEntity.data = new Date();    ;
-         this.invoice.invoiceDetailsEntity.quantity = this.dialogResult[1]    ;
-         this.invoice.invoiceDetailsEntity.price = this.dialogResult[2]    ;
-         this.invoice.invoiceDetailsEntity.summ = this.dialogResult[3]    ;
+       let invoiceDetailsEntity : any[] =[];
+       let invoiceEntity : any ={};
+       let invoiceDetails : any = {};
+         // invoiceDetailsEntity.data = new Date();    ;
+         // invoiceDetailsEntity.quantity = this.dialogResult[1]    ;
+         // invoiceDetailsEntity.price = this.dialogResult[2]    ;
+         // invoiceDetailsEntity.summ = this.dialogResult[3]    ;
 
-        modelToSubmit.invoiceEntity = this.invoice;
+        invoiceDetails.quantity = 5;
+        invoiceDetails.price = 6;
+        invoiceDetails.summ = 7;
 
+        invoiceDetailsEntity.push(invoiceDetails)
+         // this.invoice.invoiceDetailsEntity = invoiceDetailsEntity;
+        invoiceEntity.invoiceDetailsEntitySet = invoiceDetailsEntity;
+
+        modelToSubmit.invoiceEntity = invoiceEntity;
+
+        modelToSubmit.currentStep = "F";
+        modelToSubmit.requestNumber = this.requestNumber;
+        modelToSubmit.startDate = new Date();
+
+        let type : any = {};
+        // type.id = "37";
+        modelToSubmit.type = this.importData.type;
 
         modelToSubmit.requestHistories.push({
 
