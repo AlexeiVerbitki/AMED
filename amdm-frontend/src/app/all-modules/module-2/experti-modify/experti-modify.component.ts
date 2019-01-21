@@ -106,7 +106,6 @@ export class ExpertiModifyComponent implements OnInit {
                     'volumeTo': [null],
                     'volumeQuantityMeasurementTo': [null],
                     'termsOfValidityTo': [null],
-                    'customsCodeTo': [null],
                     'code': [null],
                     'medicamentTypeTo': [null],
                     'prescriptionTo': {disabled: true, value: null},
@@ -159,7 +158,6 @@ export class ExpertiModifyComponent implements OnInit {
                         this.expertForm.get('medicament.internationalMedicamentNameTo').setValue(data.medicamentHistory[0].internationalMedicamentNameTo.description);
                         this.expertForm.get('medicament.medicamentTypeTo').setValue(data.medicamentHistory[0].medicamentTypeTo.description);
                         this.expertForm.get('medicament.volumeTo').setValue(data.medicamentHistory[0].volumeTo);
-                        this.expertForm.get('medicament.customsCodeTo').setValue(data.medicamentHistory[0].customsCodeTo.description);
                         if (data.medicamentHistory && data.medicamentHistory.length != 0 && data.medicamentHistory[0].volumeQuantityMeasurementTo) {
                             this.expertForm.get('medicament.volumeQuantityMeasurementTo').setValue(data.medicamentHistory[0].volumeQuantityMeasurementTo.description);
                         }

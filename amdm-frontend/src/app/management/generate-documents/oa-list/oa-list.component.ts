@@ -118,5 +118,4 @@ export class OaListComponent implements OnInit {
     );
   }
 
-
 }

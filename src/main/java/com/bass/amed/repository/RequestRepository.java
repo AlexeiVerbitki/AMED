@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface RequestRepository extends JpaRepository<RegistrationRequestsEntity, Integer>
 {
@@ -77,13 +78,13 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
             "WHERE c.id = :id and p.type='3'  ")
     Optional<RegistrationRequestsEntity> findRegRequestByCtId(@Param("id") Integer ctId);
 
-    @Query("SELECT p FROM RegistrationRequestsEntity p WHERE p.ddIncluded = true and p.ddNumber is null and p.currentStep not in ('C','F') and p.type.id in (1,2)")
+    @Query("SELECT p FROM RegistrationRequestsEntity p WHERE p.ddIncluded = true and p.ddNumber is null and p.currentStep not in ('C','F') and p.type.id in (1,2,34,35,36)")
     List<RegistrationRequestsEntity> findRequestsForDD();
 
     @Query("SELECT p FROM RegistrationRequestsEntity p WHERE p.ddIncluded = true and p.ddNumber is null and p.currentStep not in ('C','F') and p.type.id in (21)")
     List<RegistrationRequestsEntity> findRequestsForDDM();
 
-    @Query("SELECT p FROM RegistrationRequestsEntity p WHERE p.oiIncluded = true and p.oiNumber is null and p.currentStep not in ('C','F') and p.type.id in (1,2)")
+    @Query("SELECT p FROM RegistrationRequestsEntity p WHERE p.oiIncluded = true and p.oiNumber is null and p.currentStep not in ('C','F') and p.type.id in (1,2,34,35,36)")
     List<RegistrationRequestsEntity> findRequestsForOI();
 
     @Query("SELECT p FROM RegistrationRequestsEntity p WHERE p.oiIncluded = true and p.oiNumber is null and p.currentStep not in ('C','F') and p.type.id in (21)")
@@ -119,4 +120,22 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
 
     @Query(value = "select rr.id from registration_requests rr join request_types rt on rr.type_id = rt.id and rr.license_id = ?1 and rr.id = (select max(q.id) from registration_requests q where q.id < ?2 and q.license_id = ?1 and q.current_step = 'F' and rt.code in ('LICEL','LICM', 'LICC', 'LICP'))", nativeQuery = true)
     Optional<Integer> getPreviousLicenseModificationId(Integer licenseId, Integer requestId);
+
+    @Query("SELECT DISTINCT p FROM RegistrationRequestsEntity p " +
+            "LEFT JOIN FETCH p.expertList e " +
+            "LEFT JOIN FETCH p.clinicalTrails ct " +
+            "WHERE p.type.id in (3) " +
+            "and p.ddIncluded is null " +
+            "and p.ddNumber is null " +
+            "and p.currentStep not in ('C','F') " +
+            "and p.expertList is not empty ")
+    List<RegistrationRequestsEntity> findRequestsForDDCt();
+
+    @Modifying
+    @Query("UPDATE RegistrationRequestsEntity p SET p.ddNumber = :ddNumber, p.ddIncluded=1 WHERE p.id in (:ids)")
+    void setDDCtNumber(@Param("ids") List<Integer> ids, @Param("ddNumber") String ddNumber);
+
+    @Modifying
+    @Query("UPDATE RegistrationRequestsEntity p SET p.ddIncluded = :ddIncluded WHERE p.id in (:ids)")
+    void setDDIncluded(@Param("ids") List<Integer> ids, @Param("ddIncluded") Boolean ddIncluded);
 }

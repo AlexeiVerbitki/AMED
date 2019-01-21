@@ -24,6 +24,12 @@ public class MedicamentInstructionsEntity
     private String division;
     @Basic@Column(name = "type_doc")
     private String typeDoc;
+    @Basic
+    @Column(name = "volume")
+    private String volume;
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "volume_unit_measurement_id")
+    private NmUnitsOfMeasurementEntity volumeQuantityMeasurement;
 
     public void assign(MedicamentInstructionsHistoryEntity entity)
     {
@@ -33,5 +39,7 @@ public class MedicamentInstructionsEntity
         this.path = entity.getPath();
         this.type = entity.getType();
         this.typeDoc = entity.getTypeDoc();
+        this.volume = entity.getVolume();
+        this.volumeQuantityMeasurement = entity.getVolumeQuantityMeasurement();
     }
 }

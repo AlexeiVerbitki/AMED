@@ -1,5 +1,5 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {Subscription} from 'rxjs';
 import {RequestService} from '../../../shared/service/request.service';
 import {HttpResponse} from '@angular/common/http';
@@ -7,6 +7,7 @@ import {LoaderService} from '../../../shared/service/loader.service';
 import {UploadFileService} from '../../../shared/service/upload/upload-file.service';
 import {DocumentService} from '../../../shared/service/document.service';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {SelectIssueDateDialogComponent} from '../../../dialog/select-issue-date-dialog/select-issue-date-dialog.component';
 
 @Component({
     selector: 'app-dd-list',
@@ -15,7 +16,7 @@ import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.c
 })
 export class DdListComponent implements OnInit {
 
-    displayedColumns: any[] = ['number', 'date', 'name', 'status', 'actions'];
+    displayedColumns: any[] = ['number', 'date','dateOfIssue', 'name', 'status', 'actions'];
     dataSource = new MatTableDataSource<any>();
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -27,6 +28,7 @@ export class DdListComponent implements OnInit {
     constructor(private requestService: RequestService,
                 private loadingService: LoaderService,
                 public dialogConfirmation: MatDialog,
+                private dialog: MatDialog,
                 private uploadService: UploadFileService,
                 private documentService: DocumentService) {
     }
@@ -58,20 +60,21 @@ export class DdListComponent implements OnInit {
     }
 
     addDocument(element: any, event) {
-        this.loadingService.show();
-        this.subscriptions.push(this.documentService.addDD(element, event.srcElement.files[0]).subscribe(event => {
-                if (event instanceof HttpResponse) {
-                    this.ddListModified.emit(true);
-                    this.loadDDs();
-                    this.loadingService.hide();
-                }
-            },
-            error => {
-                this.loadingService.hide();
-                console.log(error);
-            }
-            )
-        );
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.width = '400px';
+
+        dialogConfig2.data = {document : element,type : 'DD'};
+
+        let dialogRef = this.dialog.open(SelectIssueDateDialogComponent, dialogConfig2);
+        dialogRef.afterClosed().subscribe(result => {
+            this.ddListModified.emit(true);
+            this.loadDDs();
+        });
     }
 
     removeDD(element: any) {

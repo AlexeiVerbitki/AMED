@@ -1,8 +1,8 @@
 import {
-    Component,
+    Component, EventEmitter,
     Input,
     OnDestroy,
-    OnInit
+    OnInit, Output
 } from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material';
 import { Subscription} from 'rxjs';
@@ -11,7 +11,6 @@ import {UploadFileService} from '../../shared/service/upload/upload-file.service
 import {ErrorHandlerService} from '../../shared/service/error-handler.service';
 import {ConfirmationDialogComponent} from '../../dialog/confirmation-dialog.component';
 import {DivisionSelectDialogComponent} from '../../dialog/division-select-dialog/division-select-dialog.component';
-
 
 @Component({
     selector: 'app-instruction',
@@ -23,13 +22,15 @@ export class InstructionComponent implements OnInit, OnDestroy {
     instructionList: any[];
     divisionList: any[];
     numarCerere: string;
-    isModify = false;
-    enableUploading = true;
+    isModify : boolean = false;
+    enableUploading: boolean = true;
     private subscriptions: Subscription[] = [];
+    @Output() removeInstr = new EventEmitter();
+    @Output() addInstr = new EventEmitter();
 
     constructor(public dialog: MatDialog,
                 private errorHandlerService: ErrorHandlerService,
-                private uploadService: UploadFileService) {
+                private uploadService : UploadFileService) {
     }
 
     get canUpload(): boolean {
@@ -87,8 +88,10 @@ export class InstructionComponent implements OnInit, OnDestroy {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.subscriptions.push(this.uploadService.removeFileFromStorage(this.instructions[index].path).subscribe(data => {
+                let path = this.instructions[index].path;
+                this.subscriptions.push(this.uploadService.removeFileFromStorage(path).subscribe(data => {
                         this.instructions.splice(index, 1);
+                        this.removeInstr.emit(path);
                     },
                     error => {
                         console.log(error);
@@ -99,10 +102,11 @@ export class InstructionComponent implements OnInit, OnDestroy {
         });
     }
 
-    viewFile(instruction: any) {
+    viewFile(instruction: any)
+    {
             this.subscriptions.push(this.uploadService.loadFile(instruction.path).subscribe(data => {
-                    const file = new Blob([data], {type: instruction.typeDoc});
-                    const fileURL = URL.createObjectURL(file);
+                    let file = new Blob([data], {type: instruction.typeDoc});
+                    var fileURL = URL.createObjectURL(file);
                     window.open(fileURL);
                 },
                 error => {
@@ -118,7 +122,8 @@ export class InstructionComponent implements OnInit, OnDestroy {
 
     checkFields(): boolean {
 
-        if (this.divisions.length == 0) {
+        if(this.divisions.length==0)
+        {
             this.errorHandlerService.showError('Nici o divizare nu a fost introdusa.');
             return false;
         }
@@ -130,26 +135,20 @@ export class InstructionComponent implements OnInit, OnDestroy {
 
         dialogConfig2.width = '600px';
 
-        dialogConfig2.data = {type: 'add', values: this.divisions, fieldName : 'Divizare', instructions : this.instructions, numarCerere : this.numarCerere};
+        this.divisions.forEach(t=>t.include=false);
+        dialogConfig2.data = {type: 'add',values: this.divisions, fieldName : "instr", instructions : this.instructions, numarCerere : this.numarCerere};
 
-        const dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
+        let dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.response) {
-                this.instructions.push({
-                    id: null,
-                    name: result.fileName,
-                    date: new Date(),
-                    path: result.path,
-                    divisions : result.values,
-                    typeDoc : result.type,
-                    status : 'N'
-                });
+                this.addInstr.emit(result.divisions);
             }
         });
     }
 
-    edit(instruction: any) {
+    edit(instruction : any)
+    {
         const dialogConfig2 = new MatDialogConfig();
 
         dialogConfig2.disableClose = false;
@@ -158,18 +157,49 @@ export class InstructionComponent implements OnInit, OnDestroy {
 
         dialogConfig2.width = '600px';
 
-        dialogConfig2.data = {type: 'edit', values: this.divisions, value: instruction.divisions, fieldName : 'Divizare', instructions : this.instructions, numarCerere : this.numarCerere};
+        for(let div of this.divisions)
+        {
+            if(div.instructions.find(t=>t.path==instruction.path))
+            {
+                div.include = true;
+            }
+            else
+            {
+                div.include = false;
+            }
+        }
 
-        const dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
+        dialogConfig2.data = {type: 'edit', values: this.divisions,value: instruction, fieldName : "instr", instructions : this.instructions, numarCerere : this.numarCerere};
+
+        let dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.response) {
-                instruction.divisions = result.values;
-                if (instruction.status == 'O') {
-                    instruction.status = 'M';
-                }
+                this.addInstr.emit(result.divisions);
             }
         });
     }
+
+    getConcatenatedDivision(divisions : any[])
+    {
+        let concatenatedDivision = '';
+        for (let entry of divisions) {
+            if(entry.description && entry.volume && entry.volumeQuantityMeasurement)
+            {
+                concatenatedDivision = concatenatedDivision + entry.description +' '+ entry.volume+' '+entry.volumeQuantityMeasurement.description+ '; ';
+            }
+            else if(entry.volume && entry.volumeQuantityMeasurement)
+            {
+                concatenatedDivision = concatenatedDivision + entry.volume+' '+entry.volumeQuantityMeasurement.description + '; ';
+            }
+            else
+            {
+                concatenatedDivision = concatenatedDivision + entry.description + '; ';
+            }
+
+        }
+        return concatenatedDivision;
+    }
+
 
 }

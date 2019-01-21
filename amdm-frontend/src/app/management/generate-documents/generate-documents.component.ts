@@ -13,6 +13,8 @@ import {RequestsDdModifyComponent} from './requests-dd-modify/requests-dd-modify
 import {MedicamentsOmComponent} from './medicaments-om/medicaments-om.component';
 import {RequestsOiModifyComponent} from './requests-oi-modify/requests-oi-modify.component';
 import {NavbarTitleService} from '../../shared/service/navbar-title.service';
+import {DdCtListComponent} from "./dd-ct-list/dd-ct-list.component";
+import {RequestDdCtComponent} from "./request-dd-ct/request-dd-ct.component";
 
 @Component({
     selector: 'app-generate-documents',
@@ -33,6 +35,9 @@ export class GenerateDocumentsComponent implements OnInit {
     @ViewChild('medicamentsOM') medicamentsOM: MedicamentsOmComponent;
     @ViewChild('requestOI') requestOI: RequestsOiComponent;
     @ViewChild('requestOIM') requestOIM: RequestsOiModifyComponent;
+
+    @ViewChild('ddCtList') ddCtListHtml: DdCtListComponent;
+    @ViewChild('requestDDCt') requestDDCt: RequestDdCtComponent;
 
     constructor(private navbarTitleService: NavbarTitleService) {
     }
@@ -87,6 +92,14 @@ export class GenerateDocumentsComponent implements OnInit {
 
     loadOMs(event) {
         this.omListHtml.loadOAs();
+    }
+
+    loadDDCts(event) {
+        this.ddCtListHtml.loadDDs();
+    }
+
+    ddListCtModified(event) {
+        this.requestDDCt.loadRequestForDD();
     }
 
     ngOnDestroy(): void {

@@ -16,6 +16,7 @@ import {TaskService} from '../../../shared/service/task.service';
 import {CanModuleDeactivate} from '../../../shared/auth-guard/can-deactivate-guard.service';
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {MedicamentService} from "../../../shared/service/medicament.service";
 
 @Component({
     selector: 'app-reg-cerere',
@@ -44,6 +45,7 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
                 private administrationService: AdministrationService,
                 private navbarTitleService: NavbarTitleService,
                 private taskService: TaskService,
+                private medicamentService : MedicamentService,
                 private errorHandlerService: ErrorHandlerService,
                 private loadingService: LoaderService,
                 public dialog: MatDialog,
@@ -53,7 +55,6 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
             'requestNumber': [null],
             'startDate': [new Date()],
             'currentStep': ['E'],
-            'medicamentName': [null, Validators.required],
             'mandatedFirstname': [null, Validators.required],
             'mandatedLastname': [null, Validators.required],
             'phoneNumber': [null, [Validators.maxLength(9), Validators.pattern('[0-9]+')]],
@@ -62,11 +63,7 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
             'requestMandateDate': [null],
             'company': [null, Validators.required],
             'initiator': [''],
-            'assignedUser': [''],
-            'type':
-                fb.group({
-                    'code': ['MEDP', Validators.required]
-                }),
+            'assignedUser': ['']
         });
     }
 
@@ -121,8 +118,7 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
 
 
         this.formSubmitted = true;
-        if (this.rForm.get('medicamentName').invalid || this.rForm.get('mandatedFirstname').invalid || this.rForm.get('mandatedLastname').invalid || this.rForm.get('company').invalid
-        || this.rForm.get('type.code').invalid) {
+        if (this.rForm.get('mandatedFirstname').invalid || this.rForm.get('mandatedLastname').invalid || this.rForm.get('company').invalid) {
             return;
         }
 
@@ -157,6 +153,7 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
             requestMandateNr : this.rForm.get('requestMandateNr').value,
             requestMandateDate : this.rForm.get('requestMandateDate').value
         }];
+        modelToSubmit.type ={code : 'MEDF'};
 
         this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
                 this.loadingService.hide();

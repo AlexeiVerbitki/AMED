@@ -64,11 +64,11 @@
                     <div class="col-4">{{bonDePlata.date | date: 'dd/MM/yyyy HH:mm:ss'}}</div>
                     <div class="col-6">
                         <button class="btn btn-dark-red-color btn-sm" mdbTooltip="Sterge"
-                                (click)="delete(bonDePlata,i)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+                                (click)="deleteTaxes(bonDePlata,i)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
                         </button>
                         <button class="btn btn-mdb-color btn-sm" mdbTooltip="Editeaza" (click)="editTaxes(bonDePlata)">
                             <i class="fa fa-pencil fa-lg" aria-hidden="true"></i></button>
-                        <button class="btn btn-mdb-color btn-sm" mdbTooltip="Genereaza nota"><i
+                        <button class="btn btn-mdb-color btn-sm" mdbTooltip="Genereaza nota" (click)="generatePaymantNote(bonDePlata)"><i
                                 class="fa fa-file-text-o fa-lg" aria-hidden="true"></i></button>
                     </div>
                 </div>

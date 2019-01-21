@@ -38,40 +38,8 @@
 						</ng-template>
 					</ng-select>
 					<div *ngIf="formSubmitted && rForm.get('company').invalid">
-						<small class="text-muted"><strong class="text-danger">Compania solicitantă trebuie selectată</strong></small>
+						<small i declass="text-muted"><strong class="text-danger">Compania solicitantă trebuie selectată</strong></small>
 					</div>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="md-form">
-					<input id="med" mdbInputDirective type="text" class="form-control" formControlName="medicamentName">
-					<label for="med">Denumire comerciala medicament
-						<span class="text-danger">*</span>
-					</label>
-					<div *ngIf="formSubmitted && rForm.get('medicamentName').invalid">
-						<small class="text-muted"><strong class="text-danger">Denumirea comerciala a medicamentului trebuie introdusa</strong></small>
-					</div>
-				</div>
-			</div>
-			<div class="col-1">
-				<h5 class="font-w400">
-					Inregistrare
-				</h5>
-			</div>
-			<div class="col-3" formGroupName="type">
-				<div class="md-form">
-					<mat-radio-group formControlName="code">
-						<div class="container">
-							<div class="row">
-								<div class="offset-1 col-5">
-									<mat-radio-button name="prop1" value="MEDP">Primară</mat-radio-button>
-								</div>
-								<div class="offset-1 col-5">
-									<mat-radio-button name="prop2" value="MEDR">Repetată</mat-radio-button>
-								</div>
-							</div>
-						</div>
-					</mat-radio-group>
 				</div>
 			</div>
 		</div>

@@ -503,27 +503,27 @@ public class ClinicalTrailsService {
         ct.setMedicalInstitutions(ctMedicalInstitutionEntities);
     }
 
-    public void addDDClinicalTrailsDocument(@RequestBody RegistrationRequestsEntity request) {
-        Optional<RegistrationRequestStepsEntity> requestTypesStepEntityList = registrationRequestStepRepository.findOneByRequestTypeIdAndCode(request.getType().getId(), request.getCurrentStep());
-        if (requestTypesStepEntityList.isPresent()) {
-            RegistrationRequestStepsEntity entity = requestTypesStepEntityList.get();
-            request.setOutputDocuments(new HashSet<>());
-
-            String[] docTypes = entity.getOutputDocTypes() == null ? new String[0] : entity.getOutputDocTypes().split(",");
-
-            for (String docType : docTypes) {
-                Optional<NmDocumentTypesEntity> nmDocumentTypeEntity = documentTypeRepository.findByCategory(docType);
-                if (nmDocumentTypeEntity.isPresent()) {
-                    OutputDocumentsEntity outputDocumentsEntity = new OutputDocumentsEntity();
-                    outputDocumentsEntity.setDocType(nmDocumentTypeEntity.get());
-                    outputDocumentsEntity.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
-                    outputDocumentsEntity.setName(nmDocumentTypeEntity.get().getDescription());
-                    outputDocumentsEntity.setNumber(docType + "-" + request.getRequestNumber());
-                    request.getOutputDocuments().add(outputDocumentsEntity);
-                }
-            }
-        }
-    }
+//    public void addDDClinicalTrailsDocument(@RequestBody RegistrationRequestsEntity request) {
+//        Optional<RegistrationRequestStepsEntity> requestTypesStepEntityList = registrationRequestStepRepository.findOneByRequestTypeIdAndCode(request.getType().getId(), request.getCurrentStep());
+//        if (requestTypesStepEntityList.isPresent()) {
+//            RegistrationRequestStepsEntity entity = requestTypesStepEntityList.get();
+//            request.setOutputDocuments(new HashSet<>());
+//
+//            String[] docTypes = entity.getOutputDocTypes() == null ? new String[0] : entity.getOutputDocTypes().split(",");
+//
+//            for (String docType : docTypes) {
+//                Optional<NmDocumentTypesEntity> nmDocumentTypeEntity = documentTypeRepository.findByCategory(docType);
+//                if (nmDocumentTypeEntity.isPresent()) {
+//                    OutputDocumentsEntity outputDocumentsEntity = new OutputDocumentsEntity();
+//                    outputDocumentsEntity.setDocType(nmDocumentTypeEntity.get());
+//                    outputDocumentsEntity.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
+//                    outputDocumentsEntity.setName(nmDocumentTypeEntity.get().getDescription());
+//                    outputDocumentsEntity.setNumber(docType + "-" + request.getRequestNumber());
+//                    request.getOutputDocuments().add(outputDocumentsEntity);
+//                }
+//            }
+//        }
+//    }
 
     public void registerNewClinicalTrailNotification(RegistrationRequestsEntity requests) throws CustomException {
 

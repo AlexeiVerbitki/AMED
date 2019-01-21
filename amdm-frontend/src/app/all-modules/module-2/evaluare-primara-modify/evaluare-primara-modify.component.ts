@@ -39,7 +39,6 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
     isAddDivision: boolean;
     isAddManufacture: boolean;
     paymentTotal: number;
-    customsCodes: any[] = [];
     pharmaceuticalForms: any[];
     pharmaceuticalFormTypes: any[];
     activeSubstancesTable: any[] = [];
@@ -117,8 +116,7 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
                     'unitsOfMeasurementTo': [null],
                     'internationalMedicamentNameTo': [null, Validators.required],
                     'volumeTo': [null],
-                    'customsCodeTo': [null, Validators.required],
-                    'volumeQuantityMeasurementTo': [null],
+                     'volumeQuantityMeasurementTo': [null],
                     'termsOfValidityTo': [null, Validators.required],
                     'medicamentTypeTo': [null, Validators.required],
                     'prescriptionTo': [null, Validators.required],
@@ -394,17 +392,6 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
                     this.groups = data;
                     if (dataDB.medicamentHistory && dataDB.medicamentHistory.length != 0 && dataDB.medicamentHistory[0].groupTo) {
                         this.eForm.get('medicament.groupTo').setValue(this.groups.find(r => r.id === dataDB.medicamentHistory[0].groupTo.id));
-                    }
-                },
-                error => console.log(error)
-            )
-        );
-
-        this.subscriptions.push(
-            this.administrationService.getAllCustomsCodes().subscribe(data => {
-                    this.customsCodes = data;
-                    if (dataDB.medicamentHistory && dataDB.medicamentHistory.length != 0 && dataDB.medicamentHistory[0].customsCodeTo) {
-                        this.eForm.get('medicament.customsCodeTo').setValue(this.customsCodes.find(r => r.id === dataDB.medicamentHistory[0].customsCodeTo.id));
                     }
                 },
                 error => console.log(error)
@@ -1062,7 +1049,8 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
                     quantityTo: result.activeSubstanceQuantity,
                     unitsOfMeasurementTo: result.activeSubstanceUnit,
                     manufactures: result.manufactures,
-                    status: result.status
+                    status: result.status,
+                    compositionNumber : result.compositionNumber
                 });
 
                 let d = null;
@@ -1126,6 +1114,7 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
                     unitsOfMeasurementTo: result.activeSubstanceUnit,
                     manufactures: result.manufactures,
                     status: result.status,
+                    compositionNumber : result.compositionNumber
                 };
 
                 let d = null;

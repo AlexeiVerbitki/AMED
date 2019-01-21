@@ -26,3 +26,14 @@ label.required:not(:empty):after,
 .mt-4s {
   padding-top: 45px;
 }
+
+.font-w400 {
+  font-weight : 400;
+  margin-left: 15px;
+  margin-top: 35px;
+}
+.font-w400l {
+  font-weight : 400;
+  margin-left: 15px;
+  margin-top: 15px;
+}

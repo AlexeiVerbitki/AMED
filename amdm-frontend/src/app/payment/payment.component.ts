@@ -146,6 +146,7 @@ export class PaymentComponent implements OnInit {
         dialogConfig2.disableClose = false;
         dialogConfig2.autoFocus = true;
         dialogConfig2.hasBackdrop = true;
+        dialogConfig2.panelClass = 'custom-dialog-container';
 
         dialogConfig2.width = '600px';
         dialogConfig2.data = {bonSuplimentarNotRender: this.isBonSuplimentarNotRender};
@@ -273,7 +274,8 @@ export class PaymentComponent implements OnInit {
             } else {
 
                 if (this.checkProducator) {
-                    if ((!this.requestDet.medicament.pharmaceuticalForm && !this.requestDet.medicament.pharmaceuticalFormTo) ||
+                    if ((!this.requestDet.medicament.commercialName &&
+                        !this.requestDet.medicament.pharmaceuticalForm && !this.requestDet.medicament.pharmaceuticalFormTo) ||
                         (!this.requestDet.medicament.dose && !this.requestDet.medicament.doseTo) ||
                         !this.requestDet.divisionBonDePlata) {
                         this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
@@ -331,7 +333,7 @@ export class PaymentComponent implements OnInit {
                 paymentOrders: this.bonDePlataList,
                 medicamentDetails: [{
                     nr: 1,
-                    medicamentName: this.requestDet.medicamentName,
+                    medicamentName: this.requestDet.medicament.commercialName,
                     pharmaceuticForm: pharmaceuticForm,
                     dose: dose,
                     division: this.requestDet.divisionBonDePlata
@@ -412,7 +414,7 @@ export class PaymentComponent implements OnInit {
             paymentOrders: [bonDePlata],
             medicamentDetails: [{
                 nr: 1,
-                medicamentName: this.requestDet.medicamentName,
+                medicamentName: this.requestDet.medicament.commercialName,
                 pharmaceuticForm: pharmaceuticForm,
                 dose: dose,
                 division: this.requestDet.divisionBonDePlata
@@ -461,4 +463,10 @@ export class PaymentComponent implements OnInit {
         }
     }
 
+    getPaymentOrders()
+    {
+        return this.bonDePlataList;
+    }
 }
+
+

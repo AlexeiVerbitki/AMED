@@ -33,6 +33,7 @@ export class ActiveSubstanceDialogComponent implements OnInit {
             'activeSubstance': [null, Validators.required],
             'activeSubstanceCode': [null],
             'activeSubstanceQuantity': [null, Validators.required],
+            'compositionNumber': [null, Validators.required],
             'activeSubstanceUnit': [null, Validators.required],
             'manufactures': [null],
             'status': [null],
@@ -79,24 +80,10 @@ export class ActiveSubstanceDialogComponent implements OnInit {
             )
         );
 
-        // this.loadingManufacture = true;
-        // this.subscriptions.push(
-        //     this.administrationService.getAllManufactures().subscribe(data => {
-        //             this.manufactures = data;
-        //             if(this.dataDialog) {
-        //                 this.aForm.get('manufactureSA').setValue(this.manufactures.find(r => r.id === this.dataDialog.manufacture.id));
-        //                 this.aForm.get('manufactureCountrySA').setValue(this.aForm.get('manufactureSA').value.country.description);
-        //                 this.aForm.get('manufactureAddressSA').setValue(this.aForm.get('manufactureSA').value.address);
-        //             }
-        //             this.loadingManufacture = false;
-        //         },
-        //         error => {console.log(error);  this.loadingManufacture = false;}
-        //     )
-        // );
-
         if (this.dataDialog) {
             this.title = 'Editare substanta activa';
             this.aForm.get('status').setValue(this.dataDialog.status);
+            this.aForm.get('compositionNumber').setValue(this.dataDialog.compositionNumber);
         }
     }
 
@@ -136,6 +123,7 @@ export class ActiveSubstanceDialogComponent implements OnInit {
         dialogConfig2.disableClose = false;
         dialogConfig2.autoFocus = true;
         dialogConfig2.hasBackdrop = true;
+        dialogConfig2.panelClass = 'custom-dialog-container';
 
         dialogConfig2.width = '600px';
 

@@ -87,7 +87,6 @@ export class ProcessInterruptionComponent implements OnInit {
                         this.iForm.get('requestNumber').setValue(data.requestNumber);
                         this.iForm.get('company').setValue(data.company);
                         this.iForm.get('companyValue').setValue(data.company.name);
-                        this.iForm.get('medValue').setValue(data.medicamentName);
                         this.iForm.get('oiIncluded').setValue(data.oiIncluded);
                         this.iForm.get('motiv').setValue(data.interruptionReason);
                         this.iForm.get('requestHistories').setValue(data.requestHistories);
@@ -95,6 +94,7 @@ export class ProcessInterruptionComponent implements OnInit {
                             this.iForm.get('medicament.pharmaceuticalForm').setValue(data.medicaments[0].pharmaceuticalForm.description);
                         }
                         if (data.medicaments[0]) {
+                            this.iForm.get('medValue').setValue(data.medicaments[0].commercialName);
                             this.iForm.get('medicament.dose').setValue(data.medicaments[0].dose);
                         }
                         if (data.medicaments[0] && data.medicaments[0].internationalMedicamentName) {
@@ -203,7 +203,7 @@ export class ProcessInterruptionComponent implements OnInit {
                         startDate: this.iForm.get('data').value
                     }).subscribe(data => {
                         this.loadingService.hide();
-                        this.router.navigate(['dashboard/module']);
+                        this.router.navigate(['dashboard/homepage']);
                     }, error => this.loadingService.hide())
                 );
             }

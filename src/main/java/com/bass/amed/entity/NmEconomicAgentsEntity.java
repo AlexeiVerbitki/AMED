@@ -14,7 +14,7 @@ public class NmEconomicAgentsEntity {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue( strategy = GenerationType.IDENTITY )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Basic
     @Column(name = "code")
@@ -67,8 +67,8 @@ public class NmEconomicAgentsEntity {
     @Basic
     @Column(name = "legal_address")
     private String legalAddress;
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
-    @JoinColumn( name = "locality_id" )
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "locality_id")
     private NmLocalitiesEntity locality;
     @Basic
     @Column(name = "old_idno")
@@ -89,7 +89,7 @@ public class NmEconomicAgentsEntity {
             @JoinColumn(name = "license_activity_type_id")})
     private Set<LicenseActivityTypeEntity> activities = new HashSet<>();
 
-    @OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "ec_agent_id")
     private Set<LicenseAgentPharmaceutistEntity> agentPharmaceutist = new HashSet<>();
 
@@ -100,4 +100,9 @@ public class NmEconomicAgentsEntity {
     @JoinColumn(name = "ec_agent_id")
     private Set<LicenseResolutionEntity> resolutions = new HashSet<>();
 
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinTable(name = "nm_economic_agent_bank_accounts", joinColumns = {
+        @JoinColumn(name = "economic_agent_id")}, inverseJoinColumns = {
+        @JoinColumn(name = "bank_account_id")})
+    private Set<NmBankAccountsEntity> bankAccounts = new HashSet<>();
 }

@@ -62,12 +62,6 @@ public class MedicamentEntity
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "authorization_holder_id")
     private NmManufacturesEntity authorizationHolder;
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
-    @JoinColumn(name = "type_id")
-    private NmMedicamentTypeEntity medicamentType;
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
-    @JoinColumn(name = "group_id")
-    private NmMedicamentGroupEntity group;
     @Basic
     @Column(name = "prescription", nullable = true)
     private Byte prescription;
@@ -86,6 +80,15 @@ public class MedicamentEntity
     @Basic
     @Column(name = "originale", nullable = true)
     private Boolean originale;
+    @Basic
+    @Column(name = "vitale", nullable = true)
+    private Boolean vitale;
+    @Basic
+    @Column(name = "esentiale", nullable = true)
+    private Boolean esentiale;
+    @Basic
+    @Column(name = "nonesentiale", nullable = true)
+    private Boolean nonesentiale;
     @Basic
     @Column(name = "volume")
     private String volume;
@@ -128,6 +131,12 @@ public class MedicamentEntity
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "medicament_id")
     private Set<MedicamentTypesEntity> medicamentTypes;
+    @Basic
+    @Column(name = "orphan", nullable = true)
+    private Boolean orphan;
+    @Basic
+    @Column(name = "unlimited_registration_period", nullable = true)
+    private Boolean unlimitedRegistrationPeriod;
 
     public void assign(MedicamentHistoryEntity entity)
     {
@@ -140,8 +149,9 @@ public class MedicamentEntity
         this.internationalMedicamentName = entity.getInternationalMedicamentNameTo();
         this.pharmaceuticalForm = entity.getPharmaceuticalFormTo();
         this.authorizationHolder = entity.getAuthorizationHolderTo();
-        this.medicamentType = entity.getMedicamentTypeTo();
-        this.group = entity.getGroupTo();
+        this.vitale = entity.getVitaleTo();
+        this.esentiale = entity.getEsentialeTo();
+        this.nonesentiale = entity.getNonesentialeTo();
         this.prescription = entity.getPrescriptionTo();
         this.primarePackage = entity.getPrimarePackageTo();
         this.administeringMode = entity.getAdministeringModeTo();
@@ -149,6 +159,8 @@ public class MedicamentEntity
         this.volumeQuantityMeasurement = entity.getVolumeQuantityMeasurementTo();
         this.termsOfValidity = entity.getTermsOfValidityTo();
         this.dose = entity.getDoseTo();
+        this.originale=entity.getOriginaleTo();
+        this.orphan=entity.getOrphanTo();
         this.activeSubstances.clear();
         for (MedicamentActiveSubstancesHistoryEntity medicamentActiveSubstancesHistoryEntity : entity.getActiveSubstancesHistory())
         {

@@ -318,28 +318,12 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-4">
-				<div class="md-form-modified">
-					<ng-select id="customsCode" name="customCode" [items]="customsCodes"
-					           bindLabel="description"
-					           placeholder="Cod vamal "
-					           formControlName="customsCodeTo">
-						<ng-template ng-option-tmp let-item="item">
-							{{item.description}} <br />
-							<small class="form-text text-muted">{{item.code}}</small>
-						</ng-template>
-					</ng-select>
-					<div *ngIf="formSubmitted && eForm.get('medicament.customsCodeTo').invalid">
-						<small class="text-muted"><strong class="text-danger">Codul vamal trebuie selectat</strong></small>
-					</div>
-				</div>
-			</div>
 		</div>
 		<div class="row" formGroupName="medicament">
 			<div class="col-md-12">
 				<div class="md-form-modified">
 					<ng-select id="medType2" name="medType2" [items]="medicamentTypes2" bindLabel="description" [multiple]="true"
-					           placeholder="Tipul medicamentului" formControlName="medTypesValues">
+					           placeholder="Tip cerere" formControlName="medTypesValues">
 					</ng-select>
 				</div>
 			</div>

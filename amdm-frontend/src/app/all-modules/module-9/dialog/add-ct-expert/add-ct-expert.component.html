@@ -1,0 +1,46 @@
+<h3 class="text-center my-3 font-weight-bold">Adaugare expert</h3>
+<div class="mat-dialog-content">
+    <div></div>
+    <form [formGroup]='eForm'>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="md-form">
+                    <mat-checkbox #intern [checked]="eForm.get('intern').value" (change)="checkIntern(intern)">Expert
+                        intern
+                    </mat-checkbox>
+                </div>
+            </div>
+            <div *ngIf="eForm.get('intern').value" class="col-md-8">
+                <div class="md-form-modified">
+                    <ng-select id="expert" name="expert" [items]="experts"
+                               bindLabel="name"
+                               placeholder="Expert"
+                               formControlName="expert"
+                    >
+                    </ng-select>
+                    <!--<div *ngIf="eForm.get('expert').invalid">
+                        <small class="text-muted"><strong class="text-danger">Expertul trebuie selectat</strong></small>
+                    </div>-->
+                </div>
+            </div>
+            <div *ngIf="!eForm.get('intern').value" class="col-md-8">
+                <div class="md-form">
+                    <input id="expertName" mdbInputDirective type="text" formControlName="expertName"
+                           class="form-control">
+                    <label for="expertName">Expert</label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <br><br><br><br>
+        </div>
+    </form>
+</div>
+<div class="text-center">
+    <div mat-dialog-actions>
+        <div class="w-100">
+            <button class="btn btn-danger btn-sm waves-light" (click)="cancel()">Anulare</button>
+            <button class="btn btn-dark-green-color btn-sm waves-light" (click)="add()" [disabled]="eForm.get('expert').invalid">Adaugare</button>
+        </div>
+    </div>
+</div>

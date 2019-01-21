@@ -1,0 +1,23 @@
+<div>
+	<form [formGroup]="eForm">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form">
+					<input id="docNr" mdbInputDirective class="form-control" formControlName="docNr">
+					<label for="docNr">Numar document<span class="text-danger">*</span></label>
+				</div>
+				<div *ngIf="formSubmitted && eForm.get('docNr').invalid">
+					<small class="text-muted"><strong class="text-danger">Numarul documentlui trebuie introdus</strong></small>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="text-center">
+	<div mat-dialog-actions>
+		<div class="w-100">
+			<button class="btn btn-dark-green-color btn-sm waves-light" (click)="ok()">Ok</button>
+			<button class="btn btn-danger btn-sm waves-light" (click)="cancel()">Anulare</button>
+		</div>
+	</div>
+</div>

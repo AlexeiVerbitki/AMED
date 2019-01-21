@@ -7,6 +7,7 @@ import {PaymentService} from "../shared/service/payment.service";
 import {LoaderService} from "../shared/service/loader.service";
 import {ConfirmationDialogComponent} from "../dialog/confirmation-dialog.component";
 import {ErrorHandlerService} from "../shared/service/error-handler.service";
+import {SelectCurrencyBonPlataDialogComponent} from "../dialog/select-currency-bon-plata-dialog/select-currency-bon-plata-dialog.component";
 
 @Component({
     selector: 'app-payment-clinical-trial',
@@ -17,7 +18,8 @@ export class PaymentClinicalTrialComponent implements OnInit, OnDestroy {
 
     private subscriptions: Subscription[] = [];
 
-    private regReqId: number = -1;
+    private regRequest: any;
+    // private regReqId: number = -1;
 
     //Bon de plata
     bonDePlataList: any[] = [];
@@ -37,22 +39,19 @@ export class PaymentClinicalTrialComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-
-
         // console.log('this.bonDePlataList', this.bonDePlataList);
     }
 
     @Input()
-    set registrationReqestId(regRequestId: number) {
-        // console.log('regRequestId', regRequestId);
-        if (regRequestId) {
-            this.regReqId = regRequestId;
+    set registrationReqest(regRequest: any) {
+        if (regRequest) {
+            this.regRequest = regRequest;
             this.loadPaymentOrders();
         }
     }
 
-    get registrationReqestId(): number {
-        return this.regReqId;
+    get registrationReqest(): any {
+        return this.regRequest;
     }
 
     protected checkReceipts() {
@@ -66,7 +65,7 @@ export class PaymentClinicalTrialComponent implements OnInit, OnDestroy {
     private loadReceipts(arr: number[]) {
         this.loadingService.show();
         this.subscriptions.push(this.administrationService.getReceiptsByPaymentOrderNumbers(arr).subscribe(data => {
-                console.log('data', data.body);
+                // console.log('data', data.body);
                 if (data.body) {
                     this.receiptsList = data.body;
                     this.recalculateTotalReceipts();
@@ -79,7 +78,7 @@ export class PaymentClinicalTrialComponent implements OnInit, OnDestroy {
     private loadPaymentOrders() {
         this.loadingService.show();
         this.subscriptions.push(
-            this.paymentService.getPaymentOrders(this.regReqId).subscribe(data => {
+            this.paymentService.getPaymentOrders(this.regRequest.id).subscribe(data => {
                     // console.log('data', data);
                     this.bonDePlataList = data;
                     if (this.bonDePlataList.length != 0) {
@@ -107,7 +106,7 @@ export class PaymentClinicalTrialComponent implements OnInit, OnDestroy {
             newTax: true,
             specificBon: [],
             payOrderId: null,
-            regReqId: this.regReqId
+            regReqId: this.regRequest.id
         };
 
         dialogConfig2.width = '800px';
@@ -122,37 +121,8 @@ export class PaymentClinicalTrialComponent implements OnInit, OnDestroy {
     }
 
     protected editTaxes(bon: any) {
-        console.log('bon', bon);
+        // console.log('bon', bon);
 
-        const dialogConfig2 = new MatDialogConfig();
-
-        dialogConfig2.disableClose = false;
-        dialogConfig2.autoFocus = true;
-        dialogConfig2.hasBackdrop = true;
-
-        dialogConfig2.data = {
-            newTax: false,
-            //Deep cloning of bon
-            specificBon: JSON.parse(JSON.stringify(bon)),
-            payOrderId: bon.id,
-            regReqId: this.regReqId
-        };
-
-        dialogConfig2.width = '800px';
-        let dialogRef = this.dialog.open(AddCtPayOrderComponent, dialogConfig2);
-        dialogRef.afterClosed().subscribe(result => {
-            console.log('result', result);
-            if (result) {
-                // console.log('result', result);
-                let findBon = this.bonDePlataList.find(filterBon => filterBon.id == result.id)
-                findBon.ctPayOrderServices = result.ctPayOrderServices;
-                // console.log('this.bonDePlataList', this.bonDePlataList);
-                this.recalculateTotalTaxes();
-            }
-        });
-    }
-
-    protected delete(bon: any, index: number) {
         const arr: any[] = [];
         for (const bon of this.bonDePlataList) {
             arr.push(bon.number);
@@ -165,8 +135,60 @@ export class PaymentClinicalTrialComponent implements OnInit, OnDestroy {
                     this.receiptsList = data.body;
                     this.recalculateTotalReceipts();
                 }
-                let receiptExist = this.receiptsList.filter(receipt => receipt.number == bon.number);
-                if (receiptExist) {
+                let receiptExist = this.receiptsList.filter(receipt => receipt.paymentOrderNumber == bon.number);
+                if (receiptExist.length != 0) {
+                    this.loadingService.hide();
+                    this.errorHandlerService.showError('Exista plati pe bonul nr: ' + bon.number);
+                    return;
+                }
+                this.loadingService.hide();
+
+                const dialogConfig2 = new MatDialogConfig();
+
+                dialogConfig2.disableClose = false;
+                dialogConfig2.autoFocus = true;
+                dialogConfig2.hasBackdrop = true;
+
+                dialogConfig2.data = {
+                    newTax: false,
+                    //Deep cloning of bon
+                    specificBon: JSON.parse(JSON.stringify(bon)),
+                    payOrderId: bon.id,
+                    regReqId: this.regRequest.id
+                };
+
+                dialogConfig2.width = '800px';
+                let dialogRef = this.dialog.open(AddCtPayOrderComponent, dialogConfig2);
+                dialogRef.afterClosed().subscribe(result => {
+                    console.log('result', result);
+                    if (result) {
+                        // console.log('result', result);
+                        let findBon = this.bonDePlataList.find(filterBon => filterBon.id == result.id)
+                        findBon.ctPayOrderServices = result.ctPayOrderServices;
+                        // console.log('this.bonDePlataList', this.bonDePlataList);
+                        this.recalculateTotalTaxes();
+                    }
+                });
+            }, error => this.loadingService.hide())
+        )
+
+    }
+
+    protected deleteTaxes(bon: any, index: number) {
+        const arr: any[] = [];
+        for (const bon of this.bonDePlataList) {
+            arr.push(bon.number);
+        }
+
+        this.loadingService.show();
+        this.subscriptions.push(this.administrationService.getReceiptsByPaymentOrderNumbers(arr).subscribe(data => {
+                console.log('data', data.body);
+                if (data.body) {
+                    this.receiptsList = data.body;
+                    this.recalculateTotalReceipts();
+                }
+                let receiptExist = this.receiptsList.filter(receipt => receipt.paymentOrderNumber == bon.number);
+                if (receiptExist.length != 0) {
                     this.loadingService.hide();
                     this.errorHandlerService.showError('Exista plati pe bonul nr: ' + bon.number);
                     return;
@@ -194,30 +216,42 @@ export class PaymentClinicalTrialComponent implements OnInit, OnDestroy {
         );
     }
 
-    // private isValidPaymentOrderBeforeChanges(bonNr: number) {
-    //     const arr: any[] = [];
-    //     for (const bon of this.bonDePlataList) {
-    //         arr.push(bon.number);
-    //     }
-    //
-    //     this.loadingService.show();
-    //     this.subscriptions.push(this.administrationService.getReceiptsByPaymentOrderNumbers(arr).subscribe(data => {
-    //             console.log('data', data.body);
-    //             if (data.body) {
-    //                 this.receiptsList = data.body;
-    //                 this.recalculateTotalReceipts();
-    //             }
-    //             let receiptExist = this.receiptsList.filter(receipt => receipt.number == bonNr);
-    //             if (receiptExist) {
-    //                 this.loadingService.hide();
-    //                 return false;
-    //                 // this.errorHandlerService.showError('Exista plati pe bonul nr: ' + bonNr);
-    //             }
-    //             this.loadingService.hide();
-    //             return true;
-    //         }, error => this.loadingService.hide())
-    //     );
-    // }
+    protected generatePaymantNote(bon: any) {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.width = '600px';
+
+        const dialogRef = this.dialog.open(SelectCurrencyBonPlataDialogComponent, dialogConfig2);
+        dialogRef.afterClosed().subscribe(result => {
+            // console.log('currencyResult', result);
+            if (result) {
+                // console.log('bon', bon);
+                // console.log('this.regRequest', this.regRequest);
+                console.log('result', result);
+
+                let dataModel = {
+                    clinicalTrial: this.regRequest.clinicalTrails,
+                    economicAgent: this.regRequest.company,
+                    payOrder: bon,
+                    currency: result.currency
+                }
+
+                let observable = this.paymentService.generatePaymentNote(dataModel);
+
+                this.subscriptions.push(observable.subscribe(data => {
+                    const file = new Blob([data], {type: 'application/pdf'});
+                    const fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    }, error => console.log(error))
+                );
+            }
+            //this.generateSingleBonCommonParameters(bonDePlata, result.currency);
+        });
+    }
 
     private recalculateTotalTaxes() {
         this.bonDePlataTotal = 0;
@@ -248,6 +282,4 @@ export class PaymentClinicalTrialComponent implements OnInit, OnDestroy {
             subscription.unsubscribe();
         });
     }
-
-
 }

@@ -16,6 +16,8 @@ import {TaskService} from '../../../shared/service/task.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {MedInstInvestigatorsDialogComponent} from '../dialog/med-inst-investigators-dialog/med-inst-investigators-dialog.component';
 import {ActiveSubstanceDialogComponent} from '../../../dialog/active-substance-dialog/active-substance-dialog.component';
+import {AddExpertComponent} from "../../../dialog/add-expert/add-expert.component";
+import {AddCtExpertComponent} from "../dialog/add-ct-expert/add-ct-expert.component";
 
 @Component({
     selector: 'app-a-analiza',
@@ -30,6 +32,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
     docTypes: any[];
 
     phaseList: any[] = [];
+    reqReqInitData: any;
 
     //Treatments
     treatmentId: number;
@@ -97,6 +100,8 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
     protected measureUnitsPlacebo: any[] = [];
 
+    expertList: any[] = [];
+
     constructor(private fb: FormBuilder,
                 public dialog: MatDialog,
                 private activatedRoute: ActivatedRoute,
@@ -126,6 +131,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             'initiator': [null],
             'assignedUser': [null],
             'outputDocuments': [],
+            'ddIncluded': [],
             'clinicalTrails': this.fb.group({
                 'id': [''],
                 'startDateInternational': [''],
@@ -272,6 +278,8 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                     data.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
 
                     this.analyzeClinicalTrailForm.get('requestHistories').setValue(data.requestHistories);
+                    this.analyzeClinicalTrailForm.get('ddIncluded').setValue(data.ddIncluded );
+
                     this.analyzeClinicalTrailForm.get('clinicalTrails').setValue(data.clinicalTrails);
 
                     this.analyzeClinicalTrailForm.get('clinicalTrails.treatment').setValue(
@@ -310,6 +318,10 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                     this.mediacalInstitutionsList = data.clinicalTrails.medicalInstitutions;
                     this.outDocuments = data.outputDocuments;
 
+                    this.expertList = data.expertList;
+                    console.log('data', data);
+                    // console.log('this.analyzeClinicalTrailForm', this.analyzeClinicalTrailForm.value);
+
                     this.loadInvestigatorsList();
                     this.loadMedicalInstitutionsList();
                 },
@@ -333,12 +345,6 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
     }
 
     addMedicalInstitution() {
-        // this.mediacalInstitutionsList.push(this.addMediacalInstitutionForm.get('medicalInstitution').value);
-        // let intdexToDelete = this.allMediacalInstitutionsList.indexOf(this.addMediacalInstitutionForm.get('medicalInstitution').value);
-        // this.allMediacalInstitutionsList.splice(intdexToDelete, 1);
-        // this.allMediacalInstitutionsList = this.allMediacalInstitutionsList.splice(0);
-        // this.addMediacalInstitutionForm.get('medicalInstitution').setValue('');
-
         const dialogConfig2 = new MatDialogConfig();
 
         dialogConfig2.disableClose = false;
@@ -478,7 +484,9 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                 console.log('this.initialData.', this.initialData);
 
                 this.initialData.outputDocuments.forEach((item, index) => {
-                    if (item === doc) { this.initialData.outputDocuments.splice(index, 1); }
+                    if (item === doc) {
+                        this.initialData.outputDocuments.splice(index, 1);
+                    }
                 });
 
                 this.subscriptions.push(this.requestService.saveClinicalTrailRequest(this.initialData).subscribe(data => {
@@ -525,6 +533,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         formModel.clinicalTrails.medicalInstitutions = this.mediacalInstitutionsList;
 
         formModel.assignedUser = this.authService.getUserName();
+        formModel.expertList = this.expertList;
         console.log('Save data', formModel);
         this.subscriptions.push(
             this.requestService.saveClinicalTrailRequest(formModel).subscribe(data => {
@@ -565,6 +574,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
         formModel.currentStep = 'AP';
         formModel.assignedUser = this.authService.getUserName();
+        // formModel.expertList = this.expertList;
         this.subscriptions.push(
             this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
                 this.router.navigate(['/dashboard/module/clinic-studies/approval/' + data.body]);
@@ -663,7 +673,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                     activeSubstance: result.activeSubstance,
                     quantity: result.activeSubstanceQuantity,
                     unitsOfMeasurement: result.activeSubstanceUnit,
-                    manufacture: result.manufactureSA
+                    manufacture: result.manufactures[0].manufacture
                 });
             }
         });
@@ -688,7 +698,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                     activeSubstance: result.activeSubstance,
                     quantity: result.activeSubstanceQuantity,
                     unitsOfMeasurement: result.activeSubstanceUnit,
-                    manufacture: result.manufactureSA
+                    manufacture: result.manufactures[0].manufacture
                 };
             }
         });
@@ -768,6 +778,31 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                 this.refProdActiveSubstances.splice(index, 1);
             }
         });
+    }
+
+    addExpert() {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.width = '600px';
+        dialogConfig2.height = '350px';
+
+        let dialogRef = this.dialog.open(AddCtExpertComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                    console.log('result', result);
+                    this.expertList.push(result);
+                }
+            }
+        );
+    }
+
+    removeExpert(index: number) {
+        this.expertList.splice(index, 1);
     }
 
     ngOnDestroy(): void {

@@ -11,27 +11,20 @@ import {DrugSubstanceTypesService} from '../../../shared/service/drugs/drugsubst
 import {MedicamentService} from '../../../shared/service/medicament.service';
 import {DrugAuthorizationDetailsDialogComponent} from '../../../dialog/drug-authorization-details-dialog/drug-authorization-details-dialog.component';
 
-
 @Component({
     selector: 'cpcadtask', templateUrl: './cpcadtask.component.html', styleUrls: ['./cpcadtask.component.css']
 })
 export class CPCADTaskComponent implements OnInit, AfterViewInit, OnDestroy {
     taskForm: FormGroup;
-    steps: any[];
     drugSubstanceTypes: any[];
 
-    displayedColumns: any[] = ['protocolNr', 'protocolDate', 'requestNumber', 'companyName', 'drugSubstanceTypeDescription', 'medicamentCommercialName',
-        'medicamentCode'];
+    displayedColumns: any[] = ['protocolNr', 'protocolDate', 'requestNumber', 'companyName', 'drugSubstanceTypeDescription', 'substanceName'];
     dataSource = new MatTableDataSource<any>();
     row: any;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
-    medicamente: Observable<any[]>;
-    medInputs = new Subject<string>();
     medLoading = false;
     selectedMedicament: any;
-    medicamentNotSelected: boolean;
-    medicamentExistInTable: boolean;
     companies: Observable<any[]>;
     filteredOptions: Observable<any[]>;
     disabled: boolean;
@@ -45,7 +38,7 @@ export class CPCADTaskComponent implements OnInit, AfterViewInit, OnDestroy {
         this.taskForm = fb.group({
             'id': [], 'protocolNr': [null, {validators: Validators.required}], 'protocolDate': [null], 'drugSubstanceTypesId': [null], 'requestNumber': [null],
             'companyName': [null], 'drugSubstanceTypeDescription': [null], 'company': [], 'companyId': [null], 'selectedMedicament': [null], 'medicamentId': [null],
-            'medicamentCommercialName': [null], 'medicamentCode': [null], 'precursor': [{value: false, disabled: this.disabled}],
+            'substanceName': [null], 'precursor': [{value: false, disabled: this.disabled}],
             'psihotrop': [{value: false, disabled: this.disabled}], 'stupefiant': [{value: false, disabled: this.disabled}]
         });
     }
@@ -60,23 +53,7 @@ export class CPCADTaskComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.getDrugSubstanceTypes();
 
-        this.selectMedicaments();
-
         this.getAllCompanies();
-    }
-
-    selectMedicaments() {
-
-        this.medicamente = this.medInputs.pipe(filter((result: string) => {
-            if (result && result.length > 2) {
-                return true;
-            }
-        }), debounceTime(400), distinctUntilChanged(), tap((val: string) => {
-            this.medLoading = true;
-
-        }), flatMap(term =>
-
-            this.medicamentService.getMedicamentNamesAndCodeList(term).pipe(tap(() => this.medLoading = false))));
     }
 
     ngOnDestroy(): void {

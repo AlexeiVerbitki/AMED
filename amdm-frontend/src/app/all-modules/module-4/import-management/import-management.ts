@@ -894,21 +894,11 @@ export class ImportManagement implements OnInit {
 
         this.formSubmitted = true;
         let modelToSubmit: any = {};
-        modelToSubmit = this.importData;
-        this.loadingService.show();
-
         // modelToSubmit = this.importData;
-        // modelToSubmit.endDate = new Date();
-        // modelToSubmit.importAuthorizationEntity.authorized = aprrovedOrNot;
-        // modelToSubmit.currentStep = 'F';
-
+        this.loadingService.show();
 
         // modelToSubmit.importAuthorizationEntity.authorizationsNumber = this.importData.importAuthorizationEntity.id + '/' + new Date().getFullYear() + '-AM';
 
-        // modelToSubmit.data = new Date();
-        // modelToSubmit.quantity = this.dialogResult[1]
-        // modelToSubmit.price = this.dialogResult[2]
-        // modelToSubmit.summ = this.dialogResult[3]
         modelToSubmit.requestHistories = [];
 
         // this.invoice.invoiceDetailsEntity = this.invoiceDetails;
@@ -921,10 +911,6 @@ export class ImportManagement implements OnInit {
          invoiceDetails.price = this.dialogResult.importAuthorizationEntity.unitOfImportTable.price;
          invoiceDetails.summ  = this.dialogResult.importAuthorizationEntity.unitOfImportTable.summ;
          // invoiceDetails.medicament  = this.dialogResult.importAuthorizationEntity.unitOfImportTable.medicament;
-
-        // invoiceDetails.quantity = 5;
-        // invoiceDetails.price = 6;
-        // invoiceDetails.summ = 7;
 
         invoiceDetailsEntity.push(invoiceDetails)
          // this.invoice.invoiceDetailsEntity = invoiceDetailsEntity;

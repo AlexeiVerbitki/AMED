@@ -39,7 +39,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
-        this.dataSource.paginator._intl.itemsPerPageLabel = 'Prorcese pe pagina: ';
+        this.dataSource.paginator._intl.itemsPerPageLabel = 'Procese pe pagina: ';
         this.dataSource.sort = this.sort;
     }
 

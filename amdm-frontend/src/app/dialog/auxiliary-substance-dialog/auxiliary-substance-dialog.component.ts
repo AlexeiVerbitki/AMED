@@ -15,7 +15,7 @@ export class AuxiliarySubstanceDialogComponent implements OnInit {
     aForm: FormGroup;
     auxSubstances: any[];
     formSubmitted: boolean;
-
+style
     constructor(private administrationService: AdministrationService,
                 private fb: FormBuilder,
                 public dialogRef: MatDialogRef<AuxiliarySubstanceDialogComponent>,

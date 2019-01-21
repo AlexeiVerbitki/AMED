@@ -15,7 +15,7 @@ export class SelectIssueDateDialogComponent implements OnInit {
 
     maxDate = new Date();
     aForm: FormGroup;
-    formSubmitted = false;
+    formSubmitted: boolean = false;
     @ViewChild('incarcaDoc')
     incarcaDocVariable: ElementRef;
     isExtensionInvalid: boolean;
@@ -80,7 +80,33 @@ export class SelectIssueDateDialogComponent implements OnInit {
                 }
                 )
             );
-        } else {
+        } else if (this.dataDialog.type == 'DD') {
+            this.subscriptions.push(this.documentService.addDD(this.dataDialog.document, eventHtml.srcElement.files[0]).subscribe(event => {
+                    if (event instanceof HttpResponse) {
+                        this.aForm.get('response').setValue(true);
+                        this.dialogRef.close(this.aForm.value);
+                    }
+                },
+                error => {
+                    console.log(error);
+                }
+                )
+            );
+        } else if (this.dataDialog.type == 'DDC') {
+            console.log("this.dataDialog", this.dataDialog);
+            this.subscriptions.push(this.documentService.addDDC(this.dataDialog.document, eventHtml.srcElement.files[0]).subscribe(event => {
+                    if (event instanceof HttpResponse) {
+                        this.aForm.get('response').setValue(true);
+                        this.dialogRef.close(this.aForm.value);
+                    }
+                },
+                error => {
+                    console.log(error);
+                }
+                )
+            );
+        }
+        else {
             this.subscriptions.push(this.documentService.addOA(this.dataDialog.document, eventHtml.srcElement.files[0]).subscribe(event => {
                     if (event instanceof HttpResponse) {
                         this.aForm.get('response').setValue(true);

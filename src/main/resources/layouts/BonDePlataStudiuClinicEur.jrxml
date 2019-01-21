@@ -11,35 +11,68 @@
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Dataset1" uuid="437b67f3-979d-4add-a29f-65e0f1405e4d">
+		<parameter name="bonDePlataStudiuClinicDataset" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="servicesName" class="java.lang.String"/>
+		<field name="quantety" class="java.lang.String"/>
+		<field name="sum" class="java.lang.Double"/>
+		<field name="totalSum" class="java.lang.Double"/>
+		<variable name="finalSum" class="java.lang.Double" calculation="Sum">
+			<variableExpression><![CDATA[$F{totalSum}]]></variableExpression>
+		</variable>
+	</subDataset>
 	<parameter name="nr" class="java.lang.String"/>
 	<parameter name="date" class="java.lang.String"/>
 	<parameter name="genDir" class="java.lang.String"/>
-	<parameter name="companyMail" class="java.lang.String"/>
-	<parameter name="companyFax" class="java.lang.String"/>
-	<parameter name="companyCurrentAccount" class="java.lang.String"/>
-	<parameter name="companyIban" class="java.lang.String"/>
-	<parameter name="companyBankCode" class="java.lang.String"/>
-	<parameter name="companyVat" class="java.lang.String"/>
-	<parameter name="companyBank" class="java.lang.String"/>
-	<parameter name="companyFiscalCode" class="java.lang.String"/>
 	<parameter name="companyName" class="java.lang.String"/>
 	<parameter name="companyAddress" class="java.lang.String"/>
 	<parameter name="clinicStudyNr" class="java.lang.String"/>
-	<parameter name="invoiceNr" class="java.lang.String"/>
-	<parameter name="invoiceDate" class="java.lang.String"/>
 	<parameter name="beneficiary" class="java.lang.String"/>
 	<parameter name="ibanCode" class="java.lang.String"/>
-	<parameter name="bank" class="java.lang.String"/>
+	<parameter name="bankAccount" class="java.lang.String"/>
 	<parameter name="intermediaryBank" class="java.lang.String"/>
 	<parameter name="account" class="java.lang.String"/>
 	<parameter name="swiftCode" class="java.lang.String"/>
-	<parameter name="clinicStudyName" class="java.lang.String"/>
+	<parameter name="servicesName" class="java.lang.String"/>
 	<parameter name="sumToPayEUR" class="java.lang.String"/>
 	<parameter name="phases" class="java.lang.String"/>
 	<parameter name="tariffPosition" class="java.lang.String"/>
 	<parameter name="clinicStudyDescription" class="java.lang.String"/>
 	<parameter name="exchangeDate" class="java.lang.String"/>
 	<parameter name="1euroToMdl" class="java.lang.Double"/>
+	<parameter name="servicesTableDataset" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="bankCode" class="java.lang.String"/>
+	<parameter name="fiscalCode" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -56,7 +89,7 @@
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="217" splitType="Stretch">
+		<band height="70" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="0" y="10" width="320" height="20" uuid="b8809fc8-2a40-4a5a-988b-18213e70bf00"/>
 				<textElement textAlignment="Left">
@@ -65,63 +98,14 @@
 				<textFieldExpression><![CDATA["Nr. " + $P{nr} + " din " +$P{date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="310" y="40" width="241" height="30" uuid="176f4ec3-7149-477d-b9d7-e7073049bf45"/>
+				<reportElement x="280" y="40" width="271" height="30" uuid="176f4ec3-7149-477d-b9d7-e7073049bf45"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{companyName} + " " + $P{companyAddress}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="310" y="70" width="241" height="20" uuid="520faf38-cb37-4744-9773-964db268514c"/>
-				<textElement textAlignment="Right">
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Cod Fiscal " + $P{companyFiscalCode}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="310" y="90" width="241" height="20" uuid="b0aa0909-e95a-420b-a70b-7e0f4a08d3ef"/>
-				<textElement textAlignment="Right">
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA["TVA  " + $P{companyVat}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="310" y="130" width="241" height="20" uuid="8a62f626-b46f-4ef6-9a12-925e25c96c9a"/>
-				<textElement textAlignment="Right">
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Codul  bancii " + $P{companyBankCode}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="310" y="110" width="241" height="20" uuid="aa3c3650-d967-485b-a714-127b439b9897"/>
-				<textElement textAlignment="Right">
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{companyBank}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="310" y="150" width="241" height="20" uuid="a02eeeb0-9e36-420d-9315-f60e6863eaa4"/>
-				<textElement textAlignment="Right">
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA["IBAN: " + $P{companyIban}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="310" y="170" width="241" height="20" uuid="88f3bc17-ffe8-410e-bf3d-437a443deacd"/>
-				<textElement textAlignment="Right">
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Fax: " + $P{companyFax}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="310" y="190" width="241" height="20" uuid="510ee05b-5e7e-472e-890b-db1973cc2a97"/>
-				<textElement textAlignment="Right">
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA["e-mail: " + $P{companyMail}]]></textFieldExpression>
-			</textField>
 		</band>
-		<band height="92">
+		<band height="80">
 			<staticText>
 				<reportElement x="3" y="10" width="548" height="30" uuid="58cf2367-d116-4ee7-9eae-4a6a9d7e4c1b"/>
 				<textElement>
@@ -137,24 +121,129 @@
 				<textFieldExpression><![CDATA["•	Aprobarea studiilor clinice. Faza " + $P{phases} + " -pentru protocolul studiului clinic " + $P{clinicStudyNr} + " " + $P{clinicStudyDescription}]]></textFieldExpression>
 			</textField>
 		</band>
-		<band height="49">
-			<line>
-				<reportElement x="2" y="3" width="547" height="1" uuid="f13c801e-67ac-421c-8e85-9d2eae350c72"/>
-			</line>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="2" y="3" width="410" height="40" uuid="a5b04707-ec41-460c-98fe-c5689db30468"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{clinicStudyName}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="412" y="3" width="140" height="40" uuid="e7310cc8-24d1-4114-bce7-39753a4651af"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{sumToPayEUR} + " lei MDL"]]></textFieldExpression>
-			</textField>
+		<band height="102">
+			<componentElement>
+				<reportElement x="0" y="12" width="555" height="90" uuid="871acccc-5dd1-4f40-a00d-61e29702770d">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.components.autoresize.next" value="true"/>
+					<property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
+					<datasetRun subDataset="Dataset1" uuid="95ade974-0a6f-467a-a9cc-4fc65e03717a">
+						<datasetParameter name="bonDePlataStudiuClinicDataset">
+							<datasetParameterExpression><![CDATA[$P{servicesTableDataset}]]></datasetParameterExpression>
+						</datasetParameter>
+						<dataSourceExpression><![CDATA[$P{servicesTableDataset}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="190" uuid="9fcf4d63-3bd8-4e0f-ab6b-3650b270a97e">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:tableFooter style="Table_TH" height="30" rowSpan="1"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="190" height="30" uuid="f9eb7437-6bb8-46a5-ad29-3f51ab058ad2"/>
+								<textElement textAlignment="Center" markup="none">
+									<font fontName="DejaVu Sans" size="11" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Denumirea serviciului]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="190" height="30" uuid="fdb2a8de-6ec9-4c92-b6d9-4ed823c793c5"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{servicesName}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="a88aeba9-c092-4d88-99ad-87cfd0d17f53">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:tableFooter style="Table_TH" height="30" rowSpan="1"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="84b84947-48d4-4d24-8b87-748b544cad7c"/>
+								<textElement textAlignment="Center" markup="none">
+									<font fontName="DejaVu Sans" size="11" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Cantitatea]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="90" height="30" uuid="dec72bf4-d5f6-483e-a5da-aa6d3bc17b64"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{quantety}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="138" uuid="6d3e89e3-6daa-43c7-bb90-874c4996918b">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<jr:tableFooter style="Table_TH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="138" height="30" uuid="6ea27eb3-4cad-4637-8066-1e94b19115fd"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" size="11" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</jr:tableFooter>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="138" height="30" uuid="6f598182-790c-40e0-9683-fc5506314cd9"/>
+								<textElement textAlignment="Center" markup="none">
+									<font fontName="DejaVu Sans" size="11" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Suma]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="138" height="30" uuid="aea58142-5b70-444e-88a9-4c95defc07c6"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{sum}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="137" uuid="d8c70976-9118-425c-9f2e-9152b5923495">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+						<jr:tableFooter style="Table_TH" height="30" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="137" height="30" uuid="aab67a57-de63-4096-9c68-49bb4bd2f8f8"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" size="11" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{finalSum}]]></textFieldExpression>
+							</textField>
+						</jr:tableFooter>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="137" height="30" uuid="97d33b55-16d2-4a68-b2dc-dd3443548141"/>
+								<textElement textAlignment="Center" markup="none">
+									<font fontName="DejaVu Sans" size="11" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Suma totală MDL]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="137" height="30" uuid="eaf68bec-154c-4177-a5f9-011d5861d389"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{totalSum}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
 		</band>
 		<band height="160">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
@@ -190,17 +279,14 @@ Contul este valabil timp de 30 zile de la data emiterii!
 			<break>
 				<reportElement x="0" y="150" width="95" height="1" uuid="f19a8a16-b883-4755-bd1a-2c54d132b82b"/>
 			</break>
-			<line>
-				<reportElement x="0" y="6" width="547" height="1" uuid="0061a632-83bd-4282-926f-f658956a754f"/>
-			</line>
 		</band>
-		<band height="228">
+		<band height="70">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="0" y="10" width="551" height="20" uuid="accb2c64-af8d-4dbc-b0ca-c2c15ffd381b"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["CONT DE PLATĂ Nr. " + $P{invoiceNr} + " din " +$P{invoiceDate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["CONT DE PLATĂ Nr. " + $P{nr} + " din " + $P{date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="60" y="30" width="491" height="20" uuid="159a5ae4-b570-4fd2-b3b6-35fe986a334a"/>
@@ -224,142 +310,24 @@ Contul este valabil timp de 30 zile de la data emiterii!
 				</textElement>
 				<text><![CDATA[Adresa: ]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="1" y="70" width="241" height="20" uuid="9f8c1930-859c-42b6-8d8e-ac49d20e289e"/>
-				<textElement textAlignment="Left">
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Cod Fiscal " + $P{companyFiscalCode}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="1" y="110" width="241" height="20" uuid="ba5e6dcc-4ca1-44fc-9e8f-5106cce0234b"/>
-				<textElement textAlignment="Left">
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{companyBank}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="1" y="90" width="241" height="20" uuid="4685f6e5-d9fd-41b1-8902-6f17676154b8"/>
-				<textElement textAlignment="Left">
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA["TVA  " + $P{companyVat}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="1" y="130" width="241" height="20" uuid="2b336a18-c4e1-48bd-b45f-24057817bfe8"/>
-				<textElement textAlignment="Left">
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Codul  bancii " + $P{companyBankCode}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="1" y="150" width="241" height="20" uuid="be61cb08-97d1-4f12-bbb8-5e10dec1298a"/>
-				<textElement textAlignment="Left">
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA["IBAN: " + $P{companyIban}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="1" y="170" width="241" height="20" uuid="72f86142-3e11-4fa2-92c2-3e0371d8d40a"/>
-				<textElement textAlignment="Left">
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Fax: " + $P{companyFax}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="1" y="190" width="241" height="20" uuid="c56177f3-6a11-44ef-80cd-d95bfbb4efa1"/>
-				<textElement textAlignment="Left">
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA["e-mail: " + $P{companyMail}]]></textFieldExpression>
-			</textField>
-			<line>
-				<reportElement x="1" y="220" width="547" height="1" uuid="893b1b79-2ed7-4e88-876d-14fb9ab13a8c"/>
-			</line>
 		</band>
-		<band height="290">
-			<staticText>
-				<reportElement positionType="Float" x="0" y="0" width="80" height="20" uuid="e3bb247b-a65b-4212-aee7-1d08807b7387"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Beneficiary:]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="80" y="0" width="470" height="20" uuid="dad91ecf-0bb8-4f59-b08f-118ec8501f20"/>
-				<textFieldExpression><![CDATA[$P{beneficiary}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement positionType="Float" x="0" y="20" width="80" height="20" uuid="30d36d84-3478-4edd-9f58-ee5ed9934b26"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Code IBAN: ]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="80" y="20" width="470" height="20" uuid="910a6855-43e5-4f25-b1c0-a101efb8861d"/>
-				<textFieldExpression><![CDATA[$P{ibanCode}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement positionType="Float" x="0" y="40" width="120" height="20" uuid="47febe01-f9de-4bec-82bc-ab95835fe959"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Beneficiary Bank: ]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="120" y="40" width="430" height="20" uuid="0aaee9b3-79ad-4ca6-9b24-ef32b3c498a9"/>
-				<textFieldExpression><![CDATA[$P{bank}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement positionType="Float" x="0" y="60" width="130" height="20" uuid="f6923b98-de27-45ce-8e3c-013b33b5d652"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Intermediary bank: ]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="130" y="60" width="418" height="20" uuid="782cde78-22e4-42fb-93d2-1215ea5152ea"/>
-				<textFieldExpression><![CDATA[$P{intermediaryBank}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement positionType="Float" x="0" y="80" width="59" height="20" uuid="12195f48-150b-4f30-8247-da51dc7cfe9e"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Account: ]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="60" y="80" width="487" height="20" uuid="9a5ddc85-1ba9-4e09-a4cb-4e205dc62fa0"/>
-				<textFieldExpression><![CDATA[$P{account}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement positionType="Float" x="0" y="100" width="90" height="20" uuid="2bab6951-a8b8-448d-90f3-96f18bf79f38"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[SWIFT Code: ]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="90" y="100" width="456" height="20" uuid="5cca641e-095d-4ed2-86fa-3537471844ff"/>
-				<textFieldExpression><![CDATA[$P{swiftCode}]]></textFieldExpression>
-			</textField>
+		<band height="343">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="140" width="548" height="19" uuid="0e3f37ed-f89b-4d52-a405-85ccbe9900a5"/>
+				<reportElement x="0" y="171" width="548" height="19" uuid="0e3f37ed-f89b-4d52-a405-85ccbe9900a5"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Plata pentru aprobarea studiului clinic " +$P{sumToPayEUR} + " lei MDL"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="179" width="551" height="20" uuid="3b7ff6e0-4055-4621-a0a9-1c0aa27a4068"/>
+				<reportElement x="0" y="219" width="551" height="20" uuid="3b7ff6e0-4055-4621-a0a9-1c0aa27a4068"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[Contul este valabil timp de 30 zile de la data emiterii!]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="3" y="230" width="227" height="59" uuid="46c661f4-b8d6-4b97-bd03-fe0f5312aa35"/>
+				<reportElement x="3" y="270" width="227" height="59" uuid="46c661f4-b8d6-4b97-bd03-fe0f5312aa35"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
@@ -369,11 +337,80 @@ Contul este valabil timp de 30 zile de la data emiterii!
 ]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="170" width="547" height="1" uuid="8217684f-b6c9-45de-a712-056191c7a208"/>
+				<reportElement x="0" y="200" width="555" height="1" uuid="8217684f-b6c9-45de-a712-056191c7a208"/>
 			</line>
 			<line>
-				<reportElement x="2" y="130" width="547" height="1" uuid="7876c063-975e-47e6-8963-5486f0960029"/>
+				<reportElement x="0" y="160" width="555" height="1" uuid="7876c063-975e-47e6-8963-5486f0960029"/>
 			</line>
+			<line>
+				<reportElement x="0" y="10" width="555" height="1" uuid="08ca1e20-ca80-45cf-bc8b-b8f615a5e3a9"/>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="15" width="80" height="20" uuid="cc14609b-af98-4a9b-bbdd-d7973bdee660"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Beneficiar:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="80" y="15" width="470" height="20" uuid="a58fa920-2b00-4f63-bee0-ea0e5e9eae2f"/>
+				<textFieldExpression><![CDATA[$P{beneficiary}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="35" width="80" height="20" uuid="c273baf6-deaf-45a6-b418-968d2174a502"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Codul fiscal: ]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="80" y="35" width="470" height="20" uuid="ffd23ad5-e7ef-4216-9d47-712827720792"/>
+				<textFieldExpression><![CDATA[$P{fiscalCode}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="1" y="55" width="80" height="20" uuid="3bc5456e-252f-4520-a2ff-21a3aaf33b6d"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Contul IBAN: ]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="81" y="55" width="470" height="20" uuid="7c05804e-5986-4351-a08f-4c2d9d9d23e4"/>
+				<textFieldExpression><![CDATA[$P{ibanCode}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="78" width="94" height="20" uuid="62ccd96d-1910-464b-b612-750f595ea499"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Contul bancar: ]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="94" y="78" width="456" height="20" uuid="cf1f3f91-9984-474f-aad4-cd50eaba0cec"/>
+				<textFieldExpression><![CDATA[$P{bankAccount}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="98" width="120" height="20" uuid="ba4aebaf-1d83-4d3f-b4df-bef9ad66b7ae"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Banca beneficiară:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="120" y="98" width="431" height="20" uuid="80584580-1dba-4ee4-941a-ae0f9b99e22d"/>
+				<textFieldExpression><![CDATA[$P{intermediaryBank}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="121" width="90" height="20" uuid="d96f5c9c-b4c6-4ca4-b357-0d278c1e6911"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Codul băncii:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="90" y="121" width="461" height="20" uuid="5fd5a0b3-0779-4e43-81ca-249d279f24bc"/>
+				<textFieldExpression><![CDATA[$P{bankCode}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<pageFooter>

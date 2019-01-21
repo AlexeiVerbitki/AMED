@@ -28,30 +28,6 @@
 
                 </div>
             </div>
-            <!--<div class="col-md-4">-->
-                <!--<div class="md-form-modified">-->
-                    <!--<ng-select class="custom" [items]="medicamente | async"-->
-                               <!--bindLabel="name"-->
-                               <!--placeholder="Medicamente"-->
-                               <!--formControlName="selectedMedicament"-->
-                               <!--[required]="false"-->
-                               <!--[typeahead]="medInputs"-->
-                               <!--[loading]="medLoading">-->
-                        <!--<ng-template ng-option-tmp let-item="item">-->
-                            <!--{{item.name}} <br/>-->
-                            <!--<small>{{item.code}}</small>-->
-                        <!--</ng-template>-->
-                    <!--</ng-select>-->
-                    <!--<div *ngIf="medicamentNotSelected">-->
-                        <!--<small class="text-muted"><strong class="text-danger">Medicamentul trebuie-->
-                            <!--selectat</strong></small>-->
-                    <!--</div>-->
-                    <!--<div *ngIf="medicamentExistInTable">-->
-                        <!--<small class="text-muted"><strong class="text-danger">Medicamentul este deja adaugat-->
-                        <!--</strong></small>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
             <div class="col-4">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
@@ -133,16 +109,11 @@
                     <td mat-cell *matCellDef="let element"> {{element.drugSubstanceTypeDescription }} </td>
                 </ng-container>
 
-                <ng-container matColumnDef="medicamentCommercialName">
+                <ng-container matColumnDef="substanceName">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Denumire
-                        medicament
+                        substanta
                     </th>
-                    <td mat-cell *matCellDef="let element"> {{element.medicamentCommercialName }} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="medicamentCode">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="black white-text"> Cod medicament</th>
-                    <td mat-cell *matCellDef="let element"> {{element.medicamentCode }} </td>
+                    <td mat-cell *matCellDef="let element"> {{element.substanceName }} </td>
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>

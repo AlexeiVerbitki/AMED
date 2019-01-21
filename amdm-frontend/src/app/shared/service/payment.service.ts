@@ -23,4 +23,8 @@ export class PaymentService {
     deleteCtPayOrder(model: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/clinical-trails-payment/delete-payment-order', model, {observe: 'response'});
     }
+
+    generatePaymentNote(model: any): Observable<any>{
+        return this.http.post('/api/clinical-trails-payment/generate-payment-order', model, { responseType: 'blob'});
+    }
 }

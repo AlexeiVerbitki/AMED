@@ -22,12 +22,15 @@ public class MedicamentActiveSubstancesEntity
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "active_substance_id")
     private Set<MedicamentActiveSubstanceManufacturesEntity> manufactures = new HashSet<>();
+    @Basic@Column(name = "composition_number")
+    private Integer compositionNumber;
 
     public void assign(MedicamentActiveSubstancesHistoryEntity entity)
     {
         this.activeSubstance = entity.getActiveSubstance();
         this.quantity = entity.getQuantityTo();
         this.unitsOfMeasurement = entity.getUnitsOfMeasurementTo();
+        this.compositionNumber =entity.getCompositionNumberTo();
         this.manufactures.clear();
         for (MedicamentActiveSubstanceManufactureHistoryEntity manufactureHistoryEntity : entity.getManufactures())
         {

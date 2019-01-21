@@ -1,0 +1,55 @@
+<div class="mat-dialog-content">
+	<form [formGroup]='eForm'>
+		<h3 *ngIf="type!='edit'" class="text-center my-3 font-weight-bold">Adaugare expert</h3>
+		<h3 *ngIf="type=='edit'" class="text-center my-3 font-weight-bold">Editare expert</h3>
+		<div class="row">
+			<div class="col-md-4">
+				<div class="md-form">
+					<mat-checkbox #intern [checked]="eForm.get('intern').value" (change)="checkIntern(intern)">Expert intern</mat-checkbox>
+				</div>
+			</div>
+			<div *ngIf="eForm.get('intern').value" class="col-md-8">
+				<div class="md-form-modified">
+					<ng-select id="expert" name="expert" [items]="experts"
+					           bindLabel="name"
+					           placeholder="Expert"
+					           formControlName="expert">
+					</ng-select>
+					<div *ngIf="formSubmitted && eForm.get('expert').invalid">
+						<small class="text-muted"><strong class="text-danger">Expertul trebuie selectat</strong></small>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="!eForm.get('intern').value" class="col-md-8">
+				<div class="md-form">
+					<input id="expertName" mdbInputDirective type="text" formControlName="expertName" class="form-control">
+					<label for="expertName">Expert</label>
+					<div *ngIf="formSubmitted && eForm.get('expertName').invalid">
+						<small class="text-muted"><strong class="text-danger">Expertul trebuie selectat</strong></small>
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form">
+					<textarea style="height: 150px" type="text" id="content" class="md-textarea form-control" mdbInputDirective formControlName="decision"></textarea>
+					<label for="content">Decizia</label>
+				</div>
+				<div *ngIf="formSubmitted && eForm.get('decision').invalid">
+					<small class="text-muted"><strong class="text-danger">Decizia trebuie introdusa</strong></small>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="text-center">
+	<div mat-dialog-actions>
+		<div class="w-100">
+			<button class="btn btn-danger btn-sm waves-light" (click)="cancel()">Anulare</button>
+			<button *ngIf="type!='edit'" class="btn btn-dark-green-color btn-sm waves-light" (click)="add()">Adaugare</button>
+			<button *ngIf="type=='edit'" class="btn btn-dark-green-color btn-sm waves-light" (click)="add()">Salvare</button>
+		</div>
+	</div>
+</div>
