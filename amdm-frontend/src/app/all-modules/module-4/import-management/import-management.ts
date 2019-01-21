@@ -307,7 +307,7 @@ export class ImportManagement implements OnInit {
 
 
                     this.evaluateImportForm.get('id').setValue(data.id);
-                    // this.evaluateImportForm.get('requestNumber').setValue(data.requestNumber);
+                    this.evaluateImportForm.get('requestNumber').setValue(data.requestNumber);
                     this.evaluateImportForm.get('startDate').setValue(new Date(data.startDate));
                     this.evaluateImportForm.get('initiator').setValue(data.initiator);
                     this.evaluateImportForm.get('assignedUser').setValue(data.assignedUser);
@@ -378,7 +378,7 @@ export class ImportManagement implements OnInit {
         this.loadUnitsOfMeasurement();
         this.loadMedicaments();
         this.loadInternationalMedicamentName();
-        this.generateDocNr();
+        // this.generateDocNr();
 
         console.log('importTypeForms.value', this.importTypeForms.value);
     }
@@ -540,16 +540,16 @@ export class ImportManagement implements OnInit {
         }
     }
 
-    generateDocNr() {
-        this.subscriptions.push(
-            this.administrationService.generateDocNr().subscribe(data => {
-                    this.requestNumber = data;
-                    this.evaluateImportForm.get('requestNumber').setValue(this.requestNumber);
-                },
-                error => console.log(error)
-            )
-        );
-    }
+    // generateDocNr() {
+    //     this.subscriptions.push(
+    //         this.administrationService.generateDocNr().subscribe(data => {
+    //                 this.requestNumber = data;
+    //                 this.evaluateImportForm.get('requestNumber').setValue(this.requestNumber);
+    //             },
+    //             error => console.log(error)
+    //         )
+    //     );
+    // }
 
     get importTypeForms() {
         return this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable') as FormArray;
@@ -645,7 +645,7 @@ export class ImportManagement implements OnInit {
 
         dialogRef.afterClosed().subscribe(dialogResult => {
             this.dialogResult = dialogResult;
-            console.log(this.dialogResult);
+            console.log("this.dialogResult:",this.dialogResult);
 
             let invoiceDetails: any = [];
             // invoiceDetails.data = new Date();
@@ -894,6 +894,7 @@ export class ImportManagement implements OnInit {
 
         this.formSubmitted = true;
         let modelToSubmit: any = {};
+        modelToSubmit = this.importData;
         this.loadingService.show();
 
         // modelToSubmit = this.importData;
@@ -915,14 +916,15 @@ export class ImportManagement implements OnInit {
        let invoiceDetailsEntity : any[] =[];
        let invoiceEntity : any ={};
        let invoiceDetails : any = {};
-         // invoiceDetailsEntity.data = new Date();    ;
-         // invoiceDetailsEntity.quantity = this.dialogResult[1]    ;
-         // invoiceDetailsEntity.price = this.dialogResult[2]    ;
-         // invoiceDetailsEntity.summ = this.dialogResult[3]    ;
 
-        invoiceDetails.quantity = 5;
-        invoiceDetails.price = 6;
-        invoiceDetails.summ = 7;
+         invoiceDetails.quantity = this.dialogResult.importAuthorizationEntity.unitOfImportTable.quantity;
+         invoiceDetails.price = this.dialogResult.importAuthorizationEntity.unitOfImportTable.price;
+         invoiceDetails.summ  = this.dialogResult.importAuthorizationEntity.unitOfImportTable.summ;
+         // invoiceDetails.medicament  = this.dialogResult.importAuthorizationEntity.unitOfImportTable.medicament;
+
+        // invoiceDetails.quantity = 5;
+        // invoiceDetails.price = 6;
+        // invoiceDetails.summ = 7;
 
         invoiceDetailsEntity.push(invoiceDetails)
          // this.invoice.invoiceDetailsEntity = invoiceDetailsEntity;
@@ -931,8 +933,8 @@ export class ImportManagement implements OnInit {
         modelToSubmit.invoiceEntity = invoiceEntity;
 
         modelToSubmit.currentStep = "F";
-        modelToSubmit.requestNumber = this.requestNumber;
-        modelToSubmit.startDate = new Date();
+        modelToSubmit.requestNumber = this.importData.requestNumber;
+        modelToSubmit.startDate = this.importData.startDate;
 
         let type : any = {};
         // type.id = "37";

@@ -451,7 +451,7 @@ export class ImportManagementDialog implements OnInit {
 
                     } else {
 
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(val.codeAmed);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(val);
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode);
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(val.name);
                         // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(val.quantity);
