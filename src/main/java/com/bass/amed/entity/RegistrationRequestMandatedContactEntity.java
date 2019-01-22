@@ -32,5 +32,7 @@ public class RegistrationRequestMandatedContactEntity
     @Basic
     @Column(name = "request_mandate_date")
     private Timestamp requestMandateDate;
-
+    @Basic
+    @Column(name = "idnp")
+    private String idnp;
 }

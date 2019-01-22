@@ -3,7 +3,7 @@
     <hr>
     <form [formGroup]='rForm'>
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="md-form">
                     <input id="requestNumber" mdbInputDirective type="text" class="form-control"
                            formControlName="requestNumber" [attr.disabled]="true">
@@ -11,7 +11,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data">
@@ -30,7 +30,7 @@
             <!--</div>-->
             <!--</div>-->
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="md-form-modified">
                     <ng-select [items]="importer | async"
                                bindLabel="name"
@@ -51,6 +51,14 @@
                 <!--<div *ngIf="activeLicenses==null && formSubmitted">-->
                 <!--<small class="text-muted"><strong class="text-danger">Importatorul selectat nu are licente valabile</strong></small>-->
                 <!--</div>-->
+            </div>
+
+            <div class="col-lg-3">
+                <div class="md-form">
+                    <input id="idnp" mdbInputDirective type="text" maxlength="13" class="form-control"
+                           formControlName="idnp" >
+                    <label for="idnp">IDNP solicitantului </label>
+                </div>
             </div>
 
         </div>
@@ -78,11 +86,11 @@
                         <mat-radio-button value="5" id="declaratia">Declarație de import</mat-radio-button>
 
                     </div>
-                    <div class="col-4" *ngIf="importRadioButton == 5">
-                        <input id="authorizationNumber" mdbInputDirective type="text" class="form-control"
-                               formControlName="authorizationNumber">
-                        <label for="authorizationNumber"></label>
-                    </div>
+                    <!--<div class="col-4" *ngIf="importRadioButton == 5">-->
+                        <!--<input id="authorizationNumber" mdbInputDirective type="text" class="form-control"-->
+                               <!--formControlName="authorizationNumber">-->
+                        <!--<label for="authorizationNumber"></label>-->
+                    <!--</div>-->
                 </div>
             </div>
         </mat-radio-group>

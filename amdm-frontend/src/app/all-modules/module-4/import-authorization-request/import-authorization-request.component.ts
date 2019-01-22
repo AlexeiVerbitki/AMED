@@ -73,6 +73,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
             'assignedUser': [null],
             'data': {disabled: true, value: new Date()},
             'importType': [null, Validators.required],
+            'idnp': [null],
             'type':
                 this.fb.group({
                     'id': ['']
@@ -239,6 +240,10 @@ export class ImportAuthorizationRequestComponent implements OnInit {
             formModel.currentStep = 'E';
             formModel.initiator = this.authService.getUserName();
             formModel.assignedUser = this.authService.getUserName();
+            formModel.idnp = null;
+            formModel.registrationRequestMandatedContacts = [{
+            idnp : this.rForm.get('idnp').value
+        }];
 
 
 

@@ -34,7 +34,7 @@
 				</div>
 			</div>
 
-			<div class="col-md-8">
+			<div class="col-md-4">
 				<div class="md-form-modified">
 					<ng-select [items]="companii | async"
 					           bindLabel="name"
@@ -52,6 +52,16 @@
 						<small class="text-muted"><strong class="text-danger">Compania solicitantă trebuie selectată</strong></small>
 					</div>
 				</div>
+			</div>
+
+			<div class="col-lg-4">
+				<div class="md-form">
+					<input id="idnp" mdbInputDirective type="text" maxlength="13" class="form-control" formControlName="idnp">
+					<label for="idnp">IDNP-ul persoanei responsabile</label>
+				</div>
+				<!--<div *ngIf="formSubmitted && rForm.get('folderNumber').invalid">-->
+					<!--<small class="text-muted"><strong class="text-danger">Introduceți IDNP-ul persoanei responsabile</strong></small>-->
+				<!--</div>-->
 			</div>
 		</div>
 		<!--<div class="row align-items-center">-->

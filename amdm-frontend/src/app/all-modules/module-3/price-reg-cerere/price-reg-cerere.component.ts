@@ -14,7 +14,7 @@ import {ErrorHandlerService} from '../../../shared/service/error-handler.service
 import {LoaderService} from '../../../shared/service/loader.service';
 import {TaskService} from '../../../shared/service/task.service';
 import {CanModuleDeactivate} from '../../../shared/auth-guard/can-deactivate-guard.service';
-import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, filter, flatMap, max, tap} from 'rxjs/operators';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {PriceService} from '../../../shared/service/prices.service';
 
@@ -48,6 +48,7 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
         this.rForm = fb.group({
             'data': {disabled: true, value: new Date()},
             'requestNumber': [null],
+            'idnp': [null, Validators.max(13)],
             'id': [null],
             'folderNumber': [null, Validators.required],
             'startDate': [new Date()],
@@ -131,7 +132,8 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
             email : this.rForm.get('email').value,
             requestMandateNr : this.rForm.get('requestMandateNr').value,
             requestMandateDate : this.rForm.get('requestMandateDate').value,
-            id : this.rForm.get('registrationRequestMandatedContactsId').value
+            id : this.rForm.get('registrationRequestMandatedContactsId').value,
+            idnp : this.rForm.get('idnp').value
         }];
 
         this.subscriptions.push(this.priceService.addRegistrationRequestForPrice(modelToSubmit).subscribe(req => {

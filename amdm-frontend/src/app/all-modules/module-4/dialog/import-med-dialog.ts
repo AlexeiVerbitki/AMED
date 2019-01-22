@@ -204,7 +204,7 @@ export class ImportMedDialog implements OnInit {
 
         this.codeAmed;
 
-        if (this.dialogData.medicament !== null) {
+        if (this.dialogData.medicament) {
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(this.dialogData.medicament.code);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(this.dialogData.medicament.customsCode);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(this.dialogData.medicament.name);
@@ -248,7 +248,7 @@ export class ImportMedDialog implements OnInit {
         console.log('this.dialogData.producer.country.description', this.dialogData.producer.country.description);
 
 
-        if (this.importData.currentStep == 'AP') {
+        if (this.importData.currentStep == 'AP' || this.importData.currentStep == 'E') {
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').disable();
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').disable();
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').disable();
