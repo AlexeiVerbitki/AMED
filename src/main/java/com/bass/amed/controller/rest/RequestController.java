@@ -1121,6 +1121,12 @@ public class RequestController
             System.out.println("\n\n\n\n=====================\ngetImportAuthorizationEntity is null\n=====================\n\n\n");
         }
 
+//        requests.setMedicaments(null);
+        LOGGER.debug("MED==============" + requests.getMedicaments());
+        requestRepository.save(requests);
+        //TODO fix the docs
+//        addDDDocument(requests);
+        LOGGER.debug("\n\n\n\n=====================\nImport saved\n=====================\n\n\n");
 
 
 //		List<InvoiceDetailsEntity> list = new ArrayList<>();
@@ -1238,10 +1244,8 @@ public class RequestController
                 /*Create a map Key is the code value is the amount
                  *
                  * if the jey exists add the sum, if id doesn't creaet the key and add the value*/
-                if (entity != null && entity.getApproved() == true)
-                {
-                    if (autorizationImportDataSet2ArrayList.stream().anyMatch(x -> x.getProductCode().equalsIgnoreCase(entity.getCustomsCode().getCode())))
-                    {
+                if (entity != null && entity.getApproved() == true)                {
+                    if (autorizationImportDataSet2ArrayList.stream().anyMatch(x -> x.getProductCode().equalsIgnoreCase(entity.getCustomsCode().getCode())))                    {
                         for (int i = 0; i < autorizationImportDataSet2ArrayList.size(); i++)
                         {
                             if (autorizationImportDataSet2ArrayList.get(i).getProductCode().equals(entity.getCustomsCode().getCode()))
@@ -1361,9 +1365,7 @@ public class RequestController
             parameters.put("importExportSectionDate", (new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
             parameters.put("generalDirectorDate", (new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
             parameters.put("sellerAndAddress",
-                    request.getImportAuthorizationEntity().getSeller().getDescription() + ", " + request.getImportAuthorizationEntity()
-                            .getSeller()
-                            .getAddress());
+                    request.getImportAuthorizationEntity().getSeller().getDescription() + ", " + request.getImportAuthorizationEntity().getSeller().getAddress());
             parameters.put("sellerCountry", request.getImportAuthorizationEntity().getSeller().getCountry().getDescription());
             parameters.put("sellerCountryCode", request.getImportAuthorizationEntity().getSeller().getCountry().getCode());
             parameters.put("transactionType", "Cumparare/Vinzare ferma          11");

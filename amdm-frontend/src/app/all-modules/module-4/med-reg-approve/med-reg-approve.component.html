@@ -252,7 +252,7 @@
                         </div>
                     </div>
 
-                    <div class="col-4">
+                    <div class="col-4" *ngIf="importData.importAuthorizationEntity.medType==1">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
                                 <input matInput [matDatepicker]="picker22" placeholder="Data declaraţiei  vamale"
@@ -313,7 +313,7 @@
                             <td>{{ unitOfImport.producer.description }}</td>
                             <td>{{ unitOfImport.quantity }}</td>
                             <td>{{ unitOfImport.approvedQuantity }}</td>
-                            <td>{{ unitOfImport.currencyCode }}</td>
+                            <td>{{ unitOfImport.price}}</td>
                             <td>{{ unitOfImport.currency.shortDescription}}</td>
                             <td>{{ unitOfImport.summ | number : '1.2-2'}}</td>
                             <!--<td>{{ unitOfImport.producer.address }}, {{ unitOfImport.producer.country.description }}</td>-->
