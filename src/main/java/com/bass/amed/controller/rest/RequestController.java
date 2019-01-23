@@ -1460,13 +1460,16 @@ public class RequestController
     }
 
 	@GetMapping(value = "/load-import-authorization-byAuth")
-	public ResponseEntity<List<ImportAuthorizationEntity>> getAuthorizationByAuth(@RequestParam(value = "id") String id) throws
+	public ResponseEntity<RegistrationRequestsEntity> getAuthorizationByAuth(@RequestParam(value = "id") String id) throws
 	                                                                                                                                          CustomException {
 		List<ImportAuthorizationEntity> regOptional = importAuthRepository.getAuthorizationByAuth(id).orElse(new ArrayList<>());
 //        if (regOptional.isEmpty()) {
 //            throw new CustomException("Inregistrarea de Import Details nu a fost gasita");
 //        }
-		List<ImportAuthorizationEntity> rrE = regOptional;
+		List<ImportAuthorizationEntity> rrI = regOptional;
+		RegistrationRequestsEntity rrE = requestRepository.findRequestsByImportId(
+                rrI.get(0).getId());
+
 
 		return new ResponseEntity<>(rrE, HttpStatus.OK);
 	}

@@ -148,4 +148,7 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
 	@Modifying
 	@Query("UPDATE RegistrationRequestsEntity p SET p.outputDocumentId = :outputDocumentId WHERE p.id in (:ids)")
 	void setOutputDocumentId(@Param("ids") List<Integer> ids, @Param("outputDocumentId") Integer outputDocumentId);
+
+    @Query("SELECT i FROM  RegistrationRequestsEntity i WHERE i.importAuthorizationEntity.id = (:authId)")
+    RegistrationRequestsEntity findRequestsByImportId(@Param("authId") Integer authId);
 }
