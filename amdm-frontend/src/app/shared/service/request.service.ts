@@ -126,6 +126,9 @@ export class RequestService {
     getAuthorizationByAuth(id: string): Observable<any> {
         return this.http.get('/api/load-import-authorization-byAuth', {params: {id: id}});
     }
+    getAuthorizationByAuth(id: string): Observable<any> {
+        return this.http.get('/api/load-import-authorization-byAuth', {params: {id: id}});
+    }
 
     getActiveLicenses(id: string): Observable<any> {
         return this.http.get('/api/load-active-licenses', {params: {id: id}});
