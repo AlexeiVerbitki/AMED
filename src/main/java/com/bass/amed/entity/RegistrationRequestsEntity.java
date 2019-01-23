@@ -112,4 +112,13 @@ public class RegistrationRequestsEntity
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "request_id")
     private Set<ExpertListEntity> expertList = new HashSet<>();
+    @Basic
+    @Column(name = "variation_type")
+    private String variationType;
+    @Basic
+    @Column(name = "variation_description")
+    private String variationDescription;
+
+    @Column(name = "output_document_id")
+    private Integer outputDocumentId;
 }

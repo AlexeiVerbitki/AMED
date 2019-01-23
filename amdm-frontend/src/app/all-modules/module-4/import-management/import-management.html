@@ -293,7 +293,7 @@
                             <!--<th scope="col">Producatorul</th>-->
                             <th scope="col">Cod AMED</th>
                             <th scope="col">Denumire</th>
-                            <th scope="col">Data</th>
+                            <!--<th scope="col">Data</th>-->
                             <th scope="col">Cantitatea solicitată</th>
                             <!--<th scope="col">Cantitate aprobată</th>-->
                             <th scope="col">Pretul</th>
@@ -333,11 +333,11 @@
 
                         <tr *ngFor="let invoiceDetail of invoiceDetails;let i = index">
                             <td>{{ invoiceDetail.codeAmed }}</td>
-                            <td>{{ invoiceDetail.name }}</td>
+                            <!--<td>{{ invoiceDetail.name }}</td>-->
                             <td>{{ invoiceDetail.data | date:'mediumDate' }}</td>
                             <td>{{ invoiceDetail.quantity }}</td>
                             <td>{{ invoiceDetail.price }}</td>
-                            <td>{{ invoiceDetail.unitSumm | number : '1.2-2'}}</td>
+                            <td>{{ invoiceDetail.sum | number : '1.2-2'}}</td>
                             <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeunitOfImport(i)" mdbWavesEffect>Sterge</button>
 
                         </tr>

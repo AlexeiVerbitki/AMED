@@ -390,7 +390,7 @@ export class ImportManagementDialog implements OnInit {
                 if (val) {
                     console.log('pozitie:', val);
 
-                    if (val.medicament !== null) {
+                    if (val.medicament) {
 
                         // if (this.dialogData.invoiceDetails.find(x => x.codeAmed == val.medicament.codeAmed)) {
                         //     this.invoiceDetailAdded = true

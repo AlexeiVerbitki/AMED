@@ -138,8 +138,11 @@ public class ClinicalTrailsPaymentController {
             parameters.put("companyName", nmEconomicAgentsEntity.getName());
             parameters.put("companyAddress", nmEconomicAgentsEntity.getLegalAddress());
 
-            parameters.put("clinicStudyNr", ctPayNote.getClinicalTrial().getCode());
-            parameters.put("clinicStudyDescription", ctPayNote.getClinicalTrial().getTitle());
+            if (ctPayNote.getClinicalTrial() != null) {
+                parameters.put("clinicStudyNr", ctPayNote.getClinicalTrial().getCode());
+                parameters.put("clinicStudyDescription", ctPayNote.getClinicalTrial().getTitle());
+                parameters.put("phases", ctPayNote.getClinicalTrial().getPhase().getName());
+            }
 
             parameters.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
             parameters.put("beneficiary", sysParamsRepository.findByCode(Constants.SysParams.BENEFICIARY).get().getValue());
@@ -149,7 +152,7 @@ public class ClinicalTrailsPaymentController {
 
             parameters.put("intermediaryBank", sysParamsRepository.findByCode(Constants.SysParams.BENEFICIARY_ITERMEDIARY_BANK).get().getValue());
             parameters.put("swiftCode", sysParamsRepository.findByCode(Constants.SysParams.BENEFICIARY_SWIFT_CODE).get().getValue());
-            parameters.put("phases", ctPayNote.getClinicalTrial().getPhase().getName());
+
             parameters.put("fiscalCode", sysParamsRepository.findByCode(Constants.SysParams.VAT_CODE).get().getValue());
             parameters.put("bankCode", sysParamsRepository.findByCode(Constants.SysParams.BENEFICIARY_BANK_CODE).get().getValue());
 

@@ -415,14 +415,30 @@ public class LicenseRegistrationRequestService
                 request.getLicense().setStatus("F");
             }
 
+
             r.getLicense().setStatus(request.getLicense().getStatus());
             r.setCurrentStep(request.getCurrentStep());
             r.setAssignedUser(request.getAssignedUser());
 
             r.getLicense().setStatus(request.getLicense().getStatus());
-
             em.merge(r);
 
+            //Update mandated contacts
+            LicenseMandatedContactEntity lmView = request.getLicense().getDetail().getLicenseMandatedContacts().stream().findFirst().get();
+            if (lmView.getNewMandatedLastname() != null || !lmView.getNewMandatedLastname().isEmpty())
+            {
+                LicenseMandatedContactEntity lmc = em.find(LicenseMandatedContactEntity.class, lmView.getId());
+
+                lmc.setNewMandatedFirstname(lmView.getNewMandatedFirstname());
+                lmc.setNewMandatedLastname(lmView.getNewMandatedLastname());
+                lmc.setNewMandatedNr(lmView.getNewMandatedNr());
+                lmc.setNewMandatedDate(lmView.getNewMandatedDate());
+                lmc.setNewEmail(lmView.getNewEmail());
+                lmc.setNewPhoneNumber(lmView.getNewPhoneNumber());
+                lmc.setNewIdnp(lmView.getNewIdnp());
+
+                em.merge(lmc);
+            }
 
             //Save payload
             if (request.getType().getCode().equals("LICEL") || request.getType().getCode().equals("LICM") || request.getType().getCode().equals("LICC") || request.getType().getCode().equals("LICP"))

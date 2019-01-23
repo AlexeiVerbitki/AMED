@@ -10,6 +10,7 @@ import com.bass.amed.repository.license.LicensesRepository;
 import com.bass.amed.repository.prices.NmPricesRepository;
 import com.bass.amed.repository.prices.PriceRepository;
 import com.bass.amed.repository.prices.PricesHistoryRepository;
+import com.bass.amed.service.MedicamentAnnihilationRequestService;
 import com.bass.amed.utils.SecurityUtils;
 import com.bass.amed.utils.Utils;
 import net.sf.jasperreports.engine.*;
@@ -26,6 +27,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.annotation.RequestScope;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -70,11 +72,14 @@ public class RequestController
     private LicensesRepository licensesRepository;
     @Autowired
     private ImportAuthorizationRepository importAuthorizationRepository;
+    
 	@Autowired
     private InvoiceDetailsRepository invoiceDetailsRepository;
     @Autowired
     private CtMedINstInvestigatorRepository medINstInvestigatorRepository;
 
+    @Autowired
+    private MedicamentAnnihilationRequestService medicamentAnnihilationRequestService;
 
 
     @RequestMapping(value = "/add-medicament-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -104,11 +109,7 @@ public class RequestController
                 {
                     for (MedicamentEntity medDB : requestDB.getMedicaments())
                     {
-                        if (((medicament.getDivision() == null && medDB.getDivision() == null) || (medicament.getDivision()!=null && medicament.getDivision().equals(medDB.getDivision())) )
-                                &&
-                                ((medicament.getVolume() == null && medDB.getVolume() == null) || (medicament.getVolume()!=null && medicament.getVolume().equals(medDB.getVolume())))
-                                &&
-                                ((medicament.getVolumeQuantityMeasurement() == null && medDB.getVolumeQuantityMeasurement() == null)) || (medicament.getVolumeQuantityMeasurement()!=null && medicament.getVolumeQuantityMeasurement().equals(medDB.getVolumeQuantityMeasurement())))
+                        if (Utils.areDivisionsEquals(medicament, medDB))
                         {
                             medicament.setApproved(medDB.getApproved());
                             medicament.setOaNumber(medDB.getOaNumber());
@@ -130,7 +131,7 @@ public class RequestController
                     cal.setTime(dateOfIssue);
                     cal.add(Calendar.YEAR, 5);
                     medicament.setExpirationDate(new java.sql.Date(cal.getTime().getTime()));
-                    medicament.setName(medicament.getCommercialName() + " " + medicament.getPharmaceuticalForm().getCode() + " " + medicament.getDose() + " " + getConcatenatedDivision(medicament));
+                    medicament.setName(medicament.getCommercialName() + " " + medicament.getPharmaceuticalForm().getCode() + " " + medicament.getDose() + " " + Utils.getConcatenatedDivision(medicament));
                     medicament.setUnlimitedRegistrationPeriod(false);
                     if (request.getType().getCode().equals("MEDR"))
                     {
@@ -152,42 +153,62 @@ public class RequestController
         LOGGER.debug("Add medicament history");
         Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(request.getType().getCode());
         request.getType().setId(type.get().getId());
-        if (request.getMedicamentHistory().isEmpty())
+        if (!request.getMedicamentHistory().isEmpty())
         {
-            List<MedicamentEntity> medicamentEntities = medicamentRepository.findByRegistrationNumber(request.getMedicamentPostauthorizationRegisterNr());
-            medicamentEntities = medicamentEntities.stream().filter(t -> t.getStatus().equals("F")).collect(Collectors.toList());
-            MedicamentHistoryEntity medicamentHistoryEntity = new MedicamentHistoryEntity();
-            medicamentHistoryEntity.assign(medicamentEntities.get(0));
-            for (MedicamentEntity med : medicamentEntities)
-            {
-                if (med.getStatus().equals("F"))
-                {
-                    for (MedicamentInstructionsEntity medicamentInstructionsEntity : med.getInstructions())
-                    {
-                        MedicamentInstructionsHistoryEntity medicamentInstructionsHistoryEntity = new MedicamentInstructionsHistoryEntity();
-                        medicamentInstructionsHistoryEntity.assign(medicamentInstructionsEntity);
-                        medicamentHistoryEntity.getInstructionsHistory().add(medicamentInstructionsHistoryEntity);
-                    }
-                }
-            }
-            medicamentHistoryEntity.setStatus("P");
-            medicamentEntities.stream().filter(med -> med.getStatus().equals("F")).forEach(med -> {
-                fillDivisionHistory(medicamentHistoryEntity, med);
-            });
-            request.getMedicamentHistory().add(medicamentHistoryEntity);
-            request.setMedicamentName(medicamentHistoryEntity.getCommercialNameTo());
-        }
-        else
-        {
+            //List<MedicamentEntity> medicamentEntities = medicamentRepository.findByRegistrationNumber(request.getMedicamentPostauthorizationRegisterNr());
+            //medicamentEntities = medicamentEntities.stream().filter(t -> t.getStatus().equals("F")).collect(Collectors.toList());
+            //MedicamentHistoryEntity medicamentHistoryEntity = new MedicamentHistoryEntity();
+            //medicamentHistoryEntity.assign(medicamentEntities.get(0));
+//            for (MedicamentEntity med : medicamentEntities)
+//            {
+//                if (med.getStatus().equals("F"))
+//                {
+//                    for (MedicamentInstructionsEntity medicamentInstructionsEntity : med.getInstructions())
+//                    {
+//                        MedicamentInstructionsHistoryEntity medicamentInstructionsHistoryEntity = new MedicamentInstructionsHistoryEntity();
+//                        medicamentInstructionsHistoryEntity.assign(medicamentInstructionsEntity);
+//                        medicamentHistoryEntity.getInstructionsHistory().add(medicamentInstructionsHistoryEntity);
+//                    }
+//                }
+//            }
+            //medicamentHistoryEntity.setStatus("P");
+//            medicamentEntities.stream().filter(med -> med.getStatus().equals("F")).forEach(med -> {
+//                fillDivisionHistory(medicamentHistoryEntity, med);
+//            });
+//            request.getMedicamentHistory().add(medicamentHistoryEntity);
+//            request.setMedicamentName(medicamentHistoryEntity.getCommercialNameTo());
             MedicamentHistoryEntity medicamentHistoryEntity = request.getMedicamentHistory().stream().findFirst().get();
             medicamentHistoryEntity.setRequestId(request.getId());
             RegistrationRequestsEntity requestDB = requestRepository.findById(request.getId()).orElse(new RegistrationRequestsEntity());
+            MedicamentHistoryEntity medicamentHistoryEntityDB =
+                    requestDB.getMedicamentHistory().stream().findFirst().orElse(new MedicamentHistoryEntity());
+            if(medicamentHistoryEntityDB.getCommercialNameFrom()==null || medicamentHistoryEntityDB.getCommercialNameFrom().isEmpty())
+            {
+                List<MedicamentEntity> medicaments = medicamentRepository.findByRegistrationNumber(medicamentHistoryEntity.getRegistrationNumber());
+                MedicamentEntity med =  medicaments.stream().filter(t->t.getStatus().equals("F")).findFirst().orElse(new MedicamentEntity());
+                medicamentHistoryEntity.setInternationalMedicamentNameFrom(med.getInternationalMedicamentName());
+                medicamentHistoryEntity.setDoseFrom(med.getDose());
+                medicamentHistoryEntity.setPharmaceuticalFormFrom(med.getPharmaceuticalForm());
+                medicamentHistoryEntity.setAuthorizationHolderFrom(med.getAuthorizationHolder());
+                medicamentHistoryEntity.setPrescriptionFrom(med.getPrescription());
+                medicamentHistoryEntity.setTermsOfValidityFrom(med.getTermsOfValidity());
+                medicamentHistoryEntity.setAtcCodeFrom(med.getAtcCode());
+                medicamentHistoryEntity.setCommercialNameFrom(med.getCommercialName());
+                medicamentHistoryEntity.setOriginaleFrom(med.getOriginale());
+                medicamentHistoryEntity.setOrphanFrom(med.getOrphan());
+                medicamentHistoryEntity.setVitaleFrom(med.getVitale());
+                medicamentHistoryEntity.setEsentialeFrom(med.getEsentiale());
+                medicamentHistoryEntity.setNonesentialeFrom(med.getNonesentiale());
+            }
             request.setDdIncluded(requestDB.getDdIncluded());
             request.setDdNumber(requestDB.getDdNumber());
-            MedicamentHistoryEntity medDB = medicamentHistoryRepository.findById(medicamentHistoryEntity.getId()).orElse(new MedicamentHistoryEntity());
-            medicamentHistoryEntity.setRegistrationDate(medDB.getRegistrationDate());
-            medicamentHistoryEntity.setApproved(medDB.getApproved());
-            medicamentHistoryEntity.setOmNumber(medDB.getOmNumber());
+            if(medicamentHistoryEntity.getId()!=null && medicamentHistoryEntity.getId()>0)
+            {
+                MedicamentHistoryEntity medDB = medicamentHistoryRepository.findById(medicamentHistoryEntity.getId()).orElse(new MedicamentHistoryEntity());
+                medicamentHistoryEntity.setRegistrationDate(medDB.getRegistrationDate());
+                medicamentHistoryEntity.setApproved(medDB.getApproved());
+                medicamentHistoryEntity.setOmNumber(medDB.getOmNumber());
+            }
         }
         if (request.getMedicaments() == null)
         {
@@ -250,7 +271,7 @@ public class RequestController
     {
         //medicament.setRegistrationNumber(regNumber);
         medicament.setRegistrationDate(orderDate);
-        if (type.equals("MEDP"))
+        if (!type.equals("MEDR"))
         {
             MedicamentEntity medicamentEntity;
             String generatedCode = "";
@@ -621,11 +642,13 @@ public class RequestController
         // Update old medicaments and change status of canceled medicaments (division was removed)
         for (MedicamentEntity med : medicamentEntities)
         {
-            boolean isExistingDivisionInHistory = medicamentHistoryEntity.getDivisionHistory().stream().anyMatch(e -> e.getDescription().equals(med.getDivision()));
+            boolean isExistingDivisionInHistory = medicamentHistoryEntity.getDivisionHistory().stream().anyMatch(e -> Utils.areDivisionHistoryEqualsWithMedicament(e, med));
             if (isExistingDivisionInHistory)
             {
-                med.assign(medicamentHistoryEntity);
-                med.setName(med.getCommercialName() + " " + med.getPharmaceuticalForm().getCode() + " " + med.getDose() + " " + med.getDivision());
+              MedicamentDivisionHistoryEntity divisionHistory =  medicamentHistoryEntity.getDivisionHistory().stream().filter(e -> Utils.areDivisionHistoryEqualsWithMedicament(e,
+                    med)).findFirst().orElse(new MedicamentDivisionHistoryEntity());
+                med.assign(medicamentHistoryEntity, divisionHistory);
+                med.setName(med.getCommercialName() + " " + med.getPharmaceuticalForm().getCode() + " " + med.getDose() + " " + Utils.getConcatenatedDivision(med));
                 medicamentRepository.save(med);
             }
             else
@@ -647,8 +670,6 @@ public class RequestController
         medicamentHistoryEntityForUpdate.setEsentialeTo(medicamentHistoryEntity.getEsentialeTo());
         medicamentHistoryEntityForUpdate.setNonesentialeTo(medicamentHistoryEntity.getNonesentialeTo());
         medicamentHistoryEntityForUpdate.setPrescriptionTo(medicamentHistoryEntity.getPrescriptionTo());
-        medicamentHistoryEntityForUpdate.setVolumeTo(medicamentHistoryEntity.getVolumeTo());
-        medicamentHistoryEntityForUpdate.setVolumeQuantityMeasurementTo(medicamentHistoryEntity.getVolumeQuantityMeasurementTo());
         medicamentHistoryEntityForUpdate.setTermsOfValidityTo(medicamentHistoryEntity.getTermsOfValidityTo());
         medicamentHistoryEntityForUpdate.setAtcCodeTo(medicamentHistoryEntity.getAtcCodeTo());
         medicamentHistoryEntityForUpdate.setCustomsCodeTo(medicamentHistoryEntity.getCustomsCodeTo());
@@ -661,34 +682,54 @@ public class RequestController
     {
         for (MedicamentEntity med : medicamentEntities)
         {
-            boolean isExistingDivisionInHistory = medicamentHistoryEntity.getDivisionHistory().stream().anyMatch(e -> e.getDescription().equals(med.getDivision()));
+            boolean isExistingDivisionInHistory = medicamentHistoryEntity.getDivisionHistory().stream().anyMatch(e -> Utils.areDivisionHistoryEqualsWithMedicament(e, med));
             if (!isExistingDivisionInHistory)
             {
+                MedicamentDivisionHistoryEntity divisionHistoryEntity = new MedicamentDivisionHistoryEntity();
+                divisionHistoryEntity.setMedicamentCode(med.getCode());
+                divisionHistoryEntity.setStatus("R");
+                divisionHistoryEntity.setMedicamentId(med.getId());
+                divisionHistoryEntity.setDescription(med.getDivision());
+                divisionHistoryEntity.setVolume(med.getVolume());
+                divisionHistoryEntity.setVolumeQuantityMeasurement(med.getVolumeQuantityMeasurement());
                 for (MedicamentInstructionsEntity instr : med.getInstructions())
                 {
                     MedicamentInstructionsHistoryEntity medicamentInstructionsHistoryEntity = new MedicamentInstructionsHistoryEntity();
                     medicamentInstructionsHistoryEntity.assign(instr);
                     medicamentInstructionsHistoryEntity.setStatus("R");
-                    medicamentHistoryEntityForUpdate.getInstructionsHistory().add(medicamentInstructionsHistoryEntity);
+                    divisionHistoryEntity.getInstructionsHistory().add(medicamentInstructionsHistoryEntity);
+
                 }
+                medicamentHistoryEntityForUpdate.getDivisionHistory().add(divisionHistoryEntity);
             }
             else
             {
                 fillRemovedInstructions(medicamentHistoryEntity, medicamentHistoryEntityForUpdate, med);
-                fillNewInstructions(medicamentHistoryEntity, medicamentHistoryEntityForUpdate, med);
             }
         }
-        for (MedicamentDivisionHistoryEntity medicamentDivisionHistoryEntity : medicamentHistoryEntity.getDivisionHistory())
+    }
+
+    private void fillRemovedInstructions(MedicamentHistoryEntity medicamentHistoryEntity, MedicamentHistoryEntity medicamentHistoryEntityForUpdate, MedicamentEntity med)
+    {
+        for (MedicamentInstructionsEntity medicamentInstructionsEntity : med.getInstructions())
         {
-            boolean isExistingDivisionInMedicament = medicamentEntities.stream().anyMatch(e -> e.getDivision().equals(medicamentDivisionHistoryEntity.getDescription()));
-            if (!isExistingDivisionInMedicament)
+            boolean wasFound = false;
+            MedicamentDivisionHistoryEntity divisionHistoryEntity =
+                    medicamentHistoryEntity.getDivisionHistory().stream().filter(t -> Utils.areDivisionHistoryEqualsWithMedicament(t, med)).findFirst().orElse(new MedicamentDivisionHistoryEntity());
+            for (MedicamentInstructionsHistoryEntity medicamentInstructionsHistoryEntity :
+                    divisionHistoryEntity.getInstructionsHistory())
             {
-                for (MedicamentInstructionsHistoryEntity medicamentInstructionsHistoryEntity :
-                        medicamentHistoryEntity.getInstructionsHistory().stream().filter(t -> t.getDivision().equals(medicamentDivisionHistoryEntity.getDescription())).collect(Collectors.toList()))
+                if (medicamentInstructionsHistoryEntity.getPath().equals(medicamentInstructionsEntity.getPath()))
                 {
-                    medicamentInstructionsHistoryEntity.setStatus("N");
-                    medicamentHistoryEntityForUpdate.getInstructionsHistory().add(medicamentInstructionsHistoryEntity);
+                    wasFound = true;
                 }
+            }
+            if (!wasFound)
+            {
+                MedicamentInstructionsHistoryEntity medicamentInstructionsHistoryForUpdate = new MedicamentInstructionsHistoryEntity();
+                medicamentInstructionsHistoryForUpdate.assign(medicamentInstructionsEntity);
+                medicamentInstructionsHistoryForUpdate.setStatus("R");
+                divisionHistoryEntity.getInstructionsHistory().add(medicamentInstructionsHistoryForUpdate);
             }
         }
     }
@@ -699,15 +740,20 @@ public class RequestController
     {
         for (MedicamentEntity med : medicamentEntities)
         {
-            boolean isExistingDivisionInHistory = medicamentHistoryEntity.getDivisionHistory().stream().anyMatch(e -> e.getDescription().equals(med.getDivision()));
+            boolean isExistingDivisionInHistory = medicamentHistoryEntity.getDivisionHistory().stream().anyMatch(e -> Utils.areDivisionHistoryEqualsWithMedicament(e,med));
             MedicamentDivisionHistoryEntity medicamentDivisionHistoryEntity = new MedicamentDivisionHistoryEntity();
             medicamentDivisionHistoryEntity.setDescription(med.getDivision());
+            medicamentDivisionHistoryEntity.setVolume(med.getVolume());
+            medicamentDivisionHistoryEntity.setVolumeQuantityMeasurement(med.getVolumeQuantityMeasurement());
             medicamentDivisionHistoryEntity.setMedicamentId(med.getId());
             medicamentDivisionHistoryEntity.setStatus(isExistingDivisionInHistory ? "M" : "R");
             medicamentDivisionHistoryEntity.setMedicamentCode(med.getCode());
-            medicamentHistoryEntityForUpdate.getDivisionHistory().add(medicamentDivisionHistoryEntity);
             if (medicamentDivisionHistoryEntity.getStatus().equals("M"))
             {
+               MedicamentDivisionHistoryEntity divisionHistory = medicamentHistoryEntity.getDivisionHistory().stream().filter(t->Utils.areDivisionHistoryEqualsWithMedicament(t,
+                    med)).findFirst().orElse(new MedicamentDivisionHistoryEntity());
+                medicamentDivisionHistoryEntity.setInstructionsHistory(divisionHistory.getInstructionsHistory());
+                medicamentHistoryEntityForUpdate.getDivisionHistory().add(medicamentDivisionHistoryEntity);
                 med.getInstructions().clear();
                 fillMedicamentInstructions(medicamentHistoryEntity, med);
                 medicamentRepository.save(med);
@@ -715,79 +761,88 @@ public class RequestController
         }
         for (MedicamentDivisionHistoryEntity medicamentDivisionHistoryEntity : medicamentHistoryEntity.getDivisionHistory())
         {
-            boolean isExistingDivisionInMedicament = medicamentEntities.stream().anyMatch(e -> e.getDivision().equals(medicamentDivisionHistoryEntity.getDescription()));
+            boolean isExistingDivisionInMedicament = medicamentEntities.stream().anyMatch(e -> Utils.areDivisionHistoryEqualsWithMedicament(medicamentDivisionHistoryEntity,e));
             if (!isExistingDivisionInMedicament)
             {
                 MedicamentEntity medicamentEntity = fillMedicamentDetails(request.getMedicamentPostauthorizationRegisterNr(), medicamentHistoryEntity,
                         medicamentDivisionHistoryEntity.getDescription(),
                         request.getDocuments().stream().filter(t -> t.getDocType().getCategory().equals("OM")).findFirst().orElse(new DocumentsEntity()).getDateOfIssue(),
-                        request.getType().getCode());
+                        request.getType().getCode(),medicamentDivisionHistoryEntity.getVolume(),medicamentDivisionHistoryEntity.getVolumeQuantityMeasurement(),Utils.getConcatenatedDivisionHistory(medicamentDivisionHistoryEntity));
                 fillMedicamentInstructions(medicamentHistoryEntity, medicamentEntity);
                 medicamentRepository.save(medicamentEntity);
                 request.getMedicaments().add(medicamentEntity);
                 MedicamentDivisionHistoryEntity medicamentDivisionHistoryEntity1 = new MedicamentDivisionHistoryEntity();
                 medicamentDivisionHistoryEntity1.setDescription(medicamentDivisionHistoryEntity.getDescription());
+                medicamentDivisionHistoryEntity1.setVolume(medicamentDivisionHistoryEntity.getVolume());
+                medicamentDivisionHistoryEntity1.setVolumeQuantityMeasurement(medicamentDivisionHistoryEntity.getVolumeQuantityMeasurement());
                 medicamentDivisionHistoryEntity1.setMedicamentId(medicamentEntity.getId());
                 medicamentDivisionHistoryEntity1.setStatus("N");
                 medicamentDivisionHistoryEntity1.setMedicamentCode(medicamentEntity.getCode());
+                medicamentDivisionHistoryEntity1.setInstructionsHistory(medicamentDivisionHistoryEntity.getInstructionsHistory());
                 medicamentHistoryEntityForUpdate.getDivisionHistory().add(medicamentDivisionHistoryEntity1);
             }
         }
     }
 
-    private void fillRemovedInstructions(MedicamentHistoryEntity medicamentHistoryEntity, MedicamentHistoryEntity medicamentHistoryEntityForUpdate, MedicamentEntity med)
-    {
-        for (MedicamentInstructionsEntity medicamentInstructionsEntity : med.getInstructions())
-        {
-            boolean wasFound = false;
-            for (MedicamentInstructionsHistoryEntity medicamentInstructionsHistoryEntity :
-                    medicamentHistoryEntity.getInstructionsHistory().stream().filter(t -> t.getDivision().equals(med.getDivision())).collect(Collectors.toList()))
-            {
-                if (medicamentInstructionsHistoryEntity.getName().equals(medicamentInstructionsEntity.getName()))
-                {
-                    wasFound = true;
-                }
-            }
-            if (!wasFound)
-            {
-                MedicamentInstructionsHistoryEntity medicamentInstructionsHistoryForUpdate = new MedicamentInstructionsHistoryEntity();
-                medicamentInstructionsHistoryForUpdate.assign(medicamentInstructionsEntity);
-                medicamentInstructionsHistoryForUpdate.setStatus("R");
-                medicamentHistoryEntityForUpdate.getInstructionsHistory().add(medicamentInstructionsHistoryForUpdate);
-            }
-        }
-    }
+//    private void fillRemovedInstructions(MedicamentHistoryEntity medicamentHistoryEntity, MedicamentHistoryEntity medicamentHistoryEntityForUpdate, MedicamentEntity med)
+//    {
+//        for (MedicamentInstructionsEntity medicamentInstructionsEntity : med.getInstructions())
+//        {
+//            boolean wasFound = false;
+//            for (MedicamentInstructionsHistoryEntity medicamentInstructionsHistoryEntity :
+//                    medicamentHistoryEntity.getInstructionsHistory().stream().filter(t -> t.getDivision().equals(med.getDivision())).collect(Collectors.toList()))
+//            {
+//                if (medicamentInstructionsHistoryEntity.getName().equals(medicamentInstructionsEntity.getName()))
+//                {
+//                    wasFound = true;
+//                }
+//            }
+//            if (!wasFound)
+//            {
+//                MedicamentInstructionsHistoryEntity medicamentInstructionsHistoryForUpdate = new MedicamentInstructionsHistoryEntity();
+//                medicamentInstructionsHistoryForUpdate.assign(medicamentInstructionsEntity);
+//                medicamentInstructionsHistoryForUpdate.setStatus("R");
+//                medicamentHistoryEntityForUpdate.getInstructionsHistory().add(medicamentInstructionsHistoryForUpdate);
+//            }
+//        }
+//    }
 
-    private void fillNewInstructions(MedicamentHistoryEntity medicamentHistoryEntity, MedicamentHistoryEntity medicamentHistoryEntityForUpdate, MedicamentEntity med)
-    {
-        for (MedicamentInstructionsHistoryEntity medicamentInstructionsHistoryEntity :
-                medicamentHistoryEntity.getInstructionsHistory().stream().filter(t -> t.getDivision().equals(med.getDivision())).collect(Collectors.toList()))
-        {
-            boolean wasFound = false;
-            for (MedicamentInstructionsEntity medicamentInstructionsEntity : med.getInstructions())
-            {
-                if (medicamentInstructionsHistoryEntity.getName().equals(medicamentInstructionsEntity.getName()))
-                {
-                    wasFound = true;
-                }
-            }
-            if (!wasFound)
-            {
-                medicamentInstructionsHistoryEntity.setStatus("N");
-                medicamentHistoryEntityForUpdate.getInstructionsHistory().add(medicamentInstructionsHistoryEntity);
-            }
-        }
-    }
+//    private void fillNewInstructions(MedicamentHistoryEntity medicamentHistoryEntity, MedicamentHistoryEntity medicamentHistoryEntityForUpdate, MedicamentEntity med)
+//    {
+//        for (MedicamentInstructionsHistoryEntity medicamentInstructionsHistoryEntity :
+//                medicamentHistoryEntity.getInstructionsHistory().stream().filter(t -> t.getDivision().equals(med.getDivision())).collect(Collectors.toList()))
+//        {
+//            boolean wasFound = false;
+//            for (MedicamentInstructionsEntity medicamentInstructionsEntity : med.getInstructions())
+//            {
+//                if (medicamentInstructionsHistoryEntity.getName().equals(medicamentInstructionsEntity.getName()))
+//                {
+//                    wasFound = true;
+//                }
+//            }
+//            if (!wasFound)
+//            {
+//                medicamentInstructionsHistoryEntity.setStatus("N");
+//                medicamentHistoryEntityForUpdate.getInstructionsHistory().add(medicamentInstructionsHistoryEntity);
+//            }
+//        }
+//    }
 
     private void fillMedicamentInstructions(MedicamentHistoryEntity medicamentHistoryEntity, MedicamentEntity medicamentEntity)
     {
-        for (MedicamentInstructionsHistoryEntity medicamentInstructionsHistoryEntity : medicamentHistoryEntity.getInstructionsHistory())
+        for (MedicamentDivisionHistoryEntity medicamentDivisionHistoryEntity : medicamentHistoryEntity.getDivisionHistory())
         {
-            if (medicamentInstructionsHistoryEntity.getDivision().equals(medicamentEntity.getDivision()))
+            if (Utils.areDivisionHistoryEqualsWithMedicament(medicamentDivisionHistoryEntity, medicamentEntity))
             {
-                MedicamentInstructionsEntity medicamentInstructionsEntity = new MedicamentInstructionsEntity();
-                medicamentInstructionsEntity.assign(medicamentInstructionsHistoryEntity);
-                medicamentEntity.getInstructions().add(medicamentInstructionsEntity);
+                for(MedicamentInstructionsHistoryEntity medicamentInstructionsHistoryEntity : medicamentDivisionHistoryEntity.getInstructionsHistory())
+                {
+                    if(!medicamentInstructionsHistoryEntity.getStatus().equals("R"))
+                    {
+                        MedicamentInstructionsEntity medicamentInstructionsEntity = new MedicamentInstructionsEntity();
+                        medicamentInstructionsEntity.assign(medicamentInstructionsHistoryEntity);
+                        medicamentEntity.getInstructions().add(medicamentInstructionsEntity);
+                    }
+                }
             }
         }
     }
@@ -807,10 +862,8 @@ public class RequestController
         medicamentHistoryEntityForUpdate.setNonesentialeFrom(medicamentEntityForUpdate.getNonesentiale());
         medicamentHistoryEntityForUpdate.setPrescriptionFrom(medicamentEntityForUpdate.getPrescription());
         medicamentHistoryEntityForUpdate.setAtcCodeFrom(medicamentEntityForUpdate.getAtcCode());
-        medicamentHistoryEntityForUpdate.setVolumeFrom(medicamentEntityForUpdate.getVolume());
         medicamentHistoryEntityForUpdate.setCustomsCodeFrom(medicamentEntityForUpdate.getCustomsCode());
         medicamentHistoryEntityForUpdate.setTermsOfValidityFrom(medicamentEntityForUpdate.getTermsOfValidity());
-        medicamentHistoryEntityForUpdate.setVolumeQuantityMeasurementFrom(medicamentEntityForUpdate.getVolumeQuantityMeasurement());
         checkActiveSubstancesModifications(medicamentHistoryEntity, medicamentEntityForUpdate, medicamentHistoryEntityForUpdate);
         checkAuxiliarySubstancesModifications(medicamentHistoryEntity, medicamentEntityForUpdate, medicamentHistoryEntityForUpdate);
         checkMedicamentTypesModifications(medicamentHistoryEntity, medicamentEntityForUpdate, medicamentHistoryEntityForUpdate);
@@ -972,14 +1025,15 @@ public class RequestController
 
     }
 
-    private MedicamentEntity fillMedicamentDetails(Integer regNr, MedicamentHistoryEntity medicamentHistoryEntity, String division, Timestamp orderDate, String type)
+    private MedicamentEntity fillMedicamentDetails(Integer regNr, MedicamentHistoryEntity medicamentHistoryEntity, String division, Timestamp orderDate, String type,
+                                                   String volume,NmUnitsOfMeasurementEntity volumeMeasurement,String concatenatedDivision)
     {
         MedicamentEntity medicamentEntity = new MedicamentEntity();
         medicamentEntity.setRegistrationNumber(regNr);
         setCodeAndRegistrationNr(medicamentEntity, orderDate, type);
         medicamentEntity.setStatus("F");
         medicamentEntity.setName(medicamentHistoryEntity.getCommercialNameTo() + " " + medicamentHistoryEntity.getPharmaceuticalFormTo().getCode() + " " + medicamentHistoryEntity.getDoseTo() +
-                " " + division);
+                " " + concatenatedDivision);
         medicamentEntity.setCustomsCode(medicamentHistoryEntity.getCustomsCodeTo());
         medicamentEntity.setCommercialName(medicamentHistoryEntity.getCommercialNameTo());
         medicamentEntity.setInternationalMedicamentName(medicamentHistoryEntity.getInternationalMedicamentNameTo());
@@ -994,12 +1048,15 @@ public class RequestController
         medicamentEntity.setEsentiale(medicamentHistoryEntity.getEsentialeTo());
         medicamentEntity.setNonesentiale(medicamentHistoryEntity.getNonesentialeTo());
         medicamentEntity.setPrescription(medicamentHistoryEntity.getPrescriptionTo());
-        medicamentEntity.setVolume(medicamentHistoryEntity.getVolumeTo());
+        medicamentEntity.setVolume(volume);
         medicamentEntity.setTermsOfValidity(medicamentHistoryEntity.getTermsOfValidityTo());
         medicamentEntity.setExperts(medicamentHistoryEntity.getExperts());
-        medicamentEntity.setVolumeQuantityMeasurement(medicamentHistoryEntity.getVolumeQuantityMeasurementTo());
+        medicamentEntity.setVolumeQuantityMeasurement(volumeMeasurement);
         medicamentEntity.setAtcCode(medicamentHistoryEntity.getAtcCodeTo());
         medicamentEntity.setDivision(division);
+        medicamentEntity.setOriginale(medicamentHistoryEntity.getOriginaleTo());
+        medicamentEntity.setOrphan(medicamentHistoryEntity.getOrphanTo());
+        medicamentEntity.setUnlimitedRegistrationPeriod(false);
         for (MedicamentActiveSubstancesHistoryEntity medicamentActiveSubstancesHistEntity : medicamentHistoryEntity.getActiveSubstancesHistory())
         {
             MedicamentActiveSubstancesEntity medicamentActiveSubstancesEntity = new MedicamentActiveSubstancesEntity();
@@ -1007,6 +1064,7 @@ public class RequestController
             //medicamentActiveSubstancesEntity.setManufacture(medicamentActiveSubstancesHistEntity.getManufactureTo());
             medicamentActiveSubstancesEntity.setQuantity(medicamentActiveSubstancesHistEntity.getQuantityTo());
             medicamentActiveSubstancesEntity.setUnitsOfMeasurement(medicamentActiveSubstancesHistEntity.getUnitsOfMeasurementTo());
+            medicamentActiveSubstancesEntity.setCompositionNumber(medicamentActiveSubstancesHistEntity.getCompositionNumberTo());
             medicamentEntity.getActiveSubstances().add(medicamentActiveSubstancesEntity);
         }
         for (MedicamentManufactureHistoryEntity medicamentManufactureHistoryEntity : medicamentHistoryEntity.getManufacturesHistory())
@@ -1014,7 +1072,20 @@ public class RequestController
             MedicamentManufactureEntity medicamentManufactureEntity = new MedicamentManufactureEntity();
             medicamentManufactureEntity.setManufacture(medicamentManufactureHistoryEntity.getManufacture());
             medicamentManufactureEntity.setProducatorProdusFinit(medicamentManufactureHistoryEntity.getProducatorProdusFinitTo());
+            medicamentManufactureEntity.setComment(medicamentManufactureHistoryEntity.getCommentTo());
             medicamentEntity.getManufactures().add(medicamentManufactureEntity);
+        }
+        for (MedicamentAuxiliarySubstancesHistoryEntity medicamentAuxiliarySubstancesHistoryEntity : medicamentHistoryEntity.getAuxiliarySubstancesHistory())
+        {
+            MedicamentAuxiliarySubstancesEntity medicamentAuxiliarySubstancesEntity = new MedicamentAuxiliarySubstancesEntity();
+            medicamentAuxiliarySubstancesEntity.setAuxSubstance(medicamentAuxiliarySubstancesHistoryEntity.getAuxSubstance());
+            medicamentEntity.getAuxSubstances().add(medicamentAuxiliarySubstancesEntity);
+        }
+        for (MedicamentTypesHistoryEntity medicamentTypesHistoryEntity : medicamentHistoryEntity.getMedicamentTypesHistory())
+        {
+            MedicamentTypesEntity medicamentTypesEntity = new MedicamentTypesEntity();
+            medicamentTypesEntity.setType(medicamentTypesHistoryEntity.getType());
+            medicamentEntity.getMedicamentTypes().add(medicamentTypesEntity);
         }
         return medicamentEntity;
     }
@@ -1121,11 +1192,11 @@ public class RequestController
             System.out.println("\n\n\n\n=====================\ngetImportAuthorizationEntity is null\n=====================\n\n\n");
         }
 
-//        requests.setMedicaments(null);
+        //        requests.setMedicaments(null);
         LOGGER.debug("MED==============" + requests.getMedicaments());
         requestRepository.save(requests);
         //TODO fix the docs
-//        addDDDocument(requests);
+        //        addDDDocument(requests);
         LOGGER.debug("\n\n\n\n=====================\nImport saved\n=====================\n\n\n");
 
 
@@ -1228,8 +1299,6 @@ public class RequestController
                                                             );
 
 
-            *//* Convert List to JRBeanCollectionDataSource *//*
-            JRBeanCollectionDataSource itemsJRBean = new JRBeanCollectionDataSource(filiale);*/
 
             /* Map to hold Jasper report Parameters */
             Map<String, Object> parameters = new HashMap<>();
@@ -1280,78 +1349,22 @@ public class RequestController
                         map.put(entity.getCustomsCode().getCode(), map.get(entity.getCustomsCode().getCode()) + entity.getSumm());
                     }
 
-                    //====================================
                 }
 
             }
 
 
-            //			System.out.println(autorizationImportDataSet2ArrayList);
-            //
             AutorizationImportDataSet dataSet = new AutorizationImportDataSet();
             dataSet.setCustom("Nord \nSud \nAeroport \nCentru \nChișinau");
             dataSet.setCustomCode("1000 \n3000 \n2300 \n2000 \n2090");
             dataSet.setTransactionType("Cumparare/Vinzare ferma");
-            dataSet.setCurrencyPpayment(request.getImportAuthorizationEntity().getCurrency().getShortDescription());
+            if (request.getImportAuthorizationEntity().getCurrency().getShortDescription()!=null) {
+                dataSet.setCurrencyPpayment(request.getImportAuthorizationEntity().getCurrency().getShortDescription());
             dataSet.setCurrencyCode(request.getImportAuthorizationEntity().getCurrency().getCode().toString());
+            }
 
 
             autorizationImportDataSetArrayList.add(dataSet);
-            //
-            //
-            //
-            //
-            ////=====================================================================================================
-            //			AutorizationImportDataSet2 dataSet2 = new AutorizationImportDataSet2();
-            //			dataSet2.setAmount(null);
-            //			dataSet2.setField18(null);
-            //			dataSet2.setProductCode(null);
-            //			dataSet2.setProductName(null);
-            //			dataSet2.setProductCode(null);
-            //			dataSet2.setTotal(null);
-            //			dataSet2.setQuantity(null);
-            //			dataSet2.setUnitMeasure(null);
-
-            //            AutorizationImportDataSet dataSet = new AutorizationImportDataSet();
-            //            dataSet.setCustom("Nord");
-            //            dataSet.setCustomCode("1000");
-            //            dataSet.setTransactionType("Cumparare/Vinzare ferma");
-            //            dataSet.setCurrencyPpayment("MDL");
-            //            dataSet.setCurrencyCode(100.00);
-            //
-            //            ArrayList<AutorizationImportDataSet> autorizationImportDataSetArrayList = new ArrayList<AutorizationImportDataSet>();
-            //            autorizationImportDataSetArrayList.add(dataSet);
-            //
-            //
-            //
-            //
-            //            AutorizationImportDataSet2 dataSet2 = new AutorizationImportDataSet2();
-            //            dataSet2.setAmount(200.00);
-            //            dataSet2.setField18("Test");
-            //            dataSet2.setProductCode("3004");
-            //            dataSet2.setProductName("Ampicilin");
-            //            dataSet2.setProductCode("1234");
-            //            dataSet2.setTotal(300.00);
-            //            dataSet2.setQuantity("10");
-            //            dataSet2.setUnitMeasure("20 UI");
-            //
-            //            AutorizationImportDataSet2 dataSet2_1 = new AutorizationImportDataSet2();
-            //            dataSet2_1.setAmount(200.00);
-            //            dataSet2_1.setField18("Test 1");
-            //            dataSet2_1.setProductCode("300400");
-            //            dataSet2_1.setProductName("Ampicilina");
-            //            dataSet2_1.setProductCode("12345");
-            //            dataSet2_1.setTotal(320.00);
-            //            dataSet2_1.setQuantity("10");
-            //            dataSet2_1.setUnitMeasure("210 UI");
-            //
-            //            ArrayList<AutorizationImportDataSet2> autorizationImportDataSet2ArrayList = new ArrayList<AutorizationImportDataSet2>();
-            //            autorizationImportDataSet2ArrayList.add(dataSet2);
-            //            autorizationImportDataSet2ArrayList.add(dataSet2_1);
-            //
-            //
-            //
-            //			autorizationImportDataSet2ArrayList.add(dataSet2);
 
             JRBeanCollectionDataSource autorizationImportDataSet = new JRBeanCollectionDataSource(autorizationImportDataSetArrayList);
             JRBeanCollectionDataSource autorizationImportDataSet2 = new JRBeanCollectionDataSource(autorizationImportDataSet2ArrayList);
@@ -1359,69 +1372,63 @@ public class RequestController
             //            JRBeanCollectionDataSource autorizationImportDataSet  = new JRBeanCollectionDataSource(autorizationImportDataSetArrayList);
             //            JRBeanCollectionDataSource autorizationImportDataSet2 = new JRBeanCollectionDataSource(autorizationImportDataSet2ArrayList);
 
-            parameters.put("autorizationNr", request.getImportAuthorizationEntity().getAuthorizationsNumber());
+            if (request.getImportAuthorizationEntity().getAuthorizationsNumber()!=null) {
+                parameters.put("autorizationNr", request.getImportAuthorizationEntity().getAuthorizationsNumber());
+            }
             //            parameters.put("productName"							, request.getImportAuthorizationEntity().getAuthorizationsNumber());
             parameters.put("autorizationDate", (new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
             parameters.put("importExportSectionDate", (new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
             parameters.put("generalDirectorDate", (new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
-            parameters.put("sellerAndAddress",
-                    request.getImportAuthorizationEntity().getSeller().getDescription() + ", " + request.getImportAuthorizationEntity().getSeller().getAddress());
-            parameters.put("sellerCountry", request.getImportAuthorizationEntity().getSeller().getCountry().getDescription());
-            parameters.put("sellerCountryCode", request.getImportAuthorizationEntity().getSeller().getCountry().getCode());
+
+            if (request.getImportAuthorizationEntity().getSeller()!=null) {
+                parameters.put("sellerAndAddress",
+                        request.getImportAuthorizationEntity().getSeller().getDescription() + ", " + request.getImportAuthorizationEntity().getSeller().getAddress());
+                parameters.put("sellerCountry", request.getImportAuthorizationEntity().getSeller().getCountry().getDescription());
+                parameters.put("sellerCountryCode", request.getImportAuthorizationEntity().getSeller().getCountry().getCode());
+            }
             parameters.put("transactionType", "Cumparare/Vinzare ferma          11");
 
 
             parameters.put("destinationCountry", "Moldova");
             parameters.put("destinationCountryCode", "MD");
 
-            parameters.put("companyNameAndAddress",
-                    request.getImportAuthorizationEntity().getImporter().getLongName() + ", " + request.getImportAuthorizationEntity()
-                            .getImporter()
-                            .getLegalAddress());
+            if (request.getImportAuthorizationEntity().getImporter()!=null) {
+                parameters.put("companyNameAndAddress",
+                        request.getImportAuthorizationEntity().getImporter().getLongName() + ", " + request.getImportAuthorizationEntity()
+                                .getImporter()
+                                .getLegalAddress());
+            }
             //            parameters.put("codOcpo"								, request.getImportAuthorizationEntity().getAuthorizationsNumber());
-            parameters.put("registartionDate", request.getImportAuthorizationEntity().getApplicant().getRegistrationDate().toString());
-            parameters.put("registrationNr", request.getImportAuthorizationEntity().getApplicant().getIdno());
+            if (request.getImportAuthorizationEntity().getApplicant() != null) {
+                parameters.put("registartionDate", request.getImportAuthorizationEntity().getApplicant().getRegistrationDate().toString());
+                parameters.put("registrationNr", request.getImportAuthorizationEntity().getApplicant().getIdno());
+            }
 
 
-            parameters.put("themesForApplicationForAuthorization",
-                    "Contract: " + request.getImportAuthorizationEntity().getContract() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getContractDate()) +
-                            "\n" + "Specificația: " + request.getImportAuthorizationEntity().getAnexa() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getAnexaDate()) +
-                            "\n" + "Alte: " + request.getImportAuthorizationEntity().getBasisForImport());
+            if (request.getImportAuthorizationEntity().getContract()!= null && request.getImportAuthorizationEntity().getContractDate()!=null && request.getImportAuthorizationEntity().getAnexa()!= null &&request.getImportAuthorizationEntity().getAnexaDate()!=null &&request.getImportAuthorizationEntity().getBasisForImport()!=null ) {
+                parameters.put("themesForApplicationForAuthorization",
+                        "Contract: " + request.getImportAuthorizationEntity().getContract() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getContractDate()) +
+                                "\n" + "Specificația: " + request.getImportAuthorizationEntity().getAnexa() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getAnexaDate()) +
+                                "\n" + "Alte: " + request.getImportAuthorizationEntity().getBasisForImport());
+            }
+
             parameters.put("geniralDirectorName", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
             parameters.put("importExportSectionRepresentant", sysParamsRepository.findByCode(Constants.SysParams.IMPORT_REPREZENTANT).get().getValue());
             parameters.put("importExportSectionChief", sysParamsRepository.findByCode(Constants.SysParams.IMPORT_SEF_SECTIE).get().getValue());
             parameters.put("validityTerms", (new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getExpirationDate())));
 
-            parameters.put("manufacturerAndAddress",
-                    request.getImportAuthorizationEntity().getSeller().getDescription() + ", " + request.getImportAuthorizationEntity()
-                            .getSeller()
-                            .getAddress());
-            parameters.put("manufacturerCountry", request.getImportAuthorizationEntity().getSeller().getCountry().getDescription());
-            parameters.put("manufacturerCountryCode", request.getImportAuthorizationEntity().getSeller().getCountry().getCode());
+            if (request.getImportAuthorizationEntity().getSeller()!=null) {
+                parameters.put("manufacturerAndAddress",
+                        request.getImportAuthorizationEntity().getSeller().getDescription() + ", " + request.getImportAuthorizationEntity()
+                                .getSeller()
+                                .getAddress());
+                parameters.put("manufacturerCountry", request.getImportAuthorizationEntity().getSeller().getCountry().getDescription());
+                parameters.put("manufacturerCountryCode", request.getImportAuthorizationEntity().getSeller().getCountry().getCode());
+            }
 
 
             parameters.put("autorizationImportDataSet", autorizationImportDataSet);
             parameters.put("autorizationImportDataSet2", autorizationImportDataSet2);
-            //			System.out.println("parameters: " + parameters.toString());
-            /*parameters.put("licenseNumber", request.getLicense().getNr());
-            parameters.put("companyName", request.getLicense().getEconomicAgents().stream().findFirst().get().getLongName());
-            List<RegistrationRequestsEntity> listOfModifications = requestRepository.findAllLicenseModifications(request.getLicense().getId());
-
-            StringBuilder    sb1 = new StringBuilder();
-            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-            listOfModifications.forEach(lm ->
-                                        {
-                                            if (sb1.length() > 0)
-                                            {
-                                                sb1.append(";");
-                                            }
-                                            sb1.append(sdf.format(lm.getEndDate()));
-                                        }
-
-                                       );
-
-            parameters.put("updatedDates", sb1.toString());
-            parameters.put("parameterAnexaLaLicenta", itemsJRBean);*/
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
@@ -1441,29 +1448,14 @@ public class RequestController
     public ResponseEntity<List<ImportAuthorizationDetailsEntity>> getAuthorizationDetailsByNameOrCode(@RequestParam(value = "id") Integer id) throws
             CustomException
     {
-//<<<<<<< .mine
-        List<ImportAuthorizationDetailsEntity> regOptional = importAuthorizationRepository.getAuthorizationDetailsByNameOrCode(id, true, 33047);
-//        if (regOptional.isEmpty()) {
-//            throw new CustomException("Inregistrarea de Import Details nu a fost gasita");
-//        }
-//||||||| .r949
-//        List<ImportAuthorizationDetailsEntity> regOptional = importAuthorizationRepository.getAuthorizationDetailsByNameOrCode(id, true);
-//        if (regOptional.isEmpty()) {
-//            throw new CustomException("Inregistrarea de Import Details nu a fost gasita");
-//        }
-//=======
-//        List<ImportAuthorizationDetailsEntity> regOptional = importAuthorizationRepository.getAuthorizationDetailsByNameOrCode(id, true);
+        List<ImportAuthorizationDetailsEntity> regOptional = importAuthorizationRepository.getAuthorizationDetailsByNameOrCode(id, true, 33134);
         if (regOptional.isEmpty())
         {
             throw new CustomException("Inregistrarea de Import Details nu a fost gasita");
         }
-//>>>>>>> .r981
-//        List<ImportAuthorizationDetailsEntity> rrE = regOptional;
-//
         return new ResponseEntity<>(regOptional, HttpStatus.OK);
     }
 
-//<<<<<<< .mine
 	@GetMapping(value = "/load-import-authorization-byAuth")
 	public ResponseEntity<List<ImportAuthorizationEntity>> getAuthorizationByAuth(@RequestParam(value = "id") Integer id) throws
 	                                                                                                                                          CustomException {
@@ -1476,19 +1468,6 @@ public class RequestController
 		return new ResponseEntity<>(rrE, HttpStatus.OK);
 	}
 
-//	@GetMapping(value = "/load-active-licenses")
-//	public ResponseEntity<LicensesEntity> getActiveLicensesByIdno(@RequestParam(value = "id") String idno) throws CustomException {
-//		Optional<LicensesEntity> regOptional = licensesRepository.getActiveLicenseByIdno(idno, new Date());
-//		if (!regOptional.isPresent()) {
-////            throw new CustomException("Licenta nu a fost gasita");
-//			return null;
-//||||||| .r949
-//	@GetMapping(value = "/load-active-licenses")
-//	public ResponseEntity<LicensesEntity> getActiveLicensesByIdno(@RequestParam(value = "id") String idno) throws CustomException {
-//		Optional<LicensesEntity> regOptional = licensesRepository.getActiveLicenseByIdno(idno, new Date());
-//		if (!regOptional.isPresent()) {
-////            throw new CustomException("Licenta nu a fost gasita");
-//			return null;
 ////=======
     @GetMapping(value = "/load-active-licenses")
     public ResponseEntity<LicensesEntity> getActiveLicensesByIdno(@RequestParam(value = "id") String idno) throws CustomException
@@ -1498,12 +1477,9 @@ public class RequestController
         {
             //            throw new CustomException("Licenta nu a fost gasita");
             return null;
-//>>>>>>> .r981
 
         }
         LicensesEntity rrE = regOptional.get();
-        //        rrE.setClinicalTrails((ClinicalTrialsEntity) Hibernate.unproxy(regOptional.get().getClinicalTrails()));
-        //        rrE.setCompany((NmEconomicAgentsEntity) Hibernate.unproxy(regOptional.get().getCompany()));
 
         return new ResponseEntity<>(rrE, HttpStatus.OK);
     }
@@ -1622,20 +1598,6 @@ public class RequestController
         return new ResponseEntity<>(oos, HttpStatus.OK);
     }
 
-    private static String getConcatenatedDivision(MedicamentEntity med) {
-        String concatenatedDivision = "";
-        if (med.getDivision()!=null && med.getDivision().length()>0 && med.getVolume()!=null && med.getVolume().length()>0 &&
-                med.getVolumeQuantityMeasurement()!=null && med.getVolumeQuantityMeasurement().getDescription().length()>0) {
-            concatenatedDivision = concatenatedDivision + med.getDivision() + ' ' + med.getVolume() + ' ' + med.getVolumeQuantityMeasurement().getDescription();
-        } else if (med.getVolume()!=null && med.getVolume().length()>0 &&
-                med.getVolumeQuantityMeasurement()!=null && med.getVolumeQuantityMeasurement().getDescription().length()>0) {
-            concatenatedDivision = concatenatedDivision + med.getVolume() + ' ' + med.getVolumeQuantityMeasurement().getDescription();
-        } else {
-            concatenatedDivision = concatenatedDivision + med.getDivision();
-        }
-        return concatenatedDivision;
-    }
-
     @RequestMapping(value = "/get-request-dd-ct", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<RegistrationRequestsEntity>> getRequestsForDDCt() throws CustomException
     {
@@ -1678,7 +1640,76 @@ public class RequestController
         }
         throw new CustomException("Request was not found");
     }
+	
+	@RequestMapping(value = "/get-request-anih", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<RegistrationRequestsEntity>> getRequestsForAnih() throws CustomException
+    {
+        List<RegistrationRequestsEntity> regs = requestRepository.findRequestsForAnih();
+        for (RegistrationRequestsEntity reg : regs)
+        {
+            reg = medicamentAnnihilationRequestService.findMedAnnihilationRegistrationById(reg.getId());
+        }
 
+        regs.stream().map(rr -> {
+            try
+            {
+                return medicamentAnnihilationRequestService.findMedAnnihilationRegistrationById(rr.getId());
+            } catch (CustomException c)
+            {
+                return null;
+            }
+        }).collect(Collectors.toList());
+
+
+        regs.sort(Comparator.comparing(o -> o.getStartDate()));
+
+        return new ResponseEntity<>(regs, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/get-anih-meds", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<OutputDocumentsEntity>> getAnihMeds()
+    {
+        List<OutputDocumentsEntity> dds = outputDocumentsRepository.findAnihMed();
+        dds.sort(Comparator.comparing(o -> o.getDate(), Comparator.reverseOrder()));
+        return new ResponseEntity<>(dds, HttpStatus.OK);
+    }
+   
+    @GetMapping(value = "/validate-idnp")
+    public ResponseEntity<Boolean> validateIDNP(@RequestParam(value = "idnp") String idnp )
+    {
+        if( idnp.length() != 13 || !isStringDigits(idnp )){
+            return new ResponseEntity<>(false, HttpStatus.OK);
+        }
+
+        final int[] weightFunctionConstant = { 7, 3, 1 };
+        int sum = 0;
+        int j = 0;
+
+        for( int i = 0; i < ( idnp.length( ) - 1 ); i++, j++ )
+        {
+            sum = sum + ( Integer.parseInt( String.valueOf( idnp.charAt( i ) ) ) * weightFunctionConstant[j] );
+            if( weightFunctionConstant.length <= ( j + 1 ) )
+            {
+                j = -1;
+            }
+        }
+
+        int checkSum = sum % 10;
+        Boolean valid = checkSum == Integer.parseInt(String.valueOf(idnp.charAt(idnp.length() - 1)));
+        return new ResponseEntity<>(valid, HttpStatus.OK);
+    }
+
+    public static boolean isStringDigits(String str)
+    {
+        if(str == null)
+            return false;
+        for(int i = 0; i < str.length(); i++)
+            if(str.charAt(i) < '0' || str.charAt(i) > '9')
+                return false;
+
+        return true;
+    }
 }
 
 

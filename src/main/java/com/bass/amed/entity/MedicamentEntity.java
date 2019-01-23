@@ -130,7 +130,7 @@ public class MedicamentEntity
     private String oaNumber;
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "medicament_id")
-    private Set<MedicamentTypesEntity> medicamentTypes;
+    private Set<MedicamentTypesEntity> medicamentTypes = new HashSet<>();
     @Basic
     @Column(name = "orphan", nullable = true)
     private Boolean orphan;
@@ -138,7 +138,7 @@ public class MedicamentEntity
     @Column(name = "unlimited_registration_period", nullable = true)
     private Boolean unlimitedRegistrationPeriod;
 
-    public void assign(MedicamentHistoryEntity entity)
+    public void assign(MedicamentHistoryEntity entity,MedicamentDivisionHistoryEntity divisionHistoryEntity)
     {
         this.commercialName = entity.getCommercialNameTo();
         this.dose = entity.getDoseTo();
@@ -155,8 +155,8 @@ public class MedicamentEntity
         this.prescription = entity.getPrescriptionTo();
         this.primarePackage = entity.getPrimarePackageTo();
         this.administeringMode = entity.getAdministeringModeTo();
-        this.volume = entity.getVolumeTo();
-        this.volumeQuantityMeasurement = entity.getVolumeQuantityMeasurementTo();
+        this.volume = divisionHistoryEntity.getVolume();
+        this.volumeQuantityMeasurement = divisionHistoryEntity.getVolumeQuantityMeasurement();
         this.termsOfValidity = entity.getTermsOfValidityTo();
         this.dose = entity.getDoseTo();
         this.originale=entity.getOriginaleTo();

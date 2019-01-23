@@ -15,6 +15,8 @@
 		<queryString>
 			<![CDATA[]]>
 		</queryString>
+		<field name="field1" class="java.lang.String"/>
+		<field name="field2" class="java.lang.String"/>
 	</subDataset>
 	<parameter name="La Nr." class="java.lang.String"/>
 	<parameter name="regDate" class="java.lang.String">
@@ -100,6 +102,63 @@ Se scrie:
 ________________
 ]]></text>
 			</staticText>
+			<componentElement>
+				<reportElement x="0" y="253" width="555" height="40" uuid="74746dbd-2e96-406b-9ebc-4bafa9003aff">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Dataset1" uuid="46f0766f-a80e-4051-88b4-0f14c6a860f4">
+						<dataSourceExpression><![CDATA[$P{modificationTableDataset}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="278" uuid="8ffa4f63-1d38-4c34-8410-9c093824de48">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="278" height="20" uuid="931733f3-3efc-4a28-829b-1cbb0f1b6559"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" size="11" isBold="true"/>
+								</textElement>
+								<text><![CDATA[În loc de:]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="278" height="20" uuid="8adb7f3f-a57a-493f-8b41-1e4732902d95"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{field1}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="277" uuid="ec529222-5e2a-471d-bb4c-7f9a58de0ba1">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="277" height="20" uuid="f985a0c8-680c-47a2-b8c2-002882b02d11"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" size="11" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Se scrie:]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="277" height="20" uuid="fe890f1e-2016-4be0-a9fa-b51f5a4699ad"/>
+								<textElement textAlignment="Center">
+									<font fontName="DejaVu Sans" size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{field2}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="43">
 			<staticText>
 				<reportElement x="0" y="220" width="303" height="30" uuid="21dab960-03a1-4917-a360-3047c6a8b950"/>
 				<textElement>

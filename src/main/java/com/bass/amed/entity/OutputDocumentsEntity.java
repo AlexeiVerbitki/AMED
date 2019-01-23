@@ -36,4 +36,6 @@ public class OutputDocumentsEntity
     private Boolean attached;
     @Basic@Column(name = "date_of_issue")
     private Timestamp dateOfIssue;
+    @Basic@Column(name = "request_id")
+    private Integer requestId;
 }

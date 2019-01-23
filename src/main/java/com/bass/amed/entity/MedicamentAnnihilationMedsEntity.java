@@ -7,14 +7,16 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "medicament_annihilation_meds", schema = "amed")
-@IdClass(MedicamentAnnihilationIdentity.class)
 public class MedicamentAnnihilationMedsEntity
 {
     @Id
+    @Column(name = "id")
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
+    private Integer id;
+
     @Column(name = "medicament_id")
     private Integer medicamentId;
 
-    @Id
     @Column(name = "medicament_annihilation_id")
     private Integer medicamentAnnihilationId;
 
@@ -37,6 +39,24 @@ public class MedicamentAnnihilationMedsEntity
 
     @Column(name = "tax")
     private Double tax;
+
+    @Column(name = "not_reg_name")
+    private String notRegisteredName;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "form_id")
+    private NmPharmaceuticalFormsEntity pharmaceuticalForm;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "unit_measure_id")
+    private NmUnitsOfMeasurementEntity unitsOfMeasurement;
+
+
+    @Column(name = "confirmative_documents")
+    private String confirmativeDocuments;
+
+    @Column(name = "primary_package")
+    private String primaryPackage;
 
     @Transient
     private String medicamentName;

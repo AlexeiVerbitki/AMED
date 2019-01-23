@@ -45,6 +45,7 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
             "LEFT JOIN FETCH p.outputDocuments " +
             "LEFT JOIN FETCH p.documents " +
             "LEFT JOIN FETCH p.paymentOrders " +
+            "LEFT JOIN FETCH p.registrationRequestMandatedContacts " +
 //            "LEFT JOIN FETCH p.ctPaymentOrdersEntities " +
             "WHERE p.id = (:id)")
     Optional<RegistrationRequestsEntity> findClinicalTrailstRequestById(@Param("id") Integer id);
@@ -138,4 +139,13 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
     @Modifying
     @Query("UPDATE RegistrationRequestsEntity p SET p.ddIncluded = :ddIncluded WHERE p.id in (:ids)")
     void setDDIncluded(@Param("ids") List<Integer> ids, @Param("ddIncluded") Boolean ddIncluded);
+
+	@Query("SELECT p FROM RegistrationRequestsEntity p WHERE p.medicamentAnnihilation is not null and p.outputDocumentId is null and p.currentStep = 'A'")
+	List<RegistrationRequestsEntity> findRequestsForAnih();
+
+	List<RegistrationRequestsEntity> findAllByOutputDocumentId(Integer outputDocumentId);
+
+	@Modifying
+	@Query("UPDATE RegistrationRequestsEntity p SET p.outputDocumentId = :outputDocumentId WHERE p.id in (:ids)")
+	void setOutputDocumentId(@Param("ids") List<Integer> ids, @Param("outputDocumentId") Integer outputDocumentId);
 }

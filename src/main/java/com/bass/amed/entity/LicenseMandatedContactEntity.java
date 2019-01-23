@@ -54,4 +54,10 @@ public class LicenseMandatedContactEntity
     @Basic
     @Column(name = "license_detail_id")
     private Integer licenseDetailId;
+    @Basic
+    @Column(name = "idnp")
+    private String idnp;
+    @Basic
+    @Column(name = "new_idnp")
+    private String newIdnp;
 }

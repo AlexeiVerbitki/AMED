@@ -647,17 +647,13 @@ export class ImportManagement implements OnInit {
             this.dialogResult = dialogResult;
             console.log("this.dialogResult:",this.dialogResult);
 
-            let invoiceDetails: any = [];
-            // invoiceDetails.data = new Date();
-            // invoiceDetails.quantity = this.dialogResult[1]
-            // invoiceDetails.price =    this.dialogResult[2]
-            // invoiceDetails.summ =     this.dialogResult[3]
+            let invoiceDetails: any = {};
 
             invoiceDetails.quantity = this.dialogResult.importAuthorizationEntity.unitOfImportTable.quantity;
             invoiceDetails.price = this.dialogResult.importAuthorizationEntity.unitOfImportTable.price;
             invoiceDetails.sum = this.dialogResult.importAuthorizationEntity.unitOfImportTable.unitSumm;
-            // invoiceDetails.codeAmed = this.dialogResult.importAuthorizationEntity.unitOfImportTable.medicament;
-            // invoiceDetails.name = this.dialogResult.importAuthorizationEntity.unitOfImportTable.name;
+            invoiceDetails.codeAmed = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.codeAmed;
+            invoiceDetails.name = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.name;
 
 
             this.invoiceDetails.push(invoiceDetails);
@@ -912,19 +908,27 @@ export class ImportManagement implements OnInit {
          invoiceDetails.summ  = this.dialogResult.importAuthorizationEntity.unitOfImportTable.summ;
          // invoiceDetails.medicament  = this.dialogResult.importAuthorizationEntity.unitOfImportTable.medicament;
 
-        invoiceDetailsEntity.push(invoiceDetails)
+//         this.invoiceDetails.foreach(item => {
+//             invoiceDetails.quantity =   item.quantity ;
+//             invoiceDetails.price =  item.price ;
+//             invoiceDetails.summ  =  item.summ  ;
+// // invoiceDetails.medic
+//         } );
+        invoiceDetailsEntity = this.invoiceDetails;
          // this.invoice.invoiceDetailsEntity = invoiceDetailsEntity;
         invoiceEntity.invoiceDetailsEntitySet = invoiceDetailsEntity;
 
+        modelToSubmit = this.importData;
         modelToSubmit.invoiceEntity = invoiceEntity;
 
         modelToSubmit.currentStep = "F";
-        modelToSubmit.requestNumber = this.importData.requestNumber;
-        modelToSubmit.startDate = this.importData.startDate;
+        modelToSubmit.medicaments =[];
+        // modelToSubmit.requestNumber = this.importData.requestNumber;
+        // modelToSubmit.startDate = this.importData.startDate;
 
         let type : any = {};
         // type.id = "37";
-        modelToSubmit.type = this.importData.type;
+        // modelToSubmit.type = this.importData.type;
 
         modelToSubmit.requestHistories.push({
 

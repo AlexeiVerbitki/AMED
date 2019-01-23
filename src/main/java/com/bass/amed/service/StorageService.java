@@ -45,13 +45,14 @@ public class StorageService
         }
     }
 
-    public void store(String relativeFolder, MultipartFile file, String fileName) throws CustomException
+    public String store(String relativeFolder, MultipartFile file, String fileName) throws CustomException
     {
         Path rootLocation = Paths.get(rootFolder);
         initIfNeeded(rootLocation, relativeFolder);
         try
         {
             Files.copy(file.getInputStream(), rootLocation.resolve(relativeFolder).resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
+            return rootLocation.resolve(relativeFolder).resolve(fileName).toString();
         } catch (Exception e)
         {
             throw new CustomException("Failed to store file!", e);
@@ -69,7 +70,7 @@ public class StorageService
                     .map(Path::toFile)
                     .forEach(File::delete);
         }
-        catch (Exception e)
+        catch (IOException e)
         {
             LOGGER.warn(e.getMessage(), e);
         }
