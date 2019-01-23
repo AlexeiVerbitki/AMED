@@ -1446,12 +1446,18 @@ public class RequestController
                 bytes);
     }
 
+//    @GetMapping(value = "/load-import-authorization-details")
+//    public ResponseEntity<List<ImportAuthorizationDetailsEntity>> getAuthorizationDetailsByNameOrCode(@RequestParam(value = "id") Integer id, Integer authId) throws
     @GetMapping(value = "/load-import-authorization-details")
-    public ResponseEntity<List<ImportAuthorizationDetailsEntity>> getAuthorizationDetailsByNameOrCode(@RequestParam(value = "id") Integer id) throws
+    public ResponseEntity<List<ImportAuthorizationDetailsEntity>> getAuthorizationDetailsByNameOrCode(@RequestParam Map<String, String> requestParams) throws
+//    public ResponseEntity<List<ImportAuthorizationDetailsEntity>> getAuthorizationDetailsByNameOrCode(@RequestParam Integer[] requestParams) throws
             CustomException
     {
-//        List<ImportAuthorizationDetailsEntity> regOptional = importAuthorizationRepository.getAuthorizationDetailsByNameOrCode(id, true, 33134);
-        List<ImportAuthorizationDetailsEntity> regOptional = importAuthorizationRepository.getAuthorizationDetailsByNameOrCode(id, true, 33112);
+//        List<ImportAuthorizationDetailsEntity> regOptional = importAuthorizationRepository.getAuthorizationDetailsByNameOrCode(id, true, 33112);
+//        List<ImportAuthorizationDetailsEntity> regOptional = importAuthorizationRepository.getAuthorizationDetailsByNameOrCode(requestParams.get("id"), true, requestParams.get("authId"));
+        int id = Integer.parseInt(requestParams.get("id"));
+        int authId = Integer.parseInt(requestParams.get("authId"));
+        List<ImportAuthorizationDetailsEntity> regOptional = importAuthorizationRepository.getAuthorizationDetailsByNameOrCode(id, true, authId);
 //        if (regOptional.isEmpty())
 //        {
 //            throw new CustomException("Inregistrarea de Import Details nu a fost gasita");
