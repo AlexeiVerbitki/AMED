@@ -413,9 +413,9 @@ export class ImportManagementDialog implements OnInit {
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.medicament.customsCode);
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(val.medicament.name);
                         // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(val.quantity);
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').setValue(val.quantity);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').setValue(val.approvedQuantity);
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedPrice').setValue(val.price);
-                        this.approvedQuantity = val.quantity;
+                        this.approvedQuantity = val.approvedQuantity;
                         this.approvedPrice = val.price;
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(val.summ);
                         // this.unitSumm = val.summ;
@@ -431,10 +431,10 @@ export class ImportManagementDialog implements OnInit {
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(val.medicament.registrationDate));
                         this.producerAddress = val.medicament.manufactures[0].manufacture.address + ', ' + val.medicament.manufactures[0].manufacture.country.description;
 
-                        if (this.dialogData.invoiceDetails.find(x => x.codeAmed == val.medicament.codeAmed)) {
+                        if (this.dialogData.invoiceDetails.find(x => (x.codeAmed == val.medicament.code))) {
                             this.invoiceDetailAdded = true
 
-                            this.addedUnits = this.dialogData.invoiceDetails.filter(x => x.codeAmed == val.medicament.codeAmed).map(x => x.quantity).reduce((a,b) => a+b );
+                            this.addedUnits = this.dialogData.invoiceDetails.filter(x => x.codeAmed == val.medicament.code).map(x => x.quantity).reduce((a,b) => a+b );
 
 
                             this.remainingUnits = this.approvedQuantity - this.addedUnits;
@@ -455,9 +455,9 @@ export class ImportManagementDialog implements OnInit {
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode);
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(val.name);
                         // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(val.quantity);
-                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').setValue(val.quantity);
+                        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').setValue(val.approvedQuantity);
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedPrice').setValue(val.price);
-                        this.approvedQuantity = val.quantity;
+                        this.approvedQuantity = val.approvedQuantity;
                         this.approvedPrice = val.price;
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(val.summ);
                         // this.unitSumm = val.summ;

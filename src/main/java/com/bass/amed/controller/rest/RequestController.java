@@ -72,6 +72,8 @@ public class RequestController
     private LicensesRepository licensesRepository;
     @Autowired
     private ImportAuthorizationRepository importAuthorizationRepository;
+    @Autowired
+    private ImportAuthRepository importAuthRepository;
     
 	@Autowired
     private InvoiceDetailsRepository invoiceDetailsRepository;
@@ -1448,18 +1450,19 @@ public class RequestController
     public ResponseEntity<List<ImportAuthorizationDetailsEntity>> getAuthorizationDetailsByNameOrCode(@RequestParam(value = "id") Integer id) throws
             CustomException
     {
-        List<ImportAuthorizationDetailsEntity> regOptional = importAuthorizationRepository.getAuthorizationDetailsByNameOrCode(id, true, 33134);
-        if (regOptional.isEmpty())
-        {
-            throw new CustomException("Inregistrarea de Import Details nu a fost gasita");
-        }
+//        List<ImportAuthorizationDetailsEntity> regOptional = importAuthorizationRepository.getAuthorizationDetailsByNameOrCode(id, true, 33134);
+        List<ImportAuthorizationDetailsEntity> regOptional = importAuthorizationRepository.getAuthorizationDetailsByNameOrCode(id, true, 33112);
+//        if (regOptional.isEmpty())
+//        {
+//            throw new CustomException("Inregistrarea de Import Details nu a fost gasita");
+//        }
         return new ResponseEntity<>(regOptional, HttpStatus.OK);
     }
 
 	@GetMapping(value = "/load-import-authorization-byAuth")
-	public ResponseEntity<List<ImportAuthorizationEntity>> getAuthorizationByAuth(@RequestParam(value = "id") Integer id) throws
+	public ResponseEntity<List<ImportAuthorizationEntity>> getAuthorizationByAuth(@RequestParam(value = "id") String id) throws
 	                                                                                                                                          CustomException {
-		List<ImportAuthorizationEntity> regOptional = importAuthorizationRepository.getAuthorizationByAuth(id);
+		List<ImportAuthorizationEntity> regOptional = importAuthRepository.getAuthorizationByAuth(id).orElse(new ArrayList<>());
 //        if (regOptional.isEmpty()) {
 //            throw new CustomException("Inregistrarea de Import Details nu a fost gasita");
 //        }

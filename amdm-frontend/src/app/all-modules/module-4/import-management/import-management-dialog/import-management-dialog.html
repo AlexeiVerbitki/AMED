@@ -25,6 +25,7 @@
                             <ng-template ng-option-tmp let-item="item">
                                 {{item.name}} <br/>
                                 <small class="form-text text-muted">Cod: {{item.codeAmed}}</small>
+                                <!--<small class="form-text text-muted">Cantitatea aprobată: {{item.approvedQuantity}}</small>-->
                             </ng-template>
                         </ng-select>
 
@@ -188,6 +189,7 @@
                                 required="true">
                             <ng-template ng-option-tmp let-item="item">
                                 {{item.description}} <br/>
+                                <small class="form-text text-muted">Cod: {{item.code}}</small>
                                 <small class="form-text text-muted">Cod: {{item.code}}</small>
                             </ng-template>
                         </ng-select>

@@ -656,6 +656,9 @@ export class ImportManagement implements OnInit {
             invoiceDetails.name = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.name;
 
 
+            invoiceDetails.medicament = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.medicament;
+
+
             this.invoiceDetails.push(invoiceDetails);
             console.log('invoiceDetails', this.invoiceDetails);
 
