@@ -268,7 +268,7 @@
                             <input id="conditionsAndSpecification" mdbInputDirective type="text" class="form-control"
                                    formControlName="conditionsAndSpecification">
                             <label for="basisForImport">Altele
-                                <span class="text-danger">*</span>
+                                <!--<span class="text-danger">*</span>-->
                             </label>
                         </div>
                     </div>
@@ -288,8 +288,8 @@
                         <tr>
                             <th scope="col">Denumirea comercială a medicamentului</th>
                             <th scope="col" *ngIf="importData.importAuthorizationEntity.medType!==4">Codul ATC</th>
-                            <th scope="col">Doza</th>
-                            <th scope="col">Divizare</th>
+                            <th scope="col" *ngIf="importData.importAuthorizationEntity.medType==1 || importData.importAuthorizationEntity.medType==2">Doza</th>
+                            <th scope="col" *ngIf="importData.importAuthorizationEntity.medType==1 || importData.importAuthorizationEntity.medType==2">Divizare</th>
                             <th scope="col">Producatorul</th>
                             <th scope="col">Cantitatea solicitată</th>
                             <th scope="col">Cantitate aprobată</th>
@@ -308,8 +308,8 @@
                         <tr *ngFor="let unitOfImport of importData.importAuthorizationEntity.importAuthorizationDetailsEntityList;let i = index">
                             <th scope="row">{{ unitOfImport.name }}</th>
                             <td *ngIf="importData.importAuthorizationEntity.medType!==4">{{ unitOfImport.atcCode.code}}</td>
-                            <td>{{ unitOfImport.dose }}</td>
-                            <td>{{ unitOfImport.unitsOfMeasurement }}</td>
+                            <td *ngIf="importData.importAuthorizationEntity.medType==1 || importData.importAuthorizationEntity.medType==2">{{ unitOfImport.dose }}</td>
+                            <td *ngIf="importData.importAuthorizationEntity.medType==1 || importData.importAuthorizationEntity.medType==2">{{ unitOfImport.unitsOfMeasurement }}</td>
                             <td>{{ unitOfImport.producer.description }}</td>
                             <td>{{ unitOfImport.quantity }}</td>
                             <td>{{ unitOfImport.approvedQuantity }}</td>

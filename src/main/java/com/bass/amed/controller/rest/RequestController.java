@@ -11,6 +11,7 @@ import com.bass.amed.repository.prices.NmPricesRepository;
 import com.bass.amed.repository.prices.PriceRepository;
 import com.bass.amed.repository.prices.PricesHistoryRepository;
 import com.bass.amed.service.MedicamentAnnihilationRequestService;
+import com.bass.amed.utils.AmountUtils;
 import com.bass.amed.utils.SecurityUtils;
 import com.bass.amed.utils.Utils;
 import net.sf.jasperreports.engine.*;
@@ -1138,13 +1139,13 @@ public class RequestController
 		return new ResponseEntity<>(requests, HttpStatus.CREATED);
 	}
 
-	@PostMapping(value = "/get-invoice-quota")
-	public ResponseEntity<Integer> getInvoiceQuota(@RequestBody Integer authorizationDetailsId, String authorizationNumber) throws CustomException
+	@RequestMapping(value = "/get-invoice-quota")
+	public ResponseEntity<Integer> getInvoiceQuota(@RequestBody Map<String, String> requestParams) throws CustomException
 	{
 //		Optional<List<RegistrationRequestsEntity>> registrationRequestsEntities = requestRepository.findMedicamentHistoryByRegistrationNumber(registrationNumber);
 
 		List<InvoiceDetailsEntity> list = new ArrayList<>();
-		list = invoiceDetailsRepository.findInvoicesByAuthorization(authorizationNumber, authorizationDetailsId);
+		list = invoiceDetailsRepository.findInvoicesByAuthorization(requestParams.get("nameOrCodeAmed"), requestParams.get("authorizationNumber"));
 		int importedQuantity  = list.stream().map(emp -> emp.getQuantity()).reduce(0, (x,y) -> x+y);
         list.forEach(x -> System.out.println(x.getQuantity()));
 
@@ -1321,7 +1322,7 @@ public class RequestController
                         {
                             if (autorizationImportDataSet2ArrayList.get(i).getProductCode().equals(entity.getCustomsCode().getCode()))
                             {
-                                autorizationImportDataSet2ArrayList.get(i).setAmount(autorizationImportDataSet2ArrayList.get(i).getAmount() + entity.getSumm());
+                                autorizationImportDataSet2ArrayList.get(i).setAmount(AmountUtils.round(autorizationImportDataSet2ArrayList.get(i).getAmount() + entity.getSumm(),2));
                             }
                         }
                     }
@@ -1329,7 +1330,7 @@ public class RequestController
                     {
 
                         AutorizationImportDataSet2 dataSet2 = new AutorizationImportDataSet2();
-                        dataSet2.setAmount(entity.getSumm());
+                        dataSet2.setAmount(AmountUtils.round(entity.getSumm(), 2));
                         dataSet2.setField18("");
                         dataSet2.setProductCode(entity.getCustomsCode().getCode());
                         dataSet2.setProductName(entity.getCustomsCode().getDescription());
@@ -1419,13 +1420,12 @@ public class RequestController
             parameters.put("importExportSectionChief", sysParamsRepository.findByCode(Constants.SysParams.IMPORT_SEF_SECTIE).get().getValue());
             parameters.put("validityTerms", (new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getExpirationDate())));
 
-            if (request.getImportAuthorizationEntity().getSeller()!=null) {
+            if (request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer()!=null) {
                 parameters.put("manufacturerAndAddress",
-                        request.getImportAuthorizationEntity().getSeller().getDescription() + ", " + request.getImportAuthorizationEntity()
-                                .getSeller()
-                                .getAddress());
-                parameters.put("manufacturerCountry", request.getImportAuthorizationEntity().getSeller().getCountry().getDescription());
-                parameters.put("manufacturerCountryCode", request.getImportAuthorizationEntity().getSeller().getCountry().getCode());
+//                        request.getImportAuthorizationEntity().getSeller().getDescription() + ", " + request.getImportAuthorizationEntity().getSeller().getAddress());
+                        request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getDescription() + ", " + request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getAddress());
+                parameters.put("manufacturerCountry", request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getCountry().getDescription());
+                parameters.put("manufacturerCountryCode", request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getCountry().getCode());
             }
 
 

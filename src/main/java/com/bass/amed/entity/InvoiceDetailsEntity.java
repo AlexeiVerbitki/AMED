@@ -35,6 +35,10 @@ public class InvoiceDetailsEntity {
 	@JoinColumn(name = "medicament_id")
 	private MedicamentEntity medicament;
 
+	@Basic
+	@Column(name = "name")
+	private String name;
+
 //	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
 //	@JoinColumn(name = "invoices_id")
 //	private ImportAuthorizationDetailsEntity authorizationDetailsId;

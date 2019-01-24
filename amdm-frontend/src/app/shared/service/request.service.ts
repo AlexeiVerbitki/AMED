@@ -123,6 +123,10 @@ export class RequestService {
     getAuthorizationDetailsByNameOrCode(id: string, authId: string): Observable<any> {
         return this.http.get('/api/load-import-authorization-details', {params: {id: id, authId: authId}});
     }
+
+    getInvoiceQuota(nameOrCodeAmed: string, authorizationNumber: string): Observable<any> {
+        return this.http.get('/api/get-invoice-quota', {params: {nameOrCodeAmed: nameOrCodeAmed, authorizationNumber: authorizationNumber}});
+    }
     getAuthorizationByAuth(id: string): Observable<any> {
         return this.http.get('/api/load-import-authorization-byAuth', {params: {id: id}});
     }

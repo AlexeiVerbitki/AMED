@@ -641,6 +641,7 @@ export class ImportManagement implements OnInit {
         dialogConfig2.data.currentStep = this.importData.currentStep;
         dialogConfig2.data.invoiceDetails = this.invoiceDetails;
         dialogConfig2.data.importAuthorizationID = this.importData.importAuthorizationEntity.id;
+        dialogConfig2.data.authorizationsNumber = this.importData.importAuthorizationEntity.authorizationsNumber;
 
         const dialogRef = this.dialog.open(ImportManagementDialog, dialogConfig2);
 
@@ -658,6 +659,7 @@ export class ImportManagement implements OnInit {
 
 
             invoiceDetails.medicament = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.medicament;
+            invoiceDetails.authorizationsNumber = this.importData.importAuthorizationEntity.authorizationsNumber;
 
 
             this.invoiceDetails.push(invoiceDetails);
@@ -905,11 +907,11 @@ export class ImportManagement implements OnInit {
 
        let invoiceDetailsEntity : any[] =[];
        let invoiceEntity : any ={};
-       let invoiceDetails : any = {};
-
-         invoiceDetails.quantity = this.dialogResult.importAuthorizationEntity.unitOfImportTable.quantity;
-         invoiceDetails.price = this.dialogResult.importAuthorizationEntity.unitOfImportTable.price;
-         invoiceDetails.summ  = this.dialogResult.importAuthorizationEntity.unitOfImportTable.summ;
+       // let invoiceDetails : any = {};
+       //
+       //   invoiceDetails.quantity = this.dialogResult.importAuthorizationEntity.unitOfImportTable.quantity;
+       //   invoiceDetails.price = this.dialogResult.importAuthorizationEntity.unitOfImportTable.price;
+       //   invoiceDetails.summ  = this.dialogResult.importAuthorizationEntity.unitOfImportTable.summ;
          // invoiceDetails.medicament  = this.dialogResult.importAuthorizationEntity.unitOfImportTable.medicament;
 
 //         this.invoiceDetails.foreach(item => {
@@ -918,6 +920,7 @@ export class ImportManagement implements OnInit {
 //             invoiceDetails.summ  =  item.summ  ;
 // // invoiceDetails.medic
 //         } );
+
         invoiceDetailsEntity = this.invoiceDetails;
          // this.invoice.invoiceDetailsEntity = invoiceDetailsEntity;
         invoiceEntity.invoiceDetailsEntitySet = invoiceDetailsEntity;

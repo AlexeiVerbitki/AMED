@@ -323,6 +323,8 @@ export class MedRegApproveComponent implements OnInit {
             return a < b ? a : b;
         }));
     }
+
+        authorizationModel.importAuthorizationEntity.authorizationsNumber = this.importData.importAuthorizationEntity.id + '/' + new Date().getFullYear() + '-AM';
         console.log('authorizationModel', authorizationModel);
 
         observable = this.requestService.viewImportAuthorization(authorizationModel);

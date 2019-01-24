@@ -110,6 +110,7 @@ export class ImportManagementDialog implements OnInit {
     importReachedLimit: boolean = false;
     addedUnits: number = 0;
     remainingUnits: number = 0;
+    importedUnits: any = 0;
 
 
     constructor(private fb: FormBuilder,
@@ -431,22 +432,29 @@ export class ImportManagementDialog implements OnInit {
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(val.medicament.registrationDate));
                         this.producerAddress = val.medicament.manufactures[0].manufacture.address + ', ' + val.medicament.manufactures[0].manufacture.country.description;
 
+                        this.subscriptions.push(this.requestService.getInvoiceQuota(this.importData.authorizationsNumber, this.importData.importAuthorizationID).subscribe(data => {
+                            console.log("getInvoiceQuota()", data)
+                            this.importedUnits = data;
+                        }));
+
+
                         if (this.dialogData.invoiceDetails.find(x => (x.codeAmed == val.medicament.code))) {
                             this.invoiceDetailAdded = true
 
                             this.addedUnits = this.dialogData.invoiceDetails.filter(x => x.codeAmed == val.medicament.code).map(x => x.quantity).reduce((a,b) => a+b );
 
 
-                            this.remainingUnits = this.approvedQuantity - this.addedUnits;
+
+                            this.remainingUnits = this.approvedQuantity - this.addedUnits - this.importedUnits;
 
 
 
-                            console.log("addedUnits:", this.addedUnits)
+                            console.log("remainingUnits:", this.remainingUnits)
 
                         } else {
                             this.invoiceDetailAdded = false
-                            this.remainingUnits = this.approvedQuantity;
-                            console.log("addedUnits:", this.addedUnits)
+                            this.remainingUnits = this.approvedQuantity - this.importedUnits;
+                            console.log("remainingUnits:", this.remainingUnits)
                         }
 
                     } else {
@@ -473,22 +481,29 @@ export class ImportManagementDialog implements OnInit {
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(val.registrationDate));
                         this.producerAddress = val.producer.address + ', ' + val.producer.country.description;
 
+
+                        this.subscriptions.push(this.requestService.getInvoiceQuota(this.importData.authorizationsNumber, this.importData.importAuthorizationID).subscribe(data => {
+                            console.log("getInvoiceQuota()", data)
+                            this.importedUnits = data;
+                        }));
+
+
                         if (this.dialogData.invoiceDetails.find(x => x.codeAmed == val.codeAmed)) {
                             this.invoiceDetailAdded = true
 
                             this.addedUnits = this.dialogData.invoiceDetails.filter(x => x.codeAmed == val.codeAmed).map(x => x.quantity).reduce((a,b) => a+b );
 
 
-                            this.remainingUnits = this.approvedQuantity - this.addedUnits;
+                            this.remainingUnits = this.approvedQuantity - this.addedUnits - this.remainingUnits;
 
 
 
-                            console.log("addedUnits:", this.addedUnits)
+                            console.log("remainingUnits:", this.addedUnits)
 
                         } else {
                             this.invoiceDetailAdded = false
-                            this.remainingUnits = this.approvedQuantity;
-                            console.log("addedUnits:", this.addedUnits)
+                            this.remainingUnits = this.approvedQuantity - this.remainingUnits;
+                            console.log("remainingUnits:", this.remainingUnits)
                         }
 
 
@@ -799,7 +814,7 @@ export class ImportManagementDialog implements OnInit {
                     startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
                     endDate: new Date(),
                     username: this.authService.getUserName(),
-                    step: 'E'
+                    step: 'I'
                 });
                 modelToSubmit.documents = this.docs;
                 this.subscriptions.push(
