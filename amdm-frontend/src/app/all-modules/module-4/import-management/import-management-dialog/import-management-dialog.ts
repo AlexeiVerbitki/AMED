@@ -588,7 +588,7 @@ export class ImportManagementDialog implements OnInit {
                 }),
                 flatMap(term =>
                     // this.medicamentService.getMedicamentByName(term).pipe(
-                    this.requestService.getAuthorizationDetailsByNameOrCode(term, String(this.importData.id)).pipe(
+                    this.requestService.getAuthorizationDetailsByNameOrCode(term, String(this.importData.importAuthorizationID)).pipe(
                         tap(() => this.loadingAuthorizations = false)
                     )
                 )

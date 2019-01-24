@@ -640,6 +640,7 @@ export class ImportManagement implements OnInit {
         dialogConfig2.data.medtType = this.importData.importAuthorizationEntity.medType;
         dialogConfig2.data.currentStep = this.importData.currentStep;
         dialogConfig2.data.invoiceDetails = this.invoiceDetails;
+        dialogConfig2.data.importAuthorizationID = this.importData.importAuthorizationEntity.id;
 
         const dialogRef = this.dialog.open(ImportManagementDialog, dialogConfig2);
 
