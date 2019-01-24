@@ -67,7 +67,7 @@
                     </div>
                 </div>
 
-                <div class="col-4">
+                <div class="col-4" >
                     <div class="md-form">
                         <input id="quantity" mdbInputDirective type="number" min="0" onkeypress="return event.charCode >= 48"  class="form-control"
                                [attr.disabled]="true"
@@ -78,7 +78,7 @@
                     <!--<small class="text-muted"><strong class="text-danger">Cantitatea trebuie selectată</strong></small>-->
                     <!--</div>-->
                 </div>
-                <div class="col-4">
+                <div class="col-4" *ngIf="importData.currentStep == 'AP'">
                     <div class="md-form">
                         <input id="approvedQuantity" mdbInputDirective type="number" min="0" onkeypress="return event.charCode >= 48"  class="form-control"
                                formControlName="approvedQuantity">

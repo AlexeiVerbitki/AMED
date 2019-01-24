@@ -835,7 +835,7 @@ export class MedRegApproveComponent implements OnInit {
                 this.router.navigate(['dashboard/homepage']);
             }, error => {
                 alert('Something went wrong while sending the model');
-                // this.router.navigate(['dashboard/homepage']);
+                this.router.navigate(['dashboard/homepage']);
                 console.log('error: ', error);
                 this.loadingService.hide();
             }
