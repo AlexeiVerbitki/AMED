@@ -1454,10 +1454,10 @@ public class RequestController
             CustomException
     {
 //        List<ImportAuthorizationDetailsEntity> regOptional = importAuthorizationRepository.getAuthorizationDetailsByNameOrCode(id, true, 33112);
-//        List<ImportAuthorizationDetailsEntity> regOptional = importAuthorizationRepository.getAuthorizationDetailsByNameOrCode(requestParams.get("id"), true, requestParams.get("authId"));
-        int id = Integer.parseInt(requestParams.get("id"));
-        int authId = Integer.parseInt(requestParams.get("authId"));
-        List<ImportAuthorizationDetailsEntity> regOptional = importAuthorizationRepository.getAuthorizationDetailsByNameOrCode(id, true, authId);
+        List<ImportAuthorizationDetailsEntity> regOptional = importAuthorizationRepository.getAuthorizationDetailsByNameOrCode(requestParams.get("id"), true, requestParams.get("authId"));
+//        int id = Integer.parseInt(requestParams.get("id"));
+//        int authId = Integer.parseInt(requestParams.get("authId"));
+//        List<ImportAuthorizationDetailsEntity> regOptional = importAuthorizationRepository.getAuthorizationDetailsByNameOrCode(id, true, authId);
 //        if (regOptional.isEmpty())
 //        {
 //            throw new CustomException("Inregistrarea de Import Details nu a fost gasita");

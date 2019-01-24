@@ -334,7 +334,7 @@
                         <tr *ngFor="let invoiceDetail of invoiceDetails;let i = index">
                             <td>{{ invoiceDetail.codeAmed }}</td>
                             <td>{{ invoiceDetail.name }}</td>
-                            <td>{{ // invoiceDetail.data | date:'mediumDate' }}</td>
+                            <!--<td>{{ invoiceDetail.data | date:'mediumDate' }}</td>-->
                             <td>{{ invoiceDetail.quantity }}</td>
                             <td>{{ invoiceDetail.price }}</td>
                             <td>{{ invoiceDetail.sum | number : '1.2-2'}}</td>
