@@ -9,9 +9,7 @@ import java.util.List;
 public interface InvoiceDetailsRepository extends JpaRepository<InvoiceDetailsEntity, Integer>
 {
 
-//    @Query(value = "SELECT * FROM import_authorization_details m WHERE (m.code_amed like upper(CONCAT(?1, '%'))and m.approved = ?2 and m.Import_authorization_id= ?3)",nativeQuery = true)
-//    @Query(value = "SELECT * FROM invoice_details m WHERE (m.authorizations_number = ?1 and m.invoices_id = ?2)",nativeQuery = true)
-    @Query(value = "SELECT * from invoice_details t where (upper(t.name) like upper(CONCAT(?1, '%'))or t.medicament_id like (CONCAT(?1, '%'))) and t.authorizations_number = ?2)",nativeQuery = true)
+    @Query(value = "SELECT * from invoice_details t where (upper(t.name) like upper(CONCAT(?1, '%'))or t.medicament_id like (CONCAT(?1, '%')) and t.authorizations_number = ?2)",nativeQuery = true)
     List<InvoiceDetailsEntity> findInvoicesByAuthorization(String nameOrCodeAmed,String authorizationNumber);
 
 

@@ -108,9 +108,9 @@ export class ImportManagementDialog implements OnInit {
 
     invoiceDetailAdded: boolean  = false;
     importReachedLimit: boolean = false;
-    addedUnits: number = 0;
-    remainingUnits: number = 0;
-    importedUnits: any = 0;
+    addedUnits: number ;
+    remainingUnits: number ;
+    importedUnits: number ;
 
 
     constructor(private fb: FormBuilder,
@@ -145,6 +145,9 @@ export class ImportManagementDialog implements OnInit {
         this.approvedQuantity = '';
         this.invalidPrice = false;
         this.invoiceDetailAdded = false;
+        this.addedUnits = 0;
+        this.remainingUnits = 0;
+        this.importedUnits = 0;
         this.loadEconomicAgents();
         this.loadManufacturersRfPr();
 
@@ -409,6 +412,12 @@ export class ImportManagementDialog implements OnInit {
                         //     this.invoiceDetailAdded = false
                         //     console.log("addedUnits:", this.addedUnits)
                         // }
+
+                        this.subscriptions.push(this.requestService.getInvoiceQuota(val.medicament, this.importData.authorizationsNumber).subscribe(data => {
+                            console.log("getInvoiceQuota()", data)
+                            this.importedUnits = data;
+                        }));
+
                         
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(val.medicament.code);
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.medicament.customsCode);
@@ -432,10 +441,7 @@ export class ImportManagementDialog implements OnInit {
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(val.medicament.registrationDate));
                         this.producerAddress = val.medicament.manufactures[0].manufacture.address + ', ' + val.medicament.manufactures[0].manufacture.country.description;
 
-                        this.subscriptions.push(this.requestService.getInvoiceQuota(this.importData.authorizationsNumber, this.importData.importAuthorizationID).subscribe(data => {
-                            console.log("getInvoiceQuota()", data)
-                            this.importedUnits = data;
-                        }));
+
 
 
                         if (this.dialogData.invoiceDetails.find(x => (x.codeAmed == val.medicament.code))) {
@@ -458,6 +464,16 @@ export class ImportManagementDialog implements OnInit {
                         }
 
                     } else {
+
+
+                        this.subscriptions.push(this.requestService.getInvoiceQuota(val.name,this.importData.authorizationsNumber).subscribe(data => {
+                            console.log("getInvoiceQuota()", data)
+                            this.importedUnits = data;
+                            this.remainingUnits = this.approvedQuantity - this.importedUnits;
+                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.remainingQuantity').setValue(33);
+                            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.remainingQuantity').setValue(this.importedUnits);
+                        }));
+
 
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(val);
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode);
@@ -482,10 +498,6 @@ export class ImportManagementDialog implements OnInit {
                         this.producerAddress = val.producer.address + ', ' + val.producer.country.description;
 
 
-                        this.subscriptions.push(this.requestService.getInvoiceQuota(this.importData.authorizationsNumber, this.importData.importAuthorizationID).subscribe(data => {
-                            console.log("getInvoiceQuota()", data)
-                            this.importedUnits = data;
-                        }));
 
 
                         if (this.dialogData.invoiceDetails.find(x => x.codeAmed == val.codeAmed)) {
@@ -494,7 +506,7 @@ export class ImportManagementDialog implements OnInit {
                             this.addedUnits = this.dialogData.invoiceDetails.filter(x => x.codeAmed == val.codeAmed).map(x => x.quantity).reduce((a,b) => a+b );
 
 
-                            this.remainingUnits = this.approvedQuantity - this.addedUnits - this.remainingUnits;
+                            this.remainingUnits = this.approvedQuantity - this.addedUnits - this.importedUnits;
 
 
 
@@ -502,7 +514,7 @@ export class ImportManagementDialog implements OnInit {
 
                         } else {
                             this.invoiceDetailAdded = false
-                            this.remainingUnits = this.approvedQuantity - this.remainingUnits;
+                            this.remainingUnits = this.approvedQuantity - this.importedUnits;
                             console.log("remainingUnits:", this.remainingUnits)
                         }
 

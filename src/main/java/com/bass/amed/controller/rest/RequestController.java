@@ -28,7 +28,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.annotation.RequestScope;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -1139,12 +1138,13 @@ public class RequestController
 		return new ResponseEntity<>(requests, HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/get-invoice-quota")
-	public ResponseEntity<Integer> getInvoiceQuota(@RequestBody Map<String, String> requestParams) throws CustomException
+	@RequestMapping(value = "/get-invoice-quota")public ResponseEntity<Integer> getInvoiceQuota(@RequestParam Map<String, String> requestParams) throws CustomException
+
 	{
 //		Optional<List<RegistrationRequestsEntity>> registrationRequestsEntities = requestRepository.findMedicamentHistoryByRegistrationNumber(registrationNumber);
 
 		List<InvoiceDetailsEntity> list = new ArrayList<>();
+//		list = invoiceDetailsRepository.findInvoicesByAuthorization(requestParams.get("1290823578"), "33134/2019-AM");
 		list = invoiceDetailsRepository.findInvoicesByAuthorization(requestParams.get("nameOrCodeAmed"), requestParams.get("authorizationNumber"));
 		int importedQuantity  = list.stream().map(emp -> emp.getQuantity()).reduce(0, (x,y) -> x+y);
         list.forEach(x -> System.out.println(x.getQuantity()));

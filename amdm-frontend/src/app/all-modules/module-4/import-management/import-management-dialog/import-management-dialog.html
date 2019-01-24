@@ -149,12 +149,11 @@
 
                 <div class="col-4">
                     <div class="md-form">
-                        <input id="remainingQuantity" mdbInputDirective type="number" min="0" onkeypress="return event.charCode >= 48" class="form-control"
-                               [value]="remainingUnits"
+                        <input id="remainingQuantity"  mdbInputDirective type="number" min="0" onkeypress="return event.charCode >= 48" class="form-control"
+                               [attr.disabled]="true"
                                formControlName="remainingQuantity">
-                        <!--[attr.disabled]="true"-->
 
-                        <label for="approvedQuantity">Cantitatea ramasă</label>
+                        <label for="remainingQuantity">Cantitatea ramasă</label>
                     </div>
                     <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.approvedQuantity').invalid">-->
                     <!--<small class="text-muted"><strong class="text-danger">Cantitatea aprobată trebuie selectată</strong></small>-->
