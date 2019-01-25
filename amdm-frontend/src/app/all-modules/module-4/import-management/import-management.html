@@ -38,76 +38,160 @@
                 <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
             </div>
 
-<br>
-<br>
-<br>
+            <br>
+            <br>
+            <br>
 
             <!--<div class="gradient-card-header bg-sidebar border-gradient">-->
-                <!--<div class="container-fluid">-->
-                    <!--&lt;!&ndash; Title &ndash;&gt;-->
-                    <!--<div class="row">-->
-                        <!--<div class="col-12">-->
-                            <!--<div class="card-header-title white-text">Documente de iesire</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
+            <!--<div class="container-fluid">-->
+            <!--&lt;!&ndash; Title &ndash;&gt;-->
+            <!--<div class="row">-->
+            <!--<div class="col-12">-->
+            <!--<div class="card-header-title white-text">Documente de iesire</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
 
             <!--</div>-->
 
             <!--=================================================================-->
             <!-- Card content -->
             <!--<div class="card-body card-body-cascade">-->
-                <!--<table class="table table-widths-lg text-center">-->
-                    <!--<thead class="bg-sidebar white-text">-->
-                    <!--<tr>-->
-                        <!--<th scope="col">Denumirea</th>-->
-                        <!--<th scope="col">Numar</th>-->
-                        <!--<th scope="col">Statut document</th>-->
-                        <!--<th scope="col">Statut emitere</th>-->
-                        <!--<th>Actiuni</th>-->
-                    <!--</tr>-->
-                    <!--</thead>-->
-                    <!--<tbody>-->
-                    <!--<tr *ngFor="let a of outDocuments">-->
-                        <!--<th scope="row">{{ a.name }}</th>-->
-                        <!--<th scope="row">{{ a.number }}</th>-->
-                        <!--<th scope="row">{{ a.status }}</th>-->
-                        <!--<th scope="row">-->
-                            <!--<mat-checkbox-->
-                                    <!--*ngIf="a.docType && (a.docType.category=='SR' || a.docType.category=='AP' || a.docType.category=='AH' || a.docType.category=='AF')"-->
-                                    <!--#checkBoxResponse [checked]="a.responseReceived || a.status=='Atasat'"-->
-                                    <!--(change)="checkResponseReceived(a,checkBoxResponse)"-->
-                                    <!--[disabled]="a.status=='Atasat'">Emitere document-->
-                            <!--</mat-checkbox>-->
-                        <!--</th>-->
-                        <!--<td>-->
-                            <!--<button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)"><i-->
-                                    <!--class="fa fa-file fa-lg" aria-hidden="true"></i>-->
-                            <!--</button>-->
-                            <!--<button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && (a.docType.category=='SR' || a.docType.category=='AP' || a.docType.category=='AH' || a.docType.category=='AF')"-->
-                                    <!--class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)">-->
-                                <!--<i class="fa fa-trash fa-lg" aria-hidden="true"></i>-->
-                            <!--</button>-->
-                        <!--</td>-->
-                    <!--</tr>-->
-                    <!--</tbody>-->
-                <!--</table>-->
+            <!--<table class="table table-widths-lg text-center">-->
+            <!--<thead class="bg-sidebar white-text">-->
+            <!--<tr>-->
+            <!--<th scope="col">Denumirea</th>-->
+            <!--<th scope="col">Numar</th>-->
+            <!--<th scope="col">Statut document</th>-->
+            <!--<th scope="col">Statut emitere</th>-->
+            <!--<th>Actiuni</th>-->
+            <!--</tr>-->
+            <!--</thead>-->
+            <!--<tbody>-->
+            <!--<tr *ngFor="let a of outDocuments">-->
+            <!--<th scope="row">{{ a.name }}</th>-->
+            <!--<th scope="row">{{ a.number }}</th>-->
+            <!--<th scope="row">{{ a.status }}</th>-->
+            <!--<th scope="row">-->
+            <!--<mat-checkbox-->
+            <!--*ngIf="a.docType && (a.docType.category=='SR' || a.docType.category=='AP' || a.docType.category=='AH' || a.docType.category=='AF')"-->
+            <!--#checkBoxResponse [checked]="a.responseReceived || a.status=='Atasat'"-->
+            <!--(change)="checkResponseReceived(a,checkBoxResponse)"-->
+            <!--[disabled]="a.status=='Atasat'">Emitere document-->
+            <!--</mat-checkbox>-->
+            <!--</th>-->
+            <!--<td>-->
+            <!--<button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)"><i-->
+            <!--class="fa fa-file fa-lg" aria-hidden="true"></i>-->
+            <!--</button>-->
+            <!--<button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && (a.docType.category=='SR' || a.docType.category=='AP' || a.docType.category=='AH' || a.docType.category=='AF')"-->
+            <!--class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)">-->
+            <!--<i class="fa fa-trash fa-lg" aria-hidden="true"></i>-->
+            <!--</button>-->
+            <!--</td>-->
+            <!--</tr>-->
+            <!--</tbody>-->
+            <!--</table>-->
             <!--</div>-->
             <!--<div *ngIf="formSubmitted && !isResponseReceived">-->
-                <!--<small class="text-muted"><strong class="text-danger">Nici un document pentru emitere nu a fost-->
-                    <!--selectat</strong></small>-->
+            <!--<small class="text-muted"><strong class="text-danger">Nici un document pentru emitere nu a fost-->
+            <!--selectat</strong></small>-->
             <!--</div>-->
             <!--=================================================================-->
 
             <br>
-            <br>
-            <br>
 
+            <hr>
+            <h5 class="text-center font-weight-bold">Informația despre Invoice</h5>
+            <hr>
 
             <div formGroupName="importAuthorizationEntity">
                 <div class="row">
+                    <div class="col-md-4">
+                        <div class="md-form">
+                            <input id="invoiceNumber" mdbInputDirective type="text" class="form-control" formControlName="invoiceNumber">
+                            <label for="invoiceNumber">Invoice
+                                <span class="text-danger">*</span>
+                            </label>
+                        </div>
+                        <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.invoiceNumber').invalid">
+                            <small class="text-muted"><strong class="text-danger">Nr. de de invoice trebuie selectat</strong></small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="md-form">
+                            <input id="invoiceSpecificatie" mdbInputDirective type="text" class="form-control" formControlName="invoiceSpecificatie">
+                            <label for="invoiceSpecificatie">Specificație
+                                <span class="text-danger">*</span>
+                            </label>
+                        </div>
+                        <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.invoiceSpecificatie').invalid">
+                            <small class="text-muted"><strong class="text-danger">Specificația trebuie selectată</strong></small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="md-form">
+                            <input id="invoiceBasis" mdbInputDirective type="text" class="form-control" formControlName="invoiceBasis">
+                            <label for="invoiceBasis">Temeiul pentru invoice
+                                <span class="text-danger">*</span>
+                            </label>
+                        </div>
+                        <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.invoiceBasis').invalid">
+                            <small class="text-muted"><strong class="text-danger">Indicați temeiul pentru import</strong></small>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="md-form-modified">
+                            <ng-select [items]="customsCodes | async"
+                                       bindLabel="code"
+                                       placeholder="Codul Vamal"
+                                       formControlName="invoiceCustomsCode"
+                                       [loading]="loadingcustomsCodes"
+                                       [typeahead]="customsCodesInputs"
+                                       required="true">
+                                <ng-template ng-option-tmp let-item="item">
+                                    {{item.description}};
+                                    <small class="form-text text-muted">Cod AMED: {{item.code}}</small>
+                                </ng-template>
+                            </ng-select>
+                            <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsCode').invalid">
+                                <small class="text-muted"><strong class="text-danger">Codul trebuie selectat</strong></small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="md-form">
+                            <input id="invoiceCustomsNumber" mdbInputDirective type="text" class="form-control" formControlName="invoiceCustomsNumber">
+                            <label for="invoiceCustomsNumber">Specificație
+                                <span class="text-danger">*</span>
+                            </label>
+                        </div>
+                        <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsNumber').invalid">
+                            <small class="text-muted"><strong class="text-danger">Numărul declarației vamale</strong></small>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="md-form-modified">
+                            <mat-form-field class="w-100">
+                                <input matInput [matDatepicker]="picker28" placeholder="Data declaraţiei  vamale"
+                                       formControlName="invoiceCustomsDate">
+                                <mat-datepicker-toggle matSuffix [for]="picker28"></mat-datepicker-toggle>
+                                <mat-datepicker touchUi #picker28></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <br>
+                    <br>
 
 
+                    <hr>
+                    <!--=================================================================-->
                     <div class="col-md-4">
                         <div class="md-form-modified">
                             <ng-select [items]="manufacturersRfPr | async"
@@ -138,7 +222,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="md-form">
-                            <input id="basisForImport" mdbInputDirective type="text" class="form-control" formControlName="basisForImport" >
+                            <input id="basisForImport" mdbInputDirective type="text" class="form-control" formControlName="basisForImport">
                             <label for="basisForImport">Temeiul pentru autorizație de import
                                 <span class="text-danger">*</span>
                             </label>
@@ -277,10 +361,10 @@
 
                 <hr>
 
-
+                <h5 class="text-center font-weight-bold ">Specificaţia tehnică şi de preţ a obiectelor importului</h5>
                 <section>
 
-                    <h5 class="text-center font-weight-bold">Specificaţia tehnică şi de preţ a obiectelor importului</h5>
+
                     <hr>
 
                     <table class="table table-widths text-center">
@@ -310,25 +394,25 @@
                         </thead>
                         <tbody>
                         <!--<tr *ngFor="let unitOfImport of importData.importAuthorizationEntity.importAuthorizationDetailsEntityList;let i = index">-->
-                            <!--<th scope="row">{{ unitOfImport.name }}</th>-->
-                            <!--<td *ngIf="importData.importAuthorizationEntity.medType!==4">{{ unitOfImport.atcCode.code}}</td>-->
-                            <!--<td>{{ unitOfImport.dose }}</td>-->
-                            <!--<td>{{ unitOfImport.unitsOfMeasurement }}</td>-->
-                            <!--<td>{{ unitOfImport.producer.description }}</td>-->
-                            <!--<td>{{ unitOfImport.quantity }}</td>-->
-                            <!--<td>{{ unitOfImport.approvedQuantity }}</td>-->
-                            <!--<td>{{ unitOfImport.currencyCode }}</td>-->
-                            <!--<td>{{ unitOfImport.currency.shortDescription}}</td>-->
-                            <!--<td>{{ unitOfImport.summ | number : '1.2-2'}}</td>-->
-                            <!--&lt;!&ndash;<td>{{ unitOfImport.producer.address }}, {{ unitOfImport.producer.country.description }}</td>&ndash;&gt;-->
-                            <!--<td>{{ unitOfImport.expirationDate | date:'mediumDate' }}</td>-->
-                            <!--<td>{{ unitOfImport.customsCode.code }}</td>-->
-                            <!--<td>-->
-                                <!--<mat-checkbox [disabled]="true" [checked]="importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved" (change)="setApproved(i)"></mat-checkbox>-->
-                            <!--</td>-->
-                            <!--<td>-->
-                                <!--<button class="btn btn-primary waves-light btn-sm waves-light" (click)="showunitOfImport(unitOfImport, i)" mdbWavesEffect>Adaugă</button>-->
-                            <!--</td>-->
+                        <!--<th scope="row">{{ unitOfImport.name }}</th>-->
+                        <!--<td *ngIf="importData.importAuthorizationEntity.medType!==4">{{ unitOfImport.atcCode.code}}</td>-->
+                        <!--<td>{{ unitOfImport.dose }}</td>-->
+                        <!--<td>{{ unitOfImport.unitsOfMeasurement }}</td>-->
+                        <!--<td>{{ unitOfImport.producer.description }}</td>-->
+                        <!--<td>{{ unitOfImport.quantity }}</td>-->
+                        <!--<td>{{ unitOfImport.approvedQuantity }}</td>-->
+                        <!--<td>{{ unitOfImport.currencyCode }}</td>-->
+                        <!--<td>{{ unitOfImport.currency.shortDescription}}</td>-->
+                        <!--<td>{{ unitOfImport.summ | number : '1.2-2'}}</td>-->
+                        <!--&lt;!&ndash;<td>{{ unitOfImport.producer.address }}, {{ unitOfImport.producer.country.description }}</td>&ndash;&gt;-->
+                        <!--<td>{{ unitOfImport.expirationDate | date:'mediumDate' }}</td>-->
+                        <!--<td>{{ unitOfImport.customsCode.code }}</td>-->
+                        <!--<td>-->
+                        <!--<mat-checkbox [disabled]="true" [checked]="importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved" (change)="setApproved(i)"></mat-checkbox>-->
+                        <!--</td>-->
+                        <!--<td>-->
+                        <!--<button class="btn btn-primary waves-light btn-sm waves-light" (click)="showunitOfImport(unitOfImport, i)" mdbWavesEffect>Adaugă</button>-->
+                        <!--</td>-->
                         <!--</tr>-->
 
                         <tr *ngFor="let invoiceDetail of invoiceDetails;let i = index">
@@ -348,12 +432,12 @@
                     <!--</div>-->
 
                     <!--<button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc()">Autorizatie</button>-->
-                        <button class="btn btn-primary waves-light btn-sm waves-light pull-right"  (click)="showunitOfImport()" mdbWavesEffect>Adaugă unitate de import</button>
+                    <button class="btn btn-primary waves-light btn-sm waves-light pull-right" (click)="showunitOfImport()" mdbWavesEffect>Adaugă unitate de import</button>
 
 
                     <hr>
-                   <br>
-                   <br>
+                    <br>
+                    <br>
                 </section>
                 <div class="text-center">
                     <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(true)" type="button">Sălvează Declarația</button>

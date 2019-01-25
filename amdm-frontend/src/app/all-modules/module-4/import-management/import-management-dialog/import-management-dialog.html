@@ -24,7 +24,7 @@
                                 required="true">
                             <ng-template ng-option-tmp let-item="item">
                                 {{item.name}} <br/>
-                                <small class="form-text text-muted">Cod: {{item.codeAmed}}</small>
+                                <small class="form-text text-muted" *ngIf="item.codeAmed">Cod: {{item.codeAmed}}</small>
                                 <!--<small class="form-text text-muted">Cantitatea aprobată: {{item.approvedQuantity}}</small>-->
                             </ng-template>
                         </ng-select>
@@ -114,7 +114,7 @@
 
                 <div class="col-4">
                     <div class="md-form">
-                        <input id="quantity" mdbInputDirective type="number" min="0" onkeypress="return event.charCode >= 48" class="form-control"
+                        <input id="quantity" mdbInputDirective type="number" min="0"  class="form-control"
                                formControlName="quantity">
                         <!--[attr.disabled]="true"-->
                         <label for="quantity">Cantitatea spre import</label>

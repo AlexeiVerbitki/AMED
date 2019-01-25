@@ -259,6 +259,14 @@ export class ImportManagement implements OnInit {
                             'medType': [''],
                             'importAuthorizationDetailsEntityList': [],
                             'authorized': [],
+
+                            'invoiceNumber': [null, Validators.required],
+                            'invoiceSpecificatie': [null, Validators.required],
+                            'invoiceBasis': [null, Validators.required],
+                            'invoiceCustomsCode': [null, Validators.required],
+                            'invoiceCustomsNumber': [null, Validators.required],
+                            'invoiceCustomsDate': [null, Validators.required],
+
                             'unitOfImportTable': this.fb.group({
 
                                 customsCode: [null, Validators.required],

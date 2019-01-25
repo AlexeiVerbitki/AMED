@@ -355,7 +355,7 @@ export class ImportManagementDialog implements OnInit {
 
 
 
-                if (val + this.addedUnits > this.remainingUnits) {
+                if (val > this.remainingUnits) {
                     this.invalidQuantity = true;
                     console.log('invalidQuantity', this.invalidQuantity);
                 } else {
@@ -422,8 +422,8 @@ export class ImportManagementDialog implements OnInit {
                         }));
 
 
-                        if (val.medicament.code) {
-                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(val.medicament.code);
+                        if (val.medicament.name) {
+                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(val.medicament.name);
                         }
                         if (val.medicament.customsCode) {
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.medicament.customsCode);
