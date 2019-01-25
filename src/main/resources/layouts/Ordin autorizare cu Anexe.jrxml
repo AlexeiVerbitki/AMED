@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Ordin Autorizare cu Anexe" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="10" uuid="523fb55a-b7a8-4c3c-86ea-fd79290ecf5e">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Ordin Autorizare cu Anexe" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="40" rightMargin="20" topMargin="15" bottomMargin="15" uuid="523fb55a-b7a8-4c3c-86ea-fd79290ecf5e">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -149,7 +140,7 @@
 				<imageExpression><![CDATA["layouts/icons/header_left.jpg"]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="261" y="4" width="289" height="53" uuid="ae27ee01-a17f-4e89-81b4-1417b9af443c"/>
+				<reportElement x="261" y="4" width="279" height="53" uuid="ae27ee01-a17f-4e89-81b4-1417b9af443c"/>
 				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
 		</band>
@@ -164,7 +155,7 @@
 				<textFieldExpression><![CDATA["Nr. " + $P{nr} + " din " + $P{date}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="340" y="510" width="210" height="20" uuid="9c72c804-99d2-42d4-8c38-28919fc98912"/>
+				<reportElement x="320" y="510" width="210" height="20" uuid="9c72c804-99d2-42d4-8c38-28919fc98912"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" isBold="true"/>
 				</textElement>
@@ -186,14 +177,14 @@
 ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="160" width="550" height="130" uuid="9b30dd2a-dd59-4225-9430-4ceb294c9ea4"/>
+				<reportElement x="0" y="160" width="535" height="130" uuid="9b30dd2a-dd59-4225-9430-4ceb294c9ea4"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="false"/>
 				</textElement>
 				<text><![CDATA[	În conformitate cu prevederile Legii nr. 1456-XII din 25 mai 1993 cu privire la activitatea farmaceutică, Legii nr. 1409-XIII din 17 decembrie 1997 cu privire la medicamente, Hotărîrii Guvernului nr.348 din 26 mai 2014 cu privire la tarifele pentru serviciile prestate de către Agenția Medicamentului și Dispozitivelor Medicale și a ordinului Ministerului Sănătății nr. 739 din 23 iulie 2012 Cu privire la reglementarea autorizării produselor medicamentoase de uz uman și introducerea modificărilor postautorizare, în temeiul deciziei Comisiei Medicamentului din cadrul Agenției Medicamentului și Dispozitivelor Medicale (proces verbal nr. 8 din 29 noiembrie 2018) precum și în baza Regulamentului privind organizarea și funcționarea Agenției Medicamentului și Dispozitivelor Medicale, aprobat prin Hotărîrea Guvernului nr. 71 din 23 ianuarie 2013 cu modificările și completările ulterioare]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="4" y="40" width="547" height="30" uuid="cb4d677c-432f-4ffa-b404-3f659dc60536"/>
+				<reportElement x="0" y="40" width="535" height="30" uuid="cb4d677c-432f-4ffa-b404-3f659dc60536"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
@@ -202,7 +193,7 @@ mun. Chișinău
 ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="2" y="301" width="547" height="20" uuid="f1e5bf45-df9a-4d43-b663-6077e5a3f04c"/>
+				<reportElement x="0" y="301" width="535" height="20" uuid="f1e5bf45-df9a-4d43-b663-6077e5a3f04c"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
@@ -210,7 +201,7 @@ mun. Chișinău
 ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="2" y="320" width="550" height="170" uuid="21da8bc6-e062-4727-aa4a-b3b607e679ff"/>
+				<reportElement x="0" y="320" width="535" height="170" uuid="21da8bc6-e062-4727-aa4a-b3b607e679ff"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
@@ -226,56 +217,56 @@ mun. Chișinău
 		</band>
 		<band height="217">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="374" y="10" width="175" height="19" uuid="06dc1102-d4d9-474e-b440-831fd40adf03"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="10" width="535" height="19" uuid="06dc1102-d4d9-474e-b440-831fd40adf03"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Anexa 1 la ordinul AMDM"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="377" y="29" width="172" height="20" isPrintWhenDetailOverflows="true" uuid="6f689b77-caab-484b-9f57-5a5c2491a0a3"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="29" width="535" height="20" isPrintWhenDetailOverflows="true" uuid="6f689b77-caab-484b-9f57-5a5c2491a0a3"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="9" isUnderline="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["nr. "+($P{nr}!=null?$P{nr}:"____________________")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="377" y="49" width="172" height="20" isPrintWhenDetailOverflows="true" uuid="495837c4-90dd-4a70-821c-4be83dd13a8c"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="49" width="535" height="20" isPrintWhenDetailOverflows="true" uuid="495837c4-90dd-4a70-821c-4be83dd13a8c"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="9" isUnderline="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["din "+($P{date}!=null?$P{date}:"____________________")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="0" y="82" width="555" height="18" isPrintWhenDetailOverflows="true" uuid="6135f848-87f6-4e04-8da1-20efa78d327d"/>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="82" width="535" height="18" isPrintWhenDetailOverflows="true" uuid="6135f848-87f6-4e04-8da1-20efa78d327d"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["LISTA produselor medicamentoase autohtone autorizate în Republica Moldova"]]></textFieldExpression>
 			</textField>
 			<componentElement>
-				<reportElement stretchType="RelativeToTallestObject" x="0" y="109" width="555" height="81" uuid="7cab3a15-c215-4459-9be0-5f4ed225fc60">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="109" width="535" height="81" uuid="7cab3a15-c215-4459-9be0-5f4ed225fc60">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
 					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
-					<property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
 					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
+					<property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="Dataset_1" uuid="decdc6f1-0b4a-4628-afa7-f6659b0f4b9b">
 						<dataSourceExpression><![CDATA[$P{annex1DataSource}]]></dataSourceExpression>
 					</datasetRun>
-					<jr:columnGroup width="555" uuid="8398885b-edd8-4bad-b914-414ba92ee9ba">
+					<jr:columnGroup width="535" uuid="8398885b-edd8-4bad-b914-414ba92ee9ba">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [8]"/>
 						<jr:columnHeader style="Table_TD" height="0" rowSpan="1"/>
-						<jr:columnGroup width="555" uuid="042443ef-5e74-4505-99c7-dd4f1bcdcd08">
+						<jr:columnGroup width="535" uuid="042443ef-5e74-4505-99c7-dd4f1bcdcd08">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [8]"/>
-							<jr:column width="44" uuid="1d68d848-0c16-4a62-a870-17e6fc9faf71">
+							<jr:column width="43" uuid="1d68d848-0c16-4a62-a870-17e6fc9faf71">
 								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 								<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
 									<staticText>
-										<reportElement x="0" y="0" width="44" height="50" uuid="6d0a729a-9c3b-47d4-81b5-67a10f7af49e"/>
+										<reportElement x="0" y="0" width="43" height="50" uuid="6d0a729a-9c3b-47d4-81b5-67a10f7af49e"/>
 										<textElement textAlignment="Center">
 											<font fontName="DejaVu Sans" size="9" isBold="true"/>
 										</textElement>
@@ -284,7 +275,7 @@ mun. Chișinău
 								</jr:columnHeader>
 								<jr:detailCell style="Table_TD" height="30">
 									<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-										<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="44" height="30" isPrintWhenDetailOverflows="true" uuid="87756e06-fdfd-49a9-b9f5-6ad8f0960632"/>
+										<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="43" height="30" isPrintWhenDetailOverflows="true" uuid="87756e06-fdfd-49a9-b9f5-6ad8f0960632"/>
 										<textElement textAlignment="Center">
 											<font fontName="DejaVu Sans" size="8"/>
 										</textElement>
@@ -292,11 +283,11 @@ mun. Chișinău
 									</textField>
 								</jr:detailCell>
 							</jr:column>
-							<jr:column width="56" uuid="b882c479-3158-40b6-bca2-d3031e9f364d">
+							<jr:column width="54" uuid="b882c479-3158-40b6-bca2-d3031e9f364d">
 								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
 								<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
 									<staticText>
-										<reportElement x="0" y="0" width="56" height="50" uuid="af58293b-b11d-42a2-8e7e-2c722b29a90c"/>
+										<reportElement x="0" y="0" width="54" height="50" uuid="af58293b-b11d-42a2-8e7e-2c722b29a90c"/>
 										<textElement textAlignment="Center">
 											<font fontName="DejaVu Sans" size="9" isBold="true"/>
 										</textElement>
@@ -305,7 +296,7 @@ mun. Chișinău
 								</jr:columnHeader>
 								<jr:detailCell style="Table_TD" height="30">
 									<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-										<reportElement stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="0" y="0" width="56" height="30" isPrintWhenDetailOverflows="true" uuid="b8c3a692-1e86-40c2-bbc0-b85b58e7133a"/>
+										<reportElement stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="0" y="0" width="54" height="30" isPrintWhenDetailOverflows="true" uuid="b8c3a692-1e86-40c2-bbc0-b85b58e7133a"/>
 										<textElement textAlignment="Center">
 											<font fontName="DejaVu Sans" size="8"/>
 										</textElement>
@@ -313,11 +304,11 @@ mun. Chișinău
 									</textField>
 								</jr:detailCell>
 							</jr:column>
-							<jr:column width="79" uuid="6bb5bf6d-a8a8-46ec-a7d5-215e39aac860">
+							<jr:column width="77" uuid="6bb5bf6d-a8a8-46ec-a7d5-215e39aac860">
 								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
 								<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
 									<staticText>
-										<reportElement x="0" y="0" width="79" height="50" uuid="2efbf78b-2c55-4bcb-9d87-14ceeb0d2d67"/>
+										<reportElement x="0" y="0" width="77" height="50" uuid="2efbf78b-2c55-4bcb-9d87-14ceeb0d2d67"/>
 										<textElement>
 											<font fontName="DejaVu Sans" size="9" isBold="true"/>
 										</textElement>
@@ -326,7 +317,7 @@ mun. Chișinău
 								</jr:columnHeader>
 								<jr:detailCell style="Table_TD" height="30">
 									<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-										<reportElement stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="0" y="0" width="79" height="30" isPrintWhenDetailOverflows="true" uuid="05551d63-9f41-449d-bc8e-f201c64b7646"/>
+										<reportElement stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="0" y="0" width="77" height="30" isPrintWhenDetailOverflows="true" uuid="05551d63-9f41-449d-bc8e-f201c64b7646"/>
 										<textElement>
 											<font fontName="DejaVu Sans" size="8"/>
 										</textElement>
@@ -334,11 +325,11 @@ mun. Chișinău
 									</textField>
 								</jr:detailCell>
 							</jr:column>
-							<jr:column width="71" uuid="b4612ec7-1eea-4947-947f-7ddaa8e964c4">
+							<jr:column width="68" uuid="b4612ec7-1eea-4947-947f-7ddaa8e964c4">
 								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
 								<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
 									<staticText>
-										<reportElement x="0" y="0" width="71" height="50" uuid="c6bf1000-c911-4d26-a5a7-58826fe7b17b"/>
+										<reportElement x="0" y="0" width="68" height="50" uuid="c6bf1000-c911-4d26-a5a7-58826fe7b17b"/>
 										<textElement textAlignment="Center">
 											<font fontName="DejaVu Sans" size="9" isBold="true"/>
 										</textElement>
@@ -347,7 +338,7 @@ mun. Chișinău
 								</jr:columnHeader>
 								<jr:detailCell style="Table_TD" height="30">
 									<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-										<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="71" height="30" isPrintWhenDetailOverflows="true" uuid="560e9dbf-64a8-4c8a-a679-d383c12ee68b"/>
+										<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="68" height="30" isPrintWhenDetailOverflows="true" uuid="560e9dbf-64a8-4c8a-a679-d383c12ee68b"/>
 										<textElement textAlignment="Center">
 											<font fontName="DejaVu Sans" size="8"/>
 										</textElement>
@@ -355,11 +346,11 @@ mun. Chișinău
 									</textField>
 								</jr:detailCell>
 							</jr:column>
-							<jr:column width="89" uuid="dde34036-aaae-477f-8de8-e894fc3f0f5f">
+							<jr:column width="85" uuid="dde34036-aaae-477f-8de8-e894fc3f0f5f">
 								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
 								<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
 									<staticText>
-										<reportElement x="0" y="0" width="89" height="50" uuid="c6009a85-3e83-4133-808d-24536137c326"/>
+										<reportElement x="0" y="0" width="85" height="50" uuid="c6009a85-3e83-4133-808d-24536137c326"/>
 										<textElement textAlignment="Center">
 											<font fontName="DejaVu Sans" size="9" isBold="true"/>
 										</textElement>
@@ -368,7 +359,7 @@ mun. Chișinău
 								</jr:columnHeader>
 								<jr:detailCell style="Table_TD" height="30">
 									<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-										<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="89" height="30" isPrintWhenDetailOverflows="true" uuid="669bb570-391a-4420-bf97-7207e8ce7d70"/>
+										<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="85" height="30" isPrintWhenDetailOverflows="true" uuid="669bb570-391a-4420-bf97-7207e8ce7d70"/>
 										<textElement textAlignment="Center">
 											<font fontName="DejaVu Sans" size="8"/>
 										</textElement>
@@ -376,11 +367,11 @@ mun. Chișinău
 									</textField>
 								</jr:detailCell>
 							</jr:column>
-							<jr:column width="81" uuid="bcc27ae4-abff-4d05-9d0e-1355ca8e9d92">
+							<jr:column width="78" uuid="bcc27ae4-abff-4d05-9d0e-1355ca8e9d92">
 								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
 								<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
 									<staticText>
-										<reportElement x="0" y="0" width="81" height="50" uuid="52a54445-69cb-41d6-b1ff-b31439e952f1"/>
+										<reportElement x="0" y="0" width="78" height="50" uuid="52a54445-69cb-41d6-b1ff-b31439e952f1"/>
 										<textElement textAlignment="Center">
 											<font fontName="DejaVu Sans" size="9" isBold="true"/>
 										</textElement>
@@ -389,7 +380,7 @@ mun. Chișinău
 								</jr:columnHeader>
 								<jr:detailCell style="Table_TD" height="30">
 									<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-										<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="81" height="30" isPrintWhenDetailOverflows="true" uuid="d7992b5f-487f-4cb6-a7b0-72b5f54158dc"/>
+										<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="78" height="30" isPrintWhenDetailOverflows="true" uuid="d7992b5f-487f-4cb6-a7b0-72b5f54158dc"/>
 										<textElement textAlignment="Center">
 											<font fontName="DejaVu Sans" size="8"/>
 										</textElement>
@@ -397,11 +388,11 @@ mun. Chișinău
 									</textField>
 								</jr:detailCell>
 							</jr:column>
-							<jr:column width="55" uuid="2d0f1ab6-7d01-44ff-9672-8ca604a78a31">
+							<jr:column width="53" uuid="2d0f1ab6-7d01-44ff-9672-8ca604a78a31">
 								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
 								<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
 									<staticText>
-										<reportElement x="0" y="0" width="55" height="50" uuid="cdfb1540-8dde-4eea-9666-65f56b1403bb"/>
+										<reportElement x="0" y="0" width="53" height="50" uuid="cdfb1540-8dde-4eea-9666-65f56b1403bb"/>
 										<textElement textAlignment="Center">
 											<font fontName="DejaVu Sans" size="9" isBold="true"/>
 										</textElement>
@@ -410,7 +401,7 @@ mun. Chișinău
 								</jr:columnHeader>
 								<jr:detailCell style="Table_TD" height="30">
 									<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-										<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" isPrintWhenDetailOverflows="true" uuid="b14ecf88-df61-4a2e-9c0b-7d646079b57b"/>
+										<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="53" height="30" isPrintWhenDetailOverflows="true" uuid="b14ecf88-df61-4a2e-9c0b-7d646079b57b"/>
 										<textElement textAlignment="Center">
 											<font fontName="DejaVu Sans" size="8"/>
 										</textElement>
@@ -418,11 +409,11 @@ mun. Chișinău
 									</textField>
 								</jr:detailCell>
 							</jr:column>
-							<jr:column width="80" uuid="21fe649b-53ec-4cb6-9943-7b8ee56a509d">
+							<jr:column width="77" uuid="21fe649b-53ec-4cb6-9943-7b8ee56a509d">
 								<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
 								<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
 									<staticText>
-										<reportElement x="0" y="0" width="80" height="50" uuid="b014f7fd-b15e-4014-9628-10d8d0be00e5"/>
+										<reportElement x="0" y="0" width="77" height="50" uuid="b014f7fd-b15e-4014-9628-10d8d0be00e5"/>
 										<textElement textAlignment="Center">
 											<font fontName="DejaVu Sans" size="9" isBold="true"/>
 										</textElement>
@@ -431,7 +422,7 @@ mun. Chișinău
 								</jr:columnHeader>
 								<jr:detailCell style="Table_TD" height="30">
 									<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-										<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="80" height="30" isPrintWhenDetailOverflows="true" uuid="0bd4fd22-23b4-4f69-a59b-0a1b7701575a"/>
+										<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="77" height="30" isPrintWhenDetailOverflows="true" uuid="0bd4fd22-23b4-4f69-a59b-0a1b7701575a"/>
 										<textElement textAlignment="Center">
 											<font fontName="DejaVu Sans" size="8"/>
 										</textElement>
@@ -452,7 +443,7 @@ mun. Chișinău
 				<reportElement x="0" y="160" width="551" height="1" uuid="28d4b9ba-010b-47a3-9341-b7bcb5c6c2bd"/>
 			</break>
 			<componentElement>
-				<reportElement stretchType="RelativeToTallestObject" x="0" y="92" width="555" height="60" uuid="a5bab3ff-7e47-459b-b6af-5ae098c43908">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="92" width="535" height="60" uuid="a5bab3ff-7e47-459b-b6af-5ae098c43908">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
@@ -463,14 +454,14 @@ mun. Chișinău
 					<datasetRun subDataset="Dataset_2" uuid="c5a4f4c0-0355-4c52-8646-9decddde13e9">
 						<dataSourceExpression><![CDATA[$P{annex2DataSource}]]></dataSourceExpression>
 					</datasetRun>
-					<jr:columnGroup width="555" uuid="a41d306c-ece9-4130-b657-0d3dd95462b1">
+					<jr:columnGroup width="535" uuid="a41d306c-ece9-4130-b657-0d3dd95462b1">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [8]"/>
 						<jr:columnHeader style="Table_TD" height="0" rowSpan="1"/>
-						<jr:column width="51" uuid="ce626cd5-e0e2-4e84-9ab6-1f5709d05269">
+						<jr:column width="50" uuid="ce626cd5-e0e2-4e84-9ab6-1f5709d05269">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 							<jr:columnHeader style="Table_CH" height="40" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="51" height="40" uuid="d8297e8c-d18d-4379-988a-ae9499dce008"/>
+									<reportElement x="0" y="0" width="50" height="40" uuid="d8297e8c-d18d-4379-988a-ae9499dce008"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -479,7 +470,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="51" height="20" isPrintWhenDetailOverflows="true" uuid="f7b253bb-5f9f-4186-965d-75b198b1c653"/>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="50" height="20" isPrintWhenDetailOverflows="true" uuid="f7b253bb-5f9f-4186-965d-75b198b1c653"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -487,11 +478,11 @@ mun. Chișinău
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="62" uuid="d6a497f1-dd71-4861-8586-87f94765bd86">
+						<jr:column width="60" uuid="d6a497f1-dd71-4861-8586-87f94765bd86">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
 							<jr:columnHeader style="Table_CH" height="40">
 								<staticText>
-									<reportElement x="0" y="0" width="62" height="40" uuid="1949635b-f299-4dde-8c10-ef6a848f5506"/>
+									<reportElement x="0" y="0" width="60" height="40" uuid="1949635b-f299-4dde-8c10-ef6a848f5506"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -500,7 +491,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="0" y="0" width="62" height="20" isPrintWhenDetailOverflows="true" uuid="b09c7f09-fdc8-488e-9f1a-4e2004cff818"/>
+									<reportElement stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="0" y="0" width="60" height="20" isPrintWhenDetailOverflows="true" uuid="b09c7f09-fdc8-488e-9f1a-4e2004cff818"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -508,11 +499,11 @@ mun. Chișinău
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="79" uuid="ac49a8dd-8671-4dfc-8ed9-ff521c6b9ed5">
+						<jr:column width="77" uuid="ac49a8dd-8671-4dfc-8ed9-ff521c6b9ed5">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
 							<jr:columnHeader style="Table_CH" height="40">
 								<staticText>
-									<reportElement x="0" y="0" width="79" height="40" uuid="bfd34774-34bd-4dd8-bf90-addd2ac1235d"/>
+									<reportElement x="0" y="0" width="77" height="40" uuid="bfd34774-34bd-4dd8-bf90-addd2ac1235d"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -521,7 +512,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="0" y="0" width="79" height="20" isPrintWhenDetailOverflows="true" uuid="a5c8eefe-4126-4a26-81ff-44d0a67adac6"/>
+									<reportElement stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="0" y="0" width="77" height="20" isPrintWhenDetailOverflows="true" uuid="a5c8eefe-4126-4a26-81ff-44d0a67adac6"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -529,11 +520,11 @@ mun. Chișinău
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="77" uuid="addb5799-2259-45a7-8a06-6649ac9506c6">
+						<jr:column width="74" uuid="addb5799-2259-45a7-8a06-6649ac9506c6">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
 							<jr:columnHeader style="Table_CH" height="40" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="77" height="40" uuid="fd0f5525-999d-440b-ac0f-f261bea63add"/>
+									<reportElement x="0" y="0" width="74" height="40" uuid="fd0f5525-999d-440b-ac0f-f261bea63add"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -542,7 +533,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="77" height="20" isPrintWhenDetailOverflows="true" uuid="1d1e4f3b-dd21-4b14-bfe6-2b162814faba"/>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="74" height="20" isPrintWhenDetailOverflows="true" uuid="1d1e4f3b-dd21-4b14-bfe6-2b162814faba"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -550,11 +541,11 @@ mun. Chișinău
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="82" uuid="b51fa494-e670-4f9a-bb5f-546657ccf998">
+						<jr:column width="79" uuid="b51fa494-e670-4f9a-bb5f-546657ccf998">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
 							<jr:columnHeader style="Table_CH" height="40" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="82" height="40" uuid="204c2ace-eab7-40e6-b9e7-79dc7706f7ba"/>
+									<reportElement x="0" y="0" width="79" height="40" uuid="204c2ace-eab7-40e6-b9e7-79dc7706f7ba"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -563,7 +554,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="82" height="20" isPrintWhenDetailOverflows="true" uuid="02870cd8-f64e-4781-9d8d-d442799b24f0"/>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="79" height="20" isPrintWhenDetailOverflows="true" uuid="02870cd8-f64e-4781-9d8d-d442799b24f0"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -571,11 +562,11 @@ mun. Chișinău
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="79" uuid="f934ceb4-082f-4d60-ae54-b5263b94c502">
+						<jr:column width="76" uuid="f934ceb4-082f-4d60-ae54-b5263b94c502">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
 							<jr:columnHeader style="Table_CH" height="40" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="79" height="40" uuid="cb764cd6-3eca-469f-ab65-f550d14e4e99"/>
+									<reportElement x="0" y="0" width="76" height="40" uuid="cb764cd6-3eca-469f-ab65-f550d14e4e99"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -584,7 +575,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="79" height="20" isPrintWhenDetailOverflows="true" uuid="f7858ce6-be04-4011-9df2-cadcb771d117"/>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="76" height="20" isPrintWhenDetailOverflows="true" uuid="f7858ce6-be04-4011-9df2-cadcb771d117"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -592,11 +583,11 @@ mun. Chișinău
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="63" uuid="51915d7c-a211-4b31-8cc5-0cc39d506490">
+						<jr:column width="60" uuid="51915d7c-a211-4b31-8cc5-0cc39d506490">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
 							<jr:columnHeader style="Table_CH" height="40" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="63" height="40" uuid="084163b9-199e-4005-9a79-227a2e34d379"/>
+									<reportElement x="0" y="0" width="60" height="40" uuid="084163b9-199e-4005-9a79-227a2e34d379"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -605,7 +596,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="63" height="20" isPrintWhenDetailOverflows="true" uuid="384f891a-136c-46d7-a491-9b51bbd5e89b"/>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="20" isPrintWhenDetailOverflows="true" uuid="384f891a-136c-46d7-a491-9b51bbd5e89b"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -613,11 +604,11 @@ mun. Chișinău
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="62" uuid="d113f0a4-c5c2-4c7d-a29c-5abdba80c9b4">
+						<jr:column width="59" uuid="d113f0a4-c5c2-4c7d-a29c-5abdba80c9b4">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
 							<jr:columnHeader style="Table_CH" height="40" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="62" height="40" uuid="45ab38ac-7132-4e32-887e-9d4f1846afee"/>
+									<reportElement x="0" y="0" width="59" height="40" uuid="45ab38ac-7132-4e32-887e-9d4f1846afee"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -626,7 +617,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="62" height="20" isPrintWhenDetailOverflows="true" uuid="5db684f8-a61f-405b-bf76-3bb025a8a108"/>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="59" height="20" isPrintWhenDetailOverflows="true" uuid="5db684f8-a61f-405b-bf76-3bb025a8a108"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -638,28 +629,28 @@ mun. Chișinău
 				</jr:table>
 			</componentElement>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="0" y="65" width="555" height="18" isPrintWhenDetailOverflows="true" uuid="ecd5d0f7-ffd7-4075-864c-5ebfdcef563d"/>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="65" width="535" height="18" isPrintWhenDetailOverflows="true" uuid="ecd5d0f7-ffd7-4075-864c-5ebfdcef563d"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["LISTA produselor medicamentoase de import autorizate în Republica Moldova"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="383" y="42" width="172" height="20" isPrintWhenDetailOverflows="true" uuid="ffb8311a-dbcd-48d6-8386-67b43afcf8fc"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="42" width="535" height="20" isPrintWhenDetailOverflows="true" uuid="ffb8311a-dbcd-48d6-8386-67b43afcf8fc"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="9" isUnderline="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["din "+($P{date}!=null?$P{date}:"____________________")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="383" y="22" width="172" height="20" isPrintWhenDetailOverflows="true" uuid="dc863c87-553b-4807-aec9-0135a3117cd2"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="22" width="535" height="20" isPrintWhenDetailOverflows="true" uuid="dc863c87-553b-4807-aec9-0135a3117cd2"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="9" isUnderline="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["nr. "+($P{nr}!=null?$P{nr}:"____________________")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="380" y="3" width="175" height="19" uuid="9d156049-b4c2-4171-8b6f-c6fdb6b86b2a"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="3" width="535" height="19" uuid="9d156049-b4c2-4171-8b6f-c6fdb6b86b2a"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="9"/>
 				</textElement>
@@ -671,7 +662,7 @@ mun. Chișinău
 				<reportElement x="0" y="180" width="554" height="1" uuid="dca07da9-5381-40b5-87e3-fa8a6adccf9b"/>
 			</break>
 			<componentElement>
-				<reportElement stretchType="RelativeToTallestObject" x="1" y="101" width="555" height="70" uuid="d94781b2-e7d0-4145-8790-657ae81ca0b0">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="101" width="535" height="70" uuid="d94781b2-e7d0-4145-8790-657ae81ca0b0">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
@@ -682,14 +673,14 @@ mun. Chișinău
 					<datasetRun subDataset="Dataset_3" uuid="39f40f7a-911e-4b6a-947d-d79b550f17b0">
 						<dataSourceExpression><![CDATA[$P{annex3DataSource}]]></dataSourceExpression>
 					</datasetRun>
-					<jr:columnGroup width="555" uuid="b6dd8665-1975-4e02-ad77-1211103fa668">
+					<jr:columnGroup width="535" uuid="b6dd8665-1975-4e02-ad77-1211103fa668">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [8]"/>
 						<jr:columnHeader style="Table_TD" height="0" rowSpan="1"/>
-						<jr:column width="35" uuid="555a3463-d93c-4073-a800-63a806c80ec3">
+						<jr:column width="34" uuid="555a3463-d93c-4073-a800-63a806c80ec3">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 							<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="35" height="50" uuid="f232e081-a453-4ef2-803e-16161a43456c"/>
+									<reportElement x="0" y="0" width="34" height="50" uuid="f232e081-a453-4ef2-803e-16161a43456c"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -698,7 +689,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="35" height="20" isPrintWhenDetailOverflows="true" uuid="f4d03df3-e81d-46fb-903a-c3fdc64e169a"/>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="34" height="20" isPrintWhenDetailOverflows="true" uuid="f4d03df3-e81d-46fb-903a-c3fdc64e169a"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -706,11 +697,11 @@ mun. Chișinău
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="61" uuid="6a0a292d-f86f-4564-bf58-cbb35c8d38c1">
+						<jr:column width="59" uuid="6a0a292d-f86f-4564-bf58-cbb35c8d38c1">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
 							<jr:columnHeader style="Table_CH" height="50">
 								<staticText>
-									<reportElement x="0" y="0" width="61" height="50" uuid="fc07ef7c-e764-4ea9-87ae-43f133ba72bb"/>
+									<reportElement x="0" y="0" width="59" height="50" uuid="fc07ef7c-e764-4ea9-87ae-43f133ba72bb"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -719,7 +710,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="0" y="0" width="61" height="20" isPrintWhenDetailOverflows="true" uuid="84335dba-95f1-4ee6-a61d-d99645bf9475"/>
+									<reportElement stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="0" y="0" width="59" height="20" isPrintWhenDetailOverflows="true" uuid="84335dba-95f1-4ee6-a61d-d99645bf9475"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -727,11 +718,11 @@ mun. Chișinău
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="99" uuid="5917d232-71d9-4a67-b8cb-addc3b39543b">
+						<jr:column width="96" uuid="5917d232-71d9-4a67-b8cb-addc3b39543b">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
 							<jr:columnHeader style="Table_CH" height="50">
 								<staticText>
-									<reportElement x="0" y="0" width="99" height="50" uuid="46c57242-dff9-44b3-a115-f82c5181bfb7"/>
+									<reportElement x="0" y="0" width="96" height="50" uuid="46c57242-dff9-44b3-a115-f82c5181bfb7"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -740,7 +731,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="0" y="0" width="99" height="20" isPrintWhenDetailOverflows="true" uuid="65858012-9224-4704-8a0f-79c097b2d133"/>
+									<reportElement stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="0" y="0" width="96" height="20" isPrintWhenDetailOverflows="true" uuid="65858012-9224-4704-8a0f-79c097b2d133"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -748,11 +739,11 @@ mun. Chișinău
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="84" uuid="5d2e8474-17a7-4ebc-9dd5-77ab0e103094">
+						<jr:column width="81" uuid="5d2e8474-17a7-4ebc-9dd5-77ab0e103094">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
 							<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="84" height="50" uuid="eec39c56-2f4a-4c60-b9d7-1a0cb2e2b9d4"/>
+									<reportElement x="0" y="0" width="81" height="50" uuid="eec39c56-2f4a-4c60-b9d7-1a0cb2e2b9d4"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -761,7 +752,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="84" height="20" isPrintWhenDetailOverflows="true" uuid="8636af9d-2538-4b4e-b16a-bb61e631b4be"/>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="81" height="20" isPrintWhenDetailOverflows="true" uuid="8636af9d-2538-4b4e-b16a-bb61e631b4be"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -769,11 +760,11 @@ mun. Chișinău
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="81" uuid="c4683b48-20bd-4cbb-bca3-b855d6be0610">
+						<jr:column width="79" uuid="c4683b48-20bd-4cbb-bca3-b855d6be0610">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
 							<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="81" height="50" uuid="fcc3dfb0-7e20-4f39-bbb1-9dada9a888cb"/>
+									<reportElement x="0" y="0" width="79" height="50" uuid="fcc3dfb0-7e20-4f39-bbb1-9dada9a888cb"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -782,7 +773,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="81" height="20" isPrintWhenDetailOverflows="true" uuid="5b1ac0a8-179e-4c90-b166-74d2fb06126b"/>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="79" height="20" isPrintWhenDetailOverflows="true" uuid="5b1ac0a8-179e-4c90-b166-74d2fb06126b"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -790,11 +781,11 @@ mun. Chișinău
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="73" uuid="0e4b3151-00ef-442a-89f0-356a07efbf2a">
+						<jr:column width="70" uuid="0e4b3151-00ef-442a-89f0-356a07efbf2a">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
 							<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="73" height="50" uuid="dcbd535b-1121-452f-abd8-b300b34b0e36"/>
+									<reportElement x="0" y="0" width="70" height="50" uuid="dcbd535b-1121-452f-abd8-b300b34b0e36"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -803,7 +794,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="73" height="20" isPrintWhenDetailOverflows="true" uuid="6875e845-3f9f-469d-b417-3b2a435de7b2"/>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="70" height="20" isPrintWhenDetailOverflows="true" uuid="6875e845-3f9f-469d-b417-3b2a435de7b2"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -811,11 +802,11 @@ mun. Chișinău
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="63" uuid="95b3cd24-5956-4ed5-a177-1e54cb4726d1">
+						<jr:column width="60" uuid="95b3cd24-5956-4ed5-a177-1e54cb4726d1">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
 							<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="63" height="50" uuid="dc382b9e-b989-425a-acec-fa380bdbb1b9"/>
+									<reportElement x="0" y="0" width="60" height="50" uuid="dc382b9e-b989-425a-acec-fa380bdbb1b9"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -824,7 +815,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="63" height="20" isPrintWhenDetailOverflows="true" uuid="cd36fd2e-5b4d-42bb-9972-4d9ec678cb38"/>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="20" isPrintWhenDetailOverflows="true" uuid="cd36fd2e-5b4d-42bb-9972-4d9ec678cb38"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -832,11 +823,11 @@ mun. Chișinău
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="59" uuid="d5b02fe5-64d0-4e05-9c5b-3df15e9f1cc4">
+						<jr:column width="56" uuid="d5b02fe5-64d0-4e05-9c5b-3df15e9f1cc4">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
 							<jr:columnHeader style="Table_CH" height="50" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="59" height="50" uuid="9d5c4dcf-81e5-4713-a859-68fbf6abc73d"/>
+									<reportElement x="0" y="0" width="56" height="50" uuid="9d5c4dcf-81e5-4713-a859-68fbf6abc73d"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -845,7 +836,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="59" height="20" isPrintWhenDetailOverflows="true" uuid="7676c6bd-040a-49ca-a1d5-4d8e4a21a12c"/>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="56" height="20" isPrintWhenDetailOverflows="true" uuid="7676c6bd-040a-49ca-a1d5-4d8e4a21a12c"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -857,28 +848,28 @@ mun. Chișinău
 				</jr:table>
 			</componentElement>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="0" y="74" width="555" height="18" isPrintWhenDetailOverflows="true" uuid="eaeeb8ab-d81a-4ab0-9f1d-d94283d1beb0"/>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="74" width="535" height="18" isPrintWhenDetailOverflows="true" uuid="eaeeb8ab-d81a-4ab0-9f1d-d94283d1beb0"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["LISTA produselor medicamentoase autohtone autorizate repetat în Republica Moldova"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="383" y="41" width="172" height="20" isPrintWhenDetailOverflows="true" uuid="92fa0753-3bd3-4685-8742-e8de4d4cdc43"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="41" width="535" height="20" isPrintWhenDetailOverflows="true" uuid="92fa0753-3bd3-4685-8742-e8de4d4cdc43"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="9" isUnderline="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["din "+($P{date}!=null?$P{date}:"____________________")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="383" y="21" width="172" height="20" isPrintWhenDetailOverflows="true" uuid="e35bfe0a-e8a5-4a61-9a5a-9bca73dcae6b"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="21" width="535" height="20" isPrintWhenDetailOverflows="true" uuid="e35bfe0a-e8a5-4a61-9a5a-9bca73dcae6b"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="9" isUnderline="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["nr. "+($P{nr}!=null?$P{nr}:"____________________")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="380" y="2" width="175" height="19" uuid="c2fbb2a3-1e40-4a66-af07-971d4c763379"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="2" width="535" height="19" uuid="c2fbb2a3-1e40-4a66-af07-971d4c763379"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="9"/>
 				</textElement>
@@ -887,7 +878,7 @@ mun. Chișinău
 		</band>
 		<band height="168">
 			<componentElement>
-				<reportElement stretchType="RelativeToTallestObject" x="-1" y="101" width="555" height="60" uuid="20d481f6-6f57-4bb1-bbd5-95d673387ec8">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="101" width="535" height="60" uuid="20d481f6-6f57-4bb1-bbd5-95d673387ec8">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
@@ -898,14 +889,14 @@ mun. Chișinău
 					<datasetRun subDataset="Dataset_4" uuid="210b0997-1b48-41cf-8d1f-5a9021a7ac56">
 						<dataSourceExpression><![CDATA[$P{annex4DataSource}]]></dataSourceExpression>
 					</datasetRun>
-					<jr:columnGroup width="555" uuid="e88be9ef-1a40-44c6-bcff-2150bc104d5c">
+					<jr:columnGroup width="535" uuid="e88be9ef-1a40-44c6-bcff-2150bc104d5c">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [8]"/>
 						<jr:columnHeader style="Table_TD" height="0" rowSpan="1"/>
-						<jr:column width="35" uuid="2e42b719-d4b3-4540-875d-cf2fd4a946bb">
+						<jr:column width="34" uuid="2e42b719-d4b3-4540-875d-cf2fd4a946bb">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 							<jr:columnHeader style="Table_CH" height="40" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="35" height="40" uuid="507d1921-5e2c-453a-a825-7b60329847bf"/>
+									<reportElement x="0" y="0" width="34" height="40" uuid="507d1921-5e2c-453a-a825-7b60329847bf"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -914,7 +905,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="35" height="20" isPrintWhenDetailOverflows="true" uuid="bc08a5dc-d356-4836-9ff2-a8046ba394eb"/>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="34" height="20" isPrintWhenDetailOverflows="true" uuid="bc08a5dc-d356-4836-9ff2-a8046ba394eb"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -922,11 +913,11 @@ mun. Chișinău
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="57" uuid="7d8a1dbf-d262-41b5-ad2b-28f5d1f1711d">
+						<jr:column width="55" uuid="7d8a1dbf-d262-41b5-ad2b-28f5d1f1711d">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
 							<jr:columnHeader style="Table_CH" height="40" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="57" height="40" uuid="d774bbbe-9565-4238-ba6b-44cb71686546"/>
+									<reportElement x="0" y="0" width="55" height="40" uuid="d774bbbe-9565-4238-ba6b-44cb71686546"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -935,7 +926,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="0" y="0" width="57" height="20" isPrintWhenDetailOverflows="true" uuid="803bf8cd-109e-4259-99c6-1d0141d672c8"/>
+									<reportElement stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="0" y="0" width="55" height="20" isPrintWhenDetailOverflows="true" uuid="803bf8cd-109e-4259-99c6-1d0141d672c8"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -943,11 +934,11 @@ mun. Chișinău
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="68" uuid="908fc1b9-8a12-4768-a4be-2c020badcf7d">
+						<jr:column width="66" uuid="908fc1b9-8a12-4768-a4be-2c020badcf7d">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
 							<jr:columnHeader style="Table_CH" height="40" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="68" height="40" uuid="7d7df054-8f0b-484e-9b2b-deabc157fc9a"/>
+									<reportElement x="0" y="0" width="66" height="40" uuid="7d7df054-8f0b-484e-9b2b-deabc157fc9a"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -956,7 +947,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="0" y="0" width="68" height="20" isPrintWhenDetailOverflows="true" uuid="ec479d97-9050-408b-b7ee-bc6f178f6783"/>
+									<reportElement stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="0" y="0" width="66" height="20" isPrintWhenDetailOverflows="true" uuid="ec479d97-9050-408b-b7ee-bc6f178f6783"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -964,11 +955,11 @@ mun. Chișinău
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="91" uuid="4b9624fb-5e54-4f29-a44f-5fa2d7d2722d">
+						<jr:column width="88" uuid="4b9624fb-5e54-4f29-a44f-5fa2d7d2722d">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
 							<jr:columnHeader style="Table_CH" height="40" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="91" height="40" uuid="d24424a1-d87c-480c-9d71-1a38ba5a7425"/>
+									<reportElement x="0" y="0" width="88" height="40" uuid="d24424a1-d87c-480c-9d71-1a38ba5a7425"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -977,7 +968,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="91" height="20" isPrintWhenDetailOverflows="true" uuid="c4c0cac2-155e-4c94-86ce-37bc78c4c8c4"/>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="88" height="20" isPrintWhenDetailOverflows="true" uuid="c4c0cac2-155e-4c94-86ce-37bc78c4c8c4"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -985,11 +976,11 @@ mun. Chișinău
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="93" uuid="26205865-e3a1-488e-b876-31c64f95b2ed">
+						<jr:column width="90" uuid="26205865-e3a1-488e-b876-31c64f95b2ed">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
 							<jr:columnHeader style="Table_CH" height="40" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="93" height="40" uuid="e5ac2bb4-d852-49cc-803c-d8e5cfc734ac"/>
+									<reportElement x="0" y="0" width="90" height="40" uuid="e5ac2bb4-d852-49cc-803c-d8e5cfc734ac"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -998,7 +989,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="93" height="20" isPrintWhenDetailOverflows="true" uuid="546452ba-b6e4-42a8-935f-3e4bc3d6e10a"/>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true" uuid="546452ba-b6e4-42a8-935f-3e4bc3d6e10a"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -1006,11 +997,11 @@ mun. Chișinău
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="91" uuid="9eb7864d-b081-4119-a15a-d2f660e5aefc">
+						<jr:column width="88" uuid="9eb7864d-b081-4119-a15a-d2f660e5aefc">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
 							<jr:columnHeader style="Table_CH" height="40" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="91" height="40" uuid="eab90e4e-6c27-4f58-9cb9-d1a27388e49c"/>
+									<reportElement x="0" y="0" width="88" height="40" uuid="eab90e4e-6c27-4f58-9cb9-d1a27388e49c"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -1019,7 +1010,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="91" height="20" isPrintWhenDetailOverflows="true" uuid="fd097871-7c40-4224-bf11-0cb2c97677c3"/>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="88" height="20" isPrintWhenDetailOverflows="true" uuid="fd097871-7c40-4224-bf11-0cb2c97677c3"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -1027,11 +1018,11 @@ mun. Chișinău
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="60" uuid="941138e3-c133-4156-8097-47bb4c033b9f">
+						<jr:column width="57" uuid="941138e3-c133-4156-8097-47bb4c033b9f">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
 							<jr:columnHeader style="Table_CH" height="40" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="60" height="40" uuid="8e47d887-2441-4e50-a699-eb9e46ec99a9"/>
+									<reportElement x="0" y="0" width="57" height="40" uuid="8e47d887-2441-4e50-a699-eb9e46ec99a9"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -1040,7 +1031,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="20" isPrintWhenDetailOverflows="true" uuid="ba0424aa-174f-4c75-a759-2e0b53473f14"/>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="57" height="20" isPrintWhenDetailOverflows="true" uuid="ba0424aa-174f-4c75-a759-2e0b53473f14"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -1048,11 +1039,11 @@ mun. Chișinău
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="60" uuid="49615c7a-ea96-4467-a8c5-135c1cc6865a">
+						<jr:column width="57" uuid="49615c7a-ea96-4467-a8c5-135c1cc6865a">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
 							<jr:columnHeader style="Table_CH" height="40" rowSpan="1">
 								<staticText>
-									<reportElement x="0" y="0" width="60" height="40" uuid="d7e63f67-453d-466b-9631-1129b18db6d5"/>
+									<reportElement x="0" y="0" width="57" height="40" uuid="d7e63f67-453d-466b-9631-1129b18db6d5"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="9" isBold="true"/>
 									</textElement>
@@ -1061,7 +1052,7 @@ mun. Chișinău
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="20">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="20" isPrintWhenDetailOverflows="true" uuid="f7e68a23-67c0-4b72-a47d-300a8c5b484e"/>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="57" height="20" isPrintWhenDetailOverflows="true" uuid="f7e68a23-67c0-4b72-a47d-300a8c5b484e"/>
 									<textElement textAlignment="Center">
 										<font fontName="DejaVu Sans" size="8"/>
 									</textElement>
@@ -1073,28 +1064,28 @@ mun. Chișinău
 				</jr:table>
 			</componentElement>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="-1" y="74" width="555" height="18" isPrintWhenDetailOverflows="true" uuid="f4711b28-9370-484d-b73f-f8c0a795ad46"/>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="74" width="535" height="18" isPrintWhenDetailOverflows="true" uuid="f4711b28-9370-484d-b73f-f8c0a795ad46"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["LISTA produselor medicamentoase de import autorizate repetat în Republica Moldova"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="379" y="41" width="172" height="20" isPrintWhenDetailOverflows="true" uuid="b5908752-c60f-494f-9428-78ffea4654ba"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="41" width="535" height="20" isPrintWhenDetailOverflows="true" uuid="b5908752-c60f-494f-9428-78ffea4654ba"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="9" isUnderline="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["din "+($P{date}!=null?$P{date}:"____________________")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="379" y="21" width="172" height="20" isPrintWhenDetailOverflows="true" uuid="1138d848-f418-4c4e-8911-cb74ebbf71ec"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="21" width="535" height="20" isPrintWhenDetailOverflows="true" uuid="1138d848-f418-4c4e-8911-cb74ebbf71ec"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="9" isUnderline="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["nr. "+($P{nr}!=null?$P{nr}:"____________________")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="379" y="2" width="175" height="19" uuid="f5a2ec3b-dd2c-4aa7-a78e-6e26190a08b6"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="2" width="535" height="19" uuid="f5a2ec3b-dd2c-4aa7-a78e-6e26190a08b6"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="9"/>
 				</textElement>
@@ -1103,9 +1094,9 @@ mun. Chișinău
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="69" splitType="Stretch">
+		<band height="60" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="19" width="280" height="45" uuid="62abd8fc-753c-4d82-926d-20153ed31c42"/>
+				<reportElement x="0" y="8" width="280" height="45" uuid="62abd8fc-753c-4d82-926d-20153ed31c42"/>
 				<textElement markup="none">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
@@ -1116,7 +1107,7 @@ tel. +373 22 884 301, e-mail: office@amed.md; Web: www.amed.md
 ]]></text>
 			</staticText>
 			<image>
-				<reportElement x="483" y="0" width="65" height="60" uuid="36094911-1947-4f9d-a837-51c429be067a"/>
+				<reportElement x="463" y="0" width="65" height="60" uuid="36094911-1947-4f9d-a837-51c429be067a"/>
 				<imageExpression><![CDATA["layouts/icons/cer.png"]]></imageExpression>
 			</image>
 		</band>

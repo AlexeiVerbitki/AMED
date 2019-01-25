@@ -23,7 +23,7 @@ public class InvoiceEntity {
 
 	@Basic
 	@Column(name = "invoice_number")
-	private String invoice_number;
+	private String invoiceNumber;
 
 	@Basic
 	@Column(name = "basis_for_invoice")
@@ -39,7 +39,7 @@ public class InvoiceEntity {
 
 	@Basic
 	@Column(name = "customs_code")
-	private NmCustomsCodesEntity customsCodesEntity;
+	private NmCustomsPointsEntity customsPointsEntity;
 
 	@Basic
 	@Column(name = "specification")

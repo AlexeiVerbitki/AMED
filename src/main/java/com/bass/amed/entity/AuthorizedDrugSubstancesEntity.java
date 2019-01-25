@@ -49,4 +49,8 @@ public class AuthorizedDrugSubstancesEntity {
     @Basic
     @Column(name = "quantity")
     private Double quantity;
+
+    @Basic
+    @Column(name = "unit_of_measure_code")
+    private Double unitOfMeasureCode;
 }

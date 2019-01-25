@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Completare dupa aprobare amendament" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="10" uuid="c084aefd-f7fb-40ce-ab3f-dc897567241a">
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Completare dupa aprobare amendament" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="40" rightMargin="20" topMargin="15" bottomMargin="15" uuid="c084aefd-f7fb-40ce-ab3f-dc897567241a">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
@@ -65,7 +56,7 @@
 				<imageExpression><![CDATA["layouts/icons/header_left.jpg"]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="220" y="0" width="330" height="70" uuid="11dd8ec7-6404-4cc7-9d59-a7e8f6fd0917"/>
+				<reportElement x="220" y="0" width="317" height="70" uuid="11dd8ec7-6404-4cc7-9d59-a7e8f6fd0917"/>
 				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
 		</band>
@@ -73,42 +64,42 @@
 	<detail>
 		<band height="364" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="50" width="554" height="20" uuid="b8809fc8-2a40-4a5a-988b-18213e70bf00"/>
+				<reportElement x="0" y="50" width="535" height="20" uuid="b8809fc8-2a40-4a5a-988b-18213e70bf00"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Nr. " + $P{nr} + " din " +$P{date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="1" y="90" width="553" height="30" uuid="354735f7-8d20-49cf-b842-959a6fcab171"/>
+				<reportElement x="0" y="90" width="535" height="30" uuid="354735f7-8d20-49cf-b842-959a6fcab171"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="11" isBold="true" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Cu privire la aprobarea amendamentelor la studiile clinice"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="2" y="130" width="550" height="120" uuid="cf320ffd-e177-46e2-8b02-4f72e27cc05b"/>
+				<reportElement x="0" y="130" width="535" height="120" uuid="cf320ffd-e177-46e2-8b02-4f72e27cc05b"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<text><![CDATA[	În corespundere cu prevederile art. 11, 15 din Legea nr. 1409-XIII din 17.12.1997  cu privire la medicamente, Hotărârii Guvernului nr. 348 din 26.05.2014 cu privire la tarifele pentru serviciile prestate de către Agenţia Medicamentului şi Dispozitivelor Medicale, În conformitate cu prevederile Ordinului MS nr. 648 din 12 august 2016 Cu privire la reglementarea autorizăii desfășurării studiilor clinice în Republica Moldova, în baza Ordinului Agenţiei Medicamentului şi Dispozitivelor Medicale nr. A07.PS-01:Rg04-14 din 25.01.2016  despre aprobarea listei de experţi din cadrul Agenţiei Medicamentului şi Dispozitivelor Medicale, precum şi în baza deciziilor Comisiei Medicamentului din cadrul Agenţiei Medicamentului şi Dispozitivelor Medicale (procesul verbal nr. 5 din  26.07.2018)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="20" width="553" height="18" uuid="6ce57821-4c0d-45d5-bc85-4cae0cb70eca"/>
+				<reportElement x="0" y="20" width="535" height="18" uuid="6ce57821-4c0d-45d5-bc85-4cae0cb70eca"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[ORDIN]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="197" y="255" width="160" height="18" uuid="e43367bd-274e-4a3f-a580-14c905e75544"/>
+				<reportElement x="0" y="255" width="535" height="18" uuid="e43367bd-274e-4a3f-a580-14c905e75544"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[ORDON:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="285" width="553" height="20" uuid="5ba55aac-7945-4f4c-b75d-ce5daae4247b"/>
+				<reportElement x="0" y="285" width="535" height="20" uuid="5ba55aac-7945-4f4c-b75d-ce5daae4247b"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
@@ -122,7 +113,7 @@
 				<text><![CDATA[Director general ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="325" y="325" width="227" height="18" uuid="d7fa7955-2566-49a8-8815-0185b7d1a6b8"/>
+				<reportElement x="295" y="325" width="227" height="18" uuid="d7fa7955-2566-49a8-8815-0185b7d1a6b8"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
@@ -134,7 +125,7 @@
 		</band>
 		<band height="149">
 			<staticText>
-				<reportElement x="380" y="10" width="174" height="40" uuid="589cb2ab-c2da-46f2-bec8-f4ccfbd8e61a"/>
+				<reportElement x="350" y="10" width="174" height="40" uuid="589cb2ab-c2da-46f2-bec8-f4ccfbd8e61a"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11" isItalic="true"/>
 				</textElement>
@@ -144,28 +135,29 @@ Dispozitivelor Medicale
 ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="56" width="554" height="14" uuid="1e1d3810-3221-43a5-9035-2024d61df975"/>
+				<reportElement x="0" y="56" width="535" height="14" uuid="1e1d3810-3221-43a5-9035-2024d61df975"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Amendamente la protocoalele studiilor clinice]]></text>
 			</staticText>
 			<componentElement>
-				<reportElement x="1" y="80" width="553" height="60" uuid="2d2b6c3e-4f21-484c-841c-a775dc5192f9">
+				<reportElement x="0" y="80" width="535" height="60" uuid="2d2b6c3e-4f21-484c-841c-a775dc5192f9">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
 					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="ordinAmendamenteAprobate" uuid="006fd5b3-b804-4a7f-90b8-7e9b518976fd">
 						<dataSourceExpression><![CDATA[$P{ordinAmendamenteAprobateDataSource}]]></dataSourceExpression>
 					</datasetRun>
-					<jr:column width="120" uuid="7442aa9f-516f-4d21-a2fe-cd4946480716">
+					<jr:column width="116" uuid="7442aa9f-516f-4d21-a2fe-cd4946480716">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="120" height="30" uuid="7441dc14-fa4b-4cf3-b692-5505643bb4be"/>
+								<reportElement x="0" y="0" width="116" height="30" uuid="7441dc14-fa4b-4cf3-b692-5505643bb4be"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="11" isBold="true"/>
 								</textElement>
@@ -174,7 +166,7 @@ Dispozitivelor Medicale
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="120" height="30" uuid="9bb3ad0b-1cd5-404b-9625-44482853decc"/>
+								<reportElement x="0" y="0" width="116" height="30" uuid="9bb3ad0b-1cd5-404b-9625-44482853decc"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="11"/>
 								</textElement>
@@ -182,11 +174,11 @@ Dispozitivelor Medicale
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="250" uuid="634cd625-3471-4b30-8911-a95cb63e1102">
+					<jr:column width="242" uuid="634cd625-3471-4b30-8911-a95cb63e1102">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="250" height="30" uuid="89de6581-d9cc-4bfc-b296-54ecd9b133ea"/>
+								<reportElement x="0" y="0" width="242" height="30" uuid="89de6581-d9cc-4bfc-b296-54ecd9b133ea"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="11" isBold="true"/>
 								</textElement>
@@ -195,7 +187,7 @@ Dispozitivelor Medicale
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="250" height="30" uuid="de05747a-7cda-4bad-ae37-1e5300d42a39"/>
+								<reportElement x="0" y="0" width="242" height="30" uuid="de05747a-7cda-4bad-ae37-1e5300d42a39"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="11"/>
 								</textElement>
@@ -203,11 +195,11 @@ Dispozitivelor Medicale
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="184" uuid="87af67e9-ff38-41e6-9f85-cb4c9f79e711">
+					<jr:column width="177" uuid="87af67e9-ff38-41e6-9f85-cb4c9f79e711">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="184" height="30" uuid="7a584a07-edf5-40db-b638-a6a4440b9874"/>
+								<reportElement x="0" y="0" width="177" height="30" uuid="7a584a07-edf5-40db-b638-a6a4440b9874"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="11" isBold="true"/>
 								</textElement>
@@ -216,7 +208,7 @@ Dispozitivelor Medicale
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="184" height="30" uuid="71f074d3-e955-40fb-8bca-59364c3f9a5a"/>
+								<reportElement x="0" y="0" width="177" height="30" uuid="71f074d3-e955-40fb-8bca-59364c3f9a5a"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="11"/>
 								</textElement>
@@ -236,7 +228,7 @@ Dispozitivelor Medicale
 				<text><![CDATA[Director general ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="325" y="30" width="227" height="18" uuid="17f724a0-d628-4e82-a89c-b5e9361f19d2"/>
+				<reportElement x="305" y="30" width="227" height="18" uuid="17f724a0-d628-4e82-a89c-b5e9361f19d2"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
@@ -247,7 +239,7 @@ Dispozitivelor Medicale
 	<pageFooter>
 		<band height="77" splitType="Stretch">
 			<staticText>
-				<reportElement x="484" y="64" width="25" height="13" uuid="b64b0e3a-fd13-4790-bea5-b0b9acc35d20"/>
+				<reportElement x="464" y="64" width="25" height="13" uuid="b64b0e3a-fd13-4790-bea5-b0b9acc35d20"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -265,25 +257,25 @@ tel. +373 22 884 301, e-mail: office@amed.md; Web: www.amed.md
 ]]></text>
 			</staticText>
 			<image>
-				<reportElement x="483" y="0" width="65" height="60" uuid="bbc38907-770b-4532-b958-246786ffa841"/>
+				<reportElement x="463" y="0" width="65" height="60" uuid="bbc38907-770b-4532-b958-246786ffa841"/>
 				<imageExpression><![CDATA["layouts/icons/cer.png"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="521" y="64" width="16" height="13" uuid="01717c74-486d-40b7-9137-07898e652885"/>
+				<reportElement x="501" y="64" width="16" height="13" uuid="01717c74-486d-40b7-9137-07898e652885"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[din ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="509" y="64" width="12" height="13" uuid="564d9887-ad6f-4b42-954a-70326fbf7e32"/>
+				<reportElement x="489" y="64" width="12" height="13" uuid="564d9887-ad6f-4b42-954a-70326fbf7e32"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="537" y="64" width="12" height="13" uuid="8f3c4fe0-41af-4130-8f08-f3280bdb65f3"/>
+				<reportElement x="517" y="64" width="12" height="13" uuid="8f3c4fe0-41af-4130-8f08-f3280bdb65f3"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>

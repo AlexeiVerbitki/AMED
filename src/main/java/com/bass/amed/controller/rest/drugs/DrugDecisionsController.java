@@ -2,13 +2,13 @@ package com.bass.amed.controller.rest.drugs;
 
 import com.bass.amed.dto.drugs.CompanyDetailsDTO;
 import com.bass.amed.dto.drugs.DrugDecisionsFilterDTO;
+import com.bass.amed.dto.drugs.DrugDecisionsFilterDetailsDTO;
 import com.bass.amed.entity.*;
+import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.EconomicAgentsRepository;
 import com.bass.amed.repository.RequestRepository;
 import com.bass.amed.repository.RequestTypeRepository;
-import com.bass.amed.repository.drugs.AuthorizedDrugSubstancesRepository;
-import com.bass.amed.repository.drugs.DrugDecisionsRepository;
-import com.bass.amed.repository.drugs.DrugImportExportDetailsRepository;
+import com.bass.amed.repository.drugs.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,14 +38,17 @@ public class DrugDecisionsController {
     private RequestRepository requestRepository;
     @Autowired
     private RequestTypeRepository requestTypeRepository;
+    @Autowired
+    private DrugUnitsConversionRatesRepository drugUnitsConversionRatesRepository;
+    @Autowired
+    DrugDecisionsFilterRepository drugDecisionsFilterRepository;
 
     @PostMapping(value = "/by-filter")
-    public ResponseEntity<List<DrugDecisionsFilterDTO>> getDrugDecisionsByFilter(@RequestBody DrugDecisionsFilterDTO filter) {
+    public ResponseEntity<List<DrugDecisionsFilterDetailsDTO>> getDrugDecisionsByFilter(@RequestBody DrugDecisionsFilterDetailsDTO filter) {
         logger.debug("get drug decisions by filter");
-        List<DrugDecisionsFilterDTO> dtos = drugDecisionsRepository.getDrugDecisionsByFilter(filter.getProtocolNr(),
+        List<DrugDecisionsFilterDetailsDTO> dtos = drugDecisionsFilterRepository.getDrugDecisionsByFilter(filter.getProtocolNr(),
                 filter.getProtocolDate(),
                 filter.getDrugSubstanceTypesId(),
-                filter.getSubstanceId(),
                 filter.getCompanyId()
         );
 
@@ -107,5 +110,13 @@ public class DrugDecisionsController {
 
         requestRepository.save(request);
         return new ResponseEntity<>(request, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/get-units-by-reference-code")
+    public ResponseEntity<List<DrugUnitsConversionRatesEntity>> getUnityRatesByRefCode(String refCode) throws CustomException{
+        logger.debug("Get all units codes by reference unit code");
+        Optional<List<DrugUnitsConversionRatesEntity>> units = drugUnitsConversionRatesRepository.findByRefUnitCode(refCode);
+
+        return new ResponseEntity<>(units.orElseThrow(() -> new CustomException("No result was found")), HttpStatus.OK);
     }
 }

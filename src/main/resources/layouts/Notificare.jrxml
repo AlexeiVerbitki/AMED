@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="8_Notificare" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="10" uuid="523fb55a-b7a8-4c3c-86ea-fd79290ecf5e">
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="8_Notificare" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="40" rightMargin="20" topMargin="15" bottomMargin="15" uuid="523fb55a-b7a8-4c3c-86ea-fd79290ecf5e">
 	<parameter name="vicDir" class="java.lang.String"/>
 	<parameter name="date" class="java.lang.String"/>
 	<parameter name="nr" class="java.lang.String"/>
@@ -33,7 +24,7 @@
 				<imageExpression><![CDATA["layouts/icons/header_left.jpg"]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="261" y="4" width="289" height="53" uuid="ae27ee01-a17f-4e89-81b4-1417b9af443c"/>
+				<reportElement x="251" y="4" width="289" height="53" uuid="ae27ee01-a17f-4e89-81b4-1417b9af443c"/>
 				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
 		</band>
@@ -48,14 +39,14 @@
 				<textFieldExpression><![CDATA["Nr. " + $P{nr} + " din " + $P{date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="290" y="16" width="258" height="94" uuid="7482c238-9fac-408c-8c6c-3a5fd1b5f146"/>
+				<reportElement x="270" y="16" width="258" height="94" uuid="7482c238-9fac-408c-8c6c-3a5fd1b5f146"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Dnei (sau Dlui) " + $P{name} + " responsabilă pentru înregistrarea produselor companiei " + $P{representant}+ ", " + $P{country}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="180" y="111" width="373" height="29" uuid="d70dfa44-1a67-4f05-8985-25e8706f3570"/>
+				<reportElement x="150" y="111" width="378" height="29" uuid="d70dfa44-1a67-4f05-8985-25e8706f3570"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="10" isBold="false"/>
 				</textElement>
@@ -64,7 +55,7 @@
 		</band>
 		<band height="83">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="4" y="44" width="548" height="26" uuid="31b29f69-74a4-4f87-a087-082619917559"/>
+				<reportElement x="0" y="44" width="535" height="26" uuid="31b29f69-74a4-4f87-a087-082619917559"/>
 				<textElement>
 					<font fontName="DejaVu Sans"/>
 				</textElement>
@@ -80,7 +71,7 @@
 		</band>
 		<band height="79">
 			<textField>
-				<reportElement x="346" y="9" width="210" height="20" uuid="f7065078-15af-4ecc-8b04-f76f8c5c7513"/>
+				<reportElement x="316" y="9" width="210" height="20" uuid="f7065078-15af-4ecc-8b04-f76f8c5c7513"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" isBold="true"/>
 				</textElement>
@@ -123,32 +114,32 @@ tel. +373 22 884 301, e-mail: office@amed.md; Web: www.amed.md
 ]]></text>
 			</staticText>
 			<image>
-				<reportElement x="483" y="0" width="65" height="60" uuid="36094911-1947-4f9d-a837-51c429be067a"/>
+				<reportElement x="463" y="0" width="65" height="60" uuid="36094911-1947-4f9d-a837-51c429be067a"/>
 				<imageExpression><![CDATA["layouts/icons/cer.png"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="484" y="64" width="25" height="13" uuid="ba6ddd86-f034-4744-8681-3f93bef99847"/>
+				<reportElement x="464" y="64" width="25" height="13" uuid="ba6ddd86-f034-4744-8681-3f93bef99847"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Pagina]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="509" y="64" width="12" height="13" uuid="4dd1db7c-2c01-4411-91e6-af5d5a1573a1"/>
+				<reportElement x="489" y="64" width="12" height="13" uuid="4dd1db7c-2c01-4411-91e6-af5d5a1573a1"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="521" y="64" width="16" height="13" uuid="d3a454ba-b193-4060-bf3e-faca7c3e3b0c"/>
+				<reportElement x="501" y="64" width="16" height="13" uuid="d3a454ba-b193-4060-bf3e-faca7c3e3b0c"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[din ]]></text>
 			</staticText>
 			<textField evaluationTime="Report">
-				<reportElement x="537" y="64" width="12" height="13" uuid="e7507f05-4906-4a72-91c3-64ab98eca94a"/>
+				<reportElement x="517" y="64" width="12" height="13" uuid="e7507f05-4906-4a72-91c3-64ab98eca94a"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>

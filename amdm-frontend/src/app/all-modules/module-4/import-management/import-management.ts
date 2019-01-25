@@ -174,6 +174,14 @@ export class ImportManagement implements OnInit {
                 'medType': [''],
                 'importAuthorizationDetailsEntityList': [],
                 'authorized': [],
+
+                'invoiceNumber': [null, Validators.required],
+                'invoiceBasis': [null, Validators.required],
+                'invoiceSpecificatie': [null, Validators.required],
+                'invoiceCustomsCode': [null, Validators.required],
+                'invoiceCustomsNumber': [null, Validators.required],
+                'invoiceCustomsDate': [null, Validators.required],
+
                 'unitOfImportTable': this.fb.group({
 
                     customsCode: [null, Validators.required],
@@ -261,8 +269,8 @@ export class ImportManagement implements OnInit {
                             'authorized': [],
 
                             'invoiceNumber': [null, Validators.required],
-                            'invoiceSpecificatie': [null, Validators.required],
                             'invoiceBasis': [null, Validators.required],
+                            'invoiceSpecificatie': [null, Validators.required],
                             'invoiceCustomsCode': [null, Validators.required],
                             'invoiceCustomsNumber': [null, Validators.required],
                             'invoiceCustomsDate': [null, Validators.required],
@@ -929,8 +937,17 @@ export class ImportManagement implements OnInit {
 // // invoiceDetails.medic
 //         } );
 
+        let formValue = this.evaluateImportForm.value;
+
         invoiceDetailsEntity = this.invoiceDetails;
-         // this.invoice.invoiceDetailsEntity = invoiceDetailsEntity;
+
+        // invoiceEntity.invoiceDate =                this.evaluateImportForm.get('');
+        invoiceEntity.invoiceNumber =              this.evaluateImportForm.get('importAuthorizationEntity.invoiceNumber').value;
+        invoiceEntity.basisForInvoice =            this.evaluateImportForm.get('importAuthorizationEntity.invoiceBasis').value;
+        invoiceEntity.customsDeclarationDate =     new Date(this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsDate').value);
+        invoiceEntity.customsDeclarationNumber =   this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsNumber').value;
+        // invoiceEntity.customsPointsEntity =         this.evaluateImportForm.get('importAuthorizationEntity.customsPointsEntity').value;
+        invoiceEntity.specification =              this.evaluateImportForm.get('importAuthorizationEntity.invoiceSpecificatie').value;
         invoiceEntity.invoiceDetailsEntitySet = invoiceDetailsEntity;
 
         modelToSubmit = this.importData;
@@ -990,7 +1007,8 @@ export class ImportManagement implements OnInit {
                 // alert('after addInvoiceRequest(modelToSubmit)');
                 console.log('addInvoiceRequest(modelToSubmit).subscribe(data) ', data);
                 this.loadingService.hide();
-                this.router.navigate(['dashboard/homepage']);
+                // this.router.navigate(['dashboard/homepage']);
+            alert("Saved")
             }, error => {
                 alert('Something went wrong while sending the model');
                 console.log('error: ', error);

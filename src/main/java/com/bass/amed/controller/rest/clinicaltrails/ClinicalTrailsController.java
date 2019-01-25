@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -33,17 +34,20 @@ public class ClinicalTrailsController {
     CtAmendMedInstInvestigatorRepository ctAmendMedInstInvestigatorRepository;
     @Autowired
     ClinicalTrailNotificationTypeRepository clinicalTrailNotificationTypeRepository;
+    @Autowired
+    DocumentsRepository documentsRepository;
 
     @PostMapping(value = "/save-request")
-    public ResponseEntity<Integer> saveClinicalTrailRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
+    public ResponseEntity<RegistrationRequestsEntity> saveClinicalTrailRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
 
         if (requests.getClinicalTrails() == null) {
             throw new CustomException("Request was not found");
         }
         clinicalTrailsService.handeMedicalInstitutions(requests);
-
         requestRepository.save(requests);
-        return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
+        Set<DocumentsEntity> docs = documentsRepository.findAllByregistrationRequestId(requests.getId());
+        requests.setDocuments(docs);
+        return new ResponseEntity<>(requests, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/add-request")
@@ -51,7 +55,7 @@ public class ClinicalTrailsController {
         if (requests.getClinicalTrails() == null) {
             throw new CustomException("Request was not found");
         }
-//        clinicalTrailsService.addDDClinicalTrailsDocument(requests);
+        clinicalTrailsService.addDDClinicalTrailsDocument(requests);
         clinicalTrailsService.handeMedicalInstitutions(requests);
         requestRepository.save(requests);
         return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);

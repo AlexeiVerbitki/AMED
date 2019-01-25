@@ -1186,7 +1186,7 @@ public class RequestController
 
             for (ImportAuthorizationDetailsEntity medNotGer : requests.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList())
             {
-                if (medNotGer.getCodeAmed() == null)
+                if (medNotGer.getCodeAmed() == null && requests.getImportAuthorizationEntity().getMedType()==2)
                 {
                     medNotGer.setCodeAmed(Utils.generateMedicamentCode());
                 }

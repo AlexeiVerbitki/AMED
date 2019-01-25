@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="AutorizatieImportExportStupefiantePsihotropePrecursorilor" pageWidth="595" pageHeight="842" columnWidth="575" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" uuid="523fb55a-b7a8-4c3c-86ea-fd79290ecf5e">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="AutorizatieImportExportStupefiantePsihotropePrecursorilor" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="40" rightMargin="20" topMargin="15" bottomMargin="15" uuid="523fb55a-b7a8-4c3c-86ea-fd79290ecf5e">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -64,9 +55,9 @@
 		<![CDATA[]]>
 	</queryString>
 	<pageHeader>
-		<band height="100">
+		<band height="90">
 			<image>
-				<reportElement x="0" y="2" width="580" height="88" uuid="ae27ee01-a17f-4e89-81b4-1417b9af443c"/>
+				<reportElement x="0" y="2" width="555" height="88" uuid="ae27ee01-a17f-4e89-81b4-1417b9af443c"/>
 				<imageExpression><![CDATA["layouts/icons/stupefiante-header.png"]]></imageExpression>
 			</image>
 		</band>
@@ -74,7 +65,7 @@
 	<detail>
 		<band height="153" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="390" y="41" width="190" height="20" uuid="c9332ebf-d0f7-4f3c-8970-4aade3b3e1a8"/>
+				<reportElement x="340" y="41" width="190" height="20" uuid="c9332ebf-d0f7-4f3c-8970-4aade3b3e1a8"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
@@ -95,14 +86,14 @@
 				<textFieldExpression><![CDATA["Republic of Moldova"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="390" y="17" width="190" height="20" uuid="69c0008c-ecfb-4a9c-8851-0daf391e8ad0"/>
+				<reportElement x="340" y="17" width="190" height="20" uuid="69c0008c-ecfb-4a9c-8851-0daf391e8ad0"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{importExport}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="2" y="91" width="568" height="39" uuid="b4695b5d-2df7-461e-b402-a0463d664c49"/>
+				<reportElement x="0" y="91" width="535" height="39" uuid="b4695b5d-2df7-461e-b402-a0463d664c49"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
@@ -116,11 +107,11 @@
 				<text><![CDATA[Importer:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="137" width="570" height="13" uuid="11bea774-f222-4102-9781-f43f64e1ccb5"/>
+				<reportElement x="70" y="137" width="465" height="13" uuid="11bea774-f222-4102-9781-f43f64e1ccb5"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["		" + $P{importer}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" " + $P{importer}]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="22">
@@ -132,11 +123,11 @@
 				<text><![CDATA[Exporter:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="4" width="570" height="13" uuid="e9612bcb-b335-48aa-a466-2906029c66ab"/>
+				<reportElement x="70" y="4" width="465" height="13" uuid="e9612bcb-b335-48aa-a466-2906029c66ab"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["		" + $P{exporter}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" " + $P{exporter}]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="20">
@@ -148,37 +139,38 @@
 				<text><![CDATA[The customs unit through which the import will be performed:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="4" width="570" height="13" uuid="83014f75-ce2b-4de5-adfd-45a27646e344"/>
+				<reportElement x="350" y="4" width="185" height="13" uuid="83014f75-ce2b-4de5-adfd-45a27646e344"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["		 							" + $P{customs}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" " + $P{customs}]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="96">
 			<staticText>
-				<reportElement x="1" y="2" width="375" height="15" uuid="0bfb7f6e-b92b-4635-8a2f-52dbf03e8cc9"/>
+				<reportElement x="0" y="2" width="535" height="15" uuid="0bfb7f6e-b92b-4635-8a2f-52dbf03e8cc9"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Quantity and designation of the substances or preparations:]]></text>
 			</staticText>
 			<componentElement>
-				<reportElement x="2" y="22" width="568" height="70" uuid="7bbc0738-335e-4812-86cb-f1a6fb16f76b">
+				<reportElement x="0" y="22" width="535" height="70" uuid="7bbc0738-335e-4812-86cb-f1a6fb16f76b">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
 					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="Dataset1" uuid="8f6db577-a215-490c-b02e-8bd912ff211a">
 						<dataSourceExpression><![CDATA[$P{autorizationImportExportDataSet}]]></dataSourceExpression>
 					</datasetRun>
-					<jr:column width="30" uuid="8ba48d9e-7fcd-4691-b754-2b798071d41c">
+					<jr:column width="29" uuid="8ba48d9e-7fcd-4691-b754-2b798071d41c">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 						<jr:columnHeader style="Table_CH" height="40" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="30" height="40" uuid="4e319e08-2ed5-4d0d-a96c-0915f0b3701e"/>
+								<reportElement x="0" y="0" width="29" height="40" uuid="4e319e08-2ed5-4d0d-a96c-0915f0b3701e"/>
 								<textElement>
 									<font fontName="DejaVu Sans" size="11" isBold="true"/>
 								</textElement>
@@ -187,7 +179,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="30" height="30" uuid="12878e29-15b8-4e39-beaf-50ee6907e743"/>
+								<reportElement x="0" y="0" width="29" height="30" uuid="12878e29-15b8-4e39-beaf-50ee6907e743"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="11"/>
 								</textElement>
@@ -195,11 +187,11 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="190" uuid="7d1b1c05-72a0-4a62-9d47-24656ca101cb">
+					<jr:column width="179" uuid="7d1b1c05-72a0-4a62-9d47-24656ca101cb">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
 						<jr:columnHeader style="Table_CH" height="40" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="190" height="40" uuid="7207884b-7d7c-4b62-a3c0-d9343170362f"/>
+								<reportElement x="0" y="0" width="179" height="40" uuid="7207884b-7d7c-4b62-a3c0-d9343170362f"/>
 								<textElement>
 									<font fontName="DejaVu Sans" size="11" isBold="true"/>
 								</textElement>
@@ -208,7 +200,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="190" height="30" uuid="ca3a5e8b-7f95-4672-8b77-a17377e034ca"/>
+								<reportElement x="0" y="0" width="179" height="30" uuid="ca3a5e8b-7f95-4672-8b77-a17377e034ca"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="11"/>
 								</textElement>
@@ -216,11 +208,11 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="70" uuid="42b7b319-a0e8-4fe4-915c-9b3a64d788b0">
+					<jr:column width="66" uuid="42b7b319-a0e8-4fe4-915c-9b3a64d788b0">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
 						<jr:columnHeader style="Table_CH" height="40" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="70" height="40" uuid="61664ede-6813-4095-b475-b543340a5ffb"/>
+								<reportElement x="0" y="0" width="66" height="40" uuid="61664ede-6813-4095-b475-b543340a5ffb"/>
 								<textElement>
 									<font fontName="DejaVu Sans" size="11" isBold="true"/>
 								</textElement>
@@ -229,7 +221,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="70" height="30" uuid="eb896e88-6a0b-475d-8f42-f0103a4d3757"/>
+								<reportElement x="0" y="0" width="66" height="30" uuid="eb896e88-6a0b-475d-8f42-f0103a4d3757"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="11"/>
 								</textElement>
@@ -237,11 +229,11 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="70" uuid="abc2168b-a4e9-4ea1-9dfd-430c1a6e38c7">
+					<jr:column width="66" uuid="abc2168b-a4e9-4ea1-9dfd-430c1a6e38c7">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
 						<jr:columnHeader style="Table_CH" height="40" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="70" height="40" uuid="164c4c35-1625-42a5-a919-a2ebbcf41059"/>
+								<reportElement x="0" y="0" width="66" height="40" uuid="164c4c35-1625-42a5-a919-a2ebbcf41059"/>
 								<textElement>
 									<font fontName="DejaVu Sans" size="11" isBold="true"/>
 								</textElement>
@@ -250,7 +242,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="70" height="30" uuid="905f1b15-aaa3-4eb4-a4e7-4487e3b2b5e0"/>
+								<reportElement x="0" y="0" width="66" height="30" uuid="905f1b15-aaa3-4eb4-a4e7-4487e3b2b5e0"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="11"/>
 								</textElement>
@@ -258,11 +250,11 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="130" uuid="017eb1a2-9f61-429a-bae6-b36924640280">
+					<jr:column width="122" uuid="017eb1a2-9f61-429a-bae6-b36924640280">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
 						<jr:columnHeader style="Table_CH" height="40" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="130" height="40" uuid="a40c3340-99de-4208-b590-8b8838992b7c"/>
+								<reportElement x="0" y="0" width="122" height="40" uuid="a40c3340-99de-4208-b590-8b8838992b7c"/>
 								<textElement>
 									<font fontName="DejaVu Sans" size="11" isBold="true"/>
 								</textElement>
@@ -271,7 +263,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="130" height="30" uuid="f3fd8de9-96b2-44cb-b2fa-0cb130fe83d9"/>
+								<reportElement x="0" y="0" width="122" height="30" uuid="f3fd8de9-96b2-44cb-b2fa-0cb130fe83d9"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="11"/>
 								</textElement>
@@ -279,11 +271,11 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="78" uuid="0cbee769-4fcd-400d-9c41-5936ca0f6e2b">
+					<jr:column width="73" uuid="0cbee769-4fcd-400d-9c41-5936ca0f6e2b">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
 						<jr:columnHeader style="Table_CH" height="40" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="78" height="40" uuid="8b5c0a39-41bd-4b40-a129-6b3236d077e3"/>
+								<reportElement x="0" y="0" width="73" height="40" uuid="8b5c0a39-41bd-4b40-a129-6b3236d077e3"/>
 								<textElement>
 									<font fontName="DejaVu Sans" size="11" isBold="true"/>
 								</textElement>
@@ -292,7 +284,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="78" height="30" uuid="12d7ff63-ffb7-4375-9569-31201015ac06"/>
+								<reportElement x="0" y="0" width="73" height="30" uuid="12d7ff63-ffb7-4375-9569-31201015ac06"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="11"/>
 								</textElement>
@@ -305,7 +297,7 @@
 		</band>
 		<band height="178">
 			<staticText>
-				<reportElement x="1" y="2" width="569" height="28" uuid="bca65b32-5230-4c62-a10d-37f046b429b8"/>
+				<reportElement x="0" y="2" width="535" height="28" uuid="bca65b32-5230-4c62-a10d-37f046b429b8"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isUnderline="false"/>
 				</textElement>
@@ -314,14 +306,14 @@ exclusively for medical or scientific purposes.
 ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="69" width="369" height="22" uuid="44afcc80-b83a-47d3-bddb-aea6ada86136"/>
+				<reportElement x="1" y="69" width="389" height="22" uuid="44afcc80-b83a-47d3-bddb-aea6ada86136"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[General Manager]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="91" width="369" height="19" uuid="85bda993-1196-461f-8baa-7323d41cdc31"/>
+				<reportElement x="1" y="91" width="389" height="19" uuid="85bda993-1196-461f-8baa-7323d41cdc31"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
@@ -329,7 +321,7 @@ exclusively for medical or scientific purposes.
 ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="112" width="369" height="21" uuid="79e311bb-203d-4cde-a6d5-f6b27ff9cfef"/>
+				<reportElement x="1" y="113" width="389" height="21" uuid="79e311bb-203d-4cde-a6d5-f6b27ff9cfef"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
@@ -343,21 +335,21 @@ exclusively for medical or scientific purposes.
 				<textFieldExpression><![CDATA["Valid until: " + $P{validUntil}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="390" y="111" width="180" height="22" uuid="04c0cc23-5462-4d5f-9afe-7815a75d72ce"/>
+				<reportElement x="370" y="112" width="165" height="22" uuid="04c0cc23-5462-4d5f-9afe-7815a75d72ce"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{druggist}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="390" y="91" width="180" height="19" uuid="e9db05a9-8c57-430e-a0a5-e9db7dc376f3"/>
+				<reportElement x="370" y="91" width="165" height="19" uuid="e9db05a9-8c57-430e-a0a5-e9db7dc376f3"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{committeeChairman}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="390" y="69" width="180" height="22" uuid="65fc8ddd-3dc1-4b2f-9324-55b868d0e406"/>
+				<reportElement x="370" y="69" width="165" height="22" uuid="65fc8ddd-3dc1-4b2f-9324-55b868d0e406"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
@@ -368,7 +360,7 @@ exclusively for medical or scientific purposes.
 	<pageFooter>
 		<band height="65" splitType="Stretch">
 			<staticText>
-				<reportElement x="96" y="9" width="354" height="45" uuid="62abd8fc-753c-4d82-926d-20153ed31c42"/>
+				<reportElement x="6" y="9" width="354" height="45" uuid="62abd8fc-753c-4d82-926d-20153ed31c42"/>
 				<textElement markup="none">
 					<font fontName="DejaVu Sans" size="9"/>
 				</textElement>
@@ -379,7 +371,7 @@ tel. +373 22 884 301, e-mail: office@amed.md; Web: www.amed.md
 ]]></text>
 			</staticText>
 			<image>
-				<reportElement x="502" y="3" width="65" height="60" uuid="36094911-1947-4f9d-a837-51c429be067a"/>
+				<reportElement x="462" y="3" width="65" height="60" uuid="36094911-1947-4f9d-a837-51c429be067a"/>
 				<imageExpression><![CDATA["layouts/icons/cer.png"]]></imageExpression>
 			</image>
 		</band>

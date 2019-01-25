@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Antet  nou ordin anulare CIM reautorizare Guvern" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c084aefd-f7fb-40ce-ab3f-dc897567241a">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Antet  nou ordin anulare CIM reautorizare Guvern" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="40" rightMargin="20" topMargin="15" bottomMargin="15" uuid="c084aefd-f7fb-40ce-ab3f-dc897567241a">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -10,7 +11,6 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
 	<parameter name="Title" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="genDir" class="java.lang.String"/>
 	<parameter name="date" class="java.lang.String"/>
@@ -22,13 +22,13 @@
 		<![CDATA[]]>
 	</queryString>
 	<pageHeader>
-		<band height="94" splitType="Stretch">
+		<band height="70" splitType="Stretch">
 			<image>
 				<reportElement x="0" y="0" width="220" height="60" uuid="d4fe1f91-f2a0-4e52-b4c3-5c3e9dd935ca"/>
 				<imageExpression><![CDATA["layouts/icons/header_left.jpg"]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="220" y="0" width="330" height="70" uuid="11dd8ec7-6404-4cc7-9d59-a7e8f6fd0917"/>
+				<reportElement x="220" y="0" width="320" height="70" uuid="11dd8ec7-6404-4cc7-9d59-a7e8f6fd0917"/>
 				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
 		</band>
@@ -52,7 +52,7 @@ a produselor medicamentoase
 ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="50" y="340" width="498" height="70" uuid="c924f405-d774-4804-b233-340313944ed9"/>
+				<reportElement x="30" y="340" width="498" height="70" uuid="c924f405-d774-4804-b233-340313944ed9"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12"/>
 				</textElement>
@@ -62,7 +62,7 @@ a produselor medicamentoase
 ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="360" y="420" width="190" height="20" uuid="72aef8b1-82f7-4dab-bdcd-c7aebeee5e0d"/>
+				<reportElement x="340" y="420" width="190" height="20" uuid="72aef8b1-82f7-4dab-bdcd-c7aebeee5e0d"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
@@ -90,7 +90,7 @@ a produselor medicamentoase
 				<textFieldExpression><![CDATA[$P{date}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="380" y="91" width="170" height="18" uuid="afdb12de-90ff-496f-bd1f-a31d031285d7"/>
+				<reportElement x="360" y="91" width="170" height="18" uuid="afdb12de-90ff-496f-bd1f-a31d031285d7"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
@@ -104,7 +104,7 @@ a produselor medicamentoase
 				<text><![CDATA[ORDON:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="198" width="548" height="92" uuid="1a00fd4d-cf1b-4df1-b322-14a366f6e5bb"/>
+				<reportElement x="-20" y="198" width="548" height="92" uuid="1a00fd4d-cf1b-4df1-b322-14a366f6e5bb"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12"/>
 				</textElement>
@@ -113,9 +113,9 @@ a produselor medicamentoase
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="65" splitType="Stretch">
+		<band height="60" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="19" width="280" height="45" uuid="3e8850d9-7aa2-4b9e-8af5-ee0a5feafe93"/>
+				<reportElement x="0" y="9" width="280" height="45" uuid="3e8850d9-7aa2-4b9e-8af5-ee0a5feafe93"/>
 				<textElement markup="none">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
@@ -126,7 +126,7 @@ tel. +373 22 884 301, e-mail: office@amed.md; Web: www.amed.md
 ]]></text>
 			</staticText>
 			<image>
-				<reportElement x="483" y="0" width="65" height="60" uuid="bbc38907-770b-4532-b958-246786ffa841"/>
+				<reportElement x="472" y="0" width="65" height="60" uuid="bbc38907-770b-4532-b958-246786ffa841"/>
 				<imageExpression><![CDATA["layouts/icons/cer.png"]]></imageExpression>
 			</image>
 		</band>

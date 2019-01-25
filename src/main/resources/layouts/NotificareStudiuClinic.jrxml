@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Notificare Studiu Clinic" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="10" uuid="523fb55a-b7a8-4c3c-86ea-fd79290ecf5e">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Notificare Studiu Clinic" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="40" rightMargin="20" topMargin="15" bottomMargin="15" uuid="523fb55a-b7a8-4c3c-86ea-fd79290ecf5e">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<parameter name="date" class="java.lang.String"/>
 	<parameter name="nr" class="java.lang.String"/>
 	<parameter name="clinicalStudyDiscription" class="java.lang.String"/>
@@ -35,7 +26,7 @@
 				<imageExpression><![CDATA["layouts/icons/header_left.jpg"]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="261" y="4" width="289" height="53" uuid="ae27ee01-a17f-4e89-81b4-1417b9af443c"/>
+				<reportElement x="261" y="4" width="279" height="53" uuid="ae27ee01-a17f-4e89-81b4-1417b9af443c"/>
 				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
 		</band>
@@ -50,7 +41,7 @@
 				<textFieldExpression><![CDATA["Nr. " + $P{nr} + " din " + $P{date}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="370" y="16" width="178" height="44" uuid="7482c238-9fac-408c-8c6c-3a5fd1b5f146"/>
+				<reportElement x="350" y="16" width="178" height="44" uuid="7482c238-9fac-408c-8c6c-3a5fd1b5f146"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
@@ -64,7 +55,7 @@
 				<textFieldExpression><![CDATA["SCRISOARE DE NOTIFICARE PENTRU  STUDIUL CLINIC"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="15" y="132" width="535" height="18" uuid="027bf1dc-bd91-4f82-863d-f0187a750e19"/>
+				<reportElement x="0" y="132" width="535" height="18" uuid="027bf1dc-bd91-4f82-863d-f0187a750e19"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
@@ -73,7 +64,7 @@
 		</band>
 		<band height="21">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="15" y="0" width="535" height="18" uuid="67bac00e-4015-409c-a0f9-6b939ba2fc8e"/>
+				<reportElement x="0" y="0" width="535" height="18" uuid="67bac00e-4015-409c-a0f9-6b939ba2fc8e"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12"/>
 				</textElement>
@@ -82,7 +73,7 @@
 		</band>
 		<band height="20">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="15" y="0" width="535" height="18" uuid="a7c218a0-5cc2-4b90-a3dd-6bffea778a67"/>
+				<reportElement x="0" y="0" width="535" height="18" uuid="a7c218a0-5cc2-4b90-a3dd-6bffea778a67"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12"/>
 				</textElement>
@@ -91,7 +82,7 @@
 		</band>
 		<band height="20">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="15" y="0" width="535" height="18" uuid="d08090c9-9265-4873-9eb3-00edd42add77"/>
+				<reportElement x="0" y="0" width="535" height="18" uuid="d08090c9-9265-4873-9eb3-00edd42add77"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12"/>
 				</textElement>
@@ -100,7 +91,7 @@
 		</band>
 		<band height="20">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="15" y="0" width="535" height="18" uuid="bde68b24-50f8-4b8a-b16b-95f0544b33c2"/>
+				<reportElement x="0" y="0" width="535" height="18" uuid="bde68b24-50f8-4b8a-b16b-95f0544b33c2"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12"/>
 				</textElement>
@@ -109,7 +100,7 @@
 		</band>
 		<band height="20">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="15" y="0" width="535" height="18" uuid="7e854c47-165f-43f1-957a-7c6ec4d78e0b"/>
+				<reportElement x="0" y="0" width="535" height="18" uuid="7e854c47-165f-43f1-957a-7c6ec4d78e0b"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12"/>
 				</textElement>
@@ -118,42 +109,42 @@
 		</band>
 		<band height="118">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="15" y="0" width="535" height="18" uuid="5c3dbb8c-cabe-4ca7-a37c-9f7fba409e29"/>
+				<reportElement x="0" y="0" width="535" height="18" uuid="5c3dbb8c-cabe-4ca7-a37c-9f7fba409e29"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Informaţii privind studiul"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="15" y="19" width="535" height="18" uuid="0c279399-7d44-413a-9a09-8f300074c541"/>
+				<reportElement x="0" y="19" width="535" height="18" uuid="0c279399-7d44-413a-9a09-8f300074c541"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Avizat de: " + $P{avizName}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="20" y="39" width="535" height="18" uuid="103c3091-4ea8-48e4-8017-acea1c1454a9"/>
+				<reportElement x="0" y="39" width="535" height="18" uuid="103c3091-4ea8-48e4-8017-acea1c1454a9"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Agenţia Medicamentului: " + $P{medicamentAgency}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="20" y="59" width="535" height="18" uuid="8210f733-88c8-4072-a8a8-c0ac8e756b6a"/>
+				<reportElement x="0" y="59" width="535" height="18" uuid="8210f733-88c8-4072-a8a8-c0ac8e756b6a"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Comitetul de Etică: " + $P{eticComitet}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="20" y="80" width="535" height="18" uuid="a40dfc76-a0f9-4f20-92c5-7cf366935b51"/>
+				<reportElement x="0" y="80" width="535" height="18" uuid="a40dfc76-a0f9-4f20-92c5-7cf366935b51"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Ordinul Ministerului Sănătăţii: " + $P{ministryOfHealthOrder}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="20" y="100" width="535" height="18" uuid="e8c3d7b6-48df-4f0a-a50e-705b21114cbb"/>
+				<reportElement x="0" y="100" width="535" height="18" uuid="e8c3d7b6-48df-4f0a-a50e-705b21114cbb"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12" isBold="false"/>
 				</textElement>
@@ -162,7 +153,7 @@
 		</band>
 		<band height="21">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="20" y="1" width="535" height="18" uuid="d3a11a72-ec5d-4706-b37d-20f40cc42aca"/>
+				<reportElement x="0" y="1" width="535" height="18" uuid="d3a11a72-ec5d-4706-b37d-20f40cc42aca"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12" isBold="false"/>
 				</textElement>
@@ -171,7 +162,7 @@
 		</band>
 		<band height="158">
 			<staticText>
-				<reportElement x="1" y="16" width="552" height="44" uuid="89970cf7-fcec-494f-a0c0-975a6f8ea93e"/>
+				<reportElement x="0" y="16" width="535" height="44" uuid="89970cf7-fcec-494f-a0c0-975a6f8ea93e"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12"/>
 				</textElement>
@@ -192,7 +183,7 @@
 				<text><![CDATA[Semnătura  ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="353" y="86" width="202" height="14" uuid="0c1fe8ae-4ddb-4b3e-88e8-76b3a7c5af3b"/>
+				<reportElement x="353" y="86" width="182" height="14" uuid="0c1fe8ae-4ddb-4b3e-88e8-76b3a7c5af3b"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="12"/>
 				</textElement>
@@ -201,9 +192,9 @@
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="65" splitType="Stretch">
+		<band height="60" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="19" width="280" height="45" uuid="62abd8fc-753c-4d82-926d-20153ed31c42"/>
+				<reportElement x="0" y="8" width="280" height="45" uuid="62abd8fc-753c-4d82-926d-20153ed31c42"/>
 				<textElement markup="none">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
@@ -214,7 +205,7 @@ tel. +373 22 884 301, e-mail: office@amed.md; Web: www.amed.md
 ]]></text>
 			</staticText>
 			<image>
-				<reportElement x="483" y="0" width="65" height="60" uuid="36094911-1947-4f9d-a837-51c429be067a"/>
+				<reportElement x="463" y="0" width="65" height="60" uuid="36094911-1947-4f9d-a837-51c429be067a"/>
 				<imageExpression><![CDATA["layouts/icons/cer.png"]]></imageExpression>
 			</image>
 		</band>

@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Ordin_intrerupere_autorizare" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cd5bbfe5-9f80-4fa5-a699-38e56050344c">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Ordin_intrerupere_autorizare" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="40" rightMargin="20" topMargin="15" bottomMargin="15" uuid="cd5bbfe5-9f80-4fa5-a699-38e56050344c">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<parameter name="orderDate" class="java.lang.String"/>
 	<parameter name="orderNumber" class="java.lang.String"/>
 	<parameter name="chiefAccountant" class="java.lang.String"/>
@@ -13,49 +22,21 @@
 		<band splitType="Stretch"/>
 	</background>
 	<pageHeader>
-		<band height="154" splitType="Stretch">
+		<band height="70" splitType="Stretch">
 			<image>
 				<reportElement x="0" y="0" width="220" height="60" uuid="4cb608c7-6739-43a8-bd74-526340f0cdb6"/>
 				<imageExpression><![CDATA["layouts/icons/header_left.jpg"]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="224" y="0" width="330" height="70" uuid="3c83be12-755b-4d3b-a767-d69b36d3d3bb"/>
+				<reportElement x="224" y="0" width="316" height="70" uuid="3c83be12-755b-4d3b-a767-d69b36d3d3bb"/>
 				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
-			<staticText>
-				<reportElement x="227" y="70" width="100" height="20" uuid="0ae95cd3-eeff-44f3-9e9a-d915dee1f32e"/>
-				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" isBold="true"/>
-				</textElement>
-				<text><![CDATA[ORDIN]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="2" y="90" width="100" height="20" uuid="4a150e6b-eff7-4a8f-b452-a79e5be2fdf7"/>
-				<textElement textAlignment="Right">
-					<font fontName="DejaVu Sans" isUnderline="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{orderDate}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="100" y="90" width="150" height="20" uuid="bb8ab1d8-36a6-4c9a-aef4-f568e1815100"/>
-				<textElement textAlignment="Left">
-					<font fontName="DejaVu Sans"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Nr. "+$P{orderNumber}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="2" y="120" width="140" height="30" uuid="a6f2bdb7-38ca-4e5a-9a70-32f7e85cb4fe"/>
-				<textElement>
-					<font fontName="DejaVu Sans" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Cu privire la întreruperea procedurii de autorizare]]></text>
-			</staticText>
 		</band>
 	</pageHeader>
 	<detail>
 		<band height="247" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="58" width="554" height="80" uuid="38d74245-694e-4b91-be21-6786c38cb610"/>
+				<reportElement x="0" y="98" width="535" height="80" uuid="38d74245-694e-4b91-be21-6786c38cb610"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
@@ -64,32 +45,60 @@
 ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="138" width="555" height="20" isPrintWhenDetailOverflows="true" uuid="c13923c9-106c-47ad-838c-792e6b0a327e"/>
+				<reportElement x="0" y="178" width="535" height="20" isPrintWhenDetailOverflows="true" uuid="c13923c9-106c-47ad-838c-792e6b0a327e"/>
 				<textElement>
 					<font fontName="DejaVu Sans"/>
 				</textElement>
 				<textFieldExpression><![CDATA["2.Controlul asupra executării prezentului ordin se atribuie Dnei/Dlui "+$P{chiefAccountant}+" , contabil șef"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="2" y="179" width="140" height="19" uuid="57071400-7486-45b1-be1c-d2fce9893d1a"/>
+				<reportElement x="2" y="219" width="140" height="19" uuid="57071400-7486-45b1-be1c-d2fce9893d1a"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Director general]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="380" y="179" width="175" height="19" isPrintWhenDetailOverflows="true" uuid="c8ddbebe-ad5d-4fd0-a8ec-63022dd5d486"/>
+				<reportElement stretchType="RelativeToTallestObject" x="260" y="219" width="275" height="19" isPrintWhenDetailOverflows="true" uuid="c8ddbebe-ad5d-4fd0-a8ec-63022dd5d486"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{generalDirector}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="0" y="15" width="535" height="20" uuid="e72d041b-63d0-4167-b5cc-58dcd465696b"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ORDIN]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="7" y="35" width="100" height="20" uuid="56fddbc1-54d5-403d-a5e0-d1e1abcc98a3"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{orderDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="105" y="35" width="150" height="20" uuid="f2209e8c-c0d1-4a81-a119-41354e5c9c35"/>
+				<textElement textAlignment="Left">
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Nr. "+$P{orderNumber}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="7" y="65" width="140" height="30" uuid="a418a7d3-a650-4ad8-a23c-00be18950125"/>
+				<textElement>
+					<font fontName="DejaVu Sans" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cu privire la întreruperea procedurii de autorizare]]></text>
+			</staticText>
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="81" splitType="Stretch">
+		<band height="78" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="280" height="45" uuid="6854cc61-b55c-4a77-b19e-a9da08f2faae"/>
+				<reportElement x="0" y="10" width="280" height="45" uuid="6854cc61-b55c-4a77-b19e-a9da08f2faae"/>
 				<textElement markup="none">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
@@ -100,18 +109,18 @@ tel. +373 22 884 301, e-mail: office@amed.md; Web: www.amed.md
 ]]></text>
 			</staticText>
 			<image>
-				<reportElement x="493" y="0" width="61" height="60" uuid="da7ebf7e-3c47-4070-91c5-3c5bf7905041"/>
+				<reportElement x="463" y="0" width="61" height="60" uuid="da7ebf7e-3c47-4070-91c5-3c5bf7905041"/>
 				<imageExpression><![CDATA["layouts/icons/cer.png"]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="390" y="60" width="114" height="18" uuid="03839bc9-7d69-49aa-832f-d76bede93b30"/>
+				<reportElement x="370" y="60" width="114" height="18" uuid="03839bc9-7d69-49aa-832f-d76bede93b30"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Pagina " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="504" y="61" width="50" height="16" uuid="d9dcb3d5-dd42-4deb-94d9-e034e068d070"/>
+				<reportElement x="484" y="61" width="50" height="16" uuid="d9dcb3d5-dd42-4deb-94d9-e034e068d070"/>
 				<textElement textAlignment="Left">
 					<font size="8"/>
 				</textElement>

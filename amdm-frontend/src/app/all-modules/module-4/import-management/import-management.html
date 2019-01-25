@@ -166,7 +166,7 @@
                     <div class="col-md-4">
                         <div class="md-form">
                             <input id="invoiceCustomsNumber" mdbInputDirective type="text" class="form-control" formControlName="invoiceCustomsNumber">
-                            <label for="invoiceCustomsNumber">Specificație
+                            <label for="invoiceCustomsNumber">Numarul Declaratiei vamale
                                 <span class="text-danger">*</span>
                             </label>
                         </div>
@@ -375,7 +375,7 @@
                             <!--<th scope="col">Doza</th>-->
                             <!--<th scope="col">Divizare</th>-->
                             <!--<th scope="col">Producatorul</th>-->
-                            <th scope="col">Cod AMED</th>
+                            <th scope="col" *ngIf="importData.medType == 1 || importData.medType == 2">Cod AMED</th>
                             <th scope="col">Denumire</th>
                             <!--<th scope="col">Data</th>-->
                             <th scope="col">Cantitatea solicitată</th>
@@ -416,7 +416,7 @@
                         <!--</tr>-->
 
                         <tr *ngFor="let invoiceDetail of invoiceDetails;let i = index">
-                            <td>{{ invoiceDetail.codeAmed }}</td>
+                            <td *ngIf="importData.medType == 1 || importData.medType == 2">{{ invoiceDetail.codeAmed }}</td>
                             <td>{{ invoiceDetail.name }}</td>
                             <!--<td>{{ invoiceDetail.data | date:'mediumDate' }}</td>-->
                             <td>{{ invoiceDetail.quantity }}</td>

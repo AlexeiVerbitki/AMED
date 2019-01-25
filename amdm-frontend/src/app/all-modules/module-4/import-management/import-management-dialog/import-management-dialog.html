@@ -16,7 +16,7 @@
                     <div class="md-form-modified">
                         <ng-select
                                 [items]="authorizations | async"
-                                bindLabel="codeAmed"
+                                bindLabel="name"
                                 placeholder="Pozitie"
                                 formControlName="pozitie"
                                 [loading]="loadingAuthorizations"
@@ -59,11 +59,11 @@
                     <!--</div>-->
                 <!--</div>-->
 
-                <div class="col-4">
+                <div class="col-4" *ngIf="dialogData.codeAmed">
                     <div class="md-form">
                         <input id="name" mdbInputDirective type="text" class="form-control"
                                formControlName="name">
-                        <label for="name">Denumirea comercială</label>
+                        <label for="name">Cod AMED</label>
                     </div>
                     <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').invalid">
                         <small class="text-muted"><strong class="text-danger">Denumirea trebuie selectata</strong></small>
@@ -176,7 +176,7 @@
                 </div>
 
 
-                <div class="col-md-4" *ngIf="importData.medType == 1 || importData.medType == 2">
+                <div class="col-md-4" *ngIf="dialogData.medType == 1 || dialogData.medType == 2">
                     <div class="md-form-modified">
                         <ng-select
                                 [items]="internationalMedicamentNames | async"
@@ -239,7 +239,7 @@
 
 
                 <!--======================================================================-->
-                <div class="col-4" *ngIf="importData.medType == 1 || importData.medType == 2">
+                <div class="col-4" *ngIf="dialogData.medType == 1 || dialogData.medType == 2">
                     <div class="md-form-modified">
                         <ng-select [items]="pharmaceuticalForm | async"
                                    bindLabel="description"
@@ -260,7 +260,7 @@
                     </div>
                 </div>
 
-                <div class="col-4" *ngIf="importData.medType == 1 || importData.medType == 2">
+                <div class="col-4" *ngIf="dialogData.medType == 1 || dialogData.medType == 2">
                     <div class="md-form">
                         <input id="dose" mdbInputDirective type="text" class="form-control"
                                [attr.disabled]="true"
@@ -286,7 +286,7 @@
                 <!--======================================================================-->
 
 
-                <div class="col-md-4" *ngIf="importData.medType!==4">
+                <div class="col-md-4" *ngIf="dialogData.medType!==4">
                     <div class="md-form-modified">
                         <ng-select [items]="atcCodes | async"
                                    bindLabel="code"

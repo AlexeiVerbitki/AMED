@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Act de recepţie" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fa0a60e3-9d8b-4b3b-9ebd-4873a2653468">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Act de recepţie" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="807" leftMargin="15" rightMargin="20" topMargin="40" bottomMargin="15" uuid="fa0a60e3-9d8b-4b3b-9ebd-4873a2653468">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
 	<style name="Table 2_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
@@ -41,10 +41,9 @@
 		<field name="seria" class="java.lang.String"/>
 		<field name="quantity" class="java.lang.String"/>
 		<field name="taxNIM" class="java.lang.String"/>
-		<field name="date" class="java.util.Date"/>
+		<field name="date" class="java.lang.String"/>
 		<field name="docNr" class="java.lang.String"/>
 		<field name="methodAnnihilation" class="java.lang.String"/>
-		<field name="annihilationMethod" class="java.lang.String"/>
 		<field name="confirmatoryDocuments" class="java.lang.String"/>
 	</subDataset>
 	<parameter name="anihilationDataSource" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
@@ -64,7 +63,7 @@
 				<imageExpression><![CDATA["layouts/icons/header_left.jpg"]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="447" y="0" width="353" height="65" uuid="209083a0-16d0-49cc-b4ba-93c0184879a6"/>
+				<reportElement x="457" y="0" width="353" height="65" uuid="209083a0-16d0-49cc-b4ba-93c0184879a6"/>
 				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
 		</band>
@@ -72,40 +71,42 @@
 	<detail>
 		<band height="182" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="17" y="17" width="273" height="13" uuid="eb7878d8-21ba-4f50-8385-9de81e07f515"/>
+				<reportElement x="7" y="17" width="273" height="13" uuid="eb7878d8-21ba-4f50-8385-9de81e07f515"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="11"/>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Nr. " + $F{nr} + " din " + $F{date}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="563" y="10" width="236" height="30" uuid="1dd89e2a-25c2-4218-986f-4a92d7233c28"/>
+				<reportElement x="573" y="10" width="236" height="30" uuid="1dd89e2a-25c2-4218-986f-4a92d7233c28"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Agenţia Medicamentului Secţia NIM"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="2" y="40" width="798" height="20" uuid="3112c22d-a00b-4e6c-aa5e-670e35618cd6"/>
+				<reportElement x="0" y="40" width="807" height="20" uuid="3112c22d-a00b-4e6c-aa5e-670e35618cd6"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Act de recepţie a medicamentelor pentrunimicirea ulterioara a lor."]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="60" width="798" height="30" uuid="4bfeba3d-69e7-411c-a47f-722ef94b2313"/>
+				<reportElement x="0" y="60" width="807" height="30" uuid="4bfeba3d-69e7-411c-a47f-722ef94b2313"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="11" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Agenţia Medicamentului în persoana " + $F{amedRepresentant} + " confirmă, că pentru nimicirea inofensivă ulterioară a recepţionat de la " + $F{companyName} + " prin intermediul " +  $F{representatntName} + " următoarele medicamente:"]]></textFieldExpression>
 			</textField>
 			<componentElement>
-				<reportElement x="3" y="100" width="796" height="80" uuid="a983e3ea-06ae-42c0-b43e-3b827d072f69">
+				<reportElement x="0" y="100" width="807" height="80" uuid="a983e3ea-06ae-42c0-b43e-3b827d072f69">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 2_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 2_CH"/>
 					<property name="com.jaspersoft.studio.table.style.detail" value="Table 2_TD"/>
 					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
+					<property name="com.jaspersoft.studio.components.autoresize.next" value="true"/>
+					<property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
 					<datasetRun subDataset="Dataset3" uuid="4c922509-519e-4233-a06d-cba537af9d92">
@@ -132,11 +133,11 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="142" uuid="e09faae5-5b4d-4e06-ad66-28e2cd928744">
+					<jr:column width="157" uuid="e09faae5-5b4d-4e06-ad66-28e2cd928744">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
 						<jr:columnHeader style="Table 2_CH" height="50" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="142" height="50" uuid="2a7c3816-6031-403f-af49-b350c6b204f4"/>
+								<reportElement x="0" y="0" width="157" height="50" uuid="2a7c3816-6031-403f-af49-b350c6b204f4"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10" isBold="true"/>
 								</textElement>
@@ -145,7 +146,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="142" height="30" uuid="f3712ac3-759d-41aa-9f76-a0efe981f1be"/>
+								<reportElement x="0" y="0" width="157" height="30" uuid="f3712ac3-759d-41aa-9f76-a0efe981f1be"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -174,11 +175,11 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="97" uuid="493260e7-ec7c-4638-8636-4617ee3b6b71">
+					<jr:column width="108" uuid="493260e7-ec7c-4638-8636-4617ee3b6b71">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
 						<jr:columnHeader style="Table 2_CH" height="50" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="97" height="50" uuid="6e5d67a7-0a19-44ac-8622-700128c14067"/>
+								<reportElement x="0" y="0" width="108" height="50" uuid="6e5d67a7-0a19-44ac-8622-700128c14067"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10" isBold="true"/>
 								</textElement>
@@ -187,7 +188,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="97" height="30" uuid="610fd75e-d01c-446b-9b66-e2884b4ab2e5"/>
+								<reportElement x="0" y="0" width="108" height="30" uuid="610fd75e-d01c-446b-9b66-e2884b4ab2e5"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -195,11 +196,11 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="85" uuid="68193059-6a37-4181-8976-c93c40292fc6">
+					<jr:column width="83" uuid="68193059-6a37-4181-8976-c93c40292fc6">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
 						<jr:columnHeader style="Table 2_CH" height="50" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="85" height="50" uuid="757ec84c-3b00-46b2-be1e-618907e2811d"/>
+								<reportElement x="0" y="0" width="83" height="50" uuid="757ec84c-3b00-46b2-be1e-618907e2811d"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10" isBold="true"/>
 								</textElement>
@@ -208,7 +209,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="85" height="30" uuid="adab7e06-b323-45b3-9562-f1fe54a15c7b"/>
+								<reportElement x="0" y="0" width="83" height="30" uuid="adab7e06-b323-45b3-9562-f1fe54a15c7b"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -216,11 +217,11 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="41" uuid="b6e69e16-ad55-47fe-9c02-cc437e0314c7">
+					<jr:column width="40" uuid="b6e69e16-ad55-47fe-9c02-cc437e0314c7">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
 						<jr:columnHeader style="Table 2_CH" height="50" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="41" height="50" uuid="557fa7cd-e267-4cb4-b415-2d85da04bb81"/>
+								<reportElement x="0" y="0" width="40" height="50" uuid="557fa7cd-e267-4cb4-b415-2d85da04bb81"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10" isBold="true"/>
 								</textElement>
@@ -229,7 +230,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="41" height="30" uuid="4a6ccea0-0cf5-4f91-a48c-9761c0999831"/>
+								<reportElement x="0" y="0" width="40" height="30" uuid="4a6ccea0-0cf5-4f91-a48c-9761c0999831"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -237,11 +238,11 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="70" uuid="81a291ec-c892-445b-85b5-d1e544bebfb8">
+					<jr:column width="68" uuid="81a291ec-c892-445b-85b5-d1e544bebfb8">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
 						<jr:columnHeader style="Table 2_CH" height="50" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="70" height="50" uuid="9fc495d0-e200-4747-8ae6-63a5c939d202"/>
+								<reportElement x="0" y="0" width="68" height="50" uuid="9fc495d0-e200-4747-8ae6-63a5c939d202"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10" isBold="true"/>
 								</textElement>
@@ -251,7 +252,7 @@ NIM]]></text>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="70" height="30" uuid="5ebef195-829f-4cb6-8d89-8b74fa210279"/>
+								<reportElement x="0" y="0" width="68" height="30" uuid="5ebef195-829f-4cb6-8d89-8b74fa210279"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -259,11 +260,11 @@ NIM]]></text>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="50" uuid="25b801c9-8f20-4403-9c83-87a4692229bb">
+					<jr:column width="49" uuid="25b801c9-8f20-4403-9c83-87a4692229bb">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
 						<jr:columnHeader style="Table 2_CH" height="50" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="50" height="50" uuid="49dc3613-b157-4e38-9f73-5ce522ae6294"/>
+								<reportElement x="0" y="0" width="49" height="50" uuid="49dc3613-b157-4e38-9f73-5ce522ae6294"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10" isBold="true"/>
 								</textElement>
@@ -272,7 +273,7 @@ NIM]]></text>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="50" height="30" uuid="dcf81099-7c25-4588-84a2-5592422129e6"/>
+								<reportElement x="0" y="0" width="49" height="30" uuid="dcf81099-7c25-4588-84a2-5592422129e6"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -280,11 +281,11 @@ NIM]]></text>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="72" uuid="6b579e97-7613-460e-8859-23d1cca7d3e0">
+					<jr:column width="69" uuid="6b579e97-7613-460e-8859-23d1cca7d3e0">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column9"/>
 						<jr:columnHeader style="Table 2_CH" height="50" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="72" height="50" uuid="97054c6a-39e8-4834-ba2b-0033e630d803"/>
+								<reportElement x="0" y="0" width="69" height="50" uuid="97054c6a-39e8-4834-ba2b-0033e630d803"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10" isBold="true"/>
 								</textElement>
@@ -294,7 +295,7 @@ a plăţii]]></text>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="72" height="30" uuid="61826d43-3ac2-4c2b-bc8c-37d7763e4f34"/>
+								<reportElement x="0" y="0" width="69" height="30" uuid="61826d43-3ac2-4c2b-bc8c-37d7763e4f34"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -302,11 +303,11 @@ a plăţii]]></text>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="98" uuid="5355e884-8587-4962-9af3-ddbe65e6b73c">
+					<jr:column width="95" uuid="5355e884-8587-4962-9af3-ddbe65e6b73c">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
 						<jr:columnHeader style="Table 2_CH" height="50" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="98" height="50" uuid="9939ff38-ec8c-4afb-ab38-29eff449df7e"/>
+								<reportElement x="0" y="0" width="95" height="50" uuid="9939ff38-ec8c-4afb-ab38-29eff449df7e"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" isBold="true"/>
 								</textElement>
@@ -315,7 +316,7 @@ a plăţii]]></text>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="98" height="30" uuid="213af425-87e0-4ebd-9207-f04965b17a16"/>
+								<reportElement x="0" y="0" width="95" height="30" uuid="213af425-87e0-4ebd-9207-f04965b17a16"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -323,11 +324,11 @@ a plăţii]]></text>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="69" uuid="8af5137b-2e98-44b3-af30-30adf8f994e4">
+					<jr:column width="66" uuid="8af5137b-2e98-44b3-af30-30adf8f994e4">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column11"/>
 						<jr:columnHeader style="Table 2_CH" height="50" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="69" height="50" uuid="25300310-af71-4b3f-a9a4-0950a0cda08b"/>
+								<reportElement x="0" y="0" width="66" height="50" uuid="25300310-af71-4b3f-a9a4-0950a0cda08b"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10" isBold="true"/>
 								</textElement>
@@ -336,11 +337,11 @@ a plăţii]]></text>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="69" height="30" uuid="a9e94859-9ed3-4a1e-8243-b4c23274de24"/>
+								<reportElement x="0" y="0" width="66" height="30" uuid="a9e94859-9ed3-4a1e-8243-b4c23274de24"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{annihilationMethod}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{methodAnnihilation}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -349,8 +350,8 @@ a plăţii]]></text>
 		</band>
 		<band height="37">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="2" y="8" width="798" height="20" uuid="85d3d2d6-c9f4-4845-8714-285dca7aa2f3"/>
-				<textElement textAlignment="Right">
+				<reportElement x="0" y="8" width="807" height="20" uuid="85d3d2d6-c9f4-4845-8714-285dca7aa2f3"/>
+				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Farmacistul – expert, seful secţiei NIM a DC AM " + (($F{expert}!=null)?$F{expert}:"")]]></textFieldExpression>
@@ -360,14 +361,14 @@ a plăţii]]></text>
 	<pageFooter>
 		<band height="81" splitType="Stretch">
 			<textField>
-				<reportElement x="643" y="63" width="114" height="18" uuid="f8141c81-f50c-4083-9b55-fd75f0129c3b"/>
+				<reportElement x="647" y="63" width="114" height="18" uuid="f8141c81-f50c-4083-9b55-fd75f0129c3b"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Pagina " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="757" y="64" width="50" height="16" uuid="4fb9639d-2ae3-42ab-b7e1-63dd3c5db880"/>
+				<reportElement x="761" y="64" width="50" height="16" uuid="4fb9639d-2ae3-42ab-b7e1-63dd3c5db880"/>
 				<textElement textAlignment="Left">
 					<font size="8"/>
 				</textElement>
@@ -385,7 +386,7 @@ tel. +373 22 884 301, e-mail: office@amed.md; Web: www.amed.md
 ]]></text>
 			</staticText>
 			<image>
-				<reportElement x="737" y="0" width="61" height="60" uuid="c97ddec5-f1a7-463f-a1a0-7abbc9184789"/>
+				<reportElement x="749" y="0" width="61" height="60" uuid="c97ddec5-f1a7-463f-a1a0-7abbc9184789"/>
 				<imageExpression><![CDATA["layouts/icons/cer.png"]]></imageExpression>
 			</image>
 		</band>

@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="12_Ordin Intrerupere Variatii" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="10" whenResourceMissingType="Empty" uuid="c084aefd-f7fb-40ce-ab3f-dc897567241a">
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="12_Ordin Intrerupere Variatii" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="40" rightMargin="20" topMargin="15" bottomMargin="15" whenResourceMissingType="Empty" uuid="c084aefd-f7fb-40ce-ab3f-dc897567241a">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.report.description" value=""/>
@@ -66,13 +57,13 @@
 FROM amed.medicament limit 1]]>
 	</queryString>
 	<pageHeader>
-		<band height="75" splitType="Stretch">
+		<band height="70" splitType="Stretch">
 			<image>
 				<reportElement x="0" y="0" width="220" height="60" uuid="d4fe1f91-f2a0-4e52-b4c3-5c3e9dd935ca"/>
 				<imageExpression><![CDATA["layouts/icons/header_left.jpg"]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="220" y="0" width="330" height="70" uuid="11dd8ec7-6404-4cc7-9d59-a7e8f6fd0917"/>
+				<reportElement x="220" y="0" width="320" height="70" uuid="11dd8ec7-6404-4cc7-9d59-a7e8f6fd0917"/>
 				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
 		</band>
@@ -80,14 +71,14 @@ FROM amed.medicament limit 1]]>
 	<detail>
 		<band height="360" splitType="Stretch">
 			<staticText>
-				<reportElement x="232" y="10" width="93" height="20" uuid="0bed08cf-aa6d-4fe5-b25b-73eb02d1b13a"/>
+				<reportElement x="0" y="10" width="535" height="20" uuid="0bed08cf-aa6d-4fe5-b25b-73eb02d1b13a"/>
 				<textElement textAlignment="Center">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[O R D I N]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="90" width="360" height="30" uuid="25a43b1d-2d8b-43a6-abac-b1844d2378fb"/>
+				<reportElement x="0" y="90" width="535" height="30" uuid="25a43b1d-2d8b-43a6-abac-b1844d2378fb"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true" isItalic="true"/>
 				</textElement>
@@ -96,12 +87,12 @@ modificărilor postautorizare
 ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="232" y="30" width="92" height="20" uuid="8e916d65-adea-4cbc-86f9-4cbf4febdd38"/>
+				<reportElement x="0" y="30" width="535" height="20" uuid="8e916d65-adea-4cbc-86f9-4cbf4febdd38"/>
 				<textElement textAlignment="Center"/>
 				<text><![CDATA[mun. Chișinău]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="3" y="240" width="550" height="70" uuid="0cf987bd-67ab-4a28-8623-97bd59f76de0"/>
+				<reportElement x="0" y="240" width="535" height="70" uuid="0cf987bd-67ab-4a28-8623-97bd59f76de0"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="false"/>
 				</textElement>
@@ -111,14 +102,14 @@ modificărilor postautorizare
 ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="130" width="550" height="60" uuid="69ee8342-7c60-44f7-88ee-4d8510307456"/>
+				<reportElement x="0" y="130" width="535" height="60" uuid="69ee8342-7c60-44f7-88ee-4d8510307456"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="false"/>
 				</textElement>
 				<text><![CDATA[	În conformitate cu legislaţia în vigoare, în temeiul prevederilor Ordinului Ministerului Sănătăţii nr. 739 din 23 iulie 2012 „Cu privire la reglementarea autorizării produselor medicamentoase de uz uman şi introducerea modificărilor postautorizare”, cu modificările şi completările ulterioare (anexa nr.2 - pct. ________):]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="250" y="220" width="60" height="20" uuid="5ce2e835-6008-49ce-9933-bacfe2dc599a"/>
+				<reportElement x="0" y="220" width="535" height="20" uuid="5ce2e835-6008-49ce-9933-bacfe2dc599a"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" isBold="true"/>
 				</textElement>
@@ -135,14 +126,14 @@ modificărilor postautorizare
 				<text><![CDATA[Director general ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="323" y="330" width="227" height="18" uuid="2b3fd55c-1219-475c-8c79-918dd5561829"/>
+				<reportElement x="303" y="330" width="227" height="18" uuid="2b3fd55c-1219-475c-8c79-918dd5561829"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{genDir}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="2" y="60" width="321" height="20" uuid="3afb0288-9998-4d67-8cb3-9ac89312b9e3"/>
+				<reportElement x="0" y="60" width="535" height="20" uuid="3afb0288-9998-4d67-8cb3-9ac89312b9e3"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" isBold="true"/>
 				</textElement>
@@ -151,7 +142,7 @@ modificărilor postautorizare
 		</band>
 		<band height="188">
 			<staticText>
-				<reportElement x="3" y="70" width="550" height="40" uuid="24e18890-7f08-4086-a79c-29f358ab302a"/>
+				<reportElement x="0" y="70" width="535" height="40" uuid="24e18890-7f08-4086-a79c-29f358ab302a"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
@@ -160,14 +151,14 @@ produselor medicamentoase pentru care se întrerupe procedura de aprobare a modi
 ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="281" y="6" width="271" height="64" uuid="82f73790-8198-4f6b-b9be-4540116af6a9"/>
+				<reportElement x="0" y="6" width="535" height="64" uuid="82f73790-8198-4f6b-b9be-4540116af6a9"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Anexă la ordinul Agenţiei Medicamentului şi Dispozitivelor Medicale Nr. " + $P{nr} + " din " + $P{date}]]></textFieldExpression>
 			</textField>
 			<componentElement>
-				<reportElement x="3" y="120" width="549" height="60" uuid="4b228aa9-b249-4f08-b590-c06818e231eb">
+				<reportElement x="0" y="120" width="535" height="60" uuid="4b228aa9-b249-4f08-b590-c06818e231eb">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
@@ -200,11 +191,11 @@ produselor medicamentoase pentru care se întrerupe procedura de aprobare a modi
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="121" uuid="5d4831ff-6ff0-4e89-8a49-0b36b93fc115">
+					<jr:column width="118" uuid="5d4831ff-6ff0-4e89-8a49-0b36b93fc115">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
 						<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="121" height="30" uuid="88a4f07a-efd8-46e8-a125-b2b7c827ce5c"/>
+								<reportElement x="0" y="0" width="118" height="30" uuid="88a4f07a-efd8-46e8-a125-b2b7c827ce5c"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10" isBold="true"/>
 								</textElement>
@@ -213,7 +204,7 @@ produselor medicamentoase pentru care se întrerupe procedura de aprobare a modi
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="121" height="30" uuid="ec881957-6a1d-4d81-9b67-566d7a0f1a1b"/>
+								<reportElement x="0" y="0" width="118" height="30" uuid="ec881957-6a1d-4d81-9b67-566d7a0f1a1b"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -221,11 +212,11 @@ produselor medicamentoase pentru care se întrerupe procedura de aprobare a modi
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="171" uuid="1c9093f6-1114-432a-b5a0-cebeb3109271">
+					<jr:column width="167" uuid="1c9093f6-1114-432a-b5a0-cebeb3109271">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
 						<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="171" height="30" uuid="646148b3-e745-4dfd-aa01-1abb96199831"/>
+								<reportElement x="0" y="0" width="167" height="30" uuid="646148b3-e745-4dfd-aa01-1abb96199831"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10" isBold="true"/>
 								</textElement>
@@ -234,7 +225,7 @@ produselor medicamentoase pentru care se întrerupe procedura de aprobare a modi
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="171" height="30" uuid="c4930ddd-d459-4908-8adf-dbfc051eaa7b"/>
+								<reportElement x="0" y="0" width="167" height="30" uuid="c4930ddd-d459-4908-8adf-dbfc051eaa7b"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -242,11 +233,11 @@ produselor medicamentoase pentru care se întrerupe procedura de aprobare a modi
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="90" uuid="8a602cd0-57e2-4dcb-9fbd-1af6643fe921">
+					<jr:column width="87" uuid="8a602cd0-57e2-4dcb-9fbd-1af6643fe921">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
 						<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="90" height="30" uuid="52eab784-4032-4ce1-87f8-4d2467e2535e"/>
+								<reportElement x="0" y="0" width="87" height="30" uuid="52eab784-4032-4ce1-87f8-4d2467e2535e"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10" isBold="true"/>
 								</textElement>
@@ -255,7 +246,7 @@ produselor medicamentoase pentru care se întrerupe procedura de aprobare a modi
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="90" height="30" uuid="64240337-58e6-4fa7-8ae9-6a711e857658"/>
+								<reportElement x="0" y="0" width="87" height="30" uuid="64240337-58e6-4fa7-8ae9-6a711e857658"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -263,11 +254,11 @@ produselor medicamentoase pentru care se întrerupe procedura de aprobare a modi
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="73" uuid="eddc1f0c-59a7-47f5-9e6a-9d2d1c900c77">
+					<jr:column width="71" uuid="eddc1f0c-59a7-47f5-9e6a-9d2d1c900c77">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
 						<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="73" height="30" uuid="ca368979-45ba-41b7-9c90-2ba655b3dd51"/>
+								<reportElement x="0" y="0" width="71" height="30" uuid="ca368979-45ba-41b7-9c90-2ba655b3dd51"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10" isBold="true"/>
 								</textElement>
@@ -276,7 +267,7 @@ produselor medicamentoase pentru care se întrerupe procedura de aprobare a modi
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="73" height="30" uuid="7f54b4a2-8906-4733-a284-0e6ac890b501"/>
+								<reportElement x="0" y="0" width="71" height="30" uuid="7f54b4a2-8906-4733-a284-0e6ac890b501"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -284,11 +275,11 @@ produselor medicamentoase pentru care se întrerupe procedura de aprobare a modi
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="63" uuid="3e199837-201b-4112-8197-c3318bd35597">
+					<jr:column width="61" uuid="3e199837-201b-4112-8197-c3318bd35597">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
 						<jr:columnHeader style="Table 1_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="63" height="30" uuid="dc777d16-2893-4328-9a5b-f6474820aee3"/>
+								<reportElement x="0" y="0" width="61" height="30" uuid="dc777d16-2893-4328-9a5b-f6474820aee3"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10" isBold="true"/>
 								</textElement>
@@ -297,7 +288,7 @@ produselor medicamentoase pentru care se întrerupe procedura de aprobare a modi
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="63" height="30" uuid="a218ac90-9cc8-4663-abfe-3f67c02efb40"/>
+								<reportElement x="0" y="0" width="61" height="30" uuid="a218ac90-9cc8-4663-abfe-3f67c02efb40"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -323,18 +314,18 @@ tel. +373 22 884 301, e-mail: office@amed.md; Web: www.amed.md
 ]]></text>
 			</staticText>
 			<image>
-				<reportElement x="483" y="0" width="65" height="60" uuid="bbc38907-770b-4532-b958-246786ffa841"/>
+				<reportElement x="453" y="0" width="65" height="60" uuid="bbc38907-770b-4532-b958-246786ffa841"/>
 				<imageExpression><![CDATA["layouts/icons/cer.png"]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="396" y="63" width="114" height="18" uuid="367f94d5-528d-4c51-a8eb-4eb6bb0f751a"/>
+				<reportElement x="366" y="63" width="114" height="18" uuid="367f94d5-528d-4c51-a8eb-4eb6bb0f751a"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Pagina " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="510" y="64" width="50" height="16" uuid="1b118441-0726-4ecb-aa16-20d740b23f8f"/>
+				<reportElement x="480" y="64" width="50" height="16" uuid="1b118441-0726-4ecb-aa16-20d740b23f8f"/>
 				<textElement textAlignment="Left">
 					<font size="8"/>
 				</textElement>

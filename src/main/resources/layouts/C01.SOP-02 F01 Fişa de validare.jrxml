@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="14_C01.SOP-02 F01 Fişa de validare" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="10" uuid="523fb55a-b7a8-4c3c-86ea-fd79290ecf5e">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="14_C01.SOP-02 F01 Fişa de validare" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="40" rightMargin="20" topMargin="15" bottomMargin="15" uuid="523fb55a-b7a8-4c3c-86ea-fd79290ecf5e">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<parameter name="Parameter1" class="java.lang.String"/>
 	<parameter name="procVerb" class="java.lang.String"/>
 	<parameter name="date" class="java.lang.String"/>
@@ -32,11 +23,11 @@
 				<imageExpression><![CDATA["layouts/icons/header_left.jpg"]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="261" y="4" width="289" height="53" uuid="ae27ee01-a17f-4e89-81b4-1417b9af443c"/>
+				<reportElement x="261" y="4" width="277" height="53" uuid="ae27ee01-a17f-4e89-81b4-1417b9af443c"/>
 				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="0" y="60" width="548" height="20" uuid="9e1c9c81-505f-4a2f-83a1-570a8805f507"/>
+				<reportElement x="0" y="60" width="536" height="20" uuid="9e1c9c81-505f-4a2f-83a1-570a8805f507"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12"/>
 				</textElement>
@@ -47,55 +38,55 @@
 	<detail>
 		<band height="445" splitType="Stretch">
 			<textField>
-				<reportElement x="12" y="20" width="530" height="20" uuid="0c09378d-be6f-41ad-ad18-f4c28972e82f"/>
+				<reportElement x="12" y="20" width="518" height="20" uuid="0c09378d-be6f-41ad-ad18-f4c28972e82f"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Data " + $P{date}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="12" y="40" width="530" height="20" uuid="7482c238-9fac-408c-8c6c-3a5fd1b5f146"/>
+				<reportElement x="12" y="40" width="518" height="20" uuid="7482c238-9fac-408c-8c6c-3a5fd1b5f146"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Denumire medicament " + $P{medicamentName}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="12" y="60" width="530" height="20" uuid="1d0312c2-ed89-4ad7-87ad-41f08ee6196e"/>
+				<reportElement x="12" y="60" width="518" height="20" uuid="1d0312c2-ed89-4ad7-87ad-41f08ee6196e"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Deținător/Producător " + $P{medicamentProd}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="12" y="80" width="530" height="20" uuid="4a9ff42c-5ce4-42f1-89dd-b973f7ce62ce"/>
+				<reportElement x="12" y="80" width="518" height="20" uuid="4a9ff42c-5ce4-42f1-89dd-b973f7ce62ce"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Documentaţia necesară prezentării dosarului pentru aprobarea variaţiilor"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="12" y="100" width="530" height="20" uuid="1a277258-b6e6-4e3f-bfe1-e2354b51b7e1"/>
+				<reportElement x="12" y="100" width="518" height="20" uuid="1a277258-b6e6-4e3f-bfe1-e2354b51b7e1"/>
 				<textFieldExpression><![CDATA["1. Procura valabilă " + $P{procVerb}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="12" y="120" width="530" height="20" uuid="fb683bed-3cf7-49f2-a508-628b84cc1b46"/>
+				<reportElement x="12" y="120" width="518" height="20" uuid="fb683bed-3cf7-49f2-a508-628b84cc1b46"/>
 				<textFieldExpression><![CDATA["2. Cerere-model către Directorul general " + $P{reqModel}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="12" y="140" width="530" height="20" uuid="7edad787-1e7a-4832-8ae1-d471e22901a7"/>
+				<reportElement x="12" y="140" width="518" height="20" uuid="7edad787-1e7a-4832-8ae1-d471e22901a7"/>
 				<textFieldExpression><![CDATA["3. Cerere-tip pentru aprobarea variaţiilor însoţită de tabela comparativă " + $P{aprobVar}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="12" y="160" width="530" height="20" uuid="83ee5866-5166-4388-803d-0465177c838e"/>
+				<reportElement x="12" y="160" width="518" height="20" uuid="83ee5866-5166-4388-803d-0465177c838e"/>
 				<textFieldExpression><![CDATA["4. Scrisoare de intenție " + $P{intentionMail}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="12" y="180" width="530" height="50" uuid="9d46574e-07a1-428c-a512-55645e9f9ea3"/>
+				<reportElement x="12" y="180" width="518" height="50" uuid="9d46574e-07a1-428c-a512-55645e9f9ea3"/>
 				<textFieldExpression><![CDATA["5. Documentaţia necesară în susţinerea variaţiilor după tipul/tipurile de variaţie/i solicitat/e (documentaţie pe suport de hârtie (1 ex.) şi electronic) " + $P{doc}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="12" y="257" width="530" height="122" uuid="3850c19b-ad04-4094-90b5-3ac184d7b0d2"/>
+				<reportElement x="12" y="257" width="518" height="122" uuid="3850c19b-ad04-4094-90b5-3ac184d7b0d2"/>
 				<textElement>
 					<font fontName="DejaVu Sans"/>
 				</textElement>
@@ -109,16 +100,16 @@
 				<textFieldExpression><![CDATA["Numele persoanei care a recepţionat dosarul " + $P{receptionPerson} + " semnătura "]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="380" y="410" width="162" height="30" uuid="7db235d1-1d59-4ce6-9df1-b1dc9e67d567"/>
+				<reportElement x="380" y="410" width="150" height="30" uuid="7db235d1-1d59-4ce6-9df1-b1dc9e67d567"/>
 				<textElement verticalAlignment="Bottom"/>
 				<text><![CDATA[____________________________]]></text>
 			</staticText>
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="65" splitType="Stretch">
+		<band height="60" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="19" width="280" height="45" uuid="62abd8fc-753c-4d82-926d-20153ed31c42"/>
+				<reportElement x="0" y="9" width="280" height="45" uuid="62abd8fc-753c-4d82-926d-20153ed31c42"/>
 				<textElement markup="none">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
@@ -129,7 +120,7 @@ tel. +373 22 884 301, e-mail: office@amed.md; Web: www.amed.md
 ]]></text>
 			</staticText>
 			<image>
-				<reportElement x="483" y="0" width="65" height="60" uuid="36094911-1947-4f9d-a837-51c429be067a"/>
+				<reportElement x="463" y="0" width="65" height="60" uuid="36094911-1947-4f9d-a837-51c429be067a"/>
 				<imageExpression><![CDATA["layouts/icons/cer.png"]]></imageExpression>
 			</image>
 		</band>

@@ -164,6 +164,7 @@ public class ClinicalTrailsPaymentController {
             double summedTaxes = servTaxList.stream().mapToDouble(serv -> serv.getTotalSum()).sum();
             parameters.put("sumToPayEUR", String.valueOf(AmountUtils.round(summedTaxes / coeficient, 2)));
             parameters.put("sumToPayUSD", String.valueOf(AmountUtils.round(summedTaxes / coeficient, 2)));
+            parameters.put("sumToPayMDL", String.valueOf(AmountUtils.round(summedTaxes, 2)));
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);

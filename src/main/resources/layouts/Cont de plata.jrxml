@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="5_Cont de plata" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="10" uuid="c084aefd-f7fb-40ce-ab3f-dc897567241a">
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="5_Cont de plata" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="40" rightMargin="20" topMargin="15" bottomMargin="15" uuid="c084aefd-f7fb-40ce-ab3f-dc897567241a">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
@@ -77,11 +68,11 @@
 				<imageExpression><![CDATA["layouts/icons/header_left.jpg"]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="225" y="0" width="330" height="70" uuid="11dd8ec7-6404-4cc7-9d59-a7e8f6fd0917"/>
+				<reportElement x="225" y="0" width="312" height="70" uuid="11dd8ec7-6404-4cc7-9d59-a7e8f6fd0917"/>
 				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="466" y="68" width="82" height="13" uuid="a8ab1945-d22e-4171-95ce-3d9fdc3195e2"/>
+				<reportElement x="446" y="68" width="82" height="13" uuid="a8ab1945-d22e-4171-95ce-3d9fdc3195e2"/>
 				<textElement textAlignment="Right">
 					<font isItalic="true"/>
 				</textElement>
@@ -92,33 +83,34 @@
 	<detail>
 		<band height="142" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="280" y="10" width="269" height="20" uuid="b8809fc8-2a40-4a5a-988b-18213e70bf00"/>
+				<reportElement x="280" y="10" width="251" height="20" uuid="b8809fc8-2a40-4a5a-988b-18213e70bf00"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA["La Nr. " + $P{La Nr.} + " din " +$P{Din: }]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="51" width="550" height="30" uuid="4b74b26f-5777-4d67-b972-3542d2b059ba"/>
+				<reportElement x="0" y="51" width="532" height="30" uuid="4b74b26f-5777-4d67-b972-3542d2b059ba"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<text><![CDATA[	Prin prezenta, Agenţia Medicamentului şi Dispozitivelor Medicale a Republicii Moldova Vă informează privind acceptarea pentru modificări postautorizare a produsului:]]></text>
 			</staticText>
 			<componentElement>
-				<reportElement x="0" y="97" width="555" height="40" uuid="12b2bb4c-17e7-4ac2-af6a-8a060f902e2a">
+				<reportElement x="0" y="97" width="532" height="40" uuid="12b2bb4c-17e7-4ac2-af6a-8a060f902e2a">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
 					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="Dataset1" uuid="ac5ab4d9-4c4c-41dd-9532-e619a0ef78f3">
 						<dataSourceExpression><![CDATA[$P{contPlataDataset}]]></dataSourceExpression>
 					</datasetRun>
-					<jr:column width="420" uuid="e5a353e1-c388-466d-a130-f4c3bccadcaa">
+					<jr:column width="404" uuid="e5a353e1-c388-466d-a130-f4c3bccadcaa">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="420" height="20" uuid="621b3a2b-86fc-4c94-82c7-cc8e7d8be3ba"/>
+								<reportElement x="0" y="0" width="404" height="20" uuid="621b3a2b-86fc-4c94-82c7-cc8e7d8be3ba"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="11" isBold="true"/>
 								</textElement>
@@ -127,7 +119,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="20">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="420" height="20" uuid="6b4b9aa7-3642-4e65-ad3a-6066bba0da73"/>
+								<reportElement x="0" y="0" width="404" height="20" uuid="6b4b9aa7-3642-4e65-ad3a-6066bba0da73"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="11"/>
 								</textElement>
@@ -135,11 +127,11 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="135" uuid="d0b89ce7-ad08-4cd3-a77e-9184bd46ae05">
+					<jr:column width="128" uuid="d0b89ce7-ad08-4cd3-a77e-9184bd46ae05">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
 						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="135" height="20" uuid="7abef3bf-5cbc-45f4-a2a5-fe5204c64bd2"/>
+								<reportElement x="0" y="0" width="128" height="20" uuid="7abef3bf-5cbc-45f4-a2a5-fe5204c64bd2"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="11" isBold="true"/>
 								</textElement>
@@ -148,7 +140,7 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="20">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="135" height="20" uuid="6629f04b-8232-424a-9fa0-1c65506975d0"/>
+								<reportElement x="0" y="0" width="128" height="20" uuid="6629f04b-8232-424a-9fa0-1c65506975d0"/>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="11"/>
 								</textElement>
@@ -159,16 +151,16 @@
 				</jr:table>
 			</componentElement>
 		</band>
-		<band height="168">
+		<band height="166">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="4" y="12" width="548" height="38" uuid="60fce309-3961-4576-ac23-00a09c55d415"/>
+				<reportElement x="4" y="12" width="530" height="38" uuid="60fce309-3961-4576-ac23-00a09c55d415"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA["	În baza Hotărârii Guvernului Republicii Moldova Nr. 348 din 26 mai 2014 plata pentru aprobarea modificărilor postautorizare constituie " + $P{sum} + " lei MD"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="4" y="72" width="549" height="30" uuid="d0351562-1902-4007-a856-fcf7fd01c8c8"/>
+				<reportElement x="4" y="72" width="531" height="30" uuid="d0351562-1902-4007-a856-fcf7fd01c8c8"/>
 				<textElement>
 					<font size="11" isBold="true" isItalic="true"/>
 				</textElement>
@@ -184,33 +176,33 @@ Contul este valabil timp de 30 zile de la data emiterii!
 				<text><![CDATA[Director general ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="280" y="112" width="272" height="18" uuid="a7cdab52-2fc9-4bb4-9c79-d7ba9e678aa4"/>
+				<reportElement x="280" y="112" width="254" height="18" uuid="a7cdab52-2fc9-4bb4-9c79-d7ba9e678aa4"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{genDir}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="4" y="142" width="550" height="18" uuid="0736ec63-c367-4865-85b6-2c06437fe508"/>
+				<reportElement x="4" y="142" width="532" height="18" uuid="0736ec63-c367-4865-85b6-2c06437fe508"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="9" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Ex.: " + $P{nameSurname}]]></textFieldExpression>
 			</textField>
 			<break>
-				<reportElement x="0" y="165" width="549" height="1" uuid="d7d2ae58-f4e8-44be-80a7-0d7088bf6ce5"/>
+				<reportElement x="0" y="165" width="535" height="1" uuid="d7d2ae58-f4e8-44be-80a7-0d7088bf6ce5"/>
 			</break>
 		</band>
 		<band height="66">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="11" width="555" height="19" uuid="65d6cdfe-b73f-4e34-909d-f2bc244af33b"/>
+				<reportElement x="0" y="11" width="537" height="19" uuid="65d6cdfe-b73f-4e34-909d-f2bc244af33b"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["CONT  DE  PLATĂ  Nr. " + $P{invoiceNr}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="41" width="555" height="20" uuid="9d6d956a-a978-4c18-a39c-3ef1e58dbe65"/>
+				<reportElement x="0" y="41" width="537" height="20" uuid="9d6d956a-a978-4c18-a39c-3ef1e58dbe65"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
@@ -220,14 +212,14 @@ Contul este valabil timp de 30 zile de la data emiterii!
 		<band height="32"/>
 		<band height="27">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="-25" width="555" height="15" uuid="c2687317-a654-465c-9e0d-22fa0af0bac9"/>
+				<reportElement x="0" y="-25" width="537" height="15" uuid="c2687317-a654-465c-9e0d-22fa0af0bac9"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Adresa " + $P{payerAddress}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="3" width="555" height="20" uuid="2fec0ebe-c3b6-443d-9546-dd254bcbf85c"/>
+				<reportElement x="0" y="3" width="537" height="20" uuid="2fec0ebe-c3b6-443d-9546-dd254bcbf85c"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
@@ -236,14 +228,14 @@ Contul este valabil timp de 30 zile de la data emiterii!
 		</band>
 		<band height="46">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="1" y="3" width="555" height="20" uuid="eb374b1b-2a76-4523-a101-e101bde9cb68"/>
+				<reportElement x="1" y="3" width="537" height="20" uuid="eb374b1b-2a76-4523-a101-e101bde9cb68"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Cod fiscal: " + $P{vatCode}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="1" y="23" width="555" height="20" uuid="ea9b5bd0-4ad7-4288-b451-0f296b7faa94"/>
+				<reportElement x="1" y="23" width="537" height="20" uuid="ea9b5bd0-4ad7-4288-b451-0f296b7faa94"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
@@ -259,42 +251,42 @@ Contul este valabil timp de 30 zile de la data emiterii!
 				<text><![CDATA[BANCA BENEFICIARĂ: ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="120" y="2" width="434" height="30" uuid="831b07f4-e1b5-4922-8388-48be234c8209"/>
+				<reportElement x="120" y="2" width="416" height="30" uuid="831b07f4-e1b5-4922-8388-48be234c8209"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{beneficiarBank}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="32" width="555" height="20" uuid="9ae1a6e5-9e66-47ff-ad0e-9ff53c22dee2"/>
+				<reportElement x="0" y="32" width="537" height="20" uuid="9ae1a6e5-9e66-47ff-ad0e-9ff53c22dee2"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Cod: " + $P{beneficiarBankCode}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="52" width="555" height="20" uuid="a9ba57b2-48e8-4a0e-8c6b-79da85fc5ee6"/>
+				<reportElement x="0" y="52" width="537" height="20" uuid="a9ba57b2-48e8-4a0e-8c6b-79da85fc5ee6"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Cont bancar: " + $P{beneficiarBankAccount}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="72" width="555" height="20" uuid="7f115f04-6ab8-49e3-9e52-6c7cbdae01d8"/>
+				<reportElement x="0" y="72" width="537" height="20" uuid="7f115f04-6ab8-49e3-9e52-6c7cbdae01d8"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Contul IBAN.:" + $P{beneficiarIban}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="126" width="555" height="48" uuid="a0a369db-5329-43e9-b57b-9467d8901123"/>
+				<reportElement x="0" y="126" width="537" height="48" uuid="a0a369db-5329-43e9-b57b-9467d8901123"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Plata pentru modificări postautorizare conform contului de plată Nr.  " + $P{invoiceNr} + " din " + $P{invoiceDate} + $P{sum} + " lei MD"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="199" width="555" height="20" uuid="8337f0de-4ab3-4fad-8dc7-11a479d1429a"/>
+				<reportElement x="0" y="199" width="537" height="20" uuid="8337f0de-4ab3-4fad-8dc7-11a479d1429a"/>
 				<textElement>
 					<font size="11" isBold="true" isItalic="true"/>
 				</textElement>
@@ -302,7 +294,7 @@ Contul este valabil timp de 30 zile de la data emiterii!
 ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="239" width="555" height="51" uuid="2cd0b3b2-c4cd-41b2-b75a-ed2d1eb1ea24"/>
+				<reportElement x="0" y="239" width="537" height="51" uuid="2cd0b3b2-c4cd-41b2-b75a-ed2d1eb1ea24"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
@@ -316,7 +308,7 @@ Contul este valabil timp de 30 zile de la data emiterii!
 	<pageFooter>
 		<band height="77" splitType="Stretch">
 			<staticText>
-				<reportElement x="484" y="64" width="25" height="13" uuid="b64b0e3a-fd13-4790-bea5-b0b9acc35d20"/>
+				<reportElement x="464" y="64" width="25" height="13" uuid="b64b0e3a-fd13-4790-bea5-b0b9acc35d20"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -334,25 +326,25 @@ tel. +373 22 884 301, e-mail: office@amed.md; Web: www.amed.md
 ]]></text>
 			</staticText>
 			<image>
-				<reportElement x="483" y="0" width="65" height="60" uuid="bbc38907-770b-4532-b958-246786ffa841"/>
+				<reportElement x="463" y="0" width="65" height="60" uuid="bbc38907-770b-4532-b958-246786ffa841"/>
 				<imageExpression><![CDATA["layouts/icons/cer.png"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="521" y="64" width="16" height="13" uuid="01717c74-486d-40b7-9137-07898e652885"/>
+				<reportElement x="501" y="64" width="16" height="13" uuid="01717c74-486d-40b7-9137-07898e652885"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[din ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="509" y="64" width="12" height="13" uuid="564d9887-ad6f-4b42-954a-70326fbf7e32"/>
+				<reportElement x="489" y="64" width="12" height="13" uuid="564d9887-ad6f-4b42-954a-70326fbf7e32"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="537" y="64" width="12" height="13" uuid="8f3c4fe0-41af-4130-8f08-f3280bdb65f3"/>
+				<reportElement x="517" y="64" width="12" height="13" uuid="8f3c4fe0-41af-4130-8f08-f3280bdb65f3"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>

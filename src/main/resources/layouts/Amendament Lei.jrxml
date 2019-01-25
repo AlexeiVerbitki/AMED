@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Amendament Lei" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="10" uuid="c084aefd-f7fb-40ce-ab3f-dc897567241a">
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Amendament Lei" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="40" rightMargin="20" topMargin="15" bottomMargin="15" uuid="c084aefd-f7fb-40ce-ab3f-dc897567241a">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
 	<parameter name="nr" class="java.lang.String"/>
 	<parameter name="date" class="java.lang.String"/>
@@ -39,13 +30,13 @@
 		<![CDATA[]]>
 	</queryString>
 	<pageHeader>
-		<band height="72" splitType="Stretch">
+		<band height="70" splitType="Stretch">
 			<image>
-				<reportElement x="0" y="0" width="220" height="60" uuid="d4fe1f91-f2a0-4e52-b4c3-5c3e9dd935ca"/>
+				<reportElement x="0" y="0" width="234" height="70" uuid="d4fe1f91-f2a0-4e52-b4c3-5c3e9dd935ca"/>
 				<imageExpression><![CDATA["layouts/icons/header_left.jpg"]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="220" y="0" width="330" height="70" uuid="11dd8ec7-6404-4cc7-9d59-a7e8f6fd0917"/>
+				<reportElement x="234" y="0" width="298" height="70" uuid="11dd8ec7-6404-4cc7-9d59-a7e8f6fd0917"/>
 				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
 		</band>
@@ -60,56 +51,56 @@
 				<textFieldExpression><![CDATA["Nr. " + $P{nr} + " din " +$P{date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="310" y="40" width="241" height="30" uuid="176f4ec3-7149-477d-b9d7-e7073049bf45"/>
+				<reportElement x="310" y="40" width="221" height="30" uuid="176f4ec3-7149-477d-b9d7-e7073049bf45"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{companyName} + " " + $P{companyAddress}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="310" y="70" width="241" height="20" uuid="520faf38-cb37-4744-9773-964db268514c"/>
+				<reportElement x="310" y="70" width="221" height="20" uuid="520faf38-cb37-4744-9773-964db268514c"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Cod Fiscal " + $P{companyFiscalCode}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="310" y="90" width="241" height="20" uuid="b0aa0909-e95a-420b-a70b-7e0f4a08d3ef"/>
+				<reportElement x="310" y="90" width="221" height="20" uuid="b0aa0909-e95a-420b-a70b-7e0f4a08d3ef"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA["TVA  " + $P{companyVat}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="310" y="130" width="241" height="20" uuid="8a62f626-b46f-4ef6-9a12-925e25c96c9a"/>
+				<reportElement x="310" y="130" width="221" height="20" uuid="8a62f626-b46f-4ef6-9a12-925e25c96c9a"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Codul  bancii " + $P{companyBankCode}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="310" y="110" width="241" height="20" uuid="aa3c3650-d967-485b-a714-127b439b9897"/>
+				<reportElement x="310" y="110" width="221" height="20" uuid="aa3c3650-d967-485b-a714-127b439b9897"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{companyBank}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="310" y="150" width="241" height="20" uuid="a02eeeb0-9e36-420d-9315-f60e6863eaa4"/>
+				<reportElement x="310" y="150" width="221" height="20" uuid="a02eeeb0-9e36-420d-9315-f60e6863eaa4"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA["IBAN: " + $P{companyIban}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="310" y="170" width="241" height="20" uuid="88f3bc17-ffe8-410e-bf3d-437a443deacd"/>
+				<reportElement x="310" y="170" width="221" height="20" uuid="88f3bc17-ffe8-410e-bf3d-437a443deacd"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Fax: " + $P{companyFax}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="310" y="190" width="241" height="20" uuid="510ee05b-5e7e-472e-890b-db1973cc2a97"/>
+				<reportElement x="310" y="190" width="221" height="20" uuid="510ee05b-5e7e-472e-890b-db1973cc2a97"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
@@ -118,14 +109,14 @@
 		</band>
 		<band height="134">
 			<staticText>
-				<reportElement x="3" y="10" width="548" height="30" uuid="58cf2367-d116-4ee7-9eae-4a6a9d7e4c1b"/>
+				<reportElement x="3" y="10" width="528" height="30" uuid="58cf2367-d116-4ee7-9eae-4a6a9d7e4c1b"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<text><![CDATA[	Prin prezenta, Agenţia Medicamentului şi Dispozitivelor Medicale Vă informează despre admiterea spre plată a serviciului solicitat:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="3" y="40" width="548" height="30" uuid="05ca1fc8-6ee0-4f8d-bccb-70dbd617cd54"/>
+				<reportElement x="3" y="40" width="528" height="30" uuid="05ca1fc8-6ee0-4f8d-bccb-70dbd617cd54"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
@@ -139,29 +130,29 @@
 				<textFieldExpression><![CDATA[$P{amendamentName}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="429" y="80" width="121" height="40" uuid="a8f35945-3c00-47f1-ae29-472402fbf945"/>
+				<reportElement x="429" y="80" width="102" height="40" uuid="a8f35945-3c00-47f1-ae29-472402fbf945"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{sumToPayMDL} + " lei MDL"]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="0" y="80" width="555" height="1" uuid="cc1ead61-18ac-4177-8d11-cbe7fa8fba95"/>
+				<reportElement x="0" y="80" width="532" height="1" uuid="cc1ead61-18ac-4177-8d11-cbe7fa8fba95"/>
 			</line>
 			<line>
-				<reportElement x="0" y="130" width="555" height="1" uuid="279c60ac-c705-4b5a-9cf4-652aa8d97c1f"/>
+				<reportElement x="0" y="130" width="532" height="1" uuid="279c60ac-c705-4b5a-9cf4-652aa8d97c1f"/>
 			</line>
 		</band>
 		<band height="141">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="30" width="548" height="28" uuid="417cb06a-9f4b-4451-a08c-bdde6e5a9c57"/>
+				<reportElement x="0" y="30" width="532" height="28" uuid="417cb06a-9f4b-4451-a08c-bdde6e5a9c57"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA["	În baza Hotărârii Guvernului Republicii Moldova Nr. 348 din 26 mai 2014 plata pentru amendamente privind protocolul/medicamentul pentru investigaţie clinică constituie " + $P{sumToPayMDL}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="-1" y="63" width="551" height="30" uuid="c3ddbb3b-4709-43ed-822a-219c702e0831"/>
+				<reportElement x="0" y="63" width="532" height="30" uuid="c3ddbb3b-4709-43ed-822a-219c702e0831"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true" isItalic="true"/>
 				</textElement>
@@ -177,7 +168,7 @@ Contul este valabil timp de 30 zile de la data emiterii!
 				<text><![CDATA[Director general ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="323" y="112" width="227" height="18" uuid="c5ac03c8-8190-4f63-9788-99e123f83aed"/>
+				<reportElement x="323" y="112" width="208" height="18" uuid="c5ac03c8-8190-4f63-9788-99e123f83aed"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
@@ -189,18 +180,18 @@ Contul este valabil timp de 30 zile de la data emiterii!
 		</band>
 		<band height="221">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="10" width="551" height="20" uuid="accb2c64-af8d-4dbc-b0ca-c2c15ffd381b"/>
+				<reportElement x="0" y="10" width="532" height="20" uuid="accb2c64-af8d-4dbc-b0ca-c2c15ffd381b"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["CONT DE PLATĂ Nr. " + $P{invoiceNr} + " din " +$P{invoiceDate}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="60" y="30" width="491" height="20" uuid="159a5ae4-b570-4fd2-b3b6-35fe986a334a"/>
+				<reportElement positionType="Float" x="60" y="30" width="471" height="20" uuid="159a5ae4-b570-4fd2-b3b6-35fe986a334a"/>
 				<textFieldExpression><![CDATA[$P{companyName}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="ContainerBottom" isPrintRepeatedValues="false" x="60" y="50" width="491" height="20" uuid="6eb34084-272d-4caa-90a7-7b3254e91837"/>
+				<reportElement positionType="Float" stretchType="ContainerBottom" isPrintRepeatedValues="false" x="60" y="50" width="471" height="20" uuid="6eb34084-272d-4caa-90a7-7b3254e91837"/>
 				<textFieldExpression><![CDATA[$P{companyAddress}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -218,52 +209,52 @@ Contul este valabil timp de 30 zile de la data emiterii!
 				<text><![CDATA[Adresa: ]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="210" width="555" height="1" uuid="df6e7b49-2505-44e5-b3dd-96b6ccad857f"/>
+				<reportElement x="0" y="210" width="532" height="1" uuid="df6e7b49-2505-44e5-b3dd-96b6ccad857f"/>
 			</line>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="70" width="241" height="20" uuid="784988a2-fa46-46a2-b908-8c42aaca2871"/>
+				<reportElement x="0" y="70" width="532" height="20" uuid="784988a2-fa46-46a2-b908-8c42aaca2871"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Cod Fiscal " + $P{companyFiscalCode}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="90" width="241" height="20" uuid="b816abdf-d40e-4850-9743-496bb5232805"/>
+				<reportElement x="0" y="90" width="532" height="20" uuid="b816abdf-d40e-4850-9743-496bb5232805"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA["TVA  " + $P{companyVat}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="110" width="241" height="20" uuid="69ebf664-bfa1-4b8c-b634-0c3cc61a564c"/>
+				<reportElement x="0" y="110" width="532" height="20" uuid="69ebf664-bfa1-4b8c-b634-0c3cc61a564c"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{companyBank}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="130" width="241" height="20" uuid="6bb30788-cd5c-4387-90bc-b9156abc2b40"/>
+				<reportElement x="0" y="130" width="532" height="20" uuid="6bb30788-cd5c-4387-90bc-b9156abc2b40"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Codul  bancii " + $P{companyBankCode}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="150" width="241" height="20" uuid="5fe74800-0bbd-4297-9a64-787bb40e3482"/>
+				<reportElement x="0" y="150" width="532" height="20" uuid="5fe74800-0bbd-4297-9a64-787bb40e3482"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA["IBAN: " + $P{companyIban}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="170" width="241" height="20" uuid="2ef674c3-4d73-41c2-98f2-39c39c6431b7"/>
+				<reportElement x="0" y="170" width="532" height="20" uuid="2ef674c3-4d73-41c2-98f2-39c39c6431b7"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Fax: " + $P{companyFax}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="190" width="241" height="20" uuid="72f34012-b453-46bf-8225-d869c8b343fc"/>
+				<reportElement x="0" y="190" width="532" height="20" uuid="72f34012-b453-46bf-8225-d869c8b343fc"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
@@ -279,7 +270,7 @@ Contul este valabil timp de 30 zile de la data emiterii!
 				<text><![CDATA[Beneficiary:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="80" y="0" width="470" height="20" uuid="dad91ecf-0bb8-4f59-b08f-118ec8501f20"/>
+				<reportElement positionType="Float" x="80" y="0" width="451" height="20" uuid="dad91ecf-0bb8-4f59-b08f-118ec8501f20"/>
 				<textFieldExpression><![CDATA[$P{beneficiary}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -290,7 +281,7 @@ Contul este valabil timp de 30 zile de la data emiterii!
 				<text><![CDATA[Code IBAN: ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="80" y="20" width="470" height="20" uuid="910a6855-43e5-4f25-b1c0-a101efb8861d"/>
+				<reportElement positionType="Float" x="80" y="20" width="451" height="20" uuid="910a6855-43e5-4f25-b1c0-a101efb8861d"/>
 				<textFieldExpression><![CDATA[$P{ibanCode}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -301,7 +292,7 @@ Contul este valabil timp de 30 zile de la data emiterii!
 				<text><![CDATA[Beneficiary Bank: ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="120" y="40" width="430" height="20" uuid="0aaee9b3-79ad-4ca6-9b24-ef32b3c498a9"/>
+				<reportElement positionType="Float" x="120" y="40" width="411" height="20" uuid="0aaee9b3-79ad-4ca6-9b24-ef32b3c498a9"/>
 				<textFieldExpression><![CDATA[$P{bank}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -312,7 +303,7 @@ Contul este valabil timp de 30 zile de la data emiterii!
 				<text><![CDATA[Intermediary bank: ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="130" y="60" width="418" height="20" uuid="782cde78-22e4-42fb-93d2-1215ea5152ea"/>
+				<reportElement positionType="Float" x="130" y="60" width="401" height="20" uuid="782cde78-22e4-42fb-93d2-1215ea5152ea"/>
 				<textFieldExpression><![CDATA[$P{intermediaryBank}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -323,7 +314,7 @@ Contul este valabil timp de 30 zile de la data emiterii!
 				<text><![CDATA[Account: ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="60" y="80" width="487" height="20" uuid="9a5ddc85-1ba9-4e09-a4cb-4e205dc62fa0"/>
+				<reportElement positionType="Float" x="60" y="80" width="471" height="20" uuid="9a5ddc85-1ba9-4e09-a4cb-4e205dc62fa0"/>
 				<textFieldExpression><![CDATA[$P{account}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -334,18 +325,18 @@ Contul este valabil timp de 30 zile de la data emiterii!
 				<text><![CDATA[SWIFT Code: ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="90" y="100" width="456" height="20" uuid="5cca641e-095d-4ed2-86fa-3537471844ff"/>
+				<reportElement positionType="Float" x="90" y="100" width="441" height="20" uuid="5cca641e-095d-4ed2-86fa-3537471844ff"/>
 				<textFieldExpression><![CDATA[$P{swiftCode}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="140" width="548" height="19" uuid="0e3f37ed-f89b-4d52-a405-85ccbe9900a5"/>
+				<reportElement x="0" y="140" width="532" height="19" uuid="0e3f37ed-f89b-4d52-a405-85ccbe9900a5"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Plata pentru aprobarea amendamentului " + $P{sumToPayMDL} + " MDL"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="-3" y="209" width="551" height="20" uuid="3b7ff6e0-4055-4621-a0a9-1c0aa27a4068"/>
+				<reportElement x="0" y="209" width="532" height="20" uuid="3b7ff6e0-4055-4621-a0a9-1c0aa27a4068"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true" isItalic="true"/>
 				</textElement>
@@ -362,17 +353,17 @@ Contul este valabil timp de 30 zile de la data emiterii!
 ]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="170" width="555" height="1" uuid="5750e803-1b4d-4e17-ae02-9a14a7bff1c3"/>
+				<reportElement x="0" y="170" width="532" height="1" uuid="5750e803-1b4d-4e17-ae02-9a14a7bff1c3"/>
 			</line>
 			<line>
-				<reportElement x="0" y="130" width="555" height="1" uuid="914069a0-cdc2-4516-be12-1420b94e386c"/>
+				<reportElement x="0" y="130" width="532" height="1" uuid="914069a0-cdc2-4516-be12-1420b94e386c"/>
 			</line>
 		</band>
 	</detail>
 	<pageFooter>
 		<band height="77" splitType="Stretch">
 			<staticText>
-				<reportElement x="484" y="64" width="25" height="13" uuid="b64b0e3a-fd13-4790-bea5-b0b9acc35d20"/>
+				<reportElement x="465" y="64" width="25" height="13" uuid="b64b0e3a-fd13-4790-bea5-b0b9acc35d20"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -390,25 +381,25 @@ tel. +373 22 884 301, e-mail: office@amed.md; Web: www.amed.md
 ]]></text>
 			</staticText>
 			<image>
-				<reportElement x="483" y="0" width="65" height="60" uuid="bbc38907-770b-4532-b958-246786ffa841"/>
+				<reportElement x="464" y="0" width="65" height="60" uuid="bbc38907-770b-4532-b958-246786ffa841"/>
 				<imageExpression><![CDATA["layouts/icons/cer.png"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="521" y="64" width="16" height="13" uuid="01717c74-486d-40b7-9137-07898e652885"/>
+				<reportElement x="502" y="64" width="16" height="13" uuid="01717c74-486d-40b7-9137-07898e652885"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[din ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="509" y="64" width="12" height="13" uuid="564d9887-ad6f-4b42-954a-70326fbf7e32"/>
+				<reportElement x="490" y="64" width="12" height="13" uuid="564d9887-ad6f-4b42-954a-70326fbf7e32"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="537" y="64" width="12" height="13" uuid="8f3c4fe0-41af-4130-8f08-f3280bdb65f3"/>
+				<reportElement x="518" y="64" width="12" height="13" uuid="8f3c4fe0-41af-4130-8f08-f3280bdb65f3"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>

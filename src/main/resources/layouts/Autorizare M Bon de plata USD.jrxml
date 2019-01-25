@@ -48,7 +48,7 @@
 		<field name="pharmaceuticForm" class="java.lang.String"/>
 		<field name="dose" class="java.lang.String"/>
 		<field name="division" class="java.lang.String"/>
-		<field name="currencyCode" class="java.lang.Double"/>
+		<field name="price" class="java.lang.Double"/>
 	</subDataset>
 	<parameter name="autorizareMbonDePlataDataset" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<parameter name="companyName" class="java.lang.String"/>
@@ -128,7 +128,7 @@ Fax. +373 22 737000; 737002;]]></text>
 				<text><![CDATA[Prin prezenta, Agenţia Medicamentului şi Dispozitivelor Medicale a Republicii Moldova Vă informează că au fost primite pentru înregistrare următoarele produse medicamentoase:]]></text>
 			</staticText>
 			<componentElement>
-				<reportElement x="5" y="45" width="552" height="30" uuid="1b335b7a-f213-44da-8c8c-dc20b55bf192">
+				<reportElement x="5" y="45" width="549" height="30" uuid="1b335b7a-f213-44da-8c8c-dc20b55bf192">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
@@ -175,11 +175,11 @@ Fax. +373 22 737000; 737002;]]></text>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="92" uuid="b1bf6f1a-5523-443b-9842-818bd32385cc">
+					<jr:column width="91" uuid="b1bf6f1a-5523-443b-9842-818bd32385cc">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="92" height="30" uuid="c05e843b-7de1-440f-93b1-8fd6ae7eb9e5"/>
+								<reportElement x="0" y="0" width="91" height="30" uuid="c05e843b-7de1-440f-93b1-8fd6ae7eb9e5"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -187,11 +187,11 @@ Fax. +373 22 737000; 737002;]]></text>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="92" uuid="c19c2ab8-24e4-4933-b323-9d0ba0956eda">
+					<jr:column width="91" uuid="c19c2ab8-24e4-4933-b323-9d0ba0956eda">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="92" height="30" uuid="0f50c652-a34b-4c42-8b40-b63f33f22eba"/>
+								<reportElement x="0" y="0" width="91" height="30" uuid="0f50c652-a34b-4c42-8b40-b63f33f22eba"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -199,15 +199,15 @@ Fax. +373 22 737000; 737002;]]></text>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="92" uuid="4a497717-de4b-4729-b2a1-084b0f50d129">
+					<jr:column width="91" uuid="4a497717-de4b-4729-b2a1-084b0f50d129">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="92" height="30" uuid="9812bee4-0a52-4489-99e9-6c92e7f8b257"/>
+								<reportElement x="0" y="0" width="91" height="30" uuid="9812bee4-0a52-4489-99e9-6c92e7f8b257"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{currencyCode} + " USD"]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{price} + " USD"]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

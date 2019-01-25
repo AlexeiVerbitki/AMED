@@ -21,7 +21,7 @@
 // @Component({
 //   selector: 'app-med-reg',
 //   templateUrl: './import-management.html',
-//   styleUrls: ['./med-reg-approve.component.css']
+//   styleUrls: ['./med-reg-approve.component.toDelete.css']
 // })
 // export class MedRegComponent implements OnInit {
 //   cereri: Cerere[] = [];

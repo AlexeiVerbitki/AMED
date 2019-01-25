@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Ordin Autorizare" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="10" uuid="523fb55a-b7a8-4c3c-86ea-fd79290ecf5e">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Ordin Autorizare" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="40" rightMargin="20" topMargin="15" bottomMargin="15" uuid="523fb55a-b7a8-4c3c-86ea-fd79290ecf5e">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -78,7 +69,7 @@
 				<imageExpression><![CDATA["layouts/icons/header_left.jpg"]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="261" y="4" width="289" height="53" uuid="ae27ee01-a17f-4e89-81b4-1417b9af443c"/>
+				<reportElement x="261" y="4" width="279" height="53" uuid="ae27ee01-a17f-4e89-81b4-1417b9af443c"/>
 				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
 		</band>
@@ -93,7 +84,7 @@
 				<textFieldExpression><![CDATA["Nr. " + $P{nr} + " din " + $P{date}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="340" y="510" width="210" height="20" uuid="9c72c804-99d2-42d4-8c38-28919fc98912"/>
+				<reportElement x="320" y="510" width="210" height="20" uuid="9c72c804-99d2-42d4-8c38-28919fc98912"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" isBold="true"/>
 				</textElement>
@@ -115,14 +106,14 @@
 ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="160" width="550" height="130" uuid="9b30dd2a-dd59-4225-9430-4ceb294c9ea4"/>
+				<reportElement x="0" y="160" width="535" height="130" uuid="9b30dd2a-dd59-4225-9430-4ceb294c9ea4"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="false"/>
 				</textElement>
 				<text><![CDATA[	În conformitate cu prevederile Legii nr. 1456-XII din 25 mai 1993 cu privire la activitatea farmaceutică, Legii nr. 1409-XIII din 17 decembrie 1997 cu privire la medicamente, Hotărîrii Guvernului nr.348 din 26 mai 2014 cu privire la tarifele pentru serviciile prestate de către Agenția Medicamentului și Dispozitivelor Medicale și a ordinului Ministerului Sănătății nr. 739 din 23 iulie 2012 Cu privire la reglementarea autorizării produselor medicamentoase de uz uman și introducerea modificărilor postautorizare, în temeiul deciziei Comisiei Medicamentului din cadrul Agenției Medicamentului și Dispozitivelor Medicale (proces verbal nr. 8 din 29 noiembrie 2018) precum și în baza Regulamentului privind organizarea și funcționarea Agenției Medicamentului și Dispozitivelor Medicale, aprobat prin Hotărîrea Guvernului nr. 71 din 23 ianuarie 2013 cu modificările și completările ulterioare]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="4" y="40" width="547" height="30" uuid="cb4d677c-432f-4ffa-b404-3f659dc60536"/>
+				<reportElement x="0" y="40" width="535" height="30" uuid="cb4d677c-432f-4ffa-b404-3f659dc60536"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
@@ -131,7 +122,7 @@ mun. Chișinău
 ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="2" y="301" width="547" height="20" uuid="f1e5bf45-df9a-4d43-b663-6077e5a3f04c"/>
+				<reportElement x="0" y="301" width="535" height="20" uuid="f1e5bf45-df9a-4d43-b663-6077e5a3f04c"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
@@ -139,7 +130,7 @@ mun. Chișinău
 ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="2" y="320" width="550" height="170" uuid="21da8bc6-e062-4727-aa4a-b3b607e679ff"/>
+				<reportElement x="0" y="320" width="535" height="170" uuid="21da8bc6-e062-4727-aa4a-b3b607e679ff"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
@@ -165,18 +156,18 @@ tel. +373 22 884 301, e-mail: office@amed.md; Web: www.amed.md
 ]]></text>
 			</staticText>
 			<image>
-				<reportElement x="483" y="0" width="65" height="60" uuid="36094911-1947-4f9d-a837-51c429be067a"/>
+				<reportElement x="463" y="0" width="65" height="60" uuid="36094911-1947-4f9d-a837-51c429be067a"/>
 				<imageExpression><![CDATA["layouts/icons/cer.png"]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="402" y="63" width="114" height="18" uuid="cd8bd323-87cc-4987-969a-f081f3b2668c"/>
+				<reportElement x="382" y="63" width="114" height="18" uuid="cd8bd323-87cc-4987-969a-f081f3b2668c"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Pagina " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="516" y="63" width="38" height="18" uuid="9da69560-e3bf-44a5-80f1-030ab80670bf"/>
+				<reportElement x="496" y="63" width="38" height="18" uuid="9da69560-e3bf-44a5-80f1-030ab80670bf"/>
 				<textElement textAlignment="Left">
 					<font size="8"/>
 				</textElement>

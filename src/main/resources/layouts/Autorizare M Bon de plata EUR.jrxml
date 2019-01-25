@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Autorizare M Bon de plata" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="10" uuid="523fb55a-b7a8-4c3c-86ea-fd79290ecf5e">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Autorizare M Bon de plata" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="40" rightMargin="20" topMargin="15" bottomMargin="15" uuid="523fb55a-b7a8-4c3c-86ea-fd79290ecf5e">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -48,7 +39,7 @@
 		<field name="pharmaceuticForm" class="java.lang.String"/>
 		<field name="dose" class="java.lang.String"/>
 		<field name="division" class="java.lang.String"/>
-		<field name="currencyCode" class="java.lang.Double"/>
+		<field name="price" class="java.lang.Double"/>
 	</subDataset>
 	<parameter name="autorizareMbonDePlataDataset" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<parameter name="companyName" class="java.lang.String"/>
@@ -79,7 +70,7 @@
 				<imageExpression><![CDATA["layouts/icons/header_left.jpg"]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="261" y="4" width="289" height="53" uuid="ae27ee01-a17f-4e89-81b4-1417b9af443c"/>
+				<reportElement x="258" y="4" width="289" height="53" uuid="ae27ee01-a17f-4e89-81b4-1417b9af443c"/>
 				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
 		</band>
@@ -96,7 +87,7 @@ Tel. +373 22  737000;
 Fax. +373 22 737000; 737002;]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="373" y="10" width="177" height="50" uuid="8863d357-98b9-4df6-aadb-7bc779fb0118"/>
+				<reportElement x="353" y="10" width="177" height="50" uuid="8863d357-98b9-4df6-aadb-7bc779fb0118"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
@@ -105,7 +96,7 @@ Fax. +373 22 737000; 737002;]]></text>
 Факс. +373 22 737000;  737002]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="280" y="65" width="270" height="35" uuid="e65a56b7-1da6-429b-8364-69d71b3b6064"/>
+				<reportElement x="260" y="65" width="270" height="35" uuid="e65a56b7-1da6-429b-8364-69d71b3b6064"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
@@ -121,14 +112,14 @@ Fax. +373 22 737000; 737002;]]></text>
 		</band>
 		<band height="80">
 			<staticText>
-				<reportElement x="5" y="4" width="550" height="30" uuid="6b650dd0-409e-4c5e-a38b-0bd4524d82d1"/>
+				<reportElement x="5" y="4" width="528" height="30" uuid="6b650dd0-409e-4c5e-a38b-0bd4524d82d1"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<text><![CDATA[Prin prezenta, Agenţia Medicamentului şi Dispozitivelor Medicale a Republicii Moldova Vă informează că au fost primite pentru înregistrare următoarele produse medicamentoase:]]></text>
 			</staticText>
 			<componentElement>
-				<reportElement x="5" y="45" width="552" height="30" uuid="1b335b7a-f213-44da-8c8c-dc20b55bf192">
+				<reportElement x="5" y="45" width="530" height="30" uuid="1b335b7a-f213-44da-8c8c-dc20b55bf192">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
@@ -139,11 +130,11 @@ Fax. +373 22 737000; 737002;]]></text>
 					<datasetRun subDataset="Dataset1" uuid="e68d18a2-2034-4b73-b6de-b229ef4f4110">
 						<dataSourceExpression><![CDATA[$P{autorizareMbonDePlataDataset}]]></dataSourceExpression>
 					</datasetRun>
-					<jr:column width="40" uuid="0986ca19-dbb1-4b86-bda0-3736a19fc951">
+					<jr:column width="39" uuid="0986ca19-dbb1-4b86-bda0-3736a19fc951">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="40" height="30" uuid="4166b481-70be-448f-8347-b71ade8eb712"/>
+								<reportElement x="0" y="0" width="39" height="30" uuid="4166b481-70be-448f-8347-b71ade8eb712"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -151,11 +142,11 @@ Fax. +373 22 737000; 737002;]]></text>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="144" uuid="1b44ebb2-7b71-4c9b-a304-3874259c9461">
+					<jr:column width="139" uuid="1b44ebb2-7b71-4c9b-a304-3874259c9461">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="144" height="30" uuid="c20cb948-542d-4753-b659-1fec9c15ed84"/>
+								<reportElement x="0" y="0" width="139" height="30" uuid="c20cb948-542d-4753-b659-1fec9c15ed84"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -163,11 +154,11 @@ Fax. +373 22 737000; 737002;]]></text>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="92" uuid="1a54ac0a-aee3-41e5-9c66-99e43b014865">
+					<jr:column width="88" uuid="1a54ac0a-aee3-41e5-9c66-99e43b014865">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="92" height="30" uuid="9634efdf-42a7-4433-b479-ec61fedd6980"/>
+								<reportElement x="0" y="0" width="88" height="30" uuid="9634efdf-42a7-4433-b479-ec61fedd6980"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -175,11 +166,11 @@ Fax. +373 22 737000; 737002;]]></text>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="92" uuid="b1bf6f1a-5523-443b-9842-818bd32385cc">
+					<jr:column width="88" uuid="b1bf6f1a-5523-443b-9842-818bd32385cc">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="92" height="30" uuid="c05e843b-7de1-440f-93b1-8fd6ae7eb9e5"/>
+								<reportElement x="0" y="0" width="88" height="30" uuid="c05e843b-7de1-440f-93b1-8fd6ae7eb9e5"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -187,11 +178,11 @@ Fax. +373 22 737000; 737002;]]></text>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="92" uuid="c19c2ab8-24e4-4933-b323-9d0ba0956eda">
+					<jr:column width="88" uuid="c19c2ab8-24e4-4933-b323-9d0ba0956eda">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="92" height="30" uuid="0f50c652-a34b-4c42-8b40-b63f33f22eba"/>
+								<reportElement x="0" y="0" width="88" height="30" uuid="0f50c652-a34b-4c42-8b40-b63f33f22eba"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -199,15 +190,15 @@ Fax. +373 22 737000; 737002;]]></text>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="92" uuid="4a497717-de4b-4729-b2a1-084b0f50d129">
+					<jr:column width="88" uuid="4a497717-de4b-4729-b2a1-084b0f50d129">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="92" height="30" uuid="9812bee4-0a52-4489-99e9-6c92e7f8b257"/>
+								<reportElement x="0" y="0" width="88" height="30" uuid="9812bee4-0a52-4489-99e9-6c92e7f8b257"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{currencyCode} + " EUR"]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{price} + " EUR"]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -216,14 +207,14 @@ Fax. +373 22 737000; 737002;]]></text>
 		</band>
 		<band height="125">
 			<staticText>
-				<reportElement x="4" y="50" width="550" height="20" uuid="e7483a0c-88a9-479e-b99e-4f0b50916b43"/>
+				<reportElement x="4" y="50" width="528" height="20" uuid="e7483a0c-88a9-479e-b99e-4f0b50916b43"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Contul este valabil timp de 30 zile de la data emiterii!]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="280" y="90" width="271" height="18" uuid="b95d47c7-e211-40ac-bd76-9fe8db9ebb4b"/>
+				<reportElement x="280" y="90" width="249" height="18" uuid="b95d47c7-e211-40ac-bd76-9fe8db9ebb4b"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" isBold="true"/>
 				</textElement>
@@ -237,10 +228,10 @@ Fax. +373 22 737000; 737002;]]></text>
 				<text><![CDATA[Directorul general]]></text>
 			</staticText>
 			<break>
-				<reportElement x="0" y="120" width="551" height="1" uuid="2b0849a0-d1fa-43e2-9cef-bf9661ac3816"/>
+				<reportElement x="0" y="120" width="528" height="1" uuid="2b0849a0-d1fa-43e2-9cef-bf9661ac3816"/>
 			</break>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="2" y="6" width="553" height="34" uuid="f2b224dd-701d-4f4d-af7b-c836300b7ecf"/>
+				<reportElement x="2" y="6" width="531" height="34" uuid="f2b224dd-701d-4f4d-af7b-c836300b7ecf"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
@@ -249,28 +240,28 @@ Fax. +373 22 737000; 737002;]]></text>
 		</band>
 		<band height="328">
 			<textField>
-				<reportElement x="5" y="10" width="548" height="16" uuid="346ab599-eebf-4d71-9050-1ad71e47a635"/>
+				<reportElement x="5" y="10" width="526" height="16" uuid="346ab599-eebf-4d71-9050-1ad71e47a635"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["CONT DE PLATĂ Nr. " + $P{nr_invoice} + ' ' + $P{invoice_date}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="35" width="554" height="20" uuid="49475481-bdb5-4006-ba04-612d58c8da1b"/>
+				<reportElement x="0" y="35" width="532" height="20" uuid="49475481-bdb5-4006-ba04-612d58c8da1b"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["PLĂTITOR: " + $P{payer}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="56" width="554" height="20" uuid="7f69e4ff-b947-4254-8b46-3a7b34e334ce"/>
+				<reportElement x="0" y="56" width="532" height="20" uuid="7f69e4ff-b947-4254-8b46-3a7b34e334ce"/>
 				<textElement>
 					<font fontName="DejaVu Sans"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Adresa: " + $P{payer_address}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="5" y="236" width="448" height="30" uuid="b5adf136-8f6d-40d7-b3ea-8d40d4dc0fc2"/>
+				<reportElement x="5" y="236" width="425" height="30" uuid="b5adf136-8f6d-40d7-b3ea-8d40d4dc0fc2"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -283,7 +274,7 @@ Fax. +373 22 737000; 737002;]]></text>
 				<textFieldExpression><![CDATA["Destinația plății: Plata pentru autorizarea produselor medicamentoase conform contului de plată Nr. " + $P{nr_invoice}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="453" y="236" width="100" height="30" uuid="361dd49a-5658-4e60-8aa8-3fcfaf9a70bb"/>
+				<reportElement x="440" y="236" width="93" height="30" uuid="361dd49a-5658-4e60-8aa8-3fcfaf9a70bb"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -310,28 +301,28 @@ Fax. +373 22 737000; 737002;]]></text>
 				<text><![CDATA[Semnătura Beneficiarului:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="332" y="295" width="222" height="22" uuid="f78e74c8-74e8-4238-a82a-9426a0dcf564"/>
+				<reportElement x="312" y="295" width="222" height="22" uuid="f78e74c8-74e8-4238-a82a-9426a0dcf564"/>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font fontName="DejaVu Sans"/>
 				</textElement>
 				<text><![CDATA[______________________________]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="76" width="555" height="20" uuid="cac31f85-fadb-4ca8-9d5b-a41e3a86519b"/>
+				<reportElement x="0" y="76" width="533" height="20" uuid="cac31f85-fadb-4ca8-9d5b-a41e3a86519b"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA["BENEFICIAR: " + $P{beneficiar}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="97" width="555" height="20" uuid="8a3ced89-33c2-4d87-9e55-33bd3f513a20"/>
+				<reportElement x="0" y="97" width="533" height="20" uuid="8a3ced89-33c2-4d87-9e55-33bd3f513a20"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Cod fiscal: " + $P{vatCode}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="117" width="555" height="20" uuid="aabca423-56a9-4297-b5c4-82535ed18515"/>
+				<reportElement x="0" y="117" width="533" height="20" uuid="aabca423-56a9-4297-b5c4-82535ed18515"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
@@ -345,28 +336,28 @@ Fax. +373 22 737000; 737002;]]></text>
 				<text><![CDATA[BANCA BENEFICIARĂ: ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="120" y="136" width="434" height="30" uuid="a61a16e0-b641-4384-b37e-2997af67ff12"/>
+				<reportElement x="120" y="136" width="412" height="30" uuid="a61a16e0-b641-4384-b37e-2997af67ff12"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{beneficiarBank}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="167" width="555" height="20" uuid="be5862fa-55ea-4ecd-b2f9-10c938e8eaa8"/>
+				<reportElement x="0" y="167" width="533" height="20" uuid="be5862fa-55ea-4ecd-b2f9-10c938e8eaa8"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Cod: " + $P{beneficiarBankCode}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="187" width="555" height="20" uuid="6dc7cae2-c727-463b-9f67-d941b0e3f350"/>
+				<reportElement x="0" y="187" width="533" height="20" uuid="6dc7cae2-c727-463b-9f67-d941b0e3f350"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Cont bancar: " + $P{beneficiarBankAccount}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="207" width="555" height="20" uuid="49daeec4-968f-4923-978c-67165cf2932f"/>
+				<reportElement x="0" y="207" width="533" height="20" uuid="49daeec4-968f-4923-978c-67165cf2932f"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
@@ -388,18 +379,18 @@ tel. +373 22 884 301, e-mail: office@amed.md; Web: www.amed.md
 ]]></text>
 			</staticText>
 			<image>
-				<reportElement x="483" y="0" width="65" height="60" uuid="36094911-1947-4f9d-a837-51c429be067a"/>
+				<reportElement x="463" y="0" width="65" height="60" uuid="36094911-1947-4f9d-a837-51c429be067a"/>
 				<imageExpression><![CDATA["layouts/icons/cer.png"]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="406" y="63" width="114" height="18" uuid="a9ca56e7-c745-4d17-92e8-91777d67785b"/>
+				<reportElement x="386" y="63" width="114" height="18" uuid="a9ca56e7-c745-4d17-92e8-91777d67785b"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Pagina " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="520" y="64" width="38" height="16" uuid="e1fc99ea-9277-4fa3-8342-f0471ea31abe"/>
+				<reportElement x="500" y="64" width="38" height="16" uuid="e1fc99ea-9277-4fa3-8342-f0471ea31abe"/>
 				<textElement textAlignment="Left">
 					<font size="8"/>
 				</textElement>

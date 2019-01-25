@@ -63,21 +63,15 @@ public class LicenseRegistrationRequestService
         }
         RegistrationRequestsEntity rrE = re.get();
         rrE.setLicense((LicensesEntity) Hibernate.unproxy(re.get().getLicense()));
-//        rrE.getLicense().getAddresses().forEach(
-//                addr -> addr.setState(statesRepository.findById(addr.getLocality().getStateId()).get())
-//        );
 
         rrE.getLicense().setDetail(rrE.getLicense().getDetails().stream().filter(det -> det.getRegistrationId().equals(rrE.getId())).findFirst().orElse(null));
 
         if (!viewCompleted)
         {
+            rrE.getLicense().setCompanyName (economicAgentsRepository.findFirstByIdnoEquals(rrE.getLicense().getIdno()).get().getLongName());
+
             for (NmEconomicAgentsEntity ece : rrE.getLicense().getEconomicAgents())
             {
-                if (rrE.getLicense().getCompanyName() == null)
-                {
-                    rrE.getLicense().setCompanyName(ece.getLongName());
-                }
-
                 if (ece.getLocality() != null)
                 {
                     ece.setLocality(localityService.findLocalityById(ece.getLocality().getId()));
@@ -425,7 +419,7 @@ public class LicenseRegistrationRequestService
 
             //Update mandated contacts
             LicenseMandatedContactEntity lmView = request.getLicense().getDetail().getLicenseMandatedContacts().stream().findFirst().get();
-            if (lmView.getNewMandatedLastname() != null || !lmView.getNewMandatedLastname().isEmpty())
+            if (lmView.getNewMandatedLastname() != null && !lmView.getNewMandatedLastname().isEmpty())
             {
                 LicenseMandatedContactEntity lmc = em.find(LicenseMandatedContactEntity.class, lmView.getId());
 
@@ -470,7 +464,7 @@ public class LicenseRegistrationRequestService
             {
                 em.getTransaction().rollback();
             }
-            throw new CustomException(e.getMessage());
+            throw new CustomException(e.getMessage(), e);
         } finally
         {
             em.close();
