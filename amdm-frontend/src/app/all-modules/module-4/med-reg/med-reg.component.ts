@@ -309,22 +309,22 @@ export class MedRegComponent implements OnInit {
                     // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(val);
 
                     // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode);
-                     if (val.pharmaceuticalForm !== null)          {this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(val.pharmaceuticalForm); }
-                     if (val.dose !== null)                        {this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').setValue(val.dose); }
-                     if (val.division !== null)                    {this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').setValue(val.division); }
-                     if (val.internationalMedicamentName !== null) {this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').setValue(val.internationalMedicamentName); }
-                     if (val.commercialName !== null)              {this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(val.commercialName); }
-                     if (val.registrationNumber !== null)          {this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(val.registrationNumber); }
-                     if (val.registrationDate !== null)            {this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(val.registrationDate)); }
-                     if (val.expirationDate !== null)              {this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(val.expirationDate); }
+                     if (val.pharmaceuticalForm )          {this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(val.pharmaceuticalForm); }
+                     if (val.dose )                        {this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').setValue(val.dose); }
+                     if (val.division )                    {this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').setValue(val.division); }
+                     if (val.internationalMedicamentName ) {this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').setValue(val.internationalMedicamentName); }
+                     if (val.commercialName )              {this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(val.commercialName); }
+                     if (val.registrationNumber )          {this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(val.registrationNumber); }
+                     if (val.registrationDate )            {this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(val.registrationDate)); }
+                     if (val.expirationDate )              {this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(val.expirationDate); }
 
                      this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').setValue('');
                      this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue('');
 
 
-                    if (val.customsCode !== null) {this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode); }
+                    if (val.customsCode ) {this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(val.customsCode); }
 
-                    if (val.manufactures[0].manufacture !== null && val.manufactures[0].manufacture.address !== null) {
+                    if (val.manufactures[0].manufacture  && val.manufactures[0].manufacture.address ) {
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(val.manufactures[0].manufacture);
                         this.producerAddress = val.manufactures[0].manufacture.address;
                     }
@@ -336,9 +336,9 @@ export class MedRegComponent implements OnInit {
                     console.log('this.administrationService.getAllAtcCodesByCode( val.atcCode)', this.administrationService.getAllAtcCodesByCode(val.atcCode));
 
                     this.medicamentService.getMedPrice(val.id).subscribe(priceEntity => {
-                        if (priceEntity !== null) {
+                        if (priceEntity ) {
                         this.medicamentPrice = priceEntity;
-                        if (priceEntity.currency !== null) {
+                        if (priceEntity.currency ) {
                             this.valutaList = [/*this.valutaList.find(i=> i.shortDescription === "MDL"), */ priceEntity.currency];
                         }
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(this.valutaList.find(r => r === priceEntity.currency));
@@ -354,18 +354,18 @@ export class MedRegComponent implements OnInit {
             }));
             /*================================================*/
             this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.seller').valueChanges.subscribe(val => {
-                if (val && val.address !== null && val.country !== null) {
+                if (val && val.address  && val.country ) {
                     this.sellerAddress = val.address + ', ' + val.country.description;
                 }
             }));
             this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').valueChanges.subscribe(val => {
-                if (val && val.address !== null && val.country !== null) {
+                if (val && val.address  && val.country ) {
                     this.producerAddress = val.address + ', ' + val.country.description;
                     // console.log("producerAddress",this.producerAddress)
                 }
             }));
             this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.importer').valueChanges.subscribe(val => {
-                if (val && val.legalAddress !== null) {
+                if (val && val.legalAddress ) {
                     this.importerAddress = val.legalAddress /*+ ", " + val.country.description*/;
                 }
             }));

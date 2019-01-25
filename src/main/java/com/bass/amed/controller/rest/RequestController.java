@@ -1408,11 +1408,11 @@ public class RequestController
             }
 
 
-            if (request.getImportAuthorizationEntity().getContract()!= null && request.getImportAuthorizationEntity().getContractDate()!=null && request.getImportAuthorizationEntity().getAnexa()!= null &&request.getImportAuthorizationEntity().getAnexaDate()!=null &&request.getImportAuthorizationEntity().getBasisForImport()!=null ) {
+            if (request.getImportAuthorizationEntity().getContract()!= null && request.getImportAuthorizationEntity().getContractDate()!=null && request.getImportAuthorizationEntity().getAnexa()!= null &&request.getImportAuthorizationEntity().getAnexaDate()!=null &&request.getImportAuthorizationEntity().getConditionsAndSpecification()!=null ) {
                 parameters.put("themesForApplicationForAuthorization",
                         "Contract: " + request.getImportAuthorizationEntity().getContract() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getContractDate()) +
                                 "\n" + "Specificația: " + request.getImportAuthorizationEntity().getAnexa() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getAnexaDate()) +
-                                "\n" + "Alte: " + request.getImportAuthorizationEntity().getBasisForImport());
+                                "\n" + "Alte: " + request.getImportAuthorizationEntity().getConditionsAndSpecification());
             }
 
             parameters.put("geniralDirectorName", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());

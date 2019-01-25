@@ -976,10 +976,10 @@ export class ImportManagement implements OnInit {
         // }
 
         console.log('modelToSubmit', modelToSubmit);
-        alert('before addImportRequest(modelToSubmit)');
+        // alert('before addImportRequest(modelToSubmit)');
         // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {
         this.subscriptions.push(this.requestService.addInvoiceRequest(modelToSubmit).subscribe(data => {
-                alert('after addInvoiceRequest(modelToSubmit)');
+                // alert('after addInvoiceRequest(modelToSubmit)');
                 console.log('addInvoiceRequest(modelToSubmit).subscribe(data) ', data);
                 this.loadingService.hide();
                 this.router.navigate(['dashboard/homepage']);
