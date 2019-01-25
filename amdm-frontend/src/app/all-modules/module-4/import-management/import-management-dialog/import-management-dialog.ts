@@ -232,7 +232,7 @@ export class ImportManagementDialog implements OnInit {
 
         this.codeAmed;
 
-        if (this.dialogData.medicament !== null) {
+        // if (this.dialogData.medicament !== null) {
             // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(this.dialogData.medicament.code);
             // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(this.dialogData.medicament.customsCode);
             // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(this.dialogData.medicament.name);
@@ -242,7 +242,7 @@ export class ImportManagementDialog implements OnInit {
             // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.dialogData.summ);
             // // this.unitSumm = this.dialogData.medicament.summ;
             // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(this.dialogData.currency.shortDescription);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(this.dialogData.medicament.medicament.manufactures[0].manufacture);
+            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(this.dialogData.medicament.manufactures[0].manufacture);
             // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(new Date(this.dialogData.medicament.expirationDate));
             // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm').setValue(this.dialogData.medicament.pharmaceuticalForm);
             // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').setValue(this.dialogData.medicament.dose);
@@ -251,8 +251,8 @@ export class ImportManagementDialog implements OnInit {
             // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(this.dialogData.medicament.atcCode);
             // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(this.dialogData.medicament.registrationNumber);
             // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(this.dialogData.medicament.registrationDate));
-            this.producerAddress = this.dialogData.medicament.manufactures[0].manufacture.address + ', ' + this.dialogData.medicament.manufactures[0].manufacture.country.description;
-        } else {
+        //     this.producerAddress = this.dialogData.medicament.manufactures[0].manufacture.address + ', ' + this.dialogData.medicament.manufactures[0].manufacture.country.description;
+        // } else {
 
         // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(this.dialogData.codeAmed);
         // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(this.dialogData.customsCode);
@@ -272,8 +272,8 @@ export class ImportManagementDialog implements OnInit {
         // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(this.dialogData.atcCode);
         // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(this.dialogData.registrationNumber);
         // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(this.dialogData.registrationDate));
-        this.producerAddress = this.dialogData.producer.address + ', ' + this.dialogData.producer.country.description;
-    }
+        // this.producerAddress = this.dialogData.producer.address + ', ' + this.dialogData.producer.country.description;
+    // }
         console.log('this.dialogData.producer.address', this.dialogData.producer.address);
         console.log('this.dialogData.producer.country.description', this.dialogData.producer.country.description);
 
@@ -414,7 +414,7 @@ export class ImportManagementDialog implements OnInit {
                         //     console.log("addedUnits:", this.addedUnits)
                         // }
 
-                        this.subscriptions.push(this.requestService.getInvoiceQuota(val.medicament, this.importData.authorizationsNumber).subscribe(data => {
+                        this.subscriptions.push(this.requestService.getInvoiceQuota(val.medicament.id, this.importData.authorizationsNumber).subscribe(data => {
                             console.log("getInvoiceQuota()", data)
                             this.importedUnits = data;
                             this.remainingUnits = this.approvedQuantity - this.importedUnits - this.addedUnits;

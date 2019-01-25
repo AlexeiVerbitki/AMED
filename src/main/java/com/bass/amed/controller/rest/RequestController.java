@@ -74,7 +74,7 @@ public class RequestController
     private ImportAuthorizationRepository importAuthorizationRepository;
     @Autowired
     private ImportAuthRepository importAuthRepository;
-    
+
 	@Autowired
     private InvoiceDetailsRepository invoiceDetailsRepository;
     @Autowired
@@ -1152,8 +1152,10 @@ public class RequestController
         System.out.println("\n\n\n\n=====================\nlist.stream: "+ importedQuantity +"\n=====================\n\n\n");
 
 
+
 		return new ResponseEntity<>(importedQuantity, HttpStatus.CREATED);
 	}
+
 
 
 //	@RequestMapping(value = "/add-import-request"/*, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE*/)
@@ -1652,7 +1654,7 @@ public class RequestController
         }
         throw new CustomException("Request was not found");
     }
-	
+
 	@RequestMapping(value = "/get-request-anih", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<RegistrationRequestsEntity>> getRequestsForAnih() throws CustomException
     {
@@ -1686,7 +1688,7 @@ public class RequestController
         dds.sort(Comparator.comparing(o -> o.getDate(), Comparator.reverseOrder()));
         return new ResponseEntity<>(dds, HttpStatus.OK);
     }
-   
+
     @GetMapping(value = "/validate-idnp")
     public ResponseEntity<Boolean> validateIDNP(@RequestParam(value = "idnp") String idnp )
     {
