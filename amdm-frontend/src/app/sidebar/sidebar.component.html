@@ -29,7 +29,7 @@
 					<a routerLink="/dashboard/module" class="pl-3 nav-link waves-effect waves-light" mdbWavesEffect><i class="fa fa-list fa-lg" aria-hidden="true"></i> Module</a>
 				</li>
 				<li class="nav-item" [routerLinkActive]="['active']">
-					<a routerLink="/dashboard/management/generate-documents" class="pl-3 nav-link waves-effect waves-light" mdbWavesEffect><i class="fa fa-files-o fa-lg" aria-hidden="true"></i> Creare documente</a>
+					<a routerLink="/dashboard/create-documents/generate-documents" class="pl-3 nav-link waves-effect waves-light" mdbWavesEffect><i class="fa fa-files-o fa-lg" aria-hidden="true"></i> Creare documente</a>
 				</li>
 				<li class="nav-item" [routerLinkActive]="['active']">
 					<a routerLink="/dashboard/task" class="pl-3 nav-link waves-effect waves-light" mdbWavesEffect><i class="fa fa-tasks fa-lg" aria-hidden="true"></i> Gestionare cerere</a>
@@ -69,6 +69,9 @@
 				</li>
 				<li class="nav-item" [routerLinkActive]="['active']">
 					<a routerLink="/dashboard/history" class="pl-3 nav-link waves-light" mdbWavesEffect><i class="fa fa-history fa-lg" aria-hidden="true"></i> Istoric</a>
+				</li>
+				<li class="nav-item" [routerLinkActive]="['active']">
+					<a routerLink="/dashboard/audit" class="pl-3 nav-link waves-light" mdbWavesEffect><i class="fa fa fa-eye fa-lg" aria-hidden="true"></i> Audit</a>
 				</li>
 				<li class="nav-item" [routerLinkActive]="['active']">
 					<a routerLink="/dashboard/admin" class="pl-3 nav-link waves-light" mdbWavesEffect><i class="fa fa-lock fa-lg" aria-hidden="true"></i> Administrare</a>
@@ -112,7 +115,7 @@
 				</li>
 				<li class="nav-item" [routerLinkActive]="['active']">
 					<a mdbTooltip="Aprobare Prețuri" placement="right" routerLink="/dashboard/management/prices-approval" class="pl-3 nav-link waves-light"
-					   mdbWavesEffect><i class="fa fa-fa-handshake-o fa-lg" aria-hidden="true"></i></a>
+					   mdbWavesEffect><i class="fa fa-handshake-o fa-lg" aria-hidden="true"></i></a>
 				</li>
 				<li class="nav-item" [routerLinkActive]="['active']">
 					<a mdbTooltip="Reevaluare prețuri" placement="right" routerLink="/dashboard/management/auto-revaluation" class="pl-3 nav-link waves-light"
@@ -130,9 +133,14 @@
 					   mdbWavesEffect><i class="fa fa-history fa-lg" aria-hidden="true"></i></a>
 				</li>
 				<li class="nav-item" [routerLinkActive]="['active']">
+					<a mdbTooltip="Audit" placement="right" routerLink="/dashboard/audit" class="pl-3 nav-link waves-light"
+					   mdbWavesEffect><i class="fa fa fa-eye fa-lg" aria-hidden="true"></i></a>
+				</li>
+				<li class="nav-item" [routerLinkActive]="['active']">
 					<a mdbTooltip="Administrare" placement="right" routerLink="/dashboard/admin" class="pl-3 nav-link waves-light"
 					   mdbWavesEffect><i class="fa fa-lock fa-lg" aria-hidden="true"></i></a>
 				</li>
+
 			</ul>
 		</links>
 	</div>

@@ -42,6 +42,10 @@ export class DocumentService {
         return this.http.post('/api/documents/view-bon-de-plata-nimicire', requestNimicire, {responseType: 'blob'});
     }
 
+    viewBonDePlataComun(request: any): Observable<any> {
+        return this.http.post('/api/documents/view-bon-de-plata-comun', request, {responseType: 'blob'});
+    }
+
 
     viewRequest(nrDocument: any, content: any, title: any, type: any): Observable<any> {
         return this.http.get('/api/documents/view-request-additional-data', {
@@ -89,6 +93,11 @@ export class DocumentService {
     getDocumentsByIds(documentsIds: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/documents/by-ids', documentsIds, {observe: 'response'});
     }
+
+    getDocumentsByRequestId(requestId: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/documents/by-request-id', requestId, {observe: 'response'});
+    }
+
 
     getPricesDocuments(pricesIds: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/documents/by-price-ids', pricesIds, {observe: 'response'});
@@ -170,6 +179,7 @@ export class DocumentService {
     addDDM(document: any, file: File): Observable<any> {
         const formdata: FormData = new FormData();
         formdata.append('id', document.id);
+        formdata.append('dateOfIssue', document.dateOfIssue);
         formdata.append('file', file);
         return this.http.post('/api/documents/add-ddm', formdata, {observe: 'response'});
     }
@@ -204,12 +214,40 @@ export class DocumentService {
         return this.http.post('/api/documents/add-om', formdata, {observe: 'response'});
     }
 
+    addLN(document: any, file: File): Observable<any> {
+        const formdata: FormData = new FormData();
+        formdata.append('id', document.id);
+        formdata.append('file', file);
+        return this.http.post('/api/documents/add-ln', formdata, {observe: 'response'});
+    }
+
+
+    generateAnihMedM(anihDetails: any): Observable<any> {
+        return this.http.post('/api/documents/generate-anihMedM', anihDetails, {responseType: 'blob'});
+    }
+
+    removeAnih(element: any): Observable<any> {
+        return this.http.post('/api/documents/remove-anih-med', element, {observe: 'response'});
+    }
+
     addDDC(document: any, file: File): Observable<any> {
         const formdata: FormData = new FormData();
         formdata.append('id', document.id);
         formdata.append('dateOfIssue', document.dateOfIssue);
         formdata.append('file', file);
         return this.http.post('/api/documents/add-ddc', formdata, {observe: 'response'});
+    }
+    addSLC(model: any): Observable<any> {
+        return this.http.post('/api/documents/add-sl', model, {observe: 'response'});
+    }
+
+    deleteSLById(id: string): Observable<any> {
+        return this.http.post('/api/documents/delete-sl-by-id', {params: {id: id}, observe: 'response'});
+    }
+
+    generateAvizC(id: string, category: string): Observable<any> {
+        console.log('asdfasdg', id);
+        return this.http.get('/api/documents/generate-aviz-ct', {params: {id: id, docCategory: category}, responseType: 'blob'});
     }
 
 }

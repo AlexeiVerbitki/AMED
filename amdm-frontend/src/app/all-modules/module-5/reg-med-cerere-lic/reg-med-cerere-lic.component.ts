@@ -106,7 +106,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
             'dataExpirariiLic': [{value: null, disabled: true}],
             'reasonSuspension': '',
             'reasonCancel': '',
-
+            'idnp': '',
         });
 
 
@@ -154,6 +154,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
         mandatedContact.requestMandateDate = this.rForm.get('dataProcurii1').value;
         mandatedContact.phoneNumber = this.rForm.get('telefonContact').value;
         mandatedContact.email = this.rForm.get('emailContact').value;
+        mandatedContact.idnp = this.rForm.get('idnp').value;
         licenseMandatedContacts.push(mandatedContact);
         licenseDetail.licenseMandatedContacts = licenseMandatedContacts;
 

@@ -86,7 +86,7 @@ export class MedicamentsOaComponent implements OnInit {
             this.requestService.getMedicamentsForOA().subscribe(data => {
                     this.dataSource.data = data;
                     this.dataSource.data.forEach(t => t.manufacture = t.manufactures.find(x => x.producatorProdusFinit == true));
-                    this.dataSource.data.forEach(t => {t.included = true; t.divisionStr = this.getConcatenatedDivision(t);});
+                    this.dataSource.data.forEach(t => {t.included = true; t.divisionStr = this.getConcatenatedDivision(t); });
                 },
                 error => console.log(error)
             )
@@ -105,7 +105,7 @@ export class MedicamentsOaComponent implements OnInit {
         this.dataSource.sort = this.sort;
     }
 
-    getConcatenatedDivision(entry : any) {
+    getConcatenatedDivision(entry: any) {
         let concatenatedDivision = '';
             if (entry.division && entry.volume && entry.volumeQuantityMeasurement) {
                 concatenatedDivision = concatenatedDivision + entry.division + ' ' + entry.volume + ' ' + entry.volumeQuantityMeasurement.description;

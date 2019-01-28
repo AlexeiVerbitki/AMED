@@ -1433,3 +1433,19 @@ table td a {
   color : #488CD3;
   font-weight : bold;
 }
+
+.homepage__name {
+  font-weight: bold;
+  font-style: italic;
+  text-align: center;
+}
+
+.width__homepage__td {
+  max-width: 221px;
+  text-align: center;
+  padding-right:15px;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

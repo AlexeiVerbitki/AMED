@@ -1,8 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {Subscription} from "rxjs";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
-import {AdministrationService} from "../../shared/service/administration.service";
+import {Subscription} from 'rxjs';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {AdministrationService} from '../../shared/service/administration.service';
 
 @Component({
   selector: 'app-add-division',
@@ -15,7 +15,7 @@ export class AddDivisionComponent implements OnInit {
   dForm: FormGroup;
   volumeUnitsOfMeasurement: any[];
   formSubmitted: boolean;
-  wasDivisionAdded : boolean;
+  wasDivisionAdded: boolean;
   wasVolumeAdded: boolean;
 
   constructor(    private fb: FormBuilder,
@@ -59,25 +59,21 @@ export class AddDivisionComponent implements OnInit {
   add() {
     this.formSubmitted = true;
 
-    if(this.dForm.get('division').value && this.dataDialog.divisions.find(t=>t.division==this.dForm.get('division').value))
-    {
+    if (this.dForm.get('division').value && this.dataDialog.divisions.find(t => t.division == this.dForm.get('division').value)) {
       this.wasDivisionAdded = true;
       return;
     }
 
-    if(this.dForm.get('volume').value && this.dForm.get('volumeQuantityMeasurement').value && this.dataDialog.divisions.find(t=>t.volume==this.dForm.get('volume').value && t.volumeQuantityMeasurement==this.dForm.get('volumeQuantityMeasurement').value))
-    {
+    if (this.dForm.get('volume').value && this.dForm.get('volumeQuantityMeasurement').value && this.dataDialog.divisions.find(t => t.volume == this.dForm.get('volume').value && t.volumeQuantityMeasurement == this.dForm.get('volumeQuantityMeasurement').value)) {
       this.wasVolumeAdded = true;
       return;
     }
 
-    if(!this.dForm.get('volume').value && !this.dForm.get('volumeQuantityMeasurement').value && !this.dForm.get('division').value)
-    {
+    if (!this.dForm.get('volume').value && !this.dForm.get('volumeQuantityMeasurement').value && !this.dForm.get('division').value) {
       return;
     }
 
-    if((this.dForm.get('volume').value && !this.dForm.get('volumeQuantityMeasurement').value) || (!this.dForm.get('volume').value && this.dForm.get('volumeQuantityMeasurement').value))
-    {
+    if ((this.dForm.get('volume').value && !this.dForm.get('volumeQuantityMeasurement').value) || (!this.dForm.get('volume').value && this.dForm.get('volumeQuantityMeasurement').value)) {
       return;
     }
 

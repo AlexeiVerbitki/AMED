@@ -228,6 +228,15 @@
 
 				<div class="col-md-4">
 					<div class="md-form">
+						<input id="idnp" mdbInputDirective type="text" class="form-control"
+							   formControlName="idnp" maxlength="13"
+						>
+						<label for="idnp">IDNP</label>
+					</div>
+				</div>
+
+				<div class="col-md-3">
+					<div class="md-form">
 						<input id="telefonContact" mdbInputDirective type="text" class="form-control"
 						       formControlName="telefonContact" maxlength="9"
 						>
@@ -238,7 +247,7 @@
 						</small>
 					</div>
 				</div>
-				<div class="col-md-4">
+				<div class="col-md-3">
 					<div class="md-form">
 						<input id="emailContact" mdbInputDirective type="email" class="form-control"
 						       formControlName="emailContact">
@@ -250,14 +259,14 @@
 					</div>
 				</div>
 
-				<div class="col-md-4">
+				<div class="col-md-3">
 					<div class="md-form">
 						<input id="nrProcurii1" mdbInputDirective type="text" class="form-control"
 						       formControlName="nrProcurii1">
 						<label for="nrProcurii1">Nr. procurii </label>
 					</div>
 				</div>
-				<div class="col-md-4">
+				<div class="col-md-3">
 					<div class="md-form-modified">
 						<mat-form-field class="w-100">
 							<input id="dataProcurii1" matInput [matDatepicker]="picker3" [max]="maxDate"

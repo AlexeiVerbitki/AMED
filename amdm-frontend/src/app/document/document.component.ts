@@ -85,8 +85,7 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @Input()
     set documents(docList: Document []) {
-        if (docList)
-        {
+        if (docList) {
             this.documentList = docList;
             this.dataSource.data = this.documentList.slice();
             this.dataSource.filterPredicate = this.createFilter();

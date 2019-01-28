@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {MatDialogRef} from "@angular/material";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MatDialogRef} from '@angular/material';
 
 @Component({
     selector: 'app-select-document-number',
@@ -10,7 +10,7 @@ import {MatDialogRef} from "@angular/material";
 export class SelectDocumentNumberComponent implements OnInit {
 
     eForm: FormGroup;
-    formSubmitted: boolean = false;
+    formSubmitted = false;
 
     constructor(private fb: FormBuilder,
                 public dialogRef: MatDialogRef<SelectDocumentNumberComponent>) {

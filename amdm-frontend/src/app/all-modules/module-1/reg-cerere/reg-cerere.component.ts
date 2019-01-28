@@ -16,7 +16,7 @@ import {TaskService} from '../../../shared/service/task.service';
 import {CanModuleDeactivate} from '../../../shared/auth-guard/can-deactivate-guard.service';
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
-import {MedicamentService} from "../../../shared/service/medicament.service";
+import {MedicamentService} from '../../../shared/service/medicament.service';
 
 @Component({
     selector: 'app-reg-cerere',
@@ -45,7 +45,7 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
                 private administrationService: AdministrationService,
                 private navbarTitleService: NavbarTitleService,
                 private taskService: TaskService,
-                private medicamentService : MedicamentService,
+                private medicamentService: MedicamentService,
                 private errorHandlerService: ErrorHandlerService,
                 private loadingService: LoaderService,
                 public dialog: MatDialog,
@@ -61,6 +61,7 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
             'email': [null, Validators.email],
             'requestMandateNr': [null],
             'requestMandateDate': [null],
+            'idnp' : [null,[Validators.maxLength(13),Validators.minLength(13), Validators.pattern('[0-9]+')]],
             'company': [null, Validators.required],
             'initiator': [''],
             'assignedUser': ['']
@@ -118,7 +119,8 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
 
 
         this.formSubmitted = true;
-        if (this.rForm.get('mandatedFirstname').invalid || this.rForm.get('mandatedLastname').invalid || this.rForm.get('company').invalid) {
+        if (this.rForm.get('mandatedFirstname').invalid || this.rForm.get('mandatedLastname').invalid || this.rForm.get('company').invalid
+        || this.rForm.get('idnp').invalid) {
             return;
         }
 
@@ -151,9 +153,10 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
             phoneNumber : this.rForm.get('phoneNumber').value,
             email : this.rForm.get('email').value,
             requestMandateNr : this.rForm.get('requestMandateNr').value,
-            requestMandateDate : this.rForm.get('requestMandateDate').value
+            requestMandateDate : this.rForm.get('requestMandateDate').value,
+            idnp : this.rForm.get('idnp').value
         }];
-        modelToSubmit.type ={code : 'MEDF'};
+        modelToSubmit.type = {code : 'MEDF'};
 
         this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
                 this.loadingService.hide();

@@ -53,7 +53,7 @@ export class HomepageComponent implements OnInit {
     getRequestsInWork() {
         this.subscriptions.push(this.taskService.getTasksByFilter(this.taskForm.value).subscribe(data => {
 
-            const source = data.body.filter(r => r.step !== 'Proces finisat' && r.step !== 'Finisat' && r.step !== 'Proces anulat');
+            const source = data.body.filter(r => r.step !== 'Proces finisat' && r.step !== 'Finisat' && r.step !== 'Proces anulat' && r.step !== 'Întrerupt' && r.endDate === null);
             this.dataSource.data = source.sort((a, b) => a.startDate.localeCompare(b.startDate));
 
             this.requestsNumber = this.dataSource.data.length;

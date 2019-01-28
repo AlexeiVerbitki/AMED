@@ -132,10 +132,10 @@
                 <div class="md-form">
                     <input id="proffesion" mdbInputDirective type="text" class="form-control"
                            formControlName="proffesion">
-                    <label for="proffesion">Profesia<span class="text-danger">*</span></label>
+                    <label for="proffesion">Functia<span class="text-danger">*</span></label>
                 </div>
                 <div *ngIf="rFormSubbmitted && !rForm.get('proffesion').valid">
-                    <small class="text-muted"><strong class="text-danger">Introduceti prefesia</strong>
+                    <small class="text-muted"><strong class="text-danger">Introduceti functia</strong>
                     </small>
                 </div>
             </div>
@@ -199,7 +199,6 @@
         <div *ngIf="mFormSubbmitted && members.length==0">
             <small class="text-muted"><strong class="text-danger">Nici un membru nu a fost adaugat</strong></small>
         </div>
-        <hr>
 
     </form>
 
@@ -228,6 +227,20 @@
                 </small>
             </div>
         </div>
+        <br/>
+        <br/>
+        <div class="col-md-12">
+           <!-- <div class="md-form">-->
+                <mat-checkbox id="docLPAttached" formControlName="docLPAttached">Documentul cu lista medicamentelor pentru comisie a fost atasat si semnat</mat-checkbox>
+               <!-- <label for="docLPAttached">Numele reprezentantului<span class="text-danger">*</span></label>-->
+            <!--</div>-->
+            <div *ngIf="kFormSubbmitted && !kForm.get('docLPAttached').value">
+                <small class="text-muted"><strong class="text-danger">Documentul cu lista medicamentelor pentru comisie nu a fost atasat.</strong>
+                </small>
+            </div>
+        </div>
+        <br/>
+
     </div>
     </form>
 
@@ -282,7 +295,7 @@
 
     <div class="text-center">
         <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                (click)="confirm()">Confirmare
+                (click)="confirm()">Salvare date
         </button>
         <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
                 (click)="submit()">Finisare

@@ -248,9 +248,9 @@
         </div>
 
         <hr>
-        <app-payment [requestId]="cerereModAutorForm.get('id').value"
-                     (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
-        <div *ngIf="formSubmitted && paymentTotal<0">
+        <app-payment [requestId]="cerereModAutorForm.get('id').value" (totalValueChanged)="paymentTotalUpdate($event)"
+                     [processModule]="'CPCD'"></app-payment>
+        <div *ngIf="cerereModAutorForm && paymentTotal < 0">
             <small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>
         </div>
         <hr>

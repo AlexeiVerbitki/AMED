@@ -143,23 +143,38 @@
                         </div>
                     </div>
 
+                    <!--<div class="col-4">-->
+                    <!--<div class="md-form-modified">-->
+                    <!--<ng-select [items]="customsCodes | async"-->
+                    <!--bindLabel="code"-->
+                    <!--placeholder="Codul Vamal"-->
+                    <!--formControlName="invoiceCustomsCode"-->
+                    <!--[loading]="loadingcustomsCodes"-->
+                    <!--[typeahead]="customsCodesInputs"-->
+                    <!--required="true">-->
+                    <!--<ng-template ng-option-tmp let-item="item">-->
+                    <!--{{item.description}};-->
+                    <!--<small class="form-text text-muted">Cod AMED: {{item.code}}</small>-->
+                    <!--</ng-template>-->
+                    <!--</ng-select>-->
+                    <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsCode').invalid">-->
+                    <!--<small class="text-muted"><strong class="text-danger">Codul trebuie selectat</strong></small>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--</div>-->
+
                     <div class="col-4">
                         <div class="md-form-modified">
-                            <ng-select [items]="customsCodes | async"
-                                       bindLabel="code"
-                                       placeholder="Codul Vamal"
-                                       formControlName="invoiceCustomsCode"
-                                       [loading]="loadingcustomsCodes"
-                                       [typeahead]="customsCodesInputs"
-                                       required="true">
-                                <ng-template ng-option-tmp let-item="item">
-                                    {{item.description}};
-                                    <small class="form-text text-muted">Cod AMED: {{item.code}}</small>
-                                </ng-template>
+                            <!--<md-form-field class="w-100">-->
+                            <ng-select id="customsPoints" placeholder="Vama"
+                                       formControlName="customsPoints">
+                                <ng-option *ngFor="let point of customsPointsList" [value]="point">{{ point.description }} - {{point.code}}</ng-option>
                             </ng-select>
-                            <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsCode').invalid">
-                                <small class="text-muted"><strong class="text-danger">Codul trebuie selectat</strong></small>
-                            </div>
+                            <!--</md-form-field>-->
+                        </div>
+                        <div *ngIf="[formSubmitted]==true && !evaluateImportForm.get('customsPoints').valid "> /*!evaluateImportForm.get('currency')=== null &&*/
+                            <small class="text-muted"><strong class="text-danger">Vama trebuie selectată</strong>
+                            </small>
                         </div>
                     </div>
 
@@ -189,8 +204,13 @@
                     <br>
                     <br>
 
-
-                    <hr>
+                    <div class="col-12">
+                        <hr>
+                        <h5 class="text-center font-weight-bold">Informația despre Autorizație</h5>
+                        <hr>
+                        <br>
+                        <br>
+                    </div>
                     <!--=================================================================-->
                     <div class="col-md-4">
                         <div class="md-form-modified">

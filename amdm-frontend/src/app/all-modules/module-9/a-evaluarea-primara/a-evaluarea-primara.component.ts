@@ -627,7 +627,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
             this.requestService.saveClinicalTrailRequest(formModel).subscribe(data => {
                 this.loadingService.hide();
-                this.router.navigate(['dashboard/module']);
+                //this.router.navigate(['dashboard/module']);
             }, error => {
                 this.loadingService.hide();
                 console.log(error);

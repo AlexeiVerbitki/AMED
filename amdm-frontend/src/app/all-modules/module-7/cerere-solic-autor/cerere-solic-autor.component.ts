@@ -51,6 +51,7 @@ export class CerereSolicAutorComponent implements OnInit {
     company: any;
     selectedFilials: any[] = [];
     companyExistInTable = false;
+    reqReqInitData: any;
 
     constructor(private fb: FormBuilder, private administrationService: AdministrationService,
                 private medicamentService: MedicamentService,
@@ -125,6 +126,7 @@ export class CerereSolicAutorComponent implements OnInit {
 
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
                 this.subscriptions.push(this.requestService.getMedicamentRequest(params['id']).subscribe(data => {
+                        this.reqReqInitData = data;
                         this.cerereSolicAutorForm.get('id').setValue(data.id);
                         this.cerereSolicAutorForm.get('dataReg').setValue(data.startDate);
                         this.cerereSolicAutorForm.get('requestNumber').setValue(data.requestNumber);

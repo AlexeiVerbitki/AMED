@@ -51,6 +51,7 @@ export class CerereModAutorActComponent implements OnInit {
     company: any;
     selectedFilials: any[] = [];
     companyExistInTable = false;
+    reqReqInitData: any;
 
     constructor(private fb: FormBuilder, private administrationService: AdministrationService,
                 private medicamentService: MedicamentService,
@@ -125,6 +126,7 @@ export class CerereModAutorActComponent implements OnInit {
 
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
                 this.subscriptions.push(this.requestService.getMedicamentRequest(params['id']).subscribe(data => {
+                        this.reqReqInitData = data;
                         this.cerereModAutorForm.get('id').setValue(data.id);
                         this.cerereModAutorForm.get('dataReg').setValue(data.startDate);
                         this.cerereModAutorForm.get('requestNumber').setValue(data.requestNumber);

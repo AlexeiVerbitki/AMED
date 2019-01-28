@@ -1,10 +1,10 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
-import {Subscription} from "rxjs/index";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AdministrationService} from "../../shared/service/administration.service";
-import {AmendmentDetailsComponent} from "../../management/clinical-trials/dialog/amendment-details/amendment-details.component";
-import {PaymentService} from "../../shared/service/payment.service";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
+import {Subscription} from 'rxjs/index';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AdministrationService} from '../../shared/service/administration.service';
+import {AmendmentDetailsComponent} from '../../management/clinical-trials/dialog/amendment-details/amendment-details.component';
+import {PaymentService} from '../../shared/service/payment.service';
 
 @Component({
     selector: 'app-add-ct-pay-order',
@@ -19,7 +19,7 @@ export class AddCtPayOrderComponent implements OnInit, OnDestroy {
 
     protected paymentOrder: any;
     protected ctPayOrderServices: any[] = [];
-    protected pageName: string = 'Adaugare';
+    protected pageName = 'Adaugare';
 
     //Copy Of Charges
     protected serviceCharges: any[] = [];
@@ -59,7 +59,7 @@ export class AddCtPayOrderComponent implements OnInit, OnDestroy {
         // console.log('this.paymentOrder', this.paymentOrder);
     }
 
-    ngOn
+    ngOn;
 
     protected initPage() {
         if (this.dataDialog.newTax) {
@@ -69,7 +69,7 @@ export class AddCtPayOrderComponent implements OnInit, OnDestroy {
                 number: null,
                 registrationRequestId: this.dataDialog.regReqId,
                 ctPayOrderServices: []
-            }
+            };
             // this.ctPayOrderServices = [];
             this.addBonForm.get('bonNr').setValue('---');
             this.addBonForm.get('date').setValue(new Date().toLocaleDateString());
@@ -79,11 +79,10 @@ export class AddCtPayOrderComponent implements OnInit, OnDestroy {
             this.addBonForm.get('bonNr').setValue(this.paymentOrder.number);
             this.addBonForm.get('date').setValue(new Date(this.paymentOrder.date).toLocaleDateString());
 
-            if(this.paymentOrder.ctPayOrderServices.length == 1 && this.paymentOrder.ctPayOrderServices[0].serviceCharge.category=='BS'){
+            if (this.paymentOrder.ctPayOrderServices.length == 1 && this.paymentOrder.ctPayOrderServices[0].serviceCharge.category == 'BS') {
                 console.log('este bon supl');
                 this.addChargeForm.disable();
-            }
-            else {
+            } else {
                 console.log('nu este bon supl');
             }
         }
@@ -116,9 +115,9 @@ export class AddCtPayOrderComponent implements OnInit, OnDestroy {
                     // console.log('getAllServiceCharges()', data);
                     this.serviceCharges = data;
                     this.serviceChargesList = this.serviceCharges.slice();
-                    if(!this.dataDialog.newTax){
+                    if (!this.dataDialog.newTax) {
                         console.log('this.serviceChargesList', this.serviceChargesList);
-                        this.serviceChargesList = this.serviceChargesList.filter(servCharge=> servCharge.category != 'BS');
+                        this.serviceChargesList = this.serviceChargesList.filter(servCharge => servCharge.category != 'BS');
                         console.log('this.serviceChargesList2', this.serviceChargesList);
                     }
                 },
@@ -130,7 +129,7 @@ export class AddCtPayOrderComponent implements OnInit, OnDestroy {
     protected addService() {
         // console.log('this.addChargeForm', this.addChargeForm);
         // console.log('this.addBonForm', this.addBonForm);
-        let serviceCharge = this.addChargeForm.get('serviceCharge').value;
+        const serviceCharge = this.addChargeForm.get('serviceCharge').value;
         if (serviceCharge.category != 'BS') {
             this.ctPayOrderServices.push({
                 id: null,
@@ -139,12 +138,11 @@ export class AddCtPayOrderComponent implements OnInit, OnDestroy {
                 serviceCharge: serviceCharge,
                 additionalPayment: 0
             });
-            this.serviceChargesList = this.serviceChargesList.filter(servCharge=> servCharge.category != 'BS');
+            this.serviceChargesList = this.serviceChargesList.filter(servCharge => servCharge.category != 'BS');
             // console.log('indexOfServiceCharge', this.serviceChargesList.indexOf(serviceCharge));
             // console.log('this.serviceChargesList', this.serviceChargesList);
             this.addChargeForm.reset();
-        }
-        else if (serviceCharge.category == 'BS') {
+        } else if (serviceCharge.category == 'BS') {
             this.ctPayOrderServices.push({
                 id: null,
                 payOrderId: this.dataDialog.payOrderId,
@@ -169,7 +167,7 @@ export class AddCtPayOrderComponent implements OnInit, OnDestroy {
         this.ctPayOrderServices.splice(index, 1);
 
         console.log('this.ctPayOrderServices', this.ctPayOrderServices);
-        if(this.ctPayOrderServices.length == 0){
+        if (this.ctPayOrderServices.length == 0) {
             console.log('this.serviceCharges', this.serviceCharges);
             this.serviceChargesList = this.serviceCharges.splice(0);
         }
@@ -204,7 +202,7 @@ export class AddCtPayOrderComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.subscriptions.forEach(subscription => {
             subscription.unsubscribe();
-        })
+        });
     }
 
 }

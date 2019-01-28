@@ -1,13 +1,13 @@
-import {NgModule} from "@angular/core";
-import {CommonModule} from "@angular/common";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MaterialSharedModule} from "../material-shared.module";
-import {MDBBootstrapModule} from "angular-bootstrap-md";
-import {PaymentClinicalTrialComponent} from "./payment-clinical-trial.component";
-import {AddCtPayOrderComponent} from "../dialog/add-ct-pay-order/add-ct-pay-order.component";
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MaterialSharedModule} from '../material-shared.module';
+import {MDBBootstrapModule} from 'angular-bootstrap-md';
+import {PaymentClinicalTrialComponent} from './payment-clinical-trial.component';
+import {AddCtPayOrderComponent} from '../dialog/add-ct-pay-order/add-ct-pay-order.component';
 
 @NgModule({
-    imports:[
+    imports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
@@ -15,9 +15,9 @@ import {AddCtPayOrderComponent} from "../dialog/add-ct-pay-order/add-ct-pay-orde
         MDBBootstrapModule.forRoot()
     ],
 
-    declarations:[PaymentClinicalTrialComponent, AddCtPayOrderComponent],
-    entryComponents:[AddCtPayOrderComponent],
-    exports:[PaymentClinicalTrialComponent, CommonModule, FormsModule, ReactiveFormsModule]
+    declarations: [PaymentClinicalTrialComponent, AddCtPayOrderComponent],
+    entryComponents: [AddCtPayOrderComponent],
+    exports: [PaymentClinicalTrialComponent, CommonModule, FormsModule, ReactiveFormsModule]
 })
 
 export class PaymentClinicalTrialModule { }

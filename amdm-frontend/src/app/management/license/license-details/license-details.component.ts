@@ -1,9 +1,9 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
 import {Subscription} from 'rxjs';
 import {LicenseService} from '../../../shared/service/license/license.service';
-import {LicenseHistoryDialogComponent} from "../license-history-dialog/license-history-dialog.component";
+import {LicenseHistoryDialogComponent} from '../license-history-dialog/license-history-dialog.component';
 
 @Component({
     selector: 'app-license-details',
@@ -75,8 +75,7 @@ export class LicenseDetailsComponent implements OnInit, OnDestroy {
 
         this.companiiPerIdnoSelected.forEach(cis => {
             cis.companyType = cis.type.description;
-            if (cis.locality)
-            {
+            if (cis.locality) {
                 cis.address = cis.locality.stateName + ', ' + cis.locality.description + ', ' + cis.street;
             }
 
@@ -97,7 +96,7 @@ export class LicenseDetailsComponent implements OnInit, OnDestroy {
         this.dialogRef.close();
     }
 
-    showLicenseHistory(){
+    showLicenseHistory() {
         const dialogRef2 = this.dialogHistory.open(LicenseHistoryDialogComponent, {
             width: '1000px',
             panelClass: 'materialLicense',

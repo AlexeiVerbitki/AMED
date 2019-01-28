@@ -31,27 +31,9 @@ import {AnnihilationManagementComponent} from './annihilation/annihilation-manag
 import {AnnihilationService} from '../shared/service/annihilation/annihilation.service';
 import {MedicamentService} from '../shared/service/medicament.service';
 import {AmendmentDetailsComponent} from './clinical-trials/dialog/amendment-details/amendment-details.component';
-import {GenerateDocumentsComponent} from './generate-documents/generate-documents.component';
-import {DdListComponent} from './generate-documents/dd-list/dd-list.component';
-import {OaListComponent} from './generate-documents/oa-list/oa-list.component';
-import {RequestsDdComponent} from './generate-documents/requests-dd/requests-dd.component';
-import {MedicamentsOaComponent} from './generate-documents/medicaments-oa/medicaments-oa.component';
-import {SelectIssueDateDialogComponent} from '../dialog/select-issue-date-dialog/select-issue-date-dialog.component';
-import {RequestsOiComponent} from './generate-documents/requests-oi/requests-oi.component';
-import {OiListComponent} from './generate-documents/oi-list/oi-list.component';
 import {NotificationDetailslsComponent} from './clinical-trials/dialog/notification-detailsls/notification-detailsls.component';
-import {DdModifyListComponent} from './generate-documents/dd-modify-list/dd-modify-list.component';
-import {MedicamentsOmComponent} from './generate-documents/medicaments-om/medicaments-om.component';
-import {OmListComponent} from './generate-documents/om-list/om-list.component';
-import {OiModifyListComponent} from './generate-documents/oi-modify-list/oi-modify-list.component';
-import {RequestsDdModifyComponent} from './generate-documents/requests-dd-modify/requests-dd-modify.component';
-import {RequestsOiModifyComponent} from './generate-documents/requests-oi-modify/requests-oi-modify.component';
 import {LicenseHistoryDialogComponent} from './license/license-history-dialog/license-history-dialog.component';
 import {LicenseHistoryDetailComponent} from './license/license-history-detail/license-history-detail.component';
-import {SelectDocumentNumberComponent} from "../dialog/select-document-number/select-document-number.component";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {DdCtListComponent} from './generate-documents/dd-ct-list/dd-ct-list.component';
-import {RequestDdCtComponent} from './generate-documents/request-dd-ct/request-dd-ct.component';
 
 
 @NgModule({
@@ -81,33 +63,15 @@ import {RequestDdCtComponent} from './generate-documents/request-dd-ct/request-d
         DrugAuthorizationDetailsDialogComponent,
         AnnihilationManagementComponent,
         AnnihilationDetailsComponent,
-        DdListComponent,
-        OaListComponent,
         ClinicalTrialsComponent,
-        GenerateDocumentsComponent,
         ClinicalTrialsDetailsComponent,
-        OaListComponent,
-        RequestsDdComponent,
-        MedicamentsOaComponent,
-        SelectIssueDateDialogComponent,
-        SelectDocumentNumberComponent,
-        RequestsOiComponent,
-        OiListComponent,
         AmendmentDetailsComponent,
         NotificationDetailslsComponent,
-        DdModifyListComponent,
-        MedicamentsOmComponent,
-        OmListComponent,
-        OiModifyListComponent,
-        RequestsDdModifyComponent,
-        RequestsOiModifyComponent,
         LicenseHistoryDialogComponent,
-        LicenseHistoryDetailComponent,
-        DdCtListComponent,
-        RequestDdCtComponent
+	    LicenseHistoryDetailComponent,
     ],
-    entryComponents: [AddReceiptDialogComponent, PriceReqEditModalComponent, LicenseDetailsComponent, DrugAuthorizationDetailsDialogComponent, AnnihilationDetailsComponent, ClinicalTrialsDetailsComponent, SelectIssueDateDialogComponent, AmendmentDetailsComponent, NotificationDetailslsComponent, LicenseHistoryDialogComponent, LicenseHistoryDetailComponent, SelectDocumentNumberComponent],
-    providers: [LicenseService, AdministrationService, UploadFileService, AnnihilationService, MedicamentService, ClinicalTrialService, DdListComponent, OaListComponent],
+    entryComponents: [AddReceiptDialogComponent, PriceReqEditModalComponent, LicenseDetailsComponent, DrugAuthorizationDetailsDialogComponent, AnnihilationDetailsComponent, ClinicalTrialsDetailsComponent, AmendmentDetailsComponent, NotificationDetailslsComponent, LicenseHistoryDialogComponent, LicenseHistoryDetailComponent],
+    providers: [LicenseService, AdministrationService, UploadFileService, AnnihilationService, MedicamentService, ClinicalTrialService],
 })
 export class ManagementModule {
 }

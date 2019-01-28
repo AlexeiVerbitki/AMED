@@ -20,6 +20,10 @@ export class RequestService {
         return this.http.get('/api/load-medicament-request', {params: {id: id}});
     }
 
+    validIDNP(idnp: string): Observable<any> {
+        return this.http.get('/api/validate-idnp', {params: {idnp: idnp}});
+    }
+
     getOldRequestIdByMedicamentRegNr(regNr: string): Observable<any> {
         return this.http.get('/api/get-old-request-id-by-medicament-regnr', {params: {regNr: regNr}});
     }

@@ -1,5 +1,5 @@
-import {Component, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatPaginator, MatSort, MatTable, MatTableDataSource} from '@angular/material';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {MatDialog, MatPaginator, MatSort, MatTable, MatTableDataSource} from '@angular/material';
 import {Subscription} from 'rxjs';
 import {NomenclatureConstants} from '../../administration.constants';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -14,7 +14,7 @@ import {LoaderService} from '../../../shared/service/loader.service';
     templateUrl: './ec-agent-list.component.html',
     styleUrls: ['./ec-agent-list.component.css']
 })
-export class EcAgentListComponent implements OnInit, OnDestroy {
+export class EcAgentListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ecAgents: any [] = [];
 
@@ -22,15 +22,11 @@ export class EcAgentListComponent implements OnInit, OnDestroy {
     displayedColumns: any[] = ['code', 'idno', 'longName', 'name', 'registrationDate', 'legalAddress', 'actions'];
     dataSource = new MatTableDataSource<any>();
     visibility = false;
-
-    private subscriptions: Subscription[] = [];
     nomenclatures = NomenclatureConstants;
-
-
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatTable) table: MatTable<any>;
-
+    private subscriptions: Subscription[] = [];
 
     constructor(private router: Router,
                 private activatedRoute: ActivatedRoute,
@@ -80,8 +76,7 @@ export class EcAgentListComponent implements OnInit, OnDestroy {
         const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
             width: '1000px',
             panelClass: 'materialLicense',
-            data: {
-            },
+            data: {},
             hasBackdrop: false
         });
 
@@ -92,13 +87,13 @@ export class EcAgentListComponent implements OnInit, OnDestroy {
                 //Reload list
                 this.loadingService.show();
                 this.subscriptions.push(this.administrationService.getAllEcAgentsGroupByIdno().subscribe(data => {
-                    this.ecAgents = data.body;
-                    this.dataSource.data = this.ecAgents.slice();
-                    this.table.renderRows();
+                        this.ecAgents = data.body;
+                        this.dataSource.data = this.ecAgents.slice();
+                        this.table.renderRows();
 
-                    this.dataSource.filterPredicate = this.createFilter();
-                    this.loadingService.hide();
-                }, () => this.loadingService.hide()
+                        this.dataSource.filterPredicate = this.createFilter();
+                        this.loadingService.hide();
+                    }, () => this.loadingService.hide()
                 ));
             }
         });
@@ -108,7 +103,8 @@ export class EcAgentListComponent implements OnInit, OnDestroy {
 
     createFilter(): (data: any, filter: string) => boolean {
         const filterFunction = function (data, filter): boolean {
-            const dataStr = data.code.toLowerCase() + data.idno ? data.idno.toLowerCase() : '' + data.name ? data.name.toLowerCase() : '' + data.longName ? data.longName.toLowerCase() : '' + data.legalAddress ? data.legalAddress.toLowerCase() : '';
+            const dataStr = data.code.toLowerCase() + data.idno ? data.idno.toLowerCase() : '' + data.name ? data.name.toLowerCase() : ''
+            + data.longName ? data.longName.toLowerCase() : '' + data.legalAddress ? data.legalAddress.toLowerCase() : '';
             return dataStr.indexOf(filter) != -1;
         };
         return filterFunction;
@@ -119,7 +115,7 @@ export class EcAgentListComponent implements OnInit, OnDestroy {
             width: '1000px',
             panelClass: 'materialLicense',
             data: {
-                idno : element.idno
+                idno: element.idno
             },
             hasBackdrop: false
         });

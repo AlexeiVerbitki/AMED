@@ -1,5 +1,5 @@
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {NgModule} from '@angular/core';
+import {LOCALE_ID, NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 
@@ -46,8 +46,12 @@ import {NavbarTitleService} from './shared/service/navbar-title.service';
 import {AuxiliarySubstanceDialogComponent} from './dialog/auxiliary-substance-dialog/auxiliary-substance-dialog.component';
 import {DivisionSelectDialogComponent} from './dialog/division-select-dialog/division-select-dialog.component';
 import {AddManufactureComponent} from './dialog/add-manufacture/add-manufacture.component';
-import {AddDivisionComponent} from "./dialog/add-division/add-division.component";
-import {AddExpertComponent} from "./dialog/add-expert/add-expert.component";
+import {AddDivisionComponent} from './dialog/add-division/add-division.component';
+import {AddExpertComponent} from './dialog/add-expert/add-expert.component';
+import { registerLocaleData } from '@angular/common';
+import localeRo from '@angular/common/locales/ro-MD';
+
+registerLocaleData(localeRo, 'ro-MD');
 
 const interceptors = [{
     provide: HTTP_INTERCEPTORS,
@@ -110,12 +114,16 @@ const interceptors = [{
     ],
     schemas: [],
     entryComponents: [
-     DivisionSelectDialogComponent,AuxiliarySubstanceDialogComponent,ConfirmationDialogComponent,MedicamentHistoryDialogComponent,MedicamentModificationsDialogComponent,RequestAdditionalDataDialogComponent,ActiveSubstanceDialogComponent, HomepageModalComponent,MedicamentDetailsDialogComponent, AddManufactureComponent, AddDivisionComponent, AddExpertComponent
+        DivisionSelectDialogComponent, AuxiliarySubstanceDialogComponent, ConfirmationDialogComponent, MedicamentHistoryDialogComponent,
+        MedicamentModificationsDialogComponent, RequestAdditionalDataDialogComponent, ActiveSubstanceDialogComponent, HomepageModalComponent, MedicamentDetailsDialogComponent,
+        AddManufactureComponent, AddDivisionComponent, AddExpertComponent
     ],
-    providers: [AuthService, AdministrationService, ErrorHandlerService, NavbarTitleService, interceptors,
+    providers: [AuthService, AdministrationService, ErrorHandlerService, NavbarTitleService, interceptors,  { provide: LOCALE_ID, useValue: 'ro-MD' }
     ],
     bootstrap: [AppComponent]
 })
 
 export class AppModule {
+
+
 }

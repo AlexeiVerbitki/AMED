@@ -180,9 +180,10 @@ export class ImportManagement implements OnInit {
                 'invoiceNumber': [null, Validators.required],
                 'invoiceBasis': [null, Validators.required],
                 'invoiceSpecificatie': [null, Validators.required],
-                'invoiceCustomsCode': [null, Validators.required],
+                // 'invoiceCustomsCode': [null, Validators.required],
                 'invoiceCustomsNumber': [null, Validators.required],
                 'invoiceCustomsDate': [null, Validators.required],
+                'customsPoints': [null, Validators.required],
 
                 'unitOfImportTable': this.fb.group({
 
@@ -273,9 +274,10 @@ export class ImportManagement implements OnInit {
                             'invoiceNumber': [null, Validators.required],
                             'invoiceBasis': [null, Validators.required],
                             'invoiceSpecificatie': [null, Validators.required],
-                            'invoiceCustomsCode': [null, Validators.required],
+                            // 'invoiceCustomsCode': [null, Validators.required],
                             'invoiceCustomsNumber': [null, Validators.required],
                             'invoiceCustomsDate': [null, Validators.required],
+                            'customsPoints': [null, Validators.required],
 
                             'unitOfImportTable': this.fb.group({
 
@@ -396,6 +398,7 @@ export class ImportManagement implements OnInit {
         this.loadUnitsOfMeasurement();
         this.loadMedicaments();
         this.loadInternationalMedicamentName();
+        this.loadCustomsPoints();
         // this.generateDocNr();
 
         console.log('importTypeForms.value', this.importTypeForms.value);
@@ -962,6 +965,7 @@ export class ImportManagement implements OnInit {
         invoiceEntity.customsDeclarationNumber =   this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsNumber').value;
         // invoiceEntity.customsPointsEntity =         this.evaluateImportForm.get('importAuthorizationEntity.customsPointsEntity').value;
         invoiceEntity.specification =              this.evaluateImportForm.get('importAuthorizationEntity.invoiceSpecificatie').value;
+        invoiceEntity.customsPointsEntity =        this.    evaluateImportForm.get('importAuthorizationEntity.customsPoints').value;
         invoiceEntity.invoiceDetailsEntitySet = invoiceDetailsEntity;
 
         modelToSubmit = this.importData;

@@ -77,6 +77,14 @@ const routes: Routes = [
                 loadChildren: '../app/management/management.module#ManagementModule'
             },
             {
+                path: 'create-documents',
+                loadChildren: '../app/create-documents/create-document.module#CreateDocumentModule'
+            },
+            {
+                path: 'audit',
+                loadChildren: '../app/audit/audit.module#AuditModule'
+            },
+            {
                 path: '', component: AdminDashboardComponent,
                 children: [
                     {path: '', redirectTo: 'admin', pathMatch: 'full'},

@@ -18,6 +18,7 @@ import {MedInstInvestigatorsDialogComponent} from '../dialog/med-inst-investigat
 import {ActiveSubstanceDialogComponent} from '../../../dialog/active-substance-dialog/active-substance-dialog.component';
 import {AddExpertComponent} from "../../../dialog/add-expert/add-expert.component";
 import {AddCtExpertComponent} from "../dialog/add-ct-expert/add-ct-expert.component";
+import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
 
 @Component({
     selector: 'app-a-analiza',
@@ -114,7 +115,8 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                 private authService: AuthService,
                 private router: Router,
                 private taskService: TaskService,
-                private loadingService: LoaderService) {
+                private loadingService: LoaderService,
+                private errorHandlerService: ErrorHandlerService) {
 
     }
 
@@ -132,6 +134,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             'assignedUser': [null],
             'outputDocuments': [],
             'ddIncluded': [],
+            'registrationRequestMandatedContacts': [],
             'clinicalTrails': this.fb.group({
                 'id': [''],
                 'startDateInternational': [''],
@@ -274,11 +277,12 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                     this.analyzeClinicalTrailForm.get('typeCode').setValue(data.type.code);
                     this.analyzeClinicalTrailForm.get('initiator').setValue(data.initiator);
                     this.analyzeClinicalTrailForm.get('outputDocuments').setValue(data.outputDocuments);
+                    this.analyzeClinicalTrailForm.get('registrationRequestMandatedContacts').setValue(data.registrationRequestMandatedContacts);
 
                     data.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
 
                     this.analyzeClinicalTrailForm.get('requestHistories').setValue(data.requestHistories);
-                    this.analyzeClinicalTrailForm.get('ddIncluded').setValue(data.ddIncluded );
+                    this.analyzeClinicalTrailForm.get('ddIncluded').setValue(data.ddIncluded);
 
                     this.analyzeClinicalTrailForm.get('clinicalTrails').setValue(data.clinicalTrails);
 
@@ -442,34 +446,71 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
     }
 
     requestAdditionalData() {
-        const dialogRef2 = this.dialogConfirmation.open(AdditionalDataDialogComponent, {
-            data: {
-                requestNumber: 'SL-' + this.analyzeClinicalTrailForm.get('requestNumber').value,
-                requestId: this.analyzeClinicalTrailForm.get('id').value,
-                modalType: 'REQUEST_ADDITIONAL_DATA',
-                startDate: this.analyzeClinicalTrailForm.get('startDate').value
-            },
-            hasBackdrop: false
-        });
+        this.loadingService.show();
+        this.subscriptions.push(this.requestService.getClinicalTrailRequest(this.analyzeClinicalTrailForm.get('id').value).subscribe(data => {
+                console.log('getClinicalTrailRequest', data);
+                let expertDispozition = data.documents.find(doc => doc.docType.category == 'DDC');
+                //console.log('expertDispozition', expertDispozition);
+                if (!expertDispozition) {
+                    this.errorHandlerService.showError('Dispozitia de distribuire nu este atashata.');
+                    return;
+                }
 
-        dialogRef2.afterClosed().subscribe(result => {
-            if (result.success) {
-                result.docType = this.docTypes.find(doc => doc.category === 'SL');
-                this.initialData.outputDocuments.push(result);
-                this.subscriptions.push(this.requestService.addOutputDocumentRequest(this.initialData).subscribe(data => {
-                        console.log('outDocuments', data);
-                        //this.outDocuments = data.body.clinicalTrails.outputDocuments;
-                    }, error => console.log(error))
-                );
-            }
-        });
+                let addDataList = data.outputDocuments.filter(doc => doc.docType.category == 'SL');
+                // console.log('addDataList', addDataList);
+                // console.log('addDataList.length', addDataList.length);
+                const dialogRef2 = this.dialogConfirmation.open(AdditionalDataDialogComponent, {
+                    width: '800px',
+                    height: '600px',
+                    data: {
+                        requestNumber: 'SL-' + this.analyzeClinicalTrailForm.get('requestNumber').value + '-' + (addDataList.length + 1),
+                        requestId: this.analyzeClinicalTrailForm.get('id').value,
+                        modalType: 'REQUEST_ADDITIONAL_DATA',
+                        startDate: this.analyzeClinicalTrailForm.get('startDate').value,
+                        registrationRequestMandatedContacts: data.registrationRequestMandatedContacts[0],
+                        company: data.company
+                    },
+                    hasBackdrop: false
+                });
+
+                dialogRef2.afterClosed().subscribe(result => {
+                    console.log('dialog result', result);
+                    if (result && result) {
+                        let dataToSubmit = {
+                            date: result.date,
+                            name: 'Scrisoare de solicitare date aditionale',
+                            number: result.number,
+                            content: result.content,
+                            docType: this.docTypes.find(r => r.category == 'SL'),
+                            responseReceived: 0,
+                            dateOfIssue: new Date(),
+                            signerName: result.signer.value,
+                            signerFunction: result.signer.description,
+                            requestId: this.analyzeClinicalTrailForm.get('id').value
+                        }
+
+                        this.documentService.addSLC(dataToSubmit).subscribe(data => {
+                            console.log('outDocument', data);
+                            this.outDocuments.push(data.body);
+                            console.log('outDocuments', this.outDocuments);
+
+                        })
+                    }
+                });
+
+                this.loadingService.hide();
+            }, error => {
+                console.log(error);
+                this.loadingService.hide();
+            })
+        );
     }
 
     checkResponseReceived(doc: any, value: any) {
         doc.responseReceived = value.checked;
     }
 
-    remove(doc: any) {
+    remove(doc: any, index: number) {
         const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
             data: {
                 message: 'Sunteti sigur(a)?',
@@ -478,18 +519,14 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         });
 
         dialogRef2.afterClosed().subscribe(result => {
+            console.log('result', result);
             if (result) {
+                console.log('doc.id', doc.id);
 
-                console.log('this.analyzeClinicalTrailForm.getRawValue().outputDocuments', this.analyzeClinicalTrailForm.getRawValue());
-                console.log('this.initialData.', this.initialData);
-
-                this.initialData.outputDocuments.forEach((item, index) => {
-                    if (item === doc) {
+                this.subscriptions.push(
+                    this.documentService.deleteSLById(doc.id).subscribe(data => {
+                        console.log('data', data);
                         this.initialData.outputDocuments.splice(index, 1);
-                    }
-                });
-
-                this.subscriptions.push(this.requestService.saveClinicalTrailRequest(this.initialData).subscribe(data => {
                     }, error => console.log(error))
                 );
             }
@@ -497,31 +534,35 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
     }
 
     viewDoc(document: any) {
-        console.log('viewDoc', document);
-        if (document.docType.category == 'RA') {
-            this.subscriptions.push(this.documentService.viewRequest(document.number,
-                document.content,
-                document.title,
-                document.docType.category).subscribe(data => {
-                    const file = new Blob([data], {type: 'application/pdf'});
-                    const fileURL = URL.createObjectURL(file);
-                    window.open(fileURL);
-                }, error => {
-                    console.log('error ', error);
-                }
-                )
-            );
-        } else if (document.docType.category == 'DD') {
-            this.subscriptions.push(this.documentService.viewDD(document.number).subscribe(data => {
-                    const file = new Blob([data], {type: 'application/pdf'});
-                    const fileURL = URL.createObjectURL(file);
-                    window.open(fileURL);
-                }, error => {
-                    console.log('error ', error);
-                }
-                )
-            );
-        }
+        let formValue = this.analyzeClinicalTrailForm.value;
+        // console.log('formValue', formValue);
+        // console.log('viewDoc', document);
+        let modelToSubmit = {
+            nrDoc: document.number,
+            responsiblePerson: formValue.registrationRequestMandatedContacts[0].mandatedLastname + ' ' + formValue.registrationRequestMandatedContacts[0].mandatedFirstname,
+            companyName: formValue.company.name,
+            requestDate: document.date,
+            country: 'Moldova',
+            address: formValue.company.legalAddress,
+            phoneNumber: formValue.registrationRequestMandatedContacts[0].phoneNumber,
+            email: formValue.registrationRequestMandatedContacts[0].email,
+            message: document.content,
+            function: document.signerFunction,
+            signerName: document.signerName
+        };
+        // console.log('modelToSubmit', modelToSubmit);
+        let observable: Observable<any> = null;
+        observable = this.documentService.viewRequestNew(modelToSubmit);
+
+        this.subscriptions.push(observable.subscribe(data => {
+                let file = new Blob([data], {type: 'application/pdf'});
+                var fileURL = URL.createObjectURL(file);
+                window.open(fileURL);
+                this.loadingService.hide();
+            }, error => {
+                this.loadingService.hide();
+            })
+        );
     }
 
     save() {
@@ -538,7 +579,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
             this.requestService.saveClinicalTrailRequest(formModel).subscribe(data => {
                 this.loadingService.hide();
-                this.router.navigate(['dashboard/module']);
+                // this.router.navigate(['dashboard/module']);
             }, error => {
                 this.loadingService.hide();
                 console.log(error);
@@ -567,10 +608,11 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             step: 'A'
         });
         formModel.documents = this.docs;
+        formModel.outputDocuments = this.outDocuments;
         formModel.clinicalTrails.investigators = this.investigatorsList;
         formModel.clinicalTrails.medicalInstitutions = this.mediacalInstitutionsList;
 
-        console.log('evaluareaPrimaraObjectLet', JSON.stringify(formModel));
+        // console.log('evaluareaPrimaraObjectLet', JSON.stringify(formModel));
 
         formModel.currentStep = 'AP';
         formModel.assignedUser = this.authService.getUserName();

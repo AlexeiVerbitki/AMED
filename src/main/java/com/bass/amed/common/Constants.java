@@ -33,5 +33,9 @@ public interface Constants
         String STUD_CLIN_SERVICE = "STUD_CLIN_SERVICE";
         String INFORM_TEHNOLOGY_SERVICE = "INFORM_TEHNOLOGY_SERVICE";
     }
+
+    enum AUDIT_ACTIONS{
+        ADD,MODIFY,DELETE
+    }
 }
 

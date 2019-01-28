@@ -37,8 +37,8 @@ public class InvoiceEntity {
 	@Column(name = "customs_declaration_number")
 	private String customsDeclarationNumber;
 
-	@Basic
-	@Column(name = "customs_code")
+	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+	@JoinColumn(name = "customs_code")
 	private NmCustomsPointsEntity customsPointsEntity;
 
 	@Basic

@@ -98,7 +98,6 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
             if (params['id']) {
                 this.requestId = params['id'];
-                console.log('13');
                 this.subscriptions.push(
                     this.licenseService.retrieveLicenseByRequestId(this.requestId).subscribe(data => {
                             this.oldData = data;
@@ -120,8 +119,6 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
                         }
                     )
                 );
-
-                console.log('23');
 
                 this.subscriptions.push(
                     this.licenseService.loadAnnounces().subscribe(data => this.announces = data  ));
@@ -225,8 +222,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
         this.companiiPerIdnoSelected.forEach(cis => {
             cis.companyType = cis.type.description;
-            if (cis.locality)
-            {
+            if (cis.locality) {
                 cis.address = cis.locality.stateName + ', ' + cis.locality.description + ', ' + cis.street;
             }
 
@@ -441,7 +437,6 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                // console.log('result' , );
                 const anies = this.companiiPerIdnoSelected.slice(index, index + 1)[0];
 
                 this.companiiPerIdnoNotSelected = [...this.companiiPerIdnoNotSelected, anies];
@@ -464,7 +459,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(
             this.licenseService.saveEvaluateLicense(modelToSubmit).subscribe(data => {
-                    this.router.navigate(['/dashboard/homepage']);
+                    // this.router.navigate(['/dashboard/homepage']);
                 }
             )
         );

@@ -49,11 +49,15 @@ export class CerereImportExportComponent implements OnInit {
     medInputs = new Subject<string>();
     medLoading = false;
     selectedSubstance: any;
+    unityDesc: any;
+    substanceUnits: any[];
+    selectedSubstanceUnits: any[] = [];
     selectedSubstancesTable: any[] = [];
     substanceNotSelected: boolean;
     substanceExistInTable: boolean;
     disabled: boolean;
     hasError: boolean;
+    reqReqInitData: any;
     authorizationTypes: Select[] = [
         {value: 'none', viewValue: '(None)'},
         {value: 'Import', viewValue: 'Import'},
@@ -107,7 +111,7 @@ export class CerereImportExportComponent implements OnInit {
             'commercialName': [],
             'packaging': [],
             'packagingQuantity': [],
-            'unitOfMeasurement': [null]
+            'unitOfMeasurement': []
         });
     }
 
@@ -123,13 +127,13 @@ export class CerereImportExportComponent implements OnInit {
 
         this.getAllUnitsOfMeasurement();
 
-        this.onChanges();
     }
 
     populateRequestDetails() {
 
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
                 this.subscriptions.push(this.requestService.getMedicamentRequest(params['id']).subscribe(data => {
+                        this.reqReqInitData = data;
                         this.initialData = Object.assign({}, data);
                         this.cerereImpExpForm.get('id').setValue(data.id);
                         this.cerereImpExpForm.get('initiator').setValue(data.initiator);
@@ -197,6 +201,7 @@ export class CerereImportExportComponent implements OnInit {
         this.subscriptions.push(
             this.administrationService.getAllUnitsOfMeasurement().subscribe(data => {
                     this.unitsOfMeasurement = data;
+                    this.onChanges();
                 },
                 error => console.log(error)
             )
@@ -276,6 +281,24 @@ export class CerereImportExportComponent implements OnInit {
             this.selectedSubstance = this.cerereImpExpForm.get('substance').value;
             if (this.selectedSubstance != null) {
                 this.substanceNotSelected = false;
+                this.unityDesc = this.unitsOfMeasurement.find(r => r.code == this.selectedSubstance.unitOfMeasureCode);
+                this.cerereImpExpForm.get('unitOfMeasurement').setValue(this.unityDesc.description);
+                this.subscriptions.push(
+                    this.drugDecisionsService.getUnitsByRefUnitCode(this.selectedSubstance.unitOfMeasureCode).subscribe(data => {
+                            this.substanceUnits = data;
+                            const refUnit = {
+                                unitCode: this.selectedSubstance.unitOfMeasureCode,
+                                refUnitCode: "",
+                                unitCodeRate: 1,
+                                refUnitCodeRate: 1,
+                                unitCodeDescription: this.unityDesc.description
+                            };
+
+                            this.substanceUnits.push(refUnit);
+                        },
+                        error => console.log(error)
+                    )
+                );
                 this.getSubstanceDetails();
             } else {
                 this.initSubstanceData();
@@ -361,8 +384,25 @@ export class CerereImportExportComponent implements OnInit {
 
     }
 
+    convertSubstanceQuantity() {
+
+        if (this.cerereImpExpForm.value.authorizedQuantity != null && this.cerereImpExpForm.get('availableQuantity').value != null && this.cerereImpExpForm.get('substance') != null && this.cerereImpExpForm.get('unitOfMeasurement') != null )
+        {
+
+            if(this.cerereImpExpForm.get('unitOfMeasurement').value.unitCode && this.cerereImpExpForm.get('substance').value.unitOfMeasureCode != this.cerereImpExpForm.get('unitOfMeasurement').value.unitCode){
+
+                this.cerereImpExpForm.value.authorizedQuantity = (this.cerereImpExpForm.value.authorizedQuantity * this.cerereImpExpForm.get('unitOfMeasurement').value.unitCodeRate) /  this.cerereImpExpForm.get('unitOfMeasurement').value.refUnitCodeRate;
+
+            }
+
+        }
+
+    }
+
     initSubstanceData() {
         this.activeSubstancesTable = [];
+        this.cerereImpExpForm.get('availableQuantity').setValue("");
+        this.cerereImpExpForm.get('unitOfMeasurement').setValue("");
     }
 
     addSubstance() {
@@ -394,10 +434,10 @@ export class CerereImportExportComponent implements OnInit {
 
     populateSelectedSubstanceDetails() {
 
-        const unitOfMeasurement = this.cerereImpExpForm.get('unitOfMeasurement').value;
+        const unitOfMeasurement = this.cerereImpExpForm.get('substance').value;
         let unitDescription = '';
-        if (unitOfMeasurement != null && unitOfMeasurement.description != null) {
-            unitDescription = unitOfMeasurement.description;
+        if (unitOfMeasurement != null && unitOfMeasurement.unitCodeDescription != null) {
+            unitDescription = unitOfMeasurement.unitCodeDescription;
         }
 
         const substanceDetails = {
@@ -407,8 +447,8 @@ export class CerereImportExportComponent implements OnInit {
             commercialName: this.cerereImpExpForm.get('commercialName').value,
             packaging: this.cerereImpExpForm.get('packaging').value,
             packagingQuantity: this.cerereImpExpForm.get('packagingQuantity').value,
-            authorizedQuantity: this.cerereImpExpForm.get('authorizedQuantity').value,
-            authorizedQuantityUnit: unitDescription
+            authorizedQuantity: this.cerereImpExpForm.value.authorizedQuantity,
+            authorizedQuantityUnit: this.unityDesc.description
         };
 
         this.selectedSubstancesTable.push(substanceDetails);
@@ -500,6 +540,7 @@ export class CerereImportExportComponent implements OnInit {
 
     validateAuthorizedQuantity() {
 
+        this.convertSubstanceQuantity();
         if (this.cerereImpExpForm.value.authorizedQuantity != null && this.cerereImpExpForm.get('availableQuantity').value != null
             && this.cerereImpExpForm.value.authorizedQuantity > this.cerereImpExpForm.get('availableQuantity').value) {
             this.hasError = true;

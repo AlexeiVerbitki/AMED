@@ -16,7 +16,7 @@ import {LicenseDecisionDialogComponent} from '../../dialog/license-decision-dial
 import {AddLicenseFarmacistComponent} from './add-license-farmacist/add-license-farmacist.component';
 import {MatDialogModule} from '@angular/material';
 import {EcAgentModule} from '../../administration/economic-agent/ec-agent.module';
-import {ViewCompletedLicenseComponent} from "./view-completed-license/view-completed-license.component";
+import {ViewCompletedLicenseComponent} from './view-completed-license/view-completed-license.component';
 
 @NgModule({
     imports: [
@@ -29,7 +29,7 @@ import {ViewCompletedLicenseComponent} from "./view-completed-license/view-compl
         MaterialSharedModule.forRoot(),
         DocumentModule,
         PaymentModule,
-        EcAgentModule
+        EcAgentModule,
     ],
     schemas: [],
     entryComponents: [

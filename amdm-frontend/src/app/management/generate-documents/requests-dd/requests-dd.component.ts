@@ -5,8 +5,8 @@ import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} f
 import {DocumentService} from '../../../shared/service/document.service';
 import {RequestService} from '../../../shared/service/request.service';
 import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
-import {SelectIssueDateDialogComponent} from "../../../dialog/select-issue-date-dialog/select-issue-date-dialog.component";
-import {SelectDocumentNumberComponent} from "../../../dialog/select-document-number/select-document-number.component";
+import {SelectIssueDateDialogComponent} from '../../../dialog/select-issue-date-dialog/select-issue-date-dialog.component';
+import {SelectDocumentNumberComponent} from '../../../dialog/select-document-number/select-document-number.component';
 
 @Component({
     selector: 'app-requests-dd',
@@ -53,7 +53,7 @@ export class RequestsDdComponent implements OnInit {
 
         dialogConfig2.width = '400px';
 
-        let dialogRef = this.dialog.open(SelectDocumentNumberComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(SelectDocumentNumberComponent, dialogConfig2);
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.response) {
                 this.loadingService.show();

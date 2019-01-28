@@ -7,3 +7,24 @@
     border-bottom: 1px solid rgba(0, 0, 0, .12);
     padding-bottom: 2px;
 }
+
+.btn-invisible {
+    background-color: transparent !important;
+    color: #fff !important;
+    box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0), 0 0px 0px 0 rgba(0, 0, 0, 0) !important;
+}
+
+.fa-mb {
+    margin-bottom: 25px;
+}
+
+.faps {
+margin-right: 30px;
+padding: 0px;
+}
+
+.fa-lgs {
+    font-size: 1.33333333em;
+    line-height: .75em;
+    vertical-align: -15%;
+}

@@ -131,7 +131,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                 'amendCode': [[Validators.required, Validators.pattern('^[1-9][0-9]')]],
                 'note': ['', Validators.required],
                 'titleFrom': [''],
-                'titleTo': [{value: null, disabled: true}],
+                'titleTo': [{value: null, disabled: false}],
                 'treatmentFrom': [''],
                 'treatmentTo': ['', Validators.required],
                 'provenanceFrom': [''],
@@ -782,7 +782,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
             this.requestService.saveClinicalTrailAmendmentRequest(formModel).subscribe(data => {
                 this.loadingService.hide();
-                this.router.navigate(['dashboard/module']);
+                // this.router.navigate(['dashboard/module']);
             }, error => {
                 this.loadingService.hide();
                 console.log(error);

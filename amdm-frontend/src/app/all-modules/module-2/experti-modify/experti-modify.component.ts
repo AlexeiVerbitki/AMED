@@ -16,6 +16,8 @@ import {LoaderService} from '../../../shared/service/loader.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {MedicamentDetailsDialogComponent} from '../../../dialog/medicament-details-dialog/medicament-details-dialog.component';
 import {MedicamentService} from '../../../shared/service/medicament.service';
+import {AddExpertComponent} from "../../../dialog/add-expert/add-expert.component";
+import {RequestAdditionalDataDialogComponent} from "../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component";
 
 @Component({
     selector: 'app-experti',
@@ -49,6 +51,7 @@ export class ExpertiModifyComponent implements OnInit {
     medics: any[];
     omAttached = false;
     omApproved = false;
+    expertList: any[] = [];
 
     constructor(private fb: FormBuilder,
                 private authService: AuthService,
@@ -77,19 +80,10 @@ export class ExpertiModifyComponent implements OnInit {
             'assignedUser': [''],
             'companyValue': [''],
             'division': [null],
-            'expertDate': [new Date()],
-            'comiteeNr': [null],
-            'chairman': [null],
-            'farmacolog': [null],
-            'farmacist': [null],
-            'medic': [null],
-            'commentExperts': [null],
-            'statusExperts': [null, Validators.required],
-            'decisionChairman': [null],
-            'decisionFarmacolog': [null],
-            'decisionFarmacist': [null],
-            'decisionMedic': [null],
+            'labResponse': [null],
             'divisionBonDePlata': [null],
+            'variationType' : [null],
+            'variationDescription' : [null],
             'medicament':
                 fb.group({
                     'id': [],
@@ -101,6 +95,8 @@ export class ExpertiModifyComponent implements OnInit {
                     'pharmaceuticalFormTo': [null],
                     'pharmaceuticalFormType': [null],
                     'doseTo': [null],
+                    'originaleTo': [null],
+                    'orphanTo': [null],
                     'unitsOfMeasurementTo': [null],
                     'internationalMedicamentNameTo': [null],
                     'volumeTo': [null],
@@ -143,6 +139,12 @@ export class ExpertiModifyComponent implements OnInit {
                         this.expertForm.get('requestNumber').setValue(data.requestNumber);
                         this.expertForm.get('companyValue').setValue(data.company.name);
                         this.expertForm.get('company').setValue(data.company);
+                        this.expertForm.get('variationType').setValue(data.variationType=='I' ? 'Tip I' : (data.variationType=='II' ? 'Tip II' : 'Transfer de certificat'));
+                        this.expertForm.get('variationDescription').setValue(data.variationDescription);
+                        let rl = this.outputDocuments.find(r => r.docType.category == 'RL');
+                        if (rl && (rl.responseReceived == 0 || rl.responseReceived)) {
+                            this.expertForm.get('labResponse').setValue(rl.responseReceived.toString());
+                        }
                         this.expertForm.get('medicament.id').setValue(data.medicamentHistory[0].id);
                         this.expertForm.get('medicament.commercialNameTo').setValue(data.medicamentHistory[0].commercialNameTo);
                         this.expertForm.get('medicamentName').setValue(data.medicamentHistory[0].commercialNameTo);
@@ -156,58 +158,59 @@ export class ExpertiModifyComponent implements OnInit {
                             this.expertForm.get('medicament.unitsOfMeasurementTo').setValue(data.medicamentHistory[0].unitsOfMeasurementTo.description);
                         }
                         this.expertForm.get('medicament.internationalMedicamentNameTo').setValue(data.medicamentHistory[0].internationalMedicamentNameTo.description);
-                        this.expertForm.get('medicament.medicamentTypeTo').setValue(data.medicamentHistory[0].medicamentTypeTo.description);
                         this.expertForm.get('medicament.volumeTo').setValue(data.medicamentHistory[0].volumeTo);
                         if (data.medicamentHistory && data.medicamentHistory.length != 0 && data.medicamentHistory[0].volumeQuantityMeasurementTo) {
                             this.expertForm.get('medicament.volumeQuantityMeasurementTo').setValue(data.medicamentHistory[0].volumeQuantityMeasurementTo.description);
                         }
                         this.expertForm.get('medicament.termsOfValidityTo').setValue(data.medicamentHistory[0].termsOfValidityTo);
-                        this.expertForm.get('medicament.groupTo').setValue(data.medicamentHistory[0].groupTo.description);
+                        if (data.medicamentHistory[0].vitaleTo == 1) {
+                            this.expertForm.get('medicament.groupTo').setValue('Vitale');
+                        } else if (data.medicamentHistory[0].esentialeTo == 1) {
+                            this.expertForm.get('medicament.groupTo').setValue('Esenţiale');
+                        } else if (data.medicamentHistory[0].nonesentialeTo == 1) {
+                            this.expertForm.get('medicament.groupTo').setValue('Nonesenţiale');
+                        }
                         if (data.medicamentHistory[0].prescriptionTo == 0) {
                             this.expertForm.get('medicament.prescriptionTo').setValue('Fără prescripţie');
-                        } else {
+                        } else if (data.medicamentHistory[0].prescriptionTo == 1) {
                             this.expertForm.get('medicament.prescriptionTo').setValue('Cu prescripţie');
+                        } else {
+                            this.expertForm.get('medicament.prescriptionTo').setValue('Staţionar');
                         }
                         this.expertForm.get('medicament.authorizationHolderTo').setValue(data.medicamentHistory[0].authorizationHolderTo.description);
                         this.expertForm.get('medicament.authorizationHolderCountry').setValue(data.medicamentHistory[0].authorizationHolderTo.country.description);
                         this.expertForm.get('medicament.authorizationHolderAddress').setValue(data.medicamentHistory[0].authorizationHolderTo.address);
+                        this.expertForm.get('medicament.originaleTo').setValue(data.medicamentHistory[0].originaleTo);
+                        this.expertForm.get('medicament.orphanTo').setValue(data.medicamentHistory[0].orphanTo);
                         let medTypes = '';
                         for (const mt of data.medicamentHistory[0].medicamentTypesHistory) {
                             medTypes = medTypes + mt.type.description + '; ';
                         }
                         this.expertForm.get('medicament.medTypesValues').setValue(medTypes);
-                        if (data.medicamentHistory[0].experts) {
-                            this.expertForm.get('expertDate').setValue(new Date(data.medicamentHistory[0].experts.date));
-                            this.expertForm.get('comiteeNr').setValue(data.medicamentHistory[0].experts.number);
-                            this.expertForm.get('commentExperts').setValue(data.medicamentHistory[0].experts.comment);
-                            if (data.medicamentHistory[0].experts.status) {
-                                this.expertForm.get('statusExperts').setValue(data.medicamentHistory[0].experts.status.toString());
-                            }
-                            this.expertForm.get('decisionChairman').setValue(data.medicamentHistory[0].experts.decisionChairman);
-                            this.expertForm.get('decisionFarmacolog').setValue(data.medicamentHistory[0].experts.decisionFarmacolog);
-                            this.expertForm.get('decisionFarmacist').setValue(data.medicamentHistory[0].experts.decisionFarmacist);
-                            this.expertForm.get('decisionMedic').setValue(data.medicamentHistory[0].experts.decisionMedic);
-                        }
+                        this.expertList = data.expertList;
                         for (const entry of data.medicamentHistory[0].divisionHistory) {
                             this.divisions.push({
-                                description: entry.description,
                                 old: entry.old,
                                 id: entry.id,
+                                description: entry.description,
+                                medicamentCode: entry.medicamentCode,
+                                volume: entry.volume,
+                                volumeQuantityMeasurement: entry.volumeQuantityMeasurement,
+                                instructions: entry.instructionsHistory.filter(t => t.type == 'I'),
+                                machets: entry.instructionsHistory.filter(t => t.type == 'M'),
                                 approved: entry.approved
                             });
                         }
                         this.expertForm.get('medicament.atcCodeTo').setValue(data.medicamentHistory[0].atcCodeTo);
                         this.activeSubstancesTable = data.medicamentHistory[0].activeSubstancesHistory;
                         this.auxiliarySubstancesTable = data.medicamentHistory[0].auxiliarySubstancesHistory;
-                        this.fillInstructions(data.medicamentHistory[0]);
-                        if (data.medicamentHistory[0].approved == 1) {
-                            this.expertForm.get('statusExperts').setValue('1');
-                        }
-                        this.fillMachets(data.medicamentHistory[0]);
+                        this.expertForm.get('divisionBonDePlata').setValue(this.getConcatenatedDivision());
+                        this.displayInstructions();
+                        this.displayMachets();
                         this.manufacturesTable = data.medicamentHistory[0].manufacturesHistory;
                         this.expertForm.get('type').setValue(data.type);
                         this.expertForm.get('requestHistories').setValue(data.requestHistories);
-                        this.expertForm.get('typeValue').setValue(data.type.code);
+                        this.expertForm.get('typeValue').setValue(data.type.description);
                         this.company = data.company;
                         this.documents = data.documents;
                         this.documents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
@@ -219,7 +222,7 @@ export class ExpertiModifyComponent implements OnInit {
                         this.docDetails = this.documents.find(t => t.docType.category == 'OM');
                         this.omAttached = this.documents.find(t => t.docType.category == 'OM') ? true : false;
                         this.omApproved = data.medicamentHistory[0].approved == 1;
-                        this.loadExperts();
+                        this.checkOutputDocumentsStatus();
                         this.subscriptions.push(
                             this.medicamentService.getMedicamentsByFilter({registerNumber: data.medicamentHistory[0].registrationNumber}
                             ).subscribe(request => {
@@ -248,76 +251,76 @@ export class ExpertiModifyComponent implements OnInit {
         );
     }
 
-    loadExperts() {
-        this.subscriptions.push(
-            this.administrationService.getAllEmployees().subscribe(data => {
-                    this.chairmans = data;
-                    this.chairmans = this.chairmans.filter(r => r.chairmanOfExperts == 1);
-                    this.farmacologs = data;
-                    this.farmacologs = this.farmacologs.filter(r => r.profession && r.profession.category == 'FG');
-                    this.farmacists = data;
-                    this.farmacists = this.farmacists.filter(r => r.profession && r.profession.category == 'FT');
-                    this.medics = data;
-                    this.medics = this.medics.filter(r => r.profession && r.profession.category == 'CL');
-                    if (this.modelToSubmit.medicamentHistory[0].experts) {
-                        if (this.modelToSubmit.medicamentHistory[0].experts.chairman) {
-                            this.expertForm.get('chairman').setValue(this.chairmans.find(t => t.id == this.modelToSubmit.medicamentHistory[0].experts.chairman.id));
+    displayInstructions() {
+        this.instructions = [];
+        for (let div of this.divisions) {
+            if (div.instructions) {
+                for (let instr of div.instructions) {
+                    let instrTest = this.instructions.find(value => value.path == instr.path);
+                    if (instrTest) {
+                        instrTest.divisions.push({
+                            description: div.description,
+                            volume: div.volume,
+                            volumeQuantityMeasurement: div.volumeQuantityMeasurement
+                        });
+                        if (instr.status == 'O') {
+                            instrTest.status = 'O';
                         }
-                        if (this.modelToSubmit.medicamentHistory[0].experts.farmacolog) {
-                            this.expertForm.get('farmacolog').setValue(this.farmacologs.find(t => t.id == this.modelToSubmit.medicamentHistory[0].experts.farmacolog.id));
-                        }
-                        if (this.modelToSubmit.medicamentHistory[0].experts.farmacist) {
-                            this.expertForm.get('farmacist').setValue(this.farmacists.find(t => t.id == this.modelToSubmit.medicamentHistory[0].experts.farmacist.id));
-                        }
-                        if (this.modelToSubmit.medicamentHistory[0].experts.medic) {
-                            this.expertForm.get('medic').setValue(this.medics.find(t => t.id == this.modelToSubmit.medicamentHistory[0].experts.medic.id));
-                        }
+                    } else {
+                        let instrAdd = Object.assign({}, instr);
+                        instrAdd.divisions = [];
+                        instrAdd.divisions.push({
+                            description: div.description,
+                            volume: div.volume,
+                            volumeQuantityMeasurement: div.volumeQuantityMeasurement
+                        });
+                        this.instructions.push(instrAdd);
                     }
-                },
-                error => console.log(error)
-            )
-        );
-    }
-
-    fillInstructions(medicamentHist: any) {
-        for (const medInstruction of medicamentHist.instructionsHistory) {
-            if (medInstruction.type == 'I') {
-                const pageInstrction = this.instructions.find(value => value.path == medInstruction.path);
-                if (pageInstrction) {
-                    pageInstrction.divisions.push({description: medInstruction.division});
-                } else {
-                    medInstruction.divisions = [];
-                    medInstruction.divisions.push({description: medInstruction.division});
-                    this.instructions.push(medInstruction);
                 }
             }
         }
     }
 
-    fillMachets(medicamentHist: any) {
-        for (const medInstruction of medicamentHist.instructionsHistory) {
-            if (medInstruction.type == 'M') {
-                const pageInstrction = this.machets.find(value => value.path == medInstruction.path);
-                if (pageInstrction) {
-                    pageInstrction.divisions.push({description: medInstruction.division});
-                } else {
-                    medInstruction.divisions = [];
-                    medInstruction.divisions.push({description: medInstruction.division});
-                    this.machets.push(medInstruction);
+    displayMachets() {
+        this.machets = [];
+        for (let div of this.divisions) {
+            if (div.machets) {
+                for (let machet of div.machets) {
+                    let machetTest = this.machets.find(value => value.path == machet.path);
+                    if (machetTest) {
+                        machetTest.divisions.push({
+                            description: div.description,
+                            volume: div.volume,
+                            volumeQuantityMeasurement: div.volumeQuantityMeasurement
+                        });
+                        if (machet.status == 'O') {
+                            machetTest.status = 'O';
+                        }
+                    } else {
+                        let machetAdd = Object.assign({}, machet);
+                        machetAdd.divisions = [];
+                        machetAdd.divisions.push({
+                            description: div.description,
+                            volume: div.volume,
+                            volumeQuantityMeasurement: div.volumeQuantityMeasurement
+                        });
+                        this.machets.push(machetAdd);
+                    }
                 }
             }
         }
     }
+
 
     viewDoc(document: any) {
 
-        const find = this.documents.find(t => t.docType.category == 'OM');
-        if (!find) {
-            this.errorHandlerService.showError('Ordinul de aprobare a modificarilor nu este atasat.');
-            return;
-        }
-
         if (document.docType.category == 'MP') {
+
+            const find = this.documents.find(t => t.docType.category == 'OM');
+            if (!find) {
+                this.errorHandlerService.showError('Ordinul de aprobare a modificarilor nu este atasat.');
+                return;
+            }
 
             const o = this.documents.find(t => t.docType.category == 'OM');
 
@@ -325,10 +328,11 @@ export class ExpertiModifyComponent implements OnInit {
                 medName: this.expertForm.get('medicamentName').value,
                 registrationNumber: this.expertForm.get('medicament.registrationNumber').value,
                 orderNumber: o.number,
-                requestNumber : this.expertForm.get('requestNumber').value,
-                registrationDate : this.expertForm.get('medicament.registrationDate').value,
-                requestDate : this.expertForm.get('startDate').value,
-                variationTip : 'II A'
+                requestNumber: this.expertForm.get('requestNumber').value,
+                registrationDate: this.expertForm.get('medicament.registrationDate').value,
+                requestDate: this.expertForm.get('startDate').value,
+                variationTip: this.expertForm.get('variationType').value,
+                requestId : this.expertForm.get('id').value
             };
 
             this.subscriptions.push(this.documentService.viewMedicamentModificationCertificate(m).subscribe(data => {
@@ -340,33 +344,46 @@ export class ExpertiModifyComponent implements OnInit {
                 }
                 )
             );
+        } else if (document.docType.category == 'SL') {
+
+
+            let modelToSubmit = {
+                nrDoc: document.number,
+                responsiblePerson: this.registrationRequestMandatedContacts[0].mandatedLastname + ' ' + this.registrationRequestMandatedContacts[0].mandatedFirstname,
+                companyName: this.expertForm.get('company').value.name,
+                requestDate: document.date,
+                country: 'Moldova',
+                address: this.expertForm.get('company').value.legalAddress,
+                phoneNumber: this.registrationRequestMandatedContacts[0].phoneNumber,
+                email: this.registrationRequestMandatedContacts[0].email,
+                message: document.content,
+                function: document.signerFunction,
+                signerName: document.signerName
+            };
+
+            let observable: Observable<any> = null;
+            observable = this.documentService.viewRequestNew(modelToSubmit);
+
+            this.subscriptions.push(observable.subscribe(data => {
+                    let file = new Blob([data], {type: 'application/pdf'});
+                    var fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    this.loadingService.hide();
+                }, error => {
+                    this.loadingService.hide();
+                }
+                )
+            );
         }
-    }
-
-
-    finish() {
-        this.formSubmitted = true;
-
-        if (this.expertForm.get('statusExperts').invalid) {
-            this.errorHandlerService.showError('Status inregistrare trebuie selectat.');
-            return;
-        }
-
-        const find = this.documents.find(t => t.docType.category == 'DDM');
-        if (!find && this.modelToSubmit.ddIncluded) {
-            this.errorHandlerService.showError('Dispozitia de distribuire nu este atasata.');
-            return;
-        }
-
-        if (this.expertForm.get('statusExperts').value == 1) {
-            this.success();
-        } else {
-            this.interruptProcess();
-        }
-
     }
 
     success() {
+
+        const findDDM = this.documents.find(t => t.docType.category == 'DDM');
+        if (!findDDM && this.modelToSubmit.ddIncluded) {
+            this.errorHandlerService.showError('Dispozitia de distribuire nu este atasata.');
+            return;
+        }
 
         if (this.instructions.length == 0) {
             this.errorHandlerService.showError('Nici o informatie nu a fost adaugata');
@@ -440,44 +457,16 @@ export class ExpertiModifyComponent implements OnInit {
         x.documents = this.documents;
         x.outputDocuments = this.outputDocuments;
         x.medicaments = [];
+        x.expertList = this.expertList;
 
         x.medicamentHistory[0].atcCodeTo = this.expertForm.get('medicament.atcCodeTo').value;
-        x.medicamentHistory[0].experts = {
-            chairman: this.expertForm.get('chairman').value,
-            farmacolog: this.expertForm.get('farmacolog').value,
-            farmacist: this.expertForm.get('farmacist').value,
-            medic: this.expertForm.get('medic').value,
-            date: this.expertForm.get('expertDate').value,
-            comment: this.expertForm.get('commentExperts').value,
-            number: this.expertForm.get('comiteeNr').value,
-            decisionChairman: this.expertForm.get('decisionChairman').value,
-            decisionFarmacolog: this.expertForm.get('decisionFarmacolog').value,
-            decisionFarmacist: this.expertForm.get('decisionFarmacist').value,
-            decisionMedic: this.expertForm.get('decisionMedic').value,
-            status: this.expertForm.get('statusExperts').value
-        };
 
-        x.medicamentHistory[0].instructionsHistory = [];
-        for (const x1 of this.instructions) {
-            x1.id = null;
-            x1.type = 'I';
-            for (const y of x1.divisions) {
-                const z = Object.assign({}, x1);
-                z.division = y.description;
-                x.medicamentHistory[0].instructionsHistory.push(z);
-            }
-        }
-
-        for (const x1 of this.machets) {
-            x1.id = null;
-            x1.type = 'M';
-            for (const y of x1.divisions) {
-                const z = Object.assign({}, x1);
-                z.division = y.description;
-                x.medicamentHistory[0].instructionsHistory.push(z);
-            }
-        }
-
+        x.medicamentHistory[0].divisionHistory = this.divisions;
+        x.medicamentHistory[0].divisionHistory.forEach(t => {t.instructionsHistory = [];});
+        x.medicamentHistory[0].divisionHistory.forEach(t => {
+            t.instructionsHistory.push.apply(t.instructionsHistory, t.instructions);
+            t.instructionsHistory.push.apply(t.instructionsHistory, t.machets);
+        });
 
         this.subscriptions.push(this.requestService.savePostauthorizationMedicament(x).subscribe(data => {
                 this.loadingService.hide();
@@ -520,19 +509,6 @@ export class ExpertiModifyComponent implements OnInit {
 
                 modelToSubmit.medicaments = [];
                 modelToSubmit.medicamentHistory[0].atcCode = this.expertForm.get('medicament.atcCodeTo').value;
-                modelToSubmit.medicamentHistory[0].experts = {
-                    chairman: this.expertForm.get('chairman').value,
-                    farmacolog: this.expertForm.get('farmacolog').value,
-                    farmacist: this.expertForm.get('farmacist').value,
-                    medic: this.expertForm.get('medic').value,
-                    date: this.expertForm.get('expertDate').value,
-                    comment: this.expertForm.get('commentExperts').value,
-                    number: this.expertForm.get('comiteeNr').value,
-                    decisionChairman: this.expertForm.get('decisionChairman').value,
-                    decisionFarmacolog: this.expertForm.get('decisionFarmacolog').value,
-                    decisionFarmacist: this.expertForm.get('decisionFarmacist').value,
-                    decisionMedic: this.expertForm.get('decisionMedic').value
-                };
 
                 this.subscriptions.push(this.requestService.addMediacmentPostauthorizationHistoryOnInterruption(modelToSubmit).subscribe(data => {
                         this.loadingService.hide();
@@ -546,7 +522,7 @@ export class ExpertiModifyComponent implements OnInit {
     checkOutputDocumentsStatus() {
         for (const entry of this.outputDocuments) {
             const isMatch = this.documents.some(elem => {
-                return (elem.docType.category == entry.docType.category && elem.number == entry.number) ? true : false;
+                return (elem.docType.category == entry.docType.category && ((entry.docType.category == 'SL' && elem.number == entry.number) || entry.docType.category != 'SL')) ? true : false;
             });
             if (isMatch) {
                 entry.status = 'Atasat';
@@ -590,7 +566,7 @@ export class ExpertiModifyComponent implements OnInit {
         dialogConfig2.width = '1100px';
 
         dialogConfig2.data = {
-            value: this.medicamentsDetails[0].code
+            value : {code : this.medicamentsDetails[0].code, id : this.medicamentsDetails[0].id}
         };
 
         this.dialog.open(MedicamentDetailsDialogComponent, dialogConfig2);
@@ -598,38 +574,13 @@ export class ExpertiModifyComponent implements OnInit {
 
     dd() {
 
-        if (!this.expertForm.get('chairman').value || !this.expertForm.get('farmacolog').value || !this.expertForm.get('farmacist').value
-            || !this.expertForm.get('medic').value) {
+        if (this.expertList.length == 0) {
             this.errorHandlerService.showError('Membrii comisiei trebuiesc completati.');
             return;
         }
 
-        if (!this.expertForm.get('comiteeNr').value) {
-            this.errorHandlerService.showError('Numarul comisiei trebuie completat.');
-            return;
-        }
-
-        if (!this.expertForm.get('expertDate').value) {
-            this.errorHandlerService.showError('Data comisiei trebuie completata.');
-            return;
-        }
-
         this.modelToSubmit.medicaments = [];
-
-        this.modelToSubmit.medicamentHistory[0].experts = {
-            chairman: this.expertForm.get('chairman').value,
-            farmacolog: this.expertForm.get('farmacolog').value,
-            farmacist: this.expertForm.get('farmacist').value,
-            medic: this.expertForm.get('medic').value,
-            date: this.expertForm.get('expertDate').value,
-            comment: this.expertForm.get('commentExperts').value,
-            number: this.expertForm.get('comiteeNr').value,
-            decisionChairman: this.expertForm.get('decisionChairman').value,
-            decisionFarmacolog: this.expertForm.get('decisionFarmacolog').value,
-            decisionFarmacist: this.expertForm.get('decisionFarmacist').value,
-            decisionMedic: this.expertForm.get('decisionMedic').value
-        };
-
+        this.modelToSubmit.expertList = this.expertList;
         this.modelToSubmit.ddIncluded = true;
 
         const usernameDB = this.authService.getUserName();
@@ -657,12 +608,6 @@ export class ExpertiModifyComponent implements OnInit {
     addToAuthorizationOrder() {
         this.formSubmitted = true;
 
-        if (this.expertForm.get('chairman').invalid || this.expertForm.get('farmacolog').invalid || this.expertForm.get('farmacist').invalid
-            || this.expertForm.get('medic').invalid) {
-            this.errorHandlerService.showError('Membrii comisiei trebuiesc completati.');
-            return;
-        }
-
         if (this.expertForm.invalid) {
             this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
             return;
@@ -672,6 +617,28 @@ export class ExpertiModifyComponent implements OnInit {
         if (!find && this.modelToSubmit.ddIncluded) {
             this.errorHandlerService.showError('Dispozitia de distribuire nu este atasata.');
             return;
+        }
+
+        let sl = this.outputDocuments.find(r => r.docType.category == 'SL');
+        if (sl) {
+            let resp = this.outputDocuments.filter(t => t.docType.category == 'SL').find(r => r.responseReceived != 1);
+            if (resp) {
+                this.errorHandlerService.showError('Exista solicitari de date aditionale fara raspuns primit.');
+                return;
+            }
+        }
+
+        let rl = this.outputDocuments.find(r => r.docType.category == 'RL');
+        if (rl) {
+            if (!this.expertForm.get('labResponse').value) {
+                this.errorHandlerService.showError('Nu a fost primit rezultatul de la laborator.');
+                return;
+            } else if (rl.status != 'Atasat') {
+                this.errorHandlerService.showError('Rezultatul laboratorului nu a fost atasat.');
+                return;
+            } else {
+                rl.responseReceived = this.expertForm.get('labResponse').value;
+            }
         }
 
         this.loadingService.show();
@@ -712,43 +679,31 @@ export class ExpertiModifyComponent implements OnInit {
 
                 x.documents = this.documents;
                 x.outputDocuments = this.outputDocuments.filter(t => t.docType.category != 'MP');
+                x.expertList = this.expertList;
 
                 x.medicamentHistory[0].atcCodeTo = this.expertForm.get('medicament.atcCodeTo').value;
                 x.medicamentHistory[0].approved = false;
-                x.medicamentHistory[0].experts = {
-                        chairman: this.expertForm.get('chairman').value,
-                        farmacolog: this.expertForm.get('farmacolog').value,
-                        farmacist: this.expertForm.get('farmacist').value,
-                        medic: this.expertForm.get('medic').value,
-                        date: this.expertForm.get('expertDate').value,
-                        comment: this.expertForm.get('commentExperts').value,
-                        number: this.expertForm.get('comiteeNr').value,
-                        decisionChairman: this.expertForm.get('decisionChairman').value,
-                        decisionFarmacolog: this.expertForm.get('decisionFarmacolog').value,
-                        decisionFarmacist: this.expertForm.get('decisionFarmacist').value,
-                        decisionMedic: this.expertForm.get('decisionMedic').value
-                    };
 
-                    x.medicamentHistory[0].instructionsHistory = [];
-                    for (const x1 of this.instructions) {
-                        x1.id = null;
-                        x1.type = 'I';
-                        for (const y of x1.divisions) {
-                            const z = Object.assign({}, x1);
-                            z.division = y.description;
-                            x.medicamentHistory[0].instructionsHistory.push(z);
-                        }
+                x.medicamentHistory[0].instructionsHistory = [];
+                for (const x1 of this.instructions) {
+                    x1.id = null;
+                    x1.type = 'I';
+                    for (const y of x1.divisions) {
+                        const z = Object.assign({}, x1);
+                        z.division = y.description;
+                        x.medicamentHistory[0].instructionsHistory.push(z);
                     }
+                }
 
-                    for (const x1 of this.machets) {
-                        x1.id = null;
-                        x1.type = 'M';
-                        for (const y of x1.divisions) {
-                            const z = Object.assign({}, x1);
-                            z.division = y.description;
-                            x.medicamentHistory[0].instructionsHistory.push(z);
-                        }
+                for (const x1 of this.machets) {
+                    x1.id = null;
+                    x1.type = 'M';
+                    for (const y of x1.divisions) {
+                        const z = Object.assign({}, x1);
+                        z.division = y.description;
+                        x.medicamentHistory[0].instructionsHistory.push(z);
                     }
+                }
 
 
                 this.subscriptions.push(this.requestService.addMedicamentHistoryRequest(x).subscribe(data => {
@@ -777,46 +732,23 @@ export class ExpertiModifyComponent implements OnInit {
 
         x.registrationRequestMandatedContacts = this.registrationRequestMandatedContacts;
 
+        let rl = this.outputDocuments.find(r => r.docType.category == 'RL');
+        if (rl) {
+            rl.responseReceived = this.expertForm.get('labResponse').value;
+        }
+
         x.documents = this.documents;
         x.outputDocuments = this.outputDocuments;
 
+        x.medicamentHistory[0].divisionHistory = this.divisions;
+        x.medicamentHistory[0].divisionHistory.forEach(t => {t.instructionsHistory = [];});
+        x.medicamentHistory[0].divisionHistory.forEach(t => {
+            t.instructionsHistory.push.apply(t.instructionsHistory, t.instructions);
+            t.instructionsHistory.push.apply(t.instructionsHistory, t.machets);
+        });
+
         x.medicamentHistory[0].atcCodeTo = this.expertForm.get('medicament.atcCodeTo').value;
-
-        x.medicamentHistory[0].experts = {
-                chairman: this.expertForm.get('chairman').value,
-                farmacolog: this.expertForm.get('farmacolog').value,
-                farmacist: this.expertForm.get('farmacist').value,
-                medic: this.expertForm.get('medic').value,
-                date: this.expertForm.get('expertDate').value,
-                comment: this.expertForm.get('commentExperts').value,
-                number: this.expertForm.get('comiteeNr').value,
-                decisionChairman: this.expertForm.get('decisionChairman').value,
-                decisionFarmacolog: this.expertForm.get('decisionFarmacolog').value,
-                decisionFarmacist: this.expertForm.get('decisionFarmacist').value,
-                decisionMedic: this.expertForm.get('decisionMedic').value,
-                status: this.expertForm.get('statusExperts').value
-            };
-
-        x.medicamentHistory[0].instructionsHistory = [];
-        for (const x1 of this.instructions) {
-            x1.id = null;
-            x1.type = 'I';
-            for (const y of x1.divisions) {
-                const z = Object.assign({}, x1);
-                z.division = y.description;
-                x.medicamentHistory[0].instructionsHistory.push(z);
-            }
-        }
-
-        for (const x1 of this.machets) {
-            x1.id = null;
-            x1.type = 'M';
-            for (const y of x1.divisions) {
-                const z = Object.assign({}, x1);
-                z.division = y.description;
-                x.medicamentHistory[0].instructionsHistory.push(z);
-            }
-        }
+        x.expertList = this.expertList;
 
         this.subscriptions.push(this.requestService.addMedicamentHistoryRequest(x).subscribe(data => {
                 this.loadingService.hide();
@@ -831,6 +763,236 @@ export class ExpertiModifyComponent implements OnInit {
             return s.replace(';,', '; ');
         }
         return '';
+    }
+
+    getConcatenatedDivision() {
+        let concatenatedDivision = '';
+        for (let entry of this.divisions) {
+            if (entry.description && entry.volume && entry.volumeQuantityMeasurement) {
+                concatenatedDivision = concatenatedDivision + entry.description + ' ' + entry.volume + ' ' + entry.volumeQuantityMeasurement.description + '; ';
+            } else if (entry.volume && entry.volumeQuantityMeasurement) {
+                concatenatedDivision = concatenatedDivision + entry.volume + ' ' + entry.volumeQuantityMeasurement.description + '; ';
+            } else {
+                concatenatedDivision = concatenatedDivision + entry.description + '; ';
+            }
+
+        }
+        return concatenatedDivision;
+    }
+
+    removeInstr(event) {
+        for (let div of this.divisions) {
+            if(div.instructions) {
+                div.instructions = div.instructions.filter(t => t.path != event);
+            }
+        }
+        this.displayInstructions();
+    }
+
+    addInstr(event) {
+        this.divisions = event;
+        this.displayInstructions();
+    }
+
+    removeMacheta(event) {
+        for (let div of this.divisions) {
+            if(div.machets) {
+                div.machets = div.machets.filter(t => t.path != event);
+            }
+        }
+        this.displayMachets();
+    }
+
+    addMacheta(event) {
+        this.divisions = event;
+        this.displayMachets();
+    }
+
+    addExpert() {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.width = '600px';
+
+        dialogConfig2.data = {type: 'add'};
+
+        let dialogRef = this.dialog.open(AddExpertComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+                if (result && result.response) {
+                    this.expertList.push(result);
+                }
+            }
+        );
+    }
+
+    editExpert(expert: any, index: number) {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.width = '600px';
+        dialogConfig2.data = {type: 'edit', expert: expert};
+
+        let dialogRef = this.dialog.open(AddExpertComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result && result.response) {
+                this.expertList[index] = result;
+            }
+        });
+    }
+
+    removeExpert(index: number) {
+
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {message: 'Sunteti sigur ca doriti sa stergeti aceasta expert?', confirm: false}
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.expertList.splice(index, 1);
+            }
+        });
+    }
+
+    isDisabledLabButton(): boolean {
+        return this.outputDocuments.some(elem => {
+            return elem.docType.category == 'RL' ? true : false;
+        });
+    }
+
+    requestAdditionalData() {
+
+        if (this.expertList.length == 0) {
+            this.errorHandlerService.showError('Membrii comisiei trebuiesc completati.');
+            return;
+        }
+
+        var lenOutDoc = this.outputDocuments.filter(r => r.docType.category === 'SL').length;
+
+        let x = this.expertForm.get('medicament.commercialNameTo').value + ', ' + this.expertForm.get('medicament.pharmaceuticalFormTo').value.description
+            + ' ' + this.expertForm.get('medicament.doseTo').value;
+        x = x + this.getConcatenatedDivision();
+        x = x + '(DCI:' + this.expertForm.get('medicament.internationalMedicamentNameTo').value.description + '), producători: ';
+        this.manufacturesTable.forEach(elem => x = x + ' ' + elem.manufacture.description + ',' + elem.manufacture.country.description + ',' + elem.manufacture.address);
+
+        let y = '';
+        for (let exp of this.expertList) {
+            if (!exp.requestAdditionalDataNumber) {
+                y = y + '\r\n\t' + (exp.expert ? exp.expert.name : exp.expertName) + '. Decizie: ' + exp.decision;
+            }
+        }
+        if (y == '') {
+            this.errorHandlerService.showError('Deciziile expertilor au fost deja incluse in scrisoarea de solicitare date aditionale.');
+            return;
+        }
+
+        const dialogRef2 = this.dialogConfirmation.open(RequestAdditionalDataDialogComponent, {
+            width: '1000px',
+            height: '800px',
+            data: {
+                requestNumber: this.expertForm.get('requestNumber').value,
+                requestId: this.expertForm.get('id').value,
+                modalType: 'REQUEST_ADDITIONAL_DATA',
+                startDate: this.expertForm.get('data').value,
+                nrOrdDoc: lenOutDoc + 1,
+                medicamentStr: x,
+                expertStr: y,
+                companyName: this.expertForm.get('company').value.name,
+                address: this.expertForm.get('company').value.legalAddress,
+                registrationRequestMandatedContact: this.registrationRequestMandatedContacts[0]
+            },
+            hasBackdrop: false
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result.success) {
+                this.modelToSubmit.outputDocuments = Object.assign([], this.outputDocuments);
+                this.modelToSubmit.outputDocuments.push(result);
+                for (let exp of this.expertList) {
+                    if (!exp.requestAdditionalDataNumber) {
+                        exp.requestAdditionalDataNumber = result.number;
+                    }
+                }
+                this.modelToSubmit.expertList = this.expertList;
+                this.modelToSubmit.medicaments = [];
+                this.subscriptions.push(this.requestService.addMedicamentRequest(this.modelToSubmit).subscribe(data => {
+                        this.outputDocuments = data.body.outputDocuments;
+                        this.checkOutputDocumentsStatus();
+                    }, error => console.log(error))
+                );
+            }
+        });
+    }
+
+    requestLaboratoryAnalysis() {
+
+        this.outputDocuments.push({
+            name: 'Solicitare desfasurare analize de laborator',
+            docType: this.docTypes.find(r => r.category == 'RL'),
+            status: 'Nu este atasat',
+            date: new Date()
+        });
+        this.modelToSubmit.outputDocuments = this.outputDocuments;
+        this.modelToSubmit.medicaments = [];
+        this.subscriptions.push(this.requestService.addMedicamentRequest(this.modelToSubmit).subscribe(data => {
+                this.outputDocuments = data.body.outputDocuments;
+                this.checkOutputDocumentsStatus();
+            }, error => console.log(error))
+        );
+
+    }
+
+    checkResponseReceived(doc: any, value: any) {
+        if (value.checked) {
+            doc.responseReceived = 1;
+        } else {
+            doc.responseReceived = 0;
+        }
+    }
+
+    remove(doc: any) {
+        const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur(a)?',
+                confirm: false
+            }
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result) {
+                this.loadingService.show();
+                this.modelToSubmit.outputDocuments = Object.assign([], this.outputDocuments);
+                this.modelToSubmit.outputDocuments.forEach((item, index) => {
+                    if (item === doc) this.modelToSubmit.outputDocuments.splice(index, 1);
+                });
+
+                if (doc.docType.category == 'SL') {
+                    for (let exp of this.expertList) {
+                        if (exp.requestAdditionalDataNumber == doc.number) {
+                            exp.requestAdditionalDataNumber = '';
+                        }
+                    }
+                    this.modelToSubmit.expertList = this.expertList;
+                }
+
+                this.subscriptions.push(this.requestService.addMedicamentRequest(this.modelToSubmit).subscribe(data => {
+                        this.outputDocuments = data.body.outputDocuments;
+                        this.checkOutputDocumentsStatus();
+                        if (doc.docType.category == 'RL') {
+                            this.expertForm.get('labResponse').setValue(null);
+                        }
+                        this.loadingService.hide();
+                    }, error => this.loadingService.hide())
+                );
+            }
+        });
     }
 
 }

@@ -1,6 +1,6 @@
-import {Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild, } from '@angular/core';
+import {Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild,} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {Subscription} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import {Document} from '../../../models/document';
 import {MatDialog, MatTabGroup} from '@angular/material';
 import {saveAs} from 'file-saver';
@@ -36,8 +36,10 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
       @ViewChild('tabGroup') private tabGroup: MatTabGroup;
       startRecDate: Date = new Date();
 
+
     tabs = ['Medicamentul 1'];
     selected = new FormControl(0);
+
 
     /*mandatoryDocuments: any[] = [{
         description: 'Cerere',
@@ -202,8 +204,8 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
     commonDocumentAdded($event) {
     }
 
-
     nextStep() {
+
         this.loadingService.show();
         this.formSubmitted = true;
 

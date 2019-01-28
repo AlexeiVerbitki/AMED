@@ -24,7 +24,6 @@ export class CPCADTaskComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     medLoading = false;
-    selectedMedicament: any;
     companies: Observable<any[]>;
     filteredOptions: Observable<any[]>;
     disabled: boolean;
@@ -86,7 +85,6 @@ export class CPCADTaskComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.setSelectedCompany();
         this.populateSelectedSubstances();
-        this.setSelectedMedicament();
         this.subscriptions.push(this.drugDecisionsService.getDrugDecisionsByFilter(this.taskForm.value).subscribe(data => {
             this.dataSource.data = data.body;
         }));
@@ -135,16 +133,6 @@ export class CPCADTaskComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         } else {
             this.taskForm.get('drugSubstanceTypesId').setValue(null);
-        }
-    }
-
-    setSelectedMedicament() {
-
-        if (this.taskForm.get('selectedMedicament').value) {
-            const selectedMedicament = this.taskForm.get('selectedMedicament').value;
-            this.taskForm.get('medicamentId').setValue(selectedMedicament.id);
-        } else {
-            this.taskForm.get('medicamentId').setValue(null);
         }
     }
 

@@ -1,10 +1,10 @@
-import { Subscription } from 'rxjs';
-import { FormControl } from '@angular/forms';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatTableDataSource } from '@angular/material';
-import { NavbarTitleService } from '../../../shared/service/navbar-title.service';
-import { NomenclatorService } from '../../../shared/service/nomenclator.service';
-import { LoaderService } from '../../../shared/service/loader.service';
+import {Subscription} from 'rxjs';
+import {FormControl} from '@angular/forms';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {MatPaginator, MatTableDataSource} from '@angular/material';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {NomenclatorService} from '../../../shared/service/nomenclator.service';
+import {LoaderService} from '../../../shared/service/loader.service';
 
 @Component({
     selector: 'app-clasify-drugs',
@@ -12,7 +12,7 @@ import { LoaderService } from '../../../shared/service/loader.service';
     styleUrls: ['../nomenclator.component.css']
 })
 
-export class ClasifyDrugsComponent implements OnInit, OnDestroy {
+export class ClasifyDrugsComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     codMedicamentFilter = new FormControl('');
     codVamalFilter = new FormControl('');
@@ -30,23 +30,19 @@ export class ClasifyDrugsComponent implements OnInit, OnDestroy {
     termenulDeValabilitateFilter = new FormControl('');
     codulDeBareFilter = new FormControl('');
     dataSource = new MatTableDataSource();
-    columnsToDisplay = ['codMedicament', 'codVamal', 'denumireComerciala', 'formaFarmaceutica', 'dozaConcentratia', 'volum', 'divizarea', 'tara',
-        'firmaProducatoare', 'nrDeInregistrare', 'dataDeInregistrare', 'codulATC', 'denumireaComunaInternationala', 'termenulDeValabilitate',
-        'codulDeBare'];
+    columnsToDisplay = ['codMedicament', 'codVamal', 'denumireComerciala', 'formaFarmaceutica', 'dozaConcentratia', 'volum', 'divizarea', 'tara', 'firmaProducatoare',
+        'nrDeInregistrare', 'dataDeInregistrare', 'codulATC', 'denumireaComunaInternationala', 'termenulDeValabilitate', 'codulDeBare'];
 
     private subscriptions: Subscription[] = [];
 
-    constructor(private navbarTitleService: NavbarTitleService,
-        private nomenclatorService: NomenclatorService,
-        private loadingService: LoaderService) {
+    constructor(private navbarTitleService: NavbarTitleService, private nomenclatorService: NomenclatorService, private loadingService: LoaderService) {
 
     }
 
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
 
-        this.dataSource.filterPredicate = (value: string, filter: string) => JSON.stringify(value).toLowerCase().trim().includes(
-            filter.toString().toLowerCase().trim());
+        this.dataSource.filterPredicate = (value: string, filter: string) => JSON.stringify(value).toLowerCase().trim().includes(filter.toString().toLowerCase().trim());
     }
 
     ngOnDestroy(): void {
@@ -56,106 +52,77 @@ export class ClasifyDrugsComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
 
-        this.navbarTitleService.showTitleMsg('Clasificatorul medicamentului');
-        this.loadingService.show();
+        this.navbarTitleService.showTitleMsg('Nomenclator');
+        //this.loadingService.show();
 
-        this.subscriptions.push(this.nomenclatorService.getAllMedicaments().subscribe(data => {
-            this.loadingService.hide();
-            this.dataSource.data = data;
-        },
-            error => {
-                console.log('error => ', error);
-                this.loadingService.hide();
-            }
-        ));
+        //this.subscriptions.push(this.nomenclatorService.getMedicamentClassifier().subscribe(data => {
+        //this.loadingService.hide();
+        //this.dataSource.data = data;
+        //     console.log(data);
+        // }, error => {
+        //      console.log('error => ', error);
+        //      this.loadingService.hide();
+        // }));
 
 
         // this.dataSource.data = this.clasifyDrugsTable;
 
         this.subscriptions.push(this.codMedicamentFilter.valueChanges
-            .subscribe(
-                codMedicament => {
-                    this.filterTable(codMedicament);
-                }
-            ));
+            .subscribe(codMedicament => {
+                this.filterTable(codMedicament);
+            }));
         this.subscriptions.push(this.codVamalFilter.valueChanges
-            .subscribe(
-                codVamal => {
-                    this.filterTable(codVamal);
-                }
-            ));
+            .subscribe(codVamal => {
+                this.filterTable(codVamal);
+            }));
         this.subscriptions.push(this.denumireComercialaFilter.valueChanges
-            .subscribe(
-                denumireComerciala => {
-                    this.filterTable(denumireComerciala);
-                }
-            ));
+            .subscribe(denumireComerciala => {
+                this.filterTable(denumireComerciala);
+            }));
         this.subscriptions.push(this.formaFarmaceuticaFilter.valueChanges
-            .subscribe(
-                formaFarmaceutica => {
-                    this.filterTable(formaFarmaceutica);
-                }
-            ));
+            .subscribe(formaFarmaceutica => {
+                this.filterTable(formaFarmaceutica);
+            }));
         this.subscriptions.push(this.dozaConcentratiaFilter.valueChanges
-            .subscribe(
-                dozaConcentratia => {
-                    this.filterTable(dozaConcentratia);
-                }
-            ));
+            .subscribe(dozaConcentratia => {
+                this.filterTable(dozaConcentratia);
+            }));
         this.subscriptions.push(this.volumFilter.valueChanges
-            .subscribe(
-                volum => {
-                    this.filterTable(volum);
-                }
-            ));
+            .subscribe(volum => {
+                this.filterTable(volum);
+            }));
         this.subscriptions.push(this.divizareaFilter.valueChanges
-            .subscribe(
-                divizarea => {
-                    this.filterTable(divizarea);
-                }
-            ));
+            .subscribe(divizarea => {
+                this.filterTable(divizarea);
+            }));
         this.subscriptions.push(this.taraFilter.valueChanges
-            .subscribe(
-                tara => {
-                    this.filterTable(tara);
-                }
-            ));
+            .subscribe(tara => {
+                this.filterTable(tara);
+            }));
         this.subscriptions.push(this.firmaProducatoareFilter.valueChanges
-            .subscribe(
-                firmaProducatoare => {
-                    this.filterTable(firmaProducatoare);
-                }
-            ));
+            .subscribe(firmaProducatoare => {
+                this.filterTable(firmaProducatoare);
+            }));
         this.subscriptions.push(this.nrDeInregistrareFilter.valueChanges
-            .subscribe(
-                nrDeInregistrare => {
-                    this.filterTable(nrDeInregistrare);
-                }
-            ));
+            .subscribe(nrDeInregistrare => {
+                this.filterTable(nrDeInregistrare);
+            }));
         this.subscriptions.push(this.dataDeInregistrareFilter.valueChanges
-            .subscribe(
-                dataDeInregistrare => {
-                    this.filterTable(dataDeInregistrare);
-                }
-            ));
+            .subscribe(dataDeInregistrare => {
+                this.filterTable(dataDeInregistrare);
+            }));
         this.subscriptions.push(this.codulATCFilter.valueChanges
-            .subscribe(
-                codulATC => {
-                    this.filterTable(codulATC);
-                }
-            ));
+            .subscribe(codulATC => {
+                this.filterTable(codulATC);
+            }));
         this.subscriptions.push(this.denumireaComunaInternationalaFilter.valueChanges
-            .subscribe(
-                denumireaComunaInternationala => {
-                    this.filterTable(denumireaComunaInternationala);
-                }
-            ));
+            .subscribe(denumireaComunaInternationala => {
+                this.filterTable(denumireaComunaInternationala);
+            }));
         this.subscriptions.push(this.termenulDeValabilitateFilter.valueChanges
-            .subscribe(
-                termenulDeValabilitate => {
-                    this.filterTable(termenulDeValabilitate);
-                }
-            ));
+            .subscribe(termenulDeValabilitate => {
+                this.filterTable(termenulDeValabilitate);
+            }));
     }
 
     filterTable(element: string) {

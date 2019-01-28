@@ -7,6 +7,7 @@ import {DocumentService} from '../../../../shared/service/document.service';
 import {AuthService} from '../../../../shared/service/authetication.service';
 import {ConfirmationDialogComponent} from '../../../../dialog/confirmation-dialog.component';
 import {LoaderService} from '../../../../shared/service/loader.service';
+import {Observable} from "rxjs/internal/Observable";
 
 @Component({
     selector: 'app-additional-data-dialog',
@@ -20,6 +21,7 @@ export class AdditionalDataDialogComponent implements OnInit {
     docTypes: any[];
     docTypeRA: any[];
     title = 'Detalii scrisoare de solicitare date aditionale';
+    functions: any[];
 
     constructor(private fb: FormBuilder,
                 private administrationService: AdministrationService,
@@ -37,9 +39,10 @@ export class AdditionalDataDialogComponent implements OnInit {
         this.reqForm = this.fb.group({
             'data': {disabled: true, value: new Date()},
             'docNumber': {disabled: true, value: this.dataDialog.requestNumber},
-            'title': [null, Validators.required],
+            // 'title': [null, Validators.required],
             'content': [null, Validators.required],
-            'email': [null, [Validators.required, Validators.email]]
+            'email': [null, [Validators.required, Validators.email]],
+            'function': [null, Validators.required]
         });
 
         console.log('dataDialog', this.dataDialog);
@@ -48,6 +51,15 @@ export class AdditionalDataDialogComponent implements OnInit {
             this.administrationService.getAllDocTypes().subscribe(data => {
                     this.docTypes = data;
                     this.docTypeRA = this.docTypes.filter(r => r.category == 'RA');
+                },
+                error => console.log(error)
+            )
+        );
+
+        this.subscriptions.push(
+            this.administrationService.getAllSysParams().subscribe(data => {
+                    this.functions = data;
+                    this.functions = this.functions.filter(t=> t.code.startsWith('FN'));
                 },
                 error => console.log(error)
             )
@@ -93,7 +105,7 @@ export class AdditionalDataDialogComponent implements OnInit {
 
     ok() {
         this.isRegisterDoc = true;
-        if (this.reqForm.get('title').invalid || this.reqForm.get('content').invalid) {
+        if (this.reqForm.get('content').invalid || this.reqForm.get('function').invalid) {
             return;
         }
         this.isRegisterDoc = false;
@@ -110,10 +122,10 @@ export class AdditionalDataDialogComponent implements OnInit {
                     docType: this.docTypeRA[0],
                     status: 'Nu este atasat',
                     number: this.reqForm.get('docNumber').value,
-                    title: this.reqForm.get('title').value,
                     content: this.reqForm.get('content').value,
                     date: new Date(),
-                    responseReceived : false
+                    responseReceived : false,
+                    signer: this.reqForm.get('function').value
                 };
                 break;
             }
@@ -145,14 +157,14 @@ export class AdditionalDataDialogComponent implements OnInit {
 
         dialogRef2.afterClosed().subscribe(result => {
             if (result) {
-                this.dialogRef.close({success: false});
+                this.dialogRef.close();
             }
         });
     }
 
     view() {
         this.isRegisterDoc = true;
-        if (this.reqForm.get('title').invalid || this.reqForm.get('content').invalid) {
+        if (this.reqForm.get('content').invalid || this.reqForm.get('function').invalid) {
             return;
         }
         this.isRegisterDoc = false;
@@ -169,12 +181,29 @@ export class AdditionalDataDialogComponent implements OnInit {
                 break;
             }
         }
-        this.subscriptions.push(this.documentService.viewRequest(this.reqForm.get('docNumber').value,
-            this.reqForm.get('content').value,
-            this.reqForm.get('title').value,
-            docType).subscribe(data => {
-                const file = new Blob([data], {type: 'application/pdf'});
-                const fileURL = URL.createObjectURL(file);
+        console.log('this.dataDialog', this.dataDialog);
+
+        let modelToSubmit = {
+            nrDoc : this.reqForm.get('docNumber').value,
+            responsiblePerson : this.dataDialog.registrationRequestMandatedContacts.mandatedLastname+' '+this.dataDialog.registrationRequestMandatedContacts.mandatedFirstname,
+            companyName : this.dataDialog.company.name,
+            requestDate: new Date(),country : 'Moldova',
+            address : this.dataDialog.company.legalAddress,
+            phoneNumber : this.dataDialog.registrationRequestMandatedContacts.phoneNumber,
+            email : this.dataDialog.registrationRequestMandatedContacts.email,
+            message : this.reqForm.get('content').value,
+            function : this.reqForm.get('function').value.description,
+            signerName : this.reqForm.get('function').value.value
+        };
+        
+        console.log('modelToSubmit', modelToSubmit);
+
+        let observable : Observable<any> = null;
+        observable = this.documentService.viewRequestNew(modelToSubmit);
+
+        this.subscriptions.push(observable.subscribe(data => {
+                let file = new Blob([data], {type: 'application/pdf'});
+                var fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
                 this.loadingService.hide();
             }, error => {

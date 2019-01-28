@@ -16,7 +16,7 @@ import {SelectIssueDateDialogComponent} from '../../../dialog/select-issue-date-
 })
 export class DdListComponent implements OnInit {
 
-    displayedColumns: any[] = ['number', 'date','dateOfIssue', 'name', 'status', 'actions'];
+    displayedColumns: any[] = ['number', 'date', 'dateOfIssue', 'name', 'status', 'actions'];
     dataSource = new MatTableDataSource<any>();
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -68,9 +68,9 @@ export class DdListComponent implements OnInit {
 
         dialogConfig2.width = '400px';
 
-        dialogConfig2.data = {document : element,type : 'DD'};
+        dialogConfig2.data = {document : element, type : 'DD'};
 
-        let dialogRef = this.dialog.open(SelectIssueDateDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(SelectIssueDateDialogComponent, dialogConfig2);
         dialogRef.afterClosed().subscribe(result => {
             this.ddListModified.emit(true);
             this.loadDDs();

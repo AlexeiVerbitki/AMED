@@ -274,8 +274,8 @@ export class PaymentComponent implements OnInit {
             } else {
 
                 if (this.checkProducator) {
-                    if ((!this.requestDet.medicament.commercialName &&
-                        !this.requestDet.medicament.pharmaceuticalForm && !this.requestDet.medicament.pharmaceuticalFormTo) ||
+                    if ((!this.requestDet.medicament.commercialName && !this.requestDet.medicament.commercialNameTo) ||
+                        (!this.requestDet.medicament.pharmaceuticalForm && !this.requestDet.medicament.pharmaceuticalFormTo) ||
                         (!this.requestDet.medicament.dose && !this.requestDet.medicament.doseTo) ||
                         !this.requestDet.divisionBonDePlata) {
                         this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
@@ -311,7 +311,16 @@ export class PaymentComponent implements OnInit {
                 return;
             }
             observable = this.documentService.viewBonDePlataNimicire(this.requestNimicire);
-        } else {
+        }
+        else if (this.process && (this.process === 'LICENTA' || this.process === 'CPCD')) {
+            console.log('gdfg', this.bonDePlataList);
+            const modelToSubmit = {
+                requestId: this.requestIdP,
+                paymentOrders: this.bonDePlataList,
+            };
+            observable = this.documentService.viewBonDePlataComun(modelToSubmit);
+        }
+        else {
             let pharmaceuticForm = '';
             if (this.requestDet.medicament.pharmaceuticalForm) {
                 pharmaceuticForm = this.requestDet.medicament.pharmaceuticalForm.description;
@@ -324,6 +333,12 @@ export class PaymentComponent implements OnInit {
             } else {
                 dose = this.requestDet.medicament.doseTo;
             }
+            let commercialName = '';
+            if (this.requestDet.medicament.commercialName) {
+                commercialName = this.requestDet.medicament.commercialName;
+            } else {
+                commercialName = this.requestDet.medicament.commercialNameTo;
+            }
             const modelToSubmit = {
                 currency: currency,
                 companyName: this.requestDet.company.name,
@@ -333,7 +348,7 @@ export class PaymentComponent implements OnInit {
                 paymentOrders: this.bonDePlataList,
                 medicamentDetails: [{
                     nr: 1,
-                    medicamentName: this.requestDet.medicament.commercialName,
+                    medicamentName: commercialName,
                     pharmaceuticForm: pharmaceuticForm,
                     dose: dose,
                     division: this.requestDet.divisionBonDePlata
@@ -393,40 +408,49 @@ export class PaymentComponent implements OnInit {
 
     generateSingleBonCommonParameters(bonDePlata: any, currency: string) {
         this.loadingService.show();
-        let pharmaceuticForm = '';
-        if (this.requestDet.medicament.pharmaceuticalForm) {
-            pharmaceuticForm = this.requestDet.medicament.pharmaceuticalForm.description;
-        } else {
-            pharmaceuticForm = this.requestDet.medicament.pharmaceuticalFormTo.description;
-        }
-        let dose = '';
-        if (this.requestDet.medicament.dose) {
-            dose = this.requestDet.medicament.dose;
-        } else {
-            dose = this.requestDet.medicament.doseTo;
-        }
-        const modelToSubmit = {
-            currency: currency,
-            companyName: this.requestDet.company.name,
-            companyCountry: 'Republica Moldova',
-            address: this.requestDet.company.legalAddress,
-            requestId: this.requestIdP,
-            paymentOrders: [bonDePlata],
-            medicamentDetails: [{
-                nr: 1,
-                medicamentName: this.requestDet.medicament.commercialName,
-                pharmaceuticForm: pharmaceuticForm,
-                dose: dose,
-                division: this.requestDet.divisionBonDePlata
-            }]
-        };
         let observable;
-        if (bonDePlata.serviceCharge.category != 'BS') {
-            observable = this.documentService.viewBonDePlata(modelToSubmit);
-        } else {
-            observable = this.documentService.viewBonDePlataSuplimentar(modelToSubmit);
+        if (this.process && (this.process === 'LICENTA' || this.process === 'CPCD')) {
+            const modelToSubmit = {
+                requestId: this.requestIdP,
+                paymentOrders: [bonDePlata],
+            };
+            observable = this.documentService.viewBonDePlataComun(modelToSubmit);
         }
+        else {
+            let pharmaceuticForm = '';
+            if (this.requestDet.medicament.pharmaceuticalForm) {
+                pharmaceuticForm = this.requestDet.medicament.pharmaceuticalForm.description;
+            } else {
+                pharmaceuticForm = this.requestDet.medicament.pharmaceuticalFormTo.description;
+            }
+            let dose = '';
+            if (this.requestDet.medicament.dose) {
+                dose = this.requestDet.medicament.dose;
+            } else {
+                dose = this.requestDet.medicament.doseTo;
+            }
+            const modelToSubmit = {
+                currency: currency,
+                companyName: this.requestDet.company.name,
+                companyCountry: 'Republica Moldova',
+                address: this.requestDet.company.legalAddress,
+                requestId: this.requestIdP,
+                paymentOrders: [bonDePlata],
+                medicamentDetails: [{
+                    nr: 1,
+                    medicamentName: this.requestDet.medicament.commercialName,
+                    pharmaceuticForm: pharmaceuticForm,
+                    dose: dose,
+                    division: this.requestDet.divisionBonDePlata
+                }]
+            };
 
+            if (bonDePlata.serviceCharge.category != 'BS') {
+                observable = this.documentService.viewBonDePlata(modelToSubmit);
+            } else {
+                observable = this.documentService.viewBonDePlataSuplimentar(modelToSubmit);
+            }
+        }
 
         this.subscriptions.push(observable.subscribe(data => {
                 const file = new Blob([data], {type: 'application/pdf'});
@@ -463,8 +487,7 @@ export class PaymentComponent implements OnInit {
         }
     }
 
-    getPaymentOrders()
-    {
+    getPaymentOrders() {
         return this.bonDePlataList;
     }
 }

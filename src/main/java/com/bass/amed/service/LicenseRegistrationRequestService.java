@@ -4,10 +4,7 @@ import com.bass.amed.common.Constants;
 import com.bass.amed.dto.license.DiffLicense;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
-import com.bass.amed.repository.EconomicAgentsRepository;
-import com.bass.amed.repository.NmStatesRepository;
-import com.bass.amed.repository.RegistrationRequestPayloadRepository;
-import com.bass.amed.repository.RequestRepository;
+import com.bass.amed.repository.*;
 import com.bass.amed.repository.license.LicenseResolutionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.Hibernate;
@@ -49,6 +46,9 @@ public class LicenseRegistrationRequestService
     @Autowired
     private RegistrationRequestPayloadRepository registrationRequestPayloadRepository;
 
+    @Autowired
+    private AuditLogService auditLogService;
+
     @Transactional(readOnly = true)
     public RegistrationRequestsEntity findLicenseRegistrationById(Integer id, boolean viewCompleted) throws CustomException
     {
@@ -76,7 +76,7 @@ public class LicenseRegistrationRequestService
                 {
                     ece.setLocality(localityService.findLocalityById(ece.getLocality().getId()));
                 }
-                ece.setSelectedPharmaceutist(ece.getAgentPharmaceutist().stream().filter(af -> af.getSelectionDate() != null).max(Comparator.comparing(LicenseAgentPharmaceutistEntity::getSelectionDate)).get());
+                ece.setSelectedPharmaceutist(ece.getAgentPharmaceutist().stream().filter(af -> af.getSelectionDate() != null).max(Comparator.comparing(LicenseAgentPharmaceutistEntity::getSelectionDate)).orElse(null));
             }
         }
 
@@ -297,13 +297,6 @@ public class LicenseRegistrationRequestService
                 em.merge(ec);
             }
 
-//            //License
-//            LicensesEntity lEntity = em.find(LicensesEntity.class, request.getLicense().getId());
-//
-//            r.getLicense().getEconomicAgents().clear();
-//            r.getLicense().getEconomicAgents().addAll(request.getLicense().getEconomicAgents());
-
-
             //Update documents
             Set<DocumentsEntity> dSet = request.getDocuments().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
 
@@ -455,6 +448,16 @@ public class LicenseRegistrationRequestService
                     em.persist(payload);
                 }
             }
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("Salvare cerere pentru licenta cu scopul ");
+            sb.append(request.getType().getDescription());
+            sb.append(" .Seria si numarul licentei").append(request.getLicense().getSerialNr()).append(", ").append(request.getLicense().getNr());
+
+            StringBuilder sb1 = new StringBuilder("Agentul economic ").append(request.getLicense().getCompanyName()).append(" cu IDNO ").append(request.getLicense().getIdno());
+
+
+            auditLogService.save(new AuditLogEntity().withNewValue(sb.toString()).withCategoryName("MODULE").withSubCategoryName("MODULE_5").withField(sb1.toString()).withAction(Constants.AUDIT_ACTIONS.ADD.name()));
 
             em.getTransaction().commit();
 

@@ -22,15 +22,15 @@ export class InstructionComponent implements OnInit, OnDestroy {
     instructionList: any[];
     divisionList: any[];
     numarCerere: string;
-    isModify : boolean = false;
-    enableUploading: boolean = true;
+    isModify = false;
+    enableUploading = true;
     private subscriptions: Subscription[] = [];
     @Output() removeInstr = new EventEmitter();
     @Output() addInstr = new EventEmitter();
 
     constructor(public dialog: MatDialog,
                 private errorHandlerService: ErrorHandlerService,
-                private uploadService : UploadFileService) {
+                private uploadService: UploadFileService) {
     }
 
     get canUpload(): boolean {
@@ -88,7 +88,7 @@ export class InstructionComponent implements OnInit, OnDestroy {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                let path = this.instructions[index].path;
+                const path = this.instructions[index].path;
                 this.subscriptions.push(this.uploadService.removeFileFromStorage(path).subscribe(data => {
                         this.instructions.splice(index, 1);
                         this.removeInstr.emit(path);
@@ -102,11 +102,10 @@ export class InstructionComponent implements OnInit, OnDestroy {
         });
     }
 
-    viewFile(instruction: any)
-    {
+    viewFile(instruction: any) {
             this.subscriptions.push(this.uploadService.loadFile(instruction.path).subscribe(data => {
-                    let file = new Blob([data], {type: instruction.typeDoc});
-                    var fileURL = URL.createObjectURL(file);
+                    const file = new Blob([data], {type: instruction.typeDoc});
+                    const fileURL = URL.createObjectURL(file);
                     window.open(fileURL);
                 },
                 error => {
@@ -122,8 +121,7 @@ export class InstructionComponent implements OnInit, OnDestroy {
 
     checkFields(): boolean {
 
-        if(this.divisions.length==0)
-        {
+        if (this.divisions.length == 0) {
             this.errorHandlerService.showError('Nici o divizare nu a fost introdusa.');
             return false;
         }
@@ -135,10 +133,10 @@ export class InstructionComponent implements OnInit, OnDestroy {
 
         dialogConfig2.width = '600px';
 
-        this.divisions.forEach(t=>t.include=false);
-        dialogConfig2.data = {type: 'add',values: this.divisions, fieldName : "instr", instructions : this.instructions, numarCerere : this.numarCerere};
+        this.divisions.forEach(t => t.include = false);
+        dialogConfig2.data = {type: 'add', values: this.divisions, fieldName : 'instr', instructions : this.instructions, numarCerere : this.numarCerere};
 
-        let dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.response) {
@@ -147,8 +145,7 @@ export class InstructionComponent implements OnInit, OnDestroy {
         });
     }
 
-    edit(instruction : any)
-    {
+    edit(instruction: any) {
         const dialogConfig2 = new MatDialogConfig();
 
         dialogConfig2.disableClose = false;
@@ -157,21 +154,17 @@ export class InstructionComponent implements OnInit, OnDestroy {
 
         dialogConfig2.width = '600px';
 
-        for(let div of this.divisions)
-        {
-            if(div.instructions.find(t=>t.path==instruction.path))
-            {
+        for (const div of this.divisions) {
+            if (div.instructions.find(t => t.path == instruction.path)) {
                 div.include = true;
-            }
-            else
-            {
+            } else {
                 div.include = false;
             }
         }
 
-        dialogConfig2.data = {type: 'edit', values: this.divisions,value: instruction, fieldName : "instr", instructions : this.instructions, numarCerere : this.numarCerere};
+        dialogConfig2.data = {type: 'edit', values: this.divisions, value: instruction, fieldName : 'instr', instructions : this.instructions, numarCerere : this.numarCerere};
 
-        let dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.response) {
@@ -180,20 +173,14 @@ export class InstructionComponent implements OnInit, OnDestroy {
         });
     }
 
-    getConcatenatedDivision(divisions : any[])
-    {
+    getConcatenatedDivision(divisions: any[]) {
         let concatenatedDivision = '';
-        for (let entry of divisions) {
-            if(entry.description && entry.volume && entry.volumeQuantityMeasurement)
-            {
-                concatenatedDivision = concatenatedDivision + entry.description +' '+ entry.volume+' '+entry.volumeQuantityMeasurement.description+ '; ';
-            }
-            else if(entry.volume && entry.volumeQuantityMeasurement)
-            {
-                concatenatedDivision = concatenatedDivision + entry.volume+' '+entry.volumeQuantityMeasurement.description + '; ';
-            }
-            else
-            {
+        for (const entry of divisions) {
+            if (entry.description && entry.volume && entry.volumeQuantityMeasurement) {
+                concatenatedDivision = concatenatedDivision + entry.description + ' ' + entry.volume + ' ' + entry.volumeQuantityMeasurement.description + '; ';
+            } else if (entry.volume && entry.volumeQuantityMeasurement) {
+                concatenatedDivision = concatenatedDivision + entry.volume + ' ' + entry.volumeQuantityMeasurement.description + '; ';
+            } else {
                 concatenatedDivision = concatenatedDivision + entry.description + '; ';
             }
 

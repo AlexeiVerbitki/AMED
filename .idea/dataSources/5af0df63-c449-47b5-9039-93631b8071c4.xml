@@ -10030,509 +10030,535 @@ modified price - 3</Comment>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="2018" parent="364" name="medicament_registration_id_uindex">
+    <column id="2018" parent="364" name="expired">
+      <Position>25</Position>
+      <DataType>tinyint(1)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="2019" parent="364" name="critical">
+      <Position>26</Position>
+      <DataType>tinyint(1)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="2020" parent="364" name="expired_date">
+      <Position>27</Position>
+      <DataType>datetime|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="2021" parent="364" name="expired_comment">
+      <Position>28</Position>
+      <DataType>varchar(300)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="2022" parent="364" name="medicament_registration_id_uindex">
       <ColNames>id</ColNames>
       <Unique>1</Unique>
     </index>
-    <index id="2019" parent="364" name="medicament_registration_request_number_uindex">
+    <index id="2023" parent="364" name="medicament_registration_request_number_uindex">
       <ColNames>request_number</ColNames>
       <Unique>1</Unique>
     </index>
-    <index id="2020" parent="364" name="registration_requests_company_id_fk">
+    <index id="2024" parent="364" name="registration_requests_company_id_fk">
       <ColNames>company_id</ColNames>
     </index>
-    <index id="2021" parent="364" name="registration_requests_type_id_fk">
+    <index id="2025" parent="364" name="registration_requests_type_id_fk">
       <ColNames>type_id</ColNames>
     </index>
-    <index id="2022" parent="364" name="registration_requests_import_id_fk">
+    <index id="2026" parent="364" name="registration_requests_import_id_fk">
       <ColNames>import_id</ColNames>
     </index>
-    <index id="2023" parent="364" name="registration_requests_license_id_fk">
+    <index id="2027" parent="364" name="registration_requests_license_id_fk">
       <ColNames>license_id</ColNames>
     </index>
-    <index id="2024" parent="364" name="registration_requests_medicament_annihilation_id_fk">
+    <index id="2028" parent="364" name="registration_requests_medicament_annihilation_id_fk">
       <ColNames>medicament_annihilation_id</ColNames>
     </index>
-    <index id="2025" parent="364" name="registration_requests_clinical_trails_fk">
+    <index id="2029" parent="364" name="registration_requests_clinical_trails_fk">
       <ColNames>clinical_trails_id</ColNames>
     </index>
-    <index id="2026" parent="364" name="registration_requests_prices">
+    <index id="2030" parent="364" name="registration_requests_prices">
       <ColNames>price_id</ColNames>
     </index>
-    <index id="2027" parent="364" name="registration_requests_step_id_fk">
+    <index id="2031" parent="364" name="registration_requests_step_id_fk">
       <ColNames>current_step</ColNames>
     </index>
-    <index id="2028" parent="364" name="registration_requests_invoices_id_fk">
+    <index id="2032" parent="364" name="registration_requests_invoices_id_fk">
       <ColNames>invoice_id</ColNames>
     </index>
-    <key id="2029" parent="364" name="PRIMARY">
+    <key id="2033" parent="364" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="2030" parent="364" name="medicament_registration_id_uindex">
+    <key id="2034" parent="364" name="medicament_registration_id_uindex">
       <ColNames>id</ColNames>
       <UnderlyingIndexName>medicament_registration_id_uindex</UnderlyingIndexName>
     </key>
-    <key id="2031" parent="364" name="medicament_registration_request_number_uindex">
+    <key id="2035" parent="364" name="medicament_registration_request_number_uindex">
       <ColNames>request_number</ColNames>
       <UnderlyingIndexName>medicament_registration_request_number_uindex</UnderlyingIndexName>
     </key>
-    <foreign-key id="2032" parent="364" name="registration_requests_company_id_fk">
+    <foreign-key id="2036" parent="364" name="registration_requests_company_id_fk">
       <ColNames>company_id</ColNames>
       <RefSchemaName>amed</RefSchemaName>
       <RefTableName>nm_economic_agents</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="2033" parent="364" name="registration_requests_type_id_fk">
+    <foreign-key id="2037" parent="364" name="registration_requests_type_id_fk">
       <ColNames>type_id</ColNames>
       <RefSchemaName>amed</RefSchemaName>
       <RefTableName>request_types</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="2034" parent="364" name="registration_requests_import_id_fk">
+    <foreign-key id="2038" parent="364" name="registration_requests_import_id_fk">
       <ColNames>import_id</ColNames>
       <RefSchemaName>amed</RefSchemaName>
       <RefTableName>import_authorization</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="2035" parent="364" name="registration_requests_license_id_fk">
+    <foreign-key id="2039" parent="364" name="registration_requests_license_id_fk">
       <ColNames>license_id</ColNames>
       <RefSchemaName>amed</RefSchemaName>
       <RefTableName>licenses</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="2036" parent="364" name="registration_requests_medicament_annihilation_id_fk">
+    <foreign-key id="2040" parent="364" name="registration_requests_medicament_annihilation_id_fk">
       <ColNames>medicament_annihilation_id</ColNames>
       <RefSchemaName>amed</RefSchemaName>
       <RefTableName>medicament_annihilation</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="2037" parent="364" name="registration_requests_clinical_trails_fk">
+    <foreign-key id="2041" parent="364" name="registration_requests_clinical_trails_fk">
       <ColNames>clinical_trails_id</ColNames>
       <RefSchemaName>amed</RefSchemaName>
       <RefTableName>clinical_trials</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="2038" parent="364" name="registration_requests_prices">
+    <foreign-key id="2042" parent="364" name="registration_requests_prices">
       <ColNames>price_id</ColNames>
       <RefSchemaName>amed</RefSchemaName>
       <RefTableName>prices</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="2039" parent="364" name="registration_requests_invoices_id_fk">
+    <foreign-key id="2043" parent="364" name="registration_requests_invoices_id_fk">
       <ColNames>invoice_id</ColNames>
       <RefSchemaName>amed</RefSchemaName>
       <RefTableName>invoices</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="2040" parent="365" name="id">
+    <column id="2044" parent="365" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2041" parent="365" name="description">
+    <column id="2045" parent="365" name="description">
       <Position>2</Position>
       <DataType>varchar(100)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2042" parent="365" name="code">
+    <column id="2046" parent="365" name="code">
       <Position>3</Position>
       <Comment>Cod unic pentru fiecare optiune din fiecare modul.</Comment>
       <DataType>varchar(5)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2043" parent="365" name="process_id">
+    <column id="2047" parent="365" name="process_id">
       <Position>4</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="2044" parent="365" name="request_types_id_uindex">
+    <index id="2048" parent="365" name="request_types_id_uindex">
       <ColNames>id</ColNames>
       <Unique>1</Unique>
     </index>
-    <index id="2045" parent="365" name="request_types_code_uindex">
+    <index id="2049" parent="365" name="request_types_code_uindex">
       <ColNames>code</ColNames>
       <Unique>1</Unique>
     </index>
-    <index id="2046" parent="365" name="request_types_process_names_id_fk">
+    <index id="2050" parent="365" name="request_types_process_names_id_fk">
       <ColNames>process_id</ColNames>
     </index>
-    <key id="2047" parent="365" name="PRIMARY">
+    <key id="2051" parent="365" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="2048" parent="365" name="request_types_id_uindex">
+    <key id="2052" parent="365" name="request_types_id_uindex">
       <ColNames>id</ColNames>
       <UnderlyingIndexName>request_types_id_uindex</UnderlyingIndexName>
     </key>
-    <key id="2049" parent="365" name="request_types_code_uindex">
+    <key id="2053" parent="365" name="request_types_code_uindex">
       <ColNames>code</ColNames>
       <UnderlyingIndexName>request_types_code_uindex</UnderlyingIndexName>
     </key>
-    <foreign-key id="2050" parent="365" name="request_types_process_names_id_fk">
+    <foreign-key id="2054" parent="365" name="request_types_process_names_id_fk">
       <ColNames>process_id</ColNames>
       <RefSchemaName>amed</RefSchemaName>
       <RefTableName>process_names</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="2051" parent="366" name="id">
+    <column id="2055" parent="366" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2052" parent="366" name="variation_id">
+    <column id="2056" parent="366" name="variation_id">
       <Position>2</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2053" parent="366" name="request_id">
+    <column id="2057" parent="366" name="request_id">
       <Position>3</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="2054" parent="366" name="PRIMARY">
+    <column id="2058" parent="366" name="value">
+      <Position>4</Position>
+      <DataType>varchar(10)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <key id="2059" parent="366" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="2055" parent="367" name="role_id">
+    <column id="2060" parent="367" name="role_id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2056" parent="367" name="authority_id">
+    <column id="2061" parent="367" name="authority_id">
       <Position>2</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="2057" parent="367" name="role_authority_role_id_fk">
+    <index id="2062" parent="367" name="role_authority_role_id_fk">
       <ColNames>role_id</ColNames>
     </index>
-    <index id="2058" parent="367" name="role_authority_authority_id_fk">
+    <index id="2063" parent="367" name="role_authority_authority_id_fk">
       <ColNames>authority_id</ColNames>
     </index>
-    <foreign-key id="2059" parent="367" name="role_authority_role_id_fk">
+    <foreign-key id="2064" parent="367" name="role_authority_role_id_fk">
       <ColNames>role_id</ColNames>
       <RefSchemaName>amed</RefSchemaName>
       <RefTableName>scr_role</RefTableName>
       <RefColNames>id</RefColNames>
       <OnUpdate>cascade</OnUpdate>
     </foreign-key>
-    <foreign-key id="2060" parent="367" name="role_authority_authority_id_fk">
+    <foreign-key id="2065" parent="367" name="role_authority_authority_id_fk">
       <ColNames>authority_id</ColNames>
       <RefSchemaName>amed</RefSchemaName>
       <RefTableName>scr_authority</RefTableName>
       <RefColNames>id</RefColNames>
       <OnUpdate>cascade</OnUpdate>
     </foreign-key>
-    <column id="2061" parent="368" name="id">
+    <column id="2066" parent="368" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2062" parent="368" name="medicament_id">
+    <column id="2067" parent="368" name="medicament_id">
       <Position>2</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2063" parent="368" name="distribution_mandate_nr">
+    <column id="2068" parent="368" name="distribution_mandate_nr">
       <Position>3</Position>
       <DataType>int(5)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2064" parent="368" name="distribution_mandate_date">
+    <column id="2069" parent="368" name="distribution_mandate_date">
       <Position>4</Position>
       <DataType>date|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="2065" parent="368" name="samsa_id_uindex">
+    <index id="2070" parent="368" name="samsa_id_uindex">
       <ColNames>id</ColNames>
       <Unique>1</Unique>
     </index>
-    <index id="2066" parent="368" name="samsa_medicament_id_fk">
+    <index id="2071" parent="368" name="samsa_medicament_id_fk">
       <ColNames>medicament_id</ColNames>
     </index>
-    <key id="2067" parent="368" name="PRIMARY">
+    <key id="2072" parent="368" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="2068" parent="368" name="samsa_id_uindex">
+    <key id="2073" parent="368" name="samsa_id_uindex">
       <ColNames>id</ColNames>
       <UnderlyingIndexName>samsa_id_uindex</UnderlyingIndexName>
     </key>
-    <foreign-key id="2069" parent="368" name="samsa_medicament_id_fk">
+    <foreign-key id="2074" parent="368" name="samsa_medicament_id_fk">
       <ColNames>medicament_id</ColNames>
       <RefSchemaName>amed</RefSchemaName>
       <RefTableName>medicament</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="2070" parent="369" name="id">
+    <column id="2075" parent="369" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2071" parent="369" name="code">
+    <column id="2076" parent="369" name="code">
       <Position>2</Position>
       <DataType>varchar(25)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2072" parent="369" name="description">
+    <column id="2077" parent="369" name="description">
       <Position>3</Position>
       <DataType>varchar(80)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="2073" parent="369" name="scr_right_id_uindex">
+    <index id="2078" parent="369" name="scr_right_id_uindex">
       <ColNames>id</ColNames>
       <Unique>1</Unique>
     </index>
-    <index id="2074" parent="369" name="scr_right_code_uindex">
+    <index id="2079" parent="369" name="scr_right_code_uindex">
       <ColNames>code</ColNames>
       <Unique>1</Unique>
     </index>
-    <index id="2075" parent="369" name="scr_right_desdription_uindex">
+    <index id="2080" parent="369" name="scr_right_desdription_uindex">
       <ColNames>description</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="2076" parent="369" name="PRIMARY">
+    <key id="2081" parent="369" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="2077" parent="369" name="scr_right_id_uindex">
+    <key id="2082" parent="369" name="scr_right_id_uindex">
       <ColNames>id</ColNames>
       <UnderlyingIndexName>scr_right_id_uindex</UnderlyingIndexName>
     </key>
-    <key id="2078" parent="369" name="scr_right_code_uindex">
+    <key id="2083" parent="369" name="scr_right_code_uindex">
       <ColNames>code</ColNames>
       <UnderlyingIndexName>scr_right_code_uindex</UnderlyingIndexName>
     </key>
-    <key id="2079" parent="369" name="scr_right_desdription_uindex">
+    <key id="2084" parent="369" name="scr_right_desdription_uindex">
       <ColNames>description</ColNames>
       <UnderlyingIndexName>scr_right_desdription_uindex</UnderlyingIndexName>
     </key>
-    <column id="2080" parent="370" name="id">
+    <column id="2085" parent="370" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2081" parent="370" name="description">
+    <column id="2086" parent="370" name="description">
       <Position>2</Position>
       <DataType>varchar(60)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2082" parent="370" name="code">
+    <column id="2087" parent="370" name="code">
       <Position>3</Position>
       <DataType>varchar(25)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="2083" parent="370" name="role_id_uindex">
+    <index id="2088" parent="370" name="role_id_uindex">
       <ColNames>id</ColNames>
       <Unique>1</Unique>
     </index>
-    <index id="2084" parent="370" name="role_description_uindex">
+    <index id="2089" parent="370" name="role_description_uindex">
       <ColNames>description</ColNames>
       <Unique>1</Unique>
     </index>
-    <index id="2085" parent="370" name="scr_role_code_uindex">
+    <index id="2090" parent="370" name="scr_role_code_uindex">
       <ColNames>code</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="2086" parent="370" name="PRIMARY">
+    <key id="2091" parent="370" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="2087" parent="370" name="role_id_uindex">
+    <key id="2092" parent="370" name="role_id_uindex">
       <ColNames>id</ColNames>
       <UnderlyingIndexName>role_id_uindex</UnderlyingIndexName>
     </key>
-    <key id="2088" parent="370" name="role_description_uindex">
+    <key id="2093" parent="370" name="role_description_uindex">
       <ColNames>description</ColNames>
       <UnderlyingIndexName>role_description_uindex</UnderlyingIndexName>
     </key>
-    <key id="2089" parent="370" name="scr_role_code_uindex">
+    <key id="2094" parent="370" name="scr_role_code_uindex">
       <ColNames>code</ColNames>
       <UnderlyingIndexName>scr_role_code_uindex</UnderlyingIndexName>
     </key>
-    <column id="2090" parent="371" name="id">
+    <column id="2095" parent="371" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2091" parent="371" name="fullname">
+    <column id="2096" parent="371" name="fullname">
       <Position>2</Position>
       <DataType>varchar(80)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2092" parent="371" name="username">
+    <column id="2097" parent="371" name="username">
       <Position>3</Position>
       <DataType>varchar(120)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2093" parent="371" name="role_id">
+    <column id="2098" parent="371" name="role_id">
       <Position>4</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2094" parent="371" name="old_id">
+    <column id="2099" parent="371" name="old_id">
       <Position>5</Position>
       <DataType>varchar(35)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2095" parent="371" name="phone_number">
+    <column id="2100" parent="371" name="phone_number">
       <Position>6</Position>
       <DataType>varchar(45)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="2096" parent="371" name="ScrUser_id_uindex">
+    <index id="2101" parent="371" name="ScrUser_id_uindex">
       <ColNames>id</ColNames>
       <Unique>1</Unique>
     </index>
-    <index id="2097" parent="371" name="scruser_username_uindex">
+    <index id="2102" parent="371" name="scruser_username_uindex">
       <ColNames>username</ColNames>
       <Unique>1</Unique>
     </index>
-    <index id="2098" parent="371" name="scr_user_role_id_fk_idx">
+    <index id="2103" parent="371" name="scr_user_role_id_fk_idx">
       <ColNames>role_id</ColNames>
     </index>
-    <key id="2099" parent="371" name="PRIMARY">
+    <key id="2104" parent="371" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="2100" parent="371" name="ScrUser_id_uindex">
+    <key id="2105" parent="371" name="ScrUser_id_uindex">
       <ColNames>id</ColNames>
       <UnderlyingIndexName>ScrUser_id_uindex</UnderlyingIndexName>
     </key>
-    <key id="2101" parent="371" name="scruser_username_uindex">
+    <key id="2106" parent="371" name="scruser_username_uindex">
       <ColNames>username</ColNames>
       <UnderlyingIndexName>scruser_username_uindex</UnderlyingIndexName>
     </key>
-    <foreign-key id="2102" parent="371" name="scr_user_scr_role_id_fk">
+    <foreign-key id="2107" parent="371" name="scr_user_scr_role_id_fk">
       <ColNames>role_id</ColNames>
       <RefSchemaName>amed</RefSchemaName>
       <RefTableName>scr_role</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="2103" parent="372" name="id">
+    <column id="2108" parent="372" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="2104" parent="372" name="PRIMARY">
+    <key id="2109" parent="372" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="2105" parent="373" name="id">
+    <column id="2110" parent="373" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="2106" parent="373" name="PRIMARY">
+    <key id="2111" parent="373" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="2107" parent="374" name="id">
+    <column id="2112" parent="374" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="2108" parent="374" name="PRIMARY">
+    <key id="2113" parent="374" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="2109" parent="375" name="id">
+    <column id="2114" parent="375" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2110" parent="375" name="description">
+    <column id="2115" parent="375" name="description">
       <Position>2</Position>
       <DataType>varchar(100)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2111" parent="375" name="amount">
+    <column id="2116" parent="375" name="amount">
       <Position>3</Position>
       <DataType>double|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2112" parent="375" name="category">
+    <column id="2117" parent="375" name="category">
       <Position>4</Position>
       <DataType>varchar(3)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="2113" parent="375" name="PRIMARY">
+    <key id="2118" parent="375" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="2114" parent="376" name="id">
+    <column id="2119" parent="376" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2115" parent="376" name="code">
+    <column id="2120" parent="376" name="code">
       <Position>2</Position>
       <DataType>varchar(30)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2116" parent="376" name="description">
+    <column id="2121" parent="376" name="description">
       <Position>3</Position>
       <DataType>varchar(200)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="2117" parent="376" name="value">
+    <column id="2122" parent="376" name="value">
       <Position>4</Position>
       <DataType>varchar(200)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="2118" parent="376" name="sys_params_code_uindex">
+    <index id="2123" parent="376" name="sys_params_code_uindex">
       <ColNames>code</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="2119" parent="376" name="PRIMARY">
+    <key id="2124" parent="376" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="2120" parent="376" name="sys_params_code_uindex">
+    <key id="2125" parent="376" name="sys_params_code_uindex">
       <ColNames>code</ColNames>
       <UnderlyingIndexName>sys_params_code_uindex</UnderlyingIndexName>
     </key>

@@ -53,14 +53,14 @@ export class RegModifyCerereComponent implements OnInit, OnDestroy, CanModuleDea
             'data': {disabled: true, value: new Date()},
             'requestNumber': [null],
             'startDate': [new Date()],
-            'currentStep': ['E'],
-            'medicament': [null, Validators.required],
+            'currentStep': ['E'],          
             'mandatedFirstname': [null, Validators.required],
             'mandatedLastname': [null, Validators.required],
             'phoneNumber': [null, [Validators.maxLength(9), Validators.pattern('[0-9]+')]],
             'email': [null, Validators.email],
             'requestMandateNr': [null],
             'requestMandateDate': [null],
+            'idnp' : [null,[Validators.maxLength(13),Validators.minLength(13), Validators.pattern('[0-9]+')]],
             'company': [null, Validators.required],
             'initiator': [''],
             'assignedUser': [''],
@@ -102,30 +102,7 @@ export class RegModifyCerereComponent implements OnInit, OnDestroy, CanModuleDea
                         tap(() => this.loadingCompany = false)
                     )
                 )
-            );
-
-        this.companyMedicaments =
-            this.medInputs.pipe(
-                filter((result: string) => {
-                    if (result && result.length > 2) {
-                        return true;
-                    }
-                }),
-                debounceTime(400),
-                distinctUntilChanged(),
-                tap((val: string) => {
-                    this.medLoading = true;
-
-                }),
-                flatMap(term =>
-
-                    this.medicamentService.getMedicamentByRegisterNumber(term).pipe(
-                        tap((r) => {
-                            this.medLoading = false;
-                        })
-                    )
-                )
-            );
+            );        
 
         this.subscriptions.push(
             this.taskService.getRequestStepByIdAndCode('21', 'R').subscribe(step => {
@@ -146,8 +123,8 @@ export class RegModifyCerereComponent implements OnInit, OnDestroy, CanModuleDea
 
     nextStep() {
         this.formSubmitted = true;
-        if (this.rForm.get('medicament').invalid || this.rForm.get('mandatedFirstname').invalid || this.rForm.get('mandatedLastname').invalid
-            || this.rForm.get('company').invalid || this.rForm.get('type.code').invalid) {
+        if (this.rForm.get('mandatedFirstname').invalid || this.rForm.get('mandatedLastname').invalid
+            || this.rForm.get('company').invalid || this.rForm.get('type.code').invalid  || this.rForm.get('idnp').invalid) {
             return;
         }
 
@@ -176,14 +153,15 @@ export class RegModifyCerereComponent implements OnInit, OnDestroy, CanModuleDea
         modelToSubmit.initiator = useranameDB;
         modelToSubmit.assignedUser = useranameDB;
         modelToSubmit.documents = this.documents;
-        modelToSubmit.medicamentPostauthorizationRegisterNr = this.rForm.get('medicament').value.regnr;
+
         modelToSubmit.registrationRequestMandatedContacts = [{
             mandatedLastname: this.rForm.get('mandatedLastname').value,
             mandatedFirstname: this.rForm.get('mandatedFirstname').value,
             phoneNumber: this.rForm.get('phoneNumber').value,
             email: this.rForm.get('email').value,
             requestMandateNr: this.rForm.get('requestMandateNr').value,
-            requestMandateDate: this.rForm.get('requestMandateDate').value
+            requestMandateDate: this.rForm.get('requestMandateDate').value,
+	     idnp : this.rForm.get('idnp').value
         }];
         modelToSubmit.medicament = null;
 

@@ -22,9 +22,9 @@ export class MachetaComponent implements OnInit, OnDestroy {
     machetaList: any[];
     divisionList: any[];
     numarCerere: string;
-    isModify: boolean = false;
-    enableUploading: boolean = true;
-   
+    isModify = false;
+    enableUploading = true;
+
     private subscriptions: Subscription[] = [];
     @Output() removeMaket = new EventEmitter();
     @Output() addMaket = new EventEmitter();
@@ -89,7 +89,7 @@ export class MachetaComponent implements OnInit, OnDestroy {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-		let path = this.machets[index].path;
+		const path = this.machets[index].path;
                 this.subscriptions.push(this.uploadService.removeFileFromStorage(path).subscribe(data => {
                         this.machets.splice(index, 1);
 			 this.removeMaket.emit(path);
@@ -105,8 +105,8 @@ export class MachetaComponent implements OnInit, OnDestroy {
 
     viewFile(macheta: any) {
         this.subscriptions.push(this.uploadService.loadFile(macheta.path).subscribe(data => {
-                let file = new Blob([data], {type: macheta.typeDoc });
-                var fileURL = URL.createObjectURL(file);
+                const file = new Blob([data], {type: macheta.typeDoc });
+                const fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
             },
             error => {
@@ -134,16 +134,16 @@ export class MachetaComponent implements OnInit, OnDestroy {
 
         dialogConfig2.width = '600px';
 
-        this.divisions.forEach(t=>t.include=false);
+        this.divisions.forEach(t => t.include = false);
         dialogConfig2.data = {
             type: 'add',
             values: this.divisions,
-            fieldName: "macheta",
+            fieldName: 'macheta',
             instructions: this.machets,
             numarCerere: this.numarCerere
         };
 
-        let dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.response) {
@@ -160,15 +160,11 @@ export class MachetaComponent implements OnInit, OnDestroy {
         dialogConfig2.hasBackdrop = true;
 
         dialogConfig2.width = '600px';
-	
-	 for(let div of this.divisions)
-        {
-            if(div.machets.find(t=>t.path==macheta.path))
-            {
+
+	 for (const div of this.divisions) {
+            if (div.machets.find(t => t.path == macheta.path)) {
                 div.include = true;
-            }
-            else
-            {
+            } else {
                 div.include = false;
             }
         }
@@ -177,12 +173,12 @@ export class MachetaComponent implements OnInit, OnDestroy {
             type: 'edit',
             values: this.divisions,
             value: macheta,
-            fieldName: "macheta",
+            fieldName: 'macheta',
             instructions: this.machets,
             numarCerere: this.numarCerere
         };
 
-        let dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(DivisionSelectDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.response) {
@@ -190,21 +186,15 @@ export class MachetaComponent implements OnInit, OnDestroy {
             }
         });
     }
-    
-      getConcatenatedDivision(divisions : any[])
-    {
+
+      getConcatenatedDivision(divisions: any[]) {
         let concatenatedDivision = '';
-        for (let entry of divisions) {
-            if(entry.description && entry.volume && entry.volumeQuantityMeasurement)
-            {
-                concatenatedDivision = concatenatedDivision + entry.description +' '+ entry.volume+' '+entry.volumeQuantityMeasurement.description+ '; ';
-            }
-            else if(entry.volume && entry.volumeQuantityMeasurement)
-            {
-                concatenatedDivision = concatenatedDivision + entry.volume+' '+entry.volumeQuantityMeasurement.description + '; ';
-            }
-            else
-            {
+        for (const entry of divisions) {
+            if (entry.description && entry.volume && entry.volumeQuantityMeasurement) {
+                concatenatedDivision = concatenatedDivision + entry.description + ' ' + entry.volume + ' ' + entry.volumeQuantityMeasurement.description + '; ';
+            } else if (entry.volume && entry.volumeQuantityMeasurement) {
+                concatenatedDivision = concatenatedDivision + entry.volume + ' ' + entry.volumeQuantityMeasurement.description + '; ';
+            } else {
                 concatenatedDivision = concatenatedDivision + entry.description + '; ';
             }
 

@@ -61,4 +61,11 @@ export class DrugDecisionsService {
     addAuthorizationDetails(requestDetails: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/drug-decisions/add-authorization-details', requestDetails, {observe: 'response'});
     }
+
+    getUnitsByRefUnitCode(code: any): Observable<any> {
+        let Params = new HttpParams();
+        Params = Params.set('refCode', code);
+
+        return this.http.get<any>('/api/drug-decisions/get-units-by-reference-code', {params: Params});
+    }
 }

@@ -9,6 +9,7 @@ import com.bass.amed.dto.clinicaltrial.ClinicalTrialExpertDTO;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
+import com.bass.amed.service.AuditLogService;
 import com.bass.amed.service.ClinicalTrailsService;
 import com.bass.amed.service.GenerateDocNumberService;
 import com.bass.amed.service.StorageService;
@@ -87,6 +88,8 @@ public class DocumentsController {
     @Autowired
     private GenerateMedicamentRegistrationNumberRepository generateMedicamentRegistrationNumberRepository;
     @Autowired
+    private AuditLogService auditLogService;
+	@Autowired
     private ClinicalTrailsService clinicalTrailsService;
 
     @Value("${final.documents.folder}")

@@ -2,19 +2,19 @@
     <div class="table-width">
 
       <div class="row" >
-        <div class="col-md-6">
-          <div class="md-form-modified">
-            <ng-select class="w-100"
-                       [items]="nomenclatures"
-                       bindLabel="title"
-                       (change)="onNomenclatureChange($event)"
-                       placeholder="Tipul nomenclatorului">
-            </ng-select>
-          </div>
-        </div>
+        <!--<div class="col-md-6">-->
+          <!--<div class="md-form-modified">-->
+            <!--<ng-select class="w-100"-->
+                       <!--[items]="nomenclatures"-->
+                       <!--bindLabel="title"-->
+                       <!--(change)="onNomenclatureChange($event)"-->
+                       <!--placeholder="Tipul nomenclatorului">-->
+            <!--</ng-select>-->
+          <!--</div>-->
+        <!--</div>-->
 
         <div class="col-md-6">
-          <div class="text-right" class="md-form-modified" *ngIf=visibility>
+          <div class="text-right" class="md-form-modified">
             <mat-form-field class="w-100">
               <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" class="w-100">
             </mat-form-field>
@@ -32,8 +32,7 @@
               </div>
               <div class="col-4">
                 <div class="text-right fap text-white">
-                  <i class="fa fa-lg fa-mt" aria-hidden="true" (click)="changeVisibility();" [ngClass]="visibility ? 'fa-untouched fa-search-minus' : 'fa-touched fa-search-plus'"></i>
-                  <button class="button-clear ml-2" (click)="addNew()"><i  class="fa fa-plus-circle fa-lg white-text" aria-hidden="true" data-toggle="modal" data-target="#add"></i></button>
+                 <i (click)="addNew()"  class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true" data-toggle="modal" data-target="#add"></i>
                 </div>
               </div>
             </div>

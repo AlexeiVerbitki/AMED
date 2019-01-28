@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
-import {Subscription} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import {Router} from '@angular/router';
 import {PriceService} from '../../shared/service/prices.service';
 import {LoaderService} from '../../shared/service/loader.service';
@@ -49,6 +49,7 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     private subscriptions: Subscription[] = [];
+
 
     constructor(private route: Router,
                 private priceService: PriceService,
@@ -161,7 +162,6 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
         });
 
         this.subscriptions.push(this.priceService.modifyPrices(prices).subscribe(data => {
-                console.log('saved', data.body);
                 this.loadingService.hide();
                 // this.route.navigate(['dashboard/homepage']);
             },

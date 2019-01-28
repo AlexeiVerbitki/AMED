@@ -92,6 +92,10 @@ export class PriceService {
         return this.http.post<any>('/api/add-reg-request-price', request, {observe: 'response'});
     }
 
+    validIDNP(idnp: string): Observable<boolean> {
+        return this.requestService.validIDNP(idnp);
+    }
+
     approvePrices(requests: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/approve-prices', requests, {observe: 'response'});
     }

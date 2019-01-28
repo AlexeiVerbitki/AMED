@@ -1,8 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {Subscription} from "rxjs";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
-import {AdministrationService} from "../../shared/service/administration.service";
+import {Subscription} from 'rxjs';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {AdministrationService} from '../../shared/service/administration.service';
 
 @Component({
   selector: 'app-add-expert',
@@ -25,7 +25,7 @@ export class AddExpertComponent implements OnInit {
       'intern': [0],
       'expert': [null],
       'expertName': [null],
-      'decision' :  [null,Validators.required],
+      'decision' :  [null],
       'date' : [new Date()],
       'response' : [null]
     });
@@ -41,8 +41,7 @@ export class AddExpertComponent implements OnInit {
     );
     this.type = this.dataDialog.type;
 
-    if(this.type=='edit')
-    {
+    if (this.type == 'edit') {
         this.eForm.get('intern').setValue(this.dataDialog.expert.intern);
         this.eForm.get('expert').setValue(this.dataDialog.expert.expert);
         this.eForm.get('expertName').setValue(this.dataDialog.expert.expertName);
@@ -54,18 +53,15 @@ export class AddExpertComponent implements OnInit {
   add() {
     this.formSubmitted = true;
 
-    if(this.eForm.invalid)
-    {
+    if (this.eForm.invalid) {
       return;
     }
 
-    if(this.eForm.get('intern').value && !this.eForm.get('expert').value)
-    {
+    if (this.eForm.get('intern').value && !this.eForm.get('expert').value) {
       return;
     }
 
-    if(!this.eForm.get('intern').value && !this.eForm.get('expertName').value)
-    {
+    if (!this.eForm.get('intern').value && !this.eForm.get('expertName').value) {
       return;
     }
 

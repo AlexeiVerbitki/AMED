@@ -37,6 +37,7 @@ export class CerereDubAutorActComponent implements OnInit {
     docTypesInitial: any[];
     disabled = true;
     states: any[] = [];
+    reqReqInitData: any;
 
     constructor(private fb: FormBuilder, private administrationService: AdministrationService,
                 private authService: AuthService, private requestService: RequestService, private router: Router,
@@ -78,6 +79,7 @@ export class CerereDubAutorActComponent implements OnInit {
 
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
                 this.subscriptions.push(this.requestService.getMedicamentRequest(params['id']).subscribe(data => {
+                        this.reqReqInitData = data;
                         this.cerereDupAutorForm.get('id').setValue(data.id);
                         this.cerereDupAutorForm.get('dataReg').setValue(data.startDate);
                         this.cerereDupAutorForm.get('requestNumber').setValue(data.requestNumber);

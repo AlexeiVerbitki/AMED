@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from 'rxjs/index';
+import {Observable, Subscription} from 'rxjs/index';
 import {FormBuilder, FormGroup, Validator, Validators} from '@angular/forms';
 import {Document} from '../../../models/document';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -10,6 +10,8 @@ import {AuthService} from '../../../shared/service/authetication.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 import {MatDialog} from '@angular/material';
+import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
+import {DocumentService} from "../../../shared/service/document.service";
 
 @Component({
     selector: 'app-a-aprobare',
@@ -31,7 +33,9 @@ export class AAprobareComponent implements OnInit, OnDestroy {
                 private authService: AuthService,
                 private router: Router,
                 private loadingService: LoaderService,
-                public dialogConfirmation: MatDialog) {
+                public dialogConfirmation: MatDialog,
+                private errorHandlerService: ErrorHandlerService,
+                private documentService: DocumentService) {
 
     }
 
@@ -78,17 +82,19 @@ export class AAprobareComponent implements OnInit, OnDestroy {
             'status': [undefined, Validators.required],
         });
         this.initPage();
-        // this.loadDocTypes();
-
     }
 
     loadDocTypes(data) {
+        // console.log('data', data);
         this.subscriptions.push(
-            this.taskService.getRequestStepByIdAndCode('3', 'AP').subscribe(step => {
+            this.taskService.getRequestStepByIdAndCode(data.type.id, data.currentStep).subscribe(step => {
+                    // console.log('step', step);
+                    // console.log('this.outDocuments', this.outDocuments);
                     this.subscriptions.push(
                         this.administrationService.getAllDocTypes().subscribe(data => {
                                 this.docTypes = data;
                                 this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
+                                this.outDocuments = this.outDocuments.filter(r => step.outputDocTypes.includes(r.docType.category));
                             },
                             error => console.log(error)
                         )
@@ -111,6 +117,7 @@ export class AAprobareComponent implements OnInit, OnDestroy {
                     this.approveClinicalTrailForm.get('type').setValue(data.type);
                     this.approveClinicalTrailForm.get('typeCode').setValue(data.type.code);
                     this.approveClinicalTrailForm.get('initiator').setValue(data.initiator);
+                    this.approveClinicalTrailForm.get('currentStep').setValue(data.currentStep);
 
                     data.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
                     this.approveClinicalTrailForm.get('requestHistories').setValue(data.requestHistories);
@@ -124,11 +131,63 @@ export class AAprobareComponent implements OnInit, OnDestroy {
                     this.docs = data.documents;
                     this.outDocuments = data.outputDocuments;
 
-                    console.log('this.approveClinicalTrailForm', this.approveClinicalTrailForm);
+                    this.loadDocTypes(data);
+                    // console.log('this.approveClinicalTrailForm', this.approveClinicalTrailForm);
                 },
                 error => console.log(error)
             ));
         }));
+    }
+
+    viewDoc(doc: any) {
+        // console.log('doc', doc);
+        // console.log('this.docs', this.docs);
+        let findDoc = this.docs.find(document => document.docType.category === 'AC');
+        if (findDoc) {
+            if (findDoc.id) {
+                console.log('findDoc1', findDoc);
+                let observable: Observable<any> = null;
+                observable = this.documentService.generateAvizC(this.approveClinicalTrailForm.get('id').value, doc.docType.category);
+
+                this.subscriptions.push(observable.subscribe(data => {
+                        let file = new Blob([data], {type: 'application/pdf'});
+                        var fileURL = URL.createObjectURL(file);
+                        window.open(fileURL);
+                        this.loadingService.hide();
+                    }, error => {
+                        this.loadingService.hide();
+                    })
+                );
+            } else {
+                this.errorHandlerService.showError('Avizul comitetului de etica trebuie salvat');
+            }
+        } else {
+            this.errorHandlerService.showError('Avizul comitetului de etica nu a fost incarcat');
+        }
+    }
+
+    save() {
+        const formModel = this.approveClinicalTrailForm.getRawValue();
+        this.loadingService.show();
+        // console.log('1',formModel);
+        formModel.documents = this.docs;
+        formModel.outputDocuments = this.outDocuments;
+        this.subscriptions.push(
+            this.requestService.saveClinicalTrailRequest(formModel).subscribe(data => {
+                // console.log('data',data);
+                // console.log('data',data.body);
+
+                this.docs = data.body.documents;
+                this.outDocuments = data.body.outputDocuments;
+
+                console.log('this.docs', this.docs);
+
+                this.loadingService.hide();
+            }, error => {
+                this.loadingService.hide();
+                console.log(error);
+            })
+        );
     }
 
     onSubmit() {
@@ -137,10 +196,10 @@ export class AAprobareComponent implements OnInit, OnDestroy {
         console.log(formModel.status);
         if (formModel.status === '0') {
             console.log(formModel);
-            if (this.approveClinicalTrailForm.invalid ) {
-               alert('InvalidForm');
-               console.log('this.approveClinicalTrailForm.invalid', this.approveClinicalTrailForm);
-               return;
+            if (this.approveClinicalTrailForm.invalid) {
+                alert('InvalidForm');
+                console.log('this.approveClinicalTrailForm.invalid', this.approveClinicalTrailForm);
+                return;
             }
             this.loadingService.show();
 
@@ -164,7 +223,7 @@ export class AAprobareComponent implements OnInit, OnDestroy {
             console.log('formModel', formModel);
             this.subscriptions.push(
                 this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
-                   this.router.navigate(['dashboard/module']);
+                    this.router.navigate(['dashboard/module']);
                     this.loadingService.hide();
                 }, error => {
                     this.loadingService.hide();

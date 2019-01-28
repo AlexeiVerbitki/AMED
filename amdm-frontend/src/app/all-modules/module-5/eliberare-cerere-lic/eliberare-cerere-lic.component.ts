@@ -62,7 +62,6 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
             if (params['id']) {
                 this.requestId = params['id'];
-                console.log('11');
                 this.subscriptions.push(
                     this.licenseService.retrieveLicenseByRequestId(this.requestId).subscribe(data => {
                             this.oldData = data;
@@ -71,7 +70,6 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
                     )
                 );
 
-                console.log('12');
             }
         }));
 
@@ -92,6 +90,7 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
             'persResDepCereriiLastname': [{value: null, disabled: true}],
             'nrProcurii1': [{value: null, disabled: true}],
             'dataProcurii1': [{value: null, disabled: true}],
+            'idnp': [{value: null, disabled: true}],
 
             'telefonContactRec': [{value: null, disabled: true}],
             'emailContactRec': [{value: null, disabled: true}],
@@ -99,6 +98,8 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
             'persResDepCereriiLastnameRec': [{value: null, disabled: true}],
             'nrProcurii1Rec': [{value: null, disabled: true}],
             'dataProcurii1Rec': [{value: null, disabled: true}],
+            'idnpRec': [{value: null, disabled: true}],
+
 
             'otherPerson': ''
         });
@@ -133,6 +134,7 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
         this.rForm.get('persResDepCereriiLastname').patchValue(mandatedContact.requestPersonLastname);
         this.rForm.get('nrProcurii1').patchValue(mandatedContact.requestMandateNr);
         this.rForm.get('dataProcurii1').patchValue(mandatedContact.requestMandateDate);
+        this.rForm.get('idnp').patchValue(mandatedContact.idnp);
 
         if (mandatedContact.newMandatedLastname !== null) {
             this.rForm.get('telefonContactRec').patchValue(mandatedContact.newPhoneNumber);
@@ -141,6 +143,7 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
             this.rForm.get('persResDepCereriiLastnameRec').patchValue(mandatedContact.newMandatedLastname);
             this.rForm.get('nrProcurii1Rec').patchValue(mandatedContact.newMandatedNr);
             this.rForm.get('dataProcurii1Rec').patchValue(mandatedContact.newMandatedDate);
+            this.rForm.get('idnpRec').patchValue(mandatedContact.newIdnp);
 
             this.rForm.get('otherPerson').patchValue(true);
         } else {
@@ -150,6 +153,7 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
             this.rForm.get('persResDepCereriiLastnameRec').patchValue(mandatedContact.requestPersonLastname);
             this.rForm.get('nrProcurii1Rec').patchValue(mandatedContact.requestMandateNr);
             this.rForm.get('dataProcurii1Rec').patchValue(mandatedContact.requestMandateDate);
+            this.rForm.get('idnpRec').patchValue(mandatedContact.idnp);
 
             this.rForm.get('otherPerson').patchValue(false);
         }
@@ -182,7 +186,7 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(
             this.licenseService.confirmIssueLicense(modelToSubmit).subscribe(data => {
-                    this.router.navigate(['/dashboard/homepage']);
+                    // this.router.navigate(['/dashboard/homepage']);
                 }
             )
         );
@@ -208,9 +212,10 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
             mandatedContact.newEmail = this.rForm.get('emailContactRec').value;
             mandatedContact.newMandatedNr = this.rForm.get('nrProcurii1Rec').value;
             mandatedContact.newMandatedDate = this.rForm.get('dataProcurii1Rec').value;
+            mandatedContact.newIdnp = this.rForm.get('idnpRec').value;
 
             mandatedContacts.push(mandatedContact);
-            modelToSubmit.license.licenseMandatedContacts = mandatedContacts;
+            modelToSubmit.license.detail.licenseMandatedContacts = mandatedContacts;
         }
 
         modelToSubmit.license.serialNr = this.rForm.get('seriaLic').value;
@@ -246,6 +251,7 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
                 this.rForm.get('persResDepCereriiLastnameRec').setValue(mandatedContact.newMandatedLastname);
                 this.rForm.get('nrProcurii1Rec').setValue(mandatedContact.newMandatedNr);
                 this.rForm.get('dataProcurii1Rec').setValue(mandatedContact.newMandatedDate);
+                this.rForm.get('idnpRec').setValue(mandatedContact.newIdnp);
 
                 this.rForm.get('telefonContactRec').enable();
                 this.rForm.get('emailContactRec').enable();
@@ -253,6 +259,7 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
                 this.rForm.get('persResDepCereriiLastnameRec').enable();
                 this.rForm.get('nrProcurii1Rec').enable();
                 this.rForm.get('dataProcurii1Rec').enable();
+                this.rForm.get('idnpRec').enable();
 
 
                 this.rForm.get('telefonContactRec').setValidators([Validators.maxLength(9), Validators.pattern('[0-9]+')]);
@@ -269,6 +276,7 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
                 this.rForm.get('persResDepCereriiLastnameRec').patchValue(mandatedContact.requestPersonLastname);
                 this.rForm.get('nrProcurii1Rec').patchValue(mandatedContact.requestMandateNr);
                 this.rForm.get('dataProcurii1Rec').patchValue(mandatedContact.requestMandateDate);
+                this.rForm.get('idnpRec').patchValue(mandatedContact.idnp);
 
                 this.rForm.get('telefonContactRec').disable();
                 this.rForm.get('emailContactRec').disable();
@@ -276,6 +284,7 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
                 this.rForm.get('persResDepCereriiLastnameRec').disable();
                 this.rForm.get('nrProcurii1Rec').disable();
                 this.rForm.get('dataProcurii1Rec').disable();
+                this.rForm.get('idnpRec').disable();
 
 
                 this.rForm.get('telefonContactRec').setValidators(null);

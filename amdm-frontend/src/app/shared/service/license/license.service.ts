@@ -119,11 +119,11 @@ export class LicenseService {
     }
 
     findRequestsForLicense(id: string): Observable<any> {
-        return this.http.get('/api/license/find-requests-by-license-id', {params :{ licenseId : id} });
+        return this.http.get('/api/license/find-requests-by-license-id', {params : { licenseId : id} });
     }
 
     compareRevisionForLicense(licenseId: string, reqId: string): Observable<any> {
-        return this.http.get('/api/license/compare-with-previous-rev', {params :{ licenseId : licenseId, reqId : reqId} });
+        return this.http.get('/api/license/compare-with-previous-rev', {params : { licenseId : licenseId, reqId : reqId} });
     }
 
 }

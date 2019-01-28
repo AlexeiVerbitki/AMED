@@ -1,10 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {ActivatedRoute} from "@angular/router";
-import {Subscription} from "rxjs";
-import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
-import {LicenseService} from "../../../shared/service/license/license.service";
-import {Document} from "../../../models/document";
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {ActivatedRoute} from '@angular/router';
+import {Subscription} from 'rxjs';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {LicenseService} from '../../../shared/service/license/license.service';
+import {Document} from '../../../models/document';
 
 @Component({
     selector: 'app-view-completed-license',
@@ -131,7 +131,7 @@ export class ViewCompletedLicenseComponent implements OnInit, OnDestroy {
             });
         }
 
-        let mandatedContact: any = data.license.detail.licenseMandatedContacts[0];
+        const mandatedContact: any = data.license.detail.licenseMandatedContacts[0];
 
         if (mandatedContact.newMandatedLastname !== null) {
             this.mForm.get('telefonContactRec').patchValue(mandatedContact.newPhoneNumber);

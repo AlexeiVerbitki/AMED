@@ -126,8 +126,8 @@
             <div class="col-2">
                 <div class="md-form">
                     <ng-select class="w-100"
-                               [items]="unitsOfMeasurement"
-                               bindLabel="description"
+                               [items]="substanceUnits"
+                               bindLabel="unitCodeDescription"
                                formControlName="unitOfMeasurement"
                                placeholder="Unitate de masura">
                     </ng-select>
@@ -164,6 +164,7 @@
                     <th scope="col">Cantitate admisibila</th>
                     <th scope="col">Disponibila din data</th>
                     <th scope="col">Valabila pana la data</th>
+                    <th scope="col">Unitate de masura</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -173,6 +174,7 @@
                     <td>{{ substance.quantity  }}</td>
                     <td>{{ substance.fromDate | date: 'dd/MM/yyyy' }}</td>
                     <td>{{ substance.toDate | date: 'dd/MM/yyyy' }}</td>
+                    <td>{{ unityDesc.description }}</td>
                 </tr>
                 </tbody>
             </table>
@@ -286,9 +288,9 @@
         </div>
 
         <hr>
-        <app-payment [requestId]="cerereImpExpForm.get('id').value"
-                     (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
-        <div *ngIf="formSubmitted && paymentTotal<0">
+        <app-payment [requestId]="cerereImpExpForm.get('id').value" (totalValueChanged)="paymentTotalUpdate($event)"
+                     [processModule]="'CPCD'"></app-payment>
+        <div *ngIf="cerereImpExpForm && paymentTotal < 0">
             <small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>
         </div>
 

@@ -1,5 +1,6 @@
 package com.bass.amed.service;
 
+import com.bass.amed.common.Constants;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.EconomicAgentsRepository;
@@ -39,6 +40,9 @@ public class MedicamentAnnihilationRequestService
 
     @Autowired
     private MedicamentAnnihilationInstitutionRepository medicamentAnnihilationInstitutionRepository;
+
+    @Autowired
+    private AuditLogService auditLogService;
 
     @Transactional(readOnly = true)
     public RegistrationRequestsEntity findMedAnnihilationRegistrationById(Integer id) throws CustomException
@@ -191,6 +195,14 @@ public class MedicamentAnnihilationRequestService
             r.getMedicamentAnnihilation().setLastname(request.getMedicamentAnnihilation().getLastname());
 
             em.merge(r);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("Salvare cerere pentru nimicire");
+
+            StringBuilder sb1 = new StringBuilder("Agentul economic ").append(request.getMedicamentAnnihilation().getCompanyName()).append(" cu IDNO ").append(request.getMedicamentAnnihilation().getIdno());
+
+
+            auditLogService.save(new AuditLogEntity().withNewValue(sb.toString()).withCategoryName("MODULE").withSubCategoryName("MODULE_8").withField(sb1.toString()).withAction(Constants.AUDIT_ACTIONS.ADD.name()));
 
             em.getTransaction().commit();
 

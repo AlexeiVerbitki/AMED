@@ -125,7 +125,7 @@ export class AmendmentDetailsComponent implements OnInit, OnDestroy {
                 console.log('currentAmendment', currentAmendment);
                 if (currentAmendment.sponsorFrom !== currentAmendment.sponsorTo) {
                     this.modifications.push({
-                        field: 'Denumire comerciala',
+                        field: 'Sponsorul',
                         oldValue: currentAmendment.sponsorFrom,
                         newValue: currentAmendment.sponsorTo
                     });
@@ -163,6 +163,13 @@ export class AmendmentDetailsComponent implements OnInit, OnDestroy {
                         field: 'Numărul pacienților internaționali',
                         oldValue: currentAmendment.trialPopInternatFrom,
                         newValue: currentAmendment.trialPopInternatTo
+                    });
+                }
+                if (currentAmendment.titleFrom !== currentAmendment.titleTo) {
+                    this.modifications.push({
+                        field: 'Titlul studiului clinic',
+                        oldValue: currentAmendment.titleFrom,
+                        newValue: currentAmendment.titleTo
                     });
                 }
                 if (currentAmendment.medicalInstitutionsFrom && currentAmendment.medicalInstitutionsFrom.length != 0) {

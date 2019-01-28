@@ -88,10 +88,10 @@
                             <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(doc)">
                                 <i class="fa fa-file fa-lg" aria-hidden="true"></i>
                             </button>
-                            <button *ngIf="doc.status=='Nu este atasat' && doc.responseReceived==false && (doc.docType.category=='RA')"
-                                class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(doc)">
-                                <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
-                            </button>
+                            <!--<button *ngIf="doc.status=='Nu este atasat' && doc.responseReceived==false && (doc.docType.category=='RA')"-->
+                                <!--class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(doc)">-->
+                                <!--<i class="fa fa-trash fa-lg" aria-hidden="true"></i>-->
+                            <!--</button>-->
                         </td>
                     </tr>
                 </tbody>
@@ -119,8 +119,7 @@
     </form>
 
     <div class="text-center">
-        <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="onSubmit()">
-            Finisare
-        </button>
+        <button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>
+        <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="onSubmit()">Finisare</button>
     </div>
 </div>

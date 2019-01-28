@@ -128,6 +128,7 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
         this.kForm = this.fb.group({
             'firstname': '',
             'lastname': '',
+            'docLPAttached': [{value: null, disabled: true}],
         });
 
     }
@@ -145,9 +146,11 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
         this.kForm.get('firstname').patchValue(data.medicamentAnnihilation.firstname);
         this.kForm.get('lastname').patchValue(data.medicamentAnnihilation.lastname);
 
+        this.kForm.get('docLPAttached').patchValue(data.medicamentAnnihilation.attachedLNDocument);
+
         this.rForm.get('commision').patchValue(data.medicamentAnnihilation.commisions);
 
-        this.docs = data.medicamentAnnihilation.documents;
+        this.docs = data.documents;
         this.docs.forEach(doc => doc.isOld = true);
 
         this.medicamentsToDestroy = data.medicamentAnnihilation.medicamentsMedicamentAnnihilationMeds;
@@ -189,7 +192,7 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
         // this.outDocuments.push(outDocument1);
         this.outDocuments.push(outDocument4);
         this.outDocuments.push(outDocument2);
-        this.outDocuments.push(outDocument3);
+        // this.outDocuments.push(outDocument3);
     }
 
     getOutputDocStatus(category: string): any {
@@ -226,6 +229,11 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
             return;
         }
 
+        if (!this.kForm.get('docLPAttached') || !this.kForm.get('docLPAttached').value){
+            this.errorHandlerService.showError('Cererea nu a fost semnata din lista medicamntelor pentru nimicire.');
+            return;
+        }
+
         this.mFormSubbmitted = false;
         this.kFormSubbmitted = false;
         const modelToSubmit = this.composeModel('F');
@@ -249,7 +257,7 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(
             this.annihilationService.confirmEvaluateAnnihilation(modelToSubmit).subscribe(data => {
-                    this.router.navigate(['/dashboard/module']);
+                    // this.router.navigate(['/dashboard/module']);
                 }
             )
         );
@@ -266,7 +274,7 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
 
         modelToSubmit.id = this.requestId;
 
-        annihilationModel.documents = this.docs;
+        modelToSubmit.documents = this.docs;
 
         annihilationModel.medicamentsMedicamentAnnihilationMeds = this.medicamentsToDestroy;
 

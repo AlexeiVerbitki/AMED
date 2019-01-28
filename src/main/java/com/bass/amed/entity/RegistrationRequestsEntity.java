@@ -114,4 +114,17 @@ public class RegistrationRequestsEntity
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "request_id")
     private Set<RequestVariationTypeEntity> variations = new HashSet<>();
+    @Basic
+    @Column(name = "expired")
+    private Boolean expired;
+    @Basic
+    @Column(name = "critical")
+    private Boolean critical;
+    @Basic
+    @Column(name = "expired_date")
+    private Timestamp expiredDate;
+    @Basic
+    @Column(name = "expired_comment")
+    private String expiredComment;
+
 }

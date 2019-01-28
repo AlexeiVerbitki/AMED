@@ -137,6 +137,7 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
         this.priceDTO.price.currency = this.PriceRegForm.get('currency').value;
         this.priceDTO.price.medicament = this.PriceRegForm.get('medicament').value;
         this.priceDTO.price.requestNumber = this.PriceRegForm.get('requestNumber').value;
+        this.priceDTO.price.type = {id: 1};
         this.priceDTO.valid = this.PriceRegForm.valid;
         if (this.priceDTO.valid) {
             this.priceDTO.price.referencePrices.forEach(p => {

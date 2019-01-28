@@ -1,9 +1,9 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {Subscription} from "rxjs";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
-import {LicenseService} from "../../../shared/service/license/license.service";
-import {LicenseHistoryDetailComponent} from "../license-history-detail/license-history-detail.component";
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {Subscription} from 'rxjs';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
+import {LicenseService} from '../../../shared/service/license/license.service';
+import {LicenseHistoryDetailComponent} from '../license-history-detail/license-history-detail.component';
 
 @Component({
     selector: 'app-license-history-dialog',
@@ -12,10 +12,10 @@ import {LicenseHistoryDetailComponent} from "../license-history-detail/license-h
 })
 export class LicenseHistoryDialogComponent implements OnInit, OnDestroy {
 
-    rFormSubbmitted: boolean = false;
+    rFormSubbmitted = false;
     rForm: FormGroup;
 
-    requests : any [] = [];
+    requests: any [] = [];
 
     private subscriptions: Subscription[] = [];
 
@@ -32,7 +32,7 @@ export class LicenseHistoryDialogComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.licenseService.findRequestsForLicense(this.dataDialog.licenseId).subscribe(data => {
             this.requests = data;
             console.log('data', data);
-        }))
+        }));
     }
 
     cancel() {
@@ -40,7 +40,7 @@ export class LicenseHistoryDialogComponent implements OnInit, OnDestroy {
     }
 
 
-    showDetails(reqId: string){
+    showDetails(reqId: string) {
         const dialogRef2 = this.dialogHistoryDetail.open(LicenseHistoryDetailComponent, {
             width: '1000px',
             panelClass: 'materialLicense',

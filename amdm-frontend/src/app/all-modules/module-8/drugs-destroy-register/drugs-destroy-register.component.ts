@@ -28,6 +28,11 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
     rFormSubbmitted = false;
     mFormSubbmitted = false;
     fFormSubbmitted = false;
+    maxDate = new Date();
+
+    pharmaceuticalFormTypes: any[];
+    pharmaceuticalForms: any[];
+    unitsOfMeasurement: any[];
 
     medicamentsToDestroy: any[];
 
@@ -114,6 +119,20 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
 
         this.onChanges();
 
+        this.subscriptions.push(
+            this.administrationService.getAllPharamceuticalFormTypes().subscribe(data => {
+                    this.pharmaceuticalFormTypes = data;
+                }
+            )
+        );
+
+        this.subscriptions.push(
+            this.administrationService.getAllUnitsOfMeasurement().subscribe(data => {
+                    this.unitsOfMeasurement = data;
+                }
+            )
+        );
+
 
     }
 
@@ -130,13 +149,18 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
         this.rForm = this.fb.group({
 
             'medicaments': [null, Validators.required],
-            'forma': [{value: null, disabled: true}],
-            'doza': [{value: null, disabled: true}],
-            'ambalajPrimar': [{value: null, disabled: true}],
+            'forma': '',
+            'unitOfMeasure': [null],
+            'ambalajPrimar': '',
             'seria': '',
             'quantity': [null, Validators.required],
             'reasonDestroy': [null, Validators.required],
             'note': '',
+            'registeredMedicament': [null],
+            'notRegMedName': [null, Validators.required],
+            'pharmaceuticalFormType': [null, Validators.required],
+            'confirmDocuments': '',
+
         });
 
 
@@ -144,6 +168,13 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
             'nrCererii': [{value: null, disabled: true}, Validators.required],
             'dataCererii': [{value: null, disabled: true}],
             'company': [null, Validators.required],
+            'telefonContact': [null, [Validators.maxLength(9), Validators.pattern('[0-9]+')]],
+            'emailContact': [null, Validators.email],
+            'persResDepCereriiFirstname': [null, Validators.required],
+            'persResDepCereriiLastname': [null, Validators.required],
+            'nrProcurii1': [null],
+            'dataProcurii1': [{value: null, disabled: true}],
+            'idnp': '',
 
         });
 
@@ -156,23 +187,64 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
             if (val) {
                 this.subscriptions.push(
                     this.medicamentService.getMedicamentById(val.id).subscribe(data => {
-                            this.rForm.get('forma').setValue(data.pharmaceuticalForm.description);
-                            this.rForm.get('doza').setValue(data.dose);
+                            
+                            this.rForm.get('pharmaceuticalFormType').setValue(data.pharmaceuticalForm.type);
+                            this.rForm.get('forma').setValue(data.pharmaceuticalForm);
                             this.rForm.get('ambalajPrimar').setValue(data.primarePackage);
                         },
                         error => {
+                            this.rForm.get('pharmaceuticalFormType').setValue(null);
                             this.rForm.get('forma').setValue(null);
-                            this.rForm.get('doza').setValue(null);
                             this.rForm.get('ambalajPrimar').setValue(null);
                         }
                     )
                 );
             } else {
+                this.rForm.get('pharmaceuticalFormType').setValue(null);
                 this.rForm.get('forma').setValue(null);
-                this.rForm.get('doza').setValue(null);
                 this.rForm.get('ambalajPrimar').setValue(null);
             }
         });
+
+        this.rForm.get('pharmaceuticalFormType').valueChanges.subscribe(val => {
+            this.rForm.get('forma').setValue(null);
+            if (val) {
+                this.subscriptions.push(
+                    this.administrationService.getAllPharamceuticalFormsByTypeId(val.id).subscribe(data => {
+                            this.pharmaceuticalForms = data;
+                        },
+                        error => this.rForm.get('forma').setValue(null)
+                    )
+                );
+            }
+            else
+            {
+                this.rForm.get('forma').setValue(null);
+                this.pharmaceuticalForms = [];
+            }
+        });
+
+        this.rForm.get('registeredMedicament').valueChanges.subscribe(val => {
+            if (val) {
+                if (val === '1')
+                {
+                    this.rForm.get('medicaments').setValidators(Validators.required);
+                    this.rForm.get('medicaments').updateValueAndValidity();
+
+                    this.rForm.get('notRegMedName').setValidators(null);
+                    this.rForm.get('notRegMedName').updateValueAndValidity();
+                }
+                else if (val === '0')
+                {
+                    this.rForm.get('medicaments').setValidators(null);
+                    this.rForm.get('medicaments').updateValueAndValidity();
+
+                    this.rForm.get('notRegMedName').setValidators(Validators.required);
+                    this.rForm.get('notRegMedName').updateValueAndValidity();
+                }
+            }
+        });
+
     }
 
 
@@ -185,6 +257,12 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
             return;
         }
 
+        if (!this.medicamentsToDestroy || this.medicamentsToDestroy.length == 0)
+        {
+            this.errorHandlerService.showError('Nu a fost adaugat nici un medicament pentru disturgere.');
+            return;
+        }
+
         this.endDate = new Date();
 
         this.fFormSubbmitted = false;
@@ -194,7 +272,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
         const annihilationModel: any = {};
 
 
-        annihilationModel.documents = this.docs;
+
         annihilationModel.medicamentsMedicamentAnnihilationMeds = this.medicamentsToDestroy;
         annihilationModel.idno = this.mForm.get('company').value.idno;
 
@@ -214,6 +292,16 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
         modelToSubmit.startDate = this.startDate;
         modelToSubmit.initiator = this.authService.getUserName();
         modelToSubmit.assignedUser = this.authService.getUserName();
+        modelToSubmit.documents = this.docs;
+
+        modelToSubmit.registrationRequestMandatedContacts = [{mandatedLastname : this.mForm.get('persResDepCereriiLastname').value,
+            mandatedFirstname : this.mForm.get('persResDepCereriiFirstname').value,
+            phoneNumber : this.mForm.get('telefonContact').value,
+            email : this.mForm.get('emailContact').value,
+            requestMandateNr : this.mForm.get('nrProcurii1').value,
+            requestMandateDate : this.mForm.get('dataProcurii1').value,
+            idnp : this.mForm.get('idnp').value,
+        }];
 
 
         this.subscriptions.push(
@@ -235,32 +323,68 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
         if (!this.rForm.valid) {
             return;
         }
-        const id = this.rForm.get('medicaments').value.id;
-        if (this.medicamentsToDestroy.find(md => md.medicamentId === id )) {
-            return;
+
+        if (this.rForm.get('registeredMedicament').value === '1'){
+            const id = this.rForm.get('medicaments').value.id;
+
+            //Do not register the same medicament id
+            if (this.medicamentsToDestroy.find(md => md.medicamentId === id )) {
+                return;
+            }
         }
+
+
+
 
         this.rFormSubbmitted = false;
 
-        this.medicamentsToDestroy.push(
-            {
-                medicamentId: this.rForm.get('medicaments').value.id,
-                medicamentName: this.rForm.get('medicaments').value.name,
-                quantity : this.rForm.get('quantity').value,
-                uselessReason : this.rForm.get('reasonDestroy').value,
-                note : this.rForm.get('note').value,
-                seria : this.rForm.get('seria').value
-            }
-        );
+        if (this.rForm.get('registeredMedicament').value === '1') {
+            this.medicamentsToDestroy.push(
+                {
+                    medicamentId: this.rForm.get('medicaments').value.id,
+                    medicamentName: this.rForm.get('medicaments').value.name,
+                    quantity : this.rForm.get('quantity').value,
+                    uselessReason : this.rForm.get('reasonDestroy').value,
+                    note : this.rForm.get('note').value,
+                    seria : this.rForm.get('seria').value,
+                    pharmaceuticalForm : this.rForm.get('forma').value,
+                    unitsOfMeasurement : this.rForm.get('unitOfMeasure').value,
+                    confirmativeDocuments : this.rForm.get('confirmDocuments').value,
+                    primaryPackage : this.rForm.get('ambalajPrimar').value,
+                }
+            );
+        }
+
+        else if (this.rForm.get('registeredMedicament').value === '0'){
+            this.medicamentsToDestroy.push(
+                {
+                    medicamentName: this.rForm.get('notRegMedName').value,
+                    notRegisteredName: this.rForm.get('notRegMedName').value,
+                    quantity : this.rForm.get('quantity').value,
+                    uselessReason : this.rForm.get('reasonDestroy').value,
+                    note : this.rForm.get('note').value,
+                    seria : this.rForm.get('seria').value,
+                    pharmaceuticalForm : this.rForm.get('forma').value,
+                    unitsOfMeasurement : this.rForm.get('unitOfMeasure').value,
+                    confirmativeDocuments : this.rForm.get('confirmDocuments').value,
+                    primaryPackage : this.rForm.get('ambalajPrimar').value,
+                }
+            );
+        }
+
 
         this.rForm.get('medicaments').setValue(null);
         this.rForm.get('forma').setValue(null);
-        this.rForm.get('doza').setValue(null);
+        this.rForm.get('unitOfMeasure').setValue(null);
         this.rForm.get('ambalajPrimar').setValue(null);
         this.rForm.get('quantity').setValue(null);
         this.rForm.get('reasonDestroy').setValue(null);
         this.rForm.get('note').setValue(null);
         this.rForm.get('seria').setValue(null);
+        this.rForm.get('notRegMedName').setValue(null);
+        this.rForm.get('registeredMedicament').setValue(null);
+        this.rForm.get('pharmaceuticalFormType').setValue(null);
+        this.rForm.get('confirmDocuments').setValue(null);
     }
 
     removeMedicamentToDestroy(index) {

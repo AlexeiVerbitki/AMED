@@ -1,6 +1,6 @@
-import {Component, OnDestroy, OnInit,} from '@angular/core';
+import {Component, OnDestroy, OnInit, } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Subscription} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import {Document} from '../../../models/document';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Price} from '../../../models/price';
@@ -661,12 +661,8 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         console.log('priceModel:', JSON.stringify(priceModel));
 
         this.subscriptions.push(this.priceService.savePrice(priceModel).subscribe(data => {
-
             if (priceAcceptCondition && this.medicamentOriginalType) {
                 this.router.navigate(['dashboard/module/price/revaluation-generics/' + data.body.price.id]);
-            } else {
-                // this.router.navigate(['dashboard/homepage']);
-                alert('salvat');
             }
 
             this.loadingService.hide();
@@ -687,7 +683,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
             data: {
                 requestNumber: this.PriceRegForm.get('requestNumber').value, requestId: this.PriceRegForm.get('id').value, modalType: 'NOTIFICATION',
                 startDate: this.PriceRegForm.get('startDate').value,
-            }, width: '1000px', height: '550px', hasBackdrop: false
+            },  width: '1000px', height: '550px', hasBackdrop: false, panelClass: 'custom-dialog-container'
         });
 
         dialogRef2.afterClosed().subscribe(result => {

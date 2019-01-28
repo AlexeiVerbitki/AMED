@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import {Document} from '../../../models/document';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -127,19 +127,22 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
 
         this.mForm.get('company').patchValue(data.medicamentAnnihilation.companyName);
 
-        this.docs = data.medicamentAnnihilation.documents;
+        this.docs = data.documents;
         this.docs.forEach(doc => doc.isOld = true);
 
         this.medicamentsToDestroy = data.medicamentAnnihilation.medicamentsMedicamentAnnihilationMeds;
         this.medicamentsToDestroy.forEach(mtd => {
-            this.subscriptions.push(
-                this.medicamentService.getMedicamentById(mtd.medicamentId).subscribe(data => {
-                        mtd.form = data.pharmaceuticalForm.description;
-                        mtd.dose = data.dose;
-                        mtd.primarePackage = data.primarePackage;
-                    }
-                )
-            );
+            if (mtd.medicamentId)
+            {
+                this.subscriptions.push(
+                    this.medicamentService.getMedicamentById(mtd.medicamentId).subscribe(data => {
+                            mtd.form = data.pharmaceuticalForm.description;
+                            mtd.dose = data.dose;
+                            mtd.primarePackage = data.primarePackage;
+                        }
+                    )
+                );
+            }
         });
 
         this.calculateTotalSum();
@@ -216,7 +219,7 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(
             this.annihilationService.confirmEvaluateAnnihilation(modelToSubmit).subscribe(data => {
-                    this.router.navigate(['/dashboard/module']);
+                    // this.router.navigate(['/dashboard/module']);
                 }
             )
         );
@@ -233,7 +236,7 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
 
         modelToSubmit.id = this.requestId;
 
-        annihilationModel.documents = this.docs;
+        modelToSubmit.documents = this.docs;
 
         annihilationModel.medicamentsMedicamentAnnihilationMeds = this.medicamentsToDestroy;
 
@@ -276,7 +279,8 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
                     date: new Date(),
                     amount: this.totalSum,
                     registrationRequestId: this.requestId,
-                    serviceCharge: data
+                    serviceCharge: data,
+                    quantity : 1
 
                 };
                 this.subscriptions.push(this.administrationService.addPaymentOrder(paymentOrder).subscribe(data => {

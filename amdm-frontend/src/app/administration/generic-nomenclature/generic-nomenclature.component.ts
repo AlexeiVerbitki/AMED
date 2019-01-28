@@ -17,7 +17,6 @@ export class GenericNomenclatureComponent implements OnInit {
   displayedColumns: any[] = [];
   dataSource = new MatTableDataSource<any>();
 
-  visibility = false;
   forEdit: boolean;
   selectedRow: any = {};
   selectedRowIndex: number;
@@ -45,23 +44,12 @@ export class GenericNomenclatureComponent implements OnInit {
     this.navbarTitleService.showTitleMsg('Lista de nomenclatoare');
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    console.log('NomenclatureConstants', NomenclatureConstants);
     this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
        this.pageId = params['id'];
        this.selectedNomenclature = this.nomenclatures[+this.pageId - 1];
        this.navbarTitleService.showTitleMsg(this.selectedNomenclature.title);
        this.getNomenclature(this.selectedNomenclature.nr);
     }));
-  }
-
-  ngAfterViewInit() {
-    // this.basicModal.show();
-  }
-
-  onNomenclatureChange(n) {
-    this.selectedNomenclature = n;
-    this.navbarTitleService.showTitleMsg(n.title);
-    this.getNomenclature(n.nr);
   }
 
   getNomenclature(nomenclatureNr) {
@@ -74,7 +62,6 @@ export class GenericNomenclatureComponent implements OnInit {
         const cols = [];
 
         Object.keys(elem).forEach(function(key, index, value) {
-          console.log(key, index, elem[key]);
           cols.push({
             columnDef: key,
             header: elem[key],
@@ -86,8 +73,6 @@ export class GenericNomenclatureComponent implements OnInit {
         this.displayedColumns = this.columns.filter(c => c.header).map(c => c.columnDef);
         this.displayedColumns.push('action');
 
-        console.log('getNomenclatureDate', data);
-        console.log('this.columns', this.columns);
         this.dataSource._updateChangeSubscription();
         this.loadingService.hide();
     }, error1 => this.loadingService.hide()));
@@ -113,16 +98,13 @@ export class GenericNomenclatureComponent implements OnInit {
   }
 
   valueChanged(columnName: string, newValue) {
-    console.log(columnName, newValue);
     this.selectedRow[columnName] = newValue;
   }
 
   deleteRow(index: number, row: any) {
-    console.log('deleteRow', index, row);
     if (row && row.id > -1) {
       this.loadingService.show();
       this.subscriptions.push(this.administrationService.removeNomenclatureRow(this.selectedNomenclature.nr, row.id).subscribe(deleted => {
-        console.log('removeNomenclatureRow', deleted);
         if (deleted) {
           this.dataSource.data.splice(index, 1);
           this.dataSource._updateChangeSubscription();
@@ -178,10 +160,6 @@ export class GenericNomenclatureComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
-  }
-
-  changeVisibility() {
-    this.visibility = !this.visibility;
   }
 
   ngOnDestroy() {

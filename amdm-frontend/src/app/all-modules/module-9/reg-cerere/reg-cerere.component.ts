@@ -10,6 +10,7 @@ import {RequestService} from '../../../shared/service/request.service';
 import {TaskService} from '../../../shared/service/task.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
+import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
 
 enum Pages {
     CLAP = '3',
@@ -54,7 +55,8 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                 private authService: AuthService,
                 private administrationService: AdministrationService,
                 private taskService: TaskService,
-                private loadingService: LoaderService) {
+                private loadingService: LoaderService,
+                private errorHandlerService: ErrorHandlerService,) {
     }
 
     ngOnInit() {
@@ -63,6 +65,16 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             'startDate': [new Date()],
             'currentStep': ['R'],
             'company': ['', Validators.required],
+
+            'registrationRequestMandatedContacts': this.fb.group({
+                'mandatedFirstname': [null, Validators.required],
+                'mandatedLastname': [null, Validators.required],
+                'phoneNumber': [null, [Validators.maxLength(9), Validators.pattern('[0-9]+')]],
+                'email': [null, Validators.email],
+                'requestMandateNr': [null],
+                'requestMandateDate': [null]
+            }),
+
             'initiator': [null],
             'assignedUser': [null],
             'flowControl': [null, Validators.required],
@@ -90,6 +102,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
         this.loadClinicalTrails();
         this.autocompleteClinicalTrailSearch();
         this.manageClinicalTrailForm();
+
     }
 
     manageClinicalTrailForm() {
@@ -129,7 +142,9 @@ export class RegCerereComponent implements OnInit, OnDestroy {
         this.clinicalTrails =
             this.clinicalTrailInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) { return true; }
+                    if (result && result.length > 2) {
+                        return true;
+                    }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -181,7 +196,9 @@ export class RegCerereComponent implements OnInit, OnDestroy {
         this.companii =
             this.companyInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) { return true; }
+                    if (result && result.length > 2) {
+                        return true;
+                    }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -210,6 +227,15 @@ export class RegCerereComponent implements OnInit, OnDestroy {
 
 
     onSubmit() {
+        let validationData = this.registerClinicalTrailForm.get('registrationRequestMandatedContacts');
+        console.log('validationData',validationData);
+        if (validationData.get('mandatedFirstname').invalid || validationData.get('mandatedLastname').invalid || this.registerClinicalTrailForm.get('company').invalid) {
+            alert('Invalid Form0!!');
+            return;
+        }
+        if (validationData.get('requestMandateNr').value && !validationData.get('requestMandateDate').value) {
+            return;
+        }
         if (this.registerClinicalTrailForm.invalid) {
             alert('Invalid Form1!!');
             return;
@@ -230,9 +256,10 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             formModel.currentStep = 'E';
             formModel.initiator = this.authService.getUserName();
             formModel.assignedUser = this.authService.getUserName();
+            formModel.registrationRequestMandatedContacts = [formModel.registrationRequestMandatedContacts];
 
-            // console.log("formModel", formModel);
-            // console.log("regCerereJSON", JSON.stringify(formModel));
+            console.log('clinicTrail', formModel);
+            //return;
 
             this.subscriptions.push(this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
                     this.router.navigate(['/dashboard/module/clinic-studies/evaluate/' + data.body]);
@@ -263,6 +290,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             formModel.clinicalTrails = this.clinicalTrailForm.get('clinicalTrail').value;
 
             formModel.clinicalTrails.clinicTrialAmendEntities = this.clinicalTrailForm.get('clinicalTrail').value.clinicTrialAmendEntities;
+            formModel.registrationRequestMandatedContacts = [formModel.registrationRequestMandatedContacts];
 
             this.subscriptions.push(this.requestService.addClinicalTrailAmendmentRequest(formModel).subscribe(data => {
                     this.router.navigate(['/dashboard/module/clinic-studies/evaluate-amendment/' + data.body]);
@@ -292,6 +320,8 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             formModel.assignedUser = this.authService.getUserName();
             formModel.clinicalTrails = this.clinicalTrailForm.get('clinicalTrail').value;
 
+            formModel.registrationRequestMandatedContacts = [formModel.registrationRequestMandatedContacts];
+
             this.subscriptions.push(this.requestService.addClinicalTrailNotificationRequest(formModel).subscribe(data => {
                     this.router.navigate(['/dashboard/module/clinic-studies/notify/' + data.body]);
                     this.loadingService.hide();
@@ -301,7 +331,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                 })
             );
 
-            console.log('clinicTrail', this.clinicalTrailForm.value);
+            // console.log('clinicTrail', this.clinicalTrailForm.value);
             console.log('Going to -> Înregistrarea Notificărilor privind Protocolul studiului clinic cu medicamente');
             this.loadingService.hide();
         } else if (formModel.flowControl === 'CLISP') {

@@ -233,7 +233,7 @@
                         <th scope="row">{{ i + 1}}</th>
                         <td>{{ objAddr.companyType }}</td>
                         <td>{{ objAddr.address }}</td>
-                        <td>{{ objAddr.selectedPharmaceutist.fullName }}</td>
+                        <td>{{ objAddr.selectedPharmaceutist?.fullName }}</td>
                         <td mdbTooltip="{{objAddr.activitiesStr}}" placement="top">
                             <!--<a title="Activitatile" (click)="setActivities(objAddr)" *ngIf="tipCerere !== 'LICD' && tipCerere !== 'LICP' && tipCerere !== 'LICA' && tipCerere !== 'LICS' && tipCerere !== 'LICRL'">{{ objAddr.activitiesStr ?  objAddr.activitiesStr : 'Adauga'}}</a>-->
                             <label >{{ objAddr.activitiesStr }} </label>
@@ -415,7 +415,7 @@
 
             <app-payment [requestId]="requestId"
                          (totalValueChanged)="paymentTotalUpdate($event)"
-                         [isBonSuplimentarNotRender]="true"></app-payment>
+                         [isBonSuplimentarNotRender]="true" [processModule]="'LICENTA'"></app-payment>
             <div *ngIf="rFormSubbmitted && nextSubmit && paymentTotal < 0">
                 <small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>
             </div>

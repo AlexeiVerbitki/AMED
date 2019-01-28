@@ -4,8 +4,8 @@ import { LicenseStatusPipe } from './license-status.pipe';
 
 @NgModule({
     imports:        [],
-    declarations:   [DigitsAfterDecimalPipe,LicenseStatusPipe],
-    exports:        [DigitsAfterDecimalPipe,LicenseStatusPipe],
+    declarations:   [DigitsAfterDecimalPipe, LicenseStatusPipe],
+    exports:        [DigitsAfterDecimalPipe, LicenseStatusPipe],
 })
 
 export class PipeModule {

@@ -26,7 +26,7 @@ import {PipeModule} from '../../shared/pipe/pipe.module';
         MaterialSharedModule.forRoot(),
         DocumentModule,
         PaymentModule,
-        PipeModule
+        PipeModule,
     ],
     entryComponents: [
         AnnihilationMedDialogComponent

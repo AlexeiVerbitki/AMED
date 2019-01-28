@@ -38,7 +38,7 @@
 						</ng-template>
 					</ng-select>
 					<div *ngIf="formSubmitted && rForm.get('company').invalid">
-						<small i declass="text-muted"><strong class="text-danger">Compania solicitantă trebuie selectată</strong></small>
+						<small class="text-muted"><strong class="text-danger">Compania solicitantă trebuie selectată</strong></small>
 					</div>
 				</div>
 			</div>
@@ -71,8 +71,19 @@
 					</small>
 				</div>
 			</div>
-
 			<div class="col-md-4">
+				<div class="md-form">
+					<input id="idnp" mdbInputDirective type="text" class="form-control" maxlength="13"
+					       formControlName="idnp">
+					<label for="idnp">IDNP</label>
+				</div>
+				<div *ngIf="formSubmitted && !rForm.get('idnp').valid">
+					<small class="text-muted"><strong class="text-danger">IDNP-ul este invalid</strong>
+					</small>
+				</div>
+			</div>
+
+			<div class="col-md-3">
 				<div class="md-form">
 					<input id="telefonContact" mdbInputDirective type="text" class="form-control"
 					       formControlName="phoneNumber" maxlength="9"
@@ -84,7 +95,7 @@
 					</small>
 				</div>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-3">
 				<div class="md-form">
 					<input id="emailContact" mdbInputDirective type="email" class="form-control"
 					       formControlName="email">
@@ -96,7 +107,7 @@
 				</div>
 			</div>
 
-			<div class="col-md-4">
+			<div class="col-md-3">
 				<div class="md-form">
 					<input id="nrProcurii1" mdbInputDirective type="text" class="form-control"
 					       formControlName="requestMandateNr">
@@ -107,7 +118,7 @@
 					</small>
 				</div>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-3">
 				<div class="md-form-modified">
 					<mat-form-field class="w-100">
 						<input id="dataProcurii1" matInput [matDatepicker]="picker3" [max]="maxDate"

@@ -5,16 +5,12 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatDialog} from '@angular/material';
 import {saveAs} from 'file-saver';
 import {Observable, Subject, Subscription} from 'rxjs';
-import {AdministrationService} from '../../../shared/service/administration.service';
 import {Router} from '@angular/router';
 import {Document} from '../../../models/document';
-import {RequestService} from '../../../shared/service/request.service';
-import {AuthService} from '../../../shared/service/authetication.service';
 import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
 import {LoaderService} from '../../../shared/service/loader.service';
-import {TaskService} from '../../../shared/service/task.service';
 import {CanModuleDeactivate} from '../../../shared/auth-guard/can-deactivate-guard.service';
-import {debounceTime, distinctUntilChanged, filter, flatMap, max, tap} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {PriceService} from '../../../shared/service/prices.service';
 
@@ -48,7 +44,7 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
         this.rForm = fb.group({
             'data': {disabled: true, value: new Date()},
             'requestNumber': [null],
-            'idnp': [null, Validators.max(13)],
+            'idnp': [null,  Validators.maxLength(13)],
             'id': [null],
             'folderNumber': [null, Validators.required],
             'startDate': [new Date()],
@@ -102,9 +98,26 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
             );
     }
 
+
+    checkIDNP($event) {
+        if($event.target.value.trim().length === 0) {
+            this.rForm.get('idnp').setErrors(null);
+        } else {
+            this.subscriptions.push(this.priceService.validIDNP($event.target.value).subscribe(response => {
+                    if(response) {
+                        this.rForm.get('idnp').setErrors(null);
+                    } else {
+                        this.rForm.get('idnp').setErrors({'incorrect': true});
+                    }
+                })
+            );
+        }
+    }
+
     nextStep() {
 
         this.formSubmitted = true;
+
         if (!this.rForm.valid) {
             return;
         }
@@ -136,8 +149,9 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
             idnp : this.rForm.get('idnp').value
         }];
 
-        this.subscriptions.push(this.priceService.addRegistrationRequestForPrice(modelToSubmit).subscribe(req => {
+        this.formSubmitted = true;
 
+        this.subscriptions.push(this.priceService.addRegistrationRequestForPrice(modelToSubmit).subscribe(req => {
                 this.rForm.get('id').setValue(req.body.id);
                 if (req.body.registrationRequestMandatedContacts[0]) {
                     this.rForm.get('registrationRequestMandatedContactsId').setValue(req.body.registrationRequestMandatedContacts[0].id);

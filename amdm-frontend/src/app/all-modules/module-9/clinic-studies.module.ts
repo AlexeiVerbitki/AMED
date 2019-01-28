@@ -23,7 +23,7 @@ import { BAprobareComponent } from './b-aprobare/b-aprobare.component';
 import { BIntrerupereComponent } from './b-intrerupere/b-intrerupere.component';
 import { CNotificareComponent } from './c-notificare/c-notificare.component';
 import {ClinicalTrialService} from '../../shared/service/clinical-trial.service';
-import {PaymentClinicalTrialModule} from "../../payment-clinical-trial/payment-clinical-trial.module";
+import {PaymentClinicalTrialModule} from '../../payment-clinical-trial/payment-clinical-trial.module';
 import { AddCtExpertComponent } from './dialog/add-ct-expert/add-ct-expert.component';
 
 

@@ -37,9 +37,6 @@
 					<textarea style="height: 150px" type="text" id="content" class="md-textarea form-control" mdbInputDirective formControlName="decision"></textarea>
 					<label for="content">Decizia</label>
 				</div>
-				<div *ngIf="formSubmitted && eForm.get('decision').invalid">
-					<small class="text-muted"><strong class="text-danger">Decizia trebuie introdusa</strong></small>
-				</div>
 			</div>
 		</div>
 	</form>

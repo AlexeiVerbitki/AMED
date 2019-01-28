@@ -27,7 +27,7 @@
 			<div class="col-lg-4">
 				<div class="md-form">
 					<input id="nrDosar" mdbInputDirective type="text" class="form-control" formControlName="folderNumber">
-					<label for="nrDosar">Nr. dosar</label>
+					<label for="nrDosar">Nr. dosar<span class="text-danger">*</span></label>
 				</div>
 				<div *ngIf="formSubmitted && rForm.get('folderNumber').invalid">
 					<small class="text-muted"><strong class="text-danger">Introduceți numărul dosarului</strong></small>
@@ -56,12 +56,12 @@
 
 			<div class="col-lg-4">
 				<div class="md-form">
-					<input id="idnp" mdbInputDirective type="text" maxlength="13" class="form-control" formControlName="idnp">
+					<input id="idnp" mdbInputDirective type="text" maxlength="13" class="form-control" formControlName="idnp" (focusout)="checkIDNP($event)">
 					<label for="idnp">IDNP-ul persoanei responsabile</label>
 				</div>
-				<!--<div *ngIf="formSubmitted && rForm.get('folderNumber').invalid">-->
-					<!--<small class="text-muted"><strong class="text-danger">Introduceți IDNP-ul persoanei responsabile</strong></small>-->
-				<!--</div>-->
+				<div *ngIf="formSubmitted && rForm.get('idnp').value && rForm.get('idnp').invalid">
+					<small class="text-muted"><strong class="text-danger">IDNP-ul introdus este incorect</strong></small>
+				</div>
 			</div>
 		</div>
 		<!--<div class="row align-items-center">-->
