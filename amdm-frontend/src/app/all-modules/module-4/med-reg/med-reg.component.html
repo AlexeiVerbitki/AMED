@@ -321,7 +321,7 @@
                                     </ng-select>
                                     <!--</md-form-field>-->
                                 </div>
-                                <div *ngIf="[formSubmitted]==true && !evaluateImportForm.get('currency').valid "> /*!evaluateImportForm.get('currency')=== null &&*/
+                                <div *ngIf="[formSubmitted]==true && evaluateImportForm.get('currency').invalid "> /*!evaluateImportForm.get('currency')=== null &&*/
                                     <small class="text-muted"><strong class="text-danger">Valuta trebuie introdusă</strong>
                                     </small>
                                 </div>
