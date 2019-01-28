@@ -106,6 +106,10 @@ export class AdministrationService {
         return this.http.get('/api/price/all-currencies-short');
     }
 
+    getCustomsPoints(): Observable<any> {
+        return this.http.get('/api/administration/customs-points');
+    }
+
     getPrevMonthAVGCurrencies(): Observable<any> {
         return this.http.get('/api/price/prev-month-avg-currencies');
     }

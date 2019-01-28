@@ -94,6 +94,8 @@ public class AdministrationController {
     private PaymentOrderNumberRepository paymentOrderNumberRepository;
     @Autowired
     private RequestTypeRepository requestTypeRepository;
+    @Autowired
+    private NmCustomsPointsRepository nmCustomsPointsRepository;
 
     @RequestMapping(value = "/generate-doc-nr")
     public ResponseEntity<Integer> generateDocNr() {
@@ -287,6 +289,12 @@ public class AdministrationController {
     public ResponseEntity<List<GetCountriesMinimalProjection>> retrieveCountries() {
         LOGGER.debug("Retrieve all Countries");
         return new ResponseEntity<>(nmCountriesRepository.findAllOnlyIdAndAndDescriptionBy(), HttpStatus.OK);
+    }
+
+    @GetMapping("/customs-points")
+    public ResponseEntity<List<NmCustomsPointsEntity>> getCustomsPoints() {
+        LOGGER.debug("Retrieve all Customs Points");
+        return new ResponseEntity<>(nmCustomsPointsRepository.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping("/send-email")

@@ -71,6 +71,8 @@ export class ImportManagement implements OnInit {
     formModel: any;
     valutaList: Observable<any[]>;
 
+    customsPointsList: Observable<any[]>;
+
     importData: any;
     medicamentData: any;
 
@@ -862,6 +864,18 @@ export class ImportManagement implements OnInit {
         this.subscriptions.push(
             this.administrationService.getCurrenciesShort().subscribe(data => {
                     this.valutaList = data;
+
+                },
+                error => console.log(error)
+            )
+        );
+    }
+
+
+    loadCustomsPoints() {
+        this.subscriptions.push(
+            this.administrationService.getCustomsPoints().subscribe(data => {
+                    this.customsPointsList = data;
 
                 },
                 error => console.log(error)
