@@ -84,15 +84,16 @@
                     </div>
                     <div class="col-12">
                         <mat-radio-button value="5" id="declaratia">Declarație de import</mat-radio-button>
-
                     </div>
                     <div class="col-4" *ngIf="importRadioButton == 5">
-                        <input id="authorizationNumber" mdbInputDirective type="text" class="form-control"
-                               formControlName="authorizationNumber">
-                        <label for="authorizationNumber"></label>
+                        <input id="authorization" mdbInputDirective type="text" class="form-control" [(ngModel)]="authorizationNumber" [ngModelOptions]="{standalone: true}">
+                        <p>{{authorizationNumber}}
+                            <label for="authorization"></label>
                     </div>
+
                 </div>
             </div>
+
         </mat-radio-group>
         <div *ngIf="formSubmitted && rForm.get('importType').invalid">
             <small class="text-muted"><strong class="text-danger">Tipul de import trebuie selectat</strong></small>

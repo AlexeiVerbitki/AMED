@@ -102,7 +102,7 @@
             <br>
 
             <hr>
-            <h5 class="text-center font-weight-bold">Informația despre Invoice</h5>
+            <h5 class="text-center font-weight-bold" id="invoiceInfo">Informația despre Invoice</h5>
             <hr>
 
             <div formGroupName="importAuthorizationEntity">
@@ -114,7 +114,7 @@
                                 <span class="text-danger">*</span>
                             </label>
                         </div>
-                        <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.invoiceNumber').invalid">
+                        <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.invoiceNumber').invalid">
                             <small class="text-muted"><strong class="text-danger">Nr. de de invoice trebuie selectat</strong></small>
                         </div>
                     </div>
@@ -126,7 +126,7 @@
                                 <span class="text-danger">*</span>
                             </label>
                         </div>
-                        <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.invoiceSpecificatie').invalid">
+                        <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.invoiceSpecificatie').invalid">
                             <small class="text-muted"><strong class="text-danger">Specificația trebuie selectată</strong></small>
                         </div>
                     </div>
@@ -138,7 +138,7 @@
                                 <span class="text-danger">*</span>
                             </label>
                         </div>
-                        <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.invoiceBasis').invalid">
+                        <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.invoiceBasis').invalid">
                             <small class="text-muted"><strong class="text-danger">Indicați temeiul pentru import</strong></small>
                         </div>
                     </div>
@@ -172,7 +172,7 @@
                             </ng-select>
                             <!--</md-form-field>-->
                         </div>
-                        <div *ngIf="[formSubmitted]==true && !evaluateImportForm.get('customsPoints').valid "> /*!evaluateImportForm.get('currency')=== null &&*/
+                        <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.customsPoints').invalid ">
                             <small class="text-muted"><strong class="text-danger">Vama trebuie selectată</strong>
                             </small>
                         </div>
@@ -185,8 +185,8 @@
                                 <span class="text-danger">*</span>
                             </label>
                         </div>
-                        <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsNumber').invalid">
-                            <small class="text-muted"><strong class="text-danger">Numărul declarației vamale</strong></small>
+                        <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsNumber').invalid">
+                            <small class="text-muted"><strong class="text-danger">Numărul declarației vamale trebuie selectat</strong></small>
                         </div>
                     </div>
 
@@ -198,6 +198,9 @@
                                 <mat-datepicker-toggle matSuffix [for]="picker28"></mat-datepicker-toggle>
                                 <mat-datepicker touchUi #picker28></mat-datepicker>
                             </mat-form-field>
+                        </div>
+                        <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsDate').invalid">
+                            <small class="text-muted"><strong class="text-danger">Data declarației vamale trebuie selectată</strong></small>
                         </div>
                     </div>
 
@@ -413,27 +416,6 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <!--<tr *ngFor="let unitOfImport of importData.importAuthorizationEntity.importAuthorizationDetailsEntityList;let i = index">-->
-                        <!--<th scope="row">{{ unitOfImport.name }}</th>-->
-                        <!--<td *ngIf="importData.importAuthorizationEntity.medType!==4">{{ unitOfImport.atcCode.code}}</td>-->
-                        <!--<td>{{ unitOfImport.dose }}</td>-->
-                        <!--<td>{{ unitOfImport.unitsOfMeasurement }}</td>-->
-                        <!--<td>{{ unitOfImport.producer.description }}</td>-->
-                        <!--<td>{{ unitOfImport.quantity }}</td>-->
-                        <!--<td>{{ unitOfImport.approvedQuantity }}</td>-->
-                        <!--<td>{{ unitOfImport.currencyCode }}</td>-->
-                        <!--<td>{{ unitOfImport.currency.shortDescription}}</td>-->
-                        <!--<td>{{ unitOfImport.summ | number : '1.2-2'}}</td>-->
-                        <!--&lt;!&ndash;<td>{{ unitOfImport.producer.address }}, {{ unitOfImport.producer.country.description }}</td>&ndash;&gt;-->
-                        <!--<td>{{ unitOfImport.expirationDate | date:'mediumDate' }}</td>-->
-                        <!--<td>{{ unitOfImport.customsCode.code }}</td>-->
-                        <!--<td>-->
-                        <!--<mat-checkbox [disabled]="true" [checked]="importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved" (change)="setApproved(i)"></mat-checkbox>-->
-                        <!--</td>-->
-                        <!--<td>-->
-                        <!--<button class="btn btn-primary waves-light btn-sm waves-light" (click)="showunitOfImport(unitOfImport, i)" mdbWavesEffect>Adaugă</button>-->
-                        <!--</td>-->
-                        <!--</tr>-->
 
                         <tr *ngFor="let invoiceDetail of invoiceDetails;let i = index">
                             <td *ngIf="importData.medType == 1 || importData.medType == 2">{{ invoiceDetail.codeAmed }}</td>
@@ -447,16 +429,13 @@
                         </tr>
                         </tbody>
                     </table>
-                    <!--<div *ngIf="formSubmitted && unitOfImportTable.length===0">-->
-                    <!--<small class="text-muted"><strong class="text-danger">Nici o unitate de import nu a fost adaugata</strong></small>-->
-                    <!--</div>-->
+                    <button id="adauga" class="btn btn-primary waves-light btn-sm waves-light pull-right" (click)="showunitOfImport()" mdbWavesEffect>Adaugă unitate de import</button>
+                    <div *ngIf="formSubmitted && invoiceDetails.length == 0 ">
+                        <small class="text-muted"><strong class="text-danger">Nici o poziție nu a fost adaugată</strong></small>
+                    </div>
 
-                    <!--<button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc()">Autorizatie</button>-->
-                    <button class="btn btn-primary waves-light btn-sm waves-light pull-right" (click)="showunitOfImport()" mdbWavesEffect>Adaugă unitate de import</button>
-
-
-                    <hr>
                     <br>
+                    <hr>
                     <br>
                 </section>
                 <div class="text-center">

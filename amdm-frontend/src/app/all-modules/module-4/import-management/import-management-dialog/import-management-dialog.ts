@@ -395,24 +395,9 @@ export class ImportManagementDialog implements OnInit {
                 if (val) {
                     console.log('pozitie:', val);
 
+                    /*===========================================IF MEDICAMENT ID EXISTS*/
                     if (val.medicament) {
 
-                        // if (this.dialogData.invoiceDetails.find(x => x.codeAmed == val.medicament.codeAmed)) {
-                        //     this.invoiceDetailAdded = true
-                        //
-                        //     this.addedUnits = this.dialogData.invoiceDetails.filter(x => x.codeAmed == val.medicament.codeAmed).map(x => x.quantity).reduce((a,b) => a+b );
-                        //
-                        //     if (this.addedUnits!==0) {
-                        //         this.remainingUnits = this.approvedQuantity - this.addedUnits;
-                        //     } else{
-                        //         this.remainingUnits = this.approvedQuantity;
-                        //     }
-                        //     console.log("addedUnits:", this.addedUnits)
-                        //
-                        // } else {
-                        //     this.invoiceDetailAdded = false
-                        //     console.log("addedUnits:", this.addedUnits)
-                        // }
 
                         this.subscriptions.push(this.requestService.getInvoiceQuota(val.medicament.id, this.importData.authorizationsNumber).subscribe(data => {
                             console.log("getInvoiceQuota()", data)
@@ -500,7 +485,7 @@ export class ImportManagementDialog implements OnInit {
 
                     } else {
 
-
+                        /*================================IF MEDICAMENT ID DOESN'T EXIST*/
                         this.subscriptions.push(this.requestService.getInvoiceQuota(val.name,this.importData.authorizationsNumber).subscribe(data => {
                             console.log("getInvoiceQuota()", data)
                             this.importedUnits = data;
@@ -600,9 +585,6 @@ export class ImportManagementDialog implements OnInit {
     }
 
 
-    get importTypeForms() {
-        return this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable') as FormArray;
-    }
 
 
     addUnitOfImport() {

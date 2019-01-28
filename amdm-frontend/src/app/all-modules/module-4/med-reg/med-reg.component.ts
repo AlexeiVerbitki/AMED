@@ -565,6 +565,8 @@ export class MedRegComponent implements OnInit {
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(null);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(null);
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(null);
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').untouched;
+
 
         // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setErrors(null);
         // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setErrors(null);

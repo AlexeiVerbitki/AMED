@@ -1,0 +1,47 @@
+.table-width {
+    width : 100%;
+}
+
+th, td {
+    text-align : center !important;
+}
+
+mat-header-cell {
+    display         : flex;
+    justify-content : flex-end;
+}
+
+::ng-deep .mat-sort-header-container {
+    display         : flex;
+    justify-content : center;
+}
+
+table td a {
+    text-decoration: underline;
+    color : #488CD3;
+    font-weight : bold;
+}
+
+.example-container {
+    height    : 610px;
+    overflow : auto;
+}
+
+table {
+    width : 100%;
+}
+
+.modal {
+    overflow-y : auto;
+}
+
+.md-form-modified {
+    position      : relative;
+    margin-top    : 10px;
+    margin-bottom : 1.5rem;
+}
+
+.btn-large {
+    padding-left: 75px !important;
+    padding-right: 75px !important;
+}

@@ -1,0 +1,127 @@
+<div class="container-fluid sky z-depth-2">
+    <div class="gradient-card-header bg-sidebar border-gradient">
+        <div class="container-fluid">
+            <!-- Title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card-header-title white-text text-center">User List</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-6 border-right">
+            <!-- Card content -->
+            <div class="card-body card-body-cascade user-list">
+                <div class="row text-center">
+                    <div class="offset-1">
+                    </div>
+                    <div class="col-2"><strong>ID</strong></div>
+                    <div class="col"><strong>First Name</strong></div>
+                    <div class="col"><strong>Last Name</strong></div>
+                    <div class="offset-2"></div>
+                </div>
+                <hr>
+                <div class="row text-center mb-2 border-bottom" *ngFor="let el of userInternalList; let i = index;">
+                    <div class="col-1">
+                        <mat-checkbox #personCheckbox [checked]="el.selected" (change)="selectUser(i, $event)"></mat-checkbox>
+                    </div>
+                    <div class="col-2">{{i+1}}</div>
+                    <div class="col">{{el.firstName}}</div>
+                    <div class="col">{{el.lastName}}</div>
+                    <div class="col-2">
+                        <div class="row">
+                            <div class="offset-3"></div>
+                            <div class="col-3">
+                                <a class="text-primary pr-2" role="button" (click)="test.toggle()"><i class="fa fa-caret-down fa-lg"
+                                        aria-hidden="true"></i></a>
+
+                            </div>
+                            <div class="col-3">
+                                <a *ngIf="el.selected" class="text-danger pr-2" role="button"><i class="fa fa-trash-o fa-lg"
+                                        aria-hidden="true"></i></a>
+                            </div>
+                            <div class="offset-3"></div>
+                        </div>
+                    </div>
+                    <div class="col-12 text-left" mdbCollapse #test="bs-collapse">
+                        <ul class="list-group my-2">
+                            <li class="list-group-item"><strong>Job:</strong> {{el.job}}</li>
+                            <li class="list-group-item"><strong>Phone:</strong> {{el.phone}}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-1">
+                        <mat-checkbox (change)="selectAll($event)"></mat-checkbox>
+                    </div>
+                    <div class="offset-7"></div>
+                    <div class="col-4">
+                        <div class="btn btn-dark-red-color btn-sm" mdbTooltip="Eliminare" placement="top"><i class="fa fa-trash fa-lg"
+                                aria-hidden="true"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <!-- Card content -->
+            <div class="card-body card-body-cascade user-list">
+                <div class="row text-center">
+                    <div class="offset-1">
+                    </div>
+                    <div class="col-2"><strong>ID</strong></div>
+                    <div class="col"><strong>First Name</strong></div>
+                    <div class="col"><strong>Last Name</strong></div>
+                    <div class="offset-2"></div>
+                </div>
+                <hr>
+                <div class="row text-center mb-2 border-bottom" *ngFor="let el of userExternalList; let i = index;">
+                    <div class="col-1">
+                            <mat-checkbox #personCheckbox [checked]="el.selected" (change)="selectUser2(i, $event)"></mat-checkbox>
+                    </div>
+                    <div class="col-2">{{i+1}}</div>
+                    <div class="col">{{el.firstName}}</div>
+                    <div class="col">{{el.lastName}}</div>
+                    <div class="col-2">
+                        <div class="row">
+                            <div class="offset-3"></div>
+                            <div class="col-3">
+                                <a class="text-primary pr-2" role="button" (click)="test.toggle()"><i class="fa fa-caret-down fa-lg"
+                                        aria-hidden="true"></i></a>
+
+                            </div>
+                            <div class="col-3">
+                                <a *ngIf="el.selected" class="text-danger pr-2" role="button"><i class="fa fa-trash-o fa-lg"
+                                        aria-hidden="true"></i></a>
+                            </div>
+                            <div class="offset-3"></div>
+                        </div>
+                    </div>
+                    <div class="col-12 text-left" mdbCollapse #test="bs-collapse">
+                        <ul class="list-group my-2">
+                            <li class="list-group-item"><strong>Job:</strong> {{el.job}}</li>
+                            <li class="list-group-item"><strong>Phone:</strong> {{el.phone}}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-1">
+                            <mat-checkbox (change)="selectAll2($event)"></mat-checkbox>
+                    </div>
+                    <div class="offset-7"></div>
+                    <div class="col-4">
+                            <div class="btn btn-dark-red-color btn-sm" mdbTooltip="Eliminare" placement="top"><i class="fa fa-trash fa-lg"
+                                aria-hidden="true"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center">
+            <div class="btn btn-mdb-color btn-sm" mdbTooltip="Sincronizare" placement="top"><i class="fa fa-refresh fa-lg"
+                aria-hidden="true"></i></div>
+                <div class="btn btn-dark-red-color btn-sm" mdbTooltip="Eliminare" placement="top"><i class="fa fa-minus fa-lg"
+                    aria-hidden="true"></i></div>
+    </div>
+</div>

@@ -1,0 +1,191 @@
+<div class="container-fluid sky z-depth-2">
+    <hr>
+    <form [formGroup]='rForm'>
+        <div class="row">
+            <div class="col">
+                <div class="md-form-modified-select">
+                    <ng-select class="custom" [items]="categories"
+                               bindLabel="description"
+                               placeholder="Categoria"
+                               formControlName="category"
+                    >
+                    </ng-select>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="md-form-modified-select">
+                    <ng-select class="custom" [items]="subcategories"
+                               bindLabel="description"
+                               placeholder="Subcategoria"
+                               formControlName="subcategory"
+                    >
+                    </ng-select>
+                </div>
+            </div>
+
+
+            <div class="col">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input id="fromDate" matInput [matDatepicker]="picker3" [max]="maxDate"
+                               placeholder="De la data" formControlName="fromDate"
+                        >
+                        <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker3 [disabled]="false"></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+
+
+            <div class="col">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input id="toDate" matInput [matDatepicker]="picker4" [max]="maxDate"
+                               placeholder="Pina la data" formControlName="toDate"
+                        >
+                        <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker4 [disabled]="false"></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+
+
+            <div class="col">
+                <div class="md-form-modified-select">
+                    <ng-select [items]="actions"
+                               bindLabel="description"
+                               placeholder="Actiunea"
+                               formControlName="action"
+                    >
+                    </ng-select>
+                </div>
+            </div>
+
+
+            <div class="col">
+                <div class="md-form-modified-select">
+                    <ng-select class="custom" [items]="users"
+                               bindLabel="fullname"
+                               placeholder="Utilizator"
+                               formControlName="username"
+                    >
+                    </ng-select>
+                </div>
+            </div>
+
+
+
+            <div class="col-md-1">
+                <div class="md-form-modified text-center">
+                    <button type="button" class="btn btn-md btn-indigo waves-light btn-large" mdbWavesEffect
+                            (click)="findAudit();"><i
+                            class="fa fa-search fa-lg" aria-hidden="true"></i></button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="table-width">
+        <div class="text-right" *ngIf=visibility>
+            <mat-form-field class="w-25">
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtru" class="w-25">
+            </mat-form-field>
+        </div>
+        <div class="gradient-card-header bg-sidebar border-gradient">
+            <div class="container-fluid">
+                <!-- Title -->
+                <div class="row">
+                    <div class="col-4">
+                        <div class="card-header-title white-text">Licente</div>
+                    </div>
+                    <div class="col-8">
+                        <div class="text-right fap white-text">
+                            <i class="fa fa-lg fa-mt" aria-hidden="true" (click)="changeVisibility();"
+                               [ngClass]="visibility ? 'fa-touched fa-search-plus' : 'fa-untouched fa-search-minus'"></i>
+                            <!--   <i class="fa fa-file-excel-o fa-mt fa-lg" aria-hidden="true" mdbTooltip="Export in Excel" (click)="exportToExcel();"></i>
+                               <i class="fa fa-files-o fa-mt fa-lg" aria-hidden="true" mdbTooltip="Export in CSV" (click)="exportToCsv();"></i>
+                               <i class="fa fa-file-pdf-o fa-mt fa-lg" aria-hidden="true" mdbTooltip="Export in Pdf" (click)="exportToPdf();"></i>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body card-body-cascade">
+            <div class="table-width">
+                <div class="example-container">
+                    <table mat-table [dataSource]="dataSource" matSort id="tableData">
+                        <ng-container matColumnDef="category">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
+                                Categoria
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-center">
+                                {{element.category}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="subcategory">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
+                                Subcategoria
+
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-center"> {{element.subcategory}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="field">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">Camp
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-center"  mdbTooltip="{{element.field}}" placement="top">
+                                {{element.field}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="oldValue">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">Valoarea
+                                veche
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-center"  mdbTooltip="{{element.oldValue}}" placement="top"> {{element.oldValue}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="newValue">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">Valoarea
+                                noua
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-center"  mdbTooltip="{{element.newValue}}" placement="top">
+                                {{element.newValue}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="dateTime">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">Data
+
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-center"> {{element.datetime | date:
+                                'dd/MM/yyyy HH:mm:ss'}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="action">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text" >Actiunea
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-center"  mdbTooltip="{{element.action}}" placement="top">
+                                {{element.action}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="user">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
+                                Utilizator
+
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-center"> {{element.user}}</td>
+                        </ng-container>
+
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

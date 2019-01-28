@@ -141,8 +141,7 @@
                     <div class="md-form">
                         <input id="unitSumm" mdbInputDirective type="text" class="form-control"
                                [attr.disabled]="true"
-                               [value]="unitSumm | number : '1.2-2'"
-                               formControlName="unitSumm">
+                               [value]="unitSumm | number : '1.2-2'">
                         <label for="unitSumm">Suma importului</label>
                     </div>
                 </div>
@@ -164,7 +163,7 @@
 
                 <div class="col-4">
                     <div class="md-form">
-                        <input id="approvedPrice" mdbInputDirective type="number" min="0" onkeypress="return event.charCode >= 48" class="form-control"
+                        <input id="approvedPrice" mdbInputDirective type="text"  class="form-control"
                                [value]="approvedPrice | number : '1.2-2'"
                                formControlName="approvedPrice">
                         <!--[attr.disabled]="true"-->

@@ -1,0 +1,52 @@
+.md-form-modified {
+    position: relative;
+    margin-top: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.md-form-modified-select {
+    position: relative;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.mt-button {
+    margin-top: 85px !important;
+}
+
+.fa {
+    cursor: pointer;
+}
+
+
+.fa-touched {
+    font-size: 0.95em;
+}
+
+.fa-untouched {
+    font-size: 1.33em;
+}
+
+::ng-deep .mat-sort-header-container {
+    display:flex;
+    justify-content:center;
+}
+
+table th, .table td {
+    text-align: center !important;
+}
+
+table td a {
+    text-decoration: underline;
+    color : #488CD3;
+    font-weight : bold;
+}
+
+table td {
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 250px;
+}
+

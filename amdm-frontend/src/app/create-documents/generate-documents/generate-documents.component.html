@@ -1,0 +1,60 @@
+<div class="container-fluid sky z-depth-2">
+  <mat-tab-group>
+    <mat-tab label="Dispozitie de distribuire pentru autorizarea medicamentului">
+      <ng-template matTabContent><br>
+        <app-requests-dd #requestDD (loadDDs)="loadDDs($event)"></app-requests-dd>
+        <hr>
+        <app-dd-list #ddList (ddListModified)="ddListModified($event)"></app-dd-list>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Ordin de autorizare al medicamentului">
+      <ng-template matTabContent><br>
+        <app-medicaments-oa #medicamentsOA (loadOAs)="loadOAs($event)"></app-medicaments-oa>
+        <hr>
+        <app-oa-list #oaList (oaListModified)="oaListModified($event)"></app-oa-list>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Ordin de intreupere a procedurii de autorizare a medicamentului">
+      <ng-template matTabContent><br>
+        <app-requests-oi #requestOI (loadOIs)="loadOIs($event)"></app-requests-oi>
+        <hr>
+        <app-oi-list #oiList (oiListModified)="oiListModified($event)"></app-oi-list>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Dispozitie de distribuire pentru modificarile postautorizare">
+      <ng-template matTabContent><br>
+        <app-requests-dd-modify #requestDDM (loadDDMs)="loadDDMs($event)"></app-requests-dd-modify>
+        <hr>
+        <app-dd-modify-list #ddmList (ddmListModified)="ddmListModified($event)"></app-dd-modify-list>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Ordin de aprobare al modificarilor postautorizare">
+      <ng-template matTabContent><br>
+        <app-medicaments-om #medicamentsOM (loadOMs)="loadOMs($event)"></app-medicaments-om>
+        <hr>
+        <app-om-list #omList (omListModified)="omListModified($event)"></app-om-list>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Ordin de intreupere a procedurii de aprobare a modificarilor postautorizare">
+      <ng-template matTabContent><br>
+        <app-requests-oi-modify #requestOIM (loadOIMs)="loadOIMs($event)"></app-requests-oi-modify>
+        <hr>
+        <app-oi-modify-list #oimList (oimListModified)="oimListModified($event)"></app-oi-modify-list>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Dispozitie de distribuire pentru studiu clinic">
+      <ng-template matTabContent><br>
+        <app-request-dd-ct #requestDDCt (loadDDCts)="loadDDCts($event)"></app-request-dd-ct>
+        <hr>
+        <app-dd-ct-list #ddCtList (ddListCtModified)="ddListCtModified($event)"></app-dd-ct-list>
+      </ng-template>
+    </mat-tab>
+	<mat-tab label="Lista medicamentelor pentru comisia de nimicire">
+            <ng-template matTabContent><br>
+                <app-lmpc-modify-list #anihModList (loadAnih)="loadAnihList($event)"></app-lmpc-modify-list>
+                <hr>
+                <app-lmpc-list #anihList (anihListModified)="loadAnihListModified($event)"></app-lmpc-list>
+            </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</div>

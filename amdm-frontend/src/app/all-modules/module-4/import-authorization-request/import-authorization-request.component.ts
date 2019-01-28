@@ -195,16 +195,6 @@ export class ImportAuthorizationRequestComponent implements OnInit {
     nextStep() {
         this.formSubmitted = true;
 
-        // if (/*this.docs.length == 0 ||*/ this.rForm.invalid) {
-        //     alert('Invalid Form data!!')
-        //     return;
-        // }
-        // if (!this.activeLicenses == null) {
-        //
-        //     return;
-        // } else {
-        //     alert('No active licenses!!')
-        // }
 
 
 
@@ -272,10 +262,10 @@ export class ImportAuthorizationRequestComponent implements OnInit {
                             break;
                         }
                         case '5': {
-                            this.authorizationNumber = "33134/2019-AM";
+                            // this.authorizationNumber = "33134/2019-AM";
+                            // this.authorizationNumber = "33134/2019-AM";
                             this.subscriptions.push(this.requestService.getAuthorizationByAuth(this.authorizationNumber).subscribe(data =>{
                                 console.log("authorization",data)
-                                // this.importManagementId = data.body.id;
                                 this.router.navigate(['dashboard/module/import-authorization/import-management/' + data.id]);
                             }));
                             break;
