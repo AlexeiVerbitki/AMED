@@ -105,17 +105,12 @@ export class AmbalajComponent implements OnInit {
             'requestHistories': [],
 
             'importAuthorizationEntity': fb.group({
-                // 'requestNumber': {value: '', disabled: true},
-                // 'startDate': {value: '', disabled: true},
-                // 'importer': {value: '', disabled: true},
                 'id': [],
-                // 'importType': [null, Validators.required],
-                // 'applicationRegistrationNumber': [''],
                 'applicationDate': [new Date()],
                 'applicant': ['', Validators.required],
-                'seller': [null, Validators.required], // Tara si adresa lui e deja in baza
+                'seller': [null, Validators.required],
                 'basisForImport': [],
-                'importer': [null, Validators.required], // Tara si adresa lui e deja in baza
+                'importer': [null, Validators.required],
                 'contract':                              [null, Validators.required],
                 'contractDate':                          [null, Validators.required],
                 'anexa':                                 [null, Validators.required],
@@ -131,8 +126,6 @@ export class AmbalajComponent implements OnInit {
                 'stuff_type_id':                          [null, Validators.required],
                 'expiration_date':                        [null, Validators.required],
 
-                // 'customsNumber':[],
-                // 'customsDeclarationDate':[],
                 'authorizationsNumber': [], // inca nu exista la pasul acesta
                 'medType': [''],
                 'importAuthorizationDetailsEntityList' : [],
@@ -140,8 +133,8 @@ export class AmbalajComponent implements OnInit {
 
                     customsCode:    [null, Validators.required],
                     name:           [null, Validators.required],
-                    quantity:       [null, Validators.required],
-                    price:          [null, Validators.required],
+                    quantity:       [null, [Validators.required, Validators.min(0.01)]],
+                    price:          [null, [Validators.required, Validators.min(0.01)]],
                     currency:       [null, Validators.required],
                     summ:           [null, Validators.required],
                     producer:       [null, Validators.required],

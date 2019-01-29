@@ -178,8 +178,8 @@ export class ImportMedDialog implements OnInit {
 
                     customsCode: [null, Validators.required],
                     name: [null, Validators.required],
-                    quantity: [null, Validators.required],
-                    approvedQuantity: [null, Validators.required],
+                    quantity: [null, [Validators.required, Validators.min(0.01)]],
+                    approvedQuantity: [null, [Validators.required, Validators.min(0.01)]],
                     price: [null, Validators.required],
                     currency: [null, Validators.required],
                     summ: [null, Validators.required],

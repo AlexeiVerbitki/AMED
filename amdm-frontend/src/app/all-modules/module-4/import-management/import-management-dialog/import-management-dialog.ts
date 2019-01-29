@@ -202,9 +202,9 @@ export class ImportManagementDialog implements OnInit {
 
                     customsCode: [null, Validators.required],
                     name: [null, Validators.required],
-                    quantity: [null, Validators.required],
+                    quantity: [null, [Validators.required, Validators.min(0.01)]],
                     approvedQuantity: [null, Validators.required],
-                    price: [null, Validators.required],
+                    price: [null, [Validators.required, Validators.min(0.01)]],
                     approvedPrice: [null, Validators.required],
                     currency: [null, Validators.required],
                     summ: [null, Validators.required],

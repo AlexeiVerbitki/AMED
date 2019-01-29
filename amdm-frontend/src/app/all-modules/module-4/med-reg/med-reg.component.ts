@@ -174,8 +174,8 @@ export class MedRegComponent implements OnInit {
 
                     customsCode: [null, Validators.required],
                     name: [null, Validators.required],
-                    quantity: [null, Validators.required],
-                    price: [null, Validators.required],
+                    quantity: [null, [Validators.required, Validators.min(0.01)]],
+                    price: [null, [Validators.required, Validators.min(0.01)]],
                     currency: [null, Validators.required],
                     summ: [null, Validators.required],
                     producer: [null, Validators.required],

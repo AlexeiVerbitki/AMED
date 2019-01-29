@@ -119,6 +119,20 @@
                         </div>
                     </div>
 
+                    <div class="col-4">
+                        <div class="md-form-modified">
+                            <mat-form-field class="w-100">
+                                <input matInput [matDatepicker]="picker29" placeholder="Data de invoice"
+                                       formControlName="invoiceDate">
+                                <mat-datepicker-toggle matSuffix [for]="picker29"></mat-datepicker-toggle>
+                                <mat-datepicker touchUi #picker29></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.invoiceDate').invalid">
+                            <small class="text-muted"><strong class="text-danger">Data de invoice trebuie selectată</strong></small>
+                        </div>
+                    </div>
+
                     <div class="col-md-4">
                         <div class="md-form">
                             <input id="invoiceSpecificatie" mdbInputDirective type="text" class="form-control" formControlName="invoiceSpecificatie">
@@ -133,7 +147,7 @@
 
                     <div class="col-md-4">
                         <div class="md-form">
-                            <input id="invoiceBasis" mdbInputDirective type="text" class="form-control" formControlName="invoiceBasis" disabled>
+                            <input id="invoiceBasis" mdbInputDirective type="text" class="form-control" formControlName="invoiceBasis">
                             <label for="invoiceBasis"  >Temeiul pentru invoice
                                 <span class="text-danger">*</span>
                             </label>
@@ -143,25 +157,6 @@
                         </div>
                     </div>
 
-                    <!--<div class="col-4">-->
-                    <!--<div class="md-form-modified">-->
-                    <!--<ng-select [items]="customsCodes | async"-->
-                    <!--bindLabel="code"-->
-                    <!--placeholder="Codul Vamal"-->
-                    <!--formControlName="invoiceCustomsCode"-->
-                    <!--[loading]="loadingcustomsCodes"-->
-                    <!--[typeahead]="customsCodesInputs"-->
-                    <!--required="true">-->
-                    <!--<ng-template ng-option-tmp let-item="item">-->
-                    <!--{{item.description}};-->
-                    <!--<small class="form-text text-muted">Cod AMED: {{item.code}}</small>-->
-                    <!--</ng-template>-->
-                    <!--</ng-select>-->
-                    <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsCode').invalid">-->
-                    <!--<small class="text-muted"><strong class="text-danger">Codul trebuie selectat</strong></small>-->
-                    <!--</div>-->
-                    <!--</div>-->
-                    <!--</div>-->
 
                     <div class="col-4">
                         <div class="md-form-modified">

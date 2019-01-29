@@ -19,7 +19,7 @@
                     <div class="md-form-modified">
                         <mat-form-field class="w-100">
                             <input matInput [matDatepicker]="picker" placeholder="Data"
-                                   formControlName="startDate" [attr.disabled]="true">
+                                   formControlName="startDate" disabled>
                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                             <mat-datepicker touchUi #picker></mat-datepicker>
                         </mat-form-field>
@@ -292,12 +292,12 @@
 
                             <div class="col-4">
                                 <div class="md-form">
-                                    <input id="quantity" mdbInputDirective type="number" min="0" onkeypress="return event.charCode >= 48"  class="form-control"
+                                    <input id="quantity" mdbInputDirective type="number" min="0"  class="form-control"
                                            formControlName="quantity">
                                     <label for="quantity">Cantitatea</label>
                                 </div>
                                 <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').invalid">
-                                    <small class="text-muted"><strong class="text-danger">Cantitatea trebuie selectată</strong></small>
+                                    <small class="text-muted"><strong class="text-danger">Cantitatea trebuie selectată, min 0.01</strong></small>
                                 </div>
                             </div>
                             <div class="col-4">
@@ -306,7 +306,7 @@
                                     <label for="price">Pretul</label>
                                 </div>
                                 <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').invalid">
-                                    <small class="text-muted"><strong class="text-danger">Prețul trebuie selectat</strong></small>
+                                    <small class="text-muted"><strong class="text-danger">Prețul trebuie selectat, min 0.01</strong></small>
                                 </div>
                                 <div *ngIf="invalidPrice">
                                     <small class="text-muted"><strong class="text-danger">Prețul este mai mare decât cel înregistrat in monimclatorul</strong></small>

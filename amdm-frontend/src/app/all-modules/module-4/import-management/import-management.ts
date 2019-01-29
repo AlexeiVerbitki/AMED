@@ -150,7 +150,7 @@ export class ImportManagement implements OnInit {
                 'id': [Validators.required],
                 'applicationDate': [new Date()],
                 'applicant': ['', Validators.required],
-                'seller': [null, Validators.required], // Tara si adresa lui e deja in baza
+                'seller': [null, Validators.required, {disabled: true}], // Tara si adresa lui e deja in baza
                 'basisForImport': [],
                 'importer': [null, Validators.required], // Tara si adresa lui e deja in baza
                 'contract': [null, Validators.required],
@@ -175,6 +175,7 @@ export class ImportManagement implements OnInit {
                 'authorized': [],
 
                 'invoiceNumber': [null, Validators.required],
+                'invoiceDate': [null, Validators.required],
                 'invoiceBasis': [null, Validators.required],
                 'invoiceSpecificatie': [null, Validators.required],
                 // 'invoiceCustomsCode': [null, Validators.required],
@@ -269,6 +270,7 @@ export class ImportManagement implements OnInit {
                             'authorized': [],
 
                             'invoiceNumber': [null, Validators.required],
+                            'invoiceDate': [null, Validators.required],
                             'invoiceBasis': [null, Validators.required],
                             'invoiceSpecificatie': [null, Validators.required],
                             // 'invoiceCustomsCode': [null, Validators.required],
@@ -351,7 +353,7 @@ export class ImportManagement implements OnInit {
                     this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').setValue(new Date(data.importAuthorizationEntity.specificationDate));
                     // this.evaluateImportForm.get('importAuthorizationEntity.approvedQuantity').setValue(data.importAuthorizationEntity.approvedQuantity);
 
-                    this.evaluateImportForm.disable();
+                    // this.evaluateImportForm.disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.seller').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.contract').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.contractDate').disable();
@@ -925,6 +927,7 @@ export class ImportManagement implements OnInit {
 
         this.formSubmitted = true;
         if (this.evaluateImportForm.get('importAuthorizationEntity.invoiceNumber').valid &&
+            this.evaluateImportForm.get('importAuthorizationEntity.invoiceDate').valid &&
             this.evaluateImportForm.get('importAuthorizationEntity.invoiceBasis').valid &&
             this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsDate').valid &&
             this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsNumber').valid &&
@@ -943,6 +946,7 @@ export class ImportManagement implements OnInit {
             invoiceDetailsEntity = this.invoiceDetails;
 
             invoiceEntity.invoiceNumber            = this.evaluateImportForm.get('importAuthorizationEntity.invoiceNumber').value;
+            invoiceEntity.invoiceDate              = new Date(this.evaluateImportForm.get('importAuthorizationEntity.invoiceDate').value);
             invoiceEntity.basisForInvoice          = this.evaluateImportForm.get('importAuthorizationEntity.invoiceBasis').value;
             invoiceEntity.customsDeclarationDate   = new Date(this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsDate').value);
             invoiceEntity.customsDeclarationNumber = this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsNumber').value;
@@ -970,8 +974,8 @@ export class ImportManagement implements OnInit {
                     // alert('after addInvoiceRequest(modelToSubmit)');
                     console.log('addInvoiceRequest(modelToSubmit).subscribe(data) ', data);
                     this.loadingService.hide();
-                    // this.router.navigate(['dashboard/homepage']);
-                    alert("Saved")
+                    this.router.navigate(['dashboard/homepage']);
+                    // alert("Saved")
                 }, error => {
                     alert('Something went wrong while sending the model');
                     console.log('error: ', error);
@@ -982,6 +986,7 @@ export class ImportManagement implements OnInit {
             this.formSubmitted = false;
         }
         else {
+            console.log("this.evaluateImportForm.valid", this.evaluateImportForm.valid)
             console.log("this.evaluateImportForm", this.evaluateImportForm)
 
             let element = document.getElementById("invoiceInfo");
