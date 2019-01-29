@@ -792,9 +792,10 @@ export class MedRegApproveComponent implements OnInit {
         });
     }
 
-    showCustomsPoints(){
-        console.log(this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value);
-    }
+    // showCustomsPoints(){
+    //     console.log(this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value);
+    //     console.log("customsPoints", this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').valid)
+    // }
 
 
     nextStep(aprrovedOrNot: boolean) {

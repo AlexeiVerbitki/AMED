@@ -273,7 +273,12 @@
                         </div>
                     </div>
 
-                    <div class="col-4">
+
+
+                    <h5 class="text-center font-weight-bold col-12">Specificaţia tehnică şi de preţ a obiectelor importului</h5>
+                    <hr>
+
+                    <div class="col-12">
                         <div class="md-form-modified">
                             <ng-select id="customsPoints" placeholder="Pucte Vamale aprobate" formControlName="customsPoints" [multiple]="true">
                                 <ng-option *ngFor="let point of customsPointsList" [value]="point">{{ point.description }} - {{point.code}}</ng-option>
@@ -294,8 +299,7 @@
 
                 <section>
 
-                    <h5 class="text-center font-weight-bold">Specificaţia tehnică şi de preţ a obiectelor importului</h5>
-                    <hr>
+
 
                     <table class="table table-widths text-center">
                         <thead class="black white-text">

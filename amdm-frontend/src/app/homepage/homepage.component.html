@@ -4,12 +4,8 @@
             <div class="widget widget-stats bg-gradient-red">
                 <div class="stats-icon stats-icon-lg"><i class="fa fa-medkit fa-fw"></i></div>
                 <div class="stats-content">
-                    <div class="stats-title">Numarul de cereri nefinisate.</div>
+                    <div class="stats-title">Numarul de cereri nefinisate</div>
                     <div class="stats-number">{{requestsNumber}}</div>
-                    <div class="stats-progress progress">
-                        <div class="progress-bar" style="width: 95.1%;"></div>
-                    </div>
-                    <div class="stats-desc">Lorem ipsum dolor sit amed consectetur</div>
                 </div>
             </div>
         </div>
@@ -17,12 +13,8 @@
             <div class="widget widget-stats bg-gradient-green">
                 <div class="stats-icon stats-icon-lg"><i class="fa fa-bandcamp fa-fw"></i></div>
                 <div class="stats-content">
-                    <div class="stats-title">Numarul de cereri invechite.</div>
-                    <div class="stats-number">{{oldRequestsNumber}}</div>
-                    <div class="stats-progress progress">
-                        <div class="progress-bar" style="width: 70.1%;"></div>
-                    </div>
-                    <div class="stats-desc">Better than last week (70.1%)</div>
+                    <div class="stats-title">Numarul de cereri expirate</div>
+                    <div class="stats-number">{{expiredReqNumber}}</div>
                 </div>
             </div>
         </div>
@@ -30,19 +22,12 @@
             <div class="widget widget-stats bg-gradient-blue">
                 <div class="stats-icon stats-icon-lg"><i class="fa fa-bell fa-fw"></i></div>
                 <div class="stats-content">
-                    <div class="stats-title">TODAY'S VISITS</div>
-                    <div class="stats-number">7,842,900</div>
-                    <div class="stats-progress progress">
-                        <div class="progress-bar" style="width: 70.1%;"></div>
-                    </div>
-                    <div class="stats-desc">Better than last week (70.1%)</div>
+                    <div class="stats-title">Numarul de cereri urgente</div>
+                    <div class="stats-number">{{emergentReqNumber}}</div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- <div class="position-button">
-      <button mdbBtn type="button" size="sm" color="primary" mdbWavesEffect><i class="fa fa-cog fa-2x fa-fw"></i></button>
-    </div> -->
 
     <div class="table-width">
         <div class="text-right">
