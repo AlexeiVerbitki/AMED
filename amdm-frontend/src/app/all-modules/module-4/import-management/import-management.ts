@@ -351,7 +351,7 @@ export class ImportManagement implements OnInit {
                     this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').setValue(new Date(data.importAuthorizationEntity.specificationDate));
                     // this.evaluateImportForm.get('importAuthorizationEntity.approvedQuantity').setValue(data.importAuthorizationEntity.approvedQuantity);
 
-                    this.evaluateImportForm.get('startDate').disable();
+                    this.evaluateImportForm.disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.seller').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.contract').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.contractDate').disable();
