@@ -95,6 +95,8 @@ export class MedRegApproveComponent implements OnInit {
     loadinginternationalMedicamentName = false;
     internationalMedicamentNameInputs = new Subject<string>();
 
+    customsPointsList: Observable<any[]>;
+
     expirationDate: any[] = [];
 
     checked: boolean;
@@ -167,6 +169,7 @@ export class MedRegApproveComponent implements OnInit {
                 'medType': [''],
                 'importAuthorizationDetailsEntityList': [],
                 'authorized': [],
+                'customsPoints':[],
                 'unitOfImportTable': this.fb.group({
 
                     customsCode: [null, Validators.required],
@@ -292,6 +295,7 @@ export class MedRegApproveComponent implements OnInit {
         this.loadUnitsOfMeasurement();
         this.loadMedicaments();
         this.loadInternationalMedicamentName();
+        this.loadCustomsPoints();
 
         console.log('importTypeForms.value', this.importTypeForms.value);
     }
@@ -739,6 +743,17 @@ export class MedRegApproveComponent implements OnInit {
         );
     }
 
+    loadCustomsPoints() {
+        this.subscriptions.push(
+            this.administrationService.getCustomsPoints().subscribe(data => {
+                    this.customsPointsList = data;
+
+                },
+                error => console.log(error)
+            )
+        );
+    }
+
     interruptProcess() {
         const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
             data: {
@@ -777,71 +792,80 @@ export class MedRegApproveComponent implements OnInit {
         });
     }
 
+    showCustomsPoints(){
+        console.log(this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value);
+    }
+
 
     nextStep(aprrovedOrNot: boolean) {
 
         this.formSubmitted = true;
-        let modelToSubmit: any = {};
-        this.loadingService.show();
-
-        modelToSubmit = this.importData;
-        modelToSubmit.endDate = new Date();
-        modelToSubmit.importAuthorizationEntity.authorized = aprrovedOrNot;
-        modelToSubmit.currentStep = 'F';
+        if (this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').valid) {
 
 
-        modelToSubmit.importAuthorizationEntity.authorizationsNumber = this.importData.importAuthorizationEntity.id + '/' + new Date().getFullYear() + '-AM';
-        modelToSubmit.requestHistories.push({
-            startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
-            endDate: new Date(),
-            username: this.authService.getUserName(),
-            step: 'F'
-        });
+            let modelToSubmit: any = {};
+            this.loadingService.show();
+
+            modelToSubmit                                      = this.importData;
+            modelToSubmit.endDate                              = new Date();
+            modelToSubmit.importAuthorizationEntity.authorized = aprrovedOrNot;
+            modelToSubmit.currentStep                          = 'F';
 
 
-        modelToSubmit.importAuthorizationEntity.currency = this.authorizationCurrency;
-        console.log('this.evaluateImportForm.value', this.evaluateImportForm.value);
-        //=============
+            modelToSubmit.importAuthorizationEntity.authorizationsNumber = this.importData.importAuthorizationEntity.id + '/' + new Date().getFullYear() + '-AM';
+            modelToSubmit.requestHistories.push({
+                startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
+                endDate: new Date(),
+                username: this.authService.getUserName(),
+                step: 'F'
+            });
 
 
-        modelToSubmit.medicaments = [];
+            modelToSubmit.importAuthorizationEntity.currency = this.authorizationCurrency;
+            console.log('this.evaluateImportForm.value', this.evaluateImportForm.value);
+            //=============
 
-        //=============
-        modelToSubmit.importAuthorizationEntity.summ = 0;
-        this.importDetailsList.forEach(item => {
-            if (item.approved === true) {
-                this.expirationDate.push(item.expirationDate);
-                modelToSubmit.importAuthorizationEntity.summ = modelToSubmit.importAuthorizationEntity.summ + item.summ;
-                console.log('modelToSubmit.importAuthorizationEntity.summ');
+
+            modelToSubmit.medicaments = [];
+
+            //=============
+            modelToSubmit.importAuthorizationEntity.summ = 0;
+            this.importDetailsList.forEach(item => {
+                if (item.approved === true) {
+                    this.expirationDate.push(item.expirationDate);
+                    modelToSubmit.importAuthorizationEntity.summ = modelToSubmit.importAuthorizationEntity.summ + item.summ;
+                    console.log('modelToSubmit.importAuthorizationEntity.summ');
+                }
+            });
+
+            modelToSubmit.importAuthorizationEntity.expirationDate = new Date(this.expirationDate.reduce(function (a, b) {
+                return a < b ? a : b;
+            }));
+            if (this.importData.importAuthorizationEntity.medType === 2 && modelToSubmit.importAuthorizationEntity.expirationDate > (new Date(this.currentDate.getDate() + 365))) {
+                modelToSubmit.importAuthorizationEntity.expirationDate = new Date(this.currentDate.setFullYear(this.currentDate.getFullYear() + 1));
             }
-        });
 
-        modelToSubmit.importAuthorizationEntity.expirationDate = new Date(this.expirationDate.reduce(function (a, b) {
-            return a < b ? a : b;
-        }));
-        if (this.importData.importAuthorizationEntity.medType === 2 && modelToSubmit.importAuthorizationEntity.expirationDate > (new Date(this.currentDate.getDate() + 365))) {
-            modelToSubmit.importAuthorizationEntity.expirationDate = new Date(this.currentDate.setFullYear(this.currentDate.getFullYear() + 1));
+            // if (this.importData.importAuthorizationEntity.medType === 3 || this.importData.importAuthorizationEntity.medType === 4) {
+            //     modelToSubmit.importAuthorizationEntity.expirationDate = new Date(this.currentDate.setFullYear(this.currentDate.getFullYear() + 1));
+            // }
+
+            console.log('modelToSubmit', modelToSubmit);
+            // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {
+            this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
+                    console.log('addImportRequest(modelToSubmit).subscribe(data) ', data);
+                    this.loadingService.hide();
+                    this.router.navigate(['dashboard/homepage']);
+                }, error => {
+                    alert('Something went wrong while sending the model');
+                    this.router.navigate(['dashboard/homepage']);
+                    console.log('error: ', error);
+                    this.loadingService.hide();
+                }
+            ));
+
+            this.formSubmitted = false;
         }
-
-        // if (this.importData.importAuthorizationEntity.medType === 3 || this.importData.importAuthorizationEntity.medType === 4) {
-        //     modelToSubmit.importAuthorizationEntity.expirationDate = new Date(this.currentDate.setFullYear(this.currentDate.getFullYear() + 1));
-        // }
-
-        console.log('modelToSubmit', modelToSubmit);
-        // this.subscriptions.push(this.requestService.addImportRequest(this.importData).subscribe(data => {
-        this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
-                console.log('addImportRequest(modelToSubmit).subscribe(data) ', data);
-                this.loadingService.hide();
-                this.router.navigate(['dashboard/homepage']);
-            }, error => {
-                alert('Something went wrong while sending the model');
-                this.router.navigate(['dashboard/homepage']);
-                console.log('error: ', error);
-                this.loadingService.hide();
-            }
-        ));
-
-        this.formSubmitted = false;
+        else console.log("customsPoints", this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').valid)
     }
 
 

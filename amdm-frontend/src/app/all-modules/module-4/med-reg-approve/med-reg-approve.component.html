@@ -272,6 +272,20 @@
                             </label>
                         </div>
                     </div>
+
+                    <div class="col-4">
+                        <div class="md-form-modified">
+                            <ng-select id="customsPoints" placeholder="Pucte Vamale aprobate" formControlName="customsPoints" [multiple]="true">
+                                <ng-option *ngFor="let point of customsPointsList" [value]="point">{{ point.description }} - {{point.code}}</ng-option>
+                            </ng-select>
+                        </div>
+                        <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.customsPoints').invalid ">
+                            <small class="text-muted"><strong class="text-danger">Vama trebuie selectată</strong>
+                            </small>
+                        </div>
+                    </div>
+
+
                 </div>
 
 
@@ -339,6 +353,7 @@
                 </section>
                 <div class="text-center">
                     <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(true)" type="button">Aprob autorizația</button>
+                    <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="showCustomsPoints()" type="button">showCustomsPoints()</button>
                     <button class="btn btn-danger waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(false)" type="button">Resping autorizația</button>
                     <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc()">Vizualire Autorizației</button>
                     <!--<button class="btn btn-dark-red-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>-->

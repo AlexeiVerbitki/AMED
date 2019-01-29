@@ -160,12 +160,10 @@
 
                     <div class="col-4">
                         <div class="md-form-modified">
-                            <!--<md-form-field class="w-100">-->
                             <ng-select id="customsPoints" placeholder="Vama"
                                        formControlName="customsPoints">
                                 <ng-option *ngFor="let point of customsPointsList" [value]="point">{{ point.description }} - {{point.code}}</ng-option>
                             </ng-select>
-                            <!--</md-form-field>-->
                         </div>
                         <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.customsPoints').invalid ">
                             <small class="text-muted"><strong class="text-danger">Vama trebuie selectată</strong>
