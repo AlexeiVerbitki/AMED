@@ -65,7 +65,7 @@ export class MedRegComponent implements OnInit {
     codeAmed: any;
 
     solicitantCompanyList: Observable<any[]>;
-    unitSumm: any;
+    unitSumm: number;
 
     formModel: any;
     valutaList: any[];
@@ -373,7 +373,8 @@ export class MedRegComponent implements OnInit {
                 if (val) {
                     this.unitSumm = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
                         * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value;
-                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.unitSumm);
+                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.unitSumm.toFixed(2));
+                    console.log("this.unitSumm.toFixed(2)",this.unitSumm.toFixed(2))
 
                 }
             }));
@@ -383,7 +384,7 @@ export class MedRegComponent implements OnInit {
                     this.userPrice = val;
                     this.unitSumm = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
                         * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value;
-                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.unitSumm);
+                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.unitSumm.toFixed(2));
 
                 }
 

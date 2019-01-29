@@ -977,7 +977,7 @@ export class ImportManagement implements OnInit {
                     this.router.navigate(['dashboard/homepage']);
                     // alert("Saved")
                 }, error => {
-                    alert('Something went wrong while sending the model');
+                    // alert('Something went wrong while sending the model');
                     console.log('error: ', error);
                     this.loadingService.hide();
                 }
