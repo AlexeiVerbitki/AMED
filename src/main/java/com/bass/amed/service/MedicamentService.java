@@ -12,7 +12,9 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -21,20 +23,20 @@ public class MedicamentService
     private static final Logger LOGGER      = LoggerFactory.getLogger(MedicamentService.class);
     private static final String queryString = "        SELECT m.id,\n" +
             "       IFNULL(m.name, \"\")             AS denumireComerciala,\n" +
-            "       m.code                         AS codulMed,\n" +
+            "       IFNULL(m.code, \"\")                         AS codulMed,\n" +
             "       IFNULL(m.customs_code, 0)      AS       codVamal,\n" +
-            "       NPF.description                AS formaFarmaceutica,\n" +
-            "       m.dose                         AS doza,\n" +
+            "       IFNULL(NPF.description, \"\")                AS formaFarmaceutica,\n" +
+            "       IFNULL(m.dose, \"\")                         AS doza,\n" +
             "       IFNULL(m.volume,\"\")          AS volum,\n" +
             "       IFNULL(m.division,\"\")        AS divizare,\n" +
             "       IFNULL(m.atc_code,\"\")        AS atc,\n" +
             "       IFNULL(nmm.description,\"\")   AS firmaProducatoare,\n" +
-            "       m.registration_number          AS nrDeInregistrare,\n" +
+            "       IFNULL(m.registration_number, 0)         AS nrDeInregistrare,\n" +
             "       m.registration_date            AS dataInregistrarii,\n" +
             "       IFNULL(m.originale, FALSE)     AS original,\n" +
             "       IFNULL(m.prescription,\"\")    AS statutDeEliberare,\n" +
             "       IFNULL(NMIM.description,\"\")  AS dci,\n" +
-            "       nnmm.description               AS detinatorulCertificatuluiDeIntreg,\n" +
+            "       IFNULL(nnmm.description, \"\")               AS detinatorulCertificatuluiDeIntreg,\n" +
             "       IFNULL(nmct.description,\"\")  AS taraDetinatorului,\n" +
             "       IFNULL((SELECT GROUP_CONCAT(mi.path SEPARATOR '; ')\n" +
             "        FROM medicament_instructions mi\n" +
@@ -45,7 +47,8 @@ public class MedicamentService
             "        FROM medicament_instructions mi\n" +
             "        WHERE mi.medicament_id = m.id\n" +
             "          AND mi.type = 'M'\n" +
-            "        GROUP BY medicament_id, type),\"\") AS machetaAmbalajului\n" +
+            "        GROUP BY medicament_id, type),\"\") AS machetaAmbalajului,\n" +
+            "       IFNULL(m.terms_of_validity, 0)       AS termenValabilitate\n" +
             "FROM medicament m\n" +
             "       INNER JOIN nm_pharmaceutical_forms NPF ON m.pharmaceutical_form_id = NPF.id\n" +
             "       LEFT JOIN medicament_manufactures mm ON m.id = mm.medicament_id AND mm.producator_produs_finit = TRUE\n" +
@@ -88,8 +91,8 @@ public class MedicamentService
                 drugsNomenclator.setDivizare((String) record[7]);
                 drugsNomenclator.setAtc((String) record[8]);
                 drugsNomenclator.setFirmaProducatoare((String) record[9]);
-                drugsNomenclator.setNrDeInregistrare((Integer) record[10]);
-                drugsNomenclator.setDataInregistrarii((Timestamp) record[11]);
+                drugsNomenclator.setNrDeInregistrare(((BigInteger) record[10]).intValue());
+                drugsNomenclator.setDataInregistrarii( record[11] == null ? Timestamp.valueOf(LocalDate.now().atStartOfDay()) : (Timestamp) record[11]);
                 drugsNomenclator.setOriginal(Boolean.TRUE.equals(record[12]) ? "Da" : "Nu");
                 drugsNomenclator.setStatutDeEliberare(Boolean.TRUE.equals(record[13]) ? "Da" : "Nu");
                 drugsNomenclator.setDci((String) record[14]);
@@ -98,13 +101,13 @@ public class MedicamentService
 
                 drugsNomenclator.setInstructiunea((String) record[17]);
                 drugsNomenclator.setMachetaAmbalajului((String) record[18]);
+                drugsNomenclator.setTermenValabilitate(((BigInteger) record[19]).intValue());
 
                 drugsNomenclators.add(drugsNomenclator);
             });
             long streamEndTime  = System.nanoTime();
             long streamDuration = (streamEndTime - streamStartTime) / 1_000_000; // / 1_000
             System.out.println("Stream duration: " + streamDuration);
-
 
             em.getTransaction().commit();
         }

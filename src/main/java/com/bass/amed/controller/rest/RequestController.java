@@ -10,6 +10,7 @@ import com.bass.amed.repository.license.LicensesRepository;
 import com.bass.amed.repository.prices.NmPricesRepository;
 import com.bass.amed.repository.prices.PriceRepository;
 import com.bass.amed.repository.prices.PricesHistoryRepository;
+import com.bass.amed.service.ClinicalTrailsService;
 import com.bass.amed.service.MedicamentAnnihilationRequestService;
 import com.bass.amed.utils.AmountUtils;
 import com.bass.amed.utils.SecurityUtils;
@@ -74,14 +75,18 @@ public class RequestController
     private ImportAuthorizationRepository importAuthorizationRepository;
     @Autowired
     private ImportAuthRepository importAuthRepository;
-
 	@Autowired
     private InvoiceDetailsRepository invoiceDetailsRepository;
     @Autowired
     private CtMedINstInvestigatorRepository medINstInvestigatorRepository;
-
     @Autowired
     private MedicamentAnnihilationRequestService medicamentAnnihilationRequestService;
+    @Autowired
+    private MedicamentCodeSeqRepository medicamentCodeSeqRepository;
+    @Autowired
+    private ClinicalTrailsService clinicalTrailsService;
+    @Autowired
+    CtAmendMedInstInvestigatorRepository ctAmendMedInstInvestigatorRepository;
 
 
     @RequestMapping(value = "/add-medicament-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -184,7 +189,9 @@ public class RequestController
             RegistrationRequestsEntity requestDB = requestRepository.findById(request.getId()).orElse(new RegistrationRequestsEntity());
             MedicamentHistoryEntity medicamentHistoryEntityDB =
                     requestDB.getMedicamentHistory().stream().findFirst().orElse(new MedicamentHistoryEntity());
-            if(medicamentHistoryEntityDB.getCommercialNameFrom()==null || medicamentHistoryEntityDB.getCommercialNameFrom().isEmpty())
+            if(medicamentHistoryEntityDB.getCommercialNameFrom()==null || medicamentHistoryEntityDB.getCommercialNameFrom().isEmpty()
+            || medicamentHistoryEntityDB.getInternationalMedicamentNameFrom()==null
+            || medicamentHistoryEntity.getPharmaceuticalFormFrom()==null)
             {
                 List<MedicamentEntity> medicaments = medicamentRepository.findByRegistrationNumber(medicamentHistoryEntity.getRegistrationNumber());
                 MedicamentEntity med =  medicaments.stream().filter(t->t.getStatus().equals("F")).findFirst().orElse(new MedicamentEntity());
@@ -279,28 +286,15 @@ public class RequestController
             String generatedCode = "";
             do
             {
-                generatedCode = Utils.generateMedicamentCode();
+                MedicamentCodeSequenceEntity seq = new MedicamentCodeSequenceEntity();
+                medicamentCodeSeqRepository.save(seq);
+                generatedCode = Utils.generateMedicamentCode(seq.getId());
                 medicamentEntity = medicamentRepository.findByCode(generatedCode);
             }
             while (medicamentEntity != null);
             medicament.setCode(generatedCode);
         }
     }
-
-    //    private void addDDDocument(@RequestBody RegistrationRequestsEntity request)
-    //    {
-    //        if (request.getOutputDocuments() == null || request.getOutputDocuments().isEmpty())
-    //        {
-    //            request.setOutputDocuments(new HashSet<>());
-    //            Optional<NmDocumentTypesEntity> nmMedicamentTypeEntity = documentTypeRepository.findByCategory("DD");
-    //            OutputDocumentsEntity outputDocumentsEntity = new OutputDocumentsEntity();
-    //            outputDocumentsEntity.setDocType(nmMedicamentTypeEntity.get());
-    //            outputDocumentsEntity.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
-    //            outputDocumentsEntity.setName("Dispozitie de distribuire");
-    //            outputDocumentsEntity.setNumber("DD-" + request.getRequestNumber());
-    //            request.getOutputDocuments().add(outputDocumentsEntity);
-    //        }
-    //    }
 
     private void addDRDocument(@RequestBody RegistrationRequestsEntity request)
     {
@@ -676,6 +670,8 @@ public class RequestController
         medicamentHistoryEntityForUpdate.setAtcCodeTo(medicamentHistoryEntity.getAtcCodeTo());
         medicamentHistoryEntityForUpdate.setCustomsCodeTo(medicamentHistoryEntity.getCustomsCodeTo());
         medicamentHistoryEntityForUpdate.setCommercialNameTo(medicamentHistoryEntity.getCommercialNameTo());
+        medicamentHistoryEntityForUpdate.setOriginaleTo(medicamentHistoryEntity.getOriginaleTo());
+        medicamentHistoryEntityForUpdate.setOrphanTo(medicamentHistoryEntity.getOrphanTo());
         medicamentHistoryEntityForUpdate.setStatus("F");
     }
 
@@ -1138,13 +1134,14 @@ public class RequestController
 		return new ResponseEntity<>(requests, HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/get-invoice-quota")public ResponseEntity<Integer> getInvoiceQuota(@RequestParam Map<String, String> requestParams) throws CustomException
+	@RequestMapping(value = "/get-invoice-quota")
+	public ResponseEntity<Integer> getInvoiceQuota(@RequestParam Map<String, String> requestParams) throws CustomException
 
 	{
 //		Optional<List<RegistrationRequestsEntity>> registrationRequestsEntities = requestRepository.findMedicamentHistoryByRegistrationNumber(registrationNumber);
 
 		List<InvoiceDetailsEntity> list = new ArrayList<>();
-//		list = invoiceDetailsRepository.findInvoicesByAuthorization(requestParams.get("1290823578"), "33134/2019-AM");
+
 		list = invoiceDetailsRepository.findInvoicesByAuthorization(requestParams.get("nameOrCodeAmed"), requestParams.get("authorizationNumber"));
 		int importedQuantity  = list.stream().map(emp -> emp.getQuantity()).reduce(0, (x,y) -> x+y);
         list.forEach(x -> System.out.println(x.getQuantity()));
@@ -1188,7 +1185,9 @@ public class RequestController
             {
                 if (medNotGer.getCodeAmed() == null && requests.getImportAuthorizationEntity().getMedType()==2)
                 {
-                    medNotGer.setCodeAmed(Utils.generateMedicamentCode());
+                    MedicamentCodeSequenceEntity seq = new MedicamentCodeSequenceEntity();
+                    medicamentCodeSeqRepository.save(seq);
+                    medNotGer.setCodeAmed(Utils.generateMedicamentCode(seq.getId()));
                 }
             }
         }
@@ -1613,27 +1612,41 @@ public class RequestController
     }
 
     @RequestMapping(value = "/get-request-dd-ct", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<RegistrationRequestsEntity>> getRequestsForDDCt() throws CustomException
-    {
+    public ResponseEntity<List<RegistrationRequestsEntity>> getRequestsForDDCt() throws CustomException {
         List<RegistrationRequestsEntity> regs = requestRepository.findRequestsForDDCt();
 
-        for (RegistrationRequestsEntity reg : regs){
-            Set<CtMedInstInvestigatorEntity> requestTypesStepEntityList2 = medINstInvestigatorRepository.findCtMedInstInvestigatorById(reg.getClinicalTrails().getId());
-
-            Set<CtMedicalInstitutionEntity> ctMedicalInstitutionEntities = new HashSet<>();
-            requestTypesStepEntityList2.forEach(ctMedInstInvestigatorEntity -> {
-                CtMedicalInstitutionEntity medInst = ctMedInstInvestigatorEntity.getMedicalInstitutionsEntity();
-                CtInvestigatorEntity ctInvestigatorEntity = ctMedInstInvestigatorEntity.getInvestigatorsEntity();
-                ctInvestigatorEntity.setMain(ctMedInstInvestigatorEntity.getMainInvestigator());
-
-                medInst.getInvestigators().add(ctInvestigatorEntity);
-                ctMedicalInstitutionEntities.add(medInst);
-
-            });
-            reg.getClinicalTrails().setMedicalInstitutions(ctMedicalInstitutionEntities);
+        for (RegistrationRequestsEntity reg : regs) {
+            this.clinicalTrailsService.getCtMedInstInvestigator(reg);
         }
         regs.sort(Comparator.comparing(o -> o.getStartDate()));
         return new ResponseEntity<>(regs, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/get-request-dd-amd-ct", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<RegistrationRequestsEntity>> getRequestsForDDACt() throws CustomException {
+        List<RegistrationRequestsEntity> regs = requestRepository.findRequestsForDDACt();
+
+        for (RegistrationRequestsEntity requestsEntity : regs) {
+            ClinicTrialAmendEntity clinicTrialAmendEntity = requestsEntity.getClinicalTrails().getClinicTrialAmendEntities().stream().filter(entity ->
+                    entity.getRegistrationRequestId().equals(requestsEntity.getId())
+            ).findFirst().orElse(null);
+
+            if (clinicTrialAmendEntity != null) {
+                Set<CtAmendMedInstInvestigatorEntity> medInstInvestigators = ctAmendMedInstInvestigatorRepository.findCtMedInstInvestigatorById(clinicTrialAmendEntity.getId());
+                medInstInvestigators.forEach(medInstInvestigator -> {
+                    if ('U' == medInstInvestigator.getEmbededId().getStatus() || 'N' == medInstInvestigator.getEmbededId().getStatus()) {
+                        CtMedicalInstitutionEntity medInst = medInstInvestigator.getMedicalInstitutionsEntity();
+                        CtInvestigatorEntity ctInvestigatorEntity = new CtInvestigatorEntity();
+                        ctInvestigatorEntity.asign(medInstInvestigator.getInvestigatorsEntity());
+                        ctInvestigatorEntity.setMain(medInstInvestigator.getMainInvestigator());
+                        medInst.getInvestigators().add(ctInvestigatorEntity);
+
+                        clinicTrialAmendEntity.getMedicalInstitutionsTo().add(medInst);
+                    }
+                });
+            }
+        }
+        return new ResponseEntity<>(regs,HttpStatus.OK);
     }
 
     @RequestMapping(value = "/get-ddcs", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -1644,6 +1657,12 @@ public class RequestController
         return new ResponseEntity<>(dds, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/get-ddacs", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<OutputDocumentsEntity>> getDDACs() throws CustomException {
+        List<OutputDocumentsEntity> dda = outputDocumentsRepository.findDDA();
+        dda.sort(Comparator.comparing(o -> o.getDate(), Comparator.reverseOrder()));
+        return new ResponseEntity<>(dda, HttpStatus.OK);
+    }
     @GetMapping(value = "/get-old-request-term")
     public ResponseEntity<String> getOldRequestTerm(@RequestParam(value = "code") String code) throws CustomException
     {
@@ -1692,38 +1711,11 @@ public class RequestController
     @GetMapping(value = "/validate-idnp")
     public ResponseEntity<Boolean> validateIDNP(@RequestParam(value = "idnp") String idnp )
     {
-        if( idnp.length() != 13 || !isStringDigits(idnp )){
-            return new ResponseEntity<>(false, HttpStatus.OK);
-        }
-
-        final int[] weightFunctionConstant = { 7, 3, 1 };
-        int sum = 0;
-        int j = 0;
-
-        for( int i = 0; i < ( idnp.length( ) - 1 ); i++, j++ )
-        {
-            sum = sum + ( Integer.parseInt( String.valueOf( idnp.charAt( i ) ) ) * weightFunctionConstant[j] );
-            if( weightFunctionConstant.length <= ( j + 1 ) )
-            {
-                j = -1;
-            }
-        }
-
-        int checkSum = sum % 10;
-        Boolean valid = checkSum == Integer.parseInt(String.valueOf(idnp.charAt(idnp.length() - 1)));
+        Boolean valid = Utils.validateIdnp(idnp);
         return new ResponseEntity<>(valid, HttpStatus.OK);
     }
 
-    public static boolean isStringDigits(String str)
-    {
-        if(str == null)
-            return false;
-        for(int i = 0; i < str.length(); i++)
-            if(str.charAt(i) < '0' || str.charAt(i) > '9')
-                return false;
 
-        return true;
-    }
 }
 
 

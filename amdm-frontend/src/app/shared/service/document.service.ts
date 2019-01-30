@@ -140,6 +140,10 @@ export class DocumentService {
         return this.http.post('/api/documents/generate-dd-ct', ddCtDetails, {responseType: 'blob'});
     }
 
+    generateDDACt(ddCtDetails: any): Observable<any> {
+        return this.http.post('/api/documents/generate-dd-amd-ct', ddCtDetails, {responseType: 'blob'});
+    }
+
     removeDD(element: any): Observable<any> {
         return this.http.post('/api/documents/remove-dd', element, {observe: 'response'});
     }
@@ -237,17 +241,29 @@ export class DocumentService {
         formdata.append('file', file);
         return this.http.post('/api/documents/add-ddc', formdata, {observe: 'response'});
     }
+
+    addDDAC(document: any, file: File): Observable<any> {
+        const formdata: FormData = new FormData();
+        formdata.append('id', document.id);
+        formdata.append('dateOfIssue', document.dateOfIssue);
+        formdata.append('file', file);
+        return this.http.post('/api/documents/add-ddac', formdata, {observe: 'response'});
+    }
+
     addSLC(model: any): Observable<any> {
         return this.http.post('/api/documents/add-sl', model, {observe: 'response'});
     }
 
     deleteSLById(id: string): Observable<any> {
-        return this.http.post('/api/documents/delete-sl-by-id', {params: {id: id}, observe: 'response'});
+        return this.http.get('/api/documents/delete-sl-by-id', {params: {id: id}, observe: 'response'});
     }
 
     generateAvizC(id: string, category: string): Observable<any> {
-        console.log('asdfasdg', id);
         return this.http.get('/api/documents/generate-aviz-ct', {params: {id: id, docCategory: category}, responseType: 'blob'});
+    }
+
+    generateAvizAC(id: string, category: string): Observable<any> {
+        return this.http.get('/api/documents/generate-aviz-amdm-ct', {params: {id: id, docCategory: category}, responseType: 'blob'});
     }
 
 }

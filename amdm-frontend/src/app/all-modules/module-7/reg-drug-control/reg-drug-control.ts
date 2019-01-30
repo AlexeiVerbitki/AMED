@@ -13,8 +13,6 @@ import {AuthService} from '../../../shared/service/authetication.service';
 import {MedicamentService} from '../../../shared/service/medicament.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {TaskService} from '../../../shared/service/task.service';
-import {LicenseService} from '../../../shared/service/license/license.service';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
 
 @Component({
     selector: 'app-reg-drug-control', templateUrl: './reg-drug-control.html', styleUrls: ['./reg-drug-control.css']
@@ -24,7 +22,6 @@ export class RegDrugControl implements OnInit {
     requests: Cerere [] = [];
     rForm: FormGroup;
     dataForm: FormGroup;
-    sysDate: string;
     currentDate: Date;
     file: any;
     generatedDocNrSeq: number;
@@ -38,11 +35,11 @@ export class RegDrugControl implements OnInit {
     loadingCompany = false;
     companyInputs = new Subject<string>();
     private subscriptions: Subscription[] = [];
+    maxDate = new Date();
 
     constructor(private fb: FormBuilder, public dialog: MatDialog, private router: Router, private administrationService: AdministrationService,
                 private requestService: RequestService, private authService: AuthService, private medicamentService: MedicamentService,
-                private loadingService: LoaderService, private taskService: TaskService, private licenseService: LicenseService,
-                private errorHandlerService: ErrorHandlerService) {
+                private loadingService: LoaderService, private taskService: TaskService) {
 
         this.rForm = fb.group({
             'compGet': [null, Validators.required], 'med': [null, Validators.required], 'primRep': [null, Validators.required],
@@ -51,7 +48,7 @@ export class RegDrugControl implements OnInit {
             'data': {disabled: true, value: null}, 'requestNumber': [null], 'startDate': [new Date()], 'endDate': [''], 'currentStep': ['R'],
             'company': [null, Validators.required], 'type': fb.group({
                 'code': ['ATAC', Validators.required]
-            }), 'mandatedFirstname': [null, Validators.required], 'mandatedLastname': [null, Validators.required],
+            }), 'mandatedFirstname': [null, Validators.required], 'mandatedLastname': [null, Validators.required], 'idnp': [null],
             'phoneNumber': [null, [Validators.required, Validators.maxLength(9), Validators.pattern('[0-9]+')]], 'email': [null, Validators.email],
             'requestMandateNr': [null], 'requestMandateDate': [{value: null}],
         });
@@ -96,18 +93,6 @@ export class RegDrugControl implements OnInit {
         return user ? user.name : undefined;
     }
 
-    onChange(event) {
-        this.file = event.srcElement.files[0];
-        const fileName = this.file.name;
-        const lastIndex = fileName.lastIndexOf('.');
-        let fileFormat = '';
-        if (lastIndex !== -1) {
-            fileFormat = '*.' + fileName.substring(lastIndex + 1);
-        }
-        this.sysDate = `${this.currentDate.getDate()}.${this.currentDate.getMonth() + 1}.${this.currentDate.getFullYear()}`;
-        this.requests.push({denumirea: fileName, format: fileFormat, dataIncarcarii: this.sysDate});
-    }
-
     nextStep() {
         this.formSubmitted = true;
 
@@ -135,12 +120,10 @@ export class RegDrugControl implements OnInit {
         modelToSubmit.registrationRequestMandatedContacts = [{
             mandatedLastname: this.rForm.get('mandatedLastname').value, mandatedFirstname: this.rForm.get('mandatedFirstname').value,
             phoneNumber: this.rForm.get('phoneNumber').value, email: this.rForm.get('email').value, requestMandateNr: this.rForm.get('requestMandateNr').value,
-            requestMandateDate: this.rForm.get('requestMandateDate').value
+            requestMandateDate: this.rForm.get('requestMandateDate').value, idnp: this.rForm.get('idnp').value
         }];
 
         this.setSelectedRequest();
-
-        //this.goToNextStepOnLicenseValid(modelToSubmit);
 
         this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
             this.router.navigate([this.model + data.body.id]);
@@ -160,45 +143,4 @@ export class RegDrugControl implements OnInit {
             this.model = 'dashboard/module/drug-control/duplicate-authority/';
         }
     }
-
-    // private goToNextStepOnLicenseValid(modelToSubmit: any) {
-    //
-    //     let company = this.rForm.get('company').value;
-    //
-    //     if (company != null && company.licenseId != null) {
-    //         this.subscriptions.push(
-    //             this.licenseService.findLicenseById(company.licenseId).subscribe(data => {
-    //                     if (data != null && data.expirationDate != null) {
-    //                         let licenseDate = new Date(data.expirationDate);
-    //                         let date = new Date();
-    //                         let haveLicence = false;
-    //                         if (licenseDate.getTime() > date.getTime()) {
-    //                             haveLicence = true;
-    //                         }
-    //                         if (!haveLicence) {
-    //                             this.errorHandlerService.showError('Licenta nu este valida.');
-    //                             return;
-    //                         }
-    //                         try {
-    //                             this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
-    //                                     this.router.navigate([this.model + data.body.id]);
-    //                                 })
-    //                             );
-    //                         } catch (err) {
-    //                             return;
-    //                         }
-    //                     } else {
-    //                         this.errorHandlerService.showError('Licenta nu este valida.');
-    //                         return;
-    //                     }
-    //                 }
-    //             )
-    //         );
-    //     } else {
-    //         this.errorHandlerService.showError('Licenta nu este valida.');
-    //         return;
-    //     }
-    //
-    // }
-
 }

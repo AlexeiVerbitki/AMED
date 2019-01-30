@@ -67,6 +67,10 @@ const routes: Routes = [
                         path: 'module/documents',
                         loadChildren: '../app/all-modules/module-10/doc-flow.module#DocFlowModule'
                     },
+                    {
+                        path: 'module/gdp',
+                        loadChildren: '../app/all-modules/gdp/gdp.module#GDPModule'
+                    },
                 ],
             },
             {path: 'task', component: TaskComponent},

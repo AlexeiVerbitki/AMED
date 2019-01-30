@@ -1,7 +1,12 @@
 import {AfterViewInit, Component, Inject, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material';
 import {UploadFileService} from '../../shared/service/upload/upload-file.service';
+import {FormBuilder, FormGroup} from "@angular/forms";
+import {saveAs} from 'file-saver';
+import {SelectVariationTypeComponent, TodoItemFlatNode} from "../select-variation-type/select-variation-type.component";
+import {SelectionModel} from "@angular/cdk/collections";
+import {AdministrationService} from "../../shared/service/administration.service";
 
 @Component({
     selector: 'app-medicament-modifications-dialog',
@@ -20,17 +25,35 @@ export class MedicamentModificationsDialogComponent implements OnInit {
     medicamentTypes: any[] = [];
     instructions: any[] = [];
     machets: any[] = [];
+    documents: any[] = [];
+    checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
+    variationTypesIds : string;
+    variationTypesIdsTemp : string;
 
     constructor(
+        private fb: FormBuilder,
         public dialogRef: MatDialogRef<MedicamentModificationsDialogComponent>,
+        public dialog: MatDialog,
         private uploadService: UploadFileService,
+        private administrationService: AdministrationService,
         @Inject(MAT_DIALOG_DATA) public dataDialog: any) {
-
     }
 
     ngOnInit() {
         this.populateListsFromHistory();
         this.populateMedicamentDetailsFromHistory();
+        this.subscriptions.push(this.administrationService.variatonTypesJSON().subscribe(data2 => {
+                this.variationTypesIds = JSON.stringify(data2.val2);
+                if(this.dataDialog.historyDetails[0].variations) {
+                    this.variationTypesIdsTemp =  this.variationTypesIds.substr(1);
+                    for (let v of this.dataDialog.historyDetails[0].variations) {
+                        var t = new TodoItemFlatNode();
+                        t.item = this.getVariationCodeById(v.variation.id,v.value);
+                        this.checklistSelection.selected.push(t);
+                    }
+                }
+            }
+        ));
     }
 
     confirm(): void {
@@ -40,6 +63,7 @@ export class MedicamentModificationsDialogComponent implements OnInit {
     populateListsFromHistory() {
         for (const history of this.dataDialog.historyDetails) {
             if (history.id == this.dataDialog.order.registrationRequestId) {
+                this.documents = history.documents;
                 const ar = history.medicamentHistory[0].divisionHistory.filter(r => r.status == 'N' || r.status == 'R');
                 if (ar.length != 0) {
                     this.divisions = ar;
@@ -55,11 +79,6 @@ export class MedicamentModificationsDialogComponent implements OnInit {
                 const ar4 = history.medicamentHistory[0].auxiliarySubstancesHistory;
                 if (ar4.length != 0) {
                     this.auxiliarySubstancesTable = ar4;
-                }
-                const ar5: any[] = history.medicamentHistory[0].instructionsHistory;
-                if (ar5.length != 0) {
-                    this.instructions = ar5.filter(t => t.type == 'I');
-                    this.machets = ar5.filter(t => t.type == 'M');
                 }
                 const ar6 = history.medicamentHistory[0].medicamentTypesHistory;
                 if (ar6.length != 0) {
@@ -105,19 +124,29 @@ export class MedicamentModificationsDialogComponent implements OnInit {
                         changeDate: new Date()
                     });
                 }
-                if (history.medicamentHistory[0].medicamentTypeFrom.id != history.medicamentHistory[0].medicamentTypeTo.id) {
+                if (history.medicamentHistory[0].originaleFrom != history.medicamentHistory[0].originaleTo) {
                     this.modifications.push({
-                        field: 'Tip medicament',
-                        oldValue: history.medicamentHistory[0].medicamentTypeFrom.description,
-                        newValue: history.medicamentHistory[0].medicamentTypeTo.description,
+                        field: 'Original',
+                        oldValue: history.medicamentHistory[0].originaleFrom ? 'Da' : 'Nu',
+                        newValue: history.medicamentHistory[0].originaleTo ? 'Da' : 'Nu',
                         changeDate: new Date()
                     });
                 }
-               if ( history.medicamentHistory[0].groupFrom.id != history.medicamentHistory[0].groupTo.id) {
+                if (history.medicamentHistory[0].orphanFrom != history.medicamentHistory[0].orphanTo) {
+                    this.modifications.push({
+                        field: 'Orfan',
+                        oldValue: history.medicamentHistory[0].orphanFrom ? 'Da' : 'Nu',
+                        newValue: history.medicamentHistory[0].orphanTo ? 'Da' : 'Nu',
+                        changeDate: new Date()
+                    });
+                }
+               if ( history.medicamentHistory[0].vitaleFrom != history.medicamentHistory[0].vitaleTo
+               || history.medicamentHistory[0].esentialeFrom != history.medicamentHistory[0].esentialeTo
+               || history.medicamentHistory[0].nonesentialeFrom != history.medicamentHistory[0].nonesentialeTo) {
                     this.modifications.push({
                         field: 'Grupa medicament',
-                        oldValue: history.medicamentHistory[0].groupFrom.description,
-                        newValue: history.medicamentHistory[0].groupTo.description,
+                        oldValue: history.medicamentHistory[0].vitaleFrom ? 'Vitale' : (history.medicamentHistory[0].esentialeFrom ? 'Esenţiale' : (history.medicamentHistory[0].nonesentialeFrom ? 'Nonesenţiale' : '') ),
+                        newValue: history.medicamentHistory[0].vitaleTo ? 'Vitale' : (history.medicamentHistory[0].esentialeTo ? 'Esenţiale' : (history.medicamentHistory[0].nonesentialeTo ? 'Nonesenţiale' : '') ),
                         changeDate: new Date()
                     });
                 }
@@ -161,14 +190,6 @@ export class MedicamentModificationsDialogComponent implements OnInit {
                         changeDate: new Date()
                     });
                 }
-                if (history.medicamentHistory[0].customsCodeFrom.id != history.medicamentHistory[0].customsCodeTo.id) {
-                    this.modifications.push({
-                        field: 'Cod vamal',
-                        oldValue: history.medicamentHistory[0].customsCodeFrom.description,
-                        newValue: history.medicamentHistory[0].customsCodeTo.description,
-                        changeDate: new Date()
-                    });
-                }
             }
         }
     }
@@ -193,5 +214,48 @@ export class MedicamentModificationsDialogComponent implements OnInit {
             return s.replace(';,', '; ');
         }
         return '';
+    }
+
+    loadFile(path: string) {
+        this.subscriptions.push(this.uploadService.loadFile(path).subscribe(data => {
+                this.saveToFileSystem(data, path.substring(path.lastIndexOf('/') + 1));
+            },
+
+            error => {
+                console.log(error);
+            }
+            )
+        );
+    }
+
+    private saveToFileSystem(response: any, docName: string) {
+        const blob = new Blob([response]);
+        saveAs(blob, docName);
+    }
+
+    viewVariationType() {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+        // dialogConfig2.panelClass = 'overflow-ys';
+
+        dialogConfig2.width = '1000px';
+        dialogConfig2.height = '800px';
+
+        dialogConfig2.data = {values: this.checklistSelection, disabled : true};
+
+        let dialogRef = this.dialog.open(SelectVariationTypeComponent, dialogConfig2);
+    }
+
+    getVariationCodeById(id : string,value:string) : string
+    {
+        var i = this.variationTypesIdsTemp.indexOf(value+'":"'+id+'"')+value.length-1;
+        var tempStr =  this.variationTypesIdsTemp.substr(1,i);
+        var j = tempStr.lastIndexOf('"')+1;
+        var finalStr  = tempStr.substr(j,i);
+        this.variationTypesIdsTemp = this.variationTypesIdsTemp.replace('"'+finalStr+'":"'+id+'"','');
+        return finalStr;
     }
 }

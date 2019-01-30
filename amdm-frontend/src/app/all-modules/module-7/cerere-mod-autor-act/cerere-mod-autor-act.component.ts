@@ -12,7 +12,7 @@ import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.c
 import {LoaderService} from '../../../shared/service/loader.service';
 import {MatDialog} from '@angular/material';
 import {TaskService} from '../../../shared/service/task.service';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {DrugSubstanceTypesService} from '../../../shared/service/drugs/drugsubstancetypes.service';
 import {DrugDocumentsService} from '../../../shared/service/drugs/drugdocuments.service';
 import {DrugDecisionsService} from '../../../shared/service/drugs/drugdecisions.service';
@@ -52,6 +52,7 @@ export class CerereModAutorActComponent implements OnInit {
     selectedFilials: any[] = [];
     companyExistInTable = false;
     reqReqInitData: any;
+    oldDetails: any;
 
     constructor(private fb: FormBuilder, private administrationService: AdministrationService,
                 private medicamentService: MedicamentService,
@@ -60,7 +61,7 @@ export class CerereModAutorActComponent implements OnInit {
                 private loadingService: LoaderService,
                 private drugDocumentsService: DrugDocumentsService,
                 public dialogConfirmation: MatDialog,
-                private taskService: TaskService, private errorHandlerService: ErrorHandlerService,
+                private taskService: TaskService, private errorHandlerService: SuccessOrErrorHandlerService,
                 private drugSubstanceTypesService: DrugSubstanceTypesService,
                 private drugDecisionsService: DrugDecisionsService,
                 public dialog: MatDialog
@@ -117,8 +118,6 @@ export class CerereModAutorActComponent implements OnInit {
             )
         );
 
-        this.getDrugSubstanceTypes();
-
         this.onChanges();
     }
 
@@ -171,6 +170,9 @@ export class CerereModAutorActComponent implements OnInit {
                         );
 
                         this.getAllCompanies();
+
+                        this.getDrugSubstanceTypes();
+                        this.getOldDetailsByCompanyCode();
                     })
                 );
             })
@@ -181,7 +183,9 @@ export class CerereModAutorActComponent implements OnInit {
         this.companies =
             this.companyInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) { return true; }
+                    if (result && result.length > 2) {
+                        return true;
+                    }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -210,6 +214,48 @@ export class CerereModAutorActComponent implements OnInit {
         );
     }
 
+    getOldDetailsByCompanyCode() {
+
+        this.subscriptions.push(
+            this.drugDecisionsService.getOldDetailsByCompanyCode(this.company.code).subscribe(data => {
+                    this.oldDetails = data;
+                    if (this.oldDetails && this.oldDetails[0]) {
+
+                        const substance = this.drugSubstanceTypes.find((r => r.id == this.oldDetails[0].drugSubstanceTypesId));
+                        this.populateTypeOfSubstances(substance.code);
+                    }
+                },
+                error => console.log(error)
+            )
+        );
+    }
+
+    populateTypeOfSubstances(substanceCode: any) {
+
+        if (substanceCode) {
+            if (substanceCode == 'PRECURSOR') {
+                this.cerereModAutorForm.get('precursor').setValue(true);
+            } else if (substanceCode == 'PSIHOTROP') {
+                this.cerereModAutorForm.get('psihotrop').setValue(true);
+            } else if (substanceCode == 'STUPEFIANT') {
+                this.cerereModAutorForm.get('stupefiant').setValue(true);
+            } else if (substanceCode == 'PRECURSOR/PSIHOTROP') {
+                this.cerereModAutorForm.get('precursor').setValue(true);
+                this.cerereModAutorForm.get('psihotrop').setValue(true);
+            } else if (substanceCode == 'PRECURSOR/STUPEFIANT') {
+                this.cerereModAutorForm.get('precursor').setValue(true);
+                this.cerereModAutorForm.get('stupefiant').setValue(true);
+            } else if (substanceCode == 'PSIHOTROP/STUPEFIANT') {
+                this.cerereModAutorForm.get('stupefiant').setValue(true);
+                this.cerereModAutorForm.get('psihotrop').setValue(true);
+            } else if (substanceCode == 'PRECURSOR/PSIHOTROP/STUPEFIANT') {
+                this.cerereModAutorForm.get('precursor').setValue(true);
+                this.cerereModAutorForm.get('psihotrop').setValue(true);
+                this.cerereModAutorForm.get('stupefiant').setValue(true);
+            }
+        }
+    }
+    
     loadDocTypes(dataDB: any) {
 
         this.subscriptions.push(
@@ -409,6 +455,17 @@ export class CerereModAutorActComponent implements OnInit {
     }
 
     viewDoc(document: any) {
+
+        let isFormInvalid = false;
+        if (this.cerereModAutorForm.invalid) {
+            isFormInvalid = true;
+        }
+        if (isFormInvalid) {
+            this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
+        }
+        if (isFormInvalid) {
+            return;
+        }
         if (document.docType.category == 'AP') {
             this.loadingService.show();
             const locality = this.cerereModAutorForm.get('locality').value;
@@ -453,7 +510,9 @@ export class CerereModAutorActComponent implements OnInit {
             if (result) {
                 this.loadingService.show();
                 this.outDocuments.forEach((item, index) => {
-                    if (item === doc) { this.outDocuments.splice(index, 1); }
+                    if (item === doc) {
+                        this.outDocuments.splice(index, 1);
+                    }
                 });
                 this.initialData.outputDocuments = this.outDocuments;
 
@@ -558,8 +617,8 @@ export class CerereModAutorActComponent implements OnInit {
             width: '1000px',
             panelClass: 'materialLicense',
             data: {
-                idno : this.company.idno,
-                onlyNewFilial : true
+                idno: this.company.idno,
+                onlyNewFilial: true
             },
             hasBackdrop: false
         });

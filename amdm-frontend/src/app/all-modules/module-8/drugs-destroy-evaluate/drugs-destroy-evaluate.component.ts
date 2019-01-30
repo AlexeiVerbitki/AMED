@@ -13,7 +13,7 @@ import {DocumentService} from '../../../shared/service/document.service';
 import {AnnihilationMedDialogComponent} from '../../../dialog/annihilation-med-dialog/annihilation-med-dialog.component';
 import {DecimalPipe} from '@angular/common';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 
 @Component({
     selector: 'app-drugs-destroy-evaluate',
@@ -65,7 +65,7 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
                 private documentService: DocumentService,
                 public dialogDetails: MatDialog,
                 private navbarTitleService: NavbarTitleService,
-                private errorHandlerService: ErrorHandlerService) {
+                private errorHandlerService: SuccessOrErrorHandlerService) {
     }
 
     ngOnInit() {

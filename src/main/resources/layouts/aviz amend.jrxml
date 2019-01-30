@@ -45,7 +45,7 @@
 				<textFieldExpression><![CDATA["Nr. " + $P{nr} + " din " +$P{date}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="620" width="258" height="28" uuid="58bbaa30-8f56-4b5a-a5fc-d68e8cab02ea"/>
+				<reportElement x="0" y="610" width="258" height="28" uuid="58bbaa30-8f56-4b5a-a5fc-d68e8cab02ea"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
@@ -54,7 +54,7 @@ Preşedinte al Comisiei Medicamentului
 ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="289" y="630" width="241" height="18" uuid="c5ac03c8-8190-4f63-9788-99e123f83aed"/>
+				<reportElement x="289" y="620" width="241" height="18" uuid="c5ac03c8-8190-4f63-9788-99e123f83aed"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
@@ -196,26 +196,12 @@ PENTRU AMENDAMENT LA STUDIU CLINIC
 				<text><![CDATA[Informaţii privind studiul:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="500" width="139" height="20" uuid="7e82390c-8849-4971-af71-8ab44efba7f5"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Documente anexate:]]></text>
-			</staticText>
-			<staticText>
 				<reportElement x="0" y="480" width="168" height="20" uuid="76e5fe73-4b97-42f1-afb5-d815834f9749"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Identificare amendament: ]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="139" y="500" width="391" height="20" uuid="5db59652-971a-4f0a-b203-896b2bb73372"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{docAnexed}]]></textFieldExpression>
-			</textField>
 			<textField>
 				<reportElement x="168" y="480" width="362" height="20" uuid="2a1130c9-f973-433e-add0-39c90cc6344c"/>
 				<textElement>
@@ -224,7 +210,7 @@ PENTRU AMENDAMENT LA STUDIU CLINIC
 				<textFieldExpression><![CDATA[$P{amdmIdentification}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="540" width="530" height="60" uuid="23475d9b-0fdf-40c1-afa8-be66ea37e26e"/>
+				<reportElement x="0" y="530" width="530" height="60" uuid="23475d9b-0fdf-40c1-afa8-be66ea37e26e"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>

@@ -8,7 +8,7 @@ import {Router} from '@angular/router';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 import {MatDialog} from '@angular/material';
 import {AuthService} from '../../../shared/service/authetication.service';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {catchError, debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 import {LocalityService} from '../../../shared/service/locality.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
@@ -51,7 +51,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
                 private localityService: LocalityService,
                 public dialog: MatDialog,
                 private authService: AuthService,
-                private errorHandlerService: ErrorHandlerService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 private navbarTitleService: NavbarTitleService) {
 
     }

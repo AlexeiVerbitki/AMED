@@ -301,4 +301,8 @@ export class AdministrationService {
     getFilialsForIdno(idno: string): Observable<any> {
         return this.http.get('/api/nomenclature/filials-for-idno', {observe: 'response', params: {idno: idno}});
     }
+
+    variatonTypesJSON(): Observable<any> {
+        return this.http.get('/api/administration/variation-types-to-json', {});
+    }
 }

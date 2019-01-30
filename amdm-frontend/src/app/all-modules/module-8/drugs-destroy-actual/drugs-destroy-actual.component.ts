@@ -12,7 +12,7 @@ import {LoaderService} from '../../../shared/service/loader.service';
 import {DocumentService} from '../../../shared/service/document.service';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 
 @Component({
     selector: 'app-drugs-destroy-actual',
@@ -60,7 +60,7 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
                 private loadingService: LoaderService,
                 private documentService: DocumentService,
                 private navbarTitleService: NavbarTitleService,
-                private errorHandlerService: ErrorHandlerService) {
+                private errorHandlerService: SuccessOrErrorHandlerService) {
     }
 
     ngOnInit() {

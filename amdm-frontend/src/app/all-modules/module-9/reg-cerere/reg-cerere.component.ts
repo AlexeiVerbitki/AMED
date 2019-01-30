@@ -10,7 +10,7 @@ import {RequestService} from '../../../shared/service/request.service';
 import {TaskService} from '../../../shared/service/task.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
+import {SuccessOrErrorHandlerService} from "../../../shared/service/success-or-error-handler.service";
 
 enum Pages {
     CLAP = '3',
@@ -56,7 +56,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                 private administrationService: AdministrationService,
                 private taskService: TaskService,
                 private loadingService: LoaderService,
-                private errorHandlerService: ErrorHandlerService,) {
+                private errorHandlerService: SuccessOrErrorHandlerService,) {
     }
 
     ngOnInit() {
@@ -172,16 +172,15 @@ export class RegCerereComponent implements OnInit, OnDestroy {
     loadDocTypes(stepId: string) {
         this.subscriptions.push(
             this.taskService.getRequestStepByIdAndCode(stepId, 'R').subscribe(step => {
-                    // console.log('getRequestStepByIdAndCode', step);
+                    let availableDocsArr = [];
+                    step.availableDocTypes ? availableDocsArr = step.availableDocTypes.split(',') : availableDocsArr = [];
                     this.subscriptions.push(
                         this.administrationService.getAllDocTypes().subscribe(data => {
-                                //console.log('getAllDocTypes', data);
                                 if (step.availableDocTypes === null) {
                                     return;
                                 }
-
                                 this.docTypes = data;
-                                this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
+                                this.docTypes = this.docTypes.filter(r => availableDocsArr.includes(r.category));
                             },
                             error => console.log(error)
                         )

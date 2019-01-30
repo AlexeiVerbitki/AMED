@@ -3,10 +3,7 @@ package com.bass.amed.controller.rest.clinicaltrails;
 import com.bass.amed.common.Constants;
 import com.bass.amed.dto.clinicaltrial.ClinicalTrialPayNoteDTO;
 import com.bass.amed.dto.clinicaltrial.ServiceTaxesDTO;
-import com.bass.amed.entity.CtPaymentOrdersEntity;
-import com.bass.amed.entity.NmCurrenciesHistoryEntity;
-import com.bass.amed.entity.NmEconomicAgentsEntity;
-import com.bass.amed.entity.PaymentOrderNumberSequence;
+import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
 import com.bass.amed.utils.AmountUtils;
@@ -51,6 +48,9 @@ public class ClinicalTrailsPaymentController {
 
     @Autowired
     private CurrencyHistoryRepository currencyHistoryRepository;
+
+    @Autowired
+    ClinicalTrialsRepository clinicalTrialsRepository;
 
     @RequestMapping("/get-payment-orders-by-request-id")
     public ResponseEntity<List<CtPaymentOrdersEntity>> getPaymentOrdersByRequestId(Integer requestId) {
@@ -137,12 +137,21 @@ public class ClinicalTrailsPaymentController {
 
             parameters.put("companyName", nmEconomicAgentsEntity.getName());
             parameters.put("companyAddress", nmEconomicAgentsEntity.getLegalAddress());
+            parameters.put("isClinicalTrial", ctPayNote.getRequestType().equals(3));
 
-            if (ctPayNote.getClinicalTrial() != null) {
-                parameters.put("clinicStudyNr", ctPayNote.getClinicalTrial().getCode());
-                parameters.put("clinicStudyDescription", ctPayNote.getClinicalTrial().getTitle());
-                parameters.put("phases", ctPayNote.getClinicalTrial().getPhase().getName());
+            ClinicalTrialsEntity clinicalTrialsEntity = clinicalTrialsRepository.getClinicalTrialsEntityById(ctPayNote.getClinicalTrialId());
+            if(clinicalTrialsEntity.getPhase()==null) {
+                throw new CustomException("Faza studiului clinic nu este salvata.");
             }
+            if(clinicalTrialsEntity.getCode()==null || clinicalTrialsEntity.getCode().isEmpty()) {
+                throw new CustomException("Codul studiului clinic nu este salvat.");
+            }
+            if(clinicalTrialsEntity.getTitle()==null || clinicalTrialsEntity.getTitle().isEmpty()) {
+                throw new CustomException("Titlul studiului clinic nu este salvat.");
+            }
+            parameters.put("clinicStudyNr", clinicalTrialsEntity.getCode());
+            parameters.put("clinicStudyDescription", clinicalTrialsEntity.getTitle());
+            parameters.put("phases", clinicalTrialsEntity.getPhase().getName());
 
             parameters.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
             parameters.put("beneficiary", sysParamsRepository.findByCode(Constants.SysParams.BENEFICIARY).get().getValue());

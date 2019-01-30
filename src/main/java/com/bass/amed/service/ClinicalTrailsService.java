@@ -512,6 +512,9 @@ public class ClinicalTrailsService {
             String[] docTypes = entity.getOutputDocTypes() == null ? new String[0] : entity.getOutputDocTypes().split(",");
 
             for (String docType : docTypes) {
+                if (docType.equals("SL")) {
+                    continue;
+                }
                 Optional<NmDocumentTypesEntity> nmDocumentTypeEntity = documentTypeRepository.findByCategory(docType);
                 if (nmDocumentTypeEntity.isPresent()) {
                     OutputDocumentsEntity outputDocumentsEntity = new OutputDocumentsEntity();

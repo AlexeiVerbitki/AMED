@@ -1,29 +1,29 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewChildren} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {RequestService} from '../../../shared/service/request.service';
 import {DocumentService} from '../../../shared/service/document.service';
 import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 
 @Component({
     selector: 'app-medicaments-oa',
     templateUrl: './medicaments-oa.component.html',
     styleUrls: ['./medicaments-oa.component.css']
 })
-export class MedicamentsOaComponent implements OnInit {
+export class MedicamentsOaComponent implements OnInit, AfterViewInit {
 
-    private subscriptions: Subscription[] = [];
     dataSource = new MatTableDataSource<any>();
     @ViewChild('pag2') paginator2: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     displayedColumns: any[] = ['name', 'dose', 'pharmaceuticalForm', 'division', 'authorizationHolder', 'manufacture', 'includedOA'];
     @Output() loadOAs = new EventEmitter();
     oas: any[] = [];
+    private subscriptions: Subscription[] = [];
 
     constructor(private loadingService: LoaderService,
                 private requestService: RequestService,
-                private errorHandlerService: ErrorHandlerService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 private documentService: DocumentService) {
     }
 
@@ -74,7 +74,7 @@ export class MedicamentsOaComponent implements OnInit {
     loadOAsMethod() {
         this.subscriptions.push(
             this.requestService.getOAs().subscribe(data => {
-                   this.oas = data;
+                    this.oas = data;
                 },
                 error => console.log(error)
             )
@@ -86,7 +86,10 @@ export class MedicamentsOaComponent implements OnInit {
             this.requestService.getMedicamentsForOA().subscribe(data => {
                     this.dataSource.data = data;
                     this.dataSource.data.forEach(t => t.manufacture = t.manufactures.find(x => x.producatorProdusFinit == true));
-                    this.dataSource.data.forEach(t => {t.included = true; t.divisionStr = this.getConcatenatedDivision(t);});
+                    this.dataSource.data.forEach(t => {
+                        t.included = true;
+                        t.divisionStr = this.getConcatenatedDivision(t);
+                    });
                 },
                 error => console.log(error)
             )
@@ -105,15 +108,15 @@ export class MedicamentsOaComponent implements OnInit {
         this.dataSource.sort = this.sort;
     }
 
-    getConcatenatedDivision(entry : any) {
+    getConcatenatedDivision(entry: any) {
         let concatenatedDivision = '';
-            if (entry.division && entry.volume && entry.volumeQuantityMeasurement) {
-                concatenatedDivision = concatenatedDivision + entry.division + ' ' + entry.volume + ' ' + entry.volumeQuantityMeasurement.description;
-            } else if (entry.volume && entry.volumeQuantityMeasurement) {
-                concatenatedDivision = concatenatedDivision + entry.volume + ' ' + entry.volumeQuantityMeasurement.description;
-            } else {
-                concatenatedDivision = concatenatedDivision + entry.division;
-            }
+        if (entry.division && entry.volume && entry.volumeQuantityMeasurement) {
+            concatenatedDivision = concatenatedDivision + entry.division + ' ' + entry.volume + ' ' + entry.volumeQuantityMeasurement.description;
+        } else if (entry.volume && entry.volumeQuantityMeasurement) {
+            concatenatedDivision = concatenatedDivision + entry.volume + ' ' + entry.volumeQuantityMeasurement.description;
+        } else {
+            concatenatedDivision = concatenatedDivision + entry.division;
+        }
 
         return concatenatedDivision;
     }

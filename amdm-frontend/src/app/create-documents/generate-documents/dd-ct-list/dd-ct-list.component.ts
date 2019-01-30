@@ -47,7 +47,7 @@ export class DdCtListComponent implements OnInit {
     loadDDs() {
         this.subscriptions.push(
             this.requestService.getDDCs().subscribe(data => {
-                console.log("data", data);
+                    console.log("data", data);
                     this.dataSource.data = data;
                 },
                 error => console.log(error)

@@ -12,7 +12,7 @@ import {MedicamentService} from '../../../shared/service/medicament.service';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 import {MatDialog} from '@angular/material';
 import {RequestAdditionalDataDialogComponent} from '../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {TaskService} from '../../../shared/service/task.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
@@ -44,7 +44,7 @@ export class ProcessInterruptionComponent implements OnInit {
                 private administrationService: AdministrationService,
                 private medicamentService: MedicamentService,
                 private requestService: RequestService,
-                private errorHandlerService: ErrorHandlerService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 private navbarTitleService: NavbarTitleService,
                 private taskService: TaskService,
                 private loadingService: LoaderService,
@@ -103,9 +103,14 @@ export class ProcessInterruptionComponent implements OnInit {
                         this.registrationRequestMandatedContacts = data.registrationRequestMandatedContacts;
                         this.manufacturesTable = data.medicaments[0].manufactures;
                         for (const entry of data.medicaments) {
-                            if (entry.division && entry.division.length != 0) {
+                            if ((entry.division || entry.volume) && (entry.status == 'F' || entry.status == 'P')) {
                                 this.divisions.push({
-                                    description: entry.division
+                                    description: entry.division,
+                                    code: entry.code,
+                                    volume: entry.volume,
+                                    volumeQuantityMeasurement: entry.volumeQuantityMeasurement,
+                                    instructions: entry.instructions.filter(t => t.type == 'I'),
+                                    machets: entry.instructions.filter(t => t.type == 'M')
                                 });
                             }
                         }
@@ -228,7 +233,7 @@ export class ProcessInterruptionComponent implements OnInit {
            x = x + ' ' + this.iForm.get('medicament.dose').value;
         }
         if (this.divisions.length != 0) {
-            this.divisions.forEach(elem => x = x + ' ' + elem.description + ';');
+           x = x + this.getConcatenatedDivision();
         }
         if (this.iForm.get('medicament.internationalMedicamentName').value) {
             x = x + '(DCI:' + this.iForm.get('medicament.internationalMedicamentName').value + ')';
@@ -432,5 +437,20 @@ export class ProcessInterruptionComponent implements OnInit {
     ngOnDestroy(): void {
         this.navbarTitleService.showTitleMsg('');
         this.subscriptions.forEach(s => s.unsubscribe());
+    }
+
+    getConcatenatedDivision() {
+        let concatenatedDivision = '';
+        for (let entry of this.divisions) {
+            if (entry.description && entry.volume && entry.volumeQuantityMeasurement) {
+                concatenatedDivision = concatenatedDivision + entry.description + ' ' + entry.volume + ' ' + entry.volumeQuantityMeasurement.description + '; ';
+            } else if (entry.volume && entry.volumeQuantityMeasurement) {
+                concatenatedDivision = concatenatedDivision + entry.volume + ' ' + entry.volumeQuantityMeasurement.description + '; ';
+            } else {
+                concatenatedDivision = concatenatedDivision + entry.description + '; ';
+            }
+
+        }
+        return concatenatedDivision;
     }
 }

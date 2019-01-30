@@ -28,4 +28,8 @@ public interface CurrencyHistoryRepository extends JpaRepository<NmCurrenciesHis
             "       t.period >= DATE_ADD(DATE_ADD(LAST_DAY(NOW()), INTERVAL 1 DAY), INTERVAL - 2 MONTH))\n" +
             "GROUP BY t.currency_id", nativeQuery = true)
     List<GetAVGCurrencyProjection> getPrevMonthAVGCurrencies();
+
+
+    @Query(value = "SELECT MAX(period) FROM nm_currencies_history", nativeQuery = true)
+    Date findLastInsertedCurrencyDate();
 }

@@ -1,45 +1,69 @@
   <div class="table-width">
     <div class="example-container">
       <table mat-table [dataSource]="dataSource">
-        <ng-container matColumnDef="denumire">
+        <ng-container matColumnDef="id">
           <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
             <mat-form-field class="filter">
-              <mat-label>Denumirea</mat-label>
-              <input matInput [formControl]="denumireFilter">
+              <mat-label>ID</mat-label>
+              <input matInput (input)="filterColumn('id', $event)">
             </mat-form-field>
           </th>
-          <td mat-cell *matCellDef="let x">{{x.denumire}}</td>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.id}}" placement="top">{{x.id}}</td>
         </ng-container>
-        <ng-container matColumnDef="adresa">
-          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
-            <mat-form-field class="filter">
-              <mat-label>Adresa</mat-label>
-              <input matInput [formControl]="adresaFilter">
-            </mat-form-field>
-          </th>
-          <td mat-cell *matCellDef="let x">{{x.adresa}}</td>
-        </ng-container>
-        <ng-container matColumnDef="seria">
-          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
-            <mat-form-field class="filter">
-              <mat-label>Seria</mat-label>
-              <input matInput [formControl]="seriaFilter">
-            </mat-form-field>
-          </th>
-          <td mat-cell *matCellDef="let x">{{x.seria}}</td>
-        </ng-container>
+
         <ng-container matColumnDef="idno">
           <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
             <mat-form-field class="filter">
               <mat-label>IDNO</mat-label>
-              <input matInput [formControl]="idnoFilter">
+              <input matInput (input)="filterColumn('idno', $event)">
             </mat-form-field>
           </th>
-          <td mat-cell *matCellDef="let x">{{x.idno}}</td>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.idno}}" placement="top">{{x.idno}}</td>
         </ng-container>
+
+        <ng-container matColumnDef="denumire">
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter">
+              <mat-label>Denumirea</mat-label>
+              <input matInput (input)="filterColumn('name', $event)">
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.name}}" placement="top">{{x.name}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="adresa">
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter">
+              <mat-label>Adresa</mat-label>
+              <input matInput (input)="filterColumn('address', $event)">
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.address}}" placement="top">{{x.address}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="seria">
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter">
+              <mat-label>Seria licenței</mat-label>
+              <input matInput (input)="filterColumn('serialNr', $event)">
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.serialNr}}" placement="top">{{x.serialNr}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="nr">
+          <th class="header rgba-header" mat-header-cell *matHeaderCellDef>
+            <mat-form-field class="filter">
+              <mat-label>Numărul licenței</mat-label>
+              <input matInput (input)="filterColumn('nr', $event)">
+            </mat-form-field>
+          </th>
+          <td mat-cell *matCellDef="let x" mdbTooltip="{{x.nr}}" placement="top">{{x.nr}}</td>
+        </ng-container>
+
         <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
         <tr mat-row *matRowDef="let x; columns: columnsToDisplay"></tr>
       </table>
-      <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
+      <mat-paginator [pageSizeOptions]="[25, 50, 200]" showFirstLastButtons></mat-paginator>
     </div>
   </div>

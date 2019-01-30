@@ -64,6 +64,7 @@
 	<parameter name="servicesTableDataset" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<parameter name="bankCode" class="java.lang.String"/>
 	<parameter name="fiscalCode" class="java.lang.String"/>
+	<parameter name="isClinicalTrial" class="java.lang.Boolean"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -89,7 +90,7 @@
 				<textFieldExpression><![CDATA["Nr. " + $P{nr} + " din " +$P{date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="280" y="40" width="253" height="30" uuid="176f4ec3-7149-477d-b9d7-e7073049bf45"/>
+				<reportElement x="280" y="39" width="253" height="30" uuid="176f4ec3-7149-477d-b9d7-e7073049bf45"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
@@ -109,12 +110,12 @@
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA["•	Aprobarea studiilor clinice. Faza " + $P{phases} + " -pentru protocolul studiului clinic " + $P{clinicStudyNr} + " " + $P{clinicStudyDescription}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["•	Aprobarea " + ($P{isClinicalTrial}?"studiilor clinice. Faza " + $P{phases}: "amendamentelor privind protocolul/medicamentul pentru investigaţie clinică (poziţia tarifară - 23),") + " -pentru protocolul studiului clinic " + $P{clinicStudyNr} + " " + $P{clinicStudyDescription}]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="102">
 			<componentElement>
-				<reportElement x="0" y="12" width="537" height="90" uuid="871acccc-5dd1-4f40-a00d-61e29702770d">
+				<reportElement x="0" y="11" width="537" height="90" uuid="871acccc-5dd1-4f40-a00d-61e29702770d">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>

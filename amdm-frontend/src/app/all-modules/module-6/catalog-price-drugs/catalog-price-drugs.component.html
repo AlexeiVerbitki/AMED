@@ -1,113 +1,121 @@
 <div class="table-width">
 	<div class="example-container">
 		<table mat-table [dataSource]="dataSource">
+			<ng-container matColumnDef="btnDetalii">
+				<th class="header rgba-header font-td" mat-header-cell *matHeaderCellDef [ngStyle]="{'width': '220px', 'padding-bottom': '13px'}">
+					Detalii
+				</th>
+				<td mat-cell *matCellDef="let x; let i = index" [ngStyle]="{'width': '220px'}">
+					<button mdbBtn type="button" color="mdb-color" mdbWavesEffect class="btn-sm" (click)="showDetails(x)">Detalii</button>
+				</td>
+			</ng-container>
 			<ng-container matColumnDef="codMedicament">
 				<th class="header rgba-header" mat-header-cell *matHeaderCellDef>
 					<mat-form-field class="filter" [ngStyle]="{'width': '152px'}">
 						<mat-label>Codul medicamentului</mat-label>
-						<input matInput [formControl]="codMedicamentFilter" dividerColor="primary">
+						<input matInput (input)="filterColumn('medCode', $event)" dividerColor="primary">
 					</mat-form-field>
 				</th>
-				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.codMedicament}}" placement="top">{{x.codMedicament}}</td>
+				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.medCode}}" placement="top">{{x.medCode}}</td>
 			</ng-container>
 			<ng-container matColumnDef="codVamal">
 				<th class="header rgba-header" mat-header-cell *matHeaderCellDef>
 					<mat-form-field class="filter" [ngStyle]="{'width': '85px'}">
 						<mat-label>Codul vamal</mat-label>
-						<input matInput [formControl]="codVamalFilter">
+						<input matInput (input)="filterColumn('customsCode', $event)">
 					</mat-form-field>
 				</th>
-				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.codVamal}}" placement="top">{{x.codVamal}}</td>
+				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.customsCode}}" placement="top">{{x.customsCode}}</td>
 			</ng-container>
 			<ng-container matColumnDef="denumireComerciala">
 				<th class="header rgba-header" mat-header-cell *matHeaderCellDef>
 					<mat-form-field class="filter" [ngStyle]="{'width': '152px'}">
 						<mat-label>Denumirea comerciala</mat-label>
-						<input matInput [formControl]="denumireComercialaFilter">
+						<input matInput (input)="filterColumn('comercialName', $event)">
 					</mat-form-field>
 				</th>
-				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.denumireComerciala}}" placement="top">{{x.denumireComerciala}}</td>
+				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.comercialName}}" placement="top">{{x.comercialName}}</td>
 			</ng-container>
 			<ng-container matColumnDef="formaFarmaceutica">
 				<th class="header rgba-header" mat-header-cell *matHeaderCellDef>
 					<mat-form-field class="filter" [ngStyle]="{'width': '138px'}">
 						<mat-label>Forma farmaceutica</mat-label>
-						<input matInput [formControl]="formaFarmaceuticaFilter">
+						<input matInput (input)="filterColumn('farmaceuticalForm', $event)">
 					</mat-form-field>
 				</th>
-				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.formaFarmaceutica}}" placement="top">{{x.formaFarmaceutica}}</td>
+				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.farmaceuticalForm}}" placement="top">{{x.farmaceuticalForm}}</td>
 			</ng-container>
 			<ng-container matColumnDef="dozaConcentratia">
 				<th class="header rgba-header" mat-header-cell *matHeaderCellDef>
 					<mat-form-field class="filter" [ngStyle]="{'width': '127px'}">
 						<mat-label>Doza, concentratia</mat-label>
-						<input matInput [formControl]="dozaConcentratiaFilter">
+						<input matInput (input)="filterColumn('dose', $event)">
 					</mat-form-field>
 				</th>
-				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.dozaConcentratia}}" placement="top">{{x.dozaConcentratia}}</td>
+				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.dose}}" placement="top">{{x.dose}}</td>
 			</ng-container>
 			<ng-container matColumnDef="volum">
 				<th class="header rgba-header" mat-header-cell *matHeaderCellDef>
 					<mat-form-field class="filter" [ngStyle]="{'width': '47px'}">
 						<mat-label>Volum</mat-label>
-						<input matInput [formControl]="volumFilter">
+						<input matInput (input)="filterColumn('volume', $event)">
 					</mat-form-field>
 				</th>
-				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.volum}}" placement="top">{{x.volum}}</td>
+				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.volume}}" placement="top">{{x.volume}}</td>
 			</ng-container>
 			<ng-container matColumnDef="divizarea">
 				<th class="header rgba-header" mat-header-cell *matHeaderCellDef>
 					<mat-form-field class="filter" [ngStyle]="{'width': '62px'}">
 						<mat-label>Divizarea</mat-label>
-						<input matInput [formControl]="divizareaFilter">
+						<input matInput (input)="filterColumn('division', $event)">
 					</mat-form-field>
 				</th>
-				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.divizarea}}" placement="top">{{x.divizarea}}</td>
+				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.division}}" placement="top">{{x.division}}</td>
 			</ng-container>
 			<ng-container matColumnDef="tara">
 				<th class="header rgba-header" mat-header-cell *matHeaderCellDef>
-					<mat-form-field class="filter" [ngStyle]="{'width': '33px'}">
+					<mat-form-field class="filter" [ngStyle]="{'width': '100px'}">
 						<mat-label>Tara</mat-label>
-						<input matInput [formControl]="taraFilter">
+						<input matInput (input)="filterColumn('country', $event)">
 					</mat-form-field>
 				</th>
-				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.tara}}" placement="top">{{x.tara}}</td>
+				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.country}}" placement="top">{{x.country}}</td>
 			</ng-container>
 			<ng-container matColumnDef="firmaProducatoare">
 				<th class="header rgba-header" mat-header-cell *matHeaderCellDef>
 					<mat-form-field class="filter" [ngStyle]="{'width': '132px'}">
 						<mat-label>Firma producatoare</mat-label>
-						<input matInput [formControl]="firmaProducatoareFilter">
+						<input matInput (input)="filterColumn('manufacture', $event)">
 					</mat-form-field>
 				</th>
-				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.firmaProducatoare}}" placement="top">{{x.firmaProducatoare}}</td>
+				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.manufacture}}" placement="top">{{x.manufacture}}</td>
 			</ng-container>
 			<ng-container matColumnDef="nrDeInregistrare">
 				<th class="header rgba-header" mat-header-cell *matHeaderCellDef>
 					<mat-form-field class="filter" [ngStyle]="{'width': '120px'}">
 						<mat-label>Nr. de inregistrare</mat-label>
-						<input matInput [formControl]="nrDeInregistrareFilter">
+						<input matInput (input)="filterColumn('regNr', $event)">
 					</mat-form-field>
 				</th>
-				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.nrDeInregistrare}}" placement="top">{{x.nrDeInregistrare}}</td>
+				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.regNr}}" placement="top">{{x.regNr}}</td>
 			</ng-container>
 			<ng-container matColumnDef="dataDeInregistrare">
 				<th class="header rgba-header" mat-header-cell *matHeaderCellDef>
 					<mat-form-field class="filter" [ngStyle]="{'width': '132px'}">
 						<mat-label>Data de inregistrare</mat-label>
-						<input matInput [formControl]="dataDeInregistrareFilter">
+						<input matInput (input)="filterColumn('regDate', $event)">
 					</mat-form-field>
 				</th>
-				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.dataDeInregistrare | date: 'dd/MM/yyyy'}}" placement="top">{{x.dataDeInregistrare | date: 'dd/MM/yyyy'}}</td>
+				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.regDate | date: 'dd/MM/yyyy'}}" placement="top">{{x.regDate | date: 'dd/MM/yyyy'}}</td>
 			</ng-container>
 			<ng-container matColumnDef="codulATC">
 				<th class="header rgba-header" mat-header-cell *matHeaderCellDef>
 					<mat-form-field class="filter" [ngStyle]="{'width': '70px'}">
 						<mat-label>Codul ATC</mat-label>
-						<input matInput [formControl]="codulATCFilter">
+						<input matInput (input)="filterColumn('atc', $event)">
 					</mat-form-field>
 				</th>
-				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.codulATC}}" placement="top">{{x.codulATC}}</td>
+				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.atc}}" placement="top">{{x.atc}}</td>
 			</ng-container>
 			<ng-container matColumnDef="denumireaComunaInternationala">
 				<th class="header rgba-header" mat-header-cell *matHeaderCellDef>
@@ -115,66 +123,72 @@
 						<mat-label>Denumirea comuna
 						           internationala
 						</mat-label>
-						<input matInput [formControl]="denumireaComunaInternationalaFilter">
+						<input matInput (input)="filterColumn('internationalName', $event)">
 					</mat-form-field>
 				</th>
-				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.denumireaComunaInternationala}}" placement="top">{{x.denumireaComunaInternationala}}</td>
+				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.internationalName}}" placement="top">{{x.internationalName}}</td>
 			</ng-container>
 			<ng-container matColumnDef="termenulDeValabilitate">
 				<th class="header rgba-header" mat-header-cell *matHeaderCellDef>
 					<mat-form-field class="filter" [ngStyle]="{'width': '128px'}">
 						<mat-label>Termen valabilitate</mat-label>
-						<input matInput [formControl]="termenulDeValabilitateFilter">
+						<input matInput (input)="filterColumn('termsOfValidity', $event)">
 					</mat-form-field>
 				</th>
-				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.termenulDeValabilitate}}" placement="top">{{x.termenulDeValabilitate}}</td>
+				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.termsOfValidity}}" placement="top">{{x.termsOfValidity}}</td>
 			</ng-container>
 			<ng-container matColumnDef="codulDeBare">
 				<th class="header rgba-header" mat-header-cell *matHeaderCellDef>
 					<mat-form-field class="filter" [ngStyle]="{'width': '93px'}">
 						<mat-label>Codul de bare</mat-label>
-						<input matInput [formControl]="codulDeBareFilter">
+						<input matInput (input)="filterColumn('bareCode', $event)">
 					</mat-form-field>
 				</th>
-				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.codulDeBare}}" placement="top">{{x.codulDeBare}}</td>
+				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.bareCode}}" placement="top">{{x.bareCode}}</td>
 			</ng-container>
 			<ng-container matColumnDef="pretDeProducatorMDL">
 				<th class="header rgba-header" mat-header-cell *matHeaderCellDef>
 					<mat-form-field class="filter" [ngStyle]="{'width': '153px'}">
 						<mat-label>Pret producator (MDL)</mat-label>
-						<input matInput [formControl]="pretDeProducatorMDLFilter">
+						<input matInput (input)="filterColumn('priceMdl', $event)">
 					</mat-form-field>
 				</th>
-				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.pretDeProducatorMDL}}" placement="top">{{x.pretDeProducatorMDL}}</td>
+				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.priceMdl}}" placement="top">{{x.priceMdl}}</td>
 			</ng-container>
 			<ng-container matColumnDef="pretDeProducatorValuta">
 				<th class="header rgba-header" mat-header-cell *matHeaderCellDef>
 					<mat-form-field class="filter" [ngStyle]="{'width': '110px'}">
 						<mat-label>Pret producator</mat-label>
-						<input matInput [formControl]="pretDeProducatorValutaFilter">
+						<input matInput (input)="filterColumn('price', $event)">
 					</mat-form-field>
 				</th>
-				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.pretDeProducatorValuta}}" placement="top">{{x.pretDeProducatorValuta}}</td>
+				<td mat-cell *matCellDef="let x">
+					<span class="pt-text" mdbTooltip="{{x.price}} {{x.currency}}" placement="top">{{x.price}} {{x.currency}}</span>
+				</td>
 			</ng-container>
 			<ng-container matColumnDef="valuta">
 				<th class="header rgba-header" mat-header-cell *matHeaderCellDef>
 					<mat-form-field class="filter" [ngStyle]="{'width': '44px'}">
 						<mat-label>Valuta</mat-label>
-						<input matInput [formControl]="valutaFilter">
+						<input matInput (input)="filterColumn('currency', $event)">
 					</mat-form-field>
 				</th>
-				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.valuta}}" placement="top">{{x.valuta}}</td>
+				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.currency}}" placement="top">{{x.currency}}</td>
 			</ng-container>
 			<ng-container matColumnDef="nrOrdinuluiDeAprobareAPretului">
 				<th class="header rgba-header" mat-header-cell *matHeaderCellDef>
 					<mat-form-field class="filter" [ngStyle]="{'width': '230px'}">
-						<mat-label>Nr. ordinului de
+						<mat-label>Nr./data ordinului de
 						           aprobare a pretului
 						</mat-label>
-						<input matInput [formControl]="nrOrdinuluiDeAprobareAPretuluiFilter">
+						<input matInput (input)="filterColumn('orderNr', $event)">
 					</mat-form-field>
 				</th>
-				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.nrOrdinuluiDeAprobareAPretului}}" placement="top">{{x.nrOrdinuluiDeAprobareAPretului}}</td>
+				<td mat-cell *matCellDef="let x">
+					<span class="pt-text" mdbTooltip="{{x.orderNr}} - {{x.orderApprovDate | date: 'dd/MM/yyyy'}}" placement="top">
+						{{x.orderNr}}<br/><hr/>
+					</span>
+				</td>
 			</ng-container>
 			<ng-container matColumnDef="dataOrdinuluiDeAprobareAPretului">
 				<th class="header rgba-header" mat-header-cell *matHeaderCellDef>
@@ -182,10 +196,10 @@
 						<mat-label>Data ordinului de
 						           aprobare a pretului
 						</mat-label>
-						<input matInput [formControl]="dataOrdinuluiDeAprobareAPretuluiFilter">
+						<input matInput (input)="filterColumn('orderApprovDate', $event)">
 					</mat-form-field>
 				</th>
-				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.dataOrdinuluiDeAprobareAPretului}}" placement="top">{{x.dataOrdinuluiDeAprobareAPretului}}</td>
+				<td mat-cell *matCellDef="let x" mdbTooltip="{{x.orderApprovDate | date: 'dd/MM/yyyy'}}" placement="top">{{x.orderApprovDate | date: 'dd/MM/yyyy'}}</td>
 			</ng-container>
 
 			<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>

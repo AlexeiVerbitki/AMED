@@ -21,6 +21,9 @@ public class TasksService
             "       RR.requestNumber  as requestNumber," +
             "       RR.startDate      as startDate," +
             "       RR.endDate        as endDate," +
+            "       RR.currentStep    as currentStep," +
+            "       RR.expired        as expired," +
+            "       RR.critical       as critical," +
             "       PN.description    as processName," +
             "       RT.description    as requestType," +
             "       RRS.description   as step," +

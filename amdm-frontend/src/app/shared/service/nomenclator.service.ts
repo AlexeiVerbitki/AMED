@@ -14,10 +14,6 @@ export class NomenclatorService {
         return this.http.get<any[]>('/api/nomenclator/medicaments', {});
     }
 
-    getMedicamentClassifier(): Observable<any[]> {
-        return this.http.get<any[]>('/api/classifier/medicaments', {});
-    }
-
     getPricesClassifier(): Observable<any[]> {
         return this.http.get<any[]>('/api/classifier/prices', {});
     }

@@ -2,7 +2,7 @@ import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {HttpResponse} from '@angular/common/http';
-import {ErrorHandlerService} from '../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../shared/service/success-or-error-handler.service';
 import {Subscription} from 'rxjs';
 import {UploadFileService} from '../../shared/service/upload/upload-file.service';
 
@@ -26,7 +26,7 @@ export class DivisionSelectDialogComponent implements OnInit {
     constructor(private fb: FormBuilder,
                 public dialogRef: MatDialogRef<DivisionSelectDialogComponent>,
                 private uploadService: UploadFileService,
-                private errorHandlerService: ErrorHandlerService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 @Inject(MAT_DIALOG_DATA) public dataDialog: any) {
         this.fForm = fb.group({
             'divisions' : [],
@@ -100,6 +100,7 @@ export class DivisionSelectDialogComponent implements OnInit {
                     path: this.dataDialog.value.path,
                     typeDoc: this.dataDialog.value.typeDoc,
                     status: 'N',
+                    type : 'I',
                     division : div.description,
                     volume : div.volume, volumeQuantityMeasurement : div.volumeQuantityMeasurement
                 });
@@ -129,6 +130,7 @@ export class DivisionSelectDialogComponent implements OnInit {
                     path: this.dataDialog.value.path,
                     typeDoc: this.dataDialog.value.typeDoc,
                     status: 'N',
+                    type : 'M',
                     division : div.description,
                     volume : div.volume, volumeQuantityMeasurement : div.volumeQuantityMeasurement
                 });
@@ -175,7 +177,7 @@ export class DivisionSelectDialogComponent implements OnInit {
                             {
                                 div.instructions = [];
                             }
-                            div.instructions.push({name:fileName, date: new Date(),path:result.path,typeDoc : type, status : 'N',division : div.description,
+                            div.instructions.push({name:fileName, date: new Date(),path:result.path,typeDoc : type, status : 'N', type : 'I',division : div.description,
                             volume : div.volume, volumeQuantityMeasurement : div.volumeQuantityMeasurement});
                         }
                         else if(this.dataDialog.fieldName=='macheta' && div.include==true)
@@ -184,7 +186,7 @@ export class DivisionSelectDialogComponent implements OnInit {
                             {
                                 div.machets = [];
                             }
-                            div.machets.push({name:fileName, date: new Date(),path:result.path,typeDoc : type, status : 'N',division : div.description,
+                            div.machets.push({name:fileName, date: new Date(),path:result.path,typeDoc : type, status : 'N', type : 'M',division : div.description,
                                 volume : div.volume, volumeQuantityMeasurement : div.volumeQuantityMeasurement});
                         }
                     }

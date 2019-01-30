@@ -52,7 +52,7 @@
                     <div class="md-form">
                         <input id="comisiaNr" mdbInputDirective type="text" class="form-control"
                                formControlName="comissionNr">
-                        <label for="regNr">Nr. comisiei medicamentului
+                        <label for="regNr">Nr. proces verbal
                         </label>
                     </div>
                 </div>
@@ -132,6 +132,8 @@
     </form>
 
     <div class="text-center">
+        <button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date
+        </button>
         <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="onSubmit()">
             Finisare
         </button>

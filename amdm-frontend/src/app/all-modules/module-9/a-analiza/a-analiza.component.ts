@@ -18,7 +18,7 @@ import {MedInstInvestigatorsDialogComponent} from '../dialog/med-inst-investigat
 import {ActiveSubstanceDialogComponent} from '../../../dialog/active-substance-dialog/active-substance-dialog.component';
 import {AddExpertComponent} from "../../../dialog/add-expert/add-expert.component";
 import {AddCtExpertComponent} from "../dialog/add-ct-expert/add-ct-expert.component";
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
+import {SuccessOrErrorHandlerService} from "../../../shared/service/success-or-error-handler.service";
 
 @Component({
     selector: 'app-a-analiza',
@@ -116,7 +116,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private taskService: TaskService,
                 private loadingService: LoaderService,
-                private errorHandlerService: ErrorHandlerService) {
+                private errorHandlerService: SuccessOrErrorHandlerService) {
 
     }
 
@@ -220,7 +220,6 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
         this.initPage();
         this.disableEnablePage();
-        this.loadDocTypes();
 
         this.loadPhasesList();
     }
@@ -233,13 +232,20 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         );
     }
 
-    loadDocTypes() {
+    loadDocTypes(data) {
         this.subscriptions.push(
-            this.taskService.getRequestStepByIdAndCode('3', 'A').subscribe(step => {
+            this.taskService.getRequestStepByIdAndCode(data.type.id, data.currentStep).subscribe(step => {
                     this.subscriptions.push(
                         this.administrationService.getAllDocTypes().subscribe(data => {
-                                this.docTypes = data;
-                                this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
+                                let availableDocsArr = [];
+                                step.availableDocTypes ? availableDocsArr = step.availableDocTypes.split(',') : availableDocsArr = [];
+                                let outputDocsArr = [];
+                                step.outputDocTypes ? outputDocsArr = step.outputDocTypes.split(',') : outputDocsArr = [];
+                                if (step.availableDocTypes) {
+                                    this.docTypes = data;
+                                    this.docTypes = this.docTypes.filter(r => availableDocsArr.includes(r.category));
+                                    this.outDocuments = this.outDocuments.filter(r => outputDocsArr.includes(r.docType.category));
+                                }
                             },
                             error => console.log(error)
                         )
@@ -328,6 +334,8 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
                     this.loadInvestigatorsList();
                     this.loadMedicalInstitutionsList();
+                    this.loadDocTypes(data);
+
                 },
                 error => console.log(error)
             ));
@@ -449,10 +457,12 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         this.loadingService.show();
         this.subscriptions.push(this.requestService.getClinicalTrailRequest(this.analyzeClinicalTrailForm.get('id').value).subscribe(data => {
                 console.log('getClinicalTrailRequest', data);
+                this.docs = data.documents;
                 let expertDispozition = data.documents.find(doc => doc.docType.category == 'DDC');
                 //console.log('expertDispozition', expertDispozition);
                 if (!expertDispozition) {
                     this.errorHandlerService.showError('Dispozitia de distribuire nu este atashata.');
+                    this.loadingService.hide();
                     return;
                 }
 
@@ -594,6 +604,11 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         if (this.analyzeClinicalTrailForm.invalid || this.paymentTotal < 0) {
             alert('Invalid Form!!');
             console.log('Not submitted data', formModel);
+            return;
+        }
+        let docDistrib = this.docs.find(doc => doc.docType.category == 'DDC');
+        if(!docDistrib){
+            this.errorHandlerService.showError('Dispozitia de distribuire nu este atashata');
             return;
         }
 

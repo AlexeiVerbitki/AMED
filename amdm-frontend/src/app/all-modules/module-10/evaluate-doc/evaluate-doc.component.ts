@@ -11,7 +11,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Document} from '../../../models/document';
 import {RequestService} from '../../../shared/service/request.service';
 import {AuthService} from '../../../shared/service/authetication.service';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {TaskService} from '../../../shared/service/task.service';
 import {CanModuleDeactivate} from '../../../shared/auth-guard/can-deactivate-guard.service';
@@ -40,7 +40,7 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, CanModuleDea
                 private authService: AuthService,
                 private administrationService: AdministrationService,
                 private taskService: TaskService,
-                private errorHandlerService: ErrorHandlerService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 private loadingService: LoaderService,
                 private navbarTitleService: NavbarTitleService,
                 private activatedRoute: ActivatedRoute, ) {

@@ -1,10 +1,11 @@
 import {Subscription} from 'rxjs';
-import {FormControl} from '@angular/forms';
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatTableDataSource} from '@angular/material';
+import {MatDialog, MatPaginator, MatTableDataSource} from '@angular/material';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {NomenclatorService} from '../../../shared/service/nomenclator.service';
 import {LoaderService} from '../../../shared/service/loader.service';
+import {DatePipe} from "@angular/common";
+import {CatalogPriceModalComponent} from "../catalog-price-modal/catalog-price-modal.component";
 
 @Component({
     selector: 'app-catalog-price-drugs', templateUrl: './catalog-price-drugs.component.html', styleUrls: ['../nomenclator.component.css']
@@ -14,38 +15,40 @@ export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    codMedicamentFilter = new FormControl('');
-    codVamalFilter = new FormControl('');
-    denumireComercialaFilter = new FormControl('');
-    formaFarmaceuticaFilter = new FormControl('');
-    dozaConcentratiaFilter = new FormControl('');
-    volumFilter = new FormControl('');
-    divizareaFilter = new FormControl('');
-    taraFilter = new FormControl('');
-    firmaProducatoareFilter = new FormControl('');
-    nrDeInregistrareFilter = new FormControl('');
-    dataDeInregistrareFilter = new FormControl('');
-    codulATCFilter = new FormControl('');
-    denumireaComunaInternationalaFilter = new FormControl('');
-    termenulDeValabilitateFilter = new FormControl('');
-    codulDeBareFilter = new FormControl('');
-    pretDeProducatorMDLFilter = new FormControl('');
-    pretDeProducatorValutaFilter = new FormControl('');
-    valutaFilter = new FormControl('');
-    nrOrdinuluiDeAprobareAPretuluiFilter = new FormControl('');
-    dataOrdinuluiDeAprobareAPretuluiFilter = new FormControl('');
+    dataSource = new MatTableDataSource<any>();
 
-    dataSource = new MatTableDataSource();
+    datePipe = new DatePipe('en-US');
 
-    columnsToDisplay = ['codMedicament', 'codVamal', 'denumireComerciala', 'formaFarmaceutica', 'dozaConcentratia', 'volum', 'divizarea', 'tara', 'firmaProducatoare',
-        'nrDeInregistrare', 'dataDeInregistrare', 'codulATC', 'denumireaComunaInternationala', 'termenulDeValabilitate', 'codulDeBare', 'pretDeProducatorMDL',
-        'pretDeProducatorValuta', 'valuta', 'nrOrdinuluiDeAprobareAPretului', 'dataOrdinuluiDeAprobareAPretului'];
+    columnsToDisplay = ['btnDetalii' ,'codMedicament', 'codVamal', 'denumireComerciala', 'formaFarmaceutica', 'dozaConcentratia', 'volum', 'divizarea', 'denumireaComunaInternationala', 'codulATC', 'pretDeProducatorMDL', 'pretDeProducatorValuta', 'nrOrdinuluiDeAprobareAPretului'];
+
+
+    row = {
+        id: '',
+        medCode: '',
+        customsCode: '',
+        comercialName: '',
+        farmaceuticalForm: '',
+        dose: '',
+        volume: '',
+        division: '',
+        country: '',
+        manufacture: '',
+        regNr: '',
+        regDate: '',
+        atc: '',
+        internationalName: '',
+        termsOfValidity: '',
+        bareCode: '',
+        priceMdl: '',
+        price: '',
+        currency: '',
+        orderNr: '',
+        orderApprovDate: '',
+    };
 
     private subscriptions: Subscription[] = [];
 
-    constructor(private navbarTitleService: NavbarTitleService, private nomenclatorService: NomenclatorService, private loadingService: LoaderService) {
-
-    }
+    constructor(private navbarTitleService: NavbarTitleService, private nomenclatorService: NomenclatorService, private loadingService: LoaderService, public dialog: MatDialog) {}
 
     ngOnDestroy(): void {
         this.navbarTitleService.showTitleMsg('');
@@ -53,109 +56,84 @@ export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-
         this.navbarTitleService.showTitleMsg('Nomenclator');
-        // this.loadingService.show();
-        //
-        // this.subscriptions.push(this.nomenclatorService.getAllMedicaments().subscribe(data => {
-        //     this.loadingService.hide();
-        //     this.dataSource.data = data;
-        // }, error => {
-        //     console.log('error => ', error);
-        //     this.loadingService.hide();
-        // }));
 
+        this.subscriptions.push(this.nomenclatorService.getPricesClassifier().subscribe(data => {
+            this.loadingService.hide();
+            this.dataSource.data = data;
+            this.dataSource.data.forEach((r: any) => {
+                r.id = r.id ? r.id : '';
+                r.medCode = r.medCode ? r.medCode : '';
+                r.customsCode = r.customsCode ? r.customsCode : '';
+                r.comercialName = r.comercialName ? r.comercialName : '';
+                r.farmaceuticalForm = r.farmaceuticalForm ? r.farmaceuticalForm : '';
+                r.dose = r.dose ? r.dose : '';
+                r.volume = r.volume ? r.volume : '';
+                r.division = r.division ? r.division : '';
+                r.country = r.country ? r.country : '';
+                r.manufacture = r.manufacture ? r.manufacture : '';
+                r.regNr = r.regNr ? r.regNr : '';
+                r.regDate = r.regDate ? r.regDate : '';
+                r.atc = r.atc ? r.atc : '';
+                r.internationalName = r.internationalName ? r.internationalName : '';
+                r.termsOfValidity = r.termsOfValidity ? r.termsOfValidity : '';
+                r.bareCode = r.bareCode ? r.bareCode : '';
+                r.priceMdl = r.priceMdl ? r.priceMdl : '';
+                r.price = r.price ? r.price : '';
+                r.currency = r.currency ? r.currency : '';
+                r.orderNr = r.orderNr ? r.orderNr : '';
+                r.orderApprovDate = r.orderApprovDate ? r.orderApprovDate : ''; 
+            });
 
-        // this.dataSource.data = this.clasifyDrugsTable;
+            console.log(data);
 
-        this.subscriptions.push(this.codMedicamentFilter.valueChanges
-            .subscribe(codMedicament => {
-                this.filterTable(codMedicament);
-            }));
-        this.subscriptions.push(this.codVamalFilter.valueChanges
-            .subscribe(codVamal => {
-                this.filterTable(codVamal);
-            }));
-        this.subscriptions.push(this.denumireComercialaFilter.valueChanges
-            .subscribe(denumireComerciala => {
-                this.filterTable(denumireComerciala);
-            }));
-        this.subscriptions.push(this.formaFarmaceuticaFilter.valueChanges
-            .subscribe(formaFarmaceutica => {
-                this.filterTable(formaFarmaceutica);
-            }));
-        this.subscriptions.push(this.dozaConcentratiaFilter.valueChanges
-            .subscribe(dozaConcentratia => {
-                this.filterTable(dozaConcentratia);
-            }));
-        this.subscriptions.push(this.volumFilter.valueChanges
-            .subscribe(volum => {
-                this.filterTable(volum);
-            }));
-        this.subscriptions.push(this.divizareaFilter.valueChanges
-            .subscribe(divizarea => {
-                this.filterTable(divizarea);
-            }));
-        this.subscriptions.push(this.taraFilter.valueChanges
-            .subscribe(tara => {
-                this.filterTable(tara);
-            }));
-        this.subscriptions.push(this.firmaProducatoareFilter.valueChanges
-            .subscribe(firmaProducatoare => {
-                this.filterTable(firmaProducatoare);
-            }));
-        this.subscriptions.push(this.nrDeInregistrareFilter.valueChanges
-            .subscribe(nrDeInregistrare => {
-                this.filterTable(nrDeInregistrare);
-            }));
-        this.subscriptions.push(this.dataDeInregistrareFilter.valueChanges
-            .subscribe(dataDeInregistrare => {
-                this.filterTable(dataDeInregistrare);
-            }));
-        this.subscriptions.push(this.codulATCFilter.valueChanges
-            .subscribe(codulATC => {
-                this.filterTable(codulATC);
-            }));
-        this.subscriptions.push(this.denumireaComunaInternationalaFilter.valueChanges
-            .subscribe(denumireaComunaInternationala => {
-                this.filterTable(denumireaComunaInternationala);
-            }));
-        this.subscriptions.push(this.termenulDeValabilitateFilter.valueChanges
-            .subscribe(termenulDeValabilitate => {
-                this.filterTable(termenulDeValabilitate);
-            }));
-        this.subscriptions.push(this.codulDeBareFilter.valueChanges
-            .subscribe(codulDeBare => {
-                this.filterTable(codulDeBare);
-            }));
-        this.subscriptions.push(this.pretDeProducatorMDLFilter.valueChanges
-            .subscribe(pretDeProducatorMDL => {
-                this.filterTable(pretDeProducatorMDL);
-            }));
-        this.subscriptions.push(this.pretDeProducatorValutaFilter.valueChanges
-            .subscribe(pretDeProducatorValuta => {
-                this.filterTable(pretDeProducatorValuta);
-            }));
-        this.subscriptions.push(this.valutaFilter.valueChanges
-            .subscribe(valuta => {
-                this.filterTable(valuta);
-            }));
-        this.subscriptions.push(this.nrOrdinuluiDeAprobareAPretuluiFilter.valueChanges
-            .subscribe(nrOrdinuluiDeAprobareAPretului => {
-                this.filterTable(nrOrdinuluiDeAprobareAPretului);
-            }));
-        this.subscriptions.push(this.dataOrdinuluiDeAprobareAPretuluiFilter.valueChanges
-            .subscribe(dataOrdinuluiDeAprobareAPretului => {
-                this.filterTable(dataOrdinuluiDeAprobareAPretului);
-            }));
+        }, error => {
+            console.log('error => ', error);
+            this.loadingService.hide();
+        }));
     }
 
-    filterTable(element: string) {
-        if (element.toLocaleString().length >= 3) {
-            this.dataSource.filter = element;
-        } else {
-            this.dataSource.filter = '';
-        }
+    ngAfterViewInit(): void {
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.filterPredicate = (data: any, filter: any) => {
+            const f = JSON.parse(filter);
+            return data.medCode.toLowerCase().startsWith(f.medCode)
+                && data.customsCode.toLowerCase().startsWith(f.customsCode)
+                && data.comercialName.toLowerCase().startsWith(f.comercialName)
+                && data.farmaceuticalForm.toLowerCase().startsWith(f.farmaceuticalForm)
+                && data.dose.toLowerCase().startsWith(f.dose)
+                && data.volume.toLowerCase().startsWith(f.volume)
+                && data.division.toLowerCase().startsWith(f.division)
+                && data.country.toLowerCase().startsWith(f.country)
+                && data.manufacture.toLowerCase().startsWith(f.manufacture)
+                && data.regNr.toLowerCase().startsWith(f.regNr)
+                && (data.regDate == '' || this.datePipe.transform(data.regDate, 'dd/MM/yyyy').startsWith(f.regDate))
+                && data.atc.toLowerCase().startsWith(f.atc)
+                && data.internationalName.toLowerCase().startsWith(f.internationalName)
+                && data.termsOfValidity.toString().toLowerCase().startsWith(f.termsOfValidity)
+                && data.bareCode.toLowerCase().startsWith(f.bareCode)
+                && data.priceMdl.toString().toLowerCase().startsWith(f.priceMdl)
+                && data.price.toString().toLowerCase().startsWith(f.price)
+                && data.currency.toLowerCase().startsWith(f.currency)
+                && data.orderNr.toLowerCase().startsWith(f.orderNr)
+                && (data.orderApprovDate == '' || this.datePipe.transform(data.orderApprovDate, 'dd/MM/yyyy').startsWith(f.orderApprovDate))
+        };
     }
 
+    filterColumn(column, $event) {
+        this.row[column] = $event.target.value;
+        this.dataSource.filter = JSON.stringify(this.row);
+    }
+
+
+    showDetails(row: any) {
+        const dialogRef = this.dialog.open(CatalogPriceModalComponent, {
+            data: row,
+            width: '650px',
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed');
+        });
+    }
 }

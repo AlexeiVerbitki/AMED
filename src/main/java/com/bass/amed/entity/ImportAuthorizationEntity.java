@@ -2,38 +2,42 @@ package com.bass.amed.entity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Entity @Table(name = "import_authorization", schema = "amed", catalog = "") public class ImportAuthorizationEntity {
-	private Integer                                id;
-	private String                                 applicationRegistrationNumber;
-	private Timestamp                              applicationDate;
-	private NmEconomicAgentsEntity                 applicant;
-	private NmManufacturesEntity                   seller;
-	private String                                 basisForImport;
-	private NmEconomicAgentsEntity                 importer;
-	private String                                 conditionsAndSpecification;
-	private Integer                                quantity;
-	private Double                                 price;
-	private NmCurrenciesEntity                     currency;
-	private Double                                 summ;
-	private NmManufacturesEntity                   producer;
-	private Timestamp                              customsDeclarationDate;
-	private Timestamp                              expirationDate;
-	private NmCustomsCodesEntity                   customsCode;
-	private Integer                                customsNumber;
-	private NmTypesOfCustomsTransactionsEntity     customsTransactionType;
-	private String                                 authorizationsNumber;
-	private Integer                                medType;
-	private Set<ImportAuthorizationDetailsEntity>  importAuthorizationDetailsEntityList;
-	private Boolean                                authorized;
-	private String                                 contract;
-	private Timestamp                              contractDate;
-	private String                                 anexa;
-	private Timestamp                              anexaDate;
-	private String                                 specification;
-	private Timestamp                              SpecificationDate;
+@Entity
+@Table(name = "import_authorization", schema = "amed", catalog = "")
+public class ImportAuthorizationEntity {
+	private Integer                               id;
+	private String                                applicationRegistrationNumber;
+	private Timestamp                             applicationDate;
+	private NmEconomicAgentsEntity                applicant;
+	private NmManufacturesEntity                  seller;
+	private String                                basisForImport;
+	private NmEconomicAgentsEntity                importer;
+	private String                                conditionsAndSpecification;
+	private Integer                               quantity;
+	private Double                                price;
+	private NmCurrenciesEntity                    currency;
+	private Double                                summ;
+	private NmManufacturesEntity                  producer;
+	private Timestamp                             customsDeclarationDate;
+	private Timestamp                             expirationDate;
+	private NmCustomsCodesEntity                  customsCode;
+	private Integer                               customsNumber;
+	private NmTypesOfCustomsTransactionsEntity    customsTransactionType;
+	private String                                authorizationsNumber;
+	private Integer                               medType;
+	private Set<ImportAuthorizationDetailsEntity> importAuthorizationDetailsEntityList;
+	private Boolean                               authorized;
+	private String                                contract;
+	private Timestamp                             contractDate;
+	private String                                anexa;
+	private Timestamp                             anexaDate;
+	private String                                specification;
+	private Timestamp                             SpecificationDate;
+	private Set<NmCustomsPointsEntity>            nmCustomsPointsList;
 
 
 	@Id
@@ -43,7 +47,8 @@ import java.util.Set;
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(
+			Integer id) {
 		this.id = id;
 	}
 
@@ -53,7 +58,8 @@ import java.util.Set;
 		return authorized;
 	}
 
-	public void setauthorized(Boolean authorized) {
+	public void setauthorized(
+			Boolean authorized) {
 		this.authorized = authorized;
 	}
 
@@ -63,7 +69,8 @@ import java.util.Set;
 		return authorizationsNumber;
 	}
 
-	public void setAuthorizationsNumber(String authorizationsNumber) {
+	public void setAuthorizationsNumber(
+			String authorizationsNumber) {
 		this.authorizationsNumber = authorizationsNumber;
 	}
 
@@ -73,7 +80,8 @@ import java.util.Set;
 		return applicationRegistrationNumber;
 	}
 
-	public void setApplicationRegistrationNumber(String applicationRegistrationNumber) {
+	public void setApplicationRegistrationNumber(
+			String applicationRegistrationNumber) {
 		this.applicationRegistrationNumber = applicationRegistrationNumber;
 	}
 
@@ -83,7 +91,8 @@ import java.util.Set;
 		return applicationDate;
 	}
 
-	public void setApplicationDate(Timestamp applicationDate) {
+	public void setApplicationDate(
+			Timestamp applicationDate) {
 		this.applicationDate = applicationDate;
 	}
 
@@ -93,7 +102,8 @@ import java.util.Set;
 		return applicant;
 	}
 
-	public void setApplicant(NmEconomicAgentsEntity applicant) {
+	public void setApplicant(
+			NmEconomicAgentsEntity applicant) {
 		this.applicant = applicant;
 	}
 
@@ -103,7 +113,8 @@ import java.util.Set;
 		return seller;
 	}
 
-	public void setSeller(NmManufacturesEntity seller) {
+	public void setSeller(
+			NmManufacturesEntity seller) {
 		this.seller = seller;
 	}
 
@@ -113,7 +124,8 @@ import java.util.Set;
 		return basisForImport;
 	}
 
-	public void setBasisForImport(String basisForImport) {
+	public void setBasisForImport(
+			String basisForImport) {
 		this.basisForImport = basisForImport;
 	}
 
@@ -123,7 +135,8 @@ import java.util.Set;
 		return importer;
 	}
 
-	public void setImporter(NmEconomicAgentsEntity importer) {
+	public void setImporter(
+			NmEconomicAgentsEntity importer) {
 		this.importer = importer;
 	}
 
@@ -133,7 +146,8 @@ import java.util.Set;
 		return conditionsAndSpecification;
 	}
 
-	public void setConditionsAndSpecification(String conditionsAndSpecification) {
+	public void setConditionsAndSpecification(
+			String conditionsAndSpecification) {
 		this.conditionsAndSpecification = conditionsAndSpecification;
 	}
 
@@ -143,7 +157,8 @@ import java.util.Set;
 		return quantity;
 	}
 
-	public void setQuantity(Integer quantity) {
+	public void setQuantity(
+			Integer quantity) {
 		this.quantity = quantity;
 	}
 
@@ -153,7 +168,8 @@ import java.util.Set;
 		return price;
 	}
 
-	public void setPrice(Double price) {
+	public void setPrice(
+			Double price) {
 		this.price = price;
 	}
 
@@ -163,7 +179,8 @@ import java.util.Set;
 		return currency;
 	}
 
-	public void setCurrency(NmCurrenciesEntity currency) {
+	public void setCurrency(
+			NmCurrenciesEntity currency) {
 		this.currency = currency;
 	}
 
@@ -173,7 +190,8 @@ import java.util.Set;
 		return summ;
 	}
 
-	public void setSumm(Double summ) {
+	public void setSumm(
+			Double summ) {
 		this.summ = summ;
 	}
 
@@ -183,7 +201,8 @@ import java.util.Set;
 		return producer;
 	}
 
-	public void setProducer(NmManufacturesEntity producer) {
+	public void setProducer(
+			NmManufacturesEntity producer) {
 		this.producer = producer;
 	}
 
@@ -193,7 +212,8 @@ import java.util.Set;
 		return customsDeclarationDate;
 	}
 
-	public void setCustomsDeclarationDate(Timestamp customsDeclarationDate) {
+	public void setCustomsDeclarationDate(
+			Timestamp customsDeclarationDate) {
 		this.customsDeclarationDate = customsDeclarationDate;
 	}
 
@@ -203,7 +223,8 @@ import java.util.Set;
 		return expirationDate;
 	}
 
-	public void setExpirationDate(Timestamp expirationDate) {
+	public void setExpirationDate(
+			Timestamp expirationDate) {
 		this.expirationDate = expirationDate;
 	}
 
@@ -213,7 +234,8 @@ import java.util.Set;
 		return customsNumber;
 	}
 
-	public void setCustomsNumber(Integer customsNumber) {
+	public void setCustomsNumber(
+			Integer customsNumber) {
 		this.customsNumber = customsNumber;
 	}
 
@@ -223,7 +245,8 @@ import java.util.Set;
 		return customsTransactionType;
 	}
 
-	public void setCustomsTransactionType(NmTypesOfCustomsTransactionsEntity customsTransactionType) {
+	public void setCustomsTransactionType(
+			NmTypesOfCustomsTransactionsEntity customsTransactionType) {
 		this.customsTransactionType = customsTransactionType;
 	}
 
@@ -233,17 +256,19 @@ import java.util.Set;
 		return medType;
 	}
 
-	public void setMedType(Integer medType) {
+	public void setMedType(
+			Integer medType) {
 		this.medType = medType;
 	}
 
-	@OneToMany( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
 	@JoinColumn(name = "import_authorization_id")
 	public Set<ImportAuthorizationDetailsEntity> getImportAuthorizationDetailsEntityList() {
 		return importAuthorizationDetailsEntityList;
 	}
 
-	public void setImportAuthorizationDetailsEntityList(Set<ImportAuthorizationDetailsEntity> importAuthorizationDetailsEntityList) {
+	public void setImportAuthorizationDetailsEntityList(
+			Set<ImportAuthorizationDetailsEntity> importAuthorizationDetailsEntityList) {
 		this.importAuthorizationDetailsEntityList = importAuthorizationDetailsEntityList;
 	}
 
@@ -253,43 +278,52 @@ import java.util.Set;
 		return contract;
 	}
 
-	public void setContract(String contract) {
+	public void setContract(
+			String contract) {
 		this.contract = contract;
 	}
+
 	@Basic
 	@Column(name = "contract_date", nullable = true)
 	public Timestamp getContractDate() {
 		return contractDate;
 	}
 
-	public void setContractDate(Timestamp contractDate) {
+	public void setContractDate(
+			Timestamp contractDate) {
 		this.contractDate = contractDate;
 	}
+
 	@Basic
 	@Column(name = "contract_annex_number", nullable = true)
 	public String getAnexa() {
 		return anexa;
 	}
 
-	public void setAnexa(String anexa) {
+	public void setAnexa(
+			String anexa) {
 		this.anexa = anexa;
 	}
+
 	@Basic
 	@Column(name = "contract_annex_date", nullable = true)
 	public Timestamp getAnexaDate() {
 		return anexaDate;
 	}
 
-	public void setAnexaDate(Timestamp anexaDate) {
+	public void setAnexaDate(
+			Timestamp anexaDate) {
 		this.anexaDate = anexaDate;
 	}
+
 	@Basic
 	@Column(name = "specification_number", nullable = true)
 	public String getSpecification() {
 		return specification;
 	}
 
-	public void setSpecification(String specification) {
+	public void setSpecification(
+			String specification) {
 		this.specification = specification;
 	}
 
@@ -299,11 +333,26 @@ import java.util.Set;
 		return SpecificationDate;
 	}
 
-	public void setSpecificationDate(Timestamp specificationDate) {
+	public void setSpecificationDate(
+			Timestamp specificationDate) {
 		SpecificationDate = specificationDate;
 	}
 
-//	@Basic
+	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+	@JoinTable(name = "import_authorization_customs_points", joinColumns = {
+			@JoinColumn(name = "import_authorization_id")}, inverseJoinColumns = {
+			@JoinColumn(name = "customs_point_id")})
+	public Set<NmCustomsPointsEntity> getNmCustomsPointsList() {
+		return nmCustomsPointsList;
+	}
+
+	public void setNmCustomsPointsList(
+			Set<NmCustomsPointsEntity> nmCustomsPointsList) {
+		this.nmCustomsPointsList = nmCustomsPointsList;
+	}
+
+
+	//	@Basic
 //	@Column(name = "customs_code", nullable = true)
 //	public NmCustomsCodesEntity getCustomsCode() { return customsCode; }
 //
@@ -313,76 +362,165 @@ import java.util.Set;
 //
 //	public void setAuthorized(Boolean authorized) { this.authorized = authorized; }
 
+
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof ImportAuthorizationEntity)) return false;
+	public boolean equals(
+			Object o) {
+		if (this == o)
+			return true;
+		if (!(o instanceof ImportAuthorizationEntity))
+			return false;
 
 		ImportAuthorizationEntity that = (ImportAuthorizationEntity) o;
 
-		if (id != null ? !id.equals(that.id) : that.id != null) return false;
-		if (applicationRegistrationNumber != null ? !applicationRegistrationNumber.equals(
-				that.applicationRegistrationNumber) : that.applicationRegistrationNumber != null) return false;
-		if (applicationDate != null ? !applicationDate.equals(that.applicationDate) : that.applicationDate != null) return false;
-		if (applicant != null ? !applicant.equals(that.applicant) : that.applicant != null) return false;
-		if (seller != null ? !seller.equals(that.seller) : that.seller != null) return false;
-		if (basisForImport != null ? !basisForImport.equals(that.basisForImport) : that.basisForImport != null) return false;
-		if (importer != null ? !importer.equals(that.importer) : that.importer != null) return false;
-		if (conditionsAndSpecification != null ? !conditionsAndSpecification.equals(that.conditionsAndSpecification) : that.conditionsAndSpecification != null)
+		if (id != null ? !id
+				.equals(that.id) : that.id != null)
 			return false;
-		if (quantity != null ? !quantity.equals(that.quantity) : that.quantity != null) return false;
-		if (price != null ? !price.equals(that.price) : that.price != null) return false;
-		if (currency != null ? !currency.equals(that.currency) : that.currency != null) return false;
-		if (summ != null ? !summ.equals(that.summ) : that.summ != null) return false;
-		if (producer != null ? !producer.equals(that.producer) : that.producer != null) return false;
-		if (customsDeclarationDate != null ? !customsDeclarationDate.equals(that.customsDeclarationDate) : that.customsDeclarationDate != null) return false;
-		if (expirationDate != null ? !expirationDate.equals(that.expirationDate) : that.expirationDate != null) return false;
-		if (customsCode != null ? !customsCode.equals(that.customsCode) : that.customsCode != null) return false;
-		if (customsNumber != null ? !customsNumber.equals(that.customsNumber) : that.customsNumber != null) return false;
-		if (customsTransactionType != null ? !customsTransactionType.equals(that.customsTransactionType) : that.customsTransactionType != null) return false;
-		if (authorizationsNumber != null ? !authorizationsNumber.equals(that.authorizationsNumber) : that.authorizationsNumber != null) return false;
-		if (medType != null ? !medType.equals(that.medType) : that.medType != null) return false;
-		if (importAuthorizationDetailsEntityList != null ? !importAuthorizationDetailsEntityList.equals(
-				that.importAuthorizationDetailsEntityList) : that.importAuthorizationDetailsEntityList != null) return false;
-		if (authorized != null ? !authorized.equals(that.authorized) : that.authorized != null) return false;
-		if (contract != null ? !contract.equals(that.contract) : that.contract != null) return false;
-		if (contractDate != null ? !contractDate.equals(that.contractDate) : that.contractDate != null) return false;
-		if (anexa != null ? !anexa.equals(that.anexa) : that.anexa != null) return false;
-		if (anexaDate != null ? !anexaDate.equals(that.anexaDate) : that.anexaDate != null) return false;
-		if (specification != null ? !specification.equals(that.specification) : that.specification != null) return false;
-		return SpecificationDate != null ? SpecificationDate.equals(that.SpecificationDate) : that.SpecificationDate == null;
+		if (applicationRegistrationNumber != null ? !applicationRegistrationNumber
+				.equals(that.applicationRegistrationNumber) : that.applicationRegistrationNumber != null)
+			return false;
+		if (applicationDate != null ? !applicationDate
+				.equals(that.applicationDate) : that.applicationDate != null)
+			return false;
+		if (applicant != null ? !applicant
+				.equals(that.applicant) : that.applicant != null)
+			return false;
+		if (seller != null ? !seller
+				.equals(that.seller) : that.seller != null)
+			return false;
+		if (basisForImport != null ? !basisForImport
+				.equals(that.basisForImport) : that.basisForImport != null)
+			return false;
+		if (importer != null ? !importer
+				.equals(that.importer) : that.importer != null)
+			return false;
+		if (conditionsAndSpecification != null ? !conditionsAndSpecification
+				.equals(that.conditionsAndSpecification) : that.conditionsAndSpecification != null)
+			return false;
+		if (quantity != null ? !quantity
+				.equals(that.quantity) : that.quantity != null)
+			return false;
+		if (price != null ? !price
+				.equals(that.price) : that.price != null)
+			return false;
+		if (currency != null ? !currency
+				.equals(that.currency) : that.currency != null)
+			return false;
+		if (summ != null ? !summ
+				.equals(that.summ) : that.summ != null)
+			return false;
+		if (producer != null ? !producer
+				.equals(that.producer) : that.producer != null)
+			return false;
+		if (customsDeclarationDate != null ? !customsDeclarationDate
+				.equals(that.customsDeclarationDate) : that.customsDeclarationDate != null)
+			return false;
+		if (expirationDate != null ? !expirationDate
+				.equals(that.expirationDate) : that.expirationDate != null)
+			return false;
+		if (customsCode != null ? !customsCode
+				.equals(that.customsCode) : that.customsCode != null)
+			return false;
+		if (customsNumber != null ? !customsNumber
+				.equals(that.customsNumber) : that.customsNumber != null)
+			return false;
+		if (customsTransactionType != null ? !customsTransactionType
+				.equals(that.customsTransactionType) : that.customsTransactionType != null)
+			return false;
+		if (authorizationsNumber != null ? !authorizationsNumber
+				.equals(that.authorizationsNumber) : that.authorizationsNumber != null)
+			return false;
+		if (medType != null ? !medType
+				.equals(that.medType) : that.medType != null)
+			return false;
+		if (importAuthorizationDetailsEntityList != null ? !importAuthorizationDetailsEntityList
+				.equals(that.importAuthorizationDetailsEntityList) : that.importAuthorizationDetailsEntityList != null)
+			return false;
+		if (authorized != null ? !authorized
+				.equals(that.authorized) : that.authorized != null)
+			return false;
+		if (contract != null ? !contract
+				.equals(that.contract) : that.contract != null)
+			return false;
+		if (contractDate != null ? !contractDate
+				.equals(that.contractDate) : that.contractDate != null)
+			return false;
+		if (anexa != null ? !anexa
+				.equals(that.anexa) : that.anexa != null)
+			return false;
+		if (anexaDate != null ? !anexaDate
+				.equals(that.anexaDate) : that.anexaDate != null)
+			return false;
+		if (specification != null ? !specification
+				.equals(that.specification) : that.specification != null)
+			return false;
+		if (SpecificationDate != null ? !SpecificationDate
+				.equals(that.SpecificationDate) : that.SpecificationDate != null)
+			return false;
+		return nmCustomsPointsList != null ? nmCustomsPointsList
+				.equals(that.nmCustomsPointsList) : that.nmCustomsPointsList == null;
 	}
 
 	@Override
 	public int hashCode() {
-		int result = id != null ? id.hashCode() : 0;
-		result = 31 * result + (applicationRegistrationNumber != null ? applicationRegistrationNumber.hashCode() : 0);
-		result = 31 * result + (applicationDate != null ? applicationDate.hashCode() : 0);
-		result = 31 * result + (applicant != null ? applicant.hashCode() : 0);
-		result = 31 * result + (seller != null ? seller.hashCode() : 0);
-		result = 31 * result + (basisForImport != null ? basisForImport.hashCode() : 0);
-		result = 31 * result + (importer != null ? importer.hashCode() : 0);
-		result = 31 * result + (conditionsAndSpecification != null ? conditionsAndSpecification.hashCode() : 0);
-		result = 31 * result + (quantity != null ? quantity.hashCode() : 0);
-		result = 31 * result + (price != null ? price.hashCode() : 0);
-		result = 31 * result + (currency != null ? currency.hashCode() : 0);
-		result = 31 * result + (summ != null ? summ.hashCode() : 0);
-		result = 31 * result + (producer != null ? producer.hashCode() : 0);
-		result = 31 * result + (customsDeclarationDate != null ? customsDeclarationDate.hashCode() : 0);
-		result = 31 * result + (expirationDate != null ? expirationDate.hashCode() : 0);
-		result = 31 * result + (customsCode != null ? customsCode.hashCode() : 0);
-		result = 31 * result + (customsNumber != null ? customsNumber.hashCode() : 0);
-		result = 31 * result + (customsTransactionType != null ? customsTransactionType.hashCode() : 0);
-		result = 31 * result + (authorizationsNumber != null ? authorizationsNumber.hashCode() : 0);
-		result = 31 * result + (medType != null ? medType.hashCode() : 0);
-		result = 31 * result + (importAuthorizationDetailsEntityList != null ? importAuthorizationDetailsEntityList.hashCode() : 0);
-		result = 31 * result + (authorized != null ? authorized.hashCode() : 0);
-		result = 31 * result + (contract != null ? contract.hashCode() : 0);
-		result = 31 * result + (contractDate != null ? contractDate.hashCode() : 0);
-		result = 31 * result + (anexa != null ? anexa.hashCode() : 0);
-		result = 31 * result + (anexaDate != null ? anexaDate.hashCode() : 0);
-		result = 31 * result + (specification != null ? specification.hashCode() : 0);
-		result = 31 * result + (SpecificationDate != null ? SpecificationDate.hashCode() : 0);
+		int result = id != null ? id
+				.hashCode() : 0;
+		result = 31 * result + (applicationRegistrationNumber != null ? applicationRegistrationNumber
+				.hashCode() : 0);
+		result = 31 * result + (applicationDate != null ? applicationDate
+				.hashCode() : 0);
+		result = 31 * result + (applicant != null ? applicant
+				.hashCode() : 0);
+		result = 31 * result + (seller != null ? seller
+				.hashCode() : 0);
+		result = 31 * result + (basisForImport != null ? basisForImport
+				.hashCode() : 0);
+		result = 31 * result + (importer != null ? importer
+				.hashCode() : 0);
+		result = 31 * result + (conditionsAndSpecification != null ? conditionsAndSpecification
+				.hashCode() : 0);
+		result = 31 * result + (quantity != null ? quantity
+				.hashCode() : 0);
+		result = 31 * result + (price != null ? price
+				.hashCode() : 0);
+		result = 31 * result + (currency != null ? currency
+				.hashCode() : 0);
+		result = 31 * result + (summ != null ? summ
+				.hashCode() : 0);
+		result = 31 * result + (producer != null ? producer
+				.hashCode() : 0);
+		result = 31 * result + (customsDeclarationDate != null ? customsDeclarationDate
+				.hashCode() : 0);
+		result = 31 * result + (expirationDate != null ? expirationDate
+				.hashCode() : 0);
+		result = 31 * result + (customsCode != null ? customsCode
+				.hashCode() : 0);
+		result = 31 * result + (customsNumber != null ? customsNumber
+				.hashCode() : 0);
+		result = 31 * result + (customsTransactionType != null ? customsTransactionType
+				.hashCode() : 0);
+		result = 31 * result + (authorizationsNumber != null ? authorizationsNumber
+				.hashCode() : 0);
+		result = 31 * result + (medType != null ? medType
+				.hashCode() : 0);
+		result = 31 * result + (importAuthorizationDetailsEntityList != null ? importAuthorizationDetailsEntityList
+				.hashCode() : 0);
+		result = 31 * result + (authorized != null ? authorized
+				.hashCode() : 0);
+		result = 31 * result + (contract != null ? contract
+				.hashCode() : 0);
+		result = 31 * result + (contractDate != null ? contractDate
+				.hashCode() : 0);
+		result = 31 * result + (anexa != null ? anexa
+				.hashCode() : 0);
+		result = 31 * result + (anexaDate != null ? anexaDate
+				.hashCode() : 0);
+		result = 31 * result + (specification != null ? specification
+				.hashCode() : 0);
+		result = 31 * result + (SpecificationDate != null ? SpecificationDate
+				.hashCode() : 0);
+		result = 31 * result + (nmCustomsPointsList != null ? nmCustomsPointsList
+				.hashCode() : 0);
 		return result;
 	}
 }

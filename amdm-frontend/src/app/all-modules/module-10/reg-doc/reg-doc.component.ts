@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
@@ -10,7 +10,7 @@ import {Router} from '@angular/router';
 import {Document} from '../../../models/document';
 import {RequestService} from '../../../shared/service/request.service';
 import {AuthService} from '../../../shared/service/authetication.service';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {TaskService} from '../../../shared/service/task.service';
 import {CanModuleDeactivate} from '../../../shared/auth-guard/can-deactivate-guard.service';
@@ -22,7 +22,7 @@ import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
     templateUrl: './reg-doc.component.html',
     styleUrls: ['./reg-doc.component.css']
 })
-export class RegDocComponent implements OnInit, CanModuleDeactivate {
+export class RegDocComponent implements OnInit, OnDestroy, CanModuleDeactivate {
 
     documents: Document [] = [];
     rForm: FormGroup;
@@ -39,7 +39,7 @@ export class RegDocComponent implements OnInit, CanModuleDeactivate {
                 private authService: AuthService,
                 private administrationService: AdministrationService,
                 private taskService: TaskService,
-                private errorHandlerService: ErrorHandlerService,
+                private successOrErrorHandlerService: SuccessOrErrorHandlerService,
                 private loadingService: LoaderService,
                 private navbarTitleService: NavbarTitleService,
                 public dialogConfirmation: MatDialog) {

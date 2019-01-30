@@ -8,7 +8,7 @@ import {MatDialog, MatDialogConfig} from '@angular/material';
 import { Subscription} from 'rxjs';
 import {saveAs} from 'file-saver';
 import {UploadFileService} from '../../shared/service/upload/upload-file.service';
-import {ErrorHandlerService} from '../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../shared/service/success-or-error-handler.service';
 import {ConfirmationDialogComponent} from '../../dialog/confirmation-dialog.component';
 import {DivisionSelectDialogComponent} from '../../dialog/division-select-dialog/division-select-dialog.component';
 
@@ -30,7 +30,7 @@ export class MachetaComponent implements OnInit, OnDestroy {
     @Output() addMaket = new EventEmitter();
 
     constructor(public dialog: MatDialog,
-                private errorHandlerService: ErrorHandlerService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 private uploadService: UploadFileService) {
     }
 

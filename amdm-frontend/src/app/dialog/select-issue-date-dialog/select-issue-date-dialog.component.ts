@@ -80,7 +80,8 @@ export class SelectIssueDateDialogComponent implements OnInit {
                 }
                 )
             );
-        } else if (this.dataDialog.type == 'DD') {
+        }
+        else if (this.dataDialog.type == 'DD') {
             this.subscriptions.push(this.documentService.addDD(this.dataDialog.document, eventHtml.srcElement.files[0]).subscribe(event => {
                     if (event instanceof HttpResponse) {
                         this.aForm.get('response').setValue(true);
@@ -93,8 +94,30 @@ export class SelectIssueDateDialogComponent implements OnInit {
                 )
             );
         } else if (this.dataDialog.type == 'DDC') {
-            console.log("this.dataDialog", this.dataDialog);
             this.subscriptions.push(this.documentService.addDDC(this.dataDialog.document, eventHtml.srcElement.files[0]).subscribe(event => {
+                    if (event instanceof HttpResponse) {
+                        this.aForm.get('response').setValue(true);
+                        this.dialogRef.close(this.aForm.value);
+                    }
+                },
+                error => {
+                    console.log(error);
+                })
+            );
+        } else if (this.dataDialog.type == 'DDA') {
+            this.subscriptions.push(this.documentService.addDDAC(this.dataDialog.document, eventHtml.srcElement.files[0]).subscribe(event => {
+                    if (event instanceof HttpResponse) {
+                        this.aForm.get('response').setValue(true);
+                        this.dialogRef.close(this.aForm.value);
+                    }
+                },
+                error => {
+                    console.log(error);
+                })
+            );
+        }
+        else if (this.dataDialog.type == 'DDM') {
+            this.subscriptions.push(this.documentService.addDDM(this.dataDialog.document, eventHtml.srcElement.files[0]).subscribe(event => {
                     if (event instanceof HttpResponse) {
                         this.aForm.get('response').setValue(true);
                         this.dialogRef.close(this.aForm.value);
@@ -105,6 +128,16 @@ export class SelectIssueDateDialogComponent implements OnInit {
                 }
                 )
             );
+        }
+        else if (this.dataDialog.type == 'LN') {
+
+            this.subscriptions.push(this.documentService.addLN(this.dataDialog.document, eventHtml.srcElement.files[0]).subscribe(event => {
+                    if (event instanceof HttpResponse) {
+                        this.aForm.get('response').setValue(true);
+                        this.dialogRef.close(this.aForm.value);
+                    }
+                }
+            ));
         }
         else {
             this.subscriptions.push(this.documentService.addOA(this.dataDialog.document, eventHtml.srcElement.files[0]).subscribe(event => {

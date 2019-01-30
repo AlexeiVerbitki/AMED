@@ -10,7 +10,7 @@ import {RequestService} from '../../../shared/service/request.service';
 import {AuthService} from '../../../shared/service/authetication.service';
 import {AdministrationService} from '../../../shared/service/administration.service';
 import {TaskService} from '../../../shared/service/task.service';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {CanModuleDeactivate} from '../../../shared/auth-guard/can-deactivate-guard.service';
 import {MedicamentService} from '../../../shared/service/medicament.service';
@@ -44,7 +44,7 @@ export class RegModifyCerereComponent implements OnInit, OnDestroy, CanModuleDea
                 private administrationService: AdministrationService,
                 private taskService: TaskService,
                 private medicamentService: MedicamentService,
-                private errorHandlerService: ErrorHandlerService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 private navbarTitleService: NavbarTitleService,
                 private loadingService: LoaderService,
                 public dialog: MatDialog,

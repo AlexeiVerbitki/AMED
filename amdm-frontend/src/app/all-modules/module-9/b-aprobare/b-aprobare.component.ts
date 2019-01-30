@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Document} from '../../../models/document';
-import {Subscription} from 'rxjs/index';
+import {Observable, Subscription} from 'rxjs/index';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RequestService} from '../../../shared/service/request.service';
@@ -70,9 +70,14 @@ export class BAprobareComponent implements OnInit, OnDestroy {
             this.taskService.getRequestStepByIdAndCode(data.type.id, data.currentStep).subscribe(step => {
                     this.subscriptions.push(
                         this.administrationService.getAllDocTypes().subscribe(data => {
+                                let availableDocsArr = [];
+                                step.availableDocTypes ? availableDocsArr = step.availableDocTypes.split(',') : availableDocsArr = [];
+                                let outputDocsArr = [];
+                                step.outputDocTypes ? outputDocsArr = step.outputDocTypes.split(',') : outputDocsArr = [];
                                 if (step.availableDocTypes) {
                                     this.docTypes = data;
-                                    this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
+                                    this.docTypes = this.docTypes.filter(r => availableDocsArr.includes(r.category));
+                                    this.outDocuments = this.outDocuments.filter(r => outputDocsArr.includes(r.docType.category));
                                 }
                             },
                             error => console.log(error)
@@ -210,6 +215,35 @@ export class BAprobareComponent implements OnInit, OnDestroy {
                 }
             });
         }
+    }
+
+    viewDoc(doc: any) {
+        // console.log('doc', doc);
+        // console.log('this.docs', this.docs);
+        // let findDoc = this.docs.find(document => document.docType.category === 'AC');
+        // if (findDoc) {
+        //     if (findDoc.id) {
+        //         console.log('findDoc1', findDoc);
+        //         let observable: Observable<any> = null;
+        //         observable = this.documentService.generateAvizC(this.approveClinicalTrailForm.get('id').value, doc.docType.category);
+        //
+        //         this.subscriptions.push(observable.subscribe(data => {
+        //                 let file = new Blob([data], {type: 'application/pdf'});
+        //                 var fileURL = URL.createObjectURL(file);
+        //                 window.open(fileURL);
+        //                 this.loadingService.hide();
+        //             }, error => {
+        //                 console.log('error', error);
+        //                 this.errorHandlerService.showError(error);
+        //                 this.loadingService.hide();
+        //             })
+        //         );
+        //     } else {
+        //         this.errorHandlerService.showError('Avizul comitetului de etica trebuie salvat');
+        //     }
+        // } else {
+        //     this.errorHandlerService.showError('Avizul comitetului de etica nu a fost incarcat');
+        // }
     }
 
     ngOnDestroy(): void {

@@ -49,6 +49,13 @@
         <app-dd-ct-list #ddCtList (ddListCtModified)="ddListCtModified($event)"></app-dd-ct-list>
       </ng-template>
     </mat-tab>
+    <mat-tab label="Dispozitie de distribuire pentru amendament la studiu clinic">
+      <ng-template matTabContent><br>
+        <app-request-dd-ct-amend #requestDDCtAmend (loadDDAmendCts)="loadDDAmendCts($event)"></app-request-dd-ct-amend>
+        <hr>
+        <app-dd-ct-amend-list #ddCtAmendList (ddListCtAmendModified)="ddListCtAmendModified($event)"></app-dd-ct-amend-list>
+      </ng-template>
+    </mat-tab>
 	<mat-tab label="Lista medicamentelor pentru comisia de nimicire">
             <ng-template matTabContent><br>
                 <app-lmpc-modify-list #anihModList (loadAnih)="loadAnihList($event)"></app-lmpc-modify-list>

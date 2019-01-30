@@ -38,6 +38,12 @@ export class MedicamentService {
         return this.http.get<any>('/api/medicaments/search-medicaments-by-register-number', {params: Params});
     }
 
+    getMedicamentByRegisterNumberFullDetails(registerNumber: any): Observable<any> {
+        let Params = new HttpParams();
+        Params = Params.set('registerNumber', registerNumber);
+        return this.http.get<any>('/api/medicaments/search-medicaments-by-register-number-full-details', {params: Params});
+    }
+
     getMedicamentsByFilter(filter: any): Observable<any> {
         return this.http.post<any>('/api/medicaments/by-filter', filter, {observe: 'response'});
     }

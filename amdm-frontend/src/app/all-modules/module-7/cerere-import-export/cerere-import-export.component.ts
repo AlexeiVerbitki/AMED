@@ -15,7 +15,7 @@ import {LoaderService} from '../../../shared/service/loader.service';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 import {MatDialog} from '@angular/material';
 import {TaskService} from '../../../shared/service/task.service';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {DrugSubstanceTypesService} from '../../../shared/service/drugs/drugsubstancetypes.service';
 import {DrugDocumentsService} from '../../../shared/service/drugs/drugdocuments.service';
 import {DrugDecisionsService} from '../../../shared/service/drugs/drugdecisions.service';
@@ -51,7 +51,6 @@ export class CerereImportExportComponent implements OnInit {
     selectedSubstance: any;
     unityDesc: any;
     substanceUnits: any[];
-    selectedSubstanceUnits: any[] = [];
     selectedSubstancesTable: any[] = [];
     substanceNotSelected: boolean;
     substanceExistInTable: boolean;
@@ -70,7 +69,7 @@ export class CerereImportExportComponent implements OnInit {
                 private pharmaceuticalFormsService: PharmaceuticalFormsService, private activatedRoute: ActivatedRoute, private router: Router,
                 private requestService: RequestService, private authService: AuthService,
                 private documentService: DocumentService, private loadingService: LoaderService, public dialogConfirmation: MatDialog,
-                private taskService: TaskService, private ref: ChangeDetectorRef, private errorHandlerService: ErrorHandlerService,
+                private taskService: TaskService, private ref: ChangeDetectorRef, private errorHandlerService: SuccessOrErrorHandlerService,
                 private drugSubstanceTypesService: DrugSubstanceTypesService, private drugDocumentsService: DrugDocumentsService,
                 private drugDecisionsService: DrugDecisionsService) {
 
@@ -391,7 +390,7 @@ export class CerereImportExportComponent implements OnInit {
 
             if(this.cerereImpExpForm.get('unitOfMeasurement').value.unitCode && this.cerereImpExpForm.get('substance').value.unitOfMeasureCode != this.cerereImpExpForm.get('unitOfMeasurement').value.unitCode){
 
-                this.cerereImpExpForm.value.authorizedQuantity = (this.cerereImpExpForm.value.authorizedQuantity * this.cerereImpExpForm.get('unitOfMeasurement').value.unitCodeRate) /  this.cerereImpExpForm.get('unitOfMeasurement').value.refUnitCodeRate;
+                this.cerereImpExpForm.value.authorizedQuantity = (this.cerereImpExpForm.value.authorizedQuantity * this.cerereImpExpForm.get('unitOfMeasurement').value.unitCodeRate) / this.cerereImpExpForm.get('unitOfMeasurement').value.refUnitCodeRate;
 
             }
 
@@ -433,12 +432,6 @@ export class CerereImportExportComponent implements OnInit {
     }
 
     populateSelectedSubstanceDetails() {
-
-        const unitOfMeasurement = this.cerereImpExpForm.get('substance').value;
-        let unitDescription = '';
-        if (unitOfMeasurement != null && unitOfMeasurement.unitCodeDescription != null) {
-            unitDescription = unitOfMeasurement.unitCodeDescription;
-        }
 
         const substanceDetails = {
             authorizedDrugSubstancesId: this.selectedSubstance.id,

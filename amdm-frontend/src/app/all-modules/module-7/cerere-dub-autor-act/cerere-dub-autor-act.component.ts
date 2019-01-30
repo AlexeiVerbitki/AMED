@@ -11,7 +11,7 @@ import {LoaderService} from '../../../shared/service/loader.service';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 import {MatDialog} from '@angular/material';
 import {TaskService} from '../../../shared/service/task.service';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {DrugDocumentsService} from '../../../shared/service/drugs/drugdocuments.service';
 import {DrugDecisionsService} from '../../../shared/service/drugs/drugdecisions.service';
 
@@ -43,7 +43,7 @@ export class CerereDubAutorActComponent implements OnInit {
                 private authService: AuthService, private requestService: RequestService, private router: Router,
                 private activatedRoute: ActivatedRoute, private documentService: DocumentService,
                 private loadingService: LoaderService, public dialogConfirmation: MatDialog, private taskService: TaskService,
-                private errorHandlerService: ErrorHandlerService, private drugDocumentsService: DrugDocumentsService,
+                private errorHandlerService: SuccessOrErrorHandlerService, private drugDocumentsService: DrugDocumentsService,
                 private drugDecisionsService: DrugDecisionsService) {
 
         this.cerereDupAutorForm = fb.group({

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router} from '@angular/router';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {AuthService} from '../service/authetication.service';
-import {ErrorHandlerService} from '../service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../service/success-or-error-handler.service';
 
 
 @Injectable()
@@ -10,7 +10,7 @@ export class RoleAuthGuard implements CanActivate {
 
     constructor(private router: Router,
                 public auth: AuthService,
-                private errorHandlerService: ErrorHandlerService) {
+                private errorHandlerService: SuccessOrErrorHandlerService) {
     }
 
     canActivate(route: ActivatedRouteSnapshot) {

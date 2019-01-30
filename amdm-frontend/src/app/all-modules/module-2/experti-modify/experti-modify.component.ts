@@ -5,7 +5,7 @@ import {Document} from '../../../models/document';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RequestService} from '../../../shared/service/request.service';
 import {Expert} from '../../../models/expert';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {DocumentService} from '../../../shared/service/document.service';
 import {AuthService} from '../../../shared/service/authetication.service';
 import {AdministrationService} from '../../../shared/service/administration.service';
@@ -18,6 +18,11 @@ import {MedicamentDetailsDialogComponent} from '../../../dialog/medicament-detai
 import {MedicamentService} from '../../../shared/service/medicament.service';
 import {AddExpertComponent} from "../../../dialog/add-expert/add-expert.component";
 import {RequestAdditionalDataDialogComponent} from "../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component";
+import {
+    SelectVariationTypeComponent,
+    TodoItemFlatNode
+} from "../../../dialog/select-variation-type/select-variation-type.component";
+import {SelectionModel} from "@angular/cdk/collections";
 
 @Component({
     selector: 'app-experti',
@@ -25,6 +30,7 @@ import {RequestAdditionalDataDialogComponent} from "../../../dialog/request-addi
     styleUrls: ['./experti-modify.component.css']
 })
 export class ExpertiModifyComponent implements OnInit {
+    checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
     private subscriptions: Subscription[] = [];
     expertForm: FormGroup;
     documents: Document [] = [];
@@ -52,6 +58,8 @@ export class ExpertiModifyComponent implements OnInit {
     omAttached = false;
     omApproved = false;
     expertList: any[] = [];
+    variationTypesIds : string;
+    variationTypesIdsTemp : string;
 
     constructor(private fb: FormBuilder,
                 private authService: AuthService,
@@ -60,7 +68,7 @@ export class ExpertiModifyComponent implements OnInit {
                 private administrationService: AdministrationService,
                 private router: Router,
                 public dialog: MatDialog,
-                private errorHandlerService: ErrorHandlerService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 private taskService: TaskService,
                 private navbarTitleService: NavbarTitleService,
                 private medicamentService: MedicamentService,
@@ -82,8 +90,6 @@ export class ExpertiModifyComponent implements OnInit {
             'division': [null],
             'labResponse': [null],
             'divisionBonDePlata': [null],
-            'variationType' : [null],
-            'variationDescription' : [null],
             'medicament':
                 fb.group({
                     'id': [],
@@ -139,8 +145,6 @@ export class ExpertiModifyComponent implements OnInit {
                         this.expertForm.get('requestNumber').setValue(data.requestNumber);
                         this.expertForm.get('companyValue').setValue(data.company.name);
                         this.expertForm.get('company').setValue(data.company);
-                        this.expertForm.get('variationType').setValue(data.variationType=='I' ? 'Tip I' : (data.variationType=='II' ? 'Tip II' : 'Transfer de certificat'));
-                        this.expertForm.get('variationDescription').setValue(data.variationDescription);
                         let rl = this.outputDocuments.find(r => r.docType.category == 'RL');
                         if (rl && (rl.responseReceived == 0 || rl.responseReceived)) {
                             this.expertForm.get('labResponse').setValue(rl.responseReceived.toString());
@@ -230,6 +234,18 @@ export class ExpertiModifyComponent implements OnInit {
                                 },
                                 error => console.log(error)
                             ));
+                        this.subscriptions.push(this.administrationService.variatonTypesJSON().subscribe(data2 => {
+                                this.variationTypesIds = JSON.stringify(data2.val2);
+                                if(data.variations) {
+                                    this.variationTypesIdsTemp =  this.variationTypesIds.substr(1);
+                                    for (let v of data.variations) {
+                                        var t = new TodoItemFlatNode();
+                                        t.item = this.getVariationCodeById(v.variation.id,v.value);
+                                        this.checklistSelection.selected.push(t);
+                                    }
+                                }
+                            }
+                        ));
                     })
                 );
             })
@@ -249,6 +265,16 @@ export class ExpertiModifyComponent implements OnInit {
                 error => console.log(error)
             )
         );
+    }
+
+    getVariationCodeById(id : string,value:string) : string
+    {
+        var i = this.variationTypesIdsTemp.indexOf(value+'":"'+id+'"')+value.length-1;
+        var tempStr =  this.variationTypesIdsTemp.substr(1,i);
+        var j = tempStr.lastIndexOf('"')+1;
+        var finalStr  = tempStr.substr(j,i);
+        this.variationTypesIdsTemp = this.variationTypesIdsTemp.replace('"'+finalStr+'":"'+id+'"','');
+        return finalStr;
     }
 
     displayInstructions() {
@@ -331,7 +357,7 @@ export class ExpertiModifyComponent implements OnInit {
                 requestNumber: this.expertForm.get('requestNumber').value,
                 registrationDate: this.expertForm.get('medicament.registrationDate').value,
                 requestDate: this.expertForm.get('startDate').value,
-                variationTip: this.expertForm.get('variationType').value,
+                variationTip: this.modelToSubmit.variations[0].value,
                 requestId : this.expertForm.get('id').value
             };
 
@@ -460,6 +486,7 @@ export class ExpertiModifyComponent implements OnInit {
         x.expertList = this.expertList;
 
         x.medicamentHistory[0].atcCodeTo = this.expertForm.get('medicament.atcCodeTo').value;
+        x.medicamentHistory[0].registrationDate = this.expertForm.get('medicament.registrationDate').value;
 
         x.medicamentHistory[0].divisionHistory = this.divisions;
         x.medicamentHistory[0].divisionHistory.forEach(t => {t.instructionsHistory = [];});
@@ -467,7 +494,7 @@ export class ExpertiModifyComponent implements OnInit {
             t.instructionsHistory.push.apply(t.instructionsHistory, t.instructions);
             t.instructionsHistory.push.apply(t.instructionsHistory, t.machets);
         });
-
+        x.variations = this.modelToSubmit.variations;
         this.subscriptions.push(this.requestService.savePostauthorizationMedicament(x).subscribe(data => {
                 this.loadingService.hide();
                 this.router.navigate(['dashboard/homepage']);
@@ -500,7 +527,8 @@ export class ExpertiModifyComponent implements OnInit {
                     assignedUser: userNameDB,
                     id: this.expertForm.get('id').value,
                     medicaments: this.modelToSubmit.medicaments,
-                    medicamentHistory: this.modelToSubmit.medicamentHistory
+                    medicamentHistory: this.modelToSubmit.medicamentHistory,
+                    variations : this.modelToSubmit.variations
                 };
                 modelToSubmit.requestHistories.push({
                     startDate: this.expertForm.get('data').value, endDate: new Date(),
@@ -748,7 +776,9 @@ export class ExpertiModifyComponent implements OnInit {
         });
 
         x.medicamentHistory[0].atcCodeTo = this.expertForm.get('medicament.atcCodeTo').value;
+        x.medicamentHistory[0].registrationDate = this.expertForm.get('medicament.registrationDate').value;
         x.expertList = this.expertList;
+        x.variations = this.modelToSubmit.variations;
 
         this.subscriptions.push(this.requestService.addMedicamentHistoryRequest(x).subscribe(data => {
                 this.loadingService.hide();
@@ -993,6 +1023,22 @@ export class ExpertiModifyComponent implements OnInit {
                 );
             }
         });
+    }
+
+    viewVariationType() {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+        // dialogConfig2.panelClass = 'overflow-ys';
+
+        dialogConfig2.width = '1000px';
+        dialogConfig2.height = '800px';
+
+        dialogConfig2.data = {values: this.checklistSelection, disabled : true};
+
+        let dialogRef = this.dialog.open(SelectVariationTypeComponent, dialogConfig2);
     }
 
 }

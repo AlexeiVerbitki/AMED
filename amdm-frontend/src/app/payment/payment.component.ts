@@ -6,7 +6,7 @@ import {AddPaymentOrderComponent} from '../dialog/add-payment-order/add-payment-
 import {LoaderService} from '../shared/service/loader.service';
 import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog.component';
 import {DocumentService} from '../shared/service/document.service';
-import {ErrorHandlerService} from '../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../shared/service/success-or-error-handler.service';
 import {SelectCurrencyBonPlataDialogComponent} from '../dialog/select-currency-bon-plata-dialog/select-currency-bon-plata-dialog.component';
 
 @Component({
@@ -42,7 +42,7 @@ export class PaymentComponent implements OnInit {
     constructor(private administrationService: AdministrationService,
                 private dialog: MatDialog,
                 private documentService: DocumentService,
-                private errorHandlerService: ErrorHandlerService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 private loadingService: LoaderService) {
 
     }

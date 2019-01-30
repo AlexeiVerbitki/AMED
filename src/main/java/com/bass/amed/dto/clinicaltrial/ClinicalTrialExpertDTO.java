@@ -7,6 +7,7 @@ public class ClinicalTrialExpertDTO {
     private String expertName;
     private String applicant;
     private String titleClinicalStudyPhases;
+    private String titleClinicalStudyCode;
     private String investigatedProduct;
     private String institution;
     private String investigaotrs;

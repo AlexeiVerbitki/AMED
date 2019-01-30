@@ -9,7 +9,7 @@ import {AuthService} from '../../../shared/service/authetication.service';
 import {DocumentService} from '../../../shared/service/document.service';
 import {RequestAdditionalDataDialogComponent} from '../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component';
 import {TaskService} from '../../../shared/service/task.service';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
@@ -73,7 +73,7 @@ export class EvaluarePrimaraComponent implements OnInit {
                 private documentService: DocumentService,
                 private medicamentService: MedicamentService,
                 private taskService: TaskService,
-                private errorHandlerService: ErrorHandlerService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 private navbarTitleService: NavbarTitleService,
                 private uploadService: UploadFileService,
                 private loadingService: LoaderService,

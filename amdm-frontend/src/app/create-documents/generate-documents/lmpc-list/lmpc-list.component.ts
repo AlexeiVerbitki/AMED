@@ -1,29 +1,29 @@
-import {Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
-import {Subscription} from "rxjs";
-import {RequestService} from "../../../shared/service/request.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {UploadFileService} from "../../../shared/service/upload/upload-file.service";
-import {DocumentService} from "../../../shared/service/document.service";
-import {SelectIssueDateDialogComponent} from "../../../dialog/select-issue-date-dialog/select-issue-date-dialog.component";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {HttpResponse} from "@angular/common/http";
+import {AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {Subscription} from 'rxjs';
+import {RequestService} from '../../../shared/service/request.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {UploadFileService} from '../../../shared/service/upload/upload-file.service';
+import {DocumentService} from '../../../shared/service/document.service';
+import {SelectIssueDateDialogComponent} from '../../../dialog/select-issue-date-dialog/select-issue-date-dialog.component';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {HttpResponse} from '@angular/common/http';
 
 @Component({
     selector: 'app-lmpc-list',
     templateUrl: './lmpc-list.component.html',
     styleUrls: ['./lmpc-list.component.css']
 })
-export class LmpcListComponent implements OnInit, OnDestroy {
+export class LmpcListComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    displayedColumns: any[] = ['date','dateOfIssue', 'status', 'actions'];
+    displayedColumns: any[] = ['date', 'dateOfIssue', 'status', 'actions'];
     dataSource = new MatTableDataSource<any>();
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild('incarcaFisier')
     incarcaFisierVariable: ElementRef;
-    private subscriptions: Subscription[] = [];
     @Output() anihListModified = new EventEmitter();
+    private subscriptions: Subscription[] = [];
 
     constructor(private requestService: RequestService,
                 private loadingService: LoaderService,
@@ -59,7 +59,6 @@ export class LmpcListComponent implements OnInit, OnDestroy {
     }
 
 
-
     addDocument(element: any, event) {
         const dialogConfig2 = new MatDialogConfig();
 
@@ -69,9 +68,9 @@ export class LmpcListComponent implements OnInit, OnDestroy {
 
         dialogConfig2.width = '400px';
 
-        dialogConfig2.data = {document : element,type : 'LN'};
+        dialogConfig2.data = {document: element, type: 'LN'};
 
-        let dialogRef = this.dialog.open(SelectIssueDateDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(SelectIssueDateDialogComponent, dialogConfig2);
         dialogRef.afterClosed().subscribe(result => {
             this.anihListModified.emit(true);
             this.loadAnnihMeds();
@@ -114,7 +113,6 @@ export class LmpcListComponent implements OnInit, OnDestroy {
             )
         );
     }
-
 
 
     ngOnDestroy() {

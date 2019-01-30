@@ -26,3 +26,8 @@ label.required:not(:empty):after,
 .mt-4s {
     padding-top: 45px;
 }
+
+.btn-lights {
+    background-color: #f5f5f5 !important;
+    color: #000 !important;
+}

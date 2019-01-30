@@ -2,7 +2,7 @@ import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core'
 import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
 import {Observable, Subscription} from "rxjs/index";
 import {RequestService} from "../../../shared/service/request.service";
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
+import {SuccessOrErrorHandlerService} from "../../../shared/service/success-or-error-handler.service";
 import {SelectDocumentNumberComponent} from "../../../dialog/select-document-number/select-document-number.component";
 import {DocumentService} from "../../../shared/service/document.service";
 
@@ -21,7 +21,7 @@ export class RequestDdCtComponent implements OnInit {
     @Output() loadDDCts = new EventEmitter();
 
     constructor(private requestService: RequestService,
-                private errorHandlerService: ErrorHandlerService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 private dialog: MatDialog,
                 private documentService: DocumentService) {
     }

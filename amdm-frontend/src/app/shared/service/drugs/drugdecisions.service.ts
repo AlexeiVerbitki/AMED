@@ -68,4 +68,11 @@ export class DrugDecisionsService {
 
         return this.http.get<any>('/api/drug-decisions/get-units-by-reference-code', {params: Params});
     }
+
+    getOldDetailsByCompanyCode(code: string): Observable<any> {
+        let Params = new HttpParams();
+        Params = Params.set('code', code);
+
+        return this.http.get<any>('/api/drug-decisions/get-old-details-by-company-code', {params: Params});
+    }
 }

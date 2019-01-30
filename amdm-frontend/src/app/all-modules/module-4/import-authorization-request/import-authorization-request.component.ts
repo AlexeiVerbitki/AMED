@@ -6,17 +6,14 @@ import {MatDialog} from '@angular/material';
 import {Router} from '@angular/router';
 import {AdministrationService} from '../../../shared/service/administration.service';
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
-import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 import {saveAs} from 'file-saver';
 import {Document} from '../../../models/document';
 import {AuthService} from '../../../shared/service/authetication.service';
 import {RequestService} from '../../../shared/service/request.service';
 import {TaskService} from '../../../shared/service/task.service';
 import {LoaderService} from '../../../shared/service/loader.service';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
 import {Subject} from 'rxjs/index';
-
-
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 
 
 @Component({
@@ -43,17 +40,11 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
     importer: Observable<any[]>;
     loadingCompany = false;
-    protected companyInputs = new Subject<string>();
-
     authorizationNumber: any = '';
-
     importRadioButton: any;
-
-
-
-
+    importManagementId: any = '';
+    protected companyInputs = new Subject<string>();
     private subscriptions: Subscription[] = [];
-    importManagementId: any = "";
 
     constructor(private fb: FormBuilder,
                 public dialog: MatDialog,
@@ -62,7 +53,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
                 private authService: AuthService,
                 private administrationService: AdministrationService,
                 private taskService: TaskService,
-                private errorHandlerService: ErrorHandlerService,
+                private successOrErrorHandlerService: SuccessOrErrorHandlerService,
                 private loadingService: LoaderService) {
         this.rForm = fb.group({
             'requestNumber': [null],
@@ -103,7 +94,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         this.subscriptions.push(
             this.administrationService.generateDocNr().subscribe(data => {
                     this.generatedDocNrSeq = data;
-                    this.rForm.get( 'requestNumber').setValue(this.generatedDocNrSeq);
+                    this.rForm.get('requestNumber').setValue(this.generatedDocNrSeq);
 
 
                 },
@@ -153,7 +144,9 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         this.importer =
             this.companyInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) { return true; }
+                    if (result && result.length > 2) {
+                        return true;
+                    }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -183,9 +176,8 @@ export class ImportAuthorizationRequestComponent implements OnInit {
     }
 
     onChanges(): void {
-        this.subscriptions.push( this.rForm.get('importType').valueChanges.subscribe(val => {
+        this.subscriptions.push(this.rForm.get('importType').valueChanges.subscribe(val => {
             if (val) {
-                console.log("Radio Button: " , val)
                 this.importRadioButton = val;
 
             }
@@ -196,54 +188,65 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         this.formSubmitted = true;
 
 
+        this.medType = this.rForm.get('importType').value;
+        console.log('this.medType', this.medType);
+        // this.rForm.get('importAuthorizationEntity.medType').setValue(this.medType);
 
 
-            this.medType = this.rForm.get('importType').value;
-            console.log('this.medType', this.medType);
-            // this.rForm.get('importAuthorizationEntity.medType').setValue(this.medType);
-
-
-            const formModel: any = this.rForm.value;
-            formModel.importAuthorizationEntity.medType = this.medType;
-            console.log('formModel.importAuthorizationEntity.medType', formModel.importAuthorizationEntity.medType);
+        const formModel: any = this.rForm.value;
+        formModel.importAuthorizationEntity.medType = this.medType;
+        console.log('formModel.importAuthorizationEntity.medType', formModel.importAuthorizationEntity.medType);
 
 
         switch (this.rForm.get('importType').value) {
-            case '1': {formModel.type.id = '15'; break; }
-            case '2': {formModel.type.id = '16'; break; }
-            case '3': {formModel.type.id = '17'; break; }
-            case '4': {formModel.type.id = '18'; break; }
-            case '5': {formModel.type.id = '18'; break; }
+            case '1': {
+                formModel.type.id = '15';
+                break;
+            }
+            case '2': {
+                formModel.type.id = '16';
+                break;
+            }
+            case '3': {
+                formModel.type.id = '17';
+                break;
+            }
+            case '4': {
+                formModel.type.id = '18';
+                break;
+            }
+            case '5': {
+                formModel.type.id = '18';
+                break;
+            }
         }
 
-            formModel.requestHistories = [{
-                // startDate: this.rForm.get('startDate').value,
-                startDate: formModel.startDate,
-                endDate: new Date(),
-                username: this.authService.getUserName(),
-                step: formModel.currentStep
-            }];
-
-
-            // formModel.importAuthorizationEntity.documents = this.docs;
-            formModel.documents = this.docs;
-            formModel.currentStep = 'E';
-            formModel.initiator = this.authService.getUserName();
-            formModel.assignedUser = this.authService.getUserName();
-            formModel.idnp = null;
-            formModel.registrationRequestMandatedContacts = [{
-            idnp : this.rForm.get('idnp').value
+        formModel.requestHistories = [{
+            // startDate: this.rForm.get('startDate').value,
+            startDate: formModel.startDate,
+            endDate: new Date(),
+            username: this.authService.getUserName(),
+            step: formModel.currentStep
         }];
 
 
+        // formModel.importAuthorizationEntity.documents = this.docs;
+        formModel.documents = this.docs;
+        formModel.currentStep = 'E';
+        formModel.initiator = this.authService.getUserName();
+        formModel.assignedUser = this.authService.getUserName();
+        formModel.idnp = null;
+        formModel.registrationRequestMandatedContacts = [{
+            idnp: this.rForm.get('idnp').value
+        }];
 
-            console.log('formModel', formModel);
-            console.log('rForm.valid', this.rForm.valid);
 
-        if (this.rForm.valid && this.docs.length > 0 ) {
+        console.log('formModel', formModel);
+        console.log('rForm.valid', this.rForm.valid);
+
+        if (this.rForm.valid && this.docs.length > 0) {
             this.loadingService.show();
             this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
-                console.log("this.requestService.addImportRequest(formModel)", data)
                     switch (this.rForm.get('importType').value) {
                         case '1': {
                             this.router.navigate(['dashboard/module/import-authorization/registered-medicament/' + data.body.id]);
@@ -264,8 +267,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
                         case '5': {
                             // this.authorizationNumber = "33134/2019-AM";
                             // this.authorizationNumber = "33134/2019-AM";
-                            this.subscriptions.push(this.requestService.getAuthorizationByAuth(this.authorizationNumber).subscribe(data =>{
-                                console.log("authorization",data)
+                            this.subscriptions.push(this.requestService.getAuthorizationByAuth(this.authorizationNumber).subscribe(data => {
                                 this.router.navigate(['dashboard/module/import-authorization/import-management/' + data.id]);
                             }));
                             break;

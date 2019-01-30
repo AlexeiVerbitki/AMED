@@ -62,6 +62,7 @@
 	<parameter name="tariffPosition" class="java.lang.String"/>
 	<parameter name="clinicStudyDescription" class="java.lang.String"/>
 	<parameter name="servicesTableDataset" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="isClinicalTrial" class="java.lang.Boolean"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -103,11 +104,11 @@
 				<text><![CDATA[	Prin prezenta, Agenţia Medicamentului şi Dispozitivelor Medicale Vă informează despre admiterea spre plată a serviciului solicitat: ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="3" y="35" width="530" height="45" uuid="05ca1fc8-6ee0-4f8d-bccb-70dbd617cd54"/>
+				<reportElement x="3" y="40" width="530" height="45" uuid="05ca1fc8-6ee0-4f8d-bccb-70dbd617cd54"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA["•	Aprobarea studiilor clinice. Faza " + $P{phases} + " -pentru protocolul studiului clinic " + $P{clinicStudyNr} + " " + $P{clinicStudyDescription}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["•	Aprobarea " + ($P{isClinicalTrial}?"studiilor clinice. Faza " + $P{phases}: "amendamentelor privind protocolul/medicamentul pentru investigaţie clinică (poziţia tarifară - 23),") + " -pentru protocolul studiului clinic " + $P{clinicStudyNr} + " " + $P{clinicStudyDescription}]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="101">

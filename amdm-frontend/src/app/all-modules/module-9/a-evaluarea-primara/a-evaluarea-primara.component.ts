@@ -214,7 +214,6 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         });
 
         this.initPage();
-        this.loadDocTypes();
 
         this.loadManufacturers();
         this.initMeasureUnits();
@@ -375,13 +374,18 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
     }
 
 
-    loadDocTypes() {
+    loadDocTypes(data) {
         this.subscriptions.push(
-            this.taskService.getRequestStepByIdAndCode('3', 'E').subscribe(step => {
+            this.taskService.getRequestStepByIdAndCode(data.type.id, data.currentStep).subscribe(step => {
                     this.subscriptions.push(
                         this.administrationService.getAllDocTypes().subscribe(data => {
-                                this.docTypes = data;
-                                this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
+                                let availableDocsArr = [];
+                                step.availableDocTypes ? availableDocsArr = step.availableDocTypes.split(',') : availableDocsArr = [];
+                                // console.log('availableDocsArr', availableDocsArr);
+                                if (step.availableDocTypes) {
+                                    this.docTypes = data;
+                                    this.docTypes = this.docTypes.filter(r => availableDocsArr.includes(r.category));
+                                }
                             },
                             error => console.log(error)
                         )
@@ -456,6 +460,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
 
                             // console.log('clinicalTrails', this.evaluateClinicalTrailForm);
 
+                            this.loadDocTypes(data);
                             this.loadInvestigatorsList();
                             this.loadMedicalInstitutionsList();
                         },

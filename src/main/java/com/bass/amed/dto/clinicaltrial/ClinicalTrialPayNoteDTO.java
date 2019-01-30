@@ -8,7 +8,8 @@ import lombok.Data;
 @Data
 public class ClinicalTrialPayNoteDTO {
 
-    private ClinicalTrialsEntity clinicalTrial;
+    private Integer requestType;
+    private Integer clinicalTrialId;
     private NmEconomicAgentsEntity economicAgent;
     private CtPaymentOrdersEntity payOrder;
     private String currency;

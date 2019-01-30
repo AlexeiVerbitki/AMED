@@ -15,64 +15,56 @@ export class ClasifyEconomicsAgencyComponent implements OnInit, OnDestroy {
 
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
-    denumireFilter = new FormControl('');
-    adresaFilter = new FormControl('');
-    seriaFilter = new FormControl('');
-    idnoFilter = new FormControl('');
-    dataSource = new MatTableDataSource();
-    columnsToDisplay = ['denumire', 'adresa', 'seria', 'idno'];
+    filter = new FormControl('');
+    dataSource = new MatTableDataSource<any>();
+    columnsToDisplay = ['idno', 'denumire', 'adresa', 'seria', 'nr'];
+    row = {id: '', idno: '', name: '', address: '', serialNr: '', nr: ''};
     private subscriptions: Subscription[] = [];
 
-    constructor(private navbarTitleService: NavbarTitleService, private nomenclatorService: NomenclatorService, private loadingService: LoaderService) {
-
-    }
+    constructor(private navbarTitleService: NavbarTitleService, private nomenclatorService: NomenclatorService, private loadingService: LoaderService) {}
 
     ngOnDestroy(): void {
         this.navbarTitleService.showTitleMsg('');
         this.subscriptions.forEach(s => s.unsubscribe());
     }
 
+    ngAfterViewInit(): void {
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.filterPredicate = (data: any, filter: any) => {
+            const f = JSON.parse(filter);
+            return (data.idno && data.idno.toLowerCase().startsWith(f.idno))
+            && (data.name && data.name.toLowerCase().startsWith(f.name))
+            && (data.address && data.address.toLowerCase().startsWith(f.address))
+            && (data.serialNr && data.serialNr.toLowerCase().startsWith(f.serialNr))
+            && (data.nr && data.nr.toLowerCase().startsWith(f.nr))
+        };
+    }
+
+    filterColumn(column, $event) {
+        this.row[column] = $event.target.value;
+        this.dataSource.filter = JSON.stringify(this.row);
+    }
+
     ngOnInit() {
 
         this.navbarTitleService.showTitleMsg('Clasificatorul agenților economici cu activitate farmaceutică');
-        // this.loadingService.show();
-        //
-        // this.subscriptions.push(this.nomenclatorService.getAllMedicaments().subscribe(data => {
-        //   this.loadingService.hide();
-        //   this.dataSource.data = data;
-        // },
-        //   error => {
-        //     console.log('error => ', error);
-        //     this.loadingService.hide();
-        //   }
-        // ));
 
+        this.loadingService.show();
+        this.subscriptions.push(this.nomenclatorService.getEconomicAgentsClassifier().subscribe(data => {
+            this.loadingService.hide();
+            this.dataSource.data = data;
+            this.dataSource.data.forEach((r: any) => {
+                r.idno = r.idno ? r.idno: '';
+                r.name = r.name ? r.name: '';
+                r.address = r.address ? r.address: '';
+                r.serialNr = r.serialNr ? r.serialNr: '';
+                r.nr = r.nr ? r.nr: '';
+            });
+            console.log(data);
 
-        // this.dataSource.data = this.clasifyDrugsTable;
-
-        this.subscriptions.push(this.denumireFilter.valueChanges
-            .subscribe(denumire => {
-                this.filterTable(denumire);
-            }));
-        this.subscriptions.push(this.adresaFilter.valueChanges
-            .subscribe(adresa => {
-                this.filterTable(adresa);
-            }));
-        this.subscriptions.push(this.seriaFilter.valueChanges
-            .subscribe(seria => {
-                this.filterTable(seria);
-            }));
-        this.subscriptions.push(this.idnoFilter.valueChanges
-            .subscribe(idno => {
-                this.filterTable(idno);
-            }));
-    }
-
-    filterTable(element: string) {
-        if (element.toLocaleString().length >= 3) {
-            this.dataSource.filter = element;
-        } else {
-            this.dataSource.filter = '';
-        }
+        }, error => {
+            console.log('error', error);
+            this.loadingService.hide();
+        }));
     }
 }

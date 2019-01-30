@@ -3,24 +3,24 @@ package com.bass.amed.utils;
 import com.bass.amed.entity.MedicamentDivisionHistoryEntity;
 import com.bass.amed.entity.MedicamentEntity;
 
-import java.util.Random;
+import java.time.LocalDate;
 
 public final class Utils
 {
-    public static String generateMedicamentCode()
+    public static String generateMedicamentCode(Integer orderNr)
     {
-        int leftLimit = 48; // letter '0'
-        int rightLimit = 57; // letter '9'
-        int targetStringLength = 10;
-        Random random = new Random();
-        StringBuilder buffer = new StringBuilder(targetStringLength);
-        for (int i = 0; i < targetStringLength; i++)
+        LocalDate now = LocalDate.now();
+        return "9" + intToString(2, now.getYear() % 100) + intToString(2, now.getMonth().getValue()) + intToString(5, orderNr);
+    }
+
+    private static String intToString(int length, int value)
+    {
+        String str = String.valueOf(value);
+        while (str.length() < length)
         {
-            int randomLimitedInt = leftLimit + (int)
-                    (random.nextFloat() * (rightLimit - leftLimit + 1));
-            buffer.append((char) randomLimitedInt);
+            str = "0" + str;
         }
-        return buffer.toString();
+        return str;
     }
 
     public static boolean areDivisionsEquals(MedicamentEntity medicament, MedicamentEntity medDB)
@@ -61,29 +61,66 @@ public final class Utils
         return concatenatedDivision;
     }
 
-    public static String getConcatenatedDivision(MedicamentEntity med) {
+    public static String getConcatenatedDivision(MedicamentEntity med)
+    {
         String concatenatedDivision = "";
-        if (med.getDivision()!=null && med.getDivision().length()>0 && med.getVolume()!=null && med.getVolume().length()>0 &&
-                med.getVolumeQuantityMeasurement()!=null && med.getVolumeQuantityMeasurement().getDescription().length()>0) {
+        if (med.getDivision() != null && med.getDivision().length() > 0 && med.getVolume() != null && med.getVolume().length() > 0 &&
+                med.getVolumeQuantityMeasurement() != null && med.getVolumeQuantityMeasurement().getDescription().length() > 0)
+        {
             concatenatedDivision = concatenatedDivision + med.getDivision() + ' ' + med.getVolume() + ' ' + med.getVolumeQuantityMeasurement().getDescription();
-        } else if (med.getVolume()!=null && med.getVolume().length()>0 &&
-                med.getVolumeQuantityMeasurement()!=null && med.getVolumeQuantityMeasurement().getDescription().length()>0) {
+        }
+        else if (med.getVolume() != null && med.getVolume().length() > 0 &&
+                med.getVolumeQuantityMeasurement() != null && med.getVolumeQuantityMeasurement().getDescription().length() > 0)
+        {
             concatenatedDivision = concatenatedDivision + med.getVolume() + ' ' + med.getVolumeQuantityMeasurement().getDescription();
-        } else {
+        }
+        else
+        {
             concatenatedDivision = concatenatedDivision + med.getDivision();
         }
         return concatenatedDivision;
     }
 
-    public static String getVariationTypeStr(String variationType)
+    public static boolean validateIdnp(String idnp)
     {
-        String variationTypeStr = "";
-        switch (variationType)
+        if (idnp.length() != 13 || !isStringDigits(idnp))
         {
-            case "I" : variationTypeStr = "Tip I"; break;
-            case "II" : variationTypeStr = "Tip II"; break;
-            case "C" : variationTypeStr = "Transfer de certificat"; break;
+            return false;
         }
-        return  variationTypeStr;
+
+        final int[] weightFunctionConstant = {7, 3, 1};
+        int         sum                    = 0;
+        int         j                      = 0;
+
+        for (int i = 0; i < (idnp.length() - 1); i++, j++)
+        {
+            sum = sum + (Integer.parseInt(String.valueOf(idnp.charAt(i))) * weightFunctionConstant[j]);
+            if (weightFunctionConstant.length <= (j + 1))
+            {
+                j = -1;
+            }
+        }
+
+        int     checkSum = sum % 10;
+        boolean valid  = checkSum == Integer.parseInt(String.valueOf(idnp.charAt(idnp.length() - 1)));
+
+        return valid;
+    }
+
+    public static boolean isStringDigits(String str)
+    {
+        if (str == null)
+        {
+            return false;
+        }
+        for (int i = 0; i < str.length(); i++)
+        {
+            if (str.charAt(i) < '0' || str.charAt(i) > '9')
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

@@ -4,7 +4,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Document} from '../../../models/document';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RequestService} from '../../../shared/service/request.service';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {DocumentService} from '../../../shared/service/document.service';
 import {AuthService} from '../../../shared/service/authetication.service';
 import {AdministrationService} from '../../../shared/service/administration.service';
@@ -49,7 +49,7 @@ export class ExpertiComponent implements OnInit {
                 public dialog: MatDialog,
                 private administrationService: AdministrationService,
                 private router: Router,
-                private errorHandlerService: ErrorHandlerService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 private navbarTitleService: NavbarTitleService,
                 private taskService: TaskService,
                 private loadingService: LoaderService,
@@ -392,7 +392,7 @@ export class ExpertiComponent implements OnInit {
                 }
             }
             if (!findInstr) {
-                this.errorHandlerService.showError('Exista divizari fara instructiuni.');
+                this.errorHandlerService.showError('Exista divizari fara informatii.');
                 return;
             }
             if (!findMachet) {
@@ -802,7 +802,9 @@ export class ExpertiComponent implements OnInit {
 
     removeInstr(event) {
         for (let div of this.divisions) {
-            div.instructions = div.instructions.filter(t => t.path != event);
+            if(div.instructions) {
+                div.instructions = div.instructions.filter(t => t.path != event);
+            }
         }
         this.displayInstructions();
     }
@@ -814,7 +816,9 @@ export class ExpertiComponent implements OnInit {
 
     removeMacheta(event) {
         for (let div of this.divisions) {
-            div.machets = div.machets.filter(t => t.path != event);
+            if(div.machets) {
+                div.machets = div.machets.filter(t => t.path != event);
+            }
         }
         this.displayMachets();
     }

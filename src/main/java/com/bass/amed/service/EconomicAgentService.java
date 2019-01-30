@@ -1,26 +1,36 @@
 package com.bass.amed.service;
 
+import com.bass.amed.dto.EconomicAgentsNomenclator;
 import com.bass.amed.entity.EconomicAgentCodeSequence;
-import com.bass.amed.entity.LicenseDetailsEntity;
 import com.bass.amed.entity.NmEconomicAgentsEntity;
-import com.bass.amed.entity.RegistrationRequestsEntity;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.EconomicAgentCodeSeqRepository;
 import com.bass.amed.repository.EconomicAgentsRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @Transactional
 public class EconomicAgentService
 {
+    private static final String ECONOMIC_AGENTS_NOMENCLATURE_QUERRY =
+            "SELECT NEA.ID, L.IDNO, NEA.NAME, NEA.LEGAL_ADDRESS address, L.SERIAL_NR serialNr, L.NR\n" +
+            "FROM NM_ECONOMIC_AGENTS NEA\n" +
+            "  INNER JOIN LICENSES L ON NEA.LICENSE_ID = L.ID\n" +
+            "WHERE L.STATUS = 'F'\n" +
+            "  AND L.EXPIRATION_DATE >= SYSDATE()\n" +
+            "GROUP BY L.IDNO;";
+
     @Autowired
     EconomicAgentCodeSeqRepository economicAgentCodeSeqRepository;
 
@@ -35,6 +45,37 @@ public class EconomicAgentService
         EconomicAgentCodeSequence seq = new EconomicAgentCodeSequence();
         economicAgentCodeSeqRepository.save(seq);
         return seq.getId();
+    }
+
+    public List<EconomicAgentsNomenclator> getEconomicAgentsNomenclature() {
+        EntityManager em = null;
+        List<EconomicAgentsNomenclator> economicAgents;
+        try
+        {
+            em = entityManagerFactory.createEntityManager();
+            em.getTransaction().begin();
+
+            Query query = em.createNativeQuery(ECONOMIC_AGENTS_NOMENCLATURE_QUERRY, EconomicAgentsNomenclator.class);
+
+            economicAgents = query.getResultList();
+            em.getTransaction().commit();
+        }
+        catch (Exception e)
+        {
+            if (em != null)
+            {
+                em.getTransaction().rollback();
+            }
+            LOGGER.info(e.getMessage());
+            throw e;
+        }
+
+        finally
+        {
+            em.close();
+        }
+
+        return economicAgents;
     }
 
 

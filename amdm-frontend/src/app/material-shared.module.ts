@@ -24,7 +24,8 @@ import {
     MatTableModule,
     MatTabsModule,
     MatToolbarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatTreeModule
 } from '@angular/material';
 import {TooltipModule, WavesModule} from 'angular-bootstrap-md';
 import {APP_DATE_FORMATS, AppDateAdapter} from './shared/adapter/date.adapter';
@@ -56,7 +57,7 @@ import {APP_DATE_FORMATS, AppDateAdapter} from './shared/adapter/date.adapter';
         MatTableModule,
         MatAutocompleteModule,
         NgSelectModule,
-
+        MatTreeModule
     ],
     declarations: [],
     exports: [
@@ -85,6 +86,7 @@ import {APP_DATE_FORMATS, AppDateAdapter} from './shared/adapter/date.adapter';
         MatTableModule,
         MatAutocompleteModule,
         NgSelectModule,
+        MatTreeModule
     ]
 })
 export class MaterialSharedModule {
@@ -116,6 +118,7 @@ export class MaterialSharedModule {
                 MatRadioModule,
                 MatTableModule,
                 MatAutocompleteModule,
+                MatTreeModule,
                 NgSelectModule,
                 {
                     provide: DateAdapter, useClass: AppDateAdapter

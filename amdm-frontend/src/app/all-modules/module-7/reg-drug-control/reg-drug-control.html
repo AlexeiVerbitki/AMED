@@ -53,7 +53,7 @@
 
         <div class="row">
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="md-form">
                     <input id="persResDepCereriiFirstname" mdbInputDirective type="text" class="form-control"
                            formControlName="mandatedFirstname">
@@ -67,7 +67,7 @@
                     </small>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="md-form">
                     <input id="persResDepCereriiLastname" mdbInputDirective type="text" class="form-control"
                            formControlName="mandatedLastname">
@@ -82,7 +82,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="md-form">
                     <input id="telefonContact" mdbInputDirective type="text" class="form-control"
                            formControlName="phoneNumber" maxlength="9"
@@ -95,7 +95,15 @@
                     </small>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input id="idnp" mdbInputDirective type="text" class="form-control"
+                           formControlName="idnp">
+                    <label for="idnp">IDNP </label>
+
+                </div>
+            </div>
+            <div class="col-md-6">
                 <div class="md-form">
                     <input id="emailContact" mdbInputDirective type="email" class="form-control"
                            formControlName="email">
@@ -107,7 +115,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="md-form">
                     <input id="nrProcurii1" mdbInputDirective type="text" class="form-control"
                            formControlName="requestMandateNr">
@@ -118,7 +126,7 @@
                     </small>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input id="dataProcurii1" matInput [matDatepicker]="picker3" [max]="maxDate"

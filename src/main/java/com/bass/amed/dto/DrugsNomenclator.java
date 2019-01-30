@@ -3,7 +3,9 @@ package com.bass.amed.dto;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.util.Date;
 
 @Data
 public class DrugsNomenclator implements Serializable
@@ -18,8 +20,9 @@ public class DrugsNomenclator implements Serializable
     private String    divizare                          = "";
     private String    atc                               = "";
     private String    firmaProducatoare                 = "";
-    private Integer   nrDeInregistrare                  = 0;
+    private Integer nrDeInregistrare                 = 0 ;
     private Timestamp dataInregistrarii;
+    private Integer termenValabilitate = 0;
     private String    detinatorulCertificatuluiDeIntreg = "";
     private String    taraDetinatorului                 = "";
     private String    statutDeEliberare                 = "";

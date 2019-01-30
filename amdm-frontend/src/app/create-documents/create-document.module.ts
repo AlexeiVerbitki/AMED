@@ -29,6 +29,8 @@ import {PipeModule} from "../shared/pipe/pipe.module";
 import {DocumentModule} from "../document/document.module";
 import {XchangeinfoModule} from "../xchangeInfo/xchangeinfo.module";
 import {SelectDocumentNumberComponent} from "../dialog/select-document-number/select-document-number.component";
+import { DdCtAmendListComponent } from './generate-documents/dd-ct-amend-list/dd-ct-amend-list.component';
+import { RequestDdCtAmendComponent } from './generate-documents/request-dd-ct-amend/request-dd-ct-amend.component';
 
 @NgModule({
     imports: [
@@ -63,7 +65,9 @@ import {SelectDocumentNumberComponent} from "../dialog/select-document-number/se
         DdCtListComponent,
         RequestDdCtComponent,
         LmpcListComponent,
-        LmpcModifyListComponent],
+        LmpcModifyListComponent,
+        DdCtAmendListComponent,
+        RequestDdCtAmendComponent],
     entryComponents: [SelectIssueDateDialogComponent,SelectDocumentNumberComponent],
     providers: [DdListComponent, OaListComponent],
 })

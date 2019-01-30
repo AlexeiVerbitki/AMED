@@ -5,7 +5,7 @@ import {NomenclatureConstants} from '../../administration.constants';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AdministrationService} from '../../../shared/service/administration.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {AddEcAgentComponent} from '../add-ec-agent/add-ec-agent.component';
 import {LoaderService} from '../../../shared/service/loader.service';
 
@@ -33,7 +33,7 @@ export class EcAgentListComponent implements OnInit, OnDestroy, AfterViewInit {
                 private administrationService: AdministrationService,
                 public dialogDecision: MatDialog,
                 private navbarTitleService: NavbarTitleService,
-                private errorHandlerService: ErrorHandlerService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 public dialog: MatDialog,
                 private loadingService: LoaderService,
     ) {

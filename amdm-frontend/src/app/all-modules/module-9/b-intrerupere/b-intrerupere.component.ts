@@ -6,6 +6,8 @@ import {RequestService} from '../../../shared/service/request.service';
 import {Subscription} from 'rxjs/index';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {LoaderService} from '../../../shared/service/loader.service';
+import {TaskService} from "../../../shared/service/task.service";
+import {AdministrationService} from "../../../shared/service/administration.service";
 
 @Component({
     selector: 'app-b-intrerupere',
@@ -24,8 +26,9 @@ export class BIntrerupereComponent implements OnInit, OnDestroy {
                 private requestService: RequestService,
                 private authService: AuthService,
                 private router: Router,
-                private loadingService: LoaderService
-    ) {
+                private loadingService: LoaderService,
+                private taskService: TaskService,
+                private administrationService: AdministrationService) {
     }
 
     ngOnInit() {
@@ -67,10 +70,35 @@ export class BIntrerupereComponent implements OnInit, OnDestroy {
 
                     this.docs = data.documents;
                     this.outDocuments = data.outputDocuments;
+                    this.loadDocTypes(data);
                 },
                 error => console.log(error)
             ));
         }));
+    }
+
+    loadDocTypes(data) {
+        this.subscriptions.push(
+            this.taskService.getRequestStepByIdAndCode(data.type.id, data.currentStep).subscribe(step => {
+                    this.subscriptions.push(
+                        this.administrationService.getAllDocTypes().subscribe(data => {
+                                let availableDocsArr = [];
+                                step.availableDocTypes ? availableDocsArr = step.availableDocTypes.split(',') : availableDocsArr = [];
+                                let outputDocsArr = [];
+                                step.outputDocTypes ? outputDocsArr = step.outputDocTypes.split(',') : outputDocsArr = [];
+                                if (step.availableDocTypes) {
+                                    this.docTypes = data;
+                                    this.docTypes = this.docTypes.filter(r => availableDocsArr.includes(r.category));
+                                    this.outDocuments = this.outDocuments.filter(r => outputDocsArr.includes(r.docType.category));
+                                }
+                            },
+                            error => console.log(error)
+                        )
+                    );
+                },
+                error => console.log(error)
+            )
+        );
     }
 
     doSubmit() {

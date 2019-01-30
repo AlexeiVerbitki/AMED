@@ -223,8 +223,24 @@ export class RequestService {
         return this.http.get('/api/get-request-dd-ct');
     }
 
+    getRequestsForDDACt(): Observable<any> {
+        return this.http.get('/api/get-request-dd-amd-ct');
+    }
+
     getDDCs(): Observable<any> {
         return this.http.get('/api/get-ddcs');
+    }
+
+    getDDACs(): Observable<any> {
+        return this.http.get('/api/get-ddacs');
+    }
+
+    getRequestsForAnih(): Observable<any> {
+        return this.http.get('/api/get-request-anih');
+    }
+
+    getAnihs(): Observable<any> {
+        return this.http.get('/api/get-anih-meds');
     }
 
 }

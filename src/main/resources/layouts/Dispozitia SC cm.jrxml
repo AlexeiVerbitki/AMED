@@ -162,7 +162,7 @@ studiilor clinice cu medicamente]]></text>
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="8"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{expertName}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{expertName}.toString().replaceAll("\\|","\n")]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

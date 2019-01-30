@@ -4,7 +4,7 @@ import {LoaderService} from '../../../shared/service/loader.service';
 import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {DocumentService} from '../../../shared/service/document.service';
 import {RequestService} from '../../../shared/service/request.service';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {SelectIssueDateDialogComponent} from "../../../dialog/select-issue-date-dialog/select-issue-date-dialog.component";
 import {SelectDocumentNumberComponent} from "../../../dialog/select-document-number/select-document-number.component";
 
@@ -25,7 +25,7 @@ export class RequestsDdComponent implements OnInit {
     constructor(private loadingService: LoaderService,
                 private requestService: RequestService,
                 private dialog: MatDialog,
-                private errorHandlerService: ErrorHandlerService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 private documentService: DocumentService) {
     }
 

@@ -61,6 +61,7 @@
 	<parameter name="bankCode" class="java.lang.String"/>
 	<parameter name="fiscalCode" class="java.lang.String"/>
 	<parameter name="servicesTableDataset" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="isClinicalTrial" class="java.lang.Boolean"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -106,7 +107,7 @@
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA["•	Aprobarea studiilor clinice. Faza " + $P{phases} + " -pentru protocolul studiului clinic " + $P{clinicStudyNr} + " " + $P{clinicStudyDescription}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["•	Aprobarea " + ($P{isClinicalTrial}?"studiilor clinice. Faza " + $P{phases}: "amendamentelor privind protocolul/medicamentul pentru investigaţie clinică (poziţia tarifară - 23),") + " -pentru protocolul studiului clinic " + $P{clinicStudyNr} + " " + $P{clinicStudyDescription}]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="98">

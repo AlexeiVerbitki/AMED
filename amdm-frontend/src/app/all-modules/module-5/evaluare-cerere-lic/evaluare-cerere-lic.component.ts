@@ -14,7 +14,7 @@ import {LocalityService} from '../../../shared/service/locality.service';
 import {LicenseDecisionDialogComponent} from '../../../dialog/license-decision-dialog/license-decision-dialog.component';
 import {catchError, debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {AddLicenseFarmacistComponent} from '../add-license-farmacist/add-license-farmacist.component';
 import {AddEcAgentComponent} from '../../../administration/economic-agent/add-ec-agent/add-ec-agent.component';
 
@@ -86,7 +86,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
                 private localityService: LocalityService,
                 public dialogDecision: MatDialog,
                 private navbarTitleService: NavbarTitleService,
-                private errorHandlerService: ErrorHandlerService) {
+                private errorHandlerService: SuccessOrErrorHandlerService) {
 
     }
 

@@ -29,13 +29,13 @@ import {MaterialSharedModule} from './material-shared.module';
 import {MDBBootstrapModule} from 'angular-bootstrap-md';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ErrorInterceptor} from './shared/interceptor/error.interceptor';
-import {ErrorResponseHandlerComponent} from './server-response-handler/error-response-handler.component';
-import {ErrorHandlerService} from './shared/service/error-handler.service';
+import {SuccessOrErrorResponseHandlerComponent} from './server-response-handler/success-or-error-response-handler.component';
+import {SuccessOrErrorHandlerService} from './shared/service/success-or-error-handler.service';
 import {AdminDashboardComponent} from './dashboard/admin-dashboard.component';
 import {GestDocComponent} from './document-management/gest-doc/gest-doc.component';
 import {NumberOnlyDirective} from './shared/directive/number-only.directive';
 import {RequestAdditionalDataDialogComponent} from './dialog/request-additional-data-dialog/request-additional-data-dialog.component';
-import {MatDialogModule} from '@angular/material';
+import {MatDialogModule, MatTreeModule} from '@angular/material';
 import {ActiveSubstanceDialogComponent} from './dialog/active-substance-dialog/active-substance-dialog.component';
 import {HomepageModalComponent} from './homepage/homepage-modal/homepage-modal.component';
 import {MedicamentDetailsDialogComponent} from './dialog/medicament-details-dialog/medicament-details-dialog.component';
@@ -48,8 +48,9 @@ import {DivisionSelectDialogComponent} from './dialog/division-select-dialog/div
 import {AddManufactureComponent} from './dialog/add-manufacture/add-manufacture.component';
 import {AddDivisionComponent} from './dialog/add-division/add-division.component';
 import {AddExpertComponent} from './dialog/add-expert/add-expert.component';
-import { registerLocaleData } from '@angular/common';
+import {registerLocaleData} from '@angular/common';
 import localeRo from '@angular/common/locales/ro-MD';
+import {SelectVariationTypeComponent} from './dialog/select-variation-type/select-variation-type.component';
 
 registerLocaleData(localeRo, 'ro-MD');
 
@@ -86,13 +87,14 @@ const interceptors = [{
         HistoryComponent,
         ModuleComponent,
         AdministrationComponent,
-        ErrorResponseHandlerComponent,
+        SuccessOrErrorResponseHandlerComponent,
         RequestAdditionalDataDialogComponent,
         GestDocComponent,
         NumberOnlyDirective,
         ActiveSubstanceDialogComponent,
         AddManufactureComponent,
         AddDivisionComponent,
+        SelectVariationTypeComponent,
         AddExpertComponent,
         AuxiliarySubstanceDialogComponent,
         HomepageModalComponent,
@@ -107,6 +109,7 @@ const interceptors = [{
         AppRoutingModule,
         FormsModule,
         MatDialogModule,
+        MatTreeModule,
         ReactiveFormsModule,
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
@@ -116,9 +119,9 @@ const interceptors = [{
     entryComponents: [
         DivisionSelectDialogComponent, AuxiliarySubstanceDialogComponent, ConfirmationDialogComponent, MedicamentHistoryDialogComponent,
         MedicamentModificationsDialogComponent, RequestAdditionalDataDialogComponent, ActiveSubstanceDialogComponent, HomepageModalComponent, MedicamentDetailsDialogComponent,
-        AddManufactureComponent, AddDivisionComponent, AddExpertComponent
+        AddManufactureComponent, AddDivisionComponent, AddExpertComponent, SelectVariationTypeComponent
     ],
-    providers: [AuthService, AdministrationService, ErrorHandlerService, NavbarTitleService, interceptors,  { provide: LOCALE_ID, useValue: 'ro-MD' }
+    providers: [AuthService, AdministrationService, SuccessOrErrorHandlerService, NavbarTitleService, interceptors,  { provide: LOCALE_ID, useValue: 'ro-MD' }
     ],
     bootstrap: [AppComponent]
 })

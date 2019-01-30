@@ -10,7 +10,7 @@ import {AuthService} from '../../../shared/service/authetication.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 import {MatDialog} from '@angular/material';
-import {ErrorHandlerService} from "../../../shared/service/error-handler.service";
+import {SuccessOrErrorHandlerService} from "../../../shared/service/success-or-error-handler.service";
 import {DocumentService} from "../../../shared/service/document.service";
 
 @Component({
@@ -34,7 +34,7 @@ export class AAprobareComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private loadingService: LoaderService,
                 public dialogConfirmation: MatDialog,
-                private errorHandlerService: ErrorHandlerService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 private documentService: DocumentService) {
 
     }
@@ -85,16 +85,19 @@ export class AAprobareComponent implements OnInit, OnDestroy {
     }
 
     loadDocTypes(data) {
-        // console.log('data', data);
         this.subscriptions.push(
             this.taskService.getRequestStepByIdAndCode(data.type.id, data.currentStep).subscribe(step => {
-                    // console.log('step', step);
-                    // console.log('this.outDocuments', this.outDocuments);
                     this.subscriptions.push(
                         this.administrationService.getAllDocTypes().subscribe(data => {
-                                this.docTypes = data;
-                                this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
-                                this.outDocuments = this.outDocuments.filter(r => step.outputDocTypes.includes(r.docType.category));
+                                let availableDocsArr = [];
+                                step.availableDocTypes ? availableDocsArr = step.availableDocTypes.split(',') : availableDocsArr = [];
+                                let outputDocsArr = [];
+                                step.outputDocTypes ? outputDocsArr = step.outputDocTypes.split(',') : outputDocsArr = [];
+                                if (step.availableDocTypes) {
+                                    this.docTypes = data;
+                                    this.docTypes = this.docTypes.filter(r => availableDocsArr.includes(r.category));
+                                    this.outDocuments = this.outDocuments.filter(r => outputDocsArr.includes(r.docType.category));
+                                }
                             },
                             error => console.log(error)
                         )
@@ -155,6 +158,8 @@ export class AAprobareComponent implements OnInit, OnDestroy {
                         window.open(fileURL);
                         this.loadingService.hide();
                     }, error => {
+                        console.log('error', error);
+                        this.errorHandlerService.showError(error);
                         this.loadingService.hide();
                     })
                 );
@@ -213,7 +218,7 @@ export class AAprobareComponent implements OnInit, OnDestroy {
             });
             formModel.documents = this.docs;
 
-            console.log('evaluareaPrimaraObjectLet', JSON.stringify(formModel));
+            // console.log('evaluareaPrimaraObjectLet', JSON.stringify(formModel));
 
             formModel.currentStep = 'F';
             formModel.endDate = new Date();

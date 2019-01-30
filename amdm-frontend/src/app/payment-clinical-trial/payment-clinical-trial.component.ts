@@ -6,7 +6,7 @@ import {AddCtPayOrderComponent} from "../dialog/add-ct-pay-order/add-ct-pay-orde
 import {PaymentService} from "../shared/service/payment.service";
 import {LoaderService} from "../shared/service/loader.service";
 import {ConfirmationDialogComponent} from "../dialog/confirmation-dialog.component";
-import {ErrorHandlerService} from "../shared/service/error-handler.service";
+import {SuccessOrErrorHandlerService} from "../shared/service/success-or-error-handler.service";
 import {SelectCurrencyBonPlataDialogComponent} from "../dialog/select-currency-bon-plata-dialog/select-currency-bon-plata-dialog.component";
 
 @Component({
@@ -35,11 +35,11 @@ export class PaymentClinicalTrialComponent implements OnInit, OnDestroy {
                 private dialog: MatDialog,
                 private loadingService: LoaderService,
                 private administrationService: AdministrationService,
-                private errorHandlerService: ErrorHandlerService) {
+                private errorHandlerService: SuccessOrErrorHandlerService) {
     }
 
     ngOnInit() {
-        // console.log('this.bonDePlataList', this.bonDePlataList);
+        console.log('this.bonDePlataList', this.bonDePlataList);
     }
 
     @Input()
@@ -79,7 +79,7 @@ export class PaymentClinicalTrialComponent implements OnInit, OnDestroy {
         this.loadingService.show();
         this.subscriptions.push(
             this.paymentService.getPaymentOrders(this.regRequest.id).subscribe(data => {
-                    // console.log('data', data);
+                    console.log('data', data);
                     this.bonDePlataList = data;
                     if (this.bonDePlataList.length != 0) {
                         this.checkReceipts();
@@ -230,11 +230,13 @@ export class PaymentClinicalTrialComponent implements OnInit, OnDestroy {
             // console.log('currencyResult', result);
             if (result) {
                 // console.log('bon', bon);
-                // console.log('this.regRequest', this.regRequest);
-                console.log('result', result);
+                console.log('this.regRequest', this.regRequest);
+                // console.log('result', result);
 
                 let dataModel = {
-                    clinicalTrial: this.regRequest.clinicalTrails,
+                    // clinicalTrial: this.regRequest.clinicalTrails,
+                    requestType: this.regRequest.type.id,
+                    clinicalTrialId: this.regRequest.clinicalTrails.id,
                     economicAgent: this.regRequest.company,
                     payOrder: bon,
                     currency: result.currency

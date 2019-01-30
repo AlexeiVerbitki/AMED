@@ -7,6 +7,7 @@
         <app-document [documents]="documents" [nrCerere]="cerereModAutorForm.get('requestNumber').value"
                       [dcTypes]="docTypes"
                       (documentModified)="documentModified($event)"></app-document>
+                      <div class="mb-3"></div>
         <div class="row">
             <div class="col-md-6">
                 <div class="md-form-modified">
@@ -59,7 +60,7 @@
                 </div>
             </div>
         </div>
-        <div class="text-center">
+        <div class="text-center my-3">
             <button class="btn btn-primary btn-sm waves-light" mdbWavesEffect data-toggle="collapse"
                     data-target="#adresaSolicitantCollapse"
                     aria-expanded="false" aria-controls="adresaSolicitantCollapse">Adresa solicitantului <i
@@ -195,7 +196,7 @@
         </div>
         <hr>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="md-form" >
                     <input id="name" mdbInputDirective type="text" class="form-control" required formControlName="resPerson">
                     <label for="name">Persoana responsabila
@@ -203,7 +204,7 @@
                     </label>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="pickerExp" placeholder="Data expirarii" required
@@ -215,7 +216,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="md-form" formGroupName="drugCheckDecision">
                     <input id="procesVerbal" mdbInputDirective type="text" class="form-control"
                            formControlName="protocolNr">
@@ -228,7 +229,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100" formGroupName="drugCheckDecision">
                         <input matInput [matDatepicker]="pickerCPCAD" placeholder="Data procesului verbal a CPCAD"
@@ -238,7 +239,7 @@
                     </mat-form-field>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="md-form">
                     <input id="reason" mdbInputDirective type="text" class="form-control">
                     <label for="reason">Motivul refuzului
@@ -292,7 +293,7 @@
                         </mat-checkbox>
                     </th>
                     <td>
-                        <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)"><i
+                        <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)"><i
                                 class="fa fa-file fa-lg" aria-hidden="true"></i>
                         </button>
                         <button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && (a.docType.category=='SR' || a.docType.category=='AP' || a.docType.category=='AH' || a.docType.category=='AF')"

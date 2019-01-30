@@ -331,13 +331,12 @@ export class CNotificareComponent implements OnInit, OnDestroy {
     loadDocTypes() {
         this.subscriptions.push(
             this.taskService.getRequestStepByIdAndCode('5', 'N').subscribe(step => {
-                    // console.log('step', step);
-                    // console.log('step.availableDocTypes', step.availableDocTypes);
+                    let availableDocsArr = [];
+                    step.availableDocTypes ? availableDocsArr = step.availableDocTypes.split(',') : availableDocsArr = [];
                     this.subscriptions.push(
                         this.administrationService.getAllDocTypes().subscribe(data => {
                                 this.docTypes = data;
-                                const docCodesList: string[] = step.availableDocTypes.split(',');
-                                this.docTypes = this.docTypes.filter(r => docCodesList.includes(r.category));
+                                this.docTypes = this.docTypes.filter(r => availableDocsArr.includes(r.category));
                             },
                             error => console.log(error)
                         )

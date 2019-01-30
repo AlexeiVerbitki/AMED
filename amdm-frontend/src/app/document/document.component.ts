@@ -18,7 +18,7 @@ import {UploadFileService} from '../shared/service/upload/upload-file.service';
 import {saveAs} from 'file-saver';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AdministrationService} from '../shared/service/administration.service';
-import {ErrorHandlerService} from '../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../shared/service/success-or-error-handler.service';
 import {TaskService} from '../shared/service/task.service';
 import {DatePipe} from '@angular/common';
 
@@ -54,7 +54,7 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild(MatTable) table: MatTable<any>;
 
     constructor(public dialog: MatDialog, private uploadService: UploadFileService, private fb: FormBuilder,
-                private errorHandlerService: ErrorHandlerService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 private administrationService: AdministrationService,
                 private taskService: TaskService) {
         this.docForm = fb.group({

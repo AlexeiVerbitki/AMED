@@ -16,6 +16,9 @@ import {AuthService} from '../../../shared/service/authetication.service';
 import {PaymentOrder} from '../../../models/paymentOrder';
 import {Receipt} from '../../../models/receipt';
 import {AdditionalDataDialogComponent} from '../dialog/additional-data-dialog/additional-data-dialog.component';
+import {SuccessOrErrorHandlerService} from "../../../shared/service/success-or-error-handler.service";
+import {AddCtExpertComponent} from "../dialog/add-ct-expert/add-ct-expert.component";
+import {DocumentService} from "../../../shared/service/document.service";
 
 @Component({
     selector: 'app-b-evaluare-primara',
@@ -99,6 +102,8 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
     private typeId: string;
     private currentStep: string;
 
+    expertList: any[] = [];
+
 
     constructor(private fb: FormBuilder,
                 public dialog: MatDialog,
@@ -109,7 +114,9 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                 private loadingService: LoaderService,
                 private authService: AuthService,
                 private router: Router,
-                private dialogConfirmation: MatDialog, ) {
+                private dialogConfirmation: MatDialog,
+                private errorHandlerService: SuccessOrErrorHandlerService,
+                private documentService: DocumentService,) {
     }
 
     ngOnInit() {
@@ -123,7 +130,10 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
             'initiator': [null],
             'assignedUser': [null],
             'outputDocuments': [],
+            'currentStep': [''],
             'clinicalTrails': [],
+            'ddIncluded': [],
+            'registrationRequestMandatedContacts': [],
             'clinicalTrailAmendment': this.fb.group({
                 'id': [''],
                 'registrationRequestId': [],
@@ -297,7 +307,9 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         this.farmFormsRfPr =
             this.farmFormsInputsRfPr.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) { return true; }
+                    if (result && result.length > 2) {
+                        return true;
+                    }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -317,7 +329,9 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         this.manufacturersRfPr =
             this.manufacturerInputsRfPr.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) { return true; }
+                    if (result && result.length > 2) {
+                        return true;
+                    }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -359,7 +373,9 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         this.farmForms =
             this.farmFormsInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) { return true; }
+                    if (result && result.length > 2) {
+                        return true;
+                    }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -391,7 +407,9 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         this.manufacturers =
             this.manufacturerInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) { return true; }
+                    if (result && result.length > 2) {
+                        return true;
+                    }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -473,9 +491,15 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
             this.taskService.getRequestStepByIdAndCode(data.type.id, data.currentStep).subscribe(step => {
                     this.subscriptions.push(
                         this.administrationService.getAllDocTypes().subscribe(data => {
+                                let availableDocsArr = [];
+                                step.availableDocTypes ? availableDocsArr = step.availableDocTypes.split(',') : availableDocsArr = [];
+                                let outputDocsArr = [];
+                                step.outputDocTypes ? outputDocsArr = step.outputDocTypes.split(',') : outputDocsArr = [];
+                                // console.log('availableDocsArr', availableDocsArr);
                                 if (step.availableDocTypes) {
                                     this.docTypes = data;
-                                    this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
+                                    this.docTypes = this.docTypes.filter(r => availableDocsArr.includes(r.category));
+                                    this.outDocuments = this.outDocuments.filter(r => outputDocsArr.includes(r.docType.category));
                                 }
                             },
                             error => console.log(error)
@@ -496,6 +520,8 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
                         this.initialData = data;
                         this.isAnalizePage = data.type.id == 4 && data.currentStep == 'A';
+                        console.log('his.isAnalizePage', this.isAnalizePage);
+
                         this.stepName = this.isAnalizePage ? 'Analiza dosarului' : 'Evaluarea primara';
 
                         this.clinicTrailAmendForm.get('id').setValue(data.id);
@@ -507,6 +533,9 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                         this.clinicTrailAmendForm.get('initiator').setValue(data.initiator);
                         this.clinicTrailAmendForm.get('requestHistories').setValue(data.requestHistories);
                         this.clinicTrailAmendForm.get('clinicalTrails').setValue(data.clinicalTrails);
+                        this.clinicTrailAmendForm.get('currentStep').setValue(data.currentStep);
+                        this.clinicTrailAmendForm.get('ddIncluded').setValue(data.ddIncluded);
+                        this.clinicTrailAmendForm.get('registrationRequestMandatedContacts').setValue(data.registrationRequestMandatedContacts);
 
                         const findAmendment = data.clinicalTrails.clinicTrialAmendEntities.find(amendment => data.id == amendment.registrationRequestId);
                         this.amendmentIndex = data.clinicalTrails.clinicTrialAmendEntities.indexOf(findAmendment);
@@ -548,6 +577,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
                         this.receiptsList = data.receipts;
                         this.paymentOrdersList = data.paymentOrders;
+                        this.expertList = data.expertList;
 
                         this.loadDocTypes(data);
                         this.loadInvestigatorsList();
@@ -557,6 +587,31 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                 ));
             })
         );
+    }
+
+    addExpert() {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.width = '600px';
+        dialogConfig2.height = '350px';
+
+        let dialogRef = this.dialog.open(AddCtExpertComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                    console.log('result', result);
+                    this.expertList.push(result);
+                }
+            }
+        );
+    }
+
+    removeExpert(index: number) {
+        this.expertList.splice(index, 1);
     }
 
     editMedicalInstitution(i) {
@@ -756,10 +811,10 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         console.log('formData', this.clinicTrailAmendForm);
 
         const formModel = this.clinicTrailAmendForm.getRawValue();
-        formModel.currentStep = 'E';
         formModel.documents = this.docs;
         formModel.receipts = this.receiptsList;
         formModel.paymentOrders = this.paymentOrdersList;
+        formModel.outputDocuments = this.outDocuments;
 
         formModel.clinicalTrailAmendment.medicalInstitutionsTo = this.mediacalInstitutionsList;
 
@@ -777,6 +832,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         console.log('currentAmendment', currentAmendment);
 
         formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex] = formModel.clinicalTrailAmendment;
+        formModel.expertList = this.expertList;
 
         console.log('Save data', formModel);
         this.subscriptions.push(
@@ -795,19 +851,33 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
         if (this.clinicTrailAmendForm.invalid /*|| this.paymentTotal < 0*/) {
             alert('Invalid Form1!');
-            console.log('Not submitted data', this.clinicTrailAmendForm);
+            // console.log('Not submitted data', this.clinicTrailAmendForm);
             return;
         }
 
         if (this.medicamentForm.invalid || this.referenceProductFormn.invalid) {
-            console.log('this.medicamentForm', this.medicamentForm);
-            console.log('this.referenceProductFormn', this.referenceProductFormn);
             alert('Invalid Form2!');
             return;
         }
 
-        // this.loadingService.show();
+        if (this.isAnalizePage) {
+            let docDistrib = this.docs.find(doc => doc.docType.category == 'DDA');
+            if (!docDistrib) {
+                this.errorHandlerService.showError('Dispozitia de distribuire nu este atashata');
+                return;
+            }
+            let outDocDistrib = this.outDocuments.filter(doc => doc.docType.category == 'SL');
+            for (let i = 0; i < outDocDistrib.length; i++) {
+                if (!outDocDistrib[i].responseReceived) {
+                    this.errorHandlerService.showError('Raspuns la scrisoarea de solicitare date additionale ' + outDocDistrib[i].number + ' nu a fost primit');
+                    return;
+                }
+            }
+        }
+
+        this.loadingService.show();
         formModel.documents = this.docs;
+        formModel.outputDocuments = this.outDocuments;
 
         //TODO Payment managment
         formModel.receipts = this.receiptsList;
@@ -836,7 +906,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         formModel.currentStep = this.isAnalizePage ? 'AP' : 'A';
 
         const currentAmendment = formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex];
-        console.log('currentAmendment', currentAmendment);
+        // console.log('currentAmendment', currentAmendment);
         formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex] = formModel.clinicalTrailAmendment;
 
         console.log('Next page data', formModel);
@@ -892,30 +962,120 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
     }
 
     requestAdditionalData() {
-        const dialogRef2 = this.dialogConfirmation.open(AdditionalDataDialogComponent, {
-            data: {
-                requestNumber: 'SL-' + this.clinicTrailAmendForm.get('requestNumber').value,
-                requestId: this.clinicTrailAmendForm.get('id').value,
-                modalType: 'REQUEST_ADDITIONAL_DATA',
-                startDate: this.clinicTrailAmendForm.get('startDate').value
-            },
-            hasBackdrop: false
-        });
-
-        this.subscriptions.push(
-            dialogRef2.afterClosed().subscribe(result => {
-                if (result.success) {
-                    result.docType = this.docTypes.find(doc => doc.category === 'SL');
-                    this.initialData.outputDocuments.push(result);
-                    this.subscriptions.push(
-                        this.requestService.addOutputDocumentRequest(this.initialData).subscribe(data => {
-                            console.log('outDocuments', data);
-                            this.outDocuments = data.body.clinicalTrails.outputDocuments;
-                        }, error => console.log(error))
-                    );
+        this.loadingService.show();
+        this.subscriptions.push(this.requestService.getClinicalTrailRequest(this.clinicTrailAmendForm.get('id').value).subscribe(data => {
+                // console.log('getClinicalTrailRequest', data);
+                this.docs = data.documents;
+                let expertDispozition = data.documents.find(doc => doc.docType.category == 'DDA');
+                //console.log('expertDispozition', expertDispozition);
+                if (!expertDispozition) {
+                    this.errorHandlerService.showError('Dispozitia de distribuire nu este atashata.');
+                    this.loadingService.hide();
+                    return;
                 }
+
+                let addDataList = data.outputDocuments.filter(doc => doc.docType.category == 'SL');
+                // console.log('addDataList', addDataList);
+                // console.log('addDataList.length', addDataList.length);
+                const dialogRef2 = this.dialogConfirmation.open(AdditionalDataDialogComponent, {
+                    width: '800px',
+                    height: '600px',
+                    data: {
+                        requestNumber: 'SL-' + this.clinicTrailAmendForm.get('requestNumber').value + '-' + (addDataList.length + 1),
+                        requestId: this.clinicTrailAmendForm.get('id').value,
+                        modalType: 'REQUEST_ADDITIONAL_DATA',
+                        startDate: this.clinicTrailAmendForm.get('startDate').value,
+                        registrationRequestMandatedContacts: data.registrationRequestMandatedContacts[0],
+                        company: data.company
+                    },
+                    hasBackdrop: false
+                });
+
+                dialogRef2.afterClosed().subscribe(result => {
+                    console.log('dialog result', result);
+                    if (result && result) {
+                        let dataToSubmit = {
+                            date: result.date,
+                            name: 'Scrisoare de solicitare date aditionale',
+                            number: result.number,
+                            content: result.content,
+                            docType: this.docTypes.find(r => r.category == 'SL'),
+                            responseReceived: 0,
+                            dateOfIssue: new Date(),
+                            signerName: result.signer.value,
+                            signerFunction: result.signer.description,
+                            requestId: this.clinicTrailAmendForm.get('id').value
+                        }
+
+                        this.documentService.addSLC(dataToSubmit).subscribe(data => {
+                            console.log('outDocument', data);
+                            this.outDocuments.push(data.body);
+                            console.log('outDocuments', this.outDocuments);
+
+                        })
+                    }
+                });
+
+                this.loadingService.hide();
+            }, error => {
+                console.log(error);
+                this.loadingService.hide();
             })
         );
+    }
+
+    viewDoc(document: any) {
+        let formValue = this.clinicTrailAmendForm.value;
+        console.log('formValue', formValue);
+        // console.log('viewDoc', document);
+        let modelToSubmit = {
+            nrDoc: document.number,
+            responsiblePerson: formValue.registrationRequestMandatedContacts[0].mandatedLastname + ' ' + formValue.registrationRequestMandatedContacts[0].mandatedFirstname,
+            companyName: formValue.company.name,
+            requestDate: document.date,
+            country: 'Moldova',
+            address: formValue.company.legalAddress,
+            phoneNumber: formValue.registrationRequestMandatedContacts[0].phoneNumber,
+            email: formValue.registrationRequestMandatedContacts[0].email,
+            message: document.content,
+            function: document.signerFunction,
+            signerName: document.signerName
+        };
+        // console.log('modelToSubmit', modelToSubmit);
+        let observable: Observable<any> = null;
+        observable = this.documentService.viewRequestNew(modelToSubmit);
+
+        this.subscriptions.push(observable.subscribe(data => {
+                let file = new Blob([data], {type: 'application/pdf'});
+                var fileURL = URL.createObjectURL(file);
+                window.open(fileURL);
+                this.loadingService.hide();
+            }, error => {
+                this.loadingService.hide();
+            })
+        );
+    }
+
+    checkResponseReceived(doc: any, value: any) {
+        doc.responseReceived = value.checked ? 1 : 0;
+    }
+
+    remove(doc: any, index: number) {
+        const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur(a)?',
+                confirm: false
+            }
+        });
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result) {
+                this.subscriptions.push(
+                    this.documentService.deleteSLById(doc.id).subscribe(data => {
+                        this.initialData.outputDocuments.splice(index, 1);
+                    }, error => console.log(error))
+                );
+            }
+        });
     }
 
     ngOnDestroy(): void {

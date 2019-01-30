@@ -1,6 +1,6 @@
-import {Component, OnDestroy, OnInit, } from '@angular/core';
+import {Component, OnDestroy, OnInit,} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Subject, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {Document} from '../../../models/document';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Price} from '../../../models/price';
@@ -46,24 +46,60 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                 private navbarTitleService: NavbarTitleService, private router: Router, public dialog: MatDialog, private loadingService: LoaderService) {
 
         this.PriceRegForm = fb.group({
-            'id': [], 'data': {disabled: true, value: new Date()}, 'requestNumber': [null], 'initiator': [null], 'assignedUser': [null], 'requestStatus': [null],
-            'startDate': {disabled: true, value: new Date()}, 'dataToSaveInStartDateRequestHistory': [''], 'currentStep': ['E'], 'price': fb.group({
-                id: [null], value: [null], currency: [null], folderNr: [null], nationalPrice: [null], type: [null], nmPriceId: [null]
-            }), 'evaluation': fb.group({
-                'expirationDate': [null, Validators.required], 'selectedPrice': [null, Validators.required], 'selectedReason': [null, Validators.required],
+            'id': [],
+            'data': {disabled: true, value: new Date()},
+            'requestNumber': [null],
+            'initiator': [null],
+            'assignedUser': [null],
+            'requestStatus': [null],
+            'startDate': {disabled: true, value: new Date()},
+            'dataToSaveInStartDateRequestHistory': [''],
+            'currentStep': ['E'],
+            'price': fb.group({
+                id: [null],
+                value: [null],
+                currency: [null],
+                folderNr: [null],
+                nationalPrice: [null],
+                type: [null],
+                nmPriceId: [null]
+            }),
+            'evaluation': fb.group({
+                'expirationDate': [null, Validators.required],
+                'selectedPrice': [null, Validators.required],
+                'selectedReason': [null, Validators.required],
                 'decision': [null, Validators.required],
-            }), 'medicament': fb.group({
-                'id': [], 'name': ['', Validators.required], 'registrationDate': [], 'expirationDate': [], 'pharmaceuticalForm': [null, Validators.required],
-                'dose': [null, Validators.required], 'division': [null, Validators.required], 'unitsOfMeasurementDesc': [null, Validators.required],
-                'internationalMedicamentName': [null, Validators.required], 'volume': [null], 'volumeQuantityMeasurementName': [null],
-                'termsOfValidity': [null, Validators.required], 'code': [null, Validators.required], 'prescription': [null, Validators.required],
-                'authorizationHolder': [null, Validators.required], 'manufactureName': [null], 'manufactureCountry': [null], 'documents': [], 'status': ['P'],
+            }),
+            'medicament': fb.group({
+                'id': [],
+                'name': ['', Validators.required],
+                'registrationDate': [],
+                'expirationDate': [],
+                'pharmaceuticalForm': [null, Validators.required],
+                'dose': [null, Validators.required],
+                'division': [null, Validators.required],
+                'unitsOfMeasurementDesc': [null, Validators.required],
+                'internationalMedicamentName': [null, Validators.required],
+                'volume': [null],
+                'volumeQuantityMeasurementName': [null],
+                'termsOfValidity': [null, Validators.required],
+                'code': [null, Validators.required],
+                'prescription': [null, Validators.required],
+                'authorizationHolder': [null, Validators.required],
+                'manufactureName': [null],
+                'manufactureCountry': [null],
+                'documents': [],
+                'status': ['P'],
                 'group': fb.group({
                     'code': ['', Validators.required]
                 })
-            }), 'company': fb.group({
+            }),
+            'company': fb.group({
                 'id': [], 'name': ['', Validators.required],
-            }), 'type': [], 'typeValue': {disabled: true, value: null}, 'requestHistories': [],
+            }),
+            'type': [],
+            'typeValue': {disabled: true, value: null},
+            'requestHistories': [],
         });
     }
 

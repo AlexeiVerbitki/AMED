@@ -12,7 +12,7 @@ import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.c
 import {LoaderService} from '../../../shared/service/loader.service';
 import {MatDialog} from '@angular/material';
 import {TaskService} from '../../../shared/service/task.service';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {DrugSubstanceTypesService} from '../../../shared/service/drugs/drugsubstancetypes.service';
 import {DrugDocumentsService} from '../../../shared/service/drugs/drugdocuments.service';
 import {DrugDecisionsService} from '../../../shared/service/drugs/drugdecisions.service';
@@ -60,7 +60,7 @@ export class CerereSolicAutorComponent implements OnInit {
                 private loadingService: LoaderService,
                 private drugDocumentsService: DrugDocumentsService,
                 public dialogConfirmation: MatDialog,
-                private taskService: TaskService, private errorHandlerService: ErrorHandlerService,
+                private taskService: TaskService, private errorHandlerService: SuccessOrErrorHandlerService,
                 private drugSubstanceTypesService: DrugSubstanceTypesService,
                 private drugDecisionsService: DrugDecisionsService,
                 public dialog: MatDialog
@@ -409,6 +409,17 @@ export class CerereSolicAutorComponent implements OnInit {
     }
 
     viewDoc(document: any) {
+
+        let isFormInvalid = false;
+        if (this.cerereSolicAutorForm.invalid) {
+            isFormInvalid = true;
+        }
+        if (isFormInvalid) {
+            this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
+        }
+        if (isFormInvalid) {
+            return;
+        }
         if (document.docType.category == 'AP') {
             this.loadingService.show();
             const locality = this.cerereSolicAutorForm.get('locality').value;

@@ -3,6 +3,7 @@ package com.bass.amed.controller.rest.drugs;
 import com.bass.amed.dto.drugs.CompanyDetailsDTO;
 import com.bass.amed.dto.drugs.DrugDecisionsFilterDTO;
 import com.bass.amed.dto.drugs.DrugDecisionsFilterDetailsDTO;
+import com.bass.amed.dto.drugs.OldDrugDecisionDetailsDTO;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.EconomicAgentsRepository;
@@ -29,6 +30,10 @@ public class DrugDecisionsController {
     @Autowired
     DrugDecisionsRepository drugDecisionsRepository;
     @Autowired
+    DrugDecisionsFilterRepository drugDecisionsFilterRepository;
+    @Autowired
+    OldDrugDecisionDetailsRepository oldDrugDecisionDetailsRepository;
+    @Autowired
     private EconomicAgentsRepository economicAgentsRepository;
     @Autowired
     private AuthorizedDrugSubstancesRepository authorizedDrugSubstancesRepository;
@@ -40,8 +45,6 @@ public class DrugDecisionsController {
     private RequestTypeRepository requestTypeRepository;
     @Autowired
     private DrugUnitsConversionRatesRepository drugUnitsConversionRatesRepository;
-    @Autowired
-    DrugDecisionsFilterRepository drugDecisionsFilterRepository;
 
     @PostMapping(value = "/by-filter")
     public ResponseEntity<List<DrugDecisionsFilterDetailsDTO>> getDrugDecisionsByFilter(@RequestBody DrugDecisionsFilterDetailsDTO filter) {
@@ -58,7 +61,7 @@ public class DrugDecisionsController {
     @RequestMapping(value = "/by-id")
     public ResponseEntity<List<DrugDecisionsFilterDTO>> getDrugDecisionsById(String id) {
         logger.debug("Get drug decisions by id");
-        List<DrugDecisionsFilterDTO> dtos = drugDecisionsRepository.getDrugDecisionsById( id );
+        List<DrugDecisionsFilterDTO> dtos = drugDecisionsRepository.getDrugDecisionsById(id);
 
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
@@ -102,8 +105,7 @@ public class DrugDecisionsController {
     }
 
     @RequestMapping(value = "/add-authorization-details", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RegistrationRequestsEntity> addAuthorizationDetails(@RequestBody RegistrationRequestsEntity request)
-    {
+    public ResponseEntity<RegistrationRequestsEntity> addAuthorizationDetails(@RequestBody RegistrationRequestsEntity request) {
         logger.debug("Add authorization import export details");
         Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(request.getType().getCode());
         request.getType().setId(type.get().getId());
@@ -113,10 +115,18 @@ public class DrugDecisionsController {
     }
 
     @RequestMapping(value = "/get-units-by-reference-code")
-    public ResponseEntity<List<DrugUnitsConversionRatesEntity>> getUnityRatesByRefCode(String refCode) throws CustomException{
+    public ResponseEntity<List<DrugUnitsConversionRatesEntity>> getUnityRatesByRefCode(String refCode) throws CustomException {
         logger.debug("Get all units codes by reference unit code");
         Optional<List<DrugUnitsConversionRatesEntity>> units = drugUnitsConversionRatesRepository.findByRefUnitCode(refCode);
 
         return new ResponseEntity<>(units.orElseThrow(() -> new CustomException("No result was found")), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/get-old-details-by-company-code")
+    public ResponseEntity<List<OldDrugDecisionDetailsDTO>> getOldDetailsByCompanyCode(String code) {
+        logger.debug("Get old details by company code");
+        List<OldDrugDecisionDetailsDTO> dtos = oldDrugDecisionDetailsRepository.getDetailsByCompanyCode(code);
+
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 }

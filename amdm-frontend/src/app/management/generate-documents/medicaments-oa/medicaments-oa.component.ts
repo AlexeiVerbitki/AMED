@@ -4,7 +4,7 @@ import {LoaderService} from '../../../shared/service/loader.service';
 import {RequestService} from '../../../shared/service/request.service';
 import {DocumentService} from '../../../shared/service/document.service';
 import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 
 @Component({
     selector: 'app-medicaments-oa',
@@ -23,7 +23,7 @@ export class MedicamentsOaComponent implements OnInit {
 
     constructor(private loadingService: LoaderService,
                 private requestService: RequestService,
-                private errorHandlerService: ErrorHandlerService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 private documentService: DocumentService) {
     }
 

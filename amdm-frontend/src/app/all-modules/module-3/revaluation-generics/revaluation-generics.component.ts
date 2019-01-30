@@ -4,7 +4,7 @@ import {Subject, Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PriceService} from '../../../shared/service/prices.service';
 import {LoaderService} from '../../../shared/service/loader.service';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 
@@ -48,7 +48,7 @@ export class RevaluationGenericsComponent implements OnInit, AfterViewInit, OnDe
                 private priceService: PriceService,
                 private navbarTitleService: NavbarTitleService,
                 public dialog: MatDialog,
-                private errorHandlerService: ErrorHandlerService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 public dialogConfirmation: MatDialog,
                 private loadingService: LoaderService) {
 

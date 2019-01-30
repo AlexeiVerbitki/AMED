@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface RequestRepository extends JpaRepository<RegistrationRequestsEntity, Integer>
 {
@@ -29,6 +28,7 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
             "LEFT JOIN FETCH p.documents " +
             "LEFT JOIN FETCH p.paymentOrders " +
             "LEFT JOIN FETCH p.registrationRequestMandatedContacts " +
+            "LEFT JOIN FETCH p.variations " +
             "WHERE p.id = (:id)")
     Optional<RegistrationRequestsEntity> findMedicamentHistoryById(@Param("id") Integer id);
 
@@ -36,6 +36,7 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
             "LEFT JOIN FETCH p.medicamentHistory " +
             "LEFT JOIN FETCH p.requestHistories " +
             "LEFT JOIN FETCH p.documents " +
+            "LEFT JOIN FETCH p.variations " +
             "WHERE p.medicamentPostauthorizationRegisterNr = (:regNumber) and p.currentStep='F'")
     Optional<List<RegistrationRequestsEntity>> findMedicamentHistoryByRegistrationNumber(@Param("regNumber") Integer regNumber);
 
@@ -82,7 +83,11 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
     @Query("SELECT p FROM RegistrationRequestsEntity p WHERE p.ddIncluded = true and p.ddNumber is null and p.currentStep not in ('C','F') and p.type.id in (1,2,34,35,36)")
     List<RegistrationRequestsEntity> findRequestsForDD();
 
-    @Query("SELECT p FROM RegistrationRequestsEntity p WHERE p.ddIncluded = true and p.ddNumber is null and p.currentStep not in ('C','F') and p.type.id in (21)")
+    @Query("SELECT distinct p FROM RegistrationRequestsEntity p LEFT JOIN FETCH p.variations v WHERE p.ddIncluded = true and p.ddNumber is null and p.currentStep not in ('C'," +
+            "'F') " +
+            "and p" +
+            ".type.id " +
+            "in (21)")
     List<RegistrationRequestsEntity> findRequestsForDDM();
 
     @Query("SELECT p FROM RegistrationRequestsEntity p WHERE p.oiIncluded = true and p.oiNumber is null and p.currentStep not in ('C','F') and p.type.id in (1,2,34,35,36)")
@@ -98,6 +103,14 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
     @Modifying
     @Query("UPDATE RegistrationRequestsEntity p SET p.oiNumber = :oiNumber WHERE p.id in (:ids)")
     void setOINumber(@Param("ids") List<Integer> ids, @Param("oiNumber") String oiNumber);
+
+    @Modifying
+    @Query("UPDATE RegistrationRequestsEntity p SET p.expired = :expired WHERE p.id = :id")
+    void setExpiredRequest(@Param("id") Integer id, @Param("expired") Boolean expired);
+
+    @Modifying
+    @Query("UPDATE RegistrationRequestsEntity p SET p.critical = :critical WHERE p.id = :id")
+    void setCriticalRequest(@Param("id") Integer id, @Param("critical") Boolean critical);
 
     @Query("SELECT p FROM RegistrationRequestsEntity p WHERE p.ddNumber = :ddNumber")
     List<RegistrationRequestsEntity> findRequestsByDDNumber(@Param("ddNumber") String ddNumber);
@@ -131,6 +144,16 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
             "and p.currentStep not in ('C','F') " +
             "and p.expertList is not empty ")
     List<RegistrationRequestsEntity> findRequestsForDDCt();
+
+    @Query("SELECT DISTINCT p FROM RegistrationRequestsEntity p " +
+            "LEFT JOIN FETCH p.expertList e " +
+            "LEFT JOIN FETCH p.clinicalTrails ct " +
+            "WHERE p.type.id in (4) " +
+            "and p.ddIncluded is null " +
+            "and p.ddNumber is null " +
+            "and p.currentStep not in ('C','F') " +
+            "and p.expertList is not empty ")
+    List<RegistrationRequestsEntity> findRequestsForDDACt();
 
     @Modifying
     @Query("UPDATE RegistrationRequestsEntity p SET p.ddNumber = :ddNumber, p.ddIncluded=1 WHERE p.id in (:ids)")

@@ -10,7 +10,7 @@ import {AuthService} from '../../../shared/service/authetication.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {DocumentService} from '../../../shared/service/document.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 
 @Component({
     selector: 'app-eliberare-cerere-lic',
@@ -52,7 +52,7 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
                 private loadingService: LoaderService,
                 private documentService: DocumentService,
                 private navbarTitleService: NavbarTitleService,
-                private errorHandlerService: ErrorHandlerService) {
+                private errorHandlerService: SuccessOrErrorHandlerService) {
     }
 
     ngOnInit() {

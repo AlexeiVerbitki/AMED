@@ -1,16 +1,16 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {Observable, Subject, Subscription} from 'rxjs';
+import {Component, Injectable, OnInit, ViewChild} from '@angular/core';
+import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
 import {RequestService} from '../../../shared/service/request.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Document} from '../../../models/document';
 import {AdministrationService} from '../../../shared/service/administration.service';
-import {MatDialog, MatDialogConfig} from '@angular/material';
+import {MatDialog, MatDialogConfig, MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material';
 import {AuthService} from '../../../shared/service/authetication.service';
 import {DocumentService} from '../../../shared/service/document.service';
 import {RequestAdditionalDataDialogComponent} from '../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component';
 import {TaskService} from '../../../shared/service/task.service';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
@@ -23,8 +23,12 @@ import {UploadFileService} from '../../../shared/service/upload/upload-file.serv
 import {PaymentComponent} from '../../../payment/payment.component';
 import {AddManufactureComponent} from '../../../dialog/add-manufacture/add-manufacture.component';
 import {AddDivisionComponent} from "../../../dialog/add-division/add-division.component";
-import {until} from "selenium-webdriver";
-import elementIsSelected = until.elementIsSelected;
+import {
+    SelectVariationTypeComponent,
+    TodoItemFlatNode
+} from "../../../dialog/select-variation-type/select-variation-type.component";
+import {SelectionModel} from "@angular/cdk/collections";
+import {isNumeric} from "rxjs/internal-compatibility";
 
 @Component({
     selector: 'app-evaluare-primara',
@@ -32,6 +36,7 @@ import elementIsSelected = until.elementIsSelected;
     styleUrls: ['./evaluare-primara-modify.component.css']
 })
 export class EvaluarePrimaraModifyComponent implements OnInit {
+    checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
     private subscriptions: Subscription[] = [];
     eForm: FormGroup;
     documents: Document [] = [];
@@ -47,7 +52,6 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
     manufacturesTable: any[] = [];
     registrationRequestMandatedContacts: any[];
     groups: any[] = [];
-    variationTypes : any[] = [];
     prescriptions: any[] = [];
     internationalNames: any[];
     medicamentTypes2: any[];
@@ -59,6 +63,8 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
     isNonAttachedDocuments = false;
     initialData: any;
     medicamentsDetails: any[];
+    variationTypesIds : string;
+    variationTypesIdsTemp : string;
 
     companyMedicaments: Observable<any[]>;
     medInputs = new Subject<string>();
@@ -75,7 +81,7 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
                 private uploadService: UploadFileService,
                 private documentService: DocumentService,
                 private taskService: TaskService,
-                private errorHandlerService: ErrorHandlerService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 private loadingService: LoaderService,
                 private medicamentService: MedicamentService,
                 private navbarTitleService: NavbarTitleService,
@@ -83,6 +89,7 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
                 private authService: AuthService,
                 private router: Router,
                 private activatedRoute: ActivatedRoute) {
+
         this.eForm = fb.group({
             'id': [],
             'data': {disabled: true, value: new Date()},
@@ -102,8 +109,6 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
             'labResponse': [null],
             'divisionBonDePlata': [null],
             'registrationStatus': [null],
-            'variationType' : [null, Validators.required],
-            'variationDescription' : [null],
             'medicament':
                 fb.group({
                     'id': [],
@@ -252,7 +257,6 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
                         this.eForm.get('regnr').setValue(data.medicamentPostauthorizationRegisterNr);
                         this.eForm.get('company').setValue(data.company);
                         this.eForm.get('companyValue').setValue(data.company.name);
-                        this.eForm.get('variationDescription').setValue(data.variationDescription);
                         if (data.medicamentHistory && data.medicamentHistory.length != 0) {
                             this.initialData.medicamentHistory = Object.assign([], data.medicamentHistory);
                             this.eForm.get('medicament.id').setValue(data.medicamentHistory[0].id);
@@ -540,18 +544,6 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
             )
         );
 
-        this.variationTypes = [];
-        this.variationTypes = [...this.variationTypes, {value: 'I', description: 'Tip I'}];
-        this.variationTypes = [...this.variationTypes, {value: 'II', description: 'Tip II'}];
-        this.variationTypes = [...this.variationTypes, {value: 'C', description: 'Transfer de certificat'}];
-        if (dataDB && dataDB.variationType && dataDB.variationType=='I') {
-            this.eForm.get('variationType').setValue({value: 'I', description: 'Tip I'});
-        } else if (dataDB && dataDB.variationType && dataDB.variationType=='II') {
-            this.eForm.get('variationType').setValue({value: 'II', description: 'Tip II'});
-        } else if (dataDB && dataDB.variationType && dataDB.variationType=='C') {
-            this.eForm.get('variationType').setValue({value: 'C', description: 'Transfer de certificat'});
-        }
-
         this.groups = [];
         this.groups = [...this.groups, {value: 'VIT', description: 'Vitale'}];
         this.groups = [...this.groups, {value: 'ES', description: 'Esenţiale'}];
@@ -614,6 +606,29 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
                     )
                 )
             );
+
+        this.subscriptions.push(this.administrationService.variatonTypesJSON().subscribe(data => {
+               this.variationTypesIds = JSON.stringify(data.val2);
+                if(dataDB.variations) {
+                    this.variationTypesIdsTemp =  this.variationTypesIds.substr(1);
+                    for (let v of dataDB.variations) {
+                        var t = new TodoItemFlatNode();
+                        t.item = this.getVariationCodeById(v.variation.id,v.value);
+                        this.checklistSelection.selected.push(t);
+                    }
+                }
+            }
+        ));
+    }
+
+    getVariationCodeById(id : string,value:string) : string
+    {
+        var i = this.variationTypesIdsTemp.indexOf(value+'":"'+id+'"')+value.length-1;
+        var tempStr =  this.variationTypesIdsTemp.substr(1,i);
+        var j = tempStr.lastIndexOf('"')+1;
+        var finalStr  = tempStr.substr(j,i);
+        this.variationTypesIdsTemp = this.variationTypesIdsTemp.replace('"'+finalStr+'":"'+id+'"','');
+        return finalStr;
     }
 
     checkPharmaceuticalFormTypeValue(dataDB: any) {
@@ -662,6 +677,12 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
             this.errorHandlerService.showError('Status inregistrare trebuie selectat.');
             return;
         }
+
+       if(!this.checklistSelection.selected || this.checklistSelection.selected.length==0)
+       {
+           this.errorHandlerService.showError('Tip variatie trebuie selectat.');
+           return;
+       }
 
         if (this.eForm.get('registrationStatus').value == 0) {
             this.interruptProcess();
@@ -734,6 +755,14 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
                 number: 'MP-' + this.eForm.get('requestNumber').value,
                 date: new Date()
             });
+        }
+
+        modelToSubmit.variations = [];
+        for(let sel of this.checklistSelection.selected) {
+            var xid = this.getVariationId(sel.item);
+            if(isNumeric(xid)) {
+                modelToSubmit.variations.push({variation: {id: xid},value:this.getVariationValue(sel.item)});
+            }
         }
 
         this.subscriptions.push(this.requestService.addMedicamentHistoryRequest(modelToSubmit).subscribe(data => {
@@ -1001,8 +1030,7 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
                     initiator: this.initialData.initiator,
                     registrationRequestMandatedContacts: [],
                     medicaments: [],
-                    medicamentHistory: [],
-                    variationType : ''
+                    medicamentHistory: []
                 };
                 modelToSubmit.requestHistories.push({
                     startDate: this.eForm.get('data').value, endDate: new Date(),
@@ -1015,8 +1043,6 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
                 medicamentToSubmit.auxiliarySubstancesHistory = this.auxiliarySubstancesTable;
                 medicamentToSubmit.divisionHistory = this.divisions;
                 medicamentToSubmit.prescriptionTo = this.eForm.get('medicament.prescriptionTo').value.value;
-                modelToSubmit.variationType = this.eForm.get('variationType').value.value;
-                medicamentToSubmit.variationDescription = this.eForm.get('variationDescription').value;
                 modelToSubmit.medicamentHistory.push(medicamentToSubmit);
                 modelToSubmit.registrationRequestMandatedContacts = this.registrationRequestMandatedContacts;
                 if (this.eForm.get('medicament.atcCodeTo').value) {
@@ -1142,7 +1168,13 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
 
         this.fillMedicamentDetails(modelToSubmit);
 
-        console.log(modelToSubmit);
+        modelToSubmit.variations = [];
+        for(let sel of this.checklistSelection.selected) {
+            var xid = this.getVariationId(sel.item);
+            if(isNumeric(xid)) {
+                modelToSubmit.variations.push({variation: {id: xid},value:this.getVariationValue(sel.item)});
+            }
+        }
 
         this.subscriptions.push(this.requestService.addMedicamentHistoryRequest(modelToSubmit).subscribe(data => {
                 this.initialData = Object.assign({}, data.body);
@@ -1150,6 +1182,28 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
                 this.loadingService.hide();
             }, error => this.loadingService.hide())
         );
+    }
+
+    getVariationValue(find : string) : string
+    {
+        var j = find.indexOf('- ')+2;
+        return find.substr(j);
+    }
+
+    getVariationId(find : string) : string
+    {
+        var i = this.variationTypesIds.indexOf(find) + find.length + 3;
+        var tempStr =  this.variationTypesIds.substr(i);
+        var j = tempStr.indexOf(',');
+        var k = tempStr.indexOf('}');
+        if(j<k && j!=-1)
+        {
+            return this.variationTypesIds.substr(i,j-1);
+        }
+        else
+        {
+            return this.variationTypesIds.substr(i,k-1);
+        }
     }
 
     fillMedicamentDetails(modelToSubmit: any) {
@@ -1190,10 +1244,6 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
         if (this.eForm.get('medicament.prescriptionTo').value) {
             medicamentToSubmit.prescriptionTo = this.eForm.get('medicament.prescriptionTo').value.value;
         }
-        if (this.eForm.get('variationType').value) {
-            modelToSubmit.variationType = this.eForm.get('variationType').value.value;
-        }
-        medicamentToSubmit.variationDescription = this.eForm.get('variationDescription').value;
         modelToSubmit.medicamentHistory = [];
         modelToSubmit.medicamentHistory.push(medicamentToSubmit);
 
@@ -1418,5 +1468,29 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
     addMacheta(event) {
         this.divisions = event;
         this.displayMachets();
+    }
+
+    addVariationType() {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+        // dialogConfig2.panelClass = 'overflow-ys';
+
+        dialogConfig2.width = '1000px';
+        dialogConfig2.height = '800px';
+
+        dialogConfig2.data = {values: this.checklistSelection, disabled : false};
+
+        let dialogRef = this.dialog.open(SelectVariationTypeComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+                if (result && result.response) {
+                    this.checklistSelection = result.values;
+                    //console.log(result.values);
+                }
+            }
+        );
     }
 }

@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit, Inject} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {Subscription} from 'rxjs';
 import {AdministrationService} from '../../../shared/service/administration.service';
 import {LicenseService} from '../../../shared/service/license/license.service';
@@ -43,7 +43,7 @@ export class AddEcAgentComponent implements OnInit, OnDestroy {
                 private localityService: LocalityService,
                 private licenseService: LicenseService,
                 private fb: FormBuilder,
-                private errorHandlerService: ErrorHandlerService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 public dialogFarmacist: MatDialog,
                 public dialogConfirmation: MatDialog,
                 public dialogRef: MatDialogRef<AddEcAgentComponent>,

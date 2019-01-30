@@ -12,7 +12,7 @@ import {MedicamentService} from '../../../shared/service/medicament.service';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 import {MatDialog} from '@angular/material';
 import {RequestAdditionalDataDialogComponent} from '../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {TaskService} from '../../../shared/service/task.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
@@ -43,7 +43,7 @@ export class ProcessInterruptionModifyComponent implements OnInit {
                 private administrationService: AdministrationService,
                 private medicamentService: MedicamentService,
                 private requestService: RequestService,
-                private errorHandlerService: ErrorHandlerService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 private taskService: TaskService,
                 private loadingService: LoaderService,
                 public dialogConfirmation: MatDialog,
@@ -195,8 +195,8 @@ export class ProcessInterruptionModifyComponent implements OnInit {
                         startDate: this.iForm.get('data').value
                     }).subscribe(data => {
                         this.loadingService.hide();
-                        this.router.navigate(['dashboard/module']);
-                    }, error =>   this.loadingService.hide())
+                        this.router.navigate(['dashboard/homepage']);
+                    }, error => this.loadingService.hide())
                 );
             }
         });
@@ -220,7 +220,7 @@ export class ProcessInterruptionModifyComponent implements OnInit {
            x = x + ' ' + this.iForm.get('medicament.dose').value;
         }
         if (this.initialData.medicamentHistory[0].divisionHistory.length != 0) {
-            this.initialData.medicamentHistory[0].divisionHistory.forEach(elem => x = x + ' ' + elem.description + ';');
+           x = x + this.getConcatenatedDivision();
         }
         if (this.iForm.get('medicament.internationalMedicamentName').value) {
             x = x + '(DCI:' + this.iForm.get('medicament.internationalMedicamentName').value + ')';
@@ -425,5 +425,20 @@ export class ProcessInterruptionModifyComponent implements OnInit {
         this.navbarTitleService.showTitleMsg('');
         this.subscriptions.forEach(s => s.unsubscribe());
 
+    }
+
+    getConcatenatedDivision() {
+        let concatenatedDivision = '';
+        for (let entry of this.initialData.medicamentHistory[0].divisionHistory) {
+            if (entry.description && entry.volume && entry.volumeQuantityMeasurement) {
+                concatenatedDivision = concatenatedDivision + entry.description + ' ' + entry.volume + ' ' + entry.volumeQuantityMeasurement.description + '; ';
+            } else if (entry.volume && entry.volumeQuantityMeasurement) {
+                concatenatedDivision = concatenatedDivision + entry.volume + ' ' + entry.volumeQuantityMeasurement.description + '; ';
+            } else {
+                concatenatedDivision = concatenatedDivision + entry.description + '; ';
+            }
+
+        }
+        return concatenatedDivision;
     }
 }

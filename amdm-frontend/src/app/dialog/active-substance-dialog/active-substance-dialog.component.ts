@@ -4,7 +4,7 @@ import {AdministrationService} from '../../shared/service/administration.service
 import {Subscription} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material';
 import {ConfirmationDialogComponent} from '../confirmation-dialog.component';
-import {ErrorHandlerService} from '../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../shared/service/success-or-error-handler.service';
 import {AddManufactureComponent} from '../add-manufacture/add-manufacture.component';
 
 @Component({
@@ -26,7 +26,7 @@ export class ActiveSubstanceDialogComponent implements OnInit {
     constructor(private administrationService: AdministrationService,
                 private fb: FormBuilder,
                 public dialog: MatDialog,
-                private errorService: ErrorHandlerService,
+                private errorService: SuccessOrErrorHandlerService,
                 public dialogRef: MatDialogRef<ActiveSubstanceDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) public dataDialog: any) {
         this.aForm = fb.group({

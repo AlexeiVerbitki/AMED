@@ -14,8 +14,11 @@ public class TaskDetailsProjectionDTO
     private String step;
     private String navigationUrl;
     private String username;
+    private String currentStep;
+    private Boolean expired;
+    private Boolean critical;
 
-    public TaskDetailsProjectionDTO(Integer id, String requestNumber, Date startDate, Date endDate, String processName, String requestType, String step, String navigationUrl, String username)
+    public TaskDetailsProjectionDTO(Integer id, String requestNumber, Date startDate, Date endDate, String currentStep, Boolean expired, Boolean critical, String processName, String requestType, String step, String navigationUrl, String username)
     {
         this.id = id;
         this.requestNumber = requestNumber;
@@ -26,6 +29,9 @@ public class TaskDetailsProjectionDTO
         this.step = step;
         this.navigationUrl = navigationUrl;
         this.username = username;
+        this.currentStep = currentStep;
+        this.expired = expired;
+        this.critical = critical;
     }
 
     public Integer getId()
@@ -58,6 +64,10 @@ public class TaskDetailsProjectionDTO
         return requestType;
     }
 
+    public Boolean getExpired() { return expired; }
+
+    public Boolean getCritical() { return critical; }
+
     public String getStep()
     {
         return step;
@@ -72,4 +82,6 @@ public class TaskDetailsProjectionDTO
     {
         return username;
     }
+
+    public String getCurrentStep() { return currentStep; }
 }

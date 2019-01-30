@@ -11,4 +11,6 @@ public interface ClinicalTrialsRepository extends JpaRepository<ClinicalTrialsEn
 
     @Query(value = "SELECT * FROM clinical_trials m WHERE ((upper(m.code)) like upper(CONCAT(?1, '%')) or (upper(m.EudraCT_nr)) like upper(CONCAT(?2, '%'))) and m.status='F'", nativeQuery = true)
     List<ClinicalTrialsEntity> getClinicalTrailByCodeOrEudra(String code, String eudra);
+
+    ClinicalTrialsEntity getClinicalTrialsEntityById(int id);
 }

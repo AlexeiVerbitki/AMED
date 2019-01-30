@@ -4,13 +4,13 @@ import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {AuthService} from '../service/authetication.service';
 import {Router} from '@angular/router';
-import {ErrorHandlerService} from '../service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../service/success-or-error-handler.service';
 
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
 
-    constructor(private router: Router, private authService: AuthService, private errorHandlerService: ErrorHandlerService) {
+    constructor(private router: Router, private authService: AuthService, private errorHandlerService: SuccessOrErrorHandlerService) {
     }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

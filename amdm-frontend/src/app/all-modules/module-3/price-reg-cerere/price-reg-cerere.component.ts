@@ -7,7 +7,7 @@ import {saveAs} from 'file-saver';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {Router} from '@angular/router';
 import {Document} from '../../../models/document';
-import {ErrorHandlerService} from '../../../shared/service/error-handler.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {CanModuleDeactivate} from '../../../shared/auth-guard/can-deactivate-guard.service';
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
@@ -37,7 +37,7 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
                 private router: Router,
                 private priceService: PriceService,
                 private navbarTitleService: NavbarTitleService,
-                private errorHandlerService: ErrorHandlerService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 private loadingService: LoaderService,
                 public dialog: MatDialog,
                 public dialogConfirmation: MatDialog) {

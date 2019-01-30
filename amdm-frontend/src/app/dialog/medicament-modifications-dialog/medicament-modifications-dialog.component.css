@@ -31,3 +31,8 @@ label.required:not(:empty):after,
     margin-left: 3px;
     margin-right: 3px;
 }
+
+.btn-lights {
+    background-color: #f5f5f5 !important;
+    color: #000 !important;
+}

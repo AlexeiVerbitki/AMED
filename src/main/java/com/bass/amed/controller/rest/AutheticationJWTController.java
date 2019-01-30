@@ -54,7 +54,7 @@ public class AutheticationJWTController
     @PostMapping("/authenticate")
     public ResponseEntity<JWTToken> authenticate(HttpServletRequest request, @Valid @RequestBody ScrUserDTO scrUserDTO) throws CustomException
     {
-        LOGGER.debug("Try to authenticate user" + scrUserDTO.getUsername());
+        LOGGER.debug("Try to authenticate user: " + scrUserDTO.getUsername());
         LOGGER.debug("ip address: " + request.getRemoteAddr());
 
         String dnUser = scrUserDTO.getUsername() + USER_DOMAIN_SUFFIX;

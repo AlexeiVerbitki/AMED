@@ -18,6 +18,8 @@ import {RequestDdCtComponent} from "./request-dd-ct/request-dd-ct.component";
 import {LoaderService} from "../../shared/service/loader.service";
 import {LmpcModifyListComponent} from "./lmpc-modify-list/lmpc-modify-list.component";
 import {LmpcListComponent} from "./lmpc-list/lmpc-list.component";
+import {RequestDdCtAmendComponent} from "./request-dd-ct-amend/request-dd-ct-amend.component";
+import {DdCtAmendListComponent} from "./dd-ct-amend-list/dd-ct-amend-list.component";
 
 @Component({
     selector: 'app-generate-documents',
@@ -41,7 +43,9 @@ export class GenerateDocumentsComponent implements OnInit {
     @ViewChild('anihModList') anihModListHtml: LmpcModifyListComponent;
     @ViewChild('anihList') anihListHtml: LmpcListComponent;
     @ViewChild('ddCtList') ddCtListHtml: DdCtListComponent;
+    @ViewChild('ddCtAmendList') ddCtAmendListHtml: DdCtAmendListComponent;
     @ViewChild('requestDDCt') requestDDCt: RequestDdCtComponent;
+    @ViewChild('requestDDCtAmend') requestDDCtAmend: RequestDdCtAmendComponent;
     constructor(private navbarTitleService: NavbarTitleService,
                 private loadingService: LoaderService) {
     }
@@ -102,8 +106,16 @@ export class GenerateDocumentsComponent implements OnInit {
         this.ddCtListHtml.loadDDs();
     }
 
+    loadDDAmendCts(event) {
+        this.ddCtAmendListHtml.loadDDAs();
+    }
+
     ddListCtModified(event) {
         this.requestDDCt.loadRequestForDD();
+    }
+
+    ddListCtAmendModified(event) {
+        this.requestDDCtAmend.loadRequestForDDA();
     }
     
      loadAnihListModified(event) {

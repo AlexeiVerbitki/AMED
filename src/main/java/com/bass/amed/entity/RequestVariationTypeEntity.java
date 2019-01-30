@@ -16,4 +16,7 @@ public class RequestVariationTypeEntity
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "variation_id")
     private NmVariationTypeEntity variation;
+    @Basic
+    @Column(name = "value")
+    private String value;
 }
