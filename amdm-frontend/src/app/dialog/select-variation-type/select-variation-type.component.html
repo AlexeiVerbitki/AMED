@@ -1,0 +1,45 @@
+<div>
+  <h3 class="text-center my-3 font-weight-bold">Tip variatii</h3>
+  <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
+      <button mat-icon-button disabled></button>
+      <mat-checkbox class="checklist-leaf-node"
+                    [checked]="checklistSelection.isSelected(node)"
+                    [disabled]="dataDialog.disabled"
+                    (change)="todoLeafItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
+    </mat-tree-node>
+
+    <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
+      <button mat-icon-button disabled></button>
+      <mat-form-field>
+        <input matInput #itemValue placeholder="New item...">
+      </mat-form-field>
+      <button mat-button (click)="saveNode(node, itemValue.value)">Save</button>
+    </mat-tree-node>
+
+    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+      <button mat-icon-button matTreeNodeToggle
+              [attr.aria-label]="'toggle ' + node.filename">
+        <i *ngIf="!treeControl.isExpanded(node)" class="fa fa-angle-right fa-lg" aria-hidden="true"></i>
+        <i *ngIf="treeControl.isExpanded(node)" class="fa fa-angle-down fa-lg" aria-hidden="true"></i>
+        <!--<mat-icon class="mat-icon-rtl-mirror">-->
+          <!--{{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}-->
+        <!--</mat-icon>-->
+      </button>
+      <mat-checkbox [checked]="descendantsAllSelected(node)"
+                    [indeterminate]="descendantsPartiallySelected(node)"
+                    [disabled]="dataDialog.disabled"
+                    (change)="todoItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
+      <!--<button mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button>-->
+    </mat-tree-node>
+  </mat-tree>
+</div>
+<div class="text-center">
+  <div mat-dialog-actions>
+    <div class="w-100">
+      <button *ngIf="!dataDialog.disabled" class="btn btn-danger btn-sm waves-light" (click)="cancel()">Anulare</button>
+      <button *ngIf="!dataDialog.disabled" class="btn btn-dark-green-color btn-sm waves-light" (click)="add()">Adaugare</button>
+      <button *ngIf="dataDialog.disabled" class="btn btn-dark-green-color btn-sm waves-light" (click)="cancel()">Ok</button>
+    </div>
+  </div>
+</div>

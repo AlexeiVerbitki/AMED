@@ -1,0 +1,8 @@
+.mat-dialog-container {
+    overflow-y: scroll !important;
+}
+
+.mat-icon-button:focus {
+    outline: none;
+    border: none;
+}

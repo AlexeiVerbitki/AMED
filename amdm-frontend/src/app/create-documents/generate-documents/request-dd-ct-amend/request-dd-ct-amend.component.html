@@ -1,0 +1,69 @@
+<div class="gradient-card-header bg-sidebar border-gradient">
+  <div class="container-fluid">
+    <!-- Title -->
+    <div class="row">
+      <div class="col-6">
+        <div class="card-header-title white-text">Cereri care trebuiesc incluse in dispozitia de distribuire
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="text-right fap text-white">
+          <i (click)="generateDocument()" mdbTooltip="Generare dispozitie" placement="top"
+             class="fa fa-files-o fa-lg fa-mt" aria-hidden="true"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tabela cereri -->
+<div class="table-width">
+  <div>
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="number">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Numar cerere</th>
+        <td mat-cell *matCellDef="let element"> {{element.requestNumber}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="startDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Data depunere
+          cerere
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.startDate | date:'dd/MM/yyyy'}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">Tip cerere</th>
+        <td mat-cell *matCellDef="let element"> {{element.type.description}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="company">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Companie
+          solicitant
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.company.name}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="clinicTrail">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Cod studiu clinic</th>
+        <td mat-cell *matCellDef="let element"> {{element.clinicalTrails?.code}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="included">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Include in
+          dispozitie
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <mat-checkbox #checkboxIncluded [checked]="element.included"
+                        (change)="checkIncluded(element,checkboxIncluded)"></mat-checkbox>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <div *ngIf="dataSource.data.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!
+    </div>
+    <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+  </div>
+</div>
