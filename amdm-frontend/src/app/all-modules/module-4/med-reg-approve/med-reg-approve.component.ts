@@ -95,7 +95,7 @@ export class MedRegApproveComponent implements OnInit {
     loadinginternationalMedicamentName = false;
     internationalMedicamentNameInputs  = new Subject<string>();
 
-    customsPointsList: Observable<any[]>;
+    customsPointsList: any[] = [];
 
     expirationDate: any[] = [];
 
@@ -249,7 +249,15 @@ export class MedRegApproveComponent implements OnInit {
                     this.evaluateImportForm.get('importAuthorizationEntity.anexaDate').setValue(new Date(data.importAuthorizationEntity.anexaDate));
                     this.evaluateImportForm.get('importAuthorizationEntity.specification').setValue(data.importAuthorizationEntity.specification);
                     this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').setValue(new Date(data.importAuthorizationEntity.specificationDate));
-                    // this.evaluateImportForm.get('importAuthorizationEntity.approvedQuantity').setValue(data.importAuthorizationEntity.approvedQuantity);
+
+                    // this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').setValue(this.customsPointsPreviouslySelected());
+                    var arr = [];
+                    for (let c of this.importData.importAuthorizationEntity.nmCustomsPointsList) {
+                        c.descrCode = c.description + ' - '+ c.code;
+                        arr = [...arr, c];
+                    }
+                    this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').setValue(arr);
+                    console.log('this.importData.importAuthorizationEntity.nmCustomsPointsList', arr);
 
                     this.evaluateImportForm.get('startDate').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.seller').disable();
@@ -298,6 +306,13 @@ export class MedRegApproveComponent implements OnInit {
         this.loadCustomsPoints();
 
         console.log('importTypeForms.value', this.importTypeForms.value);
+    }
+
+    customsPointsPreviouslySelected() {
+        let points: any[] = [];
+        this.importData.importAuthorizationEntity.nmCustomsPointsList.forEach(item => points.push(item.description));
+        console.log("points", points)
+        return points;
     }
 
 
@@ -752,6 +767,8 @@ export class MedRegApproveComponent implements OnInit {
         this.subscriptions.push(
             this.administrationService.getCustomsPoints().subscribe(data => {
                     this.customsPointsList = data;
+                    this.customsPointsList.forEach(e=>e.descrCode = e.description + ' - '+ e.code);
+                    console.log(data);
 
                 },
                 error => console.log(error)

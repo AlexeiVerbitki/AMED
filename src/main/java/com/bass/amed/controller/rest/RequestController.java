@@ -1359,10 +1359,23 @@ public class RequestController
 
 
             AutorizationImportDataSet dataSet = new AutorizationImportDataSet();
-            dataSet.setCustom("Nord \nSud \nAeroport \nCentru \nChișinau");
-            dataSet.setCustomCode("1000 \n3000 \n2300 \n2000 \n2090");
+//            dataSet.setCustom("Nord \nSud \nAeroport \nCentru \nChișinau");
+            String customsPoints = "";
+
+            for (NmCustomsPointsEntity point: request.getImportAuthorizationEntity().getNmCustomsPointsList()) {
+                customsPoints = customsPoints + point.getDescription() +"\n";
+            }
+            dataSet.setCustom(customsPoints);
+//            dataSet.setCustomCode("1000 \n3000 \n2300 \n2000 \n2090");
+            String customsPointsCode = "";
+
+            for (NmCustomsPointsEntity point: request.getImportAuthorizationEntity().getNmCustomsPointsList()) {
+                customsPointsCode = customsPointsCode + point.getCode() +"\n";
+            }
+//            dataSet.setCustomCode("1000 \n3000 \n2300 \n2000 \n2090");
+            dataSet.setCustomCode(customsPointsCode);
             dataSet.setTransactionType("Cumparare/Vinzare ferma");
-            if (request.getImportAuthorizationEntity().getCurrency().getShortDescription()!=null) {
+            if (request.getImportAuthorizationEntity().getCurrency()!=null) {
                 dataSet.setCurrencyPpayment(request.getImportAuthorizationEntity().getCurrency().getShortDescription());
             dataSet.setCurrencyCode(request.getImportAuthorizationEntity().getCurrency().getCode().toString());
             }
