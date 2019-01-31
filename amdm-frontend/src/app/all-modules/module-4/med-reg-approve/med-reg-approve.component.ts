@@ -253,8 +253,8 @@ export class MedRegApproveComponent implements OnInit {
                     // this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').setValue(this.customsPointsPreviouslySelected());
                     var arr = [];
                     for (let c of this.importData.importAuthorizationEntity.nmCustomsPointsList) {
-                        c.descrCode = c.description + ' - '+ c.code;
-                        arr = [...arr, c];
+                        c.descrCode = c.description + ' - ' + c.code;
+                        arr         = [...arr, c];
                     }
                     this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').setValue(arr);
                     console.log('this.importData.importAuthorizationEntity.nmCustomsPointsList', arr);
@@ -771,7 +771,7 @@ export class MedRegApproveComponent implements OnInit {
         this.subscriptions.push(
             this.administrationService.getCustomsPoints().subscribe(data => {
                     this.customsPointsList = data;
-                    this.customsPointsList.forEach(e=>e.descrCode = e.description + ' - '+ e.code);
+                    this.customsPointsList.forEach(e => e.descrCode = e.description + ' - ' + e.code);
                     console.log(data);
 
                 },
@@ -794,7 +794,6 @@ export class MedRegApproveComponent implements OnInit {
                 this.loadingService.show();
                 const modelToSubmit                                                          = this.evaluateImportForm.getRawValue();
                 modelToSubmit.currentStep                                                    = 'C';
-                // modelToSubmit.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
                 modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
                 modelToSubmit.endDate                                                        = new Date();
                 modelToSubmit.documents                                                      = this.docs;
@@ -824,8 +823,12 @@ export class MedRegApproveComponent implements OnInit {
     }
 
 
-    nextStep(aprrovedOrNot: boolean) {
+    nextStep(aprrovedOrNot: boolean, submitForm: boolean) {
 
+        let currentStep = this.importData.currentStep;
+        if (submitForm) {
+            currentStep = 'F';
+        }
         this.formSubmitted = true;
         if (this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value !== null) {
 
@@ -836,8 +839,8 @@ export class MedRegApproveComponent implements OnInit {
             modelToSubmit                                               = this.importData;
             modelToSubmit.endDate                                       = new Date();
             modelToSubmit.importAuthorizationEntity.authorized          = aprrovedOrNot;
-            modelToSubmit.currentStep                                   = 'F';
             modelToSubmit.importAuthorizationEntity.nmCustomsPointsList = this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value;
+            modelToSubmit.currentStep                                   = currentStep;
 
 
             modelToSubmit.importAuthorizationEntity.authorizationsNumber = this.importData.importAuthorizationEntity.id + '/' + new Date().getFullYear() + '-AM';
@@ -845,7 +848,7 @@ export class MedRegApproveComponent implements OnInit {
                 startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
                 endDate: new Date(),
                 username: this.authService.getUserName(),
-                step: 'F'
+                step: currentStep
             });
 
 
@@ -882,10 +885,14 @@ export class MedRegApproveComponent implements OnInit {
             this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
                     console.log('addImportRequest(modelToSubmit).subscribe(data) ', data);
                     this.loadingService.hide();
+                if (submitForm) {
                     this.router.navigate(['dashboard/homepage']);
+                }
                 }, error => {
                     alert('Something went wrong while sending the model');
+                if (submitForm) {
                     this.router.navigate(['dashboard/homepage']);
+                }
                     console.log('error: ', error);
                     this.loadingService.hide();
                 }
