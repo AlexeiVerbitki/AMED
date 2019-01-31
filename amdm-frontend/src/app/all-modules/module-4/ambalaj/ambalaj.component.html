@@ -61,8 +61,8 @@
                                        [typeahead]="manufacturerInputsRfPr"
                                        required="true">
                                 <ng-template ng-option-tmp let-item="item">
-                                    {{item.description}}
-                                    <small class="form-text text-muted">{{item.address}}, {{item.country.description}}</small>
+                                    {{item?.description}}
+                                    <small class="form-text text-muted">{{item?.address}}, {{item?.country?.description}}</small>
                                 </ng-template>
                             </ng-select>
                         </div>
@@ -96,8 +96,8 @@
                                        [typeahead]="companyInputs"
                                        required="true">
                                 <ng-template ng-option-tmp let-item="item">
-                                    {{item.name}} <br/>
-                                    <small class="form-text text-muted">IDNO: {{item.idno}}</small>
+                                    {{item?.name}} <br/>
+                                    <small class="form-text text-muted">IDNO: {{item?.idno}}</small>
                                 </ng-template>
                             </ng-select>
                         </div>
@@ -259,8 +259,8 @@
                                                [typeahead]="customsCodesInputs"
                                                required="true">
                                         <ng-template ng-option-tmp let-item="item">
-                                            {{item.description}};
-                                            <small class="form-text text-muted">Cod: {{item.code}}</small>
+                                            {{item?.description}};
+                                            <small class="form-text text-muted">Cod: {{item?.code}}</small>
 
 
                                         </ng-template>
@@ -332,8 +332,8 @@
                                                [typeahead]="manufacturerInputsRfPr"
                                                required="true">
                                         <ng-template ng-option-tmp let-item="item">
-                                            Denumire: {{item.description}};
-                                            <small class="form-text text-muted">{{item.address}}, {{item.country.description}}</small>
+                                            Denumire: {{item?.description}};
+                                            <small class="form-text text-muted">{{item?.address}}, {{item?.country.description}}</small>
                                         </ng-template>
                                     </ng-select>
                                     <div *ngIf="unitOfImportPressed && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').invalid">
@@ -361,8 +361,8 @@
                                                [typeahead]="atcCodesInputs"
                                                required="true">
                                         <ng-template ng-option-tmp let-item="item">
-                                            {{item.code}} <br />
-                                            <small class="form-text text-muted">Denumire: {{item.description}}</small>
+                                            {{item?.code}} <br />
+                                            <small class="form-text text-muted">Denumire: {{item?.description}}</small>
                                         </ng-template>
                                     </ng-select>
 

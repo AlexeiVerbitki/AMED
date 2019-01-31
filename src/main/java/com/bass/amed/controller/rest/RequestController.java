@@ -1434,12 +1434,17 @@ public class RequestController
             parameters.put("importExportSectionChief", sysParamsRepository.findByCode(Constants.SysParams.IMPORT_SEF_SECTIE).get().getValue());
             parameters.put("validityTerms", (new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getExpirationDate())));
 
-            if (request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer()!=null) {
+            if (request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().size()== 1 && request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer()!=null) {
                 parameters.put("manufacturerAndAddress",
 //                        request.getImportAuthorizationEntity().getSeller().getDescription() + ", " + request.getImportAuthorizationEntity().getSeller().getAddress());
                         request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getDescription() + ", " + request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getAddress());
                 parameters.put("manufacturerCountry", request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getCountry().getDescription());
                 parameters.put("manufacturerCountryCode", request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getCountry().getCode());
+            } else
+                if  (request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().size() >1 && request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer()!=null){
+                parameters.put("manufacturerAndAddress", "Producători diferiți");
+                parameters.put("manufacturerCountry", "Țari diferite");
+                parameters.put("manufacturerCountryCode","");
             }
 
 
