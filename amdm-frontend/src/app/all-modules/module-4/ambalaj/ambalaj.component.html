@@ -195,40 +195,39 @@
                     </div>
 
                     <!--<div class="col-md-4">-->
-                        <!--<div class="md-form">-->
-                            <!--<input id="authorizationsNumber" mdbInputDirective type="text" class="form-control" formControlName="authorizationsNumber">-->
-                            <!--<label for="authorizationsNumber">Nr. autorizaţiei de import în RM-->
-                                <!--<span class="text-danger">*</span>-->
-                            <!--</label>-->
-                        <!--</div>-->
+                    <!--<div class="md-form">-->
+                    <!--<input id="authorizationsNumber" mdbInputDirective type="text" class="form-control" formControlName="authorizationsNumber">-->
+                    <!--<label for="authorizationsNumber">Nr. autorizaţiei de import în RM-->
+                    <!--<span class="text-danger">*</span>-->
+                    <!--</label>-->
+                    <!--</div>-->
                     <!--</div>-->
                     <!--<div class="col-md-4">-->
-                        <!--<div class="md-form">-->
-                            <!--<input id="customsNumber" mdbInputDirective type="text" class="form-control" formControlName="customsNumber">-->
-                            <!--<label for="customsNumber">Nr. declaraţiei vamale-->
-                                <!--<span class="text-danger">*</span>-->
-                            <!--</label>-->
-                        <!--</div>-->
+                    <!--<div class="md-form">-->
+                    <!--<input id="customsNumber" mdbInputDirective type="text" class="form-control" formControlName="customsNumber">-->
+                    <!--<label for="customsNumber">Nr. declaraţiei vamale-->
+                    <!--<span class="text-danger">*</span>-->
+                    <!--</label>-->
+                    <!--</div>-->
                     <!--</div>-->
 
                     <!--<div class="col-4" >-->
-                        <!--<div class="md-form-modified">-->
-                            <!--<mat-form-field class="w-100">-->
-                                <!--<input matInput [matDatepicker]="picker22" placeholder="Data declaraţiei  vamale"-->
-                                       <!--formControlName="customsDeclarationDate">-->
-                                <!--<mat-datepicker-toggle matSuffix [for]="picker22"></mat-datepicker-toggle>-->
-                                <!--<mat-datepicker touchUi #picker22></mat-datepicker>-->
-                            <!--</mat-form-field>-->
-                        <!--</div>-->
+                    <!--<div class="md-form-modified">-->
+                    <!--<mat-form-field class="w-100">-->
+                    <!--<input matInput [matDatepicker]="picker22" placeholder="Data declaraţiei  vamale"-->
+                    <!--formControlName="customsDeclarationDate">-->
+                    <!--<mat-datepicker-toggle matSuffix [for]="picker22"></mat-datepicker-toggle>-->
+                    <!--<mat-datepicker touchUi #picker22></mat-datepicker>-->
+                    <!--</mat-form-field>-->
+                    <!--</div>-->
                     <!--</div>-->
 
 
-
                     <!--<div class="text-center w-100 mt-3">-->
-                        <!--<div class="alert alert-primary">-->
-                            <!--<span>Nr. de inregistrare a cererii: </span>-->
-                            <!--<strong>{{generatedDocNrSeq}}</strong>-->
-                        <!--</div>-->
+                    <!--<div class="alert alert-primary">-->
+                    <!--<span>Nr. de inregistrare a cererii: </span>-->
+                    <!--<strong>{{generatedDocNrSeq}}</strong>-->
+                    <!--</div>-->
                     <!--</div>-->
                 </div>
 
@@ -246,9 +245,9 @@
                         <div class="row">
                             <div class="col-4">
                                 <!--<div class="md-form">-->
-                                    <!--<input id="customsCode" mdbInputDirective type="text" class="form-control"-->
-                                           <!--formControtlName="customsCode">-->
-                                    <!--<label for="customsCode">Codul vamal</label>-->
+                                <!--<input id="customsCode" mdbInputDirective type="text" class="form-control"-->
+                                <!--formControtlName="customsCode">-->
+                                <!--<label for="customsCode">Codul vamal</label>-->
                                 <!--</div>-->
                                 <div class="md-form-modified">
                                     <ng-select [items]="customsCodes | async"
@@ -282,7 +281,7 @@
                             </div>
                             <div class="col-4">
                                 <div class="md-form">
-                                    <input id="quantity" mdbInputDirective type="number" min="0"   class="form-control"
+                                    <input id="quantity" mdbInputDirective type="number" min="0" class="form-control"
                                            formControlName="quantity">
                                     <label for="quantity">Cantitatea</label>
                                 </div>
@@ -292,7 +291,7 @@
                             </div>
                             <div class="col-4">
                                 <div class="md-form">
-                                    <input id="price" mdbInputDirective type="number" min="0"   class="form-control"
+                                    <input id="price" mdbInputDirective type="number" min="0" class="form-control"
                                            formControlName="price">
                                     <label for="price">Pretul</label>
                                 </div>
@@ -361,7 +360,7 @@
                                                [typeahead]="atcCodesInputs"
                                                required="true">
                                         <ng-template ng-option-tmp let-item="item">
-                                            {{item?.code}} <br />
+                                            {{item?.code}} <br/>
                                             <small class="form-text text-muted">Denumire: {{item?.description}}</small>
                                         </ng-template>
                                     </ng-select>
@@ -372,7 +371,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-4" >
+                            <div class="col-4">
                                 <div class="md-form-modified">
                                     <mat-form-field class="w-100">
                                         <input matInput [matDatepicker]="picker23" placeholder="Termen de valabilitate"
@@ -385,9 +384,6 @@
                                     <small class="text-muted"><strong class="text-danger">Termenul de valabilitate trebuie selectat</strong></small>
                                 </div>
                             </div>
-
-
-
 
 
                         </div>
@@ -425,7 +421,7 @@
                             <td>{{ unitOfImport.quantity }}</td>
                             <td>{{ unitOfImport.price }}</td>
                             <td>{{ unitOfImport.currency.shortDescription}}</td>
-                            <td>{{ unitOfImport.summ |  number : '1.2-2'}}</td>
+                            <td>{{ unitOfImport.summ | number : '1.2-2'}}</td>
                             <td>{{ unitOfImport.producer.description }}</td>
                             <td>{{ unitOfImport.producer.address }}, {{ unitOfImport.producer.country.description }}</td>
                             <td>{{ unitOfImport.expirationDate | date:'mediumDate' }}</td>
@@ -445,12 +441,12 @@
                 </section>
                 <div class="text-center">
                     <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(true)"  type="button">Pasul următor</button>
-                    <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(false)" type="button">Savlare date</button>
-                    <button class="btn btn-danger waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="interruptProcess()">
+                    <button class="btn btn-primary waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(false)" type="button">Savlare date</button>
+                    <button class="btn btn-danger waves-light btn-sm btn-sm-bl "           mdbWavesEffect (click)="interruptProcess()">
                         Intrerupere
                     </button>
                 </div>
-             </div>
+            </div>
         </form>
     </div>
 </div>
