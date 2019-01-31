@@ -1375,7 +1375,7 @@ public class RequestController
 
             if (request.getImportAuthorizationEntity().getSeller()!=null) {
                 parameters.put("sellerAndAddress",
-                        request.getImportAuthorizationEntity().getSeller().getDescription() + ", " + request.getImportAuthorizationEntity().getSeller().getAddress());
+                        request.getImportAuthorizationEntity().getSeller().getDescription() + "\n" + request.getImportAuthorizationEntity().getSeller().getAddress());
                 parameters.put("sellerCountry", request.getImportAuthorizationEntity().getSeller().getCountry().getDescription());
                 parameters.put("sellerCountryCode", request.getImportAuthorizationEntity().getSeller().getCountry().getCode());
             }
@@ -1387,7 +1387,7 @@ public class RequestController
 
             if (request.getImportAuthorizationEntity().getImporter()!=null) {
                 parameters.put("companyNameAndAddress",
-                        request.getImportAuthorizationEntity().getImporter().getLongName() + ", " + request.getImportAuthorizationEntity()
+                        request.getImportAuthorizationEntity().getImporter().getLongName() + "\n" + request.getImportAuthorizationEntity()
                                 .getImporter()
                                 .getLegalAddress());
             }
@@ -1418,7 +1418,7 @@ public class RequestController
             }else if (numberOfApprovedPositions == 1 && request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer()!=null) {
                     parameters.put("manufacturerAndAddress",
 //                        request.getImportAuthorizationEntity().getSeller().getDescription() + ", " + request.getImportAuthorizationEntity().getSeller().getAddress());
-                                   request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getDescription() + ", " + request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getAddress());
+                                   request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getDescription() + "\n" + request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getAddress());
                     parameters.put("manufacturerCountry", request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getCountry().getDescription());
                     parameters.put("manufacturerCountryCode", request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getCountry().getCode());
                 }
