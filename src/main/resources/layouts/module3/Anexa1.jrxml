@@ -258,7 +258,7 @@ medicamentelor cu preţul de producător aprobat pentru înregistrare
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="8"/>
 								</textElement>
-								<textFieldExpression><![CDATA[String.format("%.2f",$F{producerPrice}).replaceAll(".",",")]]></textFieldExpression>
+								<textFieldExpression><![CDATA[String.format("%.2f",$F{producerPrice})]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -279,7 +279,7 @@ medicamentelor cu preţul de producător aprobat pentru înregistrare
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="8"/>
 								</textElement>
-								<textFieldExpression><![CDATA[String.format("%.2f",$F{priceInCurrency}).replaceAll(".",",")+" "+$F{currency}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[String.format("%.2f",$F{priceInCurrency})]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

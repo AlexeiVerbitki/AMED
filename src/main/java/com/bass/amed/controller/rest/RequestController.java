@@ -1271,37 +1271,6 @@ public class RequestController
             Resource res = resourceLoader.getResource("layouts/ImportAutorizareDeImport.jrxml");
             JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
 
-    /*        List<AnexaLaLicenta> filiale = new ArrayList<>();
-            final AtomicInteger  i       = new AtomicInteger(1);
-
-            request.getLicense().getEconomicAgents().forEach(
-                    m -> {
-                        AnexaLaLicenta p = new AnexaLaLicenta();
-                        p.setNr(i.getAndIncrement());
-
-                        StringBuilder sb = new StringBuilder();
-                        sb.append(m.getLocality().getStateName()).append(", ");
-                        sb.append(m.getLocality().getDescription()).append(", ");
-                        sb.append(m.getStreet());
-                        p.setAddress(sb.toString());
-
-                        p.setPharmacist((m.getType().getRepresentant() + ": " + m.getSelectedPharmaceutist().getFullName()));
-                        p.setPharmType(m.getType().getDescription());
-
-                        p.setPsychotropicSubstances(false);
-                        for (LicenseActivityTypeEntity type : m.getActivities())
-                        {
-                            if (type.getCanUsePsihotropicDrugs().equals(1))
-                            {
-                                p.setPsychotropicSubstances(true);
-                                break;
-                            }
-                        }
-                        filiale.add(p);
-
-                    }
-                                                            );
-
 
 
             /* Map to hold Jasper report Parameters */
@@ -1357,31 +1326,38 @@ public class RequestController
 
             }
 
+            long numberOfApprovedPositions = request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().stream().filter(x -> x.getApproved()==true).count();
 
-            AutorizationImportDataSet dataSet = new AutorizationImportDataSet();
+
 //            dataSet.setCustom("Nord \nSud \nAeroport \nCentru \nChișinau");
             String customsPoints = "";
 
             for (NmCustomsPointsEntity point: request.getImportAuthorizationEntity().getNmCustomsPointsList()) {
-                customsPoints = customsPoints + point.getDescription() +"\n";
+//                customsPoints = customsPoints + point.getDescription() +"\n";
+                AutorizationImportDataSet dataSet = new AutorizationImportDataSet();
+                dataSet.setCustom(point.getDescription());
+                dataSet.setCustomCode(point.getCode());
+                autorizationImportDataSetArrayList.add(dataSet);
             }
-            dataSet.setCustom(customsPoints);
+//            dataSet.setCustom(customsPoints);
 //            dataSet.setCustomCode("1000 \n3000 \n2300 \n2000 \n2090");
-            String customsPointsCode = "";
+//            String customsPointsCode = "";
 
-            for (NmCustomsPointsEntity point: request.getImportAuthorizationEntity().getNmCustomsPointsList()) {
-                customsPointsCode = customsPointsCode + point.getCode() +"\n";
-            }
-//            dataSet.setCustomCode("1000 \n3000 \n2300 \n2000 \n2090");
-            dataSet.setCustomCode(customsPointsCode);
-            dataSet.setTransactionType("Cumparare/Vinzare ferma");
+
+//            for (NmCustomsPointsEntity point: request.getImportAuthorizationEntity().getNmCustomsPointsList()) {
+//                customsPointsCode = customsPointsCode + point.getCode() +"\n";
+//            }
+//            dataSet.setCustomCode(customsPointsCode);
+            parameters.put("transactionType" , "Cumparare/Vinzare ferma");
+
             if (request.getImportAuthorizationEntity().getCurrency()!=null) {
-                dataSet.setCurrencyPpayment(request.getImportAuthorizationEntity().getCurrency().getShortDescription());
-            dataSet.setCurrencyCode(request.getImportAuthorizationEntity().getCurrency().getCode().toString());
+//                dataSet.setCurrencyPpayment(request.getImportAuthorizationEntity().getCurrency().getShortDescription());
+//                dataSet.setCurrencyCode(request.getImportAuthorizationEntity().getCurrency().getCode().toString());
+                parameters.put("currencyPayment", request.getImportAuthorizationEntity().getCurrency().getShortDescription());
+                parameters.put("currencyCode", request.getImportAuthorizationEntity().getCurrency().getCode());
             }
 
 
-            autorizationImportDataSetArrayList.add(dataSet);
 
             JRBeanCollectionDataSource autorizationImportDataSet = new JRBeanCollectionDataSource(autorizationImportDataSetArrayList);
             JRBeanCollectionDataSource autorizationImportDataSet2 = new JRBeanCollectionDataSource(autorizationImportDataSet2ArrayList);
@@ -1434,18 +1410,18 @@ public class RequestController
             parameters.put("importExportSectionChief", sysParamsRepository.findByCode(Constants.SysParams.IMPORT_SEF_SECTIE).get().getValue());
             parameters.put("validityTerms", (new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getExpirationDate())));
 
-            if (request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().size()== 1 && request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer()!=null) {
-                parameters.put("manufacturerAndAddress",
-//                        request.getImportAuthorizationEntity().getSeller().getDescription() + ", " + request.getImportAuthorizationEntity().getSeller().getAddress());
-                        request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getDescription() + ", " + request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getAddress());
-                parameters.put("manufacturerCountry", request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getCountry().getDescription());
-                parameters.put("manufacturerCountryCode", request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getCountry().getCode());
-            } else
-                if  (request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().size() >1 && request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer()!=null){
+
+                if  (numberOfApprovedPositions > 1 && request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer()!=null){
                 parameters.put("manufacturerAndAddress", "Producători diferiți");
                 parameters.put("manufacturerCountry", "Țari diferite");
                 parameters.put("manufacturerCountryCode","");
-            }
+            }else if (numberOfApprovedPositions == 1 && request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer()!=null) {
+                    parameters.put("manufacturerAndAddress",
+//                        request.getImportAuthorizationEntity().getSeller().getDescription() + ", " + request.getImportAuthorizationEntity().getSeller().getAddress());
+                                   request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getDescription() + ", " + request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getAddress());
+                    parameters.put("manufacturerCountry", request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getCountry().getDescription());
+                    parameters.put("manufacturerCountryCode", request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getCountry().getCode());
+                }
 
 
             parameters.put("autorizationImportDataSet", autorizationImportDataSet);

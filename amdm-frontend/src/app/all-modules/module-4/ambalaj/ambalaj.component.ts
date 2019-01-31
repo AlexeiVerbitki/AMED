@@ -241,6 +241,7 @@ export class AmbalajComponent implements OnInit {
             }));
             this.subscriptions.push(  this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').valueChanges.subscribe(val => {
                 if (val) {
+
                     this.unitSumm = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value
                         * this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value;
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(this.unitSumm.toFixed(2));
@@ -276,6 +277,7 @@ export class AmbalajComponent implements OnInit {
             this.authorizationSumm = this.authorizationSumm + this.unitSumm;
             this.authorizationCurrency = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').value;
 
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').reset();
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(null);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(null);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(null);
