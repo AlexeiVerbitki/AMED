@@ -1255,8 +1255,6 @@ public class RequestController
             throw new CustomException("Inregistrarea de Import nu a fost gasita");
         }
         RegistrationRequestsEntity rrE = regOptional.get();
-        //        rrE.setClinicalTrails((ClinicalTrialsEntity) Hibernate.unproxy(regOptional.get().getClinicalTrails()));
-        //        rrE.setCompany((NmEconomicAgentsEntity) Hibernate.unproxy(regOptional.get().getCompany()));
 
         return new ResponseEntity<>(rrE, HttpStatus.OK);
     }
@@ -1304,7 +1302,6 @@ public class RequestController
                         dataSet2.setField18("");
                         dataSet2.setProductCode(entity.getCustomsCode().getCode());
                         dataSet2.setProductName(entity.getCustomsCode().getDescription());
-                        //					dataSet2.setTotal();
                         dataSet2.setQuantity("");
                         dataSet2.setUnitMeasure("");
 
@@ -1339,20 +1336,9 @@ public class RequestController
                 dataSet.setCustomCode(point.getCode());
                 autorizationImportDataSetArrayList.add(dataSet);
             }
-//            dataSet.setCustom(customsPoints);
-//            dataSet.setCustomCode("1000 \n3000 \n2300 \n2000 \n2090");
-//            String customsPointsCode = "";
-
-
-//            for (NmCustomsPointsEntity point: request.getImportAuthorizationEntity().getNmCustomsPointsList()) {
-//                customsPointsCode = customsPointsCode + point.getCode() +"\n";
-//            }
-//            dataSet.setCustomCode(customsPointsCode);
             parameters.put("transactionType" , "Cumparare/Vinzare ferma");
 
             if (request.getImportAuthorizationEntity().getCurrency()!=null) {
-//                dataSet.setCurrencyPpayment(request.getImportAuthorizationEntity().getCurrency().getShortDescription());
-//                dataSet.setCurrencyCode(request.getImportAuthorizationEntity().getCurrency().getCode().toString());
                 parameters.put("currencyPayment", request.getImportAuthorizationEntity().getCurrency().getShortDescription());
                 parameters.put("currencyCode", request.getImportAuthorizationEntity().getCurrency().getCode());
             }
@@ -1362,13 +1348,9 @@ public class RequestController
             JRBeanCollectionDataSource autorizationImportDataSet = new JRBeanCollectionDataSource(autorizationImportDataSetArrayList);
             JRBeanCollectionDataSource autorizationImportDataSet2 = new JRBeanCollectionDataSource(autorizationImportDataSet2ArrayList);
 
-            //            JRBeanCollectionDataSource autorizationImportDataSet  = new JRBeanCollectionDataSource(autorizationImportDataSetArrayList);
-            //            JRBeanCollectionDataSource autorizationImportDataSet2 = new JRBeanCollectionDataSource(autorizationImportDataSet2ArrayList);
-
             if (request.getImportAuthorizationEntity().getAuthorizationsNumber()!=null) {
                 parameters.put("autorizationNr", request.getImportAuthorizationEntity().getAuthorizationsNumber());
             }
-            //            parameters.put("productName"							, request.getImportAuthorizationEntity().getAuthorizationsNumber());
             parameters.put("autorizationDate", (new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
             parameters.put("importExportSectionDate", (new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
             parameters.put("generalDirectorDate", (new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
@@ -1391,7 +1373,6 @@ public class RequestController
                                 .getImporter()
                                 .getLegalAddress());
             }
-            //            parameters.put("codOcpo"								, request.getImportAuthorizationEntity().getAuthorizationsNumber());
             if (request.getImportAuthorizationEntity().getApplicant() != null) {
                 parameters.put("registartionDate", request.getImportAuthorizationEntity().getApplicant().getRegistrationDate().toString());
                 parameters.put("registrationNr", request.getImportAuthorizationEntity().getApplicant().getIdno());
@@ -1417,7 +1398,6 @@ public class RequestController
                 parameters.put("manufacturerCountryCode","");
             }else if (numberOfApprovedPositions == 1 && request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer()!=null) {
                     parameters.put("manufacturerAndAddress",
-//                        request.getImportAuthorizationEntity().getSeller().getDescription() + ", " + request.getImportAuthorizationEntity().getSeller().getAddress());
                                    request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getDescription() + "\n" + request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getAddress());
                     parameters.put("manufacturerCountry", request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getCountry().getDescription());
                     parameters.put("manufacturerCountryCode", request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getCountry().getCode());
@@ -1441,22 +1421,10 @@ public class RequestController
                 bytes);
     }
 
-//    @GetMapping(value = "/load-import-authorization-details")
-//    public ResponseEntity<List<ImportAuthorizationDetailsEntity>> getAuthorizationDetailsByNameOrCode(@RequestParam(value = "id") Integer id, Integer authId) throws
     @GetMapping(value = "/load-import-authorization-details")
-    public ResponseEntity<List<ImportAuthorizationDetailsEntity>> getAuthorizationDetailsByNameOrCode(@RequestParam Map<String, String> requestParams) throws
-//    public ResponseEntity<List<ImportAuthorizationDetailsEntity>> getAuthorizationDetailsByNameOrCode(@RequestParam Integer[] requestParams) throws
-            CustomException
+    public ResponseEntity<List<ImportAuthorizationDetailsEntity>> getAuthorizationDetailsByNameOrCode(@RequestParam Map<String, String> requestParams) throws CustomException
     {
-//        List<ImportAuthorizationDetailsEntity> regOptional = importAuthorizationRepository.getAuthorizationDetailsByNameOrCode(id, true, 33112);
         List<ImportAuthorizationDetailsEntity> regOptional = importAuthorizationRepository.getAuthorizationDetailsByNameOrCode(requestParams.get("id"), true, requestParams.get("authId"));
-//        int id = Integer.parseInt(requestParams.get("id"));
-//        int authId = Integer.parseInt(requestParams.get("authId"));
-//        List<ImportAuthorizationDetailsEntity> regOptional = importAuthorizationRepository.getAuthorizationDetailsByNameOrCode(id, true, authId);
-//        if (regOptional.isEmpty())
-//        {
-//            throw new CustomException("Inregistrarea de Import Details nu a fost gasita");
-//        }
         return new ResponseEntity<>(regOptional, HttpStatus.OK);
     }
 
@@ -1464,9 +1432,6 @@ public class RequestController
 	public ResponseEntity<RegistrationRequestsEntity> getAuthorizationByAuth(@RequestParam(value = "id") String id) throws
 	                                                                                                                                          CustomException {
 		List<ImportAuthorizationEntity> regOptional = importAuthRepository.getAuthorizationByAuth(id).orElse(new ArrayList<>());
-//        if (regOptional.isEmpty()) {
-//            throw new CustomException("Inregistrarea de Import Details nu a fost gasita");
-//        }
 		List<ImportAuthorizationEntity> rrI = regOptional;
 		RegistrationRequestsEntity rrE = requestRepository.findRequestsByImportId(
                 rrI.get(0).getId());
@@ -1475,7 +1440,6 @@ public class RequestController
 		return new ResponseEntity<>(rrE, HttpStatus.OK);
 	}
 
-////=======
     @GetMapping(value = "/load-active-licenses")
     public ResponseEntity<LicensesEntity> getActiveLicensesByIdno(@RequestParam(value = "id") String idno) throws CustomException
     {
