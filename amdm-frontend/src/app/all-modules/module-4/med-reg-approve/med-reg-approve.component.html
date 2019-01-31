@@ -333,7 +333,6 @@
                             <td>{{ unitOfImport.price}}</td>
                             <td>{{ unitOfImport.currency.shortDescription}}</td>
                             <td>{{ unitOfImport.summ | number : '1.2-2'}}</td>
-                            <!--<td>{{ unitOfImport.producer.address }}, {{ unitOfImport.producer.country.description }}</td>-->
                             <td>{{ unitOfImport.expirationDate | date:'mediumDate' }}</td>
                             <td>{{ unitOfImport.customsCode.code }}</td>
                             <td>
@@ -353,11 +352,11 @@
                     <hr>
                 </section>
                 <div class="text-center">
+                    <button class="btn btn-primary waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(true, false)" type="button">Savlare date</button>
                     <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(true, true)" type="button">Aprob autorizația</button>
                     <!--<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="showCustomsPoints()" type="button">showCustomsPoints()</button>-->
                     <button class="btn btn-danger waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(false)" type="button">Resping autorizația</button>
                     <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc()">Vizualire Autorizației</button>
-                    <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(true, false)" type="button">Savlare date</button>
                     <!--<button class="btn btn-dark-red-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>-->
                 </div>
             </div>
