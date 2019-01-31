@@ -341,6 +341,10 @@ export class MedRegApproveComponent implements OnInit {
             authorizationModel.importAuthorizationEntity.expirationDate = new Date(this.expirationDate.reduce(function (a, b) {
                 return a < b ? a : b;
             }));
+
+            if (this.importData.importAuthorizationEntity.medType === 2 && authorizationModel.importAuthorizationEntity.expirationDate > (new Date(this.currentDate.getDate() + 365))) {
+                authorizationModel.importAuthorizationEntity.expirationDate = new Date(this.currentDate.setFullYear(this.currentDate.getFullYear() + 1));
+            }
         }
 
         authorizationModel.importAuthorizationEntity.authorizationsNumber = this.importData.importAuthorizationEntity.id + '/' + new Date().getFullYear() + '-AM';
