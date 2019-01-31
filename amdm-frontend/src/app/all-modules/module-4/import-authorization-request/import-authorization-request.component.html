@@ -40,8 +40,8 @@
                                [typeahead]="companyInputs"
                                required="true">
                         <ng-template ng-option-tmp let-item="item">
-                            {{item.name}} <br/>
-                            <small class="form-text text-muted">IDNO: {{item.idno}}</small>
+                            {{item?.name}} <br/>
+                            <small class="form-text text-muted">IDNO: {{item?.idno}}</small>
                         </ng-template>
                     </ng-select>
                 </div>

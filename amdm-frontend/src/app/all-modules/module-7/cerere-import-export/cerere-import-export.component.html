@@ -89,8 +89,8 @@
                                formControlName="substance" [required]="false" [typeahead]="medInputs"
                                [loading]="medLoading">
                         <ng-template ng-option-tmp let-item="item">
-                            {{item.substanceName}} <br/>
-                            <small>{{item.substanceCode}}</small>
+                            {{item?.substanceName}} <br/>
+                            <small>{{item?.substanceCode}}</small>
                         </ng-template>
                     </ng-select>
                     <div *ngIf="substanceNotSelected">

@@ -219,7 +219,7 @@
                                        disabled
                                        required="true">
                                 <ng-template ng-option-tmp let-item="item">
-                                    {{item.description}}
+                                    {{item?.description}}
                                     <small class="form-text text-muted">{{item.address}}, {{item.country.description}}</small>
                                 </ng-template>
                             </ng-select>
@@ -344,7 +344,7 @@
                     </div>
 
 
-                    <div class="col-md-4" *ngIf="importData.importAuthorizationEntity.customsNumber">
+                    <div class="col-md-4" *ngIf="importData?.importAuthorizationEntity.customsNumber">
                         <div class="md-form">
                             <input id="customsNumber" mdbInputDirective type="text" class="form-control" formControlName="customsNumber" disabled>
                             <label for="customsNumber">Nr. declaraţiei vamale
@@ -353,7 +353,7 @@
                         </div>
                     </div>
 
-                    <div class="col-4" *ngIf="importData.importAuthorizationEntity.customsDeclarationDate">
+                    <div class="col-4" *ngIf="importData?.importAuthorizationEntity.customsDeclarationDate">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
                                 <input matInput [matDatepicker]="picker22" placeholder="Data declaraţiei  vamale"
@@ -392,7 +392,7 @@
                             <!--<th scope="col">Doza</th>-->
                             <!--<th scope="col">Divizare</th>-->
                             <!--<th scope="col">Producatorul</th>-->
-                            <th scope="col" *ngIf="importData.medType == 1 || importData.medType == 2">Cod AMED</th>
+                            <th scope="col" *ngIf="importData?.medType == 1 || importData?.medType == 2">Cod AMED</th>
                             <th scope="col">Denumire</th>
                             <!--<th scope="col">Data</th>-->
                             <th scope="col">Cantitatea solicitată</th>
@@ -410,9 +410,9 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <!--<tr *ngFor="let unitOfImport of importData.importAuthorizationEntity.importAuthorizationDetailsEntityList;let i = index">-->
+                        <!--<tr *ngFor="let unitOfImport of importData?.importAuthorizationEntity.importAuthorizationDetailsEntityList;let i = index">-->
                         <!--<th scope="row">{{ unitOfImport.name }}</th>-->
-                        <!--<td *ngIf="importData.importAuthorizationEntity.medType!==4">{{ unitOfImport.atcCode.code}}</td>-->
+                        <!--<td *ngIf="importData?.importAuthorizationEntity.medType!==4">{{ unitOfImport.atcCode.code}}</td>-->
                         <!--<td>{{ unitOfImport.dose }}</td>-->
                         <!--<td>{{ unitOfImport.unitsOfMeasurement }}</td>-->
                         <!--<td>{{ unitOfImport.producer.description }}</td>-->
@@ -425,7 +425,7 @@
                         <!--<td>{{ unitOfImport.expirationDate | date:'mediumDate' }}</td>-->
                         <!--<td>{{ unitOfImport.customsCode.code }}</td>-->
                         <!--<td>-->
-                        <!--<mat-checkbox [disabled]="true" [checked]="importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved" (change)="setApproved(i)"></mat-checkbox>-->
+                        <!--<mat-checkbox [disabled]="true" [checked]="importData?.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved" (change)="setApproved(i)"></mat-checkbox>-->
                         <!--</td>-->
                         <!--<td>-->
                         <!--<button class="btn btn-primary waves-light btn-sm waves-light" (click)="showunitOfImport(unitOfImport, i)" mdbWavesEffect>Adaugă</button>-->
@@ -433,7 +433,7 @@
                         <!--</tr>-->
 
                         <tr *ngFor="let invoiceDetail of invoiceDetails;let i = index">
-                            <td *ngIf="importData.medType == 1 || importData.medType == 2">{{ invoiceDetail.codeAmed }}</td>
+                            <td *ngIf="importData?.medType == 1 || importData?.medType == 2">{{ invoiceDetail.codeAmed }}</td>
                             <td>{{ invoiceDetail.name }}</td>
                             <!--<td>{{ invoiceDetail.data | date:'mediumDate' }}</td>-->
                             <td>{{ invoiceDetail.quantity }}</td>

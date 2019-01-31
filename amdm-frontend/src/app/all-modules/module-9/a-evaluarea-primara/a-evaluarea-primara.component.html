@@ -176,7 +176,7 @@
                                    formControlName="medicalInstitution"
                                    required="true">
                             <ng-template ng-option-tmp ng-label-tmp let-item="item">
-                                {{item.name}}
+                                {{item?.name}}
                             </ng-template>
                         </ng-select>
                     </div>
@@ -295,7 +295,7 @@
                                        [typeahead]="manufacturerInputs"
                                        required="true">
                                 <ng-template ng-option-tmp let-item="item">
-                                    {{item.description}}
+                                    {{item?.description}}
                                 </ng-template>
                             </ng-select>
                         </div>
@@ -375,7 +375,7 @@
                                        [typeahead]="farmFormsInputs"
                                        required="true">
                                 <ng-template ng-option-tmp let-item="item">
-                                    {{item.description}}
+                                    {{item?.description}}
                                 </ng-template>
                             </ng-select>
                         </div>
@@ -390,8 +390,8 @@
                                        [typeahead]="atcCodesInputs"
                                        required="true">
                                 <ng-template ng-option-tmp let-item="item">
-                                    {{item.code}} <br/>
-                                    <small class="form-text text-muted">{{item.description}}</small>
+                                    {{item?.code}} <br/>
+                                    <small class="form-text text-muted">{{item?.description}}</small>
                                 </ng-template>
                             </ng-select>
                         </div>
@@ -428,7 +428,7 @@
                                        [typeahead]="manufacturerInputsRfPr"
                                        required="true">
                                 <ng-template ng-option-tmp let-item="item">
-                                    {{item.description}}
+                                    {{item?.description}}
                                 </ng-template>
                             </ng-select>
                         </div>
@@ -508,7 +508,7 @@
                                        [typeahead]="farmFormsInputsRfPr"
                                        required="true">
                                 <ng-template ng-option-tmp let-item="item">
-                                    {{item.description}}
+                                    {{item?.description}}
                                 </ng-template>
                             </ng-select>
                         </div>
@@ -523,8 +523,8 @@
                                        [typeahead]="atcCodesInputsRfPr"
                                        required="true">
                                 <ng-template ng-option-tmp let-item="item">
-                                    {{item.code}} <br/>
-                                    <small class="form-text text-muted">{{item.description}}</small>
+                                    {{item?.code}} <br/>
+                                    <small class="form-text text-muted">{{item?.description}}</small>
                                 </ng-template>
                             </ng-select>
                         </div>

@@ -127,7 +127,7 @@ export class MedRegApproveComponent implements OnInit {
         this.evaluateImportForm = this.fb.group({
             'id': [''],
             'requestNumber': [null],
-            'startDate': [new Date()],
+            'startDate': [{value: new Date(), disabled: true}],
             'currentStep': ['AP'],
             'company': ['', Validators.required],
             'initiator': [null],

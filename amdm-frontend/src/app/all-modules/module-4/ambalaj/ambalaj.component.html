@@ -37,12 +37,12 @@
 
             </div>
 
-            <app-document *ngIf="importData.importAuthorizationEntity.medType==3" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMMP', step : 'E'}"></app-document>
+            <app-document *ngIf="importData?.importAuthorizationEntity.medType==3" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMMP', step : 'E'}"></app-document>
             <div *ngIf="formSubmitted && docs && docs.length==0">
                 <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
             </div>
 
-            <app-document *ngIf="importData.importAuthorizationEntity.medType==4" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMAM', step : 'E'}"></app-document>
+            <app-document *ngIf="importData?.importAuthorizationEntity.medType==4" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMAM', step : 'E'}"></app-document>
             <div *ngIf="formSubmitted && docs && docs.length==0">
                 <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
             </div>
@@ -238,8 +238,8 @@
                 <section>
 
 
-                    <h5 class="text-center font-weight-bold" *ngIf="importData.importAuthorizationEntity.medType==3">Informația despre materia primă</h5>
-                    <h5 class="text-center font-weight-bold" *ngIf="importData.importAuthorizationEntity.medType==4">Informația despre ambalaj</h5>
+                    <h5 class="text-center font-weight-bold" *ngIf="importData?.importAuthorizationEntity.medType==3">Informația despre materia primă</h5>
+                    <h5 class="text-center font-weight-bold" *ngIf="importData?.importAuthorizationEntity.medType==4">Informația despre ambalaj</h5>
                     <hr>
                     <div formArrayName="unitOfImportTable">
                         <!--<div *ngFor="let importTypeForm of importTypeForms.controls; let i=index" [formGroupName]="i">-->
@@ -351,7 +351,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4" *ngIf="importData.importAuthorizationEntity.medType==3">
+                            <div class="col-md-4" *ngIf="importData?.importAuthorizationEntity.medType==3">
                                 <div class="md-form-modified">
                                     <ng-select [items]="atcCodes | async"
                                                bindLabel="code"
@@ -404,7 +404,7 @@
                         <tr>
                             <th scope="col">Codul Vamal</th>
                             <th scope="col">Denumirea materiei prime (DCI)</th>
-                            <th scope="col" *ngIf="importData.importAuthorizationEntity.medType==3">Codul ATC</th>
+                            <th scope="col" *ngIf="importData?.importAuthorizationEntity.medType==3">Codul ATC</th>
                             <th scope="col">Cantitate</th>
                             <th scope="col">Pretul</th>
                             <th scope="col">Valuta</th>
@@ -421,7 +421,7 @@
                         <tr *ngFor="let unitOfImport of unitOfImportTable;let i = index">
                             <th scope="row">{{ unitOfImport.customsCode.code }}</th>
                             <td>{{ unitOfImport.name }}</td>
-                            <td *ngIf="importData.importAuthorizationEntity.medType==3">{{ unitOfImport.atcCode.code}}</td>
+                            <td *ngIf="importData?.importAuthorizationEntity.medType==3">{{ unitOfImport.atcCode.code}}</td>
                             <td>{{ unitOfImport.quantity }}</td>
                             <td>{{ unitOfImport.price }}</td>
                             <td>{{ unitOfImport.currency.shortDescription}}</td>

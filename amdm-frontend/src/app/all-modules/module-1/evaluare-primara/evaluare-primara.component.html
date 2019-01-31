@@ -62,8 +62,8 @@
 						           [typeahead]="medInputs"
 						           [loading]="medLoading" >
 							<ng-template ng-option-tmp let-item="item">
-								{{item.regnr}} <br />
-								<small>{{item.commercialName}}</small>
+								{{item?.regnr}} <br />
+								<small>{{item?.commercialName}}</small>
 							</ng-template>
 						</ng-select>
 					</div>
@@ -260,8 +260,8 @@
 					           [typeahead]="atcCodesInputs"
 					           required="true">
 						<ng-template ng-option-tmp let-item="item">
-							{{item.code}} <br/>
-							<small class="form-text text-muted">{{item.description}}</small>
+							{{item?.code}} <br/>
+							<small class="form-text text-muted">{{item?.description}}</small>
 						</ng-template>
 					</ng-select>
 					<div *ngIf="formSubmitted && eForm.get('medicament.atcCode').invalid">

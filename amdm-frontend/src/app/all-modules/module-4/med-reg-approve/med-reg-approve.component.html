@@ -2,7 +2,6 @@
     <div class="container-fluid sky z-depth-2">
         <h3 class="text-center my-3 font-weight-bold">Aprobare autorizației</h3>
 
-        {{importData?.importAuthorizationEntity.nmCustomsPointsList | json}}
 
         <form [formGroup]="evaluateImportForm">
             <div class="row">
@@ -120,8 +119,8 @@
                                        [typeahead]="manufacturerInputsRfPr"
                                        required="true">
                                 <ng-template ng-option-tmp let-item="item">
-                                    {{item.description}}
-                                    <small class="form-text text-muted">{{item.address}}, {{item.country.description}}</small>
+                                    {{item?.description}}
+                                    <small class="form-text text-muted">{{item?.address}}, {{item?.country.description}}</small>
                                 </ng-template>
                             </ng-select>
 
@@ -156,8 +155,8 @@
                                        [typeahead]="companyInputs"
                                        required="true">
                                 <ng-template ng-option-tmp let-item="item">
-                                    {{item.name}} <br/>
-                                    <small class="form-text text-muted">IDNO: {{item.idno}}</small>
+                                    {{item?.name}} <br/>
+                                    <small class="form-text text-muted">IDNO: {{item?.idno}}</small>
                                 </ng-template>
                             </ng-select>
                         </div>

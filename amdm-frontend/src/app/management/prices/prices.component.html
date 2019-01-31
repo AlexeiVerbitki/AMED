@@ -25,8 +25,8 @@
 							   [typeahead]="medInputs"
 							   [loading]="medLoading">
 						<ng-template ng-option-tmp let-item="item">
-							{{item.name}} <br/>
-							<small>{{item.code}}</small>
+							{{item?.name}} <br/>
+							<small>{{item?.code}}</small>
 						</ng-template>
 					</ng-select>
 				</div>

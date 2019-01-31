@@ -27,7 +27,7 @@
                                    formControlName="treatment"
                         >
                             <ng-template ng-option-tmp let-item="item">
-                                {{item.description}}
+                                {{item?.description}}
                             </ng-template>
                         </ng-select>
                     </div>
@@ -42,7 +42,7 @@
                                    formControlName="provenance"
                         >
                             <ng-template ng-option-tmp let-item="item">
-                                {{item.description}}
+                                {{item?.description}}
                             </ng-template>
                         </ng-select>
                     </div>
