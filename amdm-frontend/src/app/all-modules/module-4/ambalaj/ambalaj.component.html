@@ -444,7 +444,8 @@
                     <hr>
                 </section>
                 <div class="text-center">
-                    <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep()" type="button">Submit</button>
+                    <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(true)"  type="button">Pasul următor</button>
+                    <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(false)" type="button">Savlare date</button>
                     <button class="btn btn-danger waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="interruptProcess()">
                         Intrerupere
                     </button>

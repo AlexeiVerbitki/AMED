@@ -843,7 +843,12 @@ export class MedRegComponent implements OnInit {
     }
 
 
-    nextStep() {
+    nextStep(submitForm: boolean) {
+
+        let currentStep = this.importData.currentStep;
+        if (submitForm) {
+            currentStep = 'AP';
+        }
 
         this.formSubmitted = true;
         let modelToSubmit: any = {};
@@ -859,13 +864,13 @@ export class MedRegComponent implements OnInit {
         // modelToSubmit.endDate = new Date();
 
         modelToSubmit.documents = this.docs;
-        modelToSubmit.currentStep = 'AP';
+        modelToSubmit.currentStep = currentStep;
 
         modelToSubmit.requestHistories.push({
             startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
             endDate: new Date(),
             username: this.authService.getUserName(),
-            step: 'AP'
+            step: currentStep
         });
 
         console.log('this.evaluateImportForm.value', this.evaluateImportForm.value);
@@ -880,14 +885,14 @@ export class MedRegComponent implements OnInit {
         console.log('this.evaluateImportForm.valid', this.evaluateImportForm.valid);
         console.log('this.docs', this.docs);
         if (this.activeLicenses !== null /*&& this.evaluateImportForm.valid*/ && this.docs !== null) {
-            // if (this.activeLicenses !== null ) {
             this.loadingService.show();
 
             this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
                     console.log('addImportRequest(modelToSubmit).subscribe(data) ', data);
                     this.loadingService.hide();
-                    // this.router.navigate(['dashboard/module/import-authorization/registered-medicament-approve/' + data.body.id]);
+                if (submitForm) {
                     this.router.navigate(['dashboard/']);
+                }
                 }, error => {
                     alert('Something went wrong while sending the model');
                     console.log('error: ', error);

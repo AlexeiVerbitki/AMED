@@ -482,9 +482,12 @@ export class AmbalajComponent implements OnInit {
 
 
 
-    nextStep() {
+    nextStep(submitForm: boolean) {
 
-
+        let currentStep = this.importData.currentStep;
+        if (submitForm) {
+            currentStep = 'AP';
+        }
 
         this.formSubmitted = true;
         let modelToSubmit: any = {};
@@ -500,7 +503,7 @@ export class AmbalajComponent implements OnInit {
         // modelToSubmit.endDate = new Date();
 
         modelToSubmit.documents = this.docs;
-        modelToSubmit.currentStep = 'AP';
+        modelToSubmit.currentStep = currentStep;
 
         modelToSubmit.requestHistories.push({
             startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
@@ -519,10 +522,10 @@ export class AmbalajComponent implements OnInit {
             this.loadingService.show();
             this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
                     console.log('addImportRequest(modelToSubmit).subscribe(data) ', data);
-                    // if (/*&& this.evaluateImportForm.valid && */ this.docs !== null) {
                     this.loadingService.hide();
+                if (submitForm) {
                     this.router.navigate(['dashboard/']);
-                    // this.router.navigate(['dashboard/module/import-authorization/registered-medicament-approve/' + data.body.id]);
+                }
                 }, error => {
                     alert('Something went wrong while sending the model');
                     console.log('error: ', error);
