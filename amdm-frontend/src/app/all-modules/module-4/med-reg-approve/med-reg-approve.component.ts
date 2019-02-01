@@ -68,7 +68,8 @@ export class MedRegApproveComponent implements OnInit {
     unitSumm: any;
 
     formModel: any;
-    valutaList: Observable<any[]>;
+    valutaList: any[];
+    contractValutaList: any[];
 
     importData: any;
     medicamentData: any;
@@ -244,6 +245,7 @@ export class MedRegApproveComponent implements OnInit {
                     this.evaluateImportForm.get('importAuthorizationEntity.customsNumber').setValue(data.importAuthorizationEntity.customsNumber);
                     this.evaluateImportForm.get('importAuthorizationEntity.customsDeclarationDate').setValue(new Date(data.importAuthorizationEntity.customsDeclarationDate));
                     this.evaluateImportForm.get('importAuthorizationEntity.contract').setValue(data.importAuthorizationEntity.contract);
+                    this.evaluateImportForm.get('importAuthorizationEntity.currency').setValue(data.importAuthorizationEntity.currency);
                     this.evaluateImportForm.get('importAuthorizationEntity.contractDate').setValue(new Date(data.importAuthorizationEntity.contractDate));
                     this.evaluateImportForm.get('importAuthorizationEntity.anexa').setValue(data.importAuthorizationEntity.anexa);
                     this.evaluateImportForm.get('importAuthorizationEntity.anexaDate').setValue(new Date(data.importAuthorizationEntity.anexaDate));
@@ -272,6 +274,7 @@ export class MedRegApproveComponent implements OnInit {
                     this.evaluateImportForm.get('importAuthorizationEntity.conditionsAndSpecification').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.authorizationsNumber').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.customsNumber').disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.currency').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.customsDeclarationDate').disable();
 
 
@@ -760,6 +763,7 @@ export class MedRegApproveComponent implements OnInit {
         this.subscriptions.push(
             this.administrationService.getCurrenciesShort().subscribe(data => {
                     this.valutaList = data;
+                    this.contractValutaList = data;
 
                 },
                 error => console.log(error)
