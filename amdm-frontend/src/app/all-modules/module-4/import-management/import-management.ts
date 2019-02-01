@@ -150,9 +150,9 @@ export class ImportManagement implements OnInit {
                 'id': [Validators.required],
                 'applicationDate': [new Date()],
                 'applicant': ['', Validators.required],
-                'seller': [null, Validators.required, {disabled: true}], // Tara si adresa lui e deja in baza
+                'seller': [{value: null, disabled: true}, Validators.required, ], // Tara si adresa lui e deja in baza
                 'basisForImport': [],
-                'importer': [null, Validators.required], // Tara si adresa lui e deja in baza
+                'importer': [{value: null, disabled: true}, Validators.required], // Tara si adresa lui e deja in baza
                 'contract': [null, Validators.required],
                 'contractDate': [null, Validators.required],
                 'anexa': [null, Validators.required],
@@ -245,9 +245,9 @@ export class ImportManagement implements OnInit {
                             'id': [Validators.required],
                             'applicationDate': [new Date()],
                             'applicant': ['', Validators.required],
-                            'seller': [null, Validators.required], // Tara si adresa lui e deja in baza
+                            'seller': [{value: null, disabled: true}, Validators.required], // Tara si adresa lui e deja in baza
                             'basisForImport': [],
-                            'importer': [null, Validators.required], // Tara si adresa lui e deja in baza
+                            'importer': [{value: null, disabled: true}, Validators.required], // Tara si adresa lui e deja in baza
                             'contract': [null, Validators.required],
                             'contractDate': [null, Validators.required],
                             'anexa': [null, Validators.required],

@@ -509,11 +509,10 @@ export class AmbalajComponent implements OnInit {
             startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
             endDate: new Date(),
             username: this.authService.getUserName(),
-            step: 'AP'
+            step: currentStep
         });
 
         console.log('this.evaluateImportForm.value', this.evaluateImportForm.value);
-        //=============
         modelToSubmit.importAuthorizationEntity.summ = this.authorizationSumm;
         modelToSubmit.importAuthorizationEntity.currency = this.authorizationCurrency;
 
