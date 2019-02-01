@@ -301,11 +301,6 @@ export class ImportManagementDialog implements OnInit {
         let dialogValues = this.evaluateImportForm.getRawValue();
         dialogValues.importAuthorizationEntity.unitOfImportTable.unitSumm  = this.unitSumm;
             if (this.validPrice === false && this.validQuantity === false && this.invalidPrice === false && this.invalidQuantity === false /*&& this.invoiceDetailAdded === false*/) {
-                // this.dialog.close([true,
-                //                                this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').value,
-                //                                this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value,
-                //                                this.unitSumm,
-                // ]);
                 this.dialog.close(dialogValues);
                 this.addMedicamentClicked = false;
             } else {

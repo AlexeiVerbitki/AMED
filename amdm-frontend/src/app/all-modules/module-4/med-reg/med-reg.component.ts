@@ -69,6 +69,7 @@ export class MedRegComponent implements OnInit {
 
     formModel: any;
     valutaList: any[];
+    contractValutaList: any[];
 
     importData: any;
     medicamentData: any;
@@ -160,6 +161,7 @@ export class MedRegComponent implements OnInit {
                 'conditionsAndSpecification': [''],
                 'quantity': [Validators.required],
                 'price': [Validators.required],
+                // 'contractCurrency': [Validators.required],
                 'currency': [Validators.required],
                 'summ': [Validators.required],
                 'producer_id': [Validators.required], // to be deleted
@@ -218,6 +220,7 @@ export class MedRegComponent implements OnInit {
                     this.evaluateImportForm.get('importAuthorizationEntity.basisForImport').setValue(data.importAuthorizationEntity.basisForImport);
                     this.evaluateImportForm.get('importAuthorizationEntity.conditionsAndSpecification').setValue(data.importAuthorizationEntity.conditionsAndSpecification);
                     this.evaluateImportForm.get('importAuthorizationEntity.authorizationsNumber').setValue(data.importAuthorizationEntity.authorizationsNumber);
+                    this.evaluateImportForm.get('importAuthorizationEntity.currency').setValue(data.importAuthorizationEntity.currency);
                     this.evaluateImportForm.get('importAuthorizationEntity.customsNumber').setValue(data.importAuthorizationEntity.customsNumber);
                     if (data.importAuthorizationEntity.customsDeclarationDate !== null) {
                         this.evaluateImportForm.get('importAuthorizationEntity.customsDeclarationDate').setValue(new Date(data.importAuthorizationEntity.customsDeclarationDate));
@@ -453,41 +456,6 @@ export class MedRegComponent implements OnInit {
                     this.invalidPrice = false;
                 }
 
-                // if (val) {
-                //     console.log("importAuthorizationEntity.unitOfImportTable.currency",val)
-                //     console.log("this.exchengeCurrencies",this.exchengeCurrencies)
-                //     this.maxPriceForCurrency(val);
-                //
-                //     if (val){
-                //
-                //         if (this.medicamentCurrencyExchangeRate === 1) {
-                //             this.medicamnetMaxPriceValuta = this.medicamnetMaxPriceMDL;
-                //         } else {
-                //             this.medicamnetMaxPriceValuta = this.medicamentCurrencyExchangeRate * this.medicamentPrice.price;
-                //         }
-                //
-                //         this.medicamnetMaxPriceMDL = this.medicamentPrice.priceMdl;
-                //
-                //
-                //         console.log(" this.userPrice", this.userPrice)
-                //         console.log(" this.medicamnetMaxPriceValuta", this.medicamnetMaxPriceValuta)
-                //         console.log(" this.medicamnetMaxPriceMDL", this.medicamnetMaxPriceMDL)
-                //
-                //         // if (this.medicamnetMaxPriceMDL < (this.medicamnetMaxPriceValuta || val)){
-                //         //     this.invalidPrice=true;
-                //         // }
-                //
-                //         if  (this.userPrice > this.medicamnetMaxPriceMDL || this.userPrice * this.medicamentCurrencyExchangeRate > this.medicamnetMaxPriceValuta){
-                //                 this.invalidPrice=true;
-                //         }
-                //         else {
-                //             this.invalidPrice = false;
-                //             console.log("invalidPrice", this.invalidPrice)
-                //         }
-                //     }
-                //
-                // }
-                //========================================
             }));
         }
     }
@@ -561,9 +529,8 @@ export class MedRegComponent implements OnInit {
         });
 
         this.authorizationSumm     = this.authorizationSumm + this.unitSumm;
-        this.authorizationCurrency = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').value;
         console.log('this.authorizationSumm', this.authorizationSumm);
-        console.log('this.authorizationCurrency', this.authorizationCurrency);
+
 
         console.log('this.evaluateImportForm.get(\'importAuthorizationEntity.unitOfImportTable\'', (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').value)),
 
@@ -817,7 +784,8 @@ export class MedRegComponent implements OnInit {
         this.subscriptions.push(
             this.administrationService.getCurrenciesShort().subscribe(data => {
                     this.valutaList = data;
-                    console.log(this.valutaList);
+                    this.contractValutaList = data;
+                    console.log("contractValutaList", data)
 
                 },
                 error => console.log(error)
@@ -895,7 +863,10 @@ export class MedRegComponent implements OnInit {
 
         modelToSubmit.medicaments                        = [];
         modelToSubmit.importAuthorizationEntity.summ     = this.authorizationSumm;
-        modelToSubmit.importAuthorizationEntity.currency = this.authorizationCurrency;
+
+        // this.authorizationCurrency = this.evaluateImportForm.get('importAuthorizationEntity.contractCurrency').value;
+        // console.log('this.authorizationCurrency', this.authorizationCurrency);
+        // modelToSubmit.importAuthorizationEntity.currency = this.authorizationCurrency;
         console.log('modelToSubmit', modelToSubmit);
 
         console.log('this.evaluateImportForm.valid', this.evaluateImportForm.valid);
