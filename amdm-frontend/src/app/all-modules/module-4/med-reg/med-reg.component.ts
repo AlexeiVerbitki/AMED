@@ -48,8 +48,10 @@ export class MedRegComponent implements OnInit {
     private subscriptions: Subscription[] = [];
     docs: Document []                     = [];
 
-    unitOfImportTable: any[]  = [];
-    exchengeCurrencies: any[] = [];
+    unitOfImportTable: any[]           = [];
+    exchangeCurrencies: any[]          = [];
+    exchangeCurrenciesForPeriod: any[] = [];
+
 
     protected manufacturersRfPr: Observable<any[]>;
     protected loadingManufacturerRfPr = false;
@@ -295,7 +297,7 @@ export class MedRegComponent implements OnInit {
         this.authorizationSumm = 0;
 
         console.log('importTypeForms.value', this.importTypeForms.value);
-        console.log('currencies', this.exchengeCurrencies);
+        console.log('exchangeCurrencies: ', this.exchangeCurrencies);
 
 
     }
@@ -359,8 +361,11 @@ export class MedRegComponent implements OnInit {
                     this.medicamentService.getMedPrice(val.id).subscribe(priceEntity => {
                         if (priceEntity) {
                             this.medicamentPrice = priceEntity;
+                            let exchangeDate = new Date(priceEntity.orderApprovDate)
+                            this.loadExchangeRateForPeriod(exchangeDate);
                             if (priceEntity.currency) {
                                 this.valutaList = [/*this.valutaList.find(i=> i.shortDescription === "MDL"), */ priceEntity.currency];
+
                             }
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(this.valutaList.find(r => r === priceEntity.currency));
 
@@ -412,8 +417,15 @@ export class MedRegComponent implements OnInit {
 
                 //========================================
                 if (val && this.importData.importAuthorizationEntity.medType === 1) {
+                    let contractCurrency : any;
 
-                    if (this.userPrice > this.medicamentPrice.price) {
+                    if (this.evaluateImportForm.get('importAuthorizationEntity.currency').value) {
+                        contractCurrency = this.evaluateImportForm.get('importAuthorizationEntity.currency').value;
+                    }
+                    let exchangeCurrency = this.exchangeCurrenciesForPeriod.find( x => x.currency.shortDescription == contractCurrency.shortDescription);
+                    let priceInContractCurrency = this.medicamentPrice.priceMdl / exchangeCurrency.value ;
+
+                    if (this.userPrice > priceInContractCurrency) {
                         this.invalidPrice = true;
 
                         console.log('invalidPrice', this.invalidPrice);
@@ -464,7 +476,7 @@ export class MedRegComponent implements OnInit {
         if (valuta.shortDescription === 'MDL') {
             this.medicamentCurrencyExchangeRate = 1;
         } else {
-            this.medicamentCurrencyExchangeRate = this.exchengeCurrencies.find(i => i.currency.shortDescription == valuta.shortDescription).value;
+            this.medicamentCurrencyExchangeRate = this.exchangeCurrencies.find(i => i.currency.shortDescription == valuta.shortDescription).value;
             // *  this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value;
 
             // console.log("medicamentCurrencyExchangeRate",this.medicamentCurrencyExchangeRate)
@@ -478,9 +490,11 @@ export class MedRegComponent implements OnInit {
     }
 
     currencyChanged($event) {
-        this.exchengeCurrencies = $event;
+        this.exchangeCurrencies = $event;
         // console.log("exchangeCurrencies", this.exchangeCurrencies)
     }
+
+
 
     addUnitOfImport() {
         this.addMedicamentClicked = true;
@@ -608,6 +622,16 @@ export class MedRegComponent implements OnInit {
             // this.addMediacalInstitutionForm.get('medicalInstitution').setValue('');
         });
     }
+
+    loadExchangeRateForPeriod(date : any){
+         this.subscriptions.push(this.administrationService.getCurrencyByPeriod(date).subscribe(data => {
+             this.exchangeCurrenciesForPeriod = data;
+             console.log("Exchange rate for " + date + "\n" + JSON.stringify(this.exchangeCurrenciesForPeriod));
+             console.log("Exchange rate for 1"  + this.exchangeCurrenciesForPeriod.toString());
+         }));
+
+    }
+
 
     loadATCCodes() {
         this.customsCodes =

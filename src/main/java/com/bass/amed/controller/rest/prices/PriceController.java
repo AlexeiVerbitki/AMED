@@ -21,6 +21,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -83,10 +86,24 @@ public class PriceController {
     public ResponseEntity<List<NmCurrenciesHistoryEntity>> getTodayCurrencyShort(@RequestParam(value = "from", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date date) throws CustomException {
         if (date == null) {
             date = new Date();
+//            date = new Date(2018,10,16);
         }
         logger.debug("Retrieve all currencies for toady or another day");
         Optional<List<NmCurrenciesHistoryEntity>> nonNullCurrenciesHistoryList = Optional.of(currencyHistoryRepository.findAllByPeriod(date));
         return new ResponseEntity<>(nonNullCurrenciesHistoryList.orElseThrow(() -> new CustomException("No curriencies for today")), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/exchange-rate-by-period")
+//    public ResponseEntity<List<NmCurrenciesHistoryEntity>> getExchangeRateByPeriod(String date) throws CustomException {
+    public ResponseEntity<List<NmCurrenciesHistoryEntity>> getExchangeRateByPeriod(String date) throws CustomException, ParseException {
+
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date searchDatedate = sdf.parse(date);
+
+        logger.debug("Retrieve all currencies for toady or another day");
+        Optional<List<NmCurrenciesHistoryEntity>> nonNullCurrenciesHistoryList = Optional.of(currencyHistoryRepository.findAllByPeriod(searchDatedate));
+        return new ResponseEntity<>(nonNullCurrenciesHistoryList.orElseThrow(() -> new CustomException("No curriencies for that day")), HttpStatus.OK);
     }
 
     @RequestMapping("/prev-month-avg-currencies")

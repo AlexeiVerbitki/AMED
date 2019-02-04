@@ -125,6 +125,23 @@ export class AdministrationService {
         return this.http.get('/api/price/today-currencies-short', {params: params});
     }
 
+    getCurrencyByPeriod(day: Date): Observable<any> {
+        let params: HttpParams;
+        let date: any;
+
+        if (day !== undefined) {
+            let dayOfMonth = day.getDate();
+            let month = day.getMonth()+1;
+            let year = day.getFullYear() ;
+
+            date = year + '-' + month +  '-' + dayOfMonth ;
+            // date =  day.toISOString();
+        }
+        // params = params.set("from", {params : day});
+        // return this.http.get('/api/load-import-request', {params: {id: id}});
+        return this.http.get('/api/price/exchange-rate-by-period', {params: {date: date}});
+    }
+
     generateReceiptNr(): Observable<any> {
         return this.http.get('/api/administration/generate-receipt-nr');
     }
