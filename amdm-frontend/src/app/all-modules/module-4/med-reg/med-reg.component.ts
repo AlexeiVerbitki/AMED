@@ -113,6 +113,9 @@ export class MedRegComponent implements OnInit {
     authorizationSumm: any;
     authorizationCurrency: any;
 
+    medicamentSelected: boolean = false;
+    invalidCurrency : any;
+
 
     constructor(private fb: FormBuilder,
                 private requestService: RequestService,
@@ -305,11 +308,15 @@ export class MedRegComponent implements OnInit {
     onChanges(): void {
         if (this.evaluateImportForm.get('importAuthorizationEntity')) {
 
+
             this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').valueChanges.subscribe(val => {
-                if (val) {
+                    this.medicamentSelected = true;
+                    this.invalidCurrency = this.evaluateImportForm.get('importAuthorizationEntity.currency').value;
+                if (this.invalidCurrency && val ) {
                     this.medicamentData = val;
                     this.codeAmed       = val.code;
                     console.log('importAuthorizationEntity.unitOfImportTable.medicament', this.medicamentData);
+                    console.log('this.evaluateImportForm.get(\'importAuthorizationEntity.currency\').invalid', this.evaluateImportForm.get('importAuthorizationEntity.currency').invalid);
 
                     // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setValue(val);
 
@@ -377,6 +384,9 @@ export class MedRegComponent implements OnInit {
                     });
 
 
+                } else {
+                    let element = document.getElementById("contractCurrency");
+                    element.scrollIntoView();
                 }
             }));
             /*================================================*/
