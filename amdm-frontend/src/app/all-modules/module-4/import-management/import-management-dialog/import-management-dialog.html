@@ -125,7 +125,7 @@
                         <!--[attr.disabled]="true"-->
                         <label for="quantity">Cantitatea spre import</label>
                     </div>
-                    <div *ngIf="validQuantity">
+                    <div *ngIf="invalidQuantity">
                         <small class="text-muted"><strong class="text-danger">Cantitatea nu poate depăși cantitatea rămasă</strong></small>
                     </div>
                 </div>
@@ -138,14 +138,14 @@
                         <label for="price">Prețul importului</label>
                     </div>
                     <!--<div *ngIf="addMedicamentClicked && invalidPrice">-->
-                    <div *ngIf="validPrice">
+                    <div *ngIf="invalidPrice">
                         <small class="text-muted"><strong class="text-danger">Prețul nu poate depăși prețul autorizat</strong></small>
                     </div>
                 </div>
 
                 <div class="col-4">
                     <div class="md-form">
-                        <input id="unitSumm" mdbInpinutDirective type="text" class="form-control"
+                        <input id="unitSumm" mdbInputDirective type="text" class="form-control"
                                [attr.disabled]="true"
                                [value]="unitSumm | number : '1.2-2'">
                         <label for="unitSumm">Suma importului</label>

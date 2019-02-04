@@ -298,7 +298,7 @@
                                 <!--<ng-option *ngFor="let point of customsPointsList" [value]="point">{{ point.description }} - {{point.code}}</ng-option>-->
                             </ng-select>
                         </div>
-                        <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.customsPoints').value == null">
+                        <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.customsPoints').value.length === 0">
                             <small class="text-muted"><strong class="text-danger">Vama trebuie selectată</strong>
                             </small>
                         </div>
@@ -366,14 +366,15 @@
                     <hr>
                 </section>
                 <div class="text-center">
-                    <button class="btn btn-primary waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(true, false)" type="button">Savlare date</button>
+                    <button class="btn btn-primary waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(true, false)" type="button">Sălvează date</button>
                     <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(true, true)" type="button">Aprob autorizația</button>
-                    <!--<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="showCustomsPoints()" type="button">showCustomsPoints()</button>-->
+                    <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="showCustomsPoints()" type="button">showCustomsPoints()</button>
                     <button class="btn btn-danger waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(false)" type="button">Resping autorizația</button>
                     <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc()">Vizualire Autorizației</button>
                 </div>
             </div>
         </form>
+        <app-xchangeinfo (changed)="currencyChanged($event)"></app-xchangeinfo>
     </div>
 </div>
 

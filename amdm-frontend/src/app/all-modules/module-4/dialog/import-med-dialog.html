@@ -177,7 +177,8 @@
                     </div>
                 </div>
 
-                <div class="col-4" *ngIf="importData?.medType == 1 || importData?.medType == 2 || importData?.medType == 3">
+                <!--<div class="col-4" *ngIf="importData?.medType == 1 || importData?.medType == 2 || importData?.medType == 3">-->
+                <div class="col-4" *ngIf="importData?.medType !== 4">
                     <div class="md-form">
                         <input id="unitsOfMeasurement" mdbInputDirective type="text" class="form-control"
                                [attr.disabled]="true"
@@ -191,7 +192,8 @@
                 <!--======================================================================-->
 
 
-                <div class="col-md-4" *ngIf="importData?.medType == 1 || importData?.medType == 2 || importData?.medType == 3">
+                <!--<div class="col-md-4" *ngIf="importData?.medType == 1 || importData?.medType == 2 || importData?.medType == 3">-->
+                <div class="col-4" *ngIf="importData?.medType !== 4">
                     <div class="md-form-modified">
                         <ng-select [items]="atcCodes | async"
                                    bindLabel="code"
@@ -224,7 +226,7 @@
                                    required="true">
                             <ng-template ng-option-tmp let-item="item">
                                 Denumire: {{item?.description}};
-                                <small class="form-text text-muted">{{item?.address}}, {{item?.country.description}}</small>
+                                <small class="form-text text-muted">{{item.address}}, {{item.country.description}}</small>
                             </ng-template>
                         </ng-select>
                         <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').invalid">-->

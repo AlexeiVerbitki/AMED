@@ -469,7 +469,7 @@ export class MedRegComponent implements OnInit {
 
             // console.log("medicamentCurrencyExchangeRate",this.medicamentCurrencyExchangeRate)
             // console.log("this.medicamentMAXPrice", this.medicamentMAXPrice),
-            // console.log("exchangeCurrencies", 10 * this.exchengeCurrencies[1].value);
+            // console.log("exchangeCurrencies", 10 * this.exchangeCurrencies[1].value);
         }
     }
 
@@ -479,7 +479,7 @@ export class MedRegComponent implements OnInit {
 
     currencyChanged($event) {
         this.exchengeCurrencies = $event;
-        // console.log("exchengeCurrencies", this.exchengeCurrencies)
+        // console.log("exchangeCurrencies", this.exchangeCurrencies)
     }
 
     addUnitOfImport() {

@@ -71,7 +71,8 @@ export class ImportManagement implements OnInit {
     formModel: any;
     valutaList: Observable<any[]>;
 
-    customsPointsList: Observable<any[]>;
+    // customsPointsList: Observable<any[]>;
+    customsPointsList: any[] = [];
 
     importData: any;
     medicamentData: any;
@@ -219,6 +220,7 @@ export class ImportManagement implements OnInit {
             this.subscriptions.push(this.requestService.getImportRequest(params['id']).subscribe(data => {
                     console.log('this.requestService.getImportRequest(params[\'id\'])', data);
                     this.importData = data;
+                    this.customsPointsList = data.importAuthorizationEntity.nmCustomsPointsList;
                     console.log("this.importData:", this.importData)
 
                     this.docs = data.documents;
@@ -397,7 +399,7 @@ export class ImportManagement implements OnInit {
         this.loadUnitsOfMeasurement();
         this.loadMedicaments();
         this.loadInternationalMedicamentName();
-        this.loadCustomsPoints();
+        // this.loadCustomsPoints();
         // this.generateDocNr();
 
     }
@@ -873,16 +875,16 @@ export class ImportManagement implements OnInit {
     }
 
 
-    loadCustomsPoints() {
-        this.subscriptions.push(
-            this.administrationService.getCustomsPoints().subscribe(data => {
-                    this.customsPointsList = data;
-
-                },
-                error => console.log(error)
-            )
-        );
-    }
+    // loadCustomsPoints() {
+    //     this.subscriptions.push(
+    //         this.administrationService.getCustomsPoints().subscribe(data => {
+    //                 this.customsPointsList = data;
+    //
+    //             },
+    //             error => console.log(error)
+    //         )
+    //     );
+    // }
 
     interruptProcess() {
         const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
@@ -923,7 +925,7 @@ export class ImportManagement implements OnInit {
     }
 
 
-    nextStep(aprrovedOrNot: boolean) {
+    nextStep(aprrovedOrNot: boolean, submitForm: boolean) {
 
         this.formSubmitted = true;
         if (this.evaluateImportForm.get('importAuthorizationEntity.invoiceNumber').valid &&

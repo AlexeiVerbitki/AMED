@@ -162,7 +162,7 @@
                         <div class="md-form-modified">
                             <ng-select id="customsPoints" placeholder="Vama"
                                        formControlName="customsPoints">
-                                <ng-option *ngFor="let point of customsPointsList" [value]="point">{{ point.description }} - {{point.code}}</ng-option>
+                                <ng-option *ngFor="let point of customsPointsList" [value]="point">{{ point?.description }} - {{point?.code}}</ng-option>
                             </ng-select>
                         </div>
                         <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.customsPoints').invalid ">
@@ -369,7 +369,7 @@
                             <input id="conditionsAndSpecification" mdbInputDirective type="text" class="form-control"
                                    formControlName="conditionsAndSpecification" disabled>
                             <label for="basisForImport">Altele
-                                <span class="text-danger">*</span>
+                                <!--<span class="text-danger">*</span>-->
                             </label>
                         </div>
                     </div>
@@ -459,7 +459,7 @@
                     <br>
                 </section>
                 <div class="text-center">
-                    <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(true)" type="button">Sălvează Declarația</button>
+                    <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(true, true)" type="button">Sălvează Declarația</button>
                     <button class="btn btn-danger waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(false)" type="button">Respinge Declarația</button>
                     <button class="btn btn-dark-red-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="interruptProcess()">
                         Intrerupere
