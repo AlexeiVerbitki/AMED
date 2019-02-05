@@ -74,6 +74,8 @@ export class ImportManagement implements OnInit {
     // customsPointsList: Observable<any[]>;
     customsPointsList: any[] = [];
 
+    generatedDocNrSeq: number;
+
     importData: any;
     medicamentData: any;
 
