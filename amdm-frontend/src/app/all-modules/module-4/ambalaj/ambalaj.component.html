@@ -123,6 +123,23 @@
                     </div>
 
                     <div class="col-4">
+                        <div class="md-form-modified" id="contractCurrency">
+                            <ng-select [items]="contractValutaList"
+                                       bindLabel="shortDescription"
+                                       placeholder="Valuta contractului"
+                                       formControlName="currency"
+                                       [selectOnTab]="false"
+                                       (ngModelChange)="showConfirm()"
+                            >
+                            </ng-select>
+                        </div>
+                        <div *ngIf="(unitOfImportPressed && evaluateImportForm.get('importAuthorizationEntity.currency').invalid) ">
+                            <small class="text-muted"><strong class="text-danger">Valuta contractului trebuie introdusă</strong>
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
                                 <input matInput [matDatepicker]="picker26" placeholder="Data contractului"
@@ -418,13 +435,13 @@
                             <th scope="row">{{ unitOfImport.customsCode.code }}</th>
                             <td>{{ unitOfImport.name }}</td>
                             <td *ngIf="importData?.importAuthorizationEntity.medType==3">{{ unitOfImport.atcCode.code}}</td>
-                            <td>{{ unitOfImport.quantity }}</td>
-                            <td>{{ unitOfImport.price }}</td>
-                            <td>{{ unitOfImport.currency.shortDescription}}</td>
-                            <td>{{ unitOfImport.summ | number : '1.2-2'}}</td>
-                            <td>{{ unitOfImport.producer.description }}</td>
-                            <td>{{ unitOfImport.producer.address }}, {{ unitOfImport.producer.country.description }}</td>
-                            <td>{{ unitOfImport.expirationDate | date:'mediumDate' }}</td>
+                            <td>{{ unitOfImport?.quantity }}</td>
+                            <td>{{ unitOfImport?.price }}</td>
+                            <td>{{ unitOfImport?.currency?.shortDescription}}</td>
+                            <td>{{ unitOfImport?.summ | number : '1.2-2'}}</td>
+                            <td>{{ unitOfImport?.producer.description }}</td>
+                            <td>{{ unitOfImport?.producer.address }}, {{ unitOfImport.producer.country.description }}</td>
+                            <td>{{ unitOfImport?.expirationDate | date:'mediumDate' }}</td>
 
                             <td>
                                 <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeunitOfImport(i)" mdbWavesEffect>Stergere</button>

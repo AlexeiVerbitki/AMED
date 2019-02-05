@@ -133,10 +133,13 @@
                             <ng-select [items]="contractValutaList"
                                        bindLabel="shortDescription"
                                        placeholder="Valuta contractului"
-                                       formControlName="currency">
+                                       formControlName="currency"
+                                       [selectOnTab]="false"
+                                       (ngModelChange)="showConfirm()"
+                                        >
                             </ng-select>
                         </div>
-                        <div *ngIf="medicamentSelected == true && invalidCurrency"> /*!evaluateImportForm.get('currency')=== null &&*/
+                        <div *ngIf="(medicamentSelected && invalidCurrency) ">
                             <small class="text-muted"><strong class="text-danger">Valuta contractului trebuie introdusă</strong>
                             </small>
                         </div>
