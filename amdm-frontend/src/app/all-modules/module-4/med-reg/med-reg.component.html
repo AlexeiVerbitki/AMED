@@ -331,11 +331,18 @@
                             </div>
                             <div class="col-4">
                                 <div class="md-form-modified">
-                                    <!--<md-form-field class="w-100">-->
-                                    <ng-select id="currency" placeholder="Valuta" formControlName="currency">
-                                        <ng-option *ngFor="let valuta of valutaList" [value]="valuta">{{ valuta.shortDescription }}</ng-option>
-                                    </ng-select>
-                                    <!--</md-form-field>-->
+                                    <!--<ng-select id="currency" placeholder="Valuta" formControlName="currency">-->
+                                        <!--<ng-option *ngFor="let valuta of valutaList" [value]="valuta">{{ valuta.shortDescription }}</ng-option>-->
+                                    <!--</ng-select>-->
+                                    <div class="md-form-modified">
+                                        <ng-select [items]="valutaList"
+                                                   bindLabel="shortDescription"
+                                                   placeholder="Valuta"
+                                                   formControlName="currency"
+                                                   [selectOnTab]="false"
+                                        >
+                                        </ng-select>
+                                    </div>
                                 </div>
                                 <div *ngIf="[formSubmitted]==true && evaluateImportForm.get('currency').invalid "> /*!evaluateImportForm.get('currency')=== null &&*/
                                     <small class="text-muted"><strong class="text-danger">Valuta trebuie introdusă</strong>

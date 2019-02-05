@@ -227,6 +227,7 @@ export class MedRegComponent implements OnInit {
                     this.evaluateImportForm.get('importAuthorizationEntity.conditionsAndSpecification').setValue(data.importAuthorizationEntity.conditionsAndSpecification);
                     this.evaluateImportForm.get('importAuthorizationEntity.authorizationsNumber').setValue(data.importAuthorizationEntity.authorizationsNumber);
                     this.evaluateImportForm.get('importAuthorizationEntity.currency').setValue(data.importAuthorizationEntity.currency);
+                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(data.importAuthorizationEntity.currency);
                     this.evaluateImportForm.get('importAuthorizationEntity.customsNumber').setValue(data.importAuthorizationEntity.customsNumber);
                     if (data.importAuthorizationEntity.customsDeclarationDate !== null) {
                         this.evaluateImportForm.get('importAuthorizationEntity.customsDeclarationDate').setValue(new Date(data.importAuthorizationEntity.customsDeclarationDate));
@@ -313,7 +314,7 @@ export class MedRegComponent implements OnInit {
 
 
             this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.currency').valueChanges.subscribe(value => {
-                if (!value) {
+                if (value) {
                     this.invalidCurrency = true;
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').reset();
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(value);
@@ -524,9 +525,8 @@ export class MedRegComponent implements OnInit {
 
 
 
-    showConfirm(valuta : any) {
-
-        if (this.evaluateImportForm.get('importAuthorizationEntity.currency').touched) {
+    showConfirm(valuta: any) {
+        if (this.evaluateImportForm.get('importAuthorizationEntity.currency').touched /*|| this.importData.importAuthorizationEntity.currency*/) {
             const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
                 data: {
                     message: 'Sunteti sigur(ă) ca doriți sa schimbați valuta ? ' +
@@ -536,12 +536,14 @@ export class MedRegComponent implements OnInit {
 
             dialogRef.afterClosed().subscribe(result => {
                 if (result) {
-                    this.unitOfImportTable = [];
+                    if (this.unitOfImportTable) {
+                        this.unitOfImportTable = [];
+                    }
                     // this.changeCurrency = true;
                 }
                 // else if (this.changeCurrency){
-                //     this.evaluateImportForm.get('importAuthorizationEntity.currency').setValue(null);
-                //     this.changeCurrency = false;
+                    // this.evaluateImportForm.get('importAuthorizationEntity.currency').setValue(selected);
+                    // this.changeCurrency = false;
                 // }
             });
         }
