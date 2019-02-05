@@ -116,6 +116,7 @@ export class MedRegComponent implements OnInit {
     medicamentSelected: boolean = false;
     invalidCurrency : boolean = false;
     changeCurrency: boolean = true;
+    currentCurrency: any;
 
 
     constructor(private fb: FormBuilder,
@@ -394,7 +395,7 @@ export class MedRegComponent implements OnInit {
                                 this.valutaList = [/*this.valutaList.find(i=> i.shortDescription === "MDL"), */ priceEntity.currency];
 
                             }
-                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(this.valutaList.find(r => r === priceEntity.currency));
+                            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(this.valutaList.find(r => r === priceEntity.currency));
 
 
                             console.log('this.medicamentPrice', this.medicamentPrice);
@@ -524,10 +525,26 @@ export class MedRegComponent implements OnInit {
         // console.log("exchangeCurrencies", this.exchangeCurrencies)
     }
 
-
+    getCurrentCurrency() {
+       this.currentCurrency =  this.evaluateImportForm.get('importAuthorizationEntity.currency').value;
+    }
 
     showConfirm(valuta: any) {
-        if (this.evaluateImportForm.get('importAuthorizationEntity.currency').touched /*|| this.importData.importAuthorizationEntity.currency*/) {
+        let showPopUp: boolean = false;
+//         if (this.evaluateImportForm.get('importAuthorizationEntity.currency').touched) {
+//             showPopUp = true;
+//         } else
+//             if (this.importData.importAuthorizationEntity.currency) {
+//             showPopUp = true;
+//         } else if (this.unitOfImportTable.length > 0) {
+//             showPopUp = true;
+// }
+        if (this.unitOfImportTable.length > 0 && this.evaluateImportForm.get('importAuthorizationEntity.currency').touched) {
+            showPopUp = true;
+        }
+
+        // if (this.evaluateImportForm.get('importAuthorizationEntity.currency').touched && this.invalidCurrency/*|| this.importData.importAuthorizationEntity.currency*/) {
+        if (showPopUp) {
             const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
                 data: {
                     message: 'Sunteti sigur(ă) ca doriți sa schimbați valuta ? ' +
@@ -542,10 +559,10 @@ export class MedRegComponent implements OnInit {
                     }
                     // this.changeCurrency = true;
                 }
-                // else if (this.changeCurrency){
-                    // this.evaluateImportForm.get('importAuthorizationEntity.currency').setValue(selected);
+                else
+                    this.evaluateImportForm.get('importAuthorizationEntity.currency').setValue(this.currentCurrency);
                     // this.changeCurrency = false;
-                // }
+
             });
         }
 

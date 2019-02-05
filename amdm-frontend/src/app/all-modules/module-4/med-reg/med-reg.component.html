@@ -135,7 +135,8 @@
                                        placeholder="Valuta contractului"
                                        formControlName="currency"
                                        [selectOnTab]="false"
-                                       (ngModelChange)="showConfirm()"
+                                       (open)="getCurrentCurrency()"
+                                       (close)="showConfirm()"
                                         >
                             </ng-select>
                         </div>
