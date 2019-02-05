@@ -324,12 +324,13 @@ export class MedRegComponent implements OnInit {
             }));
 
             this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').valueChanges.subscribe(val => {
-                if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').touched) {
+                if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').dirty) {
                     this.medicamentSelected = true;
                 }
-                // if (this.evaluateImportForm.get('importAuthorizationEntity.currency').value == undefined) {
-                //     this.invalidCurrency = true;
-                // } else this.invalidCurrency = false;
+
+                if (this.evaluateImportForm.get('importAuthorizationEntity.currency').value == undefined) {
+                    this.invalidCurrency = true;
+                } else this.invalidCurrency = false;
 
                 if (this.invalidCurrency == false && val ) {
                     this.medicamentData = val;
