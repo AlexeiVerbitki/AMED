@@ -6,7 +6,7 @@
                 <ng-container matColumnDef="selected">
                     <th class="header rgba-header font-td" mat-header-cell *matHeaderCellDef>Selectat</th>
                     <td mat-cell *matCellDef="let x; let i = index" [ngStyle]="{'width': '10px'}">
-                        <mat-checkbox [checked]="x.selected"></mat-checkbox>
+                        <mat-checkbox #rowSel [checked]="x.selected" (change)="selectRow(rowSel,x)"></mat-checkbox>
                     </td>
                 </ng-container>
 
@@ -36,7 +36,7 @@
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="columnsToDisplay; sticky: true"></tr>
-                <tr mat-row *matRowDef="let x; columns: columnsToDisplay" (click)="selectRow(x)"></tr>
+                <tr mat-row *matRowDef="let x; columns: columnsToDisplay"></tr>
             </table>
         </div>
     </div>

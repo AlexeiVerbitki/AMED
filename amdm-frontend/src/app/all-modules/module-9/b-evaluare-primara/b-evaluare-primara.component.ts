@@ -1114,7 +1114,8 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
             if (result) {
                 this.subscriptions.push(
                     this.documentService.deleteSLById(doc.id).subscribe(data => {
-                        this.initialData.outputDocuments.splice(index, 1);
+                        // this.initialData.outputDocuments.splice(index, 1);
+                        this.outDocuments.splice(index, 1);
                     }, error => console.log(error))
                 );
             }

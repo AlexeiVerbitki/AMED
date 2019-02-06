@@ -19,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -94,7 +93,6 @@ public class PriceController {
     public ResponseEntity<List<NmCurrenciesHistoryEntity>> getTodayCurrencyShort(@RequestParam(value = "from", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date date) throws CustomException {
         if (date == null) {
             date = new Date();
-//            date = new Date(2018,10,16);
         }
         logger.debug("Retrieve all currencies for toady or another day");
         Optional<List<NmCurrenciesHistoryEntity>> nonNullCurrenciesHistoryList = Optional.of(currencyHistoryRepository.findAllByPeriod(date));
@@ -102,7 +100,7 @@ public class PriceController {
     }
 
     @RequestMapping(value = "/exchange-rate-by-period")
-//    public ResponseEntity<List<NmCurrenciesHistoryEntity>> getExchangeRateByPeriod(String date) throws CustomException {
+
     public ResponseEntity<List<NmCurrenciesHistoryEntity>> getExchangeRateByPeriod(String date) throws CustomException, ParseException {
 
 
@@ -157,7 +155,13 @@ public class PriceController {
     @RequestMapping("/prev-years-prices")
     public ResponseEntity<List<PrevYearAvgPriceDTO>> getPrevYearsPrices(@RequestParam(value = "id", required = true) Integer internationalNameId) {
         logger.debug("getPrevYearsPrices");
-        List<PrevYearAvgPriceDTO> previousYearsPrices = prevYearsPriceAVGInvoiceDetailsRepository.getPreviousYearsImportPriceAVG(internationalNameId);
+        List<PrevYearAvgPriceDTO> previousYearsPrices;
+        try {
+            previousYearsPrices = prevYearsPriceAVGInvoiceDetailsRepository.getPreviousYearsImportPriceAVG(internationalNameId);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            previousYearsPrices = new ArrayList<>();
+        }
         return new ResponseEntity<>(previousYearsPrices, HttpStatus.OK);
     }
 

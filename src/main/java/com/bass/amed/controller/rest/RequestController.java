@@ -117,13 +117,13 @@ public class RequestController
         return new ResponseEntity<>(request, HttpStatus.CREATED);
     }
 
-
     @RequestMapping(value = "/add-medicament-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public ResponseEntity<RegistrationRequestsEntity> saveMedicamentRequest(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
         LOGGER.debug("Add medicament");
-if (request.getType() != null)        {
+        if (request.getType() != null)
+        {
             Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(request.getType().getCode());
             request.getType().setId(type.get().getId());
         }
@@ -1039,7 +1039,8 @@ if (request.getType() != null)        {
                 MedicamentEntity medicamentEntity = fillMedicamentDetails(request.getMedicamentPostauthorizationRegisterNr(), medicamentHistoryEntity,
                         medicamentDivisionHistoryEntity.getDescription(),
                         request.getDocuments().stream().filter(t -> t.getDocType().getCategory().equals("OM")).findFirst().orElse(new DocumentsEntity()).getDateOfIssue(),
-  request.getType().getCode(), medicamentDivisionHistoryEntity.getVolume(), medicamentDivisionHistoryEntity.getVolumeQuantityMeasurement(), Utils.getConcatenatedDivisionHistory(medicamentDivisionHistoryEntity));                fillMedicamentInstructions(medicamentHistoryEntity, medicamentEntity);
+                        request.getType().getCode(), medicamentDivisionHistoryEntity.getVolume(), medicamentDivisionHistoryEntity.getVolumeQuantityMeasurement(), Utils.getConcatenatedDivisionHistory(medicamentDivisionHistoryEntity));
+                fillMedicamentInstructions(medicamentHistoryEntity, medicamentEntity);
                 medicamentRepository.save(medicamentEntity);
                 request.getMedicaments().add(medicamentEntity);
                 MedicamentDivisionHistoryEntity medicamentDivisionHistoryEntity1 = new MedicamentDivisionHistoryEntity();
@@ -1382,18 +1383,23 @@ if (request.getType() != null)        {
 	}
 
 	@RequestMapping(value = "/add-invoice-request"/*, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE*/)
-	public ResponseEntity<RegistrationRequestsEntity> saveInvoice(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
-		LOGGER.debug("\n\n\n\n=====================\nAdd Import\n=====================\n\n\n");
+    public ResponseEntity<RegistrationRequestsEntity> saveInvoice(@RequestBody RegistrationRequestsEntity requests) throws CustomException
+    {
+        LOGGER.debug("\n\n\n\n=====================\nAdd Import\n=====================\n\n\n");
 
 
-		if (requests.getInvoiceEntity() == null) {
-			throw new CustomException("/add-invoice Threw an error, requests.getInvoice() == null");
-		}
+        if (requests.getInvoiceEntity() == null)
+        {
+            throw new CustomException("/add-invoice Threw an error, requests.getInvoice() == null");
+        }
 
-		if (requests.getInvoiceEntity().getInvoiceDetailsEntitySet() != null) {
-			requestRepository.save(requests);
+        if (requests.getInvoiceEntity().getInvoiceDetailsEntitySet() != null)
+        {
+            requestRepository.save(requests);
 
-		} else {
+        }
+        else
+        {
 			System.out.println("\n\n\n\n=====================\ngetImportAuthorizationEntity is null\n=====================\n\n\n");
 		}
 
@@ -1418,7 +1424,6 @@ if (request.getType() != null)        {
 //		Optional<List<RegistrationRequestsEntity>> registrationRequestsEntities = requestRepository.findMedicamentHistoryByRegistrationNumber(registrationNumber);
 
 		List<InvoiceDetailsEntity> list = new ArrayList<>();
-
 		list = invoiceDetailsRepository.findInvoicesByAuthorization(requestParams.get("nameOrCodeAmed"), requestParams.get("authorizationNumber"));
 		int importedQuantity  = list.stream().map(emp -> emp.getQuantity()).reduce(0, (x,y) -> x+y);
         list.forEach(x -> System.out.println(x.getQuantity()));
@@ -1426,10 +1431,8 @@ if (request.getType() != null)        {
         System.out.println("\n\n\n\n=====================\nlist.stream: "+ importedQuantity +"\n=====================\n\n\n");
 
 
-
 		return new ResponseEntity<>(importedQuantity, HttpStatus.CREATED);
 	}
-
 
 
 //	@RequestMapping(value = "/add-import-request"/*, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE*/)
@@ -1847,10 +1850,12 @@ if (request.getType() != null)        {
     }
 
     @RequestMapping(value = "/get-request-dd-ct", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<RegistrationRequestsEntity>> getRequestsForDDCt() throws CustomException {
+    public ResponseEntity<List<RegistrationRequestsEntity>> getRequestsForDDCt() throws CustomException
+    {
         List<RegistrationRequestsEntity> regs = requestRepository.findRequestsForDDCt();
 
-        for (RegistrationRequestsEntity reg : regs) {
+        for (RegistrationRequestsEntity reg : regs)
+        {
             this.clinicalTrailsService.getCtMedInstInvestigator(reg);
         }
         regs.sort(Comparator.comparing(o -> o.getStartDate()));
@@ -1858,18 +1863,22 @@ if (request.getType() != null)        {
     }
 
     @RequestMapping(value = "/get-request-dd-amd-ct", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<RegistrationRequestsEntity>> getRequestsForDDACt() throws CustomException {
+    public ResponseEntity<List<RegistrationRequestsEntity>> getRequestsForDDACt() throws CustomException
+    {
         List<RegistrationRequestsEntity> regs = requestRepository.findRequestsForDDACt();
 
-        for (RegistrationRequestsEntity requestsEntity : regs) {
+        for (RegistrationRequestsEntity requestsEntity : regs)
+        {
             ClinicTrialAmendEntity clinicTrialAmendEntity = requestsEntity.getClinicalTrails().getClinicTrialAmendEntities().stream().filter(entity ->
                     entity.getRegistrationRequestId().equals(requestsEntity.getId())
             ).findFirst().orElse(null);
 
-            if (clinicTrialAmendEntity != null) {
+            if (clinicTrialAmendEntity != null)
+            {
                 Set<CtAmendMedInstInvestigatorEntity> medInstInvestigators = ctAmendMedInstInvestigatorRepository.findCtMedInstInvestigatorById(clinicTrialAmendEntity.getId());
                 medInstInvestigators.forEach(medInstInvestigator -> {
-                    if ('U' == medInstInvestigator.getEmbededId().getStatus() || 'N' == medInstInvestigator.getEmbededId().getStatus()) {
+                    if ('U' == medInstInvestigator.getEmbededId().getStatus() || 'N' == medInstInvestigator.getEmbededId().getStatus())
+                    {
                         CtMedicalInstitutionEntity medInst = medInstInvestigator.getMedicalInstitutionsEntity();
                         CtInvestigatorEntity ctInvestigatorEntity = new CtInvestigatorEntity();
                         ctInvestigatorEntity.asign(medInstInvestigator.getInvestigatorsEntity());
@@ -1893,11 +1902,13 @@ if (request.getType() != null)        {
     }
 
     @RequestMapping(value = "/get-ddacs", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<OutputDocumentsEntity>> getDDACs() throws CustomException {
+    public ResponseEntity<List<OutputDocumentsEntity>> getDDACs() throws CustomException
+    {
         List<OutputDocumentsEntity> dda = outputDocumentsRepository.findDDA();
         dda.sort(Comparator.comparing(o -> o.getDate(), Comparator.reverseOrder()));
         return new ResponseEntity<>(dda, HttpStatus.OK);
     }
+
     @GetMapping(value = "/get-old-request-term")
     public ResponseEntity<String> getOldRequestTerm(@RequestParam(value = "code") String code) throws CustomException
     {
@@ -1922,15 +1933,14 @@ if (request.getType() != null)        {
             try
             {
                 return medicamentAnnihilationRequestService.findMedAnnihilationRegistrationById(rr.getId());
-            } catch (CustomException c)
+            }
+            catch (CustomException c)
             {
                 return null;
             }
         }).collect(Collectors.toList());
 
-
         regs.sort(Comparator.comparing(o -> o.getStartDate()));
-
         return new ResponseEntity<>(regs, HttpStatus.OK);
     }
 
@@ -1950,10 +1960,4 @@ if (request.getType() != null)        {
         return new ResponseEntity<>(valid, HttpStatus.OK);
     }
 
-
 }
-
-
-
-
-

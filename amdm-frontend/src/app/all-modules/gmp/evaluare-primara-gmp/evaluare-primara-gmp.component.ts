@@ -15,6 +15,7 @@ import {MatDialog, MatDialogConfig} from '@angular/material';
 import {AddDescriptionComponent} from '../../../dialog/add-description/add-description.component';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
+import {SelectSubsidiaryModalComponent} from "../../gdp/select-subsidiary-modal/select-subsidiary-modal.component";
 
 @Component({
     selector: 'app-evaluare-primara',
@@ -38,6 +39,8 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
     otherAsepticPreparations: any[] = [];
     finalSterilized: any[];
     otherFinalSterilized: any[] = [];
+    subsidiaryList: any[] = [];
+    selectedSubsidiaries: any[] = [];
 
     constructor(private fb: FormBuilder,
                 public dialog: MatDialog,
@@ -140,7 +143,8 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
                         this.eForm.get('nrLic').setValue(data.nr);
                         this.eForm.get('dataEliberariiLic').setValue(new Date(data.releaseDate));
                         this.eForm.get('dataExpirariiLic').setValue(new Date(data.expirationDate));
-                        this.findLicense(data);
+                        this.subsidiaryList = data.economicAgents;
+                        this.normalizeSubsidiaryList();
                     } else {
                         this.companyLicenseNotFound = true;
                     }
@@ -181,31 +185,6 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
         );
     }
 
-    findLicense(dataDB: any) {
-        this.licenseService.findLicenseById(dataDB.id).subscribe(data => {
-                this.companiiPerIdnoSelected = data.economicAgents;
-
-                this.companiiPerIdnoSelected.forEach(cis => {
-                    cis.companyType = cis.type.description;
-                    if (cis.locality) {
-                        cis.address = cis.locality.stateName + ', ' + cis.locality.description + ', ' + cis.street;
-                    }
-
-                    let activitiesStr;
-                    cis.activities.forEach(r => {
-                        if (activitiesStr) {
-                            activitiesStr += ', ' + r.description;
-                        } else {
-                            activitiesStr = r.description;
-                        }
-
-                    });
-                    cis.activitiesStr = activitiesStr;
-                });
-            }
-        );
-    }
-
     fillRequestDetails(data: any) {
         this.eForm.get('typeFara').setValue(data.type);
         this.eForm.get('type').setValue(data.type);
@@ -225,6 +204,37 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
         xs = xs.map(x => {
             x.isOld = true;
             return x;
+        });
+    }
+
+    normalizeSubsidiaryList() {
+        this.subsidiaryList.forEach(cis => {
+            cis.companyType = cis.type.description;
+            if (cis.locality) {
+                cis.address = cis.locality.state.description + ', ' + cis.locality.description + ', ' + cis.street;
+            }
+
+            let activitiesStr = '';
+            cis.activities.forEach(r => {
+                if(r.description) {
+                    if (activitiesStr) {
+                        activitiesStr += ', ' + r.description;
+                    } else {
+                        activitiesStr = r.description;
+                    }
+                }
+            });
+            cis.activitiesStr = activitiesStr;
+
+            let pharmaceutist;
+            cis.agentPharmaceutist.forEach(r => {
+                if (pharmaceutist) {
+                    pharmaceutist += ', ' + r.fullName;
+                } else {
+                    pharmaceutist = r.fullName;
+                }
+            });
+            cis.selectedPharmaceutist = pharmaceutist;
         });
     }
 
@@ -341,6 +351,12 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
             return;
         }
 
+        this.formSubmitted = true;
+        if (this.eForm.invalid) {
+            this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
+            return;
+        }
+
         if (!this.eForm.get('veterinary').value && !this.eForm.get('humanUse').value) {
             this.errorHandlerService.showError('Tipul de medicament fabricat trebuie selectat.');
             return;
@@ -351,11 +367,6 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
             return;
         }
 
-        this.formSubmitted = true;
-        if (this.eForm.invalid) {
-            this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
-            return;
-        }
         this.formSubmitted = false;
     }
 
@@ -443,6 +454,18 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
 
     checkCertificationOnlySterile(value: any) {
         this.eForm.get('certificationOnlySterile').setValue(value.checked);
+    }
+
+    selectSubsidiary() {
+        const dialogRef = this.dialog.open(SelectSubsidiaryModalComponent, {
+            width: '1800px',
+            data: {idno: this.eForm.get('company').value.idno, subsidiaryList: this.subsidiaryList},
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.selectedSubsidiaries = result;
+            }
+        });
     }
 }
 

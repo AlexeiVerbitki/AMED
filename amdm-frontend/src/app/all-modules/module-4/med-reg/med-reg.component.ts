@@ -157,7 +157,7 @@ export class MedRegComponent implements OnInit {
                 'applicationDate': [new Date()],
                 'applicant': ['', Validators.required],
                 'seller': [null, Validators.required], // Tara si adresa lui e deja in baza
-                'basisForImport': [],
+                'basisForImport': [null, Validators.required],
                 'importer': [null, Validators.required], // Tara si adresa lui e deja in baza
                 'contract': [null, Validators.required],
                 'contractDate': [null, Validators.required],
@@ -406,8 +406,8 @@ export class MedRegComponent implements OnInit {
 
 
                 } else {
-                    let el = document.getElementById("contractCurrency");
-                    el.scrollIntoView();
+                    // let el = document.getElementById("contractCurrency");
+                    // el.scrollIntoView();
                 }
             }));
             /*================================================*/
@@ -938,12 +938,24 @@ export class MedRegComponent implements OnInit {
 
     nextStep(submitForm: boolean) {
 
+        this.formSubmitted     = true;
+
+        if (this.evaluateImportForm.get('importAuthorizationEntity.seller').valid &&
+            this.evaluateImportForm.get('importAuthorizationEntity.basisForImport').valid &&
+            this.evaluateImportForm.get('importAuthorizationEntity.contract').valid &&
+            this.evaluateImportForm.get('importAuthorizationEntity.contractDate').valid &&
+            this.evaluateImportForm.get('importAuthorizationEntity.anexa').valid &&
+            this.evaluateImportForm.get('importAuthorizationEntity.anexaDate').valid &&
+            this.evaluateImportForm.get('importAuthorizationEntity.specification').valid &&
+            this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').valid &&
+            this.unitOfImportTable.length > 0) {
+
         let currentStep = this.importData.currentStep;
         if (submitForm) {
             currentStep = 'AP';
         }
 
-        this.formSubmitted     = true;
+
         let modelToSubmit: any = {};
 
 
@@ -992,6 +1004,14 @@ export class MedRegComponent implements OnInit {
             ));
 
             this.formSubmitted = false;
+        }
+        }else {
+            console.log("this.evaluateImportForm.valid", this.evaluateImportForm.valid)
+            console.log("this.evaluateImportForm", this.evaluateImportForm)
+
+            // let element = document.getElementById("importAuthorizationEntity");
+            // element.scrollIntoView();
+
         }
     }
 

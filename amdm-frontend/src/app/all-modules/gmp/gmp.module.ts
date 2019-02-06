@@ -15,12 +15,15 @@ import {ProcessInterruptionComponent} from './process-interruption/process-inter
 import {CanDeactivateGuard} from '../../shared/auth-guard/can-deactivate-guard.service';
 import {LicenseService} from '../../shared/service/license/license.service';
 import {AddDescriptionComponent} from '../../dialog/add-description/add-description.component';
+import {SelectSubsidiaryModalComponent} from "../gdp/select-subsidiary-modal/select-subsidiary-modal.component";
+import {MatDialogModule} from "@angular/material";
 
 @NgModule({
     imports: [
         CommonModule,
         GmpRoutingModule,
         FormsModule,
+        MatDialogModule,
         ReactiveFormsModule,
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
@@ -28,8 +31,8 @@ import {AddDescriptionComponent} from '../../dialog/add-description/add-descript
         PaymentModule
     ],
     schemas: [],
-    declarations: [RegCerereGmpComponent, EvaluarePrimaraGmpComponent, ProcessInterruptionComponent, AddDescriptionComponent],
-    entryComponents: [AddDescriptionComponent],
+    declarations: [RegCerereGmpComponent, EvaluarePrimaraGmpComponent, ProcessInterruptionComponent, AddDescriptionComponent,SelectSubsidiaryModalComponent],
+    entryComponents: [AddDescriptionComponent,SelectSubsidiaryModalComponent],
     providers: [UploadFileService, RequestService, CanDeactivateGuard, LicenseService]
 })
 export class GMPModule {

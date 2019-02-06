@@ -56,13 +56,13 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                 private administrationService: AdministrationService,
                 private taskService: TaskService,
                 private loadingService: LoaderService,
-                private errorHandlerService: SuccessOrErrorHandlerService, ) {
+                private errorHandlerService: SuccessOrErrorHandlerService,) {
     }
 
     ngOnInit() {
         this.registerClinicalTrailForm = this.fb.group({
-            'requestNumber': [null],
-            'startDate': [new Date()],
+            'requestNumber': {value: null, disabled: true},
+            'startDate': {value: new Date(), disabled: true},
             'currentStep': ['R'],
             'company': ['', Validators.required],
 
@@ -77,7 +77,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
 
             'initiator': [null],
             'assignedUser': [null],
-            'flowControl': [null, Validators.required],
+            'flowControl': ['CLAP', Validators.required],
             'clinicalTrails': this.fb.group({
                 'status': ['P'],
                 'clinicTrialAmendEntities': []
@@ -102,6 +102,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
         this.loadClinicalTrails();
         this.autocompleteClinicalTrailSearch();
         this.manageClinicalTrailForm();
+        this.loadDocTypes(Pages[this.registerClinicalTrailForm.get('flowControl').value]);
 
     }
 
@@ -224,22 +225,25 @@ export class RegCerereComponent implements OnInit, OnDestroy {
         );
     }
 
+    dysplayInvalidControl(form: FormGroup) {
+        const ctFormControls = form['controls'];
+        for (const control in ctFormControls) {
+            ctFormControls[control].markAsTouched();
+            ctFormControls[control].markAsDirty();
+        }
+    }
+
 
     onSubmit() {
-        const validationData = this.registerClinicalTrailForm.get('registrationRequestMandatedContacts');
-        console.log('validationData', validationData);
-        if (validationData.get('mandatedFirstname').invalid || validationData.get('mandatedLastname').invalid || this.registerClinicalTrailForm.get('company').invalid) {
-            alert('Invalid Form0!!');
+        const formModel = this.registerClinicalTrailForm.getRawValue();
+        console.log('formModel', formModel)
+
+        if (this.registerClinicalTrailForm.invalid /*&& !this.registerClinicalTrailForm.get('flowControl').invalid*/) {
+            this.dysplayInvalidControl(this.registerClinicalTrailForm);
+            this.dysplayInvalidControl(this.registerClinicalTrailForm.get('registrationRequestMandatedContacts') as FormGroup);
+            this.errorHandlerService.showError('Forma de inregistrare contine date invalide');
             return;
         }
-        if (validationData.get('requestMandateNr').value && !validationData.get('requestMandateDate').value) {
-            return;
-        }
-        if (this.registerClinicalTrailForm.invalid) {
-            alert('Invalid Form1!!');
-            return;
-        }
-        const formModel = this.registerClinicalTrailForm.value;
 
         if (formModel.flowControl === 'CLAP') {
             this.loadingService.show();
@@ -270,7 +274,8 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             );
         } else if (formModel.flowControl === 'CLPSC') {
             if (this.clinicalTrailForm.invalid) {
-                alert('Invalid Form2!!');
+                this.dysplayInvalidControl(this.clinicalTrailForm);
+                this.errorHandlerService.showError('Studiu clinic nu a fost identificat');
                 return;
             }
             this.loadingService.show();
@@ -301,7 +306,8 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             );
         } else if (formModel.flowControl === 'CLNP') {
             if (this.clinicalTrailForm.invalid) {
-                alert('Invalid Form2!!');
+                this.dysplayInvalidControl(this.clinicalTrailForm);
+                this.errorHandlerService.showError('Studiu clinic nu a fost identificat');
                 return;
             }
 

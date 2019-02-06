@@ -1,39 +1,48 @@
-.md-form {
-    position: relative;
-    margin-top: 14px !important;
-    margin-bottom: 5px !important;
-}
-
-.md-form-modified {
-    position: relative;
-    margin-top: 0px;
-    margin-bottom: 5px !important;
-}
-
-.mat-radio-button.mat-radio-disabled .mat-radio-label-content {
-    color: rgba(0, 0, 0, 0.75);
+.md-forms {
+  position: relative;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 label.required:not(:empty):after,
 .field-header.required:after {
-    content: " *";
-    color: red;
-    position: absolute;
-    right: 0px;
-    top: -15px;
+  content: " *";
+  color: red;
+  position: absolute;
+  right: 0px;
+  top: -15px;
 }
 
 .mt-4s {
-    padding-top: 45px;
+  padding-top: 45px;
+}
+
+.md-form-modified {
+  position: relative;
+  margin-top: 10px;
+  margin-bottom: 1.5rem;
 }
 
 .font-w400 {
-    font-weight : 400;
-    margin-left: 15px;
-    margin-top: 35px;
+  font-weight : 400;
+  margin-left: 15px;
+  margin-top: 35px;
 }
-.font-w400l {
-    font-weight : 400;
-    margin-left: 15px;
-    margin-top: 15px;
+
+.btn.btn-sms {
+  padding: 0.2rem 1rem;
+  font-size: 0.8rem;
+}
+
+.md-form .form-control:disabled, .md-form .form-control[readonly] {
+  border-bottom: 1px solid rgba(189, 189, 189, 0.5) !important;
+  background-color: transparent;
+}
+
+.mt-table {
+  margin-top: 21px;
+}
+
+td {
+  vertical-align: middle !important;
 }

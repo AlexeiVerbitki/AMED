@@ -38,8 +38,8 @@ export class SelectSubsidiaryModalComponent implements OnInit {
         this.dialogRef.close(this.dataSource.data.filter(row => row.selected))
     }
 
-    selectRow(row) {
-        row.selected = !row.selected;
+    selectRow(elem : any, row : any) {
+        row.selected = elem.checked;
     }
     ngOnInit() {
         this.dataSource.data = this.subsidiaryList;

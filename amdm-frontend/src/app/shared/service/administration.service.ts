@@ -338,4 +338,8 @@ export class AdministrationService {
     variatonTypesJSON(): Observable<any> {
         return this.http.get('/api/administration/variation-types-to-json', {});
     }
+
+    validIDNP(idnp: string): Observable<any> {
+        return this.http.get('/api/validate-idnp', {params: {idnp: idnp}});
+    }
 }

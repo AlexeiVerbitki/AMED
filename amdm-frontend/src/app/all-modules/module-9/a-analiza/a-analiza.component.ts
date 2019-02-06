@@ -497,7 +497,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
     }
 
     checkResponseReceived(doc: any, value: any) {
-        doc.responseReceived = value.checked;
+        doc.responseReceived = value.checked ? 1 : 0;
     }
 
     remove(doc: any, index: number) {
@@ -511,12 +511,10 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         dialogRef2.afterClosed().subscribe(result => {
             console.log('result', result);
             if (result) {
-                console.log('doc.id', doc.id);
-
                 this.subscriptions.push(
                     this.documentService.deleteSLById(doc.id).subscribe(data => {
                         console.log('data', data);
-                        this.initialData.outputDocuments.splice(index, 1);
+                        this.outDocuments.splice(index, 1);
                     }, error => console.log(error))
                 );
             }
@@ -609,6 +607,14 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         if (!docDistrib) {
             this.errorHandlerService.showError('Dispozitia de distribuire nu este atashata');
             return;
+        }
+
+        const outDocDistrib = this.outDocuments.filter(doc => doc.docType.category == 'SL');
+        for (let i = 0; i < outDocDistrib.length; i++) {
+            if (!outDocDistrib[i].responseReceived) {
+                this.errorHandlerService.showError('Raspuns la scrisoarea de solicitare date additionale ' + outDocDistrib[i].number + ' nu a fost primit');
+                return;
+            }
         }
 
         this.loadingService.show();
