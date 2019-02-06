@@ -161,7 +161,7 @@
                 <div class="md-form">
                     <textarea type="text" id="titluStud" class="md-textarea form-control" mdbInputDirective rows="1"
                               formControlName="title"></textarea>
-                    <label for="titluStud">Titlul studiului</label>
+                    <label for="titluStud">Titlul studiului <span class="text-danger">*</span></label>
                 </div>
             </div>
             <hr>
@@ -224,14 +224,15 @@
                     <div class="md-form">
                         <input id="sponsoStudClinic" mdbInputDirective type="text" class="form-control"
                                formControlName="sponsor">
-                        <label for="sponsoStudClinic">Sponsorul Studiului clinic</label>
+                        <label for="sponsoStudClinic">Sponsorul Studiului clinic <span class="text-danger">*</span></label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="md-form-modified">
                         <ng-select id="phaseid" name="step" [items]="phaseList" bindLabel="name"
                                    placeholder="Faza studiului"
-                                   formControlName="phase">
+                                   formControlName="phase"
+                                   required="true">
                         </ng-select>
                     </div>
                 </div>
@@ -239,7 +240,7 @@
                     <div class="md-form">
                         <input id="numEudraCT" mdbInputDirective type="text" class="form-control"
                                formControlName="eudraCtNr">
-                        <label for="numEudraCT">Numărul Eudra CT nr.</label>
+                        <label for="numEudraCT">Numărul Eudra CT nr. <span class="text-danger">*</span></label>
                     </div>
                 </div>
             </div>
@@ -248,21 +249,21 @@
                 <div class="col-md-4">
                     <div class="md-form">
                         <input id="codStud" mdbInputDirective type="text" class="form-control" formControlName="code">
-                        <label for="codStud">Codul studiului</label>
+                        <label for="codStud">Codul studiului <span class="text-danger">*</span></label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="md-form">
                         <input id="popStudClinicNumNational" mdbInputDirective type="number" class="form-control"
                                formControlName="trialPopNat">
-                        <label for="popStudClinicNumNational">Numărul pacienților naționali</label>
+                        <label for="popStudClinicNumNational">Numărul pacienților naționali <span class="text-danger">*</span></label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="md-form">
                         <input id="popStudClinicNumInternational" mdbInputDirective type="number" class="form-control"
                                formControlName="trialPopInternat">
-                        <label for="popStudClinicNumInternational">Numărul pacienților internaționali</label>
+                        <label for="popStudClinicNumInternational">Numărul pacienților internaționali <span class="text-danger">*</span></label>
                     </div>
                 </div>
             </div>
@@ -274,7 +275,7 @@
                         <ng-select id="allMediacalInstitutions" name="allMediacalInstitutions" [items]="allMediacalInstitutionsList"
                             placeholder="Instituţia medicala" formControlName="medicalInstitution" required="true">
                             <ng-template ng-option-tmp ng-label-tmp let-item="item">
-                                {{item.name}}
+                                {{item.name}}ponsorul Studiului clinic
                             </ng-template>
                         </ng-select>
                     </div>
@@ -484,7 +485,7 @@
                     <div class="col-4">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Calea de administrae" formControlName="administratingMode">
+                                <input type="text" matInput placeholder="Calea de administrare" formControlName="administratingMode">
                             </mat-form-field>
                         </div>
                     </div>
@@ -603,7 +604,7 @@
                     <div class="col-4">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Calea de administrae" formControlName="administratingMode">
+                                <input type="text" matInput placeholder="Calea de administrare" formControlName="administratingMode">
                             </mat-form-field>
                         </div>
                     </div>
@@ -632,7 +633,7 @@
                     <div class="col-4">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Calea de administrae"
+                                <input type="text" matInput placeholder="Calea de administrare"
                                        formControlName="administratingMode">
                             </mat-form-field>
                         </div>
@@ -641,7 +642,7 @@
             </div>
             <hr>
 
-            <app-payment-clinical-trial [registrationReqest]="initialData"></app-payment-clinical-trial>
+            <app-payment-clinical-trial [registrationRequest]="initialData"></app-payment-clinical-trial>
 
             <button type="button" (click)="disableEnableForm()" mdbWavesEffect hidden="true">Disable/Enable form
             </button>

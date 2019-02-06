@@ -441,7 +441,7 @@ export class ProcessInterruptionComponent implements OnInit {
 
     getConcatenatedDivision() {
         let concatenatedDivision = '';
-        for (let entry of this.divisions) {
+        for (const entry of this.divisions) {
             if (entry.description && entry.volume && entry.volumeQuantityMeasurement) {
                 concatenatedDivision = concatenatedDivision + entry.description + ' ' + entry.volume + ' ' + entry.volumeQuantityMeasurement.description + '; ';
             } else if (entry.volume && entry.volumeQuantityMeasurement) {

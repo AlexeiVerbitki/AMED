@@ -44,24 +44,24 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
         this.rForm = fb.group({
             'data': {disabled: true, value: new Date()},
             'requestNumber': [null],
-            'idnp': [null,  Validators.maxLength(13)],
+            'idnp': [null,  [Validators.required, Validators.maxLength(13)]],
             'id': [null],
-            'folderNumber': [null, Validators.required],
+            'folderNumber': [null],
             'startDate': [new Date()],
             'currentStep': ['R'],
             'mandatedFirstname': [null, Validators.required],
             'mandatedLastname': [null, Validators.required],
-            'phoneNumber': [null, [Validators.required, Validators.maxLength(9), Validators.pattern('[0-9]+')]],
+            'phoneNumber': [null, [Validators.maxLength(9), Validators.pattern('[0-9]+')]],
             'email': [null, Validators.email],
-            'requestMandateNr': [null, Validators.required],
-            'requestMandateDate': [{value: null}, Validators.required],
+            'requestMandateNr': [null],
+            'requestMandateDate': [{disabled: true, value: null}],
             'registrationRequestMandatedContactsId': [null],
-            'company': [null],
+            'company': [null, Validators.required],
             'initiator': [''],
             'assignedUser': [''],
             'type':
                 fb.group({
-                    'code': ['CPMED', Validators.required]
+                    'code': ['CPMED']
                 }),
         });
     }
@@ -71,7 +71,7 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
 
         this.subscriptions.push(
             this.priceService.generateDocNumber().subscribe(data => {
-                    this.generatedDocNrSeq = data;
+                    this.generatedDocNrSeq = data[0];
                     this.rForm.get('requestNumber').setValue(this.generatedDocNrSeq);
                 },
                 error => console.log(error)
@@ -100,11 +100,11 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
 
 
     checkIDNP($event) {
-        if($event.target.value.trim().length === 0) {
+        if ($event.target.value.trim().length === 0) {
             this.rForm.get('idnp').setErrors(null);
         } else {
             this.subscriptions.push(this.priceService.validIDNP($event.target.value).subscribe(response => {
-                    if(response) {
+                    if (response) {
                         this.rForm.get('idnp').setErrors(null);
                     } else {
                         this.rForm.get('idnp').setErrors({'incorrect': true});
@@ -118,7 +118,8 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
 
         this.formSubmitted = true;
 
-        if (!this.rForm.valid) {
+        console.log(this.rForm);
+        if (!this.rForm.valid || !this.rForm.get('idnp').value) {
             return;
         }
 
@@ -153,6 +154,7 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
 
         this.subscriptions.push(this.priceService.addRegistrationRequestForPrice(modelToSubmit).subscribe(req => {
                 this.rForm.get('id').setValue(req.body.id);
+                this.errorHandlerService.showSuccess('Datele au fost salvate');
                 if (req.body.registrationRequestMandatedContacts[0]) {
                     this.rForm.get('registrationRequestMandatedContactsId').setValue(req.body.registrationRequestMandatedContacts[0].id);
                 }

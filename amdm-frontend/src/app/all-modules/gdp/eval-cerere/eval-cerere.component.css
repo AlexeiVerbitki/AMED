@@ -1,0 +1,48 @@
+.md-forms {
+  position: relative;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+label.required:not(:empty):after,
+.field-header.required:after {
+  content: " *";
+  color: red;
+  position: absolute;
+  right: 0px;
+  top: -15px;
+}
+
+.mt-4s {
+  padding-top: 45px;
+}
+
+.md-form-modified {
+  position: relative;
+  margin-top: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.font-w400 {
+  font-weight : 400;
+  margin-left: 15px;
+  margin-top: 35px;
+}
+
+.btn.btn-sms {
+  padding: 0.2rem 1rem;
+  font-size: 0.8rem;
+}
+
+.md-form .form-control:disabled, .md-form .form-control[readonly] {
+  border-bottom: 1px solid rgba(189, 189, 189, 0.5) !important;
+  background-color: transparent;
+}
+
+.mt-table {
+  margin-top: 21px;
+}
+
+td {
+  vertical-align: middle !important;
+}

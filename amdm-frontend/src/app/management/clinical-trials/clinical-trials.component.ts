@@ -1,11 +1,10 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 import {NavbarTitleService} from '../../shared/service/navbar-title.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {ClinicalTrialService} from '../../shared/service/clinical-trial.service';
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import * as XLSX from 'xlsx';
-import {LicenseStatusPipe} from '../../shared/pipe/license-status.pipe';
 import {DatePipe} from '@angular/common';
 import {Angular5Csv} from 'angular5-csv/Angular5-csv';
 import {DocumentService} from '../../shared/service/document.service';
@@ -17,30 +16,26 @@ import {ClinicalTrialsDetailsComponent} from './dialog/clinical-trials-details/c
     templateUrl: './clinical-trials.component.html',
     styleUrls: ['./clinical-trials.component.css']
 })
-export class ClinicalTrialsComponent implements OnInit, OnDestroy {
+export class ClinicalTrialsComponent implements OnInit, OnDestroy, AfterViewInit {
 
-    private subscriptions: Subscription[] = [];
     ctForm: FormGroup;
-
     //Datasource table
     displayedColumns: any[] = ['code', 'eudraCt_nr', 'treatment', 'provenance', 'cometee', 'cometeeDate', 'sponsor'];
     dataSource = new MatTableDataSource<any>();
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
-
     visibility = false;
-
     //Treatments
     treatmentList: any[] = [
         {'id': 1, 'description': 'Unicentric', 'code': 'U'},
         {'id': 2, 'description': 'Multicentric', 'code': 'M'}
     ];
-
     //Provenances
     provenanceList: any[] = [
         {'id': 3, 'description': 'Național', 'code': 'N'},
         {'id': 4, 'description': 'Internațional', 'code': 'I'}
     ];
+    private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder,
                 private navbarTitleService: NavbarTitleService,
@@ -75,31 +70,6 @@ export class ClinicalTrialsComponent implements OnInit, OnDestroy {
         this.dataSource.paginator = this.paginator;
         this.dataSource.paginator._intl.itemsPerPageLabel = 'Studii clinice per pagina: ';
         this.dataSource.sort = this.sort;
-    }
-
-    private clear(): void {
-        this.ctForm.reset();
-    }
-
-    private getClinicalTrials(): void {
-
-        const submitForm = this.ctForm.value;
-        if (submitForm.treatment) {
-            submitForm.treatmentId = submitForm.treatment.id;
-        }
-        if (submitForm.provenance) {
-            submitForm.provenanceId = submitForm.provenance.id;
-        }
-
-        this.subscriptions.push(this.clinicTrialService.loadClinicalTrailListByFilter(this.ctForm.value).subscribe(data => {
-                this.dataSource.data = data;
-                //this.dataSource.data = data;
-            }, error => {
-                // this.loadingService.hide();
-                console.log(error);
-            })
-        );
-
     }
 
     exportToExcel() {
@@ -141,25 +111,6 @@ export class ClinicalTrialsComponent implements OnInit, OnDestroy {
         return arr;
     }
 
-    private getDisplayData() {
-        const dtPipe = new DatePipe('en-US');
-        const displayData: any [] = [];
-        this.dataSource.filteredData.forEach(fd => {
-            const row: any = {};
-
-            row.code = fd.code;
-            row.eudraCt_nr = fd.eudraCt_nr;
-            row.treatment = fd.treatment;
-            row.provenance = fd.provenance;
-            row.cometee = fd.cometee;
-            row.cometeeDate = dtPipe.transform(new Date(fd.cometeeDate), 'dd/MM/yyyy');
-            row.sponsor = fd.sponsor;
-
-            displayData.push(row);
-        });
-        return displayData;
-    }
-
     exportToCsv() {
         const displayData = this.getDisplayData();
 
@@ -186,21 +137,6 @@ export class ClinicalTrialsComponent implements OnInit, OnDestroy {
         );
     }
 
-
-    private openCLinicatTrialDetails(id: number) {
-        const dialogRef = this.dialogClinicTrial.open(ClinicalTrialsDetailsComponent, {
-            width: '1400px',
-            data: {
-                id: id,
-            }
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                //do nothing
-            }
-        });
-    }
-
     changeVisibility() {
         this.visibility = !this.visibility;
     }
@@ -214,6 +150,64 @@ export class ClinicalTrialsComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.navbarTitleService.showTitleMsg('');
         this.subscriptions.forEach(s => s.unsubscribe());
+    }
+
+    public clear(): void {
+        this.ctForm.reset();
+    }
+
+    public getClinicalTrials(): void {
+
+        const submitForm = this.ctForm.value;
+        if (submitForm.treatment) {
+            submitForm.treatmentId = submitForm.treatment.id;
+        }
+        if (submitForm.provenance) {
+            submitForm.provenanceId = submitForm.provenance.id;
+        }
+
+        this.subscriptions.push(this.clinicTrialService.loadClinicalTrailListByFilter(this.ctForm.value).subscribe(data => {
+                this.dataSource.data = data;
+                //this.dataSource.data = data;
+            }, error => {
+                // this.loadingService.hide();
+                console.log(error);
+            })
+        );
+
+    }
+
+    private getDisplayData() {
+        const dtPipe = new DatePipe('en-US');
+        const displayData: any [] = [];
+        this.dataSource.filteredData.forEach(fd => {
+            const row: any = {};
+
+            row.code = fd.code;
+            row.eudraCt_nr = fd.eudraCt_nr;
+            row.treatment = fd.treatment;
+            row.provenance = fd.provenance;
+            row.cometee = fd.cometee;
+            row.cometeeDate = dtPipe.transform(new Date(fd.cometeeDate), 'dd/MM/yyyy');
+            row.sponsor = fd.sponsor;
+
+            displayData.push(row);
+        });
+        return displayData;
+    }
+
+    private openCLinicatTrialDetails(id: number) {
+        const dialogRef = this.dialogClinicTrial.open(ClinicalTrialsDetailsComponent, {
+            width: '1400px',
+            data: {
+                id: id,
+            }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                //do nothing
+            }
+        });
     }
 
 }

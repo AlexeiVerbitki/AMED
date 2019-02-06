@@ -1,9 +1,11 @@
 package com.bass.amed.controller.rest;
 
+import com.bass.amed.common.Constants;
 import com.bass.amed.dto.InterruptDetailsDTO;
 import com.bass.amed.dto.MedicamentDetailsDTO;
 import com.bass.amed.dto.MedicamentFilterDTO;
 import com.bass.amed.dto.SimilarMedicamentDTO;
+import com.bass.amed.entity.AuditLogEntity;
 import com.bass.amed.entity.MedicamentEntity;
 import com.bass.amed.entity.RegistrationRequestHistoryEntity;
 import com.bass.amed.entity.RegistrationRequestsEntity;
@@ -13,6 +15,8 @@ import com.bass.amed.projection.MedicamentRegisterNumberProjection;
 import com.bass.amed.repository.MedicamentRepository;
 import com.bass.amed.repository.RequestRepository;
 import com.bass.amed.repository.SimilarMedicamentsRepository;
+import com.bass.amed.service.AuditLogService;
+import com.bass.amed.utils.AuditUtils;
 import com.bass.amed.utils.MedicamentQueryUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +30,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -43,6 +50,8 @@ public class MedicamentController
     private RequestRepository requestRepository;
     @Autowired
     private EntityManagerFactory entityManagerFactory;
+    @Autowired
+    private AuditLogService auditLogService;
 
     @RequestMapping("/company-all-medicaments")
     public ResponseEntity<List<MedicamentEntity>> getAllMedicaments()
@@ -88,7 +97,7 @@ public class MedicamentController
     public ResponseEntity<List<MedicamentRegisterNumberProjection>> getMedicamentsByRegisterNumber(String registerNumber)
     {
         logger.debug("Retrieve medicaments by register number");
-        if (registerNumber.matches("[0-9]+"))
+        if (registerNumber.matches("[0-9]+") && registerNumber.length() < 9)
         {
             return new ResponseEntity<>(medicamentRepository.findDistinctByRegistrationNumber(Integer.valueOf(registerNumber)), HttpStatus.OK);
         }
@@ -131,17 +140,22 @@ public class MedicamentController
         historyEntity.setEndDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
         registrationRequestsEntity.getRequestHistories().add(historyEntity);
 
-//        historyEntity = new RegistrationRequestHistoryEntity();
-//        historyEntity.setUsername(interruptDetailsDTO.getUsername());
-//        historyEntity.setStep("C");
-//        historyEntity.setStartDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
-//        registrationRequestsEntity.getRequestHistories().add(historyEntity);
-
-       // registrationRequestsEntity.setEndDate(new Timestamp(new Date().getTime()));
-
         registrationRequestsEntity.setOiIncluded(true);
 
         requestRepository.save(registrationRequestsEntity);
+
+        if (registrationRequestsEntity.getType().getCode().equals("INMP"))
+        {
+            auditLogService.save(new AuditLogEntity().withField("Intrerupere proces, numar cerere").withAction(Constants.AUDIT_ACTIONS.INTERRUPT.name()).withCategoryName(Constants.AUDIT_CATEGORIES.MODULE.name())
+                    .withSubCategoryName(Constants.AUDIT_SUBCATEGORIES.MODULE_2.name()).withEntityId(null).withRequestId(registrationRequestsEntity.getId()).withNewValue(registrationRequestsEntity.getRequestNumber()));
+            auditLogService.save(new AuditLogEntity().withField("Intrerupere proces, motiv").withAction(Constants.AUDIT_ACTIONS.INTERRUPT.name()).withCategoryName(Constants.AUDIT_CATEGORIES.MODULE.name())
+                    .withSubCategoryName(Constants.AUDIT_SUBCATEGORIES.MODULE_2.name()).withEntityId(null).withRequestId(registrationRequestsEntity.getId()).withNewValue(registrationRequestsEntity.getInterruptionReason()));
+        }
+        else
+        {
+            RegistrationRequestsEntity requestDBAfterCommit = requestRepository.findById(registrationRequestsEntity.getId()).orElse(new RegistrationRequestsEntity());
+            AuditUtils.auditMedicamentInterruption(auditLogService, requestDBAfterCommit);
+        }
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

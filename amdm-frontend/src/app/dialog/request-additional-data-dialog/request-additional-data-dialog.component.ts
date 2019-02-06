@@ -22,6 +22,7 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
     docTypes: any[];
     title = 'Detalii scrisoare de solicitare date aditionale';
     functions: any[];
+    hideSaveBtn = false;
     loadingFunctions = false;
 
     constructor(private fb: FormBuilder, private administrationService: AdministrationService,
@@ -45,6 +46,19 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
         const datePipe = new DatePipe('en-US');
         this.reqForm.get('docNumber').setValue('SL-' + this.dataDialog.requestNumber + '-' + this.dataDialog.nrOrdDoc);
 
+        if (this.dataDialog.hideSave) {
+            this.hideSaveBtn = true;
+        }
+
+        if (this.dataDialog.modalType == 'EMPTY_NOTIFICATION') {
+            this.title = 'Detalii scrisoare de informare';
+            this.reqForm.get('docNumber').setValue('NL-' + this.dataDialog.requestNumber);
+        }
+
+        if (this.dataDialog.modalType == 'REQUEST_ADDITIONAL_DATA_EMPTY') {
+            this.reqForm.get('docNumber').setValue('NL-' + this.dataDialog.requestNumber);
+            this.title = 'Scrisoare de solicitare date aditionale Nr ' + this.reqForm.get('docNumber').value;
+        }
         if (this.dataDialog.modalType == 'REQUEST_ADDITIONAL_DATA') {
             const x = '\tPrin prezenta, Agenția Medicamentului și Dispozitivelor Medicale Vă informează, că în rezultatul expertizei specializate a dosarului produsului medicamentos ' + this.dataDialog.medicamentStr + ' depus pentru autorizare, s-a constatat că:';
             let z = '\r\n\t-  c......';
@@ -131,18 +145,30 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
         this.loadingService.show();
         let docType = '';
         switch (this.dataDialog.modalType) {
+            case  'EMPTY_NOTIFICATION' :
             case  'NOTIFICATION' : {
                 docType = 'NL';
                 break;
             }
+            case  'REQUEST_ADDITIONAL_DATA_EMPTY' :
             case  'REQUEST_ADDITIONAL_DATA' : {
                 docType = 'SL';
                 break;
             }
         }
-        const modelToSubmit = {nrDoc : this.reqForm.get('docNumber').value, responsiblePerson : this.dataDialog.registrationRequestMandatedContact.mandatedLastname + ' ' + this.dataDialog.registrationRequestMandatedContact.mandatedFirstname, companyName : this.dataDialog.companyName,
-            requestDate: new Date(), country : 'Moldova',  address : this.dataDialog.address, phoneNumber : this.dataDialog.registrationRequestMandatedContact.phoneNumber, email : this.dataDialog.registrationRequestMandatedContact.email, message : this.reqForm.get('content').value,
-            function : this.reqForm.get('function').value.description, signerName : this.reqForm.get('function').value.value };
+        const modelToSubmit = {
+            nrDoc: this.reqForm.get('docNumber').value,
+            responsiblePerson: this.dataDialog.registrationRequestMandatedContact.mandatedLastname + ' ' + this.dataDialog.registrationRequestMandatedContact.mandatedFirstname,
+            companyName: this.dataDialog.companyName,
+            requestDate: new Date(),
+            country: 'Moldova',
+            address: this.dataDialog.address,
+            phoneNumber: this.dataDialog.registrationRequestMandatedContact.phoneNumber,
+            email: this.dataDialog.registrationRequestMandatedContact.email,
+            message: this.reqForm.get('content').value,
+            function: this.reqForm.get('function').value.description,
+            signerName: this.reqForm.get('function').value.value
+        };
 
         let observable: Observable<any> = null;
         observable = this.documentService.viewRequestNew(modelToSubmit);

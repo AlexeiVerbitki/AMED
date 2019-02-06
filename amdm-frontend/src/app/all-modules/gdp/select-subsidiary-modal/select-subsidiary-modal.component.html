@@ -1,0 +1,49 @@
+<h2 mat-dialog-title class="text-center">Selectați filiala</h2>
+<mat-dialog-content class="mat-typography">
+    <div class="table-width">
+        <div class="example-container">
+            <table mat-table [dataSource]="dataSource">
+                <ng-container matColumnDef="selected">
+                    <th class="header rgba-header font-td" mat-header-cell *matHeaderCellDef>Selectat</th>
+                    <td mat-cell *matCellDef="let x; let i = index" [ngStyle]="{'width': '10px'}">
+                        <mat-checkbox [checked]="x.selected"></mat-checkbox>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nr">
+                    <th class="header rgba-header font-td" mat-header-cell *matHeaderCellDef>Nr.</th>
+                    <td mat-cell *matCellDef="let x; let i = index" >{{i + 1}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="companyType">
+                    <th class="header rgba-header font-td" mat-header-cell *matHeaderCellDef>Tipul intreprinderii</th>
+                    <td mat-cell *matCellDef="let x" mdbTooltip="{{x.companyType}}" placement="top">{{x.companyType}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="address">
+                    <th class="header rgba-header font-td" mat-header-cell *matHeaderCellDef>Adresa</th>
+                    <td mat-cell *matCellDef="let x" mdbTooltip="{{x.address}}" placement="top">{{x.address}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="selectedPharmaceutist">
+                    <th class="header rgba-header font-td" mat-header-cell *matHeaderCellDef>Farmacist/Sef de filiala</th>
+                    <td mat-cell *matCellDef="let x" mdbTooltip="{{x.selectedPharmaceutist}}" placement="top">{{x.selectedPharmaceutist}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="activitiesStr">
+                    <th class="header rgba-header font-td" mat-header-cell *matHeaderCellDef>Activitatile</th>
+                    <td mat-cell *matCellDef="let x" mdbTooltip="{{x.activitiesStr}}" placement="top">{{x.activitiesStr}}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="columnsToDisplay; sticky: true"></tr>
+                <tr mat-row *matRowDef="let x; columns: columnsToDisplay" (click)="selectRow(x)"></tr>
+            </table>
+        </div>
+    </div>
+
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+    <mat-paginator [pageSizeOptions]="[25, 50, 200]" showFirstLastButtons></mat-paginator>
+    <button class="ml-3 btn btn-dark-green-color btn-sm waves-light" (click)="save()">Salvează</button>
+    <button class="ml-3 btn btn-dark-red-color btn-sm waves-light" (click)="this.dialogRef.close()">Închide</button>
+</mat-dialog-actions>

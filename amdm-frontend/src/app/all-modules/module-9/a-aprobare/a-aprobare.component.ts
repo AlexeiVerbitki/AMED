@@ -10,8 +10,8 @@ import {AuthService} from '../../../shared/service/authetication.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 import {MatDialog} from '@angular/material';
-import {SuccessOrErrorHandlerService} from "../../../shared/service/success-or-error-handler.service";
-import {DocumentService} from "../../../shared/service/document.service";
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
+import {DocumentService} from '../../../shared/service/document.service';
 
 @Component({
     selector: 'app-a-aprobare',
@@ -21,7 +21,7 @@ import {DocumentService} from "../../../shared/service/document.service";
 export class AAprobareComponent implements OnInit, OnDestroy {
     private subscriptions: Subscription[] = [];
     approveClinicalTrailForm: FormGroup;
-    protected docs: Document[] = [];
+    docs: Document[] = [];
     docTypes: any[];
     outDocuments: any[] = [];
 
@@ -59,13 +59,13 @@ export class AAprobareComponent implements OnInit, OnDestroy {
                 'startDateNational': [''],
                 'endDateNational': [''],
                 'endDateInternational': [''],
-                'title': ['', Validators.required],
-                'treatment': ['', Validators.required],
-                'provenance': ['', Validators.required],
-                'sponsor': ['', Validators.required],
-                'phase': ['', Validators.required],
-                'eudraCtNr': ['', Validators.required],
-                'code': ['code', Validators.required],
+                'title': [''],
+                'treatment': [''],
+                'provenance': [''],
+                'sponsor': [''],
+                'phase': [''],
+                'eudraCtNr': [''],
+                'code': ['code'],
                 'medicalInstitutions': [],
                 'trialPopNat': [''],
                 'trialPopInternat': [''],
@@ -145,7 +145,7 @@ export class AAprobareComponent implements OnInit, OnDestroy {
     viewDoc(doc: any) {
         // console.log('doc', doc);
         // console.log('this.docs', this.docs);
-        let findDoc = this.docs.find(document => document.docType.category === 'AC');
+        const findDoc = this.docs.find(document => document.docType.category === 'AC');
         if (findDoc) {
             if (findDoc.id) {
                 console.log('findDoc1', findDoc);
@@ -153,8 +153,8 @@ export class AAprobareComponent implements OnInit, OnDestroy {
                 observable = this.documentService.generateAvizC(this.approveClinicalTrailForm.get('id').value, doc.docType.category);
 
                 this.subscriptions.push(observable.subscribe(data => {
-                        let file = new Blob([data], {type: 'application/pdf'});
-                        var fileURL = URL.createObjectURL(file);
+                        const file = new Blob([data], {type: 'application/pdf'});
+                        const fileURL = URL.createObjectURL(file);
                         window.open(fileURL);
                         this.loadingService.hide();
                     }, error => {
@@ -174,14 +174,13 @@ export class AAprobareComponent implements OnInit, OnDestroy {
     save() {
         const formModel = this.approveClinicalTrailForm.getRawValue();
         this.loadingService.show();
-        // console.log('1',formModel);
         formModel.documents = this.docs;
+        formModel.documents.forEach(docum => docum.registrationRequestId = formModel.id);
         formModel.outputDocuments = this.outDocuments;
+        console.log('formModel.documents', formModel.documents);
+
         this.subscriptions.push(
             this.requestService.saveClinicalTrailRequest(formModel).subscribe(data => {
-                // console.log('data',data);
-                // console.log('data',data.body);
-
                 this.docs = data.body.documents;
                 this.outDocuments = data.body.outputDocuments;
 
@@ -195,17 +194,26 @@ export class AAprobareComponent implements OnInit, OnDestroy {
         );
     }
 
+    dysplayInvalidControl(form: FormGroup) {
+        const ctFormControls = form['controls'];
+        for (const control in ctFormControls) {
+            ctFormControls[control].markAsTouched();
+            ctFormControls[control].markAsDirty();
+        }
+    }
+
     onSubmit() {
         const formModel = this.approveClinicalTrailForm.getRawValue();
 
-        console.log(formModel.status);
+        // console.log(formModel);
         if (formModel.status === '0') {
-            console.log(formModel);
             if (this.approveClinicalTrailForm.invalid) {
-                alert('InvalidForm');
-                console.log('this.approveClinicalTrailForm.invalid', this.approveClinicalTrailForm);
+                // let form:FormGroup = this.approveClinicalTrailForm['controls'].find(control=>control)
+                this.dysplayInvalidControl(this.approveClinicalTrailForm.get('clinicalTrails') as FormGroup);
+                this.errorHandlerService.showError('Datele comisiei medicamentului sunt invalide');
                 return;
             }
+
             this.loadingService.show();
 
             formModel.currentStep = 'F';

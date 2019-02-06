@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit,} from '@angular/core';
+import {Component, OnDestroy, OnInit, } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {Document} from '../../../models/document';
@@ -12,6 +12,7 @@ import {PriceService} from '../../../shared/service/prices.service';
 import {PriceEditModalComponent} from '../modal/price-edit-modal/price-edit-modal.component';
 import {Decision, PriceReferenceType} from '../price-constants';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 
 @Component({
     selector: 'app-price-evaluate-med', templateUrl: './price-evaluate-med.component.html', styleUrls: ['./price-evaluate-med.component.css'], providers: [PriceService]
@@ -40,10 +41,13 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
     decisions: any[] = [{description: 'Acceptat', id: 1}, {description: 'Respins', id: 2}];
     medicaments: any[] = [];
     avgCurrencies: any[] = [];
+    initialData: any = {};
+    registrationRequestMandatedContacts: any[] = [];
     private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder, private activatedRoute: ActivatedRoute, private priceService: PriceService, public dialogConfirmation: MatDialog,
-                private navbarTitleService: NavbarTitleService, private router: Router, public dialog: MatDialog, private loadingService: LoaderService) {
+                private navbarTitleService: NavbarTitleService, private router: Router, public dialog: MatDialog, private loadingService: LoaderService,
+                private errorHandlerService: SuccessOrErrorHandlerService) {
 
         this.PriceRegForm = fb.group({
             'id': [],
@@ -65,7 +69,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                 nmPriceId: [null]
             }),
             'evaluation': fb.group({
-                'expirationDate': [null, Validators.required],
+                'expirationDate': [{value:null, disabled: true}, Validators.required],
                 'selectedPrice': [null, Validators.required],
                 'selectedReason': [null, Validators.required],
                 'decision': [null, Validators.required],
@@ -88,6 +92,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                 'authorizationHolder': [null, Validators.required],
                 'manufactureName': [null],
                 'manufactureCountry': [null],
+                'commercialName': [null],
                 'documents': [],
                 'status': ['P'],
                 'group': fb.group({
@@ -95,7 +100,8 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                 })
             }),
             'company': fb.group({
-                'id': [], 'name': ['', Validators.required],
+                'id': [],
+                'name': ['', Validators.required],
             }),
             'type': [],
             'typeValue': {disabled: true, value: null},
@@ -149,6 +155,11 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
             this.subscriptions.push(this.priceService.getPricesRequest(params['id']).subscribe(data => {
                 console.log(data);
+                this.initialData = Object.assign({}, data);
+
+                if (data.registrationRequestMandatedContacts) {
+                    this.registrationRequestMandatedContacts = data.registrationRequestMandatedContacts;
+                }
 
                 if (data.price.medicament != undefined) {
                     if (data.price.currency.shortDescription == 'MDL') {
@@ -251,6 +262,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                 this.PriceRegForm.get('medicament.volume').setValue(data.price.medicament.volume);
                 this.PriceRegForm.get('medicament.volumeQuantityMeasurementName').setValue(data.price.medicament.volumeQuantityMeasurement ? data.price.medicament.volumeQuantityMeasurement.description : undefined);
                 this.PriceRegForm.get('medicament.expirationDate').setValue(data.price.medicament.expirationDate);
+                this.PriceRegForm.get('medicament.commercialName').setValue(data.price.medicament.commercialName);
                 this.PriceRegForm.get('startDate').setValue(new Date(data.startDate));
                 this.initOutputDocs(data.outputDocuments);
 
@@ -452,7 +464,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         });
 
         array.push(...this.refPrices.filter(value => value.type.id == type).slice(0, 3));
-        const avgMinPrice: Price = new Price();
+        const avgMinPrice: any = {};
         avgMinPrice.country = new Country();
         avgMinPrice.country.description = 'Prețul Mediu';
         avgMinPrice['xchRateRefVal'] = 0;
@@ -468,6 +480,8 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         avgMinPrice['xchRateRefVal'] /= array.length;
         avgMinPrice['xchRateUsdVal'] /= array.length;
         avgMinPrice['xchRateEurVal'] /= array.length;
+
+        avgMinPrice.averageType = true;
 
         array.push(avgMinPrice);
     }
@@ -610,11 +624,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                 doseConcentration: currMed.dose, division: currMed.division, internationalMedicamentName: currMed.internationalMedicamentName.description,
                 priceMdl: currMed.price.mdlValue, priceCurrency: currMed.price.value, currency: currMed.price.currency.shortDescription,
             }], min1Mdl: this.minRefPrices[0] ? this.minRefPrices[0].xchRateRefVal : 0, min1Eur: this.minRefPrices[0] ? this.minRefPrices[0].xchRateEurVal : 0,
-            min1Usd: this.minRefPrices[0] ? this.minRefPrices[0].xchRateUsdVal : 0, min2Mdl: this.minRefPrices[1] ? this.minRefPrices[1].xchRateRefVal : 0,
-            min2Eur: this.minRefPrices[1] ? this.minRefPrices[1].xchRateEurVal : 0, min2Usd: this.minRefPrices[1] ? this.minRefPrices[1].xchRateUsdVal : 0,
-            min3Mdl: this.minRefPrices[2] ? this.minRefPrices[2].xchRateRefVal : 0, min3Eur: this.minRefPrices[2] ? this.minRefPrices[2].xchRateEurVal : 0,
-            min3Usd: this.minRefPrices[2] ? this.minRefPrices[2].xchRateUsdVal : 0, medMdl: this.minRefPrices[3] ? this.minRefPrices[3].xchRateRefVal : 0,
-            medEur: this.minRefPrices[3] ? this.minRefPrices[3].xchRateEurVal : 0, medUsd: this.minRefPrices[3] ? this.minRefPrices[3].xchRateUsdVal : 0,
+
             medicamentStatus: this.medicamentOriginalType ? 'Original' : 'Generic', medicamentOriginalPriceList: originalMeds,
             averageRateEuro: averageRateEuro ? averageRateEuro.value : undefined, averageRateUsd: averageRateUsd ? averageRateUsd.value : undefined,
             medicamentReferenceCountryPriceList: medicamentReferenceCountryPriceList, previousPriceRegistrations: previousPriceRegistrations,
@@ -622,6 +632,21 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
             similarRegisteredMedicaments: similarRegisteredMedicaments, sourceAveragePrices: sourceAveragePrices, previousYearsPrices: previousYearsPrices,
             expertName: this.priceService.getUsername(), creationFileDate: new Date(),
         };
+
+        const minimals = this.minRefPrices.filter(p => !p.averageType);
+
+        evaluationSheetDTO.min1Usd = minimals[0] ? minimals[0].xchRateUsdVal : 0;
+        evaluationSheetDTO.min2Mdl = minimals[1] ? minimals[1].xchRateRefVal : 0;
+        evaluationSheetDTO.min2Eur = minimals[1] ? minimals[1].xchRateEurVal : 0;
+        evaluationSheetDTO.min2Usd = minimals[1] ? minimals[1].xchRateUsdVal : 0;
+        evaluationSheetDTO.min3Mdl = minimals[2] ? minimals[2].xchRateRefVal : 0;
+        evaluationSheetDTO.min3Eur = minimals[2] ? minimals[2].xchRateEurVal : 0;
+        evaluationSheetDTO.min3Usd = minimals[2] ? minimals[2].xchRateUsdVal : 0;
+
+        const medPrice = this.minRefPrices.find(t => t.averageType);
+        evaluationSheetDTO.medMdl = medPrice ? medPrice.xchRateRefVal : 0;
+        evaluationSheetDTO.medEur = medPrice ? medPrice.xchRateEurVal : 0;
+        evaluationSheetDTO.medUsd = medPrice ? medPrice.xchRateUsdVal : 0;
 
         console.log('evaluationSheetDTO', evaluationSheetDTO);
 
@@ -697,9 +722,12 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         console.log('priceModel:', JSON.stringify(priceModel));
 
         this.subscriptions.push(this.priceService.savePrice(priceModel).subscribe(data => {
+            this.initialData = priceModel;
+
             if (priceAcceptCondition && this.medicamentOriginalType) {
                 this.router.navigate(['dashboard/module/price/revaluation-generics/' + data.body.price.id]);
             }
+            this.errorHandlerService.showSuccess('Datele au fost salvate');
 
             this.loadingService.hide();
         }, error1 => {
@@ -714,26 +742,30 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         this.subscriptions.forEach(value => value.unsubscribe());
     }
 
-    private sendInfoLetter(afterCallback?: () => void) {
+    sendInfoLetter(afterCallback?: () => void) {
+
         const dialogRef2 = this.dialogConfirmation.open(RequestAdditionalDataDialogComponent, {
+            width: '1000px',
+            height: '800px',
             data: {
-                requestNumber: this.PriceRegForm.get('requestNumber').value, requestId: this.PriceRegForm.get('id').value, modalType: 'NOTIFICATION',
-                startDate: this.PriceRegForm.get('startDate').value,
-            },  width: '1000px', height: '550px', hasBackdrop: false, panelClass: 'custom-dialog-container'
+                hideSave: true,
+                requestNumber: this.PriceRegForm.get('requestNumber').value,
+                requestId: this.PriceRegForm.get('id').value,
+                modalType: 'EMPTY_NOTIFICATION',
+                startDate: this.PriceRegForm.get('data').value,
+                companyName: this.PriceRegForm.get('company').value.name,
+                address: this.PriceRegForm.get('company').value.legalAddress,
+                registrationRequestMandatedContact: this.registrationRequestMandatedContacts[0],
+            },
+            hasBackdrop: false
         });
 
         dialogRef2.afterClosed().subscribe(result => {
-            // if (result.success) {
-            //     afterCallback();
-            //     this.outputDocuments.push(result);
-            //     this.initialData.medicament.outputDocument = this.outputDocuments;
-            //     this.subscriptions.push(this.requestService.addMedicamentRequest(this.initialData).subscribe(data => {
-            //             this.outputDocuments = data.body.medicament.outputDocuments;
-            //             this.checkOutputDocumentsStatus();
-            //         }, error => console.log(error))
-            //     );
-            // }
+            if (result.success) {
+                console.log('RequestAdditionalDataDialogComponent', result);
+            }
         });
+
     }
 
 }

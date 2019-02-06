@@ -14,7 +14,7 @@ export class AddManufactureComponent implements OnInit {
   private subscriptions: Subscription[] = [];
   aForm: FormGroup;
   manufactures: any[];
-  protected loadingManufacture = false;
+  loadingManufacture = false;
   formSubmitted: boolean;
   wasManufactureAdded = false;
 

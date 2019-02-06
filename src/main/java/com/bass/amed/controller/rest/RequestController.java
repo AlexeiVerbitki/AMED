@@ -3,6 +3,7 @@ package com.bass.amed.controller.rest;
 import com.bass.amed.common.Constants;
 import com.bass.amed.dto.AutorizationImportDataSet;
 import com.bass.amed.dto.AutorizationImportDataSet2;
+import com.bass.amed.dto.ScheduledModuleResponse;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
@@ -10,9 +11,11 @@ import com.bass.amed.repository.license.LicensesRepository;
 import com.bass.amed.repository.prices.NmPricesRepository;
 import com.bass.amed.repository.prices.PriceRepository;
 import com.bass.amed.repository.prices.PricesHistoryRepository;
+import com.bass.amed.service.AuditLogService;
 import com.bass.amed.service.ClinicalTrailsService;
 import com.bass.amed.service.MedicamentAnnihilationRequestService;
 import com.bass.amed.utils.AmountUtils;
+import com.bass.amed.utils.AuditUtils;
 import com.bass.amed.utils.SecurityUtils;
 import com.bass.amed.utils.Utils;
 import net.sf.jasperreports.engine.*;
@@ -21,6 +24,7 @@ import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -33,6 +37,9 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -87,7 +94,28 @@ public class RequestController
     private ClinicalTrailsService clinicalTrailsService;
     @Autowired
     CtAmendMedInstInvestigatorRepository ctAmendMedInstInvestigatorRepository;
+    @Autowired
+    private SrcUserRepository srcUserRepository;
+    @Autowired
+    private NmVariationTypeRespository variationTypeRespository;
+    @Autowired
+    private AuditLogService auditLogService;
+    @Value("${scheduler.rest.api.host}")
+    private String schedulerRestApiHost;
 
+    @RequestMapping(value = "/add-gmp-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    public ResponseEntity<RegistrationRequestsEntity> saveGMPRequest(@RequestBody RegistrationRequestsEntity request) throws CustomException
+    {
+        LOGGER.debug("Add GMP");
+        if (request.getType() != null)
+        {
+            Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(request.getType().getCode());
+            request.getType().setId(type.get().getId());
+        }
+        requestRepository.save(request);
+        return new ResponseEntity<>(request, HttpStatus.CREATED);
+    }
 
 
     @RequestMapping(value = "/add-medicament-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -95,16 +123,40 @@ public class RequestController
     public ResponseEntity<RegistrationRequestsEntity> saveMedicamentRequest(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
         LOGGER.debug("Add medicament");
-        if(request.getType()!=null)
-        {
+if (request.getType() != null)        {
             Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(request.getType().getCode());
             request.getType().setId(type.get().getId());
         }
+
+        RegistrationRequestsEntity requestOutDoc = null;
+        List<OutputDocumentsEntity> initialDocuments = new ArrayList<>();
+        RequestTypesEntity initialReqType = new RequestTypesEntity();
+        if (request.getId() != null && request.getId() > 0)
+        {
+            requestOutDoc = requestRepository.findDocuments(request.getId()).orElse(new RegistrationRequestsEntity());
+            initialDocuments.addAll(requestOutDoc.getOutputDocuments());
+            initialReqType = requestOutDoc.getType();
+        }
         if (request.getMedicaments() != null)
         {
+            long cntSteps = request.getRequestHistories().stream().filter(t -> t.getStep().equals("X")).count();
+            if (cntSteps == 0 && request.getCurrentStep().equals("X"))
+            {
+                Utils.jobUnschedule(schedulerRestApiHost, "/wait-evaluation-medicament-registration", request.getId());
+            }
             if (request.getId() != null && request.getId() > 0)
             {
                 RegistrationRequestsEntity requestDB = requestRepository.findById(request.getId()).orElse(new RegistrationRequestsEntity());
+                for (DocumentsEntity doc : requestDB.getDocuments())
+                {
+                    if (doc.getDocType().getCategory().equals("DD") || doc.getDocType().getCategory().equals("OA"))
+                    {
+                        if (request.getDocuments().stream().noneMatch(t -> t.getDocType().getCategory().equals(doc.getDocType().getCategory())))
+                        {
+                            request.getDocuments().add(doc);
+                        }
+                    }
+                }
                 Optional<MedicamentEntity> medicamentEntityOpt = requestDB.getMedicaments().stream().filter(t -> t.getOaNumber() != null).findFirst();
                 Optional<DocumentsEntity> documentsEntityOptional = request.getDocuments().stream().filter(t -> t.getDocType().getCategory().equals("CA")).findFirst();
                 if (medicamentEntityOpt.isPresent() && !documentsEntityOptional.isPresent())
@@ -113,6 +165,10 @@ public class RequestController
                 }
                 request.setDdIncluded(requestDB.getDdIncluded());
                 request.setDdNumber(requestDB.getDdNumber());
+                request.setExpiredDate(requestDB.getExpiredDate());
+                request.setExpired(requestDB.getExpired());
+                request.setCritical(requestDB.getCritical());
+                request.setExpiredComment(requestDB.getExpiredComment());
                 for (MedicamentEntity medicament : request.getMedicaments())
                 {
                     for (MedicamentEntity medDB : requestDB.getMedicaments())
@@ -150,44 +206,94 @@ public class RequestController
                 }
             }
         }
+
         //addDDDocument(request);
+        ZonedDateTime zonedDateTime = request.getStartDate().toInstant().atZone(ZoneId.of("Europe/Athens"));
+        request.setExpiredDate(Timestamp.from(zonedDateTime.plus(210, ChronoUnit.DAYS).toInstant()));
         requestRepository.save(request);
+
+        long cntSteps = request.getMedicaments().stream().filter(t -> t.getStatus().equals("F")).count();
+        if (cntSteps > 0)
+        {
+            Utils.jobUnschedule(schedulerRestApiHost, "/set-expired-request", request.getId());
+        }
+
+        RegistrationRequestsEntity requestDBAfterCommit = requestRepository.findById(request.getId()).orElse(new RegistrationRequestsEntity());
+        setJobsForRequestAdditionalData(request, initialDocuments, 90, requestDBAfterCommit);
+        if (cntSteps > 0)
+        {
+            AuditUtils.auditMedicamentRegistration(auditLogService, requestDBAfterCommit);
+        }
+
+        if (initialReqType.getCode() != null && !initialReqType.getCode().equals(request.getType().getCode()))
+        {
+            ResponseEntity<ScheduledModuleResponse> result = null;
+            switch (initialReqType.getCode())
+            {
+                case "MEDF":
+                case "MEDP":
+                case "MEDR":
+                    Utils.jobUnschedule(schedulerRestApiHost, "/set-expired-request", request.getId());
+                    result = Utils.jobSchedule(210, "/set-critical-request", "/set-expired-request", request.getId(), request.getRequestNumber(), null, schedulerRestApiHost);
+                    break;
+                case "MEDG":
+                    Utils.jobUnschedule(schedulerRestApiHost, "/set-expired-request", request.getId());
+                    result = Utils.jobSchedule(150, "/set-critical-request", "/set-expired-request", request.getId(), request.getRequestNumber(), null, schedulerRestApiHost);
+                    break;
+                case "MEDS":
+                    Utils.jobUnschedule(schedulerRestApiHost, "/set-expired-request", request.getId());
+                    result = Utils.jobSchedule(60, "/set-critical-request", "/set-expired-request", request.getId(), request.getRequestNumber(), null, schedulerRestApiHost);
+                    break;
+            }
+            if (result != null && !result.getBody().isSuccess())
+            {
+                throw new CustomException("Nu a putut fi setat termenul de eliberare al certificatului.");
+            }
+
+        }
+
+        if (request.getMedicaments() == null || request.getMedicaments().isEmpty())
+        {
+            Utils.jobSchedule(5, "/wait-evaluation-medicament-registration", "/wait-evaluation-medicament-registration", request.getId(), request.getRequestNumber(), null, schedulerRestApiHost);
+        }
+
         return new ResponseEntity<>(request, HttpStatus.CREATED);
     }
 
+    @Transactional
     @RequestMapping(value = "/add-medicament-history-request", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RegistrationRequestsEntity> saveMedicamentHistoryRequest(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
         LOGGER.debug("Add medicament history");
         Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(request.getType().getCode());
         request.getType().setId(type.get().getId());
+        RegistrationRequestsEntity requestOutDoc = null;
+        List<OutputDocumentsEntity> initialDocuments = new ArrayList<>();
+        if (request.getId() != null && request.getId() > 0)
+        {
+            requestOutDoc = requestRepository.findDocuments(request.getId()).orElse(new RegistrationRequestsEntity());
+            initialDocuments.addAll(requestOutDoc.getOutputDocuments());
+        }
         if (!request.getMedicamentHistory().isEmpty())
         {
-            //List<MedicamentEntity> medicamentEntities = medicamentRepository.findByRegistrationNumber(request.getMedicamentPostauthorizationRegisterNr());
-            //medicamentEntities = medicamentEntities.stream().filter(t -> t.getStatus().equals("F")).collect(Collectors.toList());
-            //MedicamentHistoryEntity medicamentHistoryEntity = new MedicamentHistoryEntity();
-            //medicamentHistoryEntity.assign(medicamentEntities.get(0));
-//            for (MedicamentEntity med : medicamentEntities)
-//            {
-//                if (med.getStatus().equals("F"))
-//                {
-//                    for (MedicamentInstructionsEntity medicamentInstructionsEntity : med.getInstructions())
-//                    {
-//                        MedicamentInstructionsHistoryEntity medicamentInstructionsHistoryEntity = new MedicamentInstructionsHistoryEntity();
-//                        medicamentInstructionsHistoryEntity.assign(medicamentInstructionsEntity);
-//                        medicamentHistoryEntity.getInstructionsHistory().add(medicamentInstructionsHistoryEntity);
-//                    }
-//                }
-//            }
-            //medicamentHistoryEntity.setStatus("P");
-//            medicamentEntities.stream().filter(med -> med.getStatus().equals("F")).forEach(med -> {
-//                fillDivisionHistory(medicamentHistoryEntity, med);
-//            });
-//            request.getMedicamentHistory().add(medicamentHistoryEntity);
-//            request.setMedicamentName(medicamentHistoryEntity.getCommercialNameTo());
+            long cntSteps = request.getRequestHistories().stream().filter(t -> t.getStep().equals("X")).count();
+            if (cntSteps == 0 && request.getCurrentStep().equals("X"))
+            {
+                Utils.jobUnschedule(schedulerRestApiHost, "/wait-evaluation-medicament-registration", request.getId());
+            }
             MedicamentHistoryEntity medicamentHistoryEntity = request.getMedicamentHistory().stream().findFirst().get();
             medicamentHistoryEntity.setRequestId(request.getId());
             RegistrationRequestsEntity requestDB = requestRepository.findById(request.getId()).orElse(new RegistrationRequestsEntity());
+            for (DocumentsEntity doc : requestDB.getDocuments())
+            {
+                if (doc.getDocType().getCategory().equals("DDM") || doc.getDocType().getCategory().equals("OM"))
+                {
+                    if (request.getDocuments().stream().noneMatch(t -> t.getDocType().getCategory().equals(doc.getDocType().getCategory())))
+                    {
+                        request.getDocuments().add(doc);
+                    }
+                }
+            }
             MedicamentHistoryEntity medicamentHistoryEntityDB =
                     requestDB.getMedicamentHistory().stream().findFirst().orElse(new MedicamentHistoryEntity());
             if(medicamentHistoryEntityDB.getCommercialNameFrom()==null || medicamentHistoryEntityDB.getCommercialNameFrom().isEmpty()
@@ -212,7 +318,7 @@ public class RequestController
             }
             request.setDdIncluded(requestDB.getDdIncluded());
             request.setDdNumber(requestDB.getDdNumber());
-            if(medicamentHistoryEntity.getId()!=null && medicamentHistoryEntity.getId()>0)
+            if (medicamentHistoryEntity.getId() != null && medicamentHistoryEntity.getId() > 0)
             {
                 MedicamentHistoryEntity medDB = medicamentHistoryRepository.findById(medicamentHistoryEntity.getId()).orElse(new MedicamentHistoryEntity());
                 medicamentHistoryEntity.setRegistrationDate(medDB.getRegistrationDate());
@@ -220,13 +326,74 @@ public class RequestController
                 medicamentHistoryEntity.setOmNumber(medDB.getOmNumber());
             }
         }
+
         if (request.getMedicaments() == null)
         {
             request.setMedicaments(new HashSet<>());
         }
         //addDRDocument(request);
         requestRepository.save(request);
+
+        if (request.getMedicamentHistory().isEmpty())
+        {
+            Utils.jobUnschedule(schedulerRestApiHost, "/set-expired-request", request.getId());
+            ResponseEntity<ScheduledModuleResponse> result = Utils.jobSchedule(210, "/set-critical-request", "/set-expired-request", request.getId(), request.getRequestNumber(), null, schedulerRestApiHost);
+            Utils.jobSchedule(10, "/wait-evaluation-medicament-registration", "/wait-evaluation-medicament-registration", request.getId(), request.getRequestNumber(), null, schedulerRestApiHost);
+            if (result != null && !result.getBody().isSuccess())
+            {
+                throw new CustomException("Nu a putut fi setat termenul limita de aprobare a modificărilor postautorizare");
+            }
+        }
+        if (request.getVariations() != null && !request.getVariations().isEmpty())
+        {
+            List<NmVariationTypeEntity> variationsNomenclator = variationTypeRespository.findAll();
+            List<NmVariationTypeEntity> transCertCodes = variationsNomenclator.stream().filter(t -> t.getCode().equals("A.1")).collect(Collectors.toList());
+            String variation = request.getVariations().stream().findFirst().orElse(new RequestVariationTypeEntity()).getValue();
+            Integer transCertId = transCertCodes.stream().findFirst().orElse(new NmVariationTypeEntity()).getId();
+            int time = 60;
+            boolean transCert =
+                    request.getVariations().size() == 1 && request.getVariations().stream().findFirst().orElse(new RequestVariationTypeEntity()).getVariation().getId().equals(transCertId);
+            if (!transCert && variation.startsWith("IA"))
+            {
+                time = 30;
+            }
+            RegistrationRequestsEntity requestDBAfterCommit = requestRepository.findById(request.getId()).orElse(new RegistrationRequestsEntity());
+            setJobsForRequestAdditionalData(request, initialDocuments, time, requestDBAfterCommit);
+        }
+
         return new ResponseEntity<>(request, HttpStatus.CREATED);
+    }
+
+    private void setJobsForRequestAdditionalData(@RequestBody RegistrationRequestsEntity request, List<OutputDocumentsEntity> initialDocuments, int time,
+                                                 RegistrationRequestsEntity requestDBAfterCommit)
+    {
+        requestDBAfterCommit.getOutputDocuments().stream().forEach(t ->
+                {
+                    if (t.getDocType().getCategory().equals("SL") && t.getResponseReceived() != 1 && !Boolean.TRUE.equals(t.getJobScheduled()))
+                    {
+                        Utils.jobSchedule(time, "/wait-request-additional-data-response", "/wait-request-additional-data-response", requestDBAfterCommit.getId(), requestDBAfterCommit.getRequestNumber(), t.getId(), schedulerRestApiHost);
+                        outputDocumentsRepository.setJobScheduled(t.getId(), true);
+                    }
+                    if (t.getDocType().getCategory().equals("SL") && t.getResponseReceived() == 1 && Boolean.TRUE.equals(t.getJobScheduled()))
+                    {
+                        Utils.jobUnschedule(schedulerRestApiHost, "/wait-request-additional-data-response" + t.getId(), requestDBAfterCommit.getId());
+                        outputDocumentsRepository.setJobScheduled(t.getId(), false);
+                    }
+                }
+        );
+
+        if (!initialDocuments.isEmpty())
+        {
+            initialDocuments.stream().forEach(t ->
+                    {
+                        long cnt = request.getOutputDocuments().stream().filter(d -> d.getId() == t.getId()).count();
+                        if (cnt == 0)
+                        {
+                            Utils.jobUnschedule(schedulerRestApiHost, "/wait-request-additional-data-response" + t.getId(), request.getId());
+                        }
+                    }
+            );
+        }
     }
 
     @RequestMapping(value = "/medicament-approved", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -376,7 +543,10 @@ public class RequestController
             registrationRequestsEntity.setCurrentStep(request.getCurrentStep());
             Optional<MedicamentHistoryEntity> optBody = request.getMedicamentHistory().stream().findFirst();
             Optional<MedicamentHistoryEntity> optDB = registrationRequestsEntity.getMedicamentHistory().stream().findFirst();
+            if(optBody.isPresent() && optBody.get().getExperts()!=null)
+            {
             optDB.get().setExperts(optBody.get().getExperts());
+            }
             registrationRequestsEntity.getRequestHistories().add((RegistrationRequestHistoryEntity) request.getRequestHistories().toArray()[0]);
             //addInterruptionOrder(registrationRequestsEntity);
             requestRepository.save(registrationRequestsEntity);
@@ -390,6 +560,17 @@ public class RequestController
     public ResponseEntity<RegistrationRequestsEntity> getMedicamentRequestById(@RequestParam(value = "id") Integer id) throws CustomException
     {
         Optional<RegistrationRequestsEntity> regOptional = requestRepository.findMedicamentRequestById(id);
+        if (regOptional.isPresent())
+        {
+            return new ResponseEntity<>(regOptional.get(), HttpStatus.OK);
+        }
+        throw new CustomException("Request was not found");
+    }
+
+    @RequestMapping(value = "/load-gmp-details", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RegistrationRequestsEntity> loadGMPDetailsByRequestId(@RequestParam(value = "id") Integer id) throws CustomException
+    {
+        Optional<RegistrationRequestsEntity> regOptional = requestRepository.findGMPRequestById(id);
         if (regOptional.isPresent())
         {
             return new ResponseEntity<>(regOptional.get(), HttpStatus.OK);
@@ -453,7 +634,7 @@ public class RequestController
         requests.forEach(r -> {
             if (r.getType().getCode().equals("CPMED"))
             {
-                r.setCurrentStep("F");
+                r.setCurrentStep("I");
             }
             Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(r.getType().getCode());
             r.setType(type.get());
@@ -473,6 +654,63 @@ public class RequestController
         requestRepository.save(request);
 
         return new ResponseEntity<>(request, HttpStatus.CREATED);
+    }
+
+
+    @RequestMapping(value = "/add-reg-request-gdp", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RegistrationRequestsEntity> addRegistrationRequestForGDP(@RequestBody RegistrationRequestsEntity request)
+    {
+        LOGGER.debug("add new GDP requests");
+        Optional<RequestTypesEntity> type = requestTypeRepository.findByCode("EGDP");
+        request.setType(type.get());
+        requestRepository.save(request);
+
+        return new ResponseEntity<>(request, HttpStatus.CREATED);
+    }
+
+
+    @RequestMapping(value = "/load-gdp-request", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RegistrationRequestsEntity> getGDPRequestById(@RequestParam(value = "id") Integer id) throws CustomException
+    {
+        Optional<RegistrationRequestsEntity> regOptional = requestRepository.findGDPRequestById(id);
+        if (regOptional.isPresent())
+        {
+            //            List<String> docTypes = Arrays.asList("FE");//OP,A1,A2,DP,CP,RF,RC,NL,RQ,CR,CC,PC,LP
+            //            List<NmDocumentTypesEntity> outputDocTypes = documentTypeRepository.findAll();
+            //            outputDocTypes.removeIf(docType -> !docTypes.contains(docType.getCategory()));
+            //
+            //            RegistrationRequestsEntity request = regOptional.get();
+            //            Set<RegistrationRequestMandatedContactEntity> contacts = (Set<RegistrationRequestMandatedContactEntity>) Hibernate.unproxy(request.getRegistrationRequestMandatedContacts());
+            //            if (!contacts.isEmpty())
+            //            {
+            //                Iterator iter = contacts.iterator();
+            //                Object first = iter.next();
+            //            }
+            //            request.setRegistrationRequestMandatedContacts(contacts);
+            //            PricesEntity price = (PricesEntity) Hibernate.unproxy(request.getPrice());
+            //            request.setPrice(price);
+            //
+            //            Set<OutputDocumentsEntity> outputDocs = new HashSet<>(docTypes.size());
+            //
+            //            Set<DocumentsEntity> docs = request.getDocuments();
+            //
+            //            outputDocTypes.forEach(docType -> {
+            //                OutputDocumentsEntity outDoc = new OutputDocumentsEntity();
+            //                outDoc.setDocType(docType);
+            //
+            //                Optional<DocumentsEntity> foundDoc = docs.stream().filter(doc -> doc.getDocType().equals(docType)).findFirst();
+            //                if (foundDoc.isPresent())
+            //                {
+            //                    outDoc.setName(foundDoc.get().getName());
+            //                }
+            //
+            //                outputDocs.add(outDoc);
+            //            });
+            //            request.setOutputDocuments(outputDocs);
+
+            return new ResponseEntity<>(regOptional.get(), HttpStatus.OK);
+        }
+        throw new CustomException("Request was not found");
     }
 
 
@@ -564,12 +802,35 @@ public class RequestController
         try
         {
             requestRepository.save(request);
+            if (request.getCurrentStep().equals("A") || request.getCurrentStep().equals("C"))
+            {
+                changeBaseRequestStatus(request.getRequestNumber());
+        }
         }
         catch (Exception ex)
         {
             throw new CustomException(ex.getMessage());
         }
         return new ResponseEntity<>(request, HttpStatus.CREATED);
+    }
+
+    private void changeBaseRequestStatus(String requestNumber)
+    {
+        if (requestNumber.contains("/"))
+        {
+            String baseRequestNumber = requestNumber.substring(0, requestNumber.indexOf("/"));
+            List<Integer> unfinishedRequestsIds = requestRepository.getUnfinishedRequests(baseRequestNumber);
+            if (unfinishedRequestsIds.isEmpty())
+            {
+                Optional<RegistrationRequestsEntity> baseRegRequestOpt = requestRepository.getBaseReqistrationRequest(baseRequestNumber);
+                if (baseRegRequestOpt.isPresent())
+                {
+                    RegistrationRequestsEntity baseRegRequest = baseRegRequestOpt.get();
+                    baseRegRequest.setCurrentStep("F");
+                    requestRepository.save(baseRegRequest);
+                }
+            }
+        }
     }
 
 
@@ -625,6 +886,13 @@ public class RequestController
         //Initial medicament entities
         List<MedicamentEntity> medicamentEntities = medicamentRepository.findByRegistrationNumber(request.getMedicamentPostauthorizationRegisterNr());
         medicamentEntities = medicamentEntities.stream().filter(m -> m.getStatus().equals("F")).collect(Collectors.toList());
+        List<MedicamentEntity> medicamentEntitiesT = new ArrayList<>();
+        for (MedicamentEntity m : medicamentEntities)
+        {
+            MedicamentEntity mTemp = new MedicamentEntity();
+            mTemp.assign(m);
+            medicamentEntitiesT.add(mTemp);
+        }
         Optional<MedicamentHistoryEntity> medicamentHistoryEntityOpt = request.getMedicamentHistory().stream().findFirst();
         MedicamentHistoryEntity medicamentHistoryEntity = medicamentHistoryEntityOpt.orElse(new MedicamentHistoryEntity());
         //in medicament history save old changes
@@ -654,7 +922,12 @@ public class RequestController
                 medicamentRepository.save(med);
             }
         }
-        return new ResponseEntity<>(requestRepository.save(request), HttpStatus.OK);
+        requestRepository.save(request);
+        Utils.jobUnschedule(schedulerRestApiHost, "/set-expired-request", request.getId());
+
+        List<MedicamentEntity> medicamentsAfterSaveEntities = medicamentRepository.findByRegistrationNumber(request.getMedicamentPostauthorizationRegisterNr());
+        AuditUtils.auditMedicamentPostAuthorization(auditLogService, medicamentEntitiesT, medicamentsAfterSaveEntities.stream().filter(m -> m.getStatus().equals("F")).collect(Collectors.toList()), request, medicamentHistoryEntity.getOmNumber());
+        return new ResponseEntity<>(request, HttpStatus.OK);
     }
 
     private void fillHistoryDetailsTo(MedicamentHistoryEntity medicamentHistoryEntity, MedicamentHistoryEntity medicamentHistoryEntityForUpdate)
@@ -766,8 +1039,7 @@ public class RequestController
                 MedicamentEntity medicamentEntity = fillMedicamentDetails(request.getMedicamentPostauthorizationRegisterNr(), medicamentHistoryEntity,
                         medicamentDivisionHistoryEntity.getDescription(),
                         request.getDocuments().stream().filter(t -> t.getDocType().getCategory().equals("OM")).findFirst().orElse(new DocumentsEntity()).getDateOfIssue(),
-                        request.getType().getCode(),medicamentDivisionHistoryEntity.getVolume(),medicamentDivisionHistoryEntity.getVolumeQuantityMeasurement(),Utils.getConcatenatedDivisionHistory(medicamentDivisionHistoryEntity));
-                fillMedicamentInstructions(medicamentHistoryEntity, medicamentEntity);
+  request.getType().getCode(), medicamentDivisionHistoryEntity.getVolume(), medicamentDivisionHistoryEntity.getVolumeQuantityMeasurement(), Utils.getConcatenatedDivisionHistory(medicamentDivisionHistoryEntity));                fillMedicamentInstructions(medicamentHistoryEntity, medicamentEntity);
                 medicamentRepository.save(medicamentEntity);
                 request.getMedicaments().add(medicamentEntity);
                 MedicamentDivisionHistoryEntity medicamentDivisionHistoryEntity1 = new MedicamentDivisionHistoryEntity();
@@ -868,8 +1140,12 @@ public class RequestController
         checkMedicamentTypesModifications(medicamentHistoryEntity, medicamentEntityForUpdate, medicamentHistoryEntityForUpdate);
         checkManufacturesModifications(medicamentHistoryEntity, medicamentEntityForUpdate, medicamentHistoryEntityForUpdate);
         medicamentHistoryEntityForUpdate.setRegistrationNumber(regNr);
+        medicamentHistoryEntityForUpdate.setStatus("F");
+        medicamentHistoryEntityForUpdate.setRegistrationDate(medicamentEntityForUpdate.getRegistrationDate());
         medicamentHistoryEntityForUpdate.setChangeDate(LocalDateTime.now());
         medicamentHistoryEntity.setStatus("F");
+        medicamentHistoryEntityForUpdate.setOmNumber(medicamentHistoryEntity.getOmNumber());
+        medicamentHistoryEntityForUpdate.setApproved(true);
         return medicamentHistoryEntityForUpdate;
     }
 
@@ -1333,6 +1609,7 @@ public class RequestController
             for (NmCustomsPointsEntity point: request.getImportAuthorizationEntity().getNmCustomsPointsList()) {
 //                customsPoints = customsPoints + point.getDescription() +"\n";
                 AutorizationImportDataSet dataSet = new AutorizationImportDataSet();
+          
                 dataSet.setCustom(point.getDescription());
                 dataSet.setCustomCode(point.getCode());
                 autorizationImportDataSetArrayList.add(dataSet);

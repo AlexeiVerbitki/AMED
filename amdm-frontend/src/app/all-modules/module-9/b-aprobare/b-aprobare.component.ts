@@ -10,6 +10,8 @@ import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.c
 import {MatDialog} from '@angular/material';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {AuthService} from '../../../shared/service/authetication.service';
+import {DocumentService} from '../../../shared/service/document.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 
 @Component({
     selector: 'app-b-aprobare',
@@ -18,12 +20,12 @@ import {AuthService} from '../../../shared/service/authetication.service';
 })
 export class BAprobareComponent implements OnInit, OnDestroy {
 
-    private subscriptions: Subscription[] = [];
     approveClinicalTrailAmendForm: FormGroup;
     clinicalTrailAmendmentForm: FormGroup;
-    protected docs: Document[] = [];
     docTypes: any[];
     outDocuments: any[] = [];
+    docs: Document[] = [];
+    private subscriptions: Subscription[] = [];
     private amendmentIndex = -1;
 
     constructor(private fb: FormBuilder,
@@ -34,8 +36,9 @@ export class BAprobareComponent implements OnInit, OnDestroy {
                 private loadingService: LoaderService,
                 private authService: AuthService,
                 private router: Router,
-                public dialogConfirmation: MatDialog
-    ) {
+                public dialogConfirmation: MatDialog,
+                private documentService: DocumentService,
+                private errorHandlerService: SuccessOrErrorHandlerService) {
     }
 
     ngOnInit() {
@@ -101,6 +104,7 @@ export class BAprobareComponent implements OnInit, OnDestroy {
                     this.approveClinicalTrailAmendForm.get('type').setValue(data.type);
                     this.approveClinicalTrailAmendForm.get('typeCode').setValue(data.type.code);
                     this.approveClinicalTrailAmendForm.get('initiator').setValue(data.initiator);
+                    this.approveClinicalTrailAmendForm.get('currentStep').setValue(data.currentStep);
 
                     data.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
                     this.approveClinicalTrailAmendForm.get('requestHistories').setValue(data.requestHistories);
@@ -110,8 +114,12 @@ export class BAprobareComponent implements OnInit, OnDestroy {
                     const findAmendment = data.clinicalTrails.clinicTrialAmendEntities.find(amendment => data.id == amendment.registrationRequestId);
                     this.amendmentIndex = data.clinicalTrails.clinicTrialAmendEntities.indexOf(findAmendment);
 
-                    findAmendment.comissionDate = '';
-                    findAmendment.comissionNr = '';
+                    this.clinicalTrailAmendmentForm.get('comissionNr').setValue(findAmendment.comissionNr);
+                    this.clinicalTrailAmendmentForm.get('comissionDate').setValue(findAmendment.comissionDate ? new Date(findAmendment.comissionDate) : findAmendment.comissionDate);
+                    this.clinicalTrailAmendmentForm.get('amendCode').setValue(findAmendment.amendCode ? findAmendment.amendCode.substring(findAmendment.amendCode.lastIndexOf('-') + 1, findAmendment.amendCode.length) : '');
+
+                    // findAmendment.comissionDate = '';
+                    // findAmendment.comissionNr = '';
                     this.approveClinicalTrailAmendForm.get('clinicalTrailAmendment').setValue(findAmendment);
                     console.log('findAmendment', findAmendment);
 
@@ -128,10 +136,51 @@ export class BAprobareComponent implements OnInit, OnDestroy {
         }));
     }
 
+    save() {
+        const formModel = this.approveClinicalTrailAmendForm.getRawValue();
+        // this.loadingService.show();
+        formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex].comissionDate = this.clinicalTrailAmendmentForm.get('comissionDate').value;
+        formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex].comissionNr = this.clinicalTrailAmendmentForm.get('comissionNr').value;
+        const codeBuilder = this.clinicalTrailAmendmentForm.get('amendCode').value == '' ?
+            null : formModel.clinicalTrailAmendment.codeTo + '-' + this.clinicalTrailAmendmentForm.get('amendCode').value;
+        formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex].amendCode = codeBuilder;
+        formModel.documents = this.docs;
+        formModel.documents.forEach(docum => docum.registrationRequestId = formModel.id);
+        formModel.outputDocuments = this.outDocuments;
+        console.log('formModel', formModel);
+        // return;
+
+        this.subscriptions.push(
+            this.requestService.saveClinicalTrailAmendmentRequest(formModel).subscribe(data => {
+                // console.log('data',data);
+                console.log('data', data.body);
+
+                this.docs = data.body.documents;
+                this.outDocuments = data.body.outputDocuments;
+
+                console.log('this.docs', this.docs);
+
+                this.loadingService.hide();
+            }, error => {
+                this.loadingService.hide();
+                console.log(error);
+            })
+        );
+    }
+
+    dysplayInvalidControl(form: FormGroup) {
+        const ctFormControls = form['controls'];
+        for (const control in ctFormControls) {
+            ctFormControls[control].markAsTouched();
+            ctFormControls[control].markAsDirty();
+        }
+    }
+
+
     onSubmit() {
         if (this.clinicalTrailAmendmentForm.invalid) {
-            console.log('InvalidForm1', this.clinicalTrailAmendmentForm);
-            alert('InvalidForm1');
+            this.dysplayInvalidControl(this.clinicalTrailAmendmentForm);
+            this.errorHandlerService.showError('Datele comisiei medicamentului sunt invalide');
             return;
         }
 
@@ -220,30 +269,30 @@ export class BAprobareComponent implements OnInit, OnDestroy {
     viewDoc(doc: any) {
         // console.log('doc', doc);
         // console.log('this.docs', this.docs);
-        // let findDoc = this.docs.find(document => document.docType.category === 'AC');
-        // if (findDoc) {
-        //     if (findDoc.id) {
-        //         console.log('findDoc1', findDoc);
-        //         let observable: Observable<any> = null;
-        //         observable = this.documentService.generateAvizC(this.approveClinicalTrailForm.get('id').value, doc.docType.category);
-        //
-        //         this.subscriptions.push(observable.subscribe(data => {
-        //                 let file = new Blob([data], {type: 'application/pdf'});
-        //                 var fileURL = URL.createObjectURL(file);
-        //                 window.open(fileURL);
-        //                 this.loadingService.hide();
-        //             }, error => {
-        //                 console.log('error', error);
-        //                 this.errorHandlerService.showError(error);
-        //                 this.loadingService.hide();
-        //             })
-        //         );
-        //     } else {
-        //         this.errorHandlerService.showError('Avizul comitetului de etica trebuie salvat');
-        //     }
-        // } else {
-        //     this.errorHandlerService.showError('Avizul comitetului de etica nu a fost incarcat');
-        // }
+        const findDoc = this.docs.find(document => document.docType.category === 'AC');
+        if (findDoc) {
+            if (findDoc.id) {
+                console.log('findDoc1', findDoc);
+                let observable: Observable<any> = null;
+                observable = this.documentService.generateAvizAC(this.approveClinicalTrailAmendForm.get('id').value, doc.docType.category);
+
+                this.subscriptions.push(observable.subscribe(data => {
+                        const file = new Blob([data], {type: 'application/pdf'});
+                        const fileURL = URL.createObjectURL(file);
+                        window.open(fileURL);
+                        this.loadingService.hide();
+                    }, error => {
+                        console.log('error', error);
+                        this.errorHandlerService.showError(error);
+                        this.loadingService.hide();
+                    })
+                );
+            } else {
+                this.errorHandlerService.showError('Avizul comitetului de etica trebuie salvat');
+            }
+        } else {
+            this.errorHandlerService.showError('Avizul comitetului de etica nu a fost incarcat');
+        }
     }
 
     ngOnDestroy(): void {

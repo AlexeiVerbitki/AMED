@@ -3,7 +3,6 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
 import {Subscription} from 'rxjs/index';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AdministrationService} from '../../shared/service/administration.service';
-import {AmendmentDetailsComponent} from '../../management/clinical-trials/dialog/amendment-details/amendment-details.component';
 import {PaymentService} from '../../shared/service/payment.service';
 
 @Component({
@@ -13,18 +12,17 @@ import {PaymentService} from '../../shared/service/payment.service';
 })
 
 export class AddCtPayOrderComponent implements OnInit, OnDestroy {
-    private subscriptions: Subscription[] = [];
-    protected addBonForm: FormGroup;
-    protected addChargeForm: FormGroup;
-
-    protected paymentOrder: any;
-    protected ctPayOrderServices: any[] = [];
-    protected pageName = 'Adaugare';
-
+    addBonForm: FormGroup;
+    addChargeForm: FormGroup;
+    paymentOrder: any;
+    ctPayOrderServices: any[] = [];
+    pageName = 'Adaugare';
+    ngOn;
     //Copy Of Charges
-    protected serviceCharges: any[] = [];
+    serviceCharges: any[] = [];
     //Working Copy Of Charges
-    protected serviceChargesList: any[] = [];
+    serviceChargesList: any[] = [];
+    private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder,
                 @Inject(MAT_DIALOG_DATA) public dataDialog: any,
@@ -59,7 +57,67 @@ export class AddCtPayOrderComponent implements OnInit, OnDestroy {
         // console.log('this.paymentOrder', this.paymentOrder);
     }
 
-    ngOn;
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(subscription => {
+            subscription.unsubscribe();
+        });
+    }
+
+    addService() {
+        // console.log('this.addChargeForm', this.addChargeForm);
+        // console.log('this.addBonForm', this.addBonForm);
+        const serviceCharge = this.addChargeForm.get('serviceCharge').value;
+        if (serviceCharge.category != 'BS') {
+            this.ctPayOrderServices.push({
+                id: null,
+                payOrderId: this.dataDialog.payOrderId,
+                quantity: this.addChargeForm.get('quantity').value,
+                serviceCharge: serviceCharge,
+                additionalPayment: 0
+            });
+            this.serviceChargesList = this.serviceChargesList.filter(servCharge => servCharge.category != 'BS');
+            // console.log('indexOfServiceCharge', this.serviceChargesList.indexOf(serviceCharge));
+            // console.log('this.serviceChargesList', this.serviceChargesList);
+            this.addChargeForm.reset();
+        } else if (serviceCharge.category == 'BS') {
+            this.ctPayOrderServices.push({
+                id: null,
+                payOrderId: this.dataDialog.payOrderId,
+                quantity: this.addChargeForm.get('quantity').value,
+                serviceCharge: this.addChargeForm.get('serviceCharge').value,
+                additionalPayment: this.addChargeForm.get('total').value
+            });
+            this.addChargeForm.reset();
+            this.addChargeForm.disable();
+        }
+
+
+        // console.log('this.ctPayOrderServices', this.ctPayOrderServices);
+    }
+
+    recalc() {
+        // console.log('recalculating');
+        this.addChargeForm.get('total').setValue(this.addChargeForm.get('serviceCharge').value.amount * this.addChargeForm.get('quantity').value);
+    }
+
+    close() {
+        this.dialogRef.close();
+    }
+
+    add() {
+        if (this.dataDialog.newTax) {
+            this.paymentOrder.date = new Date();
+        }
+
+        this.subscriptions.push(
+            this.paymentService.saveCtPayOrder(this.paymentOrder).subscribe(data => {
+                    //console.log('saveCtPayOrder()', data.body);
+                    this.dialogRef.close(data.body);
+                },
+                error => console.log(error)
+            )
+        );
+    }
 
     protected initPage() {
         if (this.dataDialog.newTax) {
@@ -126,43 +184,6 @@ export class AddCtPayOrderComponent implements OnInit, OnDestroy {
         );
     }
 
-    protected addService() {
-        // console.log('this.addChargeForm', this.addChargeForm);
-        // console.log('this.addBonForm', this.addBonForm);
-        const serviceCharge = this.addChargeForm.get('serviceCharge').value;
-        if (serviceCharge.category != 'BS') {
-            this.ctPayOrderServices.push({
-                id: null,
-                payOrderId: this.dataDialog.payOrderId,
-                quantity: this.addChargeForm.get('quantity').value,
-                serviceCharge: serviceCharge,
-                additionalPayment: 0
-            });
-            this.serviceChargesList = this.serviceChargesList.filter(servCharge => servCharge.category != 'BS');
-            // console.log('indexOfServiceCharge', this.serviceChargesList.indexOf(serviceCharge));
-            // console.log('this.serviceChargesList', this.serviceChargesList);
-            this.addChargeForm.reset();
-        } else if (serviceCharge.category == 'BS') {
-            this.ctPayOrderServices.push({
-                id: null,
-                payOrderId: this.dataDialog.payOrderId,
-                quantity: this.addChargeForm.get('quantity').value,
-                serviceCharge: this.addChargeForm.get('serviceCharge').value,
-                additionalPayment: this.addChargeForm.get('total').value
-            });
-            this.addChargeForm.reset();
-            this.addChargeForm.disable();
-        }
-
-
-        // console.log('this.ctPayOrderServices', this.ctPayOrderServices);
-    }
-
-    protected recalc() {
-        // console.log('recalculating');
-        this.addChargeForm.get('total').setValue(this.addChargeForm.get('serviceCharge').value.amount * this.addChargeForm.get('quantity').value);
-    }
-
     protected deleteSerevice(index: number) {
         this.ctPayOrderServices.splice(index, 1);
 
@@ -178,31 +199,6 @@ export class AddCtPayOrderComponent implements OnInit, OnDestroy {
         this.addChargeForm.enable();
         this.addChargeForm.get('quantity').disable();
         this.addChargeForm.get('total').disable();
-    }
-
-    protected add() {
-        if (this.dataDialog.newTax) {
-            this.paymentOrder.date = new Date();
-        }
-
-        this.subscriptions.push(
-            this.paymentService.saveCtPayOrder(this.paymentOrder).subscribe(data => {
-                    //console.log('saveCtPayOrder()', data.body);
-                    this.dialogRef.close(data.body);
-                },
-                error => console.log(error)
-            )
-        );
-    }
-
-    protected close() {
-        this.dialogRef.close();
-    }
-
-    ngOnDestroy(): void {
-        this.subscriptions.forEach(subscription => {
-            subscription.unsubscribe();
-        });
     }
 
 }

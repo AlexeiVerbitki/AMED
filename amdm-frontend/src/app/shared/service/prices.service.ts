@@ -45,7 +45,7 @@ export class PriceService {
     }
 
     generateDocNumber(): Observable<any> {
-        return this.administrationService.generateDocNr();
+        return this.http.get('/api/price/generate-price-request-number', {});
     }
 
     getAllMedicamentTypes(): Observable<any> {

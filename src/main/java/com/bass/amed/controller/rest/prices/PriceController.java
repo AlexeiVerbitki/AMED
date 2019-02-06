@@ -6,12 +6,10 @@ import com.bass.amed.dto.prices.PricesDTO;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.projection.GetMinimalCurrencyProjection;
-import com.bass.amed.repository.CurrencyHistoryRepository;
-import com.bass.amed.repository.CurrencyRepository;
-import com.bass.amed.repository.DocumentsRepository;
-import com.bass.amed.repository.PrevYearsPriceAVGInvoiceDetailsRepository;
+import com.bass.amed.repository.*;
 import com.bass.amed.repository.prices.*;
 import com.bass.amed.service.PriceEvaluationService;
+import com.bass.amed.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +65,16 @@ public class PriceController {
 
     @Autowired
     private PrevYearsPriceAVGInvoiceDetailsRepository prevYearsPriceAVGInvoiceDetailsRepository;
+    @Autowired
+    private SeqPricesRequestNumberRepository seqPricesRequestNumberRepository;
+
+    @RequestMapping(value = "/generate-price-request-number", method = RequestMethod.GET)
+    public ResponseEntity<List<String>> generatePriceRequestNumber()
+    {
+        SeqPricesRequestNumberEntity seq = new SeqPricesRequestNumberEntity();
+        seqPricesRequestNumberRepository.save(seq);
+        return new ResponseEntity<>(Arrays.asList("Rg11-"+ Utils.intToString(6, seq.getId())), HttpStatus.OK);
+    }
 
     @RequestMapping("/all-currencies-short")
     public ResponseEntity<List<GetMinimalCurrencyProjection>> getCurrencyShort() throws CustomException {

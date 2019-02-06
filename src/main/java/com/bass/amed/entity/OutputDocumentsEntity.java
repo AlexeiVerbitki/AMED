@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 
 @Data
 @Entity
-@Table(name = "output_documents", schema = "amed", catalog = "")
+@Table(name = "output_documents", schema = "amed")
 public class OutputDocumentsEntity
 {
     @Id@GeneratedValue( strategy = GenerationType.IDENTITY )@Column(name = "id")
@@ -38,4 +38,6 @@ public class OutputDocumentsEntity
     private Timestamp dateOfIssue;
     @Basic@Column(name = "request_id")
     private Integer requestId;
+    @Basic@Column(name = "job_scheduled")
+    private Boolean jobScheduled;
 }

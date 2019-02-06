@@ -1,0 +1,43 @@
+.md-form {
+  position: relative;
+  margin-top: 14px !important;
+  margin-bottom: 5px !important;
+}
+
+.md-form-modified {
+  position: relative;
+  margin-top: 0px;
+  margin-bottom: 5px !important;
+}
+
+.rgba-header {
+  background: #122f3b;
+}
+
+.header {
+  padding: 5px;
+  text-align: center;
+}
+
+.font-td {
+  color: #fff !important;
+  font-weight: 400 !important;
+  font-size: 16px !important;
+}
+
+td {
+  border: 1px solid rgba(0,0,0,.20);
+  padding-right: 3px;
+  padding-left: 3px;
+  text-align: center;
+  transition: 0.02s;
+}
+
+tr:hover {
+  transition: 0.02s;
+  background: #bdbdbd;
+}
+
+* {
+  cursor: pointer;
+}

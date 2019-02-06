@@ -86,7 +86,7 @@ export class MedicamentsOmComponent implements OnInit {
     this.subscriptions.push(
         this.requestService.getMedicamentsForOM().subscribe(data => {
               this.dataSource.data = data;
-              var str = '';
+              let str = '';
               if (data[0]) {
                   str =  this.getConcatenatedDivision(data[0].divisionHistory);
               }
@@ -110,9 +110,9 @@ export class MedicamentsOmComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-    getConcatenatedDivision(divisionHistory : any[]) {
+    getConcatenatedDivision(divisionHistory: any[]) {
         let concatenatedDivision = '';
-        for (let entry of divisionHistory) {
+        for (const entry of divisionHistory) {
             if (entry.description && entry.volume && entry.volumeQuantityMeasurement) {
                 concatenatedDivision = concatenatedDivision + entry.description + ' ' + entry.volume + ' ' + entry.volumeQuantityMeasurement.description + '; ';
             } else if (entry.volume && entry.volumeQuantityMeasurement) {

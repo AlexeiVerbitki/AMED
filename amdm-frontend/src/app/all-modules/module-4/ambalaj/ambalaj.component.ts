@@ -45,13 +45,13 @@ export class AmbalajComponent implements OnInit {
 
     unitOfImportTable: any[] = [];
 
-    protected manufacturersRfPr: Observable<any[]>;
-    protected loadingManufacturerRfPr = false;
-    protected manufacturerInputsRfPr = new Subject<string>();
+    manufacturersRfPr: Observable<any[]>;
+    loadingManufacturerRfPr = false;
+    manufacturerInputsRfPr = new Subject<string>();
 
     importer: Observable<any[]>;
     loadingCompany = false;
-    protected companyInputs = new Subject<string>();
+    companyInputs = new Subject<string>();
 
     sellerAddress: any;
     importerAddress: any;

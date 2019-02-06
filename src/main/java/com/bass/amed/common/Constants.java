@@ -5,6 +5,7 @@ public interface Constants
     interface Layouts{
         String DATE_FORMAT = "dd/MM/yyyy";
         String POINT_DATE_FORMAT = "dd.MM.yyyy";
+        String DATE_TIME_FORMAT = "dd.MM.yyyy HH:mm:ss";
     }
 
     interface StepLink
@@ -35,7 +36,26 @@ public interface Constants
     }
 
     enum AUDIT_ACTIONS{
-        ADD,MODIFY,DELETE
+        ADD,MODIFY,DELETE,INTERRUPT
     }
+
+    enum AUDIT_CATEGORIES{
+        MODULE,ADMINISTRATION
+    }
+
+    enum AUDIT_SUBCATEGORIES{
+        MODULE_1,MODULE_2,MODULE_3,MODULE_4,MODULE_5,MODULE_6,MODULE_7,MODULE_8,MODULE_9,MODULE_10,
+        MODULE_11,MODULE_12
+    }
+
+    interface ClinicTrailStep {
+        String REGISTER = "R";
+        String EVALUATE = "E";
+        String ANALIZE = "A";
+        String APPROVE = "AP";
+        String FINISH = "F";
+        String CANCEL = "C";
+    }
+
 }
 

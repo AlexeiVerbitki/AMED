@@ -332,7 +332,7 @@ export class CerereSolicAutorComponent implements OnInit {
 
         modelToSubmit.requestHistories.push({
             startDate: this.cerereSolicAutorForm.get('data').value, endDate: new Date(),
-            username: this.authService.getUserName(), step: 'E'
+            username: this.authService.getUserName(), step: 'F'
         });
 
         modelToSubmit.assignedUser = this.authService.getUserName();
@@ -351,6 +351,8 @@ export class CerereSolicAutorComponent implements OnInit {
         if (modelToSubmit.medicaments != null && modelToSubmit.medicaments[0]) {
             modelToSubmit.medicaments[0].expirationDate = this.cerereSolicAutorForm.get('dataExp').value;
         }
+        modelToSubmit.currentStep = 'F';
+        modelToSubmit.endDate = new Date();
     }
 
     populateSelectedSubstances(modelToSubmit: any) {
@@ -436,7 +438,8 @@ export class CerereSolicAutorComponent implements OnInit {
                 dataExp: this.cerereSolicAutorForm.get('dataExp').value,
                 precursor: this.cerereSolicAutorForm.get('precursor').value,
                 psihotrop: this.cerereSolicAutorForm.get('psihotrop').value,
-                stupefiant: this.cerereSolicAutorForm.get('stupefiant').value
+                stupefiant: this.cerereSolicAutorForm.get('stupefiant').value,
+                endDate: new Date()
             };
 
             this.subscriptions.push(this.drugDocumentsService.viewAuthorization(data).subscribe(data => {
@@ -516,7 +519,8 @@ export class CerereSolicAutorComponent implements OnInit {
                     initiator: this.authService.getUserName(),
                     type: this.cerereSolicAutorForm.get('type').value,
                     requestNumber: this.cerereSolicAutorForm.get('requestNumber').value,
-                    startDate: this.cerereSolicAutorForm.get('startDate').value
+                    startDate: this.cerereSolicAutorForm.get('startDate').value,
+                    endDate: new Date()
                 };
                 modelToSubmit.requestHistories.push({
                     startDate: this.cerereSolicAutorForm.get('data').value, endDate: new Date(),

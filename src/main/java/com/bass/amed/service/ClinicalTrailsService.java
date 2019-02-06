@@ -1,11 +1,15 @@
 package com.bass.amed.service;
 
+import com.bass.amed.dto.ScheduledModuleResponse;
 import com.bass.amed.dto.clinicaltrial.ClinicalTrailFilterDTO;
 import com.bass.amed.dto.clinicaltrial.ClinicalTrialDTO;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
+import com.bass.amed.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +34,68 @@ public class ClinicalTrailsService {
     @Autowired
     RegistrationRequestStepRepository registrationRequestStepRepository;
     @Autowired
+    ClinicalTrialsRepository clinicalTrialsRepository;
+    @Autowired
     ClinicTrialAmendRepository clinicTrialAmendRepository;
+    @Autowired
+    private RequestRepository requestRepository;
+
+    @Value("${scheduler.rest.api.host}")
+    private String schedulerRestApiHost;
+
+    public void schedulePayOrderCT(int reqId, String reqNumber) {
+        String mailBody = "Evaluarea primara pentru cerere nr: " + reqNumber + " este depasita.";
+        ResponseEntity<ScheduledModuleResponse> result = Utils.jobSchedule(5, "/wait-payment-order-issue-ct", "/wait-payment-order-issue-ct", reqId, reqNumber, null, schedulerRestApiHost, mailBody);
+    }
+
+    public void unschedulePayOrderCT(int reqId) {
+        Utils.jobUnschedule(schedulerRestApiHost, "/wait-payment-order-issue-ct", reqId);
+    }
+
+    public void scheduleClientDetailsDataCT(int reqId, String reqNumber) {
+        String mailBody = "Astepatrea dosarului pentru cerere nr: " + reqNumber + " este depasita.";
+        ResponseEntity<ScheduledModuleResponse> result = Utils.jobSchedule(60, "/wait-client-details-data-ct", "/wait-client-details-data-ct", reqId, reqNumber, null, schedulerRestApiHost, mailBody);
+    }
+
+    public void unscheduleClientDetailsDataCT(int reqId) {
+        Utils.jobUnschedule(schedulerRestApiHost, "/wait-client-details-data-ct", reqId);
+    }
+
+    public void scheduleFinisLimitCT(int reqId, String reqNumber) {
+        String mailBody = "Termen limita pentru inregistrare studiului clinic cu cerere nr: " + reqNumber + " este depasita.";
+        ResponseEntity<ScheduledModuleResponse> result = Utils.jobSchedule(30, "/limit-finish-ct", "/limit-finish-ct", reqId, reqNumber, null, schedulerRestApiHost, mailBody);
+    }
+
+    public void unscheduleFinisLimitCT(int reqId) {
+        Utils.jobUnschedule(schedulerRestApiHost, "/limit-finish-ct", reqId);
+    }
+
+    public void schedulePayOrderAmendCT(int reqId, String reqNumber) {
+        String mailBody = "Evaluarea primara pentru cerere nr: " + reqNumber + " este depasita.";
+        ResponseEntity<ScheduledModuleResponse> result = Utils.jobSchedule(10, "/wait-payment-order-issue-amend-ct", "/wait-payment-order-issue-amend-ct", reqId, reqNumber, null, schedulerRestApiHost, mailBody);
+    }
+
+    public void unschedulePayOrderAmendCT(int reqId) {
+        Utils.jobUnschedule(schedulerRestApiHost, "/wait-payment-order-issue-amend-ct", reqId);
+    }
+
+    public void scheduleClientDetailsDataAmendCT(int reqId, String reqNumber) {
+        String mailBody = "Astepatrea dosarului pentru cerere nr: " + reqNumber + " este depasita.";
+        ResponseEntity<ScheduledModuleResponse> result = Utils.jobSchedule(60, "/wait-client-details-data-amend-ct", "/wait-client-details-data-amend-ct", reqId, reqNumber, null, schedulerRestApiHost, mailBody);
+    }
+
+    public void unscheduleClientDetailsDataAmendCT(int reqId) {
+        Utils.jobUnschedule(schedulerRestApiHost, "/wait-client-details-data-amend-ct", reqId);
+    }
+
+    public void scheduleFinisLimitAmendmentCT(int reqId, String reqNumber) {
+        String mailBody = "Termen limita pentru inregistrare amendamentului la studiului clinic cu cerere nr: " + reqNumber + " este depasita.";
+        ResponseEntity<ScheduledModuleResponse> result = Utils.jobSchedule(30, "/limit-finish-amendment-ct", "/limit-finish-amendment-ct", reqId, reqNumber, null, schedulerRestApiHost, mailBody);
+    }
+
+    public void unscheduleFinisLimitAmendmentCT(int reqId) {
+        Utils.jobUnschedule(schedulerRestApiHost, "/limit-finish-amendment-ct", reqId);
+    }
 
     public List<ClinicalTrialDTO> retrieveClinicalTrailsByFilter(ClinicalTrailFilterDTO filter) throws CustomException {
         StringBuilder queryString = new StringBuilder(

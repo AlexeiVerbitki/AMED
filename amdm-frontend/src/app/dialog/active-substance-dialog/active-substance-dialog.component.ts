@@ -20,7 +20,7 @@ export class ActiveSubstanceDialogComponent implements OnInit {
     activeSubstances: any[];
     formSubmitted: boolean;
     activeSubstanceUnitsOfMeasurement: any[];
-    protected loadingActiveSubst = false;
+    loadingActiveSubst = false;
     manufacturesTable: any[] = [];
 
     constructor(private administrationService: AdministrationService,

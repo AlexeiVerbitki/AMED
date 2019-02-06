@@ -15,7 +15,7 @@ export class SelectIssueDateDialogComponent implements OnInit {
 
     maxDate = new Date();
     aForm: FormGroup;
-    formSubmitted: boolean = false;
+    formSubmitted = false;
     @ViewChild('incarcaDoc')
     incarcaDocVariable: ElementRef;
     isExtensionInvalid: boolean;
@@ -80,8 +80,7 @@ export class SelectIssueDateDialogComponent implements OnInit {
                 }
                 )
             );
-        }
-        else if (this.dataDialog.type == 'DD') {
+        } else if (this.dataDialog.type == 'DD') {
             this.subscriptions.push(this.documentService.addDD(this.dataDialog.document, eventHtml.srcElement.files[0]).subscribe(event => {
                     if (event instanceof HttpResponse) {
                         this.aForm.get('response').setValue(true);
@@ -115,8 +114,7 @@ export class SelectIssueDateDialogComponent implements OnInit {
                     console.log(error);
                 })
             );
-        }
-        else if (this.dataDialog.type == 'DDM') {
+        } else if (this.dataDialog.type == 'DDM') {
             this.subscriptions.push(this.documentService.addDDM(this.dataDialog.document, eventHtml.srcElement.files[0]).subscribe(event => {
                     if (event instanceof HttpResponse) {
                         this.aForm.get('response').setValue(true);
@@ -128,8 +126,7 @@ export class SelectIssueDateDialogComponent implements OnInit {
                 }
                 )
             );
-        }
-        else if (this.dataDialog.type == 'LN') {
+        } else if (this.dataDialog.type == 'LN') {
 
             this.subscriptions.push(this.documentService.addLN(this.dataDialog.document, eventHtml.srcElement.files[0]).subscribe(event => {
                     if (event instanceof HttpResponse) {
@@ -138,8 +135,7 @@ export class SelectIssueDateDialogComponent implements OnInit {
                     }
                 }
             ));
-        }
-        else {
+        } else {
             this.subscriptions.push(this.documentService.addOA(this.dataDialog.document, eventHtml.srcElement.files[0]).subscribe(event => {
                     if (event instanceof HttpResponse) {
                         this.aForm.get('response').setValue(true);

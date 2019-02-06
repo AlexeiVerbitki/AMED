@@ -1,0 +1,39 @@
+.md-form {
+    position: relative;
+    margin-top: 14px !important;
+    margin-bottom: 5px !important;
+}
+
+.md-form-modified {
+    position: relative;
+    margin-top: 0px;
+    margin-bottom: 5px !important;
+}
+
+.mat-radio-button.mat-radio-disabled .mat-radio-label-content {
+    color: rgba(0, 0, 0, 0.75);
+}
+
+label.required:not(:empty):after,
+.field-header.required:after {
+    content: " *";
+    color: red;
+    position: absolute;
+    right: 0px;
+    top: -15px;
+}
+
+.mt-4s {
+    padding-top: 45px;
+}
+
+.font-w400 {
+    font-weight : 400;
+    margin-left: 15px;
+    margin-top: 35px;
+}
+.font-w400l {
+    font-weight : 400;
+    margin-left: 15px;
+    margin-top: 15px;
+}

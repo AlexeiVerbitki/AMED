@@ -6,8 +6,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {RequestService} from '../../../shared/service/request.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {AuthService} from '../../../shared/service/authetication.service';
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {TaskService} from "../../../shared/service/task.service";
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {TaskService} from '../../../shared/service/task.service';
 
 @Component({
     selector: 'app-a-intrerupere',
@@ -17,7 +17,7 @@ import {TaskService} from "../../../shared/service/task.service";
 export class AIntrerupereComponent implements OnInit, OnDestroy {
     private subscriptions: Subscription[] = [];
     cancelClinicalTrailForm: FormGroup;
-    protected docs: Document[] = [];
+    docs: Document[] = [];
     docTypes: any[];
     outDocuments: any[] = [];
 

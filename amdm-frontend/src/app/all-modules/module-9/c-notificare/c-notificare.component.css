@@ -1,8 +1,15 @@
-.md-form-modified {
+.md-form-selected {
     position: relative;
     margin-top: 10px;
     margin-bottom: 1.5rem;
 }
+
+.md-form-modified {
+    position: relative;
+    margin-top: 12px;
+    margin-bottom: 1.5rem;
+}
+
 .border-row {
     border-bottom: 1px solid rgba(0, 0, 0, .12);
     padding-bottom: 2px;
@@ -13,4 +20,11 @@
 }
 .mt-36 {
     margin-top: 36px !important;
+}
+
+.w-30 {
+    width: 30%;
+}
+.w-70 {
+    width: 70%;
 }

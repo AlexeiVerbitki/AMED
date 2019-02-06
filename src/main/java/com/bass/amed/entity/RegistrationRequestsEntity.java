@@ -1,5 +1,6 @@
 package com.bass.amed.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -126,5 +127,10 @@ public class RegistrationRequestsEntity
     @Basic
     @Column(name = "expired_comment")
     private String expiredComment;
-
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "request_id")
+    private Set<GMPAuthorizationEntity> gmpAuthorizations = new HashSet<>();
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "registrationRequest")
+    @JsonManagedReference
+    private GDPInspectionEntity gdpInspection;
 }

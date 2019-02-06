@@ -22,6 +22,16 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
     Optional<RegistrationRequestsEntity> findMedicamentRequestById(@Param("id") Integer id);
 
     @Query("SELECT p FROM RegistrationRequestsEntity p " +
+            "LEFT JOIN FETCH p.requestHistories " +
+            "LEFT JOIN FETCH p.outputDocuments " +
+            "LEFT JOIN FETCH p.documents " +
+            "LEFT JOIN FETCH p.paymentOrders " +
+            "LEFT JOIN FETCH p.gmpAuthorizations " +
+            "LEFT JOIN FETCH p.registrationRequestMandatedContacts " +
+            "WHERE p.id = (:id)")
+    Optional<RegistrationRequestsEntity> findGMPRequestById(@Param("id") Integer id);
+
+    @Query("SELECT p FROM RegistrationRequestsEntity p " +
             "LEFT JOIN FETCH p.medicamentHistory " +
             "LEFT JOIN FETCH p.requestHistories " +
             "LEFT JOIN FETCH p.outputDocuments " +
@@ -70,6 +80,14 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
             "LEFT JOIN FETCH p.paymentOrders " +
             "WHERE p.id = (:id)")
     Optional<RegistrationRequestsEntity> findPricesRequestById(@Param("id") Integer id);
+
+    @Query("SELECT p FROM RegistrationRequestsEntity p " +
+            "LEFT JOIN FETCH p.requestHistories " +
+            "LEFT JOIN FETCH p.outputDocuments " +
+            "LEFT JOIN FETCH p.documents " +
+            "LEFT JOIN FETCH p.paymentOrders " +
+            "WHERE p.id = (:id)")
+    Optional<RegistrationRequestsEntity> findGDPRequestById(@Param("id") Integer id);
 
     @Query(value = "SELECT r.* FROM registration_requests r JOIN request_types t ON r.type_id = t.id AND r.license_id = ?1 AND r.end_date IS NOT NULL AND t.code = 'LICM'", nativeQuery = true)
     List<RegistrationRequestsEntity> findAllLicenseModifications(Integer licenseId);
@@ -174,4 +192,18 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
 
     @Query("SELECT i FROM  RegistrationRequestsEntity i WHERE i.importAuthorizationEntity.id = (:authId)")
     RegistrationRequestsEntity findRequestsByImportId(@Param("authId") Integer authId);
+
+    @Query("SELECT p FROM RegistrationRequestsEntity p " +
+            "LEFT JOIN FETCH p.outputDocuments " +
+            "WHERE p.id = (:id)")
+    Optional<RegistrationRequestsEntity> findDocuments(@Param("id") Integer id);
+
+    @Query(value = "SELECT id FROM registration_requests r WHERE R.REQUEST_NUMBER LIKE CONCAT(:REQNR, '%') AND" +
+            "(current_step != 'C' AND current_step != 'A' AND current_step != 'F' AND current_step != 'I')", nativeQuery = true)
+    List<Integer> getUnfinishedRequests(@Param("REQNR") String reqNr);
+
+    @Query(value = "SELECT * FROM registration_requests r\n" +
+            "            WHERE r.request_number = :reqNr AND r.current_step = 'I' limit 1", nativeQuery = true)
+    Optional<RegistrationRequestsEntity> getBaseReqistrationRequest(@Param("reqNr") String requestNr);
 }
+

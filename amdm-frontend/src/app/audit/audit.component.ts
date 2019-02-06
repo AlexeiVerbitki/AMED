@@ -1,11 +1,11 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Subscription} from "rxjs";
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {LoaderService} from "../shared/service/loader.service";
-import {NavbarTitleService} from "../shared/service/navbar-title.service";
-import {MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
-import {AuditService} from "../shared/service/audit.service";
-import {AdministrationService} from "../shared/service/administration.service";
+import {Subscription} from 'rxjs';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {LoaderService} from '../shared/service/loader.service';
+import {NavbarTitleService} from '../shared/service/navbar-title.service';
+import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {AuditService} from '../shared/service/audit.service';
+import {AdministrationService} from '../shared/service/administration.service';
 
 @Component({
     selector: 'app-audit',
@@ -78,7 +78,7 @@ export class AuditComponent implements OnInit, OnDestroy {
         });
     }
 
-    private initActions(){
+    private initActions() {
         this.actions.push(
             {
                 name: 'ADD', description: 'Creare'
@@ -97,9 +97,7 @@ export class AuditComponent implements OnInit, OnDestroy {
             if (val) {
                 this.subcategories = val.subcategories;
                 this.subcategories.find( a => a.name === 'test');
-            }
-            else
-            {
+            } else {
                 this.subcategories = [];
                 this.rForm.get('subcategory').setValue(null);
             }
@@ -109,15 +107,13 @@ export class AuditComponent implements OnInit, OnDestroy {
 
     findAudit() {
         const filter: any = this.rForm.value;
-        if (filter.action)
-        {
+        if (filter.action) {
             filter.action = this.rForm.get('action').value.name;
         }
         this.subscriptions.push(this.auditService.loadAuditListByFilter(this.rForm.value).subscribe(data => {
-            let dt : any [] = data;
+            const dt: any [] = data;
             dt.forEach(d => {
-                if (d.action)
-                {
+                if (d.action) {
                     d.action = this.actions.find(f => f.name = d.action).description;
                 }
 

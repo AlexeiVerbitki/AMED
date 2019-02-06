@@ -29,14 +29,12 @@ import {MedicamentService} from '../../../shared/service/medicament.service';
     styleUrls: ['./evaluare-primara.component.css']
 })
 export class EvaluarePrimaraComponent implements OnInit {
-    private subscriptions: Subscription[] = [];
     eForm: FormGroup;
     documents: Document[] = [];
     instructions: any[] = [];
     machets: any[] = [];
     formSubmitted: boolean;
     paymentTotal: number;
-
     pharmaceuticalForms: any[];
     pharmaceuticalFormTypes: any[];
     activeSubstancesTable: any[] = [];
@@ -53,18 +51,17 @@ export class EvaluarePrimaraComponent implements OnInit {
     docTypes: any[];
     docTypesInitial: any[];
     outDocuments: any[] = [];
-    isResponseReceived: boolean = true;
-    isNonAttachedDocuments: boolean = false;
+    isResponseReceived = true;
+    isNonAttachedDocuments = false;
     initialData: any;
     companyMedicaments: Observable<any[]>;
     medInputs = new Subject<string>();
     medLoading = false;
-
     @ViewChild('payment') payment: PaymentComponent;
-
-    protected atcCodes: Observable<any[]>;
-    protected loadingAtcCodes: boolean = false;
-    protected atcCodesInputs = new Subject<string>();
+    atcCodes: Observable<any[]>;
+    loadingAtcCodes = false;
+    atcCodesInputs = new Subject<string>();
+    private subscriptions: Subscription[] = [];
 
     constructor(public dialog: MatDialog,
                 private fb: FormBuilder,
@@ -92,7 +89,7 @@ export class EvaluarePrimaraComponent implements OnInit {
             'initiator': [''],
             'assignedUser': [''],
             'medicamentName': [],
-            'regnr': [],
+            'regnr': [null],
             'medicaments': [[]],
             'division': [null],
             'labResponse': [null],
@@ -103,7 +100,7 @@ export class EvaluarePrimaraComponent implements OnInit {
                     'id': [],
                     'commercialName': ['', Validators.required],
                     'atcCode': [null, Validators.required],
-                    'registrationNumber' : [],
+                    'registrationNumber': [],
                     'registrationDate': [],
                     'pharmaceuticalForm': [null, Validators.required],
                     'pharmaceuticalFormType': [null, Validators.required],
@@ -210,7 +207,7 @@ export class EvaluarePrimaraComponent implements OnInit {
             data.type = this.reqTypes.find(t => t.code == 'MEDR');
         }
         this.outDocuments = data.outputDocuments;
-        let rl = this.outDocuments.find(r => r.docType.category == 'RL');
+        const rl = this.outDocuments.find(r => r.docType.category == 'RL');
         if (rl && (rl.responseReceived == 0 || rl.responseReceived)) {
             this.eForm.get('labResponse').setValue(rl.responseReceived.toString());
         }
@@ -219,7 +216,7 @@ export class EvaluarePrimaraComponent implements OnInit {
             this.eForm.get('medicamentName').setValue(data.medicaments[0].commercialName);
             this.initialData.medicaments.activeSubstances = Object.assign([], data.medicaments[0].activeSubstances);
             this.initialData.medicaments.auxSubstances = Object.assign([], data.medicaments[0].auxSubstances);
-            for (let entry of data.medicaments) {
+            for (const entry of data.medicaments) {
                 if ((entry.division || entry.volume) && (entry.status == 'F' || entry.status == 'P')) {
                     this.divisions.push({
                         description: entry.division,
@@ -258,10 +255,10 @@ export class EvaluarePrimaraComponent implements OnInit {
 
     displayInstructions() {
         this.instructions = [];
-        for (let div of this.divisions) {
+        for (const div of this.divisions) {
             if (div.instructions) {
-                for (let instr of div.instructions) {
-                    let instrTest = this.instructions.find(value => value.path == instr.path);
+                for (const instr of div.instructions) {
+                    const instrTest = this.instructions.find(value => value.path == instr.path);
                     if (instrTest) {
                         instrTest.divisions.push({
                             description: div.description,
@@ -269,7 +266,7 @@ export class EvaluarePrimaraComponent implements OnInit {
                             volumeQuantityMeasurement: div.volumeQuantityMeasurement
                         });
                     } else {
-                        let instrAdd = Object.assign({}, instr);
+                        const instrAdd = Object.assign({}, instr);
                         instrAdd.divisions = [];
                         instrAdd.divisions.push({
                             description: div.description,
@@ -285,10 +282,10 @@ export class EvaluarePrimaraComponent implements OnInit {
 
     displayMachets() {
         this.machets = [];
-        for (let div of this.divisions) {
+        for (const div of this.divisions) {
             if (div.machets) {
-                for (let machet of div.machets) {
-                    let machetTest = this.machets.find(value => value.path == machet.path);
+                for (const machet of div.machets) {
+                    const machetTest = this.machets.find(value => value.path == machet.path);
                     if (machetTest) {
                         machetTest.divisions.push({
                             description: div.description,
@@ -296,7 +293,7 @@ export class EvaluarePrimaraComponent implements OnInit {
                             volumeQuantityMeasurement: div.volumeQuantityMeasurement
                         });
                     } else {
-                        let machetAdd = Object.assign({}, machet);
+                        const machetAdd = Object.assign({}, machet);
                         machetAdd.divisions = [];
                         machetAdd.divisions.push({
                             description: div.description,
@@ -333,8 +330,8 @@ export class EvaluarePrimaraComponent implements OnInit {
     }
 
     checkOutputDocumentsStatus() {
-        for (let entry of this.outDocuments) {
-            var isMatch = this.documents.some(elem => {
+        for (const entry of this.outDocuments) {
+            const isMatch = this.documents.some(elem => {
                 return (elem.docType.category == entry.docType.category && elem.number == entry.number) ? true : false;
             });
             if (isMatch) {
@@ -426,7 +423,7 @@ export class EvaluarePrimaraComponent implements OnInit {
         this.prescriptions = [...this.prescriptions, {value: 1, description: 'Cu prescripţie'}];
         this.prescriptions = [...this.prescriptions, {value: 0, description: 'Fără prescripţie'}];
         this.prescriptions = [...this.prescriptions, {value: 2, description: 'Staţionar'}];
-        if (dataDB.medicaments && dataDB.medicaments.length != 0 && dataDB.medicaments[0].prescription) {
+        if (dataDB.medicaments && dataDB.medicaments.length != 0 && dataDB.medicaments[0].prescription != null && dataDB.medicaments[0].prescription != undefined) {
             if (dataDB.medicaments[0].prescription == 1) {
                 this.eForm.get('medicament.prescription').setValue({value: 1, description: 'Cu prescripţie'});
             } else if (dataDB.medicaments[0].prescription == 0) {
@@ -439,7 +436,9 @@ export class EvaluarePrimaraComponent implements OnInit {
         this.companyMedicaments =
             this.medInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) return true;
+                    if (result && result.length > 2) {
+                        return true;
+                    }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -522,8 +521,24 @@ export class EvaluarePrimaraComponent implements OnInit {
         this.formSubmitted = true;
 
         let isFormInvalid = false;
-        let isOutputDocInvalid = false;
-        if (this.eForm.invalid || this.divisions.length == 0 || this.activeSubstancesTable.length == 0 || this.manufacturesTable.length == 0
+        const isOutputDocInvalid = false;
+
+        if (this.eForm.invalid) {
+            const invalid = [];
+            const controls = this.eForm.controls;
+            for (const name in controls) {
+                if (controls[name].invalid) {
+                    invalid.push(name);
+                }
+            }
+            if (invalid.length == 1 && invalid.includes('regnr') && this.eForm.get('type').value.code != 'MEDR') {
+                isFormInvalid = false;
+            } else if (invalid.length > 0) {
+                isFormInvalid = true;
+            }
+        }
+
+        if (this.divisions.length == 0 || this.activeSubstancesTable.length == 0 || this.manufacturesTable.length == 0
             || this.paymentTotal < 0) {
             isFormInvalid = true;
         }
@@ -547,22 +562,22 @@ export class EvaluarePrimaraComponent implements OnInit {
             return;
         }
 
-        let test = this.manufacturesTable.find(r => r.producatorProdusFinit == true);
+        const test = this.manufacturesTable.find(r => r.producatorProdusFinit == true);
         if (!test) {
             this.errorHandlerService.showError('Nu a fost selectat producatorul produsului finit');
             return;
         }
 
-        let sl = this.outDocuments.find(r => r.docType.category == 'SL');
+        const sl = this.outDocuments.find(r => r.docType.category == 'SL');
         if (sl) {
-            let resp = this.outDocuments.filter(t => t.docType.category == 'SL').find(r => r.responseReceived != 1);
+            const resp = this.outDocuments.filter(t => t.docType.category == 'SL').find(r => r.responseReceived != 1);
             if (resp) {
                 this.errorHandlerService.showError('Exista solicitari de date aditionale fara raspuns primit.');
                 return;
             }
         }
 
-        let rl = this.outDocuments.find(r => r.docType.category == 'RL');
+        const rl = this.outDocuments.find(r => r.docType.category == 'RL');
         if (rl) {
             if (!this.eForm.get('labResponse').value) {
                 this.errorHandlerService.showError('Nu a fost primit rezultatul de la laborator.');
@@ -578,7 +593,7 @@ export class EvaluarePrimaraComponent implements OnInit {
         this.isResponseReceived = true;
         this.formSubmitted = false;
 
-        var modelToSubmit: any = this.eForm.value;
+        const modelToSubmit: any = this.eForm.value;
         modelToSubmit.requestHistories.push({
             startDate: this.eForm.get('data').value, endDate: new Date(),
             username: this.authService.getUserName(), step: 'E'
@@ -630,7 +645,7 @@ export class EvaluarePrimaraComponent implements OnInit {
 
         dialogConfig2.data = {divisions: this.divisions};
 
-        let dialogRef = this.dialog.open(AddDivisionComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(AddDivisionComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
                 if (result && result.response) {
@@ -649,7 +664,7 @@ export class EvaluarePrimaraComponent implements OnInit {
 
     getConcatenatedDivision() {
         let concatenatedDivision = '';
-        for (let entry of this.divisions) {
+        for (const entry of this.divisions) {
             if (entry.description && entry.volume && entry.volumeQuantityMeasurement) {
                 concatenatedDivision = concatenatedDivision + entry.description + ' ' + entry.volume + ' ' + entry.volumeQuantityMeasurement.description + '; ';
             } else if (entry.volume && entry.volumeQuantityMeasurement) {
@@ -675,7 +690,7 @@ export class EvaluarePrimaraComponent implements OnInit {
 
         dialogConfig2.data = {manufacturesTable: this.manufacturesTable, comment: true};
 
-        let dialogRef = this.dialog.open(AddManufactureComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(AddManufactureComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
                 if (result && result.response) {
@@ -785,7 +800,7 @@ export class EvaluarePrimaraComponent implements OnInit {
         this.formSubmitted = true;
 
         let isFormInvalid = false;
-        let isOutputDocInvalid = false;
+        const isOutputDocInvalid = false;
         if (this.eForm.get('medicament.pharmaceuticalForm').invalid || this.eForm.get('medicament.dose').invalid ||
             this.eForm.get('medicament.internationalMedicamentName').invalid || this.divisions.length == 0 || this.manufacturesTable.length == 0) {
             isFormInvalid = true;
@@ -798,7 +813,7 @@ export class EvaluarePrimaraComponent implements OnInit {
 
         this.formSubmitted = false;
 
-        var lenOutDoc = this.outDocuments.filter(r => r.docType.category === 'SL').length;
+        const lenOutDoc = this.outDocuments.filter(r => r.docType.category === 'SL').length;
 
         let x = this.eForm.get('medicament.commercialName').value + ', ' + this.eForm.get('medicament.pharmaceuticalForm').value.description
             + ' ' + this.eForm.get('medicament.dose').value;
@@ -825,10 +840,10 @@ export class EvaluarePrimaraComponent implements OnInit {
 
         dialogRef2.afterClosed().subscribe(result => {
             if (result.success) {
-                this.outDocuments.push(result);
-                this.initialData.outputDocuments = this.outDocuments;
+                this.initialData.outputDocuments.push(result);
                 this.subscriptions.push(this.requestService.addMedicamentRequest(this.initialData).subscribe(data => {
                         this.outDocuments = data.body.outputDocuments;
+                        this.initialData.outputDocuments = data.body.outputDocuments;
                         this.checkOutputDocumentsStatus();
                     }, error => console.log(error))
                 );
@@ -844,7 +859,7 @@ export class EvaluarePrimaraComponent implements OnInit {
             this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
             return;
         }
-        let test = this.manufacturesTable.find(r => r.producatorProdusFinit == true);
+        const test = this.manufacturesTable.find(r => r.producatorProdusFinit == true);
         if (!test) {
             this.errorHandlerService.showError('Nu a fost selectat producatorul produsului finit');
             return;
@@ -862,8 +877,8 @@ export class EvaluarePrimaraComponent implements OnInit {
         dialogRef2.afterClosed().subscribe(result => {
             if (result) {
                 this.loadingService.show();
-                let usernameDB = this.authService.getUserName();
-                var modelToSubmit = {
+                const usernameDB = this.authService.getUserName();
+                const modelToSubmit = {
                     requestHistories: [],
                     currentStep: 'I',
                     id: this.eForm.get('id').value,
@@ -894,7 +909,7 @@ export class EvaluarePrimaraComponent implements OnInit {
         if (document.docType.category == 'SL' || document.docType.category == 'LA') {
 
 
-            let modelToSubmit = {
+            const modelToSubmit = {
                 nrDoc: document.number,
                 responsiblePerson: this.registrationRequestMandatedContacts[0].mandatedLastname + ' ' + this.registrationRequestMandatedContacts[0].mandatedFirstname,
                 companyName: this.eForm.get('company').value.name,
@@ -912,8 +927,8 @@ export class EvaluarePrimaraComponent implements OnInit {
             observable = this.documentService.viewRequestNew(modelToSubmit);
 
             this.subscriptions.push(observable.subscribe(data => {
-                    let file = new Blob([data], {type: 'application/pdf'});
-                    var fileURL = URL.createObjectURL(file);
+                    const file = new Blob([data], {type: 'application/pdf'});
+                    const fileURL = URL.createObjectURL(file);
                     window.open(fileURL);
                     this.loadingService.hide();
                 }, error => {
@@ -923,8 +938,8 @@ export class EvaluarePrimaraComponent implements OnInit {
             );
         } else {
             this.subscriptions.push(this.documentService.viewDD(document.number).subscribe(data => {
-                    let file = new Blob([data], {type: 'application/pdf'});
-                    var fileURL = URL.createObjectURL(file);
+                    const file = new Blob([data], {type: 'application/pdf'});
+                    const fileURL = URL.createObjectURL(file);
                     window.open(fileURL);
                     this.loadingService.hide();
                 }, error => {
@@ -947,7 +962,9 @@ export class EvaluarePrimaraComponent implements OnInit {
             if (result) {
                 this.loadingService.show();
                 this.outDocuments.forEach((item, index) => {
-                    if (item === doc) this.outDocuments.splice(index, 1);
+                    if (item === doc) {
+                        this.outDocuments.splice(index, 1);
+                    }
                 });
                 this.initialData.outputDocuments = this.outDocuments;
 
@@ -973,7 +990,7 @@ export class EvaluarePrimaraComponent implements OnInit {
     }
 
     checkProducatorProdusFinit(manufacture: any, value: any) {
-        for (let m of this.manufacturesTable) {
+        for (const m of this.manufacturesTable) {
             m.producatorProdusFinit = false;
         }
         manufacture.producatorProdusFinit = value.checked;
@@ -982,13 +999,13 @@ export class EvaluarePrimaraComponent implements OnInit {
 
     save() {
 
-        let rl = this.outDocuments.find(r => r.docType.category == 'RL');
+        const rl = this.outDocuments.find(r => r.docType.category == 'RL');
         if (rl) {
             rl.responseReceived = this.eForm.get('labResponse').value;
         }
 
         this.loadingService.show();
-        var modelToSubmit: any = this.eForm.value;
+        const modelToSubmit: any = this.eForm.value;
         modelToSubmit.documents = this.documents;
         modelToSubmit.outputDocuments = this.outDocuments;
         modelToSubmit.currentStep = 'E';
@@ -1042,7 +1059,7 @@ export class EvaluarePrimaraComponent implements OnInit {
 
         dialogConfig2.width = '600px';
 
-        let dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.response) {
@@ -1109,11 +1126,11 @@ export class EvaluarePrimaraComponent implements OnInit {
 
     fillDose() {
         this.activeSubstancesTable.sort((a, b) => {
-            return (a.compositionNumber - b.compositionNumber == 0) ? a.activeSubstance.id - b.activeSubstance.id : a.compositionNumber - b.compositionNumber
+            return (a.compositionNumber - b.compositionNumber == 0) ? a.activeSubstance.id - b.activeSubstance.id : a.compositionNumber - b.compositionNumber;
         });
-        var i = 1;
-        var orderNr = '';
-        var tempDose = '';
+        let i = 1;
+        let orderNr = '';
+        let tempDose = '';
         for (const z of this.activeSubstancesTable) {
             if (z.compositionNumber == orderNr || i == 1) {
                 if (i == 1) {
@@ -1136,14 +1153,14 @@ export class EvaluarePrimaraComponent implements OnInit {
     }
 
     fillMedicamentDetails(modelToSubmit: any): void {
-        for (let subst of this.activeSubstancesTable) {
+        for (const subst of this.activeSubstancesTable) {
             subst.id = null;
-            for (let man of subst.manufactures) {
+            for (const man of subst.manufactures) {
                 man.id = null;
             }
         }
 
-        for (let subst of this.auxiliarySubstancesTable) {
+        for (const subst of this.auxiliarySubstancesTable) {
             subst.id = null;
         }
 
@@ -1151,25 +1168,21 @@ export class EvaluarePrimaraComponent implements OnInit {
             modelToSubmit.expertList = this.initialData.expertList;
         }
 
-        if(this.eForm.get('type').value && this.eForm.get('type').value.code == 'MEDR') {
+        if (this.eForm.get('type').value && this.eForm.get('type').value.code == 'MEDR') {
             modelToSubmit.medicamentName = this.eForm.getRawValue().medicament.commercialName;
-        }
-        else
-        {
+        } else {
             modelToSubmit.medicamentName = this.eForm.get('medicament.commercialName').value;
         }
 
         modelToSubmit.medicaments = [];
-        for (let division of this.divisions) {
+        for (const division of this.divisions) {
             let medicamentToSubmit: any;
 
-            if(this.eForm.get('type').value && this.eForm.get('type').value.code == 'MEDR') {
+            if (this.eForm.get('type').value && this.eForm.get('type').value.code == 'MEDR') {
                 medicamentToSubmit = Object.assign({}, this.eForm.getRawValue().medicament);
                 medicamentToSubmit.registrationDate = this.eForm.get('medicament.registrationDate').value;
                 medicamentToSubmit.registrationNumber = this.eForm.get('medicament.registrationNumber').value;
-            }
-            else
-            {
+            } else {
                 medicamentToSubmit = Object.assign({}, this.eForm.get('medicament').value);
             }
             medicamentToSubmit.activeSubstances = this.activeSubstancesTable;
@@ -1179,21 +1192,21 @@ export class EvaluarePrimaraComponent implements OnInit {
             medicamentToSubmit.volumeQuantityMeasurement = division.volumeQuantityMeasurement;
             medicamentToSubmit.instructions = [];
             if (division.instructions) {
-                for (let i of division.instructions) {
+                for (const i of division.instructions) {
                     i.id = null;
                     i.type = 'I';
                     medicamentToSubmit.instructions.push(i);
                 }
             }
             if (division.machets) {
-                for (let m of division.machets) {
+                for (const m of division.machets) {
                     m.id = null;
                     m.type = 'M';
                     medicamentToSubmit.instructions.push(m);
                 }
             }
 
-            if(this.eForm.get('type').value && this.eForm.get('type').value.code == 'MEDR') {
+            if (this.eForm.get('type').value && this.eForm.get('type').value.code == 'MEDR') {
                 if (this.eForm.getRawValue().medicament.atcCode) {
                     if (this.eForm.getRawValue().medicament.atcCode.code) {
                         medicamentToSubmit.atcCode = this.eForm.getRawValue().medicament.atcCode.code;
@@ -1201,9 +1214,7 @@ export class EvaluarePrimaraComponent implements OnInit {
                         medicamentToSubmit.atcCode = this.eForm.getRawValue().medicament.atcCode;
                     }
                 }
-            }
-            else
-            {
+            } else {
                 if (this.eForm.get('medicament.atcCode').value) {
                     if (this.eForm.get('medicament.atcCode').value.code) {
                         medicamentToSubmit.atcCode = this.eForm.get('medicament.atcCode').value.code;
@@ -1213,18 +1224,15 @@ export class EvaluarePrimaraComponent implements OnInit {
                 }
             }
 
-            if(this.eForm.get('type').value && this.eForm.get('type').value.code == 'MEDR') {
+            if (this.eForm.get('type').value && this.eForm.get('type').value.code == 'MEDR') {
                 this.fillRawGroups(medicamentToSubmit);
-            }
-            else
-            {
+            } else {
                 this.fillGroups(medicamentToSubmit);
             }
 
-            if(this.eForm.get('type').value && this.eForm.get('type').value.code == 'MEDR') {
+            if (this.eForm.get('type').value && this.eForm.get('type').value.code == 'MEDR') {
                 medicamentToSubmit.prescription = this.eForm.getRawValue().medicament.prescription.value;
-            }
-            else {
+            } else {
                 if (this.eForm.get('medicament.prescription').value) {
                     medicamentToSubmit.prescription = this.eForm.get('medicament.prescription').value.value;
                 }
@@ -1235,23 +1243,21 @@ export class EvaluarePrimaraComponent implements OnInit {
             }
 
             medicamentToSubmit.manufactures = [];
-            for (let x of this.manufacturesTable) {
+            for (const x of this.manufacturesTable) {
                 x.id = null;
                 medicamentToSubmit.manufactures.push(x);
             }
 
             medicamentToSubmit.medicamentTypes = [];
-            if(this.eForm.get('type').value && this.eForm.get('type').value.code == 'MEDR') {
+            if (this.eForm.get('type').value && this.eForm.get('type').value.code == 'MEDR') {
                 if (this.eForm.getRawValue().medicament.medTypesValues) {
-                    for (let w of this.eForm.getRawValue().medicament.medTypesValues) {
+                    for (const w of this.eForm.getRawValue().medicament.medTypesValues) {
                         medicamentToSubmit.medicamentTypes.push({type: w});
                     }
                 }
-            }
-            else
-            {
+            } else {
                 if (this.eForm.get('medicament.medTypesValues').value) {
-                    for (let w of this.eForm.get('medicament.medTypesValues').value) {
+                    for (const w of this.eForm.get('medicament.medTypesValues').value) {
                         medicamentToSubmit.medicamentTypes.push({type: w});
                     }
                 }
@@ -1275,7 +1281,7 @@ export class EvaluarePrimaraComponent implements OnInit {
             medicamentToSubmit.manufactures = this.manufacturesTable;
             medicamentToSubmit.medicamentTypes = [];
             if (this.eForm.get('medicament.medTypesValues').value) {
-                for (let w of this.eForm.get('medicament.medTypesValues').value) {
+                for (const w of this.eForm.get('medicament.medTypesValues').value) {
                     medicamentToSubmit.medicamentTypes.push({type: w});
                 }
             }
@@ -1337,7 +1343,7 @@ export class EvaluarePrimaraComponent implements OnInit {
     }
 
     removeInstr(event) {
-        for (let div of this.divisions) {
+        for (const div of this.divisions) {
             if (div.instructions) {
                 div.instructions = div.instructions.filter(t => t.path != event);
             }
@@ -1351,7 +1357,7 @@ export class EvaluarePrimaraComponent implements OnInit {
     }
 
     removeMacheta(event) {
-        for (let div of this.divisions) {
+        for (const div of this.divisions) {
             if (div.machets) {
                 div.machets = div.machets.filter(t => t.path != event);
             }
@@ -1363,5 +1369,21 @@ export class EvaluarePrimaraComponent implements OnInit {
         this.divisions = event;
         this.displayMachets();
     }
+
+    typeWasChanged() {
+        if (this.eForm.get('type').value && this.eForm.get('type').value.code != 'MEDR') {
+            this.eForm.get('medicament.dose').enable();
+            this.eForm.get('medicament.pharmaceuticalFormType').enable();
+            this.eForm.get('medicament.pharmaceuticalForm').enable();
+            this.eForm.get('medicament.atcCode').enable();
+            this.eForm.get('medicament.group').enable();
+            this.eForm.get('medicament.prescription').enable();
+            this.eForm.get('medicament.internationalMedicamentName').enable();
+            this.eForm.get('medicament.medTypesValues').enable();
+            this.eForm.get('medicament.authorizationHolder').enable();
+            this.eForm.get('medicament.termsOfValidity').enable();
+        }
+    }
 }
+
 

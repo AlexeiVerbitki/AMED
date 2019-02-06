@@ -10,9 +10,9 @@ import {saveAs} from 'file-saver';
 import {RequestService} from '../../../shared/service/request.service';
 import {Document} from '../../../models/document';
 import {AuthService} from '../../../shared/service/authetication.service';
-import {MedicamentService} from '../../../shared/service/medicament.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {TaskService} from '../../../shared/service/task.service';
+import {DrugDecisionsService} from '../../../shared/service/drugs/drugdecisions.service';
 
 @Component({
     selector: 'app-reg-drug-control', templateUrl: './reg-drug-control.html', styleUrls: ['./reg-drug-control.css']
@@ -38,8 +38,8 @@ export class RegDrugControl implements OnInit {
     maxDate = new Date();
 
     constructor(private fb: FormBuilder, public dialog: MatDialog, private router: Router, private administrationService: AdministrationService,
-                private requestService: RequestService, private authService: AuthService, private medicamentService: MedicamentService,
-                private loadingService: LoaderService, private taskService: TaskService) {
+                private requestService: RequestService, private authService: AuthService,
+                private loadingService: LoaderService, private taskService: TaskService, private drugDecisionsService: DrugDecisionsService) {
 
         this.rForm = fb.group({
             'compGet': [null, Validators.required], 'med': [null, Validators.required], 'primRep': [null, Validators.required],
@@ -49,8 +49,8 @@ export class RegDrugControl implements OnInit {
             'company': [null, Validators.required], 'type': fb.group({
                 'code': ['ATAC', Validators.required]
             }), 'mandatedFirstname': [null, Validators.required], 'mandatedLastname': [null, Validators.required], 'idnp': [null],
-            'phoneNumber': [null, [Validators.required, Validators.maxLength(9), Validators.pattern('[0-9]+')]], 'email': [null, Validators.email],
-            'requestMandateNr': [null], 'requestMandateDate': [{value: null}],
+            'phoneNumber': [null, [Validators.maxLength(9), Validators.pattern('[0-9]+')]], 'email': [null, Validators.email],
+            'requestMandateNr': [null], 'requestMandateDate': [null]
         });
     }
 
@@ -106,13 +106,11 @@ export class RegDrugControl implements OnInit {
 
         this.formSubmitted = false;
 
-        this.rForm.get('endDate').setValue(new Date());
-
         const useranameDB = this.authService.getUserName();
 
         const modelToSubmit: any = this.rForm.value;
         modelToSubmit.requestHistories = [{
-            startDate: this.rForm.get('startDate').value, endDate: new Date(), username: useranameDB, step: 'R'
+            startDate: this.rForm.get('startDate').value, endDate: new Date(), username: useranameDB, step: 'E'
         }];
         modelToSubmit.initiator = useranameDB;
         modelToSubmit.assignedUser = useranameDB;
@@ -122,10 +120,11 @@ export class RegDrugControl implements OnInit {
             phoneNumber: this.rForm.get('phoneNumber').value, email: this.rForm.get('email').value, requestMandateNr: this.rForm.get('requestMandateNr').value,
             requestMandateDate: this.rForm.get('requestMandateDate').value, idnp: this.rForm.get('idnp').value
         }];
+        modelToSubmit.currentStep = 'E';
 
         this.setSelectedRequest();
 
-        this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
+        this.subscriptions.push(this.drugDecisionsService.addAuthorizationDetails(modelToSubmit).subscribe(data => {
             this.router.navigate([this.model + data.body.id]);
         }));
 

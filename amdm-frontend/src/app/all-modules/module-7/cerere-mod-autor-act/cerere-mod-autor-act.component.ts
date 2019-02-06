@@ -255,7 +255,7 @@ export class CerereModAutorActComponent implements OnInit {
             }
         }
     }
-    
+
     loadDocTypes(dataDB: any) {
 
         this.subscriptions.push(
@@ -378,7 +378,7 @@ export class CerereModAutorActComponent implements OnInit {
 
         modelToSubmit.requestHistories.push({
             startDate: this.cerereModAutorForm.get('data').value, endDate: new Date(),
-            username: this.authService.getUserName(), step: 'E'
+            username: this.authService.getUserName(), step: 'F'
         });
 
         modelToSubmit.assignedUser = this.authService.getUserName();
@@ -397,6 +397,8 @@ export class CerereModAutorActComponent implements OnInit {
         if (modelToSubmit.medicaments != null && modelToSubmit.medicaments[0]) {
             modelToSubmit.medicaments[0].expirationDate = this.cerereModAutorForm.get('dataExp').value;
         }
+        modelToSubmit.currentStep = 'F';
+        modelToSubmit.endDate = new Date();
     }
 
     populateSelectedSubstances(modelToSubmit: any) {
@@ -564,7 +566,8 @@ export class CerereModAutorActComponent implements OnInit {
                     initiator: this.authService.getUserName(),
                     type: this.cerereModAutorForm.get('type').value,
                     requestNumber: this.cerereModAutorForm.get('requestNumber').value,
-                    startDate: this.cerereModAutorForm.get('startDate').value
+                    startDate: this.cerereModAutorForm.get('startDate').value,
+                    endDate: new Date()
                 };
                 modelToSubmit.requestHistories.push({
                     startDate: this.cerereModAutorForm.get('data').value, endDate: new Date(),

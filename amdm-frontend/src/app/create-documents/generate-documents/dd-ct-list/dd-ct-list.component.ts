@@ -1,13 +1,13 @@
 import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
-import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
-import {RequestService} from "../../../shared/service/request.service";
-import {Subscription} from "rxjs/internal/Subscription";
-import {SelectIssueDateDialogComponent} from "../../../dialog/select-issue-date-dialog/select-issue-date-dialog.component";
-import {UploadFileService} from "../../../shared/service/upload/upload-file.service";
-import {HttpResponse} from "@angular/common/http";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {DocumentService} from "../../../shared/service/document.service";
+import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {RequestService} from '../../../shared/service/request.service';
+import {Subscription} from 'rxjs/internal/Subscription';
+import {SelectIssueDateDialogComponent} from '../../../dialog/select-issue-date-dialog/select-issue-date-dialog.component';
+import {UploadFileService} from '../../../shared/service/upload/upload-file.service';
+import {HttpResponse} from '@angular/common/http';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {DocumentService} from '../../../shared/service/document.service';
 
 @Component({
     selector: 'app-dd-ct-list',
@@ -18,7 +18,7 @@ export class DdCtListComponent implements OnInit {
 
     private subscriptions: Subscription[] = [];
 
-    displayedColumns: any[] = ['number', 'date','dateOfIssue', 'name', 'status', 'actions'];
+    displayedColumns: any[] = ['number', 'date', 'dateOfIssue', 'name', 'status', 'actions'];
     dataSource = new MatTableDataSource<any>();
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -47,7 +47,7 @@ export class DdCtListComponent implements OnInit {
     loadDDs() {
         this.subscriptions.push(
             this.requestService.getDDCs().subscribe(data => {
-                    console.log("data", data);
+                    console.log('data', data);
                     this.dataSource.data = data;
                 },
                 error => console.log(error)
@@ -64,9 +64,9 @@ export class DdCtListComponent implements OnInit {
 
         dialogConfig2.width = '400px';
 
-        dialogConfig2.data = {document : element,type : 'DDC'};
+        dialogConfig2.data = {document : element, type : 'DDC'};
 
-        let dialogRef = this.dialog.open(SelectIssueDateDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(SelectIssueDateDialogComponent, dialogConfig2);
         dialogRef.afterClosed().subscribe(result => {
             this.ddListCtModified.emit(true);
             this.loadDDs();

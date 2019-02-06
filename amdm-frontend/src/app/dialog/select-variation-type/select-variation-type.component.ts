@@ -1,9 +1,9 @@
 import {AfterViewInit, Component, Inject, Injectable, OnInit} from '@angular/core';
-import {FlatTreeControl} from "@angular/cdk/tree";
+import {FlatTreeControl} from '@angular/cdk/tree';
 import {SelectionModel} from '@angular/cdk/collections';
-import {BehaviorSubject, Subscription} from "rxjs";
-import {MAT_DIALOG_DATA, MatDialogRef, MatTreeFlatDataSource, MatTreeFlattener} from "@angular/material";
-import {AdministrationService} from "../../shared/service/administration.service";
+import {BehaviorSubject, Subscription} from 'rxjs';
+import {MAT_DIALOG_DATA, MatDialogRef, MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material';
+import {AdministrationService} from '../../shared/service/administration.service';
 
 export class TodoItemNode {
     children: TodoItemNode[];
@@ -136,7 +136,7 @@ export class SelectVariationTypeComponent implements OnInit, AfterViewInit {
 
     constructor(private database: ChecklistDatabase,
                 public dialogRef: MatDialogRef<SelectVariationTypeComponent>,
-                @Inject(MAT_DIALOG_DATA) public dataDialog: any,) {
+                @Inject(MAT_DIALOG_DATA) public dataDialog: any, ) {
         this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
             this.isExpandable, this.getChildren);
         this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
@@ -145,8 +145,8 @@ export class SelectVariationTypeComponent implements OnInit, AfterViewInit {
         database.dataChange.subscribe(data => {
             this.dataSource.data = data;
             if (this.dataSource.data.length != 0 && !this.dataExtracted) {
-                var x = Object.assign([],this.dataDialog.values.selected);
-                for (let node of x) {
+                const x = Object.assign([], this.dataDialog.values.selected);
+                for (const node of x) {
                     this.todoLeafItemSelectionToggle(this.getNode(node.item));
                 }
                 this.dataExtracted = true;
@@ -229,7 +229,7 @@ export class SelectVariationTypeComponent implements OnInit, AfterViewInit {
     checkAllParentsSelection(node: TodoItemFlatNode): void {
         let parent: TodoItemFlatNode | null = this.getParentNode(node);
         while (parent) {
-            if(this.dataDialog.values.selected.length!=0) {
+            if (this.dataDialog.values.selected.length != 0) {
                 this.treeControl.expand(parent);
             }
             this.checkRootNodeSelection(parent);
@@ -270,12 +270,9 @@ export class SelectVariationTypeComponent implements OnInit, AfterViewInit {
         return null;
     }
 
-    getNode(description : string)
-    {
-        for(let x of this.treeControl.dataNodes)
-        {
-            if(x.item==description)
-            {
+    getNode(description: string) {
+        for (const x of this.treeControl.dataNodes) {
+            if (x.item == description) {
                 return x;
             }
         }

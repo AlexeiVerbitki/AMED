@@ -579,7 +579,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="text-right fap text-white">
-                                    <i (click)="addRefProdActiveSubstanceDialog()" class="fa fa-plus-circle fa-lg fa-mt"
+                                    <i *ngIf="this.isValidRefProduct" (click)="addRefProdActiveSubstanceDialog()" class="fa fa-plus-circle fa-lg fa-mt"
                                        aria-hidden="true"></i>
                                 </div>
                             </div>
@@ -701,7 +701,7 @@
 
         <!--<app-payment [requestId]="clinicTrailAmendForm.get('id').value"
                      (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>-->
-        <app-payment-clinical-trial [registrationReqest]="initialData"></app-payment-clinical-trial>
+        <app-payment-clinical-trial [registrationRequest]="initialData"></app-payment-clinical-trial>
     </form>
 
     <div class="text-center">

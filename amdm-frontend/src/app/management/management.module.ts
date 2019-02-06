@@ -68,9 +68,10 @@ import {LicenseHistoryDetailComponent} from './license/license-history-detail/li
         AmendmentDetailsComponent,
         NotificationDetailslsComponent,
         LicenseHistoryDialogComponent,
-	    LicenseHistoryDetailComponent,
+        LicenseHistoryDetailComponent,
     ],
-    entryComponents: [AddReceiptDialogComponent, PriceReqEditModalComponent, LicenseDetailsComponent, DrugAuthorizationDetailsDialogComponent, AnnihilationDetailsComponent, ClinicalTrialsDetailsComponent, AmendmentDetailsComponent, NotificationDetailslsComponent, LicenseHistoryDialogComponent, LicenseHistoryDetailComponent],
+    entryComponents: [AddReceiptDialogComponent, PriceReqEditModalComponent, LicenseDetailsComponent, DrugAuthorizationDetailsDialogComponent, AnnihilationDetailsComponent,
+        ClinicalTrialsDetailsComponent, AmendmentDetailsComponent, NotificationDetailslsComponent, LicenseHistoryDialogComponent, LicenseHistoryDetailComponent],
     providers: [LicenseService, AdministrationService, UploadFileService, AnnihilationService, MedicamentService, ClinicalTrialService],
 })
 export class ManagementModule {

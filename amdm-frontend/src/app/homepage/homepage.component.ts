@@ -1,16 +1,16 @@
 import {MatDialog, MatSort, MatTableDataSource, MatPaginator} from '@angular/material';
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {Subscription} from "rxjs";
-import {TaskService} from "../shared/service/task.service";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Router} from "@angular/router";
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {Subscription} from 'rxjs';
+import {TaskService} from '../shared/service/task.service';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-homepage',
     templateUrl: './homepage.component.html',
     styleUrls: ['./homepage.component.css']
 })
-export class HomepageComponent implements OnInit {
+export class HomepageComponent implements OnInit, AfterViewInit {
 
     taskForm: FormGroup;
     displayedColumns: any[] = ['requestNumber', 'processName', 'requestType', 'username', 'startDate', 'endDate', 'step'];
@@ -52,7 +52,7 @@ export class HomepageComponent implements OnInit {
     getRequestsInWork() {
         this.subscriptions.push(this.taskService.getTasksByFilter(this.taskForm.value).subscribe(data => {
 
-            const source = data.body.filter(r => r.currentStep !== 'F' && r.currentStep !== 'C' && r.endDate === null);
+            const source = data.body.filter(r => r.currentStep !== 'F' && r.currentStep !== 'C' && r.currentStep !== 'I' && r.endDate === null);
             this.dataSource.data = source.sort((a, b) => a.startDate.localeCompare(b.startDate));
             const expired = data.body.filter(r => r.expired !== null && r.expired === true );
             const emergent = data.body.filter(r => r.critical !== null && r.critical === true && (r.expired == null || r.expired === false));

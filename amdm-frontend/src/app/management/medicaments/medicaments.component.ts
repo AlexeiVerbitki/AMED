@@ -235,4 +235,16 @@ export class MedicamentsComponent implements OnInit {
         this.subscriptions.forEach(s => s.unsubscribe());
 
     }
+
+    getConcatenatedDivision(entry: any) {
+        let concatenatedDivision = '';
+            if (entry.division && entry.volume && entry.volumeQuantityMeasurement) {
+                concatenatedDivision = concatenatedDivision + entry.division + ' ' + entry.volume + ' ' + entry.volumeQuantityMeasurement;
+            } else if (entry.volume && entry.volumeQuantityMeasurement) {
+                concatenatedDivision = concatenatedDivision + entry.volume + ' ' + entry.volumeQuantityMeasurement;
+            } else {
+                concatenatedDivision = concatenatedDivision + entry.division;
+            }
+        return concatenatedDivision;
+    }
 }

@@ -68,6 +68,10 @@ const routes: Routes = [
                         loadChildren: '../app/all-modules/module-10/doc-flow.module#DocFlowModule'
                     },
                     {
+                        path: 'module/gmp',
+                        loadChildren: '../app/all-modules/gmp/gmp.module#GMPModule'
+                    },
+		    {
                         path: 'module/gdp',
                         loadChildren: '../app/all-modules/gdp/gdp.module#GDPModule'
                     },

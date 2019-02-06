@@ -33,6 +33,7 @@
 				<div class="md-form-modified">
 					<ng-select id="regType" name="regType" [items]="reqTypes" bindLabel="description"
 					           placeholder="Inregistrare" formControlName="type"
+					           (ngModelChange)="typeWasChanged()"
 					           required="true">
 					</ng-select>
 					<div *ngIf="formSubmitted && eForm.get('type').invalid">
@@ -62,8 +63,8 @@
 						           [typeahead]="medInputs"
 						           [loading]="medLoading" >
 							<ng-template ng-option-tmp let-item="item">
-								{{item?.regnr}} <br />
-								<small>{{item?.commercialName}}</small>
+								{{item.regnr}} <br />
+								<small>{{item.commercialName}}</small>
 							</ng-template>
 						</ng-select>
 					</div>
@@ -260,8 +261,8 @@
 					           [typeahead]="atcCodesInputs"
 					           required="true">
 						<ng-template ng-option-tmp let-item="item">
-							{{item?.code}} <br/>
-							<small class="form-text text-muted">{{item?.description}}</small>
+							{{item.code}} <br/>
+							<small class="form-text text-muted">{{item.description}}</small>
 						</ng-template>
 					</ng-select>
 					<div *ngIf="formSubmitted && eForm.get('medicament.atcCode').invalid">
@@ -524,7 +525,7 @@
 		<hr>
 		<div class="text-center">
 			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>
-			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Finisare</button>
+			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Urmatorul pas</button>
 			<!--<button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>-->
 		</div>
 	</form>

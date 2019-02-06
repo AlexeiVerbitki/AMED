@@ -9,25 +9,20 @@ import com.bass.amed.utils.LdapErrorMappingUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ldap.core.AttributesMapper;
-import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.support.LdapContextSource;
-import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.ldap.LdapUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.naming.directory.DirContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -36,11 +31,6 @@ public class AutheticationJWTController
     private static final Logger LOGGER = LoggerFactory.getLogger(AutheticationJWTController.class);
     private final TokenProvider tokenProvider;
     private final CustomAuthenticationManager customAuthenticationManager;
-    @Autowired
-    private LdapContextSource contextSource;
-    @Autowired
-    private LdapTemplate ldapTemplate;
-    private DirContext ctx = null;
 
     @Value("${ldap.user_domain_suffix}")
     private String USER_DOMAIN_SUFFIX;
@@ -76,44 +66,6 @@ public class AutheticationJWTController
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JWTConfigurer.AUTHORIZATION_HEADER, "Bearer " + jwt);
         return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
-    }
-
-    public List getAllPersonNames()
-    {
-        return ldapTemplate.search("OU=DEV,OU=BASS", "(objectclass=person)",
-                //                (AttributesMapper) attrs -> attrs.get("cn").);
-                (AttributesMapper) attrs -> attrs.getAll());
-    }
-
-    @GetMapping("/getUserDetails")
-    void getUserDetails() throws CustomException
-    {
-        try
-        {
-            String filterStr = new EqualsFilter("userPrincipalName", "dumitru.ginu@bass.md").encode();
-
-            contextSource.setUserDn("dumitru.ginu@bass.md");
-            contextSource.setPassword("parola treb pusa");
-
-            boolean authed = ldapTemplate.authenticate("OU=BASS", filterStr, "parola treb pusa");
-            System.out.println("Authenticated: " + authed);
-            System.out.println(filterStr);
-
-            List list = getAllPersonNames();
-            System.out.println(list.toString());
-
-            LOGGER.info("Login success");
-        }
-        catch (Exception e)
-        {
-            LOGGER.error("Login failed", e.getMessage());
-            throw new CustomException(e.getMessage());
-        }
-        finally
-        {
-            LdapUtils.closeContext(ctx);
-        }
-
     }
 
     /**

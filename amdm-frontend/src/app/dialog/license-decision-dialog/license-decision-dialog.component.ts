@@ -73,22 +73,24 @@ export class LicenseDecisionDialogComponent implements OnInit, OnDestroy {
     }
 
     onChanges(): void {
-        this.rForm.get('farmDir').valueChanges.subscribe(val => {
-            if (val) {
-                val.selectionDate = new Date();
-            }
-        });
+        if (this.type === 'A') {
+            this.rForm.get('farmDir').valueChanges.subscribe(val => {
+                if (val) {
+                    val.selectionDate = new Date();
+                }
+            });
 
 
-        this.rForm.get('tipIntreprindere').valueChanges.subscribe(val => {
-            if (val ) {
-                console.log('sfsdf', val);
-                this.pharmacyRepresentantProf = val.representant;
+            this.rForm.get('tipIntreprindere').valueChanges.subscribe(val => {
+                if (val ) {
+                    console.log('sfsdf', val);
+                    this.pharmacyRepresentantProf = val.representant;
 
-            } else {
-                this.pharmacyRepresentantProf = null;
-            }
-        });
+                } else {
+                    this.pharmacyRepresentantProf = null;
+                }
+            });
+        }
     }
 
 

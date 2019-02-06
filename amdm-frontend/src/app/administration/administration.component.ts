@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {NavbarTitleService} from "../shared/service/navbar-title.service";
+import {NavbarTitleService} from '../shared/service/navbar-title.service';
 
 @Component({
     selector: 'app-administration',

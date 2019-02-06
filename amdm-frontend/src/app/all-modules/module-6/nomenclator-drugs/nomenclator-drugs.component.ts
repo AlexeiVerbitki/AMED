@@ -4,8 +4,8 @@ import {Subscription} from 'rxjs';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {NomenclatorService} from '../../../shared/service/nomenclator.service';
 import {LoaderService} from '../../../shared/service/loader.service';
-import {NomenclatorModalComponent} from "../nomenclator-modal/nomenclator-modal.component";
-import {DatePipe} from "@angular/common";
+import {NomenclatorModalComponent} from '../nomenclator-modal/nomenclator-modal.component';
+import {DatePipe} from '@angular/common';
 
 
 @Component({
@@ -19,7 +19,7 @@ export class NomenclatorDrugsComponent implements OnInit, OnDestroy, AfterViewIn
     dataSource = new MatTableDataSource();
     datePipe = new DatePipe('en-US');
 
-    columnsToDisplay = ['btnDetalii','codulMed', 'denumireComerciala', 'formaFarmaceutica', 'doza', 'volum', 'divizare', 'dci','atc', 'termenValabilitate', 'nrDeInregistrare',
+    columnsToDisplay = ['btnDetalii', 'codulMed', 'denumireComerciala', 'formaFarmaceutica', 'doza', 'volum', 'divizare', 'dci', 'atc', 'termenValabilitate', 'nrDeInregistrare',
         'detinatorulCertificatuluiDeIntreg'];
 
 
@@ -54,7 +54,7 @@ export class NomenclatorDrugsComponent implements OnInit, OnDestroy, AfterViewIn
         this.subscriptions.push(this.nomenclatorService.getMedicamentNomenclature().subscribe(data => {
             this.loadingService.hide();
             this.dataSource.data = data;
-            console.log(data)
+            console.log(data);
 
         }, error => {
             console.log('error => ', error);
@@ -76,7 +76,7 @@ export class NomenclatorDrugsComponent implements OnInit, OnDestroy, AfterViewIn
                 && data.atc.toLowerCase().startsWith(f.atc)
                 && data.termenValabilitate.toString().toLowerCase().startsWith(f.termenValabilitate)
                 && (data.nrDeInregistrare.toString().toLowerCase().startsWith(f.nrDeInregistrare) || this.datePipe.transform(data.dataInregistrarii, 'dd/MM/yyyy').startsWith(f.nrDeInregistrare))
-                && (data.detinatorulCertificatuluiDeIntreg.toLowerCase().startsWith(f.detinatorulCertificatuluiDeIntreg) || data.taraDetinatorului.toLowerCase().startsWith(f.detinatorulCertificatuluiDeIntreg))
+                && (data.detinatorulCertificatuluiDeIntreg.toLowerCase().startsWith(f.detinatorulCertificatuluiDeIntreg) || data.taraDetinatorului.toLowerCase().startsWith(f.detinatorulCertificatuluiDeIntreg));
         };
     }
 

@@ -1,12 +1,10 @@
 import {Cerere} from './../../../models/cerere';
-import {FormArray, Validators} from '@angular/forms';
-import {FormGroup, FormBuilder} from '@angular/forms';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Component, Inject, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AdministrationService} from '../../../shared/service/administration.service';
-// import {debounceTime, distinctUntilChanged, filter, map, startWith, tap} from "rxjs/operators";
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 import {saveAs} from 'file-saver';
@@ -16,8 +14,6 @@ import {Subject} from 'rxjs/index';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {AuthService} from '../../../shared/service/authetication.service';
 import {MedicamentService} from '../../../shared/service/medicament.service';
-import {Utils} from 'angular-bootstrap-md/angular-bootstrap-md/utils/utils.class';
-import {forEach} from '@angular/router/src/utils/collection';
 
 export interface PeriodicElement {
     name: string;
@@ -50,9 +46,9 @@ export class ImportMedDialog implements OnInit {
 
     unitOfImportTable: any[] = [];
 
-    protected manufacturersRfPr: Observable<any[]>;
-    protected loadingManufacturerRfPr = false;
-    protected manufacturerInputsRfPr  = new Subject<string>();
+    manufacturersRfPr: Observable<any[]>;
+    loadingManufacturerRfPr = false;
+    manufacturerInputsRfPr = new Subject<string>();
 
     importer: Observable<any[]>;
     loadingCompany          = false;

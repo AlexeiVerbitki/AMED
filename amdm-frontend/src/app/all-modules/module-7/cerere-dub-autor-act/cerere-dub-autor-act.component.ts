@@ -59,7 +59,6 @@ export class CerereDubAutorActComponent implements OnInit {
             'company': [null, Validators.required],
             'companyValue': [''],
             'documents': [],
-            'medicaments': [[]],
             'requestHistories': [],
             'type': [],
             'typeValue': {disabled: true, value: null},
@@ -89,12 +88,19 @@ export class CerereDubAutorActComponent implements OnInit {
                         this.cerereDupAutorForm.get('requestHistories').setValue(data.requestHistories);
                         this.cerereDupAutorForm.get('type').setValue(data.type);
                         this.cerereDupAutorForm.get('typeValue').setValue(data.type.code);
-                        this.cerereDupAutorForm.get('medicaments').setValue(data.medicaments);
                         this.cerereDupAutorForm.get('street').setValue(data.company.street);
                         this.cerereDupAutorForm.get('locality').setValue(data.company.locality);
                         this.documents = data.documents;
                         this.outDocuments = data.outputDocuments;
                         this.documents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+                        let resPerson: any;
+                        if (data.registrationRequestMandatedContacts[0].mandatedLastname) {
+                            this.cerereDupAutorForm.get('resPerson').setValue(data.registrationRequestMandatedContacts[0].mandatedLastname);
+                            resPerson = data.registrationRequestMandatedContacts[0].mandatedLastname + ' ';
+                        }
+                        if (data.registrationRequestMandatedContacts[0].mandatedFirstname) {
+                            this.cerereDupAutorForm.get('resPerson').setValue(resPerson + data.registrationRequestMandatedContacts[0].mandatedFirstname);
+                        }
                         let xs = this.documents;
                         xs = xs.map(x => {
                             x.isOld = true;
@@ -219,11 +225,13 @@ export class CerereDubAutorActComponent implements OnInit {
 
         modelToSubmit.requestHistories.push({
             startDate: this.cerereDupAutorForm.get('data').value, endDate: new Date(),
-            username: this.authService.getUserName(), step: 'E'
+            username: this.authService.getUserName(), step: 'F'
         });
 
         modelToSubmit.assignedUser = this.authService.getUserName();
         modelToSubmit.documents = this.documents;
+        modelToSubmit.currentStep = 'F';
+        modelToSubmit.endDate = new Date();
     }
 
     paymentTotalUpdate(event) {
@@ -294,7 +302,9 @@ export class CerereDubAutorActComponent implements OnInit {
             if (result) {
                 this.loadingService.show();
                 this.outDocuments.forEach((item, index) => {
-                    if (item === doc) { this.outDocuments.splice(index, 1); }
+                    if (item === doc) {
+                        this.outDocuments.splice(index, 1);
+                    }
                 });
                 this.initialData.outputDocuments = this.outDocuments;
 
@@ -387,7 +397,8 @@ export class CerereDubAutorActComponent implements OnInit {
                     initiator: this.authService.getUserName(),
                     type: this.cerereDupAutorForm.get('type').value,
                     requestNumber: this.cerereDupAutorForm.get('requestNumber').value,
-                    startDate: this.cerereDupAutorForm.get('startDate').value
+                    startDate: this.cerereDupAutorForm.get('startDate').value,
+                    endDate: new Date()
                 };
                 modelToSubmit.requestHistories.push({
                     startDate: this.cerereDupAutorForm.get('data').value, endDate: new Date(),

@@ -10,7 +10,7 @@ import {RequestService} from '../../../shared/service/request.service';
 import {TaskService} from '../../../shared/service/task.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
-import {SuccessOrErrorHandlerService} from "../../../shared/service/success-or-error-handler.service";
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 
 enum Pages {
     CLAP = '3',
@@ -39,7 +39,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
 
     companii: Observable<any[]>;
     loadingCompany = false;
-    protected companyInputs = new Subject<string>();
+    companyInputs = new Subject<string>();
 
     clinicalTrails: Observable<any[]>;
     loadingClinicalTrail = false;
@@ -56,7 +56,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                 private administrationService: AdministrationService,
                 private taskService: TaskService,
                 private loadingService: LoaderService,
-                private errorHandlerService: SuccessOrErrorHandlerService,) {
+                private errorHandlerService: SuccessOrErrorHandlerService, ) {
     }
 
     ngOnInit() {
@@ -226,8 +226,8 @@ export class RegCerereComponent implements OnInit, OnDestroy {
 
 
     onSubmit() {
-        let validationData = this.registerClinicalTrailForm.get('registrationRequestMandatedContacts');
-        console.log('validationData',validationData);
+        const validationData = this.registerClinicalTrailForm.get('registrationRequestMandatedContacts');
+        console.log('validationData', validationData);
         if (validationData.get('mandatedFirstname').invalid || validationData.get('mandatedLastname').invalid || this.registerClinicalTrailForm.get('company').invalid) {
             alert('Invalid Form0!!');
             return;

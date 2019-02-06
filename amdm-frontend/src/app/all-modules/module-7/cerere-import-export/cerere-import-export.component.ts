@@ -287,7 +287,7 @@ export class CerereImportExportComponent implements OnInit {
                             this.substanceUnits = data;
                             const refUnit = {
                                 unitCode: this.selectedSubstance.unitOfMeasureCode,
-                                refUnitCode: "",
+                                refUnitCode: '',
                                 unitCodeRate: 1,
                                 refUnitCodeRate: 1,
                                 unitCodeDescription: this.unityDesc.description
@@ -385,10 +385,9 @@ export class CerereImportExportComponent implements OnInit {
 
     convertSubstanceQuantity() {
 
-        if (this.cerereImpExpForm.value.authorizedQuantity != null && this.cerereImpExpForm.get('availableQuantity').value != null && this.cerereImpExpForm.get('substance') != null && this.cerereImpExpForm.get('unitOfMeasurement') != null )
-        {
+        if (this.cerereImpExpForm.value.authorizedQuantity != null && this.cerereImpExpForm.get('availableQuantity').value != null && this.cerereImpExpForm.get('substance') != null && this.cerereImpExpForm.get('unitOfMeasurement') != null ) {
 
-            if(this.cerereImpExpForm.get('unitOfMeasurement').value.unitCode && this.cerereImpExpForm.get('substance').value.unitOfMeasureCode != this.cerereImpExpForm.get('unitOfMeasurement').value.unitCode){
+            if (this.cerereImpExpForm.get('unitOfMeasurement').value.unitCode && this.cerereImpExpForm.get('substance').value.unitOfMeasureCode != this.cerereImpExpForm.get('unitOfMeasurement').value.unitCode) {
 
                 this.cerereImpExpForm.value.authorizedQuantity = (this.cerereImpExpForm.value.authorizedQuantity * this.cerereImpExpForm.get('unitOfMeasurement').value.unitCodeRate) / this.cerereImpExpForm.get('unitOfMeasurement').value.refUnitCodeRate;
 
@@ -400,8 +399,8 @@ export class CerereImportExportComponent implements OnInit {
 
     initSubstanceData() {
         this.activeSubstancesTable = [];
-        this.cerereImpExpForm.get('availableQuantity').setValue("");
-        this.cerereImpExpForm.get('unitOfMeasurement').setValue("");
+        this.cerereImpExpForm.get('availableQuantity').setValue('');
+        this.cerereImpExpForm.get('unitOfMeasurement').setValue('');
     }
 
     addSubstance() {
@@ -547,7 +546,7 @@ export class CerereImportExportComponent implements OnInit {
 
         modelToSubmit.requestHistories.push({
             startDate: this.cerereImpExpForm.get('data').value, endDate: new Date(),
-            username: this.authService.getUserName(), step: 'E'
+            username: this.authService.getUserName(), step: 'F'
         });
 
         modelToSubmit.assignedUser = this.authService.getUserName();
@@ -560,7 +559,8 @@ export class CerereImportExportComponent implements OnInit {
         modelToSubmit.drugCheckDecisions = this.drugCheckDecisions;
         modelToSubmit.documents = this.documents;
         modelToSubmit.outputDocuments = this.outDocuments;
-
+        modelToSubmit.currentStep = 'F';
+        modelToSubmit.endDate = new Date();
     }
 
     populateImportExportDetails(modelToSubmit: any) {
@@ -744,7 +744,8 @@ export class CerereImportExportComponent implements OnInit {
                     initiator: this.authService.getUserName(),
                     type: this.cerereImpExpForm.get('type').value,
                     requestNumber: this.cerereImpExpForm.get('requestNumber').value,
-                    startDate: this.cerereImpExpForm.get('startDate').value
+                    startDate: this.cerereImpExpForm.get('startDate').value,
+                    endDate: new Date()
                 };
                 modelToSubmit.requestHistories.push({
                     startDate: this.cerereImpExpForm.get('data').value, endDate: new Date(),

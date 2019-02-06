@@ -1,13 +1,13 @@
 import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
-import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
-import {DocumentService} from "../../../shared/service/document.service";
-import {RequestService} from "../../../shared/service/request.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {Subscription} from "rxjs/internal/Subscription";
-import {UploadFileService} from "../../../shared/service/upload/upload-file.service";
-import {HttpResponse} from "@angular/common/http";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {SelectIssueDateDialogComponent} from "../../../dialog/select-issue-date-dialog/select-issue-date-dialog.component";
+import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {DocumentService} from '../../../shared/service/document.service';
+import {RequestService} from '../../../shared/service/request.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {Subscription} from 'rxjs/internal/Subscription';
+import {UploadFileService} from '../../../shared/service/upload/upload-file.service';
+import {HttpResponse} from '@angular/common/http';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {SelectIssueDateDialogComponent} from '../../../dialog/select-issue-date-dialog/select-issue-date-dialog.component';
 
 @Component({
     selector: 'app-dd-ct-amend-list',
@@ -39,7 +39,7 @@ export class DdCtAmendListComponent implements OnInit {
     loadDDAs() {
         this.subscriptions.push(
             this.requestService.getDDACs().subscribe(data => {
-                    console.log("data", data);
+                    console.log('data', data);
                     this.dataSource.data = data;
                 },
                 error => console.log(error)
@@ -56,9 +56,9 @@ export class DdCtAmendListComponent implements OnInit {
 
         dialogConfig2.width = '400px';
 
-        dialogConfig2.data = {document : element,type : 'DDA'};
+        dialogConfig2.data = {document : element, type : 'DDA'};
 
-        let dialogRef = this.dialog.open(SelectIssueDateDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(SelectIssueDateDialogComponent, dialogConfig2);
         dialogRef.afterClosed().subscribe(result => {
             this.ddListCtAmendModified.emit(true);
             this.loadDDAs();
@@ -90,7 +90,7 @@ export class DdCtAmendListComponent implements OnInit {
             if (result) {
                 this.loadingService.show();
                 this.subscriptions.push(this.documentService.removeDDC(element).subscribe(event => {
-                        console.log("removeDDC", event);
+                        console.log('removeDDC', event);
                         if (event instanceof HttpResponse) {
                             this.ddListCtAmendModified.emit(true);
                             this.loadDDAs();

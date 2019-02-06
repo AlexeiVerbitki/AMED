@@ -1,8 +1,11 @@
 package com.bass.amed.utils;
 
 import com.bass.amed.dto.MedicamentFilterDTO;
+
 import javax.persistence.Query;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class MedicamentQueryUtils
@@ -170,13 +173,14 @@ public class MedicamentQueryUtils
 
     public static StringBuilder createMedicamentDetailsQuery(List<Integer> ids)
     {
+        Set<Integer> setIds = new HashSet<Integer>(ids);
         StringBuilder stringBuilder = new StringBuilder("select m.id,m.code,m.commercial_name commercialName,atc_code atcCode,registration_number registerNumber,DATE_FORMAT" +
                 "(registration_date," +
                 "'%d/%m/%Y') registrationDate," +
                 "division,ma" +
                 ".description authorizationHolderDescription,DATE_FORMAT(expiration_date,'%d/%m/%Y') expirationDate from medicament m,nm_manufactures ma\n" +
                 "where m.authorization_holder_id=ma.id and m.id in (");
-        String s = ids.stream().map(id->String.valueOf(id)).collect(Collectors.joining(", "));
+        String s = setIds.stream().map(id->String.valueOf(id)).collect(Collectors.joining(", "));
         return stringBuilder.append(s+")");
     }
 

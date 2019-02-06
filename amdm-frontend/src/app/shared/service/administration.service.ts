@@ -29,6 +29,18 @@ export class AdministrationService {
         return this.http.get('/api/administration/generate-doc-nr', {});
     }
 
+    generateGMPRequestNumber(): Observable<any> {
+        return this.http.get('/api/administration/generate-gmp-request-number', {});
+    }
+
+    generateMedicamentRegistrationRequestNumber(): Observable<any> {
+        return this.http.get('/api/administration/generate-medicament-registration-request-number', {});
+    }
+
+    generateMedicamentPostAuthorizationRequestNumber(): Observable<any> {
+        return this.http.get('/api/administration/generate-medicament-post-authorization-request-number', {});
+    }
+
     getAllCompanies(): Observable<any> {
         return this.http.get('/api/administration/all-companies', {});
     }
@@ -148,6 +160,10 @@ export class AdministrationService {
 
     getAllMedicamentTypes(): Observable<any> {
         return this.http.get('/api/administration/all-medicament-types', {});
+    }
+
+    getAllSterileProducts(): Observable<any> {
+        return this.http.get('/api/administration/all-sterile-products', {});
     }
 
     getAllManufactures(): Observable<any> {

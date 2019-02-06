@@ -11,7 +11,6 @@ import {PriceReqEditModalComponent} from './price-req-edit-modal/price-req-edit-
 import {NavbarTitleService} from '../../shared/service/navbar-title.service';
 import * as XLSX from 'xlsx';
 import {DatePipe} from '@angular/common';
-import {LicenseStatusPipe} from '../../shared/pipe/license-status.pipe';
 import {Angular5Csv} from 'angular5-csv/Angular5-csv';
 import {LoaderService} from '../../shared/service/loader.service';
 
@@ -64,8 +63,8 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
             'medicament': [null],
             'division': [null],
             'medicamentCode': [null],
-            'orderApprovDate': [null],
-            'expirationDate': [null],
+            'orderApprovDate': [{value: null, disabled:true}],
+            'expirationDate': [{value: null, disabled:true}],
             'medicamentType': [null],
             'priceType': [null],
         });

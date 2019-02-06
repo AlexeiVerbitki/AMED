@@ -76,7 +76,7 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
         this.getPrices();
         this.subscriptions.push(
             this.priceService.generateDocNumber().subscribe(generatedNumber => {
-                    this.requestNumber = generatedNumber;
+                    this.requestNumber = generatedNumber[0];
                 },
                 error => {console.log(error); alert(error); }
             )

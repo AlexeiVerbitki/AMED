@@ -6,9 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Set;
 
-public interface DocumentsRepository  extends JpaRepository<DocumentsEntity, Integer>
+public interface DocumentsRepository extends JpaRepository<DocumentsEntity, Integer>
 {
     @Query("SELECT d FROM DocumentsEntity d WHERE d.id in (:ids)")
     List<DocumentsEntity> findAllByIds(@Param("ids") List<Integer> docIds);
@@ -19,5 +18,5 @@ public interface DocumentsRepository  extends JpaRepository<DocumentsEntity, Int
     @Query("SELECT D FROM RegistrationRequestsEntity R LEFT JOIN R.documents D LEFT JOIN R.price P WHERE P.id IN (:ids)")
     List<DocumentsEntity> findAllByPriceRequestsIds(@Param("ids") List<Integer> priceReqIds);
 
-    Set<DocumentsEntity> findAllByregistrationRequestId(int priceReqIds);
+    List<DocumentsEntity> findAllByRegistrationRequestId(int priceReqIds);
 }

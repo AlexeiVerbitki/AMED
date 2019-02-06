@@ -34,18 +34,18 @@
 			<div class="col">
 				<div class="md-form-modified">
 					<mat-form-field class="w-100">
-						<input matInput [matDatepicker]="orderApprovDate1"  placeholder="Data aprobării ordinului" formControlName="orderApprovDate">
+						<input matInput disabled [matDatepicker]="orderApprovDate1"  placeholder="Data aprobării ordinului" formControlName="orderApprovDate">
 						<mat-datepicker-toggle matSuffix [for]="orderApprovDate1"></mat-datepicker-toggle>
-						<mat-datepicker touchUi #orderApprovDate1></mat-datepicker>
+						<mat-datepicker touchUi #orderApprovDate1 disabled="false"></mat-datepicker>
 					</mat-form-field>
 				</div>
 			</div>
 			<div class="col">
 				<div class="md-form-modified">
 					<mat-form-field class="w-100">
-						<input matInput [matDatepicker]="expiration1"  placeholder="Data expirării prețului" formControlName="expirationDate">
+						<input matInput disabled [matDatepicker]="expiration1"  placeholder="Data expirării prețului" formControlName="expirationDate">
 						<mat-datepicker-toggle matSuffix [for]="expiration1"></mat-datepicker-toggle>
-						<mat-datepicker touchUi #expiration1></mat-datepicker>
+						<mat-datepicker touchUi #expiration1 disabled="false"></mat-datepicker>
 					</mat-form-field>
 				</div>
 			</div>

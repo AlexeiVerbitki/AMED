@@ -4,6 +4,14 @@ body {
     background : #F5F5F5;
 }
 
+.md-form label {
+    white-space: nowrap;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+
 .md-form-modified .mat-form-field-infix {
     padding : 0.61em 0 !important;
 }
@@ -466,4 +474,12 @@ footer {
 
 .custom-dialog-container .mat-dialog-container {
     overflow : visible;
+}
+
+.md-form label {
+    white-space   : nowrap;
+    width         : 100%;
+    overflow      : hidden;
+    text-overflow : ellipsis;
+    display       : inline-block;
 }

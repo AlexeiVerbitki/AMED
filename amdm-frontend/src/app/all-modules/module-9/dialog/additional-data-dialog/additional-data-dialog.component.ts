@@ -7,7 +7,7 @@ import {DocumentService} from '../../../../shared/service/document.service';
 import {AuthService} from '../../../../shared/service/authetication.service';
 import {ConfirmationDialogComponent} from '../../../../dialog/confirmation-dialog.component';
 import {LoaderService} from '../../../../shared/service/loader.service';
-import {Observable} from "rxjs/internal/Observable";
+import {Observable} from 'rxjs/internal/Observable';
 
 @Component({
     selector: 'app-additional-data-dialog',
@@ -59,7 +59,7 @@ export class AdditionalDataDialogComponent implements OnInit {
         this.subscriptions.push(
             this.administrationService.getAllSysParams().subscribe(data => {
                     this.functions = data;
-                    this.functions = this.functions.filter(t=> t.code.startsWith('FN'));
+                    this.functions = this.functions.filter(t => t.code.startsWith('FN'));
                 },
                 error => console.log(error)
             )
@@ -183,11 +183,11 @@ export class AdditionalDataDialogComponent implements OnInit {
         }
         console.log('this.dataDialog', this.dataDialog);
 
-        let modelToSubmit = {
+        const modelToSubmit = {
             nrDoc : this.reqForm.get('docNumber').value,
-            responsiblePerson : this.dataDialog.registrationRequestMandatedContacts.mandatedLastname+' '+this.dataDialog.registrationRequestMandatedContacts.mandatedFirstname,
+            responsiblePerson : this.dataDialog.registrationRequestMandatedContacts.mandatedLastname + ' ' + this.dataDialog.registrationRequestMandatedContacts.mandatedFirstname,
             companyName : this.dataDialog.company.name,
-            requestDate: new Date(),country : 'Moldova',
+            requestDate: new Date(), country : 'Moldova',
             address : this.dataDialog.company.legalAddress,
             phoneNumber : this.dataDialog.registrationRequestMandatedContacts.phoneNumber,
             email : this.dataDialog.registrationRequestMandatedContacts.email,
@@ -195,15 +195,15 @@ export class AdditionalDataDialogComponent implements OnInit {
             function : this.reqForm.get('function').value.description,
             signerName : this.reqForm.get('function').value.value
         };
-        
+
         console.log('modelToSubmit', modelToSubmit);
 
-        let observable : Observable<any> = null;
+        let observable: Observable<any> = null;
         observable = this.documentService.viewRequestNew(modelToSubmit);
 
         this.subscriptions.push(observable.subscribe(data => {
-                let file = new Blob([data], {type: 'application/pdf'});
-                var fileURL = URL.createObjectURL(file);
+                const file = new Blob([data], {type: 'application/pdf'});
+                const fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
                 this.loadingService.hide();
             }, error => {

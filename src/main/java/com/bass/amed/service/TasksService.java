@@ -79,9 +79,9 @@ public class TasksService
     {
         StringBuilder stringBuilder = new StringBuilder(TASK_QUERY);
 
-        if (Strings.isNotEmpty(filter.getRequestNumber()))
+        if (filter.getRequestNumber()!=null && !filter.getRequestNumber().isEmpty())
         {
-            stringBuilder.append(" AND RR.requestNumber = :requestNumber");  // 104457
+            stringBuilder.append(" AND RR.requestNumber like (:requestNumber)");  // 104457
             return stringBuilder.toString();
         }
 
@@ -123,7 +123,7 @@ public class TasksService
     {
         if (Strings.isNotEmpty(filter.getRequestNumber()))
         {
-            query.setParameter("requestNumber", filter.getRequestNumber());
+            query.setParameter("requestNumber", filter.getRequestNumber() + "%");
             return;
         }
 

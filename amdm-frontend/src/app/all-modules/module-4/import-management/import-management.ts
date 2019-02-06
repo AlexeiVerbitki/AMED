@@ -1,12 +1,9 @@
 import {Cerere} from './../../../models/cerere';
-import {FormArray, Validators} from '@angular/forms';
-import {FormGroup, FormBuilder} from '@angular/forms';
 import {Component, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {MatDialog, MatDialogConfig} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AdministrationService} from '../../../shared/service/administration.service';
-// import {debounceTime, distinctUntilChanged, filter, map, startWith, tap} from "rxjs/operators";
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 import {saveAs} from 'file-saver';
@@ -21,6 +18,7 @@ import {forEach} from '@angular/router/src/utils/collection';
 import {ImportMedDialog} from '../dialog/import-med-dialog';
 import {Timestamp} from 'rxjs/internal/operators/timestamp';
 import {ImportManagementDialog} from './import-management-dialog/import-management-dialog';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 export interface PeriodicElement {
     name: string;
@@ -153,8 +151,10 @@ export class ImportManagement implements OnInit {
                 'id': [Validators.required],
                 'applicationDate': [new Date()],
                 'applicant': ['', Validators.required],
+
                 'seller': [{value: null, disabled: true}, Validators.required, ], // Tara si adresa lui e deja in baza
                 'basisForImport': [],
+
                 'importer': [{value: null, disabled: true}, Validators.required], // Tara si adresa lui e deja in baza
                 'contract': [null, Validators.required],
                 'contractDate': [null, Validators.required],
@@ -222,6 +222,7 @@ export class ImportManagement implements OnInit {
             this.subscriptions.push(this.requestService.getImportRequest(params['id']).subscribe(data => {
                     console.log('this.requestService.getImportRequest(params[\'id\'])', data);
                     this.importData = data;
+                    
                     this.customsPointsList = data.importAuthorizationEntity.nmCustomsPointsList;
                     console.log("this.importData:", this.importData)
 
@@ -249,8 +250,10 @@ export class ImportManagement implements OnInit {
                             'id': [Validators.required],
                             'applicationDate': [new Date()],
                             'applicant': ['', Validators.required],
+                            
                             'seller': [{value: null, disabled: true}, Validators.required], // Tara si adresa lui e deja in baza
                             'basisForImport': [],
+                            
                             'importer': [{value: null, disabled: true}, Validators.required], // Tara si adresa lui e deja in baza
                             'contract': [null, Validators.required],
                             'contractDate': [null, Validators.required],
@@ -877,16 +880,6 @@ export class ImportManagement implements OnInit {
     }
 
 
-    // loadCustomsPoints() {
-    //     this.subscriptions.push(
-    //         this.administrationService.getCustomsPoints().subscribe(data => {
-    //                 this.customsPointsList = data;
-    //
-    //             },
-    //             error => console.log(error)
-    //         )
-    //     );
-    // }
 
     interruptProcess() {
         const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
@@ -927,6 +920,7 @@ export class ImportManagement implements OnInit {
     }
 
 
+    
     nextStep(aprrovedOrNot: boolean, submitForm: boolean) {
 
         this.formSubmitted = true;

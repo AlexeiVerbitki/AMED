@@ -5,6 +5,7 @@ import com.bass.amed.dto.*;
 import com.bass.amed.dto.annihilation.BonPlataAnihilare1;
 import com.bass.amed.dto.annihilation.BonPlataAnihilare2;
 import com.bass.amed.dto.annihilation.ListaMedicamentelorPentruComisie;
+import com.bass.amed.dto.clinicaltrial.ClinicTrialAmdmOrdinDTO;
 import com.bass.amed.dto.clinicaltrial.ClinicalTrialExpertDTO;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
@@ -90,8 +91,14 @@ public class DocumentsController
     private GenerateMedicamentRegistrationNumberRepository generateMedicamentRegistrationNumberRepository;
     @Autowired
     private AuditLogService auditLogService;
-	@Autowired
+    @Autowired
     private ClinicalTrailsService clinicalTrailsService;
+    @Autowired
+    CtAmendMedInstInvestigatorRepository ctAmendMedInstInvestigatorRepository;
+    @Autowired
+    private CtPaymentOrderRepository ctPaymentOrderRepository;
+    @Value("${scheduler.rest.api.host}")
+    private String schedulerRestApiHost;
 
     @Value("${final.documents.folder}")
     private String folder;
@@ -263,6 +270,16 @@ public class DocumentsController
             else if (category.equals("OIM"))
             {
                 closeRequest(request);
+            }
+            else if (category.equals("DDC"))
+            {
+                clinicalTrailsService.unscheduleClientDetailsDataCT(request.getId());
+                clinicalTrailsService.scheduleFinisLimitCT(request.getId(), request.getRequestNumber());
+            }
+            else if (category.equals("DDC"))
+            {
+                clinicalTrailsService.unscheduleClientDetailsDataAmendCT(request.getId());
+                clinicalTrailsService.scheduleFinisLimitAmendmentCT(request.getId(), request.getRequestNumber());
             }
         }
     }
@@ -668,8 +685,7 @@ public class DocumentsController
                 medicamentePentruOrdinDTO.setId(String.valueOf(i++));
                 medicamentePentruOrdinDTO.setCommercialName(medicamentHistoryEntity.getCommercialNameTo());
                 medicamentePentruOrdinDTO.setPharmaceuticalForm(medicamentHistoryEntity.getPharmaceuticalFormTo().getDescription() + ", " + medicamentHistoryEntity.getDoseTo() + ", " + medicamentHistoryEntity.getDivisionHistory().stream().map(t -> Utils.getConcatenatedDivisionHistory(t)).collect(Collectors.joining("; ")));
-                //TODO modification type de setat
-                medicamentePentruOrdinDTO.setModificationType("");
+                medicamentePentruOrdinDTO.setModificationType(registrationRequestsEntity.getVariations().stream().findFirst().orElse(new RequestVariationTypeEntity()).getValue());
                 medicamentePentruOrdinDTO.setRegistrationNumber(String.valueOf(medicamentHistoryEntity.getRegistrationNumber()));
                 medicamentePentruOrdinDTO.setRegistrationNrDate(sdf.format(medicamentHistoryEntity.getRegistrationDate()));
                 medicamentePentruOrdinDTOS.add(medicamentePentruOrdinDTO);
@@ -1200,6 +1216,7 @@ public class DocumentsController
                     order.setCurrency(bonDePlataDTO.getCurrency());
                     order.setAmountExchanged(AmountUtils.round(order.getQuantity() * order.getAmount() / coeficient, 2));
                     paymentOrderRepository.save(order);
+                    Utils.jobUnschedule(schedulerRestApiHost,"/wait-evaluation-medicament-registration", bonDePlataDTO.getRequestId());
                 }
             }
         }
@@ -2280,6 +2297,114 @@ public class DocumentsController
     {
         outputDocumentsRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/generate-aviz-amdm-ct", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> generateAvizAC(@RequestParam(value = "id") Integer id,
+                                                 @RequestParam(value = "docCategory") String docCategory) throws CustomException {
+        Optional<RegistrationRequestsEntity> regOptional = regRequestRepository.findClinicalTrailstRequestById(id);
+        if (!regOptional.isPresent()) {
+            throw new CustomException("Inregistrarea nu a fost gasita");
+        }
+        RegistrationRequestsEntity registrationRequestsEntity = regOptional.get();
+
+        ClinicTrialAmendEntity clinicTrialAmendEntity = registrationRequestsEntity.getClinicalTrails().getClinicTrialAmendEntities().stream().filter(entity ->
+                entity.getRegistrationRequestId().equals(registrationRequestsEntity.getId())
+        ).findFirst().orElse(null);
+
+        if (clinicTrialAmendEntity == null) {
+            throw new CustomException("Inregistrarea nu a fost gasita");
+        }
+
+        if (clinicTrialAmendEntity.getComissionNr() == null || clinicTrialAmendEntity.getComissionNr().isEmpty()) {
+            throw new CustomException("Numarul comisiei medicamentului nu este introdusa");
+        }
+        if (clinicTrialAmendEntity.getComissionDate() == null) {
+            throw new CustomException("Data comisiei medicamentului nu este introdusa");
+        }
+
+        Set<CtAmendMedInstInvestigatorEntity> medInstInvestigators = ctAmendMedInstInvestigatorRepository.findCtMedInstInvestigatorById(clinicTrialAmendEntity.getId());
+        medInstInvestigators.forEach(medInstInvestigator -> {
+            if ('U' == medInstInvestigator.getEmbededId().getStatus() || 'N' == medInstInvestigator.getEmbededId().getStatus()) {
+                CtMedicalInstitutionEntity medInst = medInstInvestigator.getMedicalInstitutionsEntity();
+                CtInvestigatorEntity ctInvestigatorEntity = new CtInvestigatorEntity();
+                ctInvestigatorEntity.asign(medInstInvestigator.getInvestigatorsEntity());
+                ctInvestigatorEntity.setMain(medInstInvestigator.getMainInvestigator());
+                medInst.getInvestigators().add(ctInvestigatorEntity);
+
+                clinicTrialAmendEntity.getMedicalInstitutionsTo().add(medInst);
+            }
+        });
+
+        OutputDocumentsEntity documentsEntity = registrationRequestsEntity.getOutputDocuments().stream().filter(docum -> docum.getDocType().getCategory().equals(docCategory)).findFirst().get();
+
+        byte[] bytes = null;
+
+        try {
+            ResourceLoader resourceLoader = new DefaultResourceLoader();
+            Resource res = null;
+            if (documentsEntity.getDocType().getCategory().equals("AAS")) {
+                res = resourceLoader.getResource("layouts/aviz amend.jrxml");
+            } else {
+                res = resourceLoader.getResource("layouts/Ordin amendamente aprobate.jrxml");
+            }
+            JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
+            SimpleDateFormat sdf = new SimpleDateFormat(Constants.Layouts.DATE_FORMAT);
+
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("nr", documentsEntity.getNumber());
+            parameters.put("date", sdf.format(new Date()));
+            parameters.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
+            parameters.put("amdmDate", sdf.format(clinicTrialAmendEntity.getComissionDate()));
+            parameters.put("protocolClinic", clinicTrialAmendEntity.getCodeTo());
+            parameters.put("applicant", registrationRequestsEntity.getCompany().getName());
+            parameters.put("sponsor", clinicTrialAmendEntity.getSponsorTo());
+            parameters.put("institution", String.join("|", clinicTrialAmendEntity.getMedicalInstitutionsTo().stream().map(inst -> inst.getName()).collect(Collectors.toList())));
+            parameters.put("studyCode", clinicTrialAmendEntity.getCodeTo());
+            parameters.put("eudra", clinicTrialAmendEntity.getEudraCtNrTo());
+            parameters.put("studyType", clinicTrialAmendEntity.getProvenanceTo().getDescription().concat(" ").concat(clinicTrialAmendEntity.getTreatmentTo().getDescription()));
+            parameters.put("phase", clinicTrialAmendEntity.getPhaseTo().getName());
+            parameters.put("avizAmdmNr", documentsEntity.getNumber());
+
+            DocumentsEntity avizEtica = registrationRequestsEntity.getDocuments().stream().filter(docum -> docum.getDocType().getCategory().equals("AC")).findFirst().get();
+            parameters.put("avizComitetEticNr", avizEtica.getNumber());
+            if (clinicTrialAmendEntity.getAmendCode() == null || clinicTrialAmendEntity.getAmendCode().isEmpty()) {
+                throw new CustomException("Codul amendamentului studiului clinic nu este introdus");
+            }
+            parameters.put("amdmIdentification", clinicTrialAmendEntity.getAmendCode());
+            parameters.put("clinicalStudyName", clinicTrialAmendEntity.getTitleTo());
+
+            if (documentsEntity.getDocType().getCategory().equals("OAS")) {
+                parameters.put("clinicStudyNr", clinicTrialAmendEntity.getCodeTo());
+                parameters.put("ordinDate", documentsEntity.getDate());
+                parameters.put("ordinNr", documentsEntity.getNumber());
+
+                ClinicTrialAmdmOrdinDTO dtoDataSource = new ClinicTrialAmdmOrdinDTO();
+                dtoDataSource.setApplicant(registrationRequestsEntity.getCompany().getName());
+                dtoDataSource.setClinicalStudy(clinicTrialAmendEntity.getTitleTo());
+                dtoDataSource.setPhases(clinicTrialAmendEntity.getPhaseTo().getName());
+
+                List<CtPaymentOrdersEntity> payOrders = ctPaymentOrderRepository.findByregistrationRequestId(id);
+                dtoDataSource.setInvoiceNr(String.join("|", payOrders.stream().map(inst -> inst.getNumber().toString().concat("_").concat(sdf.format(inst.getDate()))).collect(Collectors.toList())));
+
+                List<ClinicTrialAmdmOrdinDTO> dtoList = new ArrayList<>();
+                dtoList.add(dtoDataSource);
+                JRBeanCollectionDataSource ordiJRBean = new JRBeanCollectionDataSource(dtoList);
+                parameters.put("ordinAmendamenteAprobateDataSource", ordiJRBean);
+
+                System.out.println();
+            }
+
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
+            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+        } catch (Exception e) {
+            throw new CustomException(e.getMessage());
+        }
+
+
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=dispozitieDeDistribuire.pdf").body(bytes);
     }
 
     @RequestMapping(value = "/generate-aviz-ct", method = RequestMethod.GET)

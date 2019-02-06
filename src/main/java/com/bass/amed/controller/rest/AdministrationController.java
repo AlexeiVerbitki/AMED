@@ -10,6 +10,7 @@ import com.bass.amed.repository.*;
 import com.bass.amed.service.GenerateDocNumberService;
 import com.bass.amed.service.GenerateReceiptNumberService;
 import com.bass.amed.utils.ReceiptsQueryUtils;
+import com.bass.amed.utils.Utils;
 import org.apache.logging.log4j.util.Strings;
 import org.hibernate.JDBCException;
 import org.hibernate.transform.ResultTransformer;
@@ -76,6 +77,8 @@ public class AdministrationController
     @Autowired
     private MedicamentTypeRepository medicamentTypeRepository;
     @Autowired
+    private NmSterileProductsRepository nmSterileProductsRepository;
+    @Autowired
     private ManufactureRepository manufactureRepository;
     @Autowired
     private GenerateReceiptNumberService generateReceiptNumberService;
@@ -99,11 +102,41 @@ public class AdministrationController
     private NmVariationTypeRespository variationTypeRespository;
     @Autowired
     private NmCustomsPointsRepository nmCustomsPointsRepository;
+    @Autowired
+    private SeqGMPRequestNumberRepository seqGMPRequestNumberRepository;
+    @Autowired
+    private SeqMedicamentRegistrationRequestNumberRepository seqMedicamentRegistrationRequestNumberRepository;
+    @Autowired
+    private SeqMedicamentPostAuthorizationRequestNumberRepository seqMedicamentPostAuthorizationRequestNumberRepository;
 
     @RequestMapping(value = "/generate-doc-nr")
     public ResponseEntity<Integer> generateDocNr()
     {
         return new ResponseEntity<>(generateDocNumberService.getDocumentNumber(), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/generate-gmp-request-number")
+    public ResponseEntity<List<String>> generateGMPRequestNumber()
+    {
+        SeqGMPRequestNumberEntity seq = new SeqGMPRequestNumberEntity();
+        seqGMPRequestNumberRepository.save(seq);
+        return new ResponseEntity<>(Arrays.asList("Rg09-"+ Utils.intToString(6, seq.getId())), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/generate-medicament-registration-request-number")
+    public ResponseEntity<List<String>> generateMedicamentRegistrationRequestNumber()
+    {
+        SeqMedicamentRegistrationRequestNumberEntity seq = new SeqMedicamentRegistrationRequestNumberEntity();
+        seqMedicamentRegistrationRequestNumberRepository.save(seq);
+        return new ResponseEntity<>(Arrays.asList("Rg06-"+ Utils.intToString(6, seq.getId())), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/generate-medicament-post-authorization-request-number")
+    public ResponseEntity<List<String>> generateMedicamentPostauthorizationRequestNumber()
+    {
+        SeqMedicamentPostAuthorizationRequestNumberEntity seq = new SeqMedicamentPostAuthorizationRequestNumberEntity();
+        seqMedicamentPostAuthorizationRequestNumberRepository.save(seq);
+        return new ResponseEntity<>(Arrays.asList("Rg16-"+ Utils.intToString(6, seq.getId())), HttpStatus.OK);
     }
 
     @GetMapping("/all-companies")
@@ -300,6 +333,13 @@ public class AdministrationController
     {
         LOGGER.debug("Retrieve all medicament types");
         return new ResponseEntity<>(medicamentTypeRepository.findAll(), HttpStatus.OK);
+    }
+
+    @RequestMapping("/all-sterile-products")
+    public ResponseEntity<List<NmSterileProductsEntity>> retrieveAllSterileProducts()
+    {
+        LOGGER.debug("Retrieve all sterile products");
+        return new ResponseEntity<>(nmSterileProductsRepository.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping("/all-manufactures")

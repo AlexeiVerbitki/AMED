@@ -110,7 +110,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     isLink(rowDetails: any): boolean {
-        return rowDetails.navigationUrl !== '';
+        return rowDetails.navigationUrl || rowDetails.navigationUrl !== '';
     }
 
     private disabledElements(val) {

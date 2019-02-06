@@ -13,13 +13,13 @@ import {RequestsDdModifyComponent} from './requests-dd-modify/requests-dd-modify
 import {MedicamentsOmComponent} from './medicaments-om/medicaments-om.component';
 import {RequestsOiModifyComponent} from './requests-oi-modify/requests-oi-modify.component';
 import {NavbarTitleService} from '../../shared/service/navbar-title.service';
-import {DdCtListComponent} from "./dd-ct-list/dd-ct-list.component";
-import {RequestDdCtComponent} from "./request-dd-ct/request-dd-ct.component";
-import {LoaderService} from "../../shared/service/loader.service";
-import {LmpcModifyListComponent} from "./lmpc-modify-list/lmpc-modify-list.component";
-import {LmpcListComponent} from "./lmpc-list/lmpc-list.component";
-import {RequestDdCtAmendComponent} from "./request-dd-ct-amend/request-dd-ct-amend.component";
-import {DdCtAmendListComponent} from "./dd-ct-amend-list/dd-ct-amend-list.component";
+import {DdCtListComponent} from './dd-ct-list/dd-ct-list.component';
+import {RequestDdCtComponent} from './request-dd-ct/request-dd-ct.component';
+import {LoaderService} from '../../shared/service/loader.service';
+import {LmpcModifyListComponent} from './lmpc-modify-list/lmpc-modify-list.component';
+import {LmpcListComponent} from './lmpc-list/lmpc-list.component';
+import {RequestDdCtAmendComponent} from './request-dd-ct-amend/request-dd-ct-amend.component';
+import {DdCtAmendListComponent} from './dd-ct-amend-list/dd-ct-amend-list.component';
 
 @Component({
     selector: 'app-generate-documents',
@@ -117,7 +117,7 @@ export class GenerateDocumentsComponent implements OnInit {
     ddListCtAmendModified(event) {
         this.requestDDCtAmend.loadRequestForDDA();
     }
-    
+
      loadAnihListModified(event) {
         this.anihModListHtml.loadRequestForAnih();
     }

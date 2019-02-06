@@ -87,12 +87,7 @@
                     <input id="telefonContact" mdbInputDirective type="text" class="form-control"
                            formControlName="phoneNumber" maxlength="9"
                     >
-                    <label for="telefonContact">Telefon de contact <span class="text-danger">*</span> </label>
-                </div>
-                <div *ngIf="formSubmitted && !rForm.get('phoneNumber').valid">
-                    <small class="text-muted"><strong class="text-danger">Telefonul trebuie introdus sau nu este
-                        valid.</strong>
-                    </small>
+                    <label for="telefonContact">Telefon de contact </label>
                 </div>
             </div>
             <div class="col-md-3">
@@ -119,12 +114,9 @@
                 <div class="md-form">
                     <input id="nrProcurii1" mdbInputDirective type="text" class="form-control"
                            formControlName="requestMandateNr">
-                    <label for="nrProcurii1">Nr. procurii <span class="text-danger">*</span></label>
+                    <label for="nrProcurii1">Nr. procurii </label>
                 </div>
-                <div *ngIf="formSubmitted && !rForm.get('requestMandateNr').valid">
-                    <small class="text-muted"><strong class="text-danger">Numarul procurii trebuie introdus</strong>
-                    </small>
-                </div>
+
             </div>
             <div class="col-md-3">
                 <div class="md-form-modified">
@@ -134,10 +126,6 @@
                         <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
                         <mat-datepicker touchUi #picker3></mat-datepicker>
                     </mat-form-field>
-                </div>
-                <div *ngIf="formSubmitted && !rForm.get('requestMandateDate').value">
-                    <small class="text-muted"><strong class="text-danger">Data procurii trebuie introdusa</strong>
-                    </small>
                 </div>
             </div>
 

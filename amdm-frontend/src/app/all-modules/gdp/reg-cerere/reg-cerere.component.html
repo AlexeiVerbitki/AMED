@@ -21,57 +21,49 @@
 		</div>
 		<app-document [documents]="documents"
 					  [nrCerere]="rForm.get('requestNumber').value"
-					  [dcTypeIdentifier]="{code:'GDPI',step:'R'}"></app-document>
+					  [dcTypeIdentifier]="{code:'IGDP',step:'R'}"></app-document>
 		<div class="row">
 
-			<div class="col-lg-4">
-				<div class="md-form">
-					<input id="nrDosar" mdbInputDirective type="text" class="form-control" formControlName="folderNumber">
-					<label for="nrDosar">Nr. dosar<span class="text-danger">*</span></label>
-				</div>
-				<div *ngIf="formSubmitted && rForm.get('folderNumber').invalid">
-					<small class="text-muted"><strong class="text-danger">Introduceți numărul dosarului</strong></small>
-				</div>
-			</div>
-
-			<div class="col-md-4">
-				<div class="md-form-modified">
+			<div class="col-md-3">
+				<div class="md-form-modified" formGroupName="company">
 					<ng-select [items]="companii | async"
 					           bindLabel="name"
 					           placeholder="Compania solicitant"
-					           formControlName="company"
+					           formControlName="name"
 					           [loading]="loadingCompany"
 					           [typeahead]="companyInputs"
-					           required="true">
+							   (change)="companySelected($event)"
+								required="true">
 						<ng-template ng-option-tmp let-item="item">
 							{{item?.name}} <br/>
 							<small class="form-text text-muted">{{item?.idno}}</small>
 						</ng-template>
 					</ng-select>
-					<div *ngIf="formSubmitted && rForm.get('company').invalid">
+					<div *ngIf="formSubmitted && rForm.get('company.name').invalid">
 						<small class="text-muted"><strong class="text-danger">Compania solicitantă trebuie selectată</strong></small>
 					</div>
 				</div>
 			</div>
 
-			<div class="col-lg-4">
+			<div class="col-lg-3">
 				<div class="md-form">
 					<input id="idnp" mdbInputDirective type="text" maxlength="13" class="form-control" formControlName="idnp" (focusout)="checkIDNP($event)">
-					<label for="idnp">IDNP-ul persoanei responsabile</label>
+					<label for="idnp">IDNP-ul persoanei responsabile<span class="text-danger">*</span></label>
+				</div>
+				<div *ngIf="formSubmitted && !rForm.get('idnp').value">
+					<small class="text-muted"><strong class="text-danger">Trebuie să introduceți IDNP-ul persoanei responsabile</strong>
+					</small>
 				</div>
 				<div *ngIf="formSubmitted && rForm.get('idnp').value && rForm.get('idnp').invalid">
-					<small class="text-muted"><strong class="text-danger">IDNP-ul introdus este incorect</strong></small>
+					<small class="text-muted"><strong class="text-danger">IDNP-ul introdus este incorect</strong>
+					</small>
 				</div>
 			</div>
-		</div>
-		<!--<div class="row align-items-center">-->
 
-		<!--</div>-->
-		<div class="row">
-			<div class="col-md-4">
+			<div class="col-md-3">
 				<div class="md-form">
 					<input id="persResDepCereriiFirstname" mdbInputDirective type="text" class="form-control"
-					       formControlName="mandatedFirstname">
+						   formControlName="mandatedFirstname">
 					<label for="persResDepCereriiFirstname">Nume persoana responsabilă <span class="text-danger">*</span></label>
 
 				</div>
@@ -80,10 +72,10 @@
 					</small>
 				</div>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-3">
 				<div class="md-form">
 					<input id="persResDepCereriiLastname" mdbInputDirective type="text" class="form-control"
-					       formControlName="mandatedLastname">
+						   formControlName="mandatedLastname">
 					<label for="persResDepCereriiLastname">Prenume persoana responsabilă <span class="text-danger">*</span></label>
 
 				</div>
@@ -92,20 +84,23 @@
 					</small>
 				</div>
 			</div>
+		</div>
 
-			<div class="col-md-4">
+		<div class="row">
+
+			<div class="col-md-3">
 				<div class="md-form">
 					<input id="telefonContact" mdbInputDirective type="text" class="form-control"
 					       formControlName="phoneNumber" maxlength="9"
 					>
-					<label for="telefonContact">Telefon de contact <span class="text-danger">*</span> </label>
+					<label for="telefonContact">Telefon de contact</label>
 				</div>
 				<div *ngIf="formSubmitted && rForm.get('phoneNumber').invalid">
 					<small class="text-muted"><strong class="text-danger">Telefonul trebuie introdus sau nu este valid.</strong>
 					</small>
 				</div>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-3">
 				<div class="md-form">
 					<input id="emailContact" mdbInputDirective type="email" class="form-control"
 					       formControlName="email">
@@ -117,24 +112,24 @@
 				</div>
 			</div>
 
-			<div class="col-md-4">
+			<div class="col-md-3">
 				<div class="md-form">
 					<input id="nrProcurii1" mdbInputDirective type="text" class="form-control"
 					       formControlName="requestMandateNr">
-					<label for="nrProcurii1">Nr. procurii <span class="text-danger">*</span></label>
+					<label for="nrProcurii1">Nr. procurii</label>
 				</div>
-				<div *ngIf="formSubmitted && rForm.get('requestMandateNr').invalid">
-					<small class="text-muted"><strong class="text-danger">Numarul procurii trebuie introdus</strong>
-					</small>
-				</div>
+				<!--<div *ngIf="formSubmitted && rForm.get('requestMandateNr').invalid">-->
+					<!--<small class="text-muted"><strong class="text-danger">Numarul procurii trebuie introdus</strong>-->
+					<!--</small>-->
+				<!--</div>-->
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-3">
 				<div class="md-form-modified">
 					<mat-form-field class="w-100">
-						<input id="dataProcurii1" matInput [matDatepicker]="picker3" [max]="maxDate"
+						<input id="picker53" matInput [matDatepicker]="picker53"
 						       placeholder="Data eliberării procurii" formControlName="requestMandateDate">
-						<mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
-						<mat-datepicker touchUi #picker3></mat-datepicker>
+						<mat-datepicker-toggle matSuffix [for]="picker53"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #picker53 disabled="false"></mat-datepicker>
 					</mat-form-field>
 				</div>
 				<div *ngIf="formSubmitted && rForm.get('requestMandateDate').invalid">
@@ -143,6 +138,60 @@
 				</div>
 			</div>
 		</div>
+
+
+		<h5 class="text-center font-weight-bold">Date despre compania selectată </h5>
+		<div class="row" formGroupName="company">
+			<div class="col-md-2">
+				<div class="md-form">
+					<input id="idno" mdbInputDirective type="text" class="form-control" formControlName="idno">
+					<label for="idno">IDNO</label>
+				</div>
+			</div>
+
+			<div class="col-md-2">
+				<div class="md-form">
+					<input id="adresa" mdbInputDirective type="text" class="form-control" formControlName="adresa">
+					<label for="adresa">Adresa</label>
+				</div>
+			</div>
+
+			<div class="col-md-2">
+				<div class="md-form">
+					<input id="seria" mdbInputDirective type="text" class="form-control" formControlName="seria">
+					<label for="seria">Seria Licentei</label>
+				</div>
+			</div>
+			<div class="col-md-2">
+				<div class="md-form">
+					<input id="nrLic" mdbInputDirective type="text" class="form-control" formControlName="nrLic">
+					<label for="nrLic">Numarul licentei</label>
+				</div>
+			</div>
+			<div class="col-md-2">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input id="dataEliberariiLic" matInput [matDatepicker]="picker99"
+							   placeholder="Data eliberării licentei" formControlName="dataEliberariiLic">
+						<mat-datepicker-toggle matSuffix [for]="picker99"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #picker99></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+
+			<div class="col-md-2">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input id="dataExpirariiLic" matInput [matDatepicker]="picker333"
+							   placeholder="Data expirarii licentei" formControlName="dataExpirariiLic">
+						<mat-datepicker-toggle matSuffix [for]="picker333"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #picker333></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+		</div>
+
+
 		<hr>
 		<div class="text-center">
 			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">

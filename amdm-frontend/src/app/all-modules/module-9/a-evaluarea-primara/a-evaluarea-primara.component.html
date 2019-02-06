@@ -56,7 +56,7 @@
                 <div class="md-form">
                     <textarea type="text" id="titluStud" class="md-textarea form-control" mdbInputDirective rows="1"
                               formControlName="title"></textarea>
-                    <label for="titluStud">Titlul studiului</label>
+                    <label for="titluStud">Titlul studiului <span class="text-danger">*</span></label>
                 </div>
             </div>
 
@@ -119,7 +119,7 @@
                     <div class="md-form">
                         <input id="sponsoStudClinic" mdbInputDirective type="text" class="form-control"
                                formControlName="sponsor">
-                        <label for="sponsoStudClinic">Sponsorul Studiului clinic</label>
+                        <label for="sponsoStudClinic">Sponsorul Studiului clinic <span class="text-danger">*</span></label>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -127,7 +127,8 @@
                         <ng-select id="phaseid" name="step" [items]="phaseList"
                                    bindLabel="name"
                                    placeholder="Faza studiului"
-                                   formControlName="phase">
+                                   formControlName="phase"
+                                   required="true">
                         </ng-select>
                     </div>
                 </div>
@@ -135,7 +136,7 @@
                     <div class="md-form">
                         <input id="numEudraCT" mdbInputDirective type="text" class="form-control"
                                formControlName="eudraCtNr">
-                        <label for="numEudraCT">Numărul Eudra CT nr.</label>
+                        <label for="numEudraCT">Numărul Eudra CT nr. <span class="text-danger">*</span></label>
                     </div>
                 </div>
             </div>
@@ -144,21 +145,21 @@
                 <div class="col-md-4">
                     <div class="md-form">
                         <input id="codStud" mdbInputDirective type="text" class="form-control" formControlName="code">
-                        <label for="codStud">Codul studiului</label>
+                        <label for="codStud">Codul studiului <span class="text-danger">*</span></label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="md-form">
                         <input id="popStudClinicNumNational" mdbInputDirective type="number" class="form-control"
                                formControlName="trialPopNat">
-                        <label for="popStudClinicNumNational">Numărul pacienților naționali</label>
+                        <label for="popStudClinicNumNational">Numărul pacienților naționali <span class="text-danger">*</span></label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="md-form">
                         <input id="popStudClinicNumInternational" mdbInputDirective type="number" class="form-control"
                                formControlName="trialPopInternat">
-                        <label for="popStudClinicNumInternational">Numărul pacienților internaționali</label>
+                        <label for="popStudClinicNumInternational">Numărul pacienților internaționali <span class="text-danger">*</span></label>
                     </div>
                 </div>
             </div>
@@ -173,8 +174,7 @@
                                    bindLabel="name"
                                    [items]="allMediacalInstitutionsList"
                                    placeholder="Instituţia medicala"
-                                   formControlName="medicalInstitution"
-                                   required="true">
+                                   formControlName="medicalInstitution">
                             <ng-template ng-option-tmp ng-label-tmp let-item="item">
                                 {{item?.name}}
                             </ng-template>
@@ -185,7 +185,7 @@
                     <div class="md-form-modified mt-3">
                         <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
                                 mdbWavesEffect (click)="addMedicalInstitution()"
-                                [disabled]="!this.addMediacalInstitutionForm.controls.medicalInstitution.valid">Adaugare
+                                [disabled]="this.addMediacalInstitutionForm.get('medicalInstitution').invalid">Adaugare
                         </button>
                     </div>
                 </div>
@@ -281,7 +281,7 @@
                     <div class="col-4">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Nume" formControlName="name">
+                                <input type="text" matInput placeholder="Nume" formControlName="name" required>
                             </mat-form-field>
                         </div>
                     </div>
@@ -399,8 +399,8 @@
                     <div class="col-4">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Calea de administrae"
-                                       formControlName="administratingMode">
+                                <input type="text" matInput placeholder="Calea de administrare"
+                                       formControlName="administratingMode" required>
                             </mat-form-field>
                         </div>
                     </div>
@@ -436,7 +436,7 @@
                     <div class="col-4">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Concentrație" formControlName="dose">
+                                <input type="text" matInput placeholder="Concentrație" formControlName="dose" required>
                             </mat-form-field>
                         </div>
                     </div>
@@ -450,7 +450,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="text-right fap text-white">
-                                    <i (click)="addRefProdActiveSubstanceDialog()" class="fa fa-plus-circle fa-lg fa-mt"
+                                    <i *ngIf="this.isValidRefProduct" (click)="addRefProdActiveSubstanceDialog()" class="fa fa-plus-circle fa-lg fa-mt"
                                        aria-hidden="true"></i>
                                 </div>
                             </div>
@@ -532,8 +532,8 @@
                     <div class="col-4">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Calea de administrae"
-                                       formControlName="administratingMode">
+                                <input type="text" matInput placeholder="Calea de administrare"
+                                       formControlName="administratingMode" required>
                             </mat-form-field>
                         </div>
                     </div>
@@ -561,7 +561,7 @@
                     <div class="col-4">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Calea de administrae"
+                                <input type="text" matInput placeholder="Calea de administrare"
                                        formControlName="administratingMode">
                             </mat-form-field>
                         </div>
@@ -570,7 +570,7 @@
             </div>
             <hr>
 
-            <app-payment-clinical-trial [registrationReqest]="reqReqInitData"></app-payment-clinical-trial>
+            <app-payment-clinical-trial [registrationRequest]="reqReqInitData"></app-payment-clinical-trial>
 
         </div>
         <hr>

@@ -1,5 +1,6 @@
 package com.bass.amed.controller.rest.drugs;
 
+import com.bass.amed.dto.ScheduledModuleResponse;
 import com.bass.amed.dto.drugs.CompanyDetailsDTO;
 import com.bass.amed.dto.drugs.DrugDecisionsFilterDTO;
 import com.bass.amed.dto.drugs.DrugDecisionsFilterDetailsDTO;
@@ -10,9 +11,11 @@ import com.bass.amed.repository.EconomicAgentsRepository;
 import com.bass.amed.repository.RequestRepository;
 import com.bass.amed.repository.RequestTypeRepository;
 import com.bass.amed.repository.drugs.*;
+import com.bass.amed.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +48,8 @@ public class DrugDecisionsController {
     private RequestTypeRepository requestTypeRepository;
     @Autowired
     private DrugUnitsConversionRatesRepository drugUnitsConversionRatesRepository;
+    @Value("${scheduler.rest.api.host}")
+    private String schedulerRestApiHost;
 
     @PostMapping(value = "/by-filter")
     public ResponseEntity<List<DrugDecisionsFilterDetailsDTO>> getDrugDecisionsByFilter(@RequestBody DrugDecisionsFilterDetailsDTO filter) {
@@ -105,12 +110,35 @@ public class DrugDecisionsController {
     }
 
     @RequestMapping(value = "/add-authorization-details", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RegistrationRequestsEntity> addAuthorizationDetails(@RequestBody RegistrationRequestsEntity request) {
+    public ResponseEntity<RegistrationRequestsEntity> addAuthorizationDetails(@RequestBody RegistrationRequestsEntity request) throws CustomException {
         logger.debug("Add authorization import export details");
         Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(request.getType().getCode());
         request.getType().setId(type.get().getId());
 
         requestRepository.save(request);
+
+        if (request.getType() != null && request.getType().getCode() != null && request.getType().getCode().equals("DACPS")) {
+
+            if (request.getCurrentStep() != null && (request.getCurrentStep().equals("F") || request.getCurrentStep().equals("I"))) {
+                logger.debug("Start jobUnschedule method...");
+                Utils.jobUnschedule(schedulerRestApiHost, "/set-expired-request", request.getId());
+                logger.debug("Finished jobUnschedule method.");
+                logger.debug("Start jobUnschedule method...");
+                Utils.jobUnschedule(schedulerRestApiHost, "/set-critical-request", request.getId());
+                logger.debug("Finished jobUnschedule method.");
+            } else {
+                logger.debug("Start jobSchedule method...");
+                ResponseEntity<ScheduledModuleResponse> result = null;
+                result = Utils.jobSchedule(3, "/set-critical-request", "/set-expired-request", request.getId(), request.getRequestNumber(), null, schedulerRestApiHost);
+                if (result != null && !result.getBody().isSuccess()) {
+                    logger.debug("The method jobSchedule, was not successful.");
+                    throw new CustomException("Nu a putut fi setat termenul de eliberare al certificatului.");
+                } else {
+                    logger.debug("Finished jobSchedule method.");
+                }
+            }
+        }
+
         return new ResponseEntity<>(request, HttpStatus.CREATED);
     }
 

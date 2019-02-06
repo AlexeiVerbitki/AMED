@@ -2,11 +2,11 @@ import {AfterViewInit, Component, Inject, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material';
 import {UploadFileService} from '../../shared/service/upload/upload-file.service';
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {saveAs} from 'file-saver';
-import {SelectVariationTypeComponent, TodoItemFlatNode} from "../select-variation-type/select-variation-type.component";
-import {SelectionModel} from "@angular/cdk/collections";
-import {AdministrationService} from "../../shared/service/administration.service";
+import {SelectVariationTypeComponent, TodoItemFlatNode} from '../select-variation-type/select-variation-type.component';
+import {SelectionModel} from '@angular/cdk/collections';
+import {AdministrationService} from '../../shared/service/administration.service';
 
 @Component({
     selector: 'app-medicament-modifications-dialog',
@@ -27,8 +27,8 @@ export class MedicamentModificationsDialogComponent implements OnInit {
     machets: any[] = [];
     documents: any[] = [];
     checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
-    variationTypesIds : string;
-    variationTypesIdsTemp : string;
+    variationTypesIds: string;
+    variationTypesIdsTemp: string;
 
     constructor(
         private fb: FormBuilder,
@@ -44,14 +44,16 @@ export class MedicamentModificationsDialogComponent implements OnInit {
         this.populateMedicamentDetailsFromHistory();
         this.subscriptions.push(this.administrationService.variatonTypesJSON().subscribe(data2 => {
                 this.variationTypesIds = JSON.stringify(data2.val2);
-                if(this.dataDialog.historyDetails[0].variations) {
                     this.variationTypesIdsTemp =  this.variationTypesIds.substr(1);
-                    for (let v of this.dataDialog.historyDetails[0].variations) {
-                        var t = new TodoItemFlatNode();
-                        t.item = this.getVariationCodeById(v.variation.id,v.value);
-                        this.checklistSelection.selected.push(t);
+                    for (const history of this.dataDialog.historyDetails) {
+                        if (history.id == this.dataDialog.order.registrationRequestId && history.variations) {
+                            for (const v of history.variations) {
+                                const t = new TodoItemFlatNode();
+                                t.item = this.getVariationCodeById(v.variation.id, v.value);
+                                this.checklistSelection.selected.push(t);
+                            }
+                        }
                     }
-                }
             }
         ));
     }
@@ -246,16 +248,15 @@ export class MedicamentModificationsDialogComponent implements OnInit {
 
         dialogConfig2.data = {values: this.checklistSelection, disabled : true};
 
-        let dialogRef = this.dialog.open(SelectVariationTypeComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(SelectVariationTypeComponent, dialogConfig2);
     }
 
-    getVariationCodeById(id : string,value:string) : string
-    {
-        var i = this.variationTypesIdsTemp.indexOf(value+'":"'+id+'"')+value.length-1;
-        var tempStr =  this.variationTypesIdsTemp.substr(1,i);
-        var j = tempStr.lastIndexOf('"')+1;
-        var finalStr  = tempStr.substr(j,i);
-        this.variationTypesIdsTemp = this.variationTypesIdsTemp.replace('"'+finalStr+'":"'+id+'"','');
+    getVariationCodeById(id: string, value: string): string {
+        const i = this.variationTypesIdsTemp.indexOf(value + '":"' + id + '"') + value.length - 1;
+        const tempStr =  this.variationTypesIdsTemp.substr(1, i);
+        const j = tempStr.lastIndexOf('"') + 1;
+        const finalStr  = tempStr.substr(j, i);
+        this.variationTypesIdsTemp = this.variationTypesIdsTemp.replace('"' + finalStr + '":"' + id + '"', '');
         return finalStr;
     }
 }

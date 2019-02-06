@@ -53,14 +53,14 @@ export class RegModifyCerereComponent implements OnInit, OnDestroy, CanModuleDea
             'data': {disabled: true, value: new Date()},
             'requestNumber': [null],
             'startDate': [new Date()],
-            'currentStep': ['E'],          
+            'currentStep': ['E'],
             'mandatedFirstname': [null, Validators.required],
             'mandatedLastname': [null, Validators.required],
             'phoneNumber': [null, [Validators.maxLength(9), Validators.pattern('[0-9]+')]],
             'email': [null, Validators.email],
             'requestMandateNr': [null],
             'requestMandateDate': [null],
-            'idnp' : [null,[Validators.maxLength(13),Validators.minLength(13), Validators.pattern('[0-9]+')]],
+            'idnp' : [null, [Validators.maxLength(13), Validators.minLength(13), Validators.pattern('[0-9]+')]],
             'company': [null, Validators.required],
             'initiator': [''],
             'assignedUser': [''],
@@ -75,8 +75,8 @@ export class RegModifyCerereComponent implements OnInit, OnDestroy, CanModuleDea
         this.navbarTitleService.showTitleMsg('Aprobarea modificarilor postautorizate / Inregistrare cerere');
 
         this.subscriptions.push(
-            this.administrationService.generateDocNr().subscribe(data => {
-                    this.generatedDocNrSeq = data;
+            this.administrationService.generateMedicamentPostAuthorizationRequestNumber().subscribe(data => {
+                    this.generatedDocNrSeq = data[0];
                     this.rForm.get('requestNumber').setValue(this.generatedDocNrSeq);
                 },
                 error => console.log(error)
@@ -102,7 +102,7 @@ export class RegModifyCerereComponent implements OnInit, OnDestroy, CanModuleDea
                         tap(() => this.loadingCompany = false)
                     )
                 )
-            );        
+            );
 
         this.subscriptions.push(
             this.taskService.getRequestStepByIdAndCode('21', 'R').subscribe(step => {

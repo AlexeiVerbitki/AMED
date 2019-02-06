@@ -5,13 +5,13 @@ import {LoaderService} from '../../../shared/service/loader.service';
 import {RequestService} from '../../../shared/service/request.service';
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {DocumentService} from '../../../shared/service/document.service';
-import {SelectDocumentNumberComponent} from "../../../dialog/select-document-number/select-document-number.component";
+import {SelectDocumentNumberComponent} from '../../../dialog/select-document-number/select-document-number.component';
 import {
     SelectVariationTypeComponent,
     TodoItemFlatNode
-} from "../../../dialog/select-variation-type/select-variation-type.component";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {SelectionModel} from "@angular/cdk/collections";
+} from '../../../dialog/select-variation-type/select-variation-type.component';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {SelectionModel} from '@angular/cdk/collections';
 
 @Component({
     selector: 'app-requests-dd-modify',
@@ -61,7 +61,7 @@ export class RequestsDdModifyComponent implements OnInit {
 
         dialogConfig2.width = '400px';
 
-        let dialogRef = this.dialog.open(SelectDocumentNumberComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(SelectDocumentNumberComponent, dialogConfig2);
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.response) {
                 this.loadingService.show();
@@ -124,7 +124,7 @@ export class RequestsDdModifyComponent implements OnInit {
         dialogConfig2.width = '1000px';
         dialogConfig2.height = '800px';
 
-        var checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
+        const checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
 
         console.log(variations);
 
@@ -132,24 +132,24 @@ export class RequestsDdModifyComponent implements OnInit {
                 this.variationTypesIds = JSON.stringify(data2.val2);
                 if (variations) {
                     this.variationTypesIdsTemp = this.variationTypesIds.substr(1);
-                    for (let v of variations) {
-                        var t = new TodoItemFlatNode();
+                    for (const v of variations) {
+                        const t = new TodoItemFlatNode();
                         t.item = this.getVariationCodeById(v.variation.id, v.value);
                         checklistSelection.selected.push(t);
                     }
                     dialogConfig2.data = {values: checklistSelection, disabled: true};
                     this.loadingService.hide();
-                    let dialogRef = this.dialog.open(SelectVariationTypeComponent, dialogConfig2);
+                    const dialogRef = this.dialog.open(SelectVariationTypeComponent, dialogConfig2);
                 }
             }, error => this.loadingService.hide())
         );
     }
 
     getVariationCodeById(id: string, value: string): string {
-        var i = this.variationTypesIdsTemp.indexOf(value + '":"' + id + '"') + value.length - 1;
-        var tempStr = this.variationTypesIdsTemp.substr(1, i);
-        var j = tempStr.lastIndexOf('"') + 1;
-        var finalStr = tempStr.substr(j, i);
+        const i = this.variationTypesIdsTemp.indexOf(value + '":"' + id + '"') + value.length - 1;
+        const tempStr = this.variationTypesIdsTemp.substr(1, i);
+        const j = tempStr.lastIndexOf('"') + 1;
+        const finalStr = tempStr.substr(j, i);
         this.variationTypesIdsTemp = this.variationTypesIdsTemp.replace('"' + finalStr + '":"' + id + '"', '');
         return finalStr;
     }

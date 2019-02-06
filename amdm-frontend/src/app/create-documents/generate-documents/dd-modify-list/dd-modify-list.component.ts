@@ -7,7 +7,7 @@ import {UploadFileService} from '../../../shared/service/upload/upload-file.serv
 import {DocumentService} from '../../../shared/service/document.service';
 import {HttpResponse} from '@angular/common/http';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
-import {SelectIssueDateDialogComponent} from "../../../dialog/select-issue-date-dialog/select-issue-date-dialog.component";
+import {SelectIssueDateDialogComponent} from '../../../dialog/select-issue-date-dialog/select-issue-date-dialog.component';
 
 @Component({
   selector: 'app-dd-modify-list',
@@ -16,7 +16,7 @@ import {SelectIssueDateDialogComponent} from "../../../dialog/select-issue-date-
 })
 export class DdModifyListComponent implements OnInit {
 
-    displayedColumns: any[] = ['number', 'date','dateOfIssue', 'name', 'status', 'actions'];
+    displayedColumns: any[] = ['number', 'date', 'dateOfIssue', 'name', 'status', 'actions'];
   dataSource = new MatTableDataSource<any>();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -68,9 +68,9 @@ export class DdModifyListComponent implements OnInit {
 
         dialogConfig2.width = '400px';
 
-        dialogConfig2.data = {document : element,type : 'DDM'};
+        dialogConfig2.data = {document : element, type : 'DDM'};
 
-        let dialogRef = this.dialog.open(SelectIssueDateDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(SelectIssueDateDialogComponent, dialogConfig2);
         dialogRef.afterClosed().subscribe(result => {
             this.ddmListModified.emit(true);
             this.loadDDs();

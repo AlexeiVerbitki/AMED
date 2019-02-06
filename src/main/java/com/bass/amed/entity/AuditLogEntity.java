@@ -1,10 +1,11 @@
 package com.bass.amed.entity;
 
+import com.bass.amed.common.Constants;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Objects;
+import java.text.SimpleDateFormat;
 
 @Data
 @Entity
@@ -15,6 +16,12 @@ public class AuditLogEntity
     @Column(name = "id")
     @GeneratedValue( strategy = GenerationType.IDENTITY )
     private Integer id;
+    @Basic
+    @Column(name = "entity_id")
+    private Integer entityId;
+    @Basic
+    @Column(name = "request_id")
+    private Integer requestId;
     @Basic
     @Column(name = "field")
     private String field;
@@ -49,13 +56,37 @@ public class AuditLogEntity
         return this;
     }
 
-    public AuditLogEntity withOldValue(String oldValue){
-        this.oldValue = oldValue;
+    public AuditLogEntity withOldValue(Object oldValue){
+        if (oldValue instanceof String)
+        {
+            this.oldValue = (String)oldValue;
+        }
+        else if (oldValue instanceof Timestamp)
+        {
+            SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.Layouts.DATE_TIME_FORMAT);
+            this.oldValue = dateFormat.format((Timestamp)oldValue);
+        }
+        else if (oldValue instanceof Integer)
+        {
+            this.oldValue = String.valueOf(oldValue);
+        }
         return this;
     }
 
-    public AuditLogEntity withNewValue(String newValue){
-        this.newValue = newValue;
+    public AuditLogEntity withNewValue(Object newValue){
+        if (newValue instanceof String)
+        {
+            this.newValue = (String)newValue;
+        }
+        else if (newValue instanceof Timestamp)
+        {
+            SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.Layouts.DATE_TIME_FORMAT);
+            this.newValue = dateFormat.format((Timestamp)newValue);
+        }
+        else if (newValue instanceof Integer)
+        {
+            this.newValue = String.valueOf(newValue);
+        }
         return this;
     }
 
@@ -72,6 +103,16 @@ public class AuditLogEntity
 
     public AuditLogEntity withSubCategoryName(String subCategoryName){
         this.subCategoryName = subCategoryName;
+        return this;
+    }
+
+    public AuditLogEntity withEntityId(Integer entityId){
+        this.entityId = entityId;
+        return this;
+    }
+
+    public AuditLogEntity withRequestId(Integer requestId){
+        this.requestId = requestId;
         return this;
     }
 

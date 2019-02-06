@@ -25,25 +25,21 @@ export class ImportAuthorizationRequestComponent implements OnInit {
     requestNumber;
     generatedDocNrSeq: number;
     rForm: FormGroup;
-    solicitantCompanyList: Observable<any[]>;
     formSubmitted: boolean;
     docs: Document [] = [];
     docTypes: any[];
 
     cereri: Cerere [] = [];
     dataForm: FormGroup;
-    sysDate: string;
     currentDate: Date;
     file: any;
     medType: any;
-    applicationRegistrationNumber: any;
 
     importer: Observable<any[]>;
     loadingCompany = false;
     authorizationNumber: any = '';
     importRadioButton: any;
-    importManagementId: any = '';
-    protected companyInputs = new Subject<string>();
+    companyInputs = new Subject<string>();
     private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder,
@@ -246,22 +242,35 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
         if (this.rForm.valid && this.docs.length > 0) {
             this.loadingService.show();
-            this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
+            // this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
                     switch (this.rForm.get('importType').value) {
                         case '1': {
+                            this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
                             this.router.navigate(['dashboard/module/import-authorization/registered-medicament/' + data.body.id]);
+                                }, error => this.loadingService.hide())
+                            );
                             break;
                         }
                         case '2': {
+                            this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
                             this.router.navigate(['dashboard/module/import-authorization/unregistered-medicament/' + data.body.id]);
+                                }, error => this.loadingService.hide())
+                            );
                             break;
+
                         }
                         case '3': {
+                            this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
                             this.router.navigate(['dashboard/module/import-authorization/materia-prima/' + data.body.id]);
+                                }, error => this.loadingService.hide())
+                            );
                             break;
                         }
                         case '4': {
-                            this.router.navigate(['dashboard/module/import-authorization/ambalaj/' + data.body.id]);
+                            this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
+                                    this.router.navigate(['dashboard/module/import-authorization/ambalaj/' + data.body.id]);
+                                }, error => this.loadingService.hide())
+                            );
                             break;
                         }
                         case '5': {
@@ -275,8 +284,8 @@ export class ImportAuthorizationRequestComponent implements OnInit {
                     }
                     this.loadingService.hide();
                     this.formSubmitted = false;
-                }, error => this.loadingService.hide())
-            );
+            //     }, error => this.loadingService.hide())
+            // );
 
         }
     }

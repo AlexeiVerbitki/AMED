@@ -82,6 +82,27 @@ public class AuditLogService
         auditLogRepository.save(dummyEntity);
     }
 
+    public void saveAll(List<AuditLogEntity> dummyEntities)
+    {
+        for(AuditLogEntity dummyEntity : dummyEntities)
+        {
+            dummyEntity.setDateTime(new Timestamp(new Date().getTime()));
+            ScrUserEntity userEntity = srcUserRepository.findOneWithAuthoritiesByUsername(SecurityUtils.getCurrentUser().orElse(null)).orElse(null);
+            dummyEntity.setUser(userEntity);
+
+            if (dummyEntity.getCategoryName() != null)
+            {
+                dummyEntity.setCategory(auditCategoryRepository.findByName(dummyEntity.getCategoryName()).orElse(null));
+            }
+
+            if (dummyEntity.getSubCategoryName() != null)
+            {
+                dummyEntity.setSubcategory(auditSubcategoryRepository.findByName(dummyEntity.getSubCategoryName()).orElse(null));
+            }
+        }
+        auditLogRepository.saveAll(dummyEntities);
+    }
+
 
     public List<AuditProjection> retrieveAnnihilationByFilter(AuditDTO filter)
     {

@@ -311,16 +311,14 @@ export class PaymentComponent implements OnInit {
                 return;
             }
             observable = this.documentService.viewBonDePlataNimicire(this.requestNimicire);
-        }
-        else if (this.process && (this.process === 'LICENTA' || this.process === 'CPCD')) {
+        } else if (this.process && (this.process === 'LICENTA' || this.process === 'CPCD' || this.process === 'GDP')) {
             console.log('gdfg', this.bonDePlataList);
             const modelToSubmit = {
                 requestId: this.requestIdP,
                 paymentOrders: this.bonDePlataList,
             };
             observable = this.documentService.viewBonDePlataComun(modelToSubmit);
-        }
-        else {
+        } else {
             let pharmaceuticForm = '';
             if (this.requestDet.medicament.pharmaceuticalForm) {
                 pharmaceuticForm = this.requestDet.medicament.pharmaceuticalForm.description;
@@ -409,14 +407,13 @@ export class PaymentComponent implements OnInit {
     generateSingleBonCommonParameters(bonDePlata: any, currency: string) {
         this.loadingService.show();
         let observable;
-        if (this.process && (this.process === 'LICENTA' || this.process === 'CPCD')) {
+        if (this.process && (this.process === 'LICENTA' || this.process === 'CPCD' || this.process === 'GDP' )) {
             const modelToSubmit = {
                 requestId: this.requestIdP,
                 paymentOrders: [bonDePlata],
             };
             observable = this.documentService.viewBonDePlataComun(modelToSubmit);
-        }
-        else {
+        } else {
             let pharmaceuticForm = '';
             if (this.requestDet.medicament.pharmaceuticalForm) {
                 pharmaceuticForm = this.requestDet.medicament.pharmaceuticalForm.description;

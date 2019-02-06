@@ -1,10 +1,10 @@
 import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
-import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
-import {DocumentService} from "../../../shared/service/document.service";
-import {RequestService} from "../../../shared/service/request.service";
-import {SuccessOrErrorHandlerService} from "../../../shared/service/success-or-error-handler.service";
-import {Observable, Subscription} from "rxjs/index";
-import {SelectDocumentNumberComponent} from "../../../dialog/select-document-number/select-document-number.component";
+import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {DocumentService} from '../../../shared/service/document.service';
+import {RequestService} from '../../../shared/service/request.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
+import {Observable, Subscription} from 'rxjs/index';
+import {SelectDocumentNumberComponent} from '../../../dialog/select-document-number/select-document-number.component';
 
 @Component({
     selector: 'app-request-dd-ct-amend',
@@ -62,7 +62,7 @@ export class RequestDdCtAmendComponent implements OnInit {
 
         dialogConfig2.width = '400px';
 
-        let dialogRef = this.dialog.open(SelectDocumentNumberComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(SelectDocumentNumberComponent, dialogConfig2);
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.response) {
                 // this.loadingService.show();
@@ -72,7 +72,7 @@ export class RequestDdCtAmendComponent implements OnInit {
                     ctList.push(x);
                 }
                 // console.log('ctList', ctList);
-                let observable: Observable<any> = this.documentService.generateDDACt(ctList);
+                const observable: Observable<any> = this.documentService.generateDDACt(ctList);
 
                 this.subscriptions.push(observable.subscribe(data => {
                         const file = new Blob([data], {type: 'application/pdf'});

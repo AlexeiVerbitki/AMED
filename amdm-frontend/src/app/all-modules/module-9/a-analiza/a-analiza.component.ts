@@ -16,9 +16,8 @@ import {TaskService} from '../../../shared/service/task.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {MedInstInvestigatorsDialogComponent} from '../dialog/med-inst-investigators-dialog/med-inst-investigators-dialog.component';
 import {ActiveSubstanceDialogComponent} from '../../../dialog/active-substance-dialog/active-substance-dialog.component';
-import {AddExpertComponent} from "../../../dialog/add-expert/add-expert.component";
-import {AddCtExpertComponent} from "../dialog/add-ct-expert/add-ct-expert.component";
-import {SuccessOrErrorHandlerService} from "../../../shared/service/success-or-error-handler.service";
+import {AddCtExpertComponent} from '../dialog/add-ct-expert/add-ct-expert.component';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 
 @Component({
     selector: 'app-a-analiza',
@@ -27,81 +26,60 @@ import {SuccessOrErrorHandlerService} from "../../../shared/service/success-or-e
 })
 export class AAnalizaComponent implements OnInit, OnDestroy {
 
-    private subscriptions: Subscription[] = [];
     analyzeClinicalTrailForm: FormGroup;
-    protected docs: Document[] = [];
+    docs: Document[] = [];
     docTypes: any[];
-
     phaseList: any[] = [];
-    reqReqInitData: any;
-
     //Treatments
     treatmentId: number;
     treatmentList: any[] = [
         {'id': 1, 'description': 'Unicentric', 'code': 'U'},
         {'id': 2, 'description': 'Multicentric', 'code': 'M'}
     ];
-
     //Provenances
     provenanceId: number;
     provenanceList: any[] = [
         {'id': 3, 'description': 'Național', 'code': 'N'},
         {'id': 4, 'description': 'Internațional', 'code': 'I'}
     ];
-
     isWaitingStep: BehaviorSubject<boolean>;
-
     medicamentForm: FormGroup;
     referenceProductFormn: FormGroup;
     placeboFormn: FormGroup;
-
-
     //MediacalInstitutions controls
     addMediacalInstitutionForm: FormGroup;
     allMediacalInstitutionsList: any[] = [];
     mediacalInstitutionsList: any[] = [];
-
     //Investigators controls
     addInvestigatorForm: FormGroup;
     allInvestigatorsList: any[] = [];
     investigatorsList: any[] = [];
-
     //Payments control
     paymentTotal = 0;
-
     initialData: any;
     outDocuments: any[] = [];
-
-    protected manufacturers: Observable<any[]>;
-    protected loadingManufacturer = false;
-    protected manufacturerInputs = new Subject<string>();
-
+    manufacturers: Observable<any[]>;
+    loadingManufacturer = false;
+    manufacturerInputs = new Subject<string>();
     medActiveSubstances: any[] = [];
     refProdActiveSubstances: any[] = [];
-
-    protected farmForms: Observable<any[]>;
-    protected loadingFarmForms = false;
-    protected farmFormsInputs = new Subject<string>();
-
-    protected atcCodes: Observable<any[]>;
-    protected loadingAtcCodes = false;
-    protected atcCodesInputs = new Subject<string>();
-
-    protected manufacturersRfPr: Observable<any[]>;
-    protected loadingManufacturerRfPr = false;
-    protected manufacturerInputsRfPr = new Subject<string>();
-
-    protected farmFormsRfPr: Observable<any[]>;
-    protected loadingFarmFormsRfPr = false;
-    protected farmFormsInputsRfPr = new Subject<string>();
-
-    protected atcCodesRfPr: Observable<any[]>;
-    protected loadingAtcCodesRfPr = false;
-    protected atcCodesInputsRfPr = new Subject<string>();
-
-    protected measureUnitsPlacebo: any[] = [];
-
+    farmForms: Observable<any[]>;
+    loadingFarmForms = false;
+    farmFormsInputs = new Subject<string>();
+    atcCodes: Observable<any[]>;
+    loadingAtcCodes = false;
+    atcCodesInputs = new Subject<string>();
+    manufacturersRfPr: Observable<any[]>;
+    loadingManufacturerRfPr = false;
+    manufacturerInputsRfPr = new Subject<string>();
+    farmFormsRfPr: Observable<any[]>;
+    loadingFarmFormsRfPr = false;
+    farmFormsInputsRfPr = new Subject<string>();
+    atcCodesRfPr: Observable<any[]>;
+    loadingAtcCodesRfPr = false;
+    atcCodesInputsRfPr = new Subject<string>();
     expertList: any[] = [];
+    private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder,
                 public dialog: MatDialog,
@@ -141,13 +119,13 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                 'startDateNational': [''],
                 'endDateNational': [''],
                 'endDateInternational': [''],
-                'title': [{value: '', disabled: this.isWaitingStep}],
+                'title': ['', Validators.required],
                 'treatment': ['', Validators.required],
                 'provenance': ['', Validators.required],
-                'sponsor': [''],
-                'phase': ['faza', Validators.required],
+                'sponsor': ['', Validators.required],
+                'phase': ['', Validators.required],
                 'eudraCtNr': ['', Validators.required],
-                'code': ['code', Validators.required],
+                'code': ['', Validators.required],
                 'medicalInstitutions': [],
                 'trialPopNat': ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
                 'trialPopInternat': ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
@@ -236,13 +214,13 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
             this.taskService.getRequestStepByIdAndCode(data.type.id, data.currentStep).subscribe(step => {
                     this.subscriptions.push(
-                        this.administrationService.getAllDocTypes().subscribe(data => {
+                        this.administrationService.getAllDocTypes().subscribe(data2 => {
                                 let availableDocsArr = [];
                                 step.availableDocTypes ? availableDocsArr = step.availableDocTypes.split(',') : availableDocsArr = [];
                                 let outputDocsArr = [];
                                 step.outputDocTypes ? outputDocsArr = step.outputDocTypes.split(',') : outputDocsArr = [];
                                 if (step.availableDocTypes) {
-                                    this.docTypes = data;
+                                    this.docTypes = data2;
                                     this.docTypes = this.docTypes.filter(r => availableDocsArr.includes(r.category));
                                     this.outDocuments = this.outDocuments.filter(r => outputDocsArr.includes(r.docType.category));
                                 }
@@ -362,6 +340,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         dialogConfig2.disableClose = false;
         dialogConfig2.autoFocus = true;
         dialogConfig2.hasBackdrop = true;
+        dialogConfig2.panelClass = 'custom-dialog-container';
 
         dialogConfig2.height = '600px';
         dialogConfig2.width = '650px';
@@ -386,6 +365,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             this.allMediacalInstitutionsList.splice(intdexToDelete, 1);
             this.allMediacalInstitutionsList = this.allMediacalInstitutionsList.splice(0);
             this.addMediacalInstitutionForm.get('medicalInstitution').setValue('');
+            this.addMediacalInstitutionForm.get('medicalInstitution').markAsUntouched();
         });
     }
 
@@ -458,15 +438,15 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.requestService.getClinicalTrailRequest(this.analyzeClinicalTrailForm.get('id').value).subscribe(data => {
                 console.log('getClinicalTrailRequest', data);
                 this.docs = data.documents;
-                let expertDispozition = data.documents.find(doc => doc.docType.category == 'DDC');
+                const expertDispozition = data.documents.find(doc => doc.docType.category == 'DDC');
                 //console.log('expertDispozition', expertDispozition);
                 if (!expertDispozition) {
-                    this.errorHandlerService.showError('Dispozitia de distribuire nu este atashata.');
+                    this.errorHandlerService.showError('Dispozitia de distribuire nu este atasata.');
                     this.loadingService.hide();
                     return;
                 }
 
-                let addDataList = data.outputDocuments.filter(doc => doc.docType.category == 'SL');
+                const addDataList = data.outputDocuments.filter(doc => doc.docType.category == 'SL');
                 // console.log('addDataList', addDataList);
                 // console.log('addDataList.length', addDataList.length);
                 const dialogRef2 = this.dialogConfirmation.open(AdditionalDataDialogComponent, {
@@ -486,7 +466,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                 dialogRef2.afterClosed().subscribe(result => {
                     console.log('dialog result', result);
                     if (result && result) {
-                        let dataToSubmit = {
+                        const dataToSubmit = {
                             date: result.date,
                             name: 'Scrisoare de solicitare date aditionale',
                             number: result.number,
@@ -497,14 +477,14 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                             signerName: result.signer.value,
                             signerFunction: result.signer.description,
                             requestId: this.analyzeClinicalTrailForm.get('id').value
-                        }
+                        };
 
                         this.documentService.addSLC(dataToSubmit).subscribe(data => {
                             console.log('outDocument', data);
                             this.outDocuments.push(data.body);
                             console.log('outDocuments', this.outDocuments);
 
-                        })
+                        });
                     }
                 });
 
@@ -544,10 +524,10 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
     }
 
     viewDoc(document: any) {
-        let formValue = this.analyzeClinicalTrailForm.value;
+        const formValue = this.analyzeClinicalTrailForm.value;
         // console.log('formValue', formValue);
         // console.log('viewDoc', document);
-        let modelToSubmit = {
+        const modelToSubmit = {
             nrDoc: document.number,
             responsiblePerson: formValue.registrationRequestMandatedContacts[0].mandatedLastname + ' ' + formValue.registrationRequestMandatedContacts[0].mandatedFirstname,
             companyName: formValue.company.name,
@@ -565,8 +545,8 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         observable = this.documentService.viewRequestNew(modelToSubmit);
 
         this.subscriptions.push(observable.subscribe(data => {
-                let file = new Blob([data], {type: 'application/pdf'});
-                var fileURL = URL.createObjectURL(file);
+                const file = new Blob([data], {type: 'application/pdf'});
+                const fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
                 this.loadingService.hide();
             }, error => {
@@ -597,17 +577,36 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         );
     }
 
+    dysplayInvalidControl(form: FormGroup) {
+        const ctFormControls = form['controls'];
+        for (const control in ctFormControls) {
+            ctFormControls[control].markAsTouched();
+            ctFormControls[control].markAsDirty();
+        }
+    }
+
     onSubmit() {
         const formModel = this.analyzeClinicalTrailForm.getRawValue();
         console.log('Submit data', formModel);
 
-        if (this.analyzeClinicalTrailForm.invalid || this.paymentTotal < 0) {
-            alert('Invalid Form!!');
-            console.log('Not submitted data', formModel);
+        // if (this.analyzeClinicalTrailForm.invalid || this.paymentTotal < 0) {
+        //     alert('Invalid Form!!');
+        //     console.log('Not submitted data', formModel);
+        //     return;
+        // }
+        if (this.analyzeClinicalTrailForm.invalid) {
+            this.dysplayInvalidControl(this.analyzeClinicalTrailForm['controls'].clinicalTrails['controls']);
+            this.errorHandlerService.showError('Datele studiului clinic contine date invalide');
             return;
         }
-        let docDistrib = this.docs.find(doc => doc.docType.category == 'DDC');
-        if(!docDistrib){
+
+        if (this.mediacalInstitutionsList.length == 0) {
+            this.dysplayInvalidControl(this.addMediacalInstitutionForm);
+            this.errorHandlerService.showError('Unitatea medicală pentru desfășurarea studiului nu a fost aleasa');
+            return;
+        }
+        const docDistrib = this.docs.find(doc => doc.docType.category == 'DDC');
+        if (!docDistrib) {
             this.errorHandlerService.showError('Dispozitia de distribuire nu este atashata');
             return;
         }
@@ -847,7 +846,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         dialogConfig2.width = '600px';
         dialogConfig2.height = '350px';
 
-        let dialogRef = this.dialog.open(AddCtExpertComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(AddCtExpertComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
                 if (result) {

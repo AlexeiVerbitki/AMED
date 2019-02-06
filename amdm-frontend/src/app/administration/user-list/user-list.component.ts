@@ -25,24 +25,24 @@ export class UserListComponent implements OnInit {
   {id: 6, firstName: 'Jaylin', lastName: 'Crona', job: 'Regional Factors Representative', phone: '+37365123456', selected: true},
   {id: 7, firstName: 'Nova', lastName: 'Rodriguez', job: 'Principal Communications Assistant', phone: '+37366123456', selected: false},
   {id: 8, firstName: 'Clementina', lastName: 'Lueilwitz', job: 'Interactive Paradigm Coordinator', phone: '+37367123456', selected: true},
-  ]
+  ];
 
   constructor() {
   }
 
-  selectAll($event){
+  selectAll($event) {
     this.userInternalList.forEach(e => e.selected = $event.checked);
   }
 
-  selectAll2($event){
+  selectAll2($event) {
     this.userExternalList.forEach(e => e.selected = $event.checked);
   }
 
-  selectUser(i, $event){
+  selectUser(i, $event) {
     this.userInternalList[i].selected = $event.checked;
   }
 
-  selectUser2(i, $event){
+  selectUser2(i, $event) {
     this.userExternalList[i].selected = $event.checked;
   }
 

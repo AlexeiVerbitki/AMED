@@ -16,13 +16,13 @@ import {LoaderService} from '../../../shared/service/loader.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {MedicamentDetailsDialogComponent} from '../../../dialog/medicament-details-dialog/medicament-details-dialog.component';
 import {MedicamentService} from '../../../shared/service/medicament.service';
-import {AddExpertComponent} from "../../../dialog/add-expert/add-expert.component";
-import {RequestAdditionalDataDialogComponent} from "../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component";
+import {AddExpertComponent} from '../../../dialog/add-expert/add-expert.component';
+import {RequestAdditionalDataDialogComponent} from '../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component';
 import {
     SelectVariationTypeComponent,
     TodoItemFlatNode
-} from "../../../dialog/select-variation-type/select-variation-type.component";
-import {SelectionModel} from "@angular/cdk/collections";
+} from '../../../dialog/select-variation-type/select-variation-type.component';
+import {SelectionModel} from '@angular/cdk/collections';
 
 @Component({
     selector: 'app-experti',
@@ -58,8 +58,8 @@ export class ExpertiModifyComponent implements OnInit {
     omAttached = false;
     omApproved = false;
     expertList: any[] = [];
-    variationTypesIds : string;
-    variationTypesIdsTemp : string;
+    variationTypesIds: string;
+    variationTypesIdsTemp: string;
 
     constructor(private fb: FormBuilder,
                 private authService: AuthService,
@@ -145,7 +145,7 @@ export class ExpertiModifyComponent implements OnInit {
                         this.expertForm.get('requestNumber').setValue(data.requestNumber);
                         this.expertForm.get('companyValue').setValue(data.company.name);
                         this.expertForm.get('company').setValue(data.company);
-                        let rl = this.outputDocuments.find(r => r.docType.category == 'RL');
+                        const rl = this.outputDocuments.find(r => r.docType.category == 'RL');
                         if (rl && (rl.responseReceived == 0 || rl.responseReceived)) {
                             this.expertForm.get('labResponse').setValue(rl.responseReceived.toString());
                         }
@@ -236,11 +236,11 @@ export class ExpertiModifyComponent implements OnInit {
                             ));
                         this.subscriptions.push(this.administrationService.variatonTypesJSON().subscribe(data2 => {
                                 this.variationTypesIds = JSON.stringify(data2.val2);
-                                if(data.variations) {
+                                if (data.variations) {
                                     this.variationTypesIdsTemp =  this.variationTypesIds.substr(1);
-                                    for (let v of data.variations) {
-                                        var t = new TodoItemFlatNode();
-                                        t.item = this.getVariationCodeById(v.variation.id,v.value);
+                                    for (const v of data.variations) {
+                                        const t = new TodoItemFlatNode();
+                                        t.item = this.getVariationCodeById(v.variation.id, v.value);
                                         this.checklistSelection.selected.push(t);
                                     }
                                 }
@@ -267,22 +267,21 @@ export class ExpertiModifyComponent implements OnInit {
         );
     }
 
-    getVariationCodeById(id : string,value:string) : string
-    {
-        var i = this.variationTypesIdsTemp.indexOf(value+'":"'+id+'"')+value.length-1;
-        var tempStr =  this.variationTypesIdsTemp.substr(1,i);
-        var j = tempStr.lastIndexOf('"')+1;
-        var finalStr  = tempStr.substr(j,i);
-        this.variationTypesIdsTemp = this.variationTypesIdsTemp.replace('"'+finalStr+'":"'+id+'"','');
+    getVariationCodeById(id: string, value: string): string {
+        const i = this.variationTypesIdsTemp.indexOf(value + '":"' + id + '"') + value.length - 1;
+        const tempStr =  this.variationTypesIdsTemp.substr(1, i);
+        const j = tempStr.lastIndexOf('"') + 1;
+        const finalStr  = tempStr.substr(j, i);
+        this.variationTypesIdsTemp = this.variationTypesIdsTemp.replace('"' + finalStr + '":"' + id + '"', '');
         return finalStr;
     }
 
     displayInstructions() {
         this.instructions = [];
-        for (let div of this.divisions) {
+        for (const div of this.divisions) {
             if (div.instructions) {
-                for (let instr of div.instructions) {
-                    let instrTest = this.instructions.find(value => value.path == instr.path);
+                for (const instr of div.instructions) {
+                    const instrTest = this.instructions.find(value => value.path == instr.path);
                     if (instrTest) {
                         instrTest.divisions.push({
                             description: div.description,
@@ -293,7 +292,7 @@ export class ExpertiModifyComponent implements OnInit {
                             instrTest.status = 'O';
                         }
                     } else {
-                        let instrAdd = Object.assign({}, instr);
+                        const instrAdd = Object.assign({}, instr);
                         instrAdd.divisions = [];
                         instrAdd.divisions.push({
                             description: div.description,
@@ -309,10 +308,10 @@ export class ExpertiModifyComponent implements OnInit {
 
     displayMachets() {
         this.machets = [];
-        for (let div of this.divisions) {
+        for (const div of this.divisions) {
             if (div.machets) {
-                for (let machet of div.machets) {
-                    let machetTest = this.machets.find(value => value.path == machet.path);
+                for (const machet of div.machets) {
+                    const machetTest = this.machets.find(value => value.path == machet.path);
                     if (machetTest) {
                         machetTest.divisions.push({
                             description: div.description,
@@ -323,7 +322,7 @@ export class ExpertiModifyComponent implements OnInit {
                             machetTest.status = 'O';
                         }
                     } else {
-                        let machetAdd = Object.assign({}, machet);
+                        const machetAdd = Object.assign({}, machet);
                         machetAdd.divisions = [];
                         machetAdd.divisions.push({
                             description: div.description,
@@ -373,7 +372,7 @@ export class ExpertiModifyComponent implements OnInit {
         } else if (document.docType.category == 'SL') {
 
 
-            let modelToSubmit = {
+            const modelToSubmit = {
                 nrDoc: document.number,
                 responsiblePerson: this.registrationRequestMandatedContacts[0].mandatedLastname + ' ' + this.registrationRequestMandatedContacts[0].mandatedFirstname,
                 companyName: this.expertForm.get('company').value.name,
@@ -391,8 +390,8 @@ export class ExpertiModifyComponent implements OnInit {
             observable = this.documentService.viewRequestNew(modelToSubmit);
 
             this.subscriptions.push(observable.subscribe(data => {
-                    let file = new Blob([data], {type: 'application/pdf'});
-                    var fileURL = URL.createObjectURL(file);
+                    const file = new Blob([data], {type: 'application/pdf'});
+                    const fileURL = URL.createObjectURL(file);
                     window.open(fileURL);
                     this.loadingService.hide();
                 }, error => {
@@ -489,7 +488,7 @@ export class ExpertiModifyComponent implements OnInit {
         x.medicamentHistory[0].registrationDate = this.expertForm.get('medicament.registrationDate').value;
 
         x.medicamentHistory[0].divisionHistory = this.divisions;
-        x.medicamentHistory[0].divisionHistory.forEach(t => {t.instructionsHistory = [];});
+        x.medicamentHistory[0].divisionHistory.forEach(t => {t.instructionsHistory = []; });
         x.medicamentHistory[0].divisionHistory.forEach(t => {
             t.instructionsHistory.push.apply(t.instructionsHistory, t.instructions);
             t.instructionsHistory.push.apply(t.instructionsHistory, t.machets);
@@ -647,16 +646,16 @@ export class ExpertiModifyComponent implements OnInit {
             return;
         }
 
-        let sl = this.outputDocuments.find(r => r.docType.category == 'SL');
+        const sl = this.outputDocuments.find(r => r.docType.category == 'SL');
         if (sl) {
-            let resp = this.outputDocuments.filter(t => t.docType.category == 'SL').find(r => r.responseReceived != 1);
+            const resp = this.outputDocuments.filter(t => t.docType.category == 'SL').find(r => r.responseReceived != 1);
             if (resp) {
                 this.errorHandlerService.showError('Exista solicitari de date aditionale fara raspuns primit.');
                 return;
             }
         }
 
-        let rl = this.outputDocuments.find(r => r.docType.category == 'RL');
+        const rl = this.outputDocuments.find(r => r.docType.category == 'RL');
         if (rl) {
             if (!this.expertForm.get('labResponse').value) {
                 this.errorHandlerService.showError('Nu a fost primit rezultatul de la laborator.');
@@ -690,6 +689,9 @@ export class ExpertiModifyComponent implements OnInit {
 
         dialogRef2.afterClosed().subscribe(result => {
             if (result) {
+
+                this.save();
+
                 this.loadingService.show();
 
                 const x = this.modelToSubmit;
@@ -760,7 +762,7 @@ export class ExpertiModifyComponent implements OnInit {
 
         x.registrationRequestMandatedContacts = this.registrationRequestMandatedContacts;
 
-        let rl = this.outputDocuments.find(r => r.docType.category == 'RL');
+        const rl = this.outputDocuments.find(r => r.docType.category == 'RL');
         if (rl) {
             rl.responseReceived = this.expertForm.get('labResponse').value;
         }
@@ -769,7 +771,7 @@ export class ExpertiModifyComponent implements OnInit {
         x.outputDocuments = this.outputDocuments;
 
         x.medicamentHistory[0].divisionHistory = this.divisions;
-        x.medicamentHistory[0].divisionHistory.forEach(t => {t.instructionsHistory = [];});
+        x.medicamentHistory[0].divisionHistory.forEach(t => {t.instructionsHistory = []; });
         x.medicamentHistory[0].divisionHistory.forEach(t => {
             t.instructionsHistory.push.apply(t.instructionsHistory, t.instructions);
             t.instructionsHistory.push.apply(t.instructionsHistory, t.machets);
@@ -797,7 +799,7 @@ export class ExpertiModifyComponent implements OnInit {
 
     getConcatenatedDivision() {
         let concatenatedDivision = '';
-        for (let entry of this.divisions) {
+        for (const entry of this.divisions) {
             if (entry.description && entry.volume && entry.volumeQuantityMeasurement) {
                 concatenatedDivision = concatenatedDivision + entry.description + ' ' + entry.volume + ' ' + entry.volumeQuantityMeasurement.description + '; ';
             } else if (entry.volume && entry.volumeQuantityMeasurement) {
@@ -811,8 +813,8 @@ export class ExpertiModifyComponent implements OnInit {
     }
 
     removeInstr(event) {
-        for (let div of this.divisions) {
-            if(div.instructions) {
+        for (const div of this.divisions) {
+            if (div.instructions) {
                 div.instructions = div.instructions.filter(t => t.path != event);
             }
         }
@@ -825,8 +827,8 @@ export class ExpertiModifyComponent implements OnInit {
     }
 
     removeMacheta(event) {
-        for (let div of this.divisions) {
-            if(div.machets) {
+        for (const div of this.divisions) {
+            if (div.machets) {
                 div.machets = div.machets.filter(t => t.path != event);
             }
         }
@@ -849,7 +851,7 @@ export class ExpertiModifyComponent implements OnInit {
 
         dialogConfig2.data = {type: 'add'};
 
-        let dialogRef = this.dialog.open(AddExpertComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(AddExpertComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
                 if (result && result.response) {
@@ -869,7 +871,7 @@ export class ExpertiModifyComponent implements OnInit {
         dialogConfig2.width = '600px';
         dialogConfig2.data = {type: 'edit', expert: expert};
 
-        let dialogRef = this.dialog.open(AddExpertComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(AddExpertComponent, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.response) {
@@ -904,7 +906,9 @@ export class ExpertiModifyComponent implements OnInit {
             return;
         }
 
-        var lenOutDoc = this.outputDocuments.filter(r => r.docType.category === 'SL').length;
+        this.save();
+
+        const lenOutDoc = this.outputDocuments.filter(r => r.docType.category === 'SL').length;
 
         let x = this.expertForm.get('medicament.commercialNameTo').value + ', ' + this.expertForm.get('medicament.pharmaceuticalFormTo').value.description
             + ' ' + this.expertForm.get('medicament.doseTo').value;
@@ -913,7 +917,7 @@ export class ExpertiModifyComponent implements OnInit {
         this.manufacturesTable.forEach(elem => x = x + ' ' + elem.manufacture.description + ',' + elem.manufacture.country.description + ',' + elem.manufacture.address);
 
         let y = '';
-        for (let exp of this.expertList) {
+        for (const exp of this.expertList) {
             if (!exp.requestAdditionalDataNumber) {
                 y = y + '\r\n\t' + (exp.expert ? exp.expert.name : exp.expertName) + '. Decizie: ' + exp.decision;
             }
@@ -945,14 +949,14 @@ export class ExpertiModifyComponent implements OnInit {
             if (result.success) {
                 this.modelToSubmit.outputDocuments = Object.assign([], this.outputDocuments);
                 this.modelToSubmit.outputDocuments.push(result);
-                for (let exp of this.expertList) {
+                for (const exp of this.expertList) {
                     if (!exp.requestAdditionalDataNumber) {
                         exp.requestAdditionalDataNumber = result.number;
                     }
                 }
                 this.modelToSubmit.expertList = this.expertList;
                 this.modelToSubmit.medicaments = [];
-                this.subscriptions.push(this.requestService.addMedicamentRequest(this.modelToSubmit).subscribe(data => {
+                this.subscriptions.push(this.requestService.addMedicamentHistoryRequest(this.modelToSubmit).subscribe(data => {
                         this.outputDocuments = data.body.outputDocuments;
                         this.checkOutputDocumentsStatus();
                     }, error => console.log(error))
@@ -963,6 +967,8 @@ export class ExpertiModifyComponent implements OnInit {
 
     requestLaboratoryAnalysis() {
 
+        this.save();
+
         this.outputDocuments.push({
             name: 'Solicitare desfasurare analize de laborator',
             docType: this.docTypes.find(r => r.category == 'RL'),
@@ -971,7 +977,7 @@ export class ExpertiModifyComponent implements OnInit {
         });
         this.modelToSubmit.outputDocuments = this.outputDocuments;
         this.modelToSubmit.medicaments = [];
-        this.subscriptions.push(this.requestService.addMedicamentRequest(this.modelToSubmit).subscribe(data => {
+        this.subscriptions.push(this.requestService.addMedicamentHistoryRequest(this.modelToSubmit).subscribe(data => {
                 this.outputDocuments = data.body.outputDocuments;
                 this.checkOutputDocumentsStatus();
             }, error => console.log(error))
@@ -1000,11 +1006,11 @@ export class ExpertiModifyComponent implements OnInit {
                 this.loadingService.show();
                 this.modelToSubmit.outputDocuments = Object.assign([], this.outputDocuments);
                 this.modelToSubmit.outputDocuments.forEach((item, index) => {
-                    if (item === doc) this.modelToSubmit.outputDocuments.splice(index, 1);
+                    if (item === doc) { this.modelToSubmit.outputDocuments.splice(index, 1); }
                 });
 
                 if (doc.docType.category == 'SL') {
-                    for (let exp of this.expertList) {
+                    for (const exp of this.expertList) {
                         if (exp.requestAdditionalDataNumber == doc.number) {
                             exp.requestAdditionalDataNumber = '';
                         }
@@ -1038,7 +1044,7 @@ export class ExpertiModifyComponent implements OnInit {
 
         dialogConfig2.data = {values: this.checklistSelection, disabled : true};
 
-        let dialogRef = this.dialog.open(SelectVariationTypeComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(SelectVariationTypeComponent, dialogConfig2);
     }
 
 }

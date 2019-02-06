@@ -1,10 +1,10 @@
 import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {Observable, Subscription} from "rxjs";
-import {MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {RequestService} from "../../../shared/service/request.service";
-import {SuccessOrErrorHandlerService} from "../../../shared/service/success-or-error-handler.service";
-import {DocumentService} from "../../../shared/service/document.service";
+import {Observable, Subscription} from 'rxjs';
+import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {RequestService} from '../../../shared/service/request.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
+import {DocumentService} from '../../../shared/service/document.service';
 
 @Component({
     selector: 'app-lmpc-modify-list',

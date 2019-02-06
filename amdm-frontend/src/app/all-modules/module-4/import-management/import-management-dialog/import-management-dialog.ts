@@ -1,6 +1,5 @@
 import {Cerere} from './../../../../models/cerere';
-import {FormArray, Validators} from '@angular/forms';
-import {FormGroup, FormBuilder} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Component, Inject, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
@@ -16,8 +15,6 @@ import {Subject} from 'rxjs/index';
 import {LoaderService} from '../../../../shared/service/loader.service';
 import {AuthService} from '../../../../shared/service/authetication.service';
 import {MedicamentService} from '../../../../shared/service/medicament.service';
-import {Utils} from 'angular-bootstrap-md/angular-bootstrap-md/utils/utils.class';
-import {forEach} from '@angular/router/src/utils/collection';
 
 export interface PeriodicElement {
     name: string;
@@ -45,62 +42,44 @@ export class ImportManagementDialog implements OnInit {
     filteredOptions: Observable<any[]>;
     formSubmitted: boolean;
     addMedicamentClicked: boolean;
-    private subscriptions: Subscription[] = [];
     docs: Document [] = [];
-
     unitOfImportTable: any[] = [];
-
-    protected manufacturersRfPr: Observable<any[]>;
-    protected loadingManufacturerRfPr = false;
-    protected manufacturerInputsRfPr = new Subject<string>();
-
+    manufacturersRfPr: Observable<any[]>;
+    loadingManufacturerRfPr = false;
+    manufacturerInputsRfPr = new Subject<string>();
     importer: Observable<any[]>;
     loadingCompany = false;
-    protected companyInputs = new Subject<string>();
-
     sellerAddress: any;
     importerAddress: any;
     producerAddress: any;
     codeAmed: any;
-
     solicitantCompanyList: Observable<any[]>;
     unitSumm: any;
-
     formModel: any;
     valutaList: any[];
-
     importData: any;
     medicamentData: any;
-
     atcCodes: Observable<any[]>;
     loadingAtcCodes = false;
     atcCodesInputs = new Subject<string>();
-
     customsCodes: Observable<any[]>;
     loadingcustomsCodes = false;
     customsCodesInputs = new Subject<string>();
-
     pharmaceuticalForm: Observable<any[]>;
     loadingpharmaceuticalForm = false;
     pharmaceuticalFormInputs = new Subject<string>();
-
     unitsOfMeasurement: Observable<any[]>;
-
     medicaments: Observable<any[]>;
     loadingmedicaments = false;
     medicamentsInputs = new Subject<string>();
-
     authorizations: Observable<any[]>;
     loadingAuthorizations = false;
     authorizationsInputs = new Subject<string>();
-
     internationalMedicamentNames: Observable<any[]>;
     loadinginternationalMedicamentName = false;
     internationalMedicamentNameInputs = new Subject<string>();
-
     checked: boolean;
     medType: any;
-
     invalidPrice: boolean;
     invalidQuantity: boolean;
     approvedPrice: any;
@@ -108,7 +87,8 @@ export class ImportManagementDialog implements OnInit {
     
     showPriceError: any;
     showQuantityError: any;
-
+    companyInputs = new Subject<string>();
+    subscriptions: Subscription[] = [];
     invoiceDetailAdded: boolean  = false;
     importReachedLimit: boolean = false;
     addedUnits: number ;
@@ -298,7 +278,7 @@ export class ImportManagementDialog implements OnInit {
         }
 
 
-        let dialogValues = this.evaluateImportForm.getRawValue();
+        const dialogValues = this.evaluateImportForm.getRawValue();
         dialogValues.importAuthorizationEntity.unitOfImportTable.unitSumm  = this.unitSumm;
             if (this.validPrice === false && this.validQuantity === false && this.invalidPrice === false && this.invalidQuantity === false /*&& this.invoiceDetailAdded === false*/) {
                 this.dialog.close(dialogValues);

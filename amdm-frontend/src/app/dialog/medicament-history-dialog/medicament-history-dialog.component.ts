@@ -3,6 +3,8 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angula
 import {Subscription} from 'rxjs';
 import {RequestService} from '../../shared/service/request.service';
 import {MedicamentModificationsDialogComponent} from '../medicament-modifications-dialog/medicament-modifications-dialog.component';
+import {saveAs} from 'file-saver';
+import {UploadFileService} from '../../shared/service/upload/upload-file.service';
 
 @Component({
     selector: 'app-medicament-history-dialog',
@@ -18,6 +20,7 @@ export class MedicamentHistoryDialogComponent implements OnInit {
 
     constructor(public dialogRef: MatDialogRef<MedicamentHistoryDialogComponent>,
                 private dialog: MatDialog,
+                private uploadService: UploadFileService,
                 @Inject(MAT_DIALOG_DATA) public dataDialog: any,
                 private requestService: RequestService) {
     }
@@ -69,5 +72,22 @@ export class MedicamentHistoryDialogComponent implements OnInit {
 
     confirm(): void {
         this.dialogRef.close(true);
+    }
+
+    loadFile(path: string) {
+        this.subscriptions.push(this.uploadService.loadFile(path).subscribe(data => {
+                this.saveToFileSystem(data, path.substring(path.lastIndexOf('/') + 1));
+            },
+
+            error => {
+                console.log(error);
+            }
+            )
+        );
+    }
+
+    private saveToFileSystem(response: any, docName: string) {
+        const blob = new Blob([response]);
+        saveAs(blob, docName);
     }
 }

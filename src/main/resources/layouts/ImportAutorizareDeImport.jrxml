@@ -164,6 +164,27 @@
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="50" y="61" width="80" height="14" uuid="a8018f56-e15c-49bd-aa20-a60d952392ff"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{registrationNr}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="147" y="61" width="108" height="14" uuid="a92610c1-974e-4b92-a1cb-e17a03e22834"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{registartionDate}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="128" y="61" width="18" height="14" uuid="6d70d7dd-f171-4eb9-b328-0c2d0cffb587"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" din: "]]></textFieldExpression>
+				</textField>
 			</frame>
 			<frame>
 				<reportElement x="263" y="0" width="272" height="76" uuid="b6a3d4f8-131f-4cff-8361-0368f67c5955"/>
@@ -174,16 +195,37 @@
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="167" y="5" width="102" height="14" uuid="4dfeaf19-5be6-452e-8392-2b4f3c5514d6"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{autorizationNr} ]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="22" y="61" width="238" height="14" uuid="46aa4f8a-6f13-45fa-b886-b2c6d1cd403b"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{autorizationDate}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="4" y="61" width="16" height="14" uuid="332d7341-2f4b-4452-a2da-d853c0405913"/>
+					<textElement>
+						<font fontName="DejaVu Sans" size="7" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Din: "]]></textFieldExpression>
+				</textField>
 			</frame>
 			<staticText>
-				<reportElement x="6" y="5" width="112" height="14" uuid="ef49b5f8-b731-4c4f-8235-fbb9f4089453"/>
+				<reportElement x="6" y="5" width="84" height="14" uuid="ef49b5f8-b731-4c4f-8235-fbb9f4089453"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
 				<text><![CDATA[1. Importător, adresa:                          ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="119" y="5" width="144" height="14" uuid="3be6e492-eadb-4599-a4a0-6d3a4f64abc8"/>
+				<reportElement x="90" y="5" width="173" height="14" uuid="3be6e492-eadb-4599-a4a0-6d3a4f64abc8"/>
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="7" isBold="true"/>
 				</textElement>
@@ -197,25 +239,18 @@
 				<textFieldExpression><![CDATA[$P{companyNameAndAddress}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="6" y="61" width="256" height="14" uuid="949e303a-d7eb-4f8c-b519-fb5c6baea7d7"/>
+				<reportElement x="6" y="61" width="44" height="14" uuid="949e303a-d7eb-4f8c-b519-fb5c6baea7d7"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA["2. Nr. Inr. " + $P{registrationNr} + "           Din " + $P{registartionDate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["2. Nr. Inr.: "]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="267" y="5" width="267" height="14" uuid="24096f25-93b9-4443-bc94-fe82fe7750bd"/>
+				<reportElement x="267" y="5" width="163" height="14" uuid="24096f25-93b9-4443-bc94-fe82fe7750bd"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="7" isBold="true"/>
+					<font fontName="DejaVu Sans" size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA["8.  AUTORIZAŢIA de IMPORT Nr. " + $P{autorizationNr}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="267" y="61" width="264" height="14" uuid="a42201ee-6152-4cdd-8bc6-82f063dbfb18"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="7"/>
-				</textElement>
-				<textFieldExpression><![CDATA["ORDINARĂ             din  " + $P{autorizationDate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["8. AUTORIZAŢIA de IMPORT ORDINARĂ Nr.:"]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="80">
@@ -244,7 +279,7 @@
 				<textElement verticalAlignment="Top">
 					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
-				<text><![CDATA[9. Vinzător, adresa ]]></text>
+				<text><![CDATA[9. Vinzător, adresa:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="266" y="13" width="266" height="16" uuid="58842565-c898-4b74-8e95-70893157b437"/>
@@ -272,7 +307,7 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
-				<text><![CDATA[10.Ţara vînzătoare ]]></text>
+				<text><![CDATA[10.Ţara vînzătoare:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="267" y="63" width="266" height="16" uuid="5a58a972-1dc7-4085-aa2e-6dbc1094e21b"/>
@@ -342,7 +377,7 @@
 				<textElement>
 					<font fontName="DejaVu Sans" size="7"/>
 				</textElement>
-				<text><![CDATA[Conform  autorizaţiei]]></text>
+				<text><![CDATA[Conform  autorizaţiei:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="391" y="19" width="141" height="22" uuid="ab6253a5-a2c2-443e-9b5d-fe67353aa0d0"/>
@@ -375,7 +410,7 @@
 							</box>
 							<staticText>
 								<reportElement x="0" y="0" width="205" height="20" uuid="5b59ad0b-2612-41a2-9557-f9f0fca8aaec"/>
-								<textElement>
+								<textElement verticalAlignment="Top">
 									<font fontName="DejaVu Sans" size="7"/>
 								</textElement>
 								<text><![CDATA[ 6. Vama                                ]]></text>
@@ -391,7 +426,7 @@
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="205" height="20" uuid="57501953-c8e2-4004-ae1b-b289b4983af0"/>
 								<box leftPadding="1"/>
-								<textElement>
+								<textElement verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="7" isBold="true"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{custom}]]></textFieldExpression>
@@ -409,7 +444,7 @@
 							</box>
 							<staticText>
 								<reportElement x="0" y="0" width="58" height="20" uuid="51e85584-7fbd-4153-b25f-489a520c9353"/>
-								<textElement>
+								<textElement verticalAlignment="Top">
 									<font fontName="DejaVu Sans" size="7"/>
 								</textElement>
 								<text><![CDATA[ 7. Codul vamei]]></text>
@@ -425,7 +460,7 @@
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="58" height="20" uuid="4ac8e0fb-77ce-48a6-b205-9218be0dabaa"/>
 								<box leftPadding="1"/>
-								<textElement>
+								<textElement verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="7" isBold="true"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{customCode}]]></textFieldExpression>
@@ -443,10 +478,10 @@
 									<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
-								<textElement>
+								<textElement verticalAlignment="Top">
 									<font fontName="DejaVu Sans" size="7"/>
 								</textElement>
-								<text><![CDATA[ 12. Tipul tranzacţiei]]></text>
+								<text><![CDATA[ 12. Tipul tranzacţiei:]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="20"/>
@@ -488,7 +523,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="DejaVu Sans" size="7"/>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[ $P{currencyPayment}]]></textFieldExpression>
 			</textField>
@@ -501,7 +536,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="DejaVu Sans" size="7"/>
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{currencyCode}]]></textFieldExpression>
 			</textField>
@@ -524,7 +559,7 @@
 						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="205" height="20" uuid="58b5dc8c-daa5-46e7-a90f-48df19b4f4e2"/>
-								<textElement>
+								<textElement verticalAlignment="Justified">
 									<font fontName="DejaVu Sans" size="7"/>
 								</textElement>
 								<text><![CDATA[ 14.Denumirea şi caracteristica mărfii
@@ -536,7 +571,7 @@
 							<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 								<reportElement x="0" y="0" width="205" height="20" uuid="33cc82fd-a02c-49da-956d-c99efa3d912a"/>
 								<box leftPadding="1"/>
-								<textElement>
+								<textElement verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="7" isBold="true"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{productName}]]></textFieldExpression>
@@ -548,27 +583,19 @@
 						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="58" height="20" uuid="da541be5-8786-4c5a-bc8c-f80230c85be2"/>
-								<textElement>
+								<textElement verticalAlignment="Justified">
 									<font fontName="DejaVu Sans" size="7"/>
 								</textElement>
 								<text><![CDATA[ 15.Codul mărfii
 ]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table_CH" height="20" rowSpan="1">
-							<textField>
-								<reportElement x="0" y="0" width="58" height="20" uuid="3f949a5a-becf-43b9-8309-becf5bb47554"/>
-								<textElement>
-									<font fontName="DejaVu Sans" size="7"/>
-								</textElement>
-								<textFieldExpression><![CDATA["01234567890"]]></textFieldExpression>
-							</textField>
-						</jr:columnFooter>
+						<jr:columnFooter style="Table_CH" height="20" rowSpan="1"/>
 						<jr:detailCell style="Table_TD" height="20">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 								<reportElement x="0" y="0" width="58" height="20" uuid="43ccd909-d5b5-41dc-a7fd-91c1a9c799b2"/>
 								<box leftPadding="1"/>
-								<textElement>
+								<textElement verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="7" isBold="true"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{productCode}]]></textFieldExpression>
@@ -580,7 +607,7 @@
 						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="67" height="20" uuid="5e8fba14-e6b4-4c0c-b5b9-55a6d583136c"/>
-								<textElement>
+								<textElement verticalAlignment="Justified">
 									<font fontName="DejaVu Sans" size="7"/>
 								</textElement>
 								<text><![CDATA[ 16. Unitatea de măsura
@@ -592,7 +619,7 @@
 							<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 								<reportElement x="0" y="0" width="67" height="20" uuid="551000d3-2994-4de8-8615-b244d1344042"/>
 								<box leftPadding="1"/>
-								<textElement>
+								<textElement verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="7" isBold="true"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{unitMeasure}]]></textFieldExpression>
@@ -604,7 +631,7 @@
 						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="60" height="20" uuid="f099d5eb-1d36-42b1-9857-e475406bd597"/>
-								<textElement>
+								<textElement verticalAlignment="Justified">
 									<font fontName="DejaVu Sans" size="7"/>
 								</textElement>
 								<text><![CDATA[ 17.Cantitatea]]></text>
@@ -615,7 +642,7 @@
 							<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 								<reportElement x="0" y="0" width="60" height="20" uuid="3f47e6e8-4bfa-4ccb-8bc4-20c2aa887f00"/>
 								<box leftPadding="1"/>
-								<textElement>
+								<textElement verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="7" isBold="true"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
@@ -627,7 +654,7 @@
 						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="66" height="20" uuid="cad4db90-b9a8-48d0-9a7c-9523f373073f"/>
-								<textElement>
+								<textElement verticalAlignment="Justified">
 									<font fontName="DejaVu Sans" size="7"/>
 								</textElement>
 								<text><![CDATA[ 18.]]></text>
@@ -636,7 +663,7 @@
 						<jr:columnFooter style="Table_CH" height="20" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="66" height="20" uuid="afa3e558-789f-4bcd-a274-ff6a183bfb5a"/>
-								<textElement>
+								<textElement verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="7" isBold="true"/>
 								</textElement>
 								<text><![CDATA[Total:]]></text>
@@ -646,7 +673,7 @@
 							<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 								<reportElement x="0" y="0" width="66" height="20" uuid="efc054b4-6140-4156-a87c-d9bb4278cd16"/>
 								<box leftPadding="1"/>
-								<textElement>
+								<textElement verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="7" isBold="true"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{field18}]]></textFieldExpression>
@@ -658,7 +685,7 @@
 						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="79" height="20" uuid="7733be5d-2fca-409a-b670-55f8b4e8b4d3"/>
-								<textElement>
+								<textElement verticalAlignment="Justified">
 									<font fontName="DejaVu Sans" size="7"/>
 								</textElement>
 								<text><![CDATA[ 19.Valoarea mii valută
@@ -669,7 +696,7 @@
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="79" height="20" uuid="b6717af5-be3f-476f-abff-5efc36389d81"/>
 								<box leftPadding="1"/>
-								<textElement>
+								<textElement verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="7" isBold="true"/>
 								</textElement>
 								<textFieldExpression><![CDATA[String.format("%.2f",$V{total})]]></textFieldExpression>
@@ -679,7 +706,7 @@
 							<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 								<reportElement x="0" y="0" width="79" height="20" uuid="3fb5b708-150a-4073-8b68-552c35f1af69"/>
 								<box leftPadding="1"/>
-								<textElement>
+								<textElement verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="7" isBold="true"/>
 								</textElement>
 								<textFieldExpression><![CDATA[String.format("%.2f",$F{amount})]]></textFieldExpression>
@@ -704,7 +731,7 @@
 					<textElement>
 						<font fontName="DejaVu Sans" size="7"/>
 					</textElement>
-					<text><![CDATA[22.   AGENŢIA MEDICAMENTULUI si DISPOZITIVELOR MEDICALE]]></text>
+					<text><![CDATA[22.   AGENŢIA MEDICAMENTULUI si DISPOZITIVELOR MEDICALE:]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="6" y="25" width="263" height="16" uuid="128c1d2d-444a-42fa-8ee5-f780359d8ff2"/>
@@ -721,7 +748,7 @@
 					<text><![CDATA[Funcţia  Director general]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="4" y="57" width="266" height="18" uuid="723aea8f-e21d-411b-b9a2-14c5fbf8510e"/>
+					<reportElement x="4" y="59" width="266" height="16" uuid="723aea8f-e21d-411b-b9a2-14c5fbf8510e"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="7"/>
 					</textElement>
@@ -742,7 +769,7 @@
 					<textElement>
 						<font fontName="DejaVu Sans" size="7"/>
 					</textElement>
-					<text><![CDATA[20. Temei pentru cererea autorizaţiei]]></text>
+					<text><![CDATA[20. Temei pentru cererea autorizaţiei:]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="6" y="25" width="251" height="51" uuid="8586db7f-d269-4b9b-818b-81a834947ae0"/>
@@ -764,7 +791,7 @@
 					<textElement>
 						<font fontName="DejaVu Sans" size="7"/>
 					</textElement>
-					<text><![CDATA[21. Conducătorul organizaţiei importătoare]]></text>
+					<text><![CDATA[21. Conducătorul organizaţiei importătoare:]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="6" y="25" width="248" height="20" uuid="0610133f-1e89-4b44-ab6b-ad63c95fccb6"/>
@@ -802,7 +829,7 @@
 					<textElement>
 						<font fontName="DejaVu Sans" size="7"/>
 					</textElement>
-					<text><![CDATA[23. Secţia import-export de medicamente, alte produse farmaceutice şi parafarmaceutice]]></text>
+					<text><![CDATA[23. Secţia import-export de medicamente, alte produse farmaceutice şi parafarmaceutice:]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="5" y="25" width="260" height="20" uuid="a55723b3-598c-40aa-aa7a-e2a4b98f3888"/>

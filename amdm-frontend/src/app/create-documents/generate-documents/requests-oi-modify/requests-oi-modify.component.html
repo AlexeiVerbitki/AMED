@@ -38,7 +38,7 @@
       </ng-container>
 
       <ng-container matColumnDef="included">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Include in dispozitie</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Include in ordin</th>
         <td mat-cell *matCellDef="let element">
           <mat-checkbox #checkboxIncluded  [checked]="element.included" (change)="checkIncluded(element,checkboxIncluded)"></mat-checkbox>
         </td>

@@ -240,7 +240,7 @@
     <!--</div>-->
     <app-document [title]="'Documente necesare înregistrării prețului medicamentului curent'"
                   [documents]="priceDTO?.documents"
-                  [nrCerere]="this.PriceRegForm.get('requestNumber').value"
+                  [nrCerere]="PriceRegForm.get('requestNumber').value"
                   [dcTypeIdentifier]="{code:'PMED',step:'R'}"
                   (documentModified)="documentAdded($event)">
     </app-document>

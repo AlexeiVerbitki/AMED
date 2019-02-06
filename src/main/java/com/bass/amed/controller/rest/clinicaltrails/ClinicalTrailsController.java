@@ -1,5 +1,6 @@
 package com.bass.amed.controller.rest.clinicaltrails;
 
+import com.bass.amed.common.Constants;
 import com.bass.amed.dto.clinicaltrial.ClinicalTrailFilterDTO;
 import com.bass.amed.dto.clinicaltrial.ClinicalTrialDTO;
 import com.bass.amed.entity.*;
@@ -45,12 +46,13 @@ public class ClinicalTrailsController {
         }
         clinicalTrailsService.handeMedicalInstitutions(requests);
         requestRepository.save(requests);
-        Set<DocumentsEntity> docs = documentsRepository.findAllByregistrationRequestId(requests.getId());
-        requests.setDocuments(docs);
+        List<DocumentsEntity> docs = documentsRepository.findAllByRegistrationRequestId(requests.getId());
+        requests.setDocuments(new HashSet<>(docs));
         return new ResponseEntity<>(requests, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/add-request")
+    @Transactional
     public ResponseEntity<Integer> saveNextClinicalTrailRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
         if (requests.getClinicalTrails() == null) {
             throw new CustomException("Request was not found");
@@ -58,6 +60,16 @@ public class ClinicalTrailsController {
         clinicalTrailsService.addDDClinicalTrailsDocument(requests);
         clinicalTrailsService.handeMedicalInstitutions(requests);
         requestRepository.save(requests);
+        if (requests.getCurrentStep().equals(Constants.ClinicTrailStep.EVALUATE)) {
+            clinicalTrailsService.schedulePayOrderCT(requests.getId(), requests.getRequestNumber());
+        } else if (requests.getCurrentStep().equals(Constants.ClinicTrailStep.ANALIZE)) {
+            clinicalTrailsService.unschedulePayOrderCT(requests.getId());
+            clinicalTrailsService.scheduleClientDetailsDataCT(requests.getId(), requests.getRequestNumber());
+        } else if (requests.getCurrentStep().equals(Constants.ClinicTrailStep.FINISH)) {
+            clinicalTrailsService.unscheduleFinisLimitCT(requests.getId());
+        } else if (requests.getCurrentStep().equals(Constants.ClinicTrailStep.CANCEL)) {
+            clinicalTrailsService.unscheduleFinisLimitCT(requests.getId());
+        }
         return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
     }
 
@@ -77,6 +89,16 @@ public class ClinicalTrailsController {
     @PostMapping(value = "/add-amendment-request")
     public ResponseEntity<Integer> seveNetxtClinicalTrailAmendmentRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
         clinicalTrailsService.registerNewClinicalTrailAmendment(requests);
+        if (requests.getCurrentStep().equals(Constants.ClinicTrailStep.EVALUATE)) {
+            clinicalTrailsService.schedulePayOrderAmendCT(requests.getId(), requests.getRequestNumber());
+        } else if (requests.getCurrentStep().equals(Constants.ClinicTrailStep.ANALIZE)) {
+            clinicalTrailsService.unschedulePayOrderAmendCT(requests.getId());
+            clinicalTrailsService.scheduleClientDetailsDataAmendCT(requests.getId(), requests.getRequestNumber());
+        } else if (requests.getCurrentStep().equals(Constants.ClinicTrailStep.FINISH)) {
+            clinicalTrailsService.unscheduleFinisLimitAmendmentCT(requests.getId());
+        } else if (requests.getCurrentStep().equals(Constants.ClinicTrailStep.CANCEL)) {
+            clinicalTrailsService.unscheduleFinisLimitAmendmentCT(requests.getId());
+        }
         return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
     }
 
@@ -142,7 +164,7 @@ public class ClinicalTrailsController {
 
     @Transactional
     @PostMapping(value = "/save-amendment-request")
-    public ResponseEntity<Integer> saveClinicalTrailAmendmentRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
+    public ResponseEntity<RegistrationRequestsEntity> saveClinicalTrailAmendmentRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
         if (requests.getClinicalTrails() == null) {
             throw new CustomException("Request was not found");
         }
@@ -153,7 +175,9 @@ public class ClinicalTrailsController {
         clinicalTrailsService.handeMedicalInstitutionsForAmendments(requests);
 
         requestRepository.save(requests);
-        return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
+        List<DocumentsEntity> docs = documentsRepository.findAllByRegistrationRequestId(requests.getId());
+        requests.setDocuments(new HashSet<>(docs));
+        return new ResponseEntity<>(requests, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/add-amendment-next-reques")

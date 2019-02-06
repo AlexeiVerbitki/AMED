@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Document} from '../../../models/document';
 import {Observable, Subject, Subscription} from 'rxjs/index';
 import {ActivatedRoute, Router} from '@angular/router';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {RequestService} from '../../../shared/service/request.service';
 import {MedicamentService} from '../../../shared/service/medicament.service';
 import {AdministrationService} from '../../../shared/service/administration.service';
@@ -17,6 +17,7 @@ import {LoaderService} from '../../../shared/service/loader.service';
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 import {ActiveSubstanceDialogComponent} from '../../../dialog/active-substance-dialog/active-substance-dialog.component';
 import {MedInstInvestigatorsDialogComponent} from '../dialog/med-inst-investigators-dialog/med-inst-investigators-dialog.component';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 
 @Component({
     selector: 'app-a-evaluarea-primara',
@@ -68,38 +69,40 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
     referenceProductFormn: FormGroup;
     placeboFormn: FormGroup;
 
-    protected manufacturers: Observable<any[]>;
-    protected loadingManufacturer = false;
-    protected manufacturerInputs = new Subject<string>();
+    manufacturers: Observable<any[]>;
+    loadingManufacturer = false;
+    manufacturerInputs = new Subject<string>();
 
-    protected measureUnits: any[] = [];
-    protected measureUnitsRfPr: any[] = [];
-    protected measureUnitsPlacebo: any[] = [];
-    protected loadingMeasureUnits = false;
+    measureUnits: any[] = [];
+    measureUnitsRfPr: any[] = [];
+    measureUnitsPlacebo: any[] = [];
+    loadingMeasureUnits = false;
 
-    protected farmForms: Observable<any[]>;
-    protected loadingFarmForms = false;
-    protected farmFormsInputs = new Subject<string>();
+    farmForms: Observable<any[]>;
+    loadingFarmForms = false;
+    farmFormsInputs = new Subject<string>();
 
-    protected atcCodes: Observable<any[]>;
-    protected loadingAtcCodes = false;
-    protected atcCodesInputs = new Subject<string>();
+    atcCodes: Observable<any[]>;
+    loadingAtcCodes = false;
+    atcCodesInputs = new Subject<string>();
 
-    protected manufacturersRfPr: Observable<any[]>;
-    protected loadingManufacturerRfPr = false;
-    protected manufacturerInputsRfPr = new Subject<string>();
+    manufacturersRfPr: Observable<any[]>;
+    loadingManufacturerRfPr = false;
+    manufacturerInputsRfPr = new Subject<string>();
 
 
-    protected farmFormsRfPr: Observable<any[]>;
-    protected loadingFarmFormsRfPr = false;
-    protected farmFormsInputsRfPr = new Subject<string>();
+    farmFormsRfPr: Observable<any[]>;
+    loadingFarmFormsRfPr = false;
+    farmFormsInputsRfPr = new Subject<string>();
 
-    protected atcCodesRfPr: Observable<any[]>;
-    protected loadingAtcCodesRfPr = false;
-    protected atcCodesInputsRfPr = new Subject<string>();
+    atcCodesRfPr: Observable<any[]>;
+    loadingAtcCodesRfPr = false;
+    atcCodesInputsRfPr = new Subject<string>();
 
     medActiveSubstances: any[] = [];
     refProdActiveSubstances: any[] = [];
+
+    isValidRefProduct = false;
 
     constructor(private fb: FormBuilder,
                 public dialog: MatDialog,
@@ -112,7 +115,8 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
                 private authService: AuthService,
                 public dialogConfirmation: MatDialog,
                 private taskService: TaskService,
-                private loadingService: LoaderService) {
+                private loadingService: LoaderService,
+                private errorHandlerService: SuccessOrErrorHandlerService) {
 
     }
 
@@ -129,6 +133,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
             'receipts': [],
             'paymentOrders': [],
             'outputDocuments': [],
+            'registrationRequestMandatedContacts': [],
             'clinicalTrails': this.fb.group({
                 'id': [''],
                 'startDateInternational': [''],
@@ -167,7 +172,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
             'registrationDate': [null],
             'internationalMedicamentName': [null],
             'manufacture': [null, Validators.required],
-            'dose': [null, Validators.required],
+            'dose': [null],
             'volumeQuantityMeasurement': [null],
             'pharmaceuticalForm': [null, Validators.required],
             'atcCode': [null, Validators.required],
@@ -177,7 +182,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
 
         this.referenceProductFormn = this.fb.group({
             'id': [null],
-            'name': [null, Validators.required],
+            'name': [null],
             'registrationNumber': [null],
             'registrationDate': [null],
             'internationalMedicamentName': [null],
@@ -192,17 +197,17 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
 
         this.placeboFormn = this.fb.group({
             'id': [null],
-            'name': [null, Validators.required],
+            'name': [null],
             'registrationNumber': [null],
             'registrationDate': [null],
             'internationalMedicamentName': [null],
-            'manufacture': [null, Validators.required],
+            'manufacture': [null],
             'dose': [null, Validators.required],
             'volumeQuantityMeasurement': [null],
-            'pharmaceuticalForm': [null, Validators.required],
+            'pharmaceuticalForm': [null],
             'atcCode': [null, Validators.required],
-            'administratingMode': [null, Validators.required],
-            'activeSubstances': [null, Validators.required]
+            'administratingMode': [null],
+            'activeSubstances': [null]
         });
 
         this.addInvestigatorForm = this.fb.group({
@@ -210,9 +215,10 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         });
 
         this.addMediacalInstitutionForm = this.fb.group({
-            'medicalInstitution': []
+            'medicalInstitution': [null, Validators.required]
         });
 
+        this.subscribeToEvents();
         this.initPage();
 
         this.loadManufacturers();
@@ -226,6 +232,48 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
 
         this.loadPhasesList();
         this.loadInvestigatorsList();
+    }
+
+    subscribeToEvents() {
+        this.subscriptions.push(
+            this.referenceProductFormn.get('name').valueChanges.subscribe(value => {
+                (value && value.length > 0) ? this.isValidRefProduct = true : this.isValidRefProduct = false;
+                if (this.isValidRefProduct) {
+                    this.referenceProductFormn.get('manufacture').enable();
+                    this.referenceProductFormn.get('dose').enable();
+                    this.referenceProductFormn.get('atcCode').enable();
+                    this.referenceProductFormn.get('administratingMode').enable();
+                    this.referenceProductFormn.get('pharmaceuticalForm').enable();
+                } else {
+                    this.referenceProductFormn.get('manufacture').disable();
+                    this.referenceProductFormn.get('manufacture').reset();
+                    this.referenceProductFormn.get('dose').disable();
+                    this.referenceProductFormn.get('dose').reset();
+                    this.referenceProductFormn.get('pharmaceuticalForm').disable();
+                    this.referenceProductFormn.get('pharmaceuticalForm').reset();
+                    this.referenceProductFormn.get('atcCode').disable();
+                    this.referenceProductFormn.get('atcCode').reset();
+                    this.referenceProductFormn.get('administratingMode').disable();
+                    this.referenceProductFormn.get('administratingMode').reset();
+                    this.refProdActiveSubstances = [];
+                }
+            })
+        );
+
+        this.subscriptions.push(
+            this.placeboFormn.get('name').valueChanges.subscribe(value => {
+                if (value && value.length > 0) {
+                    this.placeboFormn.get('administratingMode').enable();
+                    this.placeboFormn.get('dose').enable();
+                } else {
+                    this.placeboFormn.get('administratingMode').disable();
+                    this.placeboFormn.get('administratingMode').reset();
+                    this.placeboFormn.get('dose').disable();
+                    this.placeboFormn.get('dose').reset();
+                }
+
+            })
+        );
     }
 
     loadPhasesList() {
@@ -263,7 +311,9 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         this.farmFormsRfPr =
             this.farmFormsInputsRfPr.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) { return true; }
+                    if (result && result.length > 2) {
+                        return true;
+                    }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -283,7 +333,9 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         this.manufacturersRfPr =
             this.manufacturerInputsRfPr.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) { return true; }
+                    if (result && result.length > 2) {
+                        return true;
+                    }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -326,7 +378,9 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         this.farmForms =
             this.farmFormsInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) { return true; }
+                    if (result && result.length > 2) {
+                        return true;
+                    }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -358,7 +412,9 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         this.manufacturers =
             this.manufacturerInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) { return true; }
+                    if (result && result.length > 2) {
+                        return true;
+                    }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -413,7 +469,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
                             this.evaluateClinicalTrailForm.get('initiator').setValue(data.initiator);
                             this.evaluateClinicalTrailForm.get('requestHistories').setValue(data.requestHistories);
                             this.evaluateClinicalTrailForm.get('ctPaymentOrdersEntities').setValue(data.ctPaymentOrdersEntities);
-
+                            this.evaluateClinicalTrailForm.get('registrationRequestMandatedContacts').setValue(data.registrationRequestMandatedContacts);
 
                             this.evaluateClinicalTrailForm.get('clinicalTrails').setValue(data.clinicalTrails);
 
@@ -429,7 +485,6 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
                                 data.clinicalTrails.provenance.id != 4 ?
                                     this.evaluateClinicalTrailForm.get('clinicalTrails.trialPopInternat').disable() :
                                     this.evaluateClinicalTrailForm.get('clinicalTrails.trialPopInternat').enable();
-                                console.log('data.clinicalTrails.provenance.id', data.clinicalTrails.provenance.id);
                             }
 
 
@@ -441,16 +496,19 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
                             if (data.clinicalTrails.referenceProduct !== null) {
                                 this.referenceProductFormn.setValue(data.clinicalTrails.referenceProduct);
                                 this.refProdActiveSubstances = data.clinicalTrails.referenceProduct.activeSubstances;
+                            } else {
+                                this.referenceProductFormn.get('name').setValue('');
                             }
 
                             if (data.clinicalTrails.placebo !== null) {
                                 this.placeboFormn.setValue(data.clinicalTrails.placebo);
+                            } else {
+                                this.placeboFormn.get('name').setValue('');
                             }
 
                             if (data.clinicalTrails.medicalInstitutions !== null) {
                                 this.mediacalInstitutionsList = data.clinicalTrails.medicalInstitutions;
                             }
-
 
                             this.docs = data.documents;
                             this.docs.forEach(doc => doc.isOld = true);
@@ -517,6 +575,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
                 this.allMediacalInstitutionsList.splice(intdexToDelete, 1);
                 this.allMediacalInstitutionsList = this.allMediacalInstitutionsList.splice(0);
                 this.addMediacalInstitutionForm.get('medicalInstitution').setValue('');
+                this.addMediacalInstitutionForm.get('medicalInstitution').markAsUntouched();
             })
         );
     }
@@ -641,23 +700,45 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
 
     }
 
+    dysplayInvalidControl(form: FormGroup) {
+        const ctFormControls = form['controls'];
+        for (const control in ctFormControls) {
+            ctFormControls[control].markAsTouched();
+            ctFormControls[control].markAsDirty();
+        }
+    }
+
     onSubmit() {
         const formModel = this.evaluateClinicalTrailForm.getRawValue();
 
-        if (this.evaluateClinicalTrailForm.invalid || this.paymentTotal < 0) {
-            alert('Invalid Form1!');
-            console.log('Not submitted data', formModel);
+        //if (this.evaluateClinicalTrailForm.invalid || this.paymentTotal < 0) {
+        if (this.evaluateClinicalTrailForm.invalid) {
+            this.dysplayInvalidControl(this.evaluateClinicalTrailForm.get('clinicalTrails') as FormGroup);
+            this.errorHandlerService.showError('Datele studiului clinic contine date invalide');
             return;
         }
 
-        if (this.medicamentForm.invalid || this.referenceProductFormn.invalid) {
-            console.log('this.medicamentForm', this.medicamentForm);
-            console.log('this.referenceProductFormn', this.referenceProductFormn);
-            alert('Invalid Form2!');
+        if (this.medicamentForm.invalid) {
+            this.dysplayInvalidControl(this.medicamentForm);
+            this.errorHandlerService.showError('Medicamentul de investigat contine date invalide');
             return;
         }
-        console.log('this.medicamentForm', this.medicamentForm);
-        console.log('this.referenceProductFormn', this.referenceProductFormn);
+
+        if (this.referenceProductFormn.invalid) {
+            this.dysplayInvalidControl(this.referenceProductFormn);
+            this.errorHandlerService.showError('Produsul de referinta contine date invalide');
+            return;
+        }
+
+        if (this.mediacalInstitutionsList.length == 0) {
+            this.dysplayInvalidControl(this.addMediacalInstitutionForm);
+            this.errorHandlerService.showError('Unitatea medicală pentru desfășurarea studiului nu a fost aleasa');
+            return;
+        }
+
+        // return;
+        // console.log('this.medicamentForm', this.medicamentForm);
+        // console.log('this.referenceProductFormn', this.referenceProductFormn);
 
         this.loadingService.show();
         formModel.documents = this.docs;

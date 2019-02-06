@@ -187,7 +187,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
             if (val) {
                 this.subscriptions.push(
                     this.medicamentService.getMedicamentById(val.id).subscribe(data => {
-                            
+
                             this.rForm.get('pharmaceuticalFormType').setValue(data.pharmaceuticalForm.type);
                             this.rForm.get('forma').setValue(data.pharmaceuticalForm);
                             this.rForm.get('ambalajPrimar').setValue(data.primarePackage);
@@ -216,9 +216,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
                         error => this.rForm.get('forma').setValue(null)
                     )
                 );
-            }
-            else
-            {
+            } else {
                 this.rForm.get('forma').setValue(null);
                 this.pharmaceuticalForms = [];
             }
@@ -226,16 +224,13 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
 
         this.rForm.get('registeredMedicament').valueChanges.subscribe(val => {
             if (val) {
-                if (val === '1')
-                {
+                if (val === '1') {
                     this.rForm.get('medicaments').setValidators(Validators.required);
                     this.rForm.get('medicaments').updateValueAndValidity();
 
                     this.rForm.get('notRegMedName').setValidators(null);
                     this.rForm.get('notRegMedName').updateValueAndValidity();
-                }
-                else if (val === '0')
-                {
+                } else if (val === '0') {
                     this.rForm.get('medicaments').setValidators(null);
                     this.rForm.get('medicaments').updateValueAndValidity();
 
@@ -257,8 +252,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
             return;
         }
 
-        if (!this.medicamentsToDestroy || this.medicamentsToDestroy.length == 0)
-        {
+        if (!this.medicamentsToDestroy || this.medicamentsToDestroy.length == 0) {
             this.errorHandlerService.showError('Nu a fost adaugat nici un medicament pentru disturgere.');
             return;
         }
@@ -324,7 +318,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
             return;
         }
 
-        if (this.rForm.get('registeredMedicament').value === '1'){
+        if (this.rForm.get('registeredMedicament').value === '1') {
             const id = this.rForm.get('medicaments').value.id;
 
             //Do not register the same medicament id
@@ -353,9 +347,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
                     primaryPackage : this.rForm.get('ambalajPrimar').value,
                 }
             );
-        }
-
-        else if (this.rForm.get('registeredMedicament').value === '0'){
+        } else if (this.rForm.get('registeredMedicament').value === '0') {
             this.medicamentsToDestroy.push(
                 {
                     medicamentName: this.rForm.get('notRegMedName').value,

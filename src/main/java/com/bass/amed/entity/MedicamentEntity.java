@@ -138,7 +138,7 @@ public class MedicamentEntity
     @Column(name = "unlimited_registration_period", nullable = true)
     private Boolean unlimitedRegistrationPeriod;
 
-    public void assign(MedicamentHistoryEntity entity,MedicamentDivisionHistoryEntity divisionHistoryEntity)
+    public void assign(MedicamentHistoryEntity entity, MedicamentDivisionHistoryEntity divisionHistoryEntity)
     {
         this.commercialName = entity.getCommercialNameTo();
         this.dose = entity.getDoseTo();
@@ -159,8 +159,8 @@ public class MedicamentEntity
         this.volumeQuantityMeasurement = divisionHistoryEntity.getVolumeQuantityMeasurement();
         this.termsOfValidity = entity.getTermsOfValidityTo();
         this.dose = entity.getDoseTo();
-        this.originale=entity.getOriginaleTo();
-        this.orphan=entity.getOrphanTo();
+        this.originale = entity.getOriginaleTo();
+        this.orphan = entity.getOrphanTo();
         this.activeSubstances.clear();
         for (MedicamentActiveSubstancesHistoryEntity medicamentActiveSubstancesHistoryEntity : entity.getActiveSubstancesHistory())
         {
@@ -190,4 +190,51 @@ public class MedicamentEntity
             this.manufactures.add(medicamentManufactureEntity);
         }
     }
+
+    public void assign(MedicamentEntity obj)
+    {
+        this.id = obj.getId();
+        this.name = obj.getName();
+        this.commercialName = obj.getCommercialName();
+        this.code = obj.getCode();
+        this.productCode = obj.getProductCode();
+        this.customsCode = obj.getCustomsCode();
+        this.barcode = obj.getBarcode();
+        this.internationalMedicamentName = obj.getInternationalMedicamentName();
+        this.countryId = obj.getCountryId();
+        this.manufactures = obj.getManufactures();
+        this.registrationNumber = obj.getRegistrationNumber();
+        this.registrationDate = obj.getRegistrationDate();
+        this.expirationDate = obj.getExpirationDate();
+        this.dose = obj.getDose();
+        this.pharmaceuticalForm = obj.getPharmaceuticalForm();
+        this.authorizationHolder = obj.getAuthorizationHolder();
+        this.prescription = obj.getPrescription();
+        this.serialNr = obj.getSerialNr();
+        this.primarePackage = obj.getPrimarePackage();
+        this.administeringMode = obj.getAdministeringMode();
+        this.status = obj.getStatus();
+        this.originale = obj.getOriginale();
+        this.vitale = obj.getVitale();
+        this.esentiale = obj.getEsentiale();
+        this.nonesentiale = obj.getNonesentiale();
+        this.volume = obj.getVolume();
+        this.volumeQuantityMeasurement = obj.getVolumeQuantityMeasurement();
+        this.termsOfValidity = obj.getTermsOfValidity();
+        this.activeSubstances = obj.getActiveSubstances();
+        this.auxSubstances = obj.getAuxSubstances();
+        this.instructions = obj.getInstructions();
+        this.medicamentHistory = obj.getMedicamentHistory();
+        this.experts = obj.getExperts();
+        this.atcCode = obj.getAtcCode();
+        this.division = obj.getDivision();
+        this.requestId = obj.getRequestId();
+        this.drugCheckDecisionsId = obj.getDrugCheckDecisionsId();
+        this.approved = obj.getApproved();
+        this.oaNumber = obj.getOaNumber();
+        this.medicamentTypes = obj.getMedicamentTypes();
+        this.orphan = obj.getOrphan();
+        this.unlimitedRegistrationPeriod = obj.getUnlimitedRegistrationPeriod();
+    }
+
 }

@@ -36,7 +36,7 @@ export class ClasifyEconomicsAgencyComponent implements OnInit, OnDestroy {
             && (data.name && data.name.toLowerCase().startsWith(f.name))
             && (data.address && data.address.toLowerCase().startsWith(f.address))
             && (data.serialNr && data.serialNr.toLowerCase().startsWith(f.serialNr))
-            && (data.nr && data.nr.toLowerCase().startsWith(f.nr))
+            && (data.nr && data.nr.toLowerCase().startsWith(f.nr));
         };
     }
 
@@ -54,11 +54,11 @@ export class ClasifyEconomicsAgencyComponent implements OnInit, OnDestroy {
             this.loadingService.hide();
             this.dataSource.data = data;
             this.dataSource.data.forEach((r: any) => {
-                r.idno = r.idno ? r.idno: '';
-                r.name = r.name ? r.name: '';
-                r.address = r.address ? r.address: '';
-                r.serialNr = r.serialNr ? r.serialNr: '';
-                r.nr = r.nr ? r.nr: '';
+                r.idno = r.idno ? r.idno : '';
+                r.name = r.name ? r.name : '';
+                r.address = r.address ? r.address : '';
+                r.serialNr = r.serialNr ? r.serialNr : '';
+                r.nr = r.nr ? r.nr : '';
             });
             console.log(data);
 

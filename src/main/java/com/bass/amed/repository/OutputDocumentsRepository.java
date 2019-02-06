@@ -2,7 +2,9 @@ package com.bass.amed.repository;
 
 import com.bass.amed.entity.OutputDocumentsEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -34,4 +36,8 @@ public interface OutputDocumentsRepository extends JpaRepository<OutputDocuments
 	
 	@Query("SELECT p FROM OutputDocumentsEntity p WHERE p.docType.category = 'LN'")
     List<OutputDocumentsEntity> findAnihMed();
+
+    @Modifying
+    @Query("UPDATE OutputDocumentsEntity p SET p.jobScheduled = :scheduled WHERE p.id = :id")
+    void setJobScheduled(@Param("id") Integer id, @Param("scheduled") Boolean scheduled);
 }

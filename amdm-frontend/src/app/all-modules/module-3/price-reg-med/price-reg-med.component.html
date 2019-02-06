@@ -141,7 +141,6 @@
                 </div>
             </div>
         </div>
-    </form>
 
    <!--------------------------------------------------------------------------------->
 
@@ -163,13 +162,14 @@
             </div>
 
             <!--Contents for {{tab}} tab-->
-                <app-one-med-currencyCode [countries]="countries"
+                <app-one-med-price [medIndex]="index"
+                                   [countries]="countries"
                                    [currencies]="currencies"
                                    [priceTypes]="priceTypes"
+                                   [baseRequestNumber]="rForm.get('requestNumber').value + '/' + (index + 1)"
                                    [formSubmitted]="formSubmitted"
                                    (medicamentChange)="onMedChange($event)"
-                                   [(priceDTO)]="requests[index]"
-                                   [medIndex]="index"></app-one-med-currencyCode>
+                                   [(priceDTO)]="requests[index]"></app-one-med-price>
             </div>
         </mat-tab>
     </mat-tab-group>
@@ -179,4 +179,5 @@
                 (click)="nextStep()">Salvează
         </button>
     </div>
+    </form>
 </div>

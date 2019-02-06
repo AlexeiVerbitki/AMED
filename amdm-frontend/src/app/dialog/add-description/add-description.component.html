@@ -1,0 +1,24 @@
+<div>
+  <form [formGroup]="eForm">
+    <h3 class="text-center my-3 font-weight-bold">{{title}}</h3>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="md-form">
+          <input id="docNr" mdbInputDirective class="form-control" formControlName="description" type="text">
+          <label for="docNr">{{name}}<span class="text-danger">*</span></label>
+        </div>
+        <div *ngIf="formSubmitted && eForm.get('description').invalid">
+          <small class="text-muted"><strong class="text-danger">{{errMsg}}</strong></small>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="text-center">
+  <div mat-dialog-actions>
+    <div class="w-100">
+      <button class="btn btn-dark-green-color btn-sm waves-light" (click)="ok()">Ok</button>
+      <button class="btn btn-danger btn-sm waves-light" (click)="cancel()">Anulare</button>
+    </div>
+  </div>
+</div>

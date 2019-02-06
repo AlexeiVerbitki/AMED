@@ -617,7 +617,7 @@
                         <input matInput [matDatepicker]="picker2" placeholder="Data expirarii"
                                formControlName="expirationDate">
                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                        <mat-datepicker touchUi #picker2></mat-datepicker>
+                        <mat-datepicker touchUi #picker2 disabled="false"></mat-datepicker>
                     </mat-form-field>
                     <div *ngIf="formSubmitted && needSelectPrice && PriceRegForm.get('evaluation.expirationDate') == undefined">
                         <small class="text-muted"><strong class="text-danger">Indicați data expirării prețului</strong>

@@ -7,7 +7,6 @@ import {AppComponent} from './app.component';
 import {NavbarComponent} from './navbar/navbar.component';
 
 import {AppRoutingModule} from './app-routing.module';
-import {HomepageComponent} from './homepage/homepage.component';
 import {NotFoundComponent} from './not-found/not-found.component';
 
 import {LoginComponent} from './login/login.component';
@@ -37,7 +36,6 @@ import {NumberOnlyDirective} from './shared/directive/number-only.directive';
 import {RequestAdditionalDataDialogComponent} from './dialog/request-additional-data-dialog/request-additional-data-dialog.component';
 import {MatDialogModule, MatTreeModule} from '@angular/material';
 import {ActiveSubstanceDialogComponent} from './dialog/active-substance-dialog/active-substance-dialog.component';
-import {HomepageModalComponent} from './homepage/homepage-modal/homepage-modal.component';
 import {MedicamentDetailsDialogComponent} from './dialog/medicament-details-dialog/medicament-details-dialog.component';
 import {MedicamentHistoryDialogComponent} from './dialog/medicament-history-dialog/medicament-history-dialog.component';
 import {MedicamentModificationsDialogComponent} from './dialog/medicament-modifications-dialog/medicament-modifications-dialog.component';
@@ -51,6 +49,8 @@ import {AddExpertComponent} from './dialog/add-expert/add-expert.component';
 import {registerLocaleData} from '@angular/common';
 import localeRo from '@angular/common/locales/ro-MD';
 import {SelectVariationTypeComponent} from './dialog/select-variation-type/select-variation-type.component';
+import {HomepageModule} from './homepage/homepage.module';
+import {NomenclatureModule} from './all-modules/module-6/nomenclature.module';
 
 registerLocaleData(localeRo, 'ro-MD');
 
@@ -74,7 +74,6 @@ const interceptors = [{
     declarations: [
         AppComponent,
         NavbarComponent,
-        HomepageComponent,
         NotFoundComponent,
         LoginComponent,
         SidebarComponent,
@@ -97,7 +96,6 @@ const interceptors = [{
         SelectVariationTypeComponent,
         AddExpertComponent,
         AuxiliarySubstanceDialogComponent,
-        HomepageModalComponent,
         MedicamentDetailsDialogComponent,
         MedicamentHistoryDialogComponent,
         MedicamentModificationsDialogComponent,
@@ -111,6 +109,8 @@ const interceptors = [{
         MatDialogModule,
         MatTreeModule,
         ReactiveFormsModule,
+        HomepageModule,
+        NomenclatureModule,
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
         PipeModule.forRoot()
@@ -118,7 +118,7 @@ const interceptors = [{
     schemas: [],
     entryComponents: [
         DivisionSelectDialogComponent, AuxiliarySubstanceDialogComponent, ConfirmationDialogComponent, MedicamentHistoryDialogComponent,
-        MedicamentModificationsDialogComponent, RequestAdditionalDataDialogComponent, ActiveSubstanceDialogComponent, HomepageModalComponent, MedicamentDetailsDialogComponent,
+        MedicamentModificationsDialogComponent, RequestAdditionalDataDialogComponent, ActiveSubstanceDialogComponent,  MedicamentDetailsDialogComponent,
         AddManufactureComponent, AddDivisionComponent, AddExpertComponent, SelectVariationTypeComponent
     ],
     providers: [AuthService, AdministrationService, SuccessOrErrorHandlerService, NavbarTitleService, interceptors,  { provide: LOCALE_ID, useValue: 'ro-MD' }

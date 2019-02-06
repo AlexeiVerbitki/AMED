@@ -32,66 +32,78 @@ import java.util.Locale;
 
 @Slf4j
 @Service
-public class XchangeUpdateService {
+public class XchangeUpdateService
+{
     SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
     @Autowired
     private CurrencyHistoryRepository currenciesHistoryRepository;
     @Autowired
-    private CurrencyRepository currencyRepository;
-    private Unmarshaller unmarshaller;
-    private Date today = new Date();
-    private Date lastUpdatedDate;
+    private CurrencyRepository        currencyRepository;
+    private Unmarshaller              unmarshaller;
+    private Date                      today = new Date();
+    private Date                      lastUpdatedDate;
 
 
-    public void execute() throws JAXBException, MalformedURLException  {
-        System.out.println("\nBegin xchange updating ! ! ! ! ! !\n");
+    public void execute() throws JAXBException, MalformedURLException
+    {
 
+        LOGGER.info("Start updating currency exchange rate");
         lastUpdatedDate = currenciesHistoryRepository.findLastInsertedCurrencyDate();
 
-        if (lastUpdatedDate == null) {
+        if (lastUpdatedDate == null)
+        {
             lastUpdatedDate = new Date();
             updateCurrencies();
-        } else if (DateUtils.isSameDay(lastUpdatedDate, today)) {
-            System.out.println("Currencies for today are already in DB");
+        }
+        else if (DateUtils.isSameDay(lastUpdatedDate, today))
+        {
             return;
-        } else if (lastUpdatedDate.before(today)) {
+        }
+        else if (lastUpdatedDate.before(today))
+        {
             updateCurrencies();
         }
     }
 
-    public void updateCurrencies() throws JAXBException, MalformedURLException {
-        do {
+    public void updateCurrencies() throws JAXBException, MalformedURLException
+    {
+        do
+        {
             ValCurs currencies = getTodayXchangeRates();
 
-            if (currencies != null) {
+            if (currencies != null)
+            {
                 List<NmCurrenciesHistoryEntity> nmCurrencies = valCursToNm(currencies);
                 currenciesHistoryRepository.saveAll(nmCurrencies);
             }
 
             DateUtils.addDays(lastUpdatedDate, 1);
-        } while (!today.after(lastUpdatedDate));
+        }
+        while (!today.after(lastUpdatedDate));
     }
 
-    private ValCurs getTodayXchangeRates() throws JAXBException, MalformedURLException {
-            JAXBContext jc = JAXBContext.newInstance(ValCurs.class);
-            unmarshaller = jc.createUnmarshaller();
+    private ValCurs getTodayXchangeRates() throws JAXBException, MalformedURLException
+    {
+        JAXBContext jc = JAXBContext.newInstance(ValCurs.class);
+        unmarshaller = jc.createUnmarshaller();
 
-            String todayFormatingDate = sdf.format(today);
+        String todayFormatingDate = sdf.format(today);
 
-            String url = "https://www.bnm.md/ro/official_exchange_rates?date=" + todayFormatingDate;
+        String url = "https://www.bnm.md/ro/official_exchange_rates?date=" + todayFormatingDate;
 
-            File file = new File("C:\\Users\\gheorghe.guzun\\Desktop\\official_exchange_rates.xml");
+        File file = new File("C:\\Users\\gheorghe.guzun\\Desktop\\official_exchange_rates.xml");
 
-            ValCurs currencies = (ValCurs) unmarshaller.unmarshal(new URL(url));
-            return currencies;
+        ValCurs currencies = (ValCurs) unmarshaller.unmarshal(new URL(url));
+        return currencies;
     }
 
     @Transactional
-    List<NmCurrenciesHistoryEntity> valCursToNm(ValCurs valCurrencies) {
+    List<NmCurrenciesHistoryEntity> valCursToNm(ValCurs valCurrencies)
+    {
         List<NmCurrenciesHistoryEntity> nmCurrencies = new ArrayList<>(valCurrencies.getValutes().size());
 
         valCurrencies.getValutes().forEach(c -> {
-            NmCurrenciesEntity currency = currencyRepository.findByCode(c.getNumCode());
+            NmCurrenciesEntity        currency        = currencyRepository.findByCode(c.getNumCode());
             NmCurrenciesHistoryEntity currencyHistory = new NmCurrenciesHistoryEntity();
             currencyHistory.setCurrency(currency);
             currencyHistory.setMultiplicity(c.getNominal());
@@ -105,49 +117,67 @@ public class XchangeUpdateService {
 
 
     // oldCurrencies.xls contains currencies exchange from BNM: https://www.bnm.md/bdi/pages/reports/dovre/DOVRE7.xhtml
-    public void insertOldBNMCurrencyValuesFromXLS() {
-        try {
-            File file = new File("C:\\Users\\gheorghe.guzun\\Downloads\\oldCurrencies.xls");
-            POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(file));
-            HSSFWorkbook wb = new HSSFWorkbook(fs);
-            HSSFSheet sheet = wb.getSheetAt(0);
-            HSSFRow row;
+    public void insertOldBNMCurrencyValuesFromXLS()
+    {
+        try
+        {
+            File            file  = new File("C:\\Users\\gheorghe.guzun\\Downloads\\oldCurrencies.xls");
+            POIFSFileSystem fs    = new POIFSFileSystem(new FileInputStream(file));
+            HSSFWorkbook    wb    = new HSSFWorkbook(fs);
+            HSSFSheet       sheet = wb.getSheetAt(0);
+            HSSFRow         row;
 
             int rows;
             rows = sheet.getPhysicalNumberOfRows();
 
             row = sheet.getRow(1);
-            if (row == null) return;
+            if (row == null)
+            {
+                return;
+            }
 
             int collsQuantity = row.getPhysicalNumberOfCells();
-            if (collsQuantity < 2) return;
+            if (collsQuantity < 2)
+            {
+                return;
+            }
             List<NmCurrenciesHistoryEntity> currencies = new ArrayList<>(collsQuantity * rows);
 
-            for (int col = 1; col < collsQuantity; col++) {
+            for (int col = 1; col < collsQuantity; col++)
+            {
                 row = sheet.getRow(2);
                 String code = row.getCell(col).getStringCellValue();
                 row = sheet.getRow(4);
-                double rate = row.getCell(col).getNumericCellValue();
+                double             rate     = row.getCell(col).getNumericCellValue();
                 NmCurrenciesEntity currency = currencyRepository.findByCode(code);
                 if (currency == null)
+                {
                     continue;
+                }
 
-                for (int r = 5; r <= rows; r++) {
+                for (int r = 5; r <= rows; r++)
+                {
                     row = sheet.getRow(r);
                     if (row == null || row.getPhysicalNumberOfCells() < 2)
+                    {
                         break;
+                    }
                     double value = 0;
-                    try {
+                    try
+                    {
                         DataFormatter formatter = new DataFormatter();
-                        String str = formatter.formatCellValue(row.getCell(col));
-                        NumberFormat nf = NumberFormat.getInstance(Locale.FRENCH);
+                        String        str       = formatter.formatCellValue(row.getCell(col));
+                        NumberFormat  nf        = NumberFormat.getInstance(Locale.FRENCH);
                         value = nf.parse(str).doubleValue();
-//                        value = Double.parseDouble(str );
-//                        value = row.getCell(col).getNumericCellValue();
-                    } catch (IllegalStateException e) {
+                        //                        value = Double.parseDouble(str );
+                        //                        value = row.getCell(col).getNumericCellValue();
+                    }
+                    catch (IllegalStateException e)
+                    {
                         continue;
                     }
-                    if (value == 0.0) {
+                    if (value == 0.0)
+                    {
                         continue;
                     }
                     Date date = row.getCell(0).getDateCellValue();
@@ -166,7 +196,9 @@ public class XchangeUpdateService {
             currenciesHistoryRepository.saveAll(currencies);
             System.out.println("end currencies saving");
 
-        } catch (Exception ioe) {
+        }
+        catch (Exception ioe)
+        {
             ioe.printStackTrace();
         }
     }

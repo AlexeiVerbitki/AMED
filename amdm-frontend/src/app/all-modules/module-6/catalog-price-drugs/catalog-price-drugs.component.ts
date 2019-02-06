@@ -4,8 +4,8 @@ import {MatDialog, MatPaginator, MatTableDataSource} from '@angular/material';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {NomenclatorService} from '../../../shared/service/nomenclator.service';
 import {LoaderService} from '../../../shared/service/loader.service';
-import {DatePipe} from "@angular/common";
-import {CatalogPriceModalComponent} from "../catalog-price-modal/catalog-price-modal.component";
+import {DatePipe} from '@angular/common';
+import {CatalogPriceModalComponent} from '../catalog-price-modal/catalog-price-modal.component';
 
 @Component({
     selector: 'app-catalog-price-drugs', templateUrl: './catalog-price-drugs.component.html', styleUrls: ['../nomenclator.component.css']
@@ -19,7 +19,7 @@ export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
 
     datePipe = new DatePipe('en-US');
 
-    columnsToDisplay = ['btnDetalii' ,'codMedicament', 'codVamal', 'denumireComerciala', 'formaFarmaceutica', 'dozaConcentratia', 'volum', 'divizarea', 'denumireaComunaInternationala', 'codulATC', 'pretDeProducatorMDL', 'pretDeProducatorValuta', 'nrOrdinuluiDeAprobareAPretului'];
+    columnsToDisplay = ['btnDetalii' , 'codMedicament', 'codVamal', 'denumireComerciala', 'formaFarmaceutica', 'dozaConcentratia', 'volum', 'divizarea', 'denumireaComunaInternationala', 'codulATC', 'pretDeProducatorMDL', 'pretDeProducatorValuta', 'nrOrdinuluiDeAprobareAPretului'];
 
 
     row = {
@@ -82,7 +82,7 @@ export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
                 r.price = r.price ? r.price : '';
                 r.currency = r.currency ? r.currency : '';
                 r.orderNr = r.orderNr ? r.orderNr : '';
-                r.orderApprovDate = r.orderApprovDate ? r.orderApprovDate : ''; 
+                r.orderApprovDate = r.orderApprovDate ? r.orderApprovDate : '';
             });
 
             console.log(data);
@@ -116,7 +116,7 @@ export class CatalogPriceDrugsComponent implements OnInit, OnDestroy {
                 && data.price.toString().toLowerCase().startsWith(f.price)
                 && data.currency.toLowerCase().startsWith(f.currency)
                 && data.orderNr.toLowerCase().startsWith(f.orderNr)
-                && (data.orderApprovDate == '' || this.datePipe.transform(data.orderApprovDate, 'dd/MM/yyyy').startsWith(f.orderApprovDate))
+                && (data.orderApprovDate == '' || this.datePipe.transform(data.orderApprovDate, 'dd/MM/yyyy').startsWith(f.orderApprovDate));
         };
     }
 

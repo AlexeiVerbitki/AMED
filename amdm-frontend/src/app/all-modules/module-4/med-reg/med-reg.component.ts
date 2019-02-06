@@ -483,23 +483,23 @@ export class MedRegComponent implements OnInit {
                 }
             }));
 
-            this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').valueChanges.subscribe(val => {
-                //========================================
-
-                if (val && this.importData.importAuthorizationEntity.medType === 1) {
-                    if (this.userPrice > this.medicamentPrice.price) {
-                        this.invalidPrice = true;
-
-                        console.log('invalidPrice', this.invalidPrice);
-                    } else {
-                        this.invalidPrice = false;
-                        console.log('invalidPrice', this.invalidPrice);
-                    }
-                } else if (val) {
-                    this.invalidPrice = false;
-                }
-
-            }));
+            // this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').valueChanges.subscribe(val => {
+            //     //========================================
+            //
+            //     if (val && this.importData.importAuthorizationEntity.medType === 1) {
+            //         if (this.userPrice > this.medicamentPrice.price) {
+            //             this.invalidPrice = true;
+            //
+            //             console.log('invalidPrice', this.invalidPrice);
+            //         } else {
+            //             this.invalidPrice = false;
+            //             console.log('invalidPrice', this.invalidPrice);
+            //         }
+            //     } else if (val) {
+            //         this.invalidPrice = false;
+            //     }
+            //
+            // }));
         }
     }
 

@@ -229,7 +229,7 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
             return;
         }
 
-        if (!this.kForm.get('docLPAttached') || !this.kForm.get('docLPAttached').value){
+        if (!this.kForm.get('docLPAttached') || !this.kForm.get('docLPAttached').value) {
             this.errorHandlerService.showError('Cererea nu a fost semnata din lista medicamntelor pentru nimicire.');
             return;
         }

@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {Subscription} from 'rxjs';
 import {RequestService} from '../../../shared/service/request.service';
@@ -14,16 +14,16 @@ import {SelectIssueDateDialogComponent} from '../../../dialog/select-issue-date-
     templateUrl: './dd-list.component.html',
     styleUrls: ['./dd-list.component.css']
 })
-export class DdListComponent implements OnInit {
+export class DdListComponent implements OnInit, AfterViewInit {
 
-    displayedColumns: any[] = ['number', 'date','dateOfIssue', 'name', 'status', 'actions'];
+    displayedColumns: any[] = ['number', 'date', 'dateOfIssue', 'name', 'status', 'actions'];
     dataSource = new MatTableDataSource<any>();
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild('incarcaFisier')
     incarcaFisierVariable: ElementRef;
-    private subscriptions: Subscription[] = [];
     @Output() ddListModified = new EventEmitter();
+    private subscriptions: Subscription[] = [];
 
     constructor(private requestService: RequestService,
                 private loadingService: LoaderService,
@@ -44,7 +44,7 @@ export class DdListComponent implements OnInit {
                     this.dataSource.data = data;
                     this.loadingService.hide();
                 },
-                error =>  this.loadingService.hide()
+                error => this.loadingService.hide()
             )
         );
     }
@@ -70,9 +70,9 @@ export class DdListComponent implements OnInit {
 
         dialogConfig2.width = '400px';
 
-        dialogConfig2.data = {document : element,type : 'DD'};
+        dialogConfig2.data = {document: element, type: 'DD'};
 
-        let dialogRef = this.dialog.open(SelectIssueDateDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(SelectIssueDateDialogComponent, dialogConfig2);
         dialogRef.afterClosed().subscribe(result => {
             this.ddListModified.emit(true);
             this.loadDDs();

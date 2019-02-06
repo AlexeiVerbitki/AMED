@@ -1,12 +1,11 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {DocumentService} from '../../../shared/service/document.service';
 import {RequestService} from '../../../shared/service/request.service';
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
-import {SelectIssueDateDialogComponent} from "../../../dialog/select-issue-date-dialog/select-issue-date-dialog.component";
-import {SelectDocumentNumberComponent} from "../../../dialog/select-document-number/select-document-number.component";
+import {SelectDocumentNumberComponent} from '../../../dialog/select-document-number/select-document-number.component';
 
 @Component({
     selector: 'app-requests-dd',
@@ -53,7 +52,7 @@ export class RequestsDdComponent implements OnInit {
 
         dialogConfig2.width = '400px';
 
-        let dialogRef = this.dialog.open(SelectDocumentNumberComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(SelectDocumentNumberComponent, dialogConfig2);
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.response) {
                 this.loadingService.show();

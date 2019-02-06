@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators} from '@angular/forms';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {Medicament} from '../../../models/medicament';
 import {MatDialog} from '@angular/material';
@@ -15,41 +15,29 @@ import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.c
     selector: 'app-one-med-price',
     templateUrl: './one-med-price.component.html',
     styleUrls: ['./one-med-price.component.css'],
-    providers: [PriceService]
+    providers: [PriceService, {provide: NG_VALUE_ACCESSOR, useExisting: OneMedPriceComponent, multi: true}]
 })
-export class OneMedPriceComponent implements OnInit, OnDestroy {
+export class OneMedPriceComponent implements OnInit, OnDestroy { //ControlValueAccessor {
     PriceRegForm: FormGroup;
-    private subscriptions: Subscription[] = [];
-    private getMedSubscr: Subscription;
-
-
     companyMedicaments: Observable<any[]>;
     medInputs = new Subject<string>();
     medLoading = false;
-
     @Input()
     priceDTO: any = {documents: []};
     @Output()
     public priceDTOChange: EventEmitter<any> = new EventEmitter();
-
     @Output()
     public medicamentChange: EventEmitter<any> = new EventEmitter();
-
     @Input()
     public formSubmitted: boolean;
-
     @Input()
     public medIndex: number;
-
     @Input()
     countries: Country[] = [];
-
     @Input()
     currencies: Currency[] = [];
-
     @Input()
     priceTypes: any[];
-
     medCode = '';
     internationalName = '';
     termsOfValidity: number;
@@ -57,14 +45,15 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
     division = '';
     expirationDate = '';
     volumeQuantityMeasurement = '';
-    manufacture = '';
+    manufacture: any;
     originale: boolean;
     volumeProp: number;
-
+    private subscriptions: Subscription[] = [];
+    private getMedSubscr: Subscription;
 
     constructor(private fb: FormBuilder,
                 public dialog: MatDialog,
-                private priceService: PriceService, ) {
+                private priceService: PriceService) {
 
 
         this.PriceRegForm = fb.group({
@@ -75,12 +64,19 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
         });
     }
 
+    @Input()
+    set baseRequestNumber(value) {
+        this.PriceRegForm.get('requestNumber').setValue(value);
+    }
+
     ngOnInit() {
 
         this.companyMedicaments =
             this.medInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) { return true; }
+                    if (result && result.length > 2) {
+                        return true;
+                    }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -96,13 +92,13 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
                 )
             );
 
-        this.generateRequestNumber();
+        // this.generateRequestNumber();
     }
 
     generateRequestNumber() {
         this.subscriptions.push(
             this.priceService.generateDocNumber().subscribe(generatedNumber => {
-                    this.PriceRegForm.get('requestNumber').setValue(generatedNumber);
+                    this.PriceRegForm.get('requestNumber').setValue(this.baseRequestNumber + '/' + generatedNumber[0]);
                 },
                 error => {
                     console.log(error);
@@ -154,7 +150,9 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
 
     checkMedExpiration(med: Medicament) {
 
-        if (med.expirationDate == undefined) { return; }
+        if (med.expirationDate == undefined) {
+            return;
+        }
 
         const expDate: Date = new Date();
         expDate.setMonth(expDate.getMonth() + 2);
@@ -180,9 +178,34 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
         }
     }
 
+    getMedicaments($event) {
+        if (!$event) {
+            return;
+        }
+
+        const id = $event.id;
+        if (id !== undefined) {
+            if (this.getMedSubscr !== undefined) {
+                this.getMedSubscr.unsubscribe();
+            }
+
+            this.getMedSubscr = this.priceService.getMedicamentById(id).subscribe(
+                medicament => {
+                    this.onMedSelected(medicament);
+                }, error1 => console.log(error1.toString())
+            );
+        }
+    }
+
+    ngOnDestroy() {
+        this.subscriptions.forEach(value => value.unsubscribe());
+    }
+
     private onMedSelected(newMed: any) {
         console.log(newMed);
-        if (newMed == undefined) { return; }
+        if (newMed == undefined) {
+            return;
+        }
 
         this.onRemoveMed();
         this.checkMedExpiration(newMed);
@@ -222,7 +245,6 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
         this.medicamentChange.emit(newMed);
     }
 
-
     private onRemoveMed() {
         this.medCode = '';
         this.internationalName = '';
@@ -234,31 +256,5 @@ export class OneMedPriceComponent implements OnInit, OnDestroy {
         this.expirationDate = '';
         this.termsOfValidity = undefined;
         this.volumeProp = undefined;
-    }
-
-
-    private getMedicaments($event) {
-
-        if (!$event) {
-            return;
-        }
-
-        const id = $event.id;
-        if (id !== undefined) {
-            if (this.getMedSubscr !== undefined) {
-                this.getMedSubscr.unsubscribe();
-            }
-
-            this.getMedSubscr = this.priceService.getMedicamentById(id).subscribe(
-                medicament => {
-                    this.onMedSelected(medicament);
-                }, error1 => console.log(error1.toString())
-            );
-        }
-    }
-
-
-    ngOnDestroy() {
-        this.subscriptions.forEach(value => value.unsubscribe());
     }
 }

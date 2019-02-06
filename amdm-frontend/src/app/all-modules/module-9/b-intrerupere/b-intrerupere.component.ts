@@ -6,8 +6,8 @@ import {RequestService} from '../../../shared/service/request.service';
 import {Subscription} from 'rxjs/index';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {LoaderService} from '../../../shared/service/loader.service';
-import {TaskService} from "../../../shared/service/task.service";
-import {AdministrationService} from "../../../shared/service/administration.service";
+import {TaskService} from '../../../shared/service/task.service';
+import {AdministrationService} from '../../../shared/service/administration.service';
 
 @Component({
     selector: 'app-b-intrerupere',
@@ -17,7 +17,7 @@ import {AdministrationService} from "../../../shared/service/administration.serv
 export class BIntrerupereComponent implements OnInit, OnDestroy {
     private subscriptions: Subscription[] = [];
     cancelClinicalTrailAmendmentForm: FormGroup;
-    protected docs: Document[] = [];
+    docs: Document[] = [];
     docTypes: any[];
     outDocuments: any[] = [];
 

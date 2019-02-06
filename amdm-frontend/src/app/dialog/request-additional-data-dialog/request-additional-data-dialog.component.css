@@ -1,6 +1,11 @@
-.md-form-modified {
+.md-form {
     position: relative;
-    margin-top: 10px;
-    margin-bottom: 1.5rem;
+    margin-top: 14px !important;
+    margin-bottom: 5px !important;
 }
 
+.md-form-modified {
+    position: relative;
+    margin-top: 9px;
+    margin-bottom: 5px !important;
+}

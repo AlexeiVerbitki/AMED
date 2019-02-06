@@ -132,8 +132,7 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
 
         this.medicamentsToDestroy = data.medicamentAnnihilation.medicamentsMedicamentAnnihilationMeds;
         this.medicamentsToDestroy.forEach(mtd => {
-            if (mtd.medicamentId)
-            {
+            if (mtd.medicamentId) {
                 this.subscriptions.push(
                     this.medicamentService.getMedicamentById(mtd.medicamentId).subscribe(data => {
                             mtd.form = data.pharmaceuticalForm.description;

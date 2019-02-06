@@ -1,0 +1,266 @@
+<div class="container-fluid sky z-depth-2">
+	<form [formGroup]="eForm">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="md-form">
+					<input id="nrCererii" mdbInputDirective type="text" class="form-control" formControlName="requestNumber"
+					       [attr.disabled]="true">
+					<label for="nrCererii">Nr. cererii</label>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input matInput [matDatepicker]="picker" placeholder="Data" formControlName="startDateValue">
+						<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #picker></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+		</div>
+		<div class="my-3">
+			<app-document [documents]="documents" [nrCerere]="eForm.get('requestNumber').value" [dcTypes]="docTypes"
+			              (documentModified)="documentModified($event)"></app-document>
+		</div>
+		<div class="row">
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="compSolicitant" mdbInputDirective type="text" class="form-control" formControlName="companyValue" [attr.disabled]="true">
+					<label for="compSolicitant">Compania solicitant</label>
+				</div>
+			</div>
+			<div class="col-4">
+				<div class="md-form-modified">
+					<ng-select id="regType" name="regType" [items]="reqTypes" bindLabel="description"
+					           placeholder="Tip cerere" formControlName="type"
+					           required="true">
+					</ng-select>
+					<div *ngIf="formSubmitted && eForm.get('type').invalid">
+						<small class="text-muted"><strong class="text-danger">Tipul cererii trebuie selectat</strong></small>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-3">
+				<div class="md-form">
+					<input id="seria" mdbInputDirective type="text" class="form-control" formControlName="seria" [attr.disabled]="true">
+					<label for="seria">Seria Licentei</label>
+				</div>
+				<div *ngIf="companyLicenseNotFound === true">
+					<small class="text-muted"><strong class="text-danger">Nu a fost gasita nici o licenta pentru compania selectata</strong>
+					</small>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="md-form">
+					<input id="nrLic" mdbInputDirective type="text" class="form-control" formControlName="nrLic" [attr.disabled]="true">
+					<label for="nrLic">Numarul licentei</label>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input id="dataEliberariiLic" matInput [matDatepicker]="picker9"
+						       placeholder="Data eliberării licentei" formControlName="dataEliberariiLic">
+						<mat-datepicker-toggle matSuffix [for]="picker9"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #picker9></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+
+			<div class="col-md-3">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input id="dataExpirariiLic" matInput [matDatepicker]="picker10"
+						       placeholder="Data expirarii licentei" formControlName="dataExpirariiLic">
+						<mat-datepicker-toggle matSuffix [for]="picker10"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #picker10></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+		</div>
+
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Filiale</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Tipul intreprinderii</th>
+					<th scope="col">Adresa</th>
+					<th scope="col">Farmacist/Sef de filiala</th>
+					<th scope="col">Activitatile</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let objAddr of companiiPerIdnoSelected;let i = index">
+					<th scope="row">{{ i + 1}}</th>
+					<td>{{ objAddr.companyType }}</td>
+					<td>{{ objAddr.address }}</td>
+					<td>{{ objAddr.selectedPharmaceutist?.fullName }}</td>
+					<td mdbTooltip="{{objAddr.activitiesStr}}" placement="top">
+						<label>{{ objAddr.activitiesStr }} </label>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form">
+					<input id="manufacturingName" mdbInputDirective class="form-control" formControlName="manufacturingName">
+					<label for="manufacturingName">Numele locului de fabricaţie<span class="text-danger">*</span></label>
+				</div>
+				<div *ngIf="formSubmitted && eForm.get('manufacturingName').invalid">
+					<small class="text-muted"><strong class="text-danger">Numele locului de fabricaţie trebuie introdusa</strong></small>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="md-form">
+					<input id="manufacturingAddress" mdbInputDirective class="form-control" formControlName="manufacturingAddress">
+					<label for="manufacturingAddress">Adresa locului de fabricaţie<span class="text-danger">*</span></label>
+				</div>
+				<div *ngIf="formSubmitted && eForm.get('manufacturingAddress').invalid">
+					<small class="text-muted"><strong class="text-danger">Adresa locului de fabricaţie trebuie introdusa</strong></small>
+				</div>
+			</div>
+		</div>
+		<h5 class="text-center font-weight-bold">Tipurile de medicamente fabricate</h5>
+		<div class="row">
+			<div class="col-md-3">
+				<div class="md-form">
+					<mat-checkbox #humanUse [checked]="eForm.get('humanUse').value" (change)="checkHumanUseMed(humanUse)">Medicamente de uz uman</mat-checkbox>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="md-form">
+					<mat-checkbox #veterinary [checked]="eForm.get('veterinary').value" (change)="checkVeterinary(veterinary)">Medicamente de uz veterinar</mat-checkbox>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="md-form">
+					<textarea type="text" id="veterinaryDetails" class="md-textarea form-control" mdbInputDirective formControlName="veterinaryDetails"></textarea>
+					<label for="veterinaryDetails">Detalii pentru medicamente de uz veterinar</label>
+				</div>
+			</div>
+		</div>
+		<hr>
+		<h5 class="text-center font-weight-bold">Operaţii de fabricaţie – Tipuri de activităţi</h5>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="md-form-modified">
+					<mat-checkbox #certificationOnlySterile [checked]="eForm.get('certificationOnlySterile').value" (change)="checkCertificationOnlySterile(certificationOnlySterile)">Medicamente sterile pentru investigație - Numai certificarea seriei</mat-checkbox>
+				</div>
+			</div>
+		</div>
+		<div class="row" *ngIf="!eForm.get('certificationOnlySterile').value">
+			<div class="col-md-12">
+				<div class="md-form-modified">
+					<ng-select id="asepticPreparations" name="asepticPreparations" [items]="asepticPreparations" bindLabel="description" [multiple]="true"
+					           placeholder="Medicamente sterile pentru investigație - Preparate aseptic" formControlName="asepticPreparationsValues">
+					</ng-select>
+				</div>
+			</div>
+		</div>
+		<div class="gradient-card-header bg-sidebar border-gradient" *ngIf="!eForm.get('certificationOnlySterile').value">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Alte produse preparate aseptic </div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addAsepticPreparation()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-body card-body-cascade" *ngIf="!eForm.get('certificationOnlySterile').value">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Descriere</th>
+					<th scope="col">Acțiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let x of otherAsepticPreparations;let i = index">
+					<th scope="row">{{ i + 1}}</th>
+					<td>{{ x.description }}</td>
+					<td>
+						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+						        (click)="removeAsepticPreparation(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="!eForm.get('certificationOnlySterile').value && otherAsepticPreparations.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form-modified">
+					<ng-select id="finalSterilized" name="finalSterilized" [items]="finalSterilized" bindLabel="description" [multiple]="true"
+					           placeholder="Medicamente sterile pentru investigație - Sterilizate final" formControlName="finalSterilizedValues">
+					</ng-select>
+				</div>
+			</div>
+		</div>
+		<div class="gradient-card-header bg-sidebar border-gradient" *ngIf="!eForm.get('certificationOnlySterile').value">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Alte produse sterilizate final</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addAFinalSterilized()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-body card-body-cascade" *ngIf="!eForm.get('certificationOnlySterile').value">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Descriere</th>
+					<th scope="col">Acțiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let x of otherFinalSterilized;let i = index">
+					<th scope="row">{{ i + 1}}</th>
+					<td>{{ x.description }}</td>
+					<td>
+						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+						        (click)="removeFinalSterilized(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="!eForm.get('certificationOnlySterile').value && otherFinalSterilized.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<div class="text-center">
+			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>
+			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Urmatorul pas</button>
+			<!--<button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>-->
+		</div>
+	</form>
+</div>

@@ -429,7 +429,7 @@ export class ProcessInterruptionModifyComponent implements OnInit {
 
     getConcatenatedDivision() {
         let concatenatedDivision = '';
-        for (let entry of this.initialData.medicamentHistory[0].divisionHistory) {
+        for (const entry of this.initialData.medicamentHistory[0].divisionHistory) {
             if (entry.description && entry.volume && entry.volumeQuantityMeasurement) {
                 concatenatedDivision = concatenatedDivision + entry.description + ' ' + entry.volume + ' ' + entry.volumeQuantityMeasurement.description + '; ';
             } else if (entry.volume && entry.volumeQuantityMeasurement) {

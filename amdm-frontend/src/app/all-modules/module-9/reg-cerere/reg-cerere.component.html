@@ -48,12 +48,6 @@
                            formControlName="mandatedFirstname">
                     <label for="persResDepCereriiFirstname">Nume persoana responsabilă <span
                             class="text-danger">*</span></label>
-
-                </div>
-                <div *ngIf="formSubmitted && !rForm.get('mandatedFirstname').valid">
-                    <small class="text-muted"><strong class="text-danger">Prenumele persoanei de contact trebuie
-                        introdus</strong>
-                    </small>
                 </div>
             </div>
             <div class="col-md-4">
@@ -62,12 +56,6 @@
                            formControlName="mandatedLastname">
                     <label for="persResDepCereriiLastname">Prenume persoana responsabilă <span
                             class="text-danger">*</span></label>
-
-                </div>
-                <div *ngIf="formSubmitted && !rForm.get('mandatedLastname').valid">
-                    <small class="text-muted"><strong class="text-danger">Numele persoanei de contact trebuie
-                        introdus</strong>
-                    </small>
                 </div>
             </div>
 
@@ -78,21 +66,12 @@
                     >
                     <label for="telefonContact">Telefon de contact</label>
                 </div>
-                <div *ngIf="formSubmitted && !rForm.get('phoneNumber').valid">
-                    <small class="text-muted"><strong class="text-danger">Telefonul trebuie introdus sau nu este
-                        valid.</strong>
-                    </small>
-                </div>
             </div>
             <div class="col-md-4">
                 <div class="md-form">
                     <input id="emailContact" mdbInputDirective type="email" class="form-control"
                            formControlName="email">
                     <label for="emailContact">Email de contact</label>
-                </div>
-                <div *ngIf="formSubmitted && !rForm.get('email').valid">
-                    <small class="text-muted"><strong class="text-danger">Email ul nu este valid.</strong>
-                    </small>
                 </div>
             </div>
 
@@ -101,10 +80,6 @@
                     <input id="nrProcurii1" mdbInputDirective type="text" class="form-control"
                            formControlName="requestMandateNr">
                     <label for="nrProcurii1">Numarul procurii</label>
-                </div>
-                <div *ngIf="formSubmitted && !rForm.get('requestMandateNr').valid">
-                    <small class="text-muted"><strong class="text-danger">Numarul procurii trebuie introdus</strong>
-                    </small>
                 </div>
             </div>
             <div class="col-md-4">
@@ -115,7 +90,6 @@
                         <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
                         <mat-datepicker touchUi #picker3></mat-datepicker>
                     </mat-form-field>
-
                 </div>
             </div>
         </div>

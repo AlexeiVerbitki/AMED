@@ -12,12 +12,20 @@ export class RequestService {
         return this.http.post<any>('/api/add-medicament-request', requestDetails, {observe: 'response'});
     }
 
+    addGMPRequest(requestDetails: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/add-gmp-request', requestDetails, {observe: 'response'});
+    }
+
     addMedicamentHistoryRequest(requestDetails: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/add-medicament-history-request', requestDetails, {observe: 'response'});
     }
 
     getMedicamentRequest(id: string): Observable<any> {
         return this.http.get('/api/load-medicament-request', {params: {id: id}});
+    }
+
+    loadGMPDetails(id: string): Observable<any> {
+        return this.http.get('/api/load-gmp-details', {params: {id: id}});
     }
 
     validIDNP(idnp: string): Observable<any> {
