@@ -570,6 +570,7 @@ export class MedRegComponent implements OnInit {
 
     addUnitOfImport() {
         this.addMedicamentClicked = true;
+        let registrationDate : any;
 
 
         if (this.importData.importAuthorizationEntity.medType && this.importData.importAuthorizationEntity.medType == 2) {
@@ -579,7 +580,12 @@ export class MedRegComponent implements OnInit {
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setErrors(null);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setErrors(null);
             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setErrors(null);
-            // }
+            registrationDate = new Date();
+
+        }
+
+        if (this.importData.importAuthorizationEntity.medType && this.importData.importAuthorizationEntity.medType == 1) {
+            registrationDate = this.medicamentData.registrationDate;
         }
 
 
@@ -610,7 +616,7 @@ export class MedRegComponent implements OnInit {
             internationalMedicamentName: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').value,
             atcCode: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').value,
             registrationNumber: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').value,
-            registrationDate: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').value,
+            registrationDate: registrationDate,
             medicament: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').value,
 
 
