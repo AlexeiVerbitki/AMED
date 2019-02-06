@@ -701,18 +701,19 @@ export class MedRegApproveComponent implements OnInit {
             // console.log('result', result);
             if (result) {
                 this.loadingService.show();
-                const modelToSubmit                                                          = this.evaluateImportForm.getRawValue();
+                let modelToSubmit: any = {};
+                modelToSubmit                                                                = this.importData;
                 modelToSubmit.currentStep                                                    = 'C';
-                modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
                 modelToSubmit.endDate                                                        = new Date();
                 modelToSubmit.documents                                                      = this.docs;
+                modelToSubmit.medicaments = [];
                 modelToSubmit.requestHistories.push({
                     startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
                     endDate: new Date(),
                     username: this.authService.getUserName(),
                     step: 'C'
                 });
-                modelToSubmit.documents = this.docs;
+                // modelToSubmit.documents = this.docs;
                 this.subscriptions.push(
                     this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
                         this.router.navigate(['/dashboard/homepage']);
