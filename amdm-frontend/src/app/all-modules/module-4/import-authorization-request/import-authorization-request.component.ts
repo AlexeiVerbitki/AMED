@@ -278,7 +278,8 @@ export class ImportAuthorizationRequestComponent implements OnInit {
                             // this.authorizationNumber = "33134/2019-AM";
                             this.subscriptions.push(this.requestService.getAuthorizationByAuth(this.authorizationNumber).subscribe(data => {
                                 this.router.navigate(['dashboard/module/import-authorization/import-management/' + data.id]);
-                            }));
+                                }, error => this.loadingService.hide())
+                            );
                             break;
                         }
                     }

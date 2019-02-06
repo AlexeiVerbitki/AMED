@@ -1707,8 +1707,7 @@ if (request.getType() != null)        {
     }
 
 	@GetMapping(value = "/load-import-authorization-byAuth")
-	public ResponseEntity<RegistrationRequestsEntity> getAuthorizationByAuth(@RequestParam(value = "id") String id) throws
-	                                                                                                                                          CustomException {
+	public ResponseEntity<RegistrationRequestsEntity> getAuthorizationByAuth(@RequestParam(value = "id") String id) throws CustomException {
 		List<ImportAuthorizationEntity> regOptional = importAuthRepository.getAuthorizationByAuth(id).orElse(new ArrayList<>());
 		List<ImportAuthorizationEntity> rrI = regOptional;
 		RegistrationRequestsEntity rrE = requestRepository.findRequestsByImportId(

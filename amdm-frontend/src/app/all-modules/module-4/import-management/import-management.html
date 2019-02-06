@@ -36,7 +36,7 @@
             <app-document *ngIf="importData !== null && importData?.importAuthorizationEntity.medType==1" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMMA', step : 'F'}"></app-document>
             <app-document *ngIf="importData !== null && importData?.importAuthorizationEntity.medType==2" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMMN', step : 'F'}"></app-document>
             <app-document *ngIf="importData !== null && importData?.importAuthorizationEntity.medType==3" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMMP', step : 'F'}"></app-document>
-            <app-document *ngIf="importData !== null && importData?.importAuthorizationEntity.medType==4" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMMM', step : 'F'}"></app-document>
+            <app-document *ngIf="importData !== null && importData?.importAuthorizationEntity.medType==4" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMAM', step : 'F'}"></app-document>
             <div *ngIf="formSubmitted && docs && docs.length==0">
                 <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
             </div>
