@@ -60,6 +60,7 @@ export class AmbalajComponent implements OnInit {
     solicitantCompanyList: Observable<any[]>;
     unitSumm: any;
     unitOfImportPressed: boolean;
+    invalidCurrency : boolean = false;
 
     formModel: any;
     valutaList: Observable<any[]>;
@@ -77,6 +78,7 @@ export class AmbalajComponent implements OnInit {
 
     authorizationSumm: any;
     authorizationCurrency: any;
+    currentCurrency: any;
 
     constructor(private fb: FormBuilder,
                 private requestService: RequestService,
@@ -197,6 +199,8 @@ export class AmbalajComponent implements OnInit {
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setErrors(null);
                     }
 
+
+
                 },
                 error => console.log(error)
             ));
@@ -218,10 +222,21 @@ export class AmbalajComponent implements OnInit {
 
     onChanges(): void {
 
+        this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.currency').valueChanges.subscribe(value => {
+            if (value) {
+                this.invalidCurrency = true;
+                this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').reset();
+                this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(value);
 
-        this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.currency').valueChanges.subscribe(valuta => {
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(valuta)
+
+            } else this.invalidCurrency = false;
+
+            // if (this.evaluateImportForm.get('importAuthorizationEntity.currency').value == undefined) {
+            //     this.invalidCurrency = true;
+            // } else this.invalidCurrency = false;
         }));
+
+
 
         if (this.evaluateImportForm.get('importAuthorizationEntity')) {
             this.subscriptions.push( this.evaluateImportForm.get('importAuthorizationEntity.seller').valueChanges.subscribe(val => {
@@ -264,9 +279,22 @@ export class AmbalajComponent implements OnInit {
         return this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable') as FormArray;
     }
 
-    showConfirm(valuta : any) {
+    showConfirm(valuta: any) {
+        let showPopUp: boolean = false;
+//         if (this.evaluateImportForm.get('importAuthorizationEntity.currency').touched) {
+//             showPopUp = true;
+//         } else
+//             if (this.importData.importAuthorizationEntity.currency) {
+//             showPopUp = true;
+//         } else if (this.unitOfImportTable.length > 0) {
+//             showPopUp = true;
+// }
+        if (this.unitOfImportTable.length > 0 && this.evaluateImportForm.get('importAuthorizationEntity.currency').touched) {
+            showPopUp = true;
+        }
 
-        if (this.evaluateImportForm.get('importAuthorizationEntity.currency').touched) {
+        // if (this.evaluateImportForm.get('importAuthorizationEntity.currency').touched && this.invalidCurrency/*|| this.importData.importAuthorizationEntity.currency*/) {
+        if (showPopUp) {
             const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
                 data: {
                     message: 'Sunteti sigur(ă) ca doriți sa schimbați valuta ? ' +
@@ -276,16 +304,15 @@ export class AmbalajComponent implements OnInit {
 
             dialogRef.afterClosed().subscribe(result => {
                 if (result) {
-                    this.unitOfImportTable = [];
+                    if (this.unitOfImportTable) {
+                        this.unitOfImportTable = [];
+                    }
                     // this.changeCurrency = true;
-                    // this.evaluateImportForm.get('importAuthorizationEntity.currency').open();
-                } else {
-                    // this.evaluateImportForm.get('importAuthorizationEntity.currency').open();
                 }
-                // else if (this.changeCurrency){
-                //     this.evaluateImportForm.get('importAuthorizationEntity.currency').setValue(null);
-                //     this.changeCurrency = false;
-                // }
+                else
+                    this.evaluateImportForm.get('importAuthorizationEntity.currency').setValue(this.currentCurrency);
+                // this.changeCurrency = false;
+
             });
         }
 
@@ -294,9 +321,20 @@ export class AmbalajComponent implements OnInit {
 
     addUnitOfImport() {
         this.unitOfImportPressed = true;
+
+        if (this.evaluateImportForm.get('importAuthorizationEntity.currency').value == undefined) {
+            this.invalidCurrency = true;
+        } else this.invalidCurrency = false;
+
         console.log("unitOfImportTable", this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable'))
         if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').valid) {
             this.unitOfImportPressed = false;
+
+            if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').invalid || this.invalidCurrency) {
+                console.log("unitOfImportTable",this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').invalid)
+                console.log("this.invalidCurrency: ",this.invalidCurrency)
+                return;
+            }
 
             this.unitOfImportTable.push({
 
@@ -316,17 +354,17 @@ export class AmbalajComponent implements OnInit {
             this.authorizationCurrency = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').value;
 
             // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').reset();
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').setValue(null);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(null);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').setValue(null);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').setValue(null);
-            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(null);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(null);
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').reset();
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').reset();
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').reset();
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').reset();
+            // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').reset();
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').reset();
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').reset();
             this.producerAddress = null;
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(null);
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').reset();
             if (this.importData.importAuthorizationEntity.medType === 3) {
-                this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setValue(null);
+                this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').reset();
                 this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setErrors(null);
             }
             console.log('this.unitOfImportTable', this.unitOfImportTable);
@@ -481,6 +519,10 @@ export class AmbalajComponent implements OnInit {
         );
     }
 
+    getCurrentCurrency() {
+        this.currentCurrency =  this.evaluateImportForm.get('importAuthorizationEntity.currency').value;
+    }
+
     interruptProcess() {
         const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
             data: {
@@ -490,15 +532,14 @@ export class AmbalajComponent implements OnInit {
         });
 
         dialogRef2.afterClosed().subscribe(result => {
-            // console.log('result', result);
             if (result) {
                 this.loadingService.show();
-                const modelToSubmit = this.evaluateImportForm.getRawValue();
-                modelToSubmit.currentStep = 'C';
-                // modelToSubmit.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
-                modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
-                // modelToSubmit.endDate = new Date();
-                modelToSubmit.documents = this.docs;
+                let modelToSubmit: any = {};
+                modelToSubmit                                                                = this.importData;
+                modelToSubmit.currentStep                                                    = 'C';
+                modelToSubmit.endDate                                                        = new Date();
+                modelToSubmit.documents                                                      = this.docs;
+                modelToSubmit.medicaments = [];
                 modelToSubmit.requestHistories.push({
                     startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
                     endDate: new Date(),
@@ -523,12 +564,25 @@ export class AmbalajComponent implements OnInit {
 
     nextStep(submitForm: boolean) {
 
+        this.formSubmitted = true;
+
+        if (this.evaluateImportForm.get('importAuthorizationEntity.seller').valid &&
+            this.evaluateImportForm.get('importAuthorizationEntity.basisForImport').valid &&
+            this.evaluateImportForm.get('importAuthorizationEntity.importer').valid &&
+            this.evaluateImportForm.get('importAuthorizationEntity.contract').valid &&
+            this.evaluateImportForm.get('importAuthorizationEntity.contractDate').valid &&
+            this.evaluateImportForm.get('importAuthorizationEntity.anexa').valid &&
+            this.evaluateImportForm.get('importAuthorizationEntity.anexaDate').valid &&
+            this.evaluateImportForm.get('importAuthorizationEntity.specification').valid &&
+            this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').valid &&
+            this.unitOfImportTable.length > 0) {
+
         let currentStep = this.importData.currentStep;
         if (submitForm) {
             currentStep = 'AP';
         }
 
-        this.formSubmitted = true;
+
         let modelToSubmit: any = {};
 
 
@@ -572,6 +626,14 @@ export class AmbalajComponent implements OnInit {
             ));
 
             this.formSubmitted = false;
+        }
+        }else {
+            console.log("this.evaluateImportForm.valid", this.evaluateImportForm.valid)
+            console.log("this.evaluateImportForm", this.evaluateImportForm)
+
+            // let element = document.getElementById("importAuthorizationEntity");
+            // element.scrollIntoView();
+
         }
     }
 

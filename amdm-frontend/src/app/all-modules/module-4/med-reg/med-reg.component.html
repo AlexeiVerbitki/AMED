@@ -147,6 +147,7 @@
                                        placeholder="Valuta contractului"
                                        formControlName="currency"
                                        [selectOnTab]="false"
+                                       [clearable]="false"
                                        (open)="getCurrentCurrency()"
                                        (close)="showConfirm()"
                                         >
@@ -157,7 +158,7 @@
                             <!--</small>-->
                         <!--</div>-->
                         <div *ngIf="formSubmitted && invalidCurrency">
-                            <small class="text-muted"><strong class="text-danger">Data contractului trebuie selectată</strong></small>
+                            <small class="text-muted"><strong class="text-danger">Valuta contractului trebuie selectată</strong></small>
                         </div>
                     </div>
 
@@ -358,8 +359,7 @@
                                                    bindLabel="shortDescription"
                                                    placeholder="Valuta"
                                                    formControlName="currency"
-                                                   [selectOnTab]="false"
-                                        >
+                                                   [selectOnTab]="false">
                                         </ng-select>
                                     </div>
                                 </div>

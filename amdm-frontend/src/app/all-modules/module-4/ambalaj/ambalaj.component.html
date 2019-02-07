@@ -66,6 +66,9 @@
                                 </ng-template>
                             </ng-select>
                         </div>
+                        <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.seller').invalid">
+                            <small class="text-muted"><strong class="text-danger">Vînzătorul trebuie selectat</strong></small>
+                        </div>
                     </div>
 
 
@@ -77,13 +80,18 @@
                                 <label for="adresa">Adresa vînzătorului</label>
                             </div>
                         </div>
+
                     </div>
+
                     <div class="col-md-4">
                         <div class="md-form">
                             <input id="basisForImport" mdbInputDirective type="text" class="form-control" formControlName="basisForImport">
                             <label for="basisForImport">Temeiul pentru autorizație de import
                                 <span class="text-danger">*</span>
                             </label>
+                        </div>
+                        <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.seller').invalid">
+                            <small class="text-muted"><strong class="text-danger">Temeiul pentru autorizație de import trebuie selectat</strong></small>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -100,6 +108,9 @@
                                     <small class="form-text text-muted">IDNO: {{item?.idno}}</small>
                                 </ng-template>
                             </ng-select>
+                        </div>
+                        <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.importer').invalid">
+                            <small class="text-muted"><strong class="text-danger">Importatorul trebuie selectat</strong></small>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -120,6 +131,9 @@
                                 <span class="text-danger">*</span>
                             </label>
                         </div>
+                        <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.contract').invalid">
+                            <small class="text-muted"><strong class="text-danger">Contractul trebuie selectat</strong></small>
+                        </div>
                     </div>
 
                     <div class="col-4">
@@ -129,7 +143,9 @@
                                        placeholder="Valuta contractului"
                                        formControlName="currency"
                                        [selectOnTab]="false"
-                                       (ngModelChange)="showConfirm()"
+                                       [clearable]="false"
+                                       (open)="getCurrentCurrency()"
+                                       (close)="showConfirm()"
                             >
                             </ng-select>
                         </div>
@@ -148,9 +164,9 @@
                                 <mat-datepicker touchUi #picker26></mat-datepicker>
                             </mat-form-field>
                         </div>
-                        <!--<div *ngIf="unitOfImportPressed && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').invalid">-->
-                        <!--<small class="text-muted"><strong class="text-danger">Termenul de valabilitate trebuie selectat</strong></small>-->
-                        <!--</div>-->
+                        <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.contractDate').invalid">
+                            <small class="text-muted"><strong class="text-danger">Data contractului trebuie selectată</strong></small>
+                        </div>
                     </div>
 
                     <div class="col-md-4">
@@ -160,6 +176,9 @@
                             <label for="anexa">Anexa la contract
                                 <span class="text-danger">*</span>
                             </label>
+                        </div>
+                        <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.anexa').invalid">
+                            <small class="text-muted"><strong class="text-danger">Anexa trebuie selectată</strong></small>
                         </div>
                     </div>
 
@@ -172,9 +191,9 @@
                                 <mat-datepicker touchUi #picker25></mat-datepicker>
                             </mat-form-field>
                         </div>
-                        <!--<div *ngIf="unitOfImportPressed && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').invalid">-->
-                        <!--<small class="text-muted"><strong class="text-danger">Termenul de valabilitate trebuie selectat</strong></small>-->
-                        <!--</div>-->
+                        <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.anexaDate').invalid">
+                            <small class="text-muted"><strong class="text-danger">Data anexei trebuie selectată</strong></small>
+                        </div>
                     </div>
 
                     <div class="col-md-4">
@@ -184,6 +203,9 @@
                             <label for="specification">Specificație
                                 <span class="text-danger">*</span>
                             </label>
+                        </div>
+                        <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.specification').invalid">
+                            <small class="text-muted"><strong class="text-danger">Specificația trebuie selectată</strong></small>
                         </div>
                     </div>
 
@@ -196,9 +218,9 @@
                                 <mat-datepicker touchUi #picker27></mat-datepicker>
                             </mat-form-field>
                         </div>
-                        <!--<div *ngIf="unitOfImportPressed && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').invalid">-->
-                        <!--<small class="text-muted"><strong class="text-danger">Termenul de valabilitate trebuie selectat</strong></small>-->
-                        <!--</div>-->
+                        <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.specificationDate').invalid">
+                            <small class="text-muted"><strong class="text-danger">Data specificației trebuie selectată</strong></small>
+                        </div>
                     </div>
 
                     <div class="col-md-4">
@@ -318,15 +340,17 @@
                             </div>
                             <div class="col-4">
                                 <div class="md-form-modified">
-                                    <mat-form-field class="w-100">
-                                        <mat-select id="currency" placeholder="Valuta"
-                                                    formControlName="currency">
-                                            <mat-option *ngFor="let valuta of valutaList" [value]="valuta">{{ valuta.shortDescription }}</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
+                                    <div class="md-form-modified">
+                                        <ng-select [items]="valutaList"
+                                                   bindLabel="shortDescription"
+                                                   placeholder="Valuta"
+                                                   formControlName="currency"
+                                                   [selectOnTab]="false">
+                                        </ng-select>
+                                    </div>
                                 </div>
-                                <div *ngIf="unitOfImportPressed && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').invalid">
-                                    <small class="text-muted"><strong class="text-danger">Valuta trebuie selectată</strong></small>
+                                <div *ngIf="unitOfImportPressed && invalidCurrency">
+                                    <small class="text-muted"><strong class="text-danger">Valuta contractului trebuie selectată</strong></small>
                                 </div>
                             </div>
                             <div class="col-4">

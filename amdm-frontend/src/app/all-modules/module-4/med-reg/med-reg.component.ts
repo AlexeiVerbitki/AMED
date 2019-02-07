@@ -539,7 +539,8 @@ export class MedRegComponent implements OnInit {
 //         } else if (this.unitOfImportTable.length > 0) {
 //             showPopUp = true;
 // }
-        if (this.unitOfImportTable.length > 0 && this.evaluateImportForm.get('importAuthorizationEntity.currency').touched) {
+        if (this.unitOfImportTable.length > 0 &&
+            this.evaluateImportForm.get('importAuthorizationEntity.currency').touched ) {
             showPopUp = true;
         }
 
@@ -906,15 +907,14 @@ export class MedRegComponent implements OnInit {
         });
 
         dialogRef2.afterClosed().subscribe(result => {
-            // console.log('result', result);
             if (result) {
                 this.loadingService.show();
-                const modelToSubmit                                                          = this.evaluateImportForm.getRawValue();
+                let modelToSubmit: any = {};
+                modelToSubmit                                                                = this.importData;
                 modelToSubmit.currentStep                                                    = 'C';
-                // modelToSubmit.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
-                modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
-                // modelToSubmit.endDate = new Date();
+                modelToSubmit.endDate                                                        = new Date();
                 modelToSubmit.documents                                                      = this.docs;
+                modelToSubmit.medicaments = [];
                 modelToSubmit.requestHistories.push({
                     startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
                     endDate: new Date(),
@@ -939,15 +939,18 @@ export class MedRegComponent implements OnInit {
     nextStep(submitForm: boolean) {
 
         this.formSubmitted     = true;
+        console.log("this.evaluateImportForm.get('importAuthorizationEntity.currency').value", this.evaluateImportForm.get('importAuthorizationEntity.currency').value)
 
         if (this.evaluateImportForm.get('importAuthorizationEntity.seller').valid &&
             this.evaluateImportForm.get('importAuthorizationEntity.basisForImport').valid &&
+            this.evaluateImportForm.get('importAuthorizationEntity.importer').valid &&
             this.evaluateImportForm.get('importAuthorizationEntity.contract').valid &&
             this.evaluateImportForm.get('importAuthorizationEntity.contractDate').valid &&
             this.evaluateImportForm.get('importAuthorizationEntity.anexa').valid &&
             this.evaluateImportForm.get('importAuthorizationEntity.anexaDate').valid &&
             this.evaluateImportForm.get('importAuthorizationEntity.specification').valid &&
             this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').valid &&
+            this.evaluateImportForm.get('importAuthorizationEntity.currency').value &&
             this.unitOfImportTable.length > 0) {
 
         let currentStep = this.importData.currentStep;
