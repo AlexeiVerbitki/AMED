@@ -556,12 +556,12 @@ export class ImportMedDialog implements OnInit {
             // console.log('result', result);
             if (result) {
                 this.loadingService.show();
-                const modelToSubmit                                                          = this.evaluateImportForm.getRawValue();
-                modelToSubmit.currentStep                                                    = 'I';
-                // modelToSubmit.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
-                modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
+                let modelToSubmit: any = {};
+                modelToSubmit                                                                = this.importData;
+                modelToSubmit.currentStep                                                    = 'C';
                 modelToSubmit.endDate                                                        = new Date();
                 modelToSubmit.documents                                                      = this.docs;
+                modelToSubmit.medicaments = [];
                 modelToSubmit.requestHistories.push({
                     startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
                     endDate: new Date(),

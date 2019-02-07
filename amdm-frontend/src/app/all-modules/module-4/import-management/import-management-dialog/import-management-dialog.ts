@@ -810,20 +810,19 @@ export class ImportManagementDialog implements OnInit {
         });
 
         dialogRef2.afterClosed().subscribe(result => {
-            // console.log('result', result);
             if (result) {
                 this.loadingService.show();
-                const modelToSubmit = this.evaluateImportForm.getRawValue();
-                modelToSubmit.currentStep = 'I';
-                // modelToSubmit.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
-                modelToSubmit.importAuthorizationEntity.importAuthorizationDetailsEntityList = this.unitOfImportTable;
-                modelToSubmit.endDate = new Date();
-                modelToSubmit.documents = this.docs;
+                let modelToSubmit: any = {};
+                modelToSubmit                                                                = this.importData;
+                modelToSubmit.currentStep                                                    = 'C';
+                modelToSubmit.endDate                                                        = new Date();
+                modelToSubmit.documents                                                      = this.docs;
+                modelToSubmit.medicaments = [];
                 modelToSubmit.requestHistories.push({
                     startDate: modelToSubmit.requestHistories[modelToSubmit.requestHistories.length - 1].endDate,
                     endDate: new Date(),
                     username: this.authService.getUserName(),
-                    step: 'I'
+                    step: 'C'
                 });
                 modelToSubmit.documents = this.docs;
                 this.subscriptions.push(
