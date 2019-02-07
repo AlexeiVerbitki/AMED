@@ -322,12 +322,17 @@ export class MedRegApproveComponent implements OnInit {
 
         if (this.expirationDate.length > 0 && this.expirationDate.length !== null) {
 
-            authorizationModel.importAuthorizationEntity.expirationDate = new Date(this.expirationDate.reduce(function (a, b) {
-                return a < b ? a : b;
-            }));
 
-            if (this.importData.importAuthorizationEntity.medType === 2 && authorizationModel.importAuthorizationEntity.expirationDate > (new Date(this.currentDate.getDate() + 365))) {
-                authorizationModel.importAuthorizationEntity.expirationDate = new Date(this.currentDate.setFullYear(this.currentDate.getFullYear() + 1));
+            let closestExpirationDate = this.expirationDate.reduce(function (a, b) {
+                return a < b ? a : b;
+            });
+            authorizationModel.importAuthorizationEntity.expirationDate = closestExpirationDate;
+
+            let datePlusYear = new Date();
+            datePlusYear.setFullYear(datePlusYear.getFullYear() + 1);
+
+            if (this.importData.importAuthorizationEntity.medType === 2 && authorizationModel.importAuthorizationEntity.expirationDate > datePlusYear) {
+                authorizationModel.importAuthorizationEntity.expirationDate = datePlusYear;
             }
         }
 
@@ -796,9 +801,11 @@ export class MedRegApproveComponent implements OnInit {
                 }
             });
 
-            modelToSubmit.importAuthorizationEntity.expirationDate = new Date(this.expirationDate.reduce(function (a, b) {
+            let closestExpirationDate = this.expirationDate.reduce(function (a, b) {
                 return a < b ? a : b;
-            }));
+            });
+            modelToSubmit.importAuthorizationEntity.expirationDate = closestExpirationDate;
+
             if (this.importData.importAuthorizationEntity.medType === 2 && modelToSubmit.importAuthorizationEntity.expirationDate > (new Date(this.currentDate.getDate() + 365))) {
                 modelToSubmit.importAuthorizationEntity.expirationDate = new Date(this.currentDate.setFullYear(this.currentDate.getFullYear() + 1));
             }
