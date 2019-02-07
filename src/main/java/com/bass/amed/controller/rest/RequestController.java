@@ -661,7 +661,7 @@ public class RequestController
     public ResponseEntity<RegistrationRequestsEntity> addRegistrationRequestForGDP(@RequestBody RegistrationRequestsEntity request)
     {
         LOGGER.debug("add new GDP requests");
-        Optional<RequestTypesEntity> type = requestTypeRepository.findByCode("EGDP");
+        Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(request.getType().getDescription());
         request.setType(type.get());
         requestRepository.save(request);
 

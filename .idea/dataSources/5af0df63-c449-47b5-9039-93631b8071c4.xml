@@ -5180,7 +5180,7 @@ investigator_id</ColNames>
     </column>
     <column id="1123" parent="275" name="price">
       <Position>2</Position>
-      <DataType>decimal(10)|0s</DataType>
+      <DataType>double|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
     <column id="1124" parent="275" name="quantity">
@@ -5190,7 +5190,7 @@ investigator_id</ColNames>
     </column>
     <column id="1125" parent="275" name="sum">
       <Position>4</Position>
-      <DataType>decimal(10)|0s</DataType>
+      <DataType>double|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
     <column id="1126" parent="275" name="authorizations_number">
