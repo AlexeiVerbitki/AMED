@@ -733,8 +733,23 @@ export class MedRegApproveComponent implements OnInit {
     }
 
 
+    denyAuthorization() {
+        const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur(a) că respingeți autorizația?',
+                confirm: false
+            }
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result) {
+                this.nextStep(false, true)
+            }
+        });
+    }
     
     nextStep(aprrovedOrNot: boolean, submitForm: boolean) {
+
 
         let currentStep = this.importData.currentStep;
         if (submitForm) {

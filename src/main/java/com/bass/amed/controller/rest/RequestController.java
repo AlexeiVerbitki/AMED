@@ -1660,11 +1660,24 @@ public class RequestController
             }
 
 
-            if (request.getImportAuthorizationEntity().getContract()!= null && request.getImportAuthorizationEntity().getContractDate()!=null && request.getImportAuthorizationEntity().getAnexa()!= null &&request.getImportAuthorizationEntity().getAnexaDate()!=null &&request.getImportAuthorizationEntity().getConditionsAndSpecification()!=null ) {
-                parameters.put("themesForApplicationForAuthorization",
-                        "Contract: " + request.getImportAuthorizationEntity().getContract() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getContractDate()) +
-                                "\n" + "Specificația: " + request.getImportAuthorizationEntity().getAnexa() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getAnexaDate()) +
-                                "\n" + "Alte: " + request.getImportAuthorizationEntity().getConditionsAndSpecification());
+            if (request.getImportAuthorizationEntity().getContract()!= null && request.getImportAuthorizationEntity().getContractDate()!=null && request.getImportAuthorizationEntity().getAnexa()!= null &&request.getImportAuthorizationEntity().getAnexaDate()!=null ) {
+
+	            String themesForApplicationForAuthorization;
+
+	            if (request.getImportAuthorizationEntity().getConditionsAndSpecification()!= null ) {
+		            themesForApplicationForAuthorization = "Contract: " + request.getImportAuthorizationEntity().getContract() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getContractDate()) +
+		                                                   "\n" + "Anexa: " + request.getImportAuthorizationEntity().getAnexa() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getAnexaDate()) +
+                                                           "\n" + "Alte: " + request.getImportAuthorizationEntity().getConditionsAndSpecification();;
+	            } else {
+		            themesForApplicationForAuthorization =  "Contract: " + request.getImportAuthorizationEntity().getContract() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getContractDate()) +
+		            "\n" + "Anexa: " + request.getImportAuthorizationEntity().getAnexa() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getAnexaDate());
+
+	            }
+
+
+
+
+            	parameters.put("themesForApplicationForAuthorization", themesForApplicationForAuthorization);
             }
 
             parameters.put("geniralDirectorName", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
