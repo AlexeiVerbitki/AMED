@@ -673,11 +673,21 @@ export class ImportManagement implements OnInit {
 
             let invoiceDetails: any = {};
 
-            invoiceDetails.quantity = this.dialogResult.importAuthorizationEntity.unitOfImportTable.quantity;
-            invoiceDetails.price    = this.dialogResult.importAuthorizationEntity.unitOfImportTable.price;
-            invoiceDetails.sum      = this.dialogResult.importAuthorizationEntity.unitOfImportTable.unitSumm;
-            invoiceDetails.codeAmed = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.codeAmed;
-            invoiceDetails.name     = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.name;
+            if (this.dialogResult.importAuthorizationEntity.unitOfImportTable.quantity) {
+                invoiceDetails.quantity = this.dialogResult.importAuthorizationEntity.unitOfImportTable.quantity;
+            }
+            if (this.dialogResult.importAuthorizationEntity.unitOfImportTable.price) {
+                invoiceDetails.price = this.dialogResult.importAuthorizationEntity.unitOfImportTable.price;
+            }
+            if (this.dialogResult.importAuthorizationEntity.unitOfImportTable.unitSumm) {
+                invoiceDetails.sum = this.dialogResult.importAuthorizationEntity.unitOfImportTable.unitSumm;
+            }
+            if (this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.codeAmed) {
+                invoiceDetails.codeAmed = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.codeAmed;
+            }
+            if (this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.name) {
+                invoiceDetails.name = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.name;
+            }
 
 
             invoiceDetails.medicament           = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.medicament;
