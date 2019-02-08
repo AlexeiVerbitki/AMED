@@ -40,16 +40,7 @@
             <div *ngIf="formSubmitted && docs && docs.length==0">
                 <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
             </div>
-
-            <br>
-            <br>
-            <br>
-
-
-            <br>
-
-            <hr>
-            <h5 class="text-center font-weight-bold" id="invoiceInfo">Informația despre Invoice</h5>
+            <h5 class="text-center font-weight-bold my-3" id="invoiceInfo">Informația despre Invoice</h5>
             <hr>
 
             <div formGroupName="importAuthorizationEntity">
@@ -92,7 +83,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="md-form">
                             <input id="invoiceBasis" mdbInputDirective type="text" class="form-control" formControlName="invoiceBasis">
                             <label for="invoiceBasis"  >Temeiul pentru invoice
@@ -105,7 +96,7 @@
                     </div>
 
 
-                    <div class="col-4">
+                    <div class="col-3">
                         <div class="md-form-modified">
                             <ng-select id="customsPoints" placeholder="Vama"
                                        formControlName="customsPoints">
@@ -118,7 +109,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="md-form">
                             <input id="invoiceCustomsNumber" mdbInputDirective type="text" class="form-control" formControlName="invoiceCustomsNumber">
                             <label for="invoiceCustomsNumber">Numarul Declaratiei vamale
@@ -130,7 +121,7 @@
                         </div>
                     </div>
 
-                    <div class="col-4">
+                    <div class="col-3">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
                                 <input matInput [matDatepicker]="picker28" placeholder="Data declaraţiei  vamale"
@@ -144,15 +135,10 @@
                         </div>
                     </div>
 
-                    <br>
-                    <br>
-
                     <div class="col-12">
                         <hr>
                         <h5 class="text-center font-weight-bold">Informația despre Autorizație</h5>
                         <hr>
-                        <br>
-                        <br>
                     </div>
                     <!--=================================================================-->
                     <div class="col-md-4">
@@ -331,7 +317,7 @@
                     <hr>
 
                     <table class="table table-widths text-center">
-                        <thead class="black white-text">
+                        <thead class="bg-sidebar white-text">
                         <tr>
                             <!--<th scope="col">Denumirea comercială a medicamentului</th>-->
                             <!--<th scope="col">Codul ATC</th>-->

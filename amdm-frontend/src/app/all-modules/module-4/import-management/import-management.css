@@ -19,6 +19,6 @@ label.required:not(:empty):after,
 
 .md-form-modified {
     position: relative;
-    margin-top: 10px;
+    margin-top: 11px;
     margin-bottom: 1.5rem;
 }

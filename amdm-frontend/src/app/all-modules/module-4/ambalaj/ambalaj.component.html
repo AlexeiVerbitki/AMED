@@ -270,8 +270,6 @@
                     <!--</div>-->
                 </div>
 
-                <hr>
-
 
                 <section>
 
@@ -437,7 +435,7 @@
                     </div>
 
                     <table class="table table-widths text-center">
-                        <thead class="black white-text">
+                        <thead class="bg-sidebar white-text">
                         <tr>
                             <th scope="col">Codul Vamal</th>
                             <th scope="col">Denumirea materiei prime (DCI)</th>
@@ -467,9 +465,9 @@
                             <td>{{ unitOfImport?.producer.address }}, {{ unitOfImport.producer.country.description }}</td>
                             <td>{{ unitOfImport?.expirationDate | date:'mediumDate' }}</td>
 
-                            <td>
-                                <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeunitOfImport(i)" mdbWavesEffect>Stergere</button>
-                                <button class="btn btn-blue-color waves-light btn-sm waves-light" (click)="showunitOfImport(unitOfImport)" mdbWavesEffect>Vizualizare</button>
+                            <td [ngStyle]="{'width': '200px'}">
+                                <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeunitOfImport(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                                <button class="btn btn-mdb-color waves-light btn-sm waves-light" (click)="showunitOfImport(unitOfImport)" mdbWavesEffect><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
                             </td>
                         </tr>
                         </tbody>
@@ -481,8 +479,9 @@
                     <hr>
                 </section>
                 <div class="text-center">
-                    <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(true)" type="button">Pasul următor</button>
-                    <button class="btn btn-primary waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(false)" type="button">Savlare date</button>
+                    
+                    <button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(false)" type="button">Salvare date</button>
+					<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(true)" type="button">Pasul următor</button>
                     <button class="btn btn-danger waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>
                 </div>
             </div>

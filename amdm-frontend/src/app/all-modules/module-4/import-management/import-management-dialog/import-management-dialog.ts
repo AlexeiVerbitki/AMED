@@ -374,7 +374,7 @@ export class ImportManagementDialog implements OnInit {
                         this.approvedQuantity = val.approvedQuantity;
                         this.approvedPrice = val.price;
                         if (val.summ) {
-                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(val.summ);
+                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(val.summ.toFixed(2));
                         }
                         // this.unitSumm = val.summ;
                         if (val.currency.shortDescription) {

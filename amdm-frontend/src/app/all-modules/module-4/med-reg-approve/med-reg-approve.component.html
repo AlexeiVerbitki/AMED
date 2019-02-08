@@ -39,9 +39,9 @@
                 <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
             </div>
 
-            <br>
-            <br>
-            <br>
+            
+            
+            
 
             <div class="gradient-card-header bg-sidebar border-gradient">
                 <div class="container-fluid">
@@ -100,9 +100,9 @@
             <!--</div>-->
             <!--=================================================================-->
 
-            <br>
-            <br>
-            <br>
+            
+            
+            
 
 
             <div formGroupName="importAuthorizationEntity">
@@ -315,7 +315,7 @@
 
 
                     <table class="table table-widths text-center">
-                        <thead class="black white-text">
+                        <thead class="bg-sidebar white-text">
                         <tr>
                             <th scope="col">Denumirea comercială a medicamentului</th>
                             <th scope="col" *ngIf="importData?.importAuthorizationEntity.medType!==4">Codul ATC</th>
@@ -353,7 +353,7 @@
                                 <mat-checkbox [disabled]="true" [checked]="importData?.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved" (change)="setApproved(i)"></mat-checkbox>
                             </td>
                             <td>
-                                <button class="btn btn-primary waves-light btn-sm waves-light" (click)="showunitOfImport(unitOfImport, i)" mdbWavesEffect>Aprobare</button>
+                                <button class="btn btn-mdb-color waves-light btn-sm waves-light" (click)="showunitOfImport(unitOfImport, i)" mdbWavesEffect>Aprobare</button>
                             </td>
                         </tr>
                         </tbody>
@@ -366,12 +366,12 @@
                     <hr>
                 </section>
                 <div class="text-center">
-                    <button class="btn btn-primary waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(true, false)" type="button">Sălvează date</button>
-                    <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(true, true)" type="button">Aprob autorizația</button>
+                    <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(true, false)" type="button">Salvează date</button>
+                    <button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(true, true)" type="button">Aprob autorizația</button>
                     <button class="btn btn-danger waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="denyAuthorization()" type="button">Resping autorizația</button>
                     <!--<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="showCustomsPoints()" type="button">showCustomsPoints()</button>-->
                     <button class="btn btn-danger waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="interruptProcess()" type="button">Intrerupere</button>
-                    <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc()">Vizualire Autorizației</button>
+                    <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect (click)="viewDoc()">Vizualire Autorizației</button>
                 </div>
             </div>
         </form>

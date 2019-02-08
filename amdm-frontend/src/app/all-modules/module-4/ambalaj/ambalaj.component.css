@@ -22,3 +22,7 @@ label.required:not(:empty):after,
   margin-top: 10px;
   margin-bottom: 1.5rem;
 }
+
+table th, .table td {
+  vertical-align: middle;
+}

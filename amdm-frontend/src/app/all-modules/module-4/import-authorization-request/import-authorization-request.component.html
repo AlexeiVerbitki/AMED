@@ -68,7 +68,7 @@
         </div>
 
         <mat-radio-group formControlName="importType">
-            <div class="container">
+            <div class="container my-3">
                 <div class="row">
                     <div class="col-12">
                         <mat-radio-button value="1">Medicament inregistrat</mat-radio-button>
@@ -85,11 +85,17 @@
                     <div class="col-12">
                         <mat-radio-button value="5" id="declaratia">Declarație de import</mat-radio-button>
                     </div>
-                    <div class="col-4" *ngIf="importRadioButton == 5">
-                        <input id="authorization" mdbInputDirective type="text" class="form-control" [(ngModel)]="authorizationNumber" [ngModelOptions]="{standalone: true}">
-                            <label for="authorization"></label>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-12" *ngIf="importRadioButton == 5">
+                        <div class="md-form">
+                            <input id="authorization" mdbInputDirective type="text" class="form-control" [(ngModel)]="authorizationNumber"
+                                [ngModelOptions]="{standalone: true}">
+                            <label for="authorization">Numarul autorizatiei de import</label>
+                        </div>
                     </div>
-
                 </div>
             </div>
 
