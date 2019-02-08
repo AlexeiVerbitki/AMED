@@ -163,7 +163,6 @@
                                        formControlName="seller"
                                        [loading]="loadingManufacturerRfPr"
                                        [typeahead]="manufacturerInputsRfPr"
-                                       disabled
                                        required="true">
                                 <ng-template ng-option-tmp let-item="item">
                                     {{item?.description}}
@@ -186,7 +185,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="md-form">
-                            <input id="basisForImport" mdbInputDirective type="text" class="form-control" formControlName="basisForImport" disabled>
+                            <input id="basisForImport" mdbInputDirective type="text" class="form-control" formControlName="basisForImport" >
                             <label for="basisForImport">Temeiul pentru autorizație de import
                                 <span class="text-danger">*</span>
                             </label>
@@ -211,7 +210,7 @@
                     <div class="col-md-4">
                         <div class="md-form">
                             <input id="importerAddress" mdbInputDirective type="text" class="form-control"
-                                   [value]="importerAddress" disabled>
+                                   [value]="importerAddress" [attr.disabled]="true">
                             <label for="importerAddress">Ţara şi adresa importatorului
                                 <span class="text-danger">*</span>
                             </label>
@@ -221,7 +220,7 @@
                     <div class="col-md-4">
                         <div class="md-form">
                             <input id="contract" mdbInputDirective type="text" class="form-control"
-                                   formControlName="contract" disabled>
+                                   formControlName="contract" >
                             <label for="contract">Contract
                                 <span class="text-danger">*</span>
                             </label>
@@ -232,7 +231,7 @@
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
                                 <input matInput [matDatepicker]="picker26" placeholder="Data contractului"
-                                       formControlName="contractDate" disabled>
+                                       formControlName="contractDate" >
                                 <mat-datepicker-toggle matSuffix [for]="picker26"></mat-datepicker-toggle>
                                 <mat-datepicker touchUi #picker26></mat-datepicker>
                             </mat-form-field>
@@ -245,7 +244,7 @@
                     <div class="col-md-4">
                         <div class="md-form">
                             <input id="anexa" mdbInputDirective type="text" class="form-control"
-                                   formControlName="anexa" disabled>
+                                   formControlName="anexa" >
                             <label for="anexa">Anexa la contract
                                 <span class="text-danger">*</span>
                             </label>
@@ -256,7 +255,7 @@
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
                                 <input matInput [matDatepicker]="picker25" placeholder="Data anexei"
-                                       formControlName="anexaDate" disabled>
+                                       formControlName="anexaDate" >
                                 <mat-datepicker-toggle matSuffix [for]="picker25"></mat-datepicker-toggle>
                                 <mat-datepicker touchUi #picker25></mat-datepicker>
                             </mat-form-field>
@@ -269,7 +268,7 @@
                     <div class="col-md-4">
                         <div class="md-form">
                             <input id="specification" mdbInputDirective type="text" class="form-control"
-                                   formControlName="specification" disabled>
+                                   formControlName="specification" >
                             <label for="anexa">Specificație
                                 <span class="text-danger">*</span>
                             </label>
@@ -280,7 +279,7 @@
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
                                 <input matInput [matDatepicker]="picker27" placeholder="Data specificației"
-                                       formControlName="specificationDate" disabled>
+                                       formControlName="specificationDate" >
                                 <mat-datepicker-toggle matSuffix [for]="picker27"></mat-datepicker-toggle>
                                 <mat-datepicker touchUi #picker27></mat-datepicker>
                             </mat-form-field>
@@ -293,7 +292,7 @@
 
                     <div class="col-md-4" *ngIf="importData?.importAuthorizationEntity.customsNumber">
                         <div class="md-form">
-                            <input id="customsNumber" mdbInputDirective type="text" class="form-control" formControlName="customsNumber" disabled>
+                            <input id="customsNumber" mdbInputDirective type="text" class="form-control" formControlName="customsNumber" >
                             <label for="customsNumber">Nr. declaraţiei vamale
                                 <!--<span class="text-danger">*</span>-->
                             </label>
@@ -304,7 +303,7 @@
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
                                 <input matInput [matDatepicker]="picker22" placeholder="Data declaraţiei  vamale"
-                                       formControlName="customsDeclarationDate" disabled>
+                                       formControlName="customsDeclarationDate" >
                                 <mat-datepicker-toggle matSuffix [for]="picker22"></mat-datepicker-toggle>
                                 <mat-datepicker touchUi #picker22></mat-datepicker>
                             </mat-form-field>
@@ -314,7 +313,7 @@
                     <div class="col-md-4">
                         <div class="md-form">
                             <input id="conditionsAndSpecification" mdbInputDirective type="text" class="form-control"
-                                   formControlName="conditionsAndSpecification" disabled>
+                                   formControlName="conditionsAndSpecification" >
                             <label for="basisForImport">Altele
                                 <!--<span class="text-danger">*</span>-->
                             </label>

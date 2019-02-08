@@ -153,16 +153,16 @@ export class ImportManagement implements OnInit {
                 'applicant': ['', Validators.required],
 
                 'seller': [{value: null, disabled: true}, Validators.required, ], // Tara si adresa lui e deja in baza
-                'basisForImport': [],
+                'basisForImport': [{value: null, disabled: true}],
 
                 'importer': [{value: null, disabled: true}, Validators.required], // Tara si adresa lui e deja in baza
-                'contract': [null, Validators.required],
-                'contractDate': [null, Validators.required],
-                'anexa': [null, Validators.required],
-                'anexaDate': [null, Validators.required],
-                'specification': [null, Validators.required],
-                'specificationDate': [null, Validators.required],
-                'conditionsAndSpecification': [''],
+                'contract': [{value: null, disabled: true}, Validators.required],
+                'contractDate': [{value: null, disabled: true}, Validators.required],
+                'anexa': [{value: null, disabled: true}, Validators.required],
+                'anexaDate': [{value: null, disabled: true}, Validators.required],
+                'specification': [{value: null, disabled: true}, Validators.required],
+                'specificationDate': [{value: null, disabled: true}, Validators.required],
+                'conditionsAndSpecification': [{value: '', disabled: true}],
                 'quantity': [Validators.required],
                 'price': [Validators.required],
                 'currency': [Validators.required],
@@ -170,7 +170,7 @@ export class ImportManagement implements OnInit {
                 'producer_id': [Validators.required], // to be deleted
                 'stuff_type_id': [Validators.required], // to delete
                 'expiration_date': [Validators.required],
-                'customsNumber': [],
+                'customsNumber': [{value: null, disabled: true}],
                 'customsDeclarationDate': [],
                 'authorizationsNumber': [], // inca nu exista la pasul acesta
                 'medType': [''],
@@ -252,16 +252,16 @@ export class ImportManagement implements OnInit {
                             'applicant': ['', Validators.required],
                             
                             'seller': [{value: null, disabled: true}, Validators.required], // Tara si adresa lui e deja in baza
-                            'basisForImport': [],
+                            'basisForImport': [{value: null, disabled: true}],
                             
                             'importer': [{value: null, disabled: true}, Validators.required], // Tara si adresa lui e deja in baza
-                            'contract': [null, Validators.required],
+                            'contract': [{value: null, disabled: true}, Validators.required],
                             'contractDate': [null, Validators.required],
-                            'anexa': [null, Validators.required],
-                            'anexaDate': [null, Validators.required],
-                            'specification': [null, Validators.required],
-                            'specificationDate': [null, Validators.required],
-                            'conditionsAndSpecification': [''],
+                            'anexa': [{value: null, disabled: true}, Validators.required],
+                            'anexaDate': [{value: null, disabled: true}, Validators.required],
+                            'specification': [{value: null, disabled: true}, Validators.required],
+                            'specificationDate': [{value: null, disabled: true}, Validators.required],
+                            'conditionsAndSpecification': [{value: '', disabled: true}],
                             'quantity': [Validators.required],
                             'price': [Validators.required],
                             'currency': [Validators.required],
@@ -270,7 +270,7 @@ export class ImportManagement implements OnInit {
                             'stuff_type_id': [Validators.required], // to delete
                             'expiration_date': [Validators.required],
                             'customsNumber': [],
-                            'customsDeclarationDate': [],
+                            'customsDeclarationDate': [{value: null, disabled: true}],
                             'authorizationsNumber': [], // inca nu exista la pasul acesta
                             'medType': [''],
                             'importAuthorizationDetailsEntityList': [],
