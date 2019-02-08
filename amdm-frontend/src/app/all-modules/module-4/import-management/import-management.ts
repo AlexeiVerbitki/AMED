@@ -673,28 +673,25 @@ export class ImportManagement implements OnInit {
 
             let invoiceDetails: any = {};
 
-            if (this.dialogResult.importAuthorizationEntity.unitOfImportTable.quantity) {
+            if (this.dialogResult) {
                 invoiceDetails.quantity = this.dialogResult.importAuthorizationEntity.unitOfImportTable.quantity;
-            }
-            if (this.dialogResult.importAuthorizationEntity.unitOfImportTable.price) {
+
                 invoiceDetails.price = this.dialogResult.importAuthorizationEntity.unitOfImportTable.price;
-            }
-            if (this.dialogResult.importAuthorizationEntity.unitOfImportTable.unitSumm) {
+
                 invoiceDetails.sum = this.dialogResult.importAuthorizationEntity.unitOfImportTable.unitSumm;
-            }
-            if (this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.codeAmed) {
+
                 invoiceDetails.codeAmed = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.codeAmed;
-            }
-            if (this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.name) {
+
                 invoiceDetails.name = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.name;
+
+                invoiceDetails.medicament = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.medicament;
+
+                invoiceDetails.authorizationsNumber = this.importData.importAuthorizationEntity.authorizationsNumber;
+                this.invoiceDetails.push(invoiceDetails);
             }
 
 
-            invoiceDetails.medicament           = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.medicament;
-            invoiceDetails.authorizationsNumber = this.importData.importAuthorizationEntity.authorizationsNumber;
 
-
-            this.invoiceDetails.push(invoiceDetails);
             console.log('invoiceDetails', this.invoiceDetails);
 
             // if (dialogResult && dialogResult[0] === true) {
