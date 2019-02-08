@@ -293,7 +293,7 @@
                 <!--======================================================================-->
 
 
-                <div class="col-md-4" *ngIf="dialogData?.medType!==4">
+                <div class="col-md-4" *ngIf="dialogData?.medType == 1 || dialogData?.medType == 2 || dialogData?.medType == 3">
                     <div class="md-form-modified">
                         <ng-select [items]="atcCodes | async"
                                    bindLabel="code"

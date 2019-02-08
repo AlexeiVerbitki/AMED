@@ -322,6 +322,10 @@ export class AmbalajComponent implements OnInit {
     addUnitOfImport() {
         this.unitOfImportPressed = true;
 
+        if (this.importData.importAuthorizationEntity.medType === 4) {
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setErrors(null);
+        }
+
         if (this.evaluateImportForm.get('importAuthorizationEntity.currency').value == undefined) {
             this.invalidCurrency = true;
         } else this.invalidCurrency = false;
@@ -367,6 +371,8 @@ export class AmbalajComponent implements OnInit {
                 this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').reset();
                 this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setErrors(null);
             }
+
+
             console.log('this.unitOfImportTable', this.unitOfImportTable);
         }
     }

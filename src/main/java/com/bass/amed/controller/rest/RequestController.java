@@ -1664,7 +1664,7 @@ public class RequestController
 
 	            String themesForApplicationForAuthorization;
 
-	            if (request.getImportAuthorizationEntity().getConditionsAndSpecification()!= null ) {
+	            if (request.getImportAuthorizationEntity().getConditionsAndSpecification()!= null || !request.getImportAuthorizationEntity().getConditionsAndSpecification().equals("")) {
 		            themesForApplicationForAuthorization = "Contract: " + request.getImportAuthorizationEntity().getContract() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getContractDate()) +
 		                                                   "\n" + "Anexa: " + request.getImportAuthorizationEntity().getAnexa() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getAnexaDate()) +
                                                            "\n" + "Alte: " + request.getImportAuthorizationEntity().getConditionsAndSpecification();;
