@@ -87,6 +87,10 @@ export class MedRegApproveComponent implements OnInit {
     // authorizationCurrency: any;
     private subscriptions: Subscription[] = [];
 
+    authorizationNumber: string;
+    authorizationClicked: boolean = false;
+    showClickAuthorizationError: boolean = false;
+
     constructor(private fb: FormBuilder,
                 private requestService: RequestService,
                 public dialog: MatDialog,
@@ -264,6 +268,8 @@ export class MedRegApproveComponent implements OnInit {
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setErrors(null);
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setErrors(null);
                     }
+
+                    this.authorizationNumber =  data.importAuthorizationEntity.id + '/' + new Date().getFullYear() + '-AM';
                 },
                 error => console.log(error)
             ));
@@ -301,6 +307,8 @@ export class MedRegApproveComponent implements OnInit {
 
 
     viewDoc(document: any) {
+        this.authorizationClicked = true;
+        this.showClickAuthorizationError = false;
         this.loadingService.show();
 
         let observable: Observable<any> = null;
@@ -697,7 +705,7 @@ export class MedRegApproveComponent implements OnInit {
     interruptProcess() {
         const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
             data: {
-                message: 'Sunteti sigur(a)?',
+                message: 'Sunteti sigur(ă) că doriți să intrerupeți procesul ?',
                 confirm: false
             }
         });
@@ -741,7 +749,7 @@ export class MedRegApproveComponent implements OnInit {
     denyAuthorization() {
         const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
             data: {
-                message: 'Sunteti sigur(a) că respingeți autorizația?',
+                message: 'Sunteti sigur(ă) că respingeți autorizația?',
                 confirm: false
             }
         });
@@ -762,7 +770,8 @@ export class MedRegApproveComponent implements OnInit {
         }
         this.formSubmitted = true;
         let customsPoints = this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value;
-        if (customsPoints.length > 0) {
+        if (customsPoints.length > 0 &&  this.authorizationClicked) {
+
 
 
             let modelToSubmit: any = {};
@@ -833,7 +842,7 @@ export class MedRegApproveComponent implements OnInit {
             ));
 
             this.formSubmitted = false;
-        }
+        } else this.showClickAuthorizationError = true;
     }
 
 

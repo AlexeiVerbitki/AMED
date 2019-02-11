@@ -5,7 +5,7 @@
 
         <form [formGroup]="evaluateImportForm">
             <div class="row">
-                <div class="col-lg-4">
+                <div class="col-lg-3">
                     <div class="md-form">
                         <input id="requestNumber" mdbInputDirective type="text" class="form-control" formControlName="requestNumber"
                                [attr.disabled]="true">
@@ -13,7 +13,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-4">
+                <div class="col-lg-3">
                     <div class="md-form-modified">
                         <mat-form-field class="w-100">
                             <input matInput [matDatepicker]="picker" placeholder="Data"
@@ -23,11 +23,19 @@
                         </mat-form-field>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="md-form">
                         <input id="company" mdbInputDirective type="text" class="form-control"
                                value={{evaluateImportForm.value.company.name}} [attr.disabled]="true">
                         <label for="company">Compania solicitant
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="md-form">
+                        <input mdbInputDirective type="text" class="form-control"
+                               value={{authorizationNumber}} [attr.disabled]="true">
+                        <label for="company">Numărul Autorizașiei
                         </label>
                     </div>
                 </div>
@@ -311,6 +319,7 @@
                 <hr>
 
 
+
                 <section>
 
 
@@ -364,6 +373,11 @@
 
 
                     <hr>
+
+                    <div *ngIf="showClickAuthorizationError">
+                        <small class="text-muted"><strong class="text-danger">Autorizația de import trebuie Vizualizată și tipărită</strong></small>
+                    </div>
+
                 </section>
                 <div class="text-center">
                     <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep(true, false)" type="button">Salvează date</button>
