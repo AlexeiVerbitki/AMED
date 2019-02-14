@@ -63,9 +63,9 @@
 
         </div>
         <app-document [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'ATIE', step : 'R'}"></app-document>
-        <div *ngIf="docs.length<=0 && formSubmitted">
-            <small class="text-muted "><strong class="text-danger">Nici un document nu a fost încărcat</strong></small>
-        </div>
+        <!--<div *ngIf="docs.length<=0 && formSubmitted">-->
+            <!--<small class="text-muted "><strong class="text-danger">Nici un document nu a fost încărcat</strong></small>-->
+        <!--</div>-->
 
         <mat-radio-group formControlName="importType">
             <div class="container my-3">

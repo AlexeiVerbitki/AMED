@@ -240,7 +240,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         console.log('formModel', formModel);
         console.log('rForm.valid', this.rForm.valid);
 
-        if (this.rForm.valid && this.docs.length > 0) {
+        if (this.rForm.valid ) {
             this.loadingService.show();
             // this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
                     switch (this.rForm.get('importType').value) {
