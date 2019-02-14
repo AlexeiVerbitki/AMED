@@ -294,6 +294,9 @@
                                     <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').invalid">
                                         <small class="text-muted"><strong class="text-danger">Medicamentul trebuie selectat</strong></small>
                                     </div>
+                                    <div *ngIf="medicamentSelected && invalidCurrency">
+                                        <small class="text-muted"><strong class="text-danger">Mai întâi trebuie selectată valuta contractului </strong></small>
+                                    </div>
                                 </div>
                             </div>
 
@@ -327,6 +330,7 @@
                                     <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.internationalMedicamentName').invalid">
                                         <small class="text-muted"><strong class="text-danger">Denumirea trebuie selectata</strong></small>
                                     </div>
+
                                 </div>
                             </div>
 
@@ -363,9 +367,7 @@
                                         </ng-select>
                                     </div>
                                 </div>
-                                <div *ngIf="medicamentSelected && invalidCurrency">
-                                    <small class="text-muted"><strong class="text-danger">Valuta contractului trebuie selectată</strong></small>
-                                </div>
+
                             </div>
                             <div class="col-4">
                                 <div class="md-form">
