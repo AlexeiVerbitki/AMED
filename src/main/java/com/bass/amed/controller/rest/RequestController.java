@@ -1896,7 +1896,7 @@ public class RequestController
 
 
             parameters.put("autorizationImportDataSet", autorizationImportDataSet);
-            parameters.put("autorizationImportDataSet2", autorizationImportDataSet2);
+//            parameters.put("autorizationImportDataSet2", autorizationImportDataSet2);
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
