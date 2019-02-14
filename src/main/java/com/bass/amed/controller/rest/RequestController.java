@@ -1793,9 +1793,9 @@ if (request.getImportAuthorizationEntity().getContract()                    !=nu
 if (request.getImportAuthorizationEntity().getAnexaDate()                   !=null) {parameters.put("annexNrDate",    request.getImportAuthorizationEntity().getAnexaDate()               );}
 if (request.getImportAuthorizationEntity().getContractDate()                !=null) {parameters.put("contractNrDate", request.getImportAuthorizationEntity().getContractDate()            );}
 if (request.getImportAuthorizationEntity().getImporter().getName()          !=null) {parameters.put("buyerName",      request.getImportAuthorizationEntity().getImporter().getName()      );}
-if (request.getImportAuthorizationEntity().getSeller().getDescription()     !=null) {parameters.put("sallerName",     request.getImportAuthorizationEntity().getSeller().getDescription() );}
-if (request.getImportAuthorizationEntity().getSeller()                      !=null) {parameters.put("sallerAddress",  request.getImportAuthorizationEntity().getSeller().getAddress() + " " + request.getImportAuthorizationEntity().getSeller().getCountry().getCode());}
-parameters.put("sallerDirector", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
+if (request.getImportAuthorizationEntity().getSeller().getDescription()     !=null) {parameters.put("sellerName",     request.getImportAuthorizationEntity().getSeller().getDescription() );}
+if (request.getImportAuthorizationEntity().getSeller()                      !=null) {parameters.put("sellerAddress",  request.getImportAuthorizationEntity().getSeller().getAddress() + " " + request.getImportAuthorizationEntity().getSeller().getCountry().getCode());}
+parameters.put("sellerDirector", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
 //  <parameter name="annexNr
 //	<parameter name="buyerDirector
 //	<parameter name="contractNr
