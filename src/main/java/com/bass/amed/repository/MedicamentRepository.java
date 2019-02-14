@@ -96,4 +96,8 @@ public interface MedicamentRepository extends JpaRepository<MedicamentEntity, In
     @Modifying
     @Query("UPDATE MedicamentEntity p SET p.status = 'E' WHERE p.code = :code and p.status='F'")
     void setStatusExpiredForOldMedicament(@Param("code")String code);
+
+    @Query(value = "SELECT m.*, np.* FROM medicament m join nm_prices np on m.id = np.medicament_id WHERE (upper(m.name) LIKE upper(CONCAT(?1, '%')) OR m.code LIKE (CONCAT(?1, '%'))) AND m.status = 'F'", nativeQuery
+            = true)
+    List<MedicamentEntity> findAllByNameWithPrice(String name, String status);
 }

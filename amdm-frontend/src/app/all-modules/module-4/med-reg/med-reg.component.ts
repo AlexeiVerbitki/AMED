@@ -797,11 +797,13 @@ export class MedRegComponent implements OnInit {
 
                 }),
                 flatMap(term =>
-                    this.medicamentService.getMedicamentByName(term).pipe(
+                    this.medicamentService.getMedicamentByNameWithPrice(term).pipe(
+                        // this.medicamentService.getMedicamentByName(term).pipe(
                         tap(() => this.loadingmedicaments = false)
                     )
                 )
             );
+        console.log("medicaments", this.medicaments)
     }
 
 

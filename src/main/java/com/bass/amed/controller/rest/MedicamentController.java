@@ -111,6 +111,13 @@ public class MedicamentController
         return new ResponseEntity<>(medicamentRepository.findAllByName(medName, "F"), HttpStatus.OK);
     }
 
+    @RequestMapping("/all-by-name-with-price")
+    public ResponseEntity<List<MedicamentEntity>> findAllByNameWithPrice(String medName)
+    {
+        logger.debug("Retrieve all medicaments by name:" + medName);
+        return new ResponseEntity<>(medicamentRepository.findAllByNameWithPrice(medName, "F"), HttpStatus.OK);
+    }
+
 
 //    @Autowired
 //    SimilarMedicamentsRepository similarMedicamentsRepository;
