@@ -1785,6 +1785,28 @@ public class RequestController
                     ImportSpecificationDataSetArrayList.add(dataSet1);
                     }
 
+                //====================================
+
+if (request.getImportAuthorizationEntity().getAuthorizationsNumber()!=null) { parameters.put("annexNr", request.getImportAuthorizationEntity().getAuthorizationsNumber()); }
+if (request.getImportAuthorizationEntity().getImporter().getDirector()      !=null) {parameters.put("buyerDirector",  request.getImportAuthorizationEntity().getImporter().getDirector()  );}
+if (request.getImportAuthorizationEntity().getContract()                    !=null) {parameters.put("contractNr",     request.getImportAuthorizationEntity().getContract()                );}
+if (request.getImportAuthorizationEntity().getAnexaDate()                   !=null) {parameters.put("annexNrDate",    request.getImportAuthorizationEntity().getAnexaDate()               );}
+if (request.getImportAuthorizationEntity().getContractDate()                !=null) {parameters.put("contractNrDate", request.getImportAuthorizationEntity().getContractDate()            );}
+if (request.getImportAuthorizationEntity().getImporter().getName()          !=null) {parameters.put("buyerName",      request.getImportAuthorizationEntity().getImporter().getName()      );}
+if (request.getImportAuthorizationEntity().getSeller().getDescription()     !=null) {parameters.put("sallerName",     request.getImportAuthorizationEntity().getSeller().getDescription() );}
+if (request.getImportAuthorizationEntity().getSeller()                      !=null) {parameters.put("sallerAddress",  request.getImportAuthorizationEntity().getSeller().getAddress() + " " + request.getImportAuthorizationEntity().getSeller().getCountry().getCode());}
+parameters.put("sallerDirector", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
+//  <parameter name="annexNr
+//	<parameter name="buyerDirector
+//	<parameter name="contractNr
+//	<parameter name="annexNrDate
+//	<parameter name="contractNrDate
+//	<parameter name="buyerName
+//	<parameter name="sallerName
+//	<parameter name="sallerAddress
+//	<parameter name="sallerDirector
+//	<parameter name="importSpecificationMedicament" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+
                     //====================================
 
                     if (map.get(entity.getCustomsCode().getCode()) == null)
@@ -1823,8 +1845,8 @@ public class RequestController
 
 
 
-            JRBeanCollectionDataSource autorizationImportDataSet = new JRBeanCollectionDataSource(autorizationImportDataSetArrayList);
-//            JRBeanCollectionDataSource autorizationImportDataSet2 = new JRBeanCollectionDataSource(autorizationImportDataSet2ArrayList);
+//            JRBeanCollectionDataSource autorizationImportDataSet = new JRBeanCollectionDataSource(autorizationImportDataSetArrayList);
+            JRBeanCollectionDataSource autorizationImportDataSet = new JRBeanCollectionDataSource(ImportSpecificationDataSetArrayList);
 
             if (request.getImportAuthorizationEntity().getAuthorizationsNumber()!=null) {
                 parameters.put("autorizationNr", request.getImportAuthorizationEntity().getAuthorizationsNumber());
