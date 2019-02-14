@@ -131,6 +131,9 @@ export class RequestService {
     viewImportAuthorization(object: any): Observable<any> {
         return this.http.post('/api/view-import-authorization', object, { responseType: 'blob'});
     }
+    viewImportAuthorizationSpecification(object: any): Observable<any> {
+        return this.http.post('/api/view-import-authorization-specification', object, { responseType: 'blob'});
+    }
 
     getAuthorizationDetailsByNameOrCode(id: string, authId: string): Observable<any> {
         return this.http.get('/api/load-import-authorization-details', {params: {id: id, authId: authId}});
