@@ -1,9 +1,7 @@
 package com.bass.amed.controller.rest;
 
 import com.bass.amed.dto.AuditDTO;
-import com.bass.amed.dto.annihilation.AnnihilationDTO;
 import com.bass.amed.entity.NmAuditCategoryEntity;
-import com.bass.amed.entity.NmAuditSubcategoryEntity;
 import com.bass.amed.projection.AuditProjection;
 import com.bass.amed.repository.AuditCategoryRepository;
 import com.bass.amed.repository.AuditSubcategoryRepository;
@@ -35,7 +33,7 @@ public class AuditController
     public ResponseEntity<List<AuditProjection>> getAuditByFilter(@RequestBody AuditDTO filter)
     {
         LOGGER.debug("Get audit by filter: ", filter.toString());
-        List<AuditProjection> auditProjection = auditLogService.retrieveAnnihilationByFilter(filter);
+        List<AuditProjection> auditProjection = auditLogService.retrieveByFilter(filter);
         return new ResponseEntity<>(auditProjection, HttpStatus.OK);
     }
 

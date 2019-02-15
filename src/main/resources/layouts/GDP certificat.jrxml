@@ -36,10 +36,10 @@
 		<band height="184" splitType="Stretch">
 			<textField>
 				<reportElement x="2" y="30" width="528" height="20" uuid="b8809fc8-2a40-4a5a-988b-18213e70bf00"/>
-				<textElement textAlignment="Left">
+				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Nr. " + $P{nr} + " din " +$P{date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Certificat Nr. " + $P{nr} ]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="70" width="529" height="30" uuid="30570afb-e818-48c9-a274-9c09c7393701"/>

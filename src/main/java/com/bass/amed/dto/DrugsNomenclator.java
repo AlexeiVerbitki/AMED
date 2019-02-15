@@ -10,7 +10,7 @@ import java.util.Date;
 @Data
 public class DrugsNomenclator implements Serializable
 {
-    //    private Integer   id;
+    private Integer   id;
     private String    codulMed                          = "";
     private Integer   codVamal                          = 0;
     private String    denumireComerciala                = "";

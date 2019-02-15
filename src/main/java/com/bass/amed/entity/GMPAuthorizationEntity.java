@@ -19,12 +19,6 @@ public class GMPAuthorizationEntity
     @JoinColumn(name = "company_id")
     private NmEconomicAgentsEntity company;
     @Basic
-    @Column(name = "manufacturing_address")
-    private String manufacturingAddress;
-    @Basic
-    @Column(name = "manufacturing_name")
-    private String manufacturingName;
-    @Basic
     @Column(name = "status")
     private String status;
     @Basic
@@ -36,7 +30,72 @@ public class GMPAuthorizationEntity
     @Basic
     @Column(name = "veterinary_details")
     private String veterinaryDetails;
+    @Basic
+    @Column(name = "place_distribution_name")
+    private String placeDistributionName;
+    @Basic
+    @Column(name = "place_distribution_address")
+    private String placeDistributionAddress;
+    @Basic
+    @Column(name = "place_distribution_postal_code")
+    private String placeDistributionPostalCode;
+    @Basic
+    @Column(name = "place_distribution_contact_name")
+    private String placeDistributionContactName;
+    @Basic
+    @Column(name = "place_distribution_phone_number")
+    private String placeDistributionPhoneNumber;
+    @Basic
+    @Column(name = "place_distribution_fax")
+    private String placeDistributionFax;
+    @Basic
+    @Column(name = "place_distribution_mobile_number")
+    private String placeDistributionMobileNumber;
+    @Basic
+    @Column(name = "place_distribution_email")
+    private String placeDistributionEmail;
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "gmp_id")
     private Set<GMPSterileProductsEntity> sterileProducts = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "gmp_id")
+    private Set<GMPNesterileProductsEntity> neSterileProducts = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "gmp_id")
+    private Set<GMPBiologicalMedicinesEntity> biologicalMedicines = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "gmp_id")
+    private Set<GMPManufacturesEntity> manufactures = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "gmp_id")
+    private Set<GMPSterilizationsEntity> sterilizations = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "gmp_id")
+    private Set<GMPPrimaryPackagingEntity> primaryPackagings = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "gmp_id")
+    private Set<GMPSecondaryPackagingEntity> secondaryPackagings = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "gmp_id")
+    private Set<GMPTestsForQualityControlEntity> testsForQualityControl = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "gmp_id")
+    private Set<GMPLaboratoryUnderContractEntity> laboratories = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "gmp_id")
+    private Set<GMPQualifiedPersonsEntity> qualifiedPersons = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "gmp_id")
+    private Set<GMPAuthorizedMedicinesEntity> authorizedMedicines = new HashSet<>();
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(name = "gmp_inspectors", joinColumns = {
+            @JoinColumn(name = "gmp_inspection_id")}, inverseJoinColumns = {
+            @JoinColumn(name = "employer_id")})
+    private Set<NmEmployeesEntity> inspectors = new HashSet<>();
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @JoinColumn(name = "gmp_id")
+    private Set<GMPSubsidiaryEntity> subsidiaries = new HashSet<>();
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "gmp_id")
+    private Set<GMPPeriodsEntity> periods = new HashSet<>();
 }

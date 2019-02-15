@@ -1,11 +1,13 @@
 package com.bass.amed.controller.rest;
 
 import com.bass.amed.dto.TasksDTO;
+import com.bass.amed.entity.NmRegisterCatalogCodesEntity;
 import com.bass.amed.entity.ProcessNamesEntity;
 import com.bass.amed.entity.RegistrationRequestStepsEntity;
 import com.bass.amed.entity.RequestTypesEntity;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.projection.TaskDetailsProjectionDTO;
+import com.bass.amed.repository.NmRegisterCatalogCodesRepository;
 import com.bass.amed.repository.ProcessNamesRepository;
 import com.bass.amed.repository.RegistrationRequestStepRepository;
 import com.bass.amed.repository.RequestTypeRepository;
@@ -33,6 +35,8 @@ public class TasksController
     RegistrationRequestStepRepository registrationRequestStepRepository;
     @Autowired
     TasksService tasksService;
+    @Autowired
+    NmRegisterCatalogCodesRepository nmRegisterCatalogCodesRepository;
 
     @GetMapping(value = "/request-names")
     public ResponseEntity<List<ProcessNamesEntity>> getRequestNames()
@@ -84,5 +88,14 @@ public class TasksController
         List<TaskDetailsProjectionDTO> taskProjections = tasksService.retreiveTaskByFilter(filter);
         return new ResponseEntity<>(taskProjections, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/request-register-catalog-codes")
+    public ResponseEntity<List<NmRegisterCatalogCodesEntity>> getRegisterCatalogCodes() throws CustomException
+    {
+        LOGGER.debug("Get register catalog codes");
+        List<NmRegisterCatalogCodesEntity> requestTypesStepEntityList = nmRegisterCatalogCodesRepository.findAll();
+        return new ResponseEntity<>(requestTypesStepEntityList, HttpStatus.OK);
+    }
+
 
 }

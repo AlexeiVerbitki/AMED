@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -25,6 +26,12 @@ public class DrugDecisionsDetailsDTO  {
     private String partner;
     private String custom;
     private String localityId;
+    private String legalAddress;
     List<DrugImportExportDetailsEntity> details = new ArrayList<>();
+    private Integer language; //0- ro, 1- ru, 2 - en
+    private boolean usedScoupe; // true - medicina, false- tehnic
+    private String  rejectReason;
+    private Date    requestDate;
+    private String signPerson;
 
 }

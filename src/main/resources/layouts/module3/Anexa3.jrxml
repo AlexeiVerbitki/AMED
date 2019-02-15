@@ -309,7 +309,7 @@ d/o]]></text>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Verdana" size="8"/>
 								</textElement>
-								<textFieldExpression><![CDATA[String.format("%.2f",(double)$F{previousPrice}).replaceAll(".",",")]]></textFieldExpression>
+								<textFieldExpression><![CDATA[String.format("%.2f",(double)$F{previousPrice})]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -330,7 +330,7 @@ d/o]]></text>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Verdana" size="8"/>
 								</textElement>
-								<textFieldExpression><![CDATA[String.format("%.2f",(double)$F{reviewedPrice}).replaceAll(".",",")]]></textFieldExpression>
+								<textFieldExpression><![CDATA[String.format("%.2f",(double)$F{reviewedPrice})]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -351,7 +351,7 @@ d/o]]></text>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Verdana" size="8"/>
 								</textElement>
-								<textFieldExpression><![CDATA[String.format("%.2f",(double)$F{producerPrice}).replaceAll(".",",")]]></textFieldExpression>
+								<textFieldExpression><![CDATA[String.format("%.2f",(double)$F{producerPrice})]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

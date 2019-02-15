@@ -82,6 +82,7 @@ public class AuditLogService
         auditLogRepository.save(dummyEntity);
     }
 
+    @Transactional(propagation=Propagation.REQUIRED)
     public void saveAll(List<AuditLogEntity> dummyEntities)
     {
         for(AuditLogEntity dummyEntity : dummyEntities)
@@ -104,7 +105,7 @@ public class AuditLogService
     }
 
 
-    public List<AuditProjection> retrieveAnnihilationByFilter(AuditDTO filter)
+    public List<AuditProjection> retrieveByFilter(AuditDTO filter)
     {
         EntityManager         em                  = null;
         List<AuditProjection> auditDetails = new ArrayList<>();
@@ -160,6 +161,7 @@ public class AuditLogService
         if (filter.getCategory() != null)
         {
             stringBuilder.append(" WHERE nmc.id = :category ");
+            firstCriteria = false;
         }
         if (filter.getSubcategory() != null)
         {

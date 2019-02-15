@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Data
@@ -52,11 +53,32 @@ public class DrugCheckDecisionsEntity
     @Basic
     @Column(name = "drug_substance_types_id")
     private Integer drugSubstanceTypesId;
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
-    @JoinColumn(name = "drug_check_decisions_id")
-    private Set<NmEconomicAgentsEntity> nmEconomicAgents = new HashSet<>();
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     @JoinColumn(name = "drug_check_decisions_id")
     private Set<DrugImportExportDetailsEntity> drugImportExportDetails = new HashSet<>();
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "nm_ec_agent_id")
+    private NmEconomicAgentsEntity economicAgent;
+    @Basic
+    @Column(name = "decision")
+    private Byte decision;
+    @Basic
+    @Column(name = "reason_decision")
+    private String reasonDecision;
+    @Basic
+    @Column(name = "expiration_date")
+    private Date expireDate;
+    @Basic
+    @Column(name = "authorization_type")
+    private String authorizationType;
+    @Basic
+    @Column(name = "partner_company")
+    private String partnerCompany;
+    @Basic
+    @Column(name = "customs_post")
+    private String customsPost;
+    @Basic
+    @Column(name = "authorization_scope")
+    private Byte scopeAuthorization;
 
 }

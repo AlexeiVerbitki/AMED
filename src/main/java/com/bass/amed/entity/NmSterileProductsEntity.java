@@ -13,4 +13,6 @@ public class NmSterileProductsEntity
     private Integer id;
     @Basic@Column(name = "description")
     private String description;
+    @Basic@Column(name = "description_en")
+    private String descriptionEn;
 }

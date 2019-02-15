@@ -48,7 +48,7 @@
 		<field name="tradeNameOfDrug" class="java.lang.String"/>
 		<field name="pharmaceuticForm" class="java.lang.String"/>
 		<field name="dose" class="java.lang.String"/>
-		<field name="package" class="java.lang.String"/>
+		<field name="packaging" class="java.lang.String"/>
 		<field name="quantity" class="java.lang.String"/>
 		<field name="priceCurrency" class="java.lang.String"/>
 		<field name="valueCurrency" class="java.lang.String"/>
@@ -66,9 +66,12 @@
 	<parameter name="contractNrDate" class="java.lang.String"/>
 	<parameter name="importSpecificationMedicament" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<parameter name="buyerName" class="java.lang.String"/>
-	<parameter name="sallerName" class="java.lang.String"/>
-	<parameter name="sallerAddress" class="java.lang.String"/>
-	<parameter name="sallerDirector" class="java.lang.String"/>
+	<parameter name="sellerName" class="java.lang.String"/>
+	<parameter name="sellerAddress" class="java.lang.String"/>
+	<parameter name="sellerDirector" class="java.lang.String"/>
+	<parameter name="Parameter1" class="java.lang.String"/>
+	<parameter name="totalSum" class="java.lang.String"/>
+	<parameter name="buyerAddress" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -332,7 +335,7 @@
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="8"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{package}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{packaging}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -530,32 +533,25 @@
 		</band>
 		<band height="206">
 			<staticText>
-				<reportElement x="270" y="0" width="130" height="18" uuid="17b487a4-5176-4d6c-8eb9-e67990f6a252"/>
+				<reportElement x="320" y="0" width="130" height="18" uuid="17b487a4-5176-4d6c-8eb9-e67990f6a252"/>
 				<textElement>
 					<font fontName="DejaVu Sans" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Total pentru achitare]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="270" y="18" width="87" height="10" uuid="f84c911c-5ef8-4366-a272-4249254743e0"/>
+				<reportElement x="324" y="18" width="87" height="10" uuid="f84c911c-5ef8-4366-a272-4249254743e0"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[ Total to be paid]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="400" y="0" width="46" height="18" uuid="5f3c689c-41a4-4a6d-948a-c1ce56f5844e"/>
+				<reportElement x="455" y="0" width="138" height="18" uuid="5f3c689c-41a4-4a6d-948a-c1ce56f5844e"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{annexNr}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="446" y="0" width="53" height="18" uuid="07df321a-29b9-40b7-b9b4-c999997f4596"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="10" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{annexNrDate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{totalSum}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="5" y="35" width="55" height="18" uuid="1f07ca0d-25c4-4c05-95b3-7144bf2805b1"/>
@@ -576,7 +572,7 @@
 				<textElement>
 					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{sallerName}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{sellerName}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="5" y="69" width="55" height="18" uuid="90287a35-651a-4518-8ee6-6344b1001e71"/>
@@ -597,7 +593,7 @@
 				<textElement>
 					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{sallerAddress}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{sellerAddress}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="5" y="104" width="55" height="18" uuid="946e31d8-6130-4f61-ad90-7503f59e8481"/>
@@ -618,7 +614,7 @@
 				<textElement>
 					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{sallerDirector}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{sellerDirector}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="6" y="162" width="55" height="10" uuid="8f3d1547-9535-4539-aa77-83da9519c6ff"/>
@@ -628,7 +624,7 @@
 				<text><![CDATA[stamp]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="454" y="40" width="55" height="18" uuid="e360093b-bd67-42f4-aac4-76e65804e0e1"/>
+				<reportElement x="454" y="40" width="76" height="18" uuid="e360093b-bd67-42f4-aac4-76e65804e0e1"/>
 				<textElement>
 					<font fontName="DejaVu Sans" isBold="true"/>
 				</textElement>
@@ -670,7 +666,7 @@
 				<text><![CDATA[stamp]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="509" y="40" width="220" height="18" uuid="108f4865-f1b8-4c8a-bc7f-2dba71519366"/>
+				<reportElement x="530" y="40" width="199" height="18" uuid="108f4865-f1b8-4c8a-bc7f-2dba71519366"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>

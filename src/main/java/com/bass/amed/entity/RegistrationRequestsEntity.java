@@ -29,7 +29,7 @@ public class RegistrationRequestsEntity
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "company_id")
     private NmEconomicAgentsEntity company;
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
+    @OneToOne( fetch = FetchType.LAZY, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
     @JoinColumn( name = "import_id" )
     private ImportAuthorizationEntity importAuthorizationEntity;
     @OneToOne( fetch = FetchType.LAZY, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
@@ -127,10 +127,12 @@ public class RegistrationRequestsEntity
     @Basic
     @Column(name = "expired_comment")
     private String expiredComment;
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "registrationRequest")
+    private GDPInspectionEntity gmpAuthorization;
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "request_id")
     private Set<GMPAuthorizationEntity> gmpAuthorizations = new HashSet<>();
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "registrationRequest")
     @JsonManagedReference
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "registrationRequest")
     private GDPInspectionEntity gdpInspection;
 }

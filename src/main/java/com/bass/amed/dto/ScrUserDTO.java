@@ -8,6 +8,6 @@ import java.io.Serializable;
 public class ScrUserDTO implements Serializable
 {
     private String username;
-    private String password;
+    private  String password;
 
 }

@@ -10,7 +10,8 @@ import java.sql.Timestamp;
 @Table(name = "medicament_instructions", schema = "amed")
 public class MedicamentInstructionsEntity
 {
-    @Id@GeneratedValue( strategy = GenerationType.IDENTITY )@Column(name = "id", nullable = false)
+    @Id@GeneratedValue( strategy = GenerationType.IDENTITY )
+    @Column(name = "id", nullable = false)
     private Integer id;
     @Basic@Column(name = "date")
     private Timestamp date;
@@ -27,6 +28,8 @@ public class MedicamentInstructionsEntity
     @Basic
     @Column(name = "volume")
     private String volume;
+    @Basic@Column(name = "medicament_id")
+    private Integer medicamentId;
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "volume_unit_measurement_id")
     private NmUnitsOfMeasurementEntity volumeQuantityMeasurement;

@@ -6,7 +6,9 @@ import com.bass.amed.dto.clinicaltrial.ClinicalTrialDTO;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
+import com.bass.amed.service.AuditLogService;
 import com.bass.amed.service.ClinicalTrailsService;
+import com.bass.amed.utils.AuditUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -37,6 +38,8 @@ public class ClinicalTrailsController {
     ClinicalTrailNotificationTypeRepository clinicalTrailNotificationTypeRepository;
     @Autowired
     DocumentsRepository documentsRepository;
+    @Autowired
+    private AuditLogService auditLogService;
 
     @PostMapping(value = "/save-request")
     public ResponseEntity<RegistrationRequestsEntity> saveClinicalTrailRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
@@ -67,8 +70,10 @@ public class ClinicalTrailsController {
             clinicalTrailsService.scheduleClientDetailsDataCT(requests.getId(), requests.getRequestNumber());
         } else if (requests.getCurrentStep().equals(Constants.ClinicTrailStep.FINISH)) {
             clinicalTrailsService.unscheduleFinisLimitCT(requests.getId());
+            AuditUtils.auditClinicatTrinalRegistration(auditLogService, requests);
         } else if (requests.getCurrentStep().equals(Constants.ClinicTrailStep.CANCEL)) {
             clinicalTrailsService.unscheduleFinisLimitCT(requests.getId());
+            AuditUtils.auditClinicatTrinalInterrupt(auditLogService, requests);
         }
         return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
     }
@@ -131,7 +136,6 @@ public class ClinicalTrailsController {
             });
 
             boolean isMedInstModified = requestTypesStepEntityList.stream().filter(medInst -> 'N' == medInst.getEmbededId().getStatus() || 'R' == medInst.getEmbededId().getStatus()).findAny().isPresent();
-            List<CtMedicalInstitutionEntity> medicalInstitutionEntitiesList = new ArrayList<>();
             Map<CtMedicalInstitutionEntity, CtMedicalInstitutionEntity> medicalInstitutionEntitiesMap = new HashMap();
             if (isMedInstModified) {
                 requestTypesStepEntityList.forEach(entity -> {
@@ -142,8 +146,10 @@ public class ClinicalTrailsController {
                     }
 
                     if ('U' == entity.getEmbededId().getStatus() || 'R' == entity.getEmbededId().getStatus()) {
-                        entity.getInvestigatorsEntity().setMain(entity.getMainInvestigator());
-                        medicalInstitutionEntitiesMap.get(entity.getMedicalInstitutionsEntity()).getInvestigators().add(entity.getInvestigatorsEntity());
+                        CtInvestigatorEntity ctInvestigatorEntity = new CtInvestigatorEntity();
+                        ctInvestigatorEntity.asign(entity.getInvestigatorsEntity());
+                        ctInvestigatorEntity.setMain(entity.getMainInvestigator());
+                        medicalInstitutionEntitiesMap.get(entity.getMedicalInstitutionsEntity()).getInvestigators().add(ctInvestigatorEntity);
                     }
                 });
                 clinicTrialAmendEntity.getMedicalInstitutionsFrom().addAll(medicalInstitutionEntitiesMap.values());
@@ -158,9 +164,9 @@ public class ClinicalTrailsController {
     @PostMapping(value = "/finish-amendment-request")
     public ResponseEntity<Integer> finishClinicalTrailAmendmentRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
         clinicalTrailsService.finishNewClinicalTrailAmendment(requests);
+        clinicalTrailsService.getCtMedInstInvestigator(requests);
         return new ResponseEntity<>(requests.getId(), HttpStatus.OK);
     }
-
 
     @Transactional
     @PostMapping(value = "/save-amendment-request")
@@ -216,6 +222,7 @@ public class ClinicalTrailsController {
             throw new CustomException("Request was not found");
         }
         requestRepository.save(requests);
+        AuditUtils.auditClinicatTrinalNotifiicationRegistration(auditLogService, requests);
         return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
     }
 
@@ -249,6 +256,12 @@ public class ClinicalTrailsController {
         clinicalTrailsService.getCtMedInstInvestigator(registrationRequestsEntity2.get());
 
         return new ResponseEntity<>(registrationRequestsEntity2.get(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/generate-ct-sequence-nr")
+    public ResponseEntity<List<String>> generateCtSequenceNr()
+    {
+        return new ResponseEntity<>(Arrays.asList(clinicalTrailsService.getDocumentNumber()), HttpStatus.OK);
     }
 
 

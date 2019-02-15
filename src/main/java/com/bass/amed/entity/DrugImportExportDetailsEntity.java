@@ -26,17 +26,17 @@ public class DrugImportExportDetailsEntity {
     @Column(name = "drug_check_decisions_id")
     private Integer drugCheckDecisionsId;
 
-    @Basic
-    @Column(name = "substance_name")
-    private String substanceName;
+//    @Basic
+//    @Column(name = "substance_name")
+//    private String substanceName;
 
-    @Basic
-    @Column(name = "authorization_type")
-    private String authorizationType;
+//    @Basic
+//    @Column(name = "authorized_drug_substances_id")
+//    private Integer authorizedDrugSubstancesId;
 
-    @Basic
-    @Column(name = "authorized_drug_substances_id")
-    private Integer authorizedDrugSubstancesId;
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "authorized_drug_substances_id")
+    private AuthorizedDrugSubstancesEntity authorizedDrugSubstance;
 
     @Basic
     @Column(name = "from_date")

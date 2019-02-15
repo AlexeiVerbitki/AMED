@@ -24,20 +24,22 @@ import org.springframework.security.ldap.authentication.LdapAuthenticationProvid
 import org.springframework.security.ldap.ppolicy.PasswordPolicyControl;
 import org.springframework.security.ldap.ppolicy.PasswordPolicyResponseControl;
 import org.springframework.security.ldap.search.FilterBasedLdapUserSearch;
+import org.springframework.security.ldap.userdetails.LdapAuthority;
 import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
 import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 
 @Component
 public class CustomAuthenticationManager implements AuthenticationManager
 {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CustomAuthenticationManager.class);
-    private final SrcUserRepository srcUserRepository;
-    private final LdapContextSource ldapContextSource;
+    private static final Logger            LOGGER = LoggerFactory.getLogger(CustomAuthenticationManager.class);
+    private final        SrcUserRepository srcUserRepository;
+    private final        LdapContextSource ldapContextSource;
     LdapAuthenticationProvider provider = null;
 
     @Value("${ldap.base_search_user}")
@@ -64,7 +66,7 @@ public class CustomAuthenticationManager implements AuthenticationManager
         filter.and(new EqualsFilter("objectclass", "person"));
         filter.and(new EqualsFilter("userPrincipalName", authentication.getPrincipal().toString()));
 
-        FilterBasedLdapUserSearch userSearch = new FilterBasedLdapUserSearch(LDAP_BASE_USER_SEARCH, filter.encode(),ldapContextSource);
+        FilterBasedLdapUserSearch userSearch = new FilterBasedLdapUserSearch(LDAP_BASE_USER_SEARCH, filter.encode(), ldapContextSource);
         try
         {
             bindAuth.setUserSearch(userSearch);
@@ -77,6 +79,7 @@ public class CustomAuthenticationManager implements AuthenticationManager
         }
 
         provider = new LdapAuthenticationProvider(bindAuth);
+        provider.setHideUserNotFoundExceptions(false);
         provider.setUserDetailsContextMapper(new UserDetailsContextMapper()
         {
             @Override
@@ -88,28 +91,35 @@ public class CustomAuthenticationManager implements AuthenticationManager
                 LOGGER.debug("Mapping user details from context with DN: " + dn);
 
                 Optional<ScrUserEntity> isUser = srcUserRepository.findOneWithAuthoritiesByUsername(username);
-                final ScrUserEntity user = isUser.orElseThrow(() -> new UsernameNotFoundException(username + " nu este configurat in BD locala"));
+                final ScrUserEntity     user   = isUser.orElseThrow(() -> new UsernameNotFoundException(username + " nu este configurat in BD locala"));
 
-                final ScrRoleEntity srcRole = user.getSrcRole();
-                if (srcRole.getId() == null)
+                final Set<ScrRoleEntity> srcRole = user.getSrcRole();
+                if (srcRole.isEmpty())
                 {
                     throw new UsernameNotFoundException("Nu s-a gasit nici un role p/u utilizatorul: " + username);
-                }
-
-                if (srcRole.getAuthorities().isEmpty())
-                {
-                    throw new UsernameNotFoundException("Rolul: " + srcRole.getDescription() + ",  nu aveti autoritati");
                 }
 
                 LdapUserDetailsImpl.Essence essence = new LdapUserDetailsImpl.Essence();
                 essence.setDn(dn);
                 essence.setUsername(authentication.getPrincipal().toString());
-                essence.addAuthority(new SimpleGrantedAuthority(srcRole.getRoleCode()));
 
-                for (ScrAuthorityEntity authority : srcRole.getAuthorities())
+                boolean hasAuthoritiesConfig = false;
+                for (ScrRoleEntity role : srcRole)
                 {
-                    GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(authority.getCode());
-                    essence.addAuthority(grantedAuthority);
+                    GrantedAuthority grantedRoleAuthority = new SimpleGrantedAuthority(role.getRoleCode());
+                    essence.addAuthority(grantedRoleAuthority);
+
+                    for (ScrAuthorityEntity authority : role.getAuthorities())
+                    {
+                        GrantedAuthority grantedRightAuthority = new SimpleGrantedAuthority(authority.getCode());
+                        essence.addAuthority(grantedRightAuthority);
+                        hasAuthoritiesConfig = true;
+                    }
+                }
+
+                if (!hasAuthoritiesConfig)
+                {
+                    throw new UsernameNotFoundException("nu aveti nici o autoritate configurata!!!");
                 }
 
                 PasswordPolicyResponseControl policy = (PasswordPolicyResponseControl) ctx.getObjectAttribute(PasswordPolicyControl.OID);

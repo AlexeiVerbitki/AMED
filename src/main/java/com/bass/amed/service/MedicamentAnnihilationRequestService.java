@@ -4,6 +4,7 @@ import com.bass.amed.common.Constants;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.EconomicAgentsRepository;
+import com.bass.amed.repository.OutputDocumentsRepository;
 import com.bass.amed.repository.annihilation.MedicamentAnnihilationInstitutionRepository;
 import com.bass.amed.repository.annihilation.MedicamentAnnihilationMedsRepository;
 import com.bass.amed.repository.MedicamentRepository;
@@ -12,6 +13,7 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.annotation.RequestScope;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -42,6 +44,9 @@ public class MedicamentAnnihilationRequestService
     private MedicamentAnnihilationInstitutionRepository medicamentAnnihilationInstitutionRepository;
 
     @Autowired
+    private OutputDocumentsRepository outputDocumentsRepository;
+
+    @Autowired
     private AuditLogService auditLogService;
 
     @Transactional(readOnly = true)
@@ -60,11 +65,31 @@ public class MedicamentAnnihilationRequestService
         RegistrationRequestsEntity rrE = re.get();
         rrE.setMedicamentAnnihilation((MedicamentAnnihilationEntity) Hibernate.unproxy(re.get().getMedicamentAnnihilation()));
 
-        rrE.getMedicamentAnnihilation().setCompanyName(economicAgentsRepository.findFirstByIdnoEquals(rrE.getMedicamentAnnihilation().getIdno()).get().getName());
+        rrE.getMedicamentAnnihilation().setCompanyName(rrE.getMedicamentAnnihilation().getIdno() != null ? economicAgentsRepository.findFirstByIdnoEquals(rrE.getMedicamentAnnihilation().getIdno()).get().getName() : null);
 
-        rrE.getMedicamentAnnihilation().setMedicamentsMedicamentAnnihilationMeds(medicamentAnnihilationMedsRepository.findByMedicamentAnnihilationId(rrE.getMedicamentAnnihilation().getId()));
+        //        rrE.getMedicamentAnnihilation().setMedicamentsMedicamentAnnihilationMeds(medicamentAnnihilationMedsRepository.findByMedicamentAnnihilationId(rrE.getMedicamentAnnihilation().getId()));
 
-        rrE.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds().forEach(ma -> ma.setMedicamentName(medicamentRepository.getCommercialNameById(ma.getMedicamentId()).orElse(null)));
+        rrE.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds().forEach(ma ->
+                {
+                    if (ma.getMedicamentId() != null)
+                    {
+                        ma.setMedicamentName(medicamentRepository.getCommercialNameById(ma.getMedicamentId()).orElse(null));
+                    }
+                    else
+                    {
+                        ma.setMedicamentName(ma.getNotRegisteredName());
+                    }
+                }
+        );
+
+        //Call to load data from proxy
+        rrE.getDocuments().toString();
+        rrE.getPaymentOrders().toString();
+
+        if (rrE.getOutputDocumentId() != null)
+        {
+//            rrE.getMedicamentAnnihilation().setAttachedLNDocument(outputDocumentsRepository.findById(rrE.getOutputDocumentId()).get().getAttached());
+        }
 
         return rrE;
     }
@@ -80,16 +105,13 @@ public class MedicamentAnnihilationRequestService
 
             em.persist(request);
 
-            for (MedicamentAnnihilationMedsEntity mm : request.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds())
-            {
-                mm.setMedicamentAnnihilationId(request.getMedicamentAnnihilation().getId());
-                em.persist(mm);
-            }
+
 
             em.getTransaction().commit();
 
         }
-        catch (Exception e){
+        catch (Exception e)
+        {
             if (em != null)
             {
                 em.getTransaction().rollback();
@@ -115,7 +137,7 @@ public class MedicamentAnnihilationRequestService
 
             for (MedicamentAnnihilationMedsEntity mm : request.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds())
             {
-                MedicamentAnnihilationMedsEntity mam = em.find(MedicamentAnnihilationMedsEntity.class, new MedicamentAnnihilationIdentity(mm.getMedicamentId(), mm.getMedicamentAnnihilationId()));
+                MedicamentAnnihilationMedsEntity mam = em.find(MedicamentAnnihilationMedsEntity.class, mm.getId());
                 mam.setDestructionMethod(mm.getDestructionMethod());
                 mam.setTax(mm.getTax());
 
@@ -125,13 +147,15 @@ public class MedicamentAnnihilationRequestService
             r.getRequestHistories().add(new ArrayList<>(request.getRequestHistories()).get(0));
 
             //Update documents
-            Set<DocumentsEntity> dSet = request.getMedicamentAnnihilation().getDocuments().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
+            Set<DocumentsEntity> dSet = request.getDocuments().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
 
-            if (!dSet.isEmpty()){
-                r.getMedicamentAnnihilation().getDocuments().addAll(dSet);
+            if (!dSet.isEmpty())
+            {
+                r.getDocuments().addAll(dSet);
             }
 
-           //Institions
+
+            //Institions
             r.getMedicamentAnnihilation().getMedicamentAnnihilationInsitutions().clear();
             r.getMedicamentAnnihilation().getMedicamentAnnihilationInsitutions().addAll(request.getMedicamentAnnihilation().getMedicamentAnnihilationInsitutions());
 
@@ -146,7 +170,8 @@ public class MedicamentAnnihilationRequestService
             em.getTransaction().commit();
 
         }
-        catch (Exception e){
+        catch (Exception e)
+        {
             if (em != null)
             {
                 em.getTransaction().rollback();
@@ -173,10 +198,11 @@ public class MedicamentAnnihilationRequestService
             r.getRequestHistories().add(new ArrayList<>(request.getRequestHistories()).get(0));
 
             //Update documents
-            Set<DocumentsEntity> dSet = request.getMedicamentAnnihilation().getDocuments().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
+            Set<DocumentsEntity> dSet = request.getDocuments().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
 
-            if (!dSet.isEmpty()){
-                r.getMedicamentAnnihilation().getDocuments().addAll(dSet);
+            if (!dSet.isEmpty())
+            {
+                r.getDocuments().addAll(dSet);
             }
 
             r.setCurrentStep(request.getCurrentStep());
@@ -184,7 +210,7 @@ public class MedicamentAnnihilationRequestService
 
             r.getMedicamentAnnihilation().setStatus("F");
 
-            r.setEndDate(new Timestamp( new Date().getTime()));
+            r.setEndDate(new Timestamp(new Date().getTime()));
 
 
             //Institions
@@ -207,7 +233,8 @@ public class MedicamentAnnihilationRequestService
             em.getTransaction().commit();
 
         }
-        catch (Exception e){
+        catch (Exception e)
+        {
             if (em != null)
             {
                 em.getTransaction().rollback();

@@ -20,9 +20,29 @@ public class GDPInspectionEntity {
     @JsonBackReference
     private RegistrationRequestsEntity registrationRequest;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @Basic
+    @Column(name = "group_leader_id")
+    private Integer groupLeaderId;
+
+    @Basic
+    @Column(name = "inspection_certificate_nr")
+    private String certificateBasedOnTheInspection;
+
+    @Basic
+    @Column(name = "auto_distribution_operations")
+    private String autoDistributionOperations;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinTable(name = "GDP_INSPECTORS", joinColumns = {
             @JoinColumn(name = "gdp_inspection_id")}, inverseJoinColumns = {
             @JoinColumn(name = "employer_id")})
-    private Set<NmEmployeesEntity> documents;
+    private Set<NmEmployeesEntity> inspectors;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @JoinColumn(name = "gdp_inspection_id")
+    private Set<GDPSubsidiaryEntity> subsidiaries;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @JoinColumn(name = "gdp_inspection_id")
+    private Set<GDPPeriodsEntity> periods;
 }

@@ -25,16 +25,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Slf4j
 @Service
 public class XchangeUpdateService
 {
     SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Chisinau"));
     @Autowired
     private CurrencyHistoryRepository currenciesHistoryRepository;
     @Autowired
@@ -46,29 +44,40 @@ public class XchangeUpdateService
 
     public void execute() throws JAXBException, MalformedURLException
     {
+        sdf.setTimeZone(TimeZone.getTimeZone("Europe/Chisinau"));
+        today = resetTime(today);
 
         LOGGER.info("Start updating currency exchange rate");
         lastUpdatedDate = currenciesHistoryRepository.findLastInsertedCurrencyDate();
 
         if (lastUpdatedDate == null)
         {
+            LOGGER.info("Last updated date is null. I Try to extract today's currency rates..");
             lastUpdatedDate = new Date();
             updateCurrencies();
         }
         else if (DateUtils.isSameDay(lastUpdatedDate, today))
         {
+            LOGGER.info("DB alredy contains today's currency rates..");
             return;
         }
         else if (lastUpdatedDate.before(today))
         {
+            LOGGER.info("DB doesn't contain today's currency rates. Trying to extract...");
             updateCurrencies();
         }
     }
 
-    public void updateCurrencies() throws JAXBException, MalformedURLException
+    private void updateCurrencies() throws JAXBException, MalformedURLException
     {
         do
         {
+            lastUpdatedDate = addOneDay(lastUpdatedDate);
+            calendar.setTime(lastUpdatedDate);
+            if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                LOGGER.info("Escape updating for weekend: " + lastUpdatedDate);
+                continue;
+            }
             ValCurs currencies = getTodayXchangeRates();
 
             if (currencies != null)
@@ -77,9 +86,9 @@ public class XchangeUpdateService
                 currenciesHistoryRepository.saveAll(nmCurrencies);
             }
 
-            DateUtils.addDays(lastUpdatedDate, 1);
+            LOGGER.info("Updated currency for: " + lastUpdatedDate);
         }
-        while (!today.after(lastUpdatedDate));
+        while (today.after(lastUpdatedDate));
     }
 
     private ValCurs getTodayXchangeRates() throws JAXBException, MalformedURLException
@@ -87,15 +96,33 @@ public class XchangeUpdateService
         JAXBContext jc = JAXBContext.newInstance(ValCurs.class);
         unmarshaller = jc.createUnmarshaller();
 
-        String todayFormatingDate = sdf.format(today);
+        String todayFormatingDate = sdf.format(lastUpdatedDate);
 
         String url = "https://www.bnm.md/ro/official_exchange_rates?date=" + todayFormatingDate;
 
         File file = new File("C:\\Users\\gheorghe.guzun\\Desktop\\official_exchange_rates.xml");
 
+        LOGGER.info("Today currency extraction url: " + url);
         ValCurs currencies = (ValCurs) unmarshaller.unmarshal(new URL(url));
         return currencies;
     }
+
+    Date addOneDay(Date date) {
+        calendar.setTime(resetTime(date));
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        return calendar.getTime();
+    }
+
+    Date resetTime(Date date) {
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
+    }
+
+
 
     @Transactional
     List<NmCurrenciesHistoryEntity> valCursToNm(ValCurs valCurrencies)
@@ -108,7 +135,7 @@ public class XchangeUpdateService
             currencyHistory.setCurrency(currency);
             currencyHistory.setMultiplicity(c.getNominal());
             currencyHistory.setValue(c.getValue());
-            currencyHistory.setPeriod(today);
+            currencyHistory.setPeriod(lastUpdatedDate);
             nmCurrencies.add(currencyHistory);
         });
 

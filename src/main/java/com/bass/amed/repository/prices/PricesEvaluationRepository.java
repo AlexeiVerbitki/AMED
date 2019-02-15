@@ -1,17 +1,12 @@
 package com.bass.amed.repository.prices;
 
 import com.bass.amed.dto.prices.CatalogPriceDTO;
-import com.bass.amed.entity.LicenseDetailsEntity;
-import com.bass.amed.entity.NmPricesEntity;
-import com.bass.amed.exception.CustomException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 
 public interface PricesEvaluationRepository extends JpaRepository<CatalogPriceDTO, Integer>
 {
@@ -197,5 +192,5 @@ public interface PricesEvaluationRepository extends JpaRepository<CatalogPriceDT
 
     @Modifying
     @Query("UPDATE NmPricesEntity p SET p.status = :status, p.revisionDate = current_date WHERE p.id in (:ids)")
-    void changeCNPricesStatus(@Param("ids")List<Integer> ids, @Param("status")String status);
+    void changeCNPricesStatus(@Param("ids") List<Integer> ids, @Param("status") String status);
 }

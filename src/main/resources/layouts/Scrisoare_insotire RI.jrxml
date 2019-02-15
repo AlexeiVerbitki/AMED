@@ -11,6 +11,7 @@
 	<parameter name="companyEmail" class="java.lang.String"/>
 	<parameter name="inspectPeriod" class="java.lang.String"/>
 	<parameter name="anex" class="java.lang.String"/>
+	<parameter name="distributionAddress" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -72,7 +73,7 @@
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA["	Prin prezenta, Agenția Medicamentului și Dispozitivelor Medicale comunică rezultatele inspecției efectuate la întreprinderea " + $P{companyName} + " (" + $P{companyAddress} + ") " + " în perioada " + $P{inspectPeriod}.toString().replaceAll("\\|",", ") + " în vederea eliberării certificatului de conformitate cu Bunele Practici de Distribuție (GDP) a medicamentelor de uz uman (vezi anexa)."]]></textFieldExpression>
+				<textFieldExpression><![CDATA["	Prin prezenta, Agenția Medicamentului și Dispozitivelor Medicale comunică rezultatele inspecției efectuate la întreprinderea " + $P{companyName} + " (" + $P{distributionAddress} + ") " + " în perioada " + $P{inspectPeriod}.toString().replaceAll("\\|",", ") + " în vederea eliberării certificatului de conformitate cu Bunele Practici de Distribuție (GDP) a medicamentelor de uz uman (vezi anexa)."]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="200" y="5" width="60" height="18" uuid="4a9a2cc5-09db-4fcc-a994-b04e025bc255"/>

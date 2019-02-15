@@ -1,5 +1,6 @@
 package com.bass.amed.controller.rest.prices;
 
+import com.bass.amed.common.Constants;
 import com.bass.amed.dto.PrevYearAvgPriceDTO;
 import com.bass.amed.dto.prices.evaluation.*;
 import com.bass.amed.dto.prices.registration.annexes.MedicineDataForAnnex2;
@@ -72,6 +73,8 @@ public class PriceDocsController {
     @Autowired
     private DocumentsRepository documentsRepository;
 
+    @Autowired
+    private SysParamsRepository sysParamsRepository;
 
     JasperReport createReport(String resourcePath) throws IOException, JRException {
 
@@ -88,7 +91,7 @@ public class PriceDocsController {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("nr", "_____________________");
         parameters.put("date", "_____________________");
-        parameters.put("genDir", "_____________________");
+        parameters.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
 
         JasperReport report;
         try {

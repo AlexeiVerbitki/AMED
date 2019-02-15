@@ -1,6 +1,5 @@
 package com.bass.amed.entity;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
@@ -10,11 +9,12 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-@Setter
 @Getter
+@Setter
 @Entity
 @Table(name = "scr_authority")
-public class ScrAuthorityEntity implements Serializable {
+public class ScrAuthorityEntity implements Serializable
+{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

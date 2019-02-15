@@ -784,7 +784,7 @@ public class DocumentsController
                 dto.setPharmaceuticalForm(med.getPharmaceuticalForm().getDescription());
                 dto.setConcentration(med.getDose());
                 dto.setRegistrationNumber(String.valueOf(med.getRegistrationNumber()));
-                dto.setStatus(med.getOriginale() ? "Original" : "");
+                dto.setStatus(Boolean.TRUE.equals(med.getOriginale()) ? "Original" : "");
                 dto.setDose(med.getDivision());
                 MedicamentManufactureEntity manufacture =
                         med.getManufactures().stream().filter(t -> t.getProducatorProdusFinit()).findFirst().orElse(new MedicamentManufactureEntity());
@@ -934,7 +934,7 @@ public class DocumentsController
             outputDocumentsEntity.setPath(outputFile);
             outputDocumentsRepository.save(outputDocumentsEntity);
         }
-        catch (Exception e)
+        catch (IOException | JRException e)
         {
             throw new CustomException(e.getMessage());
         }
@@ -2463,8 +2463,12 @@ public class DocumentsController
 
             parameters.put("productOfInvstigation", registrationRequestsEntity.getClinicalTrails().getMedicament().getName());
             parameters.put("manufacturerOfProductOfInvestigation", registrationRequestsEntity.getClinicalTrails().getMedicament().getManufacture().getDescription());
-            parameters.put("productOfReference", registrationRequestsEntity.getClinicalTrails().getReferenceProduct().getName());
-            parameters.put("manufacturerOfProductOfReference", registrationRequestsEntity.getClinicalTrails().getReferenceProduct().getManufacture().getDescription());
+            if(registrationRequestsEntity.getClinicalTrails().getReferenceProduct() != null && registrationRequestsEntity.getClinicalTrails().getReferenceProduct().getName() != null
+                    && !registrationRequestsEntity.getClinicalTrails().getReferenceProduct().getName().isEmpty())
+            {
+                parameters.put("productOfReference", registrationRequestsEntity.getClinicalTrails().getReferenceProduct().getName());
+                parameters.put("manufacturerOfProductOfReference", registrationRequestsEntity.getClinicalTrails().getReferenceProduct().getManufacture().getDescription());
+            }
 
             parameters.put("procesVerbalNr", registrationRequestsEntity.getClinicalTrails().getComissionNr());
             parameters.put("procesVerbalDate", sdf.format(registrationRequestsEntity.getClinicalTrails().getComissionDate()));

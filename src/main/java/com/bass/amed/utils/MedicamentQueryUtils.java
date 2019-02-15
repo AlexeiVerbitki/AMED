@@ -12,13 +12,16 @@ public class MedicamentQueryUtils
 {
     public static StringBuilder createMedicamentByFilterQuery(MedicamentFilterDTO medicamentFilters)
     {
-        StringBuilder stringBuilder = new StringBuilder("select m.id,m.code,m.commercial_name commercialName,m.division,DATE_FORMAT(expiration_date,'%d/%m/%Y') expirationDate,m" +
+        StringBuilder stringBuilder = new StringBuilder("select m.id,m.code,m.commercial_name commercialName,m.division,m.volume,(select description from nm_units_of_measurement" +
+                " num where num.id = m.volume_unit_measurement_id) volumeQuantityMeasurement, " +
+                "DATE_FORMAT(expiration_date,'%d/%m/%Y') expirationDate,m" +
                 ".atc_code " +
                 "atcCode,ma" +
                 ".description " +
                 "authorizationHolderDescription, m.registration_number registerNumber,DATE_FORMAT(registration_date,'%d/%m/%Y') registrationDate " +
-                " from medicament m,nm_pharmaceutical_forms ph,registration_requests r,medicament_manufactures mm, nm_manufactures ma " +
-                " where status = 'F' and  m.authorization_holder_id=ma.id  and m.pharmaceutical_form_id = ph.id and m.request_id=r.id and m.id = mm.medicament_id and mm.producator_produs_finit = 1 " );
+                " from medicament m,nm_pharmaceutical_forms ph,registration_requests r,medicament_manufactures mm, nm_manufactures ma" +
+                " where status = 'F' and  m.authorization_holder_id=ma.id  and m.pharmaceutical_form_id = ph.id and m.request_id=r.id and m.id = mm.medicament_id and mm" +
+                ".producator_produs_finit = 1 " );
 
         if (!Boolean.TRUE.equals(medicamentFilters.getExpiratedMedicaments()))
         {
@@ -177,7 +180,7 @@ public class MedicamentQueryUtils
         StringBuilder stringBuilder = new StringBuilder("select m.id,m.code,m.commercial_name commercialName,atc_code atcCode,registration_number registerNumber,DATE_FORMAT" +
                 "(registration_date," +
                 "'%d/%m/%Y') registrationDate," +
-                "division,ma" +
+                "division,volume,(select description from nm_units_of_measurement num where num.id = m.volume_unit_measurement_id) volumeQuantityMeasurement,ma" +
                 ".description authorizationHolderDescription,DATE_FORMAT(expiration_date,'%d/%m/%Y') expirationDate from medicament m,nm_manufactures ma\n" +
                 "where m.authorization_holder_id=ma.id and m.id in (");
         String s = setIds.stream().map(id->String.valueOf(id)).collect(Collectors.joining(", "));

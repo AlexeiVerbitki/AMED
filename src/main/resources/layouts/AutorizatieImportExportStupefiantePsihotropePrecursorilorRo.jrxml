@@ -51,6 +51,7 @@
 	<parameter name="druggist" class="java.lang.String"/>
 	<parameter name="committeeChairman" class="java.lang.String"/>
 	<parameter name="genDir" class="java.lang.String"/>
+	<parameter name="usedScoupe" class="java.lang.Boolean"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -90,7 +91,7 @@
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{importExport}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Autorizație de " + $P{importExport}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="91" width="535" height="39" uuid="b4695b5d-2df7-461e-b402-a0463d664c49"/>
@@ -296,15 +297,14 @@
 			</componentElement>
 		</band>
 		<band height="178">
-			<staticText>
+			<!--<staticText>
+
 				<reportElement x="0" y="2" width="535" height="28" uuid="bca65b32-5230-4c62-a10d-37f046b429b8"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isUnderline="false"/>
 				</textElement>
-				<text><![CDATA[Comitetul Permanent de Control asupra Drogurilor garantează, că substanţele nominalizate vor fi 
-folosite exclusiv în scopuri medicale sau științifice.
-]]></text>
-			</staticText>
+				<text><![CDATA[Comitetul Permanent de Control asupra Drogurilor garantează, că substanţele nominalizate vor fi folosite exclusiv în scopuri medicale sau științifice.]]></text>
+			</staticText>-->
 			<staticText>
 				<reportElement x="1" y="69" width="278" height="22" uuid="44afcc80-b83a-47d3-bddb-aea6ada86136"/>
 				<textElement textAlignment="Left">
@@ -353,6 +353,13 @@ folosite exclusiv în scopuri medicale sau științifice.
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{genDir}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="5" width="535" height="55" uuid="2c4dbab3-2a3e-49a2-8ff6-87c49c073558"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{usedScoupe}? "Comitetul Permanent de Control asupra Drogurilor garantează, că substanţele nominalizate vor fi folosite exclusiv în scopuri medicale sau științifice.": "Comitetul Permanent de Control asupra Drogurilor garantează, că substanţele nominalizate vor fi folosite exclusiv în scopuri tehnice."]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

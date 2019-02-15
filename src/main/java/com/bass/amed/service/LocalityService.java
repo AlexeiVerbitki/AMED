@@ -1,15 +1,13 @@
 package com.bass.amed.service;
 
-import com.bass.amed.entity.*;
+import com.bass.amed.entity.NmLocalitiesEntity;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.NmLocalitiesRepository;
 import com.bass.amed.repository.NmStatesRepository;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
 import java.util.Optional;
 
 @Service
@@ -32,7 +30,7 @@ public class LocalityService
             throw new CustomException("Localitatea nu a fost gasita");
         }
 
-        local.get().setStateName(statesRepository.findById(local.get().getStateId()).get().getDescription());
+        local.get().setStateName(statesRepository.findById(local.get().getState().getId()).get().getDescription());
 
         return local.get();
     }

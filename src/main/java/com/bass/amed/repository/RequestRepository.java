@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,18 +58,14 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
             "LEFT JOIN FETCH p.documents " +
             "LEFT JOIN FETCH p.paymentOrders " +
             "LEFT JOIN FETCH p.registrationRequestMandatedContacts " +
-//            "LEFT JOIN FETCH p.ctPaymentOrdersEntities " +
             "WHERE p.id = (:id)")
     Optional<RegistrationRequestsEntity> findClinicalTrailstRequestById(@Param("id") Integer id);
 
     @Query("SELECT p FROM RegistrationRequestsEntity p " +
             "LEFT JOIN FETCH p.importAuthorizationEntity " +
-//            "LEFT JOIN FETCH p.importAuthorizationEntityDetails " +
             "LEFT JOIN FETCH p.requestHistories " +
             "LEFT JOIN FETCH p.outputDocuments " +
             "LEFT JOIN FETCH p.documents " +
-// 
-//            "LEFT JOIN FETCH p.paymentOrders " +
             "WHERE p.id = (:id)")
     Optional<RegistrationRequestsEntity> findImportAuthRequestById(@Param("id") Integer id);
 
@@ -77,6 +74,7 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
             "LEFT JOIN FETCH p.requestHistories " +
             "LEFT JOIN FETCH p.outputDocuments " +
             "LEFT JOIN FETCH p.documents " +
+            "LEFT JOIN FETCH p.registrationRequestMandatedContacts " +
             "LEFT JOIN FETCH p.paymentOrders " +
             "WHERE p.id = (:id)")
     Optional<RegistrationRequestsEntity> findPricesRequestById(@Param("id") Integer id);
@@ -85,9 +83,22 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
             "LEFT JOIN FETCH p.requestHistories " +
             "LEFT JOIN FETCH p.outputDocuments " +
             "LEFT JOIN FETCH p.documents " +
+            "LEFT JOIN FETCH p.registrationRequestMandatedContacts " +
             "LEFT JOIN FETCH p.paymentOrders " +
             "WHERE p.id = (:id)")
     Optional<RegistrationRequestsEntity> findGDPRequestById(@Param("id") Integer id);
+
+
+
+    @Query("SELECT p FROM RegistrationRequestsEntity p " +
+            "LEFT JOIN FETCH p.drugCheckDecisions " +
+            "LEFT JOIN FETCH p.requestHistories " +
+            "LEFT JOIN FETCH p.outputDocuments " +
+            "LEFT JOIN FETCH p.documents " +
+            "LEFT JOIN FETCH p.paymentOrders " +
+            "LEFT JOIN FETCH p.registrationRequestMandatedContacts " +
+            "WHERE p.id = (:id)")
+    Optional<RegistrationRequestsEntity> findRequestCPCDById(@Param("id") Integer id);
 
     @Query(value = "SELECT r.* FROM registration_requests r JOIN request_types t ON r.type_id = t.id AND r.license_id = ?1 AND r.end_date IS NOT NULL AND t.code = 'LICM'", nativeQuery = true)
     List<RegistrationRequestsEntity> findAllLicenseModifications(Integer licenseId);
@@ -146,11 +157,11 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
             " WHERE p.id in (:ids)")
     List<RegistrationRequestsEntity> findRequestWithMedicamentHistoryInfo(@Param("ids") List<Integer> ids);
 
- 	@Query(value = "SELECT * FROM registration_requests rr join request_types rt on rr.type_id = rt.id and rr.license_id = ?1 and rr.current_step = 'F' and rt.code in ( 'LICM', 'LICC', 'LICP') order by rr.id desc", nativeQuery = true)
+    @Query(value = "SELECT * FROM registration_requests rr JOIN request_types rt ON rr.type_id = rt.id AND rr.license_id = ?1 AND rr.current_step = 'F' AND rt.code IN ( 'LICM', 'LICC', 'LICP') ORDER BY rr.id DESC", nativeQuery = true)
     List<RegistrationRequestsEntity> getRequestsForLicense(Integer licenseId);
 
 
-    @Query(value = "select rr.id from registration_requests rr join request_types rt on rr.type_id = rt.id and rr.license_id = ?1 and rr.id = (select max(q.id) from registration_requests q where q.id < ?2 and q.license_id = ?1 and q.current_step = 'F' and rt.code in ('LICEL','LICM', 'LICC', 'LICP'))", nativeQuery = true)
+    @Query(value = "SELECT rr.id FROM registration_requests rr JOIN request_types rt ON rr.type_id = rt.id AND rr.license_id = ?1 AND rr.id = (SELECT max(q.id) FROM registration_requests q WHERE q.id < ?2 AND q.license_id = ?1 AND q.current_step = 'F' AND rt.code IN ('LICEL','LICM', 'LICC', 'LICP'))", nativeQuery = true)
     Optional<Integer> getPreviousLicenseModificationId(Integer licenseId, Integer requestId);
 
     @Query("SELECT DISTINCT p FROM RegistrationRequestsEntity p " +
@@ -181,14 +192,14 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
     @Query("UPDATE RegistrationRequestsEntity p SET p.ddIncluded = :ddIncluded WHERE p.id in (:ids)")
     void setDDIncluded(@Param("ids") List<Integer> ids, @Param("ddIncluded") Boolean ddIncluded);
 
-	@Query("SELECT p FROM RegistrationRequestsEntity p WHERE p.medicamentAnnihilation is not null and p.outputDocumentId is null and p.currentStep = 'A'")
-	List<RegistrationRequestsEntity> findRequestsForAnih();
+    @Query("SELECT p FROM RegistrationRequestsEntity p WHERE p.medicamentAnnihilation is not null and p.outputDocumentId is null and p.currentStep = 'A'")
+    List<RegistrationRequestsEntity> findRequestsForAnih();
 
-	List<RegistrationRequestsEntity> findAllByOutputDocumentId(Integer outputDocumentId);
+    List<RegistrationRequestsEntity> findAllByOutputDocumentId(Integer outputDocumentId);
 
-	@Modifying
-	@Query("UPDATE RegistrationRequestsEntity p SET p.outputDocumentId = :outputDocumentId WHERE p.id in (:ids)")
-	void setOutputDocumentId(@Param("ids") List<Integer> ids, @Param("outputDocumentId") Integer outputDocumentId);
+    @Modifying
+    @Query("UPDATE RegistrationRequestsEntity p SET p.outputDocumentId = :outputDocumentId WHERE p.id in (:ids)")
+    void setOutputDocumentId(@Param("ids") List<Integer> ids, @Param("outputDocumentId") Integer outputDocumentId);
 
     @Query("SELECT i FROM  RegistrationRequestsEntity i WHERE i.importAuthorizationEntity.id = (:authId)")
     RegistrationRequestsEntity findRequestsByImportId(@Param("authId") Integer authId);
@@ -199,11 +210,14 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
     Optional<RegistrationRequestsEntity> findDocuments(@Param("id") Integer id);
 
     @Query(value = "SELECT id FROM registration_requests r WHERE R.REQUEST_NUMBER LIKE CONCAT(:REQNR, '%') AND" +
-            "(current_step != 'C' AND current_step != 'A' AND current_step != 'F' AND current_step != 'I')", nativeQuery = true)
+            "(current_step != 'C' AND current_step != 'AF' AND current_step != 'F' AND current_step != 'I')", nativeQuery = true)
     List<Integer> getUnfinishedRequests(@Param("REQNR") String reqNr);
 
     @Query(value = "SELECT * FROM registration_requests r\n" +
-            "            WHERE r.request_number = :reqNr AND r.current_step = 'I' limit 1", nativeQuery = true)
+            "            WHERE r.request_number = :reqNr AND r.current_step = 'I' LIMIT 1", nativeQuery = true)
     Optional<RegistrationRequestsEntity> getBaseReqistrationRequest(@Param("reqNr") String requestNr);
+
+    @Transactional
+    void deleteByRequestNumber(String requestNumber);
 }
 

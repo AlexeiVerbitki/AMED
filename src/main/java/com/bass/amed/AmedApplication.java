@@ -17,8 +17,6 @@ public class AmedApplication implements CommandLineRunner
 
     public static void main(String[] args) throws UnknownHostException
     {
-
-
         SpringApplication app = new SpringApplication(AmedApplication.class);
         app.setBannerMode(Banner.Mode.OFF);
 
@@ -32,6 +30,6 @@ public class AmedApplication implements CommandLineRunner
     @Override
     public void run(String... args) throws Exception
     {
-//        xchangeUpdateService.updateCurrencies();
+//        xchangeUpdateService.execute();
     }
 }

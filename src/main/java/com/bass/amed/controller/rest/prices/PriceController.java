@@ -96,7 +96,7 @@ public class PriceController {
         }
         logger.debug("Retrieve all currencies for toady or another day");
         Optional<List<NmCurrenciesHistoryEntity>> nonNullCurrenciesHistoryList = Optional.of(currencyHistoryRepository.findAllByPeriod(date));
-        return new ResponseEntity<>(nonNullCurrenciesHistoryList.orElseThrow(() -> new CustomException("No curriencies for today")), HttpStatus.OK);
+        return new ResponseEntity<>(nonNullCurrenciesHistoryList.orElseThrow(() -> new CustomException("No currencies for today")), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/exchange-rate-by-period")
@@ -167,14 +167,14 @@ public class PriceController {
 
     @RequestMapping("/med-current-price")
     public ResponseEntity<NmPricesEntity> getMedCurrentPrice(@RequestParam(value = "id", required = true) Integer id) {
-        logger.debug("getOriginalMedsPrices");
+        logger.debug("getMedCurrentPrice");
         NmPricesEntity priceCNP = nmPricesRepository.findOneByMedicamentIdAndStatus(id, "V");
         return new ResponseEntity<>(priceCNP, HttpStatus.OK);
     }
 
     @RequestMapping("/med-price")
     public ResponseEntity<PricesEntity> getMedPrice(@RequestParam(value = "id", required = true) Integer id) {
-        logger.debug("getMedPrevPrices");
+        logger.debug("getMedPrice");
         PriceTypesEntity type = priceTypesRepository.findOneByDescription("Acceptat");
         PricesEntity price = priceRepository.findLast(id, type.getId());
         return new ResponseEntity<>(price, HttpStatus.OK);

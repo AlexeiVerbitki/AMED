@@ -8,13 +8,11 @@ import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.projection.LicenseProjection;
 import com.bass.amed.repository.*;
-import com.bass.amed.repository.license.LicenseActivityTypeRepository;
-import com.bass.amed.repository.license.LicenseAnnounceMethodsRepository;
-import com.bass.amed.repository.license.LicenseMandatedContactRepository;
-import com.bass.amed.repository.license.LicensesRepository;
+import com.bass.amed.repository.license.*;
 import com.bass.amed.service.LicenseRegistrationRequestService;
 import com.bass.amed.service.LicenseService;
 import com.bass.amed.service.LocalityService;
+import com.bass.amed.utils.Utils;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.slf4j.Logger;
@@ -74,27 +72,16 @@ public class LicenseController
     private LicenseService licenseService;
     @Autowired
     private NMEconomicAgentTypeRepository nmEconomicAgentTypeRepository;
+    @Autowired
+    private SeqLicenseRegistrationNumberRepository seqLicenseRegistrationNumberRepository;
 
     @RequestMapping(value = "/new-license", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> nextNewLicense(@RequestBody RegistrationRequestsEntity request) throws CustomException
     {
         logger.debug("Add license" + request);
 
-//        Optional<NmEconomicAgentsEntity> eco = economicAgentsRepository.findById(request.getCompany().getId());
-//
-//        if (!eco.isPresent())
-//        {
-//            throw new CustomException("Economic agent not found" + request.getCompany().getId());
-//        }
-//
-//        request.setCompany(eco.get());
-//        request.getLicense().setEconomicAgent(eco.get());
-
         request.setType(requestTypeRepository.findByCode("LICEL").get());
         request.getLicense().setStatus("A");
-
-//        requestRepository.save(request);
-
 
         licenseRegistrationRequestService.saveNewLicense(request);
 
@@ -499,5 +486,13 @@ public class LicenseController
 
         return ResponseEntity.ok().header("Content-Type", "application/pdf")
                 .header("Content-Disposition", "inline; filename=anexaLicenta.pdf").body(bytes);
+    }
+
+    @GetMapping(value = "/generate-registration-request-number")
+    public ResponseEntity<List<String>> generateRegistrationRequestNumber()
+    {
+        SeqLicenseNumberEntity seq = new SeqLicenseNumberEntity();
+        seqLicenseRegistrationNumberRepository.save(seq);
+        return new ResponseEntity<>(Arrays.asList("Rg08-"+ Utils.intToString(6, seq.getId())), HttpStatus.OK);
     }
 }

@@ -7,6 +7,7 @@ import com.bass.amed.security.JWTConfigurer;
 import com.bass.amed.security.TokenProvider;
 import com.bass.amed.utils.LdapErrorMappingUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,12 +25,12 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class AutheticationJWTController
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AutheticationJWTController.class);
-    private final TokenProvider tokenProvider;
+    private final TokenProvider               tokenProvider;
     private final CustomAuthenticationManager customAuthenticationManager;
 
     @Value("${ldap.user_domain_suffix}")
@@ -47,9 +48,9 @@ public class AutheticationJWTController
         LOGGER.debug("Try to authenticate user: " + scrUserDTO.getUsername());
         LOGGER.debug("ip address: " + request.getRemoteAddr());
 
-        String dnUser = scrUserDTO.getUsername() + USER_DOMAIN_SUFFIX;
+        String                              dnUser              = scrUserDTO.getUsername() + USER_DOMAIN_SUFFIX;
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dnUser, scrUserDTO.getPassword());
-        Authentication authentication;
+        Authentication                      authentication;
 
         try
         {
@@ -62,7 +63,7 @@ public class AutheticationJWTController
             throw new CustomException(LdapErrorMappingUtils.getLdapAuthErrorMessage(ce.getMessage()), HttpStatus.UNAUTHORIZED);
         }
 
-        String jwt = tokenProvider.createToken(authentication);
+        String      jwt         = tokenProvider.createToken(authentication);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JWTConfigurer.AUTHORIZATION_HEADER, "Bearer " + jwt);
         return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);

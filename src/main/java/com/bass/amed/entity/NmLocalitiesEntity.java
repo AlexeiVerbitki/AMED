@@ -3,7 +3,6 @@ package com.bass.amed.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @Data
 @Entity
@@ -12,7 +11,7 @@ public class NmLocalitiesEntity
 {
     @Id
     @Column(name = "id")
-    @GeneratedValue( strategy = GenerationType.IDENTITY )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Basic
     @Column(name = "code")
@@ -20,9 +19,9 @@ public class NmLocalitiesEntity
     @Basic
     @Column(name = "description")
     private String description;
-    @Basic
-    @Column(name = "stateId")
-    private Integer stateId;
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "stateId")
+    private NmStatesEntity state;
     @Transient
     private String stateName;
 }

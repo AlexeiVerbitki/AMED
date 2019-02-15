@@ -1,14 +1,22 @@
 package com.bass.amed.service;
 
 import com.bass.amed.common.Constants;
+import com.bass.amed.controller.rest.license.LicenseController;
+import com.bass.amed.dto.ScheduledModuleResponse;
 import com.bass.amed.dto.license.DiffLicense;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
 import com.bass.amed.repository.license.LicenseResolutionRepository;
+import com.bass.amed.utils.AuditUtils;
+import com.bass.amed.utils.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.Hibernate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,6 +57,12 @@ public class LicenseRegistrationRequestService
     @Autowired
     private AuditLogService auditLogService;
 
+    @Value("${scheduler.rest.api.host}")
+    private String schedulerRestApiHost;
+
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LicenseRegistrationRequestService.class);
+
     @Transactional(readOnly = true)
     public RegistrationRequestsEntity findLicenseRegistrationById(Integer id, boolean viewCompleted) throws CustomException
     {
@@ -68,7 +82,7 @@ public class LicenseRegistrationRequestService
 
         if (!viewCompleted)
         {
-            rrE.getLicense().setCompanyName (economicAgentsRepository.findFirstByIdnoEquals(rrE.getLicense().getIdno()).get().getLongName());
+            rrE.getLicense().setCompanyName(economicAgentsRepository.findFirstByIdnoEquals(rrE.getLicense().getIdno()).get().getLongName());
 
             for (NmEconomicAgentsEntity ece : rrE.getLicense().getEconomicAgents())
             {
@@ -127,8 +141,7 @@ public class LicenseRegistrationRequestService
 
 
                 rrE.getLicense().setEconomicAgents(version.getEconomicAgents());
-            }
-            catch (Exception e)
+            } catch (Exception e)
             {
                 throw new CustomException(e.getMessage(), e);
             }
@@ -174,6 +187,19 @@ public class LicenseRegistrationRequestService
                 }
             }
 
+            //Schedule job for new license
+            LOGGER.debug("Start jobSchedule method...");
+            ResponseEntity<ScheduledModuleResponse> result = null;
+            result = Utils.jobSchedule(20, "/set-critical-request", "/set-expired-request", request.getId(), request.getRequestNumber(), null, schedulerRestApiHost, "Se depaseste termenul de informare a clientului despre decizie");
+            if (result != null && !result.getBody().isSuccess())
+            {
+                LOGGER.debug("The method jobSchedule, was not successful.");
+                throw new CustomException("Nu a putut fi setat termenul de informare a clientului despre decizie.");
+            }
+            else
+            {
+                LOGGER.debug("Finished jobSchedule method.");
+            }
 
             em.getTransaction().commit();
 
@@ -312,6 +338,24 @@ public class LicenseRegistrationRequestService
 
             em.merge(r);
 
+
+            //Job Unshcedule for new license
+            if (request.getType().getCode().equals("LICEL") && next )
+            {
+                LOGGER.debug("Start jobUnschedule method...");
+                Utils.jobUnschedule(schedulerRestApiHost, "/set-expired-request", request.getId());
+                LOGGER.debug("Finished jobUnschedule method.");
+            }
+
+            //Job Unshcedule for duplicate license
+            if (request.getType().getCode().equals("LICD") && next )
+            {
+                LOGGER.debug("Start jobUnschedule method...");
+                Utils.jobUnschedule(schedulerRestApiHost, "/set-expired-request", request.getId());
+                LOGGER.debug("Finished jobUnschedule method.");
+            }
+
+
             em.getTransaction().commit();
 
         } catch (Exception e)
@@ -449,15 +493,7 @@ public class LicenseRegistrationRequestService
                 }
             }
 
-            StringBuilder sb = new StringBuilder();
-            sb.append("Salvare cerere pentru licenta cu scopul ");
-            sb.append(request.getType().getDescription());
-            sb.append(" .Seria si numarul licentei").append(request.getLicense().getSerialNr()).append(", ").append(request.getLicense().getNr());
-
-            StringBuilder sb1 = new StringBuilder("Agentul economic ").append(request.getLicense().getCompanyName()).append(" cu IDNO ").append(request.getLicense().getIdno());
-
-
-            auditLogService.save(new AuditLogEntity().withNewValue(sb.toString()).withCategoryName("MODULE").withSubCategoryName("MODULE_5").withField(sb1.toString()).withAction(Constants.AUDIT_ACTIONS.ADD.name()));
+            AuditUtils.auditLicense(auditLogService, request);
 
             em.getTransaction().commit();
 
@@ -564,6 +600,23 @@ public class LicenseRegistrationRequestService
                 }
 
             }
+
+            if (request.getType().getCode().equals("LICD"))
+            {
+                //Schedule job for duplicate
+                LOGGER.debug("Start jobSchedule method...");
+                ResponseEntity<ScheduledModuleResponse> result = null;
+                result = Utils.jobSchedule(3, "/set-critical-request", "/set-expired-request", request.getId(), request.getRequestNumber(), null, schedulerRestApiHost, "Se depaseste termenul de eliberare a duplicatului licentei");
+                if (result != null && !result.getBody().isSuccess())
+                {
+                    LOGGER.debug("The method jobSchedule, was not successful.");
+                    throw new CustomException("Nu a putut fi setat termenul de eliberare a duplicatului.");
+                } else
+                {
+                    LOGGER.debug("Finished jobSchedule method.");
+                }
+            }
+
 
             em.getTransaction().commit();
 

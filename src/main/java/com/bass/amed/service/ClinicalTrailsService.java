@@ -6,6 +6,8 @@ import com.bass.amed.dto.clinicaltrial.ClinicalTrialDTO;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
+import com.bass.amed.utils.AuditUtils;
+import com.bass.amed.utils.SecurityUtils;
 import com.bass.amed.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +41,14 @@ public class ClinicalTrailsService {
     ClinicTrialAmendRepository clinicTrialAmendRepository;
     @Autowired
     private RequestRepository requestRepository;
+    @Autowired
+    private SrcUserRepository srcUserRepository;
+    @Autowired
+    private AuditCategoryRepository auditCategoryRepository;
+    @Autowired
+    private AuditSubcategoryRepository auditSubcategoryRepository;
+    @Autowired
+    CtSeqRegistrationRequestNumberRepository ctSeqNumberRepository;
 
     @Value("${scheduler.rest.api.host}")
     private String schedulerRestApiHost;
@@ -248,6 +258,24 @@ public class ClinicalTrailsService {
 
 
             em.merge(requests);
+
+            List<AuditLogEntity> dummyEntities = AuditUtils.auditClinicatTrialAmendmentRegistration(requests);
+            for (AuditLogEntity persistEntity : dummyEntities) {
+                persistEntity.setDateTime(new Timestamp(new Date().getTime()));
+                ScrUserEntity userEntity = srcUserRepository.findOneWithAuthoritiesByUsername(SecurityUtils.getCurrentUser().orElse(null)).orElse(null);
+                persistEntity.setUser(userEntity);
+                if (persistEntity.getCategoryName() != null)
+                {
+                    persistEntity.setCategory(auditCategoryRepository.findByName(persistEntity.getCategoryName()).orElse(null));
+                }
+
+                if (persistEntity.getSubCategoryName() != null)
+                {
+                    persistEntity.setSubcategory(auditSubcategoryRepository.findByName(persistEntity.getSubCategoryName()).orElse(null));
+                }
+                em.persist(persistEntity);
+            }
+
             em.getTransaction().commit();
 
         } catch (Exception e) {
@@ -550,20 +578,17 @@ public class ClinicalTrailsService {
 
     public void getCtMedInstInvestigator(RegistrationRequestsEntity requests) {
         ClinicalTrialsEntity ct = requests.getClinicalTrails();
-        Set<CtMedicalInstitutionEntity> medInstitutions = ct.getMedicalInstitutions();
-
         Set<CtMedInstInvestigatorEntity> ctMedInstInvestigatorEntitiesOld = medINstInvestigatorRepository.findCtMedInstInvestigatorById(ct.getId());
 
         Set<CtMedicalInstitutionEntity> ctMedicalInstitutionEntities = new HashSet<>();
 
         ctMedInstInvestigatorEntitiesOld.forEach(ctMedInstInvestigatorEntity -> {
             CtMedicalInstitutionEntity medInst = ctMedInstInvestigatorEntity.getMedicalInstitutionsEntity();
-            CtInvestigatorEntity ctInvestigatorEntity = ctMedInstInvestigatorEntity.getInvestigatorsEntity();
+            CtInvestigatorEntity ctInvestigatorEntity = new CtInvestigatorEntity();
+            ctInvestigatorEntity.asign(ctMedInstInvestigatorEntity.getInvestigatorsEntity());
             ctInvestigatorEntity.setMain(ctMedInstInvestigatorEntity.getMainInvestigator());
-
             medInst.getInvestigators().add(ctInvestigatorEntity);
             ctMedicalInstitutionEntities.add(medInst);
-
         });
         ct.setMedicalInstitutions(ctMedicalInstitutionEntities);
     }
@@ -622,6 +647,13 @@ public class ClinicalTrailsService {
         } finally {
             em.close();
         }
+    }
+
+    public String getDocumentNumber()
+    {
+        ClinicalTrialCodeSequenceEntity ctSeqNr = new ClinicalTrialCodeSequenceEntity();
+        ctSeqNumberRepository.save(ctSeqNr);
+        return "Rg13-"+ Utils.intToString(6, ctSeqNr.getId());
     }
 
 //    public RegistrationRequestsEntity saveClinicalTrailRequest(RegistrationRequestsEntity enity) throws CustomException {

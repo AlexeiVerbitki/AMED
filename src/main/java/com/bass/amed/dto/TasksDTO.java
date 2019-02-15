@@ -1,5 +1,6 @@
 package com.bass.amed.dto;
 
+import com.bass.amed.entity.NmRegisterCatalogCodesEntity;
 import com.bass.amed.entity.ProcessNamesEntity;
 import com.bass.amed.entity.RegistrationRequestStepsEntity;
 import com.bass.amed.entity.RequestTypesEntity;
@@ -11,14 +12,13 @@ import java.util.Date;
 @Data
 public class TasksDTO implements Serializable
 {
-    private Integer id;
+    private String requestCode;
     private String requestNumber;
-    private ProcessNamesEntity request;
-    private RequestTypesEntity requestType;
-    private String assignedPerson;
-    private Date startDate;
-    private Date endDate;
-    private RegistrationRequestStepsEntity step;
-
-
+    private Date startDateFrom;
+    private Date startDateTo;
+    private Integer comanyId;
+    private Integer processId;
+    private Integer processTypeId;
+    private String stepCode;
+    private String subject;
 }

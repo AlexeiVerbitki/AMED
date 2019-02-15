@@ -21,43 +21,60 @@ import java.util.List;
 public class MedicamentService
 {
     private static final Logger LOGGER      = LoggerFactory.getLogger(MedicamentService.class);
-    private static final String queryString = "        SELECT m.id,\n" +
-            "       IFNULL(m.name, \"\")             AS denumireComerciala,\n" +
-            "       IFNULL(m.code, \"\")                         AS codulMed,\n" +
-            "       IFNULL(m.customs_code, 0)      AS       codVamal,\n" +
-            "       IFNULL(NPF.description, \"\")                AS formaFarmaceutica,\n" +
-            "       IFNULL(m.dose, \"\")                         AS doza,\n" +
-            "       IFNULL(m.volume,\"\")          AS volum,\n" +
-            "       IFNULL(m.division,\"\")        AS divizare,\n" +
-            "       IFNULL(m.atc_code,\"\")        AS atc,\n" +
-            "       IFNULL(nmm.description,\"\")   AS firmaProducatoare,\n" +
-            "       IFNULL(m.registration_number, 0)         AS nrDeInregistrare,\n" +
-            "       m.registration_date            AS dataInregistrarii,\n" +
-            "       IFNULL(m.originale, FALSE)     AS original,\n" +
-            "       IFNULL(m.prescription,\"\")    AS statutDeEliberare,\n" +
-            "       IFNULL(NMIM.description,\"\")  AS dci,\n" +
-            "       IFNULL(nnmm.description, \"\")               AS detinatorulCertificatuluiDeIntreg,\n" +
-            "       IFNULL(nmct.description,\"\")  AS taraDetinatorului,\n" +
+    private static final String queryString = "SELECT m.id,\n" +
+            "       IFNULL(m.name, '')                                    AS denumireComerciala,\n" +
+            "       IFNULL(m.code, '')                                    AS codulMed,\n" +
+            "       IFNULL(m.customs_code, 0)                             AS codVamal,\n" +
+            "       IFNULL(NPF.description, '')                           AS formaFarmaceutica,\n" +
+            "       IFNULL(m.dose, '')                                    AS doza,\n" +
+            "       IFNULL(CONCAT_WS(' ', m.volume, vum.description), '') AS volum,\n" +
+            "       IFNULL(m.division, '')                                AS divizare,\n" +
+            "       IFNULL(m.atc_code, '')                                AS atc,\n" +
+            "       IFNULL(nmm.description, '')                           AS firmaProducatoare,\n" +
+            "       IFNULL(m.registration_number, 0)                      AS nrDeInregistrare,\n" +
+            "       m.registration_date                                   AS dataInregistrarii,\n" +
+            "       IFNULL(m.originale, FALSE)                            AS original,\n" +
+            "       CASE\n" +
+            "         WHEN m.prescription = 1 THEN 'cu prescripție'\n" +
+            "         WHEN m.prescription = 2 THEN 'staționar'\n" +
+            "         ELSE 'fără prescripție'\n" +
+            "        END                                                  AS statutDeEliberare,\n" +
+            "       IFNULL(NMIM.description, '')                          AS dci,\n" +
+            "       IFNULL(nnmm.description, '')                          AS detinatorulCertificatuluiDeIntreg,\n" +
+            "       IFNULL(nmct.description, '')                          AS taraDetinatorului,\n" +
             "       IFNULL((SELECT GROUP_CONCAT(mi.path SEPARATOR '; ')\n" +
-            "        FROM medicament_instructions mi\n" +
-            "        WHERE mi.medicament_id = m.id\n" +
-            "          AND mi.type = 'I'\n" +
-            "        GROUP BY medicament_id, type),\"\") AS instructiunea,\n" +
+            "                      FROM\n" +
+            "                      medicament_instructions mi\n" +
+            "                      WHERE\n" +
+            "                      mi.medicament_id = m.id\n" +
+            "                        AND mi.type = 'I'\n" +
+            "                      GROUP\n" +
+            "                      BY\n" +
+            "                      medicament_id,\n" +
+            "                      type), '')                             AS instructiunea,\n" +
             "       IFNULL((SELECT GROUP_CONCAT(mi.path SEPARATOR '; ')\n" +
-            "        FROM medicament_instructions mi\n" +
-            "        WHERE mi.medicament_id = m.id\n" +
-            "          AND mi.type = 'M'\n" +
-            "        GROUP BY medicament_id, type),\"\") AS machetaAmbalajului,\n" +
-            "       IFNULL(m.terms_of_validity, 0)       AS termenValabilitate\n" +
-            "FROM medicament m\n" +
-            "       INNER JOIN nm_pharmaceutical_forms NPF ON m.pharmaceutical_form_id = NPF.id\n" +
-            "       LEFT JOIN medicament_manufactures mm ON m.id = mm.medicament_id AND mm.producator_produs_finit = TRUE\n" +
-            "       LEFT JOIN nm_manufactures nmm ON mm.manufacture_id = nmm.id\n" +
-            "       LEFT JOIN nm_international_medicament_names nmim ON m.international_name_id = NMIM.id\n" +
-            "       LEFT JOIN nm_manufactures nnmm ON m.authorization_holder_id = NNMM.id\n" +
-            "       LEFT JOIN nm_countries nmct ON NNMM.country_id = NMCT.id\n" +
-            "WHERE m.status = 'F'\n" +
-            "  AND (m.expiration_date > sysdate() OR m.unlimited_registration_period = 1);";
+            "                      FROM\n" +
+            "                      medicament_instructions mi\n" +
+            "                      WHERE\n" +
+            "                      mi.medicament_id = m.id\n" +
+            "                        AND mi.type = 'M'\n" +
+            "                      GROUP\n" +
+            "                      BY\n" +
+            "                      medicament_id,\n" +
+            "                      type), '')                             AS machetaAmbalajului,\n" +
+            "       IFNULL(m.terms_of_validity, 0)                        AS termenValabilitate\n" +
+            "       FROM\n" +
+            "       medicament m\n" +
+            "         INNER JOIN nm_pharmaceutical_forms NPF ON m.pharmaceutical_form_id = NPF.id\n" +
+            "         LEFT JOIN medicament_manufactures mm ON m.id = mm.medicament_id AND mm.producator_produs_finit = TRUE\n" +
+            "         LEFT JOIN nm_manufactures nmm ON mm.manufacture_id = nmm.id\n" +
+            "         LEFT JOIN nm_international_medicament_names nmim ON m.international_name_id = NMIM.id\n" +
+            "         LEFT JOIN nm_manufactures nnmm ON m.authorization_holder_id = NNMM.id\n" +
+            "         LEFT JOIN nm_countries nmct ON NNMM.country_id = NMCT.id\n" +
+            "         LEFT JOIN nm_units_of_measurement vum ON m.volume_unit_measurement_id = vum.id\n" +
+            "       WHERE\n" +
+            "       m.status = 'F'\n" +
+            "         AND (m.expiration_date > sysdate() OR m.unlimited_registration_period = 1);";
 
     @Autowired
     private EntityManagerFactory entityManagerFactory;
@@ -82,6 +99,7 @@ public class MedicamentService
             long streamStartTime = System.nanoTime();
             result.forEach(record -> {
                 DrugsNomenclator drugsNomenclator = new DrugsNomenclator();
+                drugsNomenclator.setId((Integer)record[0]);
                 drugsNomenclator.setDenumireComerciala((String) record[1]);
                 drugsNomenclator.setCodulMed((String)record[2]);
                 drugsNomenclator.setCodVamal(((BigInteger) record[3]).intValue());
@@ -94,7 +112,7 @@ public class MedicamentService
                 drugsNomenclator.setNrDeInregistrare(((BigInteger) record[10]).intValue());
                 drugsNomenclator.setDataInregistrarii( record[11] == null ? Timestamp.valueOf(LocalDate.now().atStartOfDay()) : (Timestamp) record[11]);
                 drugsNomenclator.setOriginal(Boolean.TRUE.equals(record[12]) ? "Da" : "Nu");
-                drugsNomenclator.setStatutDeEliberare(Boolean.TRUE.equals(record[13]) ? "Da" : "Nu");
+                drugsNomenclator.setStatutDeEliberare((String)record[13]);
                 drugsNomenclator.setDci((String) record[14]);
                 drugsNomenclator.setDetinatorulCertificatuluiDeIntreg((String) record[15]);
                 drugsNomenclator.setTaraDetinatorului((String) record[16]);

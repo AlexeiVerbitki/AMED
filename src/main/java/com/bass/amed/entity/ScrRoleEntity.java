@@ -3,14 +3,15 @@ package com.bass.amed.entity;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-@Setter
 @Getter
+@Setter
 @Entity
 @Table(name = "scr_role")
 public class ScrRoleEntity implements Serializable
@@ -23,14 +24,11 @@ public class ScrRoleEntity implements Serializable
     @Column(name = "description")
     private String description;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "srcRole")
-    private ScrUserEntity scrUserEntity;
-
     @Column(name = "code")
     private String roleCode;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "role_authority",
+    @JoinTable(name = "scr_role_authority",
             joinColumns = {@JoinColumn(name = "role_id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_id")})
     private Set<ScrAuthorityEntity> authorities = new HashSet<>();

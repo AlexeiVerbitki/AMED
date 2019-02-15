@@ -76,7 +76,19 @@ public class DrugDocumentsController {
 
             ResourceLoader resourceLoader = new DefaultResourceLoader();
 
-            Resource res = resourceLoader.getResource("layouts\\AutorizatieImportExportStupefiantePsihotropePrecursorilorRo.jrxml");
+            Resource res = null;
+            if (data.getLanguage() == 0)
+            {
+                res = resourceLoader.getResource("layouts\\AutorizatieImportExportStupefiantePsihotropePrecursorilorRo.jrxml");
+            }
+            else if (data.getLanguage() == 1)
+            {
+                res = resourceLoader.getResource("layouts\\AutorizatieImportExportStupefiantePsihotropePrecursorilorRu.jrxml");
+            }
+            else if(data.getLanguage() == 2)
+            {
+                res = resourceLoader.getResource("layouts\\AutorizatieImportExportStupefiantePsihotropePrecursorilorEn.jrxml");
+            }
             JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
 
             Map<String, Object> parameters = new HashMap<>();
@@ -88,6 +100,7 @@ public class DrugDocumentsController {
             } else {
                 parameters.put("validUntil", "");
             }
+            parameters.put("usedScoupe", data.isUsedScoupe());
             setImportExportDetails(data, parameters);
             setSubstanceDetails(data, parameters);
 
@@ -102,6 +115,43 @@ public class DrugDocumentsController {
 
     }
 
+
+
+    @RequestMapping(value = "/view-scrisoare-de-refuz", method = RequestMethod.POST)
+    public ResponseEntity<byte[]> viewScrisoareDeRefuz(@RequestBody DrugDecisionsDetailsDTO data) throws CustomException {
+        byte[] bytes = null;
+        try {
+
+            logger.debug("Generate scrisoare de refuz document...");
+
+            ResourceLoader resourceLoader = new DefaultResourceLoader();
+
+            Resource res = resourceLoader.getResource("layouts\\ScrisoareDeRefuz.jrxml");
+            JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
+
+            Map<String, Object> parameters = new HashMap<>();
+            setFormsCommonDetails(data, parameters);
+            parameters.put("solicitant", data.getResPerson());
+            parameters.put("solicitantAddress", data.getLegalAddress());
+            parameters.put("requestNr", data.getRequestNumber());
+            parameters.put("requestDescription", "Autorizaţia de activitate cu utilizarea obiectivelor şi încăperilor legate de circulaţia substanţelor stupefiante, psihotrope şi a precursorilor");
+            parameters.put("requestDate", new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format(new Date(data.getRequestDate().getTime())));
+            parameters.put("reason", data.getRejectReason() == null ? "" : data.getRejectReason());
+            parameters.put("responsablePerson", data.getSignPerson());
+            parameters.put("date", new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format(new Date()));
+            parameters.put("agencyName", "Medicines and Medical Devices Agency - Agenţia Medicamentului şi Dispozitivelor Medicale , Agenţia Medicamentului şi Dispozitivelor Medicale");
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
+            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+        } catch (Exception e) {
+            throw new CustomException(e.getMessage(), e);
+        }
+
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=scrisoareDeRefuz.pdf").body(bytes);
+    }
+
+
     private void setFormsCommonDetails(DrugDecisionsDetailsDTO data, Map<String, Object> parameters) {
         parameters.put("nr", data.getRequestNumber());
         if (data.getProtocolDate() != null) {
@@ -114,32 +164,14 @@ public class DrugDocumentsController {
 
     private String getReleasedForParam(DrugDecisionsDetailsDTO data) {
         StringBuilder releasedFor = new StringBuilder(data.getCompanyValue());
-        if (data.getState() != null && !data.getState().isEmpty()) {
-            if (data.getCompanyValue() != null && !data.getCompanyValue().isEmpty()) {
-                releasedFor.append(", ");
-            }
-            releasedFor.append(data.getState());
-        }
-        if (data.getLocality() != null && !data.getLocality().isEmpty()) {
-            releasedFor.append(", ");
-            releasedFor.append(data.getLocality());
-        }
-        if (data.getStreet() != null && !data.getStreet().isEmpty()) {
-            releasedFor.append(", ");
-            releasedFor.append(data.getStreet());
-        }
-
+        releasedFor.append(", ").append(data.getLegalAddress());
         return releasedFor.toString();
     }
 
     private String geInstituteAndAddressParam(DrugDecisionsDetailsDTO data) {
-        StringBuilder instituteAndAddress = new StringBuilder(data.getLocality());
-        if (data.getStreet() != null && !data.getStreet().isEmpty()) {
-            if (data.getLocality() != null && !data.getLocality().isEmpty()) {
-                instituteAndAddress.append(", ");
-            }
-            instituteAndAddress.append(data.getStreet());
-        }
+        StringBuilder instituteAndAddress = new StringBuilder(data.getState());
+        instituteAndAddress.append(", ").append(data.getLocality()).append(", ");
+        instituteAndAddress.append(data.getStreet());
 
         return instituteAndAddress.toString();
     }
@@ -189,8 +221,8 @@ public class DrugDocumentsController {
             for (DrugImportExportDetailsEntity substanceDetails : data.getDetails()) {
 
                 AuthorizedSubstancesDetails details = new AuthorizedSubstancesDetails();
-                if (substanceDetails.getSubstanceName() != null) {
-                    details.setActiveSubstance(substanceDetails.getSubstanceName());
+                if (substanceDetails.getAuthorizedDrugSubstance() != null) {
+                    details.setActiveSubstance(substanceDetails.getAuthorizedDrugSubstance().getSubstanceName());
                 }
                 details.setQuantityActiveSubstance(String.valueOf(substanceDetails.getAuthorizedQuantity()) + substanceDetails.getAuthorizedQuantityUnit());
                 setMedicamentDetails(authorizedSubstancesDetails, details, substanceDetails);

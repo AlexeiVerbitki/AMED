@@ -44,9 +44,9 @@
 		</queryString>
 		<field name="medicamentName" class="java.lang.String"/>
 		<field name="um" class="java.lang.String"/>
-		<field name="quantety" class="java.lang.String"/>
+		<field name="quantity" class="java.lang.String"/>
 		<field name="activeSubstance" class="java.lang.String"/>
-		<field name="quantetyActiveSubstance" class="java.lang.String"/>
+		<field name="quantityActiveSubstance" class="java.lang.String"/>
 	</subDataset>
 	<parameter name="nr" class="java.lang.String"/>
 	<parameter name="date" class="java.lang.String"/>
@@ -60,6 +60,7 @@
 	<parameter name="druggist" class="java.lang.String"/>
 	<parameter name="committeeChairman" class="java.lang.String"/>
 	<parameter name="genDir" class="java.lang.String"/>
+	<parameter name="usedScoupe" class="java.lang.Boolean"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -99,7 +100,7 @@
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{importExport}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Авторизация на " + $P{importExport}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="2" y="91" width="528" height="39" uuid="b4695b5d-2df7-461e-b402-a0463d664c49"/>
@@ -255,7 +256,7 @@
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="11"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{quantety}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -297,7 +298,7 @@
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="11"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{quantetyActiveSubstance}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{quantityActiveSubstance}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -305,13 +306,6 @@
 			</componentElement>
 		</band>
 		<band height="178">
-			<staticText>
-				<reportElement x="1" y="2" width="529" height="28" uuid="bca65b32-5230-4c62-a10d-37f046b429b8"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="11" isUnderline="false"/>
-				</textElement>
-				<text><![CDATA[Постоянный Комитет по Контролю над Наркотиками гарантирует, что эти вещества будут использоваться исключительно для медицинских или научных целей. ]]></text>
-			</staticText>
 			<staticText>
 				<reportElement x="1" y="69" width="289" height="22" uuid="44afcc80-b83a-47d3-bddb-aea6ada86136"/>
 				<textElement textAlignment="Left">
@@ -360,6 +354,13 @@
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{genDir}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="5" width="535" height="55" uuid="48bb027a-7be5-4961-b00b-89f2338914aa"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{usedScoupe}?"Постоянный Комитет по Контролю над Наркотиками гарантирует, что эти вещества будут использоваться исключительно для медицинских или научных целей.": "Постоянный Комитет по контролю за наркотиками гарантирует, что указанные вещества будут использованы исключительно для технических целей."]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

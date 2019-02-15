@@ -21,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,7 +48,11 @@ public class DrugDecisionsController {
     @Autowired
     private RequestTypeRepository requestTypeRepository;
     @Autowired
+    private DrugCheckDecisionRepository drugCheckDecisionRepository;
+    @Autowired
     private DrugUnitsConversionRatesRepository drugUnitsConversionRatesRepository;
+    @Autowired
+    private SeqDrugAuthorizationNumberRepository seqDrugAuthorizationNumberRepository;
     @Value("${scheduler.rest.api.host}")
     private String schedulerRestApiHost;
 
@@ -71,6 +76,15 @@ public class DrugDecisionsController {
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/search-last-act-auth")
+    public ResponseEntity<DrugCheckDecisionsEntity> searchLastDrug(String filialId) {
+        logger.debug("Get old drug details");
+        Optional<DrugCheckDecisionsEntity> result = drugCheckDecisionRepository.searchLastEntryForAuthAct(Integer.valueOf(filialId));
+
+        return new ResponseEntity<>(result.orElse(null), HttpStatus.OK);
+    }
+
+
     @RequestMapping("/search-companies-by-name-or-code-and-idno")
     public ResponseEntity<List<NmEconomicAgentsEntity>> getCompaniesByNameCodeAndIdno(@RequestBody CompanyDetailsDTO filter) {
         logger.debug("Retrieve companies by name or code and idno");
@@ -88,7 +102,7 @@ public class DrugDecisionsController {
     @RequestMapping(value = "/get-import-export-details-by-substance-id")
     public ResponseEntity<List<DrugImportExportDetailsEntity>> getImportExportDetailsBySubstanceId(Integer id) {
         logger.debug("Get import export details by substance id");
-        List<DrugImportExportDetailsEntity> details = drugImportExportDetailsRepository.findALLByAuthorizedDrugSubstancesId(id);
+        List<DrugImportExportDetailsEntity> details = drugImportExportDetailsRepository.findAllByAuthorizedDrugSubstance(id);
 
         return new ResponseEntity<>(details, HttpStatus.OK);
     }
@@ -109,6 +123,17 @@ public class DrugDecisionsController {
         return new ResponseEntity<>(details, HttpStatus.CREATED);
     }
 
+    @RequestMapping(value = "/load-request", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RegistrationRequestsEntity> getRequestDetailById(@RequestParam(value = "id") Integer id) throws CustomException
+    {
+        Optional<RegistrationRequestsEntity> regOptional = requestRepository.findRequestCPCDById(id);
+        if (regOptional.isPresent())
+        {
+            return new ResponseEntity<>(regOptional.get(), HttpStatus.OK);
+        }
+        throw new CustomException("Request was not found");
+    }
+
     @RequestMapping(value = "/add-authorization-details", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RegistrationRequestsEntity> addAuthorizationDetails(@RequestBody RegistrationRequestsEntity request) throws CustomException {
         logger.debug("Add authorization import export details");
@@ -123,9 +148,9 @@ public class DrugDecisionsController {
                 logger.debug("Start jobUnschedule method...");
                 Utils.jobUnschedule(schedulerRestApiHost, "/set-expired-request", request.getId());
                 logger.debug("Finished jobUnschedule method.");
-                logger.debug("Start jobUnschedule method...");
-                Utils.jobUnschedule(schedulerRestApiHost, "/set-critical-request", request.getId());
-                logger.debug("Finished jobUnschedule method.");
+//                logger.debug("Start jobUnschedule method...");
+//                Utils.jobUnschedule(schedulerRestApiHost, "/set-critical-request", request.getId());
+//                logger.debug("Finished jobUnschedule method.");
             } else {
                 logger.debug("Start jobSchedule method...");
                 ResponseEntity<ScheduledModuleResponse> result = null;
@@ -156,5 +181,13 @@ public class DrugDecisionsController {
         List<OldDrugDecisionDetailsDTO> dtos = oldDrugDecisionDetailsRepository.getDetailsByCompanyCode(code);
 
         return new ResponseEntity<>(dtos, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/generate-registration-request-number")
+    public ResponseEntity<List<String>> generateRegistrationRequestNumber()
+    {
+        SeqDrugAuthorizationNumberEntity seq = new SeqDrugAuthorizationNumberEntity();
+        seqDrugAuthorizationNumberRepository.save(seq);
+        return new ResponseEntity<>(Arrays.asList("Rg10-"+ Utils.intToString(6, seq.getId())), HttpStatus.OK);
     }
 }

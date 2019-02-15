@@ -1,19 +1,18 @@
 package com.bass.amed.controller.rest.annihilation;
 
 import com.bass.amed.common.Constants;
-import com.bass.amed.controller.rest.license.LicenseController;
 import com.bass.amed.dto.annihilation.*;
-import com.bass.amed.dto.license.LicenseDTO;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.projection.AnnihilationProjection;
-import com.bass.amed.projection.LicenseProjection;
 import com.bass.amed.repository.*;
 import com.bass.amed.repository.annihilation.AnnihilationCommisionRepository;
 import com.bass.amed.repository.annihilation.AnnihilationDestroyMethodsRepository;
+import com.bass.amed.repository.annihilation.SeqAnnihilationRegistrationNumberRepository;
 import com.bass.amed.service.AnnihilationService;
 import com.bass.amed.service.MedicamentAnnihilationRequestService;
 import com.bass.amed.utils.AmountUtils;
+import com.bass.amed.utils.Utils;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.slf4j.Logger;
@@ -33,7 +32,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping( "/api/annihilation" )
+@RequestMapping("/api/annihilation")
 public class MedAnnihilationController
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(MedAnnihilationController.class);
@@ -65,6 +64,14 @@ public class MedAnnihilationController
     @Autowired
     private AnnihilationService annihilationService;
 
+    @Autowired
+    private ReceiptRepository receiptRepository;
+
+    @Autowired
+    private PaymentOrderRepository paymentOrderRepository;
+    @Autowired
+    private SeqAnnihilationRegistrationNumberRepository seqAnnihilationRegistrationNumberRepository;
+
 
     @RequestMapping(value = "/new-annihilation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> nextNewAnnihilation(@RequestBody RegistrationRequestsEntity request) throws CustomException
@@ -78,7 +85,6 @@ public class MedAnnihilationController
 
         return new ResponseEntity<>(request.getId(), HttpStatus.CREATED);
     }
-
 
 
     @RequestMapping(value = "/confirm-evaluate-annihilation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -111,7 +117,7 @@ public class MedAnnihilationController
 
 
     @RequestMapping(value = "/retrieve-annihilation-by-request-id", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RegistrationRequestsEntity> loadAnnihilationById(@RequestParam("id") String id) throws  CustomException
+    public ResponseEntity<RegistrationRequestsEntity> loadAnnihilationById(@RequestParam("id") String id) throws CustomException
     {
         LOGGER.debug("Retrieve license by request id", id);
         RegistrationRequestsEntity r = medicamentAnnihilationRequestService.findMedAnnihilationRegistrationById(Integer.valueOf(id));
@@ -144,7 +150,7 @@ public class MedAnnihilationController
 
 
     @RequestMapping(value = "/find-annihilation-by-id", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MedicamentAnnihilationEntity> getAnnihilationById(@RequestParam("annihilationId") String annihilationId) throws  CustomException
+    public ResponseEntity<MedicamentAnnihilationEntity> getAnnihilationById(@RequestParam("annihilationId") String annihilationId) throws CustomException
     {
         LOGGER.debug("Get annihilation by id: ", annihilationId);
         MedicamentAnnihilationEntity le = annihilationService.findAnnihilationById(Integer.valueOf(annihilationId));
@@ -159,38 +165,69 @@ public class MedAnnihilationController
         try
         {
             ResourceLoader resourceLoader = new DefaultResourceLoader();
-            Resource res = resourceLoader.getResource("layouts/module8/ActReceptie.jrxml");
-            JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
+            Resource       res            = resourceLoader.getResource("layouts/module8/ActReceptie.jrxml");
+            JasperReport   report         = JasperCompileManager.compileReport(res.getInputStream());
 
             List<ActDeReceptieDTO> dataList = new ArrayList();
-            ActDeReceptieDTO obj = new ActDeReceptieDTO();
+            ActDeReceptieDTO       obj      = new ActDeReceptieDTO();
             obj.setNr(request.getRequestNumber());
             obj.setCompanyName(economicAgentsRepository.findFirstByIdnoEquals(request.getMedicamentAnnihilation().getIdno()).get().getLongName());
-            obj.setDate(new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format( request.getStartDate()));
+            obj.setDate(new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format(request.getStartDate()));
             obj.setAmedRepresentant(sysParamsRepository.findByCode(Constants.SysParams.NIMICIRE_DIRECTOR_SERVICE).get().getValue());
-            obj.setRepresentatntName(request.getMedicamentAnnihilation().getFirstname() + ", "+ request.getMedicamentAnnihilation().getLastname());
+            obj.setRepresentatntName(request.getMedicamentAnnihilation().getFirstname() + ", " + request.getMedicamentAnnihilation().getLastname());
 
             dataList.add(obj);
 
-            List<ProcesVerbal> procesVerbals = new ArrayList<>();
-            final AtomicInteger i = new AtomicInteger(1);
+            List<ProcesVerbal>  procesVerbals = new ArrayList<>();
+            final AtomicInteger i             = new AtomicInteger(1);
+
+            List<ReceiptsEntity> lst        = receiptRepository.findByPaymentOrderNumberIn(request.getPaymentOrders().stream().map(pm -> pm.getNumber()).collect(Collectors.toList()));
+            String               date       = lst.stream().map(rc -> new SimpleDateFormat("dd/MM/yyyy").format(rc.getInsertDate())).collect(Collectors.joining(";\n"));
+            String               nrIncasari = lst.stream().map(rc -> rc.getNumber()).collect(Collectors.joining(";\n"));
+
 
             request.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds().forEach(
                     m -> {
-                        Optional<MedicamentEntity> med = medicamentRepository.findById(m.getMedicamentId());
-                        if (med.isPresent())
+                        if (m.getMedicamentId() != null)
+                        {
+                            Optional<MedicamentEntity> med = medicamentRepository.findById(m.getMedicamentId());
+                            if (med.isPresent())
+                            {
+                                ProcesVerbal p = new ProcesVerbal();
+                                p.setNr(i.getAndIncrement());
+                                p.setName(med.get().getCommercialName());
+                                p.setDoza(m.getUnitsOfMeasurement() != null ? m.getUnitsOfMeasurement().getDescription() : "");
+                                p.setForma(m.getPharmaceuticalForm().getDescription());
+                                p.setSeria(m.getSeria());
+                                p.setQuantity(String.valueOf(m.getQuantity()));
+                                p.setNotes(m.getNote());
+//                                p.setConfirmatoryDocuments(m.getConfirmativeDocuments());
+                                p.setMethodAnnihilation(m.getDestructionMethod().getDescription());
+                                p.setTaxNIM(String.valueOf(AmountUtils.round(m.getTax() * m.getQuantity(), 2)));
+//                                p.setDate(date);
+                                p.setDocNr(nrIncasari);
+
+                                procesVerbals.add(p);
+                            }
+                        } else
                         {
                             ProcesVerbal p = new ProcesVerbal();
                             p.setNr(i.getAndIncrement());
-                            p.setName(med.get().getCommercialName());
-                            p.setDoza(String.valueOf(med.get().getDose()));
-                            p.setForma(med.get().getPharmaceuticalForm().getDescription());
+                            p.setName(m.getNotRegisteredName());
+                            p.setDoza(m.getUnitsOfMeasurement() != null ? m.getUnitsOfMeasurement().getDescription() : "");
+                            p.setForma(m.getPharmaceuticalForm().getDescription());
                             p.setSeria(m.getSeria());
                             p.setQuantity(String.valueOf(m.getQuantity()));
                             p.setNotes(m.getNote());
+//                            p.setConfirmatoryDocuments(m.getConfirmativeDocuments());
+                            p.setMethodAnnihilation(m.getDestructionMethod().getDescription());
+                            p.setTaxNIM(String.valueOf(AmountUtils.round(m.getTax() * m.getQuantity(), 2)));
+//                            p.setDate(date);
+                            p.setDocNr(nrIncasari);
 
                             procesVerbals.add(p);
                         }
+
 
                     }
             );
@@ -204,12 +241,11 @@ public class MedAnnihilationController
             parameters.put("anihilationDataSource", itemsJRBean);
 
             JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(dataList);
-            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, beanColDataSource);
+            JasperPrint                jasperPrint       = JasperFillManager.fillReport(report, parameters, beanColDataSource);
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
-            throw new CustomException(e.getMessage());
+            throw new CustomException(e.getMessage(), e);
         }
 
         return ResponseEntity.ok().header("Content-Type", "application/pdf")
@@ -224,27 +260,43 @@ public class MedAnnihilationController
         try
         {
             ResourceLoader resourceLoader = new DefaultResourceLoader();
-            Resource res = resourceLoader.getResource("layouts/module8/ProcesVerbal.jrxml");
-            JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
+            Resource       res            = resourceLoader.getResource("layouts/module8/ProcesVerbal.jrxml");
+            JasperReport   report         = JasperCompileManager.compileReport(res.getInputStream());
 
-            MedicamentAnnihilationInsitutionEntity president = request.getMedicamentAnnihilation().getMedicamentAnnihilationInsitutions().stream().filter(f -> f.getPresident()).findFirst().orElse(null);
+            MedicamentAnnihilationInsitutionEntity      president = request.getMedicamentAnnihilation().getMedicamentAnnihilationInsitutions().stream().filter(f -> f.getPresident()).findFirst().orElse(null);
             Set<MedicamentAnnihilationInsitutionEntity> memberSet = request.getMedicamentAnnihilation().getMedicamentAnnihilationInsitutions().stream().filter(f -> !f.getPresident()).collect(Collectors.toSet());
-
-
 
 
             List<ProcessVerbalInfo> procesVerbals = new ArrayList<>();
 
             request.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds().forEach(
                     m -> {
-                        Optional<MedicamentEntity> med = medicamentRepository.findById(m.getMedicamentId());
-                        if (med.isPresent())
+                        if (m.getMedicamentId() != null)
+                        {
+                            Optional<MedicamentEntity> med = medicamentRepository.findById(m.getMedicamentId());
+                            if (med.isPresent())
+                            {
+                                ProcessVerbalInfo p = new ProcessVerbalInfo();
+
+                                p.setName(med.get().getCommercialName());
+                                p.setDoza(m.getUnitsOfMeasurement() != null ? m.getUnitsOfMeasurement().getDescription() : "");
+                                p.setForma(m.getPharmaceuticalForm().getDescription());
+                                p.setSeria(m.getSeria());
+                                p.setQuantity(String.valueOf(m.getQuantity()));
+                                p.setMethodAnnihilation(m.getDestructionMethod().getDescription());
+                                p.setCompanyName(request.getMedicamentAnnihilation().getCompanyName());
+                                p.setFutilityCause(m.getUselessReason());
+
+                                procesVerbals.add(p);
+
+                            }
+                        } else
                         {
                             ProcessVerbalInfo p = new ProcessVerbalInfo();
 
-                            p.setName(med.get().getCommercialName());
-                            p.setDoza(String.valueOf(med.get().getDose()));
-                            p.setForma(med.get().getPharmaceuticalForm().getDescription());
+                            p.setName(m.getNotRegisteredName());
+                            p.setDoza(m.getUnitsOfMeasurement() != null ? m.getUnitsOfMeasurement().getDescription() : "");
+                            p.setForma(m.getPharmaceuticalForm().getDescription());
                             p.setSeria(m.getSeria());
                             p.setQuantity(String.valueOf(m.getQuantity()));
                             p.setMethodAnnihilation(m.getDestructionMethod().getDescription());
@@ -253,7 +305,6 @@ public class MedAnnihilationController
 
                             procesVerbals.add(p);
                         }
-
                     }
             );
 
@@ -268,9 +319,8 @@ public class MedAnnihilationController
                 cm.setPresident(false);
 
 
-
                 members.add(cm);
-            } );
+            });
 
 
 
@@ -278,13 +328,13 @@ public class MedAnnihilationController
             JRBeanCollectionDataSource itemsJRBean = new JRBeanCollectionDataSource(procesVerbals);
 
             /* Convert members to JRBeanCollectionDataSource */
-            JRBeanCollectionDataSource itemsMembersJRBean = new JRBeanCollectionDataSource(members);
+            JRBeanCollectionDataSource itemsMembersJRBean  = new JRBeanCollectionDataSource(members);
             JRBeanCollectionDataSource itemsMembersJRBean2 = new JRBeanCollectionDataSource(members);
 
             /* Map to hold Jasper report Parameters */
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("nr", request.getRequestNumber());
-            parameters.put("date", new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format( request.getStartDate()) );
+            parameters.put("date", new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format(request.getStartDate()));
             parameters.put("companyName", request.getMedicamentAnnihilation().getCompanyName());
             parameters.put("amedRepresentant", request.getMedicamentAnnihilation().getCompanyName());
 
@@ -302,8 +352,7 @@ public class MedAnnihilationController
 //            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(dataList);
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             throw new CustomException(e.getMessage());
         }
@@ -320,9 +369,8 @@ public class MedAnnihilationController
         try
         {
             ResourceLoader resourceLoader = new DefaultResourceLoader();
-            Resource res = resourceLoader.getResource("layouts/module8/ListaMedicamentelorPentruComisie.jrxml");
-            JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
-
+            Resource       res            = resourceLoader.getResource("layouts/module8/ListaMedicamentelorPentruComisie.jrxml");
+            JasperReport   report         = JasperCompileManager.compileReport(res.getInputStream());
 
 
             List<ListaMedicamentelorPentruComisie> listaMeds = new ArrayList<>();
@@ -339,7 +387,7 @@ public class MedAnnihilationController
                             l.setMedicamentName(med.get().getCommercialName());
                             l.setPharmaceuticForm(med.get().getPharmaceuticalForm().getDescription());
                             l.setPrimaryPackage(med.get().getPrimarePackage());
-                            l.setQuantety(String.valueOf(AmountUtils.round(m.getQuantity(),2)));
+                            l.setQuantety(String.valueOf(AmountUtils.round(m.getQuantity(), 2)));
                             l.setSeries(m.getSeria());
 
                             listaMeds.add(l);
@@ -368,5 +416,13 @@ public class MedAnnihilationController
 
         return ResponseEntity.ok().header("Content-Type", "application/pdf")
                 .header("Content-Disposition", "inline; filename=listaPentruComisie.pdf").body(bytes);
+    }
+
+    @GetMapping(value = "/generate-registration-request-number")
+    public ResponseEntity<List<String>> generateRegistrationRequestNumber()
+    {
+        SeqAnnihilationRegistrationNumberEntity seq = new SeqAnnihilationRegistrationNumberEntity();
+        seqAnnihilationRegistrationNumberRepository.save(seq);
+        return new ResponseEntity<>(Arrays.asList("Rg12-"+ Utils.intToString(6, seq.getId())), HttpStatus.OK);
     }
 }
