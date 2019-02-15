@@ -1723,7 +1723,7 @@ public class RequestController
         try
         {
             ResourceLoader resourceLoader = new DefaultResourceLoader();
-            Resource res = resourceLoader.getResource("layouts/ImportSpecificatiaMedicamente.jrxml.jrxml");
+            Resource res = resourceLoader.getResource("layouts/ImportSpecificatiaMedicamente.jrxml");
             JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
 
 
@@ -1787,15 +1787,6 @@ public class RequestController
 
                 //====================================
 
-if (request.getImportAuthorizationEntity().getAuthorizationsNumber()!=null) { parameters.put("annexNr", request.getImportAuthorizationEntity().getAuthorizationsNumber()); }
-if (request.getImportAuthorizationEntity().getImporter().getDirector()      !=null) {parameters.put("buyerDirector",  request.getImportAuthorizationEntity().getImporter().getDirector()  );}
-if (request.getImportAuthorizationEntity().getContract()                    !=null) {parameters.put("contractNr",     request.getImportAuthorizationEntity().getContract()                );}
-if (request.getImportAuthorizationEntity().getAnexaDate()                   !=null) {parameters.put("annexNrDate",    request.getImportAuthorizationEntity().getAnexaDate()               );}
-if (request.getImportAuthorizationEntity().getContractDate()                !=null) {parameters.put("contractNrDate", request.getImportAuthorizationEntity().getContractDate()            );}
-if (request.getImportAuthorizationEntity().getImporter().getName()          !=null) {parameters.put("buyerName",      request.getImportAuthorizationEntity().getImporter().getName()      );}
-if (request.getImportAuthorizationEntity().getSeller().getDescription()     !=null) {parameters.put("sellerName",     request.getImportAuthorizationEntity().getSeller().getDescription() );}
-if (request.getImportAuthorizationEntity().getSeller()                      !=null) {parameters.put("sellerAddress",  request.getImportAuthorizationEntity().getSeller().getAddress() + " " + request.getImportAuthorizationEntity().getSeller().getCountry().getCode());}
-parameters.put("sellerDirector", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
 //  <parameter name="annexNr
 //	<parameter name="buyerDirector
 //	<parameter name="contractNr
@@ -1809,116 +1800,129 @@ parameters.put("sellerDirector", sysParamsRepository.findByCode(Constants.SysPar
 
                     //====================================
 
-                    if (map.get(entity.getCustomsCode().getCode()) == null)
-                    {
-                        map.put(entity.getCustomsCode().getCode(), entity.getSumm());
-                    }
-                    else
-                    {
-                        map.put(entity.getCustomsCode().getCode(), map.get(entity.getCustomsCode().getCode()) + entity.getSumm());
-                    }
-
-//                }
+//                    if (map.get(entity.getCustomsCode().getCode()) == null)
+//                    {
+//                        map.put(entity.getCustomsCode().getCode(), entity.getSumm());
+//                    }
+//                    else
+//                    {
+//                        map.put(entity.getCustomsCode().getCode(), map.get(entity.getCustomsCode().getCode()) + entity.getSumm());
+//                    }
+//
+////                }
 
             }
 
-            long numberOfApprovedPositions = request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().stream().filter(x -> x.getApproved()==true).count();
+	        if (request.getImportAuthorizationEntity().getAuthorizationsNumber()        !=null) {parameters.put("annexNr", request.getImportAuthorizationEntity().getAuthorizationsNumber()); }
+	        if (request.getImportAuthorizationEntity().getImporter().getDirector()      !=null) {parameters.put("buyerDirector",  request.getImportAuthorizationEntity().getImporter().getDirector()  );}
+	        if (request.getImportAuthorizationEntity().getContract()                    !=null) {parameters.put("contractNr",     request.getImportAuthorizationEntity().getContract()                );}
+	        if (request.getImportAuthorizationEntity().getAnexaDate()                   !=null) {parameters.put("annexNrDate",    request.getImportAuthorizationEntity().getAnexaDate()               );}
+	        if (request.getImportAuthorizationEntity().getContractDate()                !=null) {parameters.put("contractNrDate", request.getImportAuthorizationEntity().getContractDate()            );}
+	        if (request.getImportAuthorizationEntity().getImporter().getName()          !=null) {parameters.put("buyerName",      request.getImportAuthorizationEntity().getImporter().getName()      );}
+	        if (request.getImportAuthorizationEntity().getSeller().getDescription()     !=null) {parameters.put("sellerName",     request.getImportAuthorizationEntity().getSeller().getDescription() );}
+	        if (request.getImportAuthorizationEntity().getSeller()                      !=null) {parameters.put("sellerAddress",  request.getImportAuthorizationEntity().getSeller().getAddress() + " " + request.getImportAuthorizationEntity().getSeller().getCountry().getCode());}
+	        parameters.put("sellerDirector", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
+            parameters.put("importSpecificationMedicament", ImportSpecificationDataSetArrayList);
 
+	        JRBeanCollectionDataSource autorizationImportDataSet = new JRBeanCollectionDataSource(ImportSpecificationDataSetArrayList);
 
-//            dataSet.setCustom("Nord \nSud \nAeroport \nCentru \nChișinau");
-            String customsPoints = "";
-
-            for (NmCustomsPointsEntity point: request.getImportAuthorizationEntity().getNmCustomsPointsList()) {
-//                customsPoints = customsPoints + point.getDescription() +"\n";
-                AutorizationImportDataSet dataSet = new AutorizationImportDataSet();
-
-                dataSet.setCustom(point.getDescription());
-                dataSet.setCustomCode(point.getCode());
-                autorizationImportDataSetArrayList.add(dataSet);
-            }
-            parameters.put("transactionType" , "Cumparare/Vinzare ferma");
-
-            if (request.getImportAuthorizationEntity().getCurrency()!=null) {
-                parameters.put("currencyPayment", request.getImportAuthorizationEntity().getCurrency().getShortDescription());
-                parameters.put("currencyCode", request.getImportAuthorizationEntity().getCurrency().getCode());
-            }
+//	        long numberOfApprovedPositions = request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().stream().filter(x -> x.getApproved()==true).count();
+//
+//
+////            dataSet.setCustom("Nord \nSud \nAeroport \nCentru \nChișinau");
+//            String customsPoints = "";
+//
+//            for (NmCustomsPointsEntity point: request.getImportAuthorizationEntity().getNmCustomsPointsList()) {
+////                customsPoints = customsPoints + point.getDescription() +"\n";
+//                AutorizationImportDataSet dataSet = new AutorizationImportDataSet();
+//
+//                dataSet.setCustom(point.getDescription());
+//                dataSet.setCustomCode(point.getCode());
+//                autorizationImportDataSetArrayList.add(dataSet);
+//            }
+//            parameters.put("transactionType" , "Cumparare/Vinzare ferma");
+//
+//            if (request.getImportAuthorizationEntity().getCurrency()!=null) {
+//                parameters.put("currencyPayment", request.getImportAuthorizationEntity().getCurrency().getShortDescription());
+//                parameters.put("currencyCode", request.getImportAuthorizationEntity().getCurrency().getCode());
+//            }
 
 
 
 //            JRBeanCollectionDataSource autorizationImportDataSet = new JRBeanCollectionDataSource(autorizationImportDataSetArrayList);
-            JRBeanCollectionDataSource autorizationImportDataSet = new JRBeanCollectionDataSource(ImportSpecificationDataSetArrayList);
-
-            if (request.getImportAuthorizationEntity().getAuthorizationsNumber()!=null) {
-                parameters.put("autorizationNr", request.getImportAuthorizationEntity().getAuthorizationsNumber());
-            }
-            parameters.put("autorizationDate", (new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
-            parameters.put("importExportSectionDate", (new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
-            parameters.put("generalDirectorDate", (new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
-
-            if (request.getImportAuthorizationEntity().getSeller()!=null) {
-                parameters.put("sellerAndAddress",
-                               request.getImportAuthorizationEntity().getSeller().getDescription() + "\n" + request.getImportAuthorizationEntity().getSeller().getAddress());
-                parameters.put("sellerCountry", request.getImportAuthorizationEntity().getSeller().getCountry().getDescription());
-                parameters.put("sellerCountryCode", request.getImportAuthorizationEntity().getSeller().getCountry().getCode());
-            }
-            parameters.put("transactionType", "Cumparare/Vinzare ferma          11");
 
 
-            parameters.put("destinationCountry", "Moldova");
-            parameters.put("destinationCountryCode", "MD");
-
-            if (request.getImportAuthorizationEntity().getImporter()!=null) {
-                parameters.put("companyNameAndAddress",
-                               request.getImportAuthorizationEntity().getImporter().getLongName() + "\n" + request.getImportAuthorizationEntity()
-                                                                                                                  .getImporter()
-                                                                                                                  .getLegalAddress());
-            }
-            if (request.getImportAuthorizationEntity().getApplicant() != null) {
-                parameters.put("registartionDate", request.getImportAuthorizationEntity().getApplicant().getRegistrationDate().toString());
-                parameters.put("registrationNr", request.getImportAuthorizationEntity().getApplicant().getIdno());
-            }
-
-
-            if (request.getImportAuthorizationEntity().getContract()!= null && request.getImportAuthorizationEntity().getContractDate()!=null && request.getImportAuthorizationEntity().getAnexa()!= null &&request.getImportAuthorizationEntity().getAnexaDate()!=null ) {
-
-                String themesForApplicationForAuthorization;
-
-                if (request.getImportAuthorizationEntity().getConditionsAndSpecification()!= null || !request.getImportAuthorizationEntity().getConditionsAndSpecification().equals("")) {
-                    themesForApplicationForAuthorization = "Contract: " + request.getImportAuthorizationEntity().getContract() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getContractDate()) +
-                                                           "\n" + "Anexa: " + request.getImportAuthorizationEntity().getAnexa() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getAnexaDate()) +
-                                                           "\n" + "Alte: " + request.getImportAuthorizationEntity().getConditionsAndSpecification();;
-                } else {
-                    themesForApplicationForAuthorization =  "Contract: " + request.getImportAuthorizationEntity().getContract() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getContractDate()) +
-                                                            "\n" + "Anexa: " + request.getImportAuthorizationEntity().getAnexa() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getAnexaDate());
-
-                }
-
-
-
-
-                parameters.put("themesForApplicationForAuthorization", themesForApplicationForAuthorization);
-            }
-
-            parameters.put("geniralDirectorName", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
-            parameters.put("importExportSectionRepresentant", sysParamsRepository.findByCode(Constants.SysParams.IMPORT_REPREZENTANT).get().getValue());
-            parameters.put("importExportSectionChief", sysParamsRepository.findByCode(Constants.SysParams.IMPORT_SEF_SECTIE).get().getValue());
-            parameters.put("validityTerms", (new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getExpirationDate())));
-
-
-            if  (numberOfApprovedPositions > 1 && request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer()!=null){
-                parameters.put("manufacturerAndAddress", "Producători diferiți");
-                parameters.put("manufacturerCountry", "Țari diferite");
-                parameters.put("manufacturerCountryCode","");
-            }else if (numberOfApprovedPositions == 1 && request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer()!=null) {
-                parameters.put("manufacturerAndAddress",
-                               request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getDescription() + "\n" + request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getAddress());
-                parameters.put("manufacturerCountry", request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getCountry().getDescription());
-                parameters.put("manufacturerCountryCode", request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getCountry().getCode());
-            }
-
-
-            parameters.put("autorizationImportDataSet", autorizationImportDataSet);
-//            parameters.put("autorizationImportDataSet2", autorizationImportDataSet2);
+//            if (request.getImportAuthorizationEntity().getAuthorizationsNumber()!=null) {
+//                parameters.put("autorizationNr", request.getImportAuthorizationEntity().getAuthorizationsNumber());
+//            }
+//            parameters.put("autorizationDate", (new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
+//            parameters.put("importExportSectionDate", (new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
+//            parameters.put("generalDirectorDate", (new SimpleDateFormat("dd/MM/yyyy").format(new Date())));
+//
+//            if (request.getImportAuthorizationEntity().getSeller()!=null) {
+//                parameters.put("sellerAndAddress",
+//                               request.getImportAuthorizationEntity().getSeller().getDescription() + "\n" + request.getImportAuthorizationEntity().getSeller().getAddress());
+//                parameters.put("sellerCountry", request.getImportAuthorizationEntity().getSeller().getCountry().getDescription());
+//                parameters.put("sellerCountryCode", request.getImportAuthorizationEntity().getSeller().getCountry().getCode());
+//            }
+//            parameters.put("transactionType", "Cumparare/Vinzare ferma          11");
+//
+//
+//            parameters.put("destinationCountry", "Moldova");
+//            parameters.put("destinationCountryCode", "MD");
+//
+//            if (request.getImportAuthorizationEntity().getImporter()!=null) {
+//                parameters.put("companyNameAndAddress",
+//                               request.getImportAuthorizationEntity().getImporter().getLongName() + "\n" + request.getImportAuthorizationEntity()
+//                                                                                                                  .getImporter()
+//                                                                                                                  .getLegalAddress());
+//            }
+//            if (request.getImportAuthorizationEntity().getApplicant() != null) {
+//                parameters.put("registartionDate", request.getImportAuthorizationEntity().getApplicant().getRegistrationDate().toString());
+//                parameters.put("registrationNr", request.getImportAuthorizationEntity().getApplicant().getIdno());
+//            }
+//
+//
+//            if (request.getImportAuthorizationEntity().getContract()!= null && request.getImportAuthorizationEntity().getContractDate()!=null && request.getImportAuthorizationEntity().getAnexa()!= null &&request.getImportAuthorizationEntity().getAnexaDate()!=null ) {
+//
+//                String themesForApplicationForAuthorization;
+//
+//                if (request.getImportAuthorizationEntity().getConditionsAndSpecification()!= null || !request.getImportAuthorizationEntity().getConditionsAndSpecification().equals("")) {
+//                    themesForApplicationForAuthorization = "Contract: " + request.getImportAuthorizationEntity().getContract() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getContractDate()) +
+//                                                           "\n" + "Anexa: " + request.getImportAuthorizationEntity().getAnexa() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getAnexaDate()) +
+//                                                           "\n" + "Alte: " + request.getImportAuthorizationEntity().getConditionsAndSpecification();;
+//                } else {
+//                    themesForApplicationForAuthorization =  "Contract: " + request.getImportAuthorizationEntity().getContract() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getContractDate()) +
+//                                                            "\n" + "Anexa: " + request.getImportAuthorizationEntity().getAnexa() + " din " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getAnexaDate());
+//
+//                }
+//
+//
+//
+//
+//                parameters.put("themesForApplicationForAuthorization", themesForApplicationForAuthorization);
+//            }
+//
+//            parameters.put("geniralDirectorName", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
+//            parameters.put("importExportSectionRepresentant", sysParamsRepository.findByCode(Constants.SysParams.IMPORT_REPREZENTANT).get().getValue());
+//            parameters.put("importExportSectionChief", sysParamsRepository.findByCode(Constants.SysParams.IMPORT_SEF_SECTIE).get().getValue());
+//            parameters.put("validityTerms", (new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getExpirationDate())));
+//
+//
+//            if  (numberOfApprovedPositions > 1 && request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer()!=null){
+//                parameters.put("manufacturerAndAddress", "Producători diferiți");
+//                parameters.put("manufacturerCountry", "Țari diferite");
+//                parameters.put("manufacturerCountryCode","");
+//            }else if (numberOfApprovedPositions == 1 && request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer()!=null) {
+//                parameters.put("manufacturerAndAddress",
+//                               request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getDescription() + "\n" + request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getAddress());
+//                parameters.put("manufacturerCountry", request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getCountry().getDescription());
+//                parameters.put("manufacturerCountryCode", request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getCountry().getCode());
+//            }
+//
+//
+//            parameters.put("autorizationImportDataSet", autorizationImportDataSet);
+////            parameters.put("autorizationImportDataSet2", autorizationImportDataSet2);
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);

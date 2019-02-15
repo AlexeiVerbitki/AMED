@@ -350,6 +350,10 @@ export class MedRegApproveComponent implements OnInit {
 
         observable = this.requestService.viewImportAuthorization(authorizationModel);
         console.log('observable = this.requestService.viewImportAuthorization(authorizationModel) PASSED', observable);
+        if (document == 'specification'){
+            observable = this.requestService.viewImportAuthorizationSpecification(authorizationModel);
+            console.log('observable = this.requestService.viewImportAuthorization(authorizationModel) PASSED', observable);
+        }
         // observable = this.requestService.viewImportAuthorization(this.evaluateImportForm.getRawValue())
 
 
