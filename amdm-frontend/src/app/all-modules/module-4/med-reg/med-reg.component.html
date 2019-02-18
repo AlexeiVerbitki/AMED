@@ -38,14 +38,14 @@
             </div>
 
             <app-document *ngIf="importData !== null && importData?.importAuthorizationEntity.medType==1" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMMA', step : 'E'}"></app-document>
-            <div *ngIf="formSubmitted && docs && docs.length==0">
-                <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
-            </div>
+            <!--<div *ngIf="formSubmitted && docs && docs.length==0">-->
+                <!--<small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>-->
+            <!--</div>-->
 
             <app-document *ngIf="importData !== null && importData?.importAuthorizationEntity.medType==2" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMMN', step : 'E'}"></app-document>
-            <div *ngIf="formSubmitted && docs && docs.length==0">
-                <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
-            </div>
+            <!--<div *ngIf="formSubmitted && docs && docs.length==0">-->
+                <!--<small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>-->
+            <!--</div>-->
 
             <div formGroupName="importAuthorizationEntity" id="importAuthorizationEntity">
                 <div class="row my-3">
@@ -273,7 +273,7 @@
                     <h5 class="text-center font-weight-bold" *ngIf="importData !== null && importData?.importAuthorizationEntity.medType===1">Informația despre Medicamentul Înregistrat</h5>
                     <h5 class="text-center font-weight-bold" *ngIf="importData !== null && importData?.importAuthorizationEntity.medType===2">Informația despre Medicamentul Neînregistrat</h5>
                     <hr>
-                    <div formArrayName="unitOfImportTable">
+                    <div formArrayName="unitOfImportTable" >
                         <div class="row">
 
                             <div class="col-4" *ngIf="importData !== null && importData?.importAuthorizationEntity.medType==1">
@@ -312,7 +312,7 @@
                             </div>
 
                             <div class="col-md-4">
-                                <div class="md-form-modified">
+                                <div class="md-form-modified" id="codulMedicamentului">
                                     <ng-select
                                             [items]="internationalMedicamentNames | async"
                                             bindLabel="description"

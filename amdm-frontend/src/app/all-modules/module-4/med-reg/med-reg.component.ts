@@ -449,12 +449,18 @@ export class MedRegComponent implements OnInit {
                 //========================================
                 if (val && this.importData.importAuthorizationEntity.medType === 1) {
                     let contractCurrency : any;
+                    let priceInContractCurrency : any;
 
                     if (this.evaluateImportForm.get('importAuthorizationEntity.currency').value) {
                         contractCurrency = this.evaluateImportForm.get('importAuthorizationEntity.currency').value;
                     }
-                    let exchangeCurrency = this.exchangeCurrenciesForPeriod.find( x => x.currency.shortDescription == contractCurrency.shortDescription);
-                    let priceInContractCurrency = this.medicamentPrice.priceMdl / exchangeCurrency.value ;
+
+                    if(contractCurrency.shortDescription == 'MDL'){
+                        priceInContractCurrency = this.medicamentPrice.priceMdl
+                    } else {
+                        let exchangeCurrency = this.exchangeCurrenciesForPeriod.find( x => x.currency.shortDescription == contractCurrency.shortDescription);
+                        priceInContractCurrency = this.medicamentPrice.priceMdl / exchangeCurrency.value;
+                    }
 
                     if (this.userPrice > priceInContractCurrency) {
                         this.invalidPrice = true;
@@ -483,23 +489,6 @@ export class MedRegComponent implements OnInit {
                 }
             }));
 
-            // this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').valueChanges.subscribe(val => {
-            //     //========================================
-            //
-            //     if (val && this.importData.importAuthorizationEntity.medType === 1) {
-            //         if (this.userPrice > this.medicamentPrice.price) {
-            //             this.invalidPrice = true;
-            //
-            //             console.log('invalidPrice', this.invalidPrice);
-            //         } else {
-            //             this.invalidPrice = false;
-            //             console.log('invalidPrice', this.invalidPrice);
-            //         }
-            //     } else if (val) {
-            //         this.invalidPrice = false;
-            //     }
-            //
-            // }));
         }
     }
 
@@ -1013,9 +1002,15 @@ export class MedRegComponent implements OnInit {
         }else {
             console.log("this.evaluateImportForm.valid", this.evaluateImportForm.valid)
             console.log("this.evaluateImportForm", this.evaluateImportForm)
+            let element : any;
 
-            // let element = document.getElementById("importAuthorizationEntity");
-            // element.scrollIntoView();
+            if (this.unitOfImportTable.length == 0) {
+                element = document.getElementById("codulMedicamentului");
+            } else {
+               element = document.getElementById("importAuthorizationEntity");
+            }
+
+            element.scrollIntoView();
 
         }
     }

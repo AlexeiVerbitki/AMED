@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -1814,9 +1815,11 @@ public class RequestController
             Map<String, Object> parameters = new HashMap<>();
             ArrayList<AutorizationImportDataSet> autorizationImportDataSetArrayList = new ArrayList<>();
             ArrayList<ImportSpecificationDataSet> ImportSpecificationDataSetArrayList = new ArrayList<>();
+            double totalSum = 0;
 
 
             HashMap<String, Double> map = new HashMap();
+            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
             for (ImportAuthorizationDetailsEntity entity : request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList())
             {
@@ -1837,76 +1840,43 @@ public class RequestController
 //                    else
 //                    {
 
-                    ImportSpecificationDataSet dataSet1 = new ImportSpecificationDataSet();
+                    ImportSpecificationDataSet specificationMedicament = new ImportSpecificationDataSet();
 
-                  if (entity.getCodeAmed()                                !=null)         { dataSet1.setMedicamentCode(entity.getCodeAmed()); }
-                  if (entity.getCustomsCode().getCode()                   !=null)         { dataSet1.setCustomsCode(entity.getCustomsCode().getCode()); }
-                  if (entity.getName()                                    !=null)         { dataSet1.setTradeNameOfDrug(entity.getName()); }
-                  if (entity.getPharmaceuticalForm().getCode()            !=null)         { dataSet1.setPharmaceuticForm(entity.getPharmaceuticalForm().getCode()); }
-                  if (entity.getDose()                                    !=null)         { dataSet1.setDose(entity.getDose()); }
-                  if (entity.getUnitsOfMeasurement()                      !=null)         { dataSet1.setPackaging(entity.getUnitsOfMeasurement()); }
-                  if (entity.getQuantity()                                !=null)         { dataSet1.setQuantity(entity.getQuantity().toString()); }
-                  if (entity.getPrice() !=null && entity.getCurrency()    !=null)         { dataSet1.setPriceCurrency(String.valueOf(AmountUtils.round(entity.getPrice(), 2)) + " " +  entity.getCurrency().getShortDescription()); }
-                  if (entity.getSumm() != null  && entity.getCurrency()   !=null)         { dataSet1.setValueCurrency(String.valueOf(AmountUtils.round(entity.getSumm(), 2) + " " +  entity.getCurrency().getShortDescription())); }
-                  if (entity.getProducer().getCountry()                   !=null)         { dataSet1.setCountryOfOrigin(entity.getProducer().getCountry().getCode()); }
-                  if (entity.getProducer().getDescription()               !=null)         { dataSet1.setManufacturingCompany(entity.getProducer().getDescription()); }
-                  if (entity.getRegistrationDate()                        !=null)         { dataSet1.setRegistrationDate(entity.getRegistrationDate().toString()); }
-                  if (entity.getRegistrationNumber()                      !=null)         { dataSet1.setRegistrationNumber(entity.getRegistrationNumber().toString()); } else
-                      {dataSet1.setRegistrationNumber("");}
-                  if (entity.getAtcCode()                                 !=null)         { dataSet1.setAtc(entity.getAtcCode().getCode()); }
-                  if (entity.getInternationalMedicamentName()             !=null)         { dataSet1.setInternationalName(entity.getInternationalMedicamentName().getDescription()); }
+                  if (entity.getCodeAmed()                                !=null)         { specificationMedicament.setMedicamentCode(entity.getCodeAmed()); }
+                  if (entity.getCustomsCode().getCode()                   !=null)         { specificationMedicament.setCustomsCode(entity.getCustomsCode().getCode()); }
+                  if (entity.getName()                                    !=null)         { specificationMedicament.setTradeNameOfDrug(entity.getName()); }
+                  if (entity.getPharmaceuticalForm().getCode()            !=null)         { specificationMedicament.setPharmaceuticForm(entity.getPharmaceuticalForm().getCode()); }
+                  if (entity.getDose()                                    !=null)         { specificationMedicament.setDose(entity.getDose()); }
+                  if (entity.getUnitsOfMeasurement()                      !=null)         { specificationMedicament.setPackaging(entity.getUnitsOfMeasurement()); }
+                  if (entity.getQuantity()                                !=null)         { specificationMedicament.setQuantity(entity.getApprovedQuantity().toString()); }
+                  if (entity.getPrice() !=null && entity.getCurrency()    !=null)         { specificationMedicament.setPriceCurrency(String.valueOf(AmountUtils.round(entity.getPrice(), 2)) + " " +  entity.getCurrency().getShortDescription()); }
+                  if (entity.getSumm() != null  && entity.getCurrency()   !=null)         { specificationMedicament.setValueCurrency(String.valueOf(AmountUtils.round(entity.getSumm(), 2) + " " +  entity.getCurrency().getShortDescription())); }
+                  if (entity.getProducer().getCountry()                   !=null)         { specificationMedicament.setCountryOfOrigin(entity.getProducer().getCountry().getCode()); }
+                  if (entity.getProducer().getDescription()               !=null)         { specificationMedicament.setManufacturingCompany(entity.getProducer().getDescription()); }
+                  if (entity.getRegistrationDate()                        !=null)         { specificationMedicament.setRegistrationDate(formatter.format(entity.getRegistrationDate())); }
+                  if (entity.getRegistrationNumber()                      !=null)         { specificationMedicament.setRegistrationNumber(entity.getRegistrationNumber().toString()); } else
+                      {specificationMedicament.setRegistrationNumber("");}
+                  if (entity.getAtcCode()                                 !=null)         { specificationMedicament.setAtc(entity.getAtcCode().getCode()); }
+                  if (entity.getInternationalMedicamentName()             !=null)         { specificationMedicament.setInternationalName(entity.getInternationalMedicamentName().getDescription()); }
 
-
-
-
-//                        dataSet1.setAmount(AmountUtils.round(entity.getSumm(), 2));
-//                        dataSet1.setField18("");
-//                        dataSet1.setProductCode(entity.getCustomsCode().getCode());
-//                        dataSet1.setProductName(entity.getCustomsCode().getDescription());
-//                        dataSet1.setQuantity("");
-//                        dataSet1.setUnitMeasure("");
-
-                    ImportSpecificationDataSetArrayList.add(dataSet1);
+                    ImportSpecificationDataSetArrayList.add(specificationMedicament);
                     }
 
-                //====================================
-
-//  <parameter name="annexNr
-//	<parameter name="buyerDirector
-//	<parameter name="contractNr
-//	<parameter name="annexNrDate
-//	<parameter name="contractNrDate
-//	<parameter name="buyerName
-//	<parameter name="sallerName
-//	<parameter name="sallerAddress
-//	<parameter name="sallerDirector
-//	<parameter name="importSpecificationMedicament" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
-
-                    //====================================
-
-//                    if (map.get(entity.getCustomsCode().getCode()) == null)
-//                    {
-//                        map.put(entity.getCustomsCode().getCode(), entity.getSumm());
-//                    }
-//                    else
-//                    {
-//                        map.put(entity.getCustomsCode().getCode(), map.get(entity.getCustomsCode().getCode()) + entity.getSumm());
-//                    }
-//
-////                }
 
             }
 
 	        if (request.getImportAuthorizationEntity().getAuthorizationsNumber()        !=null) {parameters.put("annexNr", request.getImportAuthorizationEntity().getAnexa()); }
 	        if (request.getImportAuthorizationEntity().getImporter().getDirector()      !=null) {parameters.put("buyerDirector",  request.getImportAuthorizationEntity().getImporter().getDirector()  );}
+	        if (request.getImportAuthorizationEntity().getImporter().getDirector()      !=null) {parameters.put("buyerAddress",  request.getImportAuthorizationEntity().getImporter().getLegalAddress()  );}
 	        if (request.getImportAuthorizationEntity().getContract()                    !=null) {parameters.put("contractNr",     request.getImportAuthorizationEntity().getContract()                );}
-	        if (request.getImportAuthorizationEntity().getAnexaDate()                   !=null) {parameters.put("annexNrDate",    request.getImportAuthorizationEntity().getAnexaDate().toString()               );}
-	        if (request.getImportAuthorizationEntity().getContractDate()                !=null) {parameters.put("contractNrDate", request.getImportAuthorizationEntity().getContractDate().toString()            );}
+	        if (request.getImportAuthorizationEntity().getAnexaDate()                   !=null) {parameters.put("annexNrDate",    formatter.format(request.getImportAuthorizationEntity().getAnexaDate())               );}
+	        if (request.getImportAuthorizationEntity().getContractDate()                !=null) {parameters.put("contractNrDate", formatter.format(request.getImportAuthorizationEntity().getContractDate())            );}
 	        if (request.getImportAuthorizationEntity().getImporter().getName()          !=null) {parameters.put("buyerName",      request.getImportAuthorizationEntity().getImporter().getName()      );}
 	        if (request.getImportAuthorizationEntity().getSeller().getDescription()     !=null) {parameters.put("sellerName",     request.getImportAuthorizationEntity().getSeller().getDescription() );}
 	        if (request.getImportAuthorizationEntity().getSeller()                      !=null) {parameters.put("sellerAddress",  request.getImportAuthorizationEntity().getSeller().getAddress() + " " + request.getImportAuthorizationEntity().getSeller().getCountry().getCode());}
 	        parameters.put("sellerDirector", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
-            parameters.put("importSpecificationMedicament", ImportSpecificationDataSetArrayList);
+//	        parameters.put("totalSum", String.valueOf(AmountUtils.round(ImportSpecificationDataSetArrayList.stream().map(sum -> sum.getValueCurrency()).reduce(0.0, (x,y) -> x+y)                    , 2 )));
+            parameters.put("importSpecificationMedicament", new JRBeanCollectionDataSource( ImportSpecificationDataSetArrayList));
 
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
