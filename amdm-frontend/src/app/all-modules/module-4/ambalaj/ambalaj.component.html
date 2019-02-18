@@ -38,16 +38,16 @@
             </div>
 
             <app-document *ngIf="importData?.importAuthorizationEntity.medType==3" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMMP', step : 'E'}"></app-document>
-            <div *ngIf="formSubmitted && docs && docs.length==0">
-                <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
-            </div>
+            <!--<div *ngIf="formSubmitted && docs && docs.length==0">-->
+                <!--<small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>-->
+            <!--</div>-->
 
             <app-document *ngIf="importData?.importAuthorizationEntity.medType==4" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMAM', step : 'E'}"></app-document>
-            <div *ngIf="formSubmitted && docs && docs.length==0">
-                <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
-            </div>
+            <!--<div *ngIf="formSubmitted && docs && docs.length==0">-->
+                <!--<small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>-->
+            <!--</div>-->
 
-            <div formGroupName="importAuthorizationEntity">
+            <div formGroupName="importAuthorizationEntity" id="importAuthorizationEntity">
                 <div class="row">
 
 
@@ -149,7 +149,7 @@
                             >
                             </ng-select>
                         </div>
-                        <div *ngIf="(unitOfImportPressed && evaluateImportForm.get('importAuthorizationEntity.currency').invalid) ">
+                        <div *ngIf="unitOfImportPressed && invalidCurrency">
                             <small class="text-muted"><strong class="text-danger">Valuta contractului trebuie introdusă</strong>
                             </small>
                         </div>
@@ -277,7 +277,7 @@
                     <h5 class="text-center font-weight-bold" *ngIf="importData?.importAuthorizationEntity.medType==3">Informația despre materia primă</h5>
                     <h5 class="text-center font-weight-bold" *ngIf="importData?.importAuthorizationEntity.medType==4">Informația despre ambalaj</h5>
                     <hr>
-                    <div formArrayName="unitOfImportTable">
+                    <div formArrayName="unitOfImportTable" id="unitOfImportTable">
                         <!--<div *ngFor="let importTypeForm of importTypeForms.controls; let i=index" [formGroupName]="i">-->
                         <div class="row">
                             <div class="col-4">

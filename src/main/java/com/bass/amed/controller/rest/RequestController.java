@@ -1858,6 +1858,7 @@ public class RequestController
                       {specificationMedicament.setRegistrationNumber("");}
                   if (entity.getAtcCode()                                 !=null)         { specificationMedicament.setAtc(entity.getAtcCode().getCode()); }
                   if (entity.getInternationalMedicamentName()             !=null)         { specificationMedicament.setInternationalName(entity.getInternationalMedicamentName().getDescription()); }
+                  totalSum += totalSum;
 
                     ImportSpecificationDataSetArrayList.add(specificationMedicament);
                     }
@@ -1876,6 +1877,7 @@ public class RequestController
 	        if (request.getImportAuthorizationEntity().getSeller()                      !=null) {parameters.put("sellerAddress",  request.getImportAuthorizationEntity().getSeller().getAddress() + " " + request.getImportAuthorizationEntity().getSeller().getCountry().getCode());}
 	        parameters.put("sellerDirector", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
 //	        parameters.put("totalSum", String.valueOf(AmountUtils.round(ImportSpecificationDataSetArrayList.stream().map(sum -> sum.getValueCurrency()).reduce(0.0, (x,y) -> x+y)                    , 2 )));
+	        parameters.put("totalSum", String.valueOf(AmountUtils.round(totalSum , 2 )));
             parameters.put("importSpecificationMedicament", new JRBeanCollectionDataSource( ImportSpecificationDataSetArrayList));
 
 

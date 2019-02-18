@@ -224,12 +224,12 @@ export class AmbalajComponent implements OnInit {
 
         this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.currency').valueChanges.subscribe(value => {
             if (value) {
-                this.invalidCurrency = true;
+                this.invalidCurrency = false;
                 this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').reset();
                 this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(value);
 
 
-            } else this.invalidCurrency = false;
+            } else this.invalidCurrency = true;
 
             // if (this.evaluateImportForm.get('importAuthorizationEntity.currency').value == undefined) {
             //     this.invalidCurrency = true;
@@ -331,7 +331,7 @@ export class AmbalajComponent implements OnInit {
         } else this.invalidCurrency = false;
 
         console.log("unitOfImportTable", this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable'))
-        if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').valid) {
+        if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').valid && this.evaluateImportForm.get('importAuthorizationEntity.currency').value) {
             this.unitOfImportPressed = false;
 
             if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').invalid || this.invalidCurrency) {
@@ -581,6 +581,7 @@ export class AmbalajComponent implements OnInit {
             this.evaluateImportForm.get('importAuthorizationEntity.anexaDate').valid &&
             this.evaluateImportForm.get('importAuthorizationEntity.specification').valid &&
             this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').valid &&
+            this.evaluateImportForm.get('importAuthorizationEntity.currency').value &&
             this.unitOfImportTable.length > 0) {
 
         let currentStep = this.importData.currentStep;
@@ -636,7 +637,18 @@ export class AmbalajComponent implements OnInit {
         }else {
             console.log("this.evaluateImportForm.valid", this.evaluateImportForm.valid)
             console.log("this.evaluateImportForm", this.evaluateImportForm)
+            let element : any;
 
+            if (!this.evaluateImportForm.get('importAuthorizationEntity.currency').value) {
+                element = document.getElementById("contractCurrency");
+            } else
+            if (this.unitOfImportTable.length == 0) {
+                element = document.getElementById("unitOfImportTable");
+            } else {
+                element = document.getElementById("importAuthorizationEntity");
+            }
+
+            element.scrollIntoView();
             // let element = document.getElementById("importAuthorizationEntity");
             // element.scrollIntoView();
 
