@@ -78,7 +78,10 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
             this.priceService.generateDocNumber().subscribe(generatedNumber => {
                     this.requestNumber = generatedNumber[0];
                 },
-                error => {console.log(error); alert(error); }
+                error => {
+                    console.log(error);
+                    alert(error);
+                }
             )
         );
         // this.taskForm.get('requestNumber').valueChanges.subscribe(val => {
@@ -175,7 +178,7 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
     newPriceModified(i: number, newValue: any) {
         console.log('newPriceModified', newValue);
         this.dataSource.data[i].priceMdlNew = +newValue;
-        this.containInvalidPrices = this.dataSource.data.some(p => p.priceMdlNew == undefined || p.priceMdlNew <= 0 );
+        this.containInvalidPrices = this.dataSource.data.some(p => p.priceMdlNew == undefined || p.priceMdlNew <= 0);
 
         const avgCur = this.avgCurrencies.find(cur => cur.currency.shortDescription == this.dataSource.data[i].currency);
 
@@ -184,14 +187,15 @@ export class PriceAutoRevaluationComponent implements OnInit, AfterViewInit, OnD
         const decreasePercentDifference = this.calculateIncreaseRate(this.dataSource.data[i].priceMdl, newValue);
 
         let afterLimit = false;
-        if (increasePercentDifference > PriceAutoRevaluationComponent.INCREASE_PERCENT_LIMIT ) {
+        if (increasePercentDifference > PriceAutoRevaluationComponent.INCREASE_PERCENT_LIMIT) {
             this.dataSource.data[i].priceMdlDifferencePercents = '↑' + increasePercentDifference.toFixed(1).toString() + '%';
             afterLimit = true;
         } else if (decreasePercentDifference > PriceAutoRevaluationComponent.DECREASE_PERCENT_LIMIT) {
             this.dataSource.data[i].priceMdlDifferencePercents = '↓' + decreasePercentDifference.toFixed(1).toString() + '%';
             afterLimit = true;
         } else {
-            this.dataSource.data[i].priceMdlDifferencePercents = decreasePercentDifference < 0 ? '↑' + increasePercentDifference.toFixed(1).toString() + '%' : '↓' + decreasePercentDifference.toFixed(1).toString() + '%';
+            this.dataSource.data[i].priceMdlDifferencePercents = decreasePercentDifference < 0 ? '↑' + increasePercentDifference.toFixed(1)
+                .toString() + '%' : '↓' + decreasePercentDifference.toFixed(1).toString() + '%';
         }
 
         this.containInvalidPrices = this.dataSource.data.some(p => p.priceMdlNew == undefined || p.priceMdlNew <= 0 || afterLimit);

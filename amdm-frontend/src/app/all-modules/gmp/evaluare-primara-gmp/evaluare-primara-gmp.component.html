@@ -18,10 +18,6 @@
 				</div>
 			</div>
 		</div>
-		<div class="my-3">
-			<app-document [documents]="documents" [nrCerere]="eForm.get('requestNumber').value" [dcTypes]="docTypes"
-			              (documentModified)="documentModified($event)"></app-document>
-		</div>
 		<div class="row">
 			<div class="col-md-4">
 				<div class="md-form">
@@ -41,6 +37,7 @@
 				</div>
 			</div>
 		</div>
+		<!--		Detalii licenta-->
 		<div class="row">
 			<div class="col-md-3">
 				<div class="md-form">
@@ -80,17 +77,60 @@
 				</div>
 			</div>
 		</div>
+		<!-- Medicamente inregistrate -->
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Medicamente inregistrate</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
+		<!-- Card content -->
+		<div class="card-body card-body-cascade">
+			<div class="med-table">
+				<table class="table table-widths text-center med-table">
+					<thead class="bg-sidebar white-text">
+					<tr>
+						<th scope="col">Nr.</th>
+						<th scope="col">Cod medicament</th>
+						<th scope="col">Denumire</th>
+						<th scope="col">Numar inregistrare</th>
+						<th scope="col">Numărul de unități</th>
+						<th scope="col">Volum</th>
+						<th scope="col">Unitate de masura (volum)</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr *ngFor="let medicament of medicaments;let i = index">
+						<td>{{ i + 1 }}</td>
+						<td>{{ medicament.code }}</td>
+						<td>{{ medicament.commercialName }}</td>
+						<td>{{ medicament.registerNumber }}</td>
+						<td>{{ medicament.division }}</td>
+						<td>{{ medicament.volume }}</td>
+						<td>{{ medicament.volumeQuantityMeasurement }}</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div *ngIf="medicaments.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<hr>
+		<!--		Filiale-->
 		<div class="gradient-card-header bg-sidebar border-gradient mt-table">
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-6">
-						<div class="card-header-title white-text">Filiale</div>
+						<div class="card-header-title white-text">Domenii de inspecție</div>
 					</div>
 					<div class="col-6">
 						<div class="text-right mt-2">
 							<button class="btn btn-dark-green-color waves-light btn-sms" mdbWavesEffect
-							        (click)="selectSubsidiary()">Selectare filiale
+							        (click)="selectSubsidiary()">Selectare domeniu
 							</button>
 						</div>
 					</div>
@@ -102,7 +142,7 @@
 		<div class="row align-items-start" *ngFor="let f of selectedSubsidiaries; let i = index">
 			<div class="col-1" [ngStyle]="{'flex': '0 0 4.333333%;', 'max-width': '4.333333%'}">
 				<div class="md-form text-center">
-					<div class="pt-4">{{i+1}}</div>
+					<div class="pt-4">{{i + 1}}</div>
 				</div>
 			</div>
 			<div class="col">
@@ -136,27 +176,197 @@
 			</div>
 
 		</div>
+		<hr>
+		<!--		Lista de inspectori-->
+		<div class="text-center mt-3" [formGroup]="inspectorForm">
+			<mat-checkbox formControlName="useInspector"><h5 class="font-weight-bold text-center ml-2 mt-2">Lista de
+				inspectori</h5></mat-checkbox>
+		</div>
+		<div *ngIf="this.inspectorForm.get('useInspector').value">
+			<div class="row">
+				<div class="col-12">
+					<div class="gradient-card-header bg-sidebar border-gradient mt-table">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col-6">
+									<div class="card-header-title white-text">Inspectorii selectati</div>
+								</div>
+								<div class="col-6">
+									<div class="text-right mt-2">
+										<button class="btn btn-dark-green-color waves-light btn-sms" mdbWavesEffect
+										        (click)="selectInspectors()">
+											Selectare inspectori
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 
-		<div class="row">
-			<div class="col-md-12">
-				<div class="md-form">
-					<input id="manufacturingName" mdbInputDirective class="form-control" formControlName="manufacturingName">
-					<label for="manufacturingName">Numele locului de fabricaţie<span class="text-danger">*</span></label>
-				</div>
-				<div *ngIf="formSubmitted && eForm.get('manufacturingName').invalid">
-					<small class="text-muted"><strong class="text-danger">Numele locului de fabricaţie trebuie introdus</strong></small>
+					<div class="card-body card-body-cascade z-depth-1">
+						<table mdbTable striped="true" hover="true" small="true" class="text-center">
+							<thead class="bg-sidebar white-text">
+							<tr>
+								<th>Sef de grup</th>
+								<th>Nume</th>
+								<th>Prenume</th>
+								<th>Cod</th>
+								<th>Grad stiintifc</th>
+								<th>Profesia</th>
+								<th>Actiuni</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr mdbTableCol *ngFor="let el of selectedInspectors; let i = index">
+								<td [ngStyle]="{'width': '95px'}">
+									<mat-radio-button [checked]="eForm.get('groupLeader').value && el.id == eForm.get('groupLeader').value.id"
+									                  (change)="eForm.get('groupLeader').setValue(el)"></mat-radio-button>
+								</td>
+								<td>{{el.lastname}}</td>
+								<td>{{el.firstname}}</td>
+								<td>{{el.code}}</td>
+								<td>{{el.scienceDegree}}</td>
+								<td>{{el.profession?.description}}</td>
+								<td class="align-middle">
+									<a role="button" class="text-danger" (click)="killInspector(i,el)">
+										<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+									</a>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+
 				</div>
 			</div>
-			<div class="col-md-12">
-				<div class="md-form">
-					<input id="manufacturingAddress" mdbInputDirective class="form-control" formControlName="manufacturingAddress">
-					<label for="manufacturingAddress">Adresa locului de fabricaţie<span class="text-danger">*</span></label>
+			<div class="row" [formGroup]="inspectorForm">
+				<div class="col-12" formArrayName="periods">
+					<div class="row align-items-center"
+					     *ngFor="let e of formData.controls; let i = index">
+						<div class="col" [formGroupName]="i">
+							<div class="md-form-modified">
+								<mat-form-field class="w-100">
+									<input id="dataFrom" matInput [matDatepicker]="picker34" formControlName="fromDate"
+									       (ngModelChange)="inspectionPeriodChanged(i,'from',$event)"
+									       placeholder="Din data">
+									<mat-datepicker-toggle matSuffix [for]="picker34"></mat-datepicker-toggle>
+									<mat-datepicker touchUi #picker34 disabled="false"></mat-datepicker>
+								</mat-form-field>
+							</div>
+						</div>
+
+						<div class="col" [formGroupName]="i">
+							<div class="md-form-modified">
+								<mat-form-field class="w-100">
+									<input id="dataTo" matInput [matDatepicker]="picker35" formControlName="toDate"
+									       (ngModelChange)="inspectionPeriodChanged(i,'to',$event)"
+									       placeholder="Pina la data">
+									<mat-datepicker-toggle matSuffix [for]="picker35"></mat-datepicker-toggle>
+									<mat-datepicker touchUi #picker35 disabled="false"></mat-datepicker>
+								</mat-form-field>
+							</div>
+						</div>
+
+						<div class="col-md-1 mb-3 text-center">
+							<a role="button" class="text-danger" (click)="removePeriod(i)">
+								<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+							</a>
+						</div>
+
+					</div>
 				</div>
-				<div *ngIf="formSubmitted && eForm.get('manufacturingAddress').invalid">
-					<small class="text-muted"><strong class="text-danger">Adresa locului de fabricaţie trebuie introdusa</strong></small>
+			</div>
+			<div class="text-right">
+				<div class="mt-3">
+					<button class="btn btn-dark-green-color waves-light btn-sms" mdbWavesEffect
+					        (click)="addPeriod()">
+						Adaugă perioadă inspecție
+					</button>
 				</div>
 			</div>
 		</div>
+		<hr>
+		<h5 class="text-center my-3 font-weight-bold">Detalii privind locul de fabricaţie</h5>
+		<div class="row" formGroupName="informatiiLoculDistributieAngro">
+			<div class="col-3">
+				<div class="md-form">
+					<input id="numeleLoculDistributie" mdbInputDirective type="text" class="form-control" formControlName="placeDistributionName">
+					<label for="numeleLoculDistributie">Numele locului de distribuție</label>
+					<small class="text-danger font-weight-bold" *ngIf="formSubmitted && eForm.get('informatiiLoculDistributieAngro.placeDistributionName').invalid">Numele
+						locului de distribuție trebuie introdus
+					</small>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="md-form">
+					<input id="adresa3" mdbInputDirective type="text" class="form-control" formControlName="placeDistributionAddress">
+					<label for="adresa3">Adresa</label>
+					<small class="text-danger font-weight-bold" *ngIf="formSubmitted && eForm.get('informatiiLoculDistributieAngro.placeDistributionAddress').invalid">Adresa
+						trebuie introdusa
+					</small>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="md-form">
+					<input id="codulPostal3" mdbInputDirective type="text" class="form-control" formControlName="placeDistributionPostalCode">
+					<label for="codulPostal3">Codul poștal</label>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="md-form">
+					<input id="numeContact" mdbInputDirective type="text" class="form-control" formControlName="placeDistributionContactName">
+					<label for="numeContact">Nume de contact</label>
+					<small class="text-danger font-weight-bold" *ngIf="formSubmitted && eForm.get('informatiiLoculDistributieAngro.placeDistributionContactName').invalid">Numele
+						de contact trebuie introdus
+					</small>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="md-form">
+					<input id="telefon3" mdbInputDirective type="text" class="form-control" formControlName="placeDistributionPhoneNumber" maxlength="9">
+					<label for="telefon3">Telefon</label>
+					<small class="text-danger font-weight-bold" *ngIf="formSubmitted && eForm.get('informatiiLoculDistributieAngro.placeDistributionPhoneNumber').invalid">Telefonul
+						este invalid
+					</small>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="md-form">
+					<input id="fax3" mdbInputDirective type="text" class="form-control" formControlName="placeDistributionFax" maxlength="9">
+					<label for="fax3">Fax</label>
+					<small class="text-danger font-weight-bold" *ngIf="formSubmitted && eForm.get('informatiiLoculDistributieAngro.placeDistributionFax').invalid">Faxul
+						este invalid
+					</small>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="md-form">
+					<input id="cellphone" mdbInputDirective type="text" class="form-control" formControlName="placeDistributionMobileNumber" maxlength="9">
+					<label for="cellphone">Telefon mobil</label>
+					<small class="text-danger font-weight-bold" *ngIf="formSubmitted && eForm.get('informatiiLoculDistributieAngro.placeDistributionMobileNumber').invalid">Telefonul
+						mobil este invalid
+					</small>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="md-form">
+					<input id="email3" mdbInputDirective type="text" class="form-control" formControlName="placeDistributionEmail">
+					<label for="email3">E-mail</label>
+					<small class="text-danger font-weight-bold" *ngIf="formSubmitted && eForm.get('informatiiLoculDistributieAngro.placeDistributionEmail').invalid">E-mailul
+						este invalid
+					</small>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="md-form">
+					<textarea type="text" id="etapeleDeFabricatie" class="md-textarea form-control" mdbInputDirective formControlName="etapeleDeFabricatie"></textarea>
+					<label for="etapeleDeFabricatie">Etapele de fabricatie</label>
+				</div>
+				<small class="text-danger font-weight-bold" *ngIf="formSubmitted && eForm.get('informatiiLoculDistributieAngro.etapeleDeFabricatie').invalid">Etapele de fabricatie trebuie introduse
+				</small>
+			</div>
+		</div>
+		<!--		Tipurile de medicamente fabricate-->
 		<h5 class="text-center font-weight-bold">Tipurile de medicamente fabricate</h5>
 		<div class="row">
 			<div class="col-md-3">
@@ -166,10 +376,15 @@
 			</div>
 			<div class="col-md-3">
 				<div class="md-form">
+					<mat-checkbox #clinicalUse [checked]="eForm.get('medicamentClinicalInvestigation').value" (change)="checkClinicalMed(clinicalUse)">Medicamente pentru investigație clinică de uz uman</mat-checkbox>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="md-form">
 					<mat-checkbox #veterinary [checked]="eForm.get('veterinary').value" (change)="checkVeterinary(veterinary)">Medicamente de uz veterinar</mat-checkbox>
 				</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-3">
 				<div class="md-form">
 					<textarea type="text" id="veterinaryDetails" class="md-textarea form-control" mdbInputDirective formControlName="veterinaryDetails"></textarea>
 					<label for="veterinaryDetails">Detalii pentru medicamente de uz veterinar</label>
@@ -177,29 +392,24 @@
 			</div>
 		</div>
 		<hr>
+		<!--		Operaţii de fabricaţie – Tipuri de activităţi-->
 		<h5 class="text-center font-weight-bold">Operaţii de fabricaţie – Tipuri de activităţi</h5>
+		<!--		Produse sterile - preparate aseptic-->
 		<div class="row">
-			<div class="col-md-6">
-				<div class="md-form-modified">
-					<mat-checkbox #certificationOnlySterile [checked]="eForm.get('certificationOnlySterile').value" (change)="checkCertificationOnlySterile(certificationOnlySterile)">Medicamente sterile pentru investigație - Numai certificarea seriei</mat-checkbox>
-				</div>
-			</div>
-		</div>
-		<div class="row" *ngIf="!eForm.get('certificationOnlySterile').value">
 			<div class="col-md-12">
 				<div class="md-form-modified">
 					<ng-select id="asepticPreparations" name="asepticPreparations" [items]="asepticPreparations" bindLabel="description" [multiple]="true"
-					           placeholder="Medicamente sterile pentru investigație - Preparate aseptic" formControlName="asepticPreparationsValues">
+					           placeholder="Produse sterile - preparate aseptic" formControlName="asepticPreparationsValues">
 					</ng-select>
 				</div>
 			</div>
 		</div>
-		<div class="gradient-card-header bg-sidebar border-gradient" *ngIf="!eForm.get('certificationOnlySterile').value">
+		<div class="gradient-card-header bg-sidebar border-gradient">
 			<div class="container-fluid">
 				<!-- Title -->
 				<div class="row">
 					<div class="col-6">
-						<div class="card-header-title white-text">Alte produse preparate aseptic </div>
+						<div class="card-header-title white-text">Alte produse preparate aseptic</div>
 					</div>
 					<div class="col-6">
 						<div class="text-right fap text-white">
@@ -209,7 +419,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="card-body card-body-cascade" *ngIf="!eForm.get('certificationOnlySterile').value">
+		<div class="card-body card-body-cascade">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
 				<tr>
@@ -231,32 +441,33 @@
 				</tbody>
 			</table>
 		</div>
-		<div *ngIf="!eForm.get('certificationOnlySterile').value && otherAsepticPreparations.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<div *ngIf="otherAsepticPreparations.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<!--		Produse sterile - sterilizate in recipient final-->
 		<div class="row">
 			<div class="col-md-12">
 				<div class="md-form-modified">
 					<ng-select id="finalSterilized" name="finalSterilized" [items]="finalSterilized" bindLabel="description" [multiple]="true"
-					           placeholder="Medicamente sterile pentru investigație - Sterilizate final" formControlName="finalSterilizedValues">
+					           placeholder="Produse sterile - sterilizate in recipient final" formControlName="finalSterilizedValues">
 					</ng-select>
 				</div>
 			</div>
 		</div>
-		<div class="gradient-card-header bg-sidebar border-gradient" *ngIf="!eForm.get('certificationOnlySterile').value">
+		<div class="gradient-card-header bg-sidebar border-gradient">
 			<div class="container-fluid">
 				<!-- Title -->
 				<div class="row">
 					<div class="col-6">
-						<div class="card-header-title white-text">Alte produse sterilizate final</div>
+						<div class="card-header-title white-text">Alte produse sterilizate in recipient final</div>
 					</div>
 					<div class="col-6">
 						<div class="text-right fap text-white">
-							<i (click)="addAFinalSterilized()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+							<i (click)="addFinalSterilized()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="card-body card-body-cascade" *ngIf="!eForm.get('certificationOnlySterile').value">
+		<div class="card-body card-body-cascade">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
 				<tr>
@@ -278,7 +489,872 @@
 				</tbody>
 			</table>
 		</div>
-		<div *ngIf="!eForm.get('certificationOnlySterile').value && otherFinalSterilized.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<div *ngIf="otherFinalSterilized.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<!--		Produse sterile - numai certificarea seriei-->
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form-modified">
+					<ng-select id="sterileCertifiedOnly" name="sterileCertifiedOnly" [items]="sterileCertifieds" bindLabel="description" [multiple]="true"
+					           placeholder="Produse sterile - numai certificarea seriei" formControlName="sterileCertifiedsValues">
+					</ng-select>
+				</div>
+			</div>
+		</div>
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Alte produse sterile - numai certificarea seriei</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addSterileCertified()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Descriere</th>
+					<th scope="col">Acțiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let x of otherSterileCertifieds;let i = index">
+					<th scope="row">{{ i + 1}}</th>
+					<td>{{ x.description }}</td>
+					<td>
+						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+						        (click)="removeOtherSterileCertified(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="otherSterileCertifieds.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<!--		Produse nesterile-->
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form-modified">
+					<ng-select id="nesterilePreparations" name="nesterilePreparations" [items]="nesterilePreparations" bindLabel="description" [multiple]="true"
+					           placeholder="Produse nesterile" formControlName="nesterilePreparationsValues">
+					</ng-select>
+				</div>
+			</div>
+		</div>
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Alte produse nesterile</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addNesterileProducts()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Descriere</th>
+					<th scope="col">Acțiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let x of otherNesterilePreparations;let i = index">
+					<th scope="row">{{ i + 1}}</th>
+					<td>{{ x.description }}</td>
+					<td>
+						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+						        (click)="removeNesterileProducts(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="otherNesterilePreparations.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<!--		Produse nesterile - numai certificarea seriei -->
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form-modified">
+					<ng-select id="nesterilePreparationsCertified" name="nesterilePreparationsCertified" [items]="nesterilePreparationsCertified" bindLabel="description" [multiple]="true"
+					           placeholder="Produse nesterile - numai certificarea seriei" formControlName="nesterilePreparationsCertifiedValues">
+					</ng-select>
+				</div>
+			</div>
+		</div>
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Alte produse nesterile - numai certificarea seriei</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addNesterilePreparationsCertified()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Descriere</th>
+					<th scope="col">Acțiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let x of otherNesterilePreparationsCertified;let i = index">
+					<th scope="row">{{ i + 1}}</th>
+					<td>{{ x.description }}</td>
+					<td>
+						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+						        (click)="removeNesterilePreparationsCertified(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="otherNesterilePreparationsCertified.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<!--		Medicamente biologice -->
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form-modified">
+					<ng-select id="biologicalMedicines" name="biologicalMedicines" [items]="biologicalMedicines" bindLabel="description" [multiple]="true"
+					           placeholder="Medicamente biologice" formControlName="biologicalMedicinesValues">
+					</ng-select>
+				</div>
+			</div>
+		</div>
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Alte medicamente biologice</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addBiologicalMedicines()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Descriere</th>
+					<th scope="col">Acțiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let x of otherBiologicalMedicines;let i = index">
+					<th scope="row">{{ i + 1}}</th>
+					<td>{{ x.description }}</td>
+					<td>
+						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+						        (click)="removeBiologicalMedicines(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="otherBiologicalMedicines.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<!--		Medicamente biologice - numai certificarea seriei -->
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form-modified">
+					<ng-select id="biologicalMedicinesCertified" name="biologicalMedicinesCertified" [items]="biologicalMedicinesCertified" bindLabel="description" [multiple]="true"
+					           placeholder="Medicamente biologice - numai certificarea seriei" formControlName="biologicalMedicinesCertifiedValues">
+					</ng-select>
+				</div>
+			</div>
+		</div>
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Alte medicamente biologice - numai certificarea seriei</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addBiologicalMedicinesCertified()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Descriere</th>
+					<th scope="col">Acțiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let x of otherBiologicalMedicinesCertified;let i = index">
+					<th scope="row">{{ i + 1}}</th>
+					<td>{{ x.description }}</td>
+					<td>
+						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+						        (click)="removeBiologicalMedicinesCertified(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="otherBiologicalMedicinesCertified.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<hr>
+		<!--		Alte produse sau activităţi de fabricaţie -->
+		<h5 class="text-center font-weight-bold">Alte produse sau activităţi de fabricaţie</h5>
+		<!--		Fabricatie -->
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form-modified">
+					<ng-select id="production" name="production" [items]="productions" bindLabel="description" [multiple]="true"
+					           placeholder="Fabricatie" formControlName="production">
+					</ng-select>
+				</div>
+			</div>
+		</div>
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Alte fabricatii</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addProduction()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Descriere</th>
+					<th scope="col">Acțiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let x of otherProductions;let i = index">
+					<th scope="row">{{ i + 1}}</th>
+					<td>{{ x.description }}</td>
+					<td>
+						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+						        (click)="removeProduction(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="otherProductions.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<!--		Sterilizarea substanţelor active/excipienţilor/produselor finite -->
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form-modified">
+					<ng-select id="sterilization" name="sterilization" [items]="sterilizations" bindLabel="description" [multiple]="true"
+					           placeholder="Sterilizarea substanţelor active/excipienţilor/produselor finite" formControlName="sterilization">
+					</ng-select>
+				</div>
+			</div>
+		</div>
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Alte sterilizari</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addSterilization()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Descriere</th>
+					<th scope="col">Acțiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let x of otherSterilizations;let i = index">
+					<th scope="row">{{ i + 1}}</th>
+					<td>{{ x.description }}</td>
+					<td>
+						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+						        (click)="removeSterilization(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="otherSterilizations.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<hr>
+		<!--		Alte produse sau activităţi de fabricaţie -->
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Alte produse sau activităţi de fabricaţie</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addPreparationsOrProductions()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Descriere</th>
+					<th scope="col">Acțiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let x of otherPreparationsOrProductions;let i = index">
+					<th scope="row">{{ i + 1}}</th>
+					<td>{{ x.description }}</td>
+					<td>
+						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+						        (click)="removePreparationsOrProductions(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="otherPreparationsOrProductions.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<hr>
+		<!-- Operatii de diviziare -->
+		<h5 class="text-center font-weight-bold">Operatii de diviziare</h5>
+		<!-- Ambalare primară   -->
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form-modified">
+					<ng-select id="primaryPackaging" name="primaryPackaging" [items]="primaryPackagings" bindLabel="description" [multiple]="true"
+					           placeholder="Ambalare primară" formControlName="primaryPackaging">
+					</ng-select>
+				</div>
+			</div>
+		</div>
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Alte ambalari</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addPrimaryPackaging()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Descriere</th>
+					<th scope="col">Acțiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let x of otherPrimaryPackagings;let i = index">
+					<th scope="row">{{ i + 1}}</th>
+					<td>{{ x.description }}</td>
+					<td>
+						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+						        (click)="removePrimaryPackaging(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="otherPrimaryPackagings.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<!-- Ambalare secundară   -->
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form-modified">
+					<ng-select id="secondaryPackaging" name="primaryPackaging" [items]="secondaryPackagings" bindLabel="description" [multiple]="true"
+					           placeholder="Ambalare secundară" formControlName="secondaryPackaging">
+					</ng-select>
+				</div>
+			</div>
+		</div>
+		<!-- Teste pentru controlul calităţii   -->
+		<h5 class="text-center font-weight-bold">Teste pentru controlul calităţii</h5>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form-modified">
+					<ng-select id="testsForQualityControl" name="testsForQualityControl" [items]="testsForQualityControls" bindLabel="description" [multiple]="true"
+					           placeholder="Teste pentru controlul calităţii" formControlName="testsForQualityControl">
+					</ng-select>
+				</div>
+			</div>
+		</div>
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Alte teste</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addTestsForQualityControl()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Descriere</th>
+					<th scope="col">Acțiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let x of otherTestsForQualityControl;let i = index">
+					<th scope="row">{{ i + 1}}</th>
+					<td>{{ x.description }}</td>
+					<td>
+						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+						        (click)="removeTestsForQualityControl(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="otherPrimaryPackagings.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<hr>
+		<!--		Laboratoare sub contract-->
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Laboratoare sub contract</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addLaborator()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Card content -->
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Nume</th>
+					<th scope="col">Adresa</th>
+					<th scope="col">Codul postal</th>
+					<th scope="col">Nume de contact</th>
+					<th scope="col">Telefon</th>
+					<th scope="col">Fax</th>
+					<th scope="col">Telefon mobil</th>
+					<th scope="col">Email</th>
+					<th scope="col">Actiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let laborator of laborators;let i = index">
+					<td>{{ i + 1 }}</td>
+					<td>{{ laborator.name }}</td>
+					<td>{{ laborator.address }}</td>
+					<td>{{ laborator.postalCode }}</td>
+					<td>{{ laborator.contactName }}</td>
+					<td>{{ laborator.phoneNumber }}</td>
+					<td>{{ laborator.fax }}</td>
+					<td>{{ laborator.mobilePhone }}</td>
+					<td>{{ laborator.email }}</td>
+					<td>
+						<button class="btn btn-mdb-color waves-light btn-sm waves-light" (click)="editLaborator(laborator,i)"
+						        mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></button>
+						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+						        (click)="removeLaborator(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="laborators.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<hr>
+		<!-- Persoane calificate -->
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Persoane calificate</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addQualifiedPerson()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Card content -->
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Nume</th>
+					<th scope="col">Prenume</th>
+					<th scope="col">Adresa de serviciu</th>
+					<th scope="col">Codul postal</th>
+					<th scope="col">Telefon</th>
+					<th scope="col">Fax</th>
+					<th scope="col">Telefon mobil</th>
+					<th scope="col">Email</th>
+					<th scope="col">Actiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let qualifiedPerson of qualifiedPersons;let i = index">
+					<td>{{ i + 1 }}</td>
+					<td>{{ qualifiedPerson.lastName }}</td>
+					<td>{{ qualifiedPerson.firstName }}</td>
+					<td>{{ qualifiedPerson.address }}</td>
+					<td>{{ qualifiedPerson.postalCode }}</td>
+					<td>{{ qualifiedPerson.phoneNumber }}</td>
+					<td>{{ qualifiedPerson.fax }}</td>
+					<td>{{ qualifiedPerson.mobilePhone }}</td>
+					<td>{{ qualifiedPerson.email }}</td>
+					<td>
+						<button class="btn btn-mdb-color waves-light btn-sm waves-light" (click)="editQualifiedPerson(qualifiedPerson,i)"
+						        mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></button>
+						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+						        (click)="removeQualifiedPerson(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="qualifiedPersons.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<hr>
+		<!-- Persoane responsabile de Controlul Calităţii -->
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Persoane responsabile de Controlul Calităţii</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addQualityControlPerson()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Card content -->
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Nume</th>
+					<th scope="col">Prenume</th>
+					<th scope="col">Adresa de serviciu</th>
+					<th scope="col">Codul postal</th>
+					<th scope="col">Telefon</th>
+					<th scope="col">Fax</th>
+					<th scope="col">Telefon mobil</th>
+					<th scope="col">Email</th>
+					<th scope="col">Actiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let qualityControlPerson of qualityControlPersons;let i = index">
+					<td>{{ i + 1 }}</td>
+					<td>{{ qualityControlPerson.lastName }}</td>
+					<td>{{ qualityControlPerson.firstName }}</td>
+					<td>{{ qualityControlPerson.address }}</td>
+					<td>{{ qualityControlPerson.postalCode }}</td>
+					<td>{{ qualityControlPerson.phoneNumber }}</td>
+					<td>{{ qualityControlPerson.fax }}</td>
+					<td>{{ qualityControlPerson.mobilePhone }}</td>
+					<td>{{ qualityControlPerson.email }}</td>
+					<td>
+						<button class="btn btn-mdb-color waves-light btn-sm waves-light" (click)="editQualityControlPerson(qualityControlPerson,i)"
+						        mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></button>
+						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+						        (click)="removeQualityControlPerson(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="qualityControlPersons.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<hr>
+		<!-- Persoane responsabile de producere -->
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Persoane responsabile de producere</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addProductionPerson()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Card content -->
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Nume</th>
+					<th scope="col">Prenume</th>
+					<th scope="col">Adresa de serviciu</th>
+					<th scope="col">Codul postal</th>
+					<th scope="col">Telefon</th>
+					<th scope="col">Fax</th>
+					<th scope="col">Telefon mobil</th>
+					<th scope="col">Email</th>
+					<th scope="col">Actiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let productionPerson of productionPersons;let i = index">
+					<td>{{ i + 1 }}</td>
+					<td>{{ productionPerson.lastName }}</td>
+					<td>{{ productionPerson.firstName }}</td>
+					<td>{{ productionPerson.address }}</td>
+					<td>{{ productionPerson.postalCode }}</td>
+					<td>{{ productionPerson.phoneNumber }}</td>
+					<td>{{ productionPerson.fax }}</td>
+					<td>{{ productionPerson.mobilePhone }}</td>
+					<td>{{ productionPerson.email }}</td>
+					<td>
+						<button class="btn btn-mdb-color waves-light btn-sm waves-light" (click)="editProductionPerson(productionPerson,i)"
+						        mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></button>
+						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+						        (click)="removeProductionPerson(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="productionPersons.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<hr>
+		<!-- Medicamente autorizate de AMDM pentru a fi fabricate -->
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Medicamente autorizate de AMDM pentru a fi fabricate</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addAuthorizedManufacturedMedicaments()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Card content -->
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Cod medicament</th>
+					<th scope="col">Denumire</th>
+					<th scope="col">Numar inregistrare</th>
+					<th scope="col">Numărul de unități</th>
+					<th scope="col">Volum</th>
+					<th scope="col">Unitate de masura (volum)</th>
+					<th scope="col">Actiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let medicament of authorizedManufacturedMedicaments;let i = index">
+					<td>{{ i + 1 }}</td>
+					<td>{{ medicament.code }}</td>
+					<td>{{ medicament.commercialName }}</td>
+					<td>{{ medicament.registerNumber }}</td>
+					<td>{{ medicament.division }}</td>
+					<td>{{ medicament.volume }}</td>
+					<td>{{ medicament.volumeQuantityMeasurement }}</td>
+					<td>
+						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+						        (click)="removeAuthorizedManufacturedMedicaments(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="authorizedManufacturedMedicaments.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<hr>
+		<app-payment [requestId]="this.eForm.get('id').value" [processModule]="'GMP'" (totalValueChanged)="paymentTotalUpdate($event)" [isBonSuplimentarNotRender]="true"></app-payment>
+		<div *ngIf="formSubmitted && paymentTotal<0">
+			<small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>
+		</div>
+		<hr>
+		<div class="my-3">
+			<app-document [documents]="documents" [nrCerere]="eForm.get('requestNumber').value" [dcTypes]="docTypes"
+			              (documentModified)="documentModified($event)"></app-document>
+		</div>
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Documente de iesire</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right mt-2">
+							<button class="btn btn-dark-green-color waves-light btn-sms" mdbWavesEffect (click)="requestAdditionalData()">Solicitare date aditionale</button>
+							<button class="btn btn-dark-green-color waves-light btn-sms" mdbWavesEffect (click)="requestRemovalDeficiencies()">Solicitare de inlaturare deficiente</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- Card content -->
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths-lg text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Denumirea</th>
+					<th scope="col">Numar</th>
+					<th scope="col">Status document</th>
+					<th scope="col">Status raspuns</th>
+					<th>Actiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let a of outDocuments">
+					<th scope="row">{{ a.name }}</th>
+					<th scope="row">{{ a.number }}</th>
+					<th scope="row">{{ a.status }}</th>
+					<th scope="row">
+						<mat-checkbox *ngIf="a.docType && (a.docType.category=='SL' || a.docType.category=='SD')" #checkBoxResponse
+						              [checked]="a.responseReceived==1" (change)="checkResponseReceived(a,checkBoxResponse)">Raspuns primit
+						</mat-checkbox>
+					</th>
+					<td>
+						<button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)">
+							<i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
+						<button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && (a.docType.category=='SL' || a.docType.category=='SD')"
+						        class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="outDocuments.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<hr>
+		<div class="row align-items-center">
+			<div class="col-5">
+				<h5 class="font-w400l text-center">
+					Raport pozitiv
+				</h5>
+			</div>
+			<div class="col-7">
+				<div class="md-form mt-3">
+					<mat-radio-group formControlName="raportStatus">
+						<div class="container">
+							<div class="row">
+								<div class="offset-2"></div>
+								<div class="col-3">
+									<mat-radio-button name="prop1" value="1">Da</mat-radio-button>
+								</div>
+								<div class="col-3">
+									<mat-radio-button name="prop2" value="0">Nu</mat-radio-button>
+								</div>
+								<div class="offset-4"></div>
+							</div>
+						</div>
+					</mat-radio-group>
+				</div>
+				<br/>
+				<div *ngIf="formSubmitted && eForm.get('raportStatus').invalid">
+					<small class="text-muted"><strong class="text-danger">Status raport trebuie selectat</strong></small>
+				</div>
+			</div>
+		</div>
+		<hr>
 		<div class="text-center">
 			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>
 			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Urmatorul pas</button>

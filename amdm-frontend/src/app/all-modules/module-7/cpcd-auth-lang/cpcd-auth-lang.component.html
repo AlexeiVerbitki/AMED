@@ -1,0 +1,38 @@
+<h2 mat-dialog-title align="center">Selectati limba pentru generarea autorizarii</h2>
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]='rForm'>
+        <div class="row">
+            <div class="offset-2 col-4 mt-6">
+                <div class="md-form-modified">
+
+                    <mat-radio-group formControlName="language">
+                        <div class="container">
+                            <div class="row">
+                                <!--<div class="offset-2"></div>-->
+                                <div class="col-12">
+                                    <mat-radio-button name="prop1" value="0">Romana</mat-radio-button>
+                                </div>
+                                <div class="col-12">
+                                    <mat-radio-button name="prop2" value="1">Rusa</mat-radio-button>
+                                </div>
+                                <div class="col-12">
+                                    <mat-radio-button name="prop2" value="2">Engleza</mat-radio-button>
+                                </div>
+                                <!--<div class="offset-2"></div>-->
+                            </div>
+                            <div *ngIf="rFormSubbmitted && !rForm.get('language').valid">
+                                <small class="text-muted"><strong class="text-danger">Limba trebuie introdusa</strong>
+                                </small>
+                            </div>
+                        </div>
+                    </mat-radio-group>
+                </div>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+    <button class="btn btn-dark-green-color btn-sm-bl btn-sm" (click)="ok()">Generare</button>
+    <button class="btn btn-danger btn-sm-bl btn-sm" (click)="cancel()">Inchidere</button>
+</mat-dialog-actions>
+

@@ -154,7 +154,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
             this.subscriptions.push(this.priceService.getPricesRequest(params['id']).subscribe(data => {
-                console.log(data);
+                console.log('getPricesRequest', data);
                 this.initialData = Object.assign({}, data);
 
                 if (data.registrationRequestMandatedContacts) {
@@ -228,7 +228,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                     case 'C':
                         this.PriceRegForm.get('requestStatus').setValue('Întrerupt');
                         break;
-                    case 'A':
+                    case 'AF':
                         this.PriceRegForm.get('requestStatus').setValue('Acceptat');
                         break;
                     case 'F':
@@ -666,14 +666,14 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
 
         let requestStatus = '';
         if (decision.valid && decision.value.description == 'Acceptat') {
-            requestStatus = 'A';
+            requestStatus = 'AF';
         } else if (decision.valid && decision.value.description == 'Respins') {
             requestStatus = 'C';
         } else {
             requestStatus = 'E';
         }
 
-        const priceAcceptCondition: boolean = ((requestStatus == 'A' || requestStatus == 'C') && uploadedEvaluationFile != undefined && !this.hasUnloadedDocs());
+        const priceAcceptCondition: boolean = ((requestStatus == 'AF' || requestStatus == 'C') && uploadedEvaluationFile != undefined && !this.hasUnloadedDocs());
         const canFinishEvaluate: boolean = this.medicaments[0].price.mdlValue > 0 && (decision.invalid || priceAcceptCondition);
 
 
@@ -695,6 +695,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         priceModel.assignedUser = this.priceService.getUsername();
         priceModel.requestHistories = this.PriceRegForm.get('requestHistories').value;
         priceModel.documents = this.documents;
+        priceModel.registrationRequestMandatedContacts = this.registrationRequestMandatedContacts;
 
         priceModel.requestHistories.push({
             startDate: this.PriceRegForm.get('dataToSaveInStartDateRequestHistory').value, endDate: new Date(), username: this.priceService.getUsername(),

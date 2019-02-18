@@ -19,7 +19,6 @@ import {ServerUrlInterceptor} from './shared/interceptor/server-url.interceptor'
 import {AdministrationService} from './shared/service/administration.service';
 import {ConfirmationDialogComponent} from './dialog/confirmation-dialog.component';
 import {TaskComponent} from './task/task.component';
-import {HistoryComponent} from './history/history.component';
 import {ModuleComponent} from './all-modules/module.component';
 import {AdministrationComponent} from './administration/administration.component';
 import {ModuleDashboardComponent} from './dashboard/module-dashboard.component';
@@ -51,6 +50,8 @@ import localeRo from '@angular/common/locales/ro-MD';
 import {SelectVariationTypeComponent} from './dialog/select-variation-type/select-variation-type.component';
 import {HomepageModule} from './homepage/homepage.module';
 import {NomenclatureModule} from './all-modules/module-6/nomenclature.module';
+import {SelectSubsidiaryModalComponent} from './all-modules/gdp/select-subsidiary-modal/select-subsidiary-modal.component';
+import {InspectorsModalComponent} from './all-modules/gdp/inspectors-modal/inspectors-modal.component';
 
 registerLocaleData(localeRo, 'ro-MD');
 
@@ -83,7 +84,6 @@ const interceptors = [{
         AdminDashboardComponent,
         ConfirmationDialogComponent,
         TaskComponent,
-        HistoryComponent,
         ModuleComponent,
         AdministrationComponent,
         SuccessOrErrorResponseHandlerComponent,
@@ -99,7 +99,10 @@ const interceptors = [{
         MedicamentDetailsDialogComponent,
         MedicamentHistoryDialogComponent,
         MedicamentModificationsDialogComponent,
-        DivisionSelectDialogComponent
+        DivisionSelectDialogComponent,
+        SelectSubsidiaryModalComponent,
+        InspectorsModalComponent
+
     ],
     imports: [
         BrowserAnimationsModule,
@@ -113,15 +116,15 @@ const interceptors = [{
         NomenclatureModule,
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
-        PipeModule.forRoot()
+        PipeModule.forRoot(),
     ],
     schemas: [],
     entryComponents: [
         DivisionSelectDialogComponent, AuxiliarySubstanceDialogComponent, ConfirmationDialogComponent, MedicamentHistoryDialogComponent,
-        MedicamentModificationsDialogComponent, RequestAdditionalDataDialogComponent, ActiveSubstanceDialogComponent,  MedicamentDetailsDialogComponent,
-        AddManufactureComponent, AddDivisionComponent, AddExpertComponent, SelectVariationTypeComponent
+        MedicamentModificationsDialogComponent, RequestAdditionalDataDialogComponent, ActiveSubstanceDialogComponent, MedicamentDetailsDialogComponent,
+        AddManufactureComponent, AddDivisionComponent, AddExpertComponent, SelectVariationTypeComponent, SelectSubsidiaryModalComponent, InspectorsModalComponent
     ],
-    providers: [AuthService, AdministrationService, SuccessOrErrorHandlerService, NavbarTitleService, interceptors,  { provide: LOCALE_ID, useValue: 'ro-MD' }
+    providers: [AuthService, AdministrationService, SuccessOrErrorHandlerService, NavbarTitleService, interceptors, {provide: LOCALE_ID, useValue: 'ro-MD'}
     ],
     bootstrap: [AppComponent]
 })

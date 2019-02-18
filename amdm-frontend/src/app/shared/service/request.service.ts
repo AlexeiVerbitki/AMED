@@ -254,4 +254,8 @@ export class RequestService {
         return this.http.get('/api/get-anih-meds');
     }
 
+    interruptGMPProcess(details: any): Observable<any> {
+        return this.http.post<any>('/api/interrupt-gmp-process', details, {observe: 'response'});
+    }
+
 }

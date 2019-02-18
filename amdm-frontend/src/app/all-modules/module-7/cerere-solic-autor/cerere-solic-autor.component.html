@@ -1,24 +1,10 @@
 <div class="container-fluid sky z-depth-2">
-    <h3 class="text-center my-3 font-weight-bold">Cerere de solicitare a autorizatiei de activitate cu
-        precursori/psihotrope/stupefiante</h3>
     <hr>
 
     <form [formGroup]='cerereSolicAutorForm'>
-        <app-document [documents]="documents" [nrCerere]="cerereSolicAutorForm.get('requestNumber').value"
-                      [dcTypes]="docTypes"
-                      (documentModified)="documentModified($event)"></app-document>
+
         <div class="row">
-            <div class="col-md-6">
-                <div class="md-form-modified">
-                    <mat-form-field class="w-100">
-                        <input matInput [matDatepicker]="picker" placeholder="Data inregistrarii" required
-                               formControlName="data">
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker touchUi #picker></mat-datepicker>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="md-form">
                     <input id="requestNumber" mdbInputDirective type="text" class="form-control"
                            formControlName="requestNumber"
@@ -28,8 +14,17 @@
                     </label>
                 </div>
             </div>
-            <hr>
-            <div class="col-md-6">
+            <div class="col-md-4">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker" placeholder="Data inregistrarii" required
+                               formControlName="data">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-md-4">
                 <div class="md-form-modified">
                     <div class="md-form">
                         <input id="compSolicitant" mdbInputDirective type="text" class="form-control"
@@ -39,111 +34,32 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="row">
-                    <div class="col-4">
-                        <div class="md-form">
-                            <mat-checkbox formControlName="precursor">Precursori</mat-checkbox>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="md-form">
-                            <mat-checkbox formControlName="psihotrop">Psihotrope</mat-checkbox>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="md-form">
-                            <mat-checkbox formControlName="stupefiant">Stupefiante</mat-checkbox>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        </div>
 
-        </div>
-        <hr>
-        <div class="text-center my-3">
-            <button class="btn btn-primary btn-sm waves-light" mdbWavesEffect data-toggle="collapse"
-                    data-target="#adresaSolicitantCollapse"
-                    aria-expanded="false" aria-controls="adresaSolicitantCollapse">Adresa solicitantului <i
-                    class="fa fa-sort"
-                    aria-hidden="true"></i></button>
-        </div>
-        <div class="collapse" id="adresaSolicitantCollapse">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="md-form-modified">
-                        <ng-select class="custom" [items]="states" bindLabel="description" placeholder="Regiunea *"
-                                   formControlName="state">
-                        </ng-select>
-                    </div>
-                    <div *ngIf="formSubmitted && cerereSolicAutorForm.get('state').invalid">
-                        <small class="text-muted"><strong class="text-danger">Regiunea trebuie selectata</strong>
-                        </small>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="md-form-modified">
-                        <ng-select class="custom" [items]="localities" bindLabel="description"
-                                   placeholder="Localitate *" formControlName="locality">
-                        </ng-select>
-                    </div>
-                    <div *ngIf="formSubmitted && cerereSolicAutorForm.get('locality').invalid">
-                        <small class="text-muted"><strong class="text-danger">Localitatea trebuie selectata</strong>
-                        </small>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="md-form">
-                        <input id="strada" mdbInputDirective type="text" class="form-control" formControlName="street">
-                        <label for="strada">Strada
-                            <span class="text-danger">*</span>
-                        </label>
-                        <div *ngIf="formSubmitted && cerereSolicAutorForm.get('street').invalid">
-                            <small class="text-muted"><strong class="text-danger">Strada trebuie introdusa</strong>
-                            </small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="md-form">
-                        <input id="address" mdbInputDirective type="text" class="form-control"
-                               formControlName="legalAddress">
-                        <label for="address">Adresa legala
-                            <span class="text-danger">*</span>
-                        </label>
-                        <div *ngIf="formSubmitted && cerereSolicAutorForm.get('legalAddress').invalid">
-                            <small class="text-muted"><strong class="text-danger">Adresa trebuie introdusa</strong>
-                            </small>
-                        </div>
-                    </div>
-                </div>
 
-            </div>
-        </div>
+        <app-document [documents]="documents" [nrCerere]="cerereSolicAutorForm.get('requestNumber').value"
+                      [dcTypes]="docTypes"
+                      (documentModified)="documentModified($event)"></app-document>
+
 
         <div class="row">
-            <div class="col-md-6">
-                <div class="md-form-modified">
-                    <ng-select [items]="companies | async"
+            <div class="col-md-3">
+                <div class="md-form-modified-select" formGroupName="drugCheckDecision">
+                    <ng-select class="custom" [items]="companiiPerIdnoNotSelected"
                                bindLabel="name"
                                placeholder="Filiala"
-                               formControlName="company"
-                               [loading]="loadingCompany"
-                               [typeahead]="companyInputs"
-                               required="true">
+                               formControlName="economicAgent"
+                               [required]="true"
+                    >
                         <ng-template ng-option-tmp let-item="item">
-                            {{item?.name}} <br/>
-                            <small class="form-text text-muted">{{item?.code}}</small>
+                            {{item.name}} <br/>
+                            <small class="form-text text-muted">{{item.address}}</small>
                         </ng-template>
                     </ng-select>
-                    <div *ngIf="formSubmitted && cerereSolicAutorForm.get('company').invalid">
-                        <small class="text-muted"><strong class="text-danger">Filiala solicitantă trebuie
-                            selectată</strong></small>
-                    </div>
-                    <div *ngIf="companyExistInTable">
-                        <small class="text-muted"><strong class="text-danger">Filiala este deja adaugata
-                        </strong></small>
-                    </div>
+                </div>
+                <div *ngIf="formSubmitted && cerereSolicAutorForm.get('drugCheckDecision.economicAgent').invalid">
+                    <small class="text-muted"><strong class="text-danger">Filiala trebuie selectata</strong>
+                    </small>
                 </div>
             </div>
 
@@ -154,71 +70,71 @@
                 </div>
             </div>
 
-        </div>
 
-        <div class="gradient-card-header bg-sidebar border-gradient">
-            <div class="container-fluid">
-                <!-- Title -->
+            <div class="col-md-2">
+                <div class="md-form" formGroupName="drugCheckDecision">
+                    <input id="region" mdbInputDirective type="text" class="form-control"
+                           formControlName="region">
+                    <label for="region">Regiunea</label>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="md-form" formGroupName="drugCheckDecision">
+                    <input id="locality" mdbInputDirective type="text" class="form-control"
+                           formControlName="locality">
+                    <label for="locality">Localitate</label>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="md-form" formGroupName="drugCheckDecision">
+                    <input id="street" mdbInputDirective type="text" class="form-control"
+                           formControlName="street">
+                    <label for="street">Strada</label>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="md-form" formGroupName="drugCheckDecision">
+                    <input id="farmDir" mdbInputDirective type="text" class="form-control"
+                           formControlName="farmDir">
+                    <label for="farmDir">Farmacist diriginte<span class="text-danger">*</span></label>
+                </div>
+            </div>
+            <div class="col-md-4" formGroupName="drugCheckDecision">
                 <div class="row">
-                    <div class="col-6">
-                        <div class="card-header-title white-text">Filiale selectate</div>
+                    <div class="col-md-4">
+                        <div class="md-form">
+                            <mat-checkbox formControlName="precursor">Precursori</mat-checkbox>
+                        </div>
                     </div>
-                    <div class="col-6">
-                        <div class="text-right fap text-white">
-                            <i (click)="addCompany()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+                    <div class="col-md-4">
+                        <div class="md-form">
+                        <mat-checkbox formControlName="psihotrop">Psihotrope</mat-checkbox>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="md-form">
+                        <mat-checkbox formControlName="stupefiant">Stupefiante</mat-checkbox>
                         </div>
                     </div>
                 </div>
             </div>
 
-        </div>
 
-        <div class="card-body card-body-cascade">
-            <table class="table table-widths text-center">
-                <thead class="bg-sidebar white-text">
-                <tr>
-                    <th scope="col">Nume</th>
-                    <th scope="col">Cod</th>
-                    <th scope="col">Actiuni</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let filial of selectedFilials;let i = index">
-                    <td>{{ filial.name }}</td>
-                    <td>{{ filial.code }}</td>
-                    <td>
-                        <button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
-                                (click)="removeCompany(i)"
-                                mdbWavesEffect attr.disabled="this.disabled">Stergere
-                        </button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <hr>
-
-        <div class="row">
             <div class="col-md-6">
-                <div class="md-form" >
-                    <input id="name" mdbInputDirective type="text" class="form-control" required formControlName="resPerson">
-                    <label for="name">Persoana responsabila
-                        <span class="text-danger">*</span>
-                    </label>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="md-form-modified">
+                <div class="md-form-modified" formGroupName="drugCheckDecision">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="pickerExp" placeholder="Data expirarii" required
-                               formControlName="dataExp">
+                               formControlName="expireDate">
                         <mat-datepicker-toggle matSuffix [for]="pickerExp"></mat-datepicker-toggle>
                         <mat-datepicker touchUi #pickerExp></mat-datepicker>
                     </mat-form-field>
                 </div>
             </div>
         </div>
+
         <hr>
+        <h5 class="text-center font-weight-bold" >Decizia</h5>
+
         <div class="row">
             <div class="col-md-6">
                 <div class="md-form" formGroupName="drugCheckDecision">
@@ -233,7 +149,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100" formGroupName="drugCheckDecision">
                         <input matInput [matDatepicker]="pickerCPCAD" placeholder="Data procesului verbal a CPCAD"
@@ -243,11 +159,40 @@
                     </mat-form-field>
                 </div>
             </div>
+
             <div class="col-md-3">
-                <div class="md-form">
-                    <input id="reason" mdbInputDirective type="text" class="form-control">
+                <div class="md-form-modified" formGroupName="drugCheckDecision">
+
+                    <mat-radio-group formControlName="decision">
+                        <div class="container">
+                            <div class="row mt-5">
+                                <!--<div class="offset-2"></div>-->
+
+                                <div class="col-12">
+                                    <mat-radio-button name="prop1" value="1">Acceptare</mat-radio-button>
+                                </div>
+                                <div class="col-12">
+                                    <mat-radio-button name="prop2" value="0">Refuz</mat-radio-button>
+                                </div>
+                                <!--<div class="offset-2"></div>-->
+                            </div>
+                            <div *ngIf="formSubmitted && cerereSolicAutorForm.get('drugCheckDecision.decision').invalid">
+                                <small class="text-muted"><strong class="text-danger">Decizia trebuie introdusa</strong>
+                                </small>
+                            </div>
+                        </div>
+                    </mat-radio-group>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="md-form" formGroupName="drugCheckDecision">
+                   <!-- <input id="reason" mdbInputDirective type="text" class="form-control">
                     <label for="reason">Motivul refuzului
-                    </label>
+                    </label>-->
+                    <textarea type="text" id="reasonDecision" class="md-textarea form-control" mdbInputDirective
+                              rows="2" formControlName="reasonDecision"></textarea>
+                    <label for="reasonDecision">Motivul refuzului</label>
                 </div>
             </div>
         </div>
@@ -255,7 +200,7 @@
         <hr>
         <app-payment [requestId]="cerereSolicAutorForm.get('id').value" (totalValueChanged)="paymentTotalUpdate($event)"
                       [processModule]="'CPCD'"></app-payment>
-        <div *ngIf="cerereSolicAutorForm && paymentTotal < 0">
+        <div *ngIf="formSubmitted && paymentTotal < 0">
             <small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>
         </div>
         <hr>
@@ -277,8 +222,6 @@
                 <tr>
                     <th scope="col">Denumirea</th>
                     <th scope="col">Numar</th>
-                    <th scope="col">Statut document</th>
-                    <th scope="col">Statut emitere</th>
                     <th>Actiuni</th>
                 </tr>
                 </thead>
@@ -286,44 +229,27 @@
                 <tr *ngFor="let a of outDocuments">
                     <th scope="row">{{ a.name }}</th>
                     <th scope="row">{{ a.number }}</th>
-                    <th scope="row">{{ a.status }}</th>
-                    <th scope="row">
-                        <mat-checkbox
-                                *ngIf="a.docType && (a.docType.category=='SR' || a.docType.category=='AP' || a.docType.category=='AH' || a.docType.category=='AF')"
-                                #checkBoxResponse [checked]="a.responseReceived || a.status=='Atasat'"
-                                (change)="checkResponseReceived(a,checkBoxResponse)"
-                                [disabled]="a.status=='Atasat'">Emitere document
-                        </mat-checkbox>
-                    </th>
                     <td>
                         <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)"><i
                                 class="fa fa-file fa-lg" aria-hidden="true"></i>
-                        </button>
-                        <button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && (a.docType.category=='SR' || a.docType.category=='AP' || a.docType.category=='AH' || a.docType.category=='AF')"
-                                class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)">
-                            <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
                         </button>
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
-        <div *ngIf="formSubmitted && !isResponseReceived">
-            <small class="text-muted"><strong class="text-danger">Nici un document pentru emitere nu a fost
-                selectat</strong></small>
-        </div>
-        <div *ngIf="formSubmitted && isNonAttachedDocuments && isResponseReceived">
-            <small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong>
-            </small>
-        </div>
         <hr>
         <div class="text-center">
-            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                    (click)="saveRequest()">Inregistrare
-            </button>
             <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">
                 Intrerupere
             </button>
+            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
+                    (click)="save()">Salvare
+            </button>
+            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
+                    (click)="nextStepRequest()">Finisare
+            </button>
+
         </div>
     </form>
     <hr>

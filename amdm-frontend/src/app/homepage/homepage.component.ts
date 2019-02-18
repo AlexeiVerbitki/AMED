@@ -4,6 +4,8 @@ import {Subscription} from 'rxjs';
 import {TaskService} from '../shared/service/task.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
+import {HomepageService} from '../shared/service/homepage.service';
+import {LoaderService} from '../shared/service/loader.service';
 
 @Component({
     selector: 'app-homepage',
@@ -13,17 +15,21 @@ import {Router} from '@angular/router';
 export class HomepageComponent implements OnInit, AfterViewInit {
 
     taskForm: FormGroup;
-    displayedColumns: any[] = ['requestNumber', 'processName', 'requestType', 'username', 'startDate', 'endDate', 'step'];
+    displayedColumns: any[] = ['requestNumber', 'startDate', 'company', 'deponent', 'subject', 'endDate', 'step'];
     dataSource = new MatTableDataSource<any>();
     private subscriptions: Subscription[] = [];
-    requestsNumber;
-    expiredReqNumber;
-    emergentReqNumber;
+    requestsNumber = 0;
+    expiredReqNumber = 0;
+    emergentReqNumber = 0;
 
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    constructor(private fb: FormBuilder, public dialog: MatDialog, private route: Router, private taskService: TaskService) {
+    constructor(private fb: FormBuilder,
+                public dialog: MatDialog,
+                private route: Router,
+                private homepageService: HomepageService,
+                private loadingService: LoaderService) {
         this.taskForm = fb.group({
             'requestNumber': [null, {validators: Validators.required}],
             'request': [null],
@@ -44,23 +50,28 @@ export class HomepageComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
-
         this.getRequestsInWork();
-
     }
 
     getRequestsInWork() {
-        this.subscriptions.push(this.taskService.getTasksByFilter(this.taskForm.value).subscribe(data => {
-
-            const source = data.body.filter(r => r.currentStep !== 'F' && r.currentStep !== 'C' && r.currentStep !== 'I' && r.endDate === null);
-            this.dataSource.data = source.sort((a, b) => a.startDate.localeCompare(b.startDate));
-            const expired = data.body.filter(r => r.expired !== null && r.expired === true );
-            const emergent = data.body.filter(r => r.critical !== null && r.critical === true && (r.expired == null || r.expired === false));
-            this.requestsNumber = this.dataSource.data.length;
-            this.expiredReqNumber = expired.length;
-            this.emergentReqNumber = emergent.length;
-
-        }));
+        this.loadingService.show();
+        this.subscriptions.push(this.homepageService.getUnfinishedTasks().subscribe(unfinishedTasks => {
+                // console.log('unfinishedTasks', unfinishedTasks);
+                this.dataSource.data = unfinishedTasks as [any];
+                this.dataSource.data.forEach(task => {
+                    if (task.critical) {
+                        this.emergentReqNumber++;
+                    }
+                    if (task.expired) {
+                        this.expiredReqNumber++;
+                    }
+                });
+                this.requestsNumber = unfinishedTasks.length;
+                this.loadingService.hide();
+            }, error1 => {
+                this.loadingService.hide();
+            })
+        );
     }
 
     isLink(rowDetails: any): boolean {

@@ -3,17 +3,27 @@
   justify-content: center !important;
   font-size: 16px !important;
   transition: 0.5s !important;
+  margin-left: 20px;
+}
+
+th, td {
+    text-align : center !important;
+}
+
+mat-header-cell {
+    display         : flex;
+    justify-content : flex-end;
 }
 
 ::ng-deep .mat-sort-header-container {
-  margin-right: 6px;
+    display         : flex;
+    justify-content : center;
 }
 
 ::ng-deep .mat-sort-header-container:hover {
   color: #D0D7DA;
   transition: 0.5s;
 }
-
 /*gradient*/
 
 .widget {

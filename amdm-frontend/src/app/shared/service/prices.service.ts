@@ -3,7 +3,7 @@ import {AdministrationService} from './administration.service';
 import {MedicamentService} from './medicament.service';
 import {RequestService} from './request.service';
 import {AuthService} from './authetication.service';
-import {HttpClient, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Company} from '../../models/company';
 import {Country} from '../../models/country';
@@ -74,6 +74,13 @@ export class PriceService {
 
     getUsername(): string {
         return this.authService.getUserName();
+    }
+
+    removeRequest(requestNr: string): Observable<any> {
+        let Params = new HttpParams();
+        Params = Params.set('requestNumber', requestNr);
+
+        return this.http.get<any>('/api/remove-price-request', {params: Params});
     }
 
     getPriceExpirationReasons(): Observable<any> {

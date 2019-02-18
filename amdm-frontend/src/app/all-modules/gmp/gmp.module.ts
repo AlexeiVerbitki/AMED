@@ -15,8 +15,11 @@ import {ProcessInterruptionComponent} from './process-interruption/process-inter
 import {CanDeactivateGuard} from '../../shared/auth-guard/can-deactivate-guard.service';
 import {LicenseService} from '../../shared/service/license/license.service';
 import {AddDescriptionComponent} from '../../dialog/add-description/add-description.component';
-import {SelectSubsidiaryModalComponent} from "../gdp/select-subsidiary-modal/select-subsidiary-modal.component";
-import {MatDialogModule} from "@angular/material";
+import {MatDialogModule} from '@angular/material';
+import {LaboratorDialogComponent} from '../../dialog/laborator-dialog/laborator-dialog.component';
+import {QualifiedPersonDialogComponent} from '../../dialog/qualified-person-dialog/qualified-person-dialog.component';
+import {SearchMedicamentsDialogComponent} from '../../dialog/search-medicaments-dialog/search-medicaments-dialog.component';
+import {SelectDocumentNumberComponent} from "../../dialog/select-document-number/select-document-number.component";
 
 @NgModule({
     imports: [
@@ -31,8 +34,10 @@ import {MatDialogModule} from "@angular/material";
         PaymentModule
     ],
     schemas: [],
-    declarations: [RegCerereGmpComponent, EvaluarePrimaraGmpComponent, ProcessInterruptionComponent, AddDescriptionComponent,SelectSubsidiaryModalComponent],
-    entryComponents: [AddDescriptionComponent,SelectSubsidiaryModalComponent],
+    declarations: [QualifiedPersonDialogComponent, SearchMedicamentsDialogComponent,SelectDocumentNumberComponent, LaboratorDialogComponent, RegCerereGmpComponent, EvaluarePrimaraGmpComponent,
+        ProcessInterruptionComponent, AddDescriptionComponent],
+    entryComponents: [AddDescriptionComponent, LaboratorDialogComponent, QualifiedPersonDialogComponent,
+        SearchMedicamentsDialogComponent,SelectDocumentNumberComponent],
     providers: [UploadFileService, RequestService, CanDeactivateGuard, LicenseService]
 })
 export class GMPModule {

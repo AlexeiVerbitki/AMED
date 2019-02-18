@@ -52,4 +52,8 @@ export class AnnihilationService {
     findAnnihilationById(id: string): Observable<any> {
         return this.http.get('/api/annihilation/find-annihilation-by-id', {params: {annihilationId: id}});
     }
+
+    generateRegistrationRequestNumber(): Observable<any> {
+        return this.http.get('/api/annihilation/generate-registration-request-number', {});
+    }
 }

@@ -311,8 +311,7 @@ export class PaymentComponent implements OnInit {
                 return;
             }
             observable = this.documentService.viewBonDePlataNimicire(this.requestNimicire);
-        } else if (this.process && (this.process === 'LICENTA' || this.process === 'CPCD' || this.process === 'GDP')) {
-            console.log('gdfg', this.bonDePlataList);
+        } else if (this.process && (this.process === 'LICENTA' || this.process === 'CPCD' || this.process === 'gdp' || this.process === 'GMP')) {
             const modelToSubmit = {
                 requestId: this.requestIdP,
                 paymentOrders: this.bonDePlataList,
@@ -407,7 +406,7 @@ export class PaymentComponent implements OnInit {
     generateSingleBonCommonParameters(bonDePlata: any, currency: string) {
         this.loadingService.show();
         let observable;
-        if (this.process && (this.process === 'LICENTA' || this.process === 'CPCD' || this.process === 'GDP' )) {
+        if (this.process && (this.process === 'LICENTA' || this.process === 'CPCD' || this.process === 'gdp' || this.process === 'GMP' )) {
             const modelToSubmit = {
                 requestId: this.requestIdP,
                 paymentOrders: [bonDePlata],

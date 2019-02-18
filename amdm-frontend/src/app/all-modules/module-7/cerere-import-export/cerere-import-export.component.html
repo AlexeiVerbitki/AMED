@@ -1,16 +1,9 @@
 <div class="container-fluid sky z-depth-2">
-    <h3 class="text-center my-3 font-weight-bold">Cerere de autorizare a importului/exportului
-        precursorilor/psihotropelor/stupefiantelor</h3>
 
     <hr>
     <form [formGroup]='cerereImpExpForm'>
 
-        <app-document [documents]="documents" [nrCerere]="cerereImpExpForm.get('requestNumber').value"
-                      [dcTypes]="docTypes"
-                      (documentModified)="documentModified($event)"></app-document>
-         <div class="mb-3"></div>             
         <div class="row">
-
             <div class="col-md-4">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
@@ -40,12 +33,21 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <app-document [documents]="documents" [nrCerere]="cerereImpExpForm.get('requestNumber').value"
+                      [dcTypes]="docTypes"
+                      (documentModified)="documentModified($event)"></app-document>
+         <div class="mb-3"></div>             
+        <div class="row">
+
 
             <div class="col-md-4">
                 <div class="md-form-modified">
                     <ng-select class="custom" [items]="authorizationTypes" bindLabel="viewValue"
                                formControlName="authorizationType"
-                               placeholder="Tipul autorizarii">
+                               placeholder="Tipul autorizarii"
+                               [required]="true">
                     </ng-select>
                     <div *ngIf="formSubmitted && !cerereImpExpForm.get('authorizationType').valid">
                         <small class="text-muted"><strong class="text-danger">Tipul autorizarii trebuie
@@ -54,6 +56,49 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-md-4">
+                <div class="md-form-modified">
+                    <ng-select class="custom" [items]="scopeAuthorizations" bindLabel="viewValue"
+                               formControlName="scopeAuthorization"
+                               placeholder="Scopul autorizarii"
+                               [required]="true">
+                    </ng-select>
+                    <div *ngIf="formSubmitted && !cerereImpExpForm.get('scopeAuthorization').valid">
+                        <small class="text-muted"><strong class="text-danger">Scopul autorizarii trebuie selectat.</strong>
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="md-form" formGroupName="drugCheckDecision">
+                    <input id="partner" mdbInputDirective type="text" class="form-control" formControlName="partnerCompany">
+                    <label for="partner">Compania partener
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form-modified" formGroupName="drugCheckDecision">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="pickerExp" placeholder="Data expirarii" required
+                               formControlName="expireDate">
+                        <mat-datepicker-toggle matSuffix [for]="pickerExp"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #pickerExp></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form" formGroupName="drugCheckDecision">
+                    <input id="custom" mdbInputDirective type="text" class="form-control" formControlName="customsPost">
+                    <label for="custom">Post vamal
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <h5 class="text-center font-weight-bold" >Detalii</h5>
+        <div class="row">
 
             <div class="col-md-4">
                 <div class="md-form">
@@ -73,7 +118,7 @@
                 </div>
             </div>
 
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <div class="md-form">
                     <input id="packagingQuantity" mdbInputDirective type="text" class="form-control"
                            formControlName="packagingQuantity">
@@ -97,14 +142,14 @@
                         <small class="text-muted"><strong class="text-danger">Substanta trebuie
                             selectata</strong></small>
                     </div>
-                    <div *ngIf="substanceExistInTable">
+                   <!-- <div *ngIf="substanceExistInTable">
                         <small class="text-muted"><strong class="text-danger">Substanta este deja adaugata
                         </strong></small>
-                    </div>
+                    </div>-->
                 </div>
             </div>
 
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="md-form">
                     <input id="availableQuantity" mdbInputDirective type="number" class="form-control"
                            formControlName="availableQuantity">
@@ -113,7 +158,7 @@
                 </div>
             </div>
 
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="md-form">
                     <input id="authorizedQuantity" mdbInputDirective type="number" class="form-control"
                            formControlName="authorizedQuantity">
@@ -217,8 +262,7 @@
                     <td>
                         <button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
                                 (click)="removeSubstance(i)"
-                                mdbWavesEffect attr.disabled="this.disabled">Stergere
-                        </button>
+                                mdbWavesEffect attr.disabled="this.disabled"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
                     </td>
                 </tr>
                 </tbody>
@@ -226,6 +270,35 @@
         </div>
         <hr>
 
+
+
+       <!-- <div class="row">
+            <div class="col-md-4">
+                <div class="md-form" formGroupName="drugCheckDecision">
+                    <input id="partner" mdbInputDirective type="text" class="form-control" formControlName="partnerCompany">
+                    <label for="partner">Compania partener
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form-modified" formGroupName="drugCheckDecision">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="pickerExp" placeholder="Data expirarii" required
+                               formControlName="expireDate">
+                        <mat-datepicker-toggle matSuffix [for]="pickerExp"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #pickerExp></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form" formGroupName="drugCheckDecision">
+                    <input id="custom" mdbInputDirective type="text" class="form-control" formControlName="customsPost">
+                    <label for="custom">Post vamal
+                    </label>
+                </div>
+            </div>
+        </div>-->
+        <h5 class="text-center font-weight-bold" >Decizia</h5>
         <div class="row">
             <div class="col-md-4">
                 <div class="md-form" formGroupName="drugCheckDecision">
@@ -250,38 +323,48 @@
                     </mat-form-field>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input id="reason" mdbInputDirective type="text" class="form-control">
-                    <label for="reason">Motiv refuz
-                    </label>
-                </div>
-            </div>
+            <!-- <div class="col-md-4">
+                 <div class="md-form">
+                     <input id="reason" mdbInputDirective type="text" class="form-control">
+                     <label for="reason">Motiv refuz
+                     </label>
+                 </div>
+             </div>-->
         </div>
-
         <div class="row">
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input id="partner" mdbInputDirective type="text" class="form-control" formControlName="partner">
-                    <label for="partner">Compania partener
-                    </label>
+            <div class="col-md-3">
+                <div class="md-form-modified" formGroupName="drugCheckDecision">
+
+                    <mat-radio-group formControlName="decision">
+                        <div class="container">
+                            <div class="row mt-5">
+                                <!--<div class="offset-2"></div>-->
+
+                                <div class="col-12">
+                                    <mat-radio-button name="prop1" value="1">Acceptare</mat-radio-button>
+                                </div>
+                                <div class="col-12">
+                                    <mat-radio-button name="prop2" value="0">Refuz</mat-radio-button>
+                                </div>
+                                <!--<div class="offset-2"></div>-->
+                            </div>
+                            <div *ngIf="formSubmitted && cerereImpExpForm.get('drugCheckDecision.decision').invalid">
+                                <small class="text-muted"><strong class="text-danger">Decizia trebuie introdusa</strong>
+                                </small>
+                            </div>
+                        </div>
+                    </mat-radio-group>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="md-form-modified">
-                    <mat-form-field class="w-100">
-                        <input matInput [matDatepicker]="pickerExp" placeholder="Data expirarii" required
-                               formControlName="dataExp">
-                        <mat-datepicker-toggle matSuffix [for]="pickerExp"></mat-datepicker-toggle>
-                        <mat-datepicker touchUi #pickerExp></mat-datepicker>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input id="custom" mdbInputDirective type="text" class="form-control" formControlName="custom">
-                    <label for="custom">Post vamal
-                    </label>
+
+            <div class="col-md-9">
+                <div class="md-form" formGroupName="drugCheckDecision">
+                    <!-- <input id="reason" mdbInputDirective type="text" class="form-control">
+                     <label for="reason">Motivul refuzului
+                     </label>-->
+                    <textarea type="text" id="reasonDecision" class="md-textarea form-control" mdbInputDirective
+                              rows="2" formControlName="reasonDecision"></textarea>
+                    <label for="reasonDecision">Motivul refuzului</label>
                 </div>
             </div>
         </div>
@@ -289,7 +372,7 @@
         <hr>
         <app-payment [requestId]="cerereImpExpForm.get('id').value" (totalValueChanged)="paymentTotalUpdate($event)"
                      [processModule]="'CPCD'"></app-payment>
-        <div *ngIf="cerereImpExpForm && paymentTotal < 0">
+        <div *ngIf="formSubmitted && paymentTotal < 0">
             <small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>
         </div>
 
@@ -312,8 +395,8 @@
                 <tr>
                     <th scope="col">Denumirea</th>
                     <th scope="col">Numar</th>
-                    <th scope="col">Statut document</th>
-                    <th scope="col">Statut emitere</th>
+                  <!--  <th scope="col">Statut document</th>
+                    <th scope="col">Statut emitere</th>-->
                     <th>Actiuni</th>
                 </tr>
                 </thead>
@@ -321,7 +404,7 @@
                 <tr *ngFor="let a of outDocuments">
                     <th scope="row">{{ a.name }}</th>
                     <th scope="row">{{ a.number }}</th>
-                    <th scope="row">{{ a.status }}</th>
+                   <!-- <th scope="row">{{ a.status }}</th>
                     <th scope="row">
                         <mat-checkbox
                                 *ngIf="a.docType && (a.docType.category=='SR' || a.docType.category=='IP' || a.docType.category=='IH' || a.docType.category=='IF' || a.docType.category=='EP' || a.docType.category=='EH' || a.docType.category=='EF')"
@@ -330,35 +413,38 @@
                                 [disabled]="a.status=='Atasat'">Emitere
                             document
                         </mat-checkbox>
-                    </th>
+                    </th>-->
                     <td>
                         <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)"><i
                                 class="fa fa-file fa-lg" aria-hidden="true"></i>
                         </button>
-                        <button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && (a.docType.category=='SR' || a.docType.category=='IP' || a.docType.category=='IH' || a.docType.category=='IF' || a.docType.category=='EP' || a.docType.category=='EH' || a.docType.category=='EF')"
+                       <!-- <button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && (a.docType.category=='SR' || a.docType.category=='IP' || a.docType.category=='IH' || a.docType.category=='IF' || a.docType.category=='EP' || a.docType.category=='EH' || a.docType.category=='EF')"
                                 class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)">
                             <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
-                        </button>
+                        </button>-->
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
-        <div *ngIf="formSubmitted && !isResponseReceived">
+      <!--  <div *ngIf="formSubmitted && !isResponseReceived">
             <small class="text-muted"><strong class="text-danger">Nici un document pentru emitere nu a fost
                 selectat</strong></small>
         </div>
         <div *ngIf="formSubmitted && isNonAttachedDocuments && isResponseReceived">
             <small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong>
             </small>
-        </div>
+        </div>-->
         <hr>
         <div class="text-center">
-            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                    (click)="saveRequest()">Inregistrare
-            </button>
             <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">
                 Intrerupere
+            </button>
+            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
+                    (click)="save()">Salvare
+            </button>
+            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
+                    (click)="finish()">Finisare
             </button>
         </div>
     </form>

@@ -81,10 +81,10 @@ export class ClinicalTrialsComponent implements OnInit, OnDestroy, AfterViewInit
         arr = this.populateDataForXLSXDocument(arr);
         const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(arr);
         /* generate workbook and add the worksheet */
-        XLSX.utils.book_append_sheet(wb, ws, 'Lista de licente');
+        XLSX.utils.book_append_sheet(wb, ws, 'Lista studiilor clinice');
 
         /* save to file */
-        XLSX.writeFile(wb, 'Licente.xlsx');
+        XLSX.writeFile(wb, 'Studii clinice.xlsx');
 
     }
 
@@ -121,7 +121,7 @@ export class ClinicalTrialsComponent implements OnInit, OnDestroy, AfterViewInit
             showLabels: true,
             headers: this.createHeaderColumns()
         };
-        new Angular5Csv(displayData, 'Studii clinice', options);
+        const csv = new Angular5Csv(displayData, 'Studii clinice', options);
     }
 
     exportToPdf() {

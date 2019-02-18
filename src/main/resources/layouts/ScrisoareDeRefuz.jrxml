@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ScrisoareDeRefuz" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="40" rightMargin="20" topMargin="15" bottomMargin="15" uuid="c084aefd-f7fb-40ce-ab3f-dc897567241a">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
+	<subDataset name="Dataset1" uuid="14df4d62-86eb-4421-95d3-68d7b987a434">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="NameFunction" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="solicitant" class="java.lang.String"/>
+	<parameter name="solicitantAddress" class="java.lang.String"/>
+	<parameter name="requestNr" class="java.lang.String"/>
+	<parameter name="requestDescription" class="java.lang.String"/>
+	<parameter name="requestDate" class="java.lang.String"/>
+	<parameter name="reason" class="java.lang.String"/>
+	<!--<parameter name="legalBasis" class="java.lang.String"/>-->
+	<parameter name="responsablePerson" class="java.lang.String"/>
+	<parameter name="date" class="java.lang.String"/>
+	<parameter name="agencyName" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<pageHeader>
+		<band height="80" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="535" height="80" uuid="4b8c7148-d4e8-41c2-8c72-9feba3bf25c2"/>
+				<imageExpression><![CDATA["layouts/icons/scrisoareDeRefuz.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="80" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="36" width="535" height="24" uuid="697b98c5-d123-4807-a8a5-7a7b0a26699a"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{solicitant}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="60" width="535" height="20" uuid="d6a66fb8-8074-48f2-9a51-63fe28ad5604"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{solicitantAddress}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="140">
+			<textField>
+				<reportElement x="0" y="6" width="535" height="14" uuid="3be82533-99d9-44f0-9c1f-8a6d10721221"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Decizie de refuz"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="40" width="535" height="14" uuid="625bf5ad-4680-4286-9b6b-209a361aaf4a"/>
+				<textElement textAlignment="Left">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Stimate solicitant " + $P{solicitant} + "!"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="74" width="535" height="66" uuid="f07c1147-606b-4f1a-97c1-0b3ebb756148"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Ne pare rău să Vă anunțăm, că cererea Dvs. Nr. " +  $P{requestNr} + " depusă pe data " + $P{requestDate} + " pentru actul permisiv " + $P{requestDescription} + " eliberat de către " + $P{agencyName}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="50">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="24" width="535" height="26" uuid="5ef2df1b-a3dd-4d75-89c0-4f69933c9bf2"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Motivul refuzului: " + $P{reason}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="50">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="24" width="535" height="26" uuid="16eb159b-b0bd-4cfc-99e5-ba0355ab6f27"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Temei legal: Nu se încadrează în cerințele Legii nr.382 din 06.05.1999."]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="50">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="24" width="535" height="26" uuid="9b0a1d59-588d-4a77-8078-03f08e5bf716"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Recomandări pentru îmbunătățire: Respectarea legislației în domeniul autorizației cu substanțe stupefiante, psihotrope si a precursorilor."]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="49">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="24" width="535" height="25" uuid="b6310d37-228b-4974-9d79-3c3b2e231a8f"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Persoana responsabilă:" + $P{responsablePerson} + ", " + $P{agencyName}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="100">
+			<textField>
+				<reportElement x="0" y="21" width="260" height="19" uuid="e7d6aab4-fc2d-44cc-ab26-43f933cb45e5"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data: " + $P{date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="61" width="360" height="39" uuid="903bc610-4ab9-40a8-9c23-fd803a716a9a"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Semnătura: " + $P{responsablePerson} + "\n_____________________"]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="66">
+			<textField>
+				<reportElement x="1" y="30" width="259" height="19" forecolor="#0400FF" uuid="56b2deca-4932-4bb2-a350-2b8870d004ed"/>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA["https://actpermisiv.gov.md"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="377" y="12" width="53" height="18" uuid="0387f58b-d483-4ce2-9578-4f3f81507004"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Tel: "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="377" y="30" width="53" height="18" uuid="84c50d1a-4990-4bce-a128-cfa48c77d893"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["E-mail: "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="377" y="48" width="53" height="18" uuid="1c8e12ec-8839-481f-a892-0767ac25a388"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Web: "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="430" y="12" width="104" height="18" uuid="0255a8af-5573-4b19-b604-0760e0680225"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["+373-22-257070"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="430" y="30" width="104" height="18" forecolor="#0015FF" uuid="51c986d8-e72a-45e9-ac9c-f2b20ab1fe65"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["asp@asp.gov.md"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="430" y="48" width="104" height="18" forecolor="#0015FF" uuid="d83db59b-17fe-46c5-b4bf-04121efc27fb"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["www.asp.gov.md"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="9" width="260" height="45" uuid="3e8850d9-7aa2-4b9e-8af5-ee0a5feafe93"/>
+				<textElement markup="none">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Sistem informațional de gestionare și
+eliberare a actelor permisive gestionat
+de Agenția Servicii Publice]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="377" y="9" width="156" height="45" uuid="f5acb214-af2a-4270-9554-fa0ff713f776"/>
+				<textElement textAlignment="Left" markup="none">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Agenția Servicii Publice
+mun. Chişinău, MD-2012,
+str. Puşkin 42]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

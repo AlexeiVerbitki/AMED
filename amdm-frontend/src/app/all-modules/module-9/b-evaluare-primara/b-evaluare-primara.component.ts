@@ -19,6 +19,7 @@ import {AdditionalDataDialogComponent} from '../dialog/additional-data-dialog/ad
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {AddCtExpertComponent} from '../dialog/add-ct-expert/add-ct-expert.component';
 import {DocumentService} from '../../../shared/service/document.service';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 
 @Component({
     selector: 'app-b-evaluare-primara',
@@ -97,7 +98,8 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private dialogConfirmation: MatDialog,
                 private errorHandlerService: SuccessOrErrorHandlerService,
-                private documentService: DocumentService) {
+                private documentService: DocumentService,
+                private navbarTitleService: NavbarTitleService) {
     }
 
     ngOnInit() {
@@ -512,14 +514,14 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
             this.taskService.getRequestStepByIdAndCode(data.type.id, data.currentStep).subscribe(step => {
                     this.subscriptions.push(
-                        this.administrationService.getAllDocTypes().subscribe(data => {
+                        this.administrationService.getAllDocTypes().subscribe(data2 => {
                                 let availableDocsArr = [];
                                 step.availableDocTypes ? availableDocsArr = step.availableDocTypes.split(',') : availableDocsArr = [];
                                 let outputDocsArr = [];
                                 step.outputDocTypes ? outputDocsArr = step.outputDocTypes.split(',') : outputDocsArr = [];
                                 // console.log('availableDocsArr', availableDocsArr);
                                 if (step.availableDocTypes) {
-                                    this.docTypes = data;
+                                    this.docTypes = data2;
                                     this.docTypes = this.docTypes.filter(r => availableDocsArr.includes(r.category));
                                     this.outDocuments = this.outDocuments.filter(r => outputDocsArr.includes(r.docType.category));
                                 }
@@ -545,7 +547,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                         console.log('his.isAnalizePage', this.isAnalizePage);
 
                         this.stepName = this.isAnalizePage ? 'Analiza dosarului' : 'Evaluarea primara';
-
+                        this.navbarTitleService.showTitleMsg(this.stepName);
                         this.clinicTrailAmendForm.get('id').setValue(data.id);
                         this.clinicTrailAmendForm.get('requestNumber').setValue(data.requestNumber);
                         this.clinicTrailAmendForm.get('startDate').setValue(new Date(data.startDate));
@@ -859,7 +861,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
             this.requestService.saveClinicalTrailAmendmentRequest(formModel).subscribe(data => {
                 this.loadingService.hide();
-                // this.router.navigate(['dashboard/module']);
+                this.errorHandlerService.showSuccess('Datele salvate cu success');
             }, error => {
                 this.loadingService.hide();
                 console.log(error);
@@ -869,7 +871,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
     dysplayInvalidControl(form: FormGroup) {
         const ctFormControls = form['controls'];
-        for (const control in ctFormControls) {
+        for (const control of Object.keys(ctFormControls)) {
             ctFormControls[control].markAsTouched();
             ctFormControls[control].markAsDirty();
         }
@@ -1050,9 +1052,9 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                             requestId: this.clinicTrailAmendForm.get('id').value
                         };
 
-                        this.documentService.addSLC(dataToSubmit).subscribe(data => {
-                            console.log('outDocument', data);
-                            this.outDocuments.push(data.body);
+                        this.documentService.addSLC(dataToSubmit).subscribe(data2 => {
+                            console.log('outDocument', data2);
+                            this.outDocuments.push(data2.body);
                             console.log('outDocuments', this.outDocuments);
 
                         });
@@ -1126,5 +1128,6 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         this.subscriptions.forEach(subscription => {
             subscription.unsubscribe();
         });
+        this.navbarTitleService.showTitleMsg('');
     }
 }

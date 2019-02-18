@@ -69,8 +69,8 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
         this.navbarTitleService.showTitleMsg('Inregistrarea cererii de nimicire a medicamentelor');
         this.startDate = new Date();
         this.subscriptions.push(
-            this.administrationService.generateDocNr().subscribe(data => {
-                    this.mForm.get('nrCererii').setValue(data);
+            this.annihilationService.generateRegistrationRequestNumber().subscribe(data => {
+                    this.mForm.get('nrCererii').setValue(data[0]);
                 }
             )
         );

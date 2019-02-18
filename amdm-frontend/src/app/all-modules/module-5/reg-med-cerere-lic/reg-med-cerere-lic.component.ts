@@ -272,8 +272,8 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
                         this.tipCerere = val;
                         this.updateReasonValidation(this.tipCerere);
                         this.subscriptions.push(
-                            this.administrationService.generateDocNr().subscribe(data => {
-                                    this.mForm.get('nrCererii').setValue(data);
+                            this.licenseService.generateRegistrationRequestNumber().subscribe(data => {
+                                    this.mForm.get('nrCererii').setValue(data[0]);
                                     this.rForm.reset();
                                     this.docTypeIdentifier = {code: this.tipCerere, step: 'R'};
                                 }
@@ -287,8 +287,8 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
                 this.tipCerere = val;
                 this.updateReasonValidation(this.tipCerere);
                 this.subscriptions.push(
-                    this.administrationService.generateDocNr().subscribe(data => {
-                            this.mForm.get('nrCererii').setValue(data);
+                    this.licenseService.generateRegistrationRequestNumber().subscribe(data => {
+                            this.mForm.get('nrCererii').setValue(data[0]);
                             this.docTypeIdentifier = {code: this.tipCerere, step: 'R'};
                         }
                     )

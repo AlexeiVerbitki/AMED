@@ -48,6 +48,10 @@ export class GDPService {
         return this.http.get('/api/administration/generate-gmp-request-number', {});
     }
 
+    generateCertificateNumber(): Observable<any> {
+        return this.http.get('/api/administration/generate-gdp-certificate-number', {});
+    }
+
     getAllMedicamentTypes(): Observable<any> {
         return this.administrationService.getAllMedicamentTypes();
     }
@@ -60,32 +64,8 @@ export class GDPService {
         return this.administrationService.getCurrenciesShort();
     }
 
-    getTodayCurrency(): Observable<CurrencyHistory[]> {
-        return this.administrationService.getCurrencyHistory(new Date());
-    }
-
-    savePrices(priceModel: any): Observable<any> {
-        return this.requestService.addPriceRequests(priceModel);
-    }
-
-    savePrice(priceModel: any): Observable<any> {
-        return this.requestService.addPriceRequest(priceModel);
-    }
-
     getUsername(): string {
         return this.authService.getUserName();
-    }
-
-    getPriceExpirationReasons(): Observable<any> {
-        return this.http.get('/api/price/all-price-expiration-reasons');
-    }
-
-    saveReevaluation(pricesModel: any): Observable<any> {
-        return this.http.post<any>('/api/price/save-reevaluation', pricesModel, {observe: 'response'});
-    }
-
-    modifyPrices(requests: any): Observable<HttpResponse<any>> {
-        return this.http.post<any>('/api/add-prices', requests, {observe: 'response'});
     }
 
     addRegistrationRequestForGDP(request: any): Observable<any> {
@@ -96,9 +76,6 @@ export class GDPService {
         return this.requestService.validIDNP(idnp);
     }
 
-    approvePrices(requests: any): Observable<HttpResponse<any>> {
-        return this.http.post<any>('/api/approve-prices', requests, {observe: 'response'});
-    }
 
     documentsByPricesIds(priceIds: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/price/documents-by-prices-ids', priceIds, {observe: 'response'});
@@ -108,49 +85,21 @@ export class GDPService {
         return this.documentService.getDocumentsByIds(requests);
     }
 
-    getPricesDocuments(requests: any): Observable<any> {
-        return this.documentService.getPricesDocuments(requests);
-    }
-
-    makeAvailableAgain(prices: any): Observable<HttpResponse<any>> {
-        return this.http.post<any>('/api/make-available', prices, {observe: 'response'});
-    }
 
     saveDocuments(documetns: any): Observable<any> {
         return this.http.post<any>('/api/documents/save-docs', documetns, {observe: 'response'});
     }
 
-    getPricesForRevaluation(): Observable<any> {
-        return this.http.get('/api/price/revaluation');
-    }
-
-    getPricesForApproval(): Observable<any> {
-        return this.http.get('/api/price/price-approval');
-    }
-
-    getGenericsPricesForRevaluation(priceId: string): Observable<any> {
-        return this.http.get('/api/price/generics-revaluation', {params: {priceId: priceId}});
-    }
 
     getPriceTypes(price: string): Observable<any> {
         return this.http.get('/api/price/price-types', {params: {price: price}});
     }
 
-    getMedPrevPrices(medicamentId: string): Observable<any> {
-        return this.http.get('/api/price/med-prev-prices', {params: {id: medicamentId}});
-    }
 
     getRelatedMedicaments(internationalNameId: string): Observable<any> {
         return this.http.get('/api/medicaments/related', {params: {internationalNameId: internationalNameId}});
     }
 
-    getPrevMonthAVGCurrencies(): Observable<any> {
-        return this.administrationService.getPrevMonthAVGCurrencies();
-    }
-
-    getMedicamentNamesAndCodeList(term): Observable<any[]> {
-        return this.medicamentService.getMedicamentNamesAndCodeList(term);
-    }
 
     getCompanyNamesAndIdnoList(partialName: string): Observable<any[]> {
         return this.administrationService.getCompanyNamesAndIdnoList(partialName);
@@ -165,7 +114,7 @@ export class GDPService {
     }
 
     getRequest(id: string): Observable<any> {
-        return this.http.get('/api/load-prices-request', {params: {id: id}});
+        return this.http.get('/api/load-gdp-request', {params: {id: id}});
     }
 
     getAllEmployees(): Observable<any> {
@@ -197,16 +146,16 @@ export class GDPService {
         return this.http.post<any>('/api/price/by-filter', filter, {observe: 'response'});
     }
 
-    viewEvaluationSheet(object: any): Observable<any> {
-        return this.http.post('/api/price-docs/view-evaluation-sheet', object, {responseType: 'blob'});
+    viewAccompanyingLetter(object: any): Observable<any> {
+        return this.http.post('/api/gdp/accompanying-letter', object, {responseType: 'blob'});
     }
 
-    viewAnexa2(object: any): Observable<any> {
-        return this.http.post('/api/price-docs/view-anexa2', object, {responseType: 'blob'});
+    viewGDPCertificate(object: any): Observable<any> {
+        return this.http.post('/api/gdp/gdp-certificate', object, {responseType: 'blob'});
     }
 
-    viewAnexa3(object: any): Observable<any> {
-        return this.http.post('/api/price-docs/view-anexa3', object, {responseType: 'blob'});
+    viewGDPOrder(object: any): Observable<any> {
+        return this.http.post('/api/gdp/gdp-order', object, {responseType: 'blob'});
     }
 
     viewAnexa1(): Observable<any> {

@@ -1113,17 +1113,6 @@ export class EvaluarePrimaraModifyComponent implements OnInit {
                 }
                 )
             );
-        } else {
-            this.subscriptions.push(this.documentService.viewDD(document.number).subscribe(data => {
-                    const file = new Blob([data], {type: 'application/pdf'});
-                    const fileURL = URL.createObjectURL(file);
-                    window.open(fileURL);
-                    this.loadingService.hide();
-                }, error => {
-                    this.loadingService.hide();
-                }
-                )
-            );
         }
     }
 

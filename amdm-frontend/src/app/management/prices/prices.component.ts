@@ -155,8 +155,8 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
                 arrIntern[3] = displayData[i].medicamentCode;
                 arrIntern[4] = displayData[i].division;
                 arrIntern[5] = displayData[i].medicamentType;
-                arrIntern[6] =  dtPipe.transform(displayData[i].orderApprovDat, 'dd/MM/yyyy');
-                arrIntern[7] = dtPipe.transform(displayData[i].expirationDate, 'dd/MM/yyyy');
+                arrIntern[6] = displayData[i].orderApprovDate;//dtPipe.transform(new Date(displayData[i].orderApprovDate), 'dd/MM/yyyy');
+                arrIntern[7] = displayData[i].expirationDate;//dtPipe.transform(new Date(displayData[i].expirationDate), 'dd/MM/yyyy');
                 arr.push(arrIntern);
             }
         }

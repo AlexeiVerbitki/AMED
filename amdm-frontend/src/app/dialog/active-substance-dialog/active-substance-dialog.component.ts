@@ -26,7 +26,6 @@ export class ActiveSubstanceDialogComponent implements OnInit {
     constructor(private administrationService: AdministrationService,
                 private fb: FormBuilder,
                 public dialog: MatDialog,
-                private errorService: SuccessOrErrorHandlerService,
                 public dialogRef: MatDialogRef<ActiveSubstanceDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) public dataDialog: any) {
         this.aForm = fb.group({
@@ -49,6 +48,7 @@ export class ActiveSubstanceDialogComponent implements OnInit {
 
         if (this.dataDialog) {
             this.aForm.get('activeSubstanceQuantity').setValue(this.dataDialog.quantity);
+            // console.log('manufactures', this.dataDialog.manufactures);
             this.manufacturesTable = this.dataDialog.manufactures;
         }
 
@@ -98,7 +98,6 @@ export class ActiveSubstanceDialogComponent implements OnInit {
     add() {
         this.formSubmitted = true;
 
-        console.log(this.manufacturesTable.length == 0);
         if (this.aForm.invalid || this.manufacturesTable.length == 0) {
             return;
         }

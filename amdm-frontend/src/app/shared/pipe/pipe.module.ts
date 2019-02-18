@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
+import {NgModule} from '@angular/core';
 import {DigitsAfterDecimalPipe} from './digits-after-decimal.pipe';
-import { LicenseStatusPipe } from './license-status.pipe';
+import {LicenseStatusPipe} from './license-status.pipe';
 
 @NgModule({
     imports:        [],

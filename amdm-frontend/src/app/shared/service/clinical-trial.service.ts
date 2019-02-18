@@ -21,4 +21,12 @@ export class ClinicalTrialService {
     loadRegistrationRequestById(id: string): Observable<any> {
         return this.http.get('/api/clinical-trails/load-request', {params: {id: id}});
     }
+
+    generateDocNr(): Observable<any> {
+        return this.http.get('/api/clinical-trails/generate-ct-sequence-nr', {});
+    }
+
+    validIDNP(idnp: string): Observable<any> {
+        return this.http.get('/api/validate-idnp', {params: {idnp: idnp}});
+    }
 }

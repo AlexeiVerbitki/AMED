@@ -2,9 +2,6 @@ import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatPaginator, MatTableDataSource} from '@angular/material';
 import {FormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
-import {GDPService} from '../../../shared/service/gdp.service';
-import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
-import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-select-subsidiary',
@@ -41,10 +38,19 @@ export class SelectSubsidiaryModalComponent implements OnInit {
     selectRow(elem : any, row : any) {
         row.selected = elem.checked;
     }
+
     ngOnInit() {
+        console.log(this.data.selectedList);
         this.dataSource.data = this.subsidiaryList;
         this.dataSource.data.forEach(r => {
-            r.selected = false;
+            var selSubs = this.data.selectedList.find(t=>t.subsidiary.id==r.id);
+            if(selSubs)
+            {
+                r.selected = true;
+            }
+            else {
+                r.selected = false;
+            }
         });
     }
 

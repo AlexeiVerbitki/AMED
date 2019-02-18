@@ -15,19 +15,12 @@ export class DocumentService {
         });
     }
 
-    // generateRequestAdditionalData(nrDocument: any, nrCerere: any, content: any, title: any,type : any): Observable<any> {
-    //         return this.http.get('/api/documents/generate-request-additional-data', {
-    //             params: {nrDocument: nrDocument, nrCerere: nrCerere, content: content, title: title,type:type},
-    //             responseType: 'text'
-    //         });
-    // }
+    viewOGM(model: any): Observable<any> {
+        return this.http.post('/api/documents/view-ordin-de-inspectare-gmp', model, {responseType: 'blob'});
+    }
 
-    viewDD(nrDocument: any): Observable<any> {
-        return this.http.get('/api/documents/view-distribution-disposition', {
-            params: {
-                nrDoc: nrDocument
-            }, responseType: 'blob'
-        });
+    viewAFM(model: any): Observable<any> {
+        return this.http.post('/api/documents/view-autorizatie-de-fabricatie-gmp', model, {responseType: 'blob'});
     }
 
     viewBonDePlata(bonDePlataDetails: any): Observable<any> {

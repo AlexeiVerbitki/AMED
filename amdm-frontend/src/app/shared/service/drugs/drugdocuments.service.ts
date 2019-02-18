@@ -15,4 +15,8 @@ export class DrugDocumentsService {
     viewImportExportAuthorization(data: any): Observable<any> {
         return this.http.post('/api/documents/view-import-export-authorization-data', data, { responseType: 'blob'});
     }
+
+    viewScrisoareDeRefuz(data: any): Observable<any> {
+        return this.http.post('/api/documents/view-scrisoare-de-refuz', data, {responseType: 'blob'});
+    }
 }

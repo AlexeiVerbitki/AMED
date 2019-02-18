@@ -6,9 +6,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CollapseModule, MDBBootstrapModule} from 'angular-bootstrap-md';
 import {MaterialSharedModule} from '../../material-shared.module';
 import {CerereSolicAutorComponent} from './cerere-solic-autor/cerere-solic-autor.component';
-import {CerereModAutorActComponent} from './cerere-mod-autor-act/cerere-mod-autor-act.component';
 import {CerereImportExportComponent} from './cerere-import-export/cerere-import-export.component';
-import {CerereDubAutorActComponent} from './cerere-dub-autor-act/cerere-dub-autor-act.component';
 import {RegDrugControl} from './reg-drug-control/reg-drug-control';
 import {UploadFileService} from '../../shared/service/upload/upload-file.service';
 import {RequestService} from '../../shared/service/request.service';
@@ -16,12 +14,16 @@ import {DocumentModule} from '../../document/document.module';
 import {PaymentModule} from '../../payment/payment.module';
 import {LicenseService} from '../../shared/service/license/license.service';
 import {EcAgentModule} from '../../administration/economic-agent/ec-agent.module';
+import {CpcdAuthLangComponent} from './cpcd-auth-lang/cpcd-auth-lang.component';
+import {MatDialogModule} from "@angular/material";
+import { CpcdRejectLetterComponent } from './cpcd-reject-letter/cpcd-reject-letter.component';
 
 @NgModule({
     imports: [
         CommonModule,
         DrugControlRoutingModule,
         FormsModule,
+        MatDialogModule,
         ReactiveFormsModule,
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
@@ -30,8 +32,9 @@ import {EcAgentModule} from '../../administration/economic-agent/ec-agent.module
         PaymentModule,
         EcAgentModule
     ],
-    declarations: [CerereDubAutorActComponent, CerereImportExportComponent, CerereModAutorActComponent, CerereSolicAutorComponent, RegDrugControl],
-    providers: [UploadFileService, RequestService, LicenseService]
+    declarations: [ CerereImportExportComponent, CerereSolicAutorComponent, RegDrugControl, CpcdAuthLangComponent, CpcdRejectLetterComponent],
+    providers: [UploadFileService, RequestService, LicenseService],
+    entryComponents:[CpcdAuthLangComponent, CpcdRejectLetterComponent],
 
 })
 export class DrugControlModule {

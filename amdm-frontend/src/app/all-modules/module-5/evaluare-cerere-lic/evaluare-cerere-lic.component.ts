@@ -448,18 +448,19 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
 
     submit() {
-        this.rFormSubbmitted = true;
-        this.nextSubmit = true;
-        if ((this.tipCerere !== 'LICD' && this.tipCerere !== 'LICP' && this.tipCerere !== 'LICA' && this.tipCerere !== 'LICS' && this.tipCerere !== 'LICRL') && (!this.rForm.valid || this.companiiPerIdnoSelected.length == 0)) {
-            return;
-        }
-
-        this.rFormSubbmitted = false;
+        // this.rFormSubbmitted = true;
+        // this.nextSubmit = true;
+        // if ((this.tipCerere !== 'LICD' && this.tipCerere !== 'LICP' && this.tipCerere !== 'LICA' && this.tipCerere !== 'LICS' && this.tipCerere !== 'LICRL') && (!this.rForm.valid || this.companiiPerIdnoSelected.length == 0)) {
+        //     return;
+        // }
+        //
+        // this.rFormSubbmitted = false;
         const modelToSubmit = this.composeModel('E');
 
         this.subscriptions.push(
             this.licenseService.saveEvaluateLicense(modelToSubmit).subscribe(data => {
                     // this.router.navigate(['/dashboard/homepage']);
+                    this.errorHandlerService.showSuccess('Datele au fost salvate');
                 }
             )
         );
@@ -507,7 +508,33 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
         modelToSubmit.id = this.requestId;
 
-        licenseModel.economicAgents = this.companiiPerIdnoSelected;
+        let ecAgents : any[];
+        if (this.tipCerere === 'LICEL' && currentStep === 'I' )
+        {
+            ecAgents = this.companiiPerIdnoSelected.filter(cpi =>
+            {
+                if (cpi.currentResolution )
+                {
+                    if (cpi.currentResolution.resolution === '1')
+                    {
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }
+
+                }
+                else{
+                    return true;
+                }
+
+            });
+        }
+        else{
+            ecAgents = this.companiiPerIdnoSelected;
+        }
+        
+        licenseModel.economicAgents = ecAgents;
 
         if (this.rForm.get('CPCDNrdeintrare').value) {
             let extraData: any;
@@ -666,61 +693,6 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
     paymentTotalUpdate(event) {
         this.paymentTotal = event.valueOf();
     }
-
-    // private refreshOutputDocuments() {
-    //     this.outDocuments = [];
-    //
-    //     let outDocument = {
-    //         name: 'Scrisoare de informare',
-    //         number: 'NL-' + this.oldData.requestNumber,
-    //         status: this.getOutputDocStatus()
-    //     };
-    //
-    //     this.outDocuments.push(outDocument);
-    // }
-
-
-    // documentAdded(event) {
-    //     this.refreshOutputDocuments();
-    // }
-
-    viewDoc(document: any) {
-        this.loadingService.show();
-        this.subscriptions.push(this.documentService.viewDD(document.number).subscribe(data => {
-                const file = new Blob([data], {type: 'application/pdf'});
-                const fileURL = URL.createObjectURL(file);
-                window.open(fileURL);
-                this.loadingService.hide();
-            }, error => {
-                this.loadingService.hide();
-            }
-            )
-        );
-    }
-
-    // checkAllDocumentsWasAttached(): boolean {
-    //     return !this.outDocuments.find(od => od.status.mode === 'N');
-    // }
-
-    // getOutputDocStatus(): any {
-    //     let result;
-    //     result = this.docs.find(doc => {
-    //         if (doc.docType.category === 'NL' && doc.number === 'NL-' + this.oldData.requestNumber) {
-    //             return true;
-    //         }
-    //     });
-    //     if (result) {
-    //         return {
-    //             mode: 'A',
-    //             description: 'Atasat'
-    //         };
-    //     }
-    //
-    //     return {
-    //         mode: 'N',
-    //         description: 'Nu este atasat'
-    //     };
-    // }
 
     addDecision(selectedFilial: any) {
         const dialogRef2 = this.dialogDecision.open(LicenseDecisionDialogComponent, {

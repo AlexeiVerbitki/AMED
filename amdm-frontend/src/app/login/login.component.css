@@ -1,5 +1,7 @@
 .login-bg {
-  background: url(../../assets/img/bg-login.png) no-repeat center center fixed; 
+  background: -webkit-linear-gradient(50deg,#45cafc,#303f9f)!important;
+  background: -o-linear-gradient(50deg,#45cafc,#303f9f)!important;
+  background: linear-gradient(40deg,#45cafc,#303f9f)!important;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;

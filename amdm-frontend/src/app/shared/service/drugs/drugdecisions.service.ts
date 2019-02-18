@@ -39,7 +39,7 @@ export class DrugDecisionsService {
         return this.http.get<any>('/api/drug-decisions/search-substances-by-name-or-code', {params: Params});
     }
 
-    getImportExportDetailsBySubstanceId(id: any): Observable<any> {
+    getImportExportDetailsBySubstance(id: any): Observable<any> {
         let Params = new HttpParams();
         Params = Params.set('id', id);
 
@@ -74,5 +74,18 @@ export class DrugDecisionsService {
         Params = Params.set('code', code);
 
         return this.http.get<any>('/api/drug-decisions/get-old-details-by-company-code', {params: Params});
+    }
+
+    getRequest(id: string): Observable<any> {
+        return this.http.get('/api/drug-decisions/load-request', {params: {id: id}});
+    }
+
+
+    searchLastRequest(filialId: string): Observable<any> {
+        return this.http.get('/api/drug-decisions/search-last-act-auth', {params: {filialId: filialId}});
+    }
+
+    generateRegistrationRequestNumber(): Observable<any> {
+        return this.http.get('/api/drug-decisions/generate-registration-request-number', {});
     }
 }

@@ -49,4 +49,12 @@ export const NomenclatureConstants = [
     {nr: 48, title: 'Unitati de masura', name: 'unitsOfMeasurement'},
     {nr: 49, title: 'Variatiile tipurilor de cereri', name: 'variationRequestType'},
     {nr: 50, title: 'Substante psihotrope autorizate', name: 'authorizedDrugSubstances'},
+    {nr: 51, title: 'Taxe de servicii', name: 'serviceCharges'},
+    {nr: 52, title: 'Medicamente biologice', name: 'nm_biological_medicines'},
+    {nr: 53, title: 'Fabricație', name: 'nm_gmp_manufacture'},
+    {nr: 54, title: 'Produse nesterile pentru investigație', name: 'nm_nesterile_products'},
+    {nr: 55, title: 'Ambalare primara', name: 'nm_primary_packaging'},
+    {nr: 56, title: 'Ambalare secundara', name: 'nm_secondary_packaging'},
+    {nr: 57, title: 'Tipuri de sterilizare a substanţelor', name: 'nm_sterilizations'},
+    {nr: 58, title: 'Teste pentru controlul calităţii', name: 'nm_tests_for_quality_control'},
 ];

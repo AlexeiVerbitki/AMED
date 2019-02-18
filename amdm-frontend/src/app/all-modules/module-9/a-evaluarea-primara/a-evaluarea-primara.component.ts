@@ -18,6 +18,7 @@ import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/ope
 import {ActiveSubstanceDialogComponent} from '../../../dialog/active-substance-dialog/active-substance-dialog.component';
 import {MedInstInvestigatorsDialogComponent} from '../dialog/med-inst-investigators-dialog/med-inst-investigators-dialog.component';
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 
 @Component({
     selector: 'app-a-evaluarea-primara',
@@ -116,11 +117,13 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
                 public dialogConfirmation: MatDialog,
                 private taskService: TaskService,
                 private loadingService: LoaderService,
-                private errorHandlerService: SuccessOrErrorHandlerService) {
+                private errorHandlerService: SuccessOrErrorHandlerService,
+                private navbarTitleService: NavbarTitleService) {
 
     }
 
     ngOnInit() {
+        this.navbarTitleService.showTitleMsg('Evaluarea primara');
         this.evaluateClinicalTrailForm = this.fb.group({
             'id': [''],
             'requestNumber': {value: '', disabled: true},
@@ -434,12 +437,12 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
             this.taskService.getRequestStepByIdAndCode(data.type.id, data.currentStep).subscribe(step => {
                     this.subscriptions.push(
-                        this.administrationService.getAllDocTypes().subscribe(data => {
+                        this.administrationService.getAllDocTypes().subscribe(data2 => {
                                 let availableDocsArr = [];
                                 step.availableDocTypes ? availableDocsArr = step.availableDocTypes.split(',') : availableDocsArr = [];
                                 // console.log('availableDocsArr', availableDocsArr);
                                 if (step.availableDocTypes) {
-                                    this.docTypes = data;
+                                    this.docTypes = data2;
                                     this.docTypes = this.docTypes.filter(r => availableDocsArr.includes(r.category));
                                 }
                             },
@@ -691,7 +694,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
             this.requestService.saveClinicalTrailRequest(formModel).subscribe(data => {
                 this.loadingService.hide();
-                //this.router.navigate(['dashboard/module']);
+                this.errorHandlerService.showSuccess('Datele salvate cu success');
             }, error => {
                 this.loadingService.hide();
                 console.log(error);
@@ -702,7 +705,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
 
     dysplayInvalidControl(form: FormGroup) {
         const ctFormControls = form['controls'];
-        for (const control in ctFormControls) {
+        for (const control of Object.keys(ctFormControls)) {
             ctFormControls[control].markAsTouched();
             ctFormControls[control].markAsDirty();
         }
@@ -959,6 +962,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         this.subscriptions.forEach(subscription => {
             subscription.unsubscribe();
         });
+        this.navbarTitleService.showTitleMsg('');
     }
 
 }

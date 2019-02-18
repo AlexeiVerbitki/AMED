@@ -8,6 +8,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {TaskService} from '../../../shared/service/task.service';
 import {AdministrationService} from '../../../shared/service/administration.service';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 
 @Component({
     selector: 'app-b-intrerupere',
@@ -28,10 +30,13 @@ export class BIntrerupereComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private loadingService: LoaderService,
                 private taskService: TaskService,
-                private administrationService: AdministrationService) {
+                private administrationService: AdministrationService,
+                private navbarTitleService: NavbarTitleService,
+                private errorHandlerService: SuccessOrErrorHandlerService) {
     }
 
     ngOnInit() {
+        this.navbarTitleService.showTitleMsg('Intrerupere amendament la studiu clinic');
         this.cancelClinicalTrailAmendmentForm = this.fb.group({
             'id': [''],
             'requestNumber': [{value: '', disabled: true}],
@@ -81,13 +86,13 @@ export class BIntrerupereComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
             this.taskService.getRequestStepByIdAndCode(data.type.id, data.currentStep).subscribe(step => {
                     this.subscriptions.push(
-                        this.administrationService.getAllDocTypes().subscribe(data => {
+                        this.administrationService.getAllDocTypes().subscribe(data2 => {
                                 let availableDocsArr = [];
                                 step.availableDocTypes ? availableDocsArr = step.availableDocTypes.split(',') : availableDocsArr = [];
                                 let outputDocsArr = [];
                                 step.outputDocTypes ? outputDocsArr = step.outputDocTypes.split(',') : outputDocsArr = [];
                                 if (step.availableDocTypes) {
-                                    this.docTypes = data;
+                                    this.docTypes = data2;
                                     this.docTypes = this.docTypes.filter(r => availableDocsArr.includes(r.category));
                                     this.outDocuments = this.outDocuments.filter(r => outputDocsArr.includes(r.docType.category));
                                 }
@@ -101,13 +106,21 @@ export class BIntrerupereComponent implements OnInit, OnDestroy {
         );
     }
 
+    dysplayInvalidControl(form: FormGroup) {
+        const ctFormControls = form['controls'];
+        for (const control of Object.keys(ctFormControls)) {
+            ctFormControls[control].markAsTouched();
+            ctFormControls[control].markAsDirty();
+        }
+    }
+
     doSubmit() {
         const formModel = this.cancelClinicalTrailAmendmentForm.getRawValue();
         console.log('Submit data', formModel);
 
         if (this.cancelClinicalTrailAmendmentForm.invalid) {
-            alert('Invalid Form!!');
-            console.log('Not submitted data', formModel);
+            this.dysplayInvalidControl(this.cancelClinicalTrailAmendmentForm as FormGroup);
+            this.errorHandlerService.showError('Motivul intreruperii este invalid');
             return;
         }
 
@@ -141,6 +154,7 @@ export class BIntrerupereComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.subscriptions.forEach(subscriotion => subscriotion.unsubscribe());
+        this.navbarTitleService.showTitleMsg('');
     }
 
 }

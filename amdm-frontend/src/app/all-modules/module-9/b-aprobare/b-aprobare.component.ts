@@ -12,6 +12,7 @@ import {LoaderService} from '../../../shared/service/loader.service';
 import {AuthService} from '../../../shared/service/authetication.service';
 import {DocumentService} from '../../../shared/service/document.service';
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 
 @Component({
     selector: 'app-b-aprobare',
@@ -38,7 +39,8 @@ export class BAprobareComponent implements OnInit, OnDestroy {
                 private router: Router,
                 public dialogConfirmation: MatDialog,
                 private documentService: DocumentService,
-                private errorHandlerService: SuccessOrErrorHandlerService) {
+                private errorHandlerService: SuccessOrErrorHandlerService,
+                private navbarTitleService: NavbarTitleService) {
     }
 
     ngOnInit() {
@@ -57,6 +59,7 @@ export class BAprobareComponent implements OnInit, OnDestroy {
             'outputDocuments': [],
             'clinicalTrails': [],
             'clinicalTrailAmendment': [],
+            'registrationRequestMandatedContacts': [],
             'status': [undefined, Validators.required],
         });
 
@@ -72,13 +75,13 @@ export class BAprobareComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
             this.taskService.getRequestStepByIdAndCode(data.type.id, data.currentStep).subscribe(step => {
                     this.subscriptions.push(
-                        this.administrationService.getAllDocTypes().subscribe(data => {
+                        this.administrationService.getAllDocTypes().subscribe(data2 => {
                                 let availableDocsArr = [];
                                 step.availableDocTypes ? availableDocsArr = step.availableDocTypes.split(',') : availableDocsArr = [];
                                 let outputDocsArr = [];
                                 step.outputDocTypes ? outputDocsArr = step.outputDocTypes.split(',') : outputDocsArr = [];
                                 if (step.availableDocTypes) {
-                                    this.docTypes = data;
+                                    this.docTypes = data2;
                                     this.docTypes = this.docTypes.filter(r => availableDocsArr.includes(r.category));
                                     this.outDocuments = this.outDocuments.filter(r => outputDocsArr.includes(r.docType.category));
                                 }
@@ -93,6 +96,7 @@ export class BAprobareComponent implements OnInit, OnDestroy {
     }
 
     initPage() {
+        this.navbarTitleService.showTitleMsg('Aprobare amendament la studiu clinic');
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
             this.subscriptions.push(this.requestService.getClinicalTrailAmendmentRequest(params['id']).subscribe(data => {
                     console.log('clinicalTrailsData', data);
@@ -105,6 +109,7 @@ export class BAprobareComponent implements OnInit, OnDestroy {
                     this.approveClinicalTrailAmendForm.get('typeCode').setValue(data.type.code);
                     this.approveClinicalTrailAmendForm.get('initiator').setValue(data.initiator);
                     this.approveClinicalTrailAmendForm.get('currentStep').setValue(data.currentStep);
+                    this.approveClinicalTrailAmendForm.get('registrationRequestMandatedContacts').setValue(data.registrationRequestMandatedContacts);
 
                     data.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
                     this.approveClinicalTrailAmendForm.get('requestHistories').setValue(data.requestHistories);
@@ -115,8 +120,10 @@ export class BAprobareComponent implements OnInit, OnDestroy {
                     this.amendmentIndex = data.clinicalTrails.clinicTrialAmendEntities.indexOf(findAmendment);
 
                     this.clinicalTrailAmendmentForm.get('comissionNr').setValue(findAmendment.comissionNr);
-                    this.clinicalTrailAmendmentForm.get('comissionDate').setValue(findAmendment.comissionDate ? new Date(findAmendment.comissionDate) : findAmendment.comissionDate);
-                    this.clinicalTrailAmendmentForm.get('amendCode').setValue(findAmendment.amendCode ? findAmendment.amendCode.substring(findAmendment.amendCode.lastIndexOf('-') + 1, findAmendment.amendCode.length) : '');
+                    this.clinicalTrailAmendmentForm.get('comissionDate')
+                        .setValue(findAmendment.comissionDate ? new Date(findAmendment.comissionDate) : findAmendment.comissionDate);
+                    this.clinicalTrailAmendmentForm.get('amendCode')
+                        .setValue(findAmendment.amendCode ? findAmendment.amendCode.substring(findAmendment.amendCode.lastIndexOf('-') + 1, findAmendment.amendCode.length) : '');
 
                     // findAmendment.comissionDate = '';
                     // findAmendment.comissionNr = '';
@@ -138,7 +145,7 @@ export class BAprobareComponent implements OnInit, OnDestroy {
 
     save() {
         const formModel = this.approveClinicalTrailAmendForm.getRawValue();
-        // this.loadingService.show();
+        this.loadingService.show();
         formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex].comissionDate = this.clinicalTrailAmendmentForm.get('comissionDate').value;
         formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex].comissionNr = this.clinicalTrailAmendmentForm.get('comissionNr').value;
         const codeBuilder = this.clinicalTrailAmendmentForm.get('amendCode').value == '' ?
@@ -152,15 +159,10 @@ export class BAprobareComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(
             this.requestService.saveClinicalTrailAmendmentRequest(formModel).subscribe(data => {
-                // console.log('data',data);
-                console.log('data', data.body);
-
                 this.docs = data.body.documents;
                 this.outDocuments = data.body.outputDocuments;
-
-                console.log('this.docs', this.docs);
-
                 this.loadingService.hide();
+                this.errorHandlerService.showSuccess('Datele salvate cu success');
             }, error => {
                 this.loadingService.hide();
                 console.log(error);
@@ -170,7 +172,7 @@ export class BAprobareComponent implements OnInit, OnDestroy {
 
     dysplayInvalidControl(form: FormGroup) {
         const ctFormControls = form['controls'];
-        for (const control in ctFormControls) {
+        for (const control of Object.keys(ctFormControls)) {
             ctFormControls[control].markAsTouched();
             ctFormControls[control].markAsDirty();
         }
@@ -299,6 +301,7 @@ export class BAprobareComponent implements OnInit, OnDestroy {
         this.subscriptions.forEach(subscription => {
             subscription.unsubscribe();
         });
+        this.navbarTitleService.showTitleMsg('');
     }
 
 }

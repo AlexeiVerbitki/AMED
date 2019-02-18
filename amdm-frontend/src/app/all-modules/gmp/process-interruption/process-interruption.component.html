@@ -1,3 +1,87 @@
-<p>
-  process-interruption works!
-</p>
+<div class="container-fluid sky z-depth-2">
+  <form [formGroup]='iForm'>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="md-form">
+          <input id="nrCererii" mdbInputDirective type="text" class="form-control"
+                 formControlName="requestNumber" [attr.disabled]="true">
+          <label for="nrCererii">Nr. cererii</label>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <app-document [documents]="documents" [nrCerere]="iForm.get('requestNumber').value" [dcTypes]="docTypes" (documentModified)="documentModified($event)"></app-document>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="compSolicitant" mdbInputDirective type="text" class="form-control" formControlName="companyValue" [attr.disabled]="true">
+          <label for="compSolicitant">Compania solicitant</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="motiv" mdbInputDirective type="text" class="form-control" formControlName="motiv">
+          <label for="motiv">Motiv
+            <span class="text-danger">*</span>
+          </label>
+        </div>
+        <div *ngIf="formSubmitted && iForm.get('motiv').invalid">
+          <small class="text-muted"><strong class="text-danger">Motivul trebuie selectat</strong></small>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="gradient-card-header bg-sidebar border-gradient">
+      <div class="container-fluid">
+        <!-- Title -->
+        <div class="row">
+          <div class="col-6">
+            <div class="card-header-title white-text">Documente de iesire</div>
+          </div>
+          <div class="col-6">
+            <div class="position-button">
+              <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="requestNL()" [disabled]="isDisabledNLButton()">Scrisoare de informare</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <table class="table table-widths-lg text-center">
+      <thead class="bg-sidebar white-text">
+      <tr>
+        <th scope="col">Denumirea</th>
+        <th scope="col">Numar</th>
+        <th scope="col">Status document</th>
+        <th>Actiuni</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let a of outputDocuments">
+        <th scope="row" *ngIf="a.docType.category=='NL' || a.docType.category=='OI'">{{ a.name }}</th>
+        <th scope="row" *ngIf="a.docType.category=='NL' || a.docType.category=='OI'">{{ a.number }}</th>
+        <th scope="row" *ngIf="a.docType.category=='NL' || a.docType.category=='OI'">{{ a.status }}</th>
+        <td *ngIf="a.docType.category=='NL' || a.docType.category=='OI'">
+          <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)"><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
+          <button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && a.docType.category=='NL'" class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div *ngIf="outputDocuments.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+    <hr>
+    <div class="text-center">
+      <button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="back()">Inapoi</button>
+      <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interrupt()">Intrerupe proces</button>
+    </div>
+  </form>
+</div>

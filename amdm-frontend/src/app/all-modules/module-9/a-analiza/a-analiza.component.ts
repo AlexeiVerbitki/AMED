@@ -18,6 +18,7 @@ import {MedInstInvestigatorsDialogComponent} from '../dialog/med-inst-investigat
 import {ActiveSubstanceDialogComponent} from '../../../dialog/active-substance-dialog/active-substance-dialog.component';
 import {AddCtExpertComponent} from '../dialog/add-ct-expert/add-ct-expert.component';
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 
 @Component({
     selector: 'app-a-analiza',
@@ -94,11 +95,13 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private taskService: TaskService,
                 private loadingService: LoaderService,
-                private errorHandlerService: SuccessOrErrorHandlerService) {
+                private errorHandlerService: SuccessOrErrorHandlerService,
+                private navbarTitleService: NavbarTitleService) {
 
     }
 
     ngOnInit() {
+        this.navbarTitleService.showTitleMsg('Analiza dosarului');
         this.analyzeClinicalTrailForm = this.fb.group({
             'id': [''],
             'requestNumber': [{value: '', disabled: true}],
@@ -237,12 +240,12 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
     disableEnablePage() {
         this.isWaitingStep.asObservable().subscribe(value => {
             const clinicalTrailFGroup = <FormArray>this.analyzeClinicalTrailForm.get('clinicalTrails');
-            for (const control in clinicalTrailFGroup.controls) {
+            for (const control of Object.keys(clinicalTrailFGroup.controls)) {
                 value ? clinicalTrailFGroup.controls[control].disable() : clinicalTrailFGroup.controls[control].enable();
             }
 
 
-            for (const control in  this.addInvestigatorForm.controls) {
+            for (const control of Object.keys(this.addInvestigatorForm.controls)) {
                 value ? this.addInvestigatorForm.controls[control].disable() : this.addInvestigatorForm.controls[control].enable();
             }
         });
@@ -479,9 +482,9 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                             requestId: this.analyzeClinicalTrailForm.get('id').value
                         };
 
-                        this.documentService.addSLC(dataToSubmit).subscribe(data => {
-                            console.log('outDocument', data);
-                            this.outDocuments.push(data.body);
+                        this.documentService.addSLC(dataToSubmit).subscribe(data2 => {
+                            console.log('outDocument', data2);
+                            this.outDocuments.push(data2.body);
                             console.log('outDocuments', this.outDocuments);
 
                         });
@@ -567,7 +570,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
             this.requestService.saveClinicalTrailRequest(formModel).subscribe(data => {
                 this.loadingService.hide();
-                // this.router.navigate(['dashboard/module']);
+                this.errorHandlerService.showSuccess('Datele salvate cu success');
             }, error => {
                 this.loadingService.hide();
                 console.log(error);
@@ -577,7 +580,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
     dysplayInvalidControl(form: FormGroup) {
         const ctFormControls = form['controls'];
-        for (const control in ctFormControls) {
+        for (const control of Object.keys(ctFormControls)) {
             ctFormControls[control].markAsTouched();
             ctFormControls[control].markAsDirty();
         }
@@ -869,6 +872,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.subscriptions.forEach(subscriotion => subscriotion.unsubscribe());
+        this.navbarTitleService.showTitleMsg('');
     }
 
 }

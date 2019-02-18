@@ -1,6 +1,4 @@
 <div class="container-fluid sky z-depth-2">
-    <h3 class="text-center my-3 font-weight-bold">Înregistrarea studiilor clinice</h3>
-    <hr>
 
     <form [formGroup]="registerClinicalTrailForm" (ngSubmit)="onSubmit()" #f="ngForm">
         <div class="row">
@@ -42,7 +40,7 @@
         </div>
 
         <div class="row" formGroupName="registrationRequestMandatedContacts">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="md-form">
                     <input id="persResDepCereriiFirstname" mdbInputDirective type="text" class="form-control"
                            formControlName="mandatedFirstname">
@@ -50,7 +48,7 @@
                             class="text-danger">*</span></label>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="md-form">
                     <input id="persResDepCereriiLastname" mdbInputDirective type="text" class="form-control"
                            formControlName="mandatedLastname">
@@ -58,16 +56,23 @@
                             class="text-danger">*</span></label>
                 </div>
             </div>
-
-            <div class="col-md-4">
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input id="idnp" mdbInputDirective type="text" maxlength="13" class="form-control"
+                           formControlName="idnp" (keypress)='allowOnlyNumbers($event)'>
+                    <label for="idnp">IDNP-ul persoanei responsabile<span class="text-danger">*</span></label>
+                </div>
+            </div>
+            <div class="col-md-3">
                 <div class="md-form">
                     <input id="telefonContact" mdbInputDirective type="text" class="form-control"
-                           formControlName="phoneNumber" maxlength="9"
-                    >
+                           formControlName="phoneNumber" maxlength="9">
                     <label for="telefonContact">Telefon de contact</label>
                 </div>
             </div>
-            <div class="col-md-4">
+
+
+            <div class="col-md-3">
                 <div class="md-form">
                     <input id="emailContact" mdbInputDirective type="email" class="form-control"
                            formControlName="email">
@@ -75,14 +80,14 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="md-form">
                     <input id="nrProcurii1" mdbInputDirective type="text" class="form-control"
                            formControlName="requestMandateNr">
                     <label for="nrProcurii1">Numarul procurii</label>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input id="dataProcurii1" matInput [matDatepicker]="picker3"
@@ -95,8 +100,8 @@
         </div>
 
         <!--<div>-->
-            <!--<small class="text-muted"><strong class="text-danger">{{registerClinicalTrailForm.value | json}}</strong>-->
-            <!--</small>-->
+        <!--<small class="text-muted"><strong class="text-danger">{{registerClinicalTrailForm.value | json}}</strong>-->
+        <!--</small>-->
         <!--</div>-->
 
         <div class="my-3">
@@ -184,9 +189,9 @@
                             </mat-radio-button>
                         </div>
                         <!--<div class="col-md-12">-->
-                            <!--<mat-radio-button name="prop4" value="CLISP">Înregistrarea informației privind siguranța-->
-                                <!--produsului de investigație clinică-->
-                            <!--</mat-radio-button>-->
+                        <!--<mat-radio-button name="prop4" value="CLISP">Înregistrarea informației privind siguranța-->
+                        <!--produsului de investigație clinică-->
+                        <!--</mat-radio-button>-->
                         <!--</div>-->
                     </mat-radio-group>
                 </div>

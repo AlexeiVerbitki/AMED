@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {LoaderService} from '../shared/service/loader.service';
@@ -12,7 +12,7 @@ import {AdministrationService} from '../shared/service/administration.service';
     templateUrl: './audit.component.html',
     styleUrls: ['./audit.component.css']
 })
-export class AuditComponent implements OnInit, OnDestroy {
+export class AuditComponent implements OnInit, OnDestroy, AfterViewInit {
 
     private subscriptions: Subscription[] = [];
 
@@ -53,7 +53,7 @@ export class AuditComponent implements OnInit, OnDestroy {
             this.categories = data;
         }));
 
-        this.subscriptions.push(this.administrationService.getAllScrUsers().subscribe(data => {
+        this.subscriptions.push(this.administrationService.getAllValidUsers().subscribe(data => {
             this.users = data;
         }));
 
@@ -63,7 +63,7 @@ export class AuditComponent implements OnInit, OnDestroy {
 
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
-        this.dataSource.paginator._intl.itemsPerPageLabel = 'Licente per pagina: ';
+        this.dataSource.paginator._intl.itemsPerPageLabel = 'Rinduri per pagina: ';
         this.dataSource.sort = this.sort;
     }
 
@@ -89,14 +89,14 @@ export class AuditComponent implements OnInit, OnDestroy {
             {
                 name: 'DELETE', description: 'Stergere'
             },
-            );
+        );
     }
 
     onChanges(): void {
         this.rForm.get('category').valueChanges.subscribe(val => {
             if (val) {
                 this.subcategories = val.subcategories;
-                this.subcategories.find( a => a.name === 'test');
+                this.subcategories.find(a => a.name === 'test');
             } else {
                 this.subcategories = [];
                 this.rForm.get('subcategory').setValue(null);

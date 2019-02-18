@@ -34,4 +34,8 @@ export class TaskService {
     getRequestStepByCodeAndStep(code: string, step: string): Observable<any> {
         return this.http.get('/api/tasks/request-step-by-code-and-step', {params: {code: code, step : step}});
     }
+
+    getRegisterCatalogCodes(): Observable<any> {
+        return this.http.get('/api/tasks/request-register-catalog-codes');
+    }
 }

@@ -38,55 +38,46 @@
         <div class="example-container">
             <table mat-table [dataSource]="dataSource" matSort>
                 <ng-container matColumnDef="requestNumber">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Numar cerere
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="width__homepage__td">
-                        <a title="Deschide proces" (click)="navigateToUrl(element)" *ngIf="isLink(element)" mdbTooltip="{{element.requestNumber}}"
-                            placement="top">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Numar cerere</th>
+                    <td mat-cell *matCellDef="let element">
+                        <a title="Deschide proces" (click)="navigateToUrl(element)" *ngIf="isLink(element)">
                             {{element.requestNumber}}
                         </a>
-                        <span class="homepage__name" title="Deschide proces" *ngIf="!isLink(element)" mdbTooltip="{{element.requestNumber}}"
-                            placement="top">
+                        <i class="font-weight-bold" title="Deschide proces" *ngIf="!isLink(element)">
                             {{element.requestNumber}}
-                        </span>
+                        </i>
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="processName">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Nume cerere
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="width__homepage__td"><span mdbTooltip="{{element.processName}}"
-                            placement="top">{{element.processName}}</span></td>
-                </ng-container>
-
-                <ng-container matColumnDef="requestType">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Tip cerere</th>
-                    <td mat-cell *matCellDef="let element" class="width__homepage__td"><span mdbTooltip="{{element.requestType}}" placement="top">{{element.requestType}}</span></td>
-                </ng-container>
-
-                <ng-container matColumnDef="username">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Utilizator</th>
-                    <td mat-cell *matCellDef="let element" class="width__homepage__td"><span mdbTooltip="{{element.username}}" placement="top">{{element.username}}</span></td>
-                </ng-container>
-
                 <ng-container matColumnDef="startDate">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Data
-                        inregistrare</th>
-                    <td mat-cell *matCellDef="let element" class="width__homepage__td"><span mdbTooltip="{{element.startDate | date:
-                        'dd/MM/yyyy'}}" placement="top">{{element.startDate | date:
-                            'dd/MM/yyyy'}}</span></td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Data inceperii</th>
+                    <td mat-cell *matCellDef="let element"> {{element.startDate | date: 'dd/MM/yyyy'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="company">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Compania solicitant</th>
+                    <td mat-cell *matCellDef="let element"> {{element.company}} </td>
+                </ng-container>
+
+
+                <ng-container matColumnDef="deponent">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Depunator</th>
+                    <td mat-cell *matCellDef="let element"> {{element.mandatedContact}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="subject">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Subiect</th>
+                    <td mat-cell *matCellDef="let element"> {{element.username}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="endDate">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Data inchidere</th>
-                    <td mat-cell *matCellDef="let element" class="width__homepage__td"><span mdbTooltip="{{element.endDate | date:
-                        'dd/MM/yyyy'}}" placement="top">{{element.endDate | date:
-                            'dd/MM/yyyy'}}</span></td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Data finisare</th>
+                    <td mat-cell *matCellDef="let element"> {{element.endDate | date: 'dd/MM/yyyy'}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="step">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Etapa</th>
-                    <td mat-cell *matCellDef="let element" class="width__homepage__td"><span mdbTooltip="{{element.step}}" placement="top">{{element.step}}</span></td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Pas</th>
+                    <td mat-cell *matCellDef="let element"> {{element.step}} </td>
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>

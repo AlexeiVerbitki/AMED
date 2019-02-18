@@ -138,15 +138,15 @@ export class AdministrationService {
     }
 
     getCurrencyByPeriod(day: Date): Observable<any> {
-        let params: HttpParams;
+        // let params: HttpParams;
         let date: any;
 
         if (day !== undefined) {
-            let dayOfMonth = day.getDate();
-            let month = day.getMonth()+1;
-            let year = day.getFullYear() ;
+            const dayOfMonth = day.getDate();
+            const month = day.getMonth() + 1;
+            const year = day.getFullYear();
 
-            date = year + '-' + month +  '-' + dayOfMonth ;
+            date = year + '-' + month + '-' + dayOfMonth;
             // date =  day.toISOString();
         }
         // params = params.set("from", {params : day});
@@ -166,6 +166,34 @@ export class AdministrationService {
         return this.http.get('/api/administration/all-sterile-products', {});
     }
 
+    getAllNesterileProducts(): Observable<any> {
+        return this.http.get('/api/administration/all-nesterile-products', {});
+    }
+
+    getAllBiologicalMedicines(): Observable<any> {
+        return this.http.get('/api/administration/all-biological-medicines', {});
+    }
+
+    getAllGMPManufacures(): Observable<any> {
+        return this.http.get('/api/administration/all-gmp-manufactures', {});
+    }
+
+    getAllSterilizations(): Observable<any> {
+        return this.http.get('/api/administration/all-sterilizations', {});
+    }
+
+    getAllPrimaryPackaging(): Observable<any> {
+        return this.http.get('/api/administration/all-primary-packaging', {});
+    }
+
+    getAllSecondaryPackaging(): Observable<any> {
+        return this.http.get('/api/administration/all-secondary-packaging', {});
+    }
+
+    getAllTestsForQualityControl(): Observable<any> {
+        return this.http.get('/api/administration/all-tests-for-quality-control', {});
+    }
+
     getAllManufactures(): Observable<any> {
         return this.http.get('/api/administration/all-manufactures', {});
     }
@@ -177,18 +205,15 @@ export class AdministrationService {
         return this.http.get<any[]>('/api/administration/search-manufactures-by-name', {params: Params});
     }
 
-    getAllInternationalNames(): Observable<any> {
-        return this.http.get('/api/administration/all-international-names', {});
+    getManufacturersByIDNO(idno: string): Observable<any> {
+        let Params = new HttpParams();
+        Params = Params.set('idno', idno);
+
+        return this.http.get<any[]>('/api/administration/search-manufactures-by-idno', {params: Params});
     }
 
-    sendEmail(title: string, content: string, mailAddress: string): Observable<any> {
-        return this.http.get('/api/administration/send-email', {
-            params: {
-                title: title,
-                content: content,
-                mailAddress: mailAddress
-            }
-        });
+    getAllInternationalNames(): Observable<any> {
+        return this.http.get('/api/administration/all-international-names', {});
     }
 
     getAllEmployees(): Observable<any> {
@@ -249,10 +274,6 @@ export class AdministrationService {
 
     getClinicalTrailsPhases(): Observable<any> {
         return this.http.get('/api/administration/all-clinical-trail-phases', {});
-    }
-
-    getAllScrUsers(): Observable<any> {
-        return this.http.get('/api/administration/all-scr-users');
     }
 
     getAllCustomsCodesByDescription(partialCode: string): Observable<any> {
@@ -341,5 +362,17 @@ export class AdministrationService {
 
     validIDNP(idnp: string): Observable<any> {
         return this.http.get('/api/validate-idnp', {params: {idnp: idnp}});
+    }
+
+    getAllValidUsersWithRoles(): Observable<any> {
+        return this.http.get('/api/administration/get-all-valid-users-with-roles');
+    }
+
+    getAllValidUsers(): Observable<any> {
+        return this.http.get('/api/administration/get-all-valid-users');
+    }
+
+    synchronizeUsers(): Observable<any> {
+        return this.http.get('/api/administration/synchronize-all-users', {responseType: 'text'});
     }
 }

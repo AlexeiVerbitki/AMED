@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {RequestService} from '../../../shared/service/request.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -28,7 +28,7 @@ import {MedicamentService} from '../../../shared/service/medicament.service';
     templateUrl: './evaluare-primara.component.html',
     styleUrls: ['./evaluare-primara.component.css']
 })
-export class EvaluarePrimaraComponent implements OnInit {
+export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
     eForm: FormGroup;
     documents: Document[] = [];
     instructions: any[] = [];
@@ -350,7 +350,8 @@ export class EvaluarePrimaraComponent implements OnInit {
             this.administrationService.getAllPharamceuticalFormTypes().subscribe(data => {
                     this.pharmaceuticalFormTypes = data;
                     if (dataDB.medicaments && dataDB.medicaments.length != 0 && dataDB.medicaments[0].pharmaceuticalForm) {
-                        this.eForm.get('medicament.pharmaceuticalFormType').setValue(this.pharmaceuticalFormTypes.find(r => r.id === dataDB.medicaments[0].pharmaceuticalForm.type.id));
+                        this.eForm.get('medicament.pharmaceuticalFormType')
+                            .setValue(this.pharmaceuticalFormTypes.find(r => r.id === dataDB.medicaments[0].pharmaceuticalForm.type.id));
                     }
                 },
                 error => console.log(error)
@@ -361,7 +362,8 @@ export class EvaluarePrimaraComponent implements OnInit {
             this.administrationService.getAllInternationalNames().subscribe(data => {
                     this.internationalNames = data;
                     if (dataDB.medicaments && dataDB.medicaments.length != 0 && dataDB.medicaments[0].internationalMedicamentName) {
-                        this.eForm.get('medicament.internationalMedicamentName').setValue(this.internationalNames.find(r => r.id === dataDB.medicaments[0].internationalMedicamentName.id));
+                        this.eForm.get('medicament.internationalMedicamentName')
+                            .setValue(this.internationalNames.find(r => r.id === dataDB.medicaments[0].internationalMedicamentName.id));
                     }
                 },
                 error => console.log(error)
@@ -385,7 +387,7 @@ export class EvaluarePrimaraComponent implements OnInit {
 
         this.subscriptions.push(
             this.administrationService.getAllManufactures().subscribe(data => {
-                    this.manufactureAuthorizations = data.filter(r => r.authorizationHolder == 1);
+                    this.manufactureAuthorizations = data;
                     if (dataDB.medicaments && dataDB.medicaments.length != 0 && dataDB.medicaments[0].authorizationHolder) {
                         this.eForm.get('medicament.authorizationHolder').setValue(this.manufactureAuthorizations.find(r => r.id === dataDB.medicaments[0].authorizationHolder.id));
                     }
@@ -479,8 +481,10 @@ export class EvaluarePrimaraComponent implements OnInit {
             this.administrationService.getAllPharamceuticalFormsByTypeId(this.eForm.get('medicament.pharmaceuticalFormType').value.id).subscribe(data => {
                     this.eForm.get('medicament.pharmaceuticalForm').setValue(null);
                     this.pharmaceuticalForms = data;
-                    if (this.initialData.medicaments && this.initialData.medicaments.length != 0 && this.initialData.medicaments[0] && this.initialData.medicaments[0].pharmaceuticalForm) {
-                        this.eForm.get('medicament.pharmaceuticalForm').setValue(this.pharmaceuticalForms.find(r => r.id === this.initialData.medicaments[0].pharmaceuticalForm.id));
+                    if (this.initialData.medicaments && this.initialData.medicaments.length != 0
+                        && this.initialData.medicaments[0] && this.initialData.medicaments[0].pharmaceuticalForm) {
+                        this.eForm.get('medicament.pharmaceuticalForm')
+                            .setValue(this.pharmaceuticalForms.find(r => r.id === this.initialData.medicaments[0].pharmaceuticalForm.id));
                     }
                 },
                 error => console.log(error)
@@ -923,21 +927,9 @@ export class EvaluarePrimaraComponent implements OnInit {
                 signerName: document.signerName
             };
 
-            let observable: Observable<any> = null;
-            observable = this.documentService.viewRequestNew(modelToSubmit);
+            let observable = this.documentService.viewRequestNew(modelToSubmit);
 
             this.subscriptions.push(observable.subscribe(data => {
-                    const file = new Blob([data], {type: 'application/pdf'});
-                    const fileURL = URL.createObjectURL(file);
-                    window.open(fileURL);
-                    this.loadingService.hide();
-                }, error => {
-                    this.loadingService.hide();
-                }
-                )
-            );
-        } else {
-            this.subscriptions.push(this.documentService.viewDD(document.number).subscribe(data => {
                     const file = new Blob([data], {type: 'application/pdf'});
                     const fileURL = URL.createObjectURL(file);
                     window.open(fileURL);

@@ -82,7 +82,7 @@ export class RegDocComponent implements OnInit, OnDestroy, CanModuleDeactivate {
             )
         );
 
-        this.subscriptions.push(this.administrationService.getAllScrUsers().subscribe(data => {
+        this.subscriptions.push(this.administrationService.getAllValidUsers().subscribe(data => {
                 this.recipients = data;
             },
             error => console.log(error)

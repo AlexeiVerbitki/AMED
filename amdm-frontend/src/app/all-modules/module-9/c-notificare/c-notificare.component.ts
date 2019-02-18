@@ -198,7 +198,8 @@ export class CNotificareComponent implements OnInit, OnDestroy {
                 console.log('notificationTypeChange', value);
                 console.log('reportSaeSusarEntity', this.addNotificationTypesForm.get('reportSaeSusarEntity'));
                 if (value && value.code == 'DSUR') {
-                    this.addNotificationTypesForm.get('reportDsurEntity.drugName').setValue(this.clinicTrailNotifForm.value.clinicalTrails.medicament.name + ' ' + this.clinicTrailNotifForm.value.clinicalTrails.medicament.dose);
+                    this.addNotificationTypesForm.get('reportDsurEntity.drugName')
+                        .setValue(this.clinicTrailNotifForm.value.clinicalTrails.medicament.name + ' ' + this.clinicTrailNotifForm.value.clinicalTrails.medicament.dose);
                 }
             })
         );

@@ -258,6 +258,7 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
             this.annihilationService.confirmEvaluateAnnihilation(modelToSubmit).subscribe(data => {
                     // this.router.navigate(['/dashboard/module']);
+                    this.errorHandlerService.showSuccess('Datele au fost salvate');
                 }
             )
         );

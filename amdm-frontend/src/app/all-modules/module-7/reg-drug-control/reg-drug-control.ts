@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Cerere} from '../../../models/cerere';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Observable, Subject, Subscription} from 'rxjs';
@@ -13,11 +13,12 @@ import {AuthService} from '../../../shared/service/authetication.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {TaskService} from '../../../shared/service/task.service';
 import {DrugDecisionsService} from '../../../shared/service/drugs/drugdecisions.service';
+import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
 
 @Component({
     selector: 'app-reg-drug-control', templateUrl: './reg-drug-control.html', styleUrls: ['./reg-drug-control.css']
 })
-export class RegDrugControl implements OnInit {
+export class RegDrugControl implements OnInit, OnDestroy {
     documents: Document [] = [];
     requests: Cerere [] = [];
     rForm: FormGroup;
@@ -37,29 +38,48 @@ export class RegDrugControl implements OnInit {
     private subscriptions: Subscription[] = [];
     maxDate = new Date();
 
-    constructor(private fb: FormBuilder, public dialog: MatDialog, private router: Router, private administrationService: AdministrationService,
-                private requestService: RequestService, private authService: AuthService,
-                private loadingService: LoaderService, private taskService: TaskService, private drugDecisionsService: DrugDecisionsService) {
+    constructor(private fb: FormBuilder,
+                public dialog: MatDialog,
+                private router: Router,
+                private administrationService: AdministrationService,
+                private requestService: RequestService,
+                private authService: AuthService,
+                private loadingService: LoaderService,
+                private taskService: TaskService,
+                private navbarTitleService: NavbarTitleService,
+                private drugDecisionsService: DrugDecisionsService) {
 
         this.rForm = fb.group({
-            'compGet': [null, Validators.required], 'med': [null, Validators.required], 'primRep': [null, Validators.required],
+            'compGet': [null, Validators.required],
+            'med': [null, Validators.required],
+            'primRep': [null, Validators.required],
         });
         this.rForm = fb.group({
-            'data': {disabled: true, value: null}, 'requestNumber': [null], 'startDate': [new Date()], 'endDate': [''], 'currentStep': ['R'],
-            'company': [null, Validators.required], 'type': fb.group({
+            'data': {disabled: true, value: null},
+            'requestNumber': [null],
+            'startDate': [new Date()],
+            'endDate': [''],
+            'currentStep': ['R'],
+            'company': [null, Validators.required],
+            'type': fb.group({
                 'code': ['ATAC', Validators.required]
-            }), 'mandatedFirstname': [null, Validators.required], 'mandatedLastname': [null, Validators.required], 'idnp': [null],
-            'phoneNumber': [null, [Validators.maxLength(9), Validators.pattern('[0-9]+')]], 'email': [null, Validators.email],
-            'requestMandateNr': [null], 'requestMandateDate': [null]
+            }),
+            'mandatedFirstname': [null, Validators.required],
+            'mandatedLastname': [null, Validators.required],
+            'idnp': [null],
+            'phoneNumber': [null, [Validators.maxLength(9), Validators.pattern('[0-9]+')]],
+            'email': [null, Validators.email],
+            'requestMandateNr': [null],
+            'requestMandateDate': [null]
         });
     }
 
     ngOnInit() {
-
+        this.navbarTitleService.showTitleMsg('Inregistrare cerere');
         this.currentDate = new Date();
 
-        this.subscriptions.push(this.administrationService.generateDocNr().subscribe(data => {
-            this.generatedDocNrSeq = data;
+        this.subscriptions.push(this.drugDecisionsService.generateRegistrationRequestNumber().subscribe(data => {
+            this.generatedDocNrSeq = data[0];
             this.rForm.get('requestNumber').setValue(this.generatedDocNrSeq);
         }, error => console.log(error)));
 
@@ -86,7 +106,7 @@ export class RegDrugControl implements OnInit {
 
         }), flatMap(term =>
 
-            this.administrationService.getCompanyNamesAndIdnoList(term).pipe(tap(() => this.loadingCompany = false))));
+            this.administrationService.getCompanyDetailsForLicense(term).pipe(tap(() => this.loadingCompany = false))));
     }
 
     displayFn(user?: any): string | undefined {
@@ -100,9 +120,9 @@ export class RegDrugControl implements OnInit {
             return;
         }
 
-        if (this.documents.length === 0 || (this.rForm.get('company').invalid)) {
-            return;
-        }
+        // if (this.documents.length === 0 || (this.rForm.get('company').invalid)) {
+        //     return;
+        // }
 
         this.formSubmitted = false;
 
@@ -131,15 +151,17 @@ export class RegDrugControl implements OnInit {
     }
 
     setSelectedRequest() {
-
-        if (this.rForm.get('type.code').value === 'ATAC') {
+        if (this.rForm.get('type.code').value === 'ATAC' || this.rForm.get('type.code').value === 'MACPS' || this.rForm.get('type.code').value === 'DACPS') {
             this.model = 'dashboard/module/drug-control/activity-authorization/';
         } else if (this.rForm.get('type.code').value === 'ATIE') {
             this.model = 'dashboard/module/drug-control/transfer-authorization/';
-        } else if (this.rForm.get('type.code').value === 'MACPS') {
-            this.model = 'dashboard/module/drug-control/modify-authority/';
-        } else if (this.rForm.get('type.code').value === 'DACPS') {
-            this.model = 'dashboard/module/drug-control/duplicate-authority/';
         }
+    }
+
+
+
+    ngOnDestroy() {
+        this.navbarTitleService.showTitleMsg('');
+        this.subscriptions.forEach(s => s.unsubscribe());
     }
 }

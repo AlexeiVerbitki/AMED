@@ -352,7 +352,7 @@ export class ProcessInterruptionComponent implements OnInit {
     checkOutputDocumentsStatus() {
         for (const entry of this.outputDocuments) {
             const isMatch = this.documents.some(elem => {
-                return (elem.docType.category == entry.docType.category && elem.number == entry.number) ? true : false;
+                return (elem.docType.category == entry.docType.category) ? true : false;
             });
             if (isMatch) {
                 entry.status = 'Atasat';

@@ -1,3 +1,9 @@
+.med-table {
+  max-height : 300px;
+  width: 100%;
+  overflow: auto;
+}
+
 .md-forms {
   position: relative;
   margin-top: 1.5rem;

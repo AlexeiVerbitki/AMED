@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatPaginator, MatTableDataSource} from '@angular/material';
 import {FormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
@@ -9,10 +9,10 @@ import {GDPService} from '../../../shared/service/gdp.service';
     templateUrl: './inspectors-modal.component.html',
     styleUrls: ['./inspectors-modal.component.css']
 })
-export class InspectorsModalComponent implements OnInit {
+export class InspectorsModalComponent implements OnInit, AfterViewInit, OnDestroy {
     title = '';
     priceEntity: FormGroup;
-    idno: string;
+    selectedInspectors : any[];
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     dataSource = new MatTableDataSource<any>();
@@ -24,16 +24,15 @@ export class InspectorsModalComponent implements OnInit {
                 private gdpService: GDPService,
                 public dialog: MatDialog,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.idno = data.idno;
+        this.selectedInspectors = data.selectedInspectors;
     }
 
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
     }
 
-    selectRow(row) {
-        // this.dialogRef.close(row);
-        row.selected = !row.selected;
+    selectRow(elem: any, row: any) {
+        row.selected = elem.checked;
     }
 
     ngOnInit() {
@@ -41,7 +40,14 @@ export class InspectorsModalComponent implements OnInit {
             this.gdpService.getAllEmployees().subscribe(data => {
                     this.dataSource.data = data;
                     this.dataSource.data.forEach(r => {
-                        r.selected = false;
+                        let selInsp = this.selectedInspectors.find(t=>t.id==r.id);
+                        if(selInsp && selInsp.selected)
+                        {
+                            r.selected = true;
+                        }
+                        else {
+                            r.selected = false;
+                        }
                     });
                 }
             ));

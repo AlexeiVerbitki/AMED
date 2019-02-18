@@ -166,7 +166,7 @@
                                    [countries]="countries"
                                    [currencies]="currencies"
                                    [priceTypes]="priceTypes"
-                                   [baseRequestNumber]="rForm.get('requestNumber').value + '/' + (index + 1)"
+                                   [baseRequestNumber]="requests[index].requestNumber"
                                    [formSubmitted]="formSubmitted"
                                    (medicamentChange)="onMedChange($event)"
                                    [(priceDTO)]="requests[index]"></app-one-med-price>

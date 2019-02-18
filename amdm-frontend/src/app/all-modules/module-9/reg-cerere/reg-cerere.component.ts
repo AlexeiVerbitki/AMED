@@ -11,6 +11,8 @@ import {TaskService} from '../../../shared/service/task.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
+import {ClinicalTrialService} from '../../../shared/service/clinical-trial.service';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 
 enum Pages {
     CLAP = '3',
@@ -56,10 +58,13 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                 private administrationService: AdministrationService,
                 private taskService: TaskService,
                 private loadingService: LoaderService,
-                private errorHandlerService: SuccessOrErrorHandlerService,) {
+                private errorHandlerService: SuccessOrErrorHandlerService,
+                private clinicTrialService: ClinicalTrialService,
+                private navbarTitleService: NavbarTitleService) {
     }
 
     ngOnInit() {
+        this.navbarTitleService.showTitleMsg('Înregistrarea studiilor clinice');
         this.registerClinicalTrailForm = this.fb.group({
             'requestNumber': {value: null, disabled: true},
             'startDate': {value: new Date(), disabled: true},
@@ -69,7 +74,8 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             'registrationRequestMandatedContacts': this.fb.group({
                 'mandatedFirstname': [null, Validators.required],
                 'mandatedLastname': [null, Validators.required],
-                'phoneNumber': [null, [Validators.maxLength(9), Validators.pattern('[0-9]+')]],
+                'idnp': [null, Validators.required],
+                'phoneNumber': [null],
                 'email': [null, Validators.email],
                 'requestMandateNr': [null],
                 'requestMandateDate': [null]
@@ -216,8 +222,9 @@ export class RegCerereComponent implements OnInit, OnDestroy {
 
     generateDocNr() {
         this.subscriptions.push(
-            this.administrationService.generateDocNr().subscribe(data => {
-                    this.generatedDocNrSeq = data;
+            this.clinicTrialService.generateDocNr().subscribe(data => {
+                    this.generatedDocNrSeq = data[0];
+                    // console.log('sequence', data[0]);
                     this.registerClinicalTrailForm.get('requestNumber').setValue(this.generatedDocNrSeq);
                 },
                 error => console.log(error)
@@ -225,9 +232,20 @@ export class RegCerereComponent implements OnInit, OnDestroy {
         );
     }
 
+    allowOnlyNumbers(event: any) {
+        //console.log(key);
+        const pattern = /[0-9]/;
+        const inputChar = String.fromCharCode(event.charCode);
+
+        if (!pattern.test(inputChar)) {
+            // invalid character, prevent input
+            event.preventDefault();
+        }
+    }
+
     dysplayInvalidControl(form: FormGroup) {
         const ctFormControls = form['controls'];
-        for (const control in ctFormControls) {
+        for (const control of Object.keys(ctFormControls)) {
             ctFormControls[control].markAsTouched();
             ctFormControls[control].markAsDirty();
         }
@@ -236,7 +254,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
 
     onSubmit() {
         const formModel = this.registerClinicalTrailForm.getRawValue();
-        console.log('formModel', formModel)
+        console.log('formModel', formModel);
 
         if (this.registerClinicalTrailForm.invalid /*&& !this.registerClinicalTrailForm.get('flowControl').invalid*/) {
             this.dysplayInvalidControl(this.registerClinicalTrailForm);
@@ -244,6 +262,21 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             this.errorHandlerService.showError('Forma de inregistrare contine date invalide');
             return;
         }
+
+        if (formModel.registrationRequestMandatedContacts.idnp.length < 13) {
+            this.errorHandlerService.showError('IDNP-ul persoanei responsabile contine mai putin de 13 caractere');
+            return;
+        }
+        this.subscriptions.push(this.clinicTrialService.validIDNP(formModel.registrationRequestMandatedContacts.idnp).subscribe(data => {
+                console.log('validationDate', data);
+                if (!data) {
+                    this.errorHandlerService.showError('IDNP-ul persoanei responsabile este invalid');
+                    return;
+                }
+            }, error => {
+                console.log(error);
+            })
+        );
 
         if (formModel.flowControl === 'CLAP') {
             this.loadingService.show();
@@ -349,6 +382,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.subscriptions.forEach(subsription => subsription.unsubscribe());
+        this.navbarTitleService.showTitleMsg('');
     }
 
 }

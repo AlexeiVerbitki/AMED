@@ -12,11 +12,10 @@ import {RegCerereComponent} from './reg-cerere/reg-cerere.component';
 import {GDPRoutingModule} from './gdp-routing.module';
 import {EvalCerereComponent} from './eval-cerere/eval-cerere.component';
 import {PaymentModule} from '../../payment/payment.module';
-import {SelectSubsidiaryModalComponent} from './select-subsidiary-modal/select-subsidiary-modal.component';
-import {InspectorsModalComponent} from './inspectors-modal/inspectors-modal.component';
+import {AprobCerereComponent} from './aprob-cerere/aprob-cerere.component';
 
 @NgModule({
-    entryComponents: [SelectSubsidiaryModalComponent, InspectorsModalComponent],
+    entryComponents: [],
     imports: [
         CommonModule,
         GDPRoutingModule,
@@ -32,8 +31,7 @@ import {InspectorsModalComponent} from './inspectors-modal/inspectors-modal.comp
     declarations: [
         RegCerereComponent,
         EvalCerereComponent,
-        SelectSubsidiaryModalComponent,
-        InspectorsModalComponent
+        AprobCerereComponent,
     ],
     providers: [UploadFileService, RequestService],
 

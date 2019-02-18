@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 import {MatDialog} from '@angular/material';
 import {saveAs} from 'file-saver';
@@ -18,7 +18,6 @@ import {InspectorsModalComponent} from "../inspectors-modal/inspectors-modal.com
 import {DatePipe} from "@angular/common";
 import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
 import {RequestAdditionalDataDialogComponent} from "../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component";
-import {Decision} from "../../module-3/price-constants";
 
 
 @Component({
@@ -34,9 +33,6 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
     rForm: FormGroup;
     inspectorForm: FormGroup;
 
-    selectedSubsidiaries: any[] = [];
-    selectedInspectors: any[] = [];
-    inspectionPeriods: any[] = [];
     subsidiaryList: any[] = [];
 
     generatedDocNrSeq: number;
@@ -51,15 +47,27 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
 
     outputDocuments: any[] = [{
         docType: {category: 'OGD'},
-        description: 'Ordin GDP',
+        description: 'Ordin gdp',
         number: undefined,
         status: 'Nu este atasat'
     }];
 
-    decisions: any[] = [{description: 'Cerere aprobată', id: 1}, {description: 'Cerere respinsă', id: 2}, {description: 'Așteptare date adiționale', id: 3}];
+    decisions: any[] = [
+        {description: 'Cerere aprobată', id: 1, currentStep: 'A', code: 'AGDP'},
+        {description: 'Cerere respinsă', id: 2, currentStep: 'C', code: 'EGDP'},
+        {description: 'Așteptare date adiționale', id: 3, currentStep: 'I', code: 'EGDP'}];
 
     datePipe = new DatePipe('en-US');
 
+    gdpInspection = {
+        groupLeaderId: null,
+        id: null,
+        inspectors: [],
+        subsidiaries: [],
+        periods: []
+    };
+
+    get formData() { return <FormArray>this.inspectorForm.get('periods'); }
 
     constructor(private fb: FormBuilder,
                 private router: Router,
@@ -75,6 +83,7 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
         this.inspectorForm = fb.group({
             'useInspector': [false],
             'mandatedLastname': [null, Validators.required],
+            'periods': fb.array([])
         });
 
         this.rForm = fb.group({
@@ -91,6 +100,10 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
                 'mandatedFirstname': [{value: null, disabled: true}],
                 'mandatedLastname': [{value: null, disabled: true}],
                 'phoneNumber': [{value: null, disabled: true}],
+                'requestMandateDate': [{value: null, disabled: true}],
+                'requestMandateNr': [{value: null, disabled: true}],
+                'email': [{value: null, disabled: true}],
+                'id': [{value: null, disabled: true}],
             }),
             'company': fb.group({
                 'id': [],
@@ -106,9 +119,27 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
             'assignedUser': [''],
             'type':
                 fb.group({
+                    'id': [null],
+                    'description': [null],
+                    'processId': [null],
                     'code': ['EGDP', Validators.required]
                 }),
+            'requestHistories': [],
         });
+    }
+
+    createPeriod(obj): FormGroup {
+        obj = obj ? obj : {};
+        return this.fb.group({
+            fromDate: [{value: new Date(obj.fromDate), disabled: true}],
+            toDate: [{value: new Date(obj.toDate), disabled: true}],
+            gdpInspectionId: obj.gdpInspectionId,
+            id: obj.id
+        });
+    }
+
+    addPeriod(obj) {
+        (this.inspectorForm.get('periods') as FormArray).push(this.createPeriod(obj));
     }
 
     ngOnInit() {
@@ -135,20 +166,57 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
                 )
             );
 
+
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
             this.requestId = params['id'];
             this.subscriptions.push(this.gdpService.getRequest(params['id']).subscribe(data => {
                 console.log('getRequest', data);
 
+                switch (data.currentStep) {
+                    case 'E':
+                        this.rForm.get('requestStatus').setValue('Evaluare');
+                        break;
+                    case 'I':
+                        this.rForm.get('requestStatus').setValue('Suspendată');
+                        break;
+                    case 'C':
+                        this.rForm.get('requestStatus').setValue('Respinsă');
+                        break;
+                }
+
                 this.rForm.get('currentStep').setValue(data.currentStep);
-                this.rForm.get('requestStatus').setValue(data.currentStep);
                 this.rForm.get('requestNumber').setValue(data.requestNumber);
+                this.rForm.get('startDate').setValue(data.startDate);
+                this.rForm.get('initiator').setValue(data.initiator);
+                this.rForm.get('assignedUser').setValue(data.assignedUser);
+
+                this.rForm.get('id').setValue(data.id);
+                this.rForm.get('type').setValue(data.type);
+                this.rForm.get('requestHistories').setValue(data.requestHistories);
+
+                this.gdpInspection = data.gdpInspection ? data.gdpInspection : this.gdpInspection;
+                if (this.gdpInspection.inspectors.length > 0) {
+                    this.inspectorForm.get('useInspector').setValue(true);
+                }
+                if (this.gdpInspection.periods.length > 0) {
+                    this.gdpInspection.periods.forEach(p => this.addPeriod(p));
+                }
+
+                if (this.gdpInspection.subsidiaries.length > 0) {
+                    this.normalizeSubsidiaryList(this.gdpInspection.subsidiaries.map(l => l.subsidiary));
+                }
+
+                this.documents = data.documents;
 
                 if (data.registrationRequestMandatedContacts) {
                     this.rForm.get('responsiblePerson.mandatedFirstname').setValue(data.registrationRequestMandatedContacts[0].mandatedFirstname);
                     this.rForm.get('responsiblePerson.mandatedLastname').setValue(data.registrationRequestMandatedContacts[0].mandatedLastname);
                     this.rForm.get('responsiblePerson.idnp').setValue(data.registrationRequestMandatedContacts[0].idnp);
                     this.rForm.get('responsiblePerson.phoneNumber').setValue(data.registrationRequestMandatedContacts[0].phoneNumber);
+                    this.rForm.get('responsiblePerson.id').setValue(data.registrationRequestMandatedContacts[0].id);
+                    this.rForm.get('responsiblePerson.email').setValue(data.registrationRequestMandatedContacts[0].email);
+                    this.rForm.get('responsiblePerson.requestMandateNr').setValue(data.registrationRequestMandatedContacts[0].requestMandateNr);
+                    this.rForm.get('responsiblePerson.requestMandateDate').setValue(data.registrationRequestMandatedContacts[0].requestMandateDate);
                 }
 
                 if (data.company) {
@@ -167,7 +235,7 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
                                     this.rForm.get('company.dataEliberariiLic').setValue(new Date(data.releaseDate));
                                     this.rForm.get('company.dataExpirariiLic').setValue(new Date(data.expirationDate));
                                     this.subsidiaryList = data.economicAgents;
-                                    this.normalizeSubsidiaryList();
+                                    this.normalizeSubsidiaryList(this.subsidiaryList);
                                 } else {
                                     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
                                         data: {
@@ -189,8 +257,8 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
 
     }
 
-    normalizeSubsidiaryList() {
-        this.subsidiaryList.forEach(cis => {
+    normalizeSubsidiaryList(list) {
+        list.forEach(cis => {
             cis.companyType = cis.type.description;
             if (cis.locality) {
                 cis.address = cis.locality.stateName + ', ' + cis.locality.description + ', ' + cis.street;
@@ -218,15 +286,17 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
         });
     }
 
-
     selectSubsidiary() {
         const dialogRef = this.dialog.open(SelectSubsidiaryModalComponent, {
             width: '1800px',
-            data: {idno: this.rForm.get('company.idno').value, subsidiaryList: this.subsidiaryList},
+            data: {idno: this.rForm.get('company.idno').value, subsidiaryList: this.subsidiaryList, selectedList: this.gdpInspection.subsidiaries},
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.selectedSubsidiaries = result;
+                this.gdpInspection.subsidiaries = [];
+                result.forEach(r => this.gdpInspection.subsidiaries.push({
+                    subsidiary: r
+                }));
                 console.log('SelectSubsidiaryModalComponent close', result);
             }
         });
@@ -235,11 +305,12 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
     selectInspectors() {
         const dialogRef = this.dialog.open(InspectorsModalComponent, {
             width: '1800px',
-            data: {},
+            data: {selectedList: this.gdpInspection.inspectors},
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.selectedInspectors = result;
+                this.gdpInspection.groupLeaderId = null;
+                this.gdpInspection.inspectors = result;
                 console.log('InspectorsModalComponent close', result);
             }
         });
@@ -279,8 +350,6 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
 
     onDecisionChange($event) {
         console.log('onDecisionChange', $event);
-        // if ($event.id == Decision.Accept) { //accepta
-        // }
     }
 
     nextStep() {
@@ -288,14 +357,19 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
         this.formSubmitted = true;
 
         console.log(this.rForm);
-        if (!this.rForm.valid) {
+
+        let acceptWithoutDocs: Boolean = this.rForm.valid && this.rForm.get('decision').value.id == 1 && this.hasUnloadedDocs();
+        let acceptWithoutSubsidiaries: Boolean = this.rForm.valid && this.rForm.get('decision').value.id == 1 && (!this.gdpInspection.subsidiaries || this.gdpInspection.subsidiaries.length == 0);
+        let inspectorsWithoutBoss: Boolean = this.rForm.valid && this.rForm.get('decision').value.id == 1 && this.inspectorForm.get('useInspector').value && this.gdpInspection.groupLeaderId == null;
+
+        if (this.rForm.invalid || acceptWithoutDocs || acceptWithoutSubsidiaries || inspectorsWithoutBoss) {
             return;
         }
 
-        if (this.paymentTotal < 0) {
-            this.errorHandlerService.showError('Nu s-a efectuat plata.');
-            return;
-        }
+        // if (this.paymentTotal < 0) {
+        //     this.errorHandlerService.showError('Nu s-a efectuat plata.');
+        //     return;
+        // }
 
         this.formSubmitted = false;
 
@@ -306,29 +380,41 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
         const modelToSubmit: any = this.rForm.value;
         modelToSubmit.requestHistories = [{
             startDate: this.rForm.get('startDate').value, endDate: new Date(),
-            username: useranameDB, step: 'R'
+            username: useranameDB, step: this.rForm.get('currentStep').value
         }];
+
+        modelToSubmit.currentStep = this.rForm.get('decision').value.currentStep;
         modelToSubmit.initiator = useranameDB;
         modelToSubmit.assignedUser = useranameDB;
         modelToSubmit.documents = this.documents;
         modelToSubmit.endDate = new Date();
-        modelToSubmit.registrationRequestMandatedContacts = [{
-            mandatedLastname: this.rForm.get('mandatedLastname').value,
-            mandatedFirstname: this.rForm.get('mandatedFirstname').value,
-            phoneNumber: this.rForm.get('phoneNumber').value,
-            email: this.rForm.get('email').value,
-            requestMandateNr: this.rForm.get('requestMandateNr').value,
-            requestMandateDate: this.rForm.get('requestMandateDate').value,
-            id: this.rForm.get('registrationRequestMandatedContactsId').value,
-            idnp: this.rForm.get('idnp').value
-        }];
+        modelToSubmit.startDate = this.rForm.get('startDate').value;
+        modelToSubmit.registrationRequestMandatedContacts = [this.rForm.get('responsiblePerson').value];
+        var subsidiaryIds = this.gdpInspection.subsidiaries.map(s => s = {
+            id: s.id, gdpInspectionId: s.gdpInspectionId, subsidiary: {id: s.subsidiary.id}
+        });
+        this.gdpInspection.periods = (this.inspectorForm.get('periods') as FormArray).getRawValue();
+        modelToSubmit.gdpInspection = this.gdpInspection;
+        modelToSubmit.gdpInspection.subsidiaries = subsidiaryIds;
+        modelToSubmit.type.code = this.rForm.get('decision').value.code;
 
-        this.formSubmitted = true;
+        // delete modelToSubmit.gdpInspection.subsidiaries;
+
+        console.log(modelToSubmit);
 
         this.subscriptions.push(this.gdpService.addRegistrationRequestForGDP(modelToSubmit).subscribe(req => {
-                this.rForm.get('id').setValue(req.body.id);
-                if (req.body.registrationRequestMandatedContacts[0]) {
-                    this.rForm.get('registrationRequestMandatedContactsId').setValue(req.body.registrationRequestMandatedContacts[0].id);
+                this.errorHandlerService.showSuccess('Datele au fost salvate');
+                if (req.body.gdpInspection) {
+                    this.gdpInspection = req.body.gdpInspection;
+                    if (this.gdpInspection.periods.length > 0) {
+                        while ((this.inspectorForm.get('periods') as FormArray).length !== 0) {
+                            (this.inspectorForm.get('periods') as FormArray).removeAt(0)
+                        }
+                        this.gdpInspection.periods.forEach(p => this.addPeriod(p));
+                    }
+                    if (this.gdpInspection.subsidiaries.length > 0) {
+                        this.normalizeSubsidiaryList(this.gdpInspection.subsidiaries.map(l => l.subsidiary));
+                    }
                 }
 
                 this.loadingService.hide();
@@ -344,7 +430,7 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
             outDoc.status = 'Nu este atasat';
 
             for (const doc of this.documents) {
-                if (doc.docType.description == outDoc.description) {
+                if (doc.docType.category == outDoc.docType.category) {
                     outDoc.number = doc.number;
                     outDoc.status = 'Atasat';
                     break;
@@ -354,39 +440,61 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
         });
     }
 
+    hasUnloadedDocs() {
+        return this.outputDocuments.some(value => value.status == 'Nu este atasat');
+    }
 
     viewDoc(document: any) {
-        if (document.docType.category != 'LR') {
-            return;
+        this.loadingService.show();
+
+        if (document.docType.category == 'OGD') {
+            this.subscriptions.push(this.gdpService.viewGDPOrder(this.createGDPOrderDTO()).subscribe(data => {
+                const file = new Blob([data], {type: 'application/pdf'});
+                const fileURL = URL.createObjectURL(file);
+                window.open(fileURL);
+                this.loadingService.hide();
+            }, error => {
+                this.loadingService.hide();
+            }));
         }
-        // this.loadingService.show();
-        //
-        // this.subscriptions.push(this.priceService.viewAnexa3(this.createAnexa3DTO()).subscribe(data => {
-        //         const file = new Blob([data], {type: 'application/pdf'});
-        //         const fileURL = URL.createObjectURL(file);
-        //         window.open(fileURL);
-        //         this.loadingService.hide();
-        //     }, error => {
-        //         this.loadingService.hide();
-        //     }
-        //     )
-        // );
+    }
+
+    createGDPOrderDTO() {
+
+        let inspectorBoss: any = {};
+        let inspectors = '';
+        this.gdpInspection.inspectors.forEach(p => {
+            if(p.id == this.gdpInspection.groupLeaderId) {
+                inspectorBoss = p;
+            } else {
+                let fun = p.profession ? (p.profession.description ? p.profession.description : '') : '';
+                inspectors += p.name + ', ' + fun + ';|';
+            }
+        });
+
+        return {
+            nr: '_____________________',
+            date: '_____________________',
+            requestNr: this.rForm.get('requestNumber').value,
+            requestDate: this.datePipe.transform(this.rForm.get('startDate').value, 'dd/MM/yyyy'),
+            companyName: this.rForm.get('company.name').value,
+            registeredLetterNr: this.rForm.get('requestNumber').value,
+            registeredLetterDate: this.datePipe.transform(this.rForm.get('startDate').value, 'dd/MM/yyyy'),
+            expertsLeader: inspectorBoss.name,
+            expertsLeaderFuncion: inspectorBoss.profession ? inspectorBoss.profession.description : '',
+            expertsLeaderInspectorat: inspectorBoss.function,
+            inspectorsNameFunction: inspectors,
+        }
     }
 
     killInspector(i) {
-        this.selectedInspectors.splice(i, 1);
+        this.gdpInspection.inspectors.splice(i, 1);
     }
 
-    addPeriod() {
-        this.inspectionPeriods.push({from: '', to: ''});
-    }
-
-    inspectionPeriodChanged(date, i, $event) {
-        this.inspectionPeriods[i][date] = this.datePipe.transform($event.target.value, 'dd/MM/yyyy');
-    }
 
     removePeriod(i) {
-        this.inspectionPeriods.splice(i, 1);
+        (this.inspectorForm.get('periods') as FormArray).controls.splice(i, 1);
+        this.gdpInspection.periods.splice(i, 1);
     }
 
     ngOnDestroy(): void {

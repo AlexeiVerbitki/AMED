@@ -1,7 +1,4 @@
 <div class="container-fluid sky z-depth-2">
-    <h3 class="text-center my-3 font-weight-bold">Aprobare amendament la studiu clinic</h3>
-    <hr>
-
     <form [formGroup]='approveClinicalTrailAmendForm' #f="ngForm">
         <div class="row">
             <div class="col-md-4">
@@ -49,8 +46,7 @@
                 <div class="col-md-4">
                     <div class="md-form">
                         <input id="comisiaNr" mdbInputDirective type="text" class="form-control" formControlName="comissionNr">
-                        <label for="regNr">Nr. proces verbal
-                        </label>
+                        <label for="comisiaNr">Nr. proces verbal</label>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -100,10 +96,7 @@
                         <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(doc)">
                             <i class="fa fa-file fa-lg" aria-hidden="true"></i>
                         </button>
-                        <button *ngIf="doc.status=='Nu este atasat' && doc.responseReceived==false && (doc.docType.category=='RA')"
-                                class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(doc)">
-                            <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
-                        </button>
+                        
                     </td>
                 </tr>
                 </tbody>

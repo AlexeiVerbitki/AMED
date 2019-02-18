@@ -126,4 +126,8 @@ export class LicenseService {
         return this.http.get('/api/license/compare-with-previous-rev', {params : { licenseId : licenseId, reqId : reqId} });
     }
 
+    generateRegistrationRequestNumber(): Observable<any> {
+        return this.http.get('/api/license/generate-registration-request-number', {});
+    }
+
 }

@@ -1,0 +1,44 @@
+<h2 mat-dialog-title align="center">Selectati peroana responsabila pentru semnare</h2>
+<!--<mat-dialog-content class="mat-typography">-->
+<div>
+  <form [formGroup]='rForm'>
+    <div class="row">
+        <div class="col-md-12">
+          <div class="md-form-modified">
+            <ng-select id="function" name="function" [items]="functions" [loading]="loadingFunctions"
+                       bindLabel="value"
+                       placeholder="Spre semnare la *"
+                       formControlName="function">
+              <ng-template ng-option-tmp let-item="item">
+                {{item.value}} <br />
+                <small class="form-text text-muted">{{item.description}}</small>
+              </ng-template>
+            </ng-select>
+            <div *ngIf="rFormSubbmitted && rForm.get('function').hasError('required')">
+              <small class="text-muted"><strong class="text-danger">Spre semnare trebuie selectat</strong></small>
+            </div>
+          </div>
+        </div>
+      </div>
+   <!-- <br>
+    <br>
+    <br>
+    <br>
+    <br>-->
+  </form>
+<!--</mat-dialog-content>-->
+</div>
+<div class="text-center">
+  <div mat-dialog-actions>
+    <div class="w-100">
+      <button class="btn btn-dark-green-color btn-sm-bl btn-sm" (click)="ok()">Generare</button>
+      <button class="btn btn-danger btn-sm-bl btn-sm" (click)="cancel()">Inchidere</button>
+    </div>
+  </div>
+</div>
+
+<!--<mat-dialog-actions align="center">
+  <button class="btn btn-dark-green-color btn-sm-bl btn-sm" (click)="ok()">Generare</button>
+  <button class="btn btn-danger btn-sm-bl btn-sm" (click)="cancel()">Inchidere</button>
+</mat-dialog-actions>-->
+

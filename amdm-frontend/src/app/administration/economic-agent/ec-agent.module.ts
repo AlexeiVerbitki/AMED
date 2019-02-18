@@ -24,7 +24,6 @@ import {LocalityService} from '../../shared/service/locality.service';
     ],
     declarations: [
         AddEcAgentComponent,
-
         EcAgentListComponent
     ],
     providers: [LicenseService, AdministrationService, LocalityService

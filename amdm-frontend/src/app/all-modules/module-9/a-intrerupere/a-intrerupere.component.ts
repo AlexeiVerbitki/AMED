@@ -8,6 +8,8 @@ import {LoaderService} from '../../../shared/service/loader.service';
 import {AuthService} from '../../../shared/service/authetication.service';
 import {AdministrationService} from '../../../shared/service/administration.service';
 import {TaskService} from '../../../shared/service/task.service';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 
 @Component({
     selector: 'app-a-intrerupere',
@@ -28,10 +30,13 @@ export class AIntrerupereComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private loadingService: LoaderService,
                 private administrationService: AdministrationService,
-                private taskService: TaskService) {
+                private taskService: TaskService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
+                private navbarTitleService: NavbarTitleService) {
     }
 
     ngOnInit() {
+        this.navbarTitleService.showTitleMsg('Intrerupere inregistrare studiu clinic');
         this.cancelClinicalTrailForm = this.fb.group({
             'id': [''],
             'requestNumber': [{value: '', disabled: true}],
@@ -41,7 +46,7 @@ export class AIntrerupereComponent implements OnInit, OnDestroy {
             'currentStep': ['E'],
             'type': [],
             'typeCode': [''],
-            'interruptionReason': [''],
+            'interruptionReason': ['', Validators.required],
             'requestHistories': [],
             'initiator': [null],
             'assignedUser': [null],
@@ -81,13 +86,13 @@ export class AIntrerupereComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
             this.taskService.getRequestStepByIdAndCode(data.type.id, data.currentStep).subscribe(step => {
                     this.subscriptions.push(
-                        this.administrationService.getAllDocTypes().subscribe(data => {
+                        this.administrationService.getAllDocTypes().subscribe(data2 => {
                                 let availableDocsArr = [];
                                 step.availableDocTypes ? availableDocsArr = step.availableDocTypes.split(',') : availableDocsArr = [];
                                 let outputDocsArr = [];
                                 step.outputDocTypes ? outputDocsArr = step.outputDocTypes.split(',') : outputDocsArr = [];
                                 if (step.availableDocTypes) {
-                                    this.docTypes = data;
+                                    this.docTypes = data2;
                                     this.docTypes = this.docTypes.filter(r => availableDocsArr.includes(r.category));
                                     this.outDocuments = this.outDocuments.filter(r => outputDocsArr.includes(r.docType.category));
                                 }
@@ -101,13 +106,21 @@ export class AIntrerupereComponent implements OnInit, OnDestroy {
         );
     }
 
+    dysplayInvalidControl(form: FormGroup) {
+        const ctFormControls = form['controls'];
+        for (const control of Object.keys(ctFormControls)) {
+            ctFormControls[control].markAsTouched();
+            ctFormControls[control].markAsDirty();
+        }
+    }
+
     doSubmit() {
         const formModel = this.cancelClinicalTrailForm.getRawValue();
         console.log('Submit data', formModel);
 
         if (this.cancelClinicalTrailForm.invalid) {
-            alert('Invalid Form!!');
-            console.log('Not submitted data', formModel);
+            this.dysplayInvalidControl(this.cancelClinicalTrailForm as FormGroup);
+            this.errorHandlerService.showError('Motivul intreruperii este invalid');
             return;
         }
 
@@ -146,6 +159,7 @@ export class AIntrerupereComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.subscriptions.forEach(subscriotion => subscriotion.unsubscribe());
+        this.navbarTitleService.showTitleMsg('');
     }
 
 }

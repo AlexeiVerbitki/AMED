@@ -1,0 +1,13 @@
+ a {
+    color : #4285F4 !important;
+    font-weight : bold;
+     text-decoration: underline !important;
+}
+
+ a:hover {
+     color: #0d47a1 !important;
+ }
+
+ a:visited {
+     color: #4a148c !important;
+ }

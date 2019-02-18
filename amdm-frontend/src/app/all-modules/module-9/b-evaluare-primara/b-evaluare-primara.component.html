@@ -1,7 +1,4 @@
 <div class="container-fluid sky z-depth-2">
-    <h3 class="text-center my-3 font-weight-bold">{{stepName}}</h3>
-    <hr>
-
     <form [formGroup]='clinicTrailAmendForm' #f="ngForm">
         <div class="row">
             <div class="col-md-4">
@@ -471,10 +468,6 @@
                             <td>{{ substance.manufacture.country.description }}</td>
                             <td>{{ substance.manufacture.address }}</td>
                             <td>
-                                <button class="btn btn-mdb-color waves-light btn-sm waves-light"
-                                        (click)="editMedActiveSubstance(substance,i)"
-                                        mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
-                                </button>
                                 <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
                                         (click)="removeMedActiveSubstance(i)"
                                         mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
@@ -612,10 +605,6 @@
                             <td>{{ substance.manufacture.country.description }}</td>
                             <td>{{ substance.manufacture.address }}</td>
                             <td>
-                                <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
-                                        (click)="editRefProdActiveSubstance(substance,i)"
-                                        mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
-                                </button>
                                 <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
                                         (click)="removeRefProdActiveSubstance(i)"
                                         mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>

@@ -6,7 +6,6 @@ import {ModuleComponent} from './all-modules/module.component';
 import {HomepageComponent} from './homepage/homepage.component';
 import {TaskComponent} from './task/task.component';
 import {AdministrationComponent} from './administration/administration.component';
-import {HistoryComponent} from './history/history.component';
 import {MainDashboardComponent} from './dashboard/main-dashboard.component';
 import {ModuleDashboardComponent} from './dashboard/module-dashboard.component';
 import {AuthGuard} from './shared/auth-guard/auth.guard';
@@ -71,7 +70,7 @@ const routes: Routes = [
                         path: 'module/gmp',
                         loadChildren: '../app/all-modules/gmp/gmp.module#GMPModule'
                     },
-		    {
+                    {
                         path: 'module/gdp',
                         loadChildren: '../app/all-modules/gdp/gdp.module#GDPModule'
                     },
@@ -79,8 +78,7 @@ const routes: Routes = [
             },
             {path: 'task', component: TaskComponent},
             {path: 'doc-management', component: GestDocComponent},
-            {path: 'history', component: HistoryComponent},
-            {
+             {
                 path: 'management',
                 loadChildren: '../app/management/management.module#ManagementModule'
             },
@@ -104,6 +102,10 @@ const routes: Routes = [
                     {
                         path: 'admin',
                         loadChildren: '../app/administration/economic-agent/ec-agent.module#EcAgentModule'
+                    },
+                    {
+                        path: 'admin',
+                        loadChildren: '../app/administration/user-list/user-list.module#UserListModule'
                     }
                 ],
             },

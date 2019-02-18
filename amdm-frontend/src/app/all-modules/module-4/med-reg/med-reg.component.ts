@@ -1,23 +1,18 @@
 import {Cerere} from './../../../models/cerere';
-import {FormArray, Validators} from '@angular/forms';
-import {FormGroup, FormBuilder} from '@angular/forms';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Component, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {MatDialog, MatDialogConfig} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AdministrationService} from '../../../shared/service/administration.service';
-// import {debounceTime, distinctUntilChanged, filter, map, startWith, tap} from "rxjs/operators";
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
-import {saveAs} from 'file-saver';
 import {Document} from '../../../models/document';
 import {RequestService} from '../../../shared/service/request.service';
 import {Subject} from 'rxjs/index';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {AuthService} from '../../../shared/service/authetication.service';
 import {MedicamentService} from '../../../shared/service/medicament.service';
-import {Utils} from 'angular-bootstrap-md/angular-bootstrap-md/utils/utils.class';
-import {MedInstInvestigatorsDialogComponent} from '../../module-9/dialog/med-inst-investigators-dialog/med-inst-investigators-dialog.component';
 import {ImportMedDialog} from '../dialog/import-med-dialog';
 import {PriceService} from '../../../shared/service/prices.service';
 
@@ -53,13 +48,13 @@ export class MedRegComponent implements OnInit {
     exchangeCurrenciesForPeriod: any[] = [];
 
 
-    protected manufacturersRfPr: Observable<any[]>;
-    protected loadingManufacturerRfPr = false;
-    protected manufacturerInputsRfPr  = new Subject<string>();
+    manufacturersRfPr: Observable<any[]>;
+    loadingManufacturerRfPr = false;
+    manufacturerInputsRfPr  = new Subject<string>();
 
     importer: Observable<any[]>;
     loadingCompany          = false;
-    protected companyInputs = new Subject<string>();
+    companyInputs = new Subject<string>();
 
     sellerAddress: any;
     importerAddress: any;
@@ -518,7 +513,7 @@ export class MedRegComponent implements OnInit {
        this.currentCurrency =  this.evaluateImportForm.get('importAuthorizationEntity.currency').value;
     }
 
-    showConfirm(valuta: any) {
+    showConfirm() {
         let showPopUp: boolean = false;
 //         if (this.evaluateImportForm.get('importAuthorizationEntity.currency').touched) {
 //             showPopUp = true;

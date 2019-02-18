@@ -1,4 +1,4 @@
-import {Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild, } from '@angular/core';
+import {Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild,} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {Document} from '../../../models/document';
@@ -41,6 +41,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
     tabs = ['Medicamentul 1'];
     selected = new FormControl(0);
 
+    lastIndex: number = 0;
 
     /*mandatoryDocuments: any[] = [{
         description: 'Cerere',
@@ -97,6 +98,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
             'mandatedLastname': {disabled: true, value: null},
             'phoneNumber': {disabled: true, value: null},
             'email': {disabled: true, value: null},
+            'idnp': {disabled: true, value: null},
             'requestMandateNr': {disabled: true, value: null},
             'requestMandateDate': {disabled: true, value: new Date()},
             'company': fb.group({
@@ -128,6 +130,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
                     console.log('request', r);
                     this.rForm.get('reqData').setValue(new Date(r.startDate));
                     this.rForm.get('requestNumber').setValue(r.requestNumber);
+                    this.requests[0].requestNumber = this.rForm.get('requestNumber').value + '/' + (++this.lastIndex),
                     this.rForm.get('folderNumber').setValue(r.dossierNr);
                     this.rForm.get('startDate').setValue(r.startDate);
                     this.rForm.get('initiator').setValue(r.initiator);
@@ -139,6 +142,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
                         this.rForm.get('mandatedLastname').setValue(r.registrationRequestMandatedContacts[0].mandatedLastname);
                         this.rForm.get('phoneNumber').setValue(r.registrationRequestMandatedContacts[0].phoneNumber);
                         this.rForm.get('email').setValue(r.registrationRequestMandatedContacts[0].email);
+                        this.rForm.get('idnp').setValue(r.registrationRequestMandatedContacts[0].idnp);
                         this.rForm.get('requestMandateNr').setValue(r.registrationRequestMandatedContacts[0].requestMandateNr);
                         this.rForm.get('requestMandateDate').setValue(r.registrationRequestMandatedContacts[0].requestMandateDate);
                     }
@@ -245,6 +249,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
             mandatedLastname: this.rForm.get('mandatedLastname').value,
             phoneNumber: this.rForm.get('phoneNumber').value,
             email: this.rForm.get('email').value,
+            idnp: this.rForm.get('idnp').value,
             requestMandateNr: this.rForm.get('requestMandateNr').value,
             requestMandateDate: this.rForm.get('requestMandateDate').value
         };
@@ -283,6 +288,8 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
                 }
                 this.loadingService.hide();
             }, error1 => {
+                this.requests = this.requests.filter(d => d.id != this.sourceRegistrationRequest.id);
+                this.requests.forEach(value => value.valid = true);
                 this.loadingService.hide();
             })
         );
@@ -324,6 +331,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
     addTab() {
         this.requests.push({
             documents: this.commonDocuments,
+            requestNumber: this.rForm.get('requestNumber').value + '/' + (++this.lastIndex),
             price: {
                 referencePrices: []
             }
@@ -333,6 +341,12 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
     }
 
     removeTab(index: number) {
+        let request = this.requests[index];
+        if(request.requestNumber) {
+            this.subscriptions.push(this.priceService.removeRequest(request.requestNumber).subscribe(data => {
+                console.log('removed', data);
+            }));
+        }
         this.requests.splice(index, 1);
         this.tabs.splice(index, 1);
     }

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {NavbarTitleService} from '../shared/service/navbar-title.service';
 
@@ -7,9 +7,7 @@ import {NavbarTitleService} from '../shared/service/navbar-title.service';
     templateUrl: './administration.component.html',
     styleUrls: ['./administration.component.css']
 })
-export class AdministrationComponent implements OnInit {
-
-    // private subscriptions: Subscription[] = [];
+export class AdministrationComponent implements OnInit, OnDestroy {
 
     constructor(private router: Router, private navbarTitleService: NavbarTitleService) {
     }
@@ -19,11 +17,15 @@ export class AdministrationComponent implements OnInit {
     }
 
     navigateTo(id: number) {
-        this.router.navigate(['/dashboard/admin/generic-nomenclature/' + id], { skipLocationChange: true });
+        this.router.navigate(['/dashboard/admin/generic-nomenclature/' + id], {skipLocationChange: true});
     }
 
     navigateToEconomicAgents() {
-        this.router.navigate(['/dashboard/admin/ec-agent/view-all/'], { skipLocationChange: true });
+        this.router.navigate(['/dashboard/admin/ec-agent/view-all/'], {skipLocationChange: true});
+    }
+
+    navigateToUserAdministration() {
+        this.router.navigate(['/dashboard/admin/users/manage/'], {skipLocationChange: true});
     }
 
     ngOnDestroy() {

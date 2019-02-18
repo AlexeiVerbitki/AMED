@@ -1,0 +1,361 @@
+<div class="container-fluid sky z-depth-2">
+	<form [formGroup]='rForm'>
+		<div class="row">
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="nrCererii" mdbInputDirective type="text" class="form-control"
+					       formControlName="requestNumber" [attr.disabled]="true">
+					<label for="nrCererii">Numarul cererii</label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input matInput [matDatepicker]="picker2" placeholder="din data" formControlName="startDate">
+						<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #picker2></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="reqStatus" mdbInputDirective type="text" class="form-control"
+					       formControlName="requestStatus" [attr.disabled]="true">
+					<label for="reqStatus">Statutul cererii</label>
+				</div>
+			</div>
+		</div>
+
+		<div class="row" formGroupName="company">
+
+			<div class="col-md-5">
+				<div class="md-form">
+					<input id="compName" mdbInputDirective type="text" class="form-control"
+					       formControlName="name" [attr.disabled]="true">
+					<label for="compName">Compania solicitantă</label>
+				</div>
+			</div>
+			<div class="col-md-2">
+				<div class="md-form">
+					<input id="idno" mdbInputDirective type="text" class="form-control" formControlName="idno">
+					<label for="idno">IDNO</label>
+				</div>
+			</div>
+
+			<div class="col-md-5">
+				<div class="md-form">
+					<input id="adresa" mdbInputDirective type="text" class="form-control" formControlName="adresa">
+					<label for="adresa">Adresa</label>
+				</div>
+			</div>
+
+			<div class="col-md-3">
+				<div class="md-form">
+					<input id="seria" mdbInputDirective type="text" class="form-control" formControlName="seria">
+					<label for="seria">Seria Licentei</label>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="md-form">
+					<input id="nrLic" mdbInputDirective type="text" class="form-control" formControlName="nrLic">
+					<label for="nrLic">Numarul licentei</label>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input id="dataEliberariiLic" matInput [matDatepicker]="picker9"
+						       placeholder="Data eliberării licentei" formControlName="dataEliberariiLic">
+						<mat-datepicker-toggle matSuffix [for]="picker9"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #picker9></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+
+			<div class="col-md-3">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input id="dataExpirariiLic" matInput [matDatepicker]="picker3"
+						       placeholder="Data expirarii licentei" formControlName="dataExpirariiLic">
+						<mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #picker3></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+		</div>
+		<div class="row" formGroupName="responsiblePerson">
+			<div class="col-lg-3">
+				<div class="md-form">
+					<input id="idnp" mdbInputDirective type="text" maxlength="13" class="form-control"
+					       formControlName="idnp">
+					<label for="idnp">IDNP-ul persoanei responsabile</label>
+				</div>
+			</div>
+
+			<div class="col-md-3">
+				<div class="md-form">
+					<input id="persResDepCereriiFirstname" mdbInputDirective type="text" class="form-control"
+					       formControlName="mandatedFirstname">
+					<label for="persResDepCereriiFirstname">Nume persoana responsabilă</label>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="md-form">
+					<input id="persResDepCereriiLastname" mdbInputDirective type="text" class="form-control"
+					       formControlName="mandatedLastname">
+					<label for="persResDepCereriiLastname">Prenume persoana responsabilă</label>
+
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="md-form">
+					<input id="telefonContact" mdbInputDirective type="text" class="form-control"
+					       formControlName="phoneNumber" maxlength="9">
+					<label for="telefonContact">Telefon de contact</label>
+				</div>
+			</div>
+		</div>
+
+		<div class="gradient-card-header bg-sidebar border-gradient mt-table">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Filiale</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="filiala-height">
+			<div class="row align-items-start" *ngFor="let f of this.gdpInspection.subsidiaries; let i = index">
+				<div class="col-1" [ngStyle]="{'flex': '0 0 4.333333%;', 'max-width': '4.333333%'}">
+					<div class="md-form text-center">
+						<div class="pt-4">{{i + 1}}</div>
+					</div>
+				</div>
+				<div class="col">
+					<div class="md-form">
+                    <textarea [value]="f.subsidiary.companyType" disabled type="text" id="nrLic1"
+                              class="md-textarea form-control w-100" mdbInputDirective></textarea>
+						<label for="nrLic1">Tipul intreprinderii</label>
+					</div>
+
+				</div>
+				<div class="col">
+					<div class="md-form">
+                    <textarea [value]="f.subsidiary.address" disabled type="text" id="nrLic2"
+                              class="md-textarea form-control w-100" mdbInputDirective></textarea>
+						<label for="nrLic2">Adresa</label>
+					</div>
+				</div>
+				<div class="col">
+					<div class="md-form">
+                    <textarea [value]="f.subsidiary.selectedPharmaceutist" disabled type="text" id="nrLic3"
+                              class="md-textarea form-control w-100" mdbInputDirective></textarea>
+						<label for="nrLic3">Farmacist/Sef de filiala</label>
+					</div>
+				</div>
+				<div class="col">
+					<div class="md-form">
+                    <textarea [value]="f.subsidiary.activitiesStr" disabled type="text" id="nrLic4"
+                              class="md-textarea form-control w-100" mdbInputDirective></textarea>
+						<label for="nrLic4">Activitate</label>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<div>
+			<div class="row">
+				<div class="col-12">
+					<div class="gradient-card-header bg-sidebar border-gradient mt-table">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col-6">
+									<div class="card-header-title white-text">Inspectorii selectati</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="card-body card-body-cascade z-depth-1">
+						<table mdbTable striped="true" hover="true" small="true" class="text-center">
+							<thead class="bg-sidebar white-text">
+							<tr>
+								<th>Sef de grup</th>
+								<th>Nume</th>
+								<th>Prenume</th>
+								<th>Cod</th>
+								<th>Grad stiintifc</th>
+								<th>Profesia</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr mdbTableCol *ngFor="let el of gdpInspection.inspectors; let i = index">
+								<td [ngStyle]="{'width': '95px'}">
+									<mat-radio-button [checked]="el.id == gdpInspection.groupLeaderId" disabled
+									                  (change)="gdpInspection.groupLeaderId = el.id"></mat-radio-button>
+								</td>
+								<td>{{el.lastname}}</td>
+								<td>{{el.firstname}}</td>
+								<td>{{el.code}}</td>
+								<td>{{el.scienceDegree}}</td>
+								<td>{{el.profession?.description}}</td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<div class="row" [formGroup]="inspectorForm">
+				<div class="col-12" formArrayName="periods">
+					<div class="row align-items-center"
+					     *ngFor="let e of formData.controls; let i = index">
+						<div class="col" [formGroupName]="i">
+							<div class="md-form-modified">
+								<mat-form-field class="w-100">
+									<input id="dataFrom" matInput [matDatepicker]="picker34" formControlName="fromDate"
+									       placeholder="din data">
+									<mat-datepicker-toggle matSuffix [for]="picker34"></mat-datepicker-toggle>
+									<mat-datepicker touchUi #picker34></mat-datepicker>
+								</mat-form-field>
+							</div>
+						</div>
+
+						<div class="col" [formGroupName]="i">
+							<div class="md-form-modified">
+								<mat-form-field class="w-100">
+									<input id="dataTo" matInput [matDatepicker]="picker35" formControlName="toDate"
+									       placeholder="pina la data">
+									<mat-datepicker-toggle matSuffix [for]="picker35"></mat-datepicker-toggle>
+									<mat-datepicker touchUi #picker35></mat-datepicker>
+								</mat-form-field>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="col-md-3">
+			<div class="md-form-modified">
+				<ng-select class="w-100"
+				           [items]="decisions"
+				           [required]="true"
+				           formControlName="decision"
+				           bindLabel="description"
+				           (change)="onDecisionChange($event)"
+				           placeholder="Decizia luată">
+				</ng-select>
+				<div *ngIf="formSubmitted && rForm.get('decision').invalid">
+					<small class="text-muted"><strong class="text-danger">Selectați decizia luată</strong>
+					</small>
+				</div>
+			</div>
+		</div>
+
+		<div class="row" [formGroup]="inspectorForm" *ngIf="rForm.get('decision').valid && rForm.get('decision').value.id == 1">
+			<div class="col">
+				<div class="md-form">
+					<input id="autoDistribution" mdbInputDirective type="text" class="form-control"
+					       formControlName="autoDistributionOperations">
+					<label for="autoDistribution">Operațiuni de distribuție autorizate<strong class="text-danger">*</strong></label>
+				</div>
+				<div class="mb-2" *ngIf="formSubmitted && inspectorForm.get('autoDistributionOperations').invalid">
+					<small class="text-muted"><strong class="text-danger">Adăugați operațiunile de distribuție autorizate</strong>
+					</small>
+				</div>
+			</div>
+
+			<div class="col">
+				<div class="md-form">
+					<input id="certificateBasedOnTheInspection" mdbInputDirective type="text" class="form-control"
+					       formControlName="certificateBasedOnTheInspection">
+					<label for="certificateBasedOnTheInspection">Nr. certificatului eliberat în baza inspecției<strong class="text-danger">*</strong></label>
+				</div>
+				<div class="mb-2" *ngIf="formSubmitted && inspectorForm.get('certificateBasedOnTheInspection').invalid">
+					<small class="text-muted"><strong class="text-danger">Adăugați Nr. certificatului</strong>
+					</small>
+				</div>
+			</div>
+		</div>
+
+		<app-document [documents]="documents"
+		              [nrCerere]="rForm.get('requestNumber').value"
+		              [dcTypeIdentifier]="{code:'AGDP',step: rForm.get('currentStep').value}"
+		              (documentModified)="documentAdded($event)"></app-document>
+
+		<div class="my-5">
+			<div class="gradient-card-header bg-sidebar border-gradient">
+				<div class="container-fluid">
+					<!-- Title -->
+					<div class="row">
+						<div class="col-6">
+							<div class="card-header-title white-text">Documente necesare</div>
+						</div>
+						<div class="col-6">
+							<div class="position-button">
+								<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
+								        (click)="requestRemoveDeficiencies()">Solicitare înlăturare deficiențe
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="card-body card-body-cascade">
+				<table class="table table-widths-lg text-center">
+					<thead class="bg-sidebar white-text">
+					<tr>
+						<th class="w-50" scope="col">Denumirea</th>
+						<th class="w-25" scope="col">Numărul</th>
+						<th class="w-20" scope="col">Statusul documentului</th>
+						<th class="w-5">Acțiuni</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr *ngFor="let a of outputDocuments">
+						<td scope="row">{{ a.description }}</td>
+						<td scope="row">{{ a.number }}</td>
+						<td scope="row">{{ a.status }}</td>
+						<td *ngIf="a.docType?.category == 'SDI'|| a.docType?.category == 'GDP'">
+							<button mdbTooltip="Generare document" class="btn btn-mdb-color btn-sm waves-light"
+							        mdbWavesEffect [disabled]="false" (click)="viewDoc(a)"><i
+									class="fa fa-puzzle-piece fa-lg" aria-hidden="true"></i></button>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="mb-2" *ngIf="formSubmitted && rForm.get('decision').valid && this.hasUnloadedDocs()">
+				<small class="text-muted"><strong class="text-danger">Încărcați documentele necesare</strong>
+				</small>
+			</div>
+		</div>
+
+		<app-payment [requestId]="requestId"
+		             (totalValueChanged)="paymentTotalUpdate($event)"
+		             [isBonSuplimentarNotRender]="true" [processModule]="'gdp'"></app-payment>
+		<div *ngIf="formSubmitted && paymentTotal < 0">
+			<small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>
+		</div>
+		<hr>
+
+
+		<div class="text-center">
+			<div class="mt-4">
+				<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
+				        [disabled]="rForm.get('decision').invalid" mdbWavesEffect (click)="nextStep()">
+					Salvare
+				</button>
+			</div>
+		</div>
+	</form>
+</div>
+

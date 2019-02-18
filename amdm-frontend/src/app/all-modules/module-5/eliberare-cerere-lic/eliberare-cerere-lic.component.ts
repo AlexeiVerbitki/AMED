@@ -160,7 +160,7 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
 
 
         this.tipCerere = data.type.code;
-        if (this.tipCerere === 'LICM' || this.tipCerere === 'LICD' || this.tipCerere === 'LICP' || this.tipCerere === 'LICA' || this.tipCerere === 'LICS' || this.tipCerere === 'LICRL') {
+        if (this.tipCerere === 'LICM' || this.tipCerere === 'LICD' || this.tipCerere === 'LICA' || this.tipCerere === 'LICS' || this.tipCerere === 'LICRL') {
             this.rForm.get('seriaLic').disable();
             this.rForm.get('nrLic').disable();
         }
@@ -176,17 +176,12 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
 
 
     save() {
-        this.rFormSubbmitted = true;
-        if (!this.rForm.valid || this.docs.length == 0 ) {
-            return;
-        }
-
-        this.rFormSubbmitted = false;
         const modelToSubmit = this.composeModel('I', 'A');
 
         this.subscriptions.push(
             this.licenseService.confirmIssueLicense(modelToSubmit).subscribe(data => {
                     // this.router.navigate(['/dashboard/homepage']);
+                    this.errorHandlerService.showSuccess('Datele au fost salvate');
                 }
             )
         );
@@ -302,7 +297,7 @@ export class EliberareCerereLicComponent implements OnInit, OnDestroy {
 
     submitFinish() {
         this.rFormSubbmitted = true;
-        if (!this.rForm.valid || this.docs.length == 0 ) {
+        if (!this.rForm.valid ) {
             this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
             return;
         }
