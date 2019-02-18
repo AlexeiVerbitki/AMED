@@ -1858,7 +1858,7 @@ public class RequestController
                       {specificationMedicament.setRegistrationNumber("");}
                   if (entity.getAtcCode()                                 !=null)         { specificationMedicament.setAtc(entity.getAtcCode().getCode()); }
                   if (entity.getInternationalMedicamentName()             !=null)         { specificationMedicament.setInternationalName(entity.getInternationalMedicamentName().getDescription()); }
-                  totalSum += totalSum;
+                  totalSum += entity.getSumm();
 
                     ImportSpecificationDataSetArrayList.add(specificationMedicament);
                     }
@@ -1866,7 +1866,7 @@ public class RequestController
 
             }
 
-	        if (request.getImportAuthorizationEntity().getAuthorizationsNumber()        !=null) {parameters.put("annexNr", request.getImportAuthorizationEntity().getAnexa()); }
+	        if (request.getImportAuthorizationEntity().getAuthorizationsNumber()        !=null) {parameters.put("annexNr",          request.getImportAuthorizationEntity().getAnexa()); }
 	        if (request.getImportAuthorizationEntity().getImporter().getDirector()      !=null) {parameters.put("buyerDirector",  request.getImportAuthorizationEntity().getImporter().getDirector()  );}
 	        if (request.getImportAuthorizationEntity().getImporter().getDirector()      !=null) {parameters.put("buyerAddress",  request.getImportAuthorizationEntity().getImporter().getLegalAddress()  );}
 	        if (request.getImportAuthorizationEntity().getContract()                    !=null) {parameters.put("contractNr",     request.getImportAuthorizationEntity().getContract()                );}
@@ -1877,7 +1877,7 @@ public class RequestController
 	        if (request.getImportAuthorizationEntity().getSeller()                      !=null) {parameters.put("sellerAddress",  request.getImportAuthorizationEntity().getSeller().getAddress() + " " + request.getImportAuthorizationEntity().getSeller().getCountry().getCode());}
 	        parameters.put("sellerDirector", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
 //	        parameters.put("totalSum", String.valueOf(AmountUtils.round(ImportSpecificationDataSetArrayList.stream().map(sum -> sum.getValueCurrency()).reduce(0.0, (x,y) -> x+y)                    , 2 )));
-	        parameters.put("totalSum", String.valueOf(AmountUtils.round(totalSum , 2 )));
+	        parameters.put("totalSum", String.valueOf(AmountUtils.round(totalSum , 2 )) + " " + request.getImportAuthorizationEntity().getCurrency().getShortDescription());
             parameters.put("importSpecificationMedicament", new JRBeanCollectionDataSource( ImportSpecificationDataSetArrayList));
 
 
