@@ -1468,13 +1468,6 @@ public class RequestController
 		LOGGER.debug("\n\n\n\n=====================\nInvoice saved\n=====================\n\n\n");
 
 
-//		List<InvoiceDetailsEntity> list = new ArrayList<>();
-//		list = invoiceDetailsRepository.findInvoicesByAuthorization("0023/2010-AM");
-//		int importedQuantity  = list.stream().map(emp -> emp.getQuantity()).reduce(0, (x , y) -> x + y);
-//		list.forEach(x -> System.out.println(x.getQuantity()));
-//
-//		System.out
-//				.println("\n\n\n\n=====================\nlist.stream: "+ importedQuantity +"\n=====================\n\n\n");
 		return new ResponseEntity<>(requests, HttpStatus.CREATED);
 	}
 
@@ -1496,16 +1489,6 @@ public class RequestController
 	}
 
 
-//	@RequestMapping(value = "/add-import-request"/*, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE*/)
-//	public ResponseEntity<RegistrationRequestsEntity> saveImportRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
-//		LOGGER.debug("\n\n\n\n=====================\nAdd Import\n=====================\n\n\n");
-//
-//	}
-//	@RequestMapping(value = "/add-import-request"/*, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE*/)
-//	public ResponseEntity<RegistrationRequestsEntity> saveImportRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
-//		LOGGER.debug("\n\n\n\n=====================\nAdd Import\n=====================\n\n\n");
-//
-//    }
 
 
     @RequestMapping(value = "/add-import-request"/*, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE*/)
@@ -1537,55 +1520,15 @@ public class RequestController
             System.out.println("\n\n\n\n=====================\ngetImportAuthorizationEntity is null\n=====================\n\n\n");
         }
 
-        //        requests.setMedicaments(null);
         LOGGER.debug("MED==============" + requests.getMedicaments());
         requestRepository.save(requests);
         //TODO fix the docs
-        //        addDDDocument(requests);
         LOGGER.debug("\n\n\n\n=====================\nImport saved\n=====================\n\n\n");
 
 
-//		List<InvoiceDetailsEntity> list = new ArrayList<>();
-//		list = invoiceDetailsRepository.findInvoicesByAuthorization("0023/2010-AM");
-//		int importedQuantity  = list.stream().map(emp -> emp.getQuantity()).reduce(0, (x,y) -> x+y);
-//        list.forEach(x -> System.out.println(x.getQuantity()));
-//
-//        System.out.println("\n\n\n\n=====================\nlist.stream: "+ importedQuantity +"\n=====================\n\n\n");
 
 		return new ResponseEntity<>(requests, HttpStatus.CREATED);
 	}
-//	@GetMapping(value = "/load-import-request")
-//	public ResponseEntity<RegistrationRequestsEntity> getImportById(@RequestParam(value = "id") Integer id) throws CustomException {
-//		Optional<RegistrationRequestsEntity> regOptional = requestRepository.findImportAuthRequestById(id);
-//		if (!regOptional.isPresent()) {
-//			throw new CustomException("Inregistrarea de Import nu a fost gasita");
-//		}
-//		RegistrationRequestsEntity rrE = regOptional.get();
-////        rrE.setClinicalTrails((ClinicalTrialsEntity) Hibernate.unproxy(regOptional.get().getClinicalTrails()));
-////        rrE.setCompany((NmEconomicAgentsEntity) Hibernate.unproxy(regOptional.get().getCompany()));
-//
-//		return new ResponseEntity<>(requests, HttpStatus.CREATED);
-//	}
-//	@GetMapping(value = "/load-import-request")
-//	public ResponseEntity<RegistrationRequestsEntity> getImportById(@RequestParam(value = "id") Integer id) throws CustomException {
-//		Optional<RegistrationRequestsEntity> regOptional = requestRepository.findImportAuthRequestById(id);
-//		if (!regOptional.isPresent()) {
-//			throw new CustomException("Inregistrarea de Import nu a fost gasita");
-//		}
-//		RegistrationRequestsEntity rrE = regOptional.get();
-////        rrE.setClinicalTrails((ClinicalTrialsEntity) Hibernate.unproxy(regOptional.get().getClinicalTrails()));
-////        rrE.setCompany((NmEconomicAgentsEntity) Hibernate.unproxy(regOptional.get().getCompany()));
-//
-//        //        requests.setMedicaments(null);
-//        LOGGER.debug("MED==============" + requests.getMedicaments());
-//        requestRepository.save(requests);
-//        //TODO fix the docs
-//        //        addDDDocument(requests);
-//        LOGGER.debug("\n\n\n\n=====================\nImport saved\n=====================\n\n\n");
-//
-//
-//        return new ResponseEntity<>(requests, HttpStatus.CREATED);
-//    }
 
     @GetMapping(value = "/load-import-request")
     public ResponseEntity<RegistrationRequestsEntity> getImportById(@RequestParam(value = "id") Integer id) throws CustomException
@@ -1864,7 +1807,6 @@ public class RequestController
 	        if (request.getImportAuthorizationEntity().getSeller().getDescription()     !=null) {parameters.put("sellerName",     request.getImportAuthorizationEntity().getSeller().getDescription() );}
 	        if (request.getImportAuthorizationEntity().getSeller()                      !=null) {parameters.put("sellerAddress",  request.getImportAuthorizationEntity().getSeller().getAddress() + " " + request.getImportAuthorizationEntity().getSeller().getCountry().getCode());}
 	        parameters.put("sellerDirector", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
-//	        parameters.put("totalSum", String.valueOf(AmountUtils.round(ImportSpecificationDataSetArrayList.stream().map(sum -> sum.getValueCurrency()).reduce(0.0, (x,y) -> x+y)                    , 2 )));
 	        parameters.put("totalSum", String.valueOf(AmountUtils.round(totalSum , 2 )) + " " + request.getImportAuthorizationEntity().getCurrency().getShortDescription());
             parameters.put("importSpecificationMedicament", new JRBeanCollectionDataSource( ImportSpecificationDataSetArrayList));
 
