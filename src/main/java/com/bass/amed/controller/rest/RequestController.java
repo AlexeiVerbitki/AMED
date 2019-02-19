@@ -1827,18 +1827,6 @@ public class RequestController
                  *
                  * if the jey exists add the sum, if id doesn't creaet the key and add the value*/
                 if (entity != null && entity.getApproved() == true)                {
-//                    if (autorizationImportDataSet2ArrayList.stream().anyMatch(x -> x.getProductCode().equalsIgnoreCase(entity.getCustomsCode().getCode())))
-//                    {
-//                        for (int i = 0; i < autorizationImportDataSet2ArrayList.size(); i++)
-//                        {
-//                            if (autorizationImportDataSet2ArrayList.get(i).getProductCode().equals(entity.getCustomsCode().getCode()))
-//                            {
-//                                autorizationImportDataSet2ArrayList.get(i).setAmount(AmountUtils.round(autorizationImportDataSet2ArrayList.get(i).getAmount() + entity.getSumm(),2));
-//                            }
-//                        }
-//                    }
-//                    else
-//                    {
 
                     ImportSpecificationDataSet specificationMedicament = new ImportSpecificationDataSet();
 
