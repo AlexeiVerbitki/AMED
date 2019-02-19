@@ -7,6 +7,7 @@ import {MatDialogModule} from '@angular/material';
 
 import {UserListRoutingModule} from './user-list-routing.module';
 import {UserListComponent} from './user-list.component';
+import {UserListModalComponent} from './user-list-modal/user-list-modal.component';
 
 @NgModule({
     imports: [
@@ -19,10 +20,10 @@ import {UserListComponent} from './user-list.component';
         MatDialogModule,
     ],
     declarations: [
-        UserListComponent,
+        UserListComponent, UserListModalComponent
     ],
     providers: [],
-    entryComponents: [UserListComponent]
+    entryComponents: [UserListComponent, UserListModalComponent]
 })
 export class UserListModule {
 }

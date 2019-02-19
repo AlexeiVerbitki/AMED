@@ -226,6 +226,8 @@
 	<parameter name="gmpDataset5" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<parameter name="gmpDataset6" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<parameter name="applicantNameAndAddres" class="java.lang.String"/>
+	<parameter name="humanUse" class="java.lang.Boolean"/>
+	<parameter name="veterinaryUse" class="java.lang.Boolean"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -265,9 +267,9 @@
 				<textFieldExpression><![CDATA["Numele şi adresa aplicantului: " + $P{applicantNameAndAddres}]]></textFieldExpression>
 			</textField>
 		</band>
-		<band height="38">
+		<band height="50">
 			<textField>
-				<reportElement x="0" y="8" width="535" height="23" uuid="f377dad8-c2fb-4c7b-a3ef-5e49745cd306"/>
+				<reportElement x="0" y="8" width="535" height="42" uuid="f377dad8-c2fb-4c7b-a3ef-5e49745cd306"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -277,7 +279,8 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans"/>
 				</textElement>
-				<textFieldExpression><![CDATA["   Medicamente pentru investigație clinică de uz uman pentru faza I, II, III (opțional)"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{humanUse}?"   Medicamente de uz uman"+"\n":""+
+($P{veterinaryUse}?"   Medicamente de uz veterinar":"")]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="150">

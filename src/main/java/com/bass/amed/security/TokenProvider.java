@@ -22,13 +22,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
-public class TokenProvider {
+public class TokenProvider
+{
 
     //Used value
     private static final String AUTHORITIES_KEY = "ROLE";
-    private final Logger LOGGER = LoggerFactory.getLogger(TokenProvider.class);
+    private final        Logger LOGGER          = LoggerFactory.getLogger(TokenProvider.class);
     @Value("${amed.app.jwtSecret}")
-    private String secretKey;
+    private              String secretKey;
 
     @Value("${amed.app.jwtExpirationInMs}")
     private long tokenValidityInMilliseconds;
@@ -36,20 +37,22 @@ public class TokenProvider {
     @Autowired
     private SrcUserRepository scrUserRepository;
 
-    public String createToken(Authentication authentication) {
+    public String createToken(Authentication authentication)
+    {
         String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
 
-        long now = (new Date()).getTime();
+        long now      = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
-        Optional<ScrUserEntity> user = scrUserRepository.findOneWithAuthoritiesByUsername(authentication.getName());
-        ScrUserEntity scrUser = user.orElseThrow(() -> new UsernameNotFoundException("No user found with username " + authentication.getName()));
+        Optional<ScrUserEntity> user    = scrUserRepository.findOneWithAuthoritiesByUsername(authentication.getName());
+        ScrUserEntity           scrUser = user.orElseThrow(() -> new UsernameNotFoundException("No user found with username " + authentication.getName()));
 
         return Jwts.builder().setSubject(authentication.getName()).claim(AUTHORITIES_KEY, authorities).claim("firstname", scrUser.getFullname())
                 .claim("username", scrUser.getUsername()).signWith(SignatureAlgorithm.HS512, secretKey).setExpiration(validity).compact();
     }
 
-    public Authentication getAuthentication(String token) {
+    public Authentication getAuthentication(String token)
+    {
         Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
 
         Collection<? extends GrantedAuthority> authorities =
@@ -60,23 +63,35 @@ public class TokenProvider {
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 
-    public boolean validateToken(String authToken) {
-        try {
+    public boolean validateToken(String authToken)
+    {
+        try
+        {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(authToken);
             return true;
-        } catch (SignatureException e) {
+        }
+        catch (SignatureException e)
+        {
             LOGGER.info("Invalid JWT signature.");
             LOGGER.trace("Invalid JWT signature trace: {}", e);
-        } catch (MalformedJwtException e) {
+        }
+        catch (MalformedJwtException e)
+        {
             LOGGER.info("Invalid JWT token.");
             LOGGER.trace("Invalid JWT token trace: {}", e);
-        } catch (ExpiredJwtException e) {
+        }
+        catch (ExpiredJwtException e)
+        {
             LOGGER.info("Expired JWT token.");
             LOGGER.trace("Expired JWT token trace: {}", e);
-        } catch (UnsupportedJwtException e) {
+        }
+        catch (UnsupportedJwtException e)
+        {
             LOGGER.info("Unsupported JWT token.");
             LOGGER.trace("Unsupported JWT token trace: {}", e);
-        } catch (IllegalArgumentException e) {
+        }
+        catch (IllegalArgumentException e)
+        {
             LOGGER.info("JWT token compact of handler are invalid.");
             LOGGER.trace("JWT token compact of handler are invalid trace: {}", e);
         }

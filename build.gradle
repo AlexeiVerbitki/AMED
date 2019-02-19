@@ -32,19 +32,20 @@ repositories {
 
 
 dependencies {
-    implementation('org.springframework.boot:spring-boot-starter')
-    runtime('mysql:mysql-connector-java')
-    compile('org.springframework.boot:spring-boot-starter-data-jpa')
-    compile('org.springframework.boot:spring-boot-starter-web')
-    compile('org.springframework.boot:spring-boot-starter-security')
-    compile('org.springframework.boot:spring-boot-starter-data-ldap')
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-data-ldap'
+    implementation "org.springframework.ldap:spring-ldap-core"
+    implementation 'org.springframework.security:spring-security-ldap'
 
     compileOnly 'org.projectlombok:lombok:1.18.4'
 //    annotationProcessor 'org.projectlombok:lombok:1.18.4'
-    compile group: 'org.apache.poi', name: 'poi', version: '4.0.1'
 
-    compile("org.springframework.ldap:spring-ldap-core")
-    compile('org.springframework.security:spring-security-ldap')
+    runtime('mysql:mysql-connector-java')
+    implementation group: 'org.apache.poi', name: 'poi', version: '4.0.1'
+
 
     compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
     compile group: 'net.sf.jasperreports', name: 'jasperreports', version: '6.7.0'

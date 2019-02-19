@@ -18,7 +18,7 @@ public class LdapUserDetailsDTO implements Serializable
     private String       userAccountControl;  // 512 544 66048 262656
     private String       telephoneNumber;
     private String       title;
-    private boolean      departmentChief = false;
+    private boolean      departmentChief;
 
 
 }

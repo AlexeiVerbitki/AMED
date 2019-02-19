@@ -373,6 +373,6 @@ export class AdministrationService {
     }
 
     synchronizeUsers(): Observable<any> {
-        return this.http.get('/api/administration/synchronize-all-users', {responseType: 'text'});
+        return this.http.get('/api/administration/synchronize-all-users', {responseType: 'json'});
     }
 }

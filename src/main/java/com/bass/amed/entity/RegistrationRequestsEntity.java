@@ -127,8 +127,6 @@ public class RegistrationRequestsEntity
     @Basic
     @Column(name = "expired_comment")
     private String expiredComment;
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "registrationRequest")
-    private GDPInspectionEntity gmpAuthorization;
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "request_id")
     private Set<GMPAuthorizationEntity> gmpAuthorizations = new HashSet<>();

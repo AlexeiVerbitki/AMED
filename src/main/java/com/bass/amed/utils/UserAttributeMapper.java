@@ -24,10 +24,10 @@ public class UserAttributeMapper implements AttributesMapper
             ldapUserDetailsDTO.setUserAccountControl((String) userAccountControl.get());
         }
 
-        Attribute username = attributes.get("userPrincipalName");
+        Attribute username = attributes.get("sAMAccountName");
         if (username != null)
         {
-            ldapUserDetailsDTO.setEmail((String) username.get());
+            ldapUserDetailsDTO.setUsername((String) username.get());
         }
 
         Attribute mail = attributes.get("mail");
@@ -61,8 +61,9 @@ public class UserAttributeMapper implements AttributesMapper
             NamingEnumeration groupList = role.getAll();
             while (groupList.hasMoreElements())
             {
-                String[] groupIdentity = groupList.nextElement().toString().split(",");
-                roles.add(groupIdentity[0]);
+                String[] groupIdentity    = groupList.nextElement().toString().split(",");
+                String   preparedRoleCode = ("ROLE_" + groupIdentity[0].substring(3)).toUpperCase();
+                roles.add(preparedRoleCode);
             }
             ldapUserDetailsDTO.setRoles(roles);
         }
@@ -70,8 +71,9 @@ public class UserAttributeMapper implements AttributesMapper
         Attribute userGroup = attributes.get("distinguishedName");
         if (userGroup != null)
         {
-            String[] arrayOfGroups = ((String) userGroup.get()).split(",");
-            ldapUserDetailsDTO.setUserGroup(arrayOfGroups[1]);
+            String[] arrayOfGroups     = ((String) userGroup.get()).split(",");
+            String   preparedRoleGroup = arrayOfGroups[1].substring(3);
+            ldapUserDetailsDTO.setUserGroup(preparedRoleGroup);
         }
 
         Attribute telephoneNumber = attributes.get("telephoneNumber");
@@ -81,12 +83,9 @@ public class UserAttributeMapper implements AttributesMapper
         }
 
         Attribute title = attributes.get("title");
-        if (title != null)
-        {
-            final String titleValue = (String) title.get();
-            ldapUserDetailsDTO.setTitle(titleValue);
-            ldapUserDetailsDTO.setDepartmentChief(!titleValue.isEmpty());
-        }
+        ldapUserDetailsDTO.setDepartmentChief(title == null ? false : true);
+        ldapUserDetailsDTO.setTitle(title == null ? "" : (String) title.get());
+
         return ldapUserDetailsDTO;
     }
 }

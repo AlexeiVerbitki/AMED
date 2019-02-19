@@ -3,7 +3,7 @@
 		<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="sycnronizeUsers()">
 			Sincronizare user
 		</button>
-		<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>
+		<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="addAuthorities()">
 			Adaugare autoritati
 		</button>
 	</div>
@@ -63,7 +63,7 @@
 				<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
 				<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 			</table>
-			<mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
 		</div>
+			<mat-paginator [pageSizeOptions]="[35, 50, 100]" showFirstLastButtons></mat-paginator>
 	</div>
 </div>

@@ -643,12 +643,16 @@ public class RequestController
         LOGGER.debug("add new prices requests");
         List<RegistrationRequestsEntity> oldRegistrations = new ArrayList<>();
         requests.forEach(r -> {
-            if (r.getType().getCode().equals("CPMED"))
-            {
-                r.setCurrentStep("I");
-            }
+//            if (r.getType().getCode().equals("CPMED"))
+//            {
+//                r.setCurrentStep("I");
+//            }
             Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(r.getType().getCode());
             r.setType(type.get());
+
+            if(r.getMedicaments() == null) {
+                r.setMedicaments(new HashSet<>());
+            }
 
             if(r.getId() != null) {
                 EntityManager em = entityManagerFactory.createEntityManager();
@@ -727,6 +731,13 @@ public class RequestController
         AuditUtils.auditGDP(auditLogService, oldRequest, request);
 
         return new ResponseEntity<>(request, HttpStatus.CREATED);
+    }
+
+
+    @RequestMapping(value = "/get-prices-requests", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<RegistrationRequestsEntity>> getPricesRequestsById(@RequestParam(value = "requestNumber") String requestNumber) throws CustomException {
+        List<RegistrationRequestsEntity> requests = requestRepository.getRequestsByRequestNr(requestNumber);
+        return new ResponseEntity<>(requests, HttpStatus.CREATED);
     }
 
 

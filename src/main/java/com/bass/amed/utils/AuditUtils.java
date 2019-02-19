@@ -954,7 +954,7 @@ public final class AuditUtils
         Set<ReferencePricesEntity> newRefPrices = newPrice.getReferencePrices() == null ? new HashSet<>() : newPrice.getReferencePrices();
 
         newRefPrices.forEach(n ->
-                auditReferencePriceRegistration(dummyEntities, oldRefPrices.stream().filter(s -> n.getId().equals(s.getId())).findFirst().orElse(new ReferencePricesEntity()), n, reqId)
+                auditReferencePriceRegistration(dummyEntities, oldRefPrices.stream().filter(s -> s.getId().equals(n.getId())).findFirst().orElse(new ReferencePricesEntity()), n, reqId)
         );
     }
 

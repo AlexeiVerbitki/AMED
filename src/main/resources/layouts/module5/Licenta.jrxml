@@ -34,71 +34,71 @@
 	<variable name="Total spre achitare: " class="java.lang.String" calculation="Sum"/>
 	<detail>
 		<band height="842">
-			<textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="290" y="260" width="240" height="30" uuid="6f4ec619-021a-40b8-b8f2-6d467f155cd5"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Agenția Medicamentului și    Dispozitivelor Medicale"]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement x="290" y="300" width="274" height="30" uuid="74ce4155-b2dc-4d0c-9532-7b69e3473e42"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="290" y="300" width="240" height="30" uuid="74ce4155-b2dc-4d0c-9532-7b69e3473e42"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{companyName}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement x="296" y="430" width="228" height="20" uuid="396673b5-8c84-4264-b2fc-fe47f2b9ed6a"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="296" y="430" width="234" height="20" uuid="396673b5-8c84-4264-b2fc-fe47f2b9ed6a"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{companyIdno}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="296" y="570" width="234" height="20" uuid="50df1f14-caa9-49fb-93b1-dff648f6438e"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{startDate}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="296" y="630" width="234" height="20" uuid="f84e2045-472e-435b-896e-ca6616c2eb5c"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{endDate}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="280" y="680" width="250" height="20" uuid="90350cbb-f0c4-496f-8ae4-d732aa819b8c"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Director general"]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="280" y="700" width="250" height="20" uuid="f848eb77-b764-4e46-a041-1f33cdf0069e"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{genDir}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="296" y="510" width="234" height="20" uuid="3f6cd003-9afc-4bb3-a1bd-30ef756548a7"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["*Activitatea farmaceutică*"]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="296" y="371" width="240" height="19" uuid="229ad375-6d87-499c-b882-9f056d1fb71b"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="296" y="371" width="234" height="19" uuid="229ad375-6d87-499c-b882-9f056d1fb71b"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{dateOfApprovalOfDecision}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement x="290" y="330" width="274" height="40" uuid="94a0c813-e863-4d7d-b545-9383452d6523"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="290" y="330" width="240" height="40" uuid="94a0c813-e863-4d7d-b545-9383452d6523"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="false"/>
 				</textElement>

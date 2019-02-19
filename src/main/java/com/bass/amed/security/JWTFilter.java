@@ -24,8 +24,6 @@ import java.io.IOException;
  */
 public class JWTFilter extends GenericFilterBean
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(JWTFilter.class);
-
     private TokenProvider tokenProvider;
 
     @Autowired

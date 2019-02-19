@@ -73,23 +73,33 @@ public interface Constants
 
     enum LDAP_ENABLED_ACCOUNT_STATUS
     {
-        NORMAL_ACCOUNT(512), ENABLED_PNR(544), ENABLED_NE(66048), ENABLED_C(262656);
+        NORMAL_ACCOUNT("512"), ENABLED_PNR("544"), ENABLED_NE("66048"), ENABLED_C("262656");
 
-        private int statusCode;
+        private String statusCode;
 
-        LDAP_ENABLED_ACCOUNT_STATUS(Integer statusCode)
+        LDAP_ENABLED_ACCOUNT_STATUS(String statusCode)
         {
             this.statusCode = statusCode;
         }
 
-        public Integer getStatusCode()
+        public String getStatusCode()
         {
             return statusCode;
         }
 
-        public List<Integer> getListOfEnabledStatus()
+        public List<String> getListOfEnabledStatus()
         {
-            return Arrays.asList(512, 544, 66048, 262656);
+            return Arrays.asList("512", "544", "66048", "262656");
+        }
+
+        public static boolean isAccountEnabled(String userStatusControl)
+        {
+            if (userStatusControl.equals(NORMAL_ACCOUNT.statusCode) || userStatusControl.equals(NORMAL_ACCOUNT)
+                    || userStatusControl.equals(ENABLED_NE.statusCode) || userStatusControl.equals(ENABLED_C.statusCode))
+            {
+                return true;
+            }
+            return false;
         }
     }
 

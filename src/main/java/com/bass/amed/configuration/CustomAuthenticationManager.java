@@ -1,5 +1,6 @@
 package com.bass.amed.configuration;
 
+import com.bass.amed.common.Constants;
 import com.bass.amed.entity.ScrAuthorityEntity;
 import com.bass.amed.entity.ScrRoleEntity;
 import com.bass.amed.entity.ScrUserEntity;
@@ -24,7 +25,6 @@ import org.springframework.security.ldap.authentication.LdapAuthenticationProvid
 import org.springframework.security.ldap.ppolicy.PasswordPolicyControl;
 import org.springframework.security.ldap.ppolicy.PasswordPolicyResponseControl;
 import org.springframework.security.ldap.search.FilterBasedLdapUserSearch;
-import org.springframework.security.ldap.userdetails.LdapAuthority;
 import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
 import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
 import org.springframework.stereotype.Component;
@@ -44,6 +44,8 @@ public class CustomAuthenticationManager implements AuthenticationManager
 
     @Value("${ldap.base_search_user}")
     private String LDAP_BASE_USER_SEARCH;
+    @Value("${ldap.user_domain_suffix}")
+    private String USER_DOMAIN_SUFFIX;
 
 
     public CustomAuthenticationManager(SrcUserRepository srcUserRepository, LdapContextSource ldapContextSource)
@@ -58,13 +60,16 @@ public class CustomAuthenticationManager implements AuthenticationManager
         LOGGER.debug("AUTHENTICATION Login: " + authentication.getName());
         LOGGER.debug("AUTHENTICATION Password: *************");
 
-        ldapContextSource.setUserDn(authentication.getPrincipal().toString());
+        String ldapUsername = authentication.getPrincipal().toString() + USER_DOMAIN_SUFFIX;
+
+        ldapContextSource.setUserDn(ldapUsername);
         ldapContextSource.setPassword(authentication.getCredentials().toString());
+
         BindAuthenticator bindAuth = new BindAuthenticator(ldapContextSource);
 
         AndFilter filter = new AndFilter();
         filter.and(new EqualsFilter("objectclass", "person"));
-        filter.and(new EqualsFilter("userPrincipalName", authentication.getPrincipal().toString()));
+        filter.and(new EqualsFilter("userPrincipalName", ldapUsername));
 
         FilterBasedLdapUserSearch userSearch = new FilterBasedLdapUserSearch(LDAP_BASE_USER_SEARCH, filter.encode(), ldapContextSource);
         try
@@ -90,13 +95,14 @@ public class CustomAuthenticationManager implements AuthenticationManager
 
                 LOGGER.debug("Mapping user details from context with DN: " + dn);
 
-                Optional<ScrUserEntity> isUser = srcUserRepository.findOneWithAuthoritiesByUsername(username);
+                String                  user1  = username.replace(USER_DOMAIN_SUFFIX, Constants.DEFAULT_VALUES.STR_EMPTY);
+                Optional<ScrUserEntity> isUser = srcUserRepository.findOneWithAuthoritiesByUsername(user1);
                 final ScrUserEntity     user   = isUser.orElseThrow(() -> new UsernameNotFoundException(username + " nu este configurat in BD locala"));
 
                 final Set<ScrRoleEntity> srcRole = user.getSrcRole();
                 if (srcRole.isEmpty())
                 {
-                    throw new UsernameNotFoundException("Nu s-a gasit nici un role p/u utilizatorul: " + username);
+                    throw new UsernameNotFoundException("Nu s-a gasit nici un role p/u utilizatorul: " + user1);
                 }
 
                 LdapUserDetailsImpl.Essence essence = new LdapUserDetailsImpl.Essence();

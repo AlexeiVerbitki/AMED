@@ -9,6 +9,7 @@ import com.bass.amed.projection.LicenseCompanyProjection;
 import com.bass.amed.repository.*;
 import com.bass.amed.service.GenerateDocNumberService;
 import com.bass.amed.service.GenerateReceiptNumberService;
+import com.bass.amed.service.LdapUserDetailsSynchronizationService;
 import com.bass.amed.utils.ReceiptsQueryUtils;
 import com.bass.amed.utils.Utils;
 import org.apache.logging.log4j.util.Strings;
@@ -123,6 +124,8 @@ public class AdministrationController
     private SeqMedicamentRegistrationRequestNumberRepository      seqMedicamentRegistrationRequestNumberRepository;
     @Autowired
     private SeqMedicamentPostAuthorizationRequestNumberRepository seqMedicamentPostAuthorizationRequestNumberRepository;
+    @Autowired
+    private LdapUserDetailsSynchronizationService                 ldapUserDetailsSynchronizationService;
 
     @RequestMapping(value = "/generate-doc-nr")
     public ResponseEntity<Integer> generateDocNr()
@@ -454,26 +457,6 @@ public class AdministrationController
         return new ResponseEntity<>(nmCustomsPointsRepository.findAll(), HttpStatus.OK);
     }
 
-    @RequestMapping("/send-email")
-    public ResponseEntity<Void> sendEmail(@RequestParam(value = "title") String title, @RequestParam(value = "content") String content,
-                                          @RequestParam(value = "mailAddress") String mailAddress) throws CustomException
-    {
-        LOGGER.debug("send email");
-        //        SimpleMailMessage message = new SimpleMailMessage();
-        //        message.setSubject(title);
-        //        message.setText(content);
-        //        message.setTo(mailAddress);
-
-        try
-        {
-        }
-        catch (Exception e)
-        {
-            throw new CustomException("Could not send message" + e.getMessage());
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     @RequestMapping("/all-investigators")
     public ResponseEntity<List<CtInvestigatorEntity>> retrieveAllInvestigators()
     {
@@ -620,6 +603,14 @@ public class AdministrationController
     {
         LOGGER.debug("Retrieve companies by idno");
         return new ResponseEntity<>(economicAgentsRepository.findAllByIdno(idno), HttpStatus.OK);
+    }
+
+    @GetMapping("/synchronize-all-users")
+    public ResponseEntity<List<ScrUserEntity>> sychronizeLdapUsers() throws CustomException
+    {
+        LOGGER.debug("Syncronize local with LDAP users");
+        List<ScrUserEntity> reponse = ldapUserDetailsSynchronizationService.synchronizeLdapUsers();
+        return new ResponseEntity<>(reponse, HttpStatus.OK);
     }
 
     public final static String[] TABLES = new String[]{
@@ -884,7 +875,6 @@ public class AdministrationController
 
 
     public static String SQL_GET_ALL_BY_TABLE  = "SELECT * FROM %s";
-    public static String SQL_GET_BY_ID         = "SELECT * FROM %s WHERE id = %s";
     public static String SQL_DELETE_TABLE      = "DELETE FROM %s WHERE ID = :id";
     public static String SQL_INSERT            = "INSERT INTO %s (%s) VALUES(%s)";
     public static String SQL_UPDATE            = "UPDATE %s SET %s WHERE ID = %s";
@@ -894,6 +884,7 @@ public class AdministrationController
                     "WHERE table_name = '%s'\n" +
                     "AND table_schema = 'amed'";
 
+    @SuppressWarnings( "deprecation" )
     @RequestMapping("/get-nomenclature")
     public ResponseEntity<List<Object>> getNomenclature(@RequestParam(value = "nomenclature", required = true) Integer nr) throws CustomException
     {

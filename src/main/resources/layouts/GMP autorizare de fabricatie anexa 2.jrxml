@@ -277,7 +277,7 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans"/>
 				</textElement>
-				<textFieldExpression><![CDATA["   Medicamente de uz uman"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["   Medicamente pentru investigație clinică de uz uman pentru faza I, II, III (opțional)"]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="150">

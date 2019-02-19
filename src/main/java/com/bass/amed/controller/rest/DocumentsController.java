@@ -7,6 +7,7 @@ import com.bass.amed.dto.annihilation.BonPlataAnihilare2;
 import com.bass.amed.dto.annihilation.ListaMedicamentelorPentruComisie;
 import com.bass.amed.dto.clinicaltrial.ClinicTrialAmdmOrdinDTO;
 import com.bass.amed.dto.clinicaltrial.ClinicalTrialExpertDTO;
+import com.bass.amed.dto.gmp.*;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
@@ -1015,7 +1016,7 @@ public class DocumentsController
             outputDocumentsEntity.setPath(docPath);
             outputDocumentsRepository.save(outputDocumentsEntity);
         }
-        catch (Exception e)
+        catch (JRException | IOException e)
         {
             throw new CustomException(e.getMessage());
         }
@@ -1216,7 +1217,7 @@ public class DocumentsController
                     order.setCurrency(bonDePlataDTO.getCurrency());
                     order.setAmountExchanged(AmountUtils.round(order.getQuantity() * order.getAmount() / coeficient, 2));
                     paymentOrderRepository.save(order);
-                    Utils.jobUnschedule(schedulerRestApiHost,"/wait-evaluation-medicament-registration", bonDePlataDTO.getRequestId());
+                    Utils.jobUnschedule(schedulerRestApiHost, "/wait-evaluation-medicament-registration", bonDePlataDTO.getRequestId());
                 }
             }
         }
@@ -1355,6 +1356,488 @@ public class DocumentsController
 
         return ResponseEntity.ok().header("Content-Type", "application/pdf")
                 .header("Content-Disposition", "inline; filename=medicamentCertificate.pdf").body(bytes);
+    }
+
+    @RequestMapping(value = "/view-ordin-de-inspectare-gmp", method = RequestMethod.POST)
+    public ResponseEntity<byte[]> viewOrdinDeInspectareGMP(@RequestBody GMPDetailsDTO details) throws CustomException
+    {
+        byte[] bytes = null;
+        try
+        {
+            ResourceLoader resourceLoader = new DefaultResourceLoader();
+            Resource res = resourceLoader.getResource("layouts/GMP Ordin.jrxml");
+            JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
+
+            /* Map to hold Jasper report Parameters */
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("nr", details.getOrderNr());
+            SimpleDateFormat sdf = new SimpleDateFormat(Constants.Layouts.DATE_FORMAT);
+            parameters.put("date", sdf.format(Calendar.getInstance().getTime()));
+            parameters.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
+            parameters.put("expertsLeader", details.getExpertsLeader());
+            parameters.put("expertsLeaderFuncion", details.getExpertsLeaderFunction());
+            parameters.put("fnDate", sdf.format(details.getRequestDate()));
+            parameters.put("registredMailNr", details.getRequestNr());
+            parameters.put("registredMailDate", sdf.format(details.getRequestDate()));
+            parameters.put("distributionCompany", details.getCompanyName());
+            parameters.put("distributionCompanyAddress", details.getDistributionCompanyAddress());
+            parameters.put("firstInspectionDate", sdf.format(details.getFirstInspectionDate()));
+            parameters.put("companyName", details.getCompanyName());
+            parameters.put("inspectorsNameFunction", details.getInspectorsName());
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
+            bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+        }
+        catch (Exception e)
+        {
+            throw new CustomException(e.getMessage());
+        }
+
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=ordin.pdf").body(bytes);
+    }
+
+    @RequestMapping(value = "/view-autorizatie-de-fabricatie-gmp", method = RequestMethod.POST)
+    public ResponseEntity<byte[]> viewAutorizatieDeFabricatieGMP(@RequestBody GMPDetailsDTO details) throws CustomException
+    {
+        byte[] bytes = null;
+        try
+        {
+            ResourceLoader resourceLoader1 = new DefaultResourceLoader();
+            Resource res1 = resourceLoader1.getResource("layouts/GMP autorizatie de fabricatie.jrxml");
+            JasperReport report1 = JasperCompileManager.compileReport(res1.getInputStream());
+
+            /* Map to hold Jasper report Parameters */
+            Map<String, Object> parameters1 = new HashMap<>();
+            SimpleDateFormat sdf = new SimpleDateFormat(Constants.Layouts.DATE_FORMAT);
+            parameters1.put("autorizationNr", details.getAutorizationNr());
+            parameters1.put("date", sdf.format(Calendar.getInstance().getTime()));
+            parameters1.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
+            parameters1.put("autorizationOwner", details.getCompanyName());
+            parameters1.put("fabricationAddress", details.getDistributionCompanyAddress());
+            parameters1.put("legalAddress", details.getCompanyAddress());
+            if (Boolean.TRUE.equals(details.getMedicamentClinicalInvestigation()) && (Boolean.TRUE.equals(details.getMedicamentHumanUse()) || Boolean.TRUE.equals(details.getMedicamentVeterinary())))
+            {
+                parameters1.put("authorizationSoupe", "Anexa 1 si Anexa 2");
+                parameters1.put("mainAnnex", "Anexa 1 si Anexa 2");
+            }
+            else if (Boolean.TRUE.equals(details.getMedicamentClinicalInvestigation()))
+            {
+                parameters1.put("authorizationSoupe", "Anexa 2");
+                parameters1.put("mainAnnex", "Anexa 2");
+            }
+            else if (Boolean.TRUE.equals(details.getMedicamentHumanUse()) || Boolean.TRUE.equals(details.getMedicamentVeterinary()))
+            {
+                parameters1.put("authorizationSoupe", "Anexa 1");
+                parameters1.put("mainAnnex", "Anexa 1");
+            }
+            Calendar c = Calendar.getInstance();
+            c.add(Calendar.YEAR, 5);
+            parameters1.put("validUntil", sdf.format(c.getTime()));
+            String optionalAnnexes = "Anexa 3 (Adresa locului(lor) de fabricaţie prin contract)|";
+            if (details.getLaboratories() != null && !details.getLaboratories().isEmpty())
+            {
+                optionalAnnexes += "Anexa 4 (Adresa laboratoarelor cu analize prin contract)|";
+            }
+            if (details.getQualifiedPersons() != null && !details.getQualifiedPersons().isEmpty())
+            {
+                optionalAnnexes += "Anexa 5 (Numele Persoanei Calificate)|";
+            }
+            if ((details.getResponsiblePersons() != null && !details.getResponsiblePersons().isEmpty()) || (details.getQualityControlPersons() != null && !details.getQualityControlPersons().isEmpty()))
+            {
+                optionalAnnexes += "Anexa 6 (Numele persoanelor responsabile)|";
+            }
+            optionalAnnexes += "Anexa 7 (Data inspecţiei în baza căreia a fost eliberată autorizaţia, scopul ultimei inspecţii)|";
+            if (details.getAutorizatedMedicamentsForProduction() != null && !details.getAutorizatedMedicamentsForProduction().isEmpty())
+            {
+                optionalAnnexes += "Anexa 8 (Medicamente autorizate pentru a fi fabricate)";
+            }
+            parameters1.put("optionalAnnexes", optionalAnnexes);
+            JasperPrint jasperPrint1 = JasperFillManager.fillReport(report1, parameters1, new JREmptyDataSource());
+
+            List<JasperPrint> jasperPrints = new ArrayList<>();
+            jasperPrints.add(jasperPrint1);
+
+            if (Boolean.TRUE.equals(details.getMedicamentHumanUse()) || Boolean.TRUE.equals(details.getMedicamentVeterinary()))
+            {
+                fillAnexaI(details, sdf, jasperPrints);
+            }
+            if (Boolean.TRUE.equals(details.getMedicamentClinicalInvestigation()))
+            {
+                fillAnexaII(details, sdf, jasperPrints);
+            }
+            fillAnexaIII(details, sdf, jasperPrints);
+            if (details.getLaboratories() != null && !details.getLaboratories().isEmpty())
+            {
+                fillAnexaIV(details, sdf, jasperPrints);
+            }
+            if (details.getQualifiedPersons() != null && !details.getQualifiedPersons().isEmpty())
+            {
+                fillAnexaV(details, sdf, jasperPrints);
+            }
+            if ((details.getResponsiblePersons() != null && !details.getResponsiblePersons().isEmpty()) || (details.getQualityControlPersons() != null && !details.getQualityControlPersons().isEmpty()))
+            {
+                fillAnexaVI(details, sdf, jasperPrints);
+            }
+            fillAnexaVII(details, sdf, jasperPrints);
+            if (details.getAutorizatedMedicamentsForProduction() != null && !details.getAutorizatedMedicamentsForProduction().isEmpty())
+            {
+                fillAnexaVIII(details, sdf, jasperPrints);
+            }
+
+            storageService.initIfNeeded(Paths.get(storageService.getRootFolder()), "ordine_de_autorizare_medicament");
+            String outputFile = storageService.getRootFolder() + "/ordine_de_autorizare_medicament/Ordin de autorizare medicament Nr.pdf";
+            OutputStream outputStream = new FileOutputStream(new File(outputFile));
+            JRPdfExporter jrPdfExporter = new JRPdfExporter();
+            jrPdfExporter.setExporterInput(SimpleExporterInput.getInstance(jasperPrints));
+            jrPdfExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+            SimplePdfExporterConfiguration configuration = new SimplePdfExporterConfiguration();
+            configuration.setCreatingBatchModeBookmarks(true);
+            jrPdfExporter.setConfiguration(configuration);
+            jrPdfExporter.exportReport();
+            outputStream.close();
+
+            bytes = Files.readAllBytes(new File(outputFile).toPath());
+        }
+        catch (IOException | JRException e)
+        {
+            throw new CustomException(e.getMessage());
+        }
+
+        return ResponseEntity.ok().header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=ordinDeAutorizare.pdf").body(bytes);
+    }
+
+    private void fillAnexaI(@RequestBody GMPDetailsDTO details, SimpleDateFormat sdf, List<JasperPrint> jasperPrints) throws JRException, IOException
+    {
+        ResourceLoader resourceLoader2 = new DefaultResourceLoader();
+        Resource res2 = resourceLoader2.getResource("layouts/GMP autorizare de fabricatie anexa 1.jrxml");
+        JasperReport report2 = JasperCompileManager.compileReport(res2.getInputStream());
+        HashMap<String, Object> report2Params = fillCommonAnnexesParameters(details, sdf);
+        report2Params.put("humanUse",Boolean.TRUE.equals(details.getMedicamentHumanUse()));
+        report2Params.put("veterinaryUse",  Boolean.TRUE.equals(details.getMedicamentVeterinary()));
+        fillCommonLists(details, jasperPrints, report2, report2Params);
+    }
+
+    private void fillAnexaII(@RequestBody GMPDetailsDTO details, SimpleDateFormat sdf, List<JasperPrint> jasperPrints) throws JRException, IOException
+    {
+        ResourceLoader resourceLoader3 = new DefaultResourceLoader();
+        Resource res3 = resourceLoader3.getResource("layouts/GMP autorizare de fabricatie anexa 2.jrxml");
+        JasperReport report3 = JasperCompileManager.compileReport(res3.getInputStream());
+        HashMap<String, Object> report3Params = fillCommonAnnexesParameters(details, sdf);
+        fillCommonLists(details, jasperPrints, report3, report3Params);
+    }
+
+    private void fillAnexaIII(@RequestBody GMPDetailsDTO details, SimpleDateFormat sdf, List<JasperPrint> jasperPrints) throws JRException, IOException
+    {
+        ResourceLoader resourceLoader4 = new DefaultResourceLoader();
+        Resource res4 = resourceLoader4.getResource("layouts/GMP autorizare de fabricatie anexa 3.jrxml");
+        JasperReport report4 = JasperCompileManager.compileReport(res4.getInputStream());
+        HashMap<String, Object> report4Params =  fillCommonAnnexesParameters(details,sdf);
+        List<GMPLocDeFabricatieDTO> fabricatiiLocuri = new ArrayList<>();
+        GMPLocDeFabricatieDTO loc = new GMPLocDeFabricatieDTO();
+        loc.setName(details.getDistributionCompanyName());
+        loc.setAddress(details.getDistributionCompanyAddress());
+        loc.setStagesOfManufacture(details.getStagesOfManufacture());
+        fabricatiiLocuri.add(loc);
+        JRBeanCollectionDataSource locJRBean = new JRBeanCollectionDataSource(fabricatiiLocuri);
+        report4Params.put("gmpDataset1", locJRBean);
+        JasperPrint jasperPrint4 = JasperFillManager.fillReport(report4, report4Params, new JREmptyDataSource());
+        jasperPrints.add(jasperPrint4);
+    }
+
+    private void fillAnexaIV(@RequestBody GMPDetailsDTO details, SimpleDateFormat sdf, List<JasperPrint> jasperPrints) throws JRException, IOException
+    {
+        ResourceLoader resourceLoader5 = new DefaultResourceLoader();
+        Resource res5 = resourceLoader5.getResource("layouts/GMP autorizare de fabricatie anexa 4.jrxml");
+        JasperReport report5 = JasperCompileManager.compileReport(res5.getInputStream());
+        HashMap<String, Object> report5Params =  fillCommonAnnexesParameters(details,sdf);
+        List<GMPLaboratorDTO> laboratories = new ArrayList<>();
+        details.getLaboratories().stream().forEach(l->laboratories.add(l));
+        JRBeanCollectionDataSource labJRBean = new JRBeanCollectionDataSource(laboratories);
+        report5Params.put("gmpDataset1", labJRBean);
+        JasperPrint jasperPrint5 = JasperFillManager.fillReport(report5, report5Params, new JREmptyDataSource());
+        jasperPrints.add(jasperPrint5);
+    }
+
+    private void fillAnexaV(@RequestBody GMPDetailsDTO details, SimpleDateFormat sdf, List<JasperPrint> jasperPrints) throws JRException, IOException
+    {
+        ResourceLoader resourceLoader6 = new DefaultResourceLoader();
+        Resource res6 = resourceLoader6.getResource("layouts/GMP autorizare de fabricatie anexa 5.jrxml");
+        JasperReport report6 = JasperCompileManager.compileReport(res6.getInputStream());
+        HashMap<String, Object> report6Params =  fillCommonAnnexesParameters(details,sdf);
+        report6Params.put("nameOfcalificationPerson", details.getQualifiedPersons().stream().findAny().orElse(""));
+        JasperPrint jasperPrint6 = JasperFillManager.fillReport(report6, report6Params, new JREmptyDataSource());
+        jasperPrints.add(jasperPrint6);
+    }
+
+    private void fillAnexaVI(@RequestBody GMPDetailsDTO details, SimpleDateFormat sdf, List<JasperPrint> jasperPrints) throws JRException, IOException
+    {
+        ResourceLoader resourceLoader7 = new DefaultResourceLoader();
+        Resource res7 = resourceLoader7.getResource("layouts/GMP autorizare de fabricatie anexa 6.jrxml");
+        JasperReport report7 = JasperCompileManager.compileReport(res7.getInputStream());
+        HashMap<String, Object> report7Params =  fillCommonAnnexesParameters(details,sdf);
+        report7Params.put("nameOfQualityControl", details.getQualityControlPersons().stream().findAny().orElse(""));
+        report7Params.put("manufacturingForResponsiblePerson", details.getResponsiblePersons().stream().findAny().orElse(""));
+        JasperPrint jasperPrint7 = JasperFillManager.fillReport(report7, report7Params, new JREmptyDataSource());
+        jasperPrints.add(jasperPrint7);
+    }
+
+    private void fillAnexaVII(@RequestBody GMPDetailsDTO details, SimpleDateFormat sdf, List<JasperPrint> jasperPrints) throws JRException, IOException
+    {
+        ResourceLoader resourceLoader8 = new DefaultResourceLoader();
+        Resource res8 = resourceLoader8.getResource("layouts/GMP autorizare de fabricatie anexa 7.jrxml");
+        JasperReport report8 = JasperCompileManager.compileReport(res8.getInputStream());
+        HashMap<String, Object> report8Params =  fillCommonAnnexesParameters(details,sdf);
+        report8Params.put("inspectionDates", sdf.format(details.getInspectionDate()));
+        report8Params.put("aplicationDomainOfLastInspection", details.getAplicationDomainOfLastInspection());
+        JasperPrint jasperPrint8 = JasperFillManager.fillReport(report8, report8Params, new JREmptyDataSource());
+        jasperPrints.add(jasperPrint8);
+    }
+
+    private void fillAnexaVIII(@RequestBody GMPDetailsDTO details, SimpleDateFormat sdf, List<JasperPrint> jasperPrints) throws JRException, IOException
+    {
+        ResourceLoader resourceLoader9 = new DefaultResourceLoader();
+        Resource res9 = resourceLoader9.getResource("layouts/GMP autorizare de fabricatie anexa 8.jrxml");
+        JasperReport report9 = JasperCompileManager.compileReport(res9.getInputStream());
+        HashMap<String, Object> report9Params =  fillCommonAnnexesParameters(details,sdf);
+        String str = "";
+        for(GMPAuthorizedMedicamentDTO m : details.getAutorizatedMedicamentsForProduction())
+        {
+            str+=m.getName()+"|";
+        }
+        report9Params.put("autorizatedMedicamentForProduction",str);
+        report9Params.put("manufacturerAndHolderOfCertificateOfRegistration",
+                details.getAutorizatedMedicamentsForProduction().stream().findAny().orElse(new GMPAuthorizedMedicamentDTO()).getCertificateHolder());
+        JasperPrint jasperPrint9 = JasperFillManager.fillReport(report9, report9Params, new JREmptyDataSource());
+        jasperPrints.add(jasperPrint9);
+    }
+
+    private void fillCommonLists(@RequestBody GMPDetailsDTO details, List<JasperPrint> jasperPrints, JasperReport report3, HashMap<String, Object> report3Params) throws JRException
+    {
+        int i = 1;
+        if ((details.getPreparateAseptic() != null && !details.getPreparateAseptic().isEmpty()) || (details.getSterilizateFinal() != null && !details.getSterilizateFinal().isEmpty())
+                || (details.getCertificareaSeriei() != null && !details.getCertificareaSeriei().isEmpty()))
+        {
+            fillProduseSterile(details, report3Params, ++i);
+        }
+        if ((details.getProduseNesterile() != null && !details.getProduseNesterile().isEmpty()) || (details.getProduseNesterileNumaiCertificareaSeriei() != null && !details.getProduseNesterileNumaiCertificareaSeriei().isEmpty()))
+        {
+            fillProduseNesterile(details, report3Params, ++i);
+        }
+        if ((details.getMedicamenteBiologice() != null && !details.getMedicamenteBiologice().isEmpty()) || (details.getMedicamenteBiologiceNumaiCertificareaSeriei() != null && !details.getMedicamenteBiologiceNumaiCertificareaSeriei().isEmpty()))
+        {
+            fillMedicamenteBiologice(details, report3Params, ++i);
+        }
+        if ((details.getManufactures() != null && !details.getManufactures().isEmpty()) || (details.getSubstanceSterilization() != null && !details.getSubstanceSterilization().isEmpty())
+                || (details.getOtherManufactures() != null && !details.getOtherManufactures().isEmpty()))
+        {
+            fillManufactures(details, report3Params, ++i);
+        }
+        if ((details.getAmbalarePrimara() != null && !details.getAmbalarePrimara().isEmpty()) || (details.getAmbalareSecundara() != null && !details.getAmbalareSecundara().isEmpty()))
+        {
+            fillAmbalare(details, report3Params, ++i);
+        }
+        if (details.getQualityControlTests() != null && !details.getQualityControlTests().isEmpty())
+        {
+            fillQualityTests(details, report3Params, ++i);
+        }
+        JasperPrint jasperPrint3 = JasperFillManager.fillReport(report3, report3Params, new JREmptyDataSource());
+        jasperPrints.add(jasperPrint3);
+    }
+
+    private HashMap<String, Object> fillCommonAnnexesParameters(@RequestBody GMPDetailsDTO details, SimpleDateFormat sdf)
+    {
+        HashMap<String, Object> report2Params = new HashMap<>();
+        report2Params.put("nr", details.getAutorizationNr());
+        report2Params.put("date", sdf.format(Calendar.getInstance().getTime()));
+        report2Params.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
+        report2Params.put("amedNr", details.getAutorizationNr());
+        report2Params.put("amedDate", sdf.format(Calendar.getInstance().getTime()));
+        report2Params.put("applicantNameAndAddres", details.getCompanyName() + " " + details.getDistributionCompanyAddress());
+        return report2Params;
+    }
+
+    private void fillQualityTests(@RequestBody GMPDetailsDTO details, HashMap<String, Object> report2Params, int i)
+    {
+        List<GMPDataSetDTO> gmpTests = new ArrayList<>();
+        GMPDataSetDTO dataSet = new GMPDataSetDTO();
+        dataSet.setNr(String.valueOf(i));
+        dataSet.setTitle("Teste pentru controlul calităţii");
+        if(details.getQualityControlTests()!=null && !details.getQualityControlTests().isEmpty())
+        {
+            int j = 0;
+            for(GMPMedDTO p : details.getAmbalarePrimara())
+            {
+                dataSet.setValue(dataSet.getValue()+" "+(++j)+") "+p.getValue()+"|");
+            }
+        }
+        gmpTests.add(dataSet);
+        JRBeanCollectionDataSource gmpTestsJRBean = new JRBeanCollectionDataSource(gmpTests);
+        report2Params.put("gmpDataset6", gmpTestsJRBean);
+    }
+
+    private void fillProduseSterile(@RequestBody GMPDetailsDTO details, HashMap<String, Object> report2Params, int i)
+    {
+        List<GMPDataSetDTO> gmpProduseSterile = new ArrayList<>();
+        GMPDataSetDTO dataSet = new GMPDataSetDTO();
+        dataSet.setNr(String.valueOf(i));
+        dataSet.setTitle("Produse sterile");
+        if(details.getPreparateAseptic()!=null && !details.getPreparateAseptic().isEmpty())
+        {
+            char ch = (char)92;
+            dataSet.setValue("1) Preparate aseptic (lista formelor farmaceutice)|");
+            for(GMPMedDTO p : details.getPreparateAseptic())
+            {
+                dataSet.setValue(dataSet.getValue()+" \t"+ch+") "+p.getValue()+"|");
+            }
+        }
+        if(details.getSterilizateFinal()!=null && !details.getSterilizateFinal().isEmpty())
+        {
+            char ch = (char)92;
+            dataSet.setValue("2) Sterilizate final (lista formelor farmaceutice)|");
+            for(GMPMedDTO p : details.getSterilizateFinal())
+            {
+                dataSet.setValue(dataSet.getValue()+" \t"+ch+") "+p.getValue()+"|");
+            }
+        }
+        if(details.getCertificareaSeriei()!=null && !details.getCertificareaSeriei().isEmpty())
+        {
+            char ch = (char)92;
+            dataSet.setValue("3) Numai certificarea seriei|");
+            for(GMPMedDTO p : details.getCertificareaSeriei())
+            {
+                dataSet.setValue(dataSet.getValue()+" \t"+ch+") "+p.getValue()+"|");
+            }
+        }
+        gmpProduseSterile.add(dataSet);
+        JRBeanCollectionDataSource gmpProduseSterileJRBean = new JRBeanCollectionDataSource(gmpProduseSterile);
+        report2Params.put("gmpDataset1", gmpProduseSterileJRBean);
+    }
+
+    private void fillProduseNesterile(@RequestBody GMPDetailsDTO details, HashMap<String, Object> report2Params, int i)
+    {
+        List<GMPDataSetDTO> gmpProduseNesterile = new ArrayList<>();
+        GMPDataSetDTO dataSet = new GMPDataSetDTO();
+        dataSet.setNr(String.valueOf(i));
+        dataSet.setTitle("Produse nesterile");
+        if(details.getProduseNesterile()!=null && !details.getProduseNesterile().isEmpty())
+        {
+            char ch = (char)92;
+            dataSet.setValue("1) Produse nesterile (lista formelor farmaceutice)|");
+            for(GMPMedDTO p : details.getProduseNesterile())
+            {
+                dataSet.setValue(dataSet.getValue()+" \t"+ch+") "+p.getValue()+"|");
+            }
+        }
+        if(details.getProduseNesterileNumaiCertificareaSeriei()!=null && !details.getProduseNesterileNumaiCertificareaSeriei().isEmpty())
+        {
+            char ch = (char)92;
+            dataSet.setValue("2) Numai certificarea seriei|");
+            for(GMPMedDTO p : details.getProduseNesterileNumaiCertificareaSeriei())
+            {
+                dataSet.setValue(dataSet.getValue()+" \t"+ch+") "+p.getValue()+"|");
+            }
+        }
+        gmpProduseNesterile.add(dataSet);
+        JRBeanCollectionDataSource gmpProduseNesterileJRBean = new JRBeanCollectionDataSource(gmpProduseNesterile);
+        report2Params.put("gmpDataset2", gmpProduseNesterileJRBean);
+    }
+
+    private void fillMedicamenteBiologice(@RequestBody GMPDetailsDTO details, HashMap<String, Object> report2Params, int i)
+    {
+        List<GMPDataSetDTO> gmpMedicamenteBiologice = new ArrayList<>();
+        GMPDataSetDTO dataSet = new GMPDataSetDTO();
+        dataSet.setNr(String.valueOf(i));
+        dataSet.setTitle("Medicamente biologice");
+        if(details.getMedicamenteBiologice()!=null && !details.getMedicamenteBiologice().isEmpty())
+        {
+            char ch = (char)92;
+            dataSet.setValue("1) Medicamente biologice|");
+            for(GMPMedDTO p : details.getMedicamenteBiologice())
+            {
+                dataSet.setValue(dataSet.getValue()+" \t"+ch+") "+p.getValue()+"|");
+            }
+        }
+        if(details.getMedicamenteBiologiceNumaiCertificareaSeriei()!=null && !details.getMedicamenteBiologiceNumaiCertificareaSeriei().isEmpty())
+        {
+            char ch = (char)92;
+            dataSet.setValue("2) Numai certificarea seriei (lista tipurilor de produse)|");
+            for(GMPMedDTO p : details.getMedicamenteBiologiceNumaiCertificareaSeriei())
+            {
+                dataSet.setValue(dataSet.getValue()+" \t"+ch+") "+p.getValue()+"|");
+            }
+        }
+        gmpMedicamenteBiologice.add(dataSet);
+        JRBeanCollectionDataSource gmpMedicamenteBiologiceJRBean = new JRBeanCollectionDataSource(gmpMedicamenteBiologice);
+        report2Params.put("gmpDataset3", gmpMedicamenteBiologiceJRBean);
+    }
+
+    private void fillAmbalare(@RequestBody GMPDetailsDTO details, HashMap<String, Object> report2Params, int i)
+    {
+        List<GMPDataSetDTO> gmpAmbalare = new ArrayList<>();
+        GMPDataSetDTO dataSet = new GMPDataSetDTO();
+        dataSet.setNr(String.valueOf(i));
+        dataSet.setTitle("Teste pentru controlul calităţii");
+        if(details.getQualityControlTests()!=null && !details.getQualityControlTests().isEmpty())
+        {
+            int ch = (char)92;
+            dataSet.setValue("1) Ambalare primară|");
+            for(GMPMedDTO p : details.getAmbalarePrimara())
+            {
+                dataSet.setValue(dataSet.getValue()+" \t"+ch+") "+p.getValue()+"|");
+            }
+        }
+        if(details.getAmbalareSecundara()!=null && !details.getAmbalareSecundara().isEmpty())
+        {
+            char ch = (char)92;
+            dataSet.setValue("2) Ambalare secundară|");
+            for(GMPMedDTO p : details.getAmbalareSecundara())
+            {
+                dataSet.setValue(dataSet.getValue()+" \t"+ch+") "+p.getValue()+"|");
+            }
+        }
+        gmpAmbalare.add(dataSet);
+        JRBeanCollectionDataSource gmpAmbalareJRBean = new JRBeanCollectionDataSource(gmpAmbalare);
+        report2Params.put("gmpDataset5", gmpAmbalareJRBean);
+    }
+
+    private void fillManufactures(@RequestBody GMPDetailsDTO details, HashMap<String, Object> report2Params, int i)
+    {
+        List<GMPDataSetDTO> gmpManufactures = new ArrayList<>();
+        GMPDataSetDTO dataSet = new GMPDataSetDTO();
+        dataSet.setNr(String.valueOf(i));
+        dataSet.setTitle("Alte produse sau activităţi de fabricaţie");
+        if(details.getManufactures()!=null && !details.getManufactures().isEmpty())
+        {
+            char ch = (char)92;
+            dataSet.setValue("1) Fabricaţie|");
+            for(GMPMedDTO p : details.getManufactures())
+            {
+                dataSet.setValue(dataSet.getValue()+" \t"+ch+") "+p.getValue()+"|");
+            }
+        }
+        if(details.getSubstanceSterilization()!=null && !details.getSubstanceSterilization().isEmpty())
+        {
+            char ch = (char)92;
+            dataSet.setValue("2) Sterilizarea substanţelor active/excipienţilor/produselor finite|");
+            for(GMPMedDTO p : details.getSubstanceSterilization())
+            {
+                dataSet.setValue(dataSet.getValue()+" \t"+ch+") "+p.getValue()+"|");
+            }
+        }
+        if(details.getOtherManufactures()!=null && !details.getOtherManufactures().isEmpty())
+        {
+            char ch = (char)92;
+            dataSet.setValue("3) Altele|");
+            for(GMPMedDTO p : details.getOtherManufactures())
+            {
+                dataSet.setValue(dataSet.getValue()+" \t"+ch+") "+p.getValue()+"|");
+            }
+        }
+        gmpManufactures.add(dataSet);
+        JRBeanCollectionDataSource gmpManufacturesJRBean = new JRBeanCollectionDataSource(gmpManufactures);
+        report2Params.put("gmpDataset4", gmpManufacturesJRBean);
     }
 
     @RequestMapping(value = "/view-medicament-modification-certificate", method = RequestMethod.POST)
@@ -2062,7 +2545,9 @@ public class DocumentsController
             outputDocumentsRepository.save(outputDocumentsEntity);
 
 
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             throw new CustomException(e.getMessage());
         }
 
@@ -2072,9 +2557,11 @@ public class DocumentsController
 
     @RequestMapping(value = "/generate-dd-amd-ct", method = RequestMethod.POST)
     @Transactional
-    public ResponseEntity<byte[]> generateDDACt(@RequestBody List<RegistrationRequestsEntity> requests) throws CustomException {
+    public ResponseEntity<byte[]> generateDDACt(@RequestBody List<RegistrationRequestsEntity> requests) throws CustomException
+    {
         byte[] bytes = null;
-        try {
+        try
+        {
             ResourceLoader resourceLoader = new DefaultResourceLoader();
             Resource res = resourceLoader.getResource("layouts/Dispozitia amendamente.jrxml");
             JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
@@ -2093,7 +2580,7 @@ public class DocumentsController
                 dto.setExpertName(String.join("|", reg.getExpertList().stream().map(exp -> exp.getExpert().getName()).collect(Collectors.toList())));
                 dto.setTitleClinicalStudyCode(reg.getClinicalTrails().getTitle().concat(" ").concat(reg.getClinicalTrails().getCode()));
 
-                ClinicTrialAmendEntity amendEntity = reg.getClinicalTrails().getClinicTrialAmendEntities().stream().filter(amend-> amend.getRegistrationRequestId().equals(reg.getId())).findFirst().orElse(new ClinicTrialAmendEntity());
+                ClinicTrialAmendEntity amendEntity = reg.getClinicalTrails().getClinicTrialAmendEntities().stream().filter(amend -> amend.getRegistrationRequestId().equals(reg.getId())).findFirst().orElse(new ClinicTrialAmendEntity());
                 dto.setInvestigatedProduct(reg.getClinicalTrails().getMedicament().getName());
                 dto.setInstitution(String.join("|", amendEntity.getMedicalInstitutionsTo().stream().map(inst -> inst.getName()).collect(Collectors.toList())));
 
@@ -2124,7 +2611,9 @@ public class DocumentsController
             outputDocumentsRepository.save(outputDocumentsEntity);
 
 
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             throw new CustomException(e.getMessage());
         }
         return ResponseEntity.ok().header("Content-Type", "application/pdf")
@@ -2133,7 +2622,8 @@ public class DocumentsController
 
     @RequestMapping(value = "/add-ddc", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    public ResponseEntity<Void> addDDC(@RequestParam("id") Integer id, @RequestParam("dateOfIssue") Date dateOfIssue, @RequestParam("file") MultipartFile file) throws CustomException {
+    public ResponseEntity<Void> addDDC(@RequestParam("id") Integer id, @RequestParam("dateOfIssue") Date dateOfIssue, @RequestParam("file") MultipartFile file) throws CustomException
+    {
         Optional<OutputDocumentsEntity> outputDocumentsEntityOpt = outputDocumentsRepository.findById(id);
         OutputDocumentsEntity outDocument = outputDocumentsEntityOpt.orElse(new OutputDocumentsEntity());
         outDocument.setDateOfIssue(new Timestamp(dateOfIssue.getTime()));
@@ -2144,7 +2634,8 @@ public class DocumentsController
 
     @RequestMapping(value = "/add-ddac", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    public ResponseEntity<Void> addDDAC(@RequestParam("id") Integer id, @RequestParam("dateOfIssue") Date dateOfIssue, @RequestParam("file") MultipartFile file) throws CustomException {
+    public ResponseEntity<Void> addDDAC(@RequestParam("id") Integer id, @RequestParam("dateOfIssue") Date dateOfIssue, @RequestParam("file") MultipartFile file) throws CustomException
+    {
         Optional<OutputDocumentsEntity> outputDocumentsEntityOpt = outputDocumentsRepository.findById(id);
         OutputDocumentsEntity outDocument = outputDocumentsEntityOpt.orElse(new OutputDocumentsEntity());
         outDocument.setDateOfIssue(new Timestamp(dateOfIssue.getTime()));
@@ -2152,6 +2643,7 @@ public class DocumentsController
         addOutputDocuments("DDA", id, file);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
     @RequestMapping(value = "/remove-ddc", method = RequestMethod.POST)
     @Transactional
     public ResponseEntity<Void> removeDDC(@RequestBody OutputDocumentsEntity document) throws CustomException
@@ -2298,12 +2790,14 @@ public class DocumentsController
         outputDocumentsRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    
+
     @RequestMapping(value = "/generate-aviz-amdm-ct", method = RequestMethod.GET)
     public ResponseEntity<byte[]> generateAvizAC(@RequestParam(value = "id") Integer id,
-                                                 @RequestParam(value = "docCategory") String docCategory) throws CustomException {
+                                                 @RequestParam(value = "docCategory") String docCategory) throws CustomException
+    {
         Optional<RegistrationRequestsEntity> regOptional = regRequestRepository.findClinicalTrailstRequestById(id);
-        if (!regOptional.isPresent()) {
+        if (!regOptional.isPresent())
+        {
             throw new CustomException("Inregistrarea nu a fost gasita");
         }
         RegistrationRequestsEntity registrationRequestsEntity = regOptional.get();
@@ -2312,20 +2806,24 @@ public class DocumentsController
                 entity.getRegistrationRequestId().equals(registrationRequestsEntity.getId())
         ).findFirst().orElse(null);
 
-        if (clinicTrialAmendEntity == null) {
+        if (clinicTrialAmendEntity == null)
+        {
             throw new CustomException("Inregistrarea nu a fost gasita");
         }
 
-        if (clinicTrialAmendEntity.getComissionNr() == null || clinicTrialAmendEntity.getComissionNr().isEmpty()) {
+        if (clinicTrialAmendEntity.getComissionNr() == null || clinicTrialAmendEntity.getComissionNr().isEmpty())
+        {
             throw new CustomException("Numarul comisiei medicamentului nu este introdusa");
         }
-        if (clinicTrialAmendEntity.getComissionDate() == null) {
+        if (clinicTrialAmendEntity.getComissionDate() == null)
+        {
             throw new CustomException("Data comisiei medicamentului nu este introdusa");
         }
 
         Set<CtAmendMedInstInvestigatorEntity> medInstInvestigators = ctAmendMedInstInvestigatorRepository.findCtMedInstInvestigatorById(clinicTrialAmendEntity.getId());
         medInstInvestigators.forEach(medInstInvestigator -> {
-            if ('U' == medInstInvestigator.getEmbededId().getStatus() || 'N' == medInstInvestigator.getEmbededId().getStatus()) {
+            if ('U' == medInstInvestigator.getEmbededId().getStatus() || 'N' == medInstInvestigator.getEmbededId().getStatus())
+            {
                 CtMedicalInstitutionEntity medInst = medInstInvestigator.getMedicalInstitutionsEntity();
                 CtInvestigatorEntity ctInvestigatorEntity = new CtInvestigatorEntity();
                 ctInvestigatorEntity.asign(medInstInvestigator.getInvestigatorsEntity());
@@ -2340,12 +2838,16 @@ public class DocumentsController
 
         byte[] bytes = null;
 
-        try {
+        try
+        {
             ResourceLoader resourceLoader = new DefaultResourceLoader();
             Resource res = null;
-            if (documentsEntity.getDocType().getCategory().equals("AAS")) {
+            if (documentsEntity.getDocType().getCategory().equals("AAS"))
+            {
                 res = resourceLoader.getResource("layouts/aviz amend.jrxml");
-            } else {
+            }
+            else
+            {
                 res = resourceLoader.getResource("layouts/Ordin amendamente aprobate.jrxml");
             }
             JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
@@ -2368,13 +2870,15 @@ public class DocumentsController
 
             DocumentsEntity avizEtica = registrationRequestsEntity.getDocuments().stream().filter(docum -> docum.getDocType().getCategory().equals("AC")).findFirst().get();
             parameters.put("avizComitetEticNr", avizEtica.getNumber());
-            if (clinicTrialAmendEntity.getAmendCode() == null || clinicTrialAmendEntity.getAmendCode().isEmpty()) {
+            if (clinicTrialAmendEntity.getAmendCode() == null || clinicTrialAmendEntity.getAmendCode().isEmpty())
+            {
                 throw new CustomException("Codul amendamentului studiului clinic nu este introdus");
             }
             parameters.put("amdmIdentification", clinicTrialAmendEntity.getAmendCode());
             parameters.put("clinicalStudyName", clinicTrialAmendEntity.getTitleTo());
 
-            if (documentsEntity.getDocType().getCategory().equals("OAS")) {
+            if (documentsEntity.getDocType().getCategory().equals("OAS"))
+            {
                 parameters.put("clinicStudyNr", clinicTrialAmendEntity.getCodeTo());
                 parameters.put("ordinDate", documentsEntity.getDate());
                 parameters.put("ordinNr", documentsEntity.getNumber());
@@ -2398,7 +2902,9 @@ public class DocumentsController
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             throw new CustomException(e.getMessage());
         }
 
@@ -2409,9 +2915,11 @@ public class DocumentsController
 
     @RequestMapping(value = "/generate-aviz-ct", method = RequestMethod.GET)
     public ResponseEntity<byte[]> generateAvizC(@RequestParam(value = "id") Integer id,
-                                                @RequestParam(value = "docCategory") String docCategory) throws CustomException {
+                                                @RequestParam(value = "docCategory") String docCategory) throws CustomException
+    {
         Optional<RegistrationRequestsEntity> regOptional = regRequestRepository.findClinicalTrailstRequestById(id);
-        if (!regOptional.isPresent()) {
+        if (!regOptional.isPresent())
+        {
             throw new CustomException("Inregistrarea nu a fost gasita");
         }
 
@@ -2421,18 +2929,24 @@ public class DocumentsController
         clinicalTrailsService.getCtMedInstInvestigator(registrationRequestsEntity);
         OutputDocumentsEntity documentsEntity = registrationRequestsEntity.getOutputDocuments().stream().filter(docum -> docum.getDocType().getCategory().equals(docCategory)).findFirst().get();
 
-        if (registrationRequestsEntity.getClinicalTrails().getComissionNr() == null || registrationRequestsEntity.getClinicalTrails().getComissionNr().isEmpty()) {
+        if (registrationRequestsEntity.getClinicalTrails().getComissionNr() == null || registrationRequestsEntity.getClinicalTrails().getComissionNr().isEmpty())
+        {
             throw new CustomException("Numarul comisiei medicamentului nu este introdusa");
         }
-        if (registrationRequestsEntity.getClinicalTrails().getComissionDate() == null) {
+        if (registrationRequestsEntity.getClinicalTrails().getComissionDate() == null)
+        {
             throw new CustomException("Data comisiei medicamentului nu este introdusa");
         }
-        try {
+        try
+        {
             ResourceLoader resourceLoader = new DefaultResourceLoader();
             Resource res = null;
-            if (documentsEntity.getDocType().getCategory().equals("AS")) {
+            if (documentsEntity.getDocType().getCategory().equals("AS"))
+            {
                 res = resourceLoader.getResource("layouts/aviz studiu.jrxml");
-            } else {
+            }
+            else
+            {
                 res = resourceLoader.getResource("layouts/Ordin Studiu Clinic.jrxml");
             }
             JasperReport report = JasperCompileManager.compileReport(res.getInputStream());
@@ -2463,7 +2977,7 @@ public class DocumentsController
 
             parameters.put("productOfInvstigation", registrationRequestsEntity.getClinicalTrails().getMedicament().getName());
             parameters.put("manufacturerOfProductOfInvestigation", registrationRequestsEntity.getClinicalTrails().getMedicament().getManufacture().getDescription());
-            if(registrationRequestsEntity.getClinicalTrails().getReferenceProduct() != null && registrationRequestsEntity.getClinicalTrails().getReferenceProduct().getName() != null
+            if (registrationRequestsEntity.getClinicalTrails().getReferenceProduct() != null && registrationRequestsEntity.getClinicalTrails().getReferenceProduct().getName() != null
                     && !registrationRequestsEntity.getClinicalTrails().getReferenceProduct().getName().isEmpty())
             {
                 parameters.put("productOfReference", registrationRequestsEntity.getClinicalTrails().getReferenceProduct().getName());
@@ -2472,10 +2986,12 @@ public class DocumentsController
 
             parameters.put("procesVerbalNr", registrationRequestsEntity.getClinicalTrails().getComissionNr());
             parameters.put("procesVerbalDate", sdf.format(registrationRequestsEntity.getClinicalTrails().getComissionDate()));
-            if (documentsEntity.getDocType().getCategory().equals("OS")) {
+            if (documentsEntity.getDocType().getCategory().equals("OS"))
+            {
                 DocumentsEntity documentAviz = registrationRequestsEntity.getDocuments().stream().filter(document -> document.getDocType().getCategory().equals("AS")).findFirst()
                         .orElse(null);
-                if (documentAviz == null) {
+                if (documentAviz == null)
+                {
                     throw new CustomException("Avizul pentru desfasurarea studiului clinic nu a fost incarcat");
                 }
                 parameters.put("avizAmdmNr", documentAviz.getNumber());
@@ -2488,7 +3004,9 @@ public class DocumentsController
                 registrationRequestsEntity.getClinicalTrails().getMedicalInstitutions().forEach(medInst -> {
                     CtInvestigatorEntity inv = medInst.getInvestigators().stream().filter(investig -> investig.getMain() == Boolean.TRUE).findFirst().get();
                     if (sb.length() > 0)
+                    {
                         sb.append("|");
+                    }
                     sb.append(medInst.getName()).append(" (investigator principal ").append(inv.getFirstName()).append(" ").append(inv.getLastName()).append(")");
                 });
                 parameters.put("ordinDetails", sb.toString());
@@ -2500,7 +3018,9 @@ public class DocumentsController
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
 
 
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             throw new CustomException(e.getMessage());
         }
         System.out.println();

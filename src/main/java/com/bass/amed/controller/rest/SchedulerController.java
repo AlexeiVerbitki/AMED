@@ -19,11 +19,9 @@ public class SchedulerController
 {
 
     @Autowired
-    private XchangeUpdateService                  xchangeUpdateService;
+    private XchangeUpdateService xchangeUpdateService;
     @Autowired
-    private RequestRepository                     requestRepository;
-    @Autowired
-    private LdapUserDetailsSynchronizationService ldapUserDetailsSynchronizationService;
+    private RequestRepository    requestRepository;
 
 
     @RequestMapping(value = "/currency-updating", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
@@ -125,12 +123,4 @@ public class SchedulerController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
-    @GetMapping("/getUserDetails")
-    public ResponseEntity<Void> getUserDetails() throws CustomException
-    {
-        ldapUserDetailsSynchronizationService.getUserDetails();
-
-        return new ResponseEntity(HttpStatus.OK);
-    }
 }

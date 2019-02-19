@@ -20,7 +20,7 @@ public final class SecurityUtils
                     }
                     else if (authentication.getPrincipal() instanceof String)
                     {
-                        return (String) authentication.getPrincipal();
+                        return ((String) authentication.getPrincipal());
                     }
                     return null;
                 });
@@ -42,20 +42,20 @@ public final class SecurityUtils
     //                });
     //    }
 
-//    @Override
-//    public Optional<LdapUserDetails> getCurrentAuditor()
-//    {
-//        LdapUserDetailsImpl.Essence ldapUserDetails = new LdapUserDetailsImpl.Essence();
-//        ldapUserDetails.setDn("bass");
-//
-//        ldapUserDetails.setAccountNonExpired(false);
-//        ldapUserDetails.setUsername("dumitrash");
-//        ldapUserDetails.setPassword("eu hz si pass ii");
-//        ldapUserDetails.setCredentialsNonExpired(false);
-//
-//        return Optional.of(ldapUserDetails.createUserDetails());
-//
-//        //        return Optional.of(new User("dima", "hz", new HashSet<GrantedAuthority>() {}));
-//
-//    }
+    //    @Override
+    //    public Optional<LdapUserDetails> getCurrentAuditor()
+    //    {
+    //        LdapUserDetailsImpl.Essence ldapUserDetails = new LdapUserDetailsImpl.Essence();
+    //        ldapUserDetails.setDn("bass");
+    //
+    //        ldapUserDetails.setAccountNonExpired(false);
+    //        ldapUserDetails.setUsername("dumitrash");
+    //        ldapUserDetails.setPassword("eu hz si pass ii");
+    //        ldapUserDetails.setCredentialsNonExpired(false);
+    //
+    //        return Optional.of(ldapUserDetails.createUserDetails());
+    //
+    //        //        return Optional.of(new User("dima", "hz", new HashSet<GrantedAuthority>() {}));
+    //
+    //    }
 }

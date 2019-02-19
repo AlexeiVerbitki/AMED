@@ -28,6 +28,9 @@ public class GMPAuthorizationEntity
     @Column(name = "medicament_human_use")
     private Boolean medicamentHumanUse;
     @Basic
+    @Column(name = "medicament_for_clinical_investigation")
+    private Boolean medicamentClinicalInvestigation;
+    @Basic
     @Column(name = "veterinary_details")
     private String veterinaryDetails;
     @Basic
@@ -54,6 +57,9 @@ public class GMPAuthorizationEntity
     @Basic
     @Column(name = "place_distribution_email")
     private String placeDistributionEmail;
+    @Basic
+    @Column(name = "stages_of_manufacture")
+    private String stagesOfManufacture;
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "gmp_id")
     private Set<GMPSterileProductsEntity> sterileProducts = new HashSet<>();
@@ -98,4 +104,7 @@ public class GMPAuthorizationEntity
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "gmp_id")
     private Set<GMPPeriodsEntity> periods = new HashSet<>();
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "group_leader_id")
+    private NmEmployeesEntity groupLeader;
 }

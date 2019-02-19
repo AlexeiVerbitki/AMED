@@ -1,13 +1,13 @@
 package com.bass.amed.service;
 
 import com.bass.amed.common.Constants;
-import com.bass.amed.controller.rest.license.LicenseController;
 import com.bass.amed.dto.ScheduledModuleResponse;
 import com.bass.amed.dto.license.DiffLicense;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
-import com.bass.amed.repository.*;
-import com.bass.amed.repository.license.LicenseResolutionRepository;
+import com.bass.amed.repository.EconomicAgentsRepository;
+import com.bass.amed.repository.RegistrationRequestPayloadRepository;
+import com.bass.amed.repository.RequestRepository;
 import com.bass.amed.utils.AuditUtils;
 import com.bass.amed.utils.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,26 +34,14 @@ public class LicenseRegistrationRequestService
 {
     @Autowired
     private EntityManagerFactory entityManagerFactory;
-
     @Autowired
     private RequestRepository requestRepository;
-
-    @Autowired
-    private NmStatesRepository statesRepository;
-
     @Autowired
     private LocalityService localityService;
-
-    @Autowired
-    private LicenseResolutionRepository licenseResolutionRepository;
-
     @Autowired
     private EconomicAgentsRepository economicAgentsRepository;
-
-
     @Autowired
     private RegistrationRequestPayloadRepository registrationRequestPayloadRepository;
-
     @Autowired
     private AuditLogService auditLogService;
 

@@ -23,7 +23,8 @@ table td a {
 }
 
 .example-container {
-  height    : 500px;
+  max-height: 660px;
+  height    : 660px;
   overflow : auto;
 }
 

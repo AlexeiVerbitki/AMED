@@ -213,6 +213,14 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
             "(current_step != 'C' AND current_step != 'AF' AND current_step != 'F' AND current_step != 'I')", nativeQuery = true)
     List<Integer> getUnfinishedRequests(@Param("REQNR") String reqNr);
 
+    @Query(value = "SELECT p FROM RegistrationRequestsEntity p \n" +
+            "            LEFT JOIN FETCH p.price \n" +
+            "            LEFT JOIN FETCH p.requestHistories\n" +
+            "            LEFT JOIN FETCH p.documents \n" +
+            "            LEFT JOIN FETCH p.registrationRequestMandatedContacts \n" +
+            "            WHERE p.requestNumber LIKE CONCAT(:REQNR, '/%')")
+    List<RegistrationRequestsEntity> getRequestsByRequestNr(@Param("REQNR") String reqNr);
+
     @Query(value = "SELECT * FROM registration_requests r\n" +
             "            WHERE r.request_number = :reqNr AND r.current_step = 'I' LIMIT 1", nativeQuery = true)
     Optional<RegistrationRequestsEntity> getBaseReqistrationRequest(@Param("reqNr") String requestNr);

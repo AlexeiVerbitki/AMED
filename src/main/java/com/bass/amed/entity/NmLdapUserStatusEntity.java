@@ -11,11 +11,12 @@ public class NmLdapUserStatusEntity
 {
     @Id
     @Column(name = "id")
-    private Integer       id;
+    private Integer id;
     @Basic
     @Column(name = "description")
-    private String        description;
+    private String  description;
     @Basic
     @Column(name = "cod")
-    private Integer       cod;
+    private Integer cod;
+
 }

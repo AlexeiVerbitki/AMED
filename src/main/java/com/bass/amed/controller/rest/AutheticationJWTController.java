@@ -8,9 +8,6 @@ import com.bass.amed.security.TokenProvider;
 import com.bass.amed.utils.LdapErrorMappingUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +30,6 @@ public class AutheticationJWTController
     private final TokenProvider               tokenProvider;
     private final CustomAuthenticationManager customAuthenticationManager;
 
-    @Value("${ldap.user_domain_suffix}")
-    private String USER_DOMAIN_SUFFIX;
-
     public AutheticationJWTController(TokenProvider tokenProvider, CustomAuthenticationManager customAuthenticationManager)
     {
         this.tokenProvider = tokenProvider;
@@ -48,8 +42,7 @@ public class AutheticationJWTController
         LOGGER.debug("Try to authenticate user: " + scrUserDTO.getUsername());
         LOGGER.debug("ip address: " + request.getRemoteAddr());
 
-        String                              dnUser              = scrUserDTO.getUsername() + USER_DOMAIN_SUFFIX;
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dnUser, scrUserDTO.getPassword());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(scrUserDTO.getUsername(), scrUserDTO.getPassword());
         Authentication                      authentication;
 
         try
