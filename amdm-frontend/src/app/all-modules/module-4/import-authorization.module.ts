@@ -17,6 +17,7 @@ import {ImportManagementDialog} from './import-management/import-management-dial
 import {UploadFileService} from '../../shared/service/upload/upload-file.service';
 import {MedRegApproveComponent} from './med-reg-approve/med-reg-approve.component';
 import {RequestService} from '../../shared/service/request.service';
+import {AuthorizationsTable} from "./Authorizations table/authorizations-table";
 
 
 @NgModule({
@@ -29,13 +30,14 @@ import {RequestService} from '../../shared/service/request.service';
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
         XchangeinfoModule
+
     ],
     entryComponents: [
         ImportMedDialog, ImportManagementDialog
     ],
     declarations: [ImportAuthorizationEvaluateComponent, ImportAuthorizationRequestComponent,
         MedRegComponent, AmbalajComponent,
-        MedRegApproveComponent, ImportMedDialog, ImportManagement, ImportManagementDialog],
+        MedRegApproveComponent, ImportMedDialog, ImportManagement, ImportManagementDialog,  AuthorizationsTable],
     providers: [UploadFileService, RequestService]
 })
 export class ImportAuthorizationModule {
