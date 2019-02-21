@@ -48,34 +48,8 @@
                 <div *ngIf="formSubmitted && rForm.get('company').invalid">
                     <small class="text-muted"><strong class="text-danger">Compania solicitant trebuie selectată</strong></small>
                 </div>
-                <!--<div *ngIf="activeLicenses==null && formSubmitted">-->
-                <!--<small class="text-muted"><strong class="text-danger">Importatorul selectat nu are licente valabile</strong></small>-->
-                <!--</div>-->
             </div>
 
-            <!--<div class="col-lg-3">-->
-                <!--<div class="md-form">-->
-                    <!--<input id="idnp" mdbInputDirective type="text" maxlength="13" class="form-control"-->
-                           <!--formControlName="idnp" >-->
-                    <!--<label for="idnp">IDNP solicitantului </label>-->
-                <!--</div>-->
-            <!--</div>-->
-
-            <!--<div class="col-lg-3">-->
-                <!--<div class="md-form">-->
-                    <!--<input id="mandatedLastname" mdbInputDirective type="text" maxlength="13" class="form-control"-->
-                           <!--formControlName="mandatedLastname" >-->
-                    <!--<label for="mandatedLastname">Numele solicitantului </label>-->
-                <!--</div>-->
-            <!--</div>-->
-
-            <!--<div class="col-lg-3">-->
-                <!--<div class="md-form">-->
-                    <!--<input id="mandatedFirstname" mdbInputDirective type="text" maxlength="13" class="form-control"-->
-                           <!--formControlName="mandatedFirstname" >-->
-                    <!--<label for="mandatedFirstname">Prenumele solicitantului </label>-->
-                <!--</div>-->
-            <!--</div>-->
 
             <div class="col-md-3">
                 <div class="md-form">
@@ -161,9 +135,6 @@
 
         </div>
         <app-document [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'ATIE', step : 'R'}"></app-document>
-        <!--<div *ngIf="docs.length<=0 && formSubmitted">-->
-            <!--<small class="text-muted "><strong class="text-danger">Nici un document nu a fost încărcat</strong></small>-->
-        <!--</div>-->
 
         <mat-radio-group formControlName="importType">
             <div class="container my-3">

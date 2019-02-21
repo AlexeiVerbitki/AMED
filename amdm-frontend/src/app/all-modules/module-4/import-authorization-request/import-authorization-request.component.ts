@@ -35,6 +35,8 @@ export class ImportAuthorizationRequestComponent implements OnInit {
     file: any;
     medType: any;
 
+    maxDate = new Date();
+
     importer: Observable<any[]>;
     loadingCompany = false;
     authorizationNumber: any = '';
@@ -60,7 +62,6 @@ export class ImportAuthorizationRequestComponent implements OnInit {
             'assignedUser': [null],
             'data': {disabled: true, value: new Date()},
             'importType': [null, Validators.required],
-            // 'idnp': [null],
             'mandatedFirstname': [null, Validators.required],
             'mandatedLastname': [null, Validators.required],
             'phoneNumber': [null, [Validators.maxLength(9), Validators.pattern('[0-9]+')]],
