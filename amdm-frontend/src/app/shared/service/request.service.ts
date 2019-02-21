@@ -90,10 +90,6 @@ export class RequestService {
         return this.http.post<any>('/api/clinical-trails/save-amendment-request', requestDetails, {observe: 'response'});
     }
 
-    addPriceRequests(requests: any): Observable<HttpResponse<any>> {
-        return this.http.post<any>('/api/add-prices-request', requests, {observe: 'response'});
-    }
-
     addPriceRequest(request: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/add-price-request', request, {observe: 'response'});
     }
@@ -137,6 +133,10 @@ export class RequestService {
 
     getAuthorizationDetailsByNameOrCode(id: string, authId: string): Observable<any> {
         return this.http.get('/api/load-import-authorization-details', {params: {id: id, authId: authId}});
+    }
+
+    getAuthorizationByFilter(authorizationsNumber: any, applicant: any,expirationDate: any, summ: any, currency: any ): Observable<any> {
+      return this.http.get('/api/load-import-authorization-by-filter', {params: {authorizationsNumber: authorizationsNumber, applicant: applicant, expirationDate: expirationDate, summ: summ, currency: currency}});
     }
 
     getInvoiceQuota(nameOrCodeAmed: string, authorizationNumber: string): Observable<any> {

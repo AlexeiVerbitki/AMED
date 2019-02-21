@@ -1844,6 +1844,29 @@ public class RequestController
         return new ResponseEntity<>(regOptional, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/load-import-authorization-by-filter")
+    public ResponseEntity<List<ImportAuthorizationEntity>> getAuthorizationByFilter(@RequestParam Map<String, String> requestParams) throws CustomException
+    {
+        List<ImportAuthorizationEntity> regOptional = importAuthorizationRepository.getAuthorizationByFilter(
+//                requestParams.getAuthorizationsNumber(),
+//                requestParams.getApplicant(),
+//                requestParams.get(),
+//                requestParams.getSumm(),
+//                requestParams.getCurrency());
+                requestParams.get("authorizationsNumber"),
+//                "33278/2019-AM",
+                requestParams.get("applicant"),
+                requestParams.get("expirationDate"),
+                requestParams.get("summ"),
+                requestParams.get("currency"));
+//                "33280/2019-AM",
+//                null,
+//                null,
+//                null,
+//                null);
+        return new ResponseEntity<>(regOptional, HttpStatus.OK);
+    }
+
 	@GetMapping(value = "/load-import-authorization-byAuth")
 	
     public ResponseEntity<RegistrationRequestsEntity> getAuthorizationByAuth(@RequestParam(value = "id") String id) throws CustomException

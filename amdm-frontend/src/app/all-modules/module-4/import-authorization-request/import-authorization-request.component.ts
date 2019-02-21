@@ -60,7 +60,14 @@ export class ImportAuthorizationRequestComponent implements OnInit {
             'assignedUser': [null],
             'data': {disabled: true, value: new Date()},
             'importType': [null, Validators.required],
-            'idnp': [null],
+            // 'idnp': [null],
+            'mandatedFirstname': [null, Validators.required],
+            'mandatedLastname': [null, Validators.required],
+            'phoneNumber': [null, [Validators.maxLength(9), Validators.pattern('[0-9]+')]],
+            'email': [null, Validators.email],
+            'requestMandateNr': [null],
+            'requestMandateDate': [null],
+            'idnp' : [null, [Validators.maxLength(13), Validators.minLength(13), Validators.pattern('[0-9]+'), Validators.required]],
             'type':
                 this.fb.group({
                     'id': ['']
@@ -233,7 +240,19 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         formModel.assignedUser = this.authService.getUserName();
         formModel.idnp = null;
         formModel.registrationRequestMandatedContacts = [{
-            idnp: this.rForm.get('idnp').value
+            mandatedLastname: this.rForm.get('mandatedFirstname').value,
+            mandatedFirstname: this.rForm.get('mandatedLastname').value,
+            phoneNumber: this.rForm.get('phoneNumber').value,
+            email: this.rForm.get('email').value,
+            requestMandateNr: this.rForm.get('requestMandateNr').value,
+            requestMandateDate: this.rForm.get('requestMandateDate').value,
+            idnp: this.rForm.get('idnp').value,
+/*'mandatedFirstname'
+'mandatedLastname'
+'phoneNumber'
+'email':
+'requestMandateNr
+'requestMandateDate*/
         }];
 
 

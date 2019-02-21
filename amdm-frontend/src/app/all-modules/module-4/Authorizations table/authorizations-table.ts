@@ -12,6 +12,7 @@ import {TaskService} from "../../../shared/service/task.service";
 import {AdministrationService} from "../../../shared/service/administration.service";
 import {LoaderService} from "../../../shared/service/loader.service";
 import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
+import {RequestService} from "../../../shared/service/request.service";
 
 @Component({
     selector: 'app-task',
@@ -29,7 +30,7 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
     loadingCompany = false;
     companyInputs = new Subject<string>();
 
-    displayedColumns: any[] = ['requestNumber', 'startDate', 'company', 'deponent', 'subject', 'endDate', 'step'];
+    displayedColumns: any[] = ['step', 'status',  'requestNumber', 'startDate', 'company', 'deponent', 'subject', 'toatlSum', 'currency', 'endDate', ];
     dataSource = new MatTableDataSource<any>();
     row: any;
     visibility = false;
@@ -42,6 +43,7 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
                 private taskService: TaskService,
                 private administrationService: AdministrationService,
                 private loadingService: LoaderService,
+                private requestService: RequestService,
                 private navbarTitleService: NavbarTitleService) {
         this.taskForm = fb.group({
             'requestCode': [null],
@@ -53,6 +55,9 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
             'requestType': [null],
             'step': [null],
             'subject': [null],
+            'toatlSum': [null],
+            'currency': [null],
+            'status': [null],
         });
     }
 
@@ -142,6 +147,62 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions.push(this.taskService.getRequestTypeSteps(this.taskForm.get('requestType').value.id).subscribe(data => {
             this.steps = data;
         }));
+    }
+    findTasks2() {
+        this.loadingService.show();
+        const taskFormValue = this.taskForm.value;
+        console.log('taskFormValue', taskFormValue);
+        const searchCriteria = {
+            // requestCode: taskFormValue.requestCode ? taskFormValue.requestCode.registerCode : '',
+            // requestNumber: taskFormValue.requestNumber,
+            // startDateFrom: taskFormValue.startDateFrom,
+            // startDateTo: taskFormValue.startDateTo,
+            // comanyId: taskFormValue.company ? taskFormValue.company.id : '',
+            // processId: taskFormValue.request ? taskFormValue.request.id : '',
+            // processTypeId: taskFormValue.requestType ? taskFormValue.requestType.id : '',
+            // stepCode: taskFormValue.step ? taskFormValue.step.code : '',
+            // subject: taskFormValue.subject,
+            id: null,
+            applicationRegistrationNumber: null,
+            applicationDate: null,
+            applicant: null,
+            seller: null,
+            basisForImport: null,
+            importer: null,
+            conditionsAndSpecification: null,
+            quantity: null,
+            price: null,
+            currency: null,
+            summ: null,
+            producer: null,
+            customsDeclarationDate: null,
+            expirationDate: null,
+            customsCode: null,
+            customsNumber: null,
+            customsTransactionType: null,
+            authorizationsNumber: taskFormValue.subject,
+            medType: null,
+            importAuthorizationDetailsEntityList: null,
+            authorized: null,
+            contract: null,
+            contractDate: null,
+            anexa: null,
+            anexaDate: null,
+            specification: null,
+            SpecificationDate: null,
+            nmCustomsPointsList: null,
+        };
+        console.log('searchCriteria', searchCriteria);
+        this.subscriptions.push(this.requestService.getAuthorizationByFilter(searchCriteria.authorizationsNumber, searchCriteria.applicant, searchCriteria.expirationDate, searchCriteria.summ, searchCriteria.currency).subscribe(data => {
+                this.loadingService.hide();
+                this.dataSource.data = data.body;
+                console.log('data.body', data.body);
+            }, error => {
+                this.loadingService.hide();
+            })
+        );
+        // console.log('searchCriteria', searchCriteria);
+
     }
 
     findTasks() {
