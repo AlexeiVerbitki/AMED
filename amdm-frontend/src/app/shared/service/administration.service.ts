@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
 @Injectable()
@@ -176,6 +176,10 @@ export class AdministrationService {
 
     getAllGMPManufacures(): Observable<any> {
         return this.http.get('/api/administration/all-gmp-manufactures', {});
+    }
+
+    getAllImportActivities(): Observable<any> {
+        return this.http.get('/api/administration/all-import-activities', {});
     }
 
     getAllSterilizations(): Observable<any> {
@@ -374,5 +378,17 @@ export class AdministrationService {
 
     synchronizeUsers(): Observable<any> {
         return this.http.get('/api/administration/synchronize-all-users', {responseType: 'json'});
+    }
+
+    getUserRightsAndRoles(): Observable<any> {
+        return this.http.get('/api/administration/user-rights-and-roles', {responseType: 'json'});
+    }
+
+    getAllAuthorities(): Observable<any> {
+        return this.http.get('/api/administration/get-all-authorities', {responseType: 'json'});
+    }
+
+    synchronizeRolesWithAuthorities(rolesWithRights: any): Observable<string> {
+        return this.http.post('/api/administration/sync-roles-with-authorities', rolesWithRights, {observe: 'body', responseType: 'text'});
     }
 }

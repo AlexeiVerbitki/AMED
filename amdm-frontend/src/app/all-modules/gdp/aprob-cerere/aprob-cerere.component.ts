@@ -44,7 +44,7 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
 
     gdpCertificate = {
         docType: {category: 'GDP'},
-        description: 'Certificatul gdp',
+        description: 'Certificatul GDP',
         number: undefined,
         status: 'Nu este atasat'
     };
@@ -65,7 +65,8 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
 
     decisions: any[] = [
         {description: 'Aprobare', id: 1, currentStep: 'AF', code: 'AGDP'},
-        {description: 'Respingere', id: 2, currentStep: 'CF', code: 'AGDP'}];
+        {description: 'Respingere', id: 2, currentStep: 'CF', code: 'AGDP'},
+        {description: 'Suspendare', id: 3, currentStep: 'A', code: 'AGDP'}];
 
     datePipe = new DatePipe('en-US');
 
@@ -343,7 +344,7 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
         console.log('onDecisionChange', $event);
         if ($event.id == 1) {
             this.outputDocuments = [this.inspectionReportDoc, this.gdpCertificate];
-        } else {
+        } else if ($event.id == 2)  {
             this.outputDocuments = [this.inspectionReportDoc, this.accompanyingLetter];
         }
 
@@ -357,8 +358,8 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
 
         console.log(this.rForm);
 
-        const WithoutDocs: Boolean = this.rForm.valid && this.rForm.get('decision').valid && this.hasUnloadedDocs();
-        const acceptValid: boolean = (this.rForm.valid && this.rForm.get('decision').value.id == 1 && this.inspectorForm.valid) || (this.rForm.valid && this.rForm.get('decision').value.id == 2);
+        const WithoutDocs: Boolean = this.rForm.valid && this.rForm.get('decision').valid && (this.rForm.get('decision').value.id != 3) && this.hasUnloadedDocs();
+        const acceptValid: boolean = (this.rForm.valid && this.rForm.get('decision').value.id == 1 && this.inspectorForm.valid) || (this.rForm.valid && this.rForm.get('decision').value.id == 2) || (this.rForm.valid && this.rForm.get('decision').value.id == 3);
 
         if (this.rForm.invalid || WithoutDocs || !acceptValid) {
             return;

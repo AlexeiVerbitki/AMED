@@ -84,18 +84,18 @@ export class ImportManagementDialog implements OnInit {
     invalidQuantity: boolean;
     approvedPrice: any;
     approvedQuantity: any;
-    
+
     showPriceError: any;
     showQuantityError: any;
     companyInputs = new Subject<string>();
     subscriptions: Subscription[] = [];
-    invoiceDetailAdded: boolean  = false;
-    importReachedLimit: boolean = false;
+    invoiceDetailAdded  = false;
+    importReachedLimit = false;
     addedUnits: number ;
     remainingUnits: number ;
     importedUnits: number ;
-    validPrice: boolean = false;
-    validQuantity: boolean = false;
+    validPrice = false;
+    validQuantity = false;
 
 
     constructor(private fb: FormBuilder,
@@ -271,9 +271,9 @@ export class ImportManagementDialog implements OnInit {
        this.validPrice = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').invalid;
        this.validQuantity = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').invalid;
 
-        if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value){
+        if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').value) {
             this.showPriceError = true;
-        } else{
+        } else {
             this.showPriceError = false;
         }
 
@@ -348,7 +348,7 @@ export class ImportManagementDialog implements OnInit {
 
 
                         this.subscriptions.push(this.requestService.getInvoiceQuota(val.medicament.id, this.importData.authorizationsNumber).subscribe(data => {
-                            console.log("getInvoiceQuota()", data)
+                            console.log('getInvoiceQuota()', data);
                             this.importedUnits = data;
                             this.remainingUnits = this.approvedQuantity - this.importedUnits - this.addedUnits;
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.remainingQuantity').setValue(this.remainingUnits);
@@ -413,9 +413,9 @@ export class ImportManagementDialog implements OnInit {
 
 
                         if (this.dialogData.invoiceDetails.find(x => (x.codeAmed == val.medicament.code))) {
-                            this.invoiceDetailAdded = true
+                            this.invoiceDetailAdded = true;
 
-                            this.addedUnits = this.dialogData.invoiceDetails.filter(x => x.codeAmed == val.medicament.code).map(x => x.quantity).reduce((a,b) => a+b );
+                            this.addedUnits = this.dialogData.invoiceDetails.filter(x => x.codeAmed == val.medicament.code).map(x => x.quantity).reduce((a, b) => a + b );
 
 
 
@@ -423,19 +423,19 @@ export class ImportManagementDialog implements OnInit {
 
 
 
-                            console.log("remainingUnits:", this.remainingUnits)
+                            console.log('remainingUnits:', this.remainingUnits);
 
                         } else {
-                            this.invoiceDetailAdded = false
+                            this.invoiceDetailAdded = false;
                             this.remainingUnits = this.approvedQuantity - this.importedUnits;
-                            console.log("remainingUnits:", this.remainingUnits)
+                            console.log('remainingUnits:', this.remainingUnits);
                         }
 
                     } else {
 
                         /*================================IF MEDICAMENT ID DOESN'T EXIST*/
-                        this.subscriptions.push(this.requestService.getInvoiceQuota(val.name,this.importData.authorizationsNumber).subscribe(data => {
-                            console.log("getInvoiceQuota()", data)
+                        this.subscriptions.push(this.requestService.getInvoiceQuota(val.name, this.importData.authorizationsNumber).subscribe(data => {
+                            console.log('getInvoiceQuota()', data);
                             this.importedUnits = data;
                             this.remainingUnits = this.approvedQuantity - this.importedUnits - this.addedUnits;
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.remainingQuantity').setValue(this.remainingUnits);
@@ -501,21 +501,21 @@ export class ImportManagementDialog implements OnInit {
 
 
                         if (this.dialogData.invoiceDetails.find(x => x.codeAmed == val.codeAmed)) {
-                            this.invoiceDetailAdded = true
+                            this.invoiceDetailAdded = true;
 
-                            this.addedUnits = this.dialogData.invoiceDetails.filter(x => x.codeAmed == val.codeAmed).map(x => x.quantity).reduce((a,b) => a+b );
+                            this.addedUnits = this.dialogData.invoiceDetails.filter(x => x.codeAmed == val.codeAmed).map(x => x.quantity).reduce((a, b) => a + b );
 
 
                             this.remainingUnits = this.approvedQuantity - this.addedUnits - this.importedUnits;
 
 
 
-                            console.log("remainingUnits:", this.addedUnits)
+                            console.log('remainingUnits:', this.addedUnits);
 
                         } else {
-                            this.invoiceDetailAdded = false
+                            this.invoiceDetailAdded = false;
                             this.remainingUnits = this.approvedQuantity - this.importedUnits;
-                            console.log("remainingUnits:", this.remainingUnits)
+                            console.log('remainingUnits:', this.remainingUnits);
                         }
 
 

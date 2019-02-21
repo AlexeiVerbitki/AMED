@@ -19,7 +19,7 @@ import {MatDialogModule} from '@angular/material';
 import {LaboratorDialogComponent} from '../../dialog/laborator-dialog/laborator-dialog.component';
 import {QualifiedPersonDialogComponent} from '../../dialog/qualified-person-dialog/qualified-person-dialog.component';
 import {SearchMedicamentsDialogComponent} from '../../dialog/search-medicaments-dialog/search-medicaments-dialog.component';
-import {SelectDocumentNumberComponent} from "../../dialog/select-document-number/select-document-number.component";
+import {SelectInspectionDateForAfComponent} from '../../dialog/select-inspection-date-for-af/select-inspection-date-for-af.component';
 
 @NgModule({
     imports: [
@@ -34,10 +34,10 @@ import {SelectDocumentNumberComponent} from "../../dialog/select-document-number
         PaymentModule
     ],
     schemas: [],
-    declarations: [QualifiedPersonDialogComponent, SearchMedicamentsDialogComponent,SelectDocumentNumberComponent, LaboratorDialogComponent, RegCerereGmpComponent, EvaluarePrimaraGmpComponent,
+    declarations: [QualifiedPersonDialogComponent, SearchMedicamentsDialogComponent,SelectInspectionDateForAfComponent,LaboratorDialogComponent, RegCerereGmpComponent, EvaluarePrimaraGmpComponent,
         ProcessInterruptionComponent, AddDescriptionComponent],
     entryComponents: [AddDescriptionComponent, LaboratorDialogComponent, QualifiedPersonDialogComponent,
-        SearchMedicamentsDialogComponent,SelectDocumentNumberComponent],
+        SearchMedicamentsDialogComponent,SelectInspectionDateForAfComponent],
     providers: [UploadFileService, RequestService, CanDeactivateGuard, LicenseService]
 })
 export class GMPModule {

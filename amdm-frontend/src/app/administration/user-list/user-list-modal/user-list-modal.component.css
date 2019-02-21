@@ -45,3 +45,7 @@ table {
 /deep/ .mat-checkbox-frame {
   border-color: gray;
 }
+
+.mat-column-select {
+  overflow: initial;
+}

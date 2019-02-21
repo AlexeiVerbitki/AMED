@@ -43,6 +43,16 @@ label.required:not(:empty):after,
   margin-top: 21px;
 }
 
+
+.disabled-div {
+  pointer-events: none;
+  opacity: 0.65;
+}
+.undisabled-div {
+  pointer-events: all;
+  opacity:1;
+}
+
 td {
   vertical-align: middle !important;
 }

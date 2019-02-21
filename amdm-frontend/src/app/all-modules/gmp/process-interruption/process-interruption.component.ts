@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import {Observable, Subscription} from "rxjs";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Document} from "../../../models/document";
-import {ModalService} from "../../../shared/service/modal.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {DocumentService} from "../../../shared/service/document.service";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {MedicamentService} from "../../../shared/service/medicament.service";
-import {RequestService} from "../../../shared/service/request.service";
-import {SuccessOrErrorHandlerService} from "../../../shared/service/success-or-error-handler.service";
-import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
-import {TaskService} from "../../../shared/service/task.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {MatDialog} from "@angular/material";
-import {AuthService} from "../../../shared/service/authetication.service";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {RequestAdditionalDataDialogComponent} from "../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component";
+import {Observable, Subscription} from 'rxjs';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Document} from '../../../models/document';
+import {ModalService} from '../../../shared/service/modal.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {DocumentService} from '../../../shared/service/document.service';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {MedicamentService} from '../../../shared/service/medicament.service';
+import {RequestService} from '../../../shared/service/request.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {TaskService} from '../../../shared/service/task.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {MatDialog} from '@angular/material';
+import {AuthService} from '../../../shared/service/authetication.service';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {RequestAdditionalDataDialogComponent} from '../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component';
 
 @Component({
   selector: 'app-process-interruption',
@@ -31,7 +31,7 @@ export class ProcessInterruptionComponent implements OnInit {
   formSubmitted: boolean;
   outputDocuments: any[] = [];
   docTypes: any[];
-  initialData : any;
+  initialData: any;
   registrationRequestMandatedContacts: any[];
 
   constructor(private fb: FormBuilder,

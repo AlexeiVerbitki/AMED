@@ -173,7 +173,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
             'pharmFormFrom': [null],
             'pharmFormTo': [null, Validators.required],
             'atcCodeFrom': [null],
-            'atcCodeTo': [null, Validators.required],
+            'atcCodeTo': [null],
             'administModeFrom': [null],
             'administModeTo': [null, Validators.required],
             'activeSubstances': [null]

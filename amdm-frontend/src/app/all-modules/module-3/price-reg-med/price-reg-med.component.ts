@@ -1,5 +1,5 @@
-import {Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild,} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild, } from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {Document} from '../../../models/document';
 import {MatDialog, MatTabGroup} from '@angular/material';
@@ -10,7 +10,7 @@ import {PriceService} from '../../../shared/service/prices.service';
 import {Country} from '../../../models/country';
 import {Currency} from '../../../models/currency';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
-import {SuccessOrErrorHandlerService} from "../../../shared/service/success-or-error-handler.service";
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 
 @Component({
     selector: 'app-price-reg-med',
@@ -27,10 +27,15 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
     currencies: Currency[] = [];
     priceTypes: any[];
 
-    requests: any[] = [{documents: this.commonDocuments, price: {referencePrices: []}}];
+    requests: any[] = [];
     rForm: FormGroup;
 
     formSubmitted: boolean;
+
+    decisions: any[] = [
+        {description: 'Evaluare', id: 1, currentStep: 'E', code: 'PMED', sourceReqCurrentStep: 'I'},
+        {description: 'Suspendare', id: 2, currentStep: 'S', code: 'PMED', sourceReqCurrentStep: 'R'}
+    ];
 
     color = 'green';
 
@@ -38,10 +43,10 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
     startRecDate: Date = new Date();
 
 
-    tabs = ['Medicamentul 1'];
+    tabs = [];
     selected = new FormControl(0);
 
-    lastIndex: number = 0;
+    lastIndex = 0;
 
     /*mandatoryDocuments: any[] = [{
         description: 'Cerere',
@@ -111,6 +116,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
                 fb.group({
                     'code': ['PMED']
                 }),
+            'decision': [null, Validators.required],
         });
     }
 
@@ -130,7 +136,8 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
                     console.log('request', r);
                     this.rForm.get('reqData').setValue(new Date(r.startDate));
                     this.rForm.get('requestNumber').setValue(r.requestNumber);
-                    this.requests[0].requestNumber = this.rForm.get('requestNumber').value + '/' + (++this.lastIndex),
+                    // this.requests[0].requestNumber = this.rForm.get('requestNumber').value + '/' + (++this.lastIndex);
+                    this.rForm.get('currentStep').setValue(r.currentStep);
                     this.rForm.get('folderNumber').setValue(r.dossierNr);
                     this.rForm.get('startDate').setValue(r.startDate);
                     this.rForm.get('initiator').setValue(r.initiator);
@@ -144,22 +151,46 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
                         this.rForm.get('email').setValue(r.registrationRequestMandatedContacts[0].email);
                         this.rForm.get('idnp').setValue(r.registrationRequestMandatedContacts[0].idnp);
                         this.rForm.get('requestMandateNr').setValue(r.registrationRequestMandatedContacts[0].requestMandateNr);
-                        this.rForm.get('requestMandateDate').setValue(r.registrationRequestMandatedContacts[0].requestMandateDate);
+                        this.rForm.get('requestMandateDate').setValue(new Date(r.registrationRequestMandatedContacts[0].requestMandateDate));
                     }
                     this.commonDocuments = r.documents;
 
                     this.sourceRegistrationRequest = r;
 
-                    this.requests.forEach(r => {
-                        r.documents = this.commonDocuments,
-                            r.price.folderNr = this.rForm.get('folderNumber').value;
-                        r.price.type = {id: 1};
-                    });
+                    this.subscriptions.push(this.priceService.getRequestsByRequestNumber(r.requestNumber).subscribe(reqs => {
+                        this.requests = reqs;
+                        console.log('getRequestsByRequestNumber', reqs);
+                        if (reqs.length == 0) {
+                            // if (this.requests.length == 0) {
+                            //     this.requests.push({
+                            //         requestNumber: this.setTabTitle({index: 0}),
+                            //         documents: this.commonDocuments,
+                            //         price: {folderNr: this.rForm.get('folderNumber').value, type: {id: 1}}
+                            //     });
+                            // } else {
+                            //     this.requests.forEach(req => {
+                            //         req.documents = this.commonDocuments;
+                            //         req.price.folderNr = this.rForm.get('folderNumber').value;
+                            //         req.price.type = {id: 1};
+                            //     });
+                            // }
+                        } else {
+                            this.requests.forEach((currentValue, index, array) => {
+                                currentValue.valid = true;
+                                if (!this.tabs[index]) {
+                                    const curMed = currentValue.price ? currentValue.price.medicament : undefined;
+                                    this.tabs.push(this.setTabTitle({commercialName: curMed.commercialName, code: curMed.code, index: index}));
+                                }
+                            });
+                        }
 
-                    this.commonDocuments.forEach(d => {
-                        d.id = null;
-                        d.registrationRequestId = null;
-                    });
+                        this.addTab();
+                    }));
+
+                    // this.commonDocuments.forEach(d => {
+                    //     d.id = null;
+                    //     d.registrationRequestId = null;
+                    // });
                 }, e => console.log(e), () => {}));
         } else {
             this.subscriptions.push(
@@ -218,8 +249,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
         this.formSubmitted = true;
 
         const canSave: boolean = //this.commonDocuments.length > 0 && //this.rForm.get('folderNumber').valid &&
-            ((this.requests.length) == this.tabs.length &&
-                this.requests.every(value => value.valid)); //&& this.mandatoryDocuments.length == 0;
+            ((this.requests.length) == this.tabs.length && this.requests.every(value => value.valid)); //&& this.mandatoryDocuments.length == 0;
 
         if (!canSave) {
             this.loadingService.hide();
@@ -241,7 +271,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
             startDate: this.startRecDate,
             endDate: new Date(),
             username: user,
-            step: 'E'
+            step: this.rForm.get('currentStep').value
         };
 
         const contacts = {
@@ -269,14 +299,17 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
             req.requestHistories = [...req.requestHistories, requestHistory];
             req.company = this.rForm.get('company').value;
             req.dossierNr = this.rForm.get('folderNumber').value;
-            req.currentStep = 'E';
+            req.currentStep = this.rForm.get('decision').value.currentStep;
             if (!req.type) {
-                req.type = {code: 'PMED'};
+                req.type = {code: this.rForm.get('decision').value.code};
             }
             if (!req.requestNumber) {
                 req.requestNumber = req.price.requestNumber;
             }
         });
+
+        this.sourceRegistrationRequest.currentStep = this.rForm.get('decision').value.sourceReqCurrentStep;
+
         this.requests.push(this.sourceRegistrationRequest);
 
         this.subscriptions.push(this.priceService.savePrices(this.requests).subscribe(data => {
@@ -302,10 +335,6 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
         this.subscriptions.forEach(value => value.unsubscribe());
     }
 
-    // ngAfterContentInit() {
-    //     alert('ngAfterContentInit');
-    // }
-
     ngAfterViewInit() {
         console.log('ngAfterViewInit', this.tabGroup);
         // this.subscriptions.push(this.tabGroup.selectedIndexChange.subscribe(index => console.log("selectedIndexChange", index)));
@@ -317,21 +346,32 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
         if ($event.index != undefined) {
             // let tab = this.tabGroup._tabs.find(tab => tab.position == $event.index);
             const tab = this.tabGroup._tabs.toArray()[$event.index];
-            if ($event.commercialName) {
-                const tabName = $event.commercialName.substring(0, 40);
-                tab.textLabel = tabName + ($event.code ? ' [' + $event.code + ']' : '');
-            } else {
-                tab.textLabel = 'Medicamentul ' + ($event.index + 1);
-            }
+            tab.textLabel = this.setTabTitle($event);
             this.tabGroup._tabs.notifyOnChanges();
+        }
+    }
+
+    setTabTitle(med): string {
+        if (med.commercialName) {
+            const tabName = med.commercialName.substring(0, 40);
+            return tabName + (med.code ? ' [' + med.code + ']' : '');
+        } else if (med.code) {
+            return 'Medicamentul [' + med.code + ']';
+        } else {
+            return 'Medicamentul ' + (med.index + 1);
         }
     }
 
 
     addTab() {
+        let newRequestNumber = '';
+        do {
+            newRequestNumber = this.rForm.get('requestNumber').value + '/' + (++this.lastIndex);
+        } while (this.requests.some(r => r.requestNumber == newRequestNumber));
+
         this.requests.push({
-            documents: this.commonDocuments,
-            requestNumber: this.rForm.get('requestNumber').value + '/' + (++this.lastIndex),
+            documents: this.commonDocuments.map(d => {const newD = d; newD.id = null; newD.registrationRequestId = null; return newD; }),
+            requestNumber: newRequestNumber,
             price: {
                 referencePrices: []
             }
@@ -341,13 +381,17 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
     }
 
     removeTab(index: number) {
-        let request = this.requests[index];
-        if(request.requestNumber) {
+        const request = this.requests[index];
+        if (request.requestNumber) {
             this.subscriptions.push(this.priceService.removeRequest(request.requestNumber).subscribe(data => {
                 console.log('removed', data);
             }));
         }
         this.requests.splice(index, 1);
         this.tabs.splice(index, 1);
+    }
+
+    onDecisionChange($event) {
+
     }
 }

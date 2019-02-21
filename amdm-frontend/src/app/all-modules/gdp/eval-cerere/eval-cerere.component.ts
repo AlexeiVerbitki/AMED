@@ -11,13 +11,13 @@ import {LoaderService} from '../../../shared/service/loader.service';
 import {CanModuleDeactivate} from '../../../shared/auth-guard/can-deactivate-guard.service';
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
-import {GDPService} from "../../../shared/service/gdp.service";
-import {SuccessOrErrorHandlerService} from "../../../shared/service/success-or-error-handler.service";
-import {SelectSubsidiaryModalComponent} from "../select-subsidiary-modal/select-subsidiary-modal.component";
-import {InspectorsModalComponent} from "../inspectors-modal/inspectors-modal.component";
-import {DatePipe} from "@angular/common";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {RequestAdditionalDataDialogComponent} from "../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component";
+import {GDPService} from '../../../shared/service/gdp.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
+import {SelectSubsidiaryModalComponent} from '../select-subsidiary-modal/select-subsidiary-modal.component';
+import {InspectorsModalComponent} from '../inspectors-modal/inspectors-modal.component';
+import {DatePipe} from '@angular/common';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {RequestAdditionalDataDialogComponent} from '../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component';
 
 
 @Component({
@@ -40,14 +40,14 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
     private subscriptions: Subscription[] = [];
     loadingCompany = false;
     companyInputs = new Subject<string>();
-    maxDate = new Date();
+    minDate = new Date();
 
     requestId: any;
     paymentTotal: number;
 
     outputDocuments: any[] = [{
         docType: {category: 'OGD'},
-        description: 'Ordin gdp',
+        description: 'Ordin GDP',
         number: undefined,
         status: 'Nu este atasat'
     }];
@@ -55,7 +55,7 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
     decisions: any[] = [
         {description: 'Cerere aprobată', id: 1, currentStep: 'A', code: 'AGDP'},
         {description: 'Cerere respinsă', id: 2, currentStep: 'C', code: 'EGDP'},
-        {description: 'Așteptare date adiționale', id: 3, currentStep: 'I', code: 'EGDP'}];
+        {description: 'Așteptare date', id: 3, currentStep: 'I', code: 'EGDP'}];
 
     datePipe = new DatePipe('en-US');
 
@@ -66,6 +66,8 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
         subsidiaries: [],
         periods: []
     };
+
+    canChange: boolean = true;
 
     get formData() { return <FormArray>this.inspectorForm.get('periods'); }
 
@@ -128,6 +130,21 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
         });
     }
 
+    inspectorUsageChanged($event) {
+        this.outputDocuments = [];
+
+        if($event.checked) {
+            this.outputDocuments = [{
+                docType: {category: 'OGD'},
+                description: 'Ordin GDP',
+                number: undefined,
+                status: 'Nu este atasat'
+            }];
+
+            this.documentAdded(null);
+        }
+    }
+
     createPeriod(obj): FormGroup {
         obj = obj ? obj : {};
         return this.fb.group({
@@ -136,6 +153,14 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
             gdpInspectionId: obj.gdpInspectionId,
             id: obj.id
         });
+    }
+
+    startDateChanged(e, d) {
+        e.controls['toDate'].reset();
+        d.disabled = true;
+        if(e.controls['fromDate'].value) {
+            d.disabled = false;
+        }
     }
 
     addPeriod(obj) {
@@ -358,14 +383,15 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
 
         console.log(this.rForm);
 
-        let acceptWithoutDocs: Boolean = this.rForm.valid && this.rForm.get('decision').value.id == 1 && this.hasUnloadedDocs();
-        let acceptWithoutSubsidiaries: Boolean = this.rForm.valid && this.rForm.get('decision').value.id == 1 && (!this.gdpInspection.subsidiaries || this.gdpInspection.subsidiaries.length == 0);
-        let inspectorsWithoutBoss: Boolean = this.rForm.valid && this.rForm.get('decision').value.id == 1 && this.inspectorForm.get('useInspector').value && this.gdpInspection.groupLeaderId == null;
+        const decisionAccept = this.rForm.valid && this.rForm.get('decision').value.id == 1;
+        const acceptWithoutPeriods: boolean = decisionAccept && (this.inspectorForm.get('periods') as FormArray).length == 0 || !this.isValidDate((this.inspectorForm.get('periods') as FormArray).controls[0].get('fromDate').value);
+        const acceptWithoutDocs: Boolean = decisionAccept && this.hasUnloadedDocs();
+        const acceptWithoutSubsidiaries: Boolean = decisionAccept && (!this.gdpInspection.subsidiaries || this.gdpInspection.subsidiaries.length == 0);
+        const inspectorsWithoutBoss: Boolean = decisionAccept && this.inspectorForm.get('useInspector').value && this.gdpInspection.groupLeaderId == null;
 
-        if (this.rForm.invalid || acceptWithoutDocs || acceptWithoutSubsidiaries || inspectorsWithoutBoss) {
+        if (this.rForm.invalid || acceptWithoutDocs || acceptWithoutSubsidiaries || inspectorsWithoutBoss || acceptWithoutPeriods) {
             return;
         }
-
         // if (this.paymentTotal < 0) {
         //     this.errorHandlerService.showError('Nu s-a efectuat plata.');
         //     return;
@@ -390,10 +416,13 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
         modelToSubmit.endDate = new Date();
         modelToSubmit.startDate = this.rForm.get('startDate').value;
         modelToSubmit.registrationRequestMandatedContacts = [this.rForm.get('responsiblePerson').value];
-        var subsidiaryIds = this.gdpInspection.subsidiaries.map(s => s = {
+        const subsidiaryIds = this.gdpInspection.subsidiaries.map(s => s = {
             id: s.id, gdpInspectionId: s.gdpInspectionId, subsidiary: {id: s.subsidiary.id}
         });
         this.gdpInspection.periods = (this.inspectorForm.get('periods') as FormArray).getRawValue();
+        this.gdpInspection.periods.forEach(p => {
+            p.toDate = p.toDate ? p.toDate : p.fromDate;
+        });
         modelToSubmit.gdpInspection = this.gdpInspection;
         modelToSubmit.gdpInspection.subsidiaries = subsidiaryIds;
         modelToSubmit.type.code = this.rForm.get('decision').value.code;
@@ -404,11 +433,13 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
 
         this.subscriptions.push(this.gdpService.addRegistrationRequestForGDP(modelToSubmit).subscribe(req => {
                 this.errorHandlerService.showSuccess('Datele au fost salvate');
-                if (req.body.gdpInspection) {
+                if(this.rForm.get('decision').value.id == 1) {
+                    this.router.navigate(['/dashboard/homepage']);
+                } else if (req.body.gdpInspection) {
                     this.gdpInspection = req.body.gdpInspection;
                     if (this.gdpInspection.periods.length > 0) {
                         while ((this.inspectorForm.get('periods') as FormArray).length !== 0) {
-                            (this.inspectorForm.get('periods') as FormArray).removeAt(0)
+                            (this.inspectorForm.get('periods') as FormArray).removeAt(0);
                         }
                         this.gdpInspection.periods.forEach(p => this.addPeriod(p));
                     }
@@ -428,8 +459,12 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
         this.outputDocuments.forEach(outDoc => {
             outDoc.number = undefined;
             outDoc.status = 'Nu este atasat';
+            this.canChange = true;
 
             for (const doc of this.documents) {
+                if(doc.docType.category == 'OGD') {
+                    this.canChange = false;
+                }
                 if (doc.docType.category == outDoc.docType.category) {
                     outDoc.number = doc.number;
                     outDoc.status = 'Atasat';
@@ -445,6 +480,14 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
     }
 
     viewDoc(document: any) {
+        if (!this.gdpInspection.groupLeaderId) {
+            this.errorHandlerService.showError('Trebuie să indicați șeful de grup');
+            return;
+        } else if((this.inspectorForm.get('periods') as FormArray).length == 0 || !this.isValidDate((this.inspectorForm.get('periods') as FormArray).controls[0].get('fromDate').value)){
+            this.errorHandlerService.showError('Trebuie să introduceți cel puțin o perioadă de inspecție ')
+            return;
+        }
+
         this.loadingService.show();
 
         if (document.docType.category == 'OGD') {
@@ -459,15 +502,19 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
         }
     }
 
+    isValidDate(d) {
+        return d instanceof Date && !isNaN(+d);
+    }
+
     createGDPOrderDTO() {
 
         let inspectorBoss: any = {};
         let inspectors = '';
         this.gdpInspection.inspectors.forEach(p => {
-            if(p.id == this.gdpInspection.groupLeaderId) {
+            if (p.id == this.gdpInspection.groupLeaderId) {
                 inspectorBoss = p;
             } else {
-                let fun = p.profession ? (p.profession.description ? p.profession.description : '') : '';
+                const fun = p.profession ? (p.profession.description ? p.profession.description : '') : '';
                 inspectors += p.name + ', ' + fun + ';|';
             }
         });
@@ -475,6 +522,8 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
         return {
             nr: '_____________________',
             date: '_____________________',
+            companyAddress: this.rForm.get('company.adresa').value ? this.rForm.get('company.adresa').value : '(adresa întreprinderii)',
+            gdpBeginDate: this.datePipe.transform((this.inspectorForm.get('periods') as FormArray).controls[0].get('fromDate').value, 'dd/MM/yyyy'),
             requestNr: this.rForm.get('requestNumber').value,
             requestDate: this.datePipe.transform(this.rForm.get('startDate').value, 'dd/MM/yyyy'),
             companyName: this.rForm.get('company.name').value,
@@ -484,11 +533,14 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
             expertsLeaderFuncion: inspectorBoss.profession ? inspectorBoss.profession.description : '',
             expertsLeaderInspectorat: inspectorBoss.function,
             inspectorsNameFunction: inspectors,
-        }
+        };
     }
 
     killInspector(i) {
         this.gdpInspection.inspectors.splice(i, 1);
+        if(this.gdpInspection.groupLeaderId && !this.gdpInspection.inspectors.some(i => i.id == this.gdpInspection.groupLeaderId)) {
+            this.gdpInspection.groupLeaderId = undefined;
+        }
     }
 
 

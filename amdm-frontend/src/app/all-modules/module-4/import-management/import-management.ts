@@ -147,7 +147,7 @@ export class ImportManagement implements OnInit {
                 'applicationDate': [new Date()],
                 'applicant': ['', Validators.required],
 
-                'seller': [{value: null, disabled: true}, Validators.required,], // Tara si adresa lui e deja in baza
+                'seller': [{value: null, disabled: true}, Validators.required, ], // Tara si adresa lui e deja in baza
                 'basisForImport': [{value: null, disabled: true}],
 
                 'importer': [{value: null, disabled: true}, Validators.required], // Tara si adresa lui e deja in baza
@@ -219,7 +219,7 @@ export class ImportManagement implements OnInit {
                     this.importData = data;
 
                     this.customsPointsList = data.importAuthorizationEntity.nmCustomsPointsList;
-                    
+
 
                     this.docs = data.documents;
 
@@ -248,7 +248,7 @@ export class ImportManagement implements OnInit {
 
                             'seller': [{value: null, disabled: true}, Validators.required], // Tara si adresa lui e deja in baza
                             'basisForImport': [{value: null, disabled: true}],
-                            
+
                             'importer': [{value: null, disabled: true}, Validators.required], // Tara si adresa lui e deja in baza
                             'contract': [{value: null, disabled: true}, Validators.required],
                             'contractDate': [null, Validators.required],
@@ -665,7 +665,7 @@ export class ImportManagement implements OnInit {
         dialogRef.afterClosed().subscribe(dialogResult => {
             this.dialogResult = dialogResult;
 
-            let invoiceDetails: any = {};
+            const invoiceDetails: any = {};
 
             if (this.dialogResult) {
                 invoiceDetails.quantity = this.dialogResult.importAuthorizationEntity.unitOfImportTable.quantity;

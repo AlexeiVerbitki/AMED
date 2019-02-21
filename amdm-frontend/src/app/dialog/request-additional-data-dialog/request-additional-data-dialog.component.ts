@@ -62,14 +62,11 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
             this.reqForm.get('docNumber').setValue('SL-' + this.dataDialog.requestNumber);
             this.title = 'Scrisoare de solicitare date aditionale Nr ' + this.reqForm.get('docNumber').value;
 
-        }
-        else if (this.dataDialog.modalType == 'REQUEST_ADDITIONAL_DATA_GMP') {
+        } else if (this.dataDialog.modalType == 'REQUEST_ADDITIONAL_DATA_GMP') {
 
-        }
-        else if (this.dataDialog.modalType == 'REQUEST_REMOVAL_DEFICIENCIES_GMP') {
+        } else if (this.dataDialog.modalType == 'REQUEST_REMOVAL_DEFICIENCIES_GMP') {
             this.reqForm.get('docNumber').setValue('SD-' + this.dataDialog.requestNumber + '-' + this.dataDialog.nrOrdDoc);
-        }
-        else if (this.dataDialog.modalType == 'REQUEST_ADDITIONAL_DATA') {
+        } else if (this.dataDialog.modalType == 'REQUEST_ADDITIONAL_DATA') {
             const x = '\tPrin prezenta, Agenția Medicamentului și Dispozitivelor Medicale Vă informează, că în rezultatul expertizei specializate a dosarului produsului medicamentos ' + this.dataDialog.medicamentStr + ' depus pentru autorizare, s-a constatat că:';
             let z = '\r\n\t-  c......';
             if (this.dataDialog.expertStr) {

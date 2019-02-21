@@ -3,7 +3,6 @@ import {FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators} from '@angular/fo
 import {Observable, Subject, Subscription} from 'rxjs';
 import {Medicament} from '../../../models/medicament';
 import {MatDialog} from '@angular/material';
-import {saveAs} from 'file-saver';
 import {Country} from '../../../models/country';
 import {Currency} from '../../../models/currency';
 import {UnitOfMeasure} from '../../../models/unitOfMeasure';
@@ -25,7 +24,7 @@ export class OneMedPriceComponent implements OnInit, OnDestroy { //ControlValueA
     @Input()
     priceDTO: any = {documents: []};
     @Output()
-    public priceDTOChange: EventEmitter<any> = new EventEmitter();
+    public priceModelChange: EventEmitter<any> = new EventEmitter();
     @Output()
     public medicamentChange: EventEmitter<any> = new EventEmitter();
     @Input()
@@ -69,6 +68,23 @@ export class OneMedPriceComponent implements OnInit, OnDestroy { //ControlValueA
         this.PriceRegForm.get('requestNumber').setValue(value);
     }
 
+
+    @Input()
+    set priceModel(value) {
+        this.priceDTO = value;
+        if (value.price) {
+            this.PriceRegForm.get('currency').setValue(value.price.currency, {emitEvent: false, emitViewToModelChange: false});
+            this.PriceRegForm.get('value').setValue(value.price.value, {emitEvent: false, emitViewToModelChange: false});
+
+            if (value.price.medicament) {
+                this.PriceRegForm.get('medicament').setValue(value.price.medicament);
+                this.onMedSelected(value.price.medicament);
+            }
+        }
+
+        console.log('priceModel', value);
+    }
+
     ngOnInit() {
 
         this.companyMedicaments =
@@ -91,21 +107,8 @@ export class OneMedPriceComponent implements OnInit, OnDestroy { //ControlValueA
                     )
                 )
             );
-
-        // this.generateRequestNumber();
     }
 
-    generateRequestNumber() {
-        this.subscriptions.push(
-            this.priceService.generateDocNumber().subscribe(generatedNumber => {
-                    this.PriceRegForm.get('requestNumber').setValue(this.baseRequestNumber + '/' + generatedNumber[0]);
-                },
-                error => {
-                    console.log(error);
-                }
-            )
-        );
-    }
 
     documentAdded($event) {
     }
@@ -137,14 +140,14 @@ export class OneMedPriceComponent implements OnInit, OnDestroy { //ControlValueA
         this.priceDTO.valid = this.PriceRegForm.valid;
         if (this.priceDTO.valid) {
             this.priceDTO.price.referencePrices.forEach(p => {
-                if (!p.value || !p.division || !p.currency || !p.country || !p.type) {
+                if (!p.value || !p.division || !p.currency || !p.country || !p.type || !p.totalQuantity) {
                     this.priceDTO.valid = false;
                     return;
                 }
             });
         }
         this.priceDTO.index = this.medIndex;
-        this.priceDTOChange.emit(this.priceDTO);
+        this.priceModelChange.emit(this.priceDTO);
     }
 
 

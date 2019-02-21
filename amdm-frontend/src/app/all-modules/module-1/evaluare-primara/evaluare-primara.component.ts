@@ -927,7 +927,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                 signerName: document.signerName
             };
 
-            let observable = this.documentService.viewRequestNew(modelToSubmit);
+            const observable = this.documentService.viewRequestNew(modelToSubmit);
 
             this.subscriptions.push(observable.subscribe(data => {
                     const file = new Blob([data], {type: 'application/pdf'});

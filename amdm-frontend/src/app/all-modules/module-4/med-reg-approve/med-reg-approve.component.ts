@@ -88,8 +88,8 @@ export class MedRegApproveComponent implements OnInit {
     private subscriptions: Subscription[] = [];
 
     authorizationNumber: string;
-    authorizationClicked: boolean = false;
-    showClickAuthorizationError: boolean = false;
+    authorizationClicked = false;
+    showClickAuthorizationError = false;
 
     constructor(private fb: FormBuilder,
                 private requestService: RequestService,
@@ -238,8 +238,8 @@ export class MedRegApproveComponent implements OnInit {
                     this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').setValue(new Date(data.importAuthorizationEntity.specificationDate));
 
                     // this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').setValue(this.customsPointsPreviouslySelected());
-                    var arr = [];
-                    for (let c of this.importData.importAuthorizationEntity.nmCustomsPointsList) {
+                    let arr = [];
+                    for (const c of this.importData.importAuthorizationEntity.nmCustomsPointsList) {
                         c.descrCode = c.description + ' - ' + c.code;
                         arr         = [...arr, c];
                     }
@@ -299,9 +299,9 @@ export class MedRegApproveComponent implements OnInit {
     }
 
     customsPointsPreviouslySelected() {
-        let points: any[] = [];
+        const points: any[] = [];
         this.importData.importAuthorizationEntity.nmCustomsPointsList.forEach(item => points.push(item.description));
-        console.log("points", points)
+        console.log('points', points);
         return points;
     }
 
@@ -331,12 +331,12 @@ export class MedRegApproveComponent implements OnInit {
         if (this.expirationDate.length > 0 && this.expirationDate.length !== null) {
 
 
-            let closestExpirationDate = this.expirationDate.reduce(function (a, b) {
+            const closestExpirationDate = this.expirationDate.reduce(function (a, b) {
                 return a < b ? a : b;
             });
             authorizationModel.importAuthorizationEntity.expirationDate = closestExpirationDate;
 
-            let datePlusYear = new Date();
+            const datePlusYear = new Date();
             datePlusYear.setFullYear(datePlusYear.getFullYear() + 1);
 
             if (this.importData.importAuthorizationEntity.medType === 2 && authorizationModel.importAuthorizationEntity.expirationDate > datePlusYear) {
@@ -350,7 +350,7 @@ export class MedRegApproveComponent implements OnInit {
 
         observable = this.requestService.viewImportAuthorization(authorizationModel);
         console.log('observable = this.requestService.viewImportAuthorization(authorizationModel) PASSED', observable);
-        if (document == 'specification'){
+        if (document == 'specification') {
             observable = this.requestService.viewImportAuthorizationSpecification(authorizationModel);
             console.log('observable = this.requestService.viewImportAuthorization(authorizationModel) PASSED', observable);
         }
@@ -745,8 +745,8 @@ export class MedRegApproveComponent implements OnInit {
     }
 
     showCustomsPoints() {
-        console.log("customsPoints.value: ",this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value);
-        console.log("customsPoints.valid: ", this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').valid)
+        console.log('customsPoints.value: ', this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value);
+        console.log('customsPoints.valid: ', this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').valid);
     }
 
 
@@ -760,11 +760,11 @@ export class MedRegApproveComponent implements OnInit {
 
         dialogRef2.afterClosed().subscribe(result => {
             if (result) {
-                this.nextStep(false, true)
+                this.nextStep(false, true);
             }
         });
     }
-    
+
     nextStep(aprrovedOrNot: boolean, submitForm: boolean) {
 
 
@@ -773,7 +773,7 @@ export class MedRegApproveComponent implements OnInit {
             currentStep = 'F';
         }
         this.formSubmitted = true;
-        let customsPoints = this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value;
+        const customsPoints = this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value;
         if (customsPoints.length > 0 &&  this.authorizationClicked) {
 
 
@@ -814,7 +814,7 @@ export class MedRegApproveComponent implements OnInit {
                 }
             });
 
-            let closestExpirationDate = this.expirationDate.reduce(function (a, b) {
+            const closestExpirationDate = this.expirationDate.reduce(function (a, b) {
                 return a < b ? a : b;
             });
             modelToSubmit.importAuthorizationEntity.expirationDate = closestExpirationDate;
@@ -846,7 +846,7 @@ export class MedRegApproveComponent implements OnInit {
             ));
 
             this.formSubmitted = false;
-        } else this.showClickAuthorizationError = true;
+        } else { this.showClickAuthorizationError = true; }
     }
 
 

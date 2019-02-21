@@ -508,32 +508,25 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
 
         modelToSubmit.id = this.requestId;
 
-        let ecAgents : any[];
-        if (this.tipCerere === 'LICEL' && currentStep === 'I' )
-        {
-            ecAgents = this.companiiPerIdnoSelected.filter(cpi =>
-            {
-                if (cpi.currentResolution )
-                {
-                    if (cpi.currentResolution.resolution === '1')
-                    {
+        let ecAgents: any[];
+        if (this.tipCerere === 'LICEL' && currentStep === 'I' ) {
+            ecAgents = this.companiiPerIdnoSelected.filter(cpi => {
+                if (cpi.currentResolution ) {
+                    if (cpi.currentResolution.resolution === '1') {
                         return true;
-                    }
-                    else{
+                    } else {
                         return false;
                     }
 
-                }
-                else{
+                } else {
                     return true;
                 }
 
             });
-        }
-        else{
+        } else {
             ecAgents = this.companiiPerIdnoSelected;
         }
-        
+
         licenseModel.economicAgents = ecAgents;
 
         if (this.rForm.get('CPCDNrdeintrare').value) {

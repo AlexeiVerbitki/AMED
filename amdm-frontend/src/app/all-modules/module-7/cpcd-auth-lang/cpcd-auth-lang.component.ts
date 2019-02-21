@@ -1,10 +1,10 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Subscription} from "rxjs";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {DrugDocumentsService} from "../../../shared/service/drugs/drugdocuments.service";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Subscription} from 'rxjs';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {DrugDocumentsService} from '../../../shared/service/drugs/drugdocuments.service';
 
 @Component({
     selector: 'app-cpcd-auth-lang',

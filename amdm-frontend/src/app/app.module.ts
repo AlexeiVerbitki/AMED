@@ -52,6 +52,7 @@ import {HomepageModule} from './homepage/homepage.module';
 import {NomenclatureModule} from './all-modules/module-6/nomenclature.module';
 import {SelectSubsidiaryModalComponent} from './all-modules/gdp/select-subsidiary-modal/select-subsidiary-modal.component';
 import {InspectorsModalComponent} from './all-modules/gdp/inspectors-modal/inspectors-modal.component';
+import {SelectDocumentNumberComponent} from "./dialog/select-document-number/select-document-number.component";
 
 registerLocaleData(localeRo, 'ro-MD');
 
@@ -101,8 +102,8 @@ const interceptors = [{
         MedicamentModificationsDialogComponent,
         DivisionSelectDialogComponent,
         SelectSubsidiaryModalComponent,
-        InspectorsModalComponent
-
+        InspectorsModalComponent,
+        SelectDocumentNumberComponent
     ],
     imports: [
         BrowserAnimationsModule,
@@ -120,7 +121,7 @@ const interceptors = [{
     ],
     schemas: [],
     entryComponents: [
-        DivisionSelectDialogComponent, AuxiliarySubstanceDialogComponent, ConfirmationDialogComponent, MedicamentHistoryDialogComponent,
+        DivisionSelectDialogComponent, AuxiliarySubstanceDialogComponent, ConfirmationDialogComponent, MedicamentHistoryDialogComponent,SelectDocumentNumberComponent,
         MedicamentModificationsDialogComponent, RequestAdditionalDataDialogComponent, ActiveSubstanceDialogComponent, MedicamentDetailsDialogComponent,
         AddManufactureComponent, AddDivisionComponent, AddExpertComponent, SelectVariationTypeComponent, SelectSubsidiaryModalComponent, InspectorsModalComponent
     ],

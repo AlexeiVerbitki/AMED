@@ -84,6 +84,8 @@ public class RequestController
     @Autowired
     private ImportAuthorizationRepository importAuthorizationRepository;
     @Autowired
+    private ImportAuthorizationRepository2 importAuthorizationRepository2;
+    @Autowired
     private ImportAuthRepository importAuthRepository;
 	@Autowired
     private InvoiceDetailsRepository invoiceDetailsRepository;
@@ -1841,15 +1843,30 @@ public class RequestController
     }
 
     @GetMapping(value = "/load-import-authorization-by-filter")
-    public ResponseEntity<List<ImportAuthorizationDTO>> getAuthorizationByFilter(@RequestParam Map<String, String> requestParams) throws CustomException
+//    public ResponseEntity<List<ImportAuthorizationEntity>> getAuthorizationByFilter(@RequestParam String authorizationsNumber, String applicant, String expirationDate, String summ, String currency) throws CustomException
+    public ResponseEntity<List<ImportAuthorizationEntity>> getAuthorizationByFilter(@RequestParam HashMap<String, String> requestParams) throws CustomException
     {
-        List<ImportAuthorizationDTO> regOptional = importAuthorizationRepository.getAuthorizationByFilter(
-//                               "33278/2019-AM",
-                requestParams.get("authorizationsNumber"),
-                requestParams.get("applicant"),
-                requestParams.get("expirationDate"),
-                requestParams.get("summ"),
-                requestParams.get("currency"));
+
+                String authorizationsNumber = requestParams.get("authorizationsNumber");
+                String applicant            = requestParams.get("applicant");
+                String expirationDate       = requestParams.get("expirationDate");
+                String summ                 = requestParams.get("summ");
+                String currency             = requestParams.get("currency");
+        List<ImportAuthorizationEntity> regOptional = importAuthorizationRepository2.getAuthorizationByFilter(authorizationsNumber, applicant, expirationDate, summ, currency);
+//        List<ImportAuthorizationEntity> regOptional = importAuthorizationRepository2.getAuthorizationByFilter(
+//                requestParams.get("authorizationsNumber").isEmpty() ? null :  requestParams.get("authorizationsNumber"),
+//                requestParams.get("applicant").isEmpty()            ? null :  requestParams.get("applicant"),
+//                requestParams.get("expirationDate").isEmpty()       ? null :  requestParams.get("expirationDate"),
+//                requestParams.get("summ").isEmpty()                 ? null :  requestParams.get("summ"),
+//                requestParams.get("currency").isEmpty()             ? null :  requestParams.get("currency")) ;
+//                requestParams.getAuthorizationsNumber(),
+//                requestParams.getApplicant(),
+//                requestParams.getExpirationDate(),
+//                requestParams.getSumm(),
+//                requestParams.getCurrency());
+
+
+
 
                 // requestParams.getAuthorizationsNumber(),
 //                requestParams.getApplicant(),
@@ -1858,11 +1875,14 @@ public class RequestController
 //                requestParams.getCurrency());
 
 
-//                "33278/2019-AM",
-//                "1",
-//                "2019-12-20",
-//                "40",
-//                "6");
+//                "33278/2019-AM", "1", "2019-12-20", "40", "6");
+
+//                requestParams.get("authorizationsNumber"),
+//                requestParams.get("applicant"),
+//                requestParams.get("expirationDate"),
+//                requestParams.get("summ"),
+//                requestParams.get("currency"));
+
         return new ResponseEntity<>(regOptional, HttpStatus.OK);
     }
 

@@ -13,8 +13,8 @@ import {MatDialog} from '@angular/material';
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 import {CanModuleDeactivate} from '../../../shared/auth-guard/can-deactivate-guard.service';
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
-import {LicenseService} from "../../../shared/service/license/license.service";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
+import {LicenseService} from '../../../shared/service/license/license.service';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 
 @Component({
     selector: 'app-reg-cerere',
@@ -193,8 +193,7 @@ export class RegCerereGmpComponent implements OnInit, OnDestroy, CanModuleDeacti
 
         this.formSubmitted = true;
 
-        if(this.rForm.get('company').valid && !this.rForm.get('seria').value)
-        {
+        if (this.rForm.get('company').valid && !this.rForm.get('seria').value) {
             this.errorHandlerService.showError('Nu a fost gasita nici o licenta pentru compania selectata.');
             return;
         }

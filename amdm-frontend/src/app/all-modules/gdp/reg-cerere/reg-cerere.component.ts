@@ -3,7 +3,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 import {MatDialog} from '@angular/material';
-import {saveAs} from 'file-saver';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {Router} from '@angular/router';
 import {Document} from '../../../models/document';
@@ -12,9 +11,8 @@ import {LoaderService} from '../../../shared/service/loader.service';
 import {CanModuleDeactivate} from '../../../shared/auth-guard/can-deactivate-guard.service';
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
-import {PriceService} from '../../../shared/service/prices.service';
 import {GDPService} from '../../../shared/service/gdp.service';
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 
 @Component({
     selector: 'app-reg-cerere',
@@ -22,7 +20,7 @@ import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.c
     styleUrls: ['./reg-cerere.component.css']
 })
 
-export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivate  {
+export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivate {
 
     documents: Document [] = [];
     companii: Observable<any[]>;
@@ -47,7 +45,7 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
         this.rForm = fb.group({
             'data': {disabled: true, value: new Date()},
             'requestNumber': [null],
-            'idnp': [null,  [Validators.required, Validators.maxLength(13)]],
+            'idnp': [null, [Validators.required, Validators.maxLength(13)]],
             'id': [null],
             'startDate': [new Date()],
             'currentStep': ['E'],
@@ -92,7 +90,9 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
         this.companii =
             this.companyInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) { return true; }
+                    if (result && result.length > 2) {
+                        return true;
+                    }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -112,27 +112,27 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
     companySelected(company) {
         console.log(company);
 
-            this.rForm.get('company.adresa').setValue(company.legalAddress);
-            this.rForm.get('company.id').setValue(company.id);
-            this.rForm.get('company.name').setValue(company.name);
+        this.rForm.get('company.adresa').setValue(company.legalAddress);
+        this.rForm.get('company.id').setValue(company.id);
+        this.rForm.get('company.name').setValue(company.name);
 
-            if (company.idno) {
-                this.rForm.get('company.idno').setValue(company.idno);
-                this.subscriptions.push(
-                    this.gdpService.retrieveLicenseByIdno(company.idno).subscribe(data => {
-                        console.log('retrieveLicenseByIdno', data);
-                        if (data) {
-                            this.rForm.get('company.seria').setValue(data.serialNr);
-                            this.rForm.get('company.nrLic').setValue(data.nr);
-                            this.rForm.get('company.dataEliberariiLic').setValue(new Date(data.releaseDate));
-                            this.rForm.get('company.dataExpirariiLic').setValue(new Date(data.expirationDate));
-                        } else {
-                            this.showNoLicence();
-                        }
-                    }));
-            } else {
-                this.showNoLicence();
-            }
+        if (company.idno) {
+            this.rForm.get('company.idno').setValue(company.idno);
+            this.subscriptions.push(
+                this.gdpService.retrieveLicenseByIdno(company.idno).subscribe(data => {
+                    console.log('retrieveLicenseByIdno', data);
+                    if (data) {
+                        this.rForm.get('company.seria').setValue(data.serialNr);
+                        this.rForm.get('company.nrLic').setValue(data.nr);
+                        this.rForm.get('company.dataEliberariiLic').setValue(new Date(data.releaseDate));
+                        this.rForm.get('company.dataExpirariiLic').setValue(new Date(data.expirationDate));
+                    } else {
+                        this.showNoLicence();
+                    }
+                }));
+        } else {
+            this.showNoLicence();
+        }
 
     }
 
@@ -190,14 +190,14 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
         modelToSubmit.documents = this.documents;
         modelToSubmit.endDate = new Date();
         modelToSubmit.registrationRequestMandatedContacts = [{
-            mandatedLastname : this.rForm.get('mandatedLastname').value,
-            mandatedFirstname : this.rForm.get('mandatedFirstname').value,
-            phoneNumber : this.rForm.get('phoneNumber').value,
-            email : this.rForm.get('email').value,
-            requestMandateNr : this.rForm.get('requestMandateNr').value,
-            requestMandateDate : this.rForm.get('requestMandateDate').value,
-            id : this.rForm.get('registrationRequestMandatedContactsId').value,
-            idnp : this.rForm.get('idnp').value
+            mandatedLastname: this.rForm.get('mandatedLastname').value,
+            mandatedFirstname: this.rForm.get('mandatedFirstname').value,
+            phoneNumber: this.rForm.get('phoneNumber').value,
+            email: this.rForm.get('email').value,
+            requestMandateNr: this.rForm.get('requestMandateNr').value,
+            requestMandateDate: this.rForm.get('requestMandateDate').value,
+            id: this.rForm.get('registrationRequestMandatedContactsId').value,
+            idnp: this.rForm.get('idnp').value
         }];
 
         this.formSubmitted = true;

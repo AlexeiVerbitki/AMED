@@ -65,7 +65,7 @@ export class PriceService {
     }
 
     savePrices(priceModel: any): Observable<any> {
-        return this.requestService.addPriceRequests(priceModel);
+        return this.http.post<any>('/api/add-prices-request', priceModel, {observe: 'response'});
     }
 
     savePrice(priceModel: any): Observable<any> {
@@ -81,6 +81,13 @@ export class PriceService {
         Params = Params.set('requestNumber', requestNr);
 
         return this.http.get<any>('/api/remove-price-request', {params: Params});
+    }
+
+    getRequestsByRequestNumber(requestNr: string): Observable<any> {
+        let Params = new HttpParams();
+        Params = Params.set('requestNumber', requestNr);
+
+        return this.http.get<any>('/api/get-prices-requests', {params: Params});
     }
 
     getPriceExpirationReasons(): Observable<any> {

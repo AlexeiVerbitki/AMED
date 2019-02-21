@@ -60,7 +60,7 @@ export class AmbalajComponent implements OnInit {
     solicitantCompanyList: Observable<any[]>;
     unitSumm: any;
     unitOfImportPressed: boolean;
-    invalidCurrency : boolean = false;
+    invalidCurrency = false;
 
     formModel: any;
     valutaList: Observable<any[]>;
@@ -229,7 +229,7 @@ export class AmbalajComponent implements OnInit {
                 this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(value);
 
 
-            } else this.invalidCurrency = true;
+            } else { this.invalidCurrency = true; }
 
             // if (this.evaluateImportForm.get('importAuthorizationEntity.currency').value == undefined) {
             //     this.invalidCurrency = true;
@@ -280,7 +280,7 @@ export class AmbalajComponent implements OnInit {
     }
 
     showConfirm(valuta: any) {
-        let showPopUp: boolean = false;
+        let showPopUp = false;
 //         if (this.evaluateImportForm.get('importAuthorizationEntity.currency').touched) {
 //             showPopUp = true;
 //         } else
@@ -308,9 +308,9 @@ export class AmbalajComponent implements OnInit {
                         this.unitOfImportTable = [];
                     }
                     // this.changeCurrency = true;
-                }
-                else
+                } else {
                     this.evaluateImportForm.get('importAuthorizationEntity.currency').setValue(this.currentCurrency);
+                }
                 // this.changeCurrency = false;
 
             });
@@ -328,15 +328,15 @@ export class AmbalajComponent implements OnInit {
 
         if (this.evaluateImportForm.get('importAuthorizationEntity.currency').value == undefined) {
             this.invalidCurrency = true;
-        } else this.invalidCurrency = false;
+        } else { this.invalidCurrency = false; }
 
-        console.log("unitOfImportTable", this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable'))
+        console.log('unitOfImportTable', this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable'));
         if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').valid && this.evaluateImportForm.get('importAuthorizationEntity.currency').value) {
             this.unitOfImportPressed = false;
 
             if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').invalid || this.invalidCurrency) {
-                console.log("unitOfImportTable",this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').invalid)
-                console.log("this.invalidCurrency: ",this.invalidCurrency)
+                console.log('unitOfImportTable', this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').invalid);
+                console.log('this.invalidCurrency: ', this.invalidCurrency);
                 return;
             }
 
@@ -634,18 +634,18 @@ export class AmbalajComponent implements OnInit {
 
             this.formSubmitted = false;
         }
-        }else {
-            console.log("this.evaluateImportForm.valid", this.evaluateImportForm.valid)
-            console.log("this.evaluateImportForm", this.evaluateImportForm)
-            let element : any;
+        } else {
+            console.log('this.evaluateImportForm.valid', this.evaluateImportForm.valid);
+            console.log('this.evaluateImportForm', this.evaluateImportForm);
+            let element: any;
 
             if (!this.evaluateImportForm.get('importAuthorizationEntity.currency').value) {
-                element = document.getElementById("contractCurrency");
+                element = document.getElementById('contractCurrency');
             } else
             if (this.unitOfImportTable.length == 0) {
-                element = document.getElementById("unitOfImportTable");
+                element = document.getElementById('unitOfImportTable');
             } else {
-                element = document.getElementById("importAuthorizationEntity");
+                element = document.getElementById('importAuthorizationEntity');
             }
 
             element.scrollIntoView();

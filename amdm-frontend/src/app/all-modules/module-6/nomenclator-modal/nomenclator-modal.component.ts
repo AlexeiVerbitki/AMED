@@ -24,7 +24,7 @@ export class NomenclatorModalComponent implements OnInit {
   }
 
   navigateToUrl(rowDetails: any) {
-    let path = rowDetails.path;
+    const path = rowDetails.path;
 
     if (path) {
       this.subscriptions.push(this.nomenclatureService.loadFile(path).subscribe(data => {

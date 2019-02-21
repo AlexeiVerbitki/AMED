@@ -19,6 +19,7 @@ import {ActiveSubstanceDialogComponent} from '../../../dialog/active-substance-d
 import {AddCtExpertComponent} from '../dialog/add-ct-expert/add-ct-expert.component';
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 
 @Component({
     selector: 'app-a-analiza',
@@ -59,28 +60,37 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
     paymentTotal = 0;
     initialData: any;
     outDocuments: any[] = [];
+
     manufacturers: Observable<any[]>;
     loadingManufacturer = false;
     manufacturerInputs = new Subject<string>();
-    medActiveSubstances: any[] = [];
-    refProdActiveSubstances: any[] = [];
+
     farmForms: Observable<any[]>;
     loadingFarmForms = false;
     farmFormsInputs = new Subject<string>();
+
     atcCodes: Observable<any[]>;
     loadingAtcCodes = false;
     atcCodesInputs = new Subject<string>();
+
     manufacturersRfPr: Observable<any[]>;
     loadingManufacturerRfPr = false;
     manufacturerInputsRfPr = new Subject<string>();
+
     farmFormsRfPr: Observable<any[]>;
     loadingFarmFormsRfPr = false;
     farmFormsInputsRfPr = new Subject<string>();
+
     atcCodesRfPr: Observable<any[]>;
     loadingAtcCodesRfPr = false;
     atcCodesInputsRfPr = new Subject<string>();
+
+    medActiveSubstances: any[] = [];
+    refProdActiveSubstances: any[] = [];
+
     expertList: any[] = [];
     private subscriptions: Subscription[] = [];
+    isValidRefProduct = false;
 
     constructor(private fb: FormBuilder,
                 public dialog: MatDialog,
@@ -97,7 +107,6 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                 private loadingService: LoaderService,
                 private errorHandlerService: SuccessOrErrorHandlerService,
                 private navbarTitleService: NavbarTitleService) {
-
     }
 
     ngOnInit() {
@@ -146,47 +155,47 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
         this.medicamentForm = this.fb.group({
             'id': [null],
-            'name': [{value: null, disabled: true}],
+            'name': [null, Validators.required],
             'registrationNumber': [null],
-            'registrationDate': [new Date()],
+            'registrationDate': [null],
             'internationalMedicamentName': [null],
-            'manufacture': [{value: null, disabled: true}],
-            'dose': [{value: null, disabled: true}],
-            'volumeQuantityMeasurement': [{value: null, disabled: true}],
-            'pharmaceuticalForm': [{value: null, disabled: true}],
-            'atcCode': [{value: null, disabled: true}],
-            'administratingMode': [{value: null, disabled: true}],
-            'activeSubstances': [null, Validators.required]
+            'manufacture': [null, Validators.required],
+            'dose': [null],
+            'volumeQuantityMeasurement': [null],
+            'pharmaceuticalForm': [null, Validators.required],
+            'atcCode': [null],
+            'administratingMode': [null, Validators.required],
+            'activeSubstances': [null]
         });
 
         this.referenceProductFormn = this.fb.group({
             'id': [null],
-            'name': [{value: null, disabled: true}],
+            'name': [null],
             'registrationNumber': [null],
-            'registrationDate': [new Date()],
+            'registrationDate': [null],
             'internationalMedicamentName': [null],
-            'manufacture': [{value: null, disabled: true}],
-            'dose': [{value: null, disabled: true}],
-            'volumeQuantityMeasurement': [{value: null, disabled: true}],
-            'pharmaceuticalForm': [{value: null, disabled: true}],
-            'atcCode': [{value: null, disabled: true}],
-            'administratingMode': [{value: null, disabled: true}],
-            'activeSubstances': [null, Validators.required]
+            'manufacture': [null, Validators.required],
+            'dose': [null, Validators.required],
+            'volumeQuantityMeasurement': [null],
+            'pharmaceuticalForm': [null, Validators.required],
+            'atcCode': [null, Validators.required],
+            'administratingMode': [null, Validators.required],
+            'activeSubstances': [null]
         });
 
         this.placeboFormn = this.fb.group({
             'id': [null],
-            'name': [{value: null, disabled: true}],
+            'name': [null],
             'registrationNumber': [null],
-            'registrationDate': [new Date()],
+            'registrationDate': [null],
             'internationalMedicamentName': [null],
-            'manufacture': [{value: null, disabled: true}],
-            'dose': [{value: null, disabled: true}],
-            'volumeQuantityMeasurement': [{value: null, disabled: true}],
-            'pharmaceuticalForm': [{value: null, disabled: true}],
-            'atcCode': [{value: null, disabled: true}],
-            'administratingMode': [{value: null, disabled: true}],
-            'activeSubstances': [null, Validators.required]
+            'manufacture': [null],
+            'dose': [null, Validators.required],
+            'volumeQuantityMeasurement': [null],
+            'pharmaceuticalForm': [null],
+            'atcCode': [null, Validators.required],
+            'administratingMode': [null],
+            'activeSubstances': [null]
         });
 
         this.addInvestigatorForm = this.fb.group({
@@ -199,10 +208,60 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
         this.isWaitingStep = new BehaviorSubject<boolean>(false);
 
+        this.subscribeToEvents();
         this.initPage();
+        this.loadManufacturers();
+        this.loadFarmForms();
+        this.loadATCCodes();
+        this.loadManufacturersRfPr();
+        this.loadFarmFormsRfPr();
+        this.loadATCCodesRfPr();
+
         this.disableEnablePage();
 
         this.loadPhasesList();
+    }
+
+    subscribeToEvents() {
+        this.subscriptions.push(
+            this.referenceProductFormn.get('name').valueChanges.subscribe(value => {
+                (value && value.length > 0) ? this.isValidRefProduct = true : this.isValidRefProduct = false;
+                if (this.isValidRefProduct) {
+                    this.referenceProductFormn.get('manufacture').enable();
+                    this.referenceProductFormn.get('dose').enable();
+                    this.referenceProductFormn.get('atcCode').enable();
+                    this.referenceProductFormn.get('administratingMode').enable();
+                    this.referenceProductFormn.get('pharmaceuticalForm').enable();
+                } else {
+                    this.referenceProductFormn.get('manufacture').disable();
+                    this.referenceProductFormn.get('manufacture').reset();
+                    this.referenceProductFormn.get('dose').disable();
+                    this.referenceProductFormn.get('dose').reset();
+                    this.referenceProductFormn.get('pharmaceuticalForm').disable();
+                    this.referenceProductFormn.get('pharmaceuticalForm').reset();
+                    this.referenceProductFormn.get('atcCode').disable();
+                    this.referenceProductFormn.get('atcCode').reset();
+                    this.referenceProductFormn.get('administratingMode').disable();
+                    this.referenceProductFormn.get('administratingMode').reset();
+                    this.refProdActiveSubstances = [];
+                }
+            })
+        );
+
+        this.subscriptions.push(
+            this.placeboFormn.get('name').valueChanges.subscribe(value => {
+                if (value && value.length > 0) {
+                    this.placeboFormn.get('administratingMode').enable();
+                    this.placeboFormn.get('dose').enable();
+                } else {
+                    this.placeboFormn.get('administratingMode').disable();
+                    this.placeboFormn.get('administratingMode').reset();
+                    this.placeboFormn.get('dose').disable();
+                    this.placeboFormn.get('dose').reset();
+                }
+
+            })
+        );
     }
 
     loadPhasesList() {
@@ -310,7 +369,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                     this.outDocuments = data.outputDocuments;
 
                     this.expertList = data.expertList;
-                    console.log('data', data);
+                    // console.log('data', data);
                     // console.log('this.analyzeClinicalTrailForm', this.analyzeClinicalTrailForm.value);
 
                     this.loadInvestigatorsList();
@@ -372,18 +431,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         });
     }
 
-    // deleteMedicalInstitution(institution) {
-    //     var intdexToDelete = this.mediacalInstitutionsList.indexOf(institution);
-    //     this.mediacalInstitutionsList.splice(intdexToDelete, 1);
-    //     this.allMediacalInstitutionsList.push(institution);
-    //     this.allMediacalInstitutionsList = this.allMediacalInstitutionsList.splice(0);
-    // }
-
     deleteMedicalInstitution(i) {
-        // console.log('i', i);
-        // console.log('this.mediacalInstitutionsList', this.mediacalInstitutionsList);
-        // console.log('this.allMediacalInstitutionsList', this.allMediacalInstitutionsList);
-
         this.allMediacalInstitutionsList.push(this.mediacalInstitutionsList[i]);
         this.mediacalInstitutionsList.splice(i, 1);
         this.allMediacalInstitutionsList = this.allMediacalInstitutionsList.splice(0);
@@ -416,6 +464,139 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         this.investigatorsList.splice(intdexToDelete, 1);
         this.allInvestigatorsList.push(investigator);
         this.allInvestigatorsList = this.allInvestigatorsList.splice(0);
+    }
+
+    loadManufacturers() {
+        this.manufacturers =
+            this.manufacturerInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) {
+                        return true;
+                    }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingManufacturer = true;
+                }),
+                flatMap(term =>
+                    this.administrationService.getManufacturersByName(term).pipe(
+                        tap(() => this.loadingManufacturer = false)
+                    )
+                )
+            );
+    }
+
+    loadFarmForms() {
+        this.farmForms =
+            this.farmFormsInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) {
+                        return true;
+                    }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingFarmForms = true;
+
+                }),
+                flatMap(term =>
+                    this.administrationService.getAllPharamceuticalFormsByName(term).pipe(
+                        tap(() => this.loadingFarmForms = false)
+                    )
+                )
+            );
+    }
+
+    loadATCCodes() {
+        this.atcCodes =
+            this.atcCodesInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 0) {
+                        console.log('result && result.length > 0', result);
+                        return true;
+                    }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingAtcCodes = true;
+
+                }),
+                flatMap(term =>
+                    this.administrationService.getAllAtcCodesByCode(term).pipe(
+                        tap(() => this.loadingAtcCodes = false)
+                    )
+                )
+            );
+    }
+
+    loadManufacturersRfPr() {
+        this.manufacturersRfPr =
+            this.manufacturerInputsRfPr.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) {
+                        return true;
+                    }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingManufacturerRfPr = true;
+
+                }),
+                flatMap(term =>
+                    this.administrationService.getManufacturersByName(term).pipe(
+                        tap(() => this.loadingManufacturerRfPr = false)
+                    )
+                )
+            );
+    }
+
+    loadFarmFormsRfPr() {
+        this.farmFormsRfPr =
+            this.farmFormsInputsRfPr.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) {
+                        return true;
+                    }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingFarmFormsRfPr = true;
+
+                }),
+                flatMap(term =>
+                    this.administrationService.getAllPharamceuticalFormsByName(term).pipe(
+                        tap(() => this.loadingFarmFormsRfPr = false)
+                    )
+                )
+            );
+    }
+
+    loadATCCodesRfPr() {
+        this.atcCodesRfPr =
+            this.atcCodesInputsRfPr.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 0) {
+                        console.log('result && result.length > 0', result);
+                        return true;
+                    }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingAtcCodesRfPr = true;
+
+                }),
+                flatMap(term =>
+                    this.administrationService.getAllAtcCodesByCode(term).pipe(
+                        tap(() => this.loadingAtcCodesRfPr = false)
+                    )
+                )
+            );
     }
 
     onTreatmentChange(mrChange: MatRadioChange) {
@@ -564,6 +745,14 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         formModel.outputDocuments = this.outDocuments;
         formModel.clinicalTrails.medicalInstitutions = this.mediacalInstitutionsList;
 
+        formModel.clinicalTrails.medicament = this.medicamentForm.value;
+        formModel.clinicalTrails.medicament.activeSubstances = this.medActiveSubstances;
+
+        formModel.clinicalTrails.referenceProduct = this.referenceProductFormn.value;
+        formModel.clinicalTrails.referenceProduct.activeSubstances = this.refProdActiveSubstances;
+
+        formModel.clinicalTrails.placebo = this.placeboFormn.value;
+
         formModel.assignedUser = this.authService.getUserName();
         formModel.expertList = this.expertList;
         console.log('Save data', formModel);
@@ -590,11 +779,6 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         const formModel = this.analyzeClinicalTrailForm.getRawValue();
         console.log('Submit data', formModel);
 
-        // if (this.analyzeClinicalTrailForm.invalid || this.paymentTotal < 0) {
-        //     alert('Invalid Form!!');
-        //     console.log('Not submitted data', formModel);
-        //     return;
-        // }
         if (this.analyzeClinicalTrailForm.invalid) {
             this.dysplayInvalidControl(this.analyzeClinicalTrailForm['controls'].clinicalTrails['controls']);
             this.errorHandlerService.showError('Datele studiului clinic contine date invalide');
@@ -620,6 +804,25 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             }
         }
 
+        if (this.medicamentForm.invalid) {
+            console.log('this.medicamentForm', this.medicamentForm);
+            this.dysplayInvalidControl(this.medicamentForm);
+            this.errorHandlerService.showError('Medicamentul de investigat contine date invalide');
+            return;
+        }
+
+        if (this.referenceProductFormn.invalid) {
+            this.dysplayInvalidControl(this.referenceProductFormn);
+            this.errorHandlerService.showError('Produsul de referinta contine date invalide');
+            return;
+        }
+
+        if (this.mediacalInstitutionsList.length == 0) {
+            this.dysplayInvalidControl(this.addMediacalInstitutionForm);
+            this.errorHandlerService.showError('Unitatea medicală pentru desfășurarea studiului nu a fost aleasa');
+            return;
+        }
+
         this.loadingService.show();
 
         formModel.currentStep = 'AP';
@@ -634,6 +837,12 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         formModel.outputDocuments = this.outDocuments;
         formModel.clinicalTrails.investigators = this.investigatorsList;
         formModel.clinicalTrails.medicalInstitutions = this.mediacalInstitutionsList;
+
+        formModel.clinicalTrails.medicament = this.medicamentForm.value;
+        formModel.clinicalTrails.medicament.activeSubstances = this.medActiveSubstances;
+        formModel.clinicalTrails.referenceProduct = this.referenceProductFormn.value;
+        formModel.clinicalTrails.referenceProduct.activeSubstances = this.refProdActiveSubstances;
+        formModel.clinicalTrails.placebo = this.placeboFormn.value;
 
         // console.log('evaluareaPrimaraObjectLet', JSON.stringify(formModel));
 
@@ -731,42 +940,20 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
         const dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
-        dialogRef.afterClosed().subscribe(result => {
-            console.log('result', result);
-            if (result !== undefined && result.response) {
-                this.medActiveSubstances.push({
-                    activeSubstance: result.activeSubstance,
-                    quantity: result.activeSubstanceQuantity,
-                    unitsOfMeasurement: result.activeSubstanceUnit,
-                    manufacture: result.manufactures[0].manufacture
-                });
-            }
-        });
-    }
-
-    editMedActiveSubstance(substance: any, index: number) {
-        const dialogConfig2 = new MatDialogConfig();
-
-        dialogConfig2.disableClose = false;
-        dialogConfig2.autoFocus = true;
-        dialogConfig2.hasBackdrop = true;
-
-        dialogConfig2.height = '650px';
-        dialogConfig2.width = '600px';
-        dialogConfig2.data = substance;
-
-        const dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result !== undefined && result.response) {
-                this.medActiveSubstances[index] = {
-                    activeSubstance: result.activeSubstance,
-                    quantity: result.activeSubstanceQuantity,
-                    unitsOfMeasurement: result.activeSubstanceUnit,
-                    manufacture: result.manufactures[0].manufacture
-                };
-            }
-        });
+        this.subscriptions.push(
+            dialogRef.afterClosed().subscribe(result => {
+                console.log('result', result);
+                if (result !== null && result !== undefined && result.response) {
+                    this.medActiveSubstances.push({
+                        activeSubstance: result.activeSubstance,
+                        quantity: result.activeSubstanceQuantity,
+                        unitsOfMeasurement: result.activeSubstanceUnit,
+                        manufacture: result.manufactures[0].manufacture
+                    });
+                    console.log('this.medActiveSubstances', this.medActiveSubstances);
+                }
+            })
+        );
     }
 
     removeMedActiveSubstance(index: number) {
@@ -795,16 +982,19 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
         const dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
 
-        dialogRef.afterClosed().subscribe(result => {
-            if (result.response) {
-                this.refProdActiveSubstances.push({
-                    activeSubstance: result.activeSubstance,
-                    quantity: result.activeSubstanceQuantity,
-                    unitsOfMeasurement: result.activeSubstanceUnit,
-                    manufacture: result.manufactureSA
-                });
-            }
-        });
+        this.subscriptions.push(
+            dialogRef.afterClosed().subscribe(result => {
+                console.log('result', result);
+                if (result !== null && result !== undefined && result.response) {
+                    this.refProdActiveSubstances.push({
+                        activeSubstance: result.activeSubstance,
+                        quantity: result.activeSubstanceQuantity,
+                        unitsOfMeasurement: result.activeSubstanceUnit,
+                        manufacture: result.manufactures[0].manufacture
+                    });
+                }
+            })
+        );
     }
 
     editRefProdActiveSubstance(substance: any, index: number) {

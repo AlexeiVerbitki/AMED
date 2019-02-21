@@ -1,5 +1,9 @@
-.table-width {
-    width : 100%;
+::ng-deep .mat-sort-header-container {
+    display: flex !important;
+    justify-content: center !important;
+    font-size: 16px !important;
+    transition: 0.5s !important;
+    margin-left: 20px;
 }
 
 th, td {
@@ -16,32 +20,7 @@ mat-header-cell {
     justify-content : center;
 }
 
-table td a {
-    text-decoration: underline;
-    color : #488CD3;
-    font-weight : bold;
-}
-
-.example-container {
-    height    : 610px;
-    overflow : auto;
-}
-
-table {
-    width : 100%;
-}
-
-.modal {
-    overflow-y : auto;
-}
-
-.md-form-modified {
-    position      : relative;
-    margin-top    : 10px;
-    margin-bottom : 1.5rem;
-}
-
-.btn-large {
-    padding-left: 75px !important;
-    padding-right: 75px !important;
+::ng-deep .mat-sort-header-container:hover {
+    color: #D0D7DA;
+    transition: 0.5s;
 }

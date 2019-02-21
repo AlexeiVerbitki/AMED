@@ -80,11 +80,12 @@
                 <tr *ngFor="let expert of expertList;let i = index">
                     <td>{{ i + 1 }}</td>
                     <td>{{ expert.intern==1 ? 'Da' : 'Nu' }}</td>
-                    <td>{{ expert.intern==1 ? expert.expert.name :  expert.expertName}}</td>
+                    <td>{{ expert.intern==1 ? expert.expert.name : expert.expertName}}</td>
                     <td>{{ expert.date| date: 'dd/MM/yyyy HH:mm:ss' }}</td>
                     <td>{{ f.value.ddIncluded ? 'Da' : 'Nu'}}</td>
                     <td>
-                        <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeExpert(i)" [disabled]="f.value.ddIncluded"
+                        <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeExpert(i)"
+                                [disabled]="f.value.ddIncluded"
                                 mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
                     </td>
                 </tr>
@@ -137,14 +138,16 @@
                     <th scope="row">{{ doc.status }}</th>
                     <th scope="row">
                         <mat-checkbox *ngIf="doc.docType?.category=='SL'" #checkBoxResponse
-                                      [checked]="doc.responseReceived==1" (change)="checkResponseReceived(doc,checkBoxResponse)">Raspuns primit
+                                      [checked]="doc.responseReceived==1"
+                                      (change)="checkResponseReceived(doc,checkBoxResponse)">Raspuns primit
                         </mat-checkbox>
                     </th>
                     <td>
                         <button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(doc)">
                             Vizualizare
                         </button>
-                        <button class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(doc, i)">
+                        <button class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect
+                                (click)="remove(doc, i)">
                             Stergere
                         </button>
                     </td>
@@ -222,7 +225,8 @@
                     <div class="md-form">
                         <input id="sponsoStudClinic" mdbInputDirective type="text" class="form-control"
                                formControlName="sponsor">
-                        <label for="sponsoStudClinic">Sponsorul Studiului clinic <span class="text-danger">*</span></label>
+                        <label for="sponsoStudClinic">Sponsorul Studiului clinic <span
+                                class="text-danger">*</span></label>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -254,14 +258,16 @@
                     <div class="md-form">
                         <input id="popStudClinicNumNational" mdbInputDirective type="number" class="form-control"
                                formControlName="trialPopNat">
-                        <label for="popStudClinicNumNational">Numărul pacienților naționali <span class="text-danger">*</span></label>
+                        <label for="popStudClinicNumNational">Numărul pacienților naționali <span
+                                class="text-danger">*</span></label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="md-form">
                         <input id="popStudClinicNumInternational" mdbInputDirective type="number" class="form-control"
                                formControlName="trialPopInternat">
-                        <label for="popStudClinicNumInternational">Numărul pacienților internaționali <span class="text-danger">*</span></label>
+                        <label for="popStudClinicNumInternational">Numărul pacienților internaționali <span
+                                class="text-danger">*</span></label>
                     </div>
                 </div>
             </div>
@@ -270,8 +276,10 @@
             <div class="row">
                 <div class="col-10">
                     <div class="md-form-modified" [formGroup]="addMediacalInstitutionForm">
-                        <ng-select id="allMediacalInstitutions" name="allMediacalInstitutions" [items]="allMediacalInstitutionsList"
-                            placeholder="Instituţia medicala" formControlName="medicalInstitution" required="true">
+                        <ng-select id="allMediacalInstitutions" name="allMediacalInstitutions"
+                                   [items]="allMediacalInstitutionsList"
+                                   placeholder="Instituţia medicala" formControlName="medicalInstitution"
+                                   required="true">
                             <ng-template ng-option-tmp ng-label-tmp let-item="item">
                                 {{item.name}}ponsorul Studiului clinic
                             </ng-template>
@@ -281,7 +289,8 @@
                 <div class="col-2">
                     <div class="md-form-modified mt-3">
                         <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
-                            mdbWavesEffect (click)="addMedicalInstitution()" [disabled]="!this.addMediacalInstitutionForm.controls.medicalInstitution.valid">
+                                mdbWavesEffect (click)="addMedicalInstitution()"
+                                [disabled]="!this.addMediacalInstitutionForm.controls.medicalInstitution.valid">
                             Adaugare
                         </button>
                     </div>
@@ -292,7 +301,8 @@
                     <!-- Title -->
                     <div class="row">
                         <div class="col-12">
-                            <div class="card-header-title white-text">Unitatea medicală pentru desfășurarea studiului</div>
+                            <div class="card-header-title white-text">Unitatea medicală pentru desfășurarea studiului
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -337,7 +347,8 @@
 
                     <div class="row text-center align-items-center">
                         <div class="col">
-                            <div class="row align-items-center border-row py-2" *ngFor="let el of mediacalInstitutionsList; let i = index">
+                            <div class="row align-items-center border-row py-2"
+                                 *ngFor="let el of mediacalInstitutionsList; let i = index">
                                 <div class="col-4">
                                     <div class="row align-items-center">
                                         <div class="col-6 border-specs ptc">{{el.name}}</div>
@@ -355,11 +366,13 @@
                                     </div>
                                 </div>
                                 <div class="col-2 border-specs ptc">
-                                    <button class="btn btn-mdb-color waves-light btn-sm waves-light" (click)="editMedicalInstitution(i)"
-                                        mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+                                    <button class="btn btn-mdb-color waves-light btn-sm waves-light"
+                                            (click)="editMedicalInstitution(i)"
+                                            mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
                                     </button>
-                                    <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="deleteMedicalInstitution(i)"
-                                        mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+                                    <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                            (click)="deleteMedicalInstitution(i)"
+                                            mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
                                     </button>
                                 </div>
                             </div>
@@ -382,16 +395,20 @@
                     </div>
                     <div class="col-4">
                         <div class="md-form-modified">
-                            <ng-select [items]="manufacturers | async" bindLabel="description" placeholder="Producatorul"
-                                formControlName="manufacture" [loading]="loadingManufacturer" [typeahead]="manufacturerInputs"
-                                required="true">
+                            <ng-select [items]="manufacturers | async"
+                                       bindLabel="description"
+                                       placeholder="Producatorul"
+                                       formControlName="manufacture"
+                                       [loading]="loadingManufacturer"
+                                       [typeahead]="manufacturerInputs"
+                                       required="true">
                                 <ng-template ng-option-tmp let-item="item">
                                     {{item.description}}
                                 </ng-template>
                             </ng-select>
                         </div>
                     </div>
-                    <div class="col-1">
+                    <div class="col-4">
                         <div class="md-form-modified">
                             <mat-form-field>
                                 <input type="text" matInput placeholder="Concentrație" formControlName="dose">
@@ -408,13 +425,13 @@
                                 <div class="card-header-title white-text">Substanţe active</div>
                             </div>
                             <div class="col-6">
-                                    <div class="text-right text-white">
-                                            <button class="btn btn-invisible btn-sm" mdbWavesEffect (click)="addMedActiveSubstanceDialog()"
-                                            disabled><i class="fa fa-plus-circle fa-lg fa-mb"
-                                            aria-hidden="true"></i>
-                                        </button>
-                                    </div>
+                                <div class="text-right text-white">
+                                    <button class="btn btn-invisible btn-sm" mdbWavesEffect
+                                            (click)="addMedActiveSubstanceDialog()">
+                                        <i class="fa fa-plus-circle fa-lg fa-mb" aria-hidden="true"></i>
+                                    </button>
                                 </div>
+                            </div>
                         </div>
                     </div>
 
@@ -436,29 +453,34 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let substance of medActiveSubstances;let i = index">
-                                <th scope="row">{{ substance.activeSubstance.description }}</th>
-                                <td>{{ substance.activeSubstance.code }}</td>
-                                <td>{{ substance.quantity }}</td>
-                                <td>{{ substance.unitsOfMeasurement.description }}</td>
-                                <td>{{ substance.manufacture.description }}</td>
-                                <td>{{ substance.manufacture.country.description }}</td>
-                                <td>{{ substance.manufacture.address }}</td>
-                                <td>
-                                    <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeMedActiveSubstance(i)"
-                                        disabled mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
-                                    </button>
-                                </td>
-                            </tr>
+                        <tr *ngFor="let substance of medActiveSubstances;let i = index">
+                            <th scope="row">{{ substance.activeSubstance.description }}</th>
+                            <td>{{ substance.activeSubstance.code }}</td>
+                            <td>{{ substance.quantity }}</td>
+                            <td>{{ substance.unitsOfMeasurement.description }}</td>
+                            <td>{{ substance.manufacture.description }}</td>
+                            <td>{{ substance.manufacture.country.description }}</td>
+                            <td>{{ substance.manufacture.address }}</td>
+                            <td>
+                                <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                        (click)="removeMedActiveSubstance(i)" mdbWavesEffect><i
+                                        class="fa fa-trash fa-lg" aria-hidden="true"></i>
+                                </button>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="row">
                     <div class="col-4">
                         <div class="md-form-modified">
-                            <ng-select [items]="farmForms | async" bindLabel="description" placeholder="Forma farmaceutica"
-                                formControlName="pharmaceuticalForm" [loading]="loadingFarmForms" [typeahead]="farmFormsInputs"
-                                required="true">
+                            <ng-select [items]="farmForms | async"
+                                       bindLabel="description"
+                                       placeholder="Forma farmaceutica"
+                                       formControlName="pharmaceuticalForm"
+                                       [loading]="loadingFarmForms"
+                                       [typeahead]="farmFormsInputs"
+                                       required="true">
                                 <ng-template ng-option-tmp let-item="item">
                                     {{item.description}}
                                 </ng-template>
@@ -467,9 +489,12 @@
                     </div>
                     <div class="col-4">
                         <div class="md-form-modified">
-                            <ng-select [items]="atcCodes | async" bindLabel="description" placeholder="Grupa farmaceutica"
-                                formControlName="atcCode" [loading]="loadingAtcCodes" [typeahead]="atcCodesInputs"
-                                required="true">
+                            <ng-select [items]="atcCodes | async"
+                                       bindLabel="description"
+                                       placeholder="Grupa farmaceutica"
+                                       formControlName="atcCode"
+                                       [loading]="loadingAtcCodes"
+                                       [typeahead]="atcCodesInputs">
                                 <ng-template ng-option-tmp let-item="item">
                                     {{item.code}} <br/>
                                     <small class="form-text text-muted">{{item.description}}</small>
@@ -480,7 +505,8 @@
                     <div class="col-4">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Calea de administrare" formControlName="administratingMode">
+                                <input type="text" matInput placeholder="Calea de administrare"
+                                       formControlName="administratingMode">
                             </mat-form-field>
                         </div>
                     </div>
@@ -500,9 +526,13 @@
                     </div>
                     <div class="col-4">
                         <div class="md-form-modified">
-                            <ng-select [items]="manufacturersRfPr | async" bindLabel="description" placeholder="Producatorul"
-                                formControlName="manufacture" [loading]="loadingManufacturerRfPr" [typeahead]="manufacturerInputsRfPr"
-                                required="true">
+                            <ng-select [items]="manufacturersRfPr | async"
+                                       bindLabel="description"
+                                       placeholder="Producatorul"
+                                       formControlName="manufacture"
+                                       [loading]="loadingManufacturerRfPr"
+                                       [typeahead]="manufacturerInputsRfPr"
+                                       required="true">
                                 <ng-template ng-option-tmp let-item="item">
                                     {{item.description}}
                                 </ng-template>
@@ -525,11 +555,9 @@
                                 <div class="card-header-title white-text">Substanţe active</div>
                             </div>
                             <div class="col-6">
-                                <div class="text-right text-white">
-                                    <button class="btn btn-invisible btn-sm" mdbWavesEffect (click)="addRefProdActiveSubstanceDialog()"
-                                            disabled><i class="fa fa-plus-circle fa-lg fa-mb"
-                                            aria-hidden="true"></i>
-                                        </button>
+                                <div class="text-right fap text-white">
+                                    <i *ngIf="this.isValidRefProduct" (click)="addRefProdActiveSubstanceDialog()" class="fa fa-plus-circle fa-lg fa-mt"
+                                       aria-hidden="true"></i>
                                 </div>
                             </div>
                         </div>
@@ -552,29 +580,34 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let substance of refProdActiveSubstances;let i = index">
-                                <th scope="row">{{ substance.activeSubstance.description }}</th>
-                                <td>{{ substance.activeSubstance.code }}</td>
-                                <td>{{ substance.quantity }}</td>
-                                <td>{{ substance.unitsOfMeasurement.description }}</td>
-                                <td>{{ substance.manufacture.description }}</td>
-                                <td>{{ substance.manufacture.country.description }}</td>
-                                <td>{{ substance.manufacture.address }}</td>
-                                <td>
-                                    <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeRefProdActiveSubstance(i)"
-                                        disabled mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
-                                    </button>
-                                </td>
-                            </tr>
+                        <tr *ngFor="let substance of refProdActiveSubstances;let i = index">
+                            <th scope="row">{{ substance.activeSubstance.description }}</th>
+                            <td>{{ substance.activeSubstance.code }}</td>
+                            <td>{{ substance.quantity }}</td>
+                            <td>{{ substance.unitsOfMeasurement.description }}</td>
+                            <td>{{ substance.manufacture.description }}</td>
+                            <td>{{ substance.manufacture.country.description }}</td>
+                            <td>{{ substance.manufacture.address }}</td>
+                            <td>
+                                <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                        (click)="removeRefProdActiveSubstance(i)" mdbWavesEffect><i
+                                        class="fa fa-trash fa-lg" aria-hidden="true"></i>
+                                </button>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="row">
                     <div class="col-4">
                         <div class="md-form-modified">
-                            <ng-select [items]="farmFormsRfPr | async" bindLabel="description" placeholder="Forma farmaceutica"
-                                formControlName="pharmaceuticalForm" [loading]="loadingFarmFormsRfPr" [typeahead]="farmFormsInputsRfPr"
-                                required="true">
+                            <ng-select [items]="farmFormsRfPr | async"
+                                       bindLabel="description"
+                                       placeholder="Forma farmaceutica"
+                                       formControlName="pharmaceuticalForm"
+                                       [loading]="loadingFarmFormsRfPr"
+                                       [typeahead]="farmFormsInputsRfPr"
+                                       required="true">
                                 <ng-template ng-option-tmp let-item="item">
                                     {{item.description}}
                                 </ng-template>
@@ -583,9 +616,11 @@
                     </div>
                     <div class="col-4">
                         <div class="md-form-modified">
-                            <ng-select [items]="atcCodesRfPr | async" bindLabel="description" placeholder="Grupa farmaceutica"
-                                formControlName="atcCode" [loading]="loadingAtcCodesRfPr" [typeahead]="atcCodesInputsRfPr"
-                                required="true">
+                            <ng-select [items]="atcCodesRfPr | async" bindLabel="description"
+                                       placeholder="Grupa farmaceutica"
+                                       formControlName="atcCode" [loading]="loadingAtcCodesRfPr"
+                                       [typeahead]="atcCodesInputsRfPr"
+                                       required="true">
                                 <ng-template ng-option-tmp let-item="item">
                                     {{item.code}} <br/>
                                     <small class="form-text text-muted">{{item.description}}</small>
@@ -596,7 +631,8 @@
                     <div class="col-4">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Calea de administrare" formControlName="administratingMode">
+                                <input type="text" matInput placeholder="Calea de administrare"
+                                       formControlName="administratingMode">
                             </mat-form-field>
                         </div>
                     </div>

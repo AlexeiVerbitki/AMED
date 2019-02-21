@@ -15,8 +15,10 @@ import {PaymentModule} from '../../payment/payment.module';
 import {LicenseService} from '../../shared/service/license/license.service';
 import {EcAgentModule} from '../../administration/economic-agent/ec-agent.module';
 import {CpcdAuthLangComponent} from './cpcd-auth-lang/cpcd-auth-lang.component';
-import {MatDialogModule} from "@angular/material";
+import {MatDialogModule} from '@angular/material';
 import { CpcdRejectLetterComponent } from './cpcd-reject-letter/cpcd-reject-letter.component';
+import { DeclarationImportExportComponent } from './declaration-import-export/declaration-import-export.component';
+import { AddDeclarationDialogComponent } from './add-declaration-dialog/add-declaration-dialog.component';
 
 @NgModule({
     imports: [
@@ -32,9 +34,9 @@ import { CpcdRejectLetterComponent } from './cpcd-reject-letter/cpcd-reject-lett
         PaymentModule,
         EcAgentModule
     ],
-    declarations: [ CerereImportExportComponent, CerereSolicAutorComponent, RegDrugControl, CpcdAuthLangComponent, CpcdRejectLetterComponent],
+    declarations: [ CerereImportExportComponent, CerereSolicAutorComponent, RegDrugControl, CpcdAuthLangComponent, CpcdRejectLetterComponent, DeclarationImportExportComponent, AddDeclarationDialogComponent],
     providers: [UploadFileService, RequestService, LicenseService],
-    entryComponents:[CpcdAuthLangComponent, CpcdRejectLetterComponent],
+    entryComponents: [CpcdAuthLangComponent, CpcdRejectLetterComponent, AddDeclarationDialogComponent],
 
 })
 export class DrugControlModule {

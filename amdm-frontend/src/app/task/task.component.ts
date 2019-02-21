@@ -108,7 +108,6 @@ export class TaskComponent implements OnInit, AfterViewInit, OnDestroy {
     ngOnDestroy(): void {
         this.navbarTitleService.showTitleMsg('');
         this.subscriptions.forEach(s => s.unsubscribe());
-        this.navbarTitleService.showTitleMsg('');
     }
 
     applyFilter(filterValue: string) {

@@ -28,7 +28,6 @@ import {MaterialSharedModule} from '../material-shared.module';
 import {PipeModule} from '../shared/pipe/pipe.module';
 import {DocumentModule} from '../document/document.module';
 import {XchangeinfoModule} from '../xchangeInfo/xchangeinfo.module';
-import {SelectDocumentNumberComponent} from '../dialog/select-document-number/select-document-number.component';
 import { DdCtAmendListComponent } from './generate-documents/dd-ct-amend-list/dd-ct-amend-list.component';
 import { RequestDdCtAmendComponent } from './generate-documents/request-dd-ct-amend/request-dd-ct-amend.component';
 
@@ -50,7 +49,6 @@ import { RequestDdCtAmendComponent } from './generate-documents/request-dd-ct-am
         OaListComponent,
         GenerateDocumentsComponent,
         OaListComponent,
-        SelectDocumentNumberComponent,
         RequestsDdComponent,
         MedicamentsOaComponent,
         SelectIssueDateDialogComponent,
@@ -68,7 +66,7 @@ import { RequestDdCtAmendComponent } from './generate-documents/request-dd-ct-am
         LmpcModifyListComponent,
         DdCtAmendListComponent,
         RequestDdCtAmendComponent],
-    entryComponents: [SelectIssueDateDialogComponent, SelectDocumentNumberComponent],
+    entryComponents: [SelectIssueDateDialogComponent],
     providers: [DdListComponent, OaListComponent],
 })
 export class CreateDocumentModule {

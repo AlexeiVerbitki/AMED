@@ -150,48 +150,20 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
         // this.refreshOutputDocuments();
     }
 
-    // private refreshOutputDocuments() {
-    //     this.outDocuments = [];
-    //
-    //     let outDocument = {
-    //         name: 'Act de recepţie a medicamentelor pentru nimicirea ulterioară a lor',
-    //         number: 'NA-' + this.oldData.requestNumber,
-    //         status: this.getOutputDocStatus()
-    //     };
-    //
-    //     this.outDocuments.push(outDocument);
-    // }
-
-    // getOutputDocStatus(): any {
-    //     let result;
-    //     result = this.docs.find(doc => {
-    //         if (doc.docType.category === 'NA' && doc.number === 'NA-' + this.oldData.requestNumber) {
-    //             return true;
-    //         }
-    //     });
-    //     if (result) {
-    //         return {
-    //             mode: 'A',
-    //             description: 'Atasat'
-    //         };
-    //     }
-    //
-    //     return {
-    //         mode: 'N',
-    //         description: 'Nu este atasat'
-    //     };
-    // }
-
-
     submit() {
         this.mFormSubbmitted = true;
-        if ( this.docs.length == 0) {
-            this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
-            return;
-        }
+        // if ( this.docs.length == 0) {
+        //     this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
+        //     return;
+        // }
 
         if (this.paymentTotal < 0) {
             this.errorHandlerService.showError('Nu s-a efectuat plata.');
+            return;
+        }
+
+        if (this.medicamentsToDestroy.find( mtd => !mtd.destructionMethod)) {
+            this.errorHandlerService.showError('Nu s-a indicat metoda de distrugere pentru toate medicamentele.');
             return;
         }
 
@@ -208,12 +180,12 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
     }
 
     confirm() {
-        this.mFormSubbmitted = true;
-        if (this.docs.length == 0) {
-            return;
-        }
-
-        this.mFormSubbmitted = false;
+        // this.mFormSubbmitted = true;
+        // if (this.docs.length == 0) {
+        //     return;
+        // }
+        //
+        // this.mFormSubbmitted = false;
         const modelToSubmit = this.composeModel('E');
 
         this.subscriptions.push(

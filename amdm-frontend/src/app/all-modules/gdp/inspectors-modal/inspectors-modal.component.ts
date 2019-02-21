@@ -12,7 +12,7 @@ import {GDPService} from '../../../shared/service/gdp.service';
 export class InspectorsModalComponent implements OnInit, AfterViewInit, OnDestroy {
     title = '';
     priceEntity: FormGroup;
-    selectedInspectors : any[];
+    selectedInspectors: any[];
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     dataSource = new MatTableDataSource<any>();
@@ -40,12 +40,10 @@ export class InspectorsModalComponent implements OnInit, AfterViewInit, OnDestro
             this.gdpService.getAllEmployees().subscribe(data => {
                     this.dataSource.data = data;
                     this.dataSource.data.forEach(r => {
-                        let selInsp = this.selectedInspectors.find(t=>t.id==r.id);
-                        if(selInsp && selInsp.selected)
-                        {
+                        const selInsp = this.selectedInspectors.find(t => t.id == r.id);
+                        if (selInsp && selInsp.selected) {
                             r.selected = true;
-                        }
-                        else {
+                        } else {
                             r.selected = false;
                         }
                     });

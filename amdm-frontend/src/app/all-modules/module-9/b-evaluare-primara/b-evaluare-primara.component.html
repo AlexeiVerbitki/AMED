@@ -501,8 +501,7 @@
                                        placeholder="Grupa farmaceutica"
                                        formControlName="atcCodeTo"
                                        [loading]="loadingAtcCodes"
-                                       [typeahead]="atcCodesInputs"
-                                       required="true">
+                                       [typeahead]="atcCodesInputs">
                                 <ng-template ng-option-tmp let-item="item">
                                     {{item.code}} <br/>
                                     <small class="form-text text-muted">{{item.description}}</small>

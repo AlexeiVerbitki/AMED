@@ -32,7 +32,7 @@ export class SelectSubsidiaryModalComponent implements OnInit {
     }
 
     save() {
-        this.dialogRef.close(this.dataSource.data.filter(row => row.selected))
+        this.dialogRef.close(this.dataSource.data.filter(row => row.selected));
     }
 
     selectRow(elem : any, row : any) {
@@ -43,13 +43,13 @@ export class SelectSubsidiaryModalComponent implements OnInit {
         console.log(this.data.selectedList);
         this.dataSource.data = this.subsidiaryList;
         this.dataSource.data.forEach(r => {
-            var selSubs = this.data.selectedList.find(t=>t.subsidiary.id==r.id);
-            if(selSubs)
-            {
-                r.selected = true;
-            }
-            else {
-                r.selected = false;
+            if(this.data.selectedList) {
+                let selSubs = this.data.selectedList.find(t => t.subsidiary.id == r.id);
+                if (selSubs) {
+                    r.selected = true;
+                } else {
+                    r.selected = false;
+                }
             }
         });
     }

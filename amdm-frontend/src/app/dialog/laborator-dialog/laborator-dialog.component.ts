@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {Subscription} from "rxjs";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material";
+import {Subscription} from 'rxjs';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material';
 
 @Component({
   selector: 'app-laborator-dialog',
@@ -25,6 +25,7 @@ export class LaboratorDialogComponent implements OnInit {
       'address':  [null, Validators.required],
       'postalCode': [null],
       'contactName': [null, Validators.required],
+        'typeOfAnalysis': [null, Validators.required],
       'phoneNumber': [null, [Validators.maxLength(9), Validators.pattern('[0-9]+')]],
       'fax': [null, [Validators.maxLength(9), Validators.pattern('[0-9]+')]],
       'mobilePhone': [null, [Validators.maxLength(9), Validators.pattern('[0-9]+')]],
@@ -44,6 +45,7 @@ export class LaboratorDialogComponent implements OnInit {
       this.lForm.get('phoneNumber').setValue(this.dataDialog.phoneNumber);
       this.lForm.get('fax').setValue(this.dataDialog.fax);
       this.lForm.get('mobilePhone').setValue(this.dataDialog.mobilePhone);
+        this.lForm.get('typeOfAnalysis').setValue(this.dataDialog.typeOfAnalysis);
       this.lForm.get('email').setValue(this.dataDialog.email);
     }
 

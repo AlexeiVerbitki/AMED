@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {Subscription} from "rxjs";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
+import {Subscription} from 'rxjs';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
 
 @Component({
   selector: 'app-qualified-person-dialog',
@@ -14,7 +14,7 @@ export class QualifiedPersonDialogComponent implements OnInit {
   qForm: FormGroup;
   title = 'Adaugare persoana calificata';
   formSubmitted: boolean;
-  isStatutInvalid : boolean;
+  isStatutInvalid: boolean;
   isFunctionInvalid: boolean;
 
   constructor(
@@ -45,7 +45,7 @@ export class QualifiedPersonDialogComponent implements OnInit {
 
     this.qForm.get('statut').valueChanges.subscribe(val => {
       this.isStatutInvalid = false;
-      if (val!='C') {
+      if (val != 'C') {
         this.qForm.get('consultantDetails').setValue(null);
         this.qForm.get('consultantDetails').disable();
       } else {
@@ -94,15 +94,13 @@ export class QualifiedPersonDialogComponent implements OnInit {
     this.formSubmitted = false;
 
     this.isStatutInvalid = false;
-    if(this.dataDialog.type=='QP' && !this.qForm.get('statut').value)
-    {
+    if (this.dataDialog.type == 'QP' && !this.qForm.get('statut').value) {
       this.isStatutInvalid = true;
       return;
     }
 
     this.isFunctionInvalid = false;
-    if(this.dataDialog.type=='QPP' && !this.qForm.get('function').value)
-    {
+    if (this.dataDialog.type == 'QPP' && !this.qForm.get('function').value) {
       this.isFunctionInvalid = true;
       return;
     }

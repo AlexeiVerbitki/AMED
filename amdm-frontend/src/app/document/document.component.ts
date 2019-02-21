@@ -140,8 +140,8 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.taskService.getRequestStepByCodeAndStep(docTypeIdentifier.code, docTypeIdentifier.step).subscribe(step => {
                         this.subscriptions.push(
                             this.administrationService.getAllDocTypes().subscribe(data => {
-                                    this.docTypes = data;
-                                    this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
+                                var splitted = step.availableDocTypes.split(",");
+                                this.docTypes = this.docTypes.filter(r => splitted.some(x => x == r.category));
                                 }
                             )
                         );

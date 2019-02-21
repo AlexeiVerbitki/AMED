@@ -4,6 +4,8 @@ import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/mat
 import {Subscription} from 'rxjs';
 import {AdministrationService} from '../../shared/service/administration.service';
 import {UserListModalComponent} from './user-list-modal/user-list-modal.component';
+import {LoaderService} from '../../shared/service/loader.service';
+import {SuccessOrErrorHandlerService} from '../../shared/service/success-or-error-handler.service';
 
 @Component({
     selector: 'app-user-list',
@@ -23,7 +25,8 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild(MatSort) sort: MatSort;
 
 
-    constructor(private adminService: AdministrationService, private navbarTitleService: NavbarTitleService, public dialog: MatDialog) {
+    constructor(private adminService: AdministrationService, private navbarTitleService: NavbarTitleService, public dialog: MatDialog,
+                private loadingService: LoaderService, private successOrErrorHandlerService: SuccessOrErrorHandlerService) {
     }
 
     addAuthorities() {
@@ -31,7 +34,6 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
             width: '1200px'
         });
         dialogRef.afterClosed().subscribe(result => {
-            console.log('Closed');
         });
     }
 
@@ -86,6 +88,7 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
                     });
                 });
                 this.dataSource.data = this.modelToView;
+                this.successOrErrorHandlerService.showSuccess('Utilizatorii au fost sincronizati cu succes!');
             }
         ));
     }

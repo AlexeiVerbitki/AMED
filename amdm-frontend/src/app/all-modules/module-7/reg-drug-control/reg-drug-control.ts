@@ -13,7 +13,7 @@ import {AuthService} from '../../../shared/service/authetication.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {TaskService} from '../../../shared/service/task.service';
 import {DrugDecisionsService} from '../../../shared/service/drugs/drugdecisions.service';
-import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 
 @Component({
     selector: 'app-reg-drug-control', templateUrl: './reg-drug-control.html', styleUrls: ['./reg-drug-control.css']

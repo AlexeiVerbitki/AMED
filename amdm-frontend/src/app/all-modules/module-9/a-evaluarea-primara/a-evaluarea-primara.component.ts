@@ -74,10 +74,10 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
     loadingManufacturer = false;
     manufacturerInputs = new Subject<string>();
 
-    measureUnits: any[] = [];
-    measureUnitsRfPr: any[] = [];
-    measureUnitsPlacebo: any[] = [];
-    loadingMeasureUnits = false;
+    // measureUnits: any[] = [];
+    // measureUnitsRfPr: any[] = [];
+    // measureUnitsPlacebo: any[] = [];
+    // loadingMeasureUnits = false;
 
     farmForms: Observable<any[]>;
     loadingFarmForms = false;
@@ -178,7 +178,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
             'dose': [null],
             'volumeQuantityMeasurement': [null],
             'pharmaceuticalForm': [null, Validators.required],
-            'atcCode': [null, Validators.required],
+            'atcCode': [null],
             'administratingMode': [null, Validators.required],
             'activeSubstances': [null]
         });
@@ -225,7 +225,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         this.initPage();
 
         this.loadManufacturers();
-        this.initMeasureUnits();
+        //this.initMeasureUnits();
         this.loadFarmForms();
         this.loadATCCodes();
 
@@ -399,17 +399,17 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
             );
     }
 
-    initMeasureUnits() {
-        this.loadingMeasureUnits = true;
-        this.subscriptions.push(
-            this.administrationService.getAllUnitsOfMeasurement().subscribe(data => {
-                this.measureUnits = data;
-                this.measureUnitsRfPr = data;
-                this.measureUnitsPlacebo = data;
-                this.loadingMeasureUnits = false;
-            }, error => console.log(error))
-        );
-    }
+    // initMeasureUnits() {
+    //     this.loadingMeasureUnits = true;
+    //     this.subscriptions.push(
+    //         this.administrationService.getAllUnitsOfMeasurement().subscribe(data => {
+    //             this.measureUnits = data;
+    //             this.measureUnitsRfPr = data;
+    //             this.measureUnitsPlacebo = data;
+    //             this.loadingMeasureUnits = false;
+    //         }, error => console.log(error))
+    //     );
+    // }
 
     loadManufacturers() {
         this.manufacturers =
@@ -722,6 +722,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         }
 
         if (this.medicamentForm.invalid) {
+            console.log('this.medicamentForm', this.medicamentForm);
             this.dysplayInvalidControl(this.medicamentForm);
             this.errorHandlerService.showError('Medicamentul de investigat contine date invalide');
             return;
@@ -874,59 +875,59 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         );
     }
 
-    editMedActiveSubstance(substance: any, index: number) {
-        const dialogConfig2 = new MatDialogConfig();
+    // editMedActiveSubstance(substance: any, index: number) {
+    //     const dialogConfig2 = new MatDialogConfig();
+    //
+    //     dialogConfig2.disableClose = false;
+    //     dialogConfig2.autoFocus = true;
+    //     dialogConfig2.hasBackdrop = true;
+    //
+    //     dialogConfig2.height = '650px';
+    //     dialogConfig2.width = '600px';
+    //     dialogConfig2.data = substance;
+    //
+    //     const dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
+    //
+    //     this.subscriptions.push(
+    //         dialogRef.afterClosed().subscribe(result => {
+    //             if (result !== null && result !== undefined && result.response) {
+    //                 this.medActiveSubstances[index] = {
+    //                     activeSubstance: result.activeSubstance,
+    //                     quantity: result.activeSubstanceQuantity,
+    //                     unitsOfMeasurement: result.activeSubstanceUnit,
+    //                     manufacture: result.manufactureSA
+    //                 };
+    //             }
+    //         })
+    //     );
+    // }
 
-        dialogConfig2.disableClose = false;
-        dialogConfig2.autoFocus = true;
-        dialogConfig2.hasBackdrop = true;
-
-        dialogConfig2.height = '650px';
-        dialogConfig2.width = '600px';
-        dialogConfig2.data = substance;
-
-        const dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
-
-        this.subscriptions.push(
-            dialogRef.afterClosed().subscribe(result => {
-                if (result !== null && result !== undefined && result.response) {
-                    this.medActiveSubstances[index] = {
-                        activeSubstance: result.activeSubstance,
-                        quantity: result.activeSubstanceQuantity,
-                        unitsOfMeasurement: result.activeSubstanceUnit,
-                        manufacture: result.manufactureSA
-                    };
-                }
-            })
-        );
-    }
-
-    editRefProdActiveSubstance(substance: any, index: number) {
-        const dialogConfig2 = new MatDialogConfig();
-
-        dialogConfig2.disableClose = false;
-        dialogConfig2.autoFocus = true;
-        dialogConfig2.hasBackdrop = true;
-
-        dialogConfig2.height = '650px';
-        dialogConfig2.width = '600px';
-        dialogConfig2.data = substance;
-
-        const dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
-
-        this.subscriptions.push(
-            dialogRef.afterClosed().subscribe(result => {
-                if (result !== null && result !== undefined && result.response) {
-                    this.refProdActiveSubstances[index] = {
-                        activeSubstance: result.activeSubstance,
-                        quantity: result.activeSubstanceQuantity,
-                        unitsOfMeasurement: result.activeSubstanceUnit,
-                        manufacture: result.manufactureSA
-                    };
-                }
-            })
-        );
-    }
+    // editRefProdActiveSubstance(substance: any, index: number) {
+    //     const dialogConfig2 = new MatDialogConfig();
+    //
+    //     dialogConfig2.disableClose = false;
+    //     dialogConfig2.autoFocus = true;
+    //     dialogConfig2.hasBackdrop = true;
+    //
+    //     dialogConfig2.height = '650px';
+    //     dialogConfig2.width = '600px';
+    //     dialogConfig2.data = substance;
+    //
+    //     const dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
+    //
+    //     this.subscriptions.push(
+    //         dialogRef.afterClosed().subscribe(result => {
+    //             if (result !== null && result !== undefined && result.response) {
+    //                 this.refProdActiveSubstances[index] = {
+    //                     activeSubstance: result.activeSubstance,
+    //                     quantity: result.activeSubstanceQuantity,
+    //                     unitsOfMeasurement: result.activeSubstanceUnit,
+    //                     manufacture: result.manufactureSA
+    //                 };
+    //             }
+    //         })
+    //     );
+    // }
 
     removeMedActiveSubstance(index: number) {
 

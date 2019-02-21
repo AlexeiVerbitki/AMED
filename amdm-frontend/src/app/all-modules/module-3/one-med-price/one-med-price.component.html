@@ -151,8 +151,17 @@
                     <div class="md-form">
                         <input [id]="'priceId'+i" mdbInputDirective type="number" class="form-control" min="0.1" step="0.1" [(ngModel)]="p.value" (ngModelChange)="sendDTO()">
                         <label [for]="'priceId'+i">Preț de referință</label>
-                        <div *ngIf="formSubmitted && p.value == undefined">
+                        <div *ngIf="formSubmitted && !p.value">
                             <small class="text-muted"><strong class="text-danger">Indicați prețul de referință</strong></small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="md-form">
+                        <input [id]="'quantityId'+i" mdbInputDirective type="number" class="form-control" [(ngModel)]="p.totalQuantity" (ngModelChange)="sendDTO()">
+                        <label [for]="'quantityId'+i">Cantitatea totală</label>
+                        <div *ngIf="formSubmitted && !p.totalQuantity">
+                            <small class="text-muted"><strong class="text-danger">Indicați cantitatea totală</strong></small>
                         </div>
                     </div>
                 </div>
@@ -160,7 +169,7 @@
                     <div class="md-form">
                         <input [id]="'divisionId'+i" mdbInputDirective type="text" class="form-control" [(ngModel)]="p.division" (ngModelChange)="sendDTO()">
                         <label [for]="'divisionId'+i">Divizarea medicamentului</label>
-                        <div *ngIf="formSubmitted && p.division == undefined">
+                        <div *ngIf="formSubmitted && !p.division">
                             <small class="text-muted"><strong class="text-danger">Indicați divizarea medicamentului</strong></small>
                         </div>
                     </div>
@@ -176,7 +185,7 @@
                                    bindLabel="shortDescription"
                                    placeholder="Valuta">
                         </ng-select>
-                        <div *ngIf="formSubmitted && p.currency == undefined">
+                        <div *ngIf="formSubmitted && !p.currency">
                             <small class="text-muted"><strong class="text-danger">Selectați valuta de referință</strong></small>
                         </div>
                     </div>
@@ -193,7 +202,7 @@
                                    bindLabel="description"
                                    placeholder="Țara de referință">
                         </ng-select>
-                        <div *ngIf="formSubmitted && p.country == undefined">
+                        <div *ngIf="formSubmitted && !p.country">
                             <small class="text-muted"><strong class="text-danger">Selectați țara de referință</strong></small>
                         </div>
                     </div>
@@ -209,7 +218,7 @@
                                    bindLabel="description"
                                    placeholder="Tipul">
                         </ng-select>
-                        <div *ngIf="formSubmitted && p.type == undefined">
+                        <div *ngIf="formSubmitted && !p.type">
                             <small class="text-muted"><strong class="text-danger">Selectați tipul prețului</strong></small>
                         </div>
                     </div>

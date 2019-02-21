@@ -37,6 +37,15 @@
 			</div>
 			<div class="col-md-12">
 				<div class="md-form">
+					<input id="typeOfAnalysis" mdbInputDirective type="text" class="form-control" formControlName="typeOfAnalysis">
+					<label for="typeOfAnalysis">Tip analize</label>
+					<div *ngIf="formSubmitted && lForm.get('typeOfAnalysis').invalid">
+						<small class="text-muted"><strong class="text-danger">Tip analize trebuie introdus</strong></small>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="md-form">
 					<input id="phoneNumber" mdbInputDirective type="text" class="form-control" formControlName="phoneNumber" maxlength="9">
 					<label for="phoneNumber">Telefon</label>
 					<div *ngIf="formSubmitted && lForm.get('phoneNumber').invalid">

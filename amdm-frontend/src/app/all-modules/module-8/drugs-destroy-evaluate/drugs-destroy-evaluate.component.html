@@ -31,9 +31,9 @@
         <app-document [documents]="docs" [nrCerere]="mForm.get('nrCererii').value"
 
                       [dcTypeIdentifier]="{code : 'INMD', step : 'E'}"></app-document>
-        <div *ngIf="mFormSubbmitted && docs.length==0">
+      <!--  <div *ngIf="mFormSubbmitted && docs.length==0">
             <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
-        </div>
+        </div>-->
         <!--  <form [formGroup]="rForm">-->
 
         <br/>

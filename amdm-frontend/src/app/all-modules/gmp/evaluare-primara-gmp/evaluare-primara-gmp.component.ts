@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Document} from '../../../models/document';
@@ -15,21 +15,22 @@ import {MatDialog, MatDialogConfig} from '@angular/material';
 import {AddDescriptionComponent} from '../../../dialog/add-description/add-description.component';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
-import {SelectSubsidiaryModalComponent} from "../../gdp/select-subsidiary-modal/select-subsidiary-modal.component";
-import {InspectorsModalComponent} from "../../gdp/inspectors-modal/inspectors-modal.component";
-import {LaboratorDialogComponent} from "../../../dialog/laborator-dialog/laborator-dialog.component";
-import {QualifiedPersonDialogComponent} from "../../../dialog/qualified-person-dialog/qualified-person-dialog.component";
-import {SearchMedicamentsDialogComponent} from "../../../dialog/search-medicaments-dialog/search-medicaments-dialog.component";
-import {MedicamentService} from "../../../shared/service/medicament.service";
-import {RequestAdditionalDataDialogComponent} from "../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component";
-import {SelectDocumentNumberComponent} from "../../../dialog/select-document-number/select-document-number.component";
+import {SelectSubsidiaryModalComponent} from '../../gdp/select-subsidiary-modal/select-subsidiary-modal.component';
+import {InspectorsModalComponent} from '../../gdp/inspectors-modal/inspectors-modal.component';
+import {LaboratorDialogComponent} from '../../../dialog/laborator-dialog/laborator-dialog.component';
+import {QualifiedPersonDialogComponent} from '../../../dialog/qualified-person-dialog/qualified-person-dialog.component';
+import {SearchMedicamentsDialogComponent} from '../../../dialog/search-medicaments-dialog/search-medicaments-dialog.component';
+import {MedicamentService} from '../../../shared/service/medicament.service';
+import {RequestAdditionalDataDialogComponent} from '../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component';
+import {SelectDocumentNumberComponent} from '../../../dialog/select-document-number/select-document-number.component';
+import {SelectInspectionDateForAfComponent} from '../../../dialog/select-inspection-date-for-af/select-inspection-date-for-af.component';
 
 @Component({
     selector: 'app-evaluare-primara',
     templateUrl: './evaluare-primara-gmp.component.html',
     styleUrls: ['./evaluare-primara-gmp.component.css']
 })
-export class EvaluarePrimaraGmpComponent implements OnInit {
+export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
     get formData() {
         return <FormArray>this.inspectorForm.get('periods');
     }
@@ -53,6 +54,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
     otherNesterilePreparations: any[] = [];
     finalSterilized: any[] = [];
     biologicalMedicines: any[] = [];
+    importActivities: any[] = [];
     primaryPackagings: any[] = [];
     secondaryPackagings: any[] = [];
     nesterilePreparationsCertified: any[] = [];
@@ -66,6 +68,8 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
     otherSterilizations: any[] = [];
     otherProductions: any[] = [];
     otherBiologicalMedicines: any[] = [];
+    otherImportActivities: any[] = [];
+    otherBiologicalMedicinesImport: any[] = [];
     otherNesterilePreparationsCertified: any[] = [];
     otherBiologicalMedicinesCertified: any[] = [];
     otherSterileCertifieds: any[] = [];
@@ -118,6 +122,9 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
             'companyValue': [],
             'seria': [null],
             'raportStatus': [null],
+            'asepticallyPrepared': [null],
+            'terminallySterilised': [null],
+            'nonsterileProducts': [null],
             'nrLic': [null],
             'dataEliberariiLic': {disabled: true, value: new Date()},
             'dataExpirariiLic': {disabled: true, value: new Date()},
@@ -130,7 +137,10 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
             'secondaryPackaging': [null],
             'sterilization': [null],
             'testsForQualityControl': [null],
+            'testsForQualityControlImport': [null],
             'biologicalMedicinesValues': [null],
+            'importActivities': [null],
+            'biologicalMedicinesImport': [null],
             'nesterilePreparationsCertifiedValues': [null],
             'biologicalMedicinesCertifiedValues': [null],
             'sterileCertifiedsValues': [null],
@@ -185,7 +195,8 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
                         this.administrationService.getAllDocTypes().subscribe(data => {
                                 this.docTypes = data;
                                 this.docTypesInitial = Object.assign([], data);
-                                this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
+                                const splitted = step.availableDocTypes.split(',');
+                                this.docTypes = this.docTypes.filter(r => splitted.some(x => x == r.category));
                                 if (!this.outDocuments.find(t => t.docType.category == 'OGM')) {
                                     this.outDocuments.push({
                                         name: 'Ordinul de inspectare al întreprinderii',
@@ -340,6 +351,19 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
                         this.eForm.get('biologicalMedicinesValues').setValue(arrBiologicalMedicines);
                         this.eForm.get('biologicalMedicinesCertifiedValues').setValue(arrBiologicalMedicinesCertified);
                     }
+                    if (dataDB.gmpAuthorizations && dataDB.gmpAuthorizations.length != 0 && dataDB.gmpAuthorizations[0].biologicalMedicinesImport) {
+                        const arrBiologicalMedicines: any[] = [];
+                        for (const z of dataDB.gmpAuthorizations[0].biologicalMedicinesImport) {
+                            if (z.category == 'B') {
+                                if (z.biologicalMedicine) {
+                                    arrBiologicalMedicines.push(z.biologicalMedicine);
+                                } else {
+                                    this.otherBiologicalMedicinesImport.push({description: z.description});
+                                }
+                            }
+                        }
+                        this.eForm.get('biologicalMedicinesImport').setValue(arrBiologicalMedicines);
+                    }
                 },
                 error => console.log(error)
             )
@@ -362,6 +386,25 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
                             }
                         }
                         this.eForm.get('production').setValue(arrManufactures);
+                    }
+                },
+                error => console.log(error)
+            )
+        );
+
+        this.subscriptions.push(
+            this.administrationService.getAllImportActivities().subscribe(data => {
+                    this.importActivities = data;
+                    if (dataDB.gmpAuthorizations && dataDB.gmpAuthorizations.length != 0 && dataDB.gmpAuthorizations[0].importActivities) {
+                        const arrImport: any[] = [];
+                        for (const z of dataDB.gmpAuthorizations[0].importActivities) {
+                            if (z.importActivity) {
+                                arrImport.push(z.importActivity);
+                            } else {
+                                this.otherImportActivities.push({description: z.description});
+                            }
+                        }
+                        this.eForm.get('importActivities').setValue(arrImport);
                     }
                 },
                 error => console.log(error)
@@ -437,6 +480,15 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
                         }
                         this.eForm.get('testsForQualityControl').setValue(arrTestsForQualityControl);
                     }
+                    if (dataDB.gmpAuthorizations && dataDB.gmpAuthorizations.length != 0 && dataDB.gmpAuthorizations[0].testsForQualityControlImport) {
+                        const arrTestsForQualityControl: any[] = [];
+                        for (const z of dataDB.gmpAuthorizations[0].testsForQualityControlImport) {
+                            if (z.testQualityControl) {
+                                arrTestsForQualityControl.push(z.testQualityControl);
+                            }
+                        }
+                        this.eForm.get('testsForQualityControlImport').setValue(arrTestsForQualityControl);
+                    }
                 },
                 error => console.log(error)
             )
@@ -445,7 +497,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
         this.subscriptions.push(
             this.administrationService.getManufacturersByIDNO(dataDB.company.idno).subscribe(data => {
                     if (data && data.length > 0) {
-                        let dto = {authorizationHolder: data[0]};
+                        const dto = {authorizationHolder: data[0]};
                         this.subscriptions.push(
                             this.medicamentService.getMedicamentsByFilter(dto
                             ).subscribe(request => {
@@ -528,7 +580,11 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
             this.eForm.get('gmpID').setValue(dataDB.gmpAuthorizations[0].id);
             this.eForm.get('humanUse').setValue(dataDB.gmpAuthorizations[0].medicamentHumanUse);
             this.eForm.get('veterinary').setValue(dataDB.gmpAuthorizations[0].medicamentVeterinary);
+            this.eForm.get('medicamentClinicalInvestigation').setValue(dataDB.gmpAuthorizations[0].medicamentClinicalInvestigation);
             this.eForm.get('veterinaryDetails').setValue(dataDB.gmpAuthorizations[0].veterinaryDetails);
+            this.eForm.get('asepticallyPrepared').setValue(dataDB.gmpAuthorizations[0].asepticallyPreparedImport);
+            this.eForm.get('terminallySterilised').setValue(dataDB.gmpAuthorizations[0].terminallySterilisedImport);
+            this.eForm.get('nonsterileProducts').setValue(dataDB.gmpAuthorizations[0].nonsterileProductsImport);
             this.eForm.get('informatiiLoculDistributieAngro.placeDistributionName').setValue(dataDB.gmpAuthorizations[0].placeDistributionName);
             this.eForm.get('informatiiLoculDistributieAngro.placeDistributionAddress').setValue(dataDB.gmpAuthorizations[0].placeDistributionAddress);
             this.eForm.get('informatiiLoculDistributieAngro.placeDistributionPostalCode').setValue(dataDB.gmpAuthorizations[0].placeDistributionPostalCode);
@@ -649,17 +705,24 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
             sterileProducts: [],
             neSterileProducts: [],
             biologicalMedicines: [],
+            biologicalMedicinesImport: [],
+            importActivities: [],
             manufactures: [],
             sterilizations: [],
             primaryPackagings: [],
             secondaryPackagings: [],
             testsForQualityControl: [],
+            testsForQualityControlImport: [],
             qualifiedPersons: [],
             authorizedMedicines: [],
             laboratories: this.laborators,
             subsidiaries: [],
             groupLeader: this.eForm.get('groupLeader').value,
             medicamentHumanUse: this.eForm.get('humanUse').value,
+            medicamentClinicalInvestigation: this.eForm.get('medicamentClinicalInvestigation').value,
+            nonsterileProductsImport: this.eForm.get('nonsterileProducts').value,
+            terminallySterilisedImport: this.eForm.get('terminallySterilised').value,
+            asepticallyPreparedImport: this.eForm.get('asepticallyPrepared').value,
             medicamentVeterinary: this.eForm.get('veterinary').value,
             veterinaryDetails: this.eForm.get('veterinaryDetails').value,
             inspectors: this.selectedInspectors,
@@ -672,7 +735,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
             placeDistributionFax: this.eForm.get('informatiiLoculDistributieAngro.placeDistributionFax').value,
             placeDistributionMobileNumber: this.eForm.get('informatiiLoculDistributieAngro.placeDistributionMobileNumber').value,
             placeDistributionEmail: this.eForm.get('informatiiLoculDistributieAngro.placeDistributionEmail').value,
-            stagesOfManufacture:  this.eForm.get('informatiiLoculDistributieAngro.etapeleDeFabricatie').value,
+            stagesOfManufacture: this.eForm.get('informatiiLoculDistributieAngro.etapeleDeFabricatie').value,
         };
 
         // produse sterile
@@ -757,6 +820,18 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
             }
         }
 
+        // medicamente biologice pentru import
+        if (this.eForm.get('biologicalMedicinesImport').value) {
+            for (const w of this.eForm.get('biologicalMedicinesImport').value) {
+                gmpAuthorization.biologicalMedicinesImport.push({biologicalMedicine: w, category: 'B'});
+            }
+        }
+        if (this.otherBiologicalMedicinesImport.length != 0) {
+            for (const w of this.otherBiologicalMedicinesImport) {
+                gmpAuthorization.biologicalMedicinesImport.push({description: w.description, category: 'B'});
+            }
+        }
+
         // fabricatii
         if (this.eForm.get('production').value) {
             for (const w of this.eForm.get('production').value) {
@@ -786,6 +861,18 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
             }
         }
 
+        // activităţi de import
+        if (this.eForm.get('importActivities').value) {
+            for (const w of this.eForm.get('importActivities').value) {
+                gmpAuthorization.importActivities.push({importActivity: w});
+            }
+        }
+        if (this.otherImportActivities.length != 0) {
+            for (const w of this.otherImportActivities) {
+                gmpAuthorization.importActivities.push({description: w.description});
+            }
+        }
+
         // ambalare primara
         if (this.eForm.get('primaryPackaging').value) {
             for (const w of this.eForm.get('primaryPackaging').value) {
@@ -810,6 +897,11 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
                 gmpAuthorization.testsForQualityControl.push({testQualityControl: w});
             }
         }
+        if (this.eForm.get('testsForQualityControlImport').value) {
+            for (const w of this.eForm.get('testsForQualityControlImport').value) {
+                gmpAuthorization.testsForQualityControlImport.push({testQualityControl: w});
+            }
+        }
         if (this.otherTestsForQualityControl.length != 0) {
             for (const w of this.otherTestsForQualityControl) {
                 gmpAuthorization.testsForQualityControl.push({description: w.description});
@@ -821,7 +913,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
         this.productionPersons.forEach(t => gmpAuthorization.qualifiedPersons.push(t));
 
         this.authorizedManufacturedMedicaments.forEach(t => gmpAuthorization.authorizedMedicines.push({medicament: {id: t.id}}));
-        this.selectedSubsidiaries.forEach(t => gmpAuthorization.subsidiaries.push({subsidiary: {id: t.id}}))
+        this.selectedSubsidiaries.forEach(t => gmpAuthorization.subsidiaries.push({subsidiary: {id: t.id}}));
         return gmpAuthorization;
     }
 
@@ -831,13 +923,18 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
             return;
         }
 
+        if (!this.eForm.get('type').value) {
+            this.errorHandlerService.showError('Tipul cererii trebuie selectat.');
+            return;
+        }
+
         this.formSubmitted = true;
         if (this.eForm.invalid) {
             this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
             return;
         }
 
-        if (!this.eForm.get('veterinary').value && !this.eForm.get('humanUse').value) {
+        if (!this.eForm.get('veterinary').value && !this.eForm.get('humanUse').value && !this.eForm.get('medicamentClinicalInvestigation').value) {
             this.errorHandlerService.showError('Tipul de medicament fabricat trebuie selectat.');
             return;
         }
@@ -846,7 +943,6 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
             this.errorHandlerService.showError('Detaliile pentru medicamentele de uz veterinar trebuie introduse');
             return;
         }
-
 
         for (const p of (this.inspectorForm.get('periods') as FormArray).getRawValue()) {
             if (!p.fromDate || !p.toDate) {
@@ -863,8 +959,8 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
             return;
         }
 
-        let arr = (this.inspectorForm.get('periods') as FormArray).getRawValue();
-        if (!arr || arr.length==0) {
+        const arr = (this.inspectorForm.get('periods') as FormArray).getRawValue();
+        if (!arr || arr.length == 0) {
             this.errorHandlerService.showError('Nici o perioada de inspectie nu a fost adaugata.');
             return;
         }
@@ -916,6 +1012,26 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
         }
 
         this.formSubmitted = false;
+
+        const modelToSubmit: any = this.eForm.value;
+        modelToSubmit.documents = this.documents;
+        modelToSubmit.outputDocuments = this.outDocuments;
+        modelToSubmit.assignedUser = this.authService.getUserName();
+
+        modelToSubmit.gmpAuthorizations = [];
+        modelToSubmit.gmpAuthorizations.push(this.fillGMPAuthorization());
+
+        modelToSubmit.requestHistories.push({
+            startDate: this.eForm.get('startDate').value, endDate: new Date(),
+            username: this.authService.getUserName(), step: 'E'
+        });
+        modelToSubmit.registrationRequestMandatedContacts = this.registrationRequestMandatedContacts;
+
+        this.subscriptions.push(this.requestService.finishGMPRequest(modelToSubmit).subscribe(data => {
+                this.loadingService.hide();
+                this.router.navigate(['dashboard/homepage']);
+            }, error => this.loadingService.hide())
+        );
     }
 
     interruptProcess() {
@@ -1186,6 +1302,47 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
         });
     }
 
+    addImportActivities() {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+        dialogConfig2.width = '600px';
+
+        dialogConfig2.data = {
+            name: 'Activitate de import',
+            errMsg: 'Activitatea trebuie introdusa',
+            title: 'Adaugare activitate de import'
+        };
+
+        const dialogRef = this.dialog.open(AddDescriptionComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+                if (result && result.response) {
+                    this.otherImportActivities.push({
+                        description: result.description
+                    });
+                }
+            }
+        );
+    }
+
+    removeImportActivities(index: number) {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur ca doriti sa stergeti aceasta activitate?',
+                confirm: false
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.otherImportActivities.splice(index, 1);
+            }
+        });
+    }
+
     addBiologicalMedicines() {
         const dialogConfig2 = new MatDialogConfig();
 
@@ -1226,6 +1383,47 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.otherBiologicalMedicines.splice(index, 1);
+            }
+        });
+    }
+
+    addBiologicalMedicinesImport() {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+        dialogConfig2.width = '600px';
+
+        dialogConfig2.data = {
+            name: 'Medicament biologic',
+            errMsg: 'Medicamentul biologic trebuie introdus',
+            title: 'Adaugare medicament biologic'
+        };
+
+        const dialogRef = this.dialog.open(AddDescriptionComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+                if (result && result.response) {
+                    this.otherBiologicalMedicinesImport.push({
+                        description: result.description
+                    });
+                }
+            }
+        );
+    }
+
+    removeBiologicalMedicinesImport(index: number) {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur ca doriti sa stergeti aceast medicament?',
+                confirm: false
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.otherBiologicalMedicinesImport.splice(index, 1);
             }
         });
     }
@@ -1494,16 +1692,28 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
         });
     }
 
-    checkHumanUseMed(value : any) {
+    checkHumanUseMed(value: any) {
         this.eForm.get('humanUse').setValue(value.checked);
     }
 
-    checkVeterinary(value : any) {
+    checkVeterinary(value: any) {
         this.eForm.get('veterinary').setValue(value.checked);
     }
 
-    checkClinicalMed(value : any) {
+    checkClinicalMed(value: any) {
         this.eForm.get('medicamentClinicalInvestigation').setValue(value.checked);
+    }
+
+    checkAsepticallyPrepared(value: any) {
+        this.eForm.get('asepticallyPrepared').setValue(value.checked);
+    }
+
+    checkTerminallySterilised(value: any) {
+        this.eForm.get('terminallySterilised').setValue(value.checked);
+    }
+
+    checkNonsterileProducts(value: any) {
+        this.eForm.get('nonsterileProducts').setValue(value.checked);
     }
 
     selectSubsidiary() {
@@ -1559,7 +1769,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
     }
 
     inspectionPeriodChanged(i, type, event) {
-        let p = (this.inspectorForm.get('periods') as FormArray).controls[i] as FormGroup;
+        const p = (this.inspectorForm.get('periods') as FormArray).controls[i] as FormGroup;
         if (p) {
             if (type == 'from' && p.controls.toDate.value && new Date(event).getTime() > p.controls.toDate.value.getTime()) {
                 this.errorHandlerService.showError('Din data trebuie sa fie mai mica sau egala cu Pina la data');
@@ -1598,12 +1808,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
         });
     }
 
-    editLaborator(laborator
-                      :
-                      any, index
-                      :
-                      number
-    ) {
+    editLaborator(laborator: any, index: number) {
         const dialogConfig2 = new MatDialogConfig();
 
         dialogConfig2.disableClose = false;
@@ -1623,10 +1828,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
         });
     }
 
-    removeLaborator(index
-                        :
-                        number
-    ) {
+    removeLaborator(index: number) {
 
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             data: {message: 'Sunteti sigur ca doriti sa stergeti aceast laborator?', confirm: false}
@@ -1687,10 +1889,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
         });
     }
 
-    removeQualifiedPerson(index
-                              :
-                              number
-    ) {
+    removeQualifiedPerson(index: number) {
 
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             data: {message: 'Sunteti sigur ca doriti sa stergeti aceasta persoana?', confirm: false}
@@ -1931,15 +2130,14 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
         });
     }
 
-    viewOGM()
-    {
+    viewOGM() {
         if (!this.eForm.get('groupLeader').value) {
             this.errorHandlerService.showError('Sef inspectie trebuie selectat.');
             return;
         }
 
-        let arr = (this.inspectorForm.get('periods') as FormArray).getRawValue();
-        if (!arr || arr.length==0) {
+        const arr = (this.inspectorForm.get('periods') as FormArray).getRawValue();
+        if (!arr || arr.length == 0) {
             this.errorHandlerService.showError('Nici o perioada de inspectie nu a fost adaugata.');
             return;
         }
@@ -1973,39 +2171,40 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
                     inspectorsName = inspectorsName + '|';
                 }
             }
-        )
-        inspectorsName = inspectorsName.substring(0,inspectorsName.length-1);
+        );
+        inspectorsName = inspectorsName.substring(0, inspectorsName.length - 1);
 
         const dialogRef = this.dialog.open(SelectDocumentNumberComponent, dialogConfig2);
         dialogRef.afterClosed().subscribe(result => {
-            let model = {
-                orderNr: result.docNr,
-                requestNr : this.eForm.get('requestNumber').value,
-                requestDate: this.eForm.get('startDate').value,
-                expertsLeader: this.eForm.get('groupLeader').value.name,
-                expertsLeaderFunction: this.eForm.get('groupLeader').value.function,
-                companyName: this.eForm.get('company').value.name,
-                companyAddress: this.eForm.get('company').value.legalAddress,
-                distributionCompanyAddress : this.eForm.get('informatiiLoculDistributieAngro.placeDistributionAddress').value,
-                firstInspectionDate: firstInspectionDate,
-                inspectorsName: inspectorsName
+            if (result && result.response) {
+                const model = {
+                    orderNr: result.docNr,
+                    requestNr: this.eForm.get('requestNumber').value,
+                    requestDate: this.eForm.get('startDate').value,
+                    expertsLeader: this.eForm.get('groupLeader').value.name,
+                    expertsLeaderFunction: this.eForm.get('groupLeader').value.function,
+                    companyName: this.eForm.get('company').value.name,
+                    companyAddress: this.eForm.get('company').value.legalAddress,
+                    distributionCompanyAddress: this.eForm.get('informatiiLoculDistributieAngro.placeDistributionAddress').value,
+                    firstInspectionDate: firstInspectionDate,
+                    inspectorsName: inspectorsName
+                };
+                this.loadingService.show();
+                this.subscriptions.push(this.documentService.viewOGM(model).subscribe(data => {
+                        const file = new Blob([data], {type: 'application/pdf'});
+                        const fileURL = URL.createObjectURL(file);
+                        window.open(fileURL);
+                        this.loadingService.hide();
+                    }, error => {
+                        this.loadingService.hide();
+                    }
+                    )
+                );
             }
-            this.loadingService.show();
-            this.subscriptions.push(this.documentService.viewOGM(model).subscribe(data => {
-                    const file = new Blob([data], {type: 'application/pdf'});
-                    const fileURL = URL.createObjectURL(file);
-                    window.open(fileURL);
-                    this.loadingService.hide();
-                }, error => {
-                    this.loadingService.hide();
-                }
-                )
-            );
         });
     }
 
-    viewSLAndSD(document: any)
-    {
+    viewSLAndSD(document: any) {
         const modelToSubmit = {
             nrDoc: document.number,
             responsiblePerson: this.registrationRequestMandatedContacts[0].mandatedLastname + ' ' + this.registrationRequestMandatedContacts[0].mandatedFirstname,
@@ -2021,7 +2220,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
         };
 
         this.loadingService.show();
-        let observable = this.documentService.viewRequestNew(modelToSubmit);
+        const observable = this.documentService.viewRequestNew(modelToSubmit);
 
         this.subscriptions.push(observable.subscribe(data => {
                 const file = new Blob([data], {type: 'application/pdf'});
@@ -2037,16 +2236,322 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
 
     viewDoc(document: any) {
         if (document.docType.category == 'SL' || document.docType.category == 'SD') {
-                this.viewSLAndSD(document);
+            this.viewSLAndSD(document);
         } else if (document.docType.category == 'OGM') {
-                this.viewOGM();
+            this.viewOGM();
         } else if (document.docType.category == 'AFM') {
-                this.viewAFM();
+            this.viewAFM();
+        } else if (document.docType.category == 'CGM') {
+            this.viewCGM();
         }
     }
 
-    viewAFM()
-    {
+    viewCGM() {
+        if (!this.eForm.get('informatiiLoculDistributieAngro.placeDistributionAddress').value) {
+            this.errorHandlerService.showError('Adresa locului de fabricaţie trebuie introdusa.');
+            return;
+        }
+
+        if (!this.eForm.get('humanUse').value && !this.eForm.get('medicamentClinicalInvestigation').value && !this.eForm.get('veterinary').value) {
+            this.errorHandlerService.showError('Tipurile de medicamente fabricate trebuie selectate.');
+            return;
+        }
+
+        const findDocTypeOGM = this.documents.find(t => t.docType.category == 'OGM');
+        if (!findDocTypeOGM) {
+            this.errorHandlerService.showError('Ordinul de inspectare al întreprinderii nu este atasat.');
+            return;
+        }
+
+        const findDocTypeAFM = this.documents.find(t => t.docType.category == 'AFM');
+        if (!findDocTypeAFM) {
+            this.errorHandlerService.showError('Autorizatia de fabricatie nu este atasata.');
+            return;
+        }
+
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.width = '400px';
+
+        dialogConfig2.data = {type: 'CGM'};
+
+        const dialogRef = this.dialog.open(SelectInspectionDateForAfComponent, dialogConfig2);
+        dialogRef.afterClosed().subscribe(result => {
+            if (result && result.response) {
+                const model = this.extractedModelLayouts(result);
+                model.certificateNr = result.docNr;
+                model.orderDate = findDocTypeOGM.dateOfIssue;
+                model.orderNr = findDocTypeOGM.number;
+                model.licenseSeries = this.eForm.get('seria').value;
+                model.licenseNr = this.eForm.get('nrLic').value;
+                model.licenseDate = this.eForm.get('dataEliberariiLic').value;
+                model.autorizationDate = findDocTypeAFM.dateOfIssue;
+                model.qualityControlTestsImport = [];
+                model.preparateAsepticImport = this.eForm.get('asepticallyPrepared').value;
+                model.sterilizateFinalImport = this.eForm.get('terminallySterilised').value;
+                model.produseNesterileImport = this.eForm.get('nonsterileProducts').value;
+                model.medicamenteBiologiceImport = [];
+                model.otherImports = [];
+                model.autorizationNr = findDocTypeAFM.number;
+                if (this.eForm.get('testsForQualityControlImport').value) {
+                    this.eForm.get('testsForQualityControlImport').value.forEach(t => model.qualityControlTestsImport.push({
+                        value: t.description,
+                        valueEn: t.descriptionEn
+                    }));
+                }
+                if (this.eForm.get('biologicalMedicinesImport').value) {
+                    this.eForm.get('biologicalMedicinesImport').value.forEach(t => model.medicamenteBiologiceImport.push({
+                        value: t.description,
+                        valueEn: t.descriptionEn
+                    }));
+                }
+                if (this.otherBiologicalMedicinesImport) {
+                    this.otherBiologicalMedicinesImport.forEach(t => model.medicamenteBiologiceImport.push({
+                        value: t.description,
+                        valueEn: t.descriptionEn
+                    }));
+                }
+                if (this.eForm.get('importActivities').value) {
+                    this.eForm.get('importActivities').value.forEach(t => model.otherImports.push({
+                        value: t.description,
+                        valueEn: t.descriptionEn
+                    }));
+                }
+                if (this.otherImportActivities) {
+                    this.otherImportActivities.forEach(t => model.otherImports.push({
+                        value: t.description,
+                        valueEn: t.descriptionEn
+                    }));
+                }
+
+                this.loadingService.show();
+                this.subscriptions.push(this.documentService.viewCGM(model).subscribe(data => {
+                        const file = new Blob([data], {type: 'application/pdf'});
+                        const fileURL = URL.createObjectURL(file);
+                        window.open(fileURL);
+                        this.loadingService.hide();
+                    }, error => {
+                        this.loadingService.hide();
+                    }
+                    )
+                );
+            }
+        });
+    }
+
+    private extractedModelLayouts(result) {
+        const model = {
+            requestNr: this.eForm.get('requestNumber').value,
+            requestDate: this.eForm.get('startDate').value,
+            expertsLeader: this.eForm.get('groupLeader').value.name,
+            expertsLeaderFunction: this.eForm.get('groupLeader').value.function,
+            companyName: this.eForm.get('company').value.name,
+            companyAddress: this.eForm.get('company').value.legalAddress,
+            distributionCompanyAddress: this.eForm.get('informatiiLoculDistributieAngro.placeDistributionAddress').value,
+            autorizationNr: result.docNr,
+            distributionCompanyName: this.eForm.get('informatiiLoculDistributieAngro.placeDistributionName').value,
+            stagesOfManufacture: this.eForm.get('informatiiLoculDistributieAngro.etapeleDeFabricatie').value,
+            medicamentHumanUse: this.eForm.get('humanUse').value,
+            medicamentClinicalInvestigation: this.eForm.get('medicamentClinicalInvestigation').value,
+            medicamentVeterinary: this.eForm.get('veterinary').value,
+            laboratories: [],
+            orderNr: '',
+            autorizatedMedicamentsForProduction: [],
+            qualifiedPersons: [],
+            responsiblePersons: [],
+            qualityControlPersons: [],
+            preparateAseptic: [],
+            sterilizateFinal: [],
+            certificareaSeriei: [],
+            produseNesterile: [],
+            produseNesterileNumaiCertificareaSeriei: [],
+            medicamenteBiologice: [],
+            medicamenteBiologiceNumaiCertificareaSeriei: [],
+            manufactures: [],
+            substanceSterilization: [],
+            otherManufactures: [],
+            ambalarePrimara: [],
+            ambalareSecundara: [],
+            qualityControlTests: [],
+            inspectionDate: result.inspectionDate,
+            aplicationDomainOfLastInspection: result.aplicationDomainOfLastInspection,
+            certificateNr: '',
+            orderDate: '',
+            licenseSeries: '',
+            licenseNr: '',
+            licenseDate: '',
+            autorizationDate: '',
+            qualityControlTestsImport: [],
+            preparateAsepticImport: '',
+            sterilizateFinalImport: '',
+            produseNesterileImport: '',
+            medicamenteBiologiceImport: [],
+            otherImports: [],
+        };
+        this.laborators.forEach(t => model.laboratories.push({
+            typeOfAnalysis: t.typeOfAnalysis,
+            address: t.address,
+            name: t.name
+        }));
+        this.authorizedManufacturedMedicaments.forEach(t => model.autorizatedMedicamentsForProduction.push({
+            certificateHolder: t.authorizationHolderDescription,
+            name: t.commercialName + ' ' + this.getConcatenatedDivision(t)
+        }));
+        this.qualifiedPersons.forEach(t => model.qualifiedPersons.push(t.lastName + ' ' + t.firstName));
+        this.productionPersons.forEach(t => model.responsiblePersons.push(t.lastName + ' ' + t.firstName));
+        this.qualityControlPersons.forEach(t => model.qualityControlPersons.push(t.lastName + ' ' + t.firstName));
+        if (this.eForm.get('asepticPreparationsValues').value) {
+            this.eForm.get('asepticPreparationsValues').value.forEach(t => model.preparateAseptic.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherAsepticPreparations) {
+            this.otherAsepticPreparations.forEach(t => model.preparateAseptic.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.eForm.get('finalSterilizedValues').value) {
+            this.eForm.get('finalSterilizedValues').value.forEach(t => model.sterilizateFinal.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherFinalSterilized) {
+            this.otherFinalSterilized.forEach(t => model.sterilizateFinal.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.eForm.get('sterileCertifiedsValues').value) {
+            this.eForm.get('sterileCertifiedsValues').value.forEach(t => model.certificareaSeriei.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherSterileCertifieds) {
+            this.otherSterileCertifieds.forEach(t => model.certificareaSeriei.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.eForm.get('nesterilePreparationsValues').value) {
+            this.eForm.get('nesterilePreparationsValues').value.forEach(t => model.produseNesterile.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherNesterilePreparations) {
+            this.otherNesterilePreparations.forEach(t => model.produseNesterile.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.eForm.get('nesterilePreparationsCertifiedValues').value) {
+            this.eForm.get('nesterilePreparationsCertifiedValues').value.forEach(t => model.produseNesterileNumaiCertificareaSeriei.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherNesterilePreparationsCertified) {
+            this.otherNesterilePreparationsCertified.forEach(t => model.produseNesterileNumaiCertificareaSeriei.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.eForm.get('biologicalMedicinesValues').value) {
+            this.eForm.get('biologicalMedicinesValues').value.forEach(t => model.medicamenteBiologice.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherBiologicalMedicines) {
+            this.otherBiologicalMedicines.forEach(t => model.medicamenteBiologice.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.eForm.get('biologicalMedicinesCertifiedValues').value) {
+            this.eForm.get('biologicalMedicinesCertifiedValues').value.forEach(t => model.medicamenteBiologiceNumaiCertificareaSeriei.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherBiologicalMedicinesCertified) {
+            this.otherBiologicalMedicinesCertified.forEach(t => model.medicamenteBiologiceNumaiCertificareaSeriei.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.eForm.get('production').value) {
+            this.eForm.get('production').value.forEach(t => model.manufactures.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherProductions) {
+            this.otherProductions.forEach(t => model.manufactures.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.eForm.get('sterilization').value) {
+            this.eForm.get('sterilization').value.forEach(t => model.substanceSterilization.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherSterilizations) {
+            this.otherSterilizations.forEach(t => model.substanceSterilization.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherPreparationsOrProductions) {
+            this.otherPreparationsOrProductions.forEach(t => model.otherManufactures.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.eForm.get('primaryPackaging').value) {
+            this.eForm.get('primaryPackaging').value.forEach(t => model.ambalarePrimara.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherPrimaryPackagings) {
+            this.otherPrimaryPackagings.forEach(t => model.ambalarePrimara.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.eForm.get('secondaryPackaging').value) {
+            this.eForm.get('secondaryPackaging').value.forEach(t => model.ambalareSecundara.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.eForm.get('testsForQualityControl').value) {
+            this.eForm.get('testsForQualityControl').value.forEach(t => model.qualityControlTests.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherTestsForQualityControl) {
+            this.otherTestsForQualityControl.forEach(t => model.qualityControlTests.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        return model;
+    }
+
+    viewAFM() {
         if (!this.eForm.get('informatiiLoculDistributieAngro.placeDistributionAddress').value) {
             this.errorHandlerService.showError('Adresa locului de fabricaţie trebuie introdusa.');
             return;
@@ -2071,32 +2576,37 @@ export class EvaluarePrimaraGmpComponent implements OnInit {
 
         dialogConfig2.width = '400px';
 
-        const dialogRef = this.dialog.open(SelectDocumentNumberComponent, dialogConfig2);
+        dialogConfig2.data = {type: 'AFM'};
+
+        const dialogRef = this.dialog.open(SelectInspectionDateForAfComponent, dialogConfig2);
         dialogRef.afterClosed().subscribe(result => {
-            let model = {
-                orderNr: result.docNr,
-                requestNr : this.eForm.get('requestNumber').value,
-                requestDate: this.eForm.get('startDate').value,
-                expertsLeader: this.eForm.get('groupLeader').value.name,
-                expertsLeaderFunction: this.eForm.get('groupLeader').value.function,
-                companyName: this.eForm.get('company').value.name,
-                companyAddress: this.eForm.get('company').value.legalAddress,
-                distributionCompanyAddress : this.eForm.get('informatiiLoculDistributieAngro.placeDistributionAddress').value,
-                firstInspectionDate: firstInspectionDate,
-                inspectorsName: inspectorsName
+            if (result && result.response) {
+                const model = this.extractedModelLayouts(result);
+                this.loadingService.show();
+                this.subscriptions.push(this.documentService.viewAFM(model).subscribe(data => {
+                        const file = new Blob([data], {type: 'application/pdf'});
+                        const fileURL = URL.createObjectURL(file);
+                        window.open(fileURL);
+                        this.loadingService.hide();
+                    }, error => {
+                        this.loadingService.hide();
+                    }
+                    )
+                );
             }
-            this.loadingService.show();
-            this.subscriptions.push(this.documentService.viewAFM(model).subscribe(data => {
-                    const file = new Blob([data], {type: 'application/pdf'});
-                    const fileURL = URL.createObjectURL(file);
-                    window.open(fileURL);
-                    this.loadingService.hide();
-                }, error => {
-                    this.loadingService.hide();
-                }
-                )
-            );
         });
+    }
+
+    getConcatenatedDivision(med: any) {
+        let concatenatedDivision = '';
+        if (med.division && med.volume && med.volumeQuantityMeasurement) {
+            concatenatedDivision = concatenatedDivision + med.division + ' ' + med.volume + ' ' + med.volumeQuantityMeasurement + '; ';
+        } else if (med.volume && med.volumeQuantityMeasurement) {
+            concatenatedDivision = concatenatedDivision + med.volume + ' ' + med.volumeQuantityMeasurement + '; ';
+        } else {
+            concatenatedDivision = concatenatedDivision + med.division + '; ';
+        }
+        return concatenatedDivision;
     }
 
     remove(doc: any) {

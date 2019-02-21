@@ -32,9 +32,10 @@ export class DrugDecisionsService {
 
     }
 
-    getAuthorizedSubstancesByNameOrCode(term: string): Observable<any> {
+    getAuthorizedSubstancesByNameOrCode(term: string, authType: string): Observable<any> {
         let Params = new HttpParams();
         Params = Params.set('term', term);
+        Params = Params.set('authType', authType);
 
         return this.http.get<any>('/api/drug-decisions/search-substances-by-name-or-code', {params: Params});
     }
@@ -87,5 +88,14 @@ export class DrugDecisionsService {
 
     generateRegistrationRequestNumber(): Observable<any> {
         return this.http.get('/api/drug-decisions/generate-registration-request-number', {});
+    }
+
+    calculateAvailableQuantityForSubstance(substanceId: any, type: any, requestId: any): Observable<any> {
+        let Params = new HttpParams();
+        Params = Params.set('substanceId', substanceId);
+        Params = Params.set('type', type);
+        Params = Params.set('requestId', requestId);
+
+        return this.http.get<any>('/api/drug-decisions/calculate-total-available', {params: Params});
     }
 }

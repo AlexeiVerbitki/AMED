@@ -47,7 +47,7 @@ export class PaymentClinicalTrialComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        console.log('this.bonDePlataList', this.bonDePlataList);
+        // console.log('this.bonDePlataList', this.bonDePlataList);
     }
 
     checkReceipts() {
@@ -94,13 +94,12 @@ export class PaymentClinicalTrialComponent implements OnInit, OnDestroy {
         // console.log('bon', bon);
 
         const arr: any[] = [];
-        for (const bon of this.bonDePlataList) {
-            arr.push(bon.number);
+        for (const eachBon of this.bonDePlataList) {
+            arr.push(eachBon.number);
         }
 
         this.loadingService.show();
         this.subscriptions.push(this.administrationService.getReceiptsByPaymentOrderNumbers(arr).subscribe(data => {
-                console.log('data', data.body);
                 if (data.body) {
                     this.receiptsList = data.body;
                     this.recalculateTotalReceipts();
@@ -130,12 +129,9 @@ export class PaymentClinicalTrialComponent implements OnInit, OnDestroy {
                 dialogConfig2.width = '800px';
                 const dialogRef = this.dialog.open(AddCtPayOrderComponent, dialogConfig2);
                 dialogRef.afterClosed().subscribe(result => {
-                    console.log('result', result);
                     if (result) {
-                        // console.log('result', result);
                         const findBon = this.bonDePlataList.find(filterBon => filterBon.id == result.id);
                         findBon.ctPayOrderServices = result.ctPayOrderServices;
-                        // console.log('this.bonDePlataList', this.bonDePlataList);
                         this.recalculateTotalTaxes();
                     }
                 });
@@ -146,13 +142,13 @@ export class PaymentClinicalTrialComponent implements OnInit, OnDestroy {
 
     protected deleteTaxes(bon: any, index: number) {
         const arr: any[] = [];
-        for (const bon of this.bonDePlataList) {
-            arr.push(bon.number);
+        for (const eachBon of this.bonDePlataList) {
+            arr.push(eachBon.number);
         }
 
         this.loadingService.show();
         this.subscriptions.push(this.administrationService.getReceiptsByPaymentOrderNumbers(arr).subscribe(data => {
-                console.log('data', data.body);
+                // console.log('data', data.body);
                 if (data.body) {
                     this.receiptsList = data.body;
                     this.recalculateTotalReceipts();
@@ -173,7 +169,7 @@ export class PaymentClinicalTrialComponent implements OnInit, OnDestroy {
                         // console.log('result', result);
                         // console.log('delete bon', bon);
                         this.subscriptions.push(
-                            this.paymentService.deleteCtPayOrder(bon.id).subscribe(data => {
+                            this.paymentService.deleteCtPayOrder(bon.id).subscribe(data2 => {
                                 this.bonDePlataList.splice(index, 1);
                                 this.recalculateTotalTaxes();
                             }, error => {
@@ -242,7 +238,7 @@ export class PaymentClinicalTrialComponent implements OnInit, OnDestroy {
         this.loadingService.show();
         this.subscriptions.push(
             this.paymentService.getPaymentOrders(this.regRequest.id).subscribe(data => {
-                    console.log('data', data);
+                    // console.log('data', data);
                     this.bonDePlataList = data;
                     if (this.bonDePlataList.length != 0) {
                         this.checkReceipts();

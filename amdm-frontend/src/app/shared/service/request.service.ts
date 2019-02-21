@@ -16,6 +16,10 @@ export class RequestService {
         return this.http.post<any>('/api/add-gmp-request', requestDetails, {observe: 'response'});
     }
 
+    finishGMPRequest(requestDetails: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/finish-gmp-request', requestDetails, {observe: 'response'});
+    }
+
     addMedicamentHistoryRequest(requestDetails: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/add-medicament-history-request', requestDetails, {observe: 'response'});
     }
@@ -137,6 +141,7 @@ export class RequestService {
 
     getAuthorizationByFilter(authorizationsNumber: any, applicant: any,expirationDate: any, summ: any, currency: any ): Observable<any> {
       return this.http.get('/api/load-import-authorization-by-filter', {params: {authorizationsNumber: authorizationsNumber, applicant: applicant, expirationDate: expirationDate, summ: summ, currency: currency}});
+      // return this.http.get('/api/load-import-authorization-by-filter', {authorizationsNumber, applicant, expirationDate, summ, currency});
     }
 
     getInvoiceQuota(nameOrCodeAmed: string, authorizationNumber: string): Observable<any> {

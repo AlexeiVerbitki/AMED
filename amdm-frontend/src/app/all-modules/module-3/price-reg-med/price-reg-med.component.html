@@ -1,34 +1,5 @@
 <div class="container-fluid sky z-depth-2">
 
-    <!--<h5 class="text-center font-weight-bold">Documente necesar a fi încărcate</h5>
-    <table class="table table-widths-lg text-center">
-        <thead class="black white-text">
-        <tr>
-            <th scope="col">Denumirea</th>
-            <th scope="col">Numărul</th>
-            <th scope="col">Statusul documentului</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let a of mandatoryDocuments">
-            <th scope="row">{{ a.description }}</th>
-            <th scope="row">{{ a.number }}</th>
-            <th scope="row">{{ a.status }}</th>
-        </tr>
-        </tbody>
-    </table>-->
-
-   <!-- <app-document [title]="'Documente comune'"
-                  [dcTypeIdentifier]="{code:'PMED',step:'R'}"
-                  [documents]="commonDocuments"
-                  [nrCerere]="folderNumber"
-                  (documentModified)="commonDocumentAdded($event)"></app-document>
-
-    <div *ngIf="formSubmitted && commonDocuments.length == 0">
-        <small class="text-muted"><strong class="text-danger">Încărcați actele comune necesare înregistrării prețului la
-            medicament</strong></small>
-    </div>-->
-
     <form [formGroup]='rForm'>
         <div class="row">
 
@@ -150,34 +121,64 @@
         </button>
     </div>
 
-    <mat-tab-group [selectedIndex]="selected.value" [backgroundColor]="color" class="mb-5"
-                   (selectedIndexChange)="selected.setValue($event)" #tabGroup>
-        <mat-tab *ngFor="let tab of tabs; let index = index" [label]="tab">
-            <div class="example-large-box mat-elevation-z4">
-            <div class="text-right">
-                <button class="btn btn-dark-red-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                        [disabled]="tabs.length === 1"
-                        (click)="removeTab(index)">Șterge medicametul
-                </button>
-            </div>
+        <mat-tab-group [selectedIndex]="selected.value" [backgroundColor]="color" class="mb-5"
+                       (selectedIndexChange)="selected.setValue($event)" #tabGroup>
+            <mat-tab *ngFor="let tab of tabs; let index = index" [label]="tab">
 
-            <!--Contents for {{tab}} tab-->
-                <app-one-med-price [medIndex]="index"
-                                   [countries]="countries"
-                                   [currencies]="currencies"
-                                   [priceTypes]="priceTypes"
-                                   [baseRequestNumber]="requests[index].requestNumber"
-                                   [formSubmitted]="formSubmitted"
-                                   (medicamentChange)="onMedChange($event)"
-                                   [(priceDTO)]="requests[index]"></app-one-med-price>
-            </div>
-        </mat-tab>
-    </mat-tab-group>
+                <ng-template matTabContent>
+                    <div class="example-large-box mat-elevation-z4">
+                        <div class="text-right">
+                            <button class="btn btn-dark-red-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
+                                    [disabled]="tabs.length === 1"
+                                    (click)="removeTab(index)">Șterge medicametul
+                            </button>
+                        </div>
 
-    <div class="text-center">
-        <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                (click)="nextStep()">Salvează
-        </button>
-    </div>
+                        <!--Contents for {{tab}} tab-->
+
+                        <app-one-med-price [medIndex]="index"
+                                           [countries]="countries"
+                                           [currencies]="currencies"
+                                           [priceTypes]="priceTypes"
+                                           [baseRequestNumber]="requests[index].requestNumber"
+                                           [formSubmitted]="formSubmitted"
+                                           (medicamentChange)="onMedChange($event)"
+                                           [(priceModel)]="requests[index]"></app-one-med-price>
+                    </div>
+                </ng-template>
+            </mat-tab>
+        </mat-tab-group>
+
+        <div class="text-center">
+            <div class="row">
+                <div class="offset-4"></div>
+                <div class="col-md-3">
+                    <div class="md-form-modified">
+                        <ng-select class="w-100"
+                                   [items]="decisions"
+                                   [required]="true"
+                                   formControlName="decision"
+                                   bindLabel="description"
+                                   (change)="onDecisionChange($event)"
+                                   placeholder="Pasul următor">
+                        </ng-select>
+                        <div *ngIf="formSubmitted && rForm.get('decision').invalid">
+                            <small class="text-muted"><strong class="text-danger">Selectați pasul următor</strong>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="mt-4">
+                        <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
+                                [disabled]="rForm.get('decision').invalid" mdbWavesEffect (click)="nextStep()">
+                            Salvează
+                        </button>
+                    </div>
+                </div>
+                <div class="offset-4"></div>
+            </div>
+        </div>
+
     </form>
 </div>

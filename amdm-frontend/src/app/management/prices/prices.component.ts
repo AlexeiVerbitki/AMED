@@ -63,8 +63,8 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
             'medicament': [null],
             'division': [null],
             'medicamentCode': [null],
-            'orderApprovDate': [{value: null, disabled:true}],
-            'expirationDate': [{value: null, disabled:true}],
+            'orderApprovDate': [{value: null, disabled: true}],
+            'expirationDate': [{value: null, disabled: true}],
             'medicamentType': [null],
             'priceType': [null],
         });
@@ -155,8 +155,8 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
                 arrIntern[3] = displayData[i].medicamentCode;
                 arrIntern[4] = displayData[i].division;
                 arrIntern[5] = displayData[i].medicamentType;
-                arrIntern[6] = displayData[i].orderApprovDate;//dtPipe.transform(new Date(displayData[i].orderApprovDate), 'dd/MM/yyyy');
-                arrIntern[7] = displayData[i].expirationDate;//dtPipe.transform(new Date(displayData[i].expirationDate), 'dd/MM/yyyy');
+                arrIntern[6] = displayData[i].orderApprovDate; //dtPipe.transform(new Date(displayData[i].orderApprovDate), 'dd/MM/yyyy');
+                arrIntern[7] = displayData[i].expirationDate; //dtPipe.transform(new Date(displayData[i].expirationDate), 'dd/MM/yyyy');
                 arr.push(arrIntern);
             }
         }

@@ -69,7 +69,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                 nmPriceId: [null]
             }),
             'evaluation': fb.group({
-                'expirationDate': [{value:null, disabled: true}, Validators.required],
+                'expirationDate': [{value: null, disabled: true}, Validators.required],
                 'selectedPrice': [null, Validators.required],
                 'selectedReason': [null, Validators.required],
                 'decision': [null, Validators.required],

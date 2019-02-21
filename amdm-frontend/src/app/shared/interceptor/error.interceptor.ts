@@ -20,7 +20,8 @@ export class ErrorInterceptor implements HttpInterceptor {
                     console.log('Error from interceptor', error);
                     if (error.status === 401) {
                         if (this.router.url === '/login') {
-                            console.log('1');
+                            this.authService.logout();
+                            location.reload(true);
                             return throwError(this.getErrorMessage(error));
                         }
                         this.authService.logout();

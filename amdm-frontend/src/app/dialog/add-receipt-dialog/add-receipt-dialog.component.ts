@@ -5,9 +5,9 @@ import {AdministrationService} from '../../shared/service/administration.service
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 @Component({
-  selector: 'app-add-receipt-dialog',
-  templateUrl: './add-receipt-dialog.component.html',
-  styleUrls: ['./add-receipt-dialog.component.css']
+    selector: 'app-add-receipt-dialog',
+    templateUrl: './add-receipt-dialog.component.html',
+    styleUrls: ['./add-receipt-dialog.component.css']
 })
 export class AddReceiptDialogComponent implements OnInit {
 
@@ -23,16 +23,17 @@ export class AddReceiptDialogComponent implements OnInit {
         this.aForm = fb.group({
             'number': [null, Validators.required],
             'paymentDate': [null, Validators.required],
-            'paymentOrderNumber': [null, Validators.required],
+            'paymentOrderNumber': {value: null, disabled: true},
             'amount': [null, Validators.required],
             'insertDate': [null],
-            'response' : [null]
+            'response': [null]
         });
     }
 
     ngOnInit() {
+        // console.log('this.dataDialog', this.dataDialog);
         if (this.dataDialog) {
-            this.title = 'Editare incasare';
+            this.title = 'Inregistrare incasari';
             this.aForm.get('number').setValue(this.dataDialog.number);
             this.aForm.get('paymentDate').setValue(new Date(this.dataDialog.paymentDate));
             this.aForm.get('paymentOrderNumber').setValue(this.dataDialog.paymentOrderNumber);
@@ -49,9 +50,10 @@ export class AddReceiptDialogComponent implements OnInit {
         }
 
         this.formSubmitted = false;
+        this.aForm.get('insertDate').setValue(new Date());
 
         this.aForm.get('response').setValue(true);
-        this.dialogRef.close(this.aForm.value);
+        this.dialogRef.close(this.aForm.getRawValue());
     }
 
     cancel() {

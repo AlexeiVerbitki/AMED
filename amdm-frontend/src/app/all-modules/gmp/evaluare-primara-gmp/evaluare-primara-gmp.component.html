@@ -887,7 +887,7 @@
 				<!-- Title -->
 				<div class="row">
 					<div class="col-6">
-						<div class="card-header-title white-text">Alte ambalari</div>
+						<div class="card-header-title white-text">Alte ambalari primare</div>
 					</div>
 					<div class="col-6">
 						<div class="text-right fap text-white">
@@ -1263,6 +1263,131 @@
 			</table>
 		</div>
 		<div *ngIf="authorizedManufacturedMedicaments.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<hr>
+		<!-- Teste pentru controlul calităţii   -->
+		<h5 class="text-center font-weight-bold">Teste pentru controlul calităţii medicamentelor importate</h5>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form-modified">
+					<ng-select id="testsForQualityControlImport" name="testsForQualityControlImport" [items]="testsForQualityControls" bindLabel="description" [multiple]="true"
+					           placeholder="Teste pentru controlul calităţii" formControlName="testsForQualityControlImport">
+					</ng-select>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">
+				<div class="md-form">
+					<mat-checkbox #asepticallyPrepared [checked]="eForm.get('asepticallyPrepared').value" (change)="checkAsepticallyPrepared(asepticallyPrepared)">Produse sterile - preparate aseptic</mat-checkbox>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form">
+					<mat-checkbox #terminallySterilised [checked]="eForm.get('terminallySterilised').value" (change)="checkTerminallySterilised(terminallySterilised)">Produse sterile - sterilizate final</mat-checkbox>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form">
+					<mat-checkbox #nonsterileProducts [checked]="eForm.get('nonsterileProducts').value" (change)="checkNonsterileProducts(nonsterileProducts)">Produse nesterile</mat-checkbox>
+				</div>
+			</div>
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form-modified">
+					<ng-select id="biologicalMedicinesImport" name="biologicalMedicinesImport" [items]="biologicalMedicines" bindLabel="description" [multiple]="true"
+					           placeholder="Medicamente biologice (import)" formControlName="biologicalMedicinesImport">
+					</ng-select>
+				</div>
+			</div>
+		</div>
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Alte medicamente biologice (import)</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addBiologicalMedicinesImport()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Descriere</th>
+					<th scope="col">Acțiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let x of otherBiologicalMedicinesImport;let i = index">
+					<th scope="row">{{ i + 1}}</th>
+					<td>{{ x.description }}</td>
+					<td>
+						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+						        (click)="removeBiologicalMedicinesImport(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="otherBiologicalMedicinesImport.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<hr>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form-modified">
+					<ng-select id="importActivities" name="importActivities" [items]="importActivities" bindLabel="description" [multiple]="true"
+					           placeholder="Medicamente biologice (import)" formControlName="importActivities">
+					</ng-select>
+				</div>
+			</div>
+		</div>
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Alte activităţi de import</div>
+					</div>
+					<div class="col-6">
+						<div class="text-right fap text-white">
+							<i (click)="addImportActivities()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Descriere</th>
+					<th scope="col">Acțiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let x of otherImportActivities;let i = index">
+					<th scope="row">{{ i + 1}}</th>
+					<td>{{ x.description }}</td>
+					<td>
+						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+						        (click)="removeImportActivities(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="otherImportActivities.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
 		<hr>
 		<app-payment [requestId]="this.eForm.get('id').value" [processModule]="'GMP'" (totalValueChanged)="paymentTotalUpdate($event)" [isBonSuplimentarNotRender]="true"></app-payment>
 		<div *ngIf="formSubmitted && paymentTotal<0">

@@ -51,6 +51,7 @@ export class AIntrerupereComponent implements OnInit, OnDestroy {
             'initiator': [null],
             'assignedUser': [null],
             'clinicalTrails': undefined,
+            'registrationRequestMandatedContacts': []
         });
         this.initPage();
     }
@@ -67,6 +68,7 @@ export class AIntrerupereComponent implements OnInit, OnDestroy {
                     this.cancelClinicalTrailForm.get('typeCode').setValue(data.type.code);
                     this.cancelClinicalTrailForm.get('initiator').setValue(data.initiator);
                     this.cancelClinicalTrailForm.get('clinicalTrails').setValue(data.clinicalTrails);
+                    this.cancelClinicalTrailForm.get('registrationRequestMandatedContacts').setValue(data.registrationRequestMandatedContacts);
 
                     data.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
                     this.cancelClinicalTrailForm.get('requestHistories').setValue(data.requestHistories);

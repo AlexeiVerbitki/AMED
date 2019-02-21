@@ -70,6 +70,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             'startDate': {value: new Date(), disabled: true},
             'currentStep': ['R'],
             'company': ['', Validators.required],
+            'regSubject': ['', Validators.required],
 
             'registrationRequestMandatedContacts': this.fb.group({
                 'mandatedFirstname': [null, Validators.required],

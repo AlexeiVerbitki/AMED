@@ -23,6 +23,10 @@ export class DocumentService {
         return this.http.post('/api/documents/view-autorizatie-de-fabricatie-gmp', model, {responseType: 'blob'});
     }
 
+    viewCGM(model: any): Observable<any> {
+        return this.http.post('/api/documents/view-certificat-gmp', model, {responseType: 'blob'});
+    }
+
     viewBonDePlata(bonDePlataDetails: any): Observable<any> {
         return this.http.post('/api/documents/view-bon-de-plata', bonDePlataDetails, {responseType: 'blob'});
     }

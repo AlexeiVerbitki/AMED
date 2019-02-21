@@ -178,43 +178,45 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
             // processTypeId: taskFormValue.requestType ? taskFormValue.requestType.id : '',
             // stepCode: taskFormValue.step ? taskFormValue.step.code : '',
             // subject: taskFormValue.subject,
-            id: null,
-            applicationRegistrationNumber: null,
-            applicationDate: null,
-            applicant: null,
-            seller: null,
-            basisForImport: null,
-            importer: null,
-            conditionsAndSpecification: null,
-            quantity: null,
-            price: null,
-            currency: null,
-            summ: null,
-            producer: null,
-            customsDeclarationDate: null,
-            expirationDate: null,
-            customsCode: null,
-            customsNumber: null,
-            customsTransactionType: null,
+            // id: null,
+            // applicationRegistrationNumber: null,
+            // applicationDate: null,
 
-            authorizationsNumber: taskFormValue.subject,
+            // seller: null,
+            // basisForImport: null,
+            // importer: null,
+            // conditionsAndSpecification: null,
+            // quantity: null,
+            // price: null,
 
-            medType: null,
-            importAuthorizationDetailsEntityList: null,
-            authorized: null,
-            contract: null,
-            contractDate: null,
-            anexa: null,
-            anexaDate: null,
-            specification: null,
-            SpecificationDate: null,
-            nmCustomsPointsList: null,
+            // producer: null,
+            // customsDeclarationDate: null,
+            // customsCode: null,
+            // customsNumber: null,
+            // customsTransactionType: null,
+            authorizationsNumber: taskFormValue.subject? taskFormValue.subject: '',
+            applicant: taskFormValue.applicant ? taskFormValue.applicant.id: '' ,
+            expirationDate: /*'2019-12-20'*/ taskFormValue.expirationDate? taskFormValue.expirationDate: null,
+            summ: /*"40"*/ taskFormValue.summ?  taskFormValue.summ: null,
+            currency: /*"6"*/ taskFormValue.currency.id? taskFormValue.currency.id: null,
+
+            // medType: null,
+            // importAuthorizationDetailsEntityList: null,
+            // authorized: null,
+            // contract: null,
+            // contractDate: null,
+            // anexa: null,
+            // anexaDate: null,
+            // specification: null,
+            // SpecificationDate: null,
+            // nmCustomsPointsList: null,
         };
         console.log('searchCriteria', searchCriteria);
         this.subscriptions.push(this.requestService.getAuthorizationByFilter(searchCriteria.authorizationsNumber, searchCriteria.applicant, searchCriteria.expirationDate, searchCriteria.summ, searchCriteria.currency).subscribe(data => {
+        // this.subscriptions.push(this.requestService.getAuthorizationByFilter(searchCriteria).subscribe(data => {
                 this.loadingService.hide();
-                this.dataSource.data = data.body;
-                console.log('data.body', data.body);
+                this.dataSource.data = data;
+                console.log('data.body', data);
             }, error => {
                 this.loadingService.hide();
             })
