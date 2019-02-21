@@ -24,10 +24,10 @@ public class ImportAuthorizationDTO implements Serializable
     @Id
     private Integer id;
     private String authorizationsNumber;
-    private NmEconomicAgentsEntity applicant;
+    private String applicant;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Timestamp expirationDate;
-    private Double summ;
-    private NmCurrenciesEntity currency;
+    private String summ;
+    private String currency;
 
 }
