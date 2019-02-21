@@ -23,8 +23,9 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
     taskForm: FormGroup;
     registerCodes: any[];
     requests: any[];
+    importType: any[] = [];
     requestTypes: any[];
-    steps: any[];
+    status: any[];
 
     companii: Observable<any[]>;
     loadingCompany = false;
@@ -68,11 +69,25 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.navbarTitleService.showTitleMsg('Gestionare cerere');
+        this.navbarTitleService.showTitleMsg('Gestionare import');
+        // this.retrieveRequestTypeSteps();
 
         this.subscriptions.push(this.taskService.getRequestNames().subscribe(data => {
             this.requests = data;
         }));
+        // this.importType = ['1','2']
+
+        this.importType = [
+            {description: 'Medicamente inregistrate', medType: '15'},
+            {description: 'Medicamente neinregistrate', medType: '16'},
+            {description: 'Materia prima', medType: '17'},
+            {description: 'Ambalajul', medType: '18'},
+        ]
+
+        this.status = [
+            {description: 'Aprobată', authorized: '1'},
+            {description: 'Respinsa', authorized: '0'}
+        ]
 
         this.taskForm.get('requestNumber').disable();
         this.taskForm.get('requestCode').valueChanges.subscribe(val1 => {
@@ -136,18 +151,19 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
         }));
     }
 
-    retrieveRequestTypeSteps() {
-
-        this.taskForm.get('step').setValue(null);
-        this.steps = null;
-        if (!this.taskForm.get('requestType').value || this.taskForm.get('requestType').value.id == null) {
-            return;
-        }
-
-        this.subscriptions.push(this.taskService.getRequestTypeSteps(this.taskForm.get('requestType').value.id).subscribe(data => {
-            this.steps = data;
-        }));
-    }
+    // retrieveRequestTypeSteps() {
+    //
+    //     // this.taskForm.get('step').setValue(null);
+    //     // this.steps = null;
+    //     // if (!this.taskForm.get('requestType').value || this.taskForm.get('requestType').value.id == null) {
+    //     //     return;
+    //     // }
+    //
+    //     this.subscriptions.push(this.taskService.getRequestTypeSteps(this.taskForm.get('requestType').value.id).subscribe(data => {
+    //         this.steps = data;
+    //         console.log("steps:", this.steps)
+    //     }));
+    // }
     findTasks2() {
         this.loadingService.show();
         const taskFormValue = this.taskForm.value;
@@ -180,7 +196,9 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
             customsCode: null,
             customsNumber: null,
             customsTransactionType: null,
+
             authorizationsNumber: taskFormValue.subject,
+
             medType: null,
             importAuthorizationDetailsEntityList: null,
             authorized: null,

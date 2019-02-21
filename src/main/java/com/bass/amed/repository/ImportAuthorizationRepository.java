@@ -1,5 +1,6 @@
 package com.bass.amed.repository;
 
+import com.bass.amed.dto.ImportAuthorizationDTO;
 import com.bass.amed.entity.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,11 +23,11 @@ public interface ImportAuthorizationRepository extends JpaRepository<ImportAutho
             "(?4 IS NULL OR nmp.summ = ?4) AND\n" +
             "(?5 IS NULL OR nmp.currency = ?5)"
             , nativeQuery = true)
-    List<ImportAuthorizationEntity> getAuthorizationByFilter(String authorizationNumber,
-                                                             String applicant,
-                                                             String expirationDate,
-                                                             String summ,
-                                                             String currency);
+    List<ImportAuthorizationDTO> getAuthorizationByFilter(String authorizationNumber,
+                                                          String applicant,
+                                                          String expirationDate,
+                                                          String summ,
+                                                          String currency);
     //List<PricesDTO> getPricesByFilter(String requestNumber,
     //								  String medCode,
     //								  String orderNr,

@@ -1,11 +1,7 @@
 package com.bass.amed.controller.rest;
 
 import com.bass.amed.common.Constants;
-import com.bass.amed.dto.AutorizationImportDataSet;
-import com.bass.amed.dto.AutorizationImportDataSet2;
-import com.bass.amed.dto.InterruptDetailsDTO;
-import com.bass.amed.dto.ImportSpecificationDataSet;
-import com.bass.amed.dto.ScheduledModuleResponse;
+import com.bass.amed.dto.*;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
@@ -1845,25 +1841,28 @@ public class RequestController
     }
 
     @GetMapping(value = "/load-import-authorization-by-filter")
-    public ResponseEntity<List<ImportAuthorizationEntity>> getAuthorizationByFilter(@RequestParam Map<String, String> requestParams) throws CustomException
+    public ResponseEntity<List<ImportAuthorizationDTO>> getAuthorizationByFilter(@RequestParam Map<String, String> requestParams) throws CustomException
     {
-        List<ImportAuthorizationEntity> regOptional = importAuthorizationRepository.getAuthorizationByFilter(
-//                requestParams.getAuthorizationsNumber(),
-//                requestParams.getApplicant(),
-//                requestParams.get(),
-//                requestParams.getSumm(),
-//                requestParams.getCurrency());
+        List<ImportAuthorizationDTO> regOptional = importAuthorizationRepository.getAuthorizationByFilter(
+//                               "33278/2019-AM",
                 requestParams.get("authorizationsNumber"),
-//                "33278/2019-AM",
                 requestParams.get("applicant"),
                 requestParams.get("expirationDate"),
                 requestParams.get("summ"),
                 requestParams.get("currency"));
-//                "33280/2019-AM",
-//                null,
-//                null,
-//                null,
-//                null);
+
+                // requestParams.getAuthorizationsNumber(),
+//                requestParams.getApplicant(),
+//                requestParams.get(),
+//                requestParams.getSumm(),
+//                requestParams.getCurrency());
+
+
+//                "33278/2019-AM",
+//                "1",
+//                "2019-12-20",
+//                "40",
+//                "6");
         return new ResponseEntity<>(regOptional, HttpStatus.OK);
     }
 

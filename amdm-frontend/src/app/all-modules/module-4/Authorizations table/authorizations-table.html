@@ -1,40 +1,48 @@
 <div class="container-fluid sky z-depth-2">
 	<form [formGroup]='taskForm'>
 		<div class="row">
-			<div class="col-4">
-				<div class="md-form-modified">
-					<ng-select id="requestCodes" name="requestCodes" [items]="registerCodes"
-							   bindLabel="registerCode"
-							   placeholder="Cod registru"
-							   formControlName="requestCode">
-						<ng-template ng-option-tmp let-item="item">
-							{{item.registerCode}} <br/>
-							<small class="form-text text-muted">{{item.registerCodeDescription}}</small>
-						</ng-template>
-						<ng-template ng-label-tmp let-item="item">
-							{{item.registerCode + ' / ' + item.registerCodeDescription}}
-						</ng-template>
-					</ng-select>
-				</div>
-			</div>
+
 			<div class="col-2">
-				<div class="md-form-modified">
-                    <mat-form-field class="w-100">
-                        <input matInput placeholder="Numar registru" maxlength="6" pattern="[0-9]*" type="tel"  formControlName="requestNumber" (keypress)='allowOnlyNumbers($event)'>
-                    </mat-form-field>
+				<div class="md-form">
+					<input id="subject" mdbInputDirective type="text" class="form-control" formControlName="subject">
+					<label for="subject">Numărul autorizației</label>
 				</div>
 			</div>
-			<div class="col-3">
-				<div class="md-form-modified">
-					<mat-form-field class="w-100">
-						<input matInput [matDatepicker]="startDateFrom" placeholder="Data inceperii din"
-							   formControlName="startDateFrom">
-						<mat-datepicker-toggle matSuffix [for]="startDateFrom"></mat-datepicker-toggle>
-						<mat-datepicker touchUi #startDateFrom></mat-datepicker>
-					</mat-form-field>
-				</div>
-			</div>
-			<div class="col-3">
+			<!--<div class="col-4">-->
+
+				<!--<div class="md-form-modified">-->
+					<!--<ng-select id="requestCodes" name="requestCodes" [items]="registerCodes"-->
+							   <!--bindLabel="registerCode"-->
+							   <!--placeholder="Cod registru"-->
+							   <!--formControlName="requestCode">-->
+						<!--<ng-template ng-option-tmp let-item="item">-->
+							<!--{{item.registerCode}} <br/>-->
+							<!--<small class="form-text text-muted">{{item.registerCodeDescription}}</small>-->
+						<!--</ng-template>-->
+						<!--<ng-template ng-label-tmp let-item="item">-->
+							<!--{{item.registerCode + ' / ' + item.registerCodeDescription}}-->
+						<!--</ng-template>-->
+					<!--</ng-select>-->
+				<!--</div>-->
+			<!--</div>-->
+			<!--<div class="col-2">-->
+				<!--<div class="md-form-modified">-->
+                    <!--<mat-form-field class="w-100">-->
+                        <!--<input matInput placeholder="Numar registru" maxlength="6" pattern="[0-9]*" type="tel"  formControlName="requestNumber" (keypress)='allowOnlyNumbers($event)'>-->
+                    <!--</mat-form-field>-->
+				<!--</div>-->
+			<!--</div>-->
+			<!--<div class="col-3">-->
+				<!--<div class="md-form-modified">-->
+					<!--<mat-form-field class="w-100">-->
+						<!--<input matInput [matDatepicker]="startDateFrom" placeholder="Data inceperii din"-->
+							   <!--formControlName="startDateFrom">-->
+						<!--<mat-datepicker-toggle matSuffix [for]="startDateFrom"></mat-datepicker-toggle>-->
+						<!--<mat-datepicker touchUi #startDateFrom></mat-datepicker>-->
+					<!--</mat-form-field>-->
+				<!--</div>-->
+			<!--</div>-->
+			<div class="col-2">
 				<div class="md-form-modified">
 					<mat-form-field class="w-100">
 						<input matInput [matDatepicker]="startDateTo" placeholder="Data inceperii pina la"
@@ -44,8 +52,6 @@
 					</mat-form-field>
 				</div>
 			</div>
-		</div>
-		<div class="row">
 			<div class="col-md-3">
 				<div class="md-form-modified">
 					<ng-select [items]="companii | async"
@@ -61,43 +67,47 @@
 					</ng-select>
 				</div>
 			</div>
+			<!--<div class="col-2">-->
+				<!--<div class="md-form-modified">-->
+					<!--<ng-select id="request" name="request" [items]="importType"-->
+							   <!--&lt;!&ndash;bindLabel="description"&ndash;&gt;-->
+							   <!--placeholder="Tip de import"-->
+							   <!--&lt;!&ndash;(ngModelChange)="retrieveRequestTypes();"&ndash;&gt;-->
+							   <!--formControlName="request">-->
+					<!--</ng-select>-->
+				<!--</div>-->
+
 			<div class="col-3">
 				<div class="md-form-modified">
-					<ng-select id="request" name="request" [items]="requests"
-							   bindLabel="description"
-							   placeholder="Nume cerere"
-							   (ngModelChange)="retrieveRequestTypes();"
-							   formControlName="request">
+					<ng-select id="customsPoints" [items]="importType"
+					           bindLabel="description"
+					           placeholder="Tipul importului"
+					           formControlName="request">
 					</ng-select>
 				</div>
 			</div>
-			<div class="col-3">
+			<!--<div class="col-3">-->
+				<!--<div class="md-form-modified">-->
+					<!--<ng-select id="requestType" name="requestType" [items]="requestTypes"-->
+							   <!--bindLabel="description"-->
+							   <!--placeholder="Tip cerere"-->
+							   <!--(ngModelChange)="retrieveRequestTypeSteps();"-->
+							   <!--formControlName="requestType">-->
+					<!--</ng-select>-->
+				<!--</div>-->
+			<!--</div>-->
+			<div class="col-2">
 				<div class="md-form-modified">
-					<ng-select id="requestType" name="requestType" [items]="requestTypes"
-							   bindLabel="description"
-							   placeholder="Tip cerere"
-							   (ngModelChange)="retrieveRequestTypeSteps();"
-							   formControlName="requestType">
-					</ng-select>
-				</div>
-			</div>
-			<div class="col-3">
-				<div class="md-form-modified">
-					<ng-select id="step" name="step" [items]="steps"
-							   bindLabel="description"
-							   placeholder="Pas"
-							   formControlName="step">
+					<ng-select id="status" [items]="status"
+					           bindLabel="description"
+					           placeholder="Status"
+					           formControlName="status">
 					</ng-select>
 				</div>
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-6">
-				<div class="md-form">
-					<input id="subject" mdbInputDirective type="text" class="form-control" formControlName="subject">
-					<label for="subject">Subiectul inregistrare</label>
-				</div>
-			</div>
+
 			<div class="col">
 				<div class="md-form-modified text-center">
 					<button type="button" class="btn btn-indigo waves-light btn-md btn-rounded-button z-depth-4"
@@ -165,7 +175,7 @@
 
 				<ng-container matColumnDef="company">
 					<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Compania solicitant</th>
-					<td mat-cell *matCellDef="let element"> {{element.company}} </td>
+					<td mat-cell *matCellDef="let element"> {{element.aplicant}} </td>
 				</ng-container>
 
 
