@@ -1,0 +1,170 @@
+<div>
+  <form [formGroup]='qForm'>
+    <h3 class="text-center my-3 font-weight-bold">{{title}}</h3>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="lastName" mdbInputDirective type="text" class="form-control" formControlName="lastName">
+          <label for="lastName">Nume de familie</label>
+          <div *ngIf="formSubmitted && qForm.get('lastName').invalid">
+            <small class="text-muted"><strong class="text-danger">Numele trebuie introdus</strong></small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="firstName" mdbInputDirective type="text" class="form-control" formControlName="firstName">
+          <label for="firstName">Prenume</label>
+          <div *ngIf="formSubmitted && qForm.get('firstName').invalid">
+            <small class="text-muted"><strong class="text-danger">Prenumele trebuie introdus</strong></small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="address" mdbInputDirective type="text" class="form-control" formControlName="address">
+          <label for="address">Adresa de serviciu</label>
+          <div *ngIf="formSubmitted && qForm.get('address').invalid">
+            <small class="text-muted"><strong class="text-danger">Adresa de serviciu trebuie introdusa</strong></small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="postalCode" mdbInputDirective type="text" class="form-control" formControlName="postalCode">
+          <label for="postalCode">Codul poştal</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="phoneNumber" mdbInputDirective type="text" class="form-control" formControlName="phoneNumber" maxlength="9">
+          <label for="phoneNumber">Telefon</label>
+          <div *ngIf="formSubmitted && qForm.get('phoneNumber').invalid">
+            <small class="text-muted"><strong class="text-danger">Telefonul este invalid</strong></small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="fax" mdbInputDirective type="text" class="form-control" formControlName="fax" maxlength="9">
+          <label for="fax">Fax</label>
+          <div *ngIf="formSubmitted && qForm.get('fax').invalid">
+            <small class="text-muted"><strong class="text-danger">Faxul este invalid</strong></small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="mobilePhone" mdbInputDirective type="text" class="form-control" formControlName="mobilePhone" maxlength="9">
+          <label for="mobilePhone">Telefon mobil</label>
+          <div *ngIf="formSubmitted && qForm.get('mobilePhone').invalid">
+            <small class="text-muted"><strong class="text-danger">Telefonul mobil este invalid</strong></small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+          <input id="email" mdbInputDirective type="text" class="form-control" formControlName="email">
+          <label for="email">E-mail</label>
+          <div *ngIf="formSubmitted && qForm.get('email').invalid">
+            <small class="text-muted"><strong class="text-danger">E-mailul este invalid</strong></small>
+          </div>
+        </div>
+      </div>
+      <div class="col-1 mt-4" *ngIf="dataDialog.type=='QP'">
+        <h5 class="font-w400l text-center my-3">
+          Statut
+        </h5>
+      </div>
+      <div class="col-md-5 mt-4" *ngIf="dataDialog.type=='QP'">
+        <mat-radio-group formControlName="statut">
+          <div class="row align-items-start">
+            <div class="col-12">
+              <mat-radio-button name="prop1" value="P">Angajat permanent</mat-radio-button>
+            </div>
+            <div class="col-12">
+              <mat-radio-button name="prop2" value="C">Consultant</mat-radio-button>
+            </div>
+            <div class="col-12">
+              <mat-radio-button name="prop3" value="T">Angajat temporar</mat-radio-button>
+            </div>
+          </div>
+        </mat-radio-group>
+        <div *ngIf="isStatutInvalid">
+          <small class="text-muted"><strong class="text-danger">Statutul trebuie selectat</strong></small>
+        </div>
+      </div>
+      <div class="col-md-6" *ngIf="dataDialog.type=='QP'">
+        <div class="md-form">
+                    <textarea formControlName="consultantDetails" type="text" id="consultantDetails"
+                              class="md-textarea form-control w-100" mdbInputDirective></textarea>
+          <label for="consultantDetails">Detalii despre disponibilitatea consultantului</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+                    <textarea formControlName="qualifications" type="text" id="qualifications"
+                              class="md-textarea form-control w-100" mdbInputDirective></textarea>
+          <label for="consultantDetails">Calificări</label>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="md-form">
+                    <textarea formControlName="experience" type="text" id="experience"
+                              class="md-textarea form-control w-100" mdbInputDirective></textarea>
+          <label for="consultantDetails">Experienţă</label>
+        </div>
+      </div>
+      <div class="col" *ngIf="dataDialog.type=='QP'">
+        <div class="md-form">
+                    <textarea formControlName="professionalAssociations" type="text" id="professionalAssociations"
+                              class="md-textarea form-control w-100" mdbInputDirective></textarea>
+          <label for="consultantDetails">Asociaţii profesionale</label>
+        </div>
+      </div>
+      <div class="col-md-6" *ngIf="dataDialog.type!='QP'">
+        <div class="md-form">
+                    <textarea formControlName="nameFunctionSubordinates" type="text" id="nameFunctionSubordinates"
+                              class="md-textarea form-control w-100" mdbInputDirective></textarea>
+          <label for="consultantDetails">Numele şi funcţia persoanelor cărora li se subordonează</label>
+        </div>
+      </div>
+      <div class="col-md-6" *ngIf="dataDialog.type!='QP'">
+        <div class="md-form">
+                    <textarea formControlName="scopeResponsability" type="text" id="scopeResponsability"
+                              class="md-textarea form-control w-100" mdbInputDirective></textarea>
+          <label for="consultantDetails">Sfera de responsabilitate</label>
+        </div>
+      </div>
+      <div class="col-2 mt-4" *ngIf="dataDialog.type=='QPP'">
+        <h5 class="font-w400l text-center">
+          Functie
+        </h5>
+      </div>
+      <div class="col-md-10 mt-3" *ngIf="dataDialog.type=='QPP'">
+        <mat-radio-group formControlName="function">
+          <div class="row">
+            <div class="col-12">
+              <mat-radio-button name="prop1" value="M">Manager de producţie</mat-radio-button>
+            </div>
+            <div class="col-12">
+              <mat-radio-button name="prop2" value="S">Şef de secţie (flux de fabricaţie)</mat-radio-button>
+            </div>
+          </div>
+        </mat-radio-group>
+        <div *ngIf="isFunctionInvalid">
+          <small class="text-muted"><strong class="text-danger">Functia trebuie selectata</strong></small>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="text-center">
+  <div mat-dialog-actions>
+    <div class="w-100">
+      <button class="btn btn-danger btn-sm waves-light" (click)="cancel()">Anulare</button>
+      <button *ngIf="!dataDialog" class="btn btn-dark-green-color btn-sm waves-light" (click)="add()">Adaugare</button>
+      <button *ngIf="dataDialog" class="btn btn-dark-green-color btn-sm waves-light" (click)="add()">Salvare</button>
+    </div>
+  </div>
+</div>

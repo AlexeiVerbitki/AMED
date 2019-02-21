@@ -1,0 +1,85 @@
+<div>
+	<form [formGroup]='lForm'>
+		<h3 class="text-center my-3 font-weight-bold">{{title}}</h3>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form">
+					<input id="name" mdbInputDirective type="text" class="form-control" formControlName="name">
+					<label for="name">Numele laboratorului sub contract</label>
+					<div *ngIf="formSubmitted && lForm.get('name').invalid">
+						<small class="text-muted"><strong class="text-danger">Numele laboratorului trebuie introdus</strong></small>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="md-form">
+					<input id="address" mdbInputDirective type="text" class="form-control" formControlName="address">
+					<label for="address">Adresa</label>
+					<div *ngIf="formSubmitted && lForm.get('address').invalid">
+						<small class="text-muted"><strong class="text-danger">Adresa trebuie introdusa</strong></small>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="md-form">
+					<input id="postalCode" mdbInputDirective type="text" class="form-control" formControlName="postalCode">
+					<label for="postalCode">Codul poştal</label>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="md-form">
+					<input id="contactName" mdbInputDirective type="text" class="form-control" formControlName="contactName">
+					<label for="contactName">Nume de contact</label>
+					<div *ngIf="formSubmitted && lForm.get('contactName').invalid">
+						<small class="text-muted"><strong class="text-danger">Numele de contact trebuie introdus</strong></small>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="md-form">
+					<input id="phoneNumber" mdbInputDirective type="text" class="form-control" formControlName="phoneNumber" maxlength="9">
+					<label for="phoneNumber">Telefon</label>
+					<div *ngIf="formSubmitted && lForm.get('phoneNumber').invalid">
+						<small class="text-muted"><strong class="text-danger">Telefonul este invalid</strong></small>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="md-form">
+					<input id="fax" mdbInputDirective type="text" class="form-control" formControlName="fax" maxlength="9">
+					<label for="fax">Fax</label>
+					<div *ngIf="formSubmitted && lForm.get('fax').invalid">
+						<small class="text-muted"><strong class="text-danger">Faxul este invalid</strong></small>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="md-form">
+					<input id="mobilePhone" mdbInputDirective type="text" class="form-control" formControlName="mobilePhone" maxlength="9">
+					<label for="mobilePhone">Telefon mobil</label>
+					<div *ngIf="formSubmitted && lForm.get('mobilePhone').invalid">
+						<small class="text-muted"><strong class="text-danger">Telefonul mobil este invalid</strong></small>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="md-form">
+					<input id="email" mdbInputDirective type="text" class="form-control" formControlName="email">
+					<label for="email">E-mail</label>
+					<div *ngIf="formSubmitted && lForm.get('email').invalid">
+						<small class="text-muted"><strong class="text-danger">E-mailul este invalid</strong></small>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="text-center">
+	<div mat-dialog-actions>
+		<div class="w-100">
+			<button class="btn btn-danger btn-sm waves-light" (click)="cancel()">Anulare</button>
+			<button *ngIf="!dataDialog" class="btn btn-dark-green-color btn-sm waves-light" (click)="add()">Adaugare</button>
+			<button *ngIf="dataDialog" class="btn btn-dark-green-color btn-sm waves-light" (click)="add()">Salvare</button>
+		</div>
+	</div>
+</div>
