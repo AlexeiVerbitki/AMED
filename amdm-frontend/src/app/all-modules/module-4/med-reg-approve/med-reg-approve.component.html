@@ -376,6 +376,9 @@
                     <div *ngIf="showClickAuthorizationError">
                         <small class="text-muted"><strong class="text-danger">Autorizația de import trebuie Vizualizată și tipărită</strong></small>
                     </div>
+					<div *ngIf="!atLeastOneApproved && formSubmitted">
+						<small class="text-muted"><strong class="text-danger">Nici o poziție un a fost aprobată</strong></small>
+					</div>
 
                 </section>
                 <div class="text-center">
@@ -386,6 +389,7 @@
                     <button class="btn btn-danger waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="interruptProcess()" type="button">Intrerupere</button>
                     <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect (click)="viewDoc()">Vizualire Autorizației</button>
                     <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect (click)="viewDoc('specification')">Vizualire Specificașiei</button>
+                    <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect (click)="approveAll()">Aprob toate</button>
                 </div>
             </div>
         </form>

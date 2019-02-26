@@ -84,6 +84,7 @@ export class MedRegApproveComponent implements OnInit {
     activeLicenses: any;
     importDetailsList: any = [];
     authorizationSumm: any;
+    atLeastOneApproved : any;
     // authorizationCurrency: any;
     private subscriptions: Subscription[] = [];
 
@@ -387,6 +388,14 @@ export class MedRegApproveComponent implements OnInit {
         console.log('this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[' + i + ']', this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved);
     }
 
+    approveAll(){
+
+        this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList.forEach( item => {
+            item.approved = true;
+            item.approvedQuantity = item.quantity;
+            this.atLeastOneApproved = true;
+        })
+    }
     dialogSetApproved(i: any, approvedQuantity: any) {
         // if (this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved === false) {
 
@@ -497,6 +506,7 @@ export class MedRegApproveComponent implements OnInit {
             console.log('result', result);
             if (result && result[0] === true) {
                 this.dialogSetApproved(i, result[1]);
+                this.atLeastOneApproved = true;
                 console.log('dialog result:', result);
             }
             if (result && result[0] === false) {
@@ -767,6 +777,7 @@ export class MedRegApproveComponent implements OnInit {
 
     nextStep(aprrovedOrNot: boolean, submitForm: boolean) {
 
+        this.atLeastOneApproved = this.importDetailsList.filter(x=> x.approved).length > 0;
 
         let currentStep = this.importData.currentStep;
         if (submitForm) {
@@ -774,7 +785,7 @@ export class MedRegApproveComponent implements OnInit {
         }
         this.formSubmitted = true;
         const customsPoints = this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value;
-        if (customsPoints.length > 0 &&  this.authorizationClicked) {
+        if (customsPoints.length > 0 &&  this.authorizationClicked && this.atLeastOneApproved) {
 
 
 

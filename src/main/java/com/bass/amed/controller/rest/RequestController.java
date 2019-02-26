@@ -1794,8 +1794,7 @@ public class RequestController
                   if (entity.getProducer().getCountry()                   !=null)         { specificationMedicament.setCountryOfOrigin(entity.getProducer().getCountry().getCode()); }
                   if (entity.getProducer().getDescription()               !=null)         { specificationMedicament.setManufacturingCompany(entity.getProducer().getDescription()); }
                   if (entity.getRegistrationDate()                        !=null)         { specificationMedicament.setRegistrationDate(formatter.format(entity.getRegistrationDate())); }
-                  if (entity.getRegistrationNumber()                      !=null)         { specificationMedicament.setRegistrationNumber(entity.getRegistrationNumber().toString()); } else
-                      {specificationMedicament.setRegistrationNumber("");}
+                  if (entity.getRegistrationNumber()                      !=null)         { specificationMedicament.setRegistrationNumber(entity.getRegistrationNumber().toString()); } else{specificationMedicament.setRegistrationNumber("");}
                   if (entity.getAtcCode()                                 !=null)         { specificationMedicament.setAtc(entity.getAtcCode().getCode()); }
                   if (entity.getInternationalMedicamentName()             !=null)         { specificationMedicament.setInternationalName(entity.getInternationalMedicamentName().getDescription()); }
                   totalSum += entity.getSumm();
@@ -1806,11 +1805,11 @@ public class RequestController
 
             }
 
-	        if (request.getImportAuthorizationEntity().getAuthorizationsNumber()        !=null) {parameters.put("annexNr",          request.getImportAuthorizationEntity().getAnexa()); }
+	        if (request.getImportAuthorizationEntity().getSpecification()               !=null) {parameters.put("annexNr",        request.getImportAuthorizationEntity().getSpecification()); }
 	        if (request.getImportAuthorizationEntity().getImporter().getDirector()      !=null) {parameters.put("buyerDirector",  request.getImportAuthorizationEntity().getImporter().getDirector()  );}
-	        if (request.getImportAuthorizationEntity().getImporter().getDirector()      !=null) {parameters.put("buyerAddress",  request.getImportAuthorizationEntity().getImporter().getLegalAddress()  );}
+	        if (request.getImportAuthorizationEntity().getImporter().getDirector()      !=null) {parameters.put("buyerAddress",   request.getImportAuthorizationEntity().getImporter().getLegalAddress()  );}
 	        if (request.getImportAuthorizationEntity().getContract()                    !=null) {parameters.put("contractNr",     request.getImportAuthorizationEntity().getContract()                );}
-	        if (request.getImportAuthorizationEntity().getAnexaDate()                   !=null) {parameters.put("annexNrDate",    formatter.format(request.getImportAuthorizationEntity().getAnexaDate())               );}
+	        if (request.getImportAuthorizationEntity().getSpecification()               !=null) {parameters.put("annexNrDate",    formatter.format(request.getImportAuthorizationEntity().getSpecificationDate()));}
 	        if (request.getImportAuthorizationEntity().getContractDate()                !=null) {parameters.put("contractNrDate", formatter.format(request.getImportAuthorizationEntity().getContractDate())            );}
 	        if (request.getImportAuthorizationEntity().getImporter().getName()          !=null) {parameters.put("buyerName",      request.getImportAuthorizationEntity().getImporter().getName()      );}
 	        if (request.getImportAuthorizationEntity().getSeller().getDescription()     !=null) {parameters.put("sellerName",     request.getImportAuthorizationEntity().getSeller().getDescription() );}

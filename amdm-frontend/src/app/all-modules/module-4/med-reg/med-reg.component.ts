@@ -577,7 +577,7 @@ export class MedRegComponent implements OnInit {
             return;
         }
 
-        // if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').valid) {
+        if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.').valid) {}
         this.unitOfImportTable.push({
 
             codeAmed: this.codeAmed,
