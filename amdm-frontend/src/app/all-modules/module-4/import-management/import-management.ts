@@ -347,16 +347,16 @@ export class ImportManagement implements OnInit {
 
 
 
-                    this.evaluateImportForm.get('id').setValue(this.requestData.id);
-                    this.evaluateImportForm.get('requestNumber').setValue(this.requestData.requestNumber);
-                    this.evaluateImportForm.get('startDate').setValue(new Date(this.requestData.startDate));
-                    this.evaluateImportForm.get('initiator').setValue(this.requestData.initiator);
-                    this.evaluateImportForm.get('assignedUser').setValue(this.requestData.assignedUser);
-                    this.evaluateImportForm.get('company').setValue(this.requestData.company);
-                    this.evaluateImportForm.get('importAuthorizationEntity.medType').setValue(this.requestData.importAuthorizationEntity.medType);
-                    this.evaluateImportForm.get('importAuthorizationEntity.applicant').setValue(this.requestData.company);
-                    this.evaluateImportForm.get('type.id').setValue(this.requestData.type.id);
-                    this.evaluateImportForm.get('requestHistories').setValue(this.requestData.requestHistories);
+                    if (this.requestData.id) { this.evaluateImportForm.get('id').setValue(this.requestData.id);}
+                    if (this.requestData.requestNumber) { this.evaluateImportForm.get('requestNumber').setValue(this.requestData.requestNumber);}
+                    if (this.requestData.startDate) { this.evaluateImportForm.get('startDate').setValue(new Date(this.requestData.startDate));}
+                    if (this.requestData.initiator) { this.evaluateImportForm.get('initiator').setValue(this.requestData.initiator);}
+                    if (this.requestData.assignedUser) { this.evaluateImportForm.get('assignedUser').setValue(this.requestData.assignedUser);}
+                    if (this.requestData.company) { this.evaluateImportForm.get('company').setValue(this.requestData.company);}
+                    if (this.requestData.importAuthorizationEntity && this.requestData.importAuthorizationEntity.medType)  {this.evaluateImportForm.get('importAuthorizationEntity.medType').setValue(this.requestData.importAuthorizationEntity.medType);}
+                    if (this.requestData.company) { this.evaluateImportForm.get('importAuthorizationEntity.applicant').setValue(this.requestData.company);}
+                    if (this.requestData.type && this.requestData.type.id)  { this.evaluateImportForm.get('type.id').setValue(this.requestData.type.id);}
+                    if (this.requestData.requestHistories)  { this.evaluateImportForm.get('requestHistories').setValue(this.requestData.requestHistories);}
 
                     this.evaluateImportForm.get('importAuthorizationEntity.seller').setValue(data.importAuthorizationEntity.seller);
                     this.sellerAddress = (data.importAuthorizationEntity.seller.address + ', ' + data.importAuthorizationEntity.seller.country.description);
