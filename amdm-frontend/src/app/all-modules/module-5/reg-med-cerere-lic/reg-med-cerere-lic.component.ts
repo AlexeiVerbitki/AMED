@@ -13,6 +13,7 @@ import {catchError, debounceTime, distinctUntilChanged, filter, flatMap, tap} fr
 import {LocalityService} from '../../../shared/service/locality.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {AddEcAgentComponent} from '../../../administration/economic-agent/add-ec-agent/add-ec-agent.component';
+import {ScrAuthorRolesService} from '../../../shared/auth-guard/scr-author-roles.service';
 
 @Component({
     selector: 'app-reg-med-cerere-lic',
@@ -52,8 +53,8 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
                 public dialog: MatDialog,
                 private authService: AuthService,
                 private errorHandlerService: SuccessOrErrorHandlerService,
-                private navbarTitleService: NavbarTitleService) {
-
+                private navbarTitleService: NavbarTitleService,
+                private roleSrv: ScrAuthorRolesService) {
     }
 
     ngOnInit() {
@@ -193,7 +194,11 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
             this.subscriptions.push(
                 this.licenseService.confirmRegisterLicense(modelToSubmit).subscribe(data => {
                         const result = data.body;
-                        this.router.navigate(['/dashboard/module/license/evaluate', result]);
+                        if (this.roleSrv.isRightAssigned('scr_module_1') || this.roleSrv.isRightAssigned('scr_admin')) {
+                            this.router.navigate(['/dashboard/module/license/evaluate', result]);
+                        } else if (this.roleSrv.isRightAssigned('scr_register_request')) {
+                            this.router.navigate(['/dashboard/homepage/']);
+                        }
                     }
                 )
             );
@@ -201,7 +206,11 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
             this.subscriptions.push(
                 this.licenseService.confirmModifyLicense(modelToSubmit).subscribe(data => {
                         const result = data.body;
-                        this.router.navigate(['/dashboard/module/license/evaluate', result]);
+                        if (this.roleSrv.isRightAssigned('scr_module_1') || this.roleSrv.isRightAssigned('scr_admin')) {
+                            this.router.navigate(['/dashboard/module/license/evaluate', result]);
+                        } else if (this.roleSrv.isRightAssigned('scr_register_request')) {
+                            this.router.navigate(['/dashboard/homepage/']);
+                        }
                     }
                 )
             );
@@ -209,7 +218,11 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
             this.subscriptions.push(
                 this.licenseService.confirmDuplicateLicense(modelToSubmit).subscribe(data => {
                         const result = data.body;
-                        this.router.navigate(['/dashboard/module/license/evaluate', result]);
+                        if (this.roleSrv.isRightAssigned('scr_module_1') || this.roleSrv.isRightAssigned('scr_admin')) {
+                            this.router.navigate(['/dashboard/module/license/evaluate', result]);
+                        } else if (this.roleSrv.isRightAssigned('scr_register_request')) {
+                            this.router.navigate(['/dashboard/homepage/']);
+                        }
                     }
                 )
             );
@@ -217,7 +230,11 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
             this.subscriptions.push(
                 this.licenseService.confirmPrelungireLicense(modelToSubmit).subscribe(data => {
                         const result = data.body;
-                        this.router.navigate(['/dashboard/module/license/evaluate', result]);
+                        if (this.roleSrv.isRightAssigned('scr_module_1') || this.roleSrv.isRightAssigned('scr_admin')) {
+                            this.router.navigate(['/dashboard/module/license/evaluate', result]);
+                        } else if (this.roleSrv.isRightAssigned('scr_register_request')) {
+                            this.router.navigate(['/dashboard/homepage/']);
+                        }
                     }
                 )
             );
@@ -225,7 +242,11 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
             this.subscriptions.push(
                 this.licenseService.confirmAnulareLicense(modelToSubmit).subscribe(data => {
                         const result = data.body;
-                        this.router.navigate(['/dashboard/module/license/evaluate', result]);
+                        if (this.roleSrv.isRightAssigned('scr_module_1') || this.roleSrv.isRightAssigned('scr_admin')) {
+                            this.router.navigate(['/dashboard/module/license/evaluate', result]);
+                        } else if (this.roleSrv.isRightAssigned('scr_register_request')) {
+                            this.router.navigate(['/dashboard/homepage/']);
+                        }
                     }
                 )
             );
@@ -233,7 +254,11 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
             this.subscriptions.push(
                 this.licenseService.confirmSuspendareLicense(modelToSubmit).subscribe(data => {
                         const result = data.body;
-                        this.router.navigate(['/dashboard/module/license/evaluate', result]);
+                        if (this.roleSrv.isRightAssigned('scr_module_1') || this.roleSrv.isRightAssigned('scr_admin')) {
+                            this.router.navigate(['/dashboard/module/license/evaluate', result]);
+                        } else if (this.roleSrv.isRightAssigned('scr_register_request')) {
+                            this.router.navigate(['/dashboard/homepage/']);
+                        }
                     }
                 )
             );
@@ -241,7 +266,11 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
             this.subscriptions.push(
                 this.licenseService.confirmReluareLicense(modelToSubmit).subscribe(data => {
                         const result = data.body;
-                        this.router.navigate(['/dashboard/module/license/evaluate', result]);
+                        if (this.roleSrv.isRightAssigned('scr_module_1') || this.roleSrv.isRightAssigned('scr_admin')) {
+                            this.router.navigate(['/dashboard/module/license/evaluate', result]);
+                        } else if (this.roleSrv.isRightAssigned('scr_register_request')) {
+                            this.router.navigate(['/dashboard/homepage/']);
+                        }
                     }
                 )
             );
@@ -249,7 +278,11 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
             this.subscriptions.push(
                 this.licenseService.confirmCesionareLicense(modelToSubmit).subscribe(data => {
                         const result = data.body;
-                        this.router.navigate(['/dashboard/module/license/evaluate', result]);
+                        if (this.roleSrv.isRightAssigned('scr_module_1') || this.roleSrv.isRightAssigned('scr_admin')) {
+                            this.router.navigate(['/dashboard/module/license/evaluate', result]);
+                        } else if (this.roleSrv.isRightAssigned('scr_register_request')) {
+                            this.router.navigate(['/dashboard/homepage/']);
+                        }
                     }
                 )
             );

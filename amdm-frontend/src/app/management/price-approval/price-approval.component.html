@@ -15,6 +15,16 @@
             <div class="example-container">
                 <table mat-table [dataSource]="dataSource" matSort>
 
+
+                    <ng-container matColumnDef="selected">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header
+                            class="bg-sidebar white-text">Salvează</th>
+                        <td mat-cell *matCellDef="let x; let i = index" [ngStyle]="{'width': '10px'}">
+                            <mat-checkbox #rowSel [checked]="x.selected" (change)="selectRow(rowSel,x)"></mat-checkbox>
+                        </td>
+                    </ng-container>
+
+
                     <ng-container matColumnDef="priceRequestType" >
                         <th mdbTooltip="Anexa, conform căruia a fost evaluat" mat-header-cell *matHeaderCellDef mat-sort-header
                             class="bg-sidebar white-text"> Tip Anexa

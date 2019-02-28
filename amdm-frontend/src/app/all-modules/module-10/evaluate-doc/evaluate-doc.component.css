@@ -10,8 +10,7 @@
   margin-bottom: 5px !important;
 }
 
-label.required:not(:empty):after,
-.field-header.required:after {
+label.required:not(:empty):after, .field-header.required:after {
   content: " *";
   color: red;
   position: absolute;
@@ -21,4 +20,13 @@ label.required:not(:empty):after,
 
 .mt-4s {
   padding-top: 45px;
+}
+
+.history {
+  white-space: pre-line;
+  height: 140px;
+  overflow: auto;
+  color: #0d47a1;
+  font-style: italic;
+  font-weight: 500;
 }

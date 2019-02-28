@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {Cerere} from '../../../models/cerere';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Observable, Subscription} from 'rxjs';
@@ -14,6 +14,8 @@ import {TaskService} from '../../../shared/service/task.service';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {Subject} from 'rxjs/index';
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
+import {ScrAuthorRolesService} from '../../../shared/auth-guard/scr-author-roles.service';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 
 
 @Component({
@@ -21,7 +23,7 @@ import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-e
     templateUrl: './import-authorization-request.component.html',
     styleUrls: ['./import-authorization-request.component.css']
 })
-export class ImportAuthorizationRequestComponent implements OnInit {
+export class ImportAuthorizationRequestComponent implements OnInit, OnDestroy {
     requestNumber;
     generatedDocNrSeq: number;
     rForm: FormGroup;
@@ -39,6 +41,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
     importer: Observable<any[]>;
     loadingCompany = false;
+    @Output() emitAuthorizationNUmber = new EventEmitter<string>()
     authorizationNumber: any = '';
     importRadioButton: any;
     companyInputs = new Subject<string>();
@@ -52,7 +55,9 @@ export class ImportAuthorizationRequestComponent implements OnInit {
                 private administrationService: AdministrationService,
                 private taskService: TaskService,
                 private successOrErrorHandlerService: SuccessOrErrorHandlerService,
-                private loadingService: LoaderService) {
+                private loadingService: LoaderService,
+                private roleSrv: ScrAuthorRolesService,
+                private navbarTitleService: NavbarTitleService) {
         this.rForm = fb.group({
             'requestNumber': [null],
             'startDate': [new Date()],
@@ -68,7 +73,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
             'email': [null, Validators.email],
             'requestMandateNr': [null],
             'requestMandateDate': [null],
-            'idnp' : [null, [Validators.maxLength(13), Validators.minLength(13), Validators.pattern('[0-9]+'), Validators.required]],
+            'idnp': [null, [Validators.maxLength(13), Validators.minLength(13), Validators.pattern('[0-9]+'), Validators.required]],
             'type':
                 this.fb.group({
                     'id': ['']
@@ -77,7 +82,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
                 fb.group({
                     'medType': [null]
                 }),
-
+            'regSubject': ['', Validators.required]
         });
         this.dataForm = fb.group({});
 
@@ -86,6 +91,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.navbarTitleService.showTitleMsg('Inregistrare cerere');
         this.generateDocNr();
         this.loadDocTypes();
         this.loadEconomicAgents();
@@ -96,11 +102,9 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
 
         this.subscriptions.push(
-            this.administrationService.generateDocNr().subscribe(data => {
-                    this.generatedDocNrSeq = data;
+            this.administrationService.generateImportAuthDocNr().subscribe(data => {
+                    this.generatedDocNrSeq = data[0];
                     this.rForm.get('requestNumber').setValue(this.generatedDocNrSeq);
-
-
                 },
                 error => console.log(error)
             )
@@ -193,13 +197,13 @@ export class ImportAuthorizationRequestComponent implements OnInit {
 
 
         this.medType = this.rForm.get('importType').value;
-        console.log('this.medType', this.medType);
+        // console.log('this.medType', this.medType);
         // this.rForm.get('importAuthorizationEntity.medType').setValue(this.medType);
 
 
         const formModel: any = this.rForm.value;
         formModel.importAuthorizationEntity.medType = this.medType;
-        console.log('formModel.importAuthorizationEntity.medType', formModel.importAuthorizationEntity.medType);
+        // console.log('formModel.importAuthorizationEntity.medType', formModel.importAuthorizationEntity.medType);
 
 
         switch (this.rForm.get('importType').value) {
@@ -239,7 +243,7 @@ export class ImportAuthorizationRequestComponent implements OnInit {
         formModel.currentStep = 'E';
         formModel.initiator = this.authService.getUserName();
         formModel.assignedUser = this.authService.getUserName();
-        formModel.idnp = null;
+        formModel.idnp = this.rForm.get('idnp').value;
         formModel.registrationRequestMandatedContacts = [{
             mandatedLastname: this.rForm.get('mandatedFirstname').value,
             mandatedFirstname: this.rForm.get('mandatedLastname').value,
@@ -248,67 +252,109 @@ export class ImportAuthorizationRequestComponent implements OnInit {
             requestMandateNr: this.rForm.get('requestMandateNr').value,
             requestMandateDate: this.rForm.get('requestMandateDate').value,
             idnp: this.rForm.get('idnp').value,
-/*'mandatedFirstname'
-'mandatedLastname'
-'phoneNumber'
-'email':
-'requestMandateNr
-'requestMandateDate*/
+            /*'mandatedFirstname'
+            'mandatedLastname'
+            'phoneNumber'
+            'email':
+            'requestMandateNr
+            'requestMandateDate*/
         }];
 
+        // console.log('formModel', formModel);
+        // console.log('rForm.valid', this.rForm.valid);
 
-        console.log('formModel', formModel);
-        console.log('rForm.valid', this.rForm.valid);
-
-        if (this.rForm.valid ) {
+        if (this.rForm.valid) {
             this.loadingService.show();
             // this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
-                    switch (this.rForm.get('importType').value) {
-                        case '1': {
-                            this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
-                            this.router.navigate(['dashboard/module/import-authorization/registered-medicament/' + data.body.id]);
-                                }, error => this.loadingService.hide())
-                            );
-                            break;
-                        }
-                        case '2': {
-                            this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
-                            this.router.navigate(['dashboard/module/import-authorization/unregistered-medicament/' + data.body.id]);
-                                }, error => this.loadingService.hide())
-                            );
-                            break;
+            switch (this.rForm.get('importType').value) {
+                case '1': {
+                    this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
+                            console.log('data', formModel);
+                            if (this.roleSrv.isRightAssigned('scr_module_7') || this.roleSrv.isRightAssigned('scr_admin')) {
+                                this.router.navigate(['dashboard/module/import-authorization/registered-medicament/' + data.body.id]);
+                            } else if (this.roleSrv.isRightAssigned('scr_register_request')) {
+                                this.router.navigate(['/dashboard/homepage/']);
+                            }
+                        }, error => this.loadingService.hide())
+                    );
+                    break;
+                }
+                case '2': {
+                    this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
+                            if (this.roleSrv.isRightAssigned('scr_module_7') || this.roleSrv.isRightAssigned('scr_admin')) {
+                                this.router.navigate(['dashboard/module/import-authorization/unregistered-medicament/' + data.body.id]);
+                            } else if (this.roleSrv.isRightAssigned('scr_register_request')) {
+                                this.router.navigate(['/dashboard/homepage/']);
+                            }
+                        }, error => this.loadingService.hide())
+                    );
+                    break;
 
-                        }
-                        case '3': {
-                            this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
-                            this.router.navigate(['dashboard/module/import-authorization/materia-prima/' + data.body.id]);
-                                }, error => this.loadingService.hide())
-                            );
-                            break;
-                        }
-                        case '4': {
-                            this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
-                                    this.router.navigate(['dashboard/module/import-authorization/ambalaj/' + data.body.id]);
-                                }, error => this.loadingService.hide())
-                            );
-                            break;
-                        }
-                        case '5': {
-                            // this.authorizationNumber = "33134/2019-AM";
-                            // this.authorizationNumber = "33134/2019-AM";
-                            this.subscriptions.push(this.requestService.getAuthorizationByAuth(this.authorizationNumber).subscribe(data => {
-                                this.router.navigate(['dashboard/module/import-authorization/import-management/' + data.id]);
-                                }, error => this.loadingService.hide())
-                            );
-                            break;
-                        }
-                    }
-                    this.loadingService.hide();
-                    this.formSubmitted = false;
+                }
+                case '3': {
+                    this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
+                            if (this.roleSrv.isRightAssigned('scr_module_7') || this.roleSrv.isRightAssigned('scr_admin')) {
+                                this.router.navigate(['dashboard/module/import-authorization/materia-prima/' + data.body.id]);
+                            } else if (this.roleSrv.isRightAssigned('scr_register_request')) {
+                                this.router.navigate(['/dashboard/homepage/']);
+                            }
+                        }, error => this.loadingService.hide())
+                    );
+                    break;
+                }
+                case '4': {
+                    this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
+                            if (this.roleSrv.isRightAssigned('scr_module_7') || this.roleSrv.isRightAssigned('scr_admin')) {
+                                this.router.navigate(['dashboard/module/import-authorization/ambalaj/' + data.body.id]);
+                            } else if (this.roleSrv.isRightAssigned('scr_register_request')) {
+                                this.router.navigate(['/dashboard/homepage/']);
+                            }
+                        }, error => this.loadingService.hide())
+                    );
+                    break;
+                }
+                case '5': {
+                    // this.authorizationNumber = "33134/2019-AM";
+                    // this.authorizationNumber = "33134/2019-AM";
+                    this.subscriptions.push(this.requestService.getAuthorizationByAuth(this.authorizationNumber).subscribe(data => {
+                            if (this.roleSrv.isRightAssigned('scr_module_7') || this.roleSrv.isRightAssigned('scr_admin')) {
+                                formModel.currentStep = data.currentStep;
+                                console.log('this.requestService.getAuthorizationByAuth(this.authorizationNumber', this.requestService.getAuthorizationByAuth(this.authorizationNumber))
+                                if (data.documents && data.documents.length > 0) {
+                                    data.documents.forEach(item => formModel.push(item));
+                                }
+                                // formModel.importAuthorizationEntity  = data.importAuthorizationEntity;
+                                // // formModel.importAuthorizationEntity.id = null;
+                                // formModel.importAuthorizationEntity.nmCustomsPointsList = null;
+                                // formModel.importAuthorizationEntity.importAuthorizationDetailsEntityList=null;
+                                // formModel.importAuthorizationEntity.importAuthorizationDetailsEntityList.forEach(item => item.id=null)
+                                // console.log("formModel",formModel);
+                                this.emitAuthorizationNUmber.emit(this.authorizationNumber);
+                                this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
+                                    this.router.navigate(['dashboard/module/import-authorization/import-management/' ,data.body.id, this.authorizationNumber]);
+                                }));
+                                // this.router.navigate(['dashboard/module/import-authorization/import-management/' + data.id]);
+                            } else if (this.roleSrv.isRightAssigned('scr_register_request')) {
+                                this.router.navigate(['/dashboard/homepage/']);
+                            }
+                        }, error => this.loadingService.hide())
+                    );
+                    break;
+                }
+            }
+            this.loadingService.hide();
+            this.formSubmitted = false;
             //     }, error => this.loadingService.hide())
             // );
 
         }
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(subscription => {
+            subscription.unsubscribe();
+        });
+        this.navbarTitleService.showTitleMsg('');
     }
 
 }

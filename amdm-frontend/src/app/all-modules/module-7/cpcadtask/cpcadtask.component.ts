@@ -140,7 +140,7 @@ export class CPCADTaskComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.subscriptions.push(this.drugSubstanceTypesService.getDrugSubstanceTypesList().subscribe(data => {
             this.drugSubstanceTypes = data;
-        }, error => console.log(error)));
+        }));
     }
 
     tasksManagement() {

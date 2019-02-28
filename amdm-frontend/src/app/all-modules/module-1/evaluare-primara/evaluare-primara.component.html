@@ -41,18 +41,18 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-4" *ngIf="!eForm.get('type').value || eForm.get('type').value.code!='MEDR'" formGroupName="medicament">
+			<div class="col-md-4" *ngIf="!eForm.get('type').value || (eForm.get('type').value.code!='MERG' && eForm.get('type').value.code!='MERS')" formGroupName="medicament">
 				<div class="md-form">
 					<input id="med" mdbInputDirective type="text" class="form-control" formControlName="commercialName">
 					<label for="med">Denumire comerciala medicament
 						<span class="text-danger">*</span>
 					</label>
-					<div *ngIf="formSubmitted && eForm.get('type').value && eForm.get('type').value.code!='MEDR' && !eForm.get('medicament.commercialName').value">
+					<div *ngIf="formSubmitted && eForm.get('type').value && eForm.get('type').value.code!='MERG'  && eForm.get('type').value.code!='MERS' && !eForm.get('medicament.commercialName').value">
 						<small class="text-muted"><strong class="text-danger">Denumirea comerciala a medicamentului trebuie introdusa</strong></small>
 					</div>
 				</div>
 			</div>
-			<div class="col-md-4" *ngIf="eForm.get('type').value && eForm.get('type').value.code=='MEDR'">
+			<div class="col-md-4" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='MERG' || eForm.get('type').value.code=='MERS')">
 				<div class="md-form-modified">
 					<div class="md-form-modified-select">
 						<ng-select class="custom" [items]="companyMedicaments | async"
@@ -68,7 +68,7 @@
 							</ng-template>
 						</ng-select>
 					</div>
-					<div *ngIf="formSubmitted && eForm.get('type').value && eForm.get('type').value.code=='MEDR' && !eForm.get('regnr').value">
+					<div *ngIf="formSubmitted && eForm.get('type').value && (eForm.get('type').value.code=='MERG' || eForm.get('type').value.code=='MERS') && !eForm.get('regnr').value">
 						<small class="text-muted"><strong class="text-danger">Medicamentul trebuie selectat</strong>
 						</small>
 					</div>
@@ -82,7 +82,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Divizari</div>
 					</div>
-					<div class="col-6" *ngIf="!eForm.get('type').value || eForm.get('type').value.code!='MEDR'">
+					<div class="col-6" *ngIf="!eForm.get('type').value || (eForm.get('type').value.code!='MERG' && eForm.get('type').value.code!='MERS')">
 						<div class="text-right fap text-white">
 							<i (click)="addDivision()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
@@ -100,8 +100,8 @@
 					<th scope="col">Numărul de unități</th>
 					<th scope="col">Volum</th>
 					<th scope="col">Unitate de masura (volum)</th>
-					<th scope="col" *ngIf="eForm.get('type').value && eForm.get('type').value.code=='MEDR'">Cod medicament</th>
-					<th scope="col" *ngIf="!eForm.get('type').value || eForm.get('type').value.code!='MEDR'">Actiuni</th>
+					<th scope="col" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='MERG' || eForm.get('type').value.code=='MERS')">Cod medicament</th>
+					<th scope="col" *ngIf="!eForm.get('type').value || (eForm.get('type').value.code!='MERG' && eForm.get('type').value.code!='MERS')">Actiuni</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -110,8 +110,8 @@
 					<td>{{ division.description }}</td>
 					<td>{{ division.volume }}</td>
 					<td>{{ division.volumeQuantityMeasurement ? division.volumeQuantityMeasurement.description : '' }}</td>
-					<td *ngIf="eForm.get('type').value && eForm.get('type').value.code=='MEDR'">{{ division.code }}</td>
-					<td *ngIf="!eForm.get('type').value || eForm.get('type').value.code!='MEDR'">
+					<td *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='MERG' || eForm.get('type').value.code=='MERS')">{{ division.code }}</td>
+					<td *ngIf="!eForm.get('type').value || (eForm.get('type').value.code!='MERG' && eForm.get('type').value.code!='MERS')">
 						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
 						        (click)="removeDivision(i,division)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 						</button>
@@ -133,7 +133,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Substanţe active</div>
 					</div>
-					<div class="col-6" *ngIf="!eForm.get('type').value || eForm.get('type').value.code!='MEDR'">
+					<div class="col-6" *ngIf="!eForm.get('type').value || (eForm.get('type').value.code!='MERG' && eForm.get('type').value.code!='MERS')">
 						<div class="text-right fap text-white">
 							<i (click)="addActiveSubstanceDialog()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
@@ -154,7 +154,7 @@
 					<th scope="col">Unitate de masură</th>
 					<th scope="col">Producători</th>
 					<th scope="col">Numărul compoziției</th>
-					<th scope="col" *ngIf="!eForm.get('type').value || eForm.get('type').value.code!='MEDR'">Actiuni</th>
+					<th scope="col" *ngIf="!eForm.get('type').value || (eForm.get('type').value.code!='MERG' && eForm.get('type').value.code!='MERS')">Actiuni</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -165,7 +165,7 @@
 					<td>{{ substance.unitsOfMeasurement.description }}</td>
 					<td>{{ manufacturesStr(substance)}}</td>
 					<td>{{ substance.compositionNumber }}</td>
-					<td *ngIf="!eForm.get('type').value || eForm.get('type').value.code!='MEDR'">
+					<td *ngIf="!eForm.get('type').value || (eForm.get('type').value.code!='MERG' && eForm.get('type').value.code!='MERS')">
 						<button class="btn btn-mdb-color waves-light btn-sm waves-light" (click)="editSubstance(substance,i)"
 						        mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></button>
 						<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeSubstance(i)"
@@ -187,7 +187,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Excipienti</div>
 					</div>
-					<div class="col-6" *ngIf="!eForm.get('type').value || eForm.get('type').value.code!='MEDR'">
+					<div class="col-6" *ngIf="!eForm.get('type').value || (eForm.get('type').value.code!='MERG' && eForm.get('type').value.code!='MERS')">
 						<div class="text-right fap text-white">
 							<i (click)="addAuxiliarySubstanceDialog()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
@@ -204,14 +204,14 @@
 				<tr>
 					<th scope="col">Nr.</th>
 					<th scope="col">Denumire</th>
-					<th scope="col" *ngIf="!eForm.get('type').value || eForm.get('type').value.code!='MEDR'">Actiuni</th>
+					<th scope="col" *ngIf="!eForm.get('type').value || (eForm.get('type').value.code!='MERG' && eForm.get('type').value.code!='MERS')">Actiuni</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr *ngFor="let substance of auxiliarySubstancesTable;let i = index">
 					<td>{{ i + 1 }}</td>
 					<th scope="row">{{ substance.auxSubstance.description }}</th>
-					<td *ngIf="eForm.get('type').value && eForm.get('type').value.code!='MEDR'">
+					<td *ngIf="eForm.get('type').value && eForm.get('type').value.code!='MERG' && eForm.get('type').value.code!='MERS'">
 						<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeAuxiliarySubstance(i)"
 						        mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
 					</td>
@@ -283,7 +283,7 @@
 			<div class="col-4">
 				<div class="md-form-modified">
 					<ng-select id="prescription" name="prescription" [items]="prescriptions" bindLabel="description"
-					           placeholder="Eliberare receta" formControlName="prescription" required="true">
+					           placeholder="Eliberare reţetă" formControlName="prescription" required="true">
 					</ng-select>
 					<div *ngIf="formSubmitted && eForm.get('medicament.prescription').invalid">
 						<small class="text-muted"><strong class="text-danger">Tipul eliberarii recetei trebuie selectat</strong></small>
@@ -313,12 +313,12 @@
 			</div>
 			<div class="col-md-2">
 				<div class="md-form">
-					<mat-checkbox #clasificareMedicament [checked]="eForm.get('medicament.originale').value" (change)="checkClasificareMedicament(clasificareMedicament)" [disabled]="eForm.get('type').value && eForm.get('type').value.code=='MEDR'">Original</mat-checkbox>
+					<mat-checkbox #clasificareMedicament [checked]="eForm.get('medicament.originale').value" (change)="checkClasificareMedicament(clasificareMedicament)" [disabled]="eForm.get('type').value && (eForm.get('type').value.code=='MERG' || eForm.get('type').value.code=='MERS')">Original</mat-checkbox>
 				</div>
 			</div>
 			<div class="col-md-2">
 				<div class="md-form">
-					<mat-checkbox #orfanMedicament [checked]="eForm.get('medicament.orphan').value" (change)="checkOrphanMedicament(orfanMedicament)" [disabled]="eForm.get('type').value && eForm.get('type').value.code=='MEDR'">Orfan</mat-checkbox>
+					<mat-checkbox #orfanMedicament [checked]="eForm.get('medicament.orphan').value" (change)="checkOrphanMedicament(orfanMedicament)" [disabled]="eForm.get('type').value && (eForm.get('type').value.code=='MERG' || eForm.get('type').value.code=='MERS')">Orfan</mat-checkbox>
 				</div>
 			</div>
 		</div>
@@ -338,6 +338,7 @@
 					           bindLabel="description"
 					           placeholder="Deţinătorul certificatului de inregistrare *"
 					           (ngModelChange)="fillAutorizationHolderDetails()"
+					           [loading]="loadingManufacture"
 					           formControlName="authorizationHolder">
 					</ng-select>
 					<div *ngIf="formSubmitted && eForm.get('medicament.authorizationHolder').invalid">
@@ -366,7 +367,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Producatori</div>
 					</div>
-					<div class="col-6" *ngIf="!eForm.get('type').value || eForm.get('type').value.code!='MEDR'">
+					<div class="col-6" *ngIf="!eForm.get('type').value || (eForm.get('type').value.code!='MERG' && eForm.get('type').value.code!='MERS')">
 						<div class="text-right fap text-white">
 							<i (click)="addManufacture()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
@@ -386,7 +387,7 @@
 					<th scope="col">Adresa</th>
 					<th scope="col">Comentariu</th>
 					<th scope="col">Producator produs finit</th>
-					<th scope="col" *ngIf="!eForm.get('type').value || eForm.get('type').value.code!='MEDR'">Actiuni</th>
+					<th scope="col" *ngIf="!eForm.get('type').value || (eForm.get('type').value.code!='MERG' && eForm.get('type').value.code!='MERS')">Actiuni</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -396,9 +397,9 @@
 					<td>{{ manufacture.manufacture.address }}</td>
 					<td>{{ manufacture.comment }}</td>
 					<th scope="row">
-						<mat-checkbox #checkBoxProducatorProdusFinit [disabled]="eForm.get('type').value && eForm.get('type').value.code=='MEDR'" [checked]="manufacture.producatorProdusFinit" (change)="checkProducatorProdusFinit(manufacture,checkBoxProducatorProdusFinit)"></mat-checkbox>
+						<mat-checkbox #checkBoxProducatorProdusFinit [disabled]="eForm.get('type').value && (eForm.get('type').value.code=='MERG' || eForm.get('type').value.code=='MERS')" [checked]="manufacture.producatorProdusFinit" (change)="checkProducatorProdusFinit(manufacture,checkBoxProducatorProdusFinit)"></mat-checkbox>
 					</th>
-					<td *ngIf="!eForm.get('type').value || eForm.get('type').value.code!='MEDR'">
+					<td *ngIf="!eForm.get('type').value || (eForm.get('type').value.code!='MERG' && eForm.get('type').value.code!='MERS')">
 						<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeManufacture(i)"
 						        mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
 					</td>
@@ -411,8 +412,8 @@
 			<small class="text-muted"><strong class="text-danger">Nici un producator nu a fost adaugat</strong></small>
 		</div>
 		<hr>
-		<app-instruction (removeInstr)="removeInstr($event)" (addInstr)="addInstr($event)" [canUpload]="!eForm.get('type').value || eForm.get('type').value.code!='MEDR'" [divisions]="divisions" [instructions]="instructions" [nrCerere]="eForm.get('requestNumber').value"></app-instruction>
-		<app-macheta (removeMaket)="removeMacheta($event)" (addMaket)="addMacheta($event)" [canUpload]="!eForm.get('type').value || eForm.get('type').value.code!='MEDR'" [divisions]="divisions" [machets]="machets" [nrCerere]="eForm.get('requestNumber').value"></app-macheta>
+		<app-instruction (removeInstr)="removeInstr($event)" (addInstr)="addInstr($event)" [canUpload]="!eForm.get('type').value || (eForm.get('type').value.code!='MERG' && eForm.get('type').value.code!='MERS')" [divisions]="divisions" [instructions]="instructions" [nrCerere]="eForm.get('requestNumber').value"></app-instruction>
+		<app-macheta (removeMaket)="removeMacheta($event)" (addMaket)="addMacheta($event)" [canUpload]="!eForm.get('type').value || (eForm.get('type').value.code!='MERG' && eForm.get('type').value.code!='MERS')" [divisions]="divisions" [machets]="machets" [nrCerere]="eForm.get('requestNumber').value"></app-macheta>
 		<app-payment #payment [requestDetails]="this.eForm.value" [checkProducator]="true" [manufactures]="manufacturesTable" [requestId]="this.eForm.get('id').value" (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
 		<div *ngIf="formSubmitted && paymentTotal<0">
 			<small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>

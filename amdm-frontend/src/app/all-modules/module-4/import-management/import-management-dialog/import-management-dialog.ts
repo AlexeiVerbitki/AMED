@@ -219,8 +219,8 @@ export class ImportManagementDialog implements OnInit {
 
         this.codeAmed;
 
-        console.log('this.dialogData.producer.address', this.dialogData.producer.address);
-        console.log('this.dialogData.producer.country.description', this.dialogData.producer.country.description);
+        // console.log('this.dialogData.producer.address', this.dialogData.producer.address);
+        // console.log('this.dialogData.producer.country.description', this.dialogData.producer.country.description);
 
 
         // if (this.importData.currentStep == "AP") {
@@ -495,7 +495,9 @@ export class ImportManagementDialog implements OnInit {
                         if (val.registrationDate) {
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(val.registrationDate));
                         }
-                        this.producerAddress = val.producer.address + ', ' + val.producer.country.description;
+                        if (val.producer && val.producer.address && val.producer.country && val.producer.country.description) {
+                            this.producerAddress = val.producer.address + ', ' + val.producer.country.description;
+                        }
 
 
 

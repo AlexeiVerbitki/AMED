@@ -57,6 +57,7 @@ export class OneMedPriceComponent implements OnInit, OnDestroy { //ControlValueA
 
         this.PriceRegForm = fb.group({
             value: [null, Validators.required],
+            totalQuantity: [null, Validators.required],
             currency: [null, Validators.required],
             requestNumber: [null, Validators.required],
             medicament: [null, Validators.required],
@@ -75,6 +76,7 @@ export class OneMedPriceComponent implements OnInit, OnDestroy { //ControlValueA
         if (value.price) {
             this.PriceRegForm.get('currency').setValue(value.price.currency, {emitEvent: false, emitViewToModelChange: false});
             this.PriceRegForm.get('value').setValue(value.price.value, {emitEvent: false, emitViewToModelChange: false});
+            this.PriceRegForm.get('totalQuantity').setValue(value.price.totalQuantity, {emitEvent: false, emitViewToModelChange: false});
 
             if (value.price.medicament) {
                 this.PriceRegForm.get('medicament').setValue(value.price.medicament);
@@ -133,6 +135,7 @@ export class OneMedPriceComponent implements OnInit, OnDestroy { //ControlValueA
             };
         }
         this.priceDTO.price.value = this.PriceRegForm.get('value').value;
+        this.priceDTO.price.totalQuantity = this.PriceRegForm.get('totalQuantity').value;
         this.priceDTO.price.currency = this.PriceRegForm.get('currency').value;
         this.priceDTO.price.medicament = this.PriceRegForm.get('medicament').value;
         this.priceDTO.price.requestNumber = this.PriceRegForm.get('requestNumber').value;

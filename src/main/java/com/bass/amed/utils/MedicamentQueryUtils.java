@@ -25,7 +25,7 @@ public class MedicamentQueryUtils
 
         if (!Boolean.TRUE.equals(medicamentFilters.getExpiratedMedicaments()))
         {
-            stringBuilder.append(" and expiration_date > now()");
+            stringBuilder.append(" and (expiration_date > now() or expiration_date is null)");
         }
 
         if (medicamentFilters.getCode() != null && !medicamentFilters.getCode().isEmpty())

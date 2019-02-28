@@ -14,23 +14,26 @@ public class DocumentModuleDetailsEntity
 {
     @Id
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Integer                             id;
     @Basic
-    @Column(name = "sender", nullable = false, length = 30)
-    private String sender;
+    @Column(name = "recipient", nullable = false, length = 30)
+    private String                              recipient;
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @JoinColumn(name = "document_module_id")
-    private Set<DocumentModuleRecipientsEntity> recipients = new HashSet<>();
+    private Set<DocumentModuleRecipientsEntity> executors             = new HashSet<>();
     @Basic
     @Column(name = "execution_date", nullable = false)
-    private Timestamp executionDate;
+    private Timestamp                           executionDate;
     @Basic
     @Column(name = "problem_description", nullable = true, length = 5000)
-    private String problemDescription;
+    private String                              problemDescription;
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @MapsId
     @JoinColumn(name = "id")
-    private RegistrationRequestsEntity registrationRequestsEntity;
+    private RegistrationRequestsEntity          registrationRequestsEntity;
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @JoinColumn(name = "document_module_id")
+    private Set<DocumentModuleHistoryEntity>    documentHistoryEntity = new HashSet<>();
 
 
 }

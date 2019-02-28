@@ -45,12 +45,14 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
     requestId: any;
     paymentTotal: number;
 
-    outputDocuments: any[] = [{
-        docType: {category: 'OGD'},
-        description: 'Ordin GDP',
-        number: undefined,
-        status: 'Nu este atasat'
-    }];
+    outputDocuments: any[] = [
+    //     {
+    //     docType: {category: 'OGD'},
+    //     description: 'Ordin GDP',
+    //     number: undefined,
+    //     status: 'Nu este atasat'
+    // }
+    ];
 
     decisions: any[] = [
         {description: 'Cerere aprobată', id: 1, currentStep: 'A', code: 'AGDP'},
@@ -220,6 +222,9 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
                 this.rForm.get('requestHistories').setValue(data.requestHistories);
 
                 this.gdpInspection = data.gdpInspection ? data.gdpInspection : this.gdpInspection;
+                if(this.gdpInspection.groupLeaderId) {
+                    this.inspectorUsageChanged({checked:true});
+                }
                 if (this.gdpInspection.inspectors.length > 0) {
                     this.inspectorForm.get('useInspector').setValue(true);
                 }
@@ -280,6 +285,11 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
             }, error1 => console.log(error1)));
         }));
 
+    }
+
+    bossSelected(id) {
+        this.gdpInspection.groupLeaderId = id
+        this.inspectorUsageChanged({checked:true});
     }
 
     normalizeSubsidiaryList(list) {
@@ -384,7 +394,7 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
         console.log(this.rForm);
 
         const decisionAccept = this.rForm.valid && this.rForm.get('decision').value.id == 1;
-        const acceptWithoutPeriods: boolean = decisionAccept && (this.inspectorForm.get('periods') as FormArray).length == 0 || !this.isValidDate((this.inspectorForm.get('periods') as FormArray).controls[0].get('fromDate').value);
+        const acceptWithoutPeriods: boolean = decisionAccept && (this.inspectorForm.get('periods') as FormArray).length == 0 ;//|| !this.isValidDate((this.inspectorForm.get('periods') as FormArray).controls[0].get('fromDate').value);
         const acceptWithoutDocs: Boolean = decisionAccept && this.hasUnloadedDocs();
         const acceptWithoutSubsidiaries: Boolean = decisionAccept && (!this.gdpInspection.subsidiaries || this.gdpInspection.subsidiaries.length == 0);
         const inspectorsWithoutBoss: Boolean = decisionAccept && this.inspectorForm.get('useInspector').value && this.gdpInspection.groupLeaderId == null;

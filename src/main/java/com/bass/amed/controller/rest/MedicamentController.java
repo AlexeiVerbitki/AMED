@@ -104,6 +104,13 @@ public class MedicamentController
         return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
     }
 
+    @RequestMapping("/search-medicaments-by-register-number-full-details")
+    public ResponseEntity<List<MedicamentEntity>> getMedicamentsByRegisterNumberFullDetails(String registerNumber)
+    {
+        logger.debug("Retrieve medicaments by register number full details");
+        return new ResponseEntity<>(medicamentRepository.findByRegistrationNumber(Integer.valueOf(registerNumber)), HttpStatus.OK);
+    }
+
     @RequestMapping("/all-by-name")
     public ResponseEntity<List<MedicamentEntity>> getAllByName(String medName)
     {

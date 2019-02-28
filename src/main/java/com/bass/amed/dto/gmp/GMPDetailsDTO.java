@@ -44,4 +44,16 @@ public class GMPDetailsDTO
     private List<GMPMedDTO> qualityControlTests;
     private Date inspectionDate;
     private String aplicationDomainOfLastInspection;
+    private String certificateNr;
+    private Date orderDate;
+    private String licenseSeries;
+    private String licenseNr;
+    private Date licenseDate;
+    private Date autorizationDate;
+    private List<GMPMedDTO> qualityControlTestsImport;
+    private Boolean preparateAsepticImport;
+    private Boolean sterilizateFinalImport;
+    private Boolean produseNesterileImport;
+    private List<GMPMedDTO> medicamenteBiologiceImport;
+    private List<GMPMedDTO> otherImports;
 }

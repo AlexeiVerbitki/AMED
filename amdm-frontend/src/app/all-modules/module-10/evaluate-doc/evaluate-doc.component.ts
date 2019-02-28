@@ -1,10 +1,9 @@
 import {EvaluateModalComponent} from './../modal/evaluate-modal/evaluate-modal.component';
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 
 import {FormBuilder, FormGroup} from '@angular/forms';
 
 import {MatDialog} from '@angular/material';
-import {saveAs} from 'file-saver';
 import {Observable, Subscription} from 'rxjs';
 import {AdministrationService} from '../../../shared/service/administration.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -24,7 +23,7 @@ import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.c
     templateUrl: './evaluate-doc.component.html',
     styleUrls: ['./evaluate-doc.component.css']
 })
-export class EvaluateDocComponent implements OnInit, AfterViewInit, CanModuleDeactivate {
+export class EvaluateDocComponent implements OnInit, AfterViewInit, OnDestroy, CanModuleDeactivate {
     documents: Document [] = [];
     eForm: FormGroup;
     docTypes: any[];
@@ -32,8 +31,15 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, CanModuleDea
     generatedDocNrSeq: number;
     formSubmitted: boolean;
 
+    assignedUsers: string;
+    history: string;
+
     canBeDeactivated = false;
     private subscriptions: Subscription[] = [];
+    isRg01: boolean;
+
+    isReadOnlyMode = false;
+    initiator = '';
 
     constructor(private fb: FormBuilder, public dialog: MatDialog, private router: Router,
                 private requestService: RequestService,
@@ -43,18 +49,19 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, CanModuleDea
                 private errorHandlerService: SuccessOrErrorHandlerService,
                 private loadingService: LoaderService,
                 private navbarTitleService: NavbarTitleService,
-                private activatedRoute: ActivatedRoute, ) {
+                private activatedRoute: ActivatedRoute) {
         this.eForm = fb.group({
             'id': null,
+            'requestNumber': null,
             'currentDate': {disabled: true, value: new Date()},
             'startDate': null,
-            'sender': '',
-            'recipients': [],
+            'recipient': '',
+            'executors': [],
             'executionDate': null,
             'executionDateString': '',
-            'problemDescription': '',
+            'problemDescription': {disabled: true, value: ''},
             'registrationRequestsEntity': {'requestHistories': {}, 'documents': []},
-
+            'documentHistoryEntity': [],
         });
     }
 
@@ -69,18 +76,25 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, CanModuleDea
                         this.recipientList = data.recipientList;
                         const pipe = new DatePipe('en-US');
                         this.eForm.get('id').setValue(data.id);
+                        this.eForm.get('requestNumber').setValue(data.registrationRequestsEntity.requestNumber);
                         this.eForm.get('startDate').setValue(new Date(data.registrationRequestsEntity.startDate));
-                        this.eForm.get('sender').setValue(data.sender);
+                        this.eForm.get('recipient').setValue(data.recipient);
                         this.eForm.get('executionDateString').setValue(pipe.transform(new Date(data.executionDate), 'dd/MM/yyyy'));
                         this.eForm.get('executionDate').setValue(data.executionDate);
                         this.eForm.get('problemDescription').setValue(data.problemDescription);
-                        this.eForm.get('recipients').setValue(data.recipients);
+                        this.eForm.get('executors').setValue(data.executors);
                         this.eForm.get('registrationRequestsEntity').setValue(data.registrationRequestsEntity);
                         this.documents = data.registrationRequestsEntity.documents;
                         this.documents.forEach(doc => doc.isOld = true);
+                        this.assignedUsers = data.executors.map(u => u.name).join(', ');
+                        this.eForm.get('documentHistoryEntity').setValue(data.documentHistoryEntity);
+                        this.history = data.documentHistoryEntity.map(entity => entity.addDate.toLocaleString() + ' - ' + entity.assignee +
+                            ': ' + entity.actionDescription).join('\r\n');
 
-                    }
-                    )
+                        this.isRg01 = data.registrationRequestsEntity.requestNumber.startsWith('Rg01') ? true : false;
+                        this.isReadOnlyMode = data.registrationRequestsEntity.currentStep.startsWith('F') ? true : false;
+                        this.initiator = data.registrationRequestsEntity.initiator;
+                    })
                 );
             }, error1 => console.log('error  ', error1)
             )
@@ -101,28 +115,42 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, CanModuleDea
         );
     }
 
+    isPersonAssigned(): boolean {
+        if (this.eForm.get('executors').value) {
+            return this.eForm.get('executors').value.filter(exec => exec.name == this.authService.getUserName()).length > 0;
+        }
+    }
+
+    isInitiator(): boolean {
+        return this.initiator == this.authService.getUserName();
+    }
+
     ngOnDestroy(): void {
         this.navbarTitleService.showTitleMsg('');
         this.subscriptions.forEach(s => s.unsubscribe());
 
     }
 
-    controllBtn(item: any): void {
-        item.confirmed = !item.confirmed;
-    }
+    addComment(): void {
 
-    addComment(item: any): void {
+        const userName = this.authService.getUserName();
+        const item = this.eForm.get('executors').value.filter(exec => exec.name == userName);
         const dialogRef = this.dialog.open(EvaluateModalComponent, {
-            data: {
-                problemDescription: item,
-            },
+            // data: {
+            //     problemDescription: item,
+            // },
             hasBackdrop: true,
             width:
                 '650px'
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            // console.log('The dialog was closed', result);
+            if (result && result.actionDescription != '') {
+                this.eForm.get('documentHistoryEntity').value.push(result);
+                item.comment = '' + result.addDate.toLocaleString().trim() + ': ' + result.assignee + ' - ' +
+                    result.actionDescription + '\r\n';
+                this.history = this.history + item.comment;
+            }
         });
     }
 
@@ -136,19 +164,21 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, CanModuleDea
         modelToCommit.registrationRequestsEntity.endDate = new Date();
 
         modelToCommit.registrationRequestsEntity.documents = this.documents;
-        console.log('1', modelToCommit.registrationRequestsEntity.requestHistories);
         modelToCommit.registrationRequestsEntity.requestHistories.push({
             startDate: this.eForm.get('currentDate').value, endDate: new Date(),
             username: this.authService.getUserName(), step: 'F'
         });
-
-        console.log(modelToCommit);
+        modelToCommit.documentHistoryEntity = this.eForm.get('documentHistoryEntity').value;
         this.subscriptions.push(this.requestService.saveDocumentModuleRequest(modelToCommit).subscribe(data => {
                 this.canBeDeactivated = true;
                 this.loadingService.hide();
                 this.router.navigate(['dashboard/homepage']);
             }, error => this.loadingService.hide())
         );
+    }
+
+    close(): void {
+        this.router.navigate(['dashboard/homepage']);
     }
 
     save(): void {
@@ -160,7 +190,6 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, CanModuleDea
         modelToCommit.registrationRequestsEntity.endDate = new Date();
 
         modelToCommit.registrationRequestsEntity.documents = this.documents;
-        console.log('1', modelToCommit.registrationRequestsEntity.requestHistories);
         modelToCommit.registrationRequestsEntity.requestHistories.push({
             startDate: this.eForm.get('currentDate').value, endDate: new Date(),
             username: this.authService.getUserName(), step: 'E'

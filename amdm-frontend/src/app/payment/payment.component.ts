@@ -270,7 +270,7 @@ export class PaymentComponent implements OnInit {
     generateBonDePlataForAll() {
         if (this.bonDePlataList.length != 0) {
             if (!this.checkProducator) {
-                this.generateBonCommonParameters('');
+                this.generateBonCommonParameters('', null);
             } else {
 
                 if (this.checkProducator) {
@@ -290,9 +290,13 @@ export class PaymentComponent implements OnInit {
 
                 dialogConfig2.width = '600px';
 
+                dialogConfig2.data = {company : this.requestDet.company};
+
                 const dialogRef = this.dialog.open(SelectCurrencyBonPlataDialogComponent, dialogConfig2);
                 dialogRef.afterClosed().subscribe(result => {
-                    this.generateBonCommonParameters(result.currency);
+                    if(result) {
+                        this.generateBonCommonParameters(result.currency, result.company);
+                    }
                 });
             }
         } else {
@@ -300,11 +304,12 @@ export class PaymentComponent implements OnInit {
         }
     }
 
-    generateBonCommonParameters(currency: string) {
+    generateBonCommonParameters(currency: string, company: any) {
         this.loadingService.show();
         let observable;
         if (this.process && this.process === 'NIMICIRE') {
             const nimicireList = this.bonDePlataList.filter(bdp => bdp.serviceCharge.category === 'BN');
+            console.log(nimicireList);
             if (nimicireList.length !== 1) {
                 this.errorHandlerService.showError('Trebuie sa exista o singura taxa pentru nimicirea medicamentelor.');
                 this.loadingService.hide();
@@ -338,9 +343,9 @@ export class PaymentComponent implements OnInit {
             }
             const modelToSubmit = {
                 currency: currency,
-                companyName: this.requestDet.company.name,
+                companyName: company ? company.name : this.requestDet.company.name,
                 companyCountry: 'Republica Moldova',
-                address: this.requestDet.company.legalAddress,
+                address: company ? company.legalAddress : this.requestDet.company.legalAddress,
                 requestId: this.requestIdP,
                 paymentOrders: this.bonDePlataList,
                 medicamentDetails: [{
@@ -395,6 +400,8 @@ export class PaymentComponent implements OnInit {
             dialogConfig2.hasBackdrop = true;
 
             dialogConfig2.width = '600px';
+
+            dialogConfig2.data = {company : this.requestDet.company};
 
             const dialogRef = this.dialog.open(SelectCurrencyBonPlataDialogComponent, dialogConfig2);
             dialogRef.afterClosed().subscribe(result => {

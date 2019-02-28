@@ -123,14 +123,14 @@
 				</textElement>
 				<text><![CDATA[to the contract nr. ]]></text>
 			</staticText>
-			<textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="187" y="33" width="110" height="18" uuid="980e9f32-328d-471c-a659-7510e9bc87fd"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{annexNr}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="187" y="61" width="110" height="18" uuid="be317f1e-b3c0-4fb5-bf1c-206acfdacf83"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="10" isBold="true"/>
@@ -165,14 +165,14 @@
 				</textElement>
 				<text><![CDATA[from]]></text>
 			</staticText>
-			<textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="327" y="33" width="110" height="18" uuid="89219692-ca0f-4f51-9d69-fa0810db9c97"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{annexNrDate}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="327" y="61" width="110" height="18" uuid="25880e2c-bb80-420e-92c4-ab3d06670f8a"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="10" isBold="true"/>
@@ -516,7 +516,7 @@
 								<textElement textAlignment="Center">
 									<font fontName="DejaVu Sans" size="8"/>
 								</textElement>
-								<text><![CDATA[Denumirea Comună Internaţională International onproprietary Name]]></text>
+								<text><![CDATA[Denumirea Comună Internaţională International Nonproprietary Name]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">

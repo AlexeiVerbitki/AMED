@@ -2,10 +2,25 @@
 	<form [formGroup]='rForm'>
 		<div class="row">
 			<div class="col-lg-6">
-				<div class="md-form">
-					<input id="nrCererii" mdbInputDirective type="text" class="form-control" formControlName="requestNumber"
-					       [attr.disabled]="true">
-					<label for="nrCererii">Nr. cererii</label>
+				<div class="md-form-modified">
+					<ng-select id="requestCodes" name="requestCodes"
+					           [items]="registerCodes"
+					           bindLabel="registerCode"
+					           onChanges
+					           placeholder="Cod registru"
+					           required="true"
+					           formControlName="requestNumber">
+						<ng-template ng-option-tmp let-item="item">
+							{{item.registerCode}} <br/>
+							<small class="form-text" placement="top">{{item.registerCodeDescription}}</small>
+						</ng-template>
+						<ng-template ng-label-tmp let-item="item">
+							{{item.registerCode + ' / ' + item.registerCodeDescription}}
+						</ng-template>
+					</ng-select>
+					<div *ngIf="formSubmitted && rForm.get('requestNumber').invalid">
+						<small class="text-muted"><strong class="text-danger">Cod registru trebuie selectat</strong></small>
+					</div>
 				</div>
 			</div>
 			<div class="col-lg-6">
@@ -23,42 +38,42 @@
 			<small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
 		</div>
 		<div class="row">
-			<div class="col-md-4">
-				<div class="md-form">
-					<input id="expeditor" mdbInputDirective type="text" class="form-control" formControlName="sender">
-					<label for="expeditor">Expeditor</label>
-				</div>
-				<div *ngIf="formSubmitted && rForm.get('sender').invalid">
-					<small class="text-muted"><strong class="text-danger">Expeditoru trebuie introdus</strong></small>
-				</div>
-			</div>
-			<div class="col-md-4">
+			<div class="col-md-4" *ngIf="isExecutor">
 				<div class="md-form-modified-select">
-					<ng-select id="destinatar"
-					           name="destinatar"
-					           [items]="recipients"
+					<ng-select id="executor"
+					           name="executor"
+					           [items]="executors"
 					           bindLabel="username"
-					           placeholder="Destinatar"
-					           formControlName="recipientList"
+					           placeholder="Executor"
+					           formControlName="executorList"
 					           [required]="true"
 					           [multiple]="true"
 					           [hideSelected]="true">
 					</ng-select>
-					<div *ngIf="formSubmitted && rForm.get('recipientList').invalid">
-						<small class="text-muted"><strong class="text-danger">Destinatarii trebuie selectati</strong></small>
+					<div *ngIf="formSubmitted && rForm.get('executorList').invalid">
+						<small class="text-muted"><strong class="text-danger">Executorii trebuie selectati</strong></small>
 					</div>
 				</div>
 			</div>
 			<div class="col-md-4">
+				<div class="md-form">
+					<input id="recipient" mdbInputDirective type="text" class="form-control" [maxLength]="30" formControlName="recipient">
+					<label for="recipient">{{solicitant ? 'Solicitant' : 'Destinatar'}}</label>
+				</div>
+				<!--				<div *ngIf="formSubmitted && rForm.get('recipient').invalid">-->
+				<!--					<small class="text-muted"><strong class="text-danger">{{solicitant}}ul trebuie introdus</strong></small>-->
+				<!--				</div>-->
+			</div>
+			<div class="col-md-4" *ngIf="execTerm">
 				<div class="md-form-modified">
 					<mat-form-field class="w-100">
 						<input matInput [matDatepicker]="pickerTermen" placeholder="Termen de executare" formControlName="executionDate">
 						<mat-datepicker-toggle matSuffix [for]="pickerTermen"></mat-datepicker-toggle>
 						<mat-datepicker #pickerTermen></mat-datepicker>
 					</mat-form-field>
-					<div *ngIf="formSubmitted && rForm.get('executionDate').invalid">
-						<small class="text-muted"><strong class="text-danger">Destinatarii trebuie selectati</strong></small>
-					</div>
+					<!--					<div *ngIf="formSubmitted && rForm.get('executionDate').invalid">-->
+					<!--						<small class="text-muted"><strong class="text-danger">Termenul de executare trebuie selectati</strong></small>-->
+					<!--					</div>-->
 				</div>
 			</div>
 		</div>
@@ -66,17 +81,15 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="md-form">
-					<textarea type="text" id="problematica" class="md-textarea form-control" mdbInputDirective rows="7" formControlName="problemDescription"></textarea>
-					<label for="problematica">Problematica</label>
+					<textarea type="text" id="problematica" class="md-textarea form-control" mdbInputDirective rows="7" formControlName="problemDescription"
+					          [maxLength]="500"></textarea>
+					<label for="problematica">Subiect / Problematica</label>
 				</div>
 			</div>
 		</div>
 		<div class="text-center">
 			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">
-				Urmatorul pas
-			</button>
-			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>
-				test
+				{{isOutLetter ? 'Înregistrează' : 'Spre executare'}}
 			</button>
 		</div>
 	</form>

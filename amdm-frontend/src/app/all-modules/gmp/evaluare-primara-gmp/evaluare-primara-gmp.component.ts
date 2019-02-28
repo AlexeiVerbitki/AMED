@@ -24,6 +24,8 @@ import {MedicamentService} from '../../../shared/service/medicament.service';
 import {RequestAdditionalDataDialogComponent} from '../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component';
 import {SelectDocumentNumberComponent} from '../../../dialog/select-document-number/select-document-number.component';
 import {SelectInspectionDateForAfComponent} from '../../../dialog/select-inspection-date-for-af/select-inspection-date-for-af.component';
+import {UploadFileService} from '../../../shared/service/upload/upload-file.service';
+import {saveAs} from 'file-saver';
 
 @Component({
     selector: 'app-evaluare-primara',
@@ -43,6 +45,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
     docTypesInitial: any[];
     formSubmitted: boolean;
     outDocuments: any[] = [];
+    authDocuments: any[] = [];
     reqTypes: any[];
     companyLicenseNotFound = false;
     initialData: any;
@@ -84,6 +87,10 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
     inspectorForm: FormGroup;
     selectedInspectors: any[] = [];
     paymentTotal: number;
+    displayErrorNotActive = false;
+    displayErrorNotSuspended = false;
+    displayErrorNotActiveOrSuspended = false;
+    displayErrorNotActiveEmitere = false;
 
     constructor(private fb: FormBuilder,
                 public dialog: MatDialog,
@@ -92,6 +99,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                 private medicamentService: MedicamentService,
                 private taskService: TaskService,
                 private authService: AuthService,
+                private uploadService: UploadFileService,
                 private loadingService: LoaderService,
                 private errorHandlerService: SuccessOrErrorHandlerService,
                 private licenseService: LicenseService,
@@ -126,8 +134,8 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
             'terminallySterilised': [null],
             'nonsterileProducts': [null],
             'nrLic': [null],
-            'dataEliberariiLic': {disabled: true, value: new Date()},
-            'dataExpirariiLic': {disabled: true, value: new Date()},
+            'dataEliberariiLic': {disabled: true, value: null},
+            'dataExpirariiLic': {disabled: true, value: null},
             'asepticPreparationsValues': [null],
             'nesterilePreparationsValues': [null],
             'finalSterilizedValues': [null],
@@ -164,13 +172,139 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         });
 
         this.eForm.get('veterinary').valueChanges.subscribe(val => {
-            if (val) {
-                this.eForm.get('veterinaryDetails').enable();
-            } else {
+            if (!this.eForm.get('type').value || (this.eForm.get('type').value.code != 'GMPE' && this.eForm.get('type').value.code != 'GMPM')) {
                 this.eForm.get('veterinaryDetails').setValue(null);
                 this.eForm.get('veterinaryDetails').disable();
+            } else {
+                if (val) {
+                    this.eForm.get('veterinaryDetails').enable();
+                } else {
+                    this.eForm.get('veterinaryDetails').setValue(null);
+                    this.eForm.get('veterinaryDetails').disable();
+                }
             }
         });
+
+        this.eForm.get('type').valueChanges.subscribe(val => {
+            this.displayErrorNotActive = false;
+            this.displayErrorNotActiveOrSuspended = false;
+            this.displayErrorNotSuspended = false;
+            this.displayErrorNotActiveEmitere = false;
+            this.checkActiveAuthorisations();
+            this.checkActiveAndSuspendedAuthorisations();
+            this.checkSuspendedAuthorisations();
+            if (!this.eForm.get('type').value || (this.eForm.get('type').value.code != 'GMPE' && this.eForm.get('type').value.code != 'GMPM')) {
+                this.eForm.get('asepticPreparationsValues').disable();
+                this.eForm.get('finalSterilizedValues').disable();
+                this.eForm.get('sterileCertifiedsValues').disable();
+                this.eForm.get('nesterilePreparationsValues').disable();
+                this.eForm.get('nesterilePreparationsCertifiedValues').disable();
+                this.eForm.get('biologicalMedicinesValues').disable();
+                this.eForm.get('biologicalMedicinesCertifiedValues').disable();
+                this.eForm.get('production').disable();
+                this.eForm.get('sterilization').disable();
+                this.eForm.get('primaryPackaging').disable();
+                this.eForm.get('secondaryPackaging').disable();
+                this.eForm.get('testsForQualityControl').disable();
+                this.eForm.get('testsForQualityControlImport').disable();
+                this.eForm.get('biologicalMedicinesImport').disable();
+                this.eForm.get('importActivities').disable();
+                this.eForm.get('informatiiLoculDistributieAngro.placeDistributionName').disable();
+                this.eForm.get('informatiiLoculDistributieAngro.placeDistributionAddress').disable();
+                this.eForm.get('informatiiLoculDistributieAngro.placeDistributionPostalCode').disable();
+                this.eForm.get('informatiiLoculDistributieAngro.placeDistributionContactName').disable();
+                this.eForm.get('informatiiLoculDistributieAngro.placeDistributionPhoneNumber').disable();
+                this.eForm.get('informatiiLoculDistributieAngro.placeDistributionFax').disable();
+                this.eForm.get('informatiiLoculDistributieAngro.placeDistributionMobileNumber').disable();
+                this.eForm.get('informatiiLoculDistributieAngro.placeDistributionEmail').disable();
+                this.eForm.get('informatiiLoculDistributieAngro.etapeleDeFabricatie').disable();
+            } else {
+                this.eForm.get('asepticPreparationsValues').enable();
+                this.eForm.get('finalSterilizedValues').enable();
+                this.eForm.get('sterileCertifiedsValues').enable();
+                this.eForm.get('nesterilePreparationsValues').enable();
+                this.eForm.get('nesterilePreparationsCertifiedValues').enable();
+                this.eForm.get('biologicalMedicinesValues').enable();
+                this.eForm.get('biologicalMedicinesCertifiedValues').enable();
+                this.eForm.get('production').enable();
+                this.eForm.get('sterilization').enable();
+                this.eForm.get('primaryPackaging').enable();
+                this.eForm.get('secondaryPackaging').enable();
+                this.eForm.get('testsForQualityControl').enable();
+                this.eForm.get('testsForQualityControlImport').enable();
+                this.eForm.get('biologicalMedicinesImport').enable();
+                this.eForm.get('importActivities').enable();
+                this.eForm.get('informatiiLoculDistributieAngro.placeDistributionName').enable();
+                this.eForm.get('informatiiLoculDistributieAngro.placeDistributionAddress').enable();
+                this.eForm.get('informatiiLoculDistributieAngro.placeDistributionPostalCode').enable();
+                this.eForm.get('informatiiLoculDistributieAngro.placeDistributionContactName').enable();
+                this.eForm.get('informatiiLoculDistributieAngro.placeDistributionPhoneNumber').enable();
+                this.eForm.get('informatiiLoculDistributieAngro.placeDistributionFax').enable();
+                this.eForm.get('informatiiLoculDistributieAngro.placeDistributionMobileNumber').enable();
+                this.eForm.get('informatiiLoculDistributieAngro.placeDistributionEmail').enable();
+                this.eForm.get('informatiiLoculDistributieAngro.etapeleDeFabricatie').enable();
+            }
+            this.fillOutputDocuments();
+            if (this.eForm.get('type').value && this.eForm.get('type').value.code != 'GMPE') {
+                this.subscriptions.push(this.requestService.checkExistingAuthorization(this.eForm.get('company').value.id).subscribe(auth => {
+                    if (auth.id) {
+                        this.fillExistingAuthorizationDetails(auth, {
+                            company: this.eForm.get('company').value,
+                            type: this.eForm.get('type').value
+                        }, false);
+                    }
+                }));
+            }
+        });
+    }
+
+    checkActiveAuthorisations() {
+        if (this.eForm.get('type').value && (this.eForm.get('type').value.code == 'GMPS')) {
+            let i = 0;
+            for (const x of this.authDocuments) {
+                if (x.statusCode == 'A') {
+                    i++;
+                }
+            }
+            if (i == 0) {
+                this.displayErrorNotActive = true;
+            }
+        }
+    }
+
+    checkSuspendedAuthorisations() {
+        if (this.eForm.get('type').value && this.eForm.get('type').value.code == 'GMPA') {
+            let i = 0;
+            for (const x of this.authDocuments) {
+                if (x.statusCode == 'S') {
+                    i++;
+                }
+            }
+            if (i == 0) {
+                this.displayErrorNotSuspended = true;
+            }
+        }
+    }
+
+    checkActiveAndSuspendedAuthorisations() {
+        if (this.eForm.get('type').value && (this.eForm.get('type').value.code == 'GMPR' || this.eForm.get('type').value.code == 'GMPM'
+            || this.eForm.get('type').value.code == 'GMPP' || this.eForm.get('type').value.code == 'GMPE')) {
+            let i = 0;
+            for (const x of this.authDocuments) {
+                if (x.statusCode == 'A' || x.statusCode == 'S') {
+                    i++;
+                }
+            }
+            if (i == 0) {
+                if (this.eForm.get('type').value.code != 'GMPE') {
+                    this.displayErrorNotActiveOrSuspended = true;
+                }
+            } else {
+                if (this.eForm.get('type').value.code == 'GMPE') {
+                    this.displayErrorNotActiveEmitere = true;
+                }
+            }
+        }
     }
 
     ngOnInit() {
@@ -180,15 +314,106 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                 this.subscriptions.push(this.requestService.loadGMPDetails(params['id']).subscribe(data => {
                         this.initialData = Object.assign({}, data);
                         this.fillRequestDetails(data);
-                        this.fillGMPDetails(data);
-                        this.loadAllQuickSearches(data);
+                        if (data.gmpAuthorizations && data.gmpAuthorizations.length > 0) {
+                            this.eForm.get('gmpID').setValue(data.gmpAuthorizations[0].id);
+                            this.fillGMPDetails(data);
+                            this.loadAllQuickSearches(data, data.company, data.type);
+                        } else {
+                            this.subscriptions.push(this.requestService.checkExistingAuthorization(data.company.id).subscribe(auth => {
+                                console.log(auth);
+                                if (auth.id) {
+                                    this.fillExistingAuthorizationDetails(auth, data, true);
+                                } else {
+                                    this.fillGMPDetails(data);
+                                    this.loadAllQuickSearches(data, data.company, data.type);
+                                }
+                            }));
+                        }
                     })
                 );
             })
         );
     }
 
-    loadAllQuickSearches(dataDB: any) {
+    fillExistingAuthorizationDetails(auth, data, loadSearches) {
+        this.authDocuments = [];
+        this.subscriptions.push(this.requestService.loadGMPDetails(auth.releaseRequestId).subscribe(request => {
+            request.documents.forEach(t => {
+                if (t.docType.category == 'AFM') {
+                    t.status = this.getGMPStatus(new Date(auth.authorizationEndDate) < new Date() ? 'E' : auth.status, 'A');
+                    t.statusCode = new Date(auth.authorizationEndDate) < new Date() ? 'E' : auth.status;
+                    t.expiredDate = auth.authorizationEndDate;
+                    this.authDocuments.push(t);
+                }
+                if (t.docType.category == 'CGM') {
+                    t.status = this.getGMPStatus(new Date(auth.certificateEndDate) < new Date() ? 'E' : auth.status, 'C');
+                    t.statusCode = new Date(auth.certificateEndDate) < new Date() ? 'E' : auth.status;
+                    t.expiredDate = auth.certificateEndDate;
+                    this.authDocuments.push(t);
+                }
+            });
+            request.gmpAuthorizations[0].periods.forEach(t => t.id = null);
+            request.gmpAuthorizations[0].qualifiedPersons.forEach(t => t.id = null);
+            request.gmpAuthorizations[0].laboratories.forEach(t => t.id = null);
+            this.fillGMPDetails(request);
+            if (loadSearches) {
+                this.loadAllQuickSearches(request, data.company, data.type);
+            }
+        }));
+    }
+
+    getGMPStatus(status, type) {
+        if (type == 'A') {
+            if (status == 'A') {
+                return 'Activa';
+            } else if (status == 'S') {
+                return 'Suspendata';
+            } else if (status == 'R') {
+                return 'Retrasa';
+            } else if (status == 'E') {
+                return 'Expirata';
+            }
+        } else if (type == 'C') {
+            if (status == 'A') {
+                return 'Activ';
+            } else if (status == 'S') {
+                return 'Suspendat';
+            } else if (status == 'R') {
+                return 'Retras';
+            } else if (status == 'E') {
+                return 'Expirat';
+            }
+        }
+    }
+
+    fillOutputDocuments() {
+        this.outDocuments = [];
+        if (this.docTypesInitial && this.eForm.get('type').value && (this.eForm.get('type').value.code == 'GMPE' || this.eForm.get('type').value.code == 'GMPM')) {
+            if (!this.outDocuments.find(t => t.docType.category == 'OGM')) {
+                this.outDocuments.push({
+                    name: 'Ordinul de inspectare al întreprinderii',
+                    docType: this.docTypesInitial.find(r => r.category == 'OGM'),
+                    date: new Date()
+                });
+            }
+            if (!this.outDocuments.find(t => t.docType.category == 'AFM')) {
+                this.outDocuments.push({
+                    name: 'Autorizatie de fabricatie',
+                    docType: this.docTypesInitial.find(r => r.category == 'AFM'),
+                    date: new Date()
+                });
+            }
+            if (!this.outDocuments.find(t => t.docType.category == 'CGM')) {
+                this.outDocuments.push({
+                    name: 'Certificatul GMP',
+                    docType: this.docTypesInitial.find(r => r.category == 'CGM'),
+                    date: new Date()
+                });
+            }
+        }
+    }
+
+    loadAllQuickSearches(dataDB: any, company: any, type: any) {
         this.subscriptions.push(
             this.taskService.getRequestStepByIdAndCode('43', 'E').subscribe(step => {
                     this.subscriptions.push(
@@ -197,27 +422,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                                 this.docTypesInitial = Object.assign([], data);
                                 const splitted = step.availableDocTypes.split(',');
                                 this.docTypes = this.docTypes.filter(r => splitted.some(x => x == r.category));
-                                if (!this.outDocuments.find(t => t.docType.category == 'OGM')) {
-                                    this.outDocuments.push({
-                                        name: 'Ordinul de inspectare al întreprinderii',
-                                        docType: this.docTypesInitial.find(r => r.category == 'OGM'),
-                                        date: new Date()
-                                    });
-                                }
-                                if (!this.outDocuments.find(t => t.docType.category == 'AFM')) {
-                                    this.outDocuments.push({
-                                        name: 'Autorizatie de fabricatie',
-                                        docType: this.docTypesInitial.find(r => r.category == 'AFM'),
-                                        date: new Date()
-                                    });
-                                }
-                                if (!this.outDocuments.find(t => t.docType.category == 'CGM')) {
-                                    this.outDocuments.push({
-                                        name: 'Certificatul GMP',
-                                        docType: this.docTypesInitial.find(r => r.category == 'CGM'),
-                                        date: new Date()
-                                    });
-                                }
+                                this.fillOutputDocuments();
                                 this.checkOutputDocumentsStatus();
                             },
                             error => console.log(error)
@@ -231,9 +436,10 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
             this.administrationService.getAllRequestTypes().subscribe(data => {
                     this.reqTypes = data;
+                    this.eForm.get('typeFara').setValue(this.reqTypes.find(t => t.processId == 12 && t.code == 'GMPF'));
                     this.reqTypes = this.reqTypes.filter(t => t.processId == 12 && t.code != 'GMPF');
                     if (dataDB.type) {
-                        this.eForm.get('type').setValue(this.reqTypes.find(r => r.id === dataDB.type.id));
+                        this.eForm.get('type').setValue(this.reqTypes.find(r => r.id === type.id));
                     }
                 },
                 error => console.log(error)
@@ -241,7 +447,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         );
 
         this.subscriptions.push(
-            this.licenseService.retrieveLicenseByIdno(dataDB.company.idno).subscribe(data => {
+            this.licenseService.retrieveLicenseByIdno(company.idno).subscribe(data => {
                     if (data) {
                         this.eForm.get('licenseId').setValue(data.id);
                         this.eForm.get('seria').setValue(data.serialNr);
@@ -495,7 +701,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         );
 
         this.subscriptions.push(
-            this.administrationService.getManufacturersByIDNO(dataDB.company.idno).subscribe(data => {
+            this.administrationService.getManufacturersByIDNO(company.idno).subscribe(data => {
                     if (data && data.length > 0) {
                         const dto = {authorizationHolder: data[0]};
                         this.subscriptions.push(
@@ -512,8 +718,6 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
     }
 
     fillRequestDetails(data: any) {
-        this.eForm.get('typeFara').setValue(data.type);
-        this.eForm.get('type').setValue(data.type);
         this.eForm.get('id').setValue(data.id);
         this.registrationRequestMandatedContacts = data.registrationRequestMandatedContacts;
         this.eForm.get('initiator').setValue(data.initiator);
@@ -577,7 +781,6 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
 
     fillGMPDetails(dataDB: any) {
         if (dataDB.gmpAuthorizations && dataDB.gmpAuthorizations.length != 0) {
-            this.eForm.get('gmpID').setValue(dataDB.gmpAuthorizations[0].id);
             this.eForm.get('humanUse').setValue(dataDB.gmpAuthorizations[0].medicamentHumanUse);
             this.eForm.get('veterinary').setValue(dataDB.gmpAuthorizations[0].medicamentVeterinary);
             this.eForm.get('medicamentClinicalInvestigation').setValue(dataDB.gmpAuthorizations[0].medicamentClinicalInvestigation);
@@ -600,10 +803,14 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                 this.selectedInspectors = dataDB.gmpAuthorizations[0].inspectors;
                 this.selectedInspectors.forEach(t => t.selected = true);
             }
+            this.purgeForm((this.inspectorForm.get('periods') as FormArray));
             if (dataDB.gmpAuthorizations[0].periods.length > 0) {
                 dataDB.gmpAuthorizations[0].periods.forEach(p => (this.inspectorForm.get('periods') as FormArray).push(this.createPeriod(p)));
             }
             this.laborators = dataDB.gmpAuthorizations[0].laboratories;
+            this.qualifiedPersons = [];
+            this.qualityControlPersons = [];
+            this.productionPersons = [];
             dataDB.gmpAuthorizations[0].qualifiedPersons.forEach(t => {
                     if (t.category == 'QP') {
                         this.qualifiedPersons.push(t);
@@ -614,6 +821,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                     }
                 }
             );
+            this.authorizedManufacturedMedicaments = [];
             dataDB.gmpAuthorizations[0].authorizedMedicines.forEach(t =>
                 this.authorizedManufacturedMedicaments.push({
                     id: t.medicament.id,
@@ -624,10 +832,17 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                     volume: t.medicament.volume,
                     volumeQuantityMeasurement: (t.medicament.volumeQuantityMeasurement) ? t.medicament.volumeQuantityMeasurement.description : ''
                 }));
+            this.selectedSubsidiaries = [];
             dataDB.gmpAuthorizations[0].subsidiaries.forEach(t =>
                 this.selectedSubsidiaries.push(t.subsidiary)
             );
             this.normalizeSubsidiaryFromDB();
+        }
+    }
+
+    purgeForm(form: FormArray) {
+        while (0 !== form.length) {
+            form.removeAt(0);
         }
     }
 
@@ -690,8 +905,6 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         modelToSubmit.registrationRequestMandatedContacts = this.registrationRequestMandatedContacts;
 
         this.subscriptions.push(this.requestService.addGMPRequest(modelToSubmit).subscribe(data => {
-                this.initialData = Object.assign({}, data.body);
-                this.initialData.gmpAuthorizations = Object.assign([], data.body.gmpAuthorizations);
                 this.loadingService.hide();
             }, error => this.loadingService.hide())
         );
@@ -928,6 +1141,36 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
             return;
         }
 
+        this.checkActiveAuthorisations();
+        if (this.displayErrorNotActive) {
+            this.errorHandlerService.showError('Operatiunea - suspendare nu poate fi executata, nu a fost gasita nici o autorizatie activa');
+            return;
+        }
+        if (this.displayErrorNotActiveEmitere) {
+            this.errorHandlerService.showError('Operatiunea - emitere nu poate fi executata, exista deja autorizatie emisa');
+            return;
+        }
+
+        this.checkActiveAndSuspendedAuthorisations();
+        if (this.displayErrorNotActiveOrSuspended && this.eForm.get('type').value.code == 'GMPR') {
+            this.errorHandlerService.showError('Operatiunea - retragere nu poate fi executata, nu a fost gasita nici o autorizatie activa sau suspendata');
+            return;
+        }
+        if (this.displayErrorNotActiveOrSuspended && this.eForm.get('type').value.code == 'GMPM') {
+            this.errorHandlerService.showError('Operatiunea - modificare nu poate fi executata, nu a fost gasita nici o autorizatie activa sau suspendata');
+            return;
+        }
+        if (this.displayErrorNotActiveOrSuspended && this.eForm.get('type').value.code == 'GMPP') {
+            this.errorHandlerService.showError('Operatiunea - prelungire certificat nu poate fi executata, nu a fost gasita nici o autorizatie activa sau suspendata');
+            return;
+        }
+
+        this.checkSuspendedAuthorisations();
+        if (this.displayErrorNotSuspended) {
+            this.errorHandlerService.showError('Operatiunea - activare nu poate fi executata, nu a fost gasita nici o autorizatie suspendata');
+            return;
+        }
+
         this.formSubmitted = true;
         if (this.eForm.invalid) {
             this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
@@ -993,22 +1236,24 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
             }
         }
 
-        const findDocTypeOGM = this.documents.find(t => t.docType.category == 'OGM');
-        if (!findDocTypeOGM) {
-            this.errorHandlerService.showError('Ordinul de inspectare al întreprinderii nu este atasat.');
-            return;
-        }
+        if (this.eForm.get('type').value.code == 'GMPE' || this.eForm.get('type').value.code == 'GMPM') {
+            const findDocTypeOGM = this.documents.find(t => t.docType.category == 'OGM');
+            if (!findDocTypeOGM) {
+                this.errorHandlerService.showError('Ordinul de inspectare al întreprinderii nu este atasat.');
+                return;
+            }
 
-        const findDocTypeAFM = this.documents.find(t => t.docType.category == 'AFM');
-        if (!findDocTypeAFM) {
-            this.errorHandlerService.showError('Autorizatia de fabricatie nu este atasata.');
-            return;
-        }
+            const findDocTypeAFM = this.documents.find(t => t.docType.category == 'AFM');
+            if (!findDocTypeAFM) {
+                this.errorHandlerService.showError('Autorizatia de fabricatie nu este atasata.');
+                return;
+            }
 
-        const findDocTypeCGM = this.documents.find(t => t.docType.category == 'CGM');
-        if (!findDocTypeCGM) {
-            this.errorHandlerService.showError('Certificatul GMP nu este atasat.');
-            return;
+            const findDocTypeCGM = this.documents.find(t => t.docType.category == 'CGM');
+            if (!findDocTypeCGM) {
+                this.errorHandlerService.showError('Certificatul GMP nu este atasat.');
+                return;
+            }
         }
 
         this.formSubmitted = false;
@@ -1027,11 +1272,43 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         });
         modelToSubmit.registrationRequestMandatedContacts = this.registrationRequestMandatedContacts;
 
-        this.subscriptions.push(this.requestService.finishGMPRequest(modelToSubmit).subscribe(data => {
-                this.loadingService.hide();
-                this.router.navigate(['dashboard/homepage']);
-            }, error => this.loadingService.hide())
-        );
+        if (this.eForm.get('type').value.code == 'GMPS') {
+            this.subscriptions.push(this.requestService.suspendGMPRequest(modelToSubmit).subscribe(data => {
+                    this.loadingService.hide();
+                    this.router.navigate(['dashboard/homepage']);
+                }, error => this.loadingService.hide())
+            );
+        } else if (this.eForm.get('type').value.code == 'GMPR') {
+            this.subscriptions.push(this.requestService.retragereGMPRequest(modelToSubmit).subscribe(data => {
+                    this.loadingService.hide();
+                    this.router.navigate(['dashboard/homepage']);
+                }, error => this.loadingService.hide())
+            );
+        } else if (this.eForm.get('type').value.code == 'GMPA') {
+            this.subscriptions.push(this.requestService.activareGMPRequest(modelToSubmit).subscribe(data => {
+                    this.loadingService.hide();
+                    this.router.navigate(['dashboard/homepage']);
+                }, error => this.loadingService.hide())
+            );
+        } else if (this.eForm.get('type').value.code == 'GMPM') {
+            this.subscriptions.push(this.requestService.modificareGMPRequest(modelToSubmit).subscribe(data => {
+                    this.loadingService.hide();
+                    this.router.navigate(['dashboard/homepage']);
+                }, error => this.loadingService.hide())
+            );
+        } else if (this.eForm.get('type').value.code == 'GMPP') {
+            this.subscriptions.push(this.requestService.prelungireGMPRequest(modelToSubmit).subscribe(data => {
+                    this.loadingService.hide();
+                    this.router.navigate(['dashboard/homepage']);
+                }, error => this.loadingService.hide())
+            );
+        } else {
+            this.subscriptions.push(this.requestService.finishGMPRequest(modelToSubmit).subscribe(data => {
+                    this.loadingService.hide();
+                    this.router.navigate(['dashboard/homepage']);
+                }, error => this.loadingService.hide())
+            );
+        }
     }
 
     interruptProcess() {
@@ -2258,7 +2535,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         }
 
         const findDocTypeOGM = this.documents.find(t => t.docType.category == 'OGM');
-        if (!findDocTypeOGM) {
+        if (!findDocTypeOGM && this.eForm.get('type').value.code == 'GMPE') {
             this.errorHandlerService.showError('Ordinul de inspectare al întreprinderii nu este atasat.');
             return;
         }
@@ -2643,6 +2920,22 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         this.subscriptions.forEach(s => s.unsubscribe());
     }
 
+    loadFile(path: string) {
+        this.subscriptions.push(this.uploadService.loadFile(path).subscribe(data => {
+                this.saveToFileSystem(data, path.substring(path.lastIndexOf('/') + 1));
+            },
+
+            error => {
+                console.log(error);
+            }
+            )
+        );
+    }
+
+    private saveToFileSystem(response: any, docName: string) {
+        const blob = new Blob([response]);
+        saveAs(blob, docName);
+    }
 
 }
 

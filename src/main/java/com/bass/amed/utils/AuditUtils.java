@@ -932,6 +932,7 @@ public final class AuditUtils
         newPrice = newPrice == null ? new PricesEntity() : newPrice;
         addAuditLog(dummyEntities, "pret propus id", oldPrice.getId(), newPrice.getId(), newPrice.getId(), reqId, Constants.AUDIT_SUBCATEGORIES.MODULE_3);
         addAuditLog(dummyEntities, "pret propus valoare valuta", oldPrice.getValue(), newPrice.getValue(), newPrice.getId(), reqId, Constants.AUDIT_SUBCATEGORIES.MODULE_3);
+        addAuditLog(dummyEntities, "pret propus cantitate totala", oldPrice.getTotalQuantity(), newPrice.getTotalQuantity(), newPrice.getId(), reqId, Constants.AUDIT_SUBCATEGORIES.MODULE_3);
 
         NmCurrenciesEntity oldCurrency = oldPrice.getCurrency() == null ? new NmCurrenciesEntity() : oldPrice.getCurrency();
         NmCurrenciesEntity newCurrency = newPrice.getCurrency() == null ? new NmCurrenciesEntity() : newPrice.getCurrency();
@@ -994,6 +995,7 @@ public final class AuditUtils
         addAuditLog(dummyEntities, "pret referinta id", oldPrice.getId(), newPrice.getId(), newPrice.getId(), reqId, Constants.AUDIT_SUBCATEGORIES.MODULE_3);
         addAuditLog(dummyEntities, "pret referinta valoare", oldPrice.getValue(), newPrice.getValue(), newPrice.getId(), reqId, Constants.AUDIT_SUBCATEGORIES.MODULE_3);
         addAuditLog(dummyEntities, "pret referinta diviziune", oldPrice.getDivision(), newPrice.getDivision(), newPrice.getId(), reqId, Constants.AUDIT_SUBCATEGORIES.MODULE_3);
+        addAuditLog(dummyEntities, "pret referinta cantitate totala", oldPrice.getTotalQuantity(), newPrice.getTotalQuantity(), newPrice.getId(), reqId, Constants.AUDIT_SUBCATEGORIES.MODULE_3);
 
         NmCurrenciesEntity oldCur = oldPrice.getCurrency() == null ? new NmCurrenciesEntity() : oldPrice.getCurrency();
         NmCurrenciesEntity newCur = newPrice.getCurrency() == null ? new NmCurrenciesEntity() : newPrice.getCurrency();

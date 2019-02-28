@@ -53,9 +53,9 @@ public class DrugCheckDecisionsEntity
     @Basic
     @Column(name = "drug_substance_types_id")
     private Integer drugSubstanceTypesId;
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
-    @JoinColumn(name = "drug_check_decisions_id")
-    private Set<DrugImportExportDetailsEntity> drugImportExportDetails = new HashSet<>();
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @JoinColumn(name = "drug_check_decision_id")
+    private Set<DrugImportExportEntity> drugImportExports = new HashSet<>();
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "nm_ec_agent_id")
     private NmEconomicAgentsEntity economicAgent;
@@ -80,5 +80,8 @@ public class DrugCheckDecisionsEntity
     @Basic
     @Column(name = "authorization_scope")
     private Byte scopeAuthorization;
+    @Basic
+    @Column(name = "status")
+    private String status;
 
 }

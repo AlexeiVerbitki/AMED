@@ -4,6 +4,7 @@ import com.bass.amed.entity.ScrUserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -17,5 +18,7 @@ public interface SrcUserRepository extends JpaRepository<ScrUserEntity, Integer>
             "LEFT JOIN FETCH u.nmLdapUserStatusEntity " +
             "where u.oldId IS NULL")
     Set<ScrUserEntity> findAllUsersWithRoles();
+
+    List<ScrUserEntity> findAllByOldIdIsNull();
 
 }

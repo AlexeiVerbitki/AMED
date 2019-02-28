@@ -15,6 +15,7 @@ import {LoaderService} from '../../../shared/service/loader.service';
 import {CanModuleDeactivate} from '../../../shared/auth-guard/can-deactivate-guard.service';
 import {MedicamentService} from '../../../shared/service/medicament.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {ScrAuthorRolesService} from '../../../shared/auth-guard/scr-author-roles.service';
 
 @Component({
     selector: 'app-reg-modify-cerere',
@@ -48,7 +49,8 @@ export class RegModifyCerereComponent implements OnInit, OnDestroy, CanModuleDea
                 private navbarTitleService: NavbarTitleService,
                 private loadingService: LoaderService,
                 public dialog: MatDialog,
-                public dialogConfirmation: MatDialog) {
+                public dialogConfirmation: MatDialog,
+                private roleSrv: ScrAuthorRolesService) {
         this.rForm = fb.group({
             'data': {disabled: true, value: new Date()},
             'requestNumber': [null],
@@ -161,13 +163,18 @@ export class RegModifyCerereComponent implements OnInit, OnDestroy, CanModuleDea
             email: this.rForm.get('email').value,
             requestMandateNr: this.rForm.get('requestMandateNr').value,
             requestMandateDate: this.rForm.get('requestMandateDate').value,
-	     idnp : this.rForm.get('idnp').value
+	        idnp : this.rForm.get('idnp').value
         }];
         modelToSubmit.medicament = null;
 
         this.subscriptions.push(this.requestService.addMedicamentHistoryRequest(modelToSubmit).subscribe(data => {
                 this.loadingService.hide();
-                this.router.navigate(['dashboard/module/post-modify/evaluate/' + data.body.id]);
+                if (this.roleSrv.isRightAssigned('scr_module_6') || this.roleSrv.isRightAssigned('scr_admin')) {
+                    this.router.navigate(['dashboard/module/post-modify/evaluate/' + data.body.id]);
+                } else if (this.roleSrv.isRightAssigned('scr_register_request')) {
+                    this.router.navigate(['/dashboard/homepage/']);
+                }
+
             }, error => this.loadingService.hide())
         );
     }

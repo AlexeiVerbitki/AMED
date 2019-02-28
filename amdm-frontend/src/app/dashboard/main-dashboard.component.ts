@@ -32,7 +32,7 @@ export class MainDashboardComponent implements OnInit, AfterViewInit, OnDestroy 
 
     @Output()
     public skipEvent: EventEmitter<any> = new EventEmitter();
-    loaderActive: boolean;
+    loaderActive = false;
     skip: boolean;
     classValue: any;
     sideBarIsOpened = false;
@@ -42,9 +42,11 @@ export class MainDashboardComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     ngAfterViewInit(): void {
-        this.loadingService.loading.asObservable().subscribe(async value => {
-            this.loaderActive = await value;
-        });
+        this.subscriptions.push(this.loadingService.loading.asObservable().subscribe(async value => {
+                this.loaderActive = await value;
+            })
+        )
+        ;
     }
 
     ngOnInit() {
@@ -53,7 +55,6 @@ export class MainDashboardComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     skipValueChanged($event) {
-        console.log('event skip', $event);
         this.classValue = !$event;
         this.skipEvent.emit($event);
         this.skip = $event.value;

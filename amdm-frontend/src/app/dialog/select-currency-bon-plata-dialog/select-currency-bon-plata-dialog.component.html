@@ -1,5 +1,46 @@
 <div>
 	<form [formGroup]="aForm">
+		<div class="row align-item-center" *ngIf="aForm.get('companyValue').value">
+			<div class="col-md-6">
+				<div class="md-form">
+					<div class="row">
+						<div class="offset-1"></div>
+						<div class="col-2">
+							<mat-checkbox #coincide [checked]="aForm.get('coincide').value" (change)="checkCoincide(coincide)"></mat-checkbox>
+						</div>
+						<div class="col-9">
+							Plătitorul coincide cu compania solicitantă
+						</div>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="!aForm.get('coincide').value" class="col-md-6">
+				<div class="md-form-modified">
+					<ng-select [items]="companii | async"
+					           bindLabel="name"
+					           placeholder="Plătitor"
+					           formControlName="company"
+					           [loading]="loadingCompany"
+					           [typeahead]="companyInputs"
+					           required="true">
+						<ng-template ng-option-tmp let-item="item">
+							{{item.name}} <br/>
+							<small class="form-text text-muted">{{item.idno}}</small>
+						</ng-template>
+					</ng-select>
+					<div *ngIf="formSubmitted && aForm.get('company').invalid">
+						<small class="text-muted"><strong class="text-danger">Plătitorul trebuie selectat</strong></small>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="aForm.get('coincide').value" class="col-md-6">
+				<div class="md-form">
+					<input id="formControlName" mdbInputDirective type="text" formControlName="companyValue" class="form-control" [attr.disabled]="true">
+					<label for="formControlName">Plătitor</label>
+				</div>
+			</div>
+		</div>
+		<hr>
 		<h5>Solicitantul a solicitat generearea bonului de plata pentru urmatoarea valuta:</h5>
 		<div>
 			<mat-radio-group formControlName="currency">

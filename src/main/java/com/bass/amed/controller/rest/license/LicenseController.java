@@ -5,6 +5,7 @@ import com.bass.amed.dto.license.AnexaLaLicenta;
 import com.bass.amed.dto.license.DiffLicense;
 import com.bass.amed.dto.license.LicenseDTO;
 import com.bass.amed.entity.*;
+import com.bass.amed.entity.sequence.SeqLicenseNumberEntity;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.projection.LicenseProjection;
 import com.bass.amed.repository.*;

@@ -71,17 +71,11 @@ export class TaskComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.taskForm.get('requestNumber').disable();
         this.taskForm.get('requestCode').valueChanges.subscribe(val1 => {
-            console.log('val1', val1);
             this.disabledElements(val1);
         });
 
-        // this.taskForm.get('requestNumber').valueChanges.subscribe(val2 => {
-        //     this.disabledElements(val2);
-        // });
-
         this.subscriptions.push(this.taskService.getRegisterCatalogCodes().subscribe(codes => {
             this.registerCodes = codes;
-            // console.log('codes', codes);
         }));
 
         this.companii =
@@ -146,7 +140,6 @@ export class TaskComponent implements OnInit, AfterViewInit, OnDestroy {
     findTasks() {
         this.loadingService.show();
         const taskFormValue = this.taskForm.value;
-        console.log('taskFormValue', taskFormValue);
         const searchCriteria = {
             requestCode: taskFormValue.requestCode ? taskFormValue.requestCode.registerCode : '',
             requestNumber: taskFormValue.requestNumber,
@@ -158,16 +151,13 @@ export class TaskComponent implements OnInit, AfterViewInit, OnDestroy {
             stepCode: taskFormValue.step ? taskFormValue.step.code : '',
             subject: taskFormValue.subject,
         };
-        console.log('searchCriteria', searchCriteria);
         this.subscriptions.push(this.taskService.getTasksByFilter(searchCriteria).subscribe(data => {
                 this.loadingService.hide();
                 this.dataSource.data = data.body;
-                console.log('data.body', data.body);
             }, error => {
                 this.loadingService.hide();
             })
         );
-        // console.log('searchCriteria', searchCriteria);
     }
 
     navigateToUrl(rowDetails: any) {
@@ -178,7 +168,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     isLink(rowDetails: any): boolean {
-        return rowDetails.navigationUrl || rowDetails.navigationUrl !== '';
+        return rowDetails.navigationUrl && rowDetails.navigationUrl !== '';
     }
 
     private disabledElements(val) {
@@ -200,7 +190,6 @@ export class TaskComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     allowOnlyNumbers(event: any) {
-        //console.log(key);
         const pattern = /[0-9]/;
         const inputChar = String.fromCharCode(event.charCode);
 
@@ -235,7 +224,6 @@ export class TaskComponent implements OnInit, AfterViewInit, OnDestroy {
 
     populateDataForXLSXDocument(arr: any[][]): any[] {
         const displayData: any[] = this.getDisplayData();
-        console.log('display data', displayData);
         if (displayData) {
             for (let i = 0; i < displayData.length; i++) {
                 const arrIntern: any[] = new Array<any>();
@@ -257,7 +245,6 @@ export class TaskComponent implements OnInit, AfterViewInit, OnDestroy {
         const displayData: any [] = [];
         this.dataSource.filteredData.forEach(fd => {
             const row: any = {};
-            // console.log('fd', fd);
             row.requestNumber = fd.requestNumber;
             row.startDate = dtPipe.transform(new Date(fd.startDate), 'dd/MM/yyyy');
             row.company = fd.company;

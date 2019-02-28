@@ -265,7 +265,7 @@
 				<textFieldExpression><![CDATA["Numele şi adresa aplicantului: " + $P{applicantNameAndAddres}]]></textFieldExpression>
 			</textField>
 		</band>
-		<band height="38">
+		<band height="31">
 			<textField>
 				<reportElement x="0" y="8" width="535" height="23" uuid="f377dad8-c2fb-4c7b-a3ef-5e49745cd306"/>
 				<box>

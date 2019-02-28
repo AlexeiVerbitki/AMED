@@ -10,7 +10,7 @@ import {ImportAuthorizationRequestComponent} from './import-authorization-reques
 import {MedRegComponent} from './med-reg/med-reg.component';
 import {AmbalajComponent} from './ambalaj/ambalaj.component';
 import {DocumentModule} from '../../document/document.module';
-import {ImportMedDialog} from './dialog/import-med-dialog';
+import {ImportMedDialogComponent} from './dialog/import-med-dialog.component';
 import {XchangeinfoModule} from '../../xchangeInfo/xchangeinfo.module';
 import {ImportManagement} from './import-management/import-management';
 import {ImportManagementDialog} from './import-management/import-management-dialog/import-management-dialog';
@@ -30,14 +30,13 @@ import {AuthorizationsTable} from "./Authorizations table/authorizations-table";
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
         XchangeinfoModule
-
     ],
     entryComponents: [
-        ImportMedDialog, ImportManagementDialog
+        ImportMedDialogComponent, ImportManagementDialog
     ],
     declarations: [ImportAuthorizationEvaluateComponent, ImportAuthorizationRequestComponent,
         MedRegComponent, AmbalajComponent,
-        MedRegApproveComponent, ImportMedDialog, ImportManagement, ImportManagementDialog,  AuthorizationsTable],
+        MedRegApproveComponent, ImportMedDialogComponent, ImportManagement, ImportManagementDialog, AuthorizationsTable ],
     providers: [UploadFileService, RequestService]
 })
 export class ImportAuthorizationModule {

@@ -267,9 +267,9 @@
 				<textFieldExpression><![CDATA["Numele şi adresa aplicantului: " + $P{applicantNameAndAddres}]]></textFieldExpression>
 			</textField>
 		</band>
-		<band height="50">
-			<textField>
-				<reportElement x="0" y="8" width="535" height="42" uuid="f377dad8-c2fb-4c7b-a3ef-5e49745cd306"/>
+		<band height="30">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="8" width="535" height="22" uuid="f377dad8-c2fb-4c7b-a3ef-5e49745cd306"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -279,7 +279,7 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{humanUse}?"   Medicamente de uz uman"+"\n":""+
+				<textFieldExpression><![CDATA[($P{humanUse}?"   Medicamente de uz uman"+"\n":"") +
 ($P{veterinaryUse}?"   Medicamente de uz veterinar":"")]]></textFieldExpression>
 			</textField>
 		</band>

@@ -27,17 +27,25 @@ public class TasksService {
                     " STEP.description AS step," +
                     " STEP.navigation_url AS navigationUrl, " +
                     " RREQ.expired AS expired, " +
-                    " RREQ.critical AS critical " +
-                    " FROM amed.registration_requests RREQ " +
-                    " LEFT JOIN amed.nm_economic_agents COMP on COMP.id=RREQ.company_id " +
-                    " LEFT JOIN amed.registration_request_mandated_contact MANCONT on MANCONT.registration_request_id=RREQ.id " +
-                    " LEFT JOIN amed.registration_request_steps STEP on (STEP.request_type_id=RREQ.type_id and STEP.code=RREQ.current_step) " +
+                    " RREQ.critical AS critical, " +
+                    " RREQ.reg_subject AS regSubject " +
+                    " FROM registration_requests RREQ " +
+                    " LEFT JOIN nm_economic_agents COMP on COMP.id=RREQ.company_id " +
+                    " LEFT JOIN registration_request_mandated_contact MANCONT on MANCONT.registration_request_id=RREQ.id " +
+                    " LEFT JOIN registration_request_steps STEP on (STEP.request_type_id=RREQ.type_id and STEP.code=RREQ.current_step) " +
                     " WHERE 1=1";
     private static final Logger LOGGER = LoggerFactory.getLogger(TasksService.class);
     @Autowired
     private EntityManagerFactory entityManagerFactory;
     @Autowired
     RequestTypeRepository requestTypeRepository;
+
+
+    private final static String AUTHORIZATION_QUERY =
+            "SELECT * " +
+                    "FROM import_authorization" +
+                    "WHERE" +
+                    "  authorized is not null";
 
     public List<TaskDetailsProjectionDTO> retreiveTaskByFilter(TasksDTO filter) {
         EntityManager em = null;
@@ -57,7 +65,7 @@ public class TasksService {
                 {
                     System.out.println(record);
                 }
-                TaskDetailsProjectionDTO taskProj = new TaskDetailsProjectionDTO((Integer) record[0], (String) record[1], (Date) record[2], (Date) record[3], (String) record[4], (String) record[5], (String) record[6], (String) record[7], (Boolean)record[8], (Boolean)record[9]);
+                TaskDetailsProjectionDTO taskProj = new TaskDetailsProjectionDTO((Integer) record[0], (String) record[1], (Date) record[2], (Date) record[3], (String) record[4], (String) record[5], (String) record[6], (String) record[7], (Boolean)record[8], (Boolean)record[9], (String) record[10]);
                 taskDetails.add(taskProj);
             });
             em.getTransaction().commit();
@@ -110,6 +118,24 @@ public class TasksService {
         }
 
         stringBuilder.append(" ORDER BY RREQ.id desc");
+        return stringBuilder.toString();
+    }
+
+    private String createAuthorizationQuery(String authorizationsNumber,
+                                            String applicant,
+                                            String expirationDate,
+                                            String summ,
+                                            String currency )
+    {
+
+
+        StringBuilder stringBuilder = new StringBuilder(AUTHORIZATION_QUERY);
+
+        if (!authorizationsNumber.equals(""))
+        {
+            stringBuilder.append(" AND authorization_number like %" + authorizationsNumber + "%");
+
+        }
         return stringBuilder.toString();
     }
 

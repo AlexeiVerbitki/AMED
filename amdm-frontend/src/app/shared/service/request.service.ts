@@ -20,6 +20,27 @@ export class RequestService {
         return this.http.post<any>('/api/finish-gmp-request', requestDetails, {observe: 'response'});
     }
 
+    suspendGMPRequest(requestDetails: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/suspend-gmp-request', requestDetails, {observe: 'response'});
+    }
+
+    retragereGMPRequest(requestDetails: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/retragere-gmp-request', requestDetails, {observe: 'response'});
+    }
+
+    activareGMPRequest(requestDetails: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/activare-gmp-request', requestDetails, {observe: 'response'});
+    }
+
+    modificareGMPRequest(requestDetails: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/modificare-gmp-request', requestDetails, {observe: 'response'});
+    }
+
+    prelungireGMPRequest(requestDetails: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/prelungire-gmp-request', requestDetails, {observe: 'response'});
+    }
+
+
     addMedicamentHistoryRequest(requestDetails: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/add-medicament-history-request', requestDetails, {observe: 'response'});
     }
@@ -30,6 +51,10 @@ export class RequestService {
 
     loadGMPDetails(id: string): Observable<any> {
         return this.http.get('/api/load-gmp-details', {params: {id: id}});
+    }
+
+    checkExistingAuthorization(companyId: string): Observable<any> {
+        return this.http.get('/api/check-existing-authorization', {params: {companyId: companyId}});
     }
 
     validIDNP(idnp: string): Observable<any> {

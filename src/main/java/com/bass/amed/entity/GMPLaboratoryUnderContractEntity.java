@@ -26,6 +26,9 @@ public class GMPLaboratoryUnderContractEntity
     @Column(name = "contact_name")
     private String contactName;
     @Basic
+    @Column(name = "type_of_analysis")
+    private String typeOfAnalysis;
+    @Basic
     @Column(name = "phone_number")
     private String phoneNumber;
     @Basic

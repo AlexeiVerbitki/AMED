@@ -1,7 +1,7 @@
 <div class="container-fluid sky z-depth-2">
 	<div class="mt-5">
 		<div class="row">
-			<div class="col-lg-6 mb-4">
+			<div class="col-lg-6 mb-4" *ngIf="checkRole('scr_module_2') || checkRole('scr_register_request') || checkRole('scr_admin')">
 				<a routerLink="/dashboard/module/medicament-registration/register">
 					<div class="module-a h-box">
 						<div class="row">
@@ -13,7 +13,7 @@
 					</div>
 				</a>
 			</div>
-			<div class="col-lg-6 mb-4">
+			<div class="col-lg-6 mb-4"  *ngIf="checkRole('scr_module_6') || checkRole('scr_register_request') || checkRole('scr_admin')">
 				<a routerLink="/dashboard/module/post-modify/register">
 					<div class="module-b h-box">
 						<div class="row">
@@ -26,7 +26,7 @@
 					</div>
 				</a>
 			</div>
-			<div class="col-lg-6 mb-4">
+			<div class="col-lg-6 mb-4"  *ngIf="checkRole('scr_module_5') || checkRole('scr_register_request') || checkRole('scr_admin')">
 				<a routerLink="/dashboard/module/currencyCode/reg-cerere">
 					<div class="module-c h-box">
 						<div class="row">
@@ -39,7 +39,7 @@
 					</div>
 				</a>
 			</div>
-			<div class="col-lg-6 mb-4">
+			<div class="col-lg-6 mb-4"  *ngIf="checkRole('scr_module_7') || checkRole('scr_register_request') || checkRole('scr_admin')">
 				<a routerLink="/dashboard/module/import-authorization/register">
 					<div class="module-d h-box">
 						<div class="row">
@@ -52,7 +52,7 @@
 					</div>
 				</a>
 			</div>
-			<div class="col-lg-6 mb-4">
+			<div class="col-lg-6 mb-4"  *ngIf="checkRole('scr_module_1') || checkRole('scr_register_request') || checkRole('scr_admin')">
 				<a routerLink="/dashboard/module/license/register">
 					<div class="module-e h-box">
 						<div class="row">
@@ -78,7 +78,7 @@
 					</div>
 				</a>
 			</div>
-			<div class="col-lg-6 mb-4">
+			<div class="col-lg-6 mb-4"  *ngIf="checkRole('scr_module_4') || checkRole('scr_register_request') || checkRole('scr_admin')">
 				<a routerLink="/dashboard/module/drug-control/reg-drug-control">
 					<div class="module-g h-box">
 						<div class="row">
@@ -91,7 +91,7 @@
 					</div>
 				</a>
 			</div>
-			<div class="col-lg-6 mb-4">
+			<div class="col-lg-6 mb-4"  *ngIf="checkRole('scr_module_8') || checkRole('scr_register_request') || checkRole('scr_admin')">
 				<a routerLink="/dashboard/module/medicament-destruction/register">
 					<div class="module-h h-box">
 						<div class="row">
@@ -104,7 +104,7 @@
 					</div>
 				</a>
 			</div>
-			<div class="col-lg-6 mb-4">
+			<div class="col-lg-6 mb-4"  *ngIf="checkRole('scr_module_3') || checkRole('scr_register_request') || checkRole('scr_admin')">
 				<a routerLink="/dashboard/module/clinic-studies/register">
 					<div class="module-i h-box">
 						<div class="row">
@@ -116,7 +116,7 @@
 					</div>
 				</a>
 			</div>
-			<div class="col-lg-6 mb-4">
+			<div class="col-lg-6 mb-4"  *ngIf="checkRole('scr_module_10') || checkRole('scr_register_request') || checkRole('scr_admin')">
 				<a routerLink="/dashboard/module/documents/register">
 					<div class="module-i h-box">
 						<div class="row">
@@ -128,9 +128,9 @@
 					</div>
 				</a>
 			</div>
-			<div class="col-lg-6 mb-4">
+			<div class="col-lg-6 mb-4"  *ngIf="checkRole('scr_module_12') || checkRole('scr_register_request') || checkRole('scr_admin')">
 				<a routerLink="/dashboard/module/gmp/register">
-					<div class="module-i h-box">
+					<div class="module-r h-box">
 						<div class="row">
 							<div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
 							<div class="col">
@@ -140,9 +140,9 @@
 					</div>
 				</a>
 			</div>
-			<div class="col-lg-6 mb-4">
+			<div class="col-lg-6 mb-4"  *ngIf="checkRole('scr_module_11') || checkRole('scr_register_request') || checkRole('scr_admin')">
 				<a routerLink="/dashboard/module/gdp/reg-cerere">
-					<div class="module-k h-box">
+					<div class="module-t h-box">
 						<div class="row">
 							<div class="col-3 mt-3"><i class="fa fa-user-o fa-sz" aria-hidden="true"></i></div>
 							<div class="col">

@@ -5,9 +5,10 @@ import java.util.List;
 
 public interface Constants
 {
-    public interface DEFAULT_VALUES
+    interface DEFAULT_VALUES
     {
         String STR_EMPTY = "";
+        String STR_DASH  = "-";
     }
 
     interface Layouts
@@ -15,12 +16,6 @@ public interface Constants
         String DATE_FORMAT       = "dd/MM/yyyy";
         String POINT_DATE_FORMAT = "dd.MM.yyyy";
         String DATE_TIME_FORMAT  = "dd.MM.yyyy HH:mm:ss";
-    }
-
-    interface StepLink
-    {
-        String MODULE  = "/dashboard/module/";
-        String LICENSE = "license/";
     }
 
     interface SysParams
@@ -47,7 +42,7 @@ public interface Constants
 
     enum AUDIT_ACTIONS
     {
-        ADD, MODIFY, DELETE, INTERRUPT
+        ADD, MODIFY, DELETE, INTERRUPT, SUSPEND, ACTIVATE, EXTENSION, RETIRE
     }
 
     enum AUDIT_CATEGORIES

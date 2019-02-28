@@ -57,10 +57,18 @@
             </div>
 
 
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <div class="md-form">
                     <input id="typeMed" mdbInputDirective type="text" class="form-control" [value]="medicamentOriginalType ? 'Original' : 'Generic'" [attr.disabled]="true">
                     <label for="typeMed">Tipul medicamentului</label>
+                </div>
+            </div>
+
+            <div class="col-md-2" formGroupName="price">
+                <div class="md-form">
+                    <input id="tquan" mdbInputDirective type="number" class="form-control"
+                           formControlName="totalQuantity"  [attr.disabled]="true">
+                    <label for="tquan">Cantitatea totală</label>
                 </div>
             </div>
 
@@ -101,7 +109,7 @@
 
             <tr mdbTableCol *ngFor="let el of medicaments; let i = index">
                 <td class="align-middle" mdbTooltip="{{el.target}}" placement="top">{{el.target}}</td>
-                <td class="align-middle"  mdbTooltip="{{el.code}}" placement="top">{{el.code}}</td>
+                <td class="align-middle" mdbTooltip="{{el.code}}" placement="top">{{el.code}}</td>
                 <td class="align-middle" mdbTooltip="{{el.name}}" placement="top">{{el.name}}</td>
                 <td class="align-middle" mdbTooltip="{{el.pharmaceuticalForm.description}}" placement="top">{{el.pharmaceuticalForm.description}}</td>
                 <td class="align-middle" mdbTooltip="{{el.dose}}" placement="top">{{el.dose}}</td>
@@ -152,9 +160,11 @@
                         <th scope="col" mdbTooltip="Țara de referință">Țara de referință</th>
                         <th mdbTooltip="Valuta ţării de referinţă">Valuta ţării de referinţă</th>
                         <th>Divizare</th>
-                        <th>Preţ</th>
+                        <th mdbTooltip="Cantitatea totală">Cantitate</th>
+                        <th>Preţ Valută</th>
                         <th mdbTooltip="Rata de schimb (valuta ţării de referinta/MDL)">Rata de schimb (valuta ţării de referinta/MDL)</th>
-                        <th>MDL</th>
+                        <th mdbTooltip="Prețul MDL inițial">MDL inițial</th>
+                        <th mdbTooltip="Preţ MDL de evaluare">MDL eval</th>
                         <th mdbTooltip="Rata de schimb (EUR/lei)">Rata de schimb (EUR/lei)</th>
                         <th>EUR</th>
                         <th mdbTooltip="Rata de schimb (USD/lei)">Rata de schimb (USD/lei)</th>
@@ -165,11 +175,13 @@
                     <tbody>
                     <tr mdbTableCol *ngFor="let el of refPrices; let i = index">
                         <ng-container *ngIf="el.type?.id == PriceRefType.ReferenceCountry">
-                            <td mdbTooltip="{{el.country?.description}}" class="align-middle" scope="row">{{el.country?.description}}</td>
-                            <td mdbTooltip="{{el.currency?.shortDescription}}" class="align-middle">{{el.currency?.shortDescription}}</td>
-                            <td mdbTooltip="{{el.division}}" class="align-middle">{{el.division}}</td>
-                            <td mdbTooltip="{{el.value | digitsAfterDecimal:4}}" class="align-middle">{{el.value | digitsAfterDecimal:4}}</td>
+                            <td mdbTooltip="{{el?.country?.description}}" class="align-middle" scope="row">{{el?.country?.description}}</td>
+                            <td mdbTooltip="{{el?.currency?.shortDescription}}" class="align-middle">{{el?.currency?.shortDescription}}</td>
+                            <td mdbTooltip="{{el?.division}}" class="align-middle">{{el?.division}}</td>
+                            <td mdbTooltip="{{el?.totalQuantity}}" class="align-middle">{{el?.totalQuantity}}</td>
+                            <td mdbTooltip="{{el?.value | digitsAfterDecimal:4}}" class="align-middle">{{el?.value | digitsAfterDecimal:4}}</td>
                             <td mdbTooltip="{{el?.xchRateRef | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateRef | digitsAfterDecimal:4}}</td>
+                            <td mdbTooltip="{{el?.xchRateMDLInitVal | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateMDLInitVal | digitsAfterDecimal:4}}</td>
                             <td mdbTooltip="{{el?.xchRateRefVal | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateRefVal | digitsAfterDecimal:4}}</td>
                             <td mdbTooltip="{{el?.xchRateEur | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateEur | digitsAfterDecimal:4}}</td>
                             <td mdbTooltip="{{el?.xchRateEurVal | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateEurVal | digitsAfterDecimal:4}}</td>
@@ -283,9 +295,11 @@
                             <th mdbTooltip="Țara de origine" scope="col">Țara de origine</th>
                             <th mdbTooltip="Valuta ţării de referinţă">Valuta ţării de referinţă</th>
                             <th mdbTooltip="Divizarea">Divizare</th>
-                            <th mdbTooltip="Preţ">Preţ</th>
+                            <th mdbTooltip="Cantitatea totală">Cantitate</th>
+                            <th mdbTooltip="Preţ">Preţ Valută</th>
                             <th mdbTooltip="Rata de schimb (valuta ţării de referinta/MDL)">Rata de schimb (valuta ţării de referinta/MDL)</th>
-                            <th mdbTooltip="MDL">MDL</th>
+                            <th mdbTooltip="Prețul MDL inițial">MDL inițial</th>
+                            <th mdbTooltip="Preţ MDL de evaluare">MDL eval</th>
                             <th mdbTooltip="Rata de schimb (EUR/lei)">Rata de schimb (EUR/lei)</th>
                             <th mdbTooltip="EUR">EUR</th>
                             <th mdbTooltip="Rata de schimb (USD/lei)">Rata de schimb (USD/lei)</th>
@@ -295,12 +309,14 @@
                         <tbody>
                         <tr mdbTableCol *ngFor="let el of refPrices">
                             <ng-container *ngIf="el.type?.id == PriceRefType.OriginCountry">
-                                <td mdbTooltip="{{el.country?.description}}" scope="row">{{el.country?.description}}</td>
-                                <td mdbTooltip="{{el.currency?.shortDescription}}">{{el.currency?.shortDescription}}</td>
-                                <td mdbTooltip="{{el.division}}">{{el.division}}</td>
-                                <td mdbTooltip="{{el.value | digitsAfterDecimal:4}}">{{el.value | digitsAfterDecimal:4}}</td>
+                                <td mdbTooltip="{{el?.country?.description}}" scope="row">{{el?.country?.description}}</td>
+                                <td mdbTooltip="{{el?.currency?.shortDescription}}">{{el?.currency?.shortDescription}}</td>
+                                <td mdbTooltip="{{el?.division}}">{{el?.division}}</td>
+                                <td mdbTooltip="{{el?.totalQuantity}}" class="align-middle">{{el?.totalQuantity}}</td>
+                                <td mdbTooltip="{{el?.value | digitsAfterDecimal:4}}">{{el?.value | digitsAfterDecimal:4}}</td>
                                 <td mdbTooltip="{{el?.xchRateRef | digitsAfterDecimal:4}}">{{el?.xchRateRef | digitsAfterDecimal:4}}</td>
-                                <td mdbTooltip="{{el?.xchRateRefVal | digitsAfterDecimal:4}}">{{el?.xchRateRefVal | digitsAfterDecimal:4}}</td>
+                                <td mdbTooltip="{{el?.xchRateMDLInitVal | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateMDLInitVal | digitsAfterDecimal:4}}</td>
+                                <td mdbTooltip="{{el?.xchRateRefVal | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateRefVal | digitsAfterDecimal:4}}</td>
                                 <td mdbTooltip="{{el?.xchRateEur | digitsAfterDecimal:4}}">{{el?.xchRateEur | digitsAfterDecimal:4}}</td>
                                 <td mdbTooltip="{{el?.xchRateEurVal | digitsAfterDecimal:4}}">{{el?.xchRateEurVal | digitsAfterDecimal:4}}</td>
                                 <td mdbTooltip="{{el?.xchRateUsd | digitsAfterDecimal:4}}">{{el?.xchRateUsd | digitsAfterDecimal:4}}</td>
@@ -341,9 +357,11 @@
                             <th mdbTooltip="Țara" scope="col">Țara</th>
                             <th mdbTooltip="Valuta ţării de referinţă">Valuta ţării de referinţă</th>
                             <th mdbTooltip="Divizarea">Divizare</th>
-                            <th mdbTooltip="Preţ">Preţ</th>
+                            <th mdbTooltip="Cantitatea totală">Cantitate</th>
+                            <th mdbTooltip="Preţ în Valută">Preţ</th>
                             <th mdbTooltip="Rata de schimb (valuta ţării de referinta/MDL)">Rata de schimb (valuta ţării de referinta/MDL)</th>
-                            <th mdbTooltip="MDL">MDL</th>
+                            <th mdbTooltip="Prețul MDL inițial">MDL inițial</th>
+                            <th mdbTooltip="Preţ MDL de evaluare">MDL eval</th>
                             <th mdbTooltip="Rata de schimb (EUR/lei)">Rata de schimb (EUR/lei)</th>
                             <th mdbTooltip="EUR">EUR</th>
                             <th mdbTooltip="Rata de schimb (USD/lei)">Rata de schimb (USD/lei)</th>
@@ -357,9 +375,11 @@
                                 <td mdbTooltip="{{el.country?.description}}" class="align-middle" scope="row">{{el.country?.description}}</td>
                                 <td mdbTooltip="{{el.currency?.shortDescription}}" class="align-middle">{{el.currency?.shortDescription}}</td>
                                 <td mdbTooltip="{{el.division}}" class="align-middle">{{el.division}}</td>
+                                <td mdbTooltip="{{el.totalQuantity}}" class="align-middle">{{el.totalQuantity}}</td>
                                 <td mdbTooltip="{{el.value | digitsAfterDecimal:4}}" class="align-middle">{{el.value | digitsAfterDecimal:4}}</td>
                                 <td mdbTooltip="{{el?.xchRateRef | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateRef | digitsAfterDecimal:4}}</td>
-                                <td mdbTooltip="{{el?.xchRateRefVal | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateRefVal | digitsAfterDecimal:4}}</td>
+                                <td mdbTooltip="{{el?.xchRateMDLInitVal | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateMDLInitVal | digitsAfterDecimal:4}}</td>
+                                <td mdbTooltip="{{el.xchRateRefVal | digitsAfterDecimal:4}}" class="align-middle">{{el.xchRateRefVal | digitsAfterDecimal:4}}</td>
                                 <td mdbTooltip="{{el?.xchRateEur | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateEur | digitsAfterDecimal:4}}</td>
                                 <td mdbTooltip="{{el?.xchRateEurVal | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateEurVal | digitsAfterDecimal:4}}</td>
                                 <td mdbTooltip="{{el?.xchRateUsd | digitsAfterDecimal:4}}" class="align-middle">{{el?.xchRateUsd | digitsAfterDecimal:4}}</td>

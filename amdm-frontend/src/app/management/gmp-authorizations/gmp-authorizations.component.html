@@ -1,0 +1,171 @@
+<div class="container-fluid sky z-depth-2">
+	<form [formGroup]='mForm'>
+		<div class="row">
+			<div class="col-3">
+				<div class="md-form">
+					<input id="requestNumber" mdbInputDirective type="text" class="form-control"
+					       formControlName="requestNumber">
+					<label for="requestNumber">Numar cerere</label>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="md-form">
+					<input id="authorizationNumber" mdbInputDirective type="text" class="form-control"
+					       formControlName="authorizationNumber">
+					<label for="authorizationNumber">Numar autorizare</label>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input matInput [matDatepicker]="authorizationStartDateFrom" placeholder="Data emiterii autorizarii (de la)" formControlName="authorizationStartDateFrom">
+						<mat-datepicker-toggle matSuffix [for]="authorizationStartDateFrom"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #authorizationStartDateFrom></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input matInput [matDatepicker]="authorizationStartDateTo" placeholder="Data emiterii autorizarii (pina la)" formControlName="authorizationStartDateTo">
+						<mat-datepicker-toggle matSuffix [for]="authorizationStartDateTo"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #authorizationStartDateTo></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-3">
+				<div class="md-form-modified">
+					<ng-select [items]="companii | async"
+					           bindLabel="name"
+					           placeholder="Compania solicitant"
+					           formControlName="company"
+					           [loading]="loadingCompany"
+					           [typeahead]="companyInputs"
+					           required="true">
+						<ng-template ng-option-tmp let-item="item">
+							{{item.name}} <br/>
+							<small class="form-text text-muted">{{item.idno}}</small>
+						</ng-template>
+					</ng-select>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="md-form">
+					<input id="name" mdbInputDirective type="text" class="form-control"
+					       formControlName="certificateNumber">
+					<label for="name">Numar certifiat</label>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input matInput [matDatepicker]="certificateStartDateFrom" placeholder="Data emiterii certificatului (de la)" formControlName="certificateStartDateFrom">
+						<mat-datepicker-toggle matSuffix [for]="certificateStartDateFrom"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #certificateStartDateFrom></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input matInput [matDatepicker]="certificateEndDateTo" placeholder="Data emiterii certificatului (pina la)" formControlName="certificateEndDateTo">
+						<mat-datepicker-toggle matSuffix [for]="certificateEndDateTo"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #certificateEndDateTo></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="md-form-modified text-center mt-1">
+				<button type="button" class="btn btn-indigo waves-light btn-md btn-rounded-button z-depth-4" mdbWavesEffect (click)="clear();">
+					<i class="fa fa-undo fa-lg" aria-hidden="true"></i></button>
+			</div>
+			<div class="md-form-modified text-center mt-1">
+				<button type="button" class="btn btn-indigo waves-light btn-md btn-rounded-button z-depth-4" mdbWavesEffect (click)="getAuthorisations();">
+					<i class="fa fa-search fa-lg" aria-hidden="true"></i></button>
+			</div>
+		</div>
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Autorizatii/Certificate GMP</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="table-width">
+			<div class="example-container">
+				<table mat-table [dataSource]="dataSource" matSort>
+					<ng-container matColumnDef="company">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Compania solicitant</th>
+						<td mat-cell *matCellDef="let element"> {{element.company}} </td>
+					</ng-container>
+
+					<ng-container matColumnDef="authorizationNumber">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Numar autorizare</th>
+						<td mat-cell *matCellDef="let element"> {{element.authorizationNumber}} </td>
+					</ng-container>
+
+					<ng-container matColumnDef="authorizationIssuedDate">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Data emitere autorizare</th>
+						<td mat-cell *matCellDef="let element"> {{element.authorizationStartDate | date: 'dd/MM/yyyy'}} </td>
+					</ng-container>
+
+					<ng-container matColumnDef="authorizationExpirationDate">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Data expirare autorizare</th>
+						<td mat-cell *matCellDef="let element"> {{element.authorizationEndDate | date: 'dd/MM/yyyy'}} </td>
+					</ng-container>
+
+					<ng-container matColumnDef="statusAuthorization">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Statut autorizare</th>
+						<td mat-cell *matCellDef="let element"> {{getStatusAuthorization(element.status,element.authorizationEndDate)}} </td>
+					</ng-container>
+
+					<ng-container matColumnDef="certifictionNumber">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Numar certificat</th>
+						<td mat-cell *matCellDef="let element"> {{element.certificateNumber}} </td>
+					</ng-container>
+
+					<ng-container matColumnDef="certifictionIssuedDate">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Data emitere certificat</th>
+						<td mat-cell *matCellDef="let element"> {{element.certificateStartDate | date: 'dd/MM/yyyy'}} </td>
+					</ng-container>
+
+					<ng-container matColumnDef="certificationExpiredDate">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Data expirare certificat</th>
+						<td mat-cell *matCellDef="let element"> {{element.certificateEndDate | date: 'dd/MM/yyyy'}} </td>
+					</ng-container>
+
+					<ng-container matColumnDef="statusCertificate">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Statut certificat</th>
+						<td mat-cell *matCellDef="let element"> {{getStatusCertificate(element.status,element.certificateEndDate)}} </td>
+					</ng-container>
+
+					<ng-container matColumnDef="authorizationPath">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Vizualizare autorizare</th>
+						<td mat-cell *matCellDef="let element">
+							<button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect data-toggle="modal" data-target="#edit"
+							        (click)="loadFile(element.authorizationPath)"><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
+						</td>
+					</ng-container>
+
+					<ng-container matColumnDef="certificatePath">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Vizualizare certificat</th>
+						<td mat-cell *matCellDef="let element">
+							<button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect data-toggle="modal" data-target="#edit"
+							        (click)="loadFile(element.certificatePath)"><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
+						</td>
+					</ng-container>
+
+					<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+					<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+				</table>
+				<mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+			</div>
+			<div *ngIf="dataSource.data.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		</div>
+	</form>
+</div>

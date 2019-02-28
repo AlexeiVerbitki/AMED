@@ -1,5 +1,6 @@
 package com.bass.amed.service;
 
+import com.bass.amed.JobSchedulerComponent;
 import com.bass.amed.common.Constants;
 import com.bass.amed.dto.ScheduledModuleResponse;
 import com.bass.amed.dto.license.DiffLicense;
@@ -45,8 +46,8 @@ public class LicenseRegistrationRequestService
     @Autowired
     private AuditLogService auditLogService;
 
-    @Value("${scheduler.rest.api.host}")
-    private String schedulerRestApiHost;
+    @Autowired
+    private JobSchedulerComponent jobSchedulerComponent;
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LicenseRegistrationRequestService.class);
@@ -178,7 +179,7 @@ public class LicenseRegistrationRequestService
             //Schedule job for new license
             LOGGER.debug("Start jobSchedule method...");
             ResponseEntity<ScheduledModuleResponse> result = null;
-            result = Utils.jobSchedule(20, "/set-critical-request", "/set-expired-request", request.getId(), request.getRequestNumber(), null, schedulerRestApiHost, "Se depaseste termenul de informare a clientului despre decizie");
+            result = jobSchedulerComponent.jobSchedule(20, "/set-critical-request", "/set-expired-request", request.getId(), request.getRequestNumber(), null,  "Se depaseste termenul de informare a clientului despre decizie");
             if (result != null && !result.getBody().isSuccess())
             {
                 LOGGER.debug("The method jobSchedule, was not successful.");
@@ -331,7 +332,7 @@ public class LicenseRegistrationRequestService
             if (request.getType().getCode().equals("LICEL") && next )
             {
                 LOGGER.debug("Start jobUnschedule method...");
-                Utils.jobUnschedule(schedulerRestApiHost, "/set-expired-request", request.getId());
+                jobSchedulerComponent.jobUnschedule( "/set-expired-request", request.getId());
                 LOGGER.debug("Finished jobUnschedule method.");
             }
 
@@ -339,7 +340,7 @@ public class LicenseRegistrationRequestService
             if (request.getType().getCode().equals("LICD") && next )
             {
                 LOGGER.debug("Start jobUnschedule method...");
-                Utils.jobUnschedule(schedulerRestApiHost, "/set-expired-request", request.getId());
+                jobSchedulerComponent.jobUnschedule( "/set-expired-request", request.getId());
                 LOGGER.debug("Finished jobUnschedule method.");
             }
 
@@ -594,7 +595,7 @@ public class LicenseRegistrationRequestService
                 //Schedule job for duplicate
                 LOGGER.debug("Start jobSchedule method...");
                 ResponseEntity<ScheduledModuleResponse> result = null;
-                result = Utils.jobSchedule(3, "/set-critical-request", "/set-expired-request", request.getId(), request.getRequestNumber(), null, schedulerRestApiHost, "Se depaseste termenul de eliberare a duplicatului licentei");
+                result = jobSchedulerComponent.jobSchedule(3, "/set-critical-request", "/set-expired-request", request.getId(), request.getRequestNumber(), null,  "Se depaseste termenul de eliberare a duplicatului licentei");
                 if (result != null && !result.getBody().isSuccess())
                 {
                     LOGGER.debug("The method jobSchedule, was not successful.");

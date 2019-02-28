@@ -52,7 +52,8 @@ import {HomepageModule} from './homepage/homepage.module';
 import {NomenclatureModule} from './all-modules/module-6/nomenclature.module';
 import {SelectSubsidiaryModalComponent} from './all-modules/gdp/select-subsidiary-modal/select-subsidiary-modal.component';
 import {InspectorsModalComponent} from './all-modules/gdp/inspectors-modal/inspectors-modal.component';
-import {SelectDocumentNumberComponent} from "./dialog/select-document-number/select-document-number.component";
+import {SelectDocumentNumberComponent} from './dialog/select-document-number/select-document-number.component';
+import {AuthGuard} from './shared/auth-guard/auth.guard';
 
 registerLocaleData(localeRo, 'ro-MD');
 
@@ -121,11 +122,11 @@ const interceptors = [{
     ],
     schemas: [],
     entryComponents: [
-        DivisionSelectDialogComponent, AuxiliarySubstanceDialogComponent, ConfirmationDialogComponent, MedicamentHistoryDialogComponent,SelectDocumentNumberComponent,
+        DivisionSelectDialogComponent, AuxiliarySubstanceDialogComponent, ConfirmationDialogComponent, MedicamentHistoryDialogComponent, SelectDocumentNumberComponent,
         MedicamentModificationsDialogComponent, RequestAdditionalDataDialogComponent, ActiveSubstanceDialogComponent, MedicamentDetailsDialogComponent,
         AddManufactureComponent, AddDivisionComponent, AddExpertComponent, SelectVariationTypeComponent, SelectSubsidiaryModalComponent, InspectorsModalComponent
     ],
-    providers: [AuthService, AdministrationService, SuccessOrErrorHandlerService, NavbarTitleService, interceptors, {provide: LOCALE_ID, useValue: 'ro-MD'}
+    providers: [AuthGuard, AuthService, AdministrationService, SuccessOrErrorHandlerService, NavbarTitleService, interceptors, {provide: LOCALE_ID, useValue: 'ro-MD'}
     ],
     bootstrap: [AppComponent]
 })

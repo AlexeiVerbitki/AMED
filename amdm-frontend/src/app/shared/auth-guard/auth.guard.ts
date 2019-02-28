@@ -3,7 +3,7 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {AuthService} from '../service/authetication.service';
 
-@Injectable({providedIn: 'root'})
+@Injectable()
 export class AuthGuard implements CanActivate {
 
     constructor(private router: Router,
@@ -15,7 +15,6 @@ export class AuthGuard implements CanActivate {
         // this will be passed from the route config
         // on the data property
         const expectedRoles: string[] = route.data.expectedRoles;
-
         const token = localStorage.getItem('authenticationToken');
 
         if (!token) {
@@ -23,9 +22,10 @@ export class AuthGuard implements CanActivate {
             return false;
         }
 
-        const jwtHelper = new JwtHelperService();
+        // const jwtHelper = new JwtHelperService();
         // decode the token to get its payload
-        const tokenPayload = jwtHelper.decodeToken(token);
+        // const tokenPayload = jwtHelper.decodeToken(token);
+        // console.log(jwtHelper.isTokenExpired(tokenPayload.exp));
 
         if (!this.auth.isAuthenticated()) {
             this.router.navigate(['/login'], {queryParams: {returnUrl: state.url}});
@@ -33,5 +33,11 @@ export class AuthGuard implements CanActivate {
         }
 
         return true;
+    }
+
+    canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+        // console.log('canActivateChild', route);
+
+        return this.canActivate(route, state);
     }
 }

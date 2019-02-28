@@ -34,6 +34,7 @@ import {AmendmentDetailsComponent} from './clinical-trials/dialog/amendment-deta
 import {NotificationDetailslsComponent} from './clinical-trials/dialog/notification-detailsls/notification-detailsls.component';
 import {LicenseHistoryDialogComponent} from './license/license-history-dialog/license-history-dialog.component';
 import {LicenseHistoryDetailComponent} from './license/license-history-detail/license-history-detail.component';
+import {GmpAuthorizationsComponent} from './gmp-authorizations/gmp-authorizations.component';
 
 
 @NgModule({
@@ -59,6 +60,7 @@ import {LicenseHistoryDetailComponent} from './license/license-history-detail/li
         PriceApprovalComponent,
         PriceAutoRevaluationComponent,
         LicenseDetailsComponent,
+        GmpAuthorizationsComponent,
         CPCADTaskComponent,
         DrugAuthorizationDetailsDialogComponent,
         AnnihilationManagementComponent,

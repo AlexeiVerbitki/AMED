@@ -19,6 +19,7 @@ import {MatDialogModule} from '@angular/material';
 import { CpcdRejectLetterComponent } from './cpcd-reject-letter/cpcd-reject-letter.component';
 import { DeclarationImportExportComponent } from './declaration-import-export/declaration-import-export.component';
 import { AddDeclarationDialogComponent } from './add-declaration-dialog/add-declaration-dialog.component';
+import { AddActiveSubstanceDialogComponent } from './add-active-substance-dialog/add-active-substance-dialog.component';
 
 @NgModule({
     imports: [
@@ -34,9 +35,9 @@ import { AddDeclarationDialogComponent } from './add-declaration-dialog/add-decl
         PaymentModule,
         EcAgentModule
     ],
-    declarations: [ CerereImportExportComponent, CerereSolicAutorComponent, RegDrugControl, CpcdAuthLangComponent, CpcdRejectLetterComponent, DeclarationImportExportComponent, AddDeclarationDialogComponent],
+    declarations: [ CerereImportExportComponent, CerereSolicAutorComponent, RegDrugControl, CpcdAuthLangComponent, CpcdRejectLetterComponent, DeclarationImportExportComponent, AddDeclarationDialogComponent, AddActiveSubstanceDialogComponent],
     providers: [UploadFileService, RequestService, LicenseService],
-    entryComponents: [CpcdAuthLangComponent, CpcdRejectLetterComponent, AddDeclarationDialogComponent],
+    entryComponents: [CpcdAuthLangComponent, CpcdRejectLetterComponent, AddDeclarationDialogComponent, AddActiveSubstanceDialogComponent],
 
 })
 export class DrugControlModule {

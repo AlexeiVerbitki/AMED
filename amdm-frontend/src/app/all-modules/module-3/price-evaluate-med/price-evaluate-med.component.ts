@@ -63,6 +63,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                 id: [null],
                 value: [null],
                 currency: [null],
+                totalQuantity: [null],
                 folderNr: [null],
                 nationalPrice: [null],
                 type: [null],
@@ -131,6 +132,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                     price.country = result.country;
                     price.value = result.price;
                     price.currency = result.currency;
+                    price.totalQuantity = result.totalQuantity;
                     price.division = result.division;
                     this.refPrices.push(price);
                     index = this.refPrices.length - 1;
@@ -138,6 +140,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                     this.refPrices[index].country = result.country;
                     this.refPrices[index].value = result.price;
                     this.refPrices[index].currency = result.currency;
+                    this.refPrices[index].totalQuantity = result.totalQuantity;
                     this.refPrices[index].division = result.division;
                 }
                 this.calculateCurrencyConversion(this.refPrices[index]);
@@ -176,7 +179,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                     if (data.price.medicament.internationalMedicamentName) {
                         this.getRelatedDCIMedicamentsPrices(data.price.medicament.internationalMedicamentName.id, data.price.id);
                     }
-                    data.price.medicament.price = {mdlValue: data.price.mdlValue, value: data.price.value, currency: data.price.currency};
+                    data.price.medicament.price = {mdlValue: data.price.mdlValue, totalQuantity: data.price.totalQuantity, value: data.price.value, currency: data.price.currency};
                     data.price.medicament.target = 'Medicamentul cu prețul solicitat';
                     data.price.medicament.rowType = 1;
                     this.medicaments.push(data.price.medicament);
@@ -188,7 +191,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                                 console.log('getOriginalMedsByInternationalName', m);
                                 m.forEach(m => {
                                     const priceModel = m.medicament;
-                                    priceModel.price = {mdlValue: m.priceMdl, value: m.price, currency: m.currency};
+                                    priceModel.price = {mdlValue: m.priceMdl, value: m.price, currency: m.currency, totalQuantity: '-'};
                                     priceModel.target = 'Medicamentul Original de bază';
                                     priceModel.rowType = 2;
                                     this.medicaments.push(priceModel);
@@ -205,6 +208,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                 if (data.price != undefined) {
                     this.PriceRegForm.get('price.id').setValue(data.price.id);
                     this.PriceRegForm.get('price.value').setValue(data.price.value);
+                    this.PriceRegForm.get('price.totalQuantity').setValue(data.price.totalQuantity);
                     this.PriceRegForm.get('price.nmPriceId').setValue(data.price.nmPrice ? data.price.nmPrice.id : undefined);
                     this.PriceRegForm.get('price.currency').setValue(data.price.currency);
                     this.PriceRegForm.get('price.folderNr').setValue(data.price.folderNr);
@@ -490,7 +494,8 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         for (const avgCur of this.avgCurrencies) {
             if (avgCur.currency.id == refPrice.currency.id) {
                 refPrice['xchRateRef'] = avgCur.value;
-                refPrice['xchRateRefVal'] = avgCur.value * +refPrice.value;
+                refPrice['xchRateMDLInitVal'] = avgCur.value * +refPrice.value;
+                refPrice['xchRateRefVal'] = (refPrice['xchRateMDLInitVal'] / refPrice['totalQuantity']) * (+this.PriceRegForm.get('price.totalQuantity').value);
                 break;
             }
         }
@@ -509,7 +514,6 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
             } else if (avgCur.currency.shortDescription == 'USD') {
                 refPrice['xchRateUsd'] = avgCur.value;
                 refPrice['xchRateUsdVal'] = refPrice['xchRateRefVal'] / avgCur.value;
-
             }
         }
     }
@@ -720,7 +724,6 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
             referencePrices: this.refPrices, medicament: {id: this.PriceRegForm.get('medicament.id').value},
         };
 
-        console.log('priceModel:', JSON.stringify(priceModel));
 
         this.subscriptions.push(this.priceService.savePrice(priceModel).subscribe(data => {
             this.initialData = priceModel;

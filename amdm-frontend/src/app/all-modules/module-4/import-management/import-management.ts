@@ -1,5 +1,5 @@
 import {Cerere} from './../../../models/cerere';
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {MatDialog, MatDialogConfig} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -108,6 +108,10 @@ export class ImportManagement implements OnInit {
     invoice: any = {};
     invoiceDetails: any = [];
 
+    @Input()
+    authorizationNumber: string;
+    requestData: any;
+
 
     constructor(private fb: FormBuilder,
                 private requestService: RequestService,
@@ -212,10 +216,23 @@ export class ImportManagement implements OnInit {
         });
 
         this.authorizationSumm = 0;
+        console.log('authorizationNumber', this.authorizationNumber)
 
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
+            console.log("params", params)
             this.subscriptions.push(this.requestService.getImportRequest(params['id']).subscribe(data => {
                     console.log('this.requestService.getImportRequest(params[\'id\'])', data);
+                this.requestData = data;
+            }));
+        }));
+
+        // this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
+        //     console.log("params", params)
+        //     this.subscriptions.push(this.requestService.getImportRequest(params['id']).subscribe(data => {
+        //             console.log('this.requestService.getImportRequest(params[\'id\'])', data);
+        this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
+            this.subscriptions.push(this.requestService.getAuthorizationByAuth(params['auth']).subscribe(data => {
+                    console.log("this.requestService.getAuthorizationByAuth(params['auth'])", data)
                     this.importData = data;
 
                     this.customsPointsList = data.importAuthorizationEntity.nmCustomsPointsList;
@@ -309,13 +326,15 @@ export class ImportManagement implements OnInit {
 
                     this.importDetailsList = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList;
 
-                    this.requestService.getActiveLicenses(data.importAuthorizationEntity.applicant.idno).subscribe(data => {
-                        console.log('this.requestService.getActiveLicenses(data.applicant.idno).subscribe', data);
-                        this.activeLicenses = data;
-                        console.log('this.activeLicenses', this.activeLicenses);
-                        this.expirationDate.push(this.activeLicenses.expirationDate);
+                    if (data.importAuthorizationEntity && data.importAuthorizationEntity.applicant && data.importAuthorizationEntity.applicant.idno) {
+                        this.requestService.getActiveLicenses(data.importAuthorizationEntity.applicant.idno).subscribe(data => {
+                            console.log('this.requestService.getActiveLicenses(data.applicant.idno).subscribe', data);
+                            this.activeLicenses = data;
+                            console.log('this.activeLicenses', this.activeLicenses);
+                            this.expirationDate.push(this.activeLicenses.expirationDate);
 
-                    });
+                        });
+                    }
 
 
                     this.importDetailsList.forEach(item => {
@@ -327,16 +346,17 @@ export class ImportManagement implements OnInit {
                     });
 
 
-                    this.evaluateImportForm.get('id').setValue(data.id);
-                    this.evaluateImportForm.get('requestNumber').setValue(data.requestNumber);
-                    this.evaluateImportForm.get('startDate').setValue(new Date(data.startDate));
-                    this.evaluateImportForm.get('initiator').setValue(data.initiator);
-                    this.evaluateImportForm.get('assignedUser').setValue(data.assignedUser);
-                    this.evaluateImportForm.get('company').setValue(data.company);
-                    this.evaluateImportForm.get('importAuthorizationEntity.medType').setValue(data.importAuthorizationEntity.medType);
-                    this.evaluateImportForm.get('importAuthorizationEntity.applicant').setValue(data.company);
-                    this.evaluateImportForm.get('type.id').setValue(data.type.id);
-                    this.evaluateImportForm.get('requestHistories').setValue(data.requestHistories);
+
+                    this.evaluateImportForm.get('id').setValue(this.requestData.id);
+                    this.evaluateImportForm.get('requestNumber').setValue(this.requestData.requestNumber);
+                    this.evaluateImportForm.get('startDate').setValue(new Date(this.requestData.startDate));
+                    this.evaluateImportForm.get('initiator').setValue(this.requestData.initiator);
+                    this.evaluateImportForm.get('assignedUser').setValue(this.requestData.assignedUser);
+                    this.evaluateImportForm.get('company').setValue(this.requestData.company);
+                    this.evaluateImportForm.get('importAuthorizationEntity.medType').setValue(this.requestData.importAuthorizationEntity.medType);
+                    this.evaluateImportForm.get('importAuthorizationEntity.applicant').setValue(this.requestData.company);
+                    this.evaluateImportForm.get('type.id').setValue(this.requestData.type.id);
+                    this.evaluateImportForm.get('requestHistories').setValue(this.requestData.requestHistories);
 
                     this.evaluateImportForm.get('importAuthorizationEntity.seller').setValue(data.importAuthorizationEntity.seller);
                     this.sellerAddress = (data.importAuthorizationEntity.seller.address + ', ' + data.importAuthorizationEntity.seller.country.description);
@@ -950,7 +970,7 @@ export class ImportManagement implements OnInit {
             invoiceEntity.customsPointsEntity = this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value;
             invoiceEntity.invoiceDetailsEntitySet = invoiceDetailsEntity;
 
-            modelToSubmit = this.importData;
+            modelToSubmit = this.requestData;
             modelToSubmit.invoiceEntity = invoiceEntity;
 
             modelToSubmit.currentStep = 'F';

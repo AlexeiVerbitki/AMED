@@ -29,6 +29,7 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
     companii: Observable<any[]>;
     rForm: FormGroup;
     inspectorForm: FormGroup;
+    decisionForm: FormGroup;
 
     subsidiaryList: any[] = [];
 
@@ -65,13 +66,15 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
 
     decisions: any[] = [
         {description: 'Aprobare', id: 1, currentStep: 'AF', code: 'AGDP'},
-        {description: 'Respingere', id: 2, currentStep: 'CF', code: 'AGDP'},
-        {description: 'Suspendare', id: 3, currentStep: 'A', code: 'AGDP'}];
+        {description: 'Respingere', id: 2, currentStep: 'AC', code: 'AGDP'}];
+        // {description: 'Suspendare', id: 3, currentStep: 'A', code: 'AGDP'}];
 
     datePipe = new DatePipe('en-US');
 
     gdpInspection = {
         groupLeaderId: null,
+        certificateBasedOnTheInspection: null,
+        autoDistributionOperations: null,
         id: null,
         inspectors: [],
         subsidiaries: [],
@@ -103,6 +106,10 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
             'certificateBasedOnTheInspection': [null, Validators.required],
         });
 
+        this.decisionForm = fb.group({
+            'decision': [null]
+        });
+
         this.rForm = fb.group({
 
             'data': {disabled: true, value: new Date()},
@@ -111,7 +118,6 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
             'requestStatus': [null],
             'startDate': {disabled: true, value: new Date()},
             'currentStep': ['A'],
-            'decision': [null, Validators.required],
             'gdpCertificateNr': [null],
             'responsiblePerson': fb.group({
                 'idnp': [{value: null, disabled: true}],
@@ -224,6 +230,9 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
                     this.normalizeSubsidiaryList(this.gdpInspection.subsidiaries.map(l => l.subsidiary));
                 }
 
+                this.inspectorForm.get('certificateBasedOnTheInspection').setValue(this.gdpInspection.certificateBasedOnTheInspection);
+                this.inspectorForm.get('autoDistributionOperations').setValue(this.gdpInspection.autoDistributionOperations);
+
                 this.documents = data.documents;
                 this.documentAdded(null);
 
@@ -319,10 +328,13 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
                 modalType: 'REQUEST_REMOVE_DEFICIENCIES',
                 startDate: this.rForm.get('data').value,
                 companyName: this.rForm.get('company').value.name,
-                address: this.rForm.get('company').value.legalAddress,
+                address: this.rForm.get('company.adresa').value,
                 registrationRequestMandatedContact: {
                     mandatedFirstname: this.rForm.get('responsiblePerson.mandatedFirstname').value,
-                    mandatedLastname: this.rForm.get('responsiblePerson.mandatedLastname').value
+                    mandatedLastname: this.rForm.get('responsiblePerson.mandatedLastname').value,
+                    idnp: this.rForm.get('responsiblePerson.mandatedLastname').value,
+                    phoneNumber: this.rForm.get('responsiblePerson.phoneNumber').value,
+                    email: this.rForm.get('responsiblePerson.email').value,
                 }
             },
             hasBackdrop: false
@@ -352,14 +364,18 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
     }
 
 
-    nextStep() {
+
+    save(onlySave: boolean) {
+        // if(onlySave) {
+        //     this.rForm.controls['decision'].setErrors(null);
+        // }
 
         this.formSubmitted = true;
 
         console.log(this.rForm);
 
-        const WithoutDocs: Boolean = this.rForm.valid && this.rForm.get('decision').valid && (this.rForm.get('decision').value.id != 3) && this.hasUnloadedDocs();
-        const acceptValid: boolean = (this.rForm.valid && this.rForm.get('decision').value.id == 1 && this.inspectorForm.valid) || (this.rForm.valid && this.rForm.get('decision').value.id == 2) || (this.rForm.valid && this.rForm.get('decision').value.id == 3);
+        const WithoutDocs: boolean = this.decisionForm.valid && this.decisionForm.get('decision').valid && (!onlySave) && this.hasUnloadedDocs();
+        const acceptValid: boolean = onlySave || this.decisionForm.valid && ((this.decisionForm.get('decision').value.id == 1 && this.inspectorForm.valid) || this.decisionForm.get('decision').value.id == 2);
 
         if (this.rForm.invalid || WithoutDocs || !acceptValid) {
             return;
@@ -382,7 +398,7 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
             username: useranameDB, step: this.rForm.get('currentStep').value
         }];
 
-        modelToSubmit.currentStep = this.rForm.get('decision').value.currentStep;
+        modelToSubmit.currentStep = onlySave ? 'A' : this.decisionForm.get('decision').value.currentStep;
         modelToSubmit.initiator = useranameDB;
         modelToSubmit.assignedUser = useranameDB;
         modelToSubmit.documents = this.documents;
@@ -399,7 +415,7 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
         modelToSubmit.gdpInspection.autoDistributionOperations = this.inspectorForm.get('autoDistributionOperations').value;
         modelToSubmit.gdpInspection.certificateBasedOnTheInspection = this.inspectorForm.get('certificateBasedOnTheInspection').value;
 
-        modelToSubmit.type.code = this.rForm.get('decision').value.code;
+        modelToSubmit.type.code = onlySave ? 'AGDP' : this.decisionForm.get('decision').value.code;
 
         // delete modelToSubmit.gdpInspection.subsidiaries;
 
@@ -407,6 +423,9 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
 
         this.subscriptions.push(this.gdpService.addRegistrationRequestForGDP(modelToSubmit).subscribe(req => {
                 this.errorHandlerService.showSuccess('Datele au fost salvate');
+                if(!onlySave) {
+                    this.router.navigate(['/dashboard/homepage']);
+                }
 
                 this.loadingService.hide();
             }, error => this.loadingService.hide())

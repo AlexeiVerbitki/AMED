@@ -29,6 +29,7 @@ public class RegistrationRequestsEntity
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "company_id")
     private NmEconomicAgentsEntity company;
+//    @OneToOne( fetch = FetchType.LAZY, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
     @OneToOne( fetch = FetchType.LAZY, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
     @JoinColumn( name = "import_id" )
     private ImportAuthorizationEntity importAuthorizationEntity;
@@ -129,8 +130,11 @@ public class RegistrationRequestsEntity
     private String expiredComment;
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "request_id")
-    private Set<GMPAuthorizationEntity> gmpAuthorizations = new HashSet<>();
+    private Set<GMPAuthorizationDetailsEntity> gmpAuthorizations = new HashSet<>();
     @JsonManagedReference
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "registrationRequest")
     private GDPInspectionEntity gdpInspection;
+    @Basic
+    @Column(name = "reg_subject")
+    private String regSubject;
 }

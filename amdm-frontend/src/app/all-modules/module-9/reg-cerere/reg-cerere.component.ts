@@ -13,6 +13,7 @@ import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/ope
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {ClinicalTrialService} from '../../../shared/service/clinical-trial.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {ScrAuthorRolesService} from '../../../shared/auth-guard/scr-author-roles.service';
 
 enum Pages {
     CLAP = '3',
@@ -33,22 +34,18 @@ export class RegCerereComponent implements OnInit, OnDestroy {
     Pages: typeof Pages = Pages;
     generatedDocNrSeq: number;
     registerClinicalTrailForm: FormGroup;
-    private subscriptions: Subscription[] = [];
     docs: Document [] = [];
     docTypes: any[] = [];
-
     phaseList: any[] = [];
-
     companii: Observable<any[]>;
     loadingCompany = false;
     companyInputs = new Subject<string>();
-
     clinicalTrails: Observable<any[]>;
     loadingClinicalTrail = false;
-    protected clinicalTrailInputs = new Subject<string>();
-
     clinicalTrailForm: FormGroup;
     showClinicTrail = false;
+    protected clinicalTrailInputs = new Subject<string>();
+    private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder,
                 private dialog: MatDialog,
@@ -60,7 +57,8 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                 private loadingService: LoaderService,
                 private errorHandlerService: SuccessOrErrorHandlerService,
                 private clinicTrialService: ClinicalTrialService,
-                private navbarTitleService: NavbarTitleService) {
+                private navbarTitleService: NavbarTitleService,
+                private roleSrv: ScrAuthorRolesService) {
     }
 
     ngOnInit() {
@@ -299,7 +297,11 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             //return;
 
             this.subscriptions.push(this.requestService.addClinicalTrailRequest(formModel).subscribe(data => {
-                    this.router.navigate(['/dashboard/module/clinic-studies/evaluate/' + data.body]);
+                    if (this.roleSrv.isRightAssigned('scr_module_3') || this.roleSrv.isRightAssigned('scr_admin')) {
+                        this.router.navigate(['/dashboard/module/clinic-studies/evaluate/' + data.body]);
+                    } else if (this.roleSrv.isRightAssigned('scr_register_request')) {
+                        this.router.navigate(['/dashboard/homepage/']);
+                    }
                     this.loadingService.hide();
                 }, error => {
                     this.loadingService.hide();
@@ -331,7 +333,11 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             formModel.registrationRequestMandatedContacts = [formModel.registrationRequestMandatedContacts];
 
             this.subscriptions.push(this.requestService.addClinicalTrailAmendmentRequest(formModel).subscribe(data => {
-                    this.router.navigate(['/dashboard/module/clinic-studies/evaluate-amendment/' + data.body]);
+                    if (this.roleSrv.isRightAssigned('scr_module_3') || this.roleSrv.isRightAssigned('scr_admin')) {
+                        this.router.navigate(['/dashboard/module/clinic-studies/evaluate-amendment/' + data.body]);
+                    } else if (this.roleSrv.isRightAssigned('scr_register_request')) {
+                        this.router.navigate(['/dashboard/homepage/']);
+                    }
                     this.loadingService.hide();
                 }, error => {
                     this.loadingService.hide();
@@ -362,7 +368,11 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             formModel.registrationRequestMandatedContacts = [formModel.registrationRequestMandatedContacts];
 
             this.subscriptions.push(this.requestService.addClinicalTrailNotificationRequest(formModel).subscribe(data => {
-                    this.router.navigate(['/dashboard/module/clinic-studies/notify/' + data.body]);
+                    if (this.roleSrv.isRightAssigned('scr_module_3') || this.roleSrv.isRightAssigned('scr_admin')) {
+                        this.router.navigate(['/dashboard/module/clinic-studies/notify/' + data.body]);
+                    } else if (this.roleSrv.isRightAssigned('scr_register_request')) {
+                        this.router.navigate(['/dashboard/homepage/']);
+                    }
                     this.loadingService.hide();
                 }, error => {
                     this.loadingService.hide();

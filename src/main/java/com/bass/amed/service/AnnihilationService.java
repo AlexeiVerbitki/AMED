@@ -41,18 +41,8 @@ public class AnnihilationService
     @Autowired
     private MedicamentRepository medicamentRepository;
 
-//
-//    select * from medicament_annihilation_meds med right join (
-//        select ma.*, nma.long_name from medicament_annihilation ma, nm_economic_agents nma where ma.idno = nma.idno and ma.status = 'F' group by nma.idno
-//) items on med.medicament_annihilation_id = items.id
-//    left join medicament m on med.medicament_id = m.id
-//    left join med_annihilation_destroy_methods adm on med.destruction_method_id = adm.id
-//    left join registration_requests r on items.id = r.medicament_annihilation_id
-
-
     private final static String ANNIHILATION_QUERY =
             " SELECT " +
-//            "SELECT new com.bass.amed.projection.AnnihilationProjection( " +
                     "items.id as annihilationMedsId, " +
                     "items.long_name as ecAgentLongName, " +
                     "med.quantity, " +
@@ -127,38 +117,6 @@ public class AnnihilationService
             stringBuilder.append(" AND ma.idno = :idno ");
             stringBuilder.toString();
         }
-//
-//
-//        if (Strings.isNotEmpty(filter.getNrLicenta()))
-//        {
-//            stringBuilder.append(" AND le.nr = :nr");
-//        }
-//
-//        if (Strings.isNotEmpty(filter.getSeriaLicenta()))
-//        {
-//            stringBuilder.append(" AND le.serialNr = :serialNr");
-//        }
-//
-//        if (filter.getStep() != null)
-//        {
-//            stringBuilder.append(" AND RRS.id = :registrationRequestStepId");
-//        }
-//
-//        if (Strings.isNotEmpty(filter.getAssignedPerson()))
-//        {
-//            stringBuilder.append(" AND RR.assignedUser like  (:assignedUser)");
-//        }
-//        if (filter.getStartDate() != null)
-//        {
-//            stringBuilder.append(" AND RR.startDate >= :startDate");
-//        }
-//
-//        if (filter.getEndDate() != null)
-//        {
-//            stringBuilder.append(" AND RR.endDate <= :endDate");
-//        }
-
-//        stringBuilder.append(" GROUP BY nme.licenseId ");
 
         stringBuilder.append(" and ma.status = 'F' GROUP BY nma.idno ) items" +
                 " ON med.medicament_annihilation_id = items.id " +
@@ -196,35 +154,6 @@ public class AnnihilationService
         {
             query.setParameter("toDate", toDate);
         }
-//
-//        if (Strings.isNotEmpty(filter.getNrLicenta()))
-//        {
-//            query.setParameter("nr", filter.getNrLicenta());
-//        }
-//
-//        if (Strings.isNotEmpty(filter.getSeriaLicenta()))
-//        {
-//            query.setParameter("serialNr", filter.getSeriaLicenta());
-//        }
-//
-//        if (filter.getStep() != null)
-//        {
-//            query.setParameter("registrationRequestStepId", filter.getStep().getId());
-//        }
-//
-//        if (Strings.isNotEmpty(filter.getAssignedPerson()))
-//        {
-//            query.setParameter("assignedUser", "%" + filter.getAssignedPerson() + "%");
-//        }
-//        if (filter.getStartDate() != null)
-//        {
-//            query.setParameter("startDate", filter.getStartDate());
-//        }
-//
-//        if (filter.getEndDate() != null)
-//        {
-//            query.setParameter("endDate", filter.getEndDate());
-//        }
     }
 
 
@@ -239,51 +168,19 @@ public class AnnihilationService
             throw new CustomException("Nimicirea nu a fost gasita");
         }
 
-
-//        for (NmEconomicAgentsEntity ece : leOpt.get().getEconomicAgents())
-//        {
-//            if (leOpt.get().getCompanyName() == null)
-//            {
-//                leOpt.get().setCompanyName(ece.getLongName());
-//            }
-//
-//            ece.setLocality(localityService.findLocalityById(ece.getLocality().getId()));
-//            if (!ece.getAgentPharmaceutist().isEmpty())
-//            {
-//                ece.setSelectedPharmaceutist(ece.getAgentPharmaceutist().stream().filter(af -> af.getSelectionDate() != null).max(Comparator.comparing(LicenseAgentPharmaceutistEntity::getSelectionDate)).get());
-//            }
-//
-//        }
-
-
-
-//        Optional<RegistrationRequestsEntity> re = requestRepository.findById(id);
-//
-//        if (!re.isPresent())
-//        {
-//            throw new CustomException("Inregistrarea nu a fost gasita");
-//        }
-//        else if (re.get().getEndDate() != null)
-//        {
-//            throw new CustomException("Cererea a fost deja finisata!!!");
-//        }
-//        RegistrationRequestsEntity rrE = re.get();
-//        rrE.setMedicamentAnnihilation((MedicamentAnnihilationEntity) Hibernate.unproxy(re.get().getMedicamentAnnihilation()));
-//
-//        rrE.getMedicamentAnnihilation().setCompanyName(economicAgentsRepository.findFirstByIdnoEquals(rrE.getMedicamentAnnihilation().getIdno()).get().getName());
-//
-//        rrE.getMedicamentAnnihilation().setMedicamentsMedicamentAnnihilationMeds(medicamentAnnihilationMedsRepository.findByMedicamentAnnihilationId(rrE.getMedicamentAnnihilation().getId()));
-//
-//        rrE.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds().forEach(ma -> ma.setMedicamentName(medicamentRepository.getCommercialNameById(ma.getMedicamentId()).orElse(null)));
-//
-//        return rrE;
-
-
         mdOpt.get().setCompanyName(economicAgentsRepository.findFirstByIdnoEquals(mdOpt.get().getIdno()).get().getLongName());
 
-        mdOpt.get().setMedicamentsMedicamentAnnihilationMeds(medicamentAnnihilationMedsRepository.findByMedicamentAnnihilationId(mdOpt.get().getId()));
-
-        mdOpt.get().getMedicamentsMedicamentAnnihilationMeds().forEach(ma -> ma.setMedicamentName(medicamentRepository.getCommercialNameById(ma.getMedicamentId()).orElse(null)));
+        mdOpt.get().getMedicamentsMedicamentAnnihilationMeds().forEach(ma ->
+        {
+            if (ma.getMedicamentId() != null)
+            {
+                ma.setMedicamentName(medicamentRepository.getCommercialNameById(ma.getMedicamentId()).orElse(null));
+            }
+            else
+            {
+                ma.setMedicamentName(ma.getNotRegisteredName());
+            }
+        });
 
         return mdOpt.get();
     }

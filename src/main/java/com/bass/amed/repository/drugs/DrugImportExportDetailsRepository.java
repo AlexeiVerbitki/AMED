@@ -20,5 +20,5 @@ public interface DrugImportExportDetailsRepository extends JpaRepository<DrugImp
             "WHERE  a.id = (:id)")
     List<DrugImportExportDetailsEntity> findAllByAuthorizedDrugSubstance(@Param("id") Integer id);
 
-    List<DrugImportExportDetailsEntity> findALLByDrugCheckDecisionsId(Integer id);
+//    List<DrugImportExportDetailsEntity> findALLByDrugCheckDecisionsId(Integer id);
 }

@@ -1,0 +1,44 @@
+<div>
+  <form [formGroup]="eForm">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="md-form">
+          <input id="docNr" mdbInputDirective class="form-control" formControlName="docNr" type="text">
+          <label for="docNr">Numar document<span class="text-danger">*</span></label>
+        </div>
+        <div *ngIf="formSubmitted && eForm.get('docNr').invalid">
+          <small class="text-muted"><strong class="text-danger">Numarul documentlui trebuie introdus</strong></small>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="md-form-modified">
+          <mat-form-field class="w-100">
+            <input matInput [matDatepicker]="picker" placeholder="Data inspecției în baza căreia a fost acordată autorizația" formControlName="inspectionDate">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div *ngIf="formSubmitted && eForm.get('inspectionDate').invalid">
+          <small class="text-muted"><strong class="text-danger"></strong>Data inspecției trebuie introdusa</small>
+        </div>
+      </div>
+      <div class="col-md-12" *ngIf="type=='AFM'">
+        <div class="md-form">
+          <input id="aplicationDomainOfLastInspection" mdbInputDirective class="form-control" formControlName="aplicationDomainOfLastInspection" type="text">
+          <label for="aplicationDomainOfLastInspection">Domeniul de aplicare al ultimei inspecții<span class="text-danger">*</span></label>
+        </div>
+        <div *ngIf="formSubmitted && eForm.get('aplicationDomainOfLastInspection').invalid">
+          <small class="text-muted"><strong class="text-danger"></strong>Domeniul de aplicare al ultimei inspecții trebuie introdus</small>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="text-center">
+  <div mat-dialog-actions>
+    <div class="w-100">
+      <button class="btn btn-dark-green-color btn-sm waves-light" (click)="ok()">Ok</button>
+      <button class="btn btn-danger btn-sm waves-light" (click)="cancel()">Anulare</button>
+    </div>
+  </div>
+</div>

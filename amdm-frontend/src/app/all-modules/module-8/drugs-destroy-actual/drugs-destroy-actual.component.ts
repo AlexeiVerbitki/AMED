@@ -219,7 +219,7 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
     submit() {
         this.mFormSubbmitted = true;
         this.kFormSubbmitted = true;
-        if (this.docs.length == 0 || this.members.length == 0) {
+        if (this.members.length == 0) {
             this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
             return;
         }
@@ -240,19 +240,13 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(
             this.annihilationService.finishAnnihilation(modelToSubmit).subscribe(data => {
-                    this.router.navigate(['/dashboard/module']);
+                    this.router.navigate(['/dashboard/homepage']);
                 }
             )
         );
     }
 
     confirm() {
-        this.mFormSubbmitted = true;
-        if (this.docs.length == 0) {
-            return;
-        }
-
-        this.mFormSubbmitted = false;
         const modelToSubmit = this.composeModel('A');
 
         this.subscriptions.push(

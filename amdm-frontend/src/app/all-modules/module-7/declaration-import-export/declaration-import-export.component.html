@@ -1,0 +1,140 @@
+<div class="container-fluid sky z-depth-2">
+    <form [formGroup]='cerereImpExpForm'>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="nrReg" mdbInputDirective type="text" class="form-control" formControlName="requestNumber"
+                    >
+                    <label for="nrReg">Nr. de inregistrare a cererii
+                        <span class="text-danger">*</span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker" placeholder="Data inregistrarii" required
+                               formControlName="dataCererii">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <div class="md-form">
+                        <input id="compSolicitant" mdbInputDirective type="text" class="form-control"
+                               formControlName="company">
+                        <label for="compSolicitant">Agentul economic</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <app-document [documents]="docs" [nrCerere]="cerereImpExpForm.get('requestNumber').value"
+                      (documentModified)="documentAdded($event)" [dcTypeIdentifier]="{code : 'ATIE', step : 'D'}"></app-document>
+
+
+
+
+        <div class="row">
+
+
+            <div class="col-md-2">
+                <div class="md-form">
+                    <input id="authorizationType" mdbInputDirective type="text" class="form-control" formControlName="authorizationType">
+                    <label for="authorizationType">Tipul autorizarii</label>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+
+                <div class="md-form">
+                    <input id="scopeAuthorization" mdbInputDirective type="text" class="form-control" formControlName="scopeAuthorization">
+                    <label for="scopeAuthorization">Scopul autorizarii</label>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input id="partner" mdbInputDirective type="text" class="form-control" formControlName="partnerCompany">
+                    <label for="partner">Compania partener
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="pickerExp" placeholder="Data expirarii" required
+                               formControlName="expireDate">
+                        <mat-datepicker-toggle matSuffix [for]="pickerExp"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #pickerExp></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input id="custom" mdbInputDirective type="text" class="form-control" formControlName="customsPost">
+                    <label for="custom">Post vamal
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="gradient-card-header bg-sidebar border-gradient">
+            <div class="container-fluid">
+                <!-- Title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card-header-title white-text">Substante selectate</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card-body card-body-cascade">
+            <table class="table table-widths text-center">
+                <thead class="bg-sidebar white-text">
+                <tr>
+                 
+                    <th scope="col">Denumire comerciala</th>
+                    <th scope="col">Divizare</th>
+                    <th scope="col">Cantitatea</th>
+                    <th scope="col">Unitate de masura cantitate totala</th>
+                  
+                    <th scope="col">Actiuni</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let susbstance of selectedSubstancesTable;let i = index">
+                 
+                    <td>{{ susbstance.commercialName }}</td>
+                    <td>{{ susbstance.packaging }}</td>
+                    <td>{{ susbstance.packagingQuantity }}</td>
+                    <td>{{ susbstance.packagingQuantityUnitDesc }}</td>
+                
+                    <td>
+                        <button type="button" class="btn btn-mdb-color waves-light btn-sm waves-light"
+                                (click)="loadActiveSubstance(susbstance)"
+                                mdbWavesEffect [disabled]="expiredAuthorization" ><i class="fa fa-info-circle fa-lg" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr>
+
+
+        <div class="text-center">
+            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
+                    (click)="save()">Salvare
+            </button>
+            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
+                    (click)="finish()">Finisare
+            </button>
+        </div>
+
+    </form>
+
+</div>

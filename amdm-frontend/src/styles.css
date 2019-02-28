@@ -16,6 +16,15 @@ body {
     padding : 0.61em 0 !important;
 }
 
+.mat-form-field-wrapper,
+.ng-select {
+    margin-bottom: -20px;
+}
+
+.md-form .form-control {
+    margin: 0 auto;
+}
+
 .mat-tab-body-content {
     overflow : hidden !important;
 }

@@ -455,7 +455,7 @@ export class CerereSolicAutorComponent implements OnInit, OnDestroy {
         this.populateModelToSubmit(modelToSubmit, 'F');
 
         this.subscriptions.push(this.drugDecisionsService.addAuthorizationDetails(modelToSubmit).subscribe(data => {
-                this.router.navigate(['/dashboard/management/cpcadtask']);
+                this.router.navigate(['/dashboard/homepage']);
             }
         ));
 
@@ -498,6 +498,15 @@ export class CerereSolicAutorComponent implements OnInit, OnDestroy {
             drugDecision = this.cerereSolicAutorForm.get('drugCheckDecision').value;
         }
 
+        if (step === 'F') {
+            modelToSubmit.currentStep = 'F';
+            modelToSubmit.endDate = new Date();
+
+            drugDecision.status = 'F';
+        }
+        else{
+            drugDecision.status = 'A';
+        }
 
         this.populateSelectedSubstances(drugDecision);
 
@@ -510,10 +519,7 @@ export class CerereSolicAutorComponent implements OnInit, OnDestroy {
         modelToSubmit.documents = this.documents;
         modelToSubmit.outputDocuments = this.outDocuments;
         modelToSubmit.medicaments = [];
-        if (step === 'F') {
-            modelToSubmit.currentStep = 'F';
-            modelToSubmit.endDate = new Date();
-        }
+
     }
 
     populateSelectedSubstances(drugDecision: any) {

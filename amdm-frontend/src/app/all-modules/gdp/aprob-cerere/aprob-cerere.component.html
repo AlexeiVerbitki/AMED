@@ -243,7 +243,7 @@
 
 
 		<div class="col-md-3">
-			<div class="md-form-modified">
+			<div class="md-form-modified" [formGroup]='decisionForm'>
 				<ng-select class="w-100"
 				           [items]="decisions"
 				           [required]="true"
@@ -252,14 +252,14 @@
 				           (change)="onDecisionChange($event)"
 				           placeholder="Decizia luată">
 				</ng-select>
-				<div *ngIf="formSubmitted && rForm.get('decision').invalid">
+				<div *ngIf="formSubmitted && decisionForm.get('decision').invalid">
 					<small class="text-muted"><strong class="text-danger">Selectați decizia luată</strong>
 					</small>
 				</div>
 			</div>
 		</div>
 
-		<div class="row" [formGroup]="inspectorForm" *ngIf="rForm.get('decision').valid && rForm.get('decision').value.id == 1">
+		<div class="row" [formGroup]="inspectorForm" *ngIf="decisionForm.get('decision').valid && decisionForm.get('decision').value.id == 1">
 			<div class="col">
 				<div class="md-form">
 					<input id="autoDistribution" mdbInputDirective type="text" class="form-control"
@@ -333,7 +333,7 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="mb-2" *ngIf="formSubmitted && rForm.get('decision').valid && this.hasUnloadedDocs()">
+			<div class="mb-2" *ngIf="formSubmitted && decisionForm.get('decision').valid && this.hasUnloadedDocs()">
 				<small class="text-muted"><strong class="text-danger">Încărcați documentele necesare</strong>
 				</small>
 			</div>
@@ -351,7 +351,11 @@
 		<div class="text-center">
 			<div class="mt-4">
 				<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
-				        [disabled]="rForm.get('decision').invalid" mdbWavesEffect (click)="nextStep()">
+				        [disabled]="decisionForm.get('decision').invalid" mdbWavesEffect (click)="save(false)">
+					Finisare
+				</button>
+
+				<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save(true)">
 					Salvare
 				</button>
 			</div>

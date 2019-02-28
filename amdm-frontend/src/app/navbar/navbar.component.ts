@@ -1,8 +1,8 @@
-import { Observable, Subscription } from 'rxjs';
-import { AfterViewInit, Component, OnDestroy, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
-import { AuthService } from '../shared/service/authetication.service';
-import { Router } from '@angular/router';
-import { NavbarTitleService } from '../shared/service/navbar-title.service';
+import {Observable, Subscription} from 'rxjs';
+import {AfterViewInit, Component, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {AuthService} from '../shared/service/authetication.service';
+import {Router} from '@angular/router';
+import {NavbarTitleService} from '../shared/service/navbar-title.service';
 
 @Component({
     selector: 'app-navbar',
@@ -42,7 +42,7 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     logout() {
-        this.authService.logout().subscribe();
+        this.authService.logout();
         this.router.navigate(['/']);
     }
 
@@ -59,16 +59,17 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log('event skip', $event);
         this.skip = $event.value;
         if (this.skip) {
-            this.classValue = 'offset-xxl-1 offset-xl-1 skip-offset-lg col-xxl-11 col-xl-11 skip-col-lg navbar fixed-top navbar-expand-lg navbar-dark darkskie scrolling-navbar intro-fixed-nav';
+            this.classValue = 'offset-xxl-1 offset-xl-1 skip-offset-lg col-xxl-11 col-xl-11 skip-col-lg navbar fixed-top navbar-expand-lg ' +
+                'navbar-dark darkskie scrolling-navbar intro-fixed-nav';
         } else {
-            this.classValue = 'offset-lg-3 offset-xl-3 col-xl-9 col-lg-9 offset-xxl-2 col-xxl-10 navbar fixed-top navbar-expand-lg navbar-dark darkskie scrolling-navbar intro-fixed-nav';
+            this.classValue = 'offset-lg-3 offset-xl-3 col-xl-9 col-lg-9 offset-xxl-2 col-xxl-10 navbar fixed-top navbar-expand-lg navbar-dark ' +
+                'darkskie scrolling-navbar intro-fixed-nav';
         }
         // this.classValue = !this.classValue;
         console.log(this.isOpen);
     }
 
     ngOnDestroy() {
-
         this.eventsSubscription.unsubscribe();
         this.titleService.message.complete();
     }

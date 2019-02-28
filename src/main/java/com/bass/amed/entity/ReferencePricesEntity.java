@@ -27,6 +27,9 @@ public class ReferencePricesEntity
     @Basic
     @Column(name = "price_id")
     private Integer priceId;
+    @Basic
+    @Column(name = "total_quantity")
+    private Integer totalQuantity;
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "type_id", referencedColumnName = "id", nullable = false)
     private PriceTypesEntity type;

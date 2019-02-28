@@ -31,8 +31,20 @@
 					           placeholder="Tip cerere" formControlName="type"
 					           required="true">
 					</ng-select>
-					<div *ngIf="formSubmitted && eForm.get('type').invalid">
+					<div *ngIf="eForm.get('type').invalid">
 						<small class="text-muted"><strong class="text-danger">Tipul cererii trebuie selectat</strong></small>
+					</div>
+					<div *ngIf="displayErrorNotActive">
+						<small class="text-muted"><strong class="text-danger">Nu a fost gasita nici o autorizatie activa</strong></small>
+					</div>
+					<div *ngIf="displayErrorNotActiveEmitere">
+						<small class="text-muted"><strong class="text-danger">Exista deja autorizatie emisa</strong></small>
+					</div>
+					<div *ngIf="displayErrorNotActiveOrSuspended">
+						<small class="text-muted"><strong class="text-danger">Nu a fost gasita nici o autorizatie activa sau suspendata</strong></small>
+					</div>
+					<div *ngIf="displayErrorNotSuspended">
+						<small class="text-muted"><strong class="text-danger">Nu a fost gasita nici o autorizatie suspendata</strong></small>
 					</div>
 				</div>
 			</div>
@@ -77,6 +89,48 @@
 				</div>
 			</div>
 		</div>
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Certificat/autorizatie curenta</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- Card content -->
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths-lg text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Denumire</th>
+					<th scope="col">Numar</th>
+					<th scope="col">Data emiterii</th>
+					<th scope="col">Data expirarii</th>
+					<th scope="col">Statut</th>
+					<th>Actiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let a of authDocuments">
+					<th scope="row">{{ a.docType.description }}</th>
+					<th scope="row">{{ a.number }}</th>
+					<th scope="row">{{ a.dateOfIssue | date: 'dd/MM/yyyy' }}</th>
+					<th scope="row">{{ a.expiredDate | date: 'dd/MM/yyyy' }}</th>
+					<th scope="row">{{ a.status }}</th>
+					<td>
+						<button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect (click)="loadFile(a.path)">
+							<i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="authDocuments.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<hr>
 		<!-- Medicamente inregistrate -->
 		<div class="gradient-card-header bg-sidebar border-gradient">
 			<div class="container-fluid">
@@ -127,7 +181,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Domenii de inspecție</div>
 					</div>
-					<div class="col-6">
+					<div class="col-6" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<div class="text-right mt-2">
 							<button class="btn btn-dark-green-color waves-light btn-sms" mdbWavesEffect
 							        (click)="selectSubsidiary()">Selectare domeniu
@@ -179,7 +233,7 @@
 		<hr>
 		<!--		Lista de inspectori-->
 		<div class="text-center mt-3" [formGroup]="inspectorForm">
-			<mat-checkbox formControlName="useInspector"><h5 class="font-weight-bold text-center ml-2 mt-2">Lista de
+			<mat-checkbox formControlName="useInspector" [disabled]="!eForm.get('type').value || (eForm.get('type').value.code!='GMPE' && eForm.get('type').value.code!='GMPM')"><h5 class="font-weight-bold text-center ml-2 mt-2">Lista de
 				inspectori</h5></mat-checkbox>
 		</div>
 		<div *ngIf="this.inspectorForm.get('useInspector').value">
@@ -193,7 +247,7 @@
 								</div>
 								<div class="col-6">
 									<div class="text-right mt-2">
-										<button class="btn btn-dark-green-color waves-light btn-sms" mdbWavesEffect
+										<button class="btn btn-dark-green-color waves-light btn-sms" mdbWavesEffect *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')"
 										        (click)="selectInspectors()">
 											Selectare inspectori
 										</button>
@@ -213,13 +267,13 @@
 								<th>Cod</th>
 								<th>Grad stiintifc</th>
 								<th>Profesia</th>
-								<th>Actiuni</th>
+								<th *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">Actiuni</th>
 							</tr>
 							</thead>
 							<tbody>
 							<tr mdbTableCol *ngFor="let el of selectedInspectors; let i = index">
 								<td [ngStyle]="{'width': '95px'}">
-									<mat-radio-button [checked]="eForm.get('groupLeader').value && el.id == eForm.get('groupLeader').value.id"
+									<mat-radio-button [disabled]="!eForm.get('type').value || (eForm.get('type').value.code!='GMPE' && eForm.get('type').value.code!='GMPM')" [checked]="eForm.get('groupLeader').value && el.id == eForm.get('groupLeader').value.id"
 									                  (change)="eForm.get('groupLeader').setValue(el)"></mat-radio-button>
 								</td>
 								<td>{{el.lastname}}</td>
@@ -227,7 +281,7 @@
 								<td>{{el.code}}</td>
 								<td>{{el.scienceDegree}}</td>
 								<td>{{el.profession?.description}}</td>
-								<td class="align-middle">
+								<td class="align-middle" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 									<a role="button" class="text-danger" (click)="killInspector(i,el)">
 										<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 									</a>
@@ -245,29 +299,43 @@
 					     *ngFor="let e of formData.controls; let i = index">
 						<div class="col" [formGroupName]="i">
 							<div class="md-form-modified">
-								<mat-form-field class="w-100">
-									<input id="dataFrom" matInput [matDatepicker]="picker34" formControlName="fromDate"
+								<mat-form-field class="w-100" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
+									<input id="dataFrom1" matInput [matDatepicker]="picker34" formControlName="fromDate"
 									       (ngModelChange)="inspectionPeriodChanged(i,'from',$event)"
 									       placeholder="Din data">
 									<mat-datepicker-toggle matSuffix [for]="picker34"></mat-datepicker-toggle>
 									<mat-datepicker touchUi #picker34 disabled="false"></mat-datepicker>
+								</mat-form-field>
+								<mat-form-field class="w-100" *ngIf="!eForm.get('type').value || (eForm.get('type').value.code!='GMPE' && eForm.get('type').value.code!='GMPM')">
+									<input id="dataFrom2" matInput [matDatepicker]="picker36" formControlName="fromDate"
+									       (ngModelChange)="inspectionPeriodChanged(i,'from',$event)"
+									       placeholder="Din data">
+									<mat-datepicker-toggle matSuffix [for]="picker36"></mat-datepicker-toggle>
+									<mat-datepicker touchUi #picker36 disabled></mat-datepicker>
 								</mat-form-field>
 							</div>
 						</div>
 
 						<div class="col" [formGroupName]="i">
 							<div class="md-form-modified">
-								<mat-form-field class="w-100">
-									<input id="dataTo" matInput [matDatepicker]="picker35" formControlName="toDate"
+								<mat-form-field class="w-100"  *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
+									<input id="dataTo1" matInput [matDatepicker]="picker35" formControlName="toDate"
 									       (ngModelChange)="inspectionPeriodChanged(i,'to',$event)"
 									       placeholder="Pina la data">
 									<mat-datepicker-toggle matSuffix [for]="picker35"></mat-datepicker-toggle>
 									<mat-datepicker touchUi #picker35 disabled="false"></mat-datepicker>
 								</mat-form-field>
+								<mat-form-field class="w-100" *ngIf="!eForm.get('type').value || (eForm.get('type').value.code!='GMPE' && eForm.get('type').value.code!='GMPM')">
+									<input id="dataTo2" matInput [matDatepicker]="picker37" formControlName="toDate"
+									       (ngModelChange)="inspectionPeriodChanged(i,'to',$event)"
+									       placeholder="Pina la data">
+									<mat-datepicker-toggle matSuffix [for]="picker37"></mat-datepicker-toggle>
+									<mat-datepicker touchUi #picker37 disabled></mat-datepicker>
+								</mat-form-field>
 							</div>
 						</div>
 
-						<div class="col-md-1 mb-3 text-center">
+						<div class="col-md-1 mb-3 text-center" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 							<a role="button" class="text-danger" (click)="removePeriod(i)">
 								<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 							</a>
@@ -276,10 +344,10 @@
 					</div>
 				</div>
 			</div>
-			<div class="text-right">
+			<div class="text-right" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 				<div class="mt-3">
 					<button class="btn btn-dark-green-color waves-light btn-sms" mdbWavesEffect
-					        (click)="addPeriod()">
+					        (click)="addPeriod(null)">
 						Adaugă perioadă inspecție
 					</button>
 				</div>
@@ -371,22 +439,22 @@
 		<div class="row">
 			<div class="col-md-3">
 				<div class="md-form">
-					<mat-checkbox #humanUse [checked]="eForm.get('humanUse').value" (change)="checkHumanUseMed(humanUse)">Medicamente de uz uman</mat-checkbox>
+					<mat-checkbox #humanUse [checked]="eForm.get('humanUse').value" (change)="checkHumanUseMed(humanUse)" [disabled]="!eForm.get('type').value || (eForm.get('type').value.code!='GMPE' && eForm.get('type').value.code!='GMPM')">Medicamente de uz uman</mat-checkbox>
 				</div>
 			</div>
 			<div class="col-md-3">
 				<div class="md-form">
-					<mat-checkbox #clinicalUse [checked]="eForm.get('medicamentClinicalInvestigation').value" (change)="checkClinicalMed(clinicalUse)">Medicamente pentru investigație clinică de uz uman</mat-checkbox>
+					<mat-checkbox #clinicalUse [checked]="eForm.get('medicamentClinicalInvestigation').value" (change)="checkClinicalMed(clinicalUse)" [disabled]="!eForm.get('type').value || (eForm.get('type').value.code!='GMPE' && eForm.get('type').value.code!='GMPM')">Medicamente pentru investigație clinică de uz uman</mat-checkbox>
 				</div>
 			</div>
 			<div class="col-md-3">
 				<div class="md-form">
-					<mat-checkbox #veterinary [checked]="eForm.get('veterinary').value" (change)="checkVeterinary(veterinary)">Medicamente de uz veterinar</mat-checkbox>
+					<mat-checkbox #veterinary [checked]="eForm.get('veterinary').value" (change)="checkVeterinary(veterinary)" [disabled]="!eForm.get('type').value || (eForm.get('type').value.code!='GMPE' && eForm.get('type').value.code!='GMPM')">Medicamente de uz veterinar</mat-checkbox>
 				</div>
 			</div>
 			<div class="col-md-3">
 				<div class="md-form">
-					<textarea type="text" id="veterinaryDetails" class="md-textarea form-control" mdbInputDirective formControlName="veterinaryDetails"></textarea>
+					<textarea type="text" id="veterinaryDetails" class="md-textarea form-control" [attr.disabled]="!eForm.get('type').value || (eForm.get('type').value.code!='GMPE' && eForm.get('type').value.code!='GMPM')" mdbInputDirective formControlName="veterinaryDetails"></textarea>
 					<label for="veterinaryDetails">Detalii pentru medicamente de uz veterinar</label>
 				</div>
 			</div>
@@ -411,7 +479,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Alte produse preparate aseptic</div>
 					</div>
-					<div class="col-6">
+					<div class="col-6" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<div class="text-right fap text-white">
 							<i (click)="addAsepticPreparation()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
@@ -425,14 +493,14 @@
 				<tr>
 					<th scope="col">Nr.</th>
 					<th scope="col">Descriere</th>
-					<th scope="col">Acțiuni</th>
+					<th scope="col"   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">Acțiuni</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr *ngFor="let x of otherAsepticPreparations;let i = index">
 					<th scope="row">{{ i + 1}}</th>
 					<td>{{ x.description }}</td>
-					<td>
+					<td   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
 						        (click)="removeAsepticPreparation(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 						</button>
@@ -459,7 +527,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Alte produse sterilizate in recipient final</div>
 					</div>
-					<div class="col-6">
+					<div class="col-6" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<div class="text-right fap text-white">
 							<i (click)="addFinalSterilized()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
@@ -473,14 +541,14 @@
 				<tr>
 					<th scope="col">Nr.</th>
 					<th scope="col">Descriere</th>
-					<th scope="col">Acțiuni</th>
+					<th   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')" scope="col">Acțiuni</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr *ngFor="let x of otherFinalSterilized;let i = index">
 					<th scope="row">{{ i + 1}}</th>
 					<td>{{ x.description }}</td>
-					<td>
+					<td   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
 						        (click)="removeFinalSterilized(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 						</button>
@@ -507,7 +575,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Alte produse sterile - numai certificarea seriei</div>
 					</div>
-					<div class="col-6">
+					<div class="col-6" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<div class="text-right fap text-white">
 							<i (click)="addSterileCertified()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
@@ -521,14 +589,14 @@
 				<tr>
 					<th scope="col">Nr.</th>
 					<th scope="col">Descriere</th>
-					<th scope="col">Acțiuni</th>
+					<th   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')" scope="col">Acțiuni</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr *ngFor="let x of otherSterileCertifieds;let i = index">
 					<th scope="row">{{ i + 1}}</th>
 					<td>{{ x.description }}</td>
-					<td>
+					<td   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
 						        (click)="removeOtherSterileCertified(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 						</button>
@@ -555,7 +623,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Alte produse nesterile</div>
 					</div>
-					<div class="col-6">
+					<div class="col-6" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<div class="text-right fap text-white">
 							<i (click)="addNesterileProducts()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
@@ -569,14 +637,14 @@
 				<tr>
 					<th scope="col">Nr.</th>
 					<th scope="col">Descriere</th>
-					<th scope="col">Acțiuni</th>
+					<th   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')" scope="col">Acțiuni</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr *ngFor="let x of otherNesterilePreparations;let i = index">
 					<th scope="row">{{ i + 1}}</th>
 					<td>{{ x.description }}</td>
-					<td>
+					<td   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
 						        (click)="removeNesterileProducts(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 						</button>
@@ -603,7 +671,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Alte produse nesterile - numai certificarea seriei</div>
 					</div>
-					<div class="col-6">
+					<div class="col-6" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<div class="text-right fap text-white">
 							<i (click)="addNesterilePreparationsCertified()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
@@ -617,14 +685,14 @@
 				<tr>
 					<th scope="col">Nr.</th>
 					<th scope="col">Descriere</th>
-					<th scope="col">Acțiuni</th>
+					<th   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')" scope="col">Acțiuni</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr *ngFor="let x of otherNesterilePreparationsCertified;let i = index">
 					<th scope="row">{{ i + 1}}</th>
 					<td>{{ x.description }}</td>
-					<td>
+					<td   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
 						        (click)="removeNesterilePreparationsCertified(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 						</button>
@@ -651,7 +719,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Alte medicamente biologice</div>
 					</div>
-					<div class="col-6">
+					<div class="col-6" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<div class="text-right fap text-white">
 							<i (click)="addBiologicalMedicines()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
@@ -665,14 +733,14 @@
 				<tr>
 					<th scope="col">Nr.</th>
 					<th scope="col">Descriere</th>
-					<th scope="col">Acțiuni</th>
+					<th   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')" scope="col">Acțiuni</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr *ngFor="let x of otherBiologicalMedicines;let i = index">
 					<th scope="row">{{ i + 1}}</th>
 					<td>{{ x.description }}</td>
-					<td>
+					<td   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
 						        (click)="removeBiologicalMedicines(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 						</button>
@@ -699,7 +767,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Alte medicamente biologice - numai certificarea seriei</div>
 					</div>
-					<div class="col-6">
+					<div class="col-6" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<div class="text-right fap text-white">
 							<i (click)="addBiologicalMedicinesCertified()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
@@ -713,14 +781,14 @@
 				<tr>
 					<th scope="col">Nr.</th>
 					<th scope="col">Descriere</th>
-					<th scope="col">Acțiuni</th>
+					<th   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')" scope="col">Acțiuni</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr *ngFor="let x of otherBiologicalMedicinesCertified;let i = index">
 					<th scope="row">{{ i + 1}}</th>
 					<td>{{ x.description }}</td>
-					<td>
+					<td   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
 						        (click)="removeBiologicalMedicinesCertified(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 						</button>
@@ -750,7 +818,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Alte fabricatii</div>
 					</div>
-					<div class="col-6">
+					<div class="col-6" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<div class="text-right fap text-white">
 							<i (click)="addProduction()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
@@ -764,14 +832,14 @@
 				<tr>
 					<th scope="col">Nr.</th>
 					<th scope="col">Descriere</th>
-					<th scope="col">Acțiuni</th>
+					<th   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')" scope="col">Acțiuni</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr *ngFor="let x of otherProductions;let i = index">
 					<th scope="row">{{ i + 1}}</th>
 					<td>{{ x.description }}</td>
-					<td>
+					<td   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
 						        (click)="removeProduction(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 						</button>
@@ -798,7 +866,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Alte sterilizari</div>
 					</div>
-					<div class="col-6">
+					<div class="col-6" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<div class="text-right fap text-white">
 							<i (click)="addSterilization()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
@@ -812,14 +880,14 @@
 				<tr>
 					<th scope="col">Nr.</th>
 					<th scope="col">Descriere</th>
-					<th scope="col">Acțiuni</th>
+					<th   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')" scope="col">Acțiuni</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr *ngFor="let x of otherSterilizations;let i = index">
 					<th scope="row">{{ i + 1}}</th>
 					<td>{{ x.description }}</td>
-					<td>
+					<td   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
 						        (click)="removeSterilization(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 						</button>
@@ -838,7 +906,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Alte produse sau activităţi de fabricaţie</div>
 					</div>
-					<div class="col-6">
+					<div class="col-6" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<div class="text-right fap text-white">
 							<i (click)="addPreparationsOrProductions()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
@@ -852,14 +920,14 @@
 				<tr>
 					<th scope="col">Nr.</th>
 					<th scope="col">Descriere</th>
-					<th scope="col">Acțiuni</th>
+					<th   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')" scope="col">Acțiuni</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr *ngFor="let x of otherPreparationsOrProductions;let i = index">
 					<th scope="row">{{ i + 1}}</th>
 					<td>{{ x.description }}</td>
-					<td>
+					<td   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
 						        (click)="removePreparationsOrProductions(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 						</button>
@@ -889,7 +957,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Alte ambalari primare</div>
 					</div>
-					<div class="col-6">
+					<div class="col-6" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<div class="text-right fap text-white">
 							<i (click)="addPrimaryPackaging()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
@@ -903,14 +971,14 @@
 				<tr>
 					<th scope="col">Nr.</th>
 					<th scope="col">Descriere</th>
-					<th scope="col">Acțiuni</th>
+					<th   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')" scope="col">Acțiuni</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr *ngFor="let x of otherPrimaryPackagings;let i = index">
 					<th scope="row">{{ i + 1}}</th>
 					<td>{{ x.description }}</td>
-					<td>
+					<td   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
 						        (click)="removePrimaryPackaging(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 						</button>
@@ -948,7 +1016,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Alte teste</div>
 					</div>
-					<div class="col-6">
+					<div class="col-6" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<div class="text-right fap text-white">
 							<i (click)="addTestsForQualityControl()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
@@ -962,14 +1030,14 @@
 				<tr>
 					<th scope="col">Nr.</th>
 					<th scope="col">Descriere</th>
-					<th scope="col">Acțiuni</th>
+					<th   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')" scope="col">Acțiuni</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr *ngFor="let x of otherTestsForQualityControl;let i = index">
 					<th scope="row">{{ i + 1}}</th>
 					<td>{{ x.description }}</td>
-					<td>
+					<td   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
 						        (click)="removeTestsForQualityControl(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 						</button>
@@ -988,7 +1056,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Laboratoare sub contract</div>
 					</div>
-					<div class="col-6">
+					<div class="col-6" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<div class="text-right fap text-white">
 							<i (click)="addLaborator()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
@@ -1011,7 +1079,7 @@
 					<th scope="col">Fax</th>
 					<th scope="col">Telefon mobil</th>
 					<th scope="col">Email</th>
-					<th scope="col">Actiuni</th>
+					<th *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')" scope="col">Actiuni</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -1025,7 +1093,7 @@
 					<td>{{ laborator.fax }}</td>
 					<td>{{ laborator.mobilePhone }}</td>
 					<td>{{ laborator.email }}</td>
-					<td>
+					<td *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<button class="btn btn-mdb-color waves-light btn-sm waves-light" (click)="editLaborator(laborator,i)"
 						        mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></button>
 						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
@@ -1046,7 +1114,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Persoane calificate</div>
 					</div>
-					<div class="col-6">
+					<div class="col-6"   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<div class="text-right fap text-white">
 							<i (click)="addQualifiedPerson()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
@@ -1069,7 +1137,7 @@
 					<th scope="col">Fax</th>
 					<th scope="col">Telefon mobil</th>
 					<th scope="col">Email</th>
-					<th scope="col">Actiuni</th>
+					<th   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')" scope="col">Actiuni</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -1083,7 +1151,7 @@
 					<td>{{ qualifiedPerson.fax }}</td>
 					<td>{{ qualifiedPerson.mobilePhone }}</td>
 					<td>{{ qualifiedPerson.email }}</td>
-					<td>
+					<td   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<button class="btn btn-mdb-color waves-light btn-sm waves-light" (click)="editQualifiedPerson(qualifiedPerson,i)"
 						        mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></button>
 						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
@@ -1104,7 +1172,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Persoane responsabile de Controlul Calităţii</div>
 					</div>
-					<div class="col-6">
+					<div class="col-6"   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<div class="text-right fap text-white">
 							<i (click)="addQualityControlPerson()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
@@ -1127,7 +1195,7 @@
 					<th scope="col">Fax</th>
 					<th scope="col">Telefon mobil</th>
 					<th scope="col">Email</th>
-					<th scope="col">Actiuni</th>
+					<th   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')" scope="col">Actiuni</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -1141,7 +1209,7 @@
 					<td>{{ qualityControlPerson.fax }}</td>
 					<td>{{ qualityControlPerson.mobilePhone }}</td>
 					<td>{{ qualityControlPerson.email }}</td>
-					<td>
+					<td   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<button class="btn btn-mdb-color waves-light btn-sm waves-light" (click)="editQualityControlPerson(qualityControlPerson,i)"
 						        mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></button>
 						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
@@ -1162,7 +1230,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Persoane responsabile de producere</div>
 					</div>
-					<div class="col-6">
+					<div class="col-6"   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<div class="text-right fap text-white">
 							<i (click)="addProductionPerson()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
@@ -1185,7 +1253,7 @@
 					<th scope="col">Fax</th>
 					<th scope="col">Telefon mobil</th>
 					<th scope="col">Email</th>
-					<th scope="col">Actiuni</th>
+					<th   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')" scope="col">Actiuni</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -1199,7 +1267,7 @@
 					<td>{{ productionPerson.fax }}</td>
 					<td>{{ productionPerson.mobilePhone }}</td>
 					<td>{{ productionPerson.email }}</td>
-					<td>
+					<td   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<button class="btn btn-mdb-color waves-light btn-sm waves-light" (click)="editProductionPerson(productionPerson,i)"
 						        mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></button>
 						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
@@ -1220,7 +1288,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Medicamente autorizate de AMDM pentru a fi fabricate</div>
 					</div>
-					<div class="col-6">
+					<div class="col-6"   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<div class="text-right fap text-white">
 							<i (click)="addAuthorizedManufacturedMedicaments()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
@@ -1241,7 +1309,7 @@
 					<th scope="col">Numărul de unități</th>
 					<th scope="col">Volum</th>
 					<th scope="col">Unitate de masura (volum)</th>
-					<th scope="col">Actiuni</th>
+					<th   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')" scope="col">Actiuni</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -1253,7 +1321,7 @@
 					<td>{{ medicament.division }}</td>
 					<td>{{ medicament.volume }}</td>
 					<td>{{ medicament.volumeQuantityMeasurement }}</td>
-					<td>
+					<td   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
 						        (click)="removeAuthorizedManufacturedMedicaments(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 						</button>
@@ -1278,17 +1346,17 @@
 		<div class="row">
 			<div class="col-md-4">
 				<div class="md-form">
-					<mat-checkbox #asepticallyPrepared [checked]="eForm.get('asepticallyPrepared').value" (change)="checkAsepticallyPrepared(asepticallyPrepared)">Produse sterile - preparate aseptic</mat-checkbox>
+					<mat-checkbox #asepticallyPrepared [disabled]="!eForm.get('type').value || (eForm.get('type').value.code!='GMPE' && eForm.get('type').value.code!='GMPM')" [checked]="eForm.get('asepticallyPrepared').value" (change)="checkAsepticallyPrepared(asepticallyPrepared)">Produse sterile - preparate aseptic</mat-checkbox>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
-					<mat-checkbox #terminallySterilised [checked]="eForm.get('terminallySterilised').value" (change)="checkTerminallySterilised(terminallySterilised)">Produse sterile - sterilizate final</mat-checkbox>
+					<mat-checkbox #terminallySterilised [disabled]="!eForm.get('type').value || (eForm.get('type').value.code!='GMPE' && eForm.get('type').value.code!='GMPM')" [checked]="eForm.get('terminallySterilised').value" (change)="checkTerminallySterilised(terminallySterilised)">Produse sterile - sterilizate final</mat-checkbox>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
-					<mat-checkbox #nonsterileProducts [checked]="eForm.get('nonsterileProducts').value" (change)="checkNonsterileProducts(nonsterileProducts)">Produse nesterile</mat-checkbox>
+					<mat-checkbox #nonsterileProducts [disabled]="!eForm.get('type').value || (eForm.get('type').value.code!='GMPE' && eForm.get('type').value.code!='GMPM')" [checked]="eForm.get('nonsterileProducts').value" (change)="checkNonsterileProducts(nonsterileProducts)">Produse nesterile</mat-checkbox>
 				</div>
 			</div>
 		</div>
@@ -1309,7 +1377,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Alte medicamente biologice (import)</div>
 					</div>
-					<div class="col-6">
+					<div class="col-6"   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<div class="text-right fap text-white">
 							<i (click)="addBiologicalMedicinesImport()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
@@ -1323,14 +1391,14 @@
 				<tr>
 					<th scope="col">Nr.</th>
 					<th scope="col">Descriere</th>
-					<th scope="col">Acțiuni</th>
+					<th   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')" scope="col">Acțiuni</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr *ngFor="let x of otherBiologicalMedicinesImport;let i = index">
 					<th scope="row">{{ i + 1}}</th>
 					<td>{{ x.description }}</td>
-					<td>
+					<td   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
 						        (click)="removeBiologicalMedicinesImport(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 						</button>
@@ -1357,7 +1425,7 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Alte activităţi de import</div>
 					</div>
-					<div class="col-6">
+					<div class="col-6"   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<div class="text-right fap text-white">
 							<i (click)="addImportActivities()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
 						</div>
@@ -1371,14 +1439,14 @@
 				<tr>
 					<th scope="col">Nr.</th>
 					<th scope="col">Descriere</th>
-					<th scope="col">Acțiuni</th>
+					<th   *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')" scope="col">Acțiuni</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr *ngFor="let x of otherImportActivities;let i = index">
 					<th scope="row">{{ i + 1}}</th>
 					<td>{{ x.description }}</td>
-					<td>
+					<td  *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
 						        (click)="removeImportActivities(i)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 						</button>
@@ -1482,7 +1550,7 @@
 		<hr>
 		<div class="text-center">
 			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>
-			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Urmatorul pas</button>
+			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Finisare</button>
 			<!--<button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>-->
 		</div>
 	</form>

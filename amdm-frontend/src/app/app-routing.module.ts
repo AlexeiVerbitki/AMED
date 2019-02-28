@@ -110,8 +110,7 @@ const routes: Routes = [
                 ],
             },
 
-        ],
-        //canActivate: [AuthGuard]
+        ], canActivateChild: [AuthGuard]
     },
     {path: '**', component: NotFoundComponent},
 ];

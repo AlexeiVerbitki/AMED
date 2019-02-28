@@ -43,6 +43,9 @@ public class MedicamentAnnihilationMedsEntity
     @Column(name = "not_reg_name")
     private String notRegisteredName;
 
+    @Column(name = "not_reg_dose")
+    private String notRegisteredDose;
+
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "form_id")
     private NmPharmaceuticalFormsEntity pharmaceuticalForm;

@@ -21,7 +21,7 @@ const routes: Routes = [
     {path: 'materia-prima/:id', component: AmbalajComponent},
     {path: 'ambalaj/:id', component: AmbalajComponent},
 
-    {path: 'import-management/:id', component: ImportManagement},
+    {path: 'import-management/:id/:auth', component: ImportManagement},
 
     {path: 'authorizations-table', component:  AuthorizationsTable,},
 ];

@@ -30,6 +30,8 @@ export class AuthService implements OnInit {
         if (!jwtHelper.isTokenExpired(token)) {
             return true;
         }
+
+        localStorage.removeItem('authenticationToken');
         return false;
 
     }
@@ -40,21 +42,6 @@ export class AuthService implements OnInit {
             localStorage.removeItem('authenticationToken');
             observer.complete();
         });
-    }
-
-    hasRole(roles: string[]): boolean {
-        const token = localStorage.getItem('authenticationToken');
-        if (!token) {
-            return false;
-        }
-        const jwtHelper = new JwtHelperService();
-        // decode the token to get its payload
-        const tokenPayload = jwtHelper.decodeToken(token);
-
-        if (this.isAuthenticated() && roles.includes(tokenPayload.role)) {
-            return true;
-        }
-        return false;
     }
 
     getUserName(): string {

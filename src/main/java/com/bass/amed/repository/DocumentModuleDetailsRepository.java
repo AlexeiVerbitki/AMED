@@ -9,12 +9,13 @@ import java.util.Optional;
 
 public interface DocumentModuleDetailsRepository extends JpaRepository<DocumentModuleDetailsEntity, Integer>
 {
-    @Query( "SELECT p FROM DocumentModuleDetailsEntity p " +
-            "INNER JOIN FETCH p.recipients " +
+    @Query("SELECT p FROM DocumentModuleDetailsEntity p " +
+            "LEFT JOIN FETCH p.executors " +
             "INNER JOIN FETCH p.registrationRequestsEntity  r " +
+            "LEFT JOIN FETCH p.documentHistoryEntity " +
             "LEFT JOIN FETCH r.requestHistories " +
             "LEFT JOIN FETCH r.documents " +
             "WHERE r.id = :id")
-    Optional<DocumentModuleDetailsEntity> finddDocumentModuleById(@Param("id") Integer id);
+    Optional<DocumentModuleDetailsEntity> findDocumentModuleById(@Param("id") Integer id);
 
 }

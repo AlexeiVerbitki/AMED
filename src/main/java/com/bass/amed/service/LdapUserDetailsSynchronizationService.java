@@ -13,6 +13,7 @@ import com.bass.amed.utils.UserAttributeMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.filter.AndFilter;
@@ -29,42 +30,30 @@ import java.util.stream.Collectors;
 public class LdapUserDetailsSynchronizationService
 {
     @Autowired
+    NmLdapUserStatusRepository nmLdapUserStatusRepository;
+    @Autowired
+    LdapContextSource          ldapContextSource;
+    List<ScrRoleEntity> newRoles;
+    @Autowired
     private LdapTemplate      ldapTemplate;
     @Autowired
     private SrcUserRepository srcUserRepository;
     @Autowired
     private ScrRoleRepository scrRoleRepository;
-    @Autowired
-    NmLdapUserStatusRepository nmLdapUserStatusRepository;
-
-    @Autowired
-    LdapContextSource ldapContextSource;
-
-    List<ScrRoleEntity> newRoles;
-
     @Value("${ldap.user_search_dn}")
-    private String LDAP_USER_SEARCH_DN;
+    private String            LDAP_USER_SEARCH_DN;
 
     @Transactional
     public List<ScrUserEntity> synchronizeLdapUsers() throws CustomException
     {
-        List<ScrUserEntity> newUsers;
-        try
+        if(ldapContextSource.getPassword().isEmpty())
         {
-            ldapContextSource.setUserDn("dumitru.ginu@bass.md");
-            ldapContextSource.setPassword("Mind2Mind");
-
-            List<LdapUserDetailsDTO> ldapUserDetails = getAllLdapUserDetails();
-
-            newRoles = syncronizeRoles(ldapUserDetails);
-
-            newUsers = syncronizeUsers(ldapUserDetails);
+            throw new CustomException("test", HttpStatus.UNAUTHORIZED);
         }
-        catch (Exception e)
-        {
-            LOGGER.info("Sincronizare esuata: {}", e.getMessage());
-            throw new CustomException(e.getMessage(), e);
-        }
+        List<LdapUserDetailsDTO> ldapUserDetails = getAllLdapUserDetails();
+        newRoles = syncronizeRoles(ldapUserDetails);
+        List<ScrUserEntity> newUsers = syncronizeUsers(ldapUserDetails);
+
         return newUsers; // "Sincronizarea a fost efectuata cu succes!"
     }
 
@@ -80,7 +69,6 @@ public class LdapUserDetailsSynchronizationService
         //        System.out.println(result);
 
         userDetailsResult.removeIf(elem -> !Constants.LDAP_ENABLED_ACCOUNT_STATUS.isAccountEnabled(elem.getUserAccountControl()) || elem.getRoles() == null);
-        //        userDetailsResult.removeIf(elem -> !elem.getUsername().equals("cristina.musteata"));
 
         return userDetailsResult;
 

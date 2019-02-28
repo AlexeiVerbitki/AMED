@@ -3,6 +3,7 @@ package com.bass.amed.controller.rest.annihilation;
 import com.bass.amed.common.Constants;
 import com.bass.amed.dto.annihilation.*;
 import com.bass.amed.entity.*;
+import com.bass.amed.entity.sequence.SeqAnnihilationRegistrationNumberEntity;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.projection.AnnihilationProjection;
 import com.bass.amed.repository.*;
@@ -196,15 +197,16 @@ public class MedAnnihilationController
                                 ProcesVerbal p = new ProcesVerbal();
                                 p.setNr(i.getAndIncrement());
                                 p.setName(med.get().getCommercialName());
-                                p.setDoza(m.getUnitsOfMeasurement() != null ? m.getUnitsOfMeasurement().getDescription() : "");
+                                p.setDoza(med.get().getDose());
                                 p.setForma(m.getPharmaceuticalForm().getDescription());
                                 p.setSeria(m.getSeria());
-                                p.setQuantity(String.valueOf(m.getQuantity()));
+                                p.setQuantity(String.valueOf(m.getQuantity()) + " " + String.valueOf(m.getUnitsOfMeasurement() != null ? m.getUnitsOfMeasurement().getDescription() : ""));
                                 p.setNotes(m.getNote());
 //                                p.setConfirmatoryDocuments(m.getConfirmativeDocuments());
                                 p.setMethodAnnihilation(m.getDestructionMethod().getDescription());
                                 p.setTaxNIM(String.valueOf(AmountUtils.round(m.getTax() * m.getQuantity(), 2)));
 //                                p.setDate(date);
+                                p.setPrimaryPackage(m.getPrimaryPackage());
                                 p.setDocNr(nrIncasari);
 
                                 procesVerbals.add(p);
@@ -214,15 +216,16 @@ public class MedAnnihilationController
                             ProcesVerbal p = new ProcesVerbal();
                             p.setNr(i.getAndIncrement());
                             p.setName(m.getNotRegisteredName());
-                            p.setDoza(m.getUnitsOfMeasurement() != null ? m.getUnitsOfMeasurement().getDescription() : "");
+                            p.setDoza(m.getNotRegisteredDose());
                             p.setForma(m.getPharmaceuticalForm().getDescription());
                             p.setSeria(m.getSeria());
-                            p.setQuantity(String.valueOf(m.getQuantity()));
+                            p.setQuantity(String.valueOf(m.getQuantity()) + " " + String.valueOf(m.getUnitsOfMeasurement() != null ? m.getUnitsOfMeasurement().getDescription() : ""));
                             p.setNotes(m.getNote());
 //                            p.setConfirmatoryDocuments(m.getConfirmativeDocuments());
                             p.setMethodAnnihilation(m.getDestructionMethod().getDescription());
                             p.setTaxNIM(String.valueOf(AmountUtils.round(m.getTax() * m.getQuantity(), 2)));
 //                            p.setDate(date);
+                            p.setPrimaryPackage(m.getPrimaryPackage());
                             p.setDocNr(nrIncasari);
 
                             procesVerbals.add(p);
@@ -279,13 +282,14 @@ public class MedAnnihilationController
                                 ProcessVerbalInfo p = new ProcessVerbalInfo();
 
                                 p.setName(med.get().getCommercialName());
-                                p.setDoza(m.getUnitsOfMeasurement() != null ? m.getUnitsOfMeasurement().getDescription() : "");
+                                p.setDoza(med.get().getDose());
                                 p.setForma(m.getPharmaceuticalForm().getDescription());
                                 p.setSeria(m.getSeria());
-                                p.setQuantity(String.valueOf(m.getQuantity()));
+                                p.setQuantity(String.valueOf(m.getQuantity()) + " " + String.valueOf(m.getUnitsOfMeasurement() != null ? m.getUnitsOfMeasurement().getDescription() : ""));
                                 p.setMethodAnnihilation(m.getDestructionMethod().getDescription());
                                 p.setCompanyName(request.getMedicamentAnnihilation().getCompanyName());
                                 p.setFutilityCause(m.getUselessReason());
+                                p.setPrimaryPackage(m.getPrimaryPackage());
 
                                 procesVerbals.add(p);
 
@@ -295,13 +299,14 @@ public class MedAnnihilationController
                             ProcessVerbalInfo p = new ProcessVerbalInfo();
 
                             p.setName(m.getNotRegisteredName());
-                            p.setDoza(m.getUnitsOfMeasurement() != null ? m.getUnitsOfMeasurement().getDescription() : "");
+                            p.setDoza(m.getNotRegisteredDose());
                             p.setForma(m.getPharmaceuticalForm().getDescription());
                             p.setSeria(m.getSeria());
-                            p.setQuantity(String.valueOf(m.getQuantity()));
+                            p.setQuantity(String.valueOf(m.getQuantity()) + " " + String.valueOf(m.getUnitsOfMeasurement() != null ? m.getUnitsOfMeasurement().getDescription() : ""));
                             p.setMethodAnnihilation(m.getDestructionMethod().getDescription());
                             p.setCompanyName(request.getMedicamentAnnihilation().getCompanyName());
                             p.setFutilityCause(m.getUselessReason());
+                            p.setPrimaryPackage(m.getPrimaryPackage());
 
                             procesVerbals.add(p);
                         }

@@ -1,5 +1,6 @@
 package com.bass.amed.controller.rest;
 
+import com.bass.amed.common.AdministrationConstants;
 import com.bass.amed.dto.ReceiptFilterDTO;
 import com.bass.amed.entity.*;
 import com.bass.amed.exception.CustomException;
@@ -10,13 +11,12 @@ import com.bass.amed.repository.*;
 import com.bass.amed.service.GenerateDocNumberService;
 import com.bass.amed.service.GenerateReceiptNumberService;
 import com.bass.amed.service.LdapUserDetailsSynchronizationService;
+import com.bass.amed.utils.AdministrationUtils;
 import com.bass.amed.utils.ReceiptsQueryUtils;
-import com.bass.amed.utils.Utils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.hibernate.JDBCException;
 import org.hibernate.transform.ResultTransformer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,12 +30,11 @@ import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/administration")
 public class AdministrationController
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AdministrationController.class);
-
     @Autowired
     private InvestigatorRepository                                investigatorRepository;
     @Autowired
@@ -83,6 +82,8 @@ public class AdministrationController
     @Autowired
     private NmNesterileProductsRepository                         nmNesterileProductsRepository;
     @Autowired
+    private NmImportActivityRepository                         nmImportActivityRepository;
+    @Autowired
     private NmBiologicalMedicinesRepository                       nmBiologicalMedicinesRepository;
     @Autowired
     private NmGMPManufacturesRepository                           nmGMPManufacturesRepository;
@@ -117,56 +118,16 @@ public class AdministrationController
     @Autowired
     private NmCustomsPointsRepository                             nmCustomsPointsRepository;
     @Autowired
-    private SeqGMPRequestNumberRepository                         seqGMPRequestNumberRepository;
+    private LdapUserDetailsSynchronizationService ldapUserDetailsSynchronizationService;
     @Autowired
-    private SeqGDPCertificateNrRepository                         seqGDPCertificateNrRepository;
+    private ScrRoleRepository                     scrRoleRepository;
     @Autowired
-    private SeqMedicamentRegistrationRequestNumberRepository      seqMedicamentRegistrationRequestNumberRepository;
-    @Autowired
-    private SeqMedicamentPostAuthorizationRequestNumberRepository seqMedicamentPostAuthorizationRequestNumberRepository;
-    @Autowired
-    private LdapUserDetailsSynchronizationService                 ldapUserDetailsSynchronizationService;
+    private ScrAuthorityRepository                scrAuthorityRepository;
 
     @RequestMapping(value = "/generate-doc-nr")
     public ResponseEntity<Integer> generateDocNr()
     {
         return new ResponseEntity<>(generateDocNumberService.getDocumentNumber(), HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/generate-gmp-request-number")
-    public ResponseEntity<List<String>> generateGMPRequestNumber()
-    {
-        SeqGMPRequestNumberEntity seq = new SeqGMPRequestNumberEntity();
-        seqGMPRequestNumberRepository.save(seq);
-        return new ResponseEntity<>(Arrays.asList("Rg09-" + Utils.intToString(6, seq.getId())), HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/generate-gdp-certificate-number")
-    public ResponseEntity<List<String>> generateGDPCertificateNumber()
-    {
-        SeqGDPCertificateNumberEntity seq = new SeqGDPCertificateNumberEntity();
-        seqGDPCertificateNrRepository.save(seq);
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-        int    year              = cal.get(Calendar.YEAR);
-        String certificateNumber = String.format("AMDM.MD.GDP.H.%s.%s", Utils.intToString(4, seq.getId()), year);
-        return new ResponseEntity<>(Arrays.asList(certificateNumber), HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/generate-medicament-registration-request-number")
-    public ResponseEntity<List<String>> generateMedicamentRegistrationRequestNumber()
-    {
-        SeqMedicamentRegistrationRequestNumberEntity seq = new SeqMedicamentRegistrationRequestNumberEntity();
-        seqMedicamentRegistrationRequestNumberRepository.save(seq);
-        return new ResponseEntity<>(Arrays.asList("Rg06-" + Utils.intToString(6, seq.getId())), HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/generate-medicament-post-authorization-request-number")
-    public ResponseEntity<List<String>> generateMedicamentPostauthorizationRequestNumber()
-    {
-        SeqMedicamentPostAuthorizationRequestNumberEntity seq = new SeqMedicamentPostAuthorizationRequestNumberEntity();
-        seqMedicamentPostAuthorizationRequestNumberRepository.save(seq);
-        return new ResponseEntity<>(Arrays.asList("Rg16-" + Utils.intToString(6, seq.getId())), HttpStatus.OK);
     }
 
     @GetMapping("/all-companies")
@@ -379,6 +340,14 @@ public class AdministrationController
         return new ResponseEntity<>(nmNesterileProductsRepository.findAll(), HttpStatus.OK);
     }
 
+    @RequestMapping("/all-import-activities")
+    public ResponseEntity<List<NmImportActivitiesEntity>> retrieveAllImportActivities()
+    {
+        LOGGER.debug("Retrieve all import activities");
+        return new ResponseEntity<>(nmImportActivityRepository.findAll(), HttpStatus.OK);
+    }
+
+
     @RequestMapping("/all-biological-medicines")
     public ResponseEntity<List<NmBiologicalMedicinesEntity>> retrieveAllBiologicalMedicines()
     {
@@ -486,10 +455,10 @@ public class AdministrationController
     }
 
     @GetMapping("/get-all-valid-users")
-    public ResponseEntity<List<ScrUserEntity>> retrieveAllScrUsers()
+    public ResponseEntity<List<ScrUserEntity>> retrieveAllValidScrUsers()
     {
         LOGGER.debug("Retrieve all valid users");
-        List<ScrUserEntity> allScrUsers = srcUserRepository.findAll();
+        List<ScrUserEntity> allScrUsers = srcUserRepository.findAllByOldIdIsNull();
 
         return new ResponseEntity<>(allScrUsers, HttpStatus.OK);
     }
@@ -511,7 +480,7 @@ public class AdministrationController
     }
 
     @PostMapping(value = "/receipts-by-payment-order-numbers")
-    public ResponseEntity<List<ReceiptsEntity>> getReceiptsByPaymentOrderNumbers(@RequestBody List<String> paymentOrderNumbers) throws CustomException
+    public ResponseEntity<List<ReceiptsEntity>> getReceiptsByPaymentOrderNumbers(@RequestBody List<String> paymentOrderNumbers)
     {
         LOGGER.debug("Get receipts by payment order numbers");
         return new ResponseEntity<>(receiptRepository.findByPaymentOrderNumberIn(paymentOrderNumbers), HttpStatus.OK);
@@ -613,78 +582,41 @@ public class AdministrationController
         return new ResponseEntity<>(reponse, HttpStatus.OK);
     }
 
-    public final static String[] TABLES = new String[]{
-            "nm_active_substances",
-            "nm_atc_codes",
-            "nm_authorization_comment",
-            "nm_auxiliary_substances",
-            "nm_bank_accounts",
-            "nm_banks",
-            "nm_clinic_trail_phases",
-            "nm_countries",
-            "nm_country_group",
-            "nm_currencies",
-            "nm_currencies_history",
-            "nm_customs_codes",
-            "nm_customs_groups",
-            "nm_customs_points",
-            "nm_document_types",
-            "nm_documents_archive",
-            "nm_economic_agent_bank_accounts",
-            "nm_economic_agent_contact_info",
-            "nm_economic_agent_types",
-            "nm_economic_agents",
-            "nm_employees",
-            "nm_identification_document_types",
-            "nm_international_medicament_names",
-            "nm_investigators",
-            "nm_labels",
-            "nm_localities",
-            "nm_manufacture_bank_accounts",
-            "nm_manufactures",
-            "nm_medical_institutions",
-            "nm_medicament_forms",
-            "nm_medicament_group",
-            "nm_medicament_type",
-            "nm_organization",
-            "nm_organization_bank_accounts",
-            "nm_partners",
-            "nm_pharmaceutical_form_types",
-            "nm_pharmaceutical_forms",
-            "nm_price_types",
-            "nm_prices",
-            "nm_professions",
-            "nm_states",
-            "nm_subdivisions",
-            "nm_taxes",
-            "nm_traffic_archive",
-            "nm_type_of_pharmacy_activity",
-            "nm_types_of_customs_transactions",
-            "nm_types_of_drug_changes",
-            "nm_units_of_measurement",
-            "nm_variation_request_type",
-            "authorized_drug_substances",
-            "service_charges",
-            "nm_biological_medicines",
-            "nm_gmp_manufacture",
-            "nm_nesterile_products",
-            "nm_primary_packaging",
-            "nm_secondary_packaging",
-            "nm_sterilizations",
-            "nm_tests_for_quality_control",
-    };
+    @GetMapping("/user-rights-and-roles")
+    public ResponseEntity<Set<ScrRoleEntity>> getUserRightsAndRoles()
+    {
+        LOGGER.debug("Get all roles with rights");
+        Set<ScrRoleEntity> scrRoleEntities = scrRoleRepository.findAllRolesWithRights();
+        return new ResponseEntity<>(scrRoleEntities, HttpStatus.OK);
+    }
+
+    @GetMapping("/get-all-authorities")
+    public ResponseEntity<List<ScrAuthorityEntity>> getAllAuthorities()
+    {
+        LOGGER.debug("Get all authorities");
+        List<ScrAuthorityEntity> scrRoleEntities = scrAuthorityRepository.findAll();
+        return new ResponseEntity<>(scrRoleEntities, HttpStatus.OK);
+    }
+
+    @PostMapping("/sync-roles-with-authorities")
+    public ResponseEntity<String> syncRolesWithAuthorities(@RequestBody List<ScrRoleEntity> scrRoleEntities)
+    {
+        LOGGER.debug("Synchronize roles with authorities");
+        scrRoleRepository.saveAll(scrRoleEntities);
+        return new ResponseEntity<>("Modificarile au fost salvate cu succes", HttpStatus.OK);
+    }
 
 
     @RequestMapping("/remove-nomenclature-row")
     public ResponseEntity<Boolean> removeNomenclatureRow(@RequestParam(value = "nomenclature", required = true) Integer nr, @RequestParam(value = "id", required = true) Integer id) throws CustomException
     {
 
-        String tableName   = TABLES[nr - 1];
+        String tableName   = AdministrationConstants.TABLES[nr - 1];
         int    isSuccesful = 0;
 
         if (!Strings.isEmpty(tableName))
         {
-            String sqlQuerry = String.format(SQL_DELETE_TABLE, tableName);
+            String sqlQuerry = String.format(AdministrationConstants.SQL_DELETE_TABLE, tableName);
 
             EntityManager em = null;
             try
@@ -721,18 +653,14 @@ public class AdministrationController
     public ResponseEntity<Long> insertNomenclatureRow(@RequestBody Map<String, Object> nomenclature) throws CustomException
     {
 
-        String tableName = getTableName(nomenclature);
+        String tableName = AdministrationUtils.getTableName(nomenclature);
 
         Long insertedRowId = null;
-
-        Map<String, Object> insertedRow = null;
 
         if (!Strings.isEmpty(tableName))
         {
 
             nomenclature.remove("tableNr");
-
-            String query = "";
 
             EntityManager em = null;
             try
@@ -740,8 +668,8 @@ public class AdministrationController
                 em = entityManagerFactory.createEntityManager();
                 em.getTransaction().begin();
 
-                query = createInsertQuery(nomenclature, tableName);
-                int numberOfAfected = em.createNativeQuery(query).executeUpdate();
+                String query           = AdministrationUtils.createInsertQuery(nomenclature, tableName);
+                int    numberOfAfected = em.createNativeQuery(query).executeUpdate();
                 if (numberOfAfected > 0)
                 {
                     insertedRowId = ((BigInteger) em.createNativeQuery("SELECT LAST_INSERT_ID()").getSingleResult()).longValue();
@@ -773,26 +701,11 @@ public class AdministrationController
     }
 
 
-    String getTableName(Map<String, Object> nomenclature)
-    {
-        Integer nr = 0;
-        try
-        {
-            nr = Integer.parseInt(nomenclature.get("tableNr").toString());
-        }
-        catch (NumberFormatException e)
-        {
-            return null;
-        }
-
-        return TABLES[nr - 1];
-    }
-
     @PostMapping(value = "update-row")
     public ResponseEntity<Boolean> updateNomenclatureRow(@RequestBody Map<String, Object> nomenclature) throws CustomException
     {
 
-        String tableName = getTableName(nomenclature);
+        String tableName = AdministrationUtils.getTableName(nomenclature);
 
         int success = 0;
 
@@ -809,7 +722,7 @@ public class AdministrationController
                 em = entityManagerFactory.createEntityManager();
                 em.getTransaction().begin();
 
-                query = createUpdateQuery(nomenclature, tableName);
+                query = AdministrationUtils.createUpdateQuery(nomenclature, tableName);
                 success = em.createNativeQuery(query).executeUpdate();
 
                 em.getTransaction().commit();
@@ -837,65 +750,18 @@ public class AdministrationController
         return new ResponseEntity<>(success > 0, HttpStatus.OK);
     }
 
-    String createInsertQuery(Map<String, Object> row, String table)
-    {
-        StringBuilder snames  = new StringBuilder(100);
-        StringBuilder svalues = new StringBuilder(100);
-        row.forEach((k, v) -> {
-            snames.append(k + ",");
-            svalues.append(String.format("'%s',", v));
-        });
-
-        snames.deleteCharAt(snames.lastIndexOf(","));
-        svalues.deleteCharAt(svalues.lastIndexOf(","));
-
-        String colls  = snames.toString();
-        String values = svalues.toString();
-
-        String sqlInsertQuerry = String.format(SQL_INSERT, table, colls, values);
-        return sqlInsertQuerry;
-    }
-
-    String createUpdateQuery(Map<String, Object> row, String table)
-    {
-        StringBuilder paramsStringBuilder = new StringBuilder(100);
-        String        id                  = row.get("id").toString();
-
-        row.forEach((k, v) -> {
-            paramsStringBuilder.append(String.format("%s = '%s',", k, v));
-        });
-
-        paramsStringBuilder.deleteCharAt(paramsStringBuilder.lastIndexOf(","));
-
-        String params = paramsStringBuilder.toString();
-
-        String sqlInsertQuerry = String.format(SQL_UPDATE, table, params, id);
-        return sqlInsertQuerry;
-    }
-
-
-    public static String SQL_GET_ALL_BY_TABLE  = "SELECT * FROM %s";
-    public static String SQL_DELETE_TABLE      = "DELETE FROM %s WHERE ID = :id";
-    public static String SQL_INSERT            = "INSERT INTO %s (%s) VALUES(%s)";
-    public static String SQL_UPDATE            = "UPDATE %s SET %s WHERE ID = %s";
-    public static String SQL_GET_COLUMNS_NAMES =
-            "SELECT COLUMN_NAME, COLUMN_COMMENT\n" +
-                    "FROM INFORMATION_SCHEMA.COLUMNS\n" +
-                    "WHERE table_name = '%s'\n" +
-                    "AND table_schema = 'amed'";
-
-    @SuppressWarnings( "deprecation" )
+    @SuppressWarnings("deprecation")
     @RequestMapping("/get-nomenclature")
     public ResponseEntity<List<Object>> getNomenclature(@RequestParam(value = "nomenclature", required = true) Integer nr) throws CustomException
     {
-        String tableName = TABLES[nr - 1];
+        String tableName = AdministrationConstants.TABLES[nr - 1];
 
 
         if (!Strings.isEmpty(tableName))
         {
-            String sqlColumnsQuery = String.format(SQL_GET_COLUMNS_NAMES, tableName);
+            String sqlColumnsQuery = String.format(AdministrationConstants.SQL_GET_COLUMNS_NAMES, tableName);
 
-            String sqlQuerry = String.format(SQL_GET_ALL_BY_TABLE, tableName);
+            String sqlQuerry = String.format(AdministrationConstants.SQL_GET_ALL_BY_TABLE, tableName);
 
             List<Object>  responseList;
             EntityManager em = null;
@@ -978,211 +844,31 @@ public class AdministrationController
         LOGGER.debug("Retrieve JSON of variation types");
         List<NmVariationTypeEntity> variations = variationTypeRespository.findAll();
 
-        Map<Integer, VariationType> variationTypeMap = new HashMap<>();
-        variations.stream().forEach(v -> variationTypeMap.put(v.getId(), new VariationType(v.getId(), v.getParentId(), v.getCode(), v.getDescription(), v.getPossibleValues())));
+        AdministrationUtils utils = new AdministrationUtils();
+        Map<Integer, AdministrationUtils.VariationType> variationTypeMap = new HashMap<>();
+        variations.stream().forEach(v -> variationTypeMap.put(v.getId(), utils.new VariationType(v.getId(), v.getParentId(), v.getCode(), v.getDescription(),
+                v.getPossibleValues())));
 
         variationTypeMap.values().stream().forEach(v -> {
-            VariationType tempV = variationTypeMap.get(v.getParentId());
+            AdministrationUtils.VariationType tempV = variationTypeMap.get(v.getParentId());
             if (tempV != null)
             {
                 tempV.getChildrens().add(v);
             }
         });
 
-        Map<Integer, VariationType> initialMap = new HashMap<>();
+        Map<Integer, AdministrationUtils.VariationType> initialMap = new HashMap<>();
         initialMap.putAll(variationTypeMap);
         variationTypeMap.entrySet().removeIf(entry -> entry.getValue().getParentId() != null);
 
-        List<VariationType> variationsFinal = new ArrayList<>();
+        List<AdministrationUtils.VariationType> variationsFinal = new ArrayList<>();
         variationTypeMap.values().stream().forEach(v -> variationsFinal.add(v));
 
-        String json        = removeUnnecessaryFields(initialMap, variationsFinal);
-        String jsonWithIds = getJSONWithIds(initialMap, variationsFinal);
+        String json        = utils.removeUnnecessaryFields(initialMap, variationsFinal);
+        String jsonWithIds = utils.getJSONWithIds(initialMap, variationsFinal);
 
         return new ResponseEntity<>("{\"val1\" : {" + json + "},\"val2\" : {" + jsonWithIds + "} }", HttpStatus.OK);
     }
 
-    private String removeUnnecessaryFields(Map<Integer, VariationType> map, List<VariationType> variations)
-    {
-        String json = "";
-        if (variations != null && !variations.isEmpty())
-        {
-            for (VariationType v : variations)
-            {
-                json = json + "\"" + v.getCode() + " - " + v.getDescription() + "\"";
-                if (!v.getChildrens().isEmpty())
-                {
-                    json = json + ":{" + removeUnnecessaryFields(map, v.getChildrens()) + "},";
-                }
-                else
-                {
-                    if (v.getPossibleValues() != null && !v.getPossibleValues().isEmpty())
-                    {
-                        json = json + ":{";
-                        String[] arr = v.getPossibleValues().split(",");
-                        for (String a : arr)
-                        {
-                            if (v.getCode().length() > 1)
-                            {
-                                json = json + "\"" + v.getCode() + " - " + a + "\":null,";
-                            }
-                            else
-                            {
-                                VariationType parent = map.get(v.getParentId());
-                                if (parent.getCode().length() > 1)
-                                {
-                                    json = json + "\"" + parent.getCode() + "-" + v.getCode() + " - " + a + "\":null,";
-                                }
-                                else
-                                {
-                                    VariationType parent2 = map.get(parent.getParentId());
-                                    json = json + "\"" + parent2.getCode() + "-" + parent.getCode() + "-" + v.getCode() + " - " + a + "\":null,";
-                                }
-                            }
-                        }
-                        json = json.substring(0, json.length() - 1);
-                        json = json + "},";
-                    }
-                    else
-                    {
-                        json = json + ": null,";
-                    }
-                }
-            }
-            json = json.substring(0, json.length() - 1);
-        }
-        return json;
-    }
 
-    private String getJSONWithIds(Map<Integer, VariationType> map, List<VariationType> variations)
-    {
-        String json = "";
-        if (variations != null && !variations.isEmpty())
-        {
-            for (VariationType v : variations)
-            {
-                json = json + "\"" + v.getCode() + " - " + v.getDescription() + "\"";
-                if (!v.getChildrens().isEmpty())
-                {
-                    json = json + ":{" + getJSONWithIds(map, v.getChildrens()) + "},";
-                }
-                else
-                {
-                    if (v.getPossibleValues() != null && !v.getPossibleValues().isEmpty())
-                    {
-                        json = json + ":{";
-                        String[] arr = v.getPossibleValues().split(",");
-                        for (String a : arr)
-                        {
-                            if (v.getCode().length() > 1)
-                            {
-                                json = json + "\"" + v.getCode() + " - " + a + "\":\"" + v.getId() + "\",";
-                            }
-                            else
-                            {
-                                VariationType parent = map.get(v.getParentId());
-                                if (parent.getCode().length() > 1)
-                                {
-                                    json = json + "\"" + parent.getCode() + "-" + v.getCode() + " - " + a + "\":\"" + v.getId() + "\",";
-                                }
-                                else
-                                {
-                                    VariationType parent2 = map.get(parent.getParentId());
-                                    json = json + "\"" + parent2.getCode() + "-" + parent.getCode() + "-" + v.getCode() + " - " + a + "\":\"" + v.getId() + "\",";
-                                }
-                            }
-                        }
-                        json = json.substring(0, json.length() - 1);
-                        json = json + "},";
-                    }
-                    else
-                    {
-                        json = json + ":\"" + v.getId() + "\",";
-                    }
-                }
-            }
-            json = json.substring(0, json.length() - 1);
-        }
-        return json;
-    }
-
-    class VariationType
-    {
-        public VariationType(Integer id, Integer parentId, String code, String description, String possibleValues)
-        {
-            this.id = id;
-            this.parentId = parentId;
-            this.code = code;
-            this.description = description;
-            this.possibleValues = possibleValues;
-            childrens = new ArrayList<VariationType>();
-        }
-
-        public Integer             id;
-        public Integer             parentId;
-        public String              code;
-        public String              description;
-        public String              possibleValues;
-        public List<VariationType> childrens;
-
-        public Integer getId()
-        {
-            return id;
-        }
-
-        public void setId(Integer id)
-        {
-            this.id = id;
-        }
-
-        public Integer getParentId()
-        {
-            return parentId;
-        }
-
-        public void setParentId(Integer parentId)
-        {
-            this.parentId = parentId;
-        }
-
-        public String getCode()
-        {
-            return code;
-        }
-
-        public void setCode(String code)
-        {
-            this.code = code;
-        }
-
-        public String getDescription()
-        {
-            return description;
-        }
-
-        public void setDescription(String description)
-        {
-            this.description = description;
-        }
-
-        public String getPossibleValues()
-        {
-            return possibleValues;
-        }
-
-        public void setPossibleValues(String possibleValues)
-        {
-            this.possibleValues = possibleValues;
-        }
-
-        public List<VariationType> getChildrens()
-        {
-            return childrens;
-        }
-
-        public void setChildrens(List<VariationType> childrens)
-        {
-            this.childrens = childrens;
-        }
-    }
 }

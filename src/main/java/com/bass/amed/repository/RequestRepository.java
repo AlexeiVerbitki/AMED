@@ -66,6 +66,7 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
             "LEFT JOIN FETCH p.requestHistories " +
             "LEFT JOIN FETCH p.outputDocuments " +
             "LEFT JOIN FETCH p.documents " +
+            "LEFT JOIN FETCH p.registrationRequestMandatedContacts " +
             "WHERE p.id = (:id)")
     Optional<RegistrationRequestsEntity> findImportAuthRequestById(@Param("id") Integer id);
 
@@ -213,7 +214,7 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
             "(current_step != 'C' AND current_step != 'AF' AND current_step != 'F' AND current_step != 'I')", nativeQuery = true)
     List<Integer> getUnfinishedRequests(@Param("REQNR") String reqNr);
 
-    @Query(value = "SELECT p FROM RegistrationRequestsEntity p \n" +
+    @Query(value = "SELECT DISTINCT p FROM RegistrationRequestsEntity p \n" +
             "            LEFT JOIN FETCH p.price \n" +
             "            LEFT JOIN FETCH p.requestHistories\n" +
             "            LEFT JOIN FETCH p.documents \n" +
@@ -227,5 +228,10 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
 
     @Transactional
     void deleteByRequestNumber(String requestNumber);
+
+    @Query("SELECT p FROM RegistrationRequestsEntity p " +
+            "LEFT JOIN FETCH p.documents " +
+            "WHERE p.id = (:id)")
+    Optional<RegistrationRequestsEntity> getRequestDocuments(@Param("id") Integer id);
 }
 

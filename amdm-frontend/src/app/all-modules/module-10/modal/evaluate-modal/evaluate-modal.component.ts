@@ -1,5 +1,6 @@
-import {Component, Inject, Input, OnInit} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {AuthService} from '../../../../shared/service/authetication.service';
 
 @Component({
     selector: 'app-evaluate-modal',
@@ -8,19 +9,24 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 })
 export class EvaluateModalComponent implements OnInit {
 
-    problemDescription: string;
+    historyEntity = {'id': null, 'addDate': new Date(), 'actionDescription': '', 'assignee': ''};
+
     constructor(@Inject(MAT_DIALOG_DATA) public dataDialog: any,
-                public dialogConfirmation: MatDialogRef<EvaluateModalComponent>) {
+                public dialogConfirmation: MatDialogRef<EvaluateModalComponent>,
+                private authService: AuthService) {
     }
 
     ngOnInit() {
-       this.problemDescription =  this.dataDialog.problemDescription.comment;
+        console.log(this.historyEntity);
+        this.historyEntity.actionDescription = '';
+        this.historyEntity.assignee = this.authService.getUserName();
     }
+
     cancel(): void {
-        this.dialogConfirmation.close();
+        this.dialogConfirmation.close(this.historyEntity);
     }
+
     addComment(): void {
-        this.dataDialog.problemDescription.comment = this.problemDescription;
-        this.dialogConfirmation.close();
+        this.dialogConfirmation.close(this.historyEntity);
     }
 }

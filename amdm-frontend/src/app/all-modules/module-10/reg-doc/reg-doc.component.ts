@@ -3,7 +3,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 import {MatDialog} from '@angular/material';
-import {saveAs} from 'file-saver';
 import {Observable, Subscription} from 'rxjs';
 import {AdministrationService} from '../../../shared/service/administration.service';
 import {Router} from '@angular/router';
@@ -22,16 +21,26 @@ import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
     templateUrl: './reg-doc.component.html',
     styleUrls: ['./reg-doc.component.css']
 })
+
+
 export class RegDocComponent implements OnInit, OnDestroy, CanModuleDeactivate {
 
     documents: Document [] = [];
     rForm: FormGroup;
+    initialDocTypes: any[];
     docTypes: any[];
-    recipients: any[];
+    executors: any[];
+    registerCodes: any[];
 
     generatedDocNrSeq: number;
     formSubmitted = false;
     canBeDeactivated = false;
+
+    isExecutor = false;
+    solicitant = false;
+    execTerm = false;
+    isOutLetter = false;
+
     private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder, public dialog: MatDialog, private router: Router,
@@ -47,9 +56,9 @@ export class RegDocComponent implements OnInit, OnDestroy, CanModuleDeactivate {
                 'requestNumber': [null],
                 'startDate': [new Date(), Validators.required],
                 'currentStep': ['E'],
-                'sender': [null, Validators.required],
-                'recipientList': [null, Validators.required],
-                'executionDate': [null, Validators.required],
+                'recipient': [null],
+                'executorList': [],
+                'executionDate': [null],
                 'problemDescription': [null]
             }
         );
@@ -58,21 +67,21 @@ export class RegDocComponent implements OnInit, OnDestroy, CanModuleDeactivate {
     ngOnInit() {
         this.navbarTitleService.showTitleMsg('Înregistrare documente / Registrare cerere');
 
-        this.subscriptions.push(
-            this.administrationService.generateDocNr().subscribe(data => {
-                    this.generatedDocNrSeq = data;
-                    this.rForm.get('requestNumber').setValue(this.generatedDocNrSeq);
-                },
-                error => console.log(error)
-            )
-        );
+        this.subscriptions.push(this.taskService.getRegisterCatalogCodes().subscribe(data => {
+                this.registerCodes = data;
+                this.registerCodes = this.registerCodes.filter(elem => {
+                    return 'Rg01,Rg02,Rg03,Rg04,Rg05'.includes(elem.registerCode);
+                });
+            }
+        ));
 
         this.subscriptions.push(
             this.taskService.getRequestStepByIdAndCode('24', 'R').subscribe(step => {
                     this.subscriptions.push(
                         this.administrationService.getAllDocTypes().subscribe(data => {
-                                this.docTypes = data;
-                                this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
+                                this.initialDocTypes = data;
+                                this.initialDocTypes = this.initialDocTypes.filter(r => step.availableDocTypes.includes(r.category));
+                                this.docTypes = this.initialDocTypes.filter(r => r.category == 'AX');
                             },
                             error => console.log(error)
                         )
@@ -83,11 +92,53 @@ export class RegDocComponent implements OnInit, OnDestroy, CanModuleDeactivate {
         );
 
         this.subscriptions.push(this.administrationService.getAllValidUsers().subscribe(data => {
-                this.recipients = data;
+                this.executors = data;
             },
             error => console.log(error)
             )
         );
+        this.subscribeForValueChanges();
+    }
+
+    subscribeForValueChanges() {
+        this.subscriptions.push(this.rForm.get('requestNumber').valueChanges.subscribe(regRequestCode => {
+                this.docTypes = [];
+                if (regRequestCode == null) {
+                    this.initialDocTypes.forEach(doc => doc.category == 'AX' ? this.docTypes.push(doc) : null);
+                    this.isExecutor = false;
+                    this.execTerm = false;
+                    this.isOutLetter = false;
+                } else if (regRequestCode.registerCode == 'Rg01') {
+                    this.initialDocTypes.forEach(doc => 'AX,SIN'.includes(doc.category) ? this.docTypes.push(doc) : null);
+                    this.solicitant = true;
+                    this.isExecutor = false;
+                    this.execTerm = false;
+                    this.isOutLetter = true;
+                } else if (regRequestCode.registerCode == 'Rg02') {
+                    this.initialDocTypes.forEach(doc => 'AX,SIE'.includes(doc.category) ? this.docTypes.push(doc) : null);
+                    this.solicitant = false;
+                    this.isExecutor = true;
+                    this.execTerm = false;
+                    this.isOutLetter = false;
+                } else if (regRequestCode.registerCode == 'Rg03') {
+                    this.initialDocTypes.forEach(doc => 'AX,DI'.includes(doc.category) ? this.docTypes.push(doc) : null);
+                    this.isExecutor = true;
+                    this.execTerm = true;
+                    this.isOutLetter = false;
+                } else if (regRequestCode.registerCode == 'Rg04') {
+                    this.initialDocTypes.forEach(doc => 'AX,OR'.includes(doc.category) ? this.docTypes.push(doc) : null);
+                    this.isExecutor = true;
+                    this.execTerm = true;
+                    this.isOutLetter = false;
+                } else if (regRequestCode.registerCode == 'Rg05') {
+                    this.initialDocTypes.forEach(doc => 'AX,PT'.includes(doc.category) ? this.docTypes.push(doc) : null);
+                    this.isExecutor = true;
+                    this.execTerm = true;
+                    this.isOutLetter = false;
+                }
+            })
+        );
+
     }
 
     nextStep() {
@@ -102,36 +153,52 @@ export class RegDocComponent implements OnInit, OnDestroy, CanModuleDeactivate {
         this.loadingService.show();
         const currentUser = this.authService.getUserName();
 
-        const modelToSubmit: any = {recipients: [], registrationRequestsEntity: {requestHistories: {}, type: {}, documents: {}}};
+        const modelToSubmit: any = {executors: [], registrationRequestsEntity: {requestHistories: {}, type: {}, documents: {}}};
 
 
-        modelToSubmit.registrationRequestsEntity.requestNumber = this.rForm.get('requestNumber').value;
+        modelToSubmit.registrationRequestsEntity.requestNumber = this.rForm.get('requestNumber').value.registerCode;
         modelToSubmit.registrationRequestsEntity.initiator = currentUser;
         modelToSubmit.registrationRequestsEntity.assignedUser = currentUser;
         modelToSubmit.registrationRequestsEntity.startDate = this.rForm.get('startDate').value;
-        modelToSubmit.registrationRequestsEntity.currentStep = 'E';
+        modelToSubmit.registrationRequestsEntity.regSubject = this.rForm.get('problemDescription').value;
 
-        modelToSubmit.sender = this.rForm.get('sender').value;
+        if (this.rForm.get('requestNumber').value.registerCode == 'Rg01') {
+            modelToSubmit.registrationRequestsEntity.currentStep = 'FI';
+
+            modelToSubmit.registrationRequestsEntity.requestHistories = [{
+                startDate: this.rForm.get('startDate').value,
+                endDate: new Date(),
+                username: currentUser,
+                step: 'R'
+            }];
+        } else {
+            modelToSubmit.registrationRequestsEntity.currentStep = 'E';
+
+            modelToSubmit.registrationRequestsEntity.requestHistories = [{
+                startDate: this.rForm.get('startDate').value,
+                endDate: new Date(),
+                username: currentUser,
+                step: 'R'
+            }];
+        }
+
+        modelToSubmit.recipient = this.rForm.get('recipient').value;
         modelToSubmit.executionDate = this.rForm.get('executionDate').value;
         modelToSubmit.problemDescription = this.rForm.get('problemDescription').value;
 
-        this.rForm.value.recipientList.forEach(elem => modelToSubmit.recipients.push({
-            name: elem.username, comment: '', confirmed: false
-        }));
+        if (this.rForm.value.executorList != null) {
+            this.rForm.value.executorList.forEach(elem => modelToSubmit.executors.push({
+                name: elem.username, comment: '', confirmed: false
+            }));
+        }
 
-        modelToSubmit.registrationRequestsEntity.requestHistories = [{
-            startDate: this.rForm.get('startDate').value,
-            endDate: new Date(),
-            username: currentUser,
-            step: 'R'
-        }];
         modelToSubmit.registrationRequestsEntity.type = {id: 24, description: '', code: '', processId: ''};
         modelToSubmit.registrationRequestsEntity.documents = this.documents;
 
         this.subscriptions.push(this.requestService.addDocumentRequest(modelToSubmit).subscribe(data => {
                 this.canBeDeactivated = true;
                 this.loadingService.hide();
-                this.router.navigate(['dashboard/module/documents/evaluate/' + data.body.id]);
+                this.router.navigate(['dashboard/homepage/']);
             }, error => this.loadingService.hide())
         );
     }

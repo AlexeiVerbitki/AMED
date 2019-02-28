@@ -1,26 +1,31 @@
 package com.bass.amed.controller.rest.drugs;
 
+import com.bass.amed.JobSchedulerComponent;
 import com.bass.amed.dto.ScheduledModuleResponse;
 import com.bass.amed.dto.drugs.CompanyDetailsDTO;
 import com.bass.amed.dto.drugs.DrugDecisionsFilterDTO;
 import com.bass.amed.dto.drugs.DrugDecisionsFilterDetailsDTO;
 import com.bass.amed.dto.drugs.OldDrugDecisionDetailsDTO;
 import com.bass.amed.entity.*;
+import com.bass.amed.entity.sequence.SeqDrugAuthorizationNumberEntity;
 import com.bass.amed.exception.CustomException;
+import com.bass.amed.projection.DrugRemainingSubstanceProjection;
 import com.bass.amed.repository.EconomicAgentsRepository;
 import com.bass.amed.repository.RequestRepository;
 import com.bass.amed.repository.RequestTypeRepository;
 import com.bass.amed.repository.drugs.*;
+import com.bass.amed.utils.AmountUtils;
 import com.bass.amed.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -53,8 +58,11 @@ public class DrugDecisionsController {
     private DrugUnitsConversionRatesRepository drugUnitsConversionRatesRepository;
     @Autowired
     private SeqDrugAuthorizationNumberRepository seqDrugAuthorizationNumberRepository;
-    @Value("${scheduler.rest.api.host}")
-    private String schedulerRestApiHost;
+    @Autowired
+    private DrugImportExportDeclarationsRepository drugImportExportDeclarationsRepository;
+
+    @Autowired
+    private JobSchedulerComponent jobSchedulerComponent;
 
     @PostMapping(value = "/by-filter")
     public ResponseEntity<List<DrugDecisionsFilterDetailsDTO>> getDrugDecisionsByFilter(@RequestBody DrugDecisionsFilterDetailsDTO filter) {
@@ -92,9 +100,9 @@ public class DrugDecisionsController {
     }
 
     @RequestMapping(value = "/search-substances-by-name-or-code")
-    public ResponseEntity<List<AuthorizedDrugSubstancesEntity>> getAuthorizedSubstancesByNameOrCode(String term) {
+    public ResponseEntity<List<AuthorizedDrugSubstancesEntity>> getAuthorizedSubstancesByNameOrCode(String term, String authType) {
         logger.debug("Retrieve substances by name or code");
-        List<AuthorizedDrugSubstancesEntity> substances = authorizedDrugSubstancesRepository.getAuthorizedSubstancesByNameOrCode(term, term);
+        List<AuthorizedDrugSubstancesEntity> substances = authorizedDrugSubstancesRepository.getAuthorizedSubstancesByNameOrCode(term, term, authType);
 
         return new ResponseEntity<>(substances, HttpStatus.OK);
     }
@@ -110,8 +118,8 @@ public class DrugDecisionsController {
     @RequestMapping(value = "/get-import-export-details-by-decision-id")
     public ResponseEntity<List<DrugImportExportDetailsEntity>> getImportExportDetailsByDecisionId(Integer id) {
         logger.debug("Get import export details by decision id");
-        List<DrugImportExportDetailsEntity> details = drugImportExportDetailsRepository.findALLByDrugCheckDecisionsId(id);
-
+//        List<DrugImportExportDetailsEntity> details = drugCheckDecisionRepository.findById(id).get().get;
+        List<DrugImportExportDetailsEntity> details = new ArrayList<>();
         return new ResponseEntity<>(details, HttpStatus.OK);
     }
 
@@ -135,6 +143,7 @@ public class DrugDecisionsController {
     }
 
     @RequestMapping(value = "/add-authorization-details", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
     public ResponseEntity<RegistrationRequestsEntity> addAuthorizationDetails(@RequestBody RegistrationRequestsEntity request) throws CustomException {
         logger.debug("Add authorization import export details");
         Optional<RequestTypesEntity> type = requestTypeRepository.findByCode(request.getType().getCode());
@@ -146,7 +155,7 @@ public class DrugDecisionsController {
 
             if (request.getCurrentStep() != null && (request.getCurrentStep().equals("F") || request.getCurrentStep().equals("I"))) {
                 logger.debug("Start jobUnschedule method...");
-                Utils.jobUnschedule(schedulerRestApiHost, "/set-expired-request", request.getId());
+                jobSchedulerComponent.jobUnschedule( "/set-expired-request", request.getId());
                 logger.debug("Finished jobUnschedule method.");
 //                logger.debug("Start jobUnschedule method...");
 //                Utils.jobUnschedule(schedulerRestApiHost, "/set-critical-request", request.getId());
@@ -154,7 +163,7 @@ public class DrugDecisionsController {
             } else {
                 logger.debug("Start jobSchedule method...");
                 ResponseEntity<ScheduledModuleResponse> result = null;
-                result = Utils.jobSchedule(3, "/set-critical-request", "/set-expired-request", request.getId(), request.getRequestNumber(), null, schedulerRestApiHost);
+                result = jobSchedulerComponent.jobSchedule(3, "/set-critical-request", "/set-expired-request", request.getId(), request.getRequestNumber(), null);
                 if (result != null && !result.getBody().isSuccess()) {
                     logger.debug("The method jobSchedule, was not successful.");
                     throw new CustomException("Nu a putut fi setat termenul de eliberare al certificatului.");
@@ -172,7 +181,7 @@ public class DrugDecisionsController {
         logger.debug("Get all units codes by reference unit code");
         Optional<List<DrugUnitsConversionRatesEntity>> units = drugUnitsConversionRatesRepository.findByRefUnitCode(refCode);
 
-        return new ResponseEntity<>(units.orElseThrow(() -> new CustomException("No result was found")), HttpStatus.OK);
+        return new ResponseEntity<>(units.orElse(null), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/get-old-details-by-company-code")
@@ -189,5 +198,35 @@ public class DrugDecisionsController {
         SeqDrugAuthorizationNumberEntity seq = new SeqDrugAuthorizationNumberEntity();
         seqDrugAuthorizationNumberRepository.save(seq);
         return new ResponseEntity<>(Arrays.asList("Rg10-"+ Utils.intToString(6, seq.getId())), HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/calculate-total-available")
+    public ResponseEntity<Double> calculateAvailableTotal(Integer substanceId, String type /*Import,Export*/, Integer requestId) throws CustomException {
+        logger.debug("Calculate available remainng substance");
+        Optional<AuthorizedDrugSubstancesEntity> authOpt = authorizedDrugSubstancesRepository.findById(substanceId);
+
+        if (!authOpt.isPresent())
+        {
+            throw new CustomException("Not found respective drug substance");
+        }
+
+
+        //Cantitate autorizatii valide
+        Optional<Double> notFinishedAuthorizations = drugDecisionsRepository.calculateAvailableAuthorizations(substanceId, requestId);
+
+
+        //Cantitate autorizatii finisate
+        List<DrugRemainingSubstanceProjection> importExports = drugDecisionsRepository.loadFinishedAuthorizations(substanceId);
+
+        Double totalFinishedUsed = 0.0;
+        for (DrugRemainingSubstanceProjection dre : importExports){
+            List<Double> rsList = drugImportExportDeclarationsRepository.findAllByImportExportDetailId(dre.getId());
+
+            totalFinishedUsed += rsList.stream().reduce(0.0, Double::sum);
+        }
+
+        Double total = authOpt.get().getQuantity() -( notFinishedAuthorizations.isPresent() ? notFinishedAuthorizations.get() : 0.0 ) - totalFinishedUsed;
+        return new ResponseEntity<>(AmountUtils.round(total,2), HttpStatus.OK);
     }
 }

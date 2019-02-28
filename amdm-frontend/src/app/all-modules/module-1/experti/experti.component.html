@@ -75,6 +75,7 @@
 		</div>
 		<hr>
 		<app-document [docDetails]="docDetails" [documents]="documents" [nrCerere]="expertForm.get('requestNumber').value" [dcTypes]="docTypes" (documentModified)="documentModified($event)"></app-document>
+		<h5 class="text-center font-weight-bold">Detalii medicament</h5>
 		<div class="row">
 			<div class="col-md-4">
 				<div class="md-form">
@@ -121,7 +122,7 @@
 						<th scope="col">Numărul de unități</th>
 						<th scope="col">Volum</th>
 						<th scope="col">Unitate de masura (volum)</th>
-						<th scope="col" *ngIf="expertForm.get('type').value && expertForm.get('type').value.code=='MEDR'">Cod medicament</th>
+						<th scope="col" *ngIf="expertForm.get('type').value && (expertForm.get('type').value.code=='MERG' || expertForm.get('type').value.code=='MERS')">Cod medicament</th>
 						<th scope="col">Aprobat</th>					
 					</tr>
 				</thead>
@@ -131,8 +132,8 @@
 						<td>{{ division.description }}</td>
 						<td>{{ division.volume }}</td>
 						<td>{{ division.volumeQuantityMeasurement ? division.volumeQuantityMeasurement.description : '' }}</td>
-						<td *ngIf="expertForm.get('type').value && expertForm.get('type').value.code=='MEDR'">{{ division.code }}</td>
-						<td>  <mat-checkbox #checkboxApproved  [checked]="division.approved" (change)="checkApproved(division,checkboxApproved)"></mat-checkbox></td>
+						<td *ngIf="expertForm.get('type').value && (expertForm.get('type').value.code=='MERG' || expertForm.get('type').value.code=='MERS')">{{ division.code }}</td>
+						<td>  <mat-checkbox #checkboxApproved  [checked]="division.approved" [disabled]="oaAttached" (change)="checkApproved(division,checkboxApproved)"></mat-checkbox></td>
 					</tr>
 				</tbody>
 			</table>
@@ -160,6 +161,7 @@
 						<th scope="col">Concentratie</th>
 						<th scope="col">Unitate de masură</th>
 						<th scope="col">Producători</th>
+						<th scope="col">Numărul compoziției</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -169,6 +171,7 @@
 						<td>{{ substance.quantity }}</td>
 						<td>{{ substance.unitsOfMeasurement.description }}</td>
 						<td>{{ manufacturesStr(substance)}}</td>
+						<td>{{ substance.compositionNumber }}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -241,7 +244,7 @@
 			<div class="col-md-4">
 				<div class="md-form">
 					<input id="prescription" mdbInputDirective type="text" class="form-control" formControlName="prescription" [attr.disabled]="true">
-					<label for="prescription">Eliberare receta</label>
+					<label for="prescription">Eliberare reţetă</label>
 				</div>
 			</div>
 			<div class="col-md-4">
@@ -335,8 +338,8 @@
 		</table>
 		</div>
 		<hr>
-		<app-instruction (removeInstr)="removeInstr($event)" (addInstr)="addInstr($event)" [canUpload]="expertForm.get('type').value && expertForm.get('type').value.code!='MEDR'" [divisions]="divisions" [instructions]="instructions" [nrCerere]="expertForm.get('requestNumber').value"></app-instruction>
-		<app-macheta (removeMaket)="removeMacheta($event)" (addMaket)="addMacheta($event)" [canUpload]="expertForm.get('type').value && expertForm.get('type').value.code!='MEDR'" [divisions]="divisions" [machets]="machets" [nrCerere]="expertForm.get('requestNumber').value"></app-macheta>
+		<app-instruction (removeInstr)="removeInstr($event)" (addInstr)="addInstr($event)" [canUpload]="expertForm.get('type').value && expertForm.get('type').value.code!='MERG' && expertForm.get('type').value.code!='MERS'" [divisions]="divisions" [instructions]="instructions" [nrCerere]="expertForm.get('requestNumber').value"></app-instruction>
+		<app-macheta (removeMaket)="removeMacheta($event)" (addMaket)="addMacheta($event)" [canUpload]="expertForm.get('type').value && expertForm.get('type').value.code!='MERG' && expertForm.get('type').value.code!='MERS'" [divisions]="divisions" [machets]="machets" [nrCerere]="expertForm.get('requestNumber').value"></app-macheta>
 		<div class="gradient-card-header bg-sidebar border-gradient">
 			<div class="container-fluid">
 				<div class="row">

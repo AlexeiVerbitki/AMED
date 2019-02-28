@@ -4,6 +4,15 @@
 
         <div class="row">
             <div class="col-md-4">
+                <div class="md-form">
+                    <input id="nrReg" mdbInputDirective type="text" class="form-control" formControlName="requestNumber"
+                           [attr.disabled]="true">
+                    <label for="nrReg">Nr. de inregistrare a cererii
+                        <span class="text-danger">*</span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="picker" placeholder="Data inregistrarii" required
@@ -11,15 +20,6 @@
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker touchUi #picker></mat-datepicker>
                     </mat-form-field>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input id="nrReg" mdbInputDirective type="text" class="form-control" formControlName="requestNumber"
-                           [attr.disabled]="true">
-                    <label for="nrReg">Nr. de inregistrare a cererii
-                        <span class="text-danger">*</span>
-                    </label>
                 </div>
             </div>
             <div class="col-md-4">
@@ -35,8 +35,7 @@
         </div>
 
         <app-document [documents]="documents" [nrCerere]="cerereImpExpForm.get('requestNumber').value"
-                      [dcTypes]="docTypes"
-                      (documentModified)="documentModified($event)"></app-document>
+                      (documentModified)="documentModified($event)" [dcTypeIdentifier]="{code : 'ATIE', step : 'E'}"></app-document>
          <div class="mb-3"></div>             
         <div class="row">
 
@@ -99,72 +98,12 @@
         <h5 class="text-center font-weight-bold" >Detalii</h5>
         <div class="row">
 
-            <div class="col-md-4">
-                <div class="md-form-modified">
-                    <ng-select class="custom" [items]="authorizedSubstances | async" bindLabel="substanceName"
-                               placeholder="Substanta activa"
-                               formControlName="substance" [required]="false" [typeahead]="medInputs"
-                               [loading]="medLoading">
-                        <ng-template ng-option-tmp let-item="item">
-                            {{item?.substanceName}} <br/>
-                            <small>{{item?.substanceCode}}</small>
-                        </ng-template>
-                    </ng-select>
-                    <div *ngIf="substanceNotSelected">
-                        <small class="text-muted"><strong class="text-danger">Substanta activa trebuie
-                            selectata</strong></small>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="row">
-                    <div class="col-md-10">
-                        <div class="md-form">
-                            <input id="availableQuantity" mdbInputDirective type="number" class="form-control"
-                                   formControlName="availableQuantity">
-                            <label for="availableQuantity">Substanta activa disponibila
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="md-form">
-                            <input id="availableQuantityUM" mdbInputDirective type="text" class="form-control"
-                                   formControlName="availableQuantityUM">
-                            <label for="availableQuantityUM">
-                            </label>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="md-form">
-                    <input id="authorizedQuantity" mdbInputDirective type="number" class="form-control"
-                           formControlName="authorizedQuantity">
-                    <label for="authorizedQuantity">Cantitate substanta activa pentru autorizare
-                    </label>
-                </div>
-            </div>
-
-            <div class="col-2">
-                <div class="md-form-modified">
-                    <ng-select class="w-100"
-                               [items]="substanceUnits"
-                               bindLabel="unitCodeDescription"
-                               formControlName="unitOfMeasurement"
-                               placeholder="UM substanta activa">
-                    </ng-select>
-                </div>
-            </div>
-
 
             <div class="col-md-4">
                 <div class="md-form">
                     <input id="comName" mdbInputDirective type="text" class="form-control"
                            formControlName="commercialName">
-                    <label for="comName">Denumire comerciala
+                    <label for="comName">Denumire comerciala<span class="text-danger">*</span>
                     </label>
                 </div>
             </div>
@@ -182,7 +121,7 @@
                 <div class="md-form">
                     <input id="packagingQuantity" mdbInputDirective type="text" class="form-control"
                            formControlName="packagingQuantity">
-                    <label for="packagingQuantity">Cantitatea
+                    <label for="packagingQuantity">Cantitatea<span class="text-danger">*</span>
                     </label>
                 </div>
             </div>
@@ -193,10 +132,17 @@
                                [items]="allSubstanceUnits"
                                bindLabel="description"
                                formControlName="unitOfMeasurementAll"
-                               placeholder="UM pentru toata cantitatea">
+                               placeholder="UM pentru toata cantitatea"
+
+                    >
                     </ng-select>
                 </div>
             </div>
+
+
+
+
+
         </div>
 
         <hr>
@@ -206,7 +152,7 @@
                 <!-- Title -->
                 <div class="row">
                     <div class="col-6">
-                        <div class="card-header-title white-text">Substanta activa</div>
+                        <div class="card-header-title white-text">Substante</div>
                     </div>
                     <div class="col-6">
                         <div class="text-right fap text-white">
@@ -222,63 +168,21 @@
             <table class="table table-widths text-center">
                 <thead class="bg-sidebar white-text">
                 <tr>
-                    <th scope="col">Denumire</th>
-                    <th scope="col">Cod</th>
-                    <th scope="col">Cantitate admisibila</th>
-                    <th scope="col">Disponibila din data</th>
-                    <th scope="col">Valabila pana la data</th>
-                    <th scope="col">Unitate de masura</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let substance of activeSubstancesTable;let i = index">
-                    <th scope="row">{{ substance.substanceName }}</th>
-                    <td>{{ substance.substanceCode }}</td>
-                    <td>{{ substance.quantity  }}</td>
-                    <td>{{ substance.fromDate | date: 'dd/MM/yyyy' }}</td>
-                    <td>{{ substance.toDate | date: 'dd/MM/yyyy' }}</td>
-                    <td>{{ unity.description }}</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <hr>
-        <div class="gradient-card-header bg-sidebar border-gradient">
-            <div class="container-fluid">
-                <!-- Title -->
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card-header-title white-text">Substante selectate</div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="card-body card-body-cascade">
-            <table class="table table-widths text-center">
-                <thead class="bg-sidebar white-text">
-                <tr>
-                    <th scope="col">Denumire</th>
-                    <th scope="col">Cod</th>
                     <th scope="col">Denumire comerciala</th>
                     <th scope="col">Divizare</th>
                     <th scope="col">Cantitatea</th>
-                    <th scope="col">Cantitate autorizata</th>
-                    <th scope="col">Unitate de masura</th>
                     <th scope="col">Actiuni</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr *ngFor="let susbstance of selectedSubstancesTable;let i = index">
-                    <td>{{ susbstance.substanceName }}</td>
-                    <td>{{ susbstance.substanceCode }}</td>
                     <td>{{ susbstance.commercialName }}</td>
                     <td>{{ susbstance.packaging }}</td>
                     <td>{{ susbstance.packagingQuantity }}</td>
-                    <td>{{ susbstance.authorizedQuantity }}</td>
-                    <td>{{ susbstance.authorizedQuantityUnitDesc }}</td>
                     <td>
+                        <button type="button" class="btn btn-mdb-color waves-light btn-sm waves-light"
+                                (click)="addActiveSubstance(susbstance, i)"
+                                mdbWavesEffect ><i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i></button>
                         <button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
                                 (click)="removeSubstance(i)"
                                 mdbWavesEffect attr.disabled="this.disabled"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
@@ -291,32 +195,6 @@
 
 
 
-       <!-- <div class="row">
-            <div class="col-md-4">
-                <div class="md-form" formGroupName="drugCheckDecision">
-                    <input id="partner" mdbInputDirective type="text" class="form-control" formControlName="partnerCompany">
-                    <label for="partner">Compania partener
-                    </label>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="md-form-modified" formGroupName="drugCheckDecision">
-                    <mat-form-field class="w-100">
-                        <input matInput [matDatepicker]="pickerExp" placeholder="Data expirarii" required
-                               formControlName="expireDate">
-                        <mat-datepicker-toggle matSuffix [for]="pickerExp"></mat-datepicker-toggle>
-                        <mat-datepicker touchUi #pickerExp></mat-datepicker>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="md-form" formGroupName="drugCheckDecision">
-                    <input id="custom" mdbInputDirective type="text" class="form-control" formControlName="customsPost">
-                    <label for="custom">Post vamal
-                    </label>
-                </div>
-            </div>
-        </div>-->
         <h5 class="text-center font-weight-bold" >Decizia</h5>
         <div class="row">
             <div class="col-md-4">
@@ -342,13 +220,6 @@
                     </mat-form-field>
                 </div>
             </div>
-            <!-- <div class="col-md-4">
-                 <div class="md-form">
-                     <input id="reason" mdbInputDirective type="text" class="form-control">
-                     <label for="reason">Motiv refuz
-                     </label>
-                 </div>
-             </div>-->
         </div>
         <div class="row">
             <div class="col-md-3">
@@ -378,9 +249,6 @@
 
             <div class="col-md-9">
                 <div class="md-form" formGroupName="drugCheckDecision">
-                    <!-- <input id="reason" mdbInputDirective type="text" class="form-control">
-                     <label for="reason">Motivul refuzului
-                     </label>-->
                     <textarea type="text" id="reasonDecision" class="md-textarea form-control" mdbInputDirective
                               rows="2" formControlName="reasonDecision"></textarea>
                     <label for="reasonDecision">Motivul refuzului</label>
@@ -414,8 +282,6 @@
                 <tr>
                     <th scope="col">Denumirea</th>
                     <th scope="col">Numar</th>
-                  <!--  <th scope="col">Statut document</th>
-                    <th scope="col">Statut emitere</th>-->
                     <th>Actiuni</th>
                 </tr>
                 </thead>
@@ -423,37 +289,15 @@
                 <tr *ngFor="let a of outDocuments">
                     <th scope="row">{{ a.name }}</th>
                     <th scope="row">{{ a.number }}</th>
-                   <!-- <th scope="row">{{ a.status }}</th>
-                    <th scope="row">
-                        <mat-checkbox
-                                *ngIf="a.docType && (a.docType.category=='SR' || a.docType.category=='IP' || a.docType.category=='IH' || a.docType.category=='IF' || a.docType.category=='EP' || a.docType.category=='EH' || a.docType.category=='EF')"
-                                #checkBoxResponse [checked]="a.responseReceived || a.status=='Atasat'"
-                                (change)="checkResponseReceived(a,checkBoxResponse)"
-                                [disabled]="a.status=='Atasat'">Emitere
-                            document
-                        </mat-checkbox>
-                    </th>-->
                     <td>
                         <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)"><i
                                 class="fa fa-file fa-lg" aria-hidden="true"></i>
                         </button>
-                       <!-- <button *ngIf="a.status=='Nu este atasat' && a.responseReceived==false && (a.docType.category=='SR' || a.docType.category=='IP' || a.docType.category=='IH' || a.docType.category=='IF' || a.docType.category=='EP' || a.docType.category=='EH' || a.docType.category=='EF')"
-                                class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)">
-                            <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
-                        </button>-->
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
-      <!--  <div *ngIf="formSubmitted && !isResponseReceived">
-            <small class="text-muted"><strong class="text-danger">Nici un document pentru emitere nu a fost
-                selectat</strong></small>
-        </div>
-        <div *ngIf="formSubmitted && isNonAttachedDocuments && isResponseReceived">
-            <small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong>
-            </small>
-        </div>-->
         <hr>
         <div class="text-center">
             <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">

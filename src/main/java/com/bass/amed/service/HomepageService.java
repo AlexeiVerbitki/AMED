@@ -1,8 +1,6 @@
 package com.bass.amed.service;
 
-import com.bass.amed.dto.TasksDTO;
 import com.bass.amed.projection.TaskDetailsProjectionDTO;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +26,16 @@ public class HomepageService {
                     " STEP.description AS step," +
                     " STEP.navigation_url AS navigationUrl, " +
                     " RREQ.expired AS expired, " +
-                    " RREQ.critical AS critical " +
-                    " FROM amed.registration_requests RREQ " +
-                    " LEFT JOIN amed.nm_economic_agents COMP on COMP.id=RREQ.company_id " +
-                    " LEFT JOIN amed.registration_request_mandated_contact MANCONT on MANCONT.registration_request_id=RREQ.id " +
-                    " LEFT JOIN amed.registration_request_steps STEP on (STEP.request_type_id=RREQ.type_id and STEP.code=RREQ.current_step) " +
+                    " RREQ.critical AS critical, " +
+                    " RREQ.reg_subject AS regSubject " +
+                    " FROM registration_requests RREQ " +
+                    " LEFT JOIN nm_economic_agents COMP on COMP.id=RREQ.company_id " +
+                    " LEFT JOIN registration_request_mandated_contact MANCONT on MANCONT.registration_request_id=RREQ.id " +
+                    " LEFT JOIN registration_request_steps STEP on (STEP.request_type_id=RREQ.type_id and STEP.code=RREQ.current_step) " +
                     " WHERE RREQ.current_step<>'F' " +
                     " AND RREQ.current_step<>'C' " +
+                    " AND RREQ.current_step<>'AC' " +
+                    " AND RREQ.current_step<>'AF' " +
                     " ORDER BY RREQ.id DESC";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HomepageService.class);
@@ -53,7 +54,7 @@ public class HomepageService {
 
             List<Object[]> results = query.getResultList();
             results.stream().forEach(record -> {
-                TaskDetailsProjectionDTO taskProj = new TaskDetailsProjectionDTO((Integer) record[0], (String) record[1], (Date) record[2], (Date) record[3], (String) record[4], (String) record[5], (String) record[6], (String) record[7], (Boolean)record[8], (Boolean)record[9]);
+                TaskDetailsProjectionDTO taskProj = new TaskDetailsProjectionDTO((Integer) record[0], (String) record[1], (Date) record[2], (Date) record[3], (String) record[4], (String) record[5], (String) record[6], (String) record[7], (Boolean)record[8], (Boolean)record[9], (String) record[10]);
                 taskDetails.add(taskProj);
             });
             em.getTransaction().commit();

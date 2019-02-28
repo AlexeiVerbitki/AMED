@@ -222,7 +222,7 @@
 								<tr mdbTableCol *ngFor="let el of gdpInspection.inspectors; let i = index">
 									<td [ngStyle]="{'width': '95px'}">
 										<mat-radio-button [checked]="el.id == gdpInspection.groupLeaderId"
-										                  (change)="gdpInspection.groupLeaderId = el.id"></mat-radio-button>
+										                  (change)="bossSelected(el.id)"></mat-radio-button>
 									</td>
 									<td>{{el.lastname}}</td>
 									<td>{{el.firstname}}</td>

@@ -12,7 +12,7 @@ import {
 import {Document} from '../models/document';
 import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog.component';
 import {MatDialog, MatSort, MatTable, MatTableDataSource} from '@angular/material';
-import { Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {HttpResponse} from '@angular/common/http';
 import {UploadFileService} from '../shared/service/upload/upload-file.service';
 import {saveAs} from 'file-saver';
@@ -140,8 +140,9 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.taskService.getRequestStepByCodeAndStep(docTypeIdentifier.code, docTypeIdentifier.step).subscribe(step => {
                         this.subscriptions.push(
                             this.administrationService.getAllDocTypes().subscribe(data => {
-                                var splitted = step.availableDocTypes.split(",");
-                                this.docTypes = this.docTypes.filter(r => splitted.some(x => x == r.category));
+                                    const splitted = step.availableDocTypes.split(',');
+                                    this.docTypes = data;
+                                    this.docTypes = this.docTypes.filter(r => splitted.some(x => x == r.category));
                                 }
                             )
                         );

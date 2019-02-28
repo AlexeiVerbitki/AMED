@@ -22,6 +22,11 @@ export class SuccessOrErrorHandlerService implements OnInit, OnDestroy {
         this.success.next(successMessage);
     }
 
+    cleanMessage() {
+        this.error.next('');
+        this.success.next('');
+    }
+
     ngOnDestroy(): void {
     }
 

@@ -15,6 +15,7 @@ import {CanModuleDeactivate} from '../../../shared/auth-guard/can-deactivate-gua
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {LicenseService} from '../../../shared/service/license/license.service';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {ScrAuthorRolesService} from '../../../shared/auth-guard/scr-author-roles.service';
 
 @Component({
     selector: 'app-reg-cerere',
@@ -30,10 +31,10 @@ export class RegCerereGmpComponent implements OnInit, OnDestroy, CanModuleDeacti
 
     generatedDocNrSeq: number;
     formSubmitted: boolean;
-    private subscriptions: Subscription[] = [];
     loadingCompany = false;
     companyInputs = new Subject<string>();
     maxDate = new Date();
+    private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder,
                 private router: Router,
@@ -46,7 +47,8 @@ export class RegCerereGmpComponent implements OnInit, OnDestroy, CanModuleDeacti
                 private loadingService: LoaderService,
                 private licenseService: LicenseService,
                 public dialog: MatDialog,
-                public dialogConfirmation: MatDialog) {
+                public dialogConfirmation: MatDialog,
+                private roleSrv: ScrAuthorRolesService) {
         this.rForm = fb.group({
             'data': {disabled: true, value: new Date()},
             'requestNumber': [null],
@@ -240,7 +242,11 @@ export class RegCerereGmpComponent implements OnInit, OnDestroy, CanModuleDeacti
 
         this.subscriptions.push(this.requestService.addGMPRequest(modelToSubmit).subscribe(data => {
                 this.loadingService.hide();
-                this.router.navigate(['dashboard/module/gmp/evaluate/' + data.body.id]);
+                if (this.roleSrv.isRightAssigned('scr_module_12') || this.roleSrv.isRightAssigned('scr_admin')) {
+                    this.router.navigate(['dashboard/module/gmp/evaluate/' + data.body.id]);
+                } else if (this.roleSrv.isRightAssigned('scr_register_request')) {
+                    this.router.navigate(['/dashboard/homepage/']);
+                }
             }, error => this.loadingService.hide())
         );
     }

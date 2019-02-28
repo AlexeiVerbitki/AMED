@@ -39,6 +39,7 @@ export class PriceApprovalComponent implements OnInit, AfterViewInit, OnDestroy 
     }];
 
     displayedColumns: any[] = [
+        'selected',
         'priceRequestType',
         'medicamentCode',
         'commercialName',
@@ -73,6 +74,9 @@ export class PriceApprovalComponent implements OnInit, AfterViewInit, OnDestroy 
         this.dataSource.sort = this.sort;
     }
 
+    selectRow(elem : any, row : any) {
+        row.selected = elem.checked;
+    }
 
     ngOnInit() {
         this.navbarTitleService.showTitleMsg('Procesul de aprobare a prețurilor');
@@ -186,7 +190,7 @@ export class PriceApprovalComponent implements OnInit, AfterViewInit, OnDestroy 
 
         let priceNewType = 0;
 
-        this.dataSource.data.forEach(p => {
+        this.dataSource.data.filter(f => f.selected).forEach(p => {
             switch (p.priceRequestType) {
                 case 2: priceNewType = 13 ; break; //Preț nou aprobat
                 case 9: priceNewType = 10 ; break; //Aprobat după modificarea originalului
@@ -234,7 +238,7 @@ export class PriceApprovalComponent implements OnInit, AfterViewInit, OnDestroy 
 
         this.subscriptions.push(this.priceService.approvePrices(prices).subscribe(data => {
                 this.loadingService.hide();
-                // this.route.navigate(['dashboard/homepage']);
+                this.route.navigate(['dashboard/homepage']);
 
             },
             error1 => {
@@ -278,7 +282,7 @@ export class PriceApprovalComponent implements OnInit, AfterViewInit, OnDestroy 
         const anexa2ListDTO: any[] = [];
 
         this.dataSource.data.forEach(m => {
-            if (m.priceRequestType == 9) {
+            if (m.priceRequestType == 9 && m.selected) {
                 anexa2ListDTO.push({
                     medicineInfo: {
                         medicineCode: m.medicamentCode,

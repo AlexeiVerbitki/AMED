@@ -71,6 +71,7 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     sycnronizeUsers(): void {
+        this.loadingService.show();
         this.subscriptions.push(this.adminService.synchronizeUsers().subscribe(data => {
                 let id = 1;
                 this.modelToView = [];
@@ -87,9 +88,10 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
                         roles: this.concatRoles(object.srcRole),
                     });
                 });
+                this.loadingService.hide();
                 this.dataSource.data = this.modelToView;
                 this.successOrErrorHandlerService.showSuccess('Utilizatorii au fost sincronizati cu succes!');
-            }
+            }, error => this.loadingService.hide()
         ));
     }
 

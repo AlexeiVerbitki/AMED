@@ -6,12 +6,12 @@ import {AdministrationService} from '../../../shared/service/administration.serv
 import {MatDialog} from '@angular/material';
 import {AuthService} from '../../../shared/service/authetication.service';
 import {Document} from '../../../models/document';
-import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 import {MedicamentService} from '../../../shared/service/medicament.service';
 import {AnnihilationService} from '../../../shared/service/annihilation/annihilation.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
+import {ScrAuthorRolesService} from '../../../shared/auth-guard/scr-author-roles.service';
 
 @Component({
     selector: 'app-drugs-destroy-register',
@@ -25,22 +25,9 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
     companyInputs = new Subject<string>();
     private subscriptions: Subscription[] = [];
     docs: Document [] = [];
-    rFormSubbmitted = false;
     mFormSubbmitted = false;
     fFormSubbmitted = false;
     maxDate = new Date();
-
-    pharmaceuticalFormTypes: any[];
-    pharmaceuticalForms: any[];
-    unitsOfMeasurement: any[];
-
-    medicamentsToDestroy: any[];
-
-    medicamente: Observable<any[]>;
-
-    medInputs = new Subject<string>();
-    medLoading = false;
-
 
     // count time
     startDate: Date;
@@ -60,7 +47,8 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
                 private medicamentService: MedicamentService,
                 private annihilationService: AnnihilationService,
                 private navbarTitleService: NavbarTitleService,
-                private errorHandlerService: SuccessOrErrorHandlerService) {
+                private errorHandlerService: SuccessOrErrorHandlerService,
+                private roleSrv: ScrAuthorRolesService) {
 
     }
 
@@ -74,26 +62,6 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
                 }
             )
         );
-
-        this.medicamente =
-            this.medInputs.pipe(
-                filter((result: string) => {
-                    if (result && result.length > 2) { return true; }
-                }),
-                debounceTime(400),
-                distinctUntilChanged(),
-                tap((val: string) => {
-                    this.medLoading = true;
-
-                }),
-                flatMap(term =>
-
-                    this.medicamentService.getMedicamentNamesAndCodeList(term).pipe(
-                        tap(() => this.medLoading = false)
-                    )
-                )
-            );
-
 
         this.companii =
             this.companyInputs.pipe(
@@ -119,21 +87,6 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
 
         this.onChanges();
 
-        this.subscriptions.push(
-            this.administrationService.getAllPharamceuticalFormTypes().subscribe(data => {
-                    this.pharmaceuticalFormTypes = data;
-                }
-            )
-        );
-
-        this.subscriptions.push(
-            this.administrationService.getAllUnitsOfMeasurement().subscribe(data => {
-                    this.unitsOfMeasurement = data;
-                }
-            )
-        );
-
-
     }
 
     checkMedInput(value: string): boolean {
@@ -146,24 +99,6 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
 
 
     private initFormData() {
-        this.rForm = this.fb.group({
-
-            'medicaments': [null, Validators.required],
-            'forma': '',
-            'unitOfMeasure': [null],
-            'ambalajPrimar': '',
-            'seria': '',
-            'quantity': [null, Validators.required],
-            'reasonDestroy': [null, Validators.required],
-            'note': '',
-            'registeredMedicament': [null],
-            'notRegMedName': [null, Validators.required],
-            'pharmaceuticalFormType': [null, Validators.required],
-            'confirmDocuments': '',
-
-        });
-
-
         this.mForm = this.fb.group({
             'nrCererii': [{value: null, disabled: true}, Validators.required],
             'dataCererii': [{value: null, disabled: true}],
@@ -183,63 +118,6 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
 
 
     onChanges(): void {
-        this.rForm.get('medicaments').valueChanges.subscribe(val => {
-            if (val) {
-                this.subscriptions.push(
-                    this.medicamentService.getMedicamentById(val.id).subscribe(data => {
-
-                            this.rForm.get('pharmaceuticalFormType').setValue(data.pharmaceuticalForm.type);
-                            this.rForm.get('forma').setValue(data.pharmaceuticalForm);
-                            this.rForm.get('ambalajPrimar').setValue(data.primarePackage);
-                        },
-                        error => {
-                            this.rForm.get('pharmaceuticalFormType').setValue(null);
-                            this.rForm.get('forma').setValue(null);
-                            this.rForm.get('ambalajPrimar').setValue(null);
-                        }
-                    )
-                );
-            } else {
-                this.rForm.get('pharmaceuticalFormType').setValue(null);
-                this.rForm.get('forma').setValue(null);
-                this.rForm.get('ambalajPrimar').setValue(null);
-            }
-        });
-
-        this.rForm.get('pharmaceuticalFormType').valueChanges.subscribe(val => {
-            this.rForm.get('forma').setValue(null);
-            if (val) {
-                this.subscriptions.push(
-                    this.administrationService.getAllPharamceuticalFormsByTypeId(val.id).subscribe(data => {
-                            this.pharmaceuticalForms = data;
-                        },
-                        error => this.rForm.get('forma').setValue(null)
-                    )
-                );
-            } else {
-                this.rForm.get('forma').setValue(null);
-                this.pharmaceuticalForms = [];
-            }
-        });
-
-        this.rForm.get('registeredMedicament').valueChanges.subscribe(val => {
-            if (val) {
-                if (val === '1') {
-                    this.rForm.get('medicaments').setValidators(Validators.required);
-                    this.rForm.get('medicaments').updateValueAndValidity();
-
-                    this.rForm.get('notRegMedName').setValidators(null);
-                    this.rForm.get('notRegMedName').updateValueAndValidity();
-                } else if (val === '0') {
-                    this.rForm.get('medicaments').setValidators(null);
-                    this.rForm.get('medicaments').updateValueAndValidity();
-
-                    this.rForm.get('notRegMedName').setValidators(Validators.required);
-                    this.rForm.get('notRegMedName').updateValueAndValidity();
-                }
-            }
-        });
-
     }
 
 
@@ -249,11 +127,6 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
 
         if (!this.mForm.valid) {
             this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
-            return;
-        }
-
-        if (!this.medicamentsToDestroy || this.medicamentsToDestroy.length == 0) {
-            this.errorHandlerService.showError('Nu a fost adaugat nici un medicament pentru disturgere.');
             return;
         }
 
@@ -267,12 +140,10 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
 
 
 
-        annihilationModel.medicamentsMedicamentAnnihilationMeds = this.medicamentsToDestroy;
         annihilationModel.idno = this.mForm.get('company').value.idno;
 
         modelToSubmit.medicamentAnnihilation = annihilationModel;
         modelToSubmit.requestNumber = this.mForm.get('nrCererii').value;
-        // modelToSubmit.company = {id : this.mForm.get('company').value.id};
 
 
         modelToSubmit.requestHistories = [{
@@ -301,101 +172,16 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
             this.annihilationService.confirmRegisterAnnihilation(modelToSubmit).subscribe(data => {
                     const result = data.body;
-                    this.router.navigate(['/dashboard/module/medicament-destruction/evaluate', result]);
+                    if (this.roleSrv.isRightAssigned('scr_module_8') || this.roleSrv.isRightAssigned('scr_admin')) {
+                        this.router.navigate(['/dashboard/module/medicament-destruction/evaluate', result]);
+                    } else if (this.roleSrv.isRightAssigned('scr_register_request')) {
+                        this.router.navigate(['/dashboard/homepage/']);
+                    }
                 }
             )
         );
 
     }
-
-    addNewMedicament() {
-        this.rFormSubbmitted = true;
-        if (this.medicamentsToDestroy == null) {
-            this.medicamentsToDestroy = [];
-        }
-
-        if (!this.rForm.valid) {
-            return;
-        }
-
-        if (this.rForm.get('registeredMedicament').value === '1') {
-            const id = this.rForm.get('medicaments').value.id;
-
-            //Do not register the same medicament id
-            if (this.medicamentsToDestroy.find(md => md.medicamentId === id )) {
-                return;
-            }
-        }
-
-
-
-
-        this.rFormSubbmitted = false;
-
-        if (this.rForm.get('registeredMedicament').value === '1') {
-            this.medicamentsToDestroy.push(
-                {
-                    medicamentId: this.rForm.get('medicaments').value.id,
-                    medicamentName: this.rForm.get('medicaments').value.name,
-                    quantity : this.rForm.get('quantity').value,
-                    uselessReason : this.rForm.get('reasonDestroy').value,
-                    note : this.rForm.get('note').value,
-                    seria : this.rForm.get('seria').value,
-                    pharmaceuticalForm : this.rForm.get('forma').value,
-                    unitsOfMeasurement : this.rForm.get('unitOfMeasure').value,
-                    confirmativeDocuments : this.rForm.get('confirmDocuments').value,
-                    primaryPackage : this.rForm.get('ambalajPrimar').value,
-                }
-            );
-        } else if (this.rForm.get('registeredMedicament').value === '0') {
-            this.medicamentsToDestroy.push(
-                {
-                    medicamentName: this.rForm.get('notRegMedName').value,
-                    notRegisteredName: this.rForm.get('notRegMedName').value,
-                    quantity : this.rForm.get('quantity').value,
-                    uselessReason : this.rForm.get('reasonDestroy').value,
-                    note : this.rForm.get('note').value,
-                    seria : this.rForm.get('seria').value,
-                    pharmaceuticalForm : this.rForm.get('forma').value,
-                    unitsOfMeasurement : this.rForm.get('unitOfMeasure').value,
-                    confirmativeDocuments : this.rForm.get('confirmDocuments').value,
-                    primaryPackage : this.rForm.get('ambalajPrimar').value,
-                }
-            );
-        }
-
-
-        this.rForm.get('medicaments').setValue(null);
-        this.rForm.get('forma').setValue(null);
-        this.rForm.get('unitOfMeasure').setValue(null);
-        this.rForm.get('ambalajPrimar').setValue(null);
-        this.rForm.get('quantity').setValue(null);
-        this.rForm.get('reasonDestroy').setValue(null);
-        this.rForm.get('note').setValue(null);
-        this.rForm.get('seria').setValue(null);
-        this.rForm.get('notRegMedName').setValue(null);
-        this.rForm.get('registeredMedicament').setValue(null);
-        this.rForm.get('pharmaceuticalFormType').setValue(null);
-        this.rForm.get('confirmDocuments').setValue(null);
-    }
-
-    removeMedicamentToDestroy(index) {
-        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-            data: {message: 'Sunteti sigur ca doriti sa stergeti aceasta inregistrare?', confirm: false}
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.medicamentsToDestroy.splice(index, 1);
-            }
-        });
-    }
-
-
-    customSearchFn(term: string, item: any) {
-        term = term.toLocaleLowerCase();
-        return item.name.toLocaleLowerCase().indexOf(term) > -1 || item.code.toLocaleLowerCase() === term;
-    }
-
 
     ngOnDestroy() {
         this.navbarTitleService.showTitleMsg('');

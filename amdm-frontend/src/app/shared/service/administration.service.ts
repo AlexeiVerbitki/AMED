@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
 @Injectable()
@@ -27,6 +27,10 @@ export class AdministrationService {
 
     generateDocNr(): Observable<any> {
         return this.http.get('/api/administration/generate-doc-nr', {});
+    }
+
+    generateImportAuthDocNr(): Observable<any> {
+        return this.http.get('/api/administration/generate-import-auth-doc-nr', {});
     }
 
     generateGMPRequestNumber(): Observable<any> {

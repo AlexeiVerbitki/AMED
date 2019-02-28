@@ -62,6 +62,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
     loadingAtcCodes = false;
     atcCodesInputs = new Subject<string>();
     private subscriptions: Subscription[] = [];
+    loadingManufacture = false;
 
     constructor(public dialog: MatDialog,
                 private fb: FormBuilder,
@@ -140,7 +141,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                 this.subscriptions.push(this.requestService.getMedicamentRequest(params['id']).subscribe(data => {
                         this.fillRequestDetails(data);
                         this.initiateMedicamentDetails(data, false);
-                        if (data.type && data.type.code == 'MEDR') {
+                        if (data.type && (data.type.code == 'MERG' || data.type.code == 'MERS')) {
                             this.disabeFieldsForRepeatedRegistration();
                         }
                     })
@@ -204,7 +205,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
         if (!isRepeatedRegistration) {
             this.documents = data.documents;
         } else {
-            data.type = this.reqTypes.find(t => t.code == 'MEDR');
+            data.type = this.reqTypes.find(t => t.code == this.eForm.get('type').value.code);
         }
         this.outDocuments = data.outputDocuments;
         const rl = this.outDocuments.find(r => r.docType.category == 'RL');
@@ -372,7 +373,8 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(
             this.administrationService.getAllMedicamentTypes().subscribe(data => {
-                    this.medicamentTypes2 = data.filter(r => r.category === 'T');
+                    //this.medicamentTypes2 = data.filter(r => r.category === 'T');
+                    this.medicamentTypes2 = data;
                     if (dataDB.medicaments && dataDB.medicaments.length != 0 && dataDB.medicaments[0].medicamentTypes) {
                         const arr: any[] = [];
                         for (const z of dataDB.medicaments[0].medicamentTypes) {
@@ -385,14 +387,16 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
             )
         );
 
+        this.loadingManufacture = true;
         this.subscriptions.push(
             this.administrationService.getAllManufactures().subscribe(data => {
                     this.manufactureAuthorizations = data;
                     if (dataDB.medicaments && dataDB.medicaments.length != 0 && dataDB.medicaments[0].authorizationHolder) {
                         this.eForm.get('medicament.authorizationHolder').setValue(this.manufactureAuthorizations.find(r => r.id === dataDB.medicaments[0].authorizationHolder.id));
                     }
+                    this.loadingManufacture = false;
                 },
-                error => console.log(error)
+                error =>  this.loadingManufacture = false
             )
         );
 
@@ -535,7 +539,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                     invalid.push(name);
                 }
             }
-            if (invalid.length == 1 && invalid.includes('regnr') && this.eForm.get('type').value.code != 'MEDR') {
+            if (invalid.length == 1 && invalid.includes('regnr') && this.eForm.get('type').value.code != 'MERG' && this.eForm.get('type').value.code != 'MERS') {
                 isFormInvalid = false;
             } else if (invalid.length > 0) {
                 isFormInvalid = true;
@@ -550,10 +554,10 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
         if (!this.eForm.get('type').value) {
             isFormInvalid = true;
         } else {
-            if (this.eForm.get('type').value.code != 'MEDR' && !this.eForm.get('medicament.commercialName').value) {
+            if (this.eForm.get('type').value.code != 'MERG' && this.eForm.get('type').value.code != 'MERS' && !this.eForm.get('medicament.commercialName').value) {
                 isFormInvalid = true;
             }
-            if (this.eForm.get('type').value.code == 'MEDR' && !this.eForm.get('medicament').value) {
+            if (this.eForm.get('type').value.code != 'MERG' && this.eForm.get('type').value.code != 'MERS' && !this.eForm.get('medicament').value) {
                 isFormInvalid = true;
             }
         }
@@ -605,7 +609,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
 
         this.fillMedicamentDetails(modelToSubmit);
 
-        if (this.eForm.get('type').value.code == 'MEDR') {
+        if (this.eForm.get('type').value.code == 'MERG' || this.eForm.get('type').value.code == 'MERS') {
             modelToSubmit.medicamentPostauthorizationRegisterNr = this.eForm.get('regnr').value.regnr;
             modelToSubmit.medicamentName = this.eForm.get('regnr').value.commercialName;
         }
@@ -1160,7 +1164,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
             modelToSubmit.expertList = this.initialData.expertList;
         }
 
-        if (this.eForm.get('type').value && this.eForm.get('type').value.code == 'MEDR') {
+        if (this.eForm.get('type').value && (this.eForm.get('type').value.code == 'MERG' || this.eForm.get('type').value.code == 'MERS')) {
             modelToSubmit.medicamentName = this.eForm.getRawValue().medicament.commercialName;
         } else {
             modelToSubmit.medicamentName = this.eForm.get('medicament.commercialName').value;
@@ -1170,7 +1174,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
         for (const division of this.divisions) {
             let medicamentToSubmit: any;
 
-            if (this.eForm.get('type').value && this.eForm.get('type').value.code == 'MEDR') {
+            if (this.eForm.get('type').value && (this.eForm.get('type').value.code == 'MERG' || this.eForm.get('type').value.code == 'MERS')) {
                 medicamentToSubmit = Object.assign({}, this.eForm.getRawValue().medicament);
                 medicamentToSubmit.registrationDate = this.eForm.get('medicament.registrationDate').value;
                 medicamentToSubmit.registrationNumber = this.eForm.get('medicament.registrationNumber').value;
@@ -1198,7 +1202,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                 }
             }
 
-            if (this.eForm.get('type').value && this.eForm.get('type').value.code == 'MEDR') {
+            if (this.eForm.get('type').value && (this.eForm.get('type').value.code == 'MERG' || this.eForm.get('type').value.code == 'MERS')) {
                 if (this.eForm.getRawValue().medicament.atcCode) {
                     if (this.eForm.getRawValue().medicament.atcCode.code) {
                         medicamentToSubmit.atcCode = this.eForm.getRawValue().medicament.atcCode.code;
@@ -1216,13 +1220,13 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                 }
             }
 
-            if (this.eForm.get('type').value && this.eForm.get('type').value.code == 'MEDR') {
+            if (this.eForm.get('type').value && (this.eForm.get('type').value.code == 'MERG' || this.eForm.get('type').value.code == 'MERS')) {
                 this.fillRawGroups(medicamentToSubmit);
             } else {
                 this.fillGroups(medicamentToSubmit);
             }
 
-            if (this.eForm.get('type').value && this.eForm.get('type').value.code == 'MEDR') {
+            if (this.eForm.get('type').value && (this.eForm.get('type').value.code == 'MERG' || this.eForm.get('type').value.code == 'MERS')) {
                 medicamentToSubmit.prescription = this.eForm.getRawValue().medicament.prescription.value;
             } else {
                 if (this.eForm.get('medicament.prescription').value) {
@@ -1230,7 +1234,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                 }
             }
 
-            if (this.eForm.get('type').value && this.eForm.get('type').value.code == 'MEDR') {
+            if (this.eForm.get('type').value && (this.eForm.get('type').value.code == 'MERG' || this.eForm.get('type').value.code == 'MERS')) {
                 medicamentToSubmit.code = division.code;
             }
 
@@ -1241,7 +1245,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
             }
 
             medicamentToSubmit.medicamentTypes = [];
-            if (this.eForm.get('type').value && this.eForm.get('type').value.code == 'MEDR') {
+            if (this.eForm.get('type').value && (this.eForm.get('type').value.code == 'MERG' || this.eForm.get('type').value.code == 'MERS')) {
                 if (this.eForm.getRawValue().medicament.medTypesValues) {
                     for (const w of this.eForm.getRawValue().medicament.medTypesValues) {
                         medicamentToSubmit.medicamentTypes.push({type: w});
@@ -1363,7 +1367,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
     }
 
     typeWasChanged() {
-        if (this.eForm.get('type').value && this.eForm.get('type').value.code != 'MEDR') {
+        if (this.eForm.get('type').value && this.eForm.get('type').value.code != 'MERG' && this.eForm.get('type').value.code != 'MERS') {
             this.eForm.get('medicament.dose').enable();
             this.eForm.get('medicament.pharmaceuticalFormType').enable();
             this.eForm.get('medicament.pharmaceuticalForm').enable();

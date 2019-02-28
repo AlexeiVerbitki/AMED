@@ -384,14 +384,14 @@ tel. +373 22 884 301, e-mail: office@amed.md; Web: www.amed.md
 				<imageExpression><![CDATA["layouts/icons/cer.png"]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="382" y="63" width="114" height="18" uuid="10b049c4-7e83-42a3-af07-6739461e168a"/>
+				<reportElement x="382" y="63" width="114" height="17" uuid="10b049c4-7e83-42a3-af07-6739461e168a"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Pagina " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="496" y="63" width="38" height="18" uuid="ededf915-e540-4aa9-bd0d-fc24ba1776c8"/>
+				<reportElement x="496" y="63" width="38" height="17" uuid="ededf915-e540-4aa9-bd0d-fc24ba1776c8"/>
 				<textElement textAlignment="Left">
 					<font size="8"/>
 				</textElement>

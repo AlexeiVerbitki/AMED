@@ -17,8 +17,9 @@ public class TaskDetailsProjectionDTO implements Serializable {
     private String navigationUrl;
     private Boolean expired;
     private Boolean critical;
+    private String regSubject;
 
-    public TaskDetailsProjectionDTO(Integer id, String requestNumber, Date startDate, Date endDate, String company, String mandatedContact, String step, String navigationUrl, Boolean expired, Boolean critical) {
+    public TaskDetailsProjectionDTO(Integer id, String requestNumber, Date startDate, Date endDate, String company, String mandatedContact, String step, String navigationUrl, Boolean expired, Boolean critical, String regSubject) {
         this.id = id;
         this.requestNumber = requestNumber;
         this.startDate = startDate;
@@ -29,6 +30,7 @@ public class TaskDetailsProjectionDTO implements Serializable {
         this.navigationUrl = navigationUrl;
         this.expired = expired == null ? Boolean.FALSE : expired;
         this.critical = critical == null ? Boolean.FALSE : critical;
+        this.regSubject = regSubject;
     }
 
     public Integer getId() {
@@ -70,5 +72,7 @@ public class TaskDetailsProjectionDTO implements Serializable {
     public Boolean getCritical() {
         return critical;
     }
+
+    public String getReqSubject() { return regSubject; }
 
 }

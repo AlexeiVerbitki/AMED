@@ -49,7 +49,7 @@
 				<text><![CDATA[Nr.:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="238" width="535" height="20" uuid="a709933f-67ed-4516-babd-7986ef4294fa"/>
+				<reportElement x="10" y="240" width="535" height="20" uuid="a709933f-67ed-4516-babd-7986ef4294fa"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>

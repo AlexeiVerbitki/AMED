@@ -50,7 +50,7 @@
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="10" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{address} + ", tel: " + $P{phone} + ($P{email}!=null ? ", email: " + $P{email} : "")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($P{address}!=null ? "adresa: " + $P{address} + "," : "") + ($P{phone}!=null ? " tel: " + $P{phone} + "," : "") + ($P{email}!=null ? " email: " + $P{email} : "")]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="83">

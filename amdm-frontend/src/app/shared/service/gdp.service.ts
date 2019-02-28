@@ -165,4 +165,8 @@ export class GDPService {
     viewApprovalOrder(): Observable<any> {
         return this.http.get('/api/price-docs/view-approval-order', {responseType: 'blob'});
     }
+
+    getAuthorisationsByFilter(filter: any): Observable<any> {
+        return this.http.post<any>('/api/gdp/gmp-authorisations-by-filter', filter, {observe: 'response'});
+    }
 }

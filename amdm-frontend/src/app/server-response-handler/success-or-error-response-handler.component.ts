@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {SuccessOrErrorHandlerService} from '../shared/service/success-or-error-handler.service';
 import {ModalDirective} from 'angular-bootstrap-md';
+import {BehaviorSubject, Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-server-response-handler',
@@ -11,7 +12,10 @@ export class SuccessOrErrorResponseHandlerComponent implements OnInit, OnDestroy
     @ViewChild('errorModal') modalDialog: ModalDirective;
     public error: string;
     public success: string;
-    public modalType: boolean;
+    public modalType = false;
+
+    errorObs: Subscription;
+    successObs: Subscription;
 
     constructor(private errorHandlerService: SuccessOrErrorHandlerService) {
     }
@@ -20,31 +24,38 @@ export class SuccessOrErrorResponseHandlerComponent implements OnInit, OnDestroy
     }
 
     ngAfterViewInit(): void {
-        this.errorHandlerService.error.asObservable().subscribe(value => {
-            if (value && value.length > 0) {
+
+        this.errorObs = this.errorHandlerService.error.asObservable().subscribe(async value => {
+            if (await value && value.length > 0) {
                 this.error = value;
                 this.modalType = false;
                 this.modalDialog.show();
             }
+        }, error1 => {
+            console.log('SuccessOrErrorResponseHandlerComponent error on show error', error1)
         });
-        this.errorHandlerService.success.asObservable().subscribe(value => {
-            if (value && value.length > 0) {
-                console.log(value);
-                this.success = value;
-                this.modalType = true;
-                this.modalDialog.show();
+
+        this.successObs = this.errorHandlerService.success.asObservable().subscribe(async value => {
+                if (await value && value.length > 0) {
+                    this.success = value;
+                    this.modalType = true;
+                    this.modalDialog.show();
+                }
+            }, error1 => {
+                console.log('SuccessOrErrorResponseHandlerComponent error on show succes', error1)
             }
-        });
+        );
     }
 
     closeErrorModal() {
         this.error = '';
         this.success = '';
         this.modalDialog.hide();
+        this.errorHandlerService.cleanMessage();
     }
 
     ngOnDestroy() {
-        this.errorHandlerService.error.complete();
-        this.errorHandlerService.success.complete();
+        this.errorObs.unsubscribe();
+        this.successObs.unsubscribe();
     }
 }

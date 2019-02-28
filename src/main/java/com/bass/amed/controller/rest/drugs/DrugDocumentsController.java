@@ -4,8 +4,12 @@ import com.bass.amed.common.Constants;
 import com.bass.amed.dto.drugs.AuthorizedSubstancesDetails;
 import com.bass.amed.dto.drugs.DrugDecisionsDetailsDTO;
 import com.bass.amed.entity.DrugImportExportDetailsEntity;
+import com.bass.amed.entity.DrugImportExportEntity;
+import com.bass.amed.entity.NmUnitsOfMeasurementEntity;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.SysParamsRepository;
+import com.bass.amed.repository.UnitsOfMeasurementRepository;
+import com.bass.amed.utils.AmountUtils;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.slf4j.Logger;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/documents")
@@ -28,6 +33,8 @@ public class DrugDocumentsController {
 
     @Autowired
     private SysParamsRepository sysParamsRepository;
+    @Autowired
+    private UnitsOfMeasurementRepository unitsOfMeasurementRepository;
 
     @RequestMapping(value = "/view-authorization-data", method = RequestMethod.POST)
     public ResponseEntity<byte[]> viewAuthorizationData(@RequestBody DrugDecisionsDetailsDTO data) throws CustomException {
@@ -107,7 +114,7 @@ public class DrugDocumentsController {
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
         } catch (Exception e) {
-            throw new CustomException(e.getMessage());
+            throw new CustomException(e.getMessage(), e);
         }
 
         return ResponseEntity.ok().header("Content-Type", "application/pdf")
@@ -216,16 +223,25 @@ public class DrugDocumentsController {
 
     private void setSubstanceDetails(DrugDecisionsDetailsDTO data, Map<String, Object> parameters) {
         if (data.getDetails() != null && !data.getDetails().isEmpty()) {
+            List<NmUnitsOfMeasurementEntity> rs = unitsOfMeasurementRepository.findAll();
             List<AuthorizedSubstancesDetails> authorizedSubstancesDetails = new ArrayList<>();
 
-            for (DrugImportExportDetailsEntity substanceDetails : data.getDetails()) {
+            for (DrugImportExportEntity subst : data.getDetails()) {
 
                 AuthorizedSubstancesDetails details = new AuthorizedSubstancesDetails();
-                if (substanceDetails.getAuthorizedDrugSubstance() != null) {
-                    details.setActiveSubstance(substanceDetails.getAuthorizedDrugSubstance().getSubstanceName());
-                }
-                details.setQuantityActiveSubstance(String.valueOf(substanceDetails.getAuthorizedQuantity()) + substanceDetails.getAuthorizedQuantityUnit());
-                setMedicamentDetails(authorizedSubstancesDetails, details, substanceDetails);
+
+                //set main details
+                setMedicamentDetails(authorizedSubstancesDetails, details, subst, rs);
+
+
+                //set detailed list
+
+                details.setActiveSubstance(subst.getDetails().stream().map(r -> r.getAuthorizedDrugSubstance().getSubstanceName()).collect(Collectors.joining(",\n")));
+
+                String result = subst.getDetails().stream().map(hh -> hh.getAuthorizedQuantity() + rs.stream().filter(k -> k.getCode().equals(hh.getAuthorizedQuantityUnitCode())).findFirst().get().getDescription()).collect(Collectors.joining(",\n"));
+
+                details.setQuantityActiveSubstance(result);
+
 
             }
 
@@ -234,15 +250,15 @@ public class DrugDocumentsController {
         }
     }
 
-    private void setMedicamentDetails(List<AuthorizedSubstancesDetails> authorizedSubstancesDetails, AuthorizedSubstancesDetails details, DrugImportExportDetailsEntity substanceDetails) {
+    private void setMedicamentDetails(List<AuthorizedSubstancesDetails> authorizedSubstancesDetails, AuthorizedSubstancesDetails details, DrugImportExportEntity substanceDetails, List<NmUnitsOfMeasurementEntity> rs) {
         if (substanceDetails.getCommercialName() != null) {
-            details.setMedicamentName(substanceDetails.getCommercialName());
+            details.setMedicamentName(substanceDetails.getCommercialName()+ " (" + substanceDetails.getPackaging() + ")");
         }
         if (substanceDetails.getPackaging() != null) {
-            details.setQuantity(substanceDetails.getPackaging());
+            details.setQuantity(String.valueOf(AmountUtils.round(substanceDetails.getPackagingQuantity(), 2)));
         }
         if (substanceDetails.getPackagingQuantity() != null) {
-            details.setUm(substanceDetails.getPackagingQuantity());
+            details.setUm( rs.stream().filter(k -> k.getCode().equals(substanceDetails.getRequestQuantityUnitCode())).findFirst().get().getDescription());
         }
         authorizedSubstancesDetails.add(details);
     }

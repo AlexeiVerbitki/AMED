@@ -4,10 +4,12 @@ import com.bass.amed.dto.PrevYearAvgPriceDTO;
 import com.bass.amed.dto.prices.CatalogPriceDTO;
 import com.bass.amed.dto.prices.PricesDTO;
 import com.bass.amed.entity.*;
+import com.bass.amed.entity.sequence.SeqPricesRequestNumberEntity;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.projection.GetMinimalCurrencyProjection;
 import com.bass.amed.repository.*;
 import com.bass.amed.repository.prices.*;
+import com.bass.amed.repository.sequence.SeqPricesRequestNumberRepository;
 import com.bass.amed.service.PriceEvaluationService;
 import com.bass.amed.utils.Utils;
 import org.slf4j.Logger;
@@ -65,7 +67,7 @@ public class PriceController {
     @Autowired
     private PrevYearsPriceAVGInvoiceDetailsRepository prevYearsPriceAVGInvoiceDetailsRepository;
     @Autowired
-    private SeqPricesRequestNumberRepository seqPricesRequestNumberRepository;
+    private SeqPricesRequestNumberRepository          seqPricesRequestNumberRepository;
 
     @RequestMapping(value = "/generate-price-request-number", method = RequestMethod.GET)
     public ResponseEntity<List<String>> generatePriceRequestNumber()

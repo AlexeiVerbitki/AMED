@@ -35,6 +35,7 @@ export class PriceEditModalComponent implements OnInit {
           country:            [data.country, Validators.required],
           currency:           [data.currency, Validators.required],
           division:           [data.division, Validators.required],
+          totalQuantity:      [data.totalQuantity, Validators.required],
       });
   }
 

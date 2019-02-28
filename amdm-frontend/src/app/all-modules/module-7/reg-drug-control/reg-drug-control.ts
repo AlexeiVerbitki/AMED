@@ -14,6 +14,7 @@ import {LoaderService} from '../../../shared/service/loader.service';
 import {TaskService} from '../../../shared/service/task.service';
 import {DrugDecisionsService} from '../../../shared/service/drugs/drugdecisions.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {ScrAuthorRolesService} from '../../../shared/auth-guard/scr-author-roles.service';
 
 @Component({
     selector: 'app-reg-drug-control', templateUrl: './reg-drug-control.html', styleUrls: ['./reg-drug-control.css']
@@ -35,8 +36,8 @@ export class RegDrugControl implements OnInit, OnDestroy {
     companies: Observable<any[]>;
     loadingCompany = false;
     companyInputs = new Subject<string>();
-    private subscriptions: Subscription[] = [];
     maxDate = new Date();
+    private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder,
                 public dialog: MatDialog,
@@ -47,7 +48,8 @@ export class RegDrugControl implements OnInit, OnDestroy {
                 private loadingService: LoaderService,
                 private taskService: TaskService,
                 private navbarTitleService: NavbarTitleService,
-                private drugDecisionsService: DrugDecisionsService) {
+                private drugDecisionsService: DrugDecisionsService,
+                private roleSrv: ScrAuthorRolesService) {
 
         this.rForm = fb.group({
             'compGet': [null, Validators.required],
@@ -81,7 +83,7 @@ export class RegDrugControl implements OnInit, OnDestroy {
         this.subscriptions.push(this.drugDecisionsService.generateRegistrationRequestNumber().subscribe(data => {
             this.generatedDocNrSeq = data[0];
             this.rForm.get('requestNumber').setValue(this.generatedDocNrSeq);
-        }, error => console.log(error)));
+        }));
 
         this.getAllCompanies();
 
@@ -91,8 +93,8 @@ export class RegDrugControl implements OnInit, OnDestroy {
             this.subscriptions.push(this.administrationService.getAllDocTypes().subscribe(data => {
                 this.docTypes = data;
                 this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
-            }, error => console.log(error)));
-        }, error => console.log(error)));
+            }));
+        }));
     }
 
     getAllCompanies() {
@@ -136,16 +138,24 @@ export class RegDrugControl implements OnInit, OnDestroy {
         modelToSubmit.assignedUser = useranameDB;
         modelToSubmit.documents = this.documents;
         modelToSubmit.registrationRequestMandatedContacts = [{
-            mandatedLastname: this.rForm.get('mandatedLastname').value, mandatedFirstname: this.rForm.get('mandatedFirstname').value,
-            phoneNumber: this.rForm.get('phoneNumber').value, email: this.rForm.get('email').value, requestMandateNr: this.rForm.get('requestMandateNr').value,
-            requestMandateDate: this.rForm.get('requestMandateDate').value, idnp: this.rForm.get('idnp').value
+            mandatedLastname: this.rForm.get('mandatedLastname').value,
+            mandatedFirstname: this.rForm.get('mandatedFirstname').value,
+            phoneNumber: this.rForm.get('phoneNumber').value,
+            email: this.rForm.get('email').value,
+            requestMandateNr: this.rForm.get('requestMandateNr').value,
+            requestMandateDate: this.rForm.get('requestMandateDate').value,
+            idnp: this.rForm.get('idnp').value
         }];
         modelToSubmit.currentStep = 'E';
 
         this.setSelectedRequest();
 
         this.subscriptions.push(this.drugDecisionsService.addAuthorizationDetails(modelToSubmit).subscribe(data => {
-            this.router.navigate([this.model + data.body.id]);
+            if (this.roleSrv.isRightAssigned('scr_module_4') || this.roleSrv.isRightAssigned('scr_admin')) {
+                this.router.navigate([this.model + data.body.id]);
+            } else if (this.roleSrv.isRightAssigned('scr_register_request')) {
+                this.router.navigate(['/dashboard/homepage/']);
+            }
         }));
 
     }
@@ -157,7 +167,6 @@ export class RegDrugControl implements OnInit, OnDestroy {
             this.model = 'dashboard/module/drug-control/transfer-authorization/';
         }
     }
-
 
 
     ngOnDestroy() {

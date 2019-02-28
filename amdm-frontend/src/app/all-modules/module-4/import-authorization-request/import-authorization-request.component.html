@@ -1,6 +1,6 @@
 <div class="container-fluid sky z-depth-2">
-    <h3 class="text-center my-3 font-weight-bold">Inregistrare cerere</h3>
-    <hr>
+    <!--<h3 class="text-center my-3 font-weight-bold">Inregistrare cerere</h3>-->
+    <!--<hr>-->
     <form [formGroup]='rForm'>
         <div class="row">
             <div class="col-lg-3">
@@ -44,9 +44,10 @@
                             <small class="form-text text-muted">IDNO: {{item?.idno}}</small>
                         </ng-template>
                     </ng-select>
-                </div>
-                <div *ngIf="formSubmitted && rForm.get('company').invalid">
-                    <small class="text-muted"><strong class="text-danger">Compania solicitant trebuie selectată</strong></small>
+                    <div *ngIf="formSubmitted && rForm.get('company').invalid">
+                        <small class="text-muted"><strong class="text-danger">Compania solicitant trebuie
+                            selectată</strong></small>
+                    </div>
                 </div>
             </div>
 
@@ -55,43 +56,44 @@
                 <div class="md-form">
                     <input id="persResDepCereriiFirstname" mdbInputDirective type="text" class="form-control"
                            formControlName="mandatedFirstname">
-                    <label for="persResDepCereriiFirstname">Nume persoana responsabilă <span class="text-danger">*</span></label>
-
-                </div>
-                <div *ngIf="formSubmitted && !rForm.get('mandatedFirstname').valid">
-                    <small class="text-muted"><strong class="text-danger">Prenumele persoanei de contact trebuie introdus</strong>
-                    </small>
+                    <label for="persResDepCereriiFirstname">Nume persoana responsabilă <span
+                            class="text-danger">*</span></label>
+                    <div *ngIf="formSubmitted && !rForm.get('mandatedFirstname').valid">
+                        <small class="text-muted"><strong class="text-danger">Prenumele persoanei de contact trebuie
+                            introdus</strong>
+                        </small>
+                    </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="md-form">
                     <input id="persResDepCereriiLastname" mdbInputDirective type="text" class="form-control"
                            formControlName="mandatedLastname">
-                    <label for="persResDepCereriiLastname">Prenume persoana responsabilă <span class="text-danger">*</span></label>
-
-                </div>
-                <div *ngIf="formSubmitted && !rForm.get('mandatedLastname').valid">
-                    <small class="text-muted"><strong class="text-danger">Numele persoanei de contact trebuie introdus</strong>
-                    </small>
+                    <label for="persResDepCereriiLastname">Prenume persoana responsabilă <span
+                            class="text-danger">*</span></label>
+                    <div *ngIf="formSubmitted && !rForm.get('mandatedLastname').valid">
+                        <small class="text-muted"><strong class="text-danger">Numele persoanei de contact trebuie
+                            introdus</strong>
+                        </small>
+                    </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="md-form">
                     <input id="idnp" mdbInputDirective type="text" class="form-control" maxlength="13"
                            formControlName="idnp">
-                    <label for="idnp">IDNP</label>
-                </div>
-                <div *ngIf="formSubmitted && !rForm.get('idnp').valid">
-                    <small class="text-muted"><strong class="text-danger">IDNP-ul este invalid</strong>
-                    </small>
+                    <label for="idnp">IDNP <span class="text-danger">*</span></label>
+                    <div *ngIf="formSubmitted && !rForm.get('idnp').valid">
+                        <small class="text-muted"><strong class="text-danger">IDNP-ul trebuie introdus</strong>
+                        </small>
+                    </div>
                 </div>
             </div>
 
             <div class="col-md-3">
                 <div class="md-form">
                     <input id="telefonContact" mdbInputDirective type="text" class="form-control"
-                           formControlName="phoneNumber" maxlength="9"
-                    >
+                           formControlName="phoneNumber" maxlength="9">
                     <label for="telefonContact">Telefon de contact</label>
                 </div>
                 <div *ngIf="formSubmitted && !rForm.get('phoneNumber').valid">
@@ -133,8 +135,21 @@
                 </div>
             </div>
 
+            <div class="col-md-12">
+                <div class="md-form">
+                    <textarea type="text" id="reqSubject" class="md-textarea form-control" mdbInputDirective rows="1"
+                              formControlName="regSubject"></textarea>
+                    <label for="reqSubject">Subiectul cererii<span class="text-danger">*</span></label>
+                    <div *ngIf="formSubmitted && !rForm.get('regSubject').valid">
+                        <small class="text-muted"><strong class="text-danger">Subiectul cererii trebuie introdus</strong>
+                        </small>
+                    </div>
+                </div>
+            </div>
+
         </div>
-        <app-document [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'ATIE', step : 'R'}"></app-document>
+        <app-document [documents]="docs" [nrCerere]="generatedDocNrSeq"
+                      [dcTypeIdentifier]="{code: 'ATIE', step : 'R'}"></app-document>
 
         <mat-radio-group formControlName="importType">
             <div class="container my-3">
@@ -160,8 +175,9 @@
                 <div class="row">
                     <div class="col-12" *ngIf="importRadioButton == 5">
                         <div class="md-form">
-                            <input id="authorization" mdbInputDirective type="text" class="form-control" [(ngModel)]="authorizationNumber"
-                                [ngModelOptions]="{standalone: true}">
+                            <input id="authorization" mdbInputDirective type="text" class="form-control"
+                                   [(ngModel)]="authorizationNumber"
+                                   [ngModelOptions]="{standalone: true}">
                             <label for="authorization">Numarul autorizatiei de import</label>
                         </div>
                     </div>
@@ -174,7 +190,8 @@
         </div>
         <hr>
         <div class="text-center">
-            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Urmatorul
+            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">
+                Urmatorul
                 pas
             </button>
         </div>

@@ -30,7 +30,7 @@ public class PricesEntity
     @JoinColumn(name = "currency_id" )
     private NmCurrenciesEntity currency;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @JoinColumn(name = "price_id")
     private Set<ReferencePricesEntity> referencePrices;
 
@@ -46,11 +46,15 @@ public class PricesEntity
     @Column(name = "mdl_value")
     private Double mdlValue;
 
+    @Basic
+    @Column(name = "total_quantity")
+    private Integer totalQuantity;
+
 //    @OneToOne( fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST })
 //    @JoinColumn( name = "doc_id" )
 //    private DocumentsEntity document;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinTable(name = "PRICES_DOCUMENTS", joinColumns = {
             @JoinColumn(name = "price_id")}, inverseJoinColumns = {
             @JoinColumn(name = "DOCUMENT_ID")})

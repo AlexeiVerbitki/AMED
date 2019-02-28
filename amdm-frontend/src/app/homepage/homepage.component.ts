@@ -1,18 +1,18 @@
-import {MatDialog, MatSort, MatTableDataSource, MatPaginator} from '@angular/material';
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
-import {TaskService} from '../shared/service/task.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {HomepageService} from '../shared/service/homepage.service';
 import {LoaderService} from '../shared/service/loader.service';
+import {SuccessOrErrorHandlerService} from '../shared/service/success-or-error-handler.service';
 
 @Component({
     selector: 'app-homepage',
     templateUrl: './homepage.component.html',
     styleUrls: ['./homepage.component.css']
 })
-export class HomepageComponent implements OnInit, AfterViewInit {
+export class HomepageComponent implements OnInit, AfterViewInit, OnDestroy {
 
     taskForm: FormGroup;
     displayedColumns: any[] = ['requestNumber', 'startDate', 'company', 'deponent', 'subject', 'endDate', 'step'];
@@ -29,7 +29,8 @@ export class HomepageComponent implements OnInit, AfterViewInit {
                 public dialog: MatDialog,
                 private route: Router,
                 private homepageService: HomepageService,
-                private loadingService: LoaderService) {
+                private loadingService: LoaderService,
+                private s: SuccessOrErrorHandlerService) {
         this.taskForm = fb.group({
             'requestNumber': [null, {validators: Validators.required}],
             'request': [null],
@@ -91,5 +92,9 @@ export class HomepageComponent implements OnInit, AfterViewInit {
         if (this.dataSource.paginator) {
             this.dataSource.paginator.firstPage();
         }
+    }
+
+    ngOnDestroy() {
+        this.subscriptions.forEach(subscription => subscription.unsubscribe());
     }
 }

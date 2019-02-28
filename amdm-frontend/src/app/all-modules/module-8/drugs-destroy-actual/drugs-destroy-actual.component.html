@@ -70,7 +70,7 @@
             <th scope="row">{{ meds.medicamentName }}</th>
             <td>{{ meds.quantity }}</td>
             <td>{{ meds.uselessReason }}</td>
-            <td>{{meds.destructionMethod.description}}</td>
+            <td>{{meds.destructionMethod ? meds.destructionMethod.description : ''}}</td>
         </tr>
         </tbody>
     </table>

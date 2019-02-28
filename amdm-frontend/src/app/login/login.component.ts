@@ -1,7 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs/internal/Subscription';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {AuthService} from '../shared/service/authetication.service';
+import {ScrAuthorRolesService} from '../shared/auth-guard/scr-author-roles.service';
+import {JwtHelperService} from '@auth0/angular-jwt';
 
 @Component({
     selector: 'app-login',
@@ -14,14 +16,20 @@ export class LoginComponent implements OnInit, OnDestroy {
     model: any = {};
     error: string;
     subscriptions: Subscription[];
+    redirectUrl: string = undefined;
 
     constructor(private router: Router,
-                private authenticationService: AuthService) {
+                private route: ActivatedRoute,
+                private authenticationService: AuthService,
+                private securityRoleService: ScrAuthorRolesService) {
     }
 
     ngOnInit() {
         this.subscriptions = [];
         this.authenticationService.logout();
+        this.subscriptions.push(this.route.queryParams.subscribe(params => {
+            this.redirectUrl = params['returnUrl'];
+        }));
     }
 
     login() {
@@ -32,8 +40,15 @@ export class LoginComponent implements OnInit, OnDestroy {
                     if (bearerToken && bearerToken.slice(0, 7) === 'Bearer ') {
                         const jwt = bearerToken.slice(7, bearerToken.length);
                         localStorage.setItem('authenticationToken', JSON.stringify(jwt));
+
+                        //init authorities
+                        this.securityRoleService.changeValue(new JwtHelperService().decodeToken(jwt).ROLE.split(','));
                     }
-                    this.router.navigate(['/dashboard']);
+                    if (this.redirectUrl) {
+                        this.router.navigate([this.redirectUrl]);
+                    } else {
+                        this.router.navigate(['/dashboard']);
+                    }
                 },
                 error => {
                     this.error = error;

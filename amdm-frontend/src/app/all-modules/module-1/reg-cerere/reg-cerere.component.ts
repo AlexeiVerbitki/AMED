@@ -16,6 +16,7 @@ import {TaskService} from '../../../shared/service/task.service';
 import {CanModuleDeactivate} from '../../../shared/auth-guard/can-deactivate-guard.service';
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {ScrAuthorRolesService} from '../../../shared/auth-guard/scr-author-roles.service';
 
 @Component({
     selector: 'app-reg-cerere',
@@ -23,7 +24,7 @@ import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
     styleUrls: ['./reg-cerere.component.css']
 })
 
-export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivate  {
+export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivate {
 
     documents: Document [] = [];
     companii: Observable<any[]>;
@@ -32,10 +33,10 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
 
     generatedDocNrSeq: number;
     formSubmitted: boolean;
-    private subscriptions: Subscription[] = [];
     loadingCompany = false;
     companyInputs = new Subject<string>();
     maxDate = new Date();
+    private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder,
                 private router: Router,
@@ -47,7 +48,8 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
                 private errorHandlerService: SuccessOrErrorHandlerService,
                 private loadingService: LoaderService,
                 public dialog: MatDialog,
-                public dialogConfirmation: MatDialog) {
+                public dialogConfirmation: MatDialog,
+                private roleSrv: ScrAuthorRolesService) {
         this.rForm = fb.group({
             'data': {disabled: true, value: new Date()},
             'requestNumber': [null],
@@ -59,7 +61,7 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
             'email': [null, Validators.email],
             'requestMandateNr': [null],
             'requestMandateDate': [null],
-            'idnp' : [null, [Validators.maxLength(13), Validators.minLength(13), Validators.pattern('[0-9]+')]],
+            'idnp': [null, [Validators.maxLength(13), Validators.minLength(13), Validators.pattern('[0-9]+')]],
             'company': [null, Validators.required],
             'initiator': [''],
             'assignedUser': ['']
@@ -81,7 +83,9 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
         this.companii =
             this.companyInputs.pipe(
                 filter((result: string) => {
-                    if (result && result.length > 2) { return true; }
+                    if (result && result.length > 2) {
+                        return true;
+                    }
                 }),
                 debounceTime(400),
                 distinctUntilChanged(),
@@ -118,7 +122,7 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
 
         this.formSubmitted = true;
         if (this.rForm.get('mandatedFirstname').invalid || this.rForm.get('mandatedLastname').invalid || this.rForm.get('company').invalid
-        || this.rForm.get('idnp').invalid) {
+            || this.rForm.get('idnp').invalid) {
             return;
         }
 
@@ -146,19 +150,25 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
         modelToSubmit.initiator = useranameDB;
         modelToSubmit.assignedUser = useranameDB;
         modelToSubmit.documents = this.documents;
-        modelToSubmit.registrationRequestMandatedContacts = [{mandatedLastname : this.rForm.get('mandatedLastname').value,
-            mandatedFirstname : this.rForm.get('mandatedFirstname').value,
-            phoneNumber : this.rForm.get('phoneNumber').value,
-            email : this.rForm.get('email').value,
-            requestMandateNr : this.rForm.get('requestMandateNr').value,
-            requestMandateDate : this.rForm.get('requestMandateDate').value,
-            idnp : this.rForm.get('idnp').value
+        modelToSubmit.registrationRequestMandatedContacts = [{
+            mandatedLastname: this.rForm.get('mandatedLastname').value,
+            mandatedFirstname: this.rForm.get('mandatedFirstname').value,
+            phoneNumber: this.rForm.get('phoneNumber').value,
+            email: this.rForm.get('email').value,
+            requestMandateNr: this.rForm.get('requestMandateNr').value,
+            requestMandateDate: this.rForm.get('requestMandateDate').value,
+            idnp: this.rForm.get('idnp').value
         }];
-        modelToSubmit.type = {code : 'MEDF'};
+        modelToSubmit.type = {code: 'MEDF'};
 
         this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
                 this.loadingService.hide();
-                this.router.navigate(['dashboard/module/medicament-registration/evaluate/' + data.body.id]);
+                if (this.roleSrv.isRightAssigned('scr_module_2') || this.roleSrv.isRightAssigned('scr_admin')) {
+                    this.router.navigate(['dashboard/module/medicament-registration/evaluate/' + data.body.id]);
+                } else if (this.roleSrv.isRightAssigned('scr_register_request')) {
+                    this.router.navigate(['/dashboard/homepage/']);
+                }
+
             }, error => this.loadingService.hide())
         );
     }

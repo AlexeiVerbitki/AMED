@@ -1,0 +1,169 @@
+<h2 mat-dialog-title align="center">Substante active pentru {{selectedSubstance?.commercialName}}</h2>
+<div>
+    <form [formGroup]='rForm'>
+        <div class="row" *ngIf="!viewMode">
+
+
+            <div class="col-md-4">
+                <div class="md-form-modified">
+                    <ng-select class="custom" [items]="authorizedSubstances | async" bindLabel="substanceName"
+                               placeholder="Substanta activa"
+                               formControlName="substance"
+                               [required]="true"
+                               [typeahead]="substInput"
+                               [loading]="substLoading">
+                        <ng-template ng-option-tmp let-item="item">
+                            {{item.substanceName}} <br/>
+                            <small>{{item.substanceCode}}</small>
+                        </ng-template>
+                    </ng-select>
+                    <div *ngIf="rFormSubbmitted && rForm.get('substance').invalid">
+                        <small class="text-muted"><strong class="text-danger">Substanta activa trebuie
+                            selectata</strong></small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="md-form">
+                            <input id="availableQuantity" mdbInputDirective type="number" class="form-control"
+                                   formControlName="availableQuantity">
+                            <label for="availableQuantity">Substanta activa disponibila</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="md-form">
+                            <input id="availableQuantityUM" mdbInputDirective type="text" class="form-control"
+                                   formControlName="availableQuantityUM">
+                            <label for="availableQuantityUM"> </label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input id="authorizedQuantity" mdbInputDirective type="number" class="form-control"
+                           formControlName="authorizedQuantity">
+                    <label for="authorizedQuantity">Cantitate substanta activa pentru autorizare
+                    </label>
+                </div>
+                <div *ngIf="rFormSubbmitted && rForm.get('authorizedQuantity').invalid">
+                    <small class="text-muted"><strong class="text-danger">Cantitatea pentru autorizare trebuie introdusa</strong></small>
+                </div>
+            </div>
+
+            <div class="col-2">
+                <div class="md-form-modified">
+                    <ng-select class="w-100"
+                               [items]="substanceUnits"
+                               bindLabel="unitCodeDescription"
+                               formControlName="unitOfMeasurement"
+                               placeholder="UM substanta activa">
+                    </ng-select>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="gradient-card-header bg-sidebar border-gradient" *ngIf="!viewMode">
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card-header-title white-text">Detalii substanta</div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-right fap text-white">
+                            <i (click)="addSubstance()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card-body card-body-cascade" *ngIf="!viewMode">
+            <table class="table table-widths text-center">
+                <thead class="bg-sidebar white-text">
+                <tr>
+                    <th scope="col">Denumire</th>
+                    <th scope="col">Cod</th>
+                    <th scope="col">Cantitate admisibila</th>
+                    <th scope="col">Disponibila din data</th>
+                    <th scope="col">Valabila pana la data</th>
+                    <th scope="col">Unitate de masura</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let substance of activeSubstancesTable;let i = index">
+                    <th scope="row">{{ substance.substanceName }}</th>
+                    <td>{{ substance.substanceCode }}</td>
+                    <td>{{ substance.quantity }}</td>
+                    <td>{{ substance.fromDate | date: 'dd/MM/yyyy' }}</td>
+                    <td>{{ substance.toDate | date: 'dd/MM/yyyy' }}</td>
+                     <td>{{ substance.unitDescription }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr>
+        <div class="gradient-card-header bg-sidebar border-gradient">
+            <div class="container-fluid">
+                <!-- Title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card-header-title white-text">Substante active adaugate</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card-body card-body-cascade">
+            <table class="table table-widths text-center">
+                <thead class="bg-sidebar white-text">
+                <tr>
+                     <th scope="col">Denumire</th>
+                     <th scope="col">Cod</th>
+                     <th scope="col">Cantitate autorizata</th>
+                        <th *ngIf="viewMode" scope="col">Cantitate ramasa</th>
+                     <th scope="col">Unitate de masura</th>
+                    <th scope="col">Actiuni</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let susbstance of selectedSubstancesTable;let i = index">
+                      <td>{{ susbstance.substanceName }}</td>
+                      <td>{{ susbstance.substanceCode }}</td>
+                     <td >{{ susbstance.authorizedQuantity }}</td>
+                    <td *ngIf="viewMode">{{ susbstance.authorizedQuantityRemaining }}</td>
+                     <td>{{ susbstance.authorizedQuantityUnitDesc }}</td>
+                    <td>
+                        <button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                (click)="removeSubstance(i)"
+                                mdbWavesEffect [disabled]="viewMode"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                        <button *ngIf="viewMode" type="button" class="btn btn-mdb-color waves-light btn-sm waves-light"
+                                (click)="declare(susbstance)"
+                                mdbWavesEffect ><i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr>
+    </form>
+</div>
+<div class="text-center">
+    <div mat-dialog-actions>
+        <div class="w-100">
+            <button class="btn btn-dark-green-color btn-sm-bl btn-sm" (click)="ok()" *ngIf="!viewMode">Salvare</button>
+            <button class="btn btn-danger btn-sm-bl btn-sm" (click)="cancel()">Inchidere</button>
+        </div>
+    </div>
+</div>

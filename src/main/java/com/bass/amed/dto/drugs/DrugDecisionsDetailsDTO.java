@@ -1,6 +1,6 @@
 package com.bass.amed.dto.drugs;
 
-import com.bass.amed.entity.DrugImportExportDetailsEntity;
+import com.bass.amed.entity.DrugImportExportEntity;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -27,7 +27,7 @@ public class DrugDecisionsDetailsDTO  {
     private String custom;
     private String localityId;
     private String legalAddress;
-    List<DrugImportExportDetailsEntity> details = new ArrayList<>();
+    List<DrugImportExportEntity> details = new ArrayList<>();
     private Integer language; //0- ro, 1- ru, 2 - en
     private boolean usedScoupe; // true - medicina, false- tehnic
     private String  rejectReason;

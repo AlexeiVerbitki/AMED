@@ -3,11 +3,10 @@ package com.bass.amed.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @Data
 @Entity
-@Table(name = "nm_register_catalog_codes", schema = "amed", catalog = "")
+@Table(name = "nm_register_catalog_codes", schema = "amed")
 public class NmRegisterCatalogCodesEntity {
 
     @Id

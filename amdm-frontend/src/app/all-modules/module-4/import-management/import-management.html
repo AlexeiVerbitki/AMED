@@ -37,9 +37,6 @@
             <app-document *ngIf="importData !== null && importData?.importAuthorizationEntity.medType==2" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMMN', step : 'F'}"></app-document>
             <app-document *ngIf="importData !== null && importData?.importAuthorizationEntity.medType==3" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMMP', step : 'F'}"></app-document>
             <app-document *ngIf="importData !== null && importData?.importAuthorizationEntity.medType==4" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMAM', step : 'F'}"></app-document>
-            <div *ngIf="formSubmitted && docs && docs.length==0">
-                <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
-            </div>
             <h5 class="text-center font-weight-bold my-3" id="invoiceInfo">Informația despre Invoice</h5>
             <hr>
 
@@ -51,9 +48,9 @@
                             <label for="invoiceNumber">Invoice
                                 <span class="text-danger">*</span>
                             </label>
-                        </div>
                         <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.invoiceNumber').invalid">
                             <small class="text-muted"><strong class="text-danger">Nr. de de invoice trebuie selectat</strong></small>
+                        </div>
                         </div>
                     </div>
 
@@ -65,9 +62,9 @@
                                 <mat-datepicker-toggle matSuffix [for]="picker29"></mat-datepicker-toggle>
                                 <mat-datepicker touchUi #picker29></mat-datepicker>
                             </mat-form-field>
-                        </div>
                         <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.invoiceDate').invalid">
                             <small class="text-muted"><strong class="text-danger">Data de invoice trebuie selectată</strong></small>
+                        </div>
                         </div>
                     </div>
 
@@ -77,9 +74,9 @@
                             <label for="invoiceSpecificatie">Specificație
                                 <span class="text-danger">*</span>
                             </label>
-                        </div>
                         <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.invoiceSpecificatie').invalid">
                             <small class="text-muted"><strong class="text-danger">Specificația trebuie selectată</strong></small>
+                        </div>
                         </div>
                     </div>
 
@@ -89,9 +86,9 @@
                             <label for="invoiceBasis"  >Temeiul pentru invoice
                                 <span class="text-danger">*</span>
                             </label>
-                        </div>
                         <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.invoiceBasis').invalid">
                             <small class="text-muted"><strong class="text-danger">Indicați temeiul pentru import</strong></small>
+                        </div>
                         </div>
                     </div>
 
@@ -102,10 +99,10 @@
                                        formControlName="customsPoints">
                                 <ng-option *ngFor="let point of customsPointsList" [value]="point">{{ point?.description }} - {{point?.code}}</ng-option>
                             </ng-select>
-                        </div>
                         <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.customsPoints').invalid ">
                             <small class="text-muted"><strong class="text-danger">Vama trebuie selectată</strong>
                             </small>
+                        </div>
                         </div>
                     </div>
 
@@ -115,9 +112,9 @@
                             <label for="invoiceCustomsNumber">Numarul Declaratiei vamale
                                 <span class="text-danger">*</span>
                             </label>
-                        </div>
                         <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsNumber').invalid">
                             <small class="text-muted"><strong class="text-danger">Numărul declarației vamale trebuie selectat</strong></small>
+                        </div>
                         </div>
                     </div>
 
@@ -129,9 +126,9 @@
                                 <mat-datepicker-toggle matSuffix [for]="picker28"></mat-datepicker-toggle>
                                 <mat-datepicker touchUi #picker28></mat-datepicker>
                             </mat-form-field>
-                        </div>
                         <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsDate').invalid">
                             <small class="text-muted"><strong class="text-danger">Data declarației vamale trebuie selectată</strong></small>
+                        </div>
                         </div>
                     </div>
 

@@ -1,37 +1,35 @@
 package com.bass.amed.controller.rest.gdp;
 
 import com.bass.amed.common.Constants;
-import com.bass.amed.dto.PrevYearAvgPriceDTO;
 import com.bass.amed.dto.gdp.GDPAccompanyingLetterDTO;
 import com.bass.amed.dto.gdp.GDPCertificateDTO;
 import com.bass.amed.dto.gdp.GDPOrderDTO;
-import com.bass.amed.dto.prices.evaluation.FisaDeEvaluare;
-import com.bass.amed.dto.prices.registration.annexes.MedicineDataForAnnex2;
-import com.bass.amed.dto.prices.registration.annexes.MedicineDataForAnnex3;
-import com.bass.amed.dto.prices.registration.annexes.MedicineInfoForAnnex1;
+import com.bass.amed.dto.gmp.GMPAuthorizationDetailsDTO;
+import com.bass.amed.dto.gmp.GMPFilterDTO;
 import com.bass.amed.exception.CustomException;
-import com.bass.amed.repository.*;
-import com.bass.amed.repository.prices.*;
-import com.bass.amed.service.PriceEvaluationService;
+import com.bass.amed.repository.ManufactureRepository;
+import com.bass.amed.repository.SysParamsRepository;
+import com.bass.amed.repository.prices.PricesManagementRepository;
+import com.bass.amed.utils.GMPQueryUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Slf4j
@@ -42,9 +40,11 @@ public class GDPController
     @Autowired
     PricesManagementRepository pricesManagementRepository;
     @Autowired
-    ManufactureRepository manufactureRepository;
+    ManufactureRepository      manufactureRepository;
     @Autowired
     private SysParamsRepository sysParamsRepository;
+    @Autowired
+    private EntityManagerFactory entityManagerFactory;
 
 
     @RequestMapping(value = "/accompanying-letter", method = RequestMethod.POST)
@@ -57,7 +57,7 @@ public class GDPController
         parameters.put("companyName", gdpAccompanyingLetterDTO.getCompanyName());
         parameters.put("companyDirector", gdpAccompanyingLetterDTO.getCompanyDirector());
         parameters.put("companyEmail", gdpAccompanyingLetterDTO.getCompanyEmail());
-        parameters.put("inspectPeriod",gdpAccompanyingLetterDTO.getInspectPeriod());
+        parameters.put("inspectPeriod", gdpAccompanyingLetterDTO.getInspectPeriod());
         parameters.put("anex", gdpAccompanyingLetterDTO.getAnex());
         parameters.put("distributionAddress", gdpAccompanyingLetterDTO.getDistributionAddress());
         parameters.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
@@ -93,6 +93,8 @@ public class GDPController
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("nr", gdpOrderDTO.getNr());
         parameters.put("date", gdpOrderDTO.getDate());
+        parameters.put("gdpBeginDate", gdpOrderDTO.getGdpBeginDate());
+        parameters.put("companyAddress", gdpOrderDTO.getCompanyAddress());
         parameters.put("requestNr", gdpOrderDTO.getRequestNr());
         parameters.put("requestDate", gdpOrderDTO.getRequestDate());
         parameters.put("companyName", gdpOrderDTO.getCompanyName());
@@ -142,6 +144,40 @@ public class GDPController
         ResourceLoader resourceLoader = new DefaultResourceLoader();
         Resource       res            = resourceLoader.getResource(resourcePath);
         return JasperCompileManager.compileReport(res.getInputStream());
+    }
+
+    @PostMapping(value = "/gmp-authorisations-by-filter")
+    public ResponseEntity<List<GMPAuthorizationDetailsDTO>> getGMPDetailsByFilter(@RequestBody GMPFilterDTO filter) throws CustomException
+    {
+        LOGGER.debug("get GMP authorisations by filter");
+
+        EntityManager em = null;
+        List<GMPAuthorizationDetailsDTO> result = new ArrayList<>();
+        try
+        {
+            em = entityManagerFactory.createEntityManager();
+            em.getTransaction().begin();
+            StringBuilder queryString = GMPQueryUtils.createQuery(filter);
+            Query query = em.createNativeQuery(queryString.toString(), GMPAuthorizationDetailsDTO.class);
+            GMPQueryUtils.updateQueryWithValues(filter, query);
+            result = query.getResultList();
+            em.getTransaction().commit();
+        }
+        catch (Exception e)
+        {
+            if (em != null)
+            {
+                em.getTransaction().rollback();
+            }
+            throw new CustomException(e.getMessage());
+        }
+
+        finally
+        {
+            em.close();
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 }

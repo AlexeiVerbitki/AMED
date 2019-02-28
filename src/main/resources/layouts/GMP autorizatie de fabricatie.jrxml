@@ -202,7 +202,7 @@ A MEDICAMENTELOR DE UZ UMAN
 				<textElement>
 					<font fontName="DejaVu Sans" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[Ordinul MS nr. 1024 din 25.09.2013 cu privire la autorizarea fabricației medicamentelor de uz uman în Republica Moldova]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Ordinul MS nr. 1024 din 25.09.2013 cu privire la autorizarea fabricației medicamentelor de uz uman în Republica Moldova"]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="18">

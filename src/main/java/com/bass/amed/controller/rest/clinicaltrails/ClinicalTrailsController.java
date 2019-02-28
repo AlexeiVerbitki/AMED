@@ -92,6 +92,7 @@ public class ClinicalTrailsController {
     }
 
     @PostMapping(value = "/add-amendment-request")
+    @Transactional
     public ResponseEntity<Integer> seveNetxtClinicalTrailAmendmentRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
         clinicalTrailsService.registerNewClinicalTrailAmendment(requests);
         if (requests.getCurrentStep().equals(Constants.ClinicTrailStep.EVALUATE)) {

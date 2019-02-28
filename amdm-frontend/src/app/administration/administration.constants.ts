@@ -57,4 +57,10 @@ export const NomenclatureConstants = [
     {nr: 56, title: 'Ambalare secundara', name: 'nm_secondary_packaging'},
     {nr: 57, title: 'Tipuri de sterilizare a substanţelor', name: 'nm_sterilizations'},
     {nr: 58, title: 'Teste pentru controlul calităţii', name: 'nm_tests_for_quality_control'},
+    {nr: 59, title: 'Categorii de audit', name: 'nm_audit_category'},
+    {nr: 60, title: 'Subcategorii de audit', name: 'nm_audit_subcategory'},
+    {nr: 61, title: 'Activități de import', name: 'nm_import_activities'},
+    {nr: 62, title: 'Statuturile utilizatorilor LDAP', name: 'nm_ldap_user_status'},
+    {nr: 63, title: 'Codurile registrelor', name: 'nm_register_catalog_codes'},
+    {nr: 64, title: 'Rata de conversie a unitatilor de masura pentru droguri', name: 'drug_units_conversion_rates'},
 ];

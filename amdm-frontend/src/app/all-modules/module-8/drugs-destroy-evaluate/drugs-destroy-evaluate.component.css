@@ -21,3 +21,7 @@ table td a {
   color : #488CD3;
   font-weight : bold;
 }
+
+.mt-button {
+  margin-top: 4.5rem;
+}

@@ -135,14 +135,39 @@ public class MedicamentAnnihilationRequestService
             em.getTransaction().begin();
             RegistrationRequestsEntity r = em.find(RegistrationRequestsEntity.class, request.getId());
 
-            for (MedicamentAnnihilationMedsEntity mm : request.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds())
-            {
-                MedicamentAnnihilationMedsEntity mam = em.find(MedicamentAnnihilationMedsEntity.class, mm.getId());
-                mam.setDestructionMethod(mm.getDestructionMethod());
-                mam.setTax(mm.getTax());
 
-                em.merge(mam);
-            }
+//            //update
+//            for (MedicamentAnnihilationMedsEntity mm : request.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds())
+//            {
+//                if (mm.getId() != null)
+//                {
+//                    MedicamentAnnihilationMedsEntity mam = em.find(MedicamentAnnihilationMedsEntity.class, mm.getId());
+//                    mam.setDestructionMethod(mm.getDestructionMethod());
+//                    mam.setTax(mm.getTax());
+//
+//                    em.merge(mam);
+//                }
+//            }
+
+            //insert
+//            List<MedicamentAnnihilationMedsEntity> rsNew = request.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds().stream().filter(rrr-> rrr.getId() == null).collect(Collectors.toList());
+
+            r.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds().clear();
+            r.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds().addAll(request.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds());
+
+
+            //removed
+//            Set<Integer> rsViewSet = request.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds().stream().filter( nn -> nn.getId() != null).map(gg -> gg.getId()).collect(Collectors.toSet());
+//            Set<Integer> rsDBSet = r.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds().stream().filter( nn -> nn.getId() != null).map(gg -> gg.getId()).collect(Collectors.toSet());
+//
+//            rsDBSet.removeAll(rsViewSet);
+
+//            for (Integer rsDBId : rsDBSet){
+//                MedicamentAnnihilationMedsEntity ent = em.find(MedicamentAnnihilationMedsEntity.class, rsDBId);
+//
+//
+//                em.remove(ent);
+//            }
 
             r.getRequestHistories().add(new ArrayList<>(request.getRequestHistories()).get(0));
 

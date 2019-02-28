@@ -137,6 +137,16 @@
                 </div>
             </div>
         </div>
+        <div class="col">
+            <div class="md-form">
+                <input id="pretQuant" mdbInputDirective type="number" class="form-control" min="0.1" step="0.1"
+                       formControlName="totalQuantity" (ngModelChange)="sendDTO()">
+                <label for="pretQuant">Cantitatea totală<span class="text-danger">*</span></label>
+                <div *ngIf="formSubmitted && this.PriceRegForm.get('totalQuantity').invalid">
+                    <small class="text-muted"><strong class="text-danger">Indicați cantitatea totală</strong></small>
+                </div>
+            </div>
+        </div>
     </div>
 </form>
 
@@ -158,19 +168,19 @@
                 </div>
                 <div class="col">
                     <div class="md-form">
-                        <input [id]="'quantityId'+i" mdbInputDirective type="number" class="form-control" [(ngModel)]="p.totalQuantity" (ngModelChange)="sendDTO()">
-                        <label [for]="'quantityId'+i">Cantitatea totală</label>
-                        <div *ngIf="formSubmitted && !p.totalQuantity">
-                            <small class="text-muted"><strong class="text-danger">Indicați cantitatea totală</strong></small>
+                        <input [id]="'divisionId'+i" mdbInputDirective type="text" class="form-control" [(ngModel)]="p.division" (ngModelChange)="sendDTO()">
+                        <label [for]="'divisionId'+i">Divizarea medicamentului</label>
+                        <div *ngIf="formSubmitted && !p.division">
+                            <small class="text-muted"><strong class="text-danger">Indicați divizarea medicamentului</strong></small>
                         </div>
                     </div>
                 </div>
                 <div class="col">
                     <div class="md-form">
-                        <input [id]="'divisionId'+i" mdbInputDirective type="text" class="form-control" [(ngModel)]="p.division" (ngModelChange)="sendDTO()">
-                        <label [for]="'divisionId'+i">Divizarea medicamentului</label>
-                        <div *ngIf="formSubmitted && !p.division">
-                            <small class="text-muted"><strong class="text-danger">Indicați divizarea medicamentului</strong></small>
+                        <input [id]="'quantityId'+i" mdbInputDirective type="number" class="form-control" [(ngModel)]="p.totalQuantity" (ngModelChange)="sendDTO()">
+                        <label [for]="'quantityId'+i">Cantitatea totală</label>
+                        <div *ngIf="formSubmitted && !p.totalQuantity">
+                            <small class="text-muted"><strong class="text-danger">Indicați cantitatea totală</strong></small>
                         </div>
                     </div>
                 </div>

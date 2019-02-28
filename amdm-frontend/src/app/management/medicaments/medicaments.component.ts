@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
@@ -12,7 +12,7 @@ import {NavbarTitleService} from '../../shared/service/navbar-title.service';
     templateUrl: './medicaments.component.html',
     styleUrls: ['./medicaments.component.css']
 })
-export class MedicamentsComponent implements OnInit {
+export class MedicamentsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     mForm: FormGroup;
     displayedColumns: any[] = ['code', 'name', 'atcCode', 'registerNumber', 'registrationDate', 'division', 'authorizationHolder', 'expirationDate'];
@@ -65,7 +65,7 @@ export class MedicamentsComponent implements OnInit {
 
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
-        this.dataSource.paginator._intl.itemsPerPageLabel = 'Prorcese pe pagina: ';
+        this.dataSource.paginator._intl.itemsPerPageLabel = 'Medicamente pe pagina: ';
         this.dataSource.sort = this.sort;
     }
 

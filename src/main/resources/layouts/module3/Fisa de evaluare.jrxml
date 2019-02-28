@@ -1311,8 +1311,8 @@
 		</band>
 		<band height="58">
 			<staticText>
-				<reportElement x="0" y="0" width="535" height="19" uuid="699cb3d7-8d2c-456d-bb59-59db1439e066"/>
-				<textElement>
+				<reportElement x="0" y="0" width="535" height="18" uuid="699cb3d7-8d2c-456d-bb59-59db1439e066"/>
+				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[10. Date despre înregistrările precedente]]></text>

@@ -13,7 +13,7 @@ public class CachingConfig
     @Bean
     public CacheManager cacheManager()
     {
-        return new ConcurrentMapCacheManager("nm_ldap_user_status");
+        return new ConcurrentMapCacheManager("nm_ldap_user_status", "all_doc_types");
     }
 
 

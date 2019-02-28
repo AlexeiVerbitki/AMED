@@ -1,0 +1,114 @@
+<h2 mat-dialog-title align="center">Declaratii pentru {{dataDialog?.details?.substance?.substanceName}}</h2>
+<div>
+    <form [formGroup]='rForm'>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="quantity" mdbInputDirective type="text" class="form-control"
+                           formControlName="quantity">
+                    <label for="quantity">Cantitatea de declarat
+                    </label>
+                </div>
+                <div *ngIf="rFormSubbmitted && rForm.get('quantity').invalid">
+                    <small class="text-muted"><strong class="text-danger">Cantitatea trebuie sa fie un numar cu cel mult
+                        doua decimale
+                        selectata</strong></small>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="md-form">
+                    <input id="quantityUM" mdbInputDirective type="text" class="form-control"
+                           formControlName="quantityUM">
+                </div>
+                <div *ngIf="rFormSubbmitted && rForm.get('quantityUM').invalid">
+                    <small class="text-muted"><strong class="text-danger">Substanta activa trebuie
+                        selectata</strong></small>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="activeSubstanceQuantity" mdbInputDirective type="text" class="form-control"
+                           formControlName="activeSubstanceQuantity">
+                    <label for="activeSubstanceQuantity">Substanta activa cantitate
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="md-form">
+                    <input id="activeSubstanceQuantityUM" mdbInputDirective type="text" class="form-control"
+                           formControlName="activeSubstanceQuantityUM">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="md-form">
+                    <input id="activeSubstanceQuantityRemaining" mdbInputDirective type="text" class="form-control"
+                           formControlName="activeSubstanceQuantityRemaining">
+                    <label for="activeSubstanceQuantityRemaining">Cantitatea ramasa
+                    </label>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="gradient-card-header bg-sidebar border-gradient">
+            <div class="container-fluid">
+                <!-- Title -->
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card-header-title white-text">Import/Export declaratii</div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-right fap text-white">
+                            <i (click)="addDeclaration()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card-body card-body-cascade">
+            <table class="table table-widths text-center">
+                <thead class="bg-sidebar white-text">
+                <tr>
+                    <th scope="col">Cant. totala</th>
+                    <th scope="col">Cant. totala UM</th>
+                    <th scope="col">Cant. substanta activa</th>
+                    <th scope="col">Cant. substanta activa UM</th>
+                    <th scope="col">Data declararii</th>
+                    <th scope="col">Actiuni</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let declare of declarations;let i = index">
+                    <th scope="row">{{ declare.quantity }}</th>
+                    <td>{{ rForm.get('quantityUM').value }}</td>
+                    <td>{{ declare.substActiveQuantityUsed }}</td>
+                    <td>{{ rForm.get('activeSubstanceQuantityUM').value }}</td>
+                    <td>{{ declare.declarationDate | date: 'dd/MM/yyyy' }}</td>
+                    <td>
+                        <button type="button" *ngIf="!declare.id"
+                                class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                (click)="remove(declare, i)" mdbWavesEffect attr.disabled="disabled"><i
+                                class="fa fa-trash fa-lg" aria-hidden="true"></i>
+                        </button>
+
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </form>
+
+</div>
+<div class="text-center">
+    <div mat-dialog-actions>
+        <div class="w-100">
+            <button class="btn btn-dark-green-color btn-sm-bl btn-sm" (click)="ok()">Salvare</button>
+            <button class="btn btn-danger btn-sm-bl btn-sm" (click)="cancel()">Inchidere</button>
+        </div>
+    </div>
+</div>

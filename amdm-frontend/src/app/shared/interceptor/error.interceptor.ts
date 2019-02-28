@@ -21,13 +21,12 @@ export class ErrorInterceptor implements HttpInterceptor {
                     if (error.status === 401) {
                         if (this.router.url === '/login') {
                             this.authService.logout();
-                            location.reload(true);
+                            this.router.navigateByUrl('/', {preserveQueryParams: true});
                             return throwError(this.getErrorMessage(error));
                         }
-                        this.authService.logout();
-                        // location.reload(true);
+                        localStorage.removeItem('authenticationToken');
                         this.router.navigateByUrl('/', {preserveQueryParams: true});
-                        return throwError(error.message);
+                        // return throwError(error.message);
                     }
                     let errMsg = '';
                     if (error.status === 404) {

@@ -10,6 +10,8 @@ public class GDPOrderDTO
     private String genDir;
     private String requestNr;
     private String requestDate;
+    private String companyAddress;
+    private String gdpBeginDate;
     private String companyName;
     private String registeredLetterNr;
     private String registeredLetterDate;

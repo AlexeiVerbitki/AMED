@@ -41,7 +41,7 @@ export class CpcdRejectLetterComponent implements OnInit, OnDestroy {
                     this.functions = this.functions.filter(t => t.code.startsWith('FN'));
                     this.loadingFunctions = false;
                 },
-                error => {console.log(error);  this.loadingFunctions = false; }
+                error => { this.loadingFunctions = false; }
             )
         );
     }
