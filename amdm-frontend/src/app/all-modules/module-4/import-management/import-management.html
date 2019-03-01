@@ -145,11 +145,10 @@
                                        placeholder="Vînzător"
                                        formControlName="seller"
                                        [loading]="loadingManufacturerRfPr"
-                                       [typeahead]="manufacturerInputsRfPr"
-                                       required="true">
+                                       [typeahead]="manufacturerInputsRfPr">
                                 <ng-template ng-option-tmp let-item="item">
                                     {{item?.description}}
-                                    <small class="form-text text-muted">{{item.address}}, {{item.country.description}}</small>
+                                    <small class="form-text text-muted">{{item?.address}}, {{item?.country?.description}}</small>
                                 </ng-template>
                             </ng-select>
 
@@ -181,8 +180,7 @@
                                        placeholder="Importator"
                                        formControlName="importer"
                                        [loading]="loadingCompany"
-                                       [typeahead]="companyInputs"
-                                       required="true">
+                                       [typeahead]="companyInputs">
                                 <ng-template ng-option-tmp let-item="item">
                                     {{item.name}} <br/>
                                     <small class="form-text text-muted">IDNO: {{item.idno}}</small>
@@ -195,7 +193,6 @@
                             <input id="importerAddress" mdbInputDirective type="text" class="form-control"
                                    [value]="importerAddress" [attr.disabled]="true">
                             <label for="importerAddress">Ţara şi adresa importatorului
-                                <span class="text-danger">*</span>
                             </label>
                         </div>
                     </div>
@@ -205,7 +202,6 @@
                             <input id="contract" mdbInputDirective type="text" class="form-control"
                                    formControlName="contract" >
                             <label for="contract">Contract
-                                <span class="text-danger">*</span>
                             </label>
                         </div>
                     </div>
@@ -229,7 +225,6 @@
                             <input id="anexa" mdbInputDirective type="text" class="form-control"
                                    formControlName="anexa" >
                             <label for="anexa">Anexa la contract
-                                <span class="text-danger">*</span>
                             </label>
                         </div>
                     </div>
@@ -324,7 +319,7 @@
                             <th scope="col" *ngIf="importData?.medType == 1 || importData?.medType == 2">Cod AMED</th>
                             <th scope="col">Denumire</th>
                             <!--<th scope="col">Data</th>-->
-                            <th scope="col">Cantitatea solicitată</th>
+                            <th scope="col">Cantitatea importată</th>
                             <!--<th scope="col">Cantitate aprobată</th>-->
                             <th scope="col">Pretul</th>
                             <!--<th scope="col">Valuta</th>-->

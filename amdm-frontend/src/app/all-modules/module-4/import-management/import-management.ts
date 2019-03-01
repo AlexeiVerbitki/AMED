@@ -170,7 +170,7 @@ export class ImportManagement implements OnInit {
                 'stuff_type_id': [Validators.required], // to delete
                 'expiration_date': [Validators.required],
                 'customsNumber': [{value: null, disabled: true}],
-                'customsDeclarationDate': [],
+                'customsDeclarationDate': [{value: null, disabled: true}],
                 'authorizationsNumber': [], // inca nu exista la pasul acesta
                 'medType': [''],
                 'importAuthorizationDetailsEntityList': [],
@@ -219,18 +219,6 @@ export class ImportManagement implements OnInit {
         console.log('authorizationNumber', this.authorizationNumber)
 
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
-            console.log("params", params)
-            this.subscriptions.push(this.requestService.getImportRequest(params.id).subscribe(data => {
-                    console.log('this.requestService.getImportRequest(params[\'id\'])', data);
-                this.requestData = data;
-            }));
-        }));
-
-        // this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
-        //     console.log("params", params)
-        //     this.subscriptions.push(this.requestService.getImportRequest(params['id']).subscribe(data => {
-        //             console.log('this.requestService.getImportRequest(params[\'id\'])', data);
-        this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
             this.subscriptions.push(this.requestService.getAuthorizationByAuth(params.auth).subscribe(data => {
                     console.log("this.requestService.getAuthorizationByAuth(params['auth'])", data)
                     this.importData = data;
@@ -240,88 +228,6 @@ export class ImportManagement implements OnInit {
 
                     this.docs = data.documents;
 
-                    this.evaluateImportForm = this.fb.group({
-                        'id': [''],
-                        'requestNumber': [null],
-                        'startDate': [new Date()],
-                        'currentStep': ['AP'],
-                        'company': ['', Validators.required],
-                        'initiator': [null],
-                        'assignedUser': [null],
-                        'data': {disabled: true, value: null},
-                        'importType': [null, Validators.required],
-                        'type':
-                            this.fb.group({
-                                'id': ['']
-                            }),
-
-                        'requestHistories': [],
-                        'medicaments': [],
-
-                        'importAuthorizationEntity': this.fb.group({
-                            'id': [Validators.required],
-                            'applicationDate': [new Date()],
-                            'applicant': ['', Validators.required],
-
-                            'seller': [{value: null, disabled: true}, Validators.required], // Tara si adresa lui e deja in baza
-                            'basisForImport': [{value: null, disabled: true}],
-
-                            'importer': [{value: null, disabled: true}, Validators.required], // Tara si adresa lui e deja in baza
-                            'contract': [{value: null, disabled: true}, Validators.required],
-                            'contractDate': [null, Validators.required],
-                            'anexa': [{value: null, disabled: true}, Validators.required],
-                            'anexaDate': [{value: null, disabled: true}, Validators.required],
-                            'specification': [{value: null, disabled: true}, Validators.required],
-                            'specificationDate': [{value: null, disabled: true}, Validators.required],
-                            'conditionsAndSpecification': [{value: '', disabled: true}],
-                            'quantity': [Validators.required],
-                            'price': [Validators.required],
-                            'currency': [Validators.required],
-                            'summ': [Validators.required],
-                            'producer_id': [Validators.required], // to be deleted
-                            'stuff_type_id': [Validators.required], // to delete
-                            'expiration_date': [Validators.required],
-                            'customsNumber': [],
-                            'customsDeclarationDate': [{value: null, disabled: true}],
-                            'authorizationsNumber': [], // inca nu exista la pasul acesta
-                            'medType': [''],
-                            'importAuthorizationDetailsEntityList': [],
-                            'authorized': [],
-
-                            'invoiceNumber': [null, Validators.required],
-                            'invoiceDate': [null, Validators.required],
-                            'invoiceBasis': [null, Validators.required],
-                            'invoiceSpecificatie': [null, Validators.required],
-                            // 'invoiceCustomsCode': [null, Validators.required],
-                            'invoiceCustomsNumber': [null, Validators.required],
-                            'invoiceCustomsDate': [null, Validators.required],
-                            'customsPoints': [null, Validators.required],
-
-                            'unitOfImportTable': this.fb.group({
-
-                                customsCode: [null, Validators.required],
-                                name: [null, Validators.required],
-                                quantity: [null, Validators.required],
-                                price: [null, Validators.required],
-                                currency: [null, Validators.required],
-                                summ: [null, Validators.required],
-                                producer: [null, Validators.required],
-                                expirationDate: [null, Validators.required],
-                                atcCode: [null, Validators.required],
-                                medicament: [null, Validators.required],
-                                pharmaceuticalForm: [null, Validators.required],
-                                dose: [null, Validators.required],
-                                registrationRmNumber: [null, Validators.required],
-                                unitsOfMeasurement: [null, Validators.required],
-                                registrationRmDate: [null, Validators.required],
-                                internationalMedicamentName: [null, Validators.required]
-
-                            }),
-
-
-                        }),
-
-                    });
 
 
                     this.importDetailsList = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList;
@@ -346,17 +252,24 @@ export class ImportManagement implements OnInit {
                     });
 
 
+                    this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
+                        console.log("params", params)
+                        this.subscriptions.push(this.requestService.getImportRequest(params.id).subscribe(data => {
+                            console.log('this.requestService.getImportRequest(params[\'id\'])', data);
+                            this.requestData = data;
+                            if (this.requestData.id) { this.evaluateImportForm.get('id').setValue(this.requestData.id);}
+                            if (this.requestData.requestNumber) { this.evaluateImportForm.get('requestNumber').setValue(this.requestData.requestNumber);}
+                            if (this.requestData.startDate) { this.evaluateImportForm.get('startDate').setValue(new Date(this.requestData.startDate));}
+                            if (this.requestData.initiator) { this.evaluateImportForm.get('initiator').setValue(this.requestData.initiator);}
+                            if (this.requestData.assignedUser) { this.evaluateImportForm.get('assignedUser').setValue(this.requestData.assignedUser);}
+                            if (this.requestData.company) { this.evaluateImportForm.get('company').setValue(this.requestData.company);}
+                            if (this.requestData.importAuthorizationEntity && this.requestData.importAuthorizationEntity.medType)  {this.evaluateImportForm.get('importAuthorizationEntity.medType').setValue(this.requestData.importAuthorizationEntity.medType);}
+                            if (this.requestData.company) { this.evaluateImportForm.get('importAuthorizationEntity.applicant').setValue(this.requestData.company);}
+                            if (this.requestData.type && this.requestData.type.id)  { this.evaluateImportForm.get('type.id').setValue(this.requestData.type.id);}
+                            if (this.requestData.requestHistories)  { this.evaluateImportForm.get('requestHistories').setValue(this.requestData.requestHistories);}
+                        }));
+                    }));
 
-                    if (this.requestData.id) { this.evaluateImportForm.get('id').setValue(this.requestData.id);}
-                    if (this.requestData.requestNumber) { this.evaluateImportForm.get('requestNumber').setValue(this.requestData.requestNumber);}
-                    if (this.requestData.startDate) { this.evaluateImportForm.get('startDate').setValue(new Date(this.requestData.startDate));}
-                    if (this.requestData.initiator) { this.evaluateImportForm.get('initiator').setValue(this.requestData.initiator);}
-                    if (this.requestData.assignedUser) { this.evaluateImportForm.get('assignedUser').setValue(this.requestData.assignedUser);}
-                    if (this.requestData.company) { this.evaluateImportForm.get('company').setValue(this.requestData.company);}
-                    if (this.requestData.importAuthorizationEntity && this.requestData.importAuthorizationEntity.medType)  {this.evaluateImportForm.get('importAuthorizationEntity.medType').setValue(this.requestData.importAuthorizationEntity.medType);}
-                    if (this.requestData.company) { this.evaluateImportForm.get('importAuthorizationEntity.applicant').setValue(this.requestData.company);}
-                    if (this.requestData.type && this.requestData.type.id)  { this.evaluateImportForm.get('type.id').setValue(this.requestData.type.id);}
-                    if (this.requestData.requestHistories)  { this.evaluateImportForm.get('requestHistories').setValue(this.requestData.requestHistories);}
 
                     if (data.importAuthorizationEntity.seller) { this.evaluateImportForm.get('importAuthorizationEntity.seller').setValue(data.importAuthorizationEntity.seller);}
                     if (data.importAuthorizationEntity.seller && data.importAuthorizationEntity.seller.address && data.importAuthorizationEntity.seller.country.descriptior) { this.sellerAddress = (data.importAuthorizationEntity.seller.address + ', ' + data.importAuthorizationEntity.seller.country.description);}
@@ -375,7 +288,6 @@ export class ImportManagement implements OnInit {
                     this.evaluateImportForm.get('importAuthorizationEntity.authorizationsNumber').setValue(data.id + '/' + new Date().getFullYear() + '-AM');
                     // this.evaluateImportForm.get('importAuthorizationEntity.approvedQuantity').setValue(data.importAuthorizationEntity.approvedQuantity);
 
-                    // this.evaluateImportForm.disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.seller').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.contract').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.contractDate').disable();
@@ -451,13 +363,6 @@ export class ImportManagement implements OnInit {
 
         console.log('authorizationModel', authorizationModel);
         observable = this.requestService.viewImportAuthorization(authorizationModel);
-        // observable = this.requestService.viewImportAuthorization(this.evaluateImportForm.getRawValue())
-
-        // }
-        // else if (document.category === 'LI')
-        // {
-        //     observable = this.licenseService.viewLicenta(this.composeModel('A', 'A'));
-        // }
 
         this.subscriptions.push(observable.subscribe(data => {
                 console.log('observable.subscribe(data =>', data);

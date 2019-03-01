@@ -21,6 +21,7 @@
                                 formControlName="pozitie"
                                 [loading]="loadingAuthorizations"
                                 [typeahead]="authorizationsInputs"
+                                [clearable]="false"
                                 required="true">
                             <ng-template ng-option-tmp let-item="item">
                                 {{item?.name}} <br/>
@@ -90,8 +91,7 @@
                                    formControlName="customsCode"
                                    [loading]="loadingcustomsCodes"
                                    [typeahead]="customsCodesInputs"
-                                   [attr.disabled]="true"
-                                   required="true">
+                                   [attr.disabled]="true">
                             <ng-template ng-option-tmp let-item="item">
                                 {{item?.code}};
                                 <small class="form-text text-muted">Cod : {{item?.code}}</small>
@@ -336,11 +336,10 @@
                                    formControlName="producer"
                                    [loading]="loadingManufacturerRfPr"
                                    [typeahead]="manufacturerInputsRfPr"
-                                   [attr.disabled]="true"
-                                   required="true">
+                                   [attr.disabled]="true">
                             <ng-template ng-option-tmp let-item="item">
                                 Denumire: {{item?.description}};
-                                <small class="form-text text-muted">{{item?.address}}, {{item?.country.description}}</small>
+                                <small class="form-text text-muted">{{item?.address}}, {{item?.country?.description}}</small>
                             </ng-template>
                         </ng-select>
                         <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.producer').invalid">-->
@@ -365,7 +364,6 @@
                                [attr.disabled]="true"
                                formControlName="registrationRmNumber">
                         <label for="registrationRmNumber">Nr. de înregistrare în RM
-                            <span class="text-danger">*</span>
                         </label>
                     </div>
                     <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').invalid">-->
