@@ -226,7 +226,7 @@ export class ImportManagement implements OnInit {
                     this.customsPointsList = data.importAuthorizationEntity.nmCustomsPointsList;
 
 
-                    this.docs = data.documents;
+                    // this.docs = data.documents;
 
 
 
@@ -267,6 +267,7 @@ export class ImportManagement implements OnInit {
                             if (this.requestData.company) { this.evaluateImportForm.get('importAuthorizationEntity.applicant').setValue(this.requestData.company);}
                             if (this.requestData.type && this.requestData.type.id)  { this.evaluateImportForm.get('type.id').setValue(this.requestData.type.id);}
                             if (this.requestData.requestHistories)  { this.evaluateImportForm.get('requestHistories').setValue(this.requestData.requestHistories);}
+                            this.docs = data.documents;
                         }));
                     }));
 
