@@ -127,6 +127,9 @@
                     <div *ngIf="invalidQuantity">
                         <small class="text-muted"><strong class="text-danger">Cantitatea nu poate depăși cantitatea rămasă</strong></small>
                     </div>
+                        <div *ngIf="salveazaClicked && this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').invalid">
+                            <small class="text-muted"><strong class="text-danger">Cantitatea trebuie selectată</strong></small>
+                        </div>
                     </div>
                 </div>
 
@@ -139,6 +142,9 @@
                     <div *ngIf="invalidPrice">
                         <small class="text-muted"><strong class="text-danger">Prețul nu poate depăși prețul autorizat</strong></small>
                     </div>
+                        <div *ngIf="salveazaClicked && this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').invalid">
+                            <small class="text-muted"><strong class="text-danger">Prețul trebuie selectat</strong></small>
+                        </div>
                     </div>
                 </div>
 
