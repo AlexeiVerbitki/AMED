@@ -343,7 +343,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
                     }
                     if (val.commercialName) {
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue(val.commercialName);
-                    }
+                    } else {this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue('');}
                     if (val.registrationNumber) {
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setValue(val.registrationNumber);
                     }
@@ -587,7 +587,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
             return;
         }
 
-        if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.').valid) {}
+        // if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').valid) {}
         if (!this.invalidPrice) {
         }
         this.unitOfImportTable.push({

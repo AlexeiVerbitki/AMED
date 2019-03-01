@@ -41,7 +41,7 @@ export class ImportAuthorizationRequestComponent implements OnInit, OnDestroy {
 
     importer: Observable<any[]>;
     loadingCompany = false;
-    @Output() emitAuthorizationNUmber = new EventEmitter<string>()
+    // @Output() emitAuthorizationNUmber = new EventEmitter<string>()
     authorizationNumber: any = '';
     importRadioButton: any;
     companyInputs = new Subject<string>();
@@ -314,8 +314,6 @@ export class ImportAuthorizationRequestComponent implements OnInit, OnDestroy {
                     break;
                 }
                 case '5': {
-                    // this.authorizationNumber = "33134/2019-AM";
-                    // this.authorizationNumber = "33134/2019-AM";
                     this.subscriptions.push(this.requestService.getAuthorizationByAuth(this.authorizationNumber).subscribe(data => {
                             if (this.roleSrv.isRightAssigned('scr_module_7') || this.roleSrv.isRightAssigned('scr_admin')) {
                                 formModel.currentStep = data.currentStep;
@@ -329,7 +327,7 @@ export class ImportAuthorizationRequestComponent implements OnInit, OnDestroy {
                                 // formModel.importAuthorizationEntity.importAuthorizationDetailsEntityList=null;
                                 // formModel.importAuthorizationEntity.importAuthorizationDetailsEntityList.forEach(item => item.id=null)
                                 // console.log("formModel",formModel);
-                                this.emitAuthorizationNUmber.emit(this.authorizationNumber);
+                                // this.emitAuthorizationNUmber.emit(this.authorizationNumber);
                                 this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
                                     this.router.navigate(['dashboard/module/import-authorization/import-management/' ,data.body.id, this.authorizationNumber]);
                                 }));

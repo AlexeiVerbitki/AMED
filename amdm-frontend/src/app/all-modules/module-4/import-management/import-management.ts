@@ -220,7 +220,7 @@ export class ImportManagement implements OnInit {
 
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
             console.log("params", params)
-            this.subscriptions.push(this.requestService.getImportRequest(params['id']).subscribe(data => {
+            this.subscriptions.push(this.requestService.getImportRequest(params.id).subscribe(data => {
                     console.log('this.requestService.getImportRequest(params[\'id\'])', data);
                 this.requestData = data;
             }));
@@ -231,7 +231,7 @@ export class ImportManagement implements OnInit {
         //     this.subscriptions.push(this.requestService.getImportRequest(params['id']).subscribe(data => {
         //             console.log('this.requestService.getImportRequest(params[\'id\'])', data);
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
-            this.subscriptions.push(this.requestService.getAuthorizationByAuth(params['auth']).subscribe(data => {
+            this.subscriptions.push(this.requestService.getAuthorizationByAuth(params.auth).subscribe(data => {
                     console.log("this.requestService.getAuthorizationByAuth(params['auth'])", data)
                     this.importData = data;
 
@@ -358,21 +358,21 @@ export class ImportManagement implements OnInit {
                     if (this.requestData.type && this.requestData.type.id)  { this.evaluateImportForm.get('type.id').setValue(this.requestData.type.id);}
                     if (this.requestData.requestHistories)  { this.evaluateImportForm.get('requestHistories').setValue(this.requestData.requestHistories);}
 
-                    this.evaluateImportForm.get('importAuthorizationEntity.seller').setValue(data.importAuthorizationEntity.seller);
-                    this.sellerAddress = (data.importAuthorizationEntity.seller.address + ', ' + data.importAuthorizationEntity.seller.country.description);
-                    this.evaluateImportForm.get('importAuthorizationEntity.importer').setValue(data.importAuthorizationEntity.importer);
-                    this.importerAddress = data.importAuthorizationEntity.importer.legalAddress + ', Moldova';
-                    this.evaluateImportForm.get('importAuthorizationEntity.basisForImport').setValue(data.importAuthorizationEntity.basisForImport);
-                    this.evaluateImportForm.get('importAuthorizationEntity.conditionsAndSpecification').setValue(data.importAuthorizationEntity.conditionsAndSpecification);
+                    if (data.importAuthorizationEntity.seller) { this.evaluateImportForm.get('importAuthorizationEntity.seller').setValue(data.importAuthorizationEntity.seller);}
+                    if (data.importAuthorizationEntity.seller && data.importAuthorizationEntity.seller.address && data.importAuthorizationEntity.seller.country.descriptior) { this.sellerAddress = (data.importAuthorizationEntity.seller.address + ', ' + data.importAuthorizationEntity.seller.country.description);}
+                    if (data.importAuthorizationEntity.importer) { this.evaluateImportForm.get('importAuthorizationEntity.importer').setValue(data.importAuthorizationEntity.importer);}
+                    if (data.importAuthorizationEntity.importer && data.importAuthorizationEntity.importer.legalAddress) { this.importerAddress = data.importAuthorizationEntity.importer.legalAddress + ', Moldova';}
+                    if (data.importAuthorizationEntity.basisForImport) { this.evaluateImportForm.get('importAuthorizationEntity.basisForImport').setValue(data.importAuthorizationEntity.basisForImport);}
+                    if (data.importAuthorizationEntity.conditionsAndSpecification) { this.evaluateImportForm.get('importAuthorizationEntity.conditionsAndSpecification').setValue(data.importAuthorizationEntity.conditionsAndSpecification);}
+                    if (data.importAuthorizationEntity.customsNumber) { this.evaluateImportForm.get('importAuthorizationEntity.customsNumber').setValue(data.importAuthorizationEntity.customsNumber);}
+                    if (data.importAuthorizationEntity.customsDeclarationDate) { this.evaluateImportForm.get('importAuthorizationEntity.customsDeclarationDate').setValue(new Date(data.importAuthorizationEntity.customsDeclarationDate));}
+                    if (data.importAuthorizationEntity.contract) { this.evaluateImportForm.get('importAuthorizationEntity.contract').setValue(data.importAuthorizationEntity.contract);}
+                    if (data.importAuthorizationEntity.contractDate) { this.evaluateImportForm.get('importAuthorizationEntity.contractDate').setValue(new Date(data.importAuthorizationEntity.contractDate));}
+                    if (data.importAuthorizationEntity.anexa) { this.evaluateImportForm.get('importAuthorizationEntity.anexa').setValue(data.importAuthorizationEntity.anexa);}
+                    if (data.importAuthorizationEntity.anexaDate) { this.evaluateImportForm.get('importAuthorizationEntity.anexaDate').setValue(new Date(data.importAuthorizationEntity.anexaDate));}
+                    if (data.importAuthorizationEntity.specification) { this.evaluateImportForm.get('importAuthorizationEntity.specification').setValue(data.importAuthorizationEntity.specification);}
+                    if (data.importAuthorizationEntity.specificationDate) { this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').setValue(new Date(data.importAuthorizationEntity.specificationDate));}
                     this.evaluateImportForm.get('importAuthorizationEntity.authorizationsNumber').setValue(data.id + '/' + new Date().getFullYear() + '-AM');
-                    this.evaluateImportForm.get('importAuthorizationEntity.customsNumber').setValue(data.importAuthorizationEntity.customsNumber);
-                    this.evaluateImportForm.get('importAuthorizationEntity.customsDeclarationDate').setValue(new Date(data.importAuthorizationEntity.customsDeclarationDate));
-                    this.evaluateImportForm.get('importAuthorizationEntity.contract').setValue(data.importAuthorizationEntity.contract);
-                    this.evaluateImportForm.get('importAuthorizationEntity.contractDate').setValue(new Date(data.importAuthorizationEntity.contractDate));
-                    this.evaluateImportForm.get('importAuthorizationEntity.anexa').setValue(data.importAuthorizationEntity.anexa);
-                    this.evaluateImportForm.get('importAuthorizationEntity.anexaDate').setValue(new Date(data.importAuthorizationEntity.anexaDate));
-                    this.evaluateImportForm.get('importAuthorizationEntity.specification').setValue(data.importAuthorizationEntity.specification);
-                    this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').setValue(new Date(data.importAuthorizationEntity.specificationDate));
                     // this.evaluateImportForm.get('importAuthorizationEntity.approvedQuantity').setValue(data.importAuthorizationEntity.approvedQuantity);
 
                     // this.evaluateImportForm.disable();
@@ -1001,7 +1001,12 @@ export class ImportManagement implements OnInit {
 
             this.formSubmitted = false;
         } else {
-            const element = document.getElementById('invoiceInfo');
+            let element: any;
+            if (this.invoiceDetails.length == 0) {
+                element = document.getElementById('adauga');
+            } else {
+                element = document.getElementById('invoiceInfo');
+            }
             element.scrollIntoView();
         }
     }

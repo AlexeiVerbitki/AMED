@@ -124,9 +124,9 @@
                                formControlName="quantity">
                         <!--[attr.disabled]="true"-->
                         <label for="quantity">Cantitatea spre import</label>
-                    </div>
                     <div *ngIf="invalidQuantity">
                         <small class="text-muted"><strong class="text-danger">Cantitatea nu poate depăși cantitatea rămasă</strong></small>
+                    </div>
                     </div>
                 </div>
 
@@ -136,10 +136,9 @@
                                formControlName="price">
                         <!--[attr.disabled]="true"-->
                         <label for="price">Prețul importului</label>
-                    </div>
-                    <!--<div *ngIf="addMedicamentClicked && invalidPrice">-->
                     <div *ngIf="invalidPrice">
                         <small class="text-muted"><strong class="text-danger">Prețul nu poate depăși prețul autorizat</strong></small>
+                    </div>
                     </div>
                 </div>
 
