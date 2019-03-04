@@ -192,6 +192,10 @@ export class ImportManagement implements OnInit, OnDestroy {
             this.subscriptions.push(this.requestService.getImportRequest(params2.id).subscribe(requestData => {
                 console.log('this.requestService.getImportRequest(params[\'id\'])', requestData);
                 this.requestData = requestData;
+                    this.subscriptions.push(this.requestService.getInvoiceItems('', this.requestData.importAuthorizationEntity.authorizationsNumber, "false").subscribe(data => {
+                        this.invoiceDetails = data;
+                        console.log('this.invoiceDetails', this.invoiceDetails);
+                    }));
                 if (this.requestData.id) {
                     this.evaluateImportForm.get('id').setValue(this.requestData.id);
                 }
@@ -335,7 +339,15 @@ export class ImportManagement implements OnInit, OnDestroy {
         this.loadUnitsOfMeasurement();
         this.loadMedicaments();
         this.loadInternationalMedicamentName();
+        // this.loadInvoiceDetails(this.requestData.importAuthorizationEntity.name, this.requestData.importAuthorizationEntity.authorizationsNumber, "false");
 
+    }
+
+    loadInvoiceDetails(name, auth, saved){
+        this.subscriptions.push(this.requestService.getInvoiceQuota(name,auth, saved).subscribe(data => {
+            console.log('loadInvoiceDetails()', data);
+            this.invoiceDetails = data;
+        }));
     }
 
 
@@ -533,18 +545,13 @@ export class ImportManagement implements OnInit, OnDestroy {
 
             if (this.dialogResult) {
                 invoiceDetails.quantity = this.dialogResult.importAuthorizationEntity.unitOfImportTable.quantity;
-
                 invoiceDetails.price = this.dialogResult.importAuthorizationEntity.unitOfImportTable.price;
-
                 invoiceDetails.sum = this.dialogResult.importAuthorizationEntity.unitOfImportTable.unitSumm;
-
                 invoiceDetails.codeAmed = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.codeAmed;
-
                 invoiceDetails.name = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.name;
-
                 invoiceDetails.medicament = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.medicament;
-
                 invoiceDetails.authorizationsNumber = this.importData.importAuthorizationEntity.authorizationsNumber;
+
                 this.invoiceDetails.push(invoiceDetails);
             }
 
@@ -806,6 +813,64 @@ export class ImportManagement implements OnInit, OnDestroy {
         ));
     }
 
+    save(){
+        {
+
+            let modelToSubmit: any = {};
+            this.loadingService.show();
+
+            let invoiceDetailsEntity: any[] = [];
+            const invoiceEntity: any = {};
+
+            // this.invoiceDetails.forEach
+            invoiceDetailsEntity = this.invoiceDetails;
+            invoiceDetailsEntity.forEach(item => item.saved = false);
+
+            invoiceEntity.invoiceNumber = this.evaluateImportForm.get('importAuthorizationEntity.invoiceNumber').value;
+            invoiceEntity.invoiceDate = new Date(this.evaluateImportForm.get('importAuthorizationEntity.invoiceDate').value);
+            invoiceEntity.basisForInvoice = this.evaluateImportForm.get('importAuthorizationEntity.invoiceBasis').value;
+            invoiceEntity.customsDeclarationDate = new Date(this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsDate').value);
+            invoiceEntity.customsDeclarationNumber = this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsNumber').value;
+            invoiceEntity.specification = this.evaluateImportForm.get('importAuthorizationEntity.invoiceSpecificatie').value;
+            invoiceEntity.customsPointsEntity = this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value;
+            invoiceEntity.invoiceDetailsEntitySet = invoiceDetailsEntity;
+
+            modelToSubmit = this.requestData;
+            modelToSubmit.invoiceEntity = invoiceEntity;
+
+            modelToSubmit.currentStep = 'E';
+            // modelToSubmit.endDate = new Date();
+            modelToSubmit.medicaments = [];
+
+            // console.log('modelToSubmit.requestHistories', modelToSubmit.requestHistories);
+            // console.log('this.importData', this.importData);
+            // console.log('this.requestDate', this.requestData);
+            modelToSubmit.requestHistories.push({
+
+                startDate: new Date(),
+                endDate: new Date(),
+                username: this.authService.getUserName(),
+                step: 'E'
+            });
+
+
+            console.log('modelToSubmit', modelToSubmit);
+            this.subscriptions.push(this.requestService.addInvoiceRequest(modelToSubmit).subscribe(data => {
+                    // alert('after addInvoiceRequest(modelToSubmit)');
+                    console.log('addInvoiceRequest(modelToSubmit).subscribe(data) ', data);
+                    this.loadingService.hide();
+                    alert("Saved")
+                }, error => {
+                    // alert('Something went wrong while sending the model');
+                    console.log('error: ', error);
+                    this.loadingService.hide();
+                }
+            ));
+
+            this.formSubmitted = false;
+        }
+    }
+
     nextStep() {
 
         this.formSubmitted = true;
@@ -824,7 +889,9 @@ export class ImportManagement implements OnInit, OnDestroy {
             let invoiceDetailsEntity: any[] = [];
             const invoiceEntity: any = {};
 
+            // this.invoiceDetails.forEach
             invoiceDetailsEntity = this.invoiceDetails;
+            invoiceDetailsEntity.forEach(item => item.saved = true);
 
             invoiceEntity.invoiceNumber = this.evaluateImportForm.get('importAuthorizationEntity.invoiceNumber').value;
             invoiceEntity.invoiceDate = new Date(this.evaluateImportForm.get('importAuthorizationEntity.invoiceDate').value);

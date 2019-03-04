@@ -354,7 +354,7 @@ export class ImportManagementDialog implements OnInit {
 
                         
 
-                        this.subscriptions.push(this.requestService.getInvoiceQuota(val.medicament.id, this.importData.authorizationsNumber).subscribe(data => {
+                        this.subscriptions.push(this.requestService.getInvoiceQuota(val.medicament.id, this.importData.authorizationsNumber, "true").subscribe(data => {
                             console.log('getInvoiceQuota()', data);
                             this.importedUnits = data;
                             this.remainingUnits = this.approvedQuantity - this.importedUnits - this.addedUnits;
@@ -421,10 +421,10 @@ export class ImportManagementDialog implements OnInit {
 
 
 
-                        if (this.dialogData.invoiceDetails.find(x => (x.codeAmed == val.medicament.code))) {
+                        if (this.dialogData.invoiceDetails.find(x => (x.medicament.code == val.medicament.code))) {
                             this.invoiceDetailAdded = true;
 
-                            this.addedUnits = this.dialogData.invoiceDetails.filter(x => x.codeAmed == val.medicament.code).map(x => x.quantity).reduce((a, b) => a + b );
+                            this.addedUnits = this.dialogData.invoiceDetails.filter(x => x.medicament.code == val.medicament.code).map(x => x.quantity).reduce((a, b) => a + b );
 
 
 
@@ -443,7 +443,7 @@ export class ImportManagementDialog implements OnInit {
                     } else {
 
                         /*================================IF MEDICAMENT ID DOESN'T EXIST*/
-                        this.subscriptions.push(this.requestService.getInvoiceQuota(val.name, this.importData.authorizationsNumber).subscribe(data => {
+                        this.subscriptions.push(this.requestService.getInvoiceQuota(val.name, this.importData.authorizationsNumber, "true").subscribe(data => {
                             console.log('getInvoiceQuota()', data);
                             this.importedUnits = data;
                             this.remainingUnits = this.approvedQuantity - this.importedUnits - this.addedUnits;

@@ -2002,7 +2002,7 @@ public class RequestController
         }
         else
         {
-            System.out.println("\n\n\n\n=====================\ngetImportAuthorizationEntity is null\n=====================\n\n\n");
+            System.out.println("\n\n\n\n=====================\n        if (requests.getInvoiceEntity().getInvoiceDetailsEntitySet() != null)\n is null\n=====================\n\n\n");
         }
 
 
@@ -2019,7 +2019,8 @@ public class RequestController
         //		Optional<List<RegistrationRequestsEntity>> registrationRequestsEntities = requestRepository.findMedicamentHistoryByRegistrationNumber(registrationNumber);
 
         List<InvoiceDetailsEntity> list = new ArrayList<>();
-        list = invoiceDetailsRepository.findInvoicesByAuthorization(requestParams.get("nameOrCodeAmed"), requestParams.get("authorizationNumber"));
+        boolean saved = requestParams.get("saved").equals("true");
+        list = invoiceDetailsRepository.findInvoicesByAuthorization(requestParams.get("nameOrCodeAmed"), requestParams.get("authorizationNumber"), saved);
         int importedQuantity = list.stream().map(emp -> emp.getQuantity()).reduce(0, (x, y) -> x + y);
         list.forEach(x -> System.out.println(x.getQuantity()));
 
@@ -2027,6 +2028,21 @@ public class RequestController
 
 
         return new ResponseEntity<>(importedQuantity, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/get-invoice-items-not-saved")
+    public ResponseEntity<List<InvoiceDetailsEntity>> getInvoiceItemsa(@RequestParam Map<String, String> requestParams) throws CustomException
+
+    {
+
+        List<InvoiceDetailsEntity> list = new ArrayList<>();
+        boolean saved = requestParams.get("saved").equals("true");
+        list = invoiceDetailsRepository.findInvoicesByAuthorization(requestParams.get("nameOrCodeAmed"), requestParams.get("authorizationNumber"), saved);
+
+//        System.out.println("\n\n\n\n=====================\nlist.stream: " + importedQuantity + "\n=====================\n\n\n");
+
+
+        return new ResponseEntity<>(list, HttpStatus.CREATED);
     }
 
 

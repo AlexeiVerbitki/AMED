@@ -212,7 +212,8 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
             // nmCustomsPointsList: null,
         };
         console.log('searchCriteria', searchCriteria);
-        this.subscriptions.push(this.requestService.getAuthorizationByFilter(searchCriteria.authorizationsNumber, searchCriteria.applicant, searchCriteria.expirationDate, searchCriteria.summ, searchCriteria.currency).subscribe(data => {
+        // this.subscriptions.push(this.requestService.getAuthorizationByFilter(searchCriteria.authorizationsNumber, searchCriteria.applicant, searchCriteria.expirationDate, searchCriteria.summ, searchCriteria.currency).subscribe(data => {
+        this.subscriptions.push(this.requestService.getAuthorizationDetailsByNameOrCode('', searchCriteria.authorizationsNumber ).subscribe(data => {
         // this.subscriptions.push(this.requestService.getAuthorizationByFilter(searchCriteria).subscribe(data => {
                 this.loadingService.hide();
                 this.dataSource.data = data;

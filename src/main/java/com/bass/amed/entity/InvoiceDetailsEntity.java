@@ -39,6 +39,10 @@ public class InvoiceDetailsEntity {
 	@Column(name = "name")
 	private String name;
 
+	@Basic
+	@Column(name = "saved")
+	private Boolean saved;
+
 //	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
 //	@JoinColumn(name = "invoices_id")
 //	private ImportAuthorizationDetailsEntity authorizationDetailsId;

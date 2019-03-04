@@ -362,7 +362,7 @@
                             <!--<td>{{ invoiceDetail.data | date:'mediumDate' }}</td>-->
                             <td>{{ invoiceDetail.quantity }}</td>
                             <td>{{ invoiceDetail.price }}</td>
-                            <td>{{ invoiceDetail.sum | number : '1.2-2'}}</td>
+                            <td>{{ invoiceDetail.sum | number : '1.2-3'}}</td>
                             <button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeunitOfImport(i)" mdbWavesEffect>Sterge</button>
 
                         </tr>
@@ -384,6 +384,7 @@
                 </section>
                 <div class="text-center">
                     <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep()" type="button">Inregistreaza Declarația</button>
+                    <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="save()" type="button">Salvarea Declarația</button>
                     <button class="btn btn-danger waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="cancel()" type="button">Respinge Declarația</button>
                     <!--<button class="btn btn-dark-red-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>-->
                 </div>

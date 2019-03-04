@@ -172,8 +172,11 @@ export class RequestService {
       // return this.http.get('/api/load-import-authorization-by-filter', {authorizationsNumber, applicant, expirationDate, summ, currency});
     }
 
-    getInvoiceQuota(nameOrCodeAmed: string, authorizationNumber: string): Observable<any> {
-        return this.http.get('/api/get-invoice-quota', {params: {nameOrCodeAmed: nameOrCodeAmed, authorizationNumber: authorizationNumber}});
+    getInvoiceQuota(nameOrCodeAmed: string, authorizationNumber: string, saved: string): Observable<any> {
+        return this.http.get('/api/get-invoice-quota', {params: {nameOrCodeAmed: nameOrCodeAmed, authorizationNumber: authorizationNumber, saved: saved}});
+    }
+    getInvoiceItems(nameOrCodeAmed: string, authorizationNumber: string, saved: string): Observable<any> {
+        return this.http.get('/api/get-invoice-items-not-saved', {params: {nameOrCodeAmed: nameOrCodeAmed, authorizationNumber: authorizationNumber, saved: saved}});
     }
     getAuthorizationByAuth(id: string): Observable<any> {
         return this.http.get('/api/load-import-authorization-byAuth', {params: {id: id}});

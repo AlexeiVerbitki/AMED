@@ -5,6 +5,7 @@ import {AmbalajComponent} from './ambalaj/ambalaj.component';
 import {NgModule} from '@angular/core';
 import {MedRegApproveComponent} from './med-reg-approve/med-reg-approve.component';
 import {ImportManagement} from './import-management/import-management';
+import {AuthorizationsTable} from "./Authorizations table/authorizations-table";
 
 const routes: Routes = [
     {path: 'register', component: ImportAuthorizationRequestComponent},
@@ -21,6 +22,7 @@ const routes: Routes = [
     {path: 'ambalaj/:id', component: AmbalajComponent},
 
     {path: 'import-management/:id', component: ImportManagement},
+    {path: 'authorizations-table', component:  AuthorizationsTable,},
 ];
 
 @NgModule({
