@@ -13,6 +13,7 @@ import {RequestService} from '../../shared/service/request.service';
 import {CanDeactivateGuard} from '../../shared/auth-guard/can-deactivate-guard.service';
 import { EvaluateDocComponent } from './evaluate-doc/evaluate-doc.component';
 import { EvaluateModalComponent } from './modal/evaluate-modal/evaluate-modal.component';
+import {PersAsignModalComponent} from './modal/pers-asign-modal/pers-asign-modal.component';
 
 @NgModule({
     imports: [
@@ -25,8 +26,8 @@ import { EvaluateModalComponent } from './modal/evaluate-modal/evaluate-modal.co
         MaterialSharedModule.forRoot(),
         MDBBootstrapModule.forRoot(),
     ],
-    entryComponents: [EvaluateModalComponent],
-    declarations: [RegDocComponent, EvaluateDocComponent, EvaluateModalComponent],
+    entryComponents: [EvaluateModalComponent, PersAsignModalComponent],
+    declarations: [RegDocComponent, EvaluateDocComponent, EvaluateModalComponent, PersAsignModalComponent],
     providers: [UploadFileService, RequestService, CanDeactivateGuard]
 })
 export class DocFlowModule {

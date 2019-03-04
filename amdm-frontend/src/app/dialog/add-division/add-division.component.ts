@@ -17,6 +17,7 @@ export class AddDivisionComponent implements OnInit {
   formSubmitted: boolean;
   wasDivisionAdded: boolean;
   wasVolumeAdded: boolean;
+  maxDate = new Date();
 
   constructor(    private fb: FormBuilder,
                   public dialogRef: MatDialogRef<AddDivisionComponent>,
@@ -26,6 +27,9 @@ export class AddDivisionComponent implements OnInit {
       'volumeQuantityMeasurement': [null],
       'volume': [null],
       'division': [null],
+      'samplesNumber' : [null],
+      'serialNr' : [null],
+      'samplesExpirationDate' : [null],
       'response' : [null]
     });
 
@@ -50,6 +54,17 @@ export class AddDivisionComponent implements OnInit {
     this.subscriptions.push(
         this.administrationService.getAllUnitsOfMeasurement().subscribe(data => {
               this.volumeUnitsOfMeasurement = data;
+              if (!this.dataDialog.divisions) {
+                this.dForm.get('volumeQuantityMeasurement').setValue(this.dataDialog.volumeQuantityMeasurement);
+                this.dForm.get('volume').setValue(this.dataDialog.volume);
+                this.dForm.get('division').setValue(this.dataDialog.description);
+                this.dForm.get('samplesNumber').setValue(this.dataDialog.samplesNumber);
+                this.dForm.get('serialNr').setValue(this.dataDialog.serialNr);
+                this.dForm.get('samplesExpirationDate').setValue(this.dataDialog.samplesExpirationDate);
+                this.dForm.get('volumeQuantityMeasurement').disable();
+                this.dForm.get('volume').disable();
+                this.dForm.get('division').disable();
+              }
             },
             error => console.log(error)
         )
@@ -59,12 +74,13 @@ export class AddDivisionComponent implements OnInit {
   add() {
     this.formSubmitted = true;
 
-    if (this.dForm.get('division').value && this.dataDialog.divisions.find(t => t.division == this.dForm.get('division').value)) {
+    if (this.dataDialog.divisions && this.dForm.get('division').value && this.dataDialog.divisions.find(t => t.division == this.dForm.get('division').value)) {
       this.wasDivisionAdded = true;
       return;
     }
 
-    if (this.dForm.get('volume').value && this.dForm.get('volumeQuantityMeasurement').value && this.dataDialog.divisions.find(t => t.volume == this.dForm.get('volume').value && t.volumeQuantityMeasurement == this.dForm.get('volumeQuantityMeasurement').value)) {
+    if (this.dataDialog.divisions && this.dForm.get('volume').value && this.dForm.get('volumeQuantityMeasurement').value &&
+        this.dataDialog.divisions.find(t => t.volume == this.dForm.get('volume').value && t.volumeQuantityMeasurement == this.dForm.get('volumeQuantityMeasurement').value)) {
       this.wasVolumeAdded = true;
       return;
     }
@@ -73,7 +89,8 @@ export class AddDivisionComponent implements OnInit {
       return;
     }
 
-    if ((this.dForm.get('volume').value && !this.dForm.get('volumeQuantityMeasurement').value) || (!this.dForm.get('volume').value && this.dForm.get('volumeQuantityMeasurement').value)) {
+    if ((this.dForm.get('volume').value && !this.dForm.get('volumeQuantityMeasurement').value)
+        || (!this.dForm.get('volume').value && this.dForm.get('volumeQuantityMeasurement').value)) {
       return;
     }
 

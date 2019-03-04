@@ -2,7 +2,7 @@
 
     <form [formGroup]="registerClinicalTrailForm" (ngSubmit)="onSubmit()" #f="ngForm">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="md-form">
                     <input id="regNr" mdbInputDirective type="text" class="form-control" formControlName="requestNumber"
                            required>
@@ -11,7 +11,7 @@
                     </label>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="picker" placeholder="Data de înregistrare a cererii"
@@ -21,7 +21,7 @@
                     </mat-form-field>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="md-form-modified">
                     <ng-select [items]="companii | async"
                                bindLabel="name"
@@ -35,6 +35,11 @@
                             <small class="form-text text-muted">{{item?.idno}}</small>
                         </ng-template>
                     </ng-select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="md-form">
+                    <mat-checkbox #checkBoxResponse (change)="checkIndividual($event)">Persoană fizică</mat-checkbox>
                 </div>
             </div>
         </div>

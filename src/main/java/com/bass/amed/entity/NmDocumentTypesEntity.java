@@ -19,6 +19,6 @@ public class NmDocumentTypesEntity
     private boolean needDocNr;
     @Basic@Column(name = "need_date")
     private boolean needDate;
-
-
+    @Basic@Column(name = "need_to_date")
+    private boolean needToDate;
 }

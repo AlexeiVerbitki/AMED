@@ -17,8 +17,8 @@ public class DocumentModuleRecipientsEntity
     @Column(name = "name", nullable = true, length = 60)
     private String name;
     @Basic
-    @Column(name = "comment", nullable = true, length = 5000)
-    private String comment;
+    @Column(name = "fullname", nullable = true, length = 200)
+    private String fullname;
     @Basic
     @Column(name = "confirmed", nullable = true)
     private Boolean confirmed;

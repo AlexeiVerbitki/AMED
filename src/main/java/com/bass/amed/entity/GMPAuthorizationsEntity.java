@@ -57,4 +57,7 @@ public class GMPAuthorizationsEntity
     @Basic
     @Column(name = "to_date")
     private LocalDateTime toDate;
+    @Basic
+    @Column(name = "cause")
+    private String cause;
 }

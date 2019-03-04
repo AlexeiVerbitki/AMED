@@ -192,6 +192,8 @@ public final class AuditUtils
                         requestId));
                 dummyEntities.add(fillAuditLogEntityForMedicamentRegistration("medicament excipient denumire - " + auxiliarySubstancesEntity.getId(), auxiliarySubstancesEntity.getAuxSubstance().getDescription(), med.getId(),
                         requestId));
+                dummyEntities.add(fillAuditLogEntityForMedicamentRegistration("medicament excipient numar compozitie - " + auxiliarySubstancesEntity.getId(), auxiliarySubstancesEntity.getCompositionNumber(), med.getId(),
+                        requestId));
             }
         }
     }
@@ -347,6 +349,8 @@ public final class AuditUtils
                             null, auxiliarySubstancesEntity.getAuxSubstance().getId(), medFinal.getId(), request.getId()));
                     dummyEntities.add(fillAuditLogEntityForMedicamentPostAuthorization("medicament excipient denumire - " + auxiliarySubstancesEntity.getId(),
                             null, auxiliarySubstancesEntity.getAuxSubstance().getDescription(), medFinal.getId(), request.getId()));
+                    dummyEntities.add(fillAuditLogEntityForMedicamentPostAuthorization("medicament excipient numar compozitie - " + auxiliarySubstancesEntity.getId(),
+                            null, auxiliarySubstancesEntity.getCompositionNumber(), medFinal.getId(), request.getId()));
                 }
             }
             dummyEntities.stream().forEach(t -> {
@@ -877,8 +881,11 @@ public final class AuditUtils
 
 
         entity.getEconomicAgents().forEach(ecAgent -> {
-            StringBuilder sbAddress = new StringBuilder();
-            sbAddress.append(ecAgent.getLocality().getStateName()).append(", ").append(ecAgent.getLocality().getDescription()).append(", ").append(ecAgent.getStreet());
+            StringBuilder sbAddress = new StringBuilder("");
+            if (ecAgent.getLocality() != null)
+            {
+                sbAddress.append(ecAgent.getLocality().getStateName()).append(", ").append(ecAgent.getLocality().getDescription()).append(", ").append(ecAgent.getStreet());
+            }
 
             StringBuilder sbData = new StringBuilder();
             //Tipul filialei

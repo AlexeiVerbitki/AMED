@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatPaginator, MatTableDataSource} from '@angular/material';
 import {FormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
@@ -8,7 +8,7 @@ import {Subscription} from 'rxjs';
     templateUrl: './select-subsidiary-modal.component.html',
     styleUrls: ['./select-subsidiary-modal.component.css']
 })
-export class SelectSubsidiaryModalComponent implements OnInit {
+export class SelectSubsidiaryModalComponent implements OnInit, AfterViewInit, OnDestroy {
     title = '';
     priceEntity: FormGroup;
     subsidiaryList: any[] = [];
@@ -35,7 +35,12 @@ export class SelectSubsidiaryModalComponent implements OnInit {
         this.dialogRef.close(this.dataSource.data.filter(row => row.selected));
     }
 
-    selectRow(elem : any, row : any) {
+    selectRow(elem: any, row: any) {
+        if (this.data.type == 'GMP') {
+            for (const x of this.dataSource.data) {
+                x.selected = false;
+            }
+        }
         row.selected = elem.checked;
     }
 
@@ -43,8 +48,8 @@ export class SelectSubsidiaryModalComponent implements OnInit {
         console.log(this.data.selectedList);
         this.dataSource.data = this.subsidiaryList;
         this.dataSource.data.forEach(r => {
-            if(this.data.selectedList) {
-                let selSubs = this.data.selectedList.find(t => t.subsidiary.id == r.id);
+            if (this.data.selectedList) {
+                const selSubs = this.data.selectedList.find(t => t.subsidiary.id == r.id);
                 if (selSubs) {
                     r.selected = true;
                 } else {

@@ -1,7 +1,6 @@
 package com.bass.amed.repository;
 
 import com.bass.amed.entity.NmDocumentTypesEntity;
-import com.bass.amed.entity.NmLdapUserStatusEntity;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,7 +11,7 @@ public interface DocumentTypeRepository extends JpaRepository<NmDocumentTypesEnt
 {
     Optional<NmDocumentTypesEntity> findByCategory(String category);
 
-    @Cacheable("all_doc_types")
+//    @Cacheable("all_doc_types")
     @Override
     List<NmDocumentTypesEntity> findAll();
 }

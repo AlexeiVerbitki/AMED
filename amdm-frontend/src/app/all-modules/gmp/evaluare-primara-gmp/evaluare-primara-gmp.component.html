@@ -115,7 +115,7 @@
 				</tr>
 				</thead>
 				<tbody>
-				<tr *ngFor="let a of authDocuments">
+				<tr *ngFor="let a of authHistory">
 					<th scope="row">{{ a.docType.description }}</th>
 					<th scope="row">{{ a.number }}</th>
 					<th scope="row">{{ a.dateOfIssue | date: 'dd/MM/yyyy' }}</th>
@@ -129,7 +129,7 @@
 				</tbody>
 			</table>
 		</div>
-		<div *ngIf="authDocuments.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<div *ngIf="authHistory.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
 		<hr>
 		<!-- Medicamente inregistrate -->
 		<div class="gradient-card-header bg-sidebar border-gradient">
@@ -179,12 +179,12 @@
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-6">
-						<div class="card-header-title white-text">Domenii de inspecție</div>
+						<div class="card-header-title white-text">Locul de fabricație</div>
 					</div>
 					<div class="col-6" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPE' || eForm.get('type').value.code=='GMPM')">
 						<div class="text-right mt-2">
 							<button class="btn btn-dark-green-color waves-light btn-sms" mdbWavesEffect
-							        (click)="selectSubsidiary()">Selectare domeniu
+							        (click)="selectSubsidiary()">Selectare loc de fabricație
 							</button>
 						</div>
 					</div>
@@ -359,7 +359,7 @@
 			<div class="col-3">
 				<div class="md-form">
 					<input id="numeleLoculDistributie" mdbInputDirective type="text" class="form-control" formControlName="placeDistributionName">
-					<label for="numeleLoculDistributie">Numele locului de distribuție</label>
+					<label for="numeleLoculDistributie">Numele locului de fabricație</label>
 					<small class="text-danger font-weight-bold" *ngIf="formSubmitted && eForm.get('informatiiLoculDistributieAngro.placeDistributionName').invalid">Numele
 						locului de distribuție trebuie introdus
 					</small>
@@ -428,7 +428,7 @@
 			<div class="col-md-12">
 				<div class="md-form">
 					<textarea type="text" id="etapeleDeFabricatie" class="md-textarea form-control" mdbInputDirective formControlName="etapeleDeFabricatie"></textarea>
-					<label for="etapeleDeFabricatie">Etapele de fabricatie</label>
+					<label for="etapeleDeFabricatie">Etapele de fabricație</label>
 				</div>
 				<small class="text-danger font-weight-bold" *ngIf="formSubmitted && eForm.get('informatiiLoculDistributieAngro.etapeleDeFabricatie').invalid">Etapele de fabricatie trebuie introduse
 				</small>
@@ -1345,17 +1345,17 @@
 		</div>
 		<div class="row">
 			<div class="col-md-4">
-				<div class="md-form">
+				<div class="md-form-modified">
 					<mat-checkbox #asepticallyPrepared [disabled]="!eForm.get('type').value || (eForm.get('type').value.code!='GMPE' && eForm.get('type').value.code!='GMPM')" [checked]="eForm.get('asepticallyPrepared').value" (change)="checkAsepticallyPrepared(asepticallyPrepared)">Produse sterile - preparate aseptic</mat-checkbox>
 				</div>
 			</div>
 			<div class="col-md-4">
-				<div class="md-form">
+				<div class="md-form-modified">
 					<mat-checkbox #terminallySterilised [disabled]="!eForm.get('type').value || (eForm.get('type').value.code!='GMPE' && eForm.get('type').value.code!='GMPM')" [checked]="eForm.get('terminallySterilised').value" (change)="checkTerminallySterilised(terminallySterilised)">Produse sterile - sterilizate final</mat-checkbox>
 				</div>
 			</div>
 			<div class="col-md-4">
-				<div class="md-form">
+				<div class="md-form-modified">
 					<mat-checkbox #nonsterileProducts [disabled]="!eForm.get('type').value || (eForm.get('type').value.code!='GMPE' && eForm.get('type').value.code!='GMPM')" [checked]="eForm.get('nonsterileProducts').value" (change)="checkNonsterileProducts(nonsterileProducts)">Produse nesterile</mat-checkbox>
 				</div>
 			</div>
@@ -1519,12 +1519,37 @@
 		<div *ngIf="outDocuments.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
 		<hr>
 		<div class="row align-items-center">
-			<div class="col-5">
+			<div class="col-2" *ngIf="!eForm.get('type').value || eForm.get('type').value.code=='GMPE'">
 				<h5 class="font-w400l text-center">
 					Raport pozitiv
 				</h5>
 			</div>
-			<div class="col-7">
+			<div class="col-2" *ngIf="eForm.get('type').value && eForm.get('type').value.code=='GMPR'">
+				<h5 class="font-w400l text-center">
+					Retragere acceptata
+				</h5>
+			</div>
+			<div class="col-2" *ngIf="eForm.get('type').value && eForm.get('type').value.code=='GMPA'">
+				<h5 class="font-w400l text-center">
+					Activare acceptata
+				</h5>
+			</div>
+			<div class="col-2" *ngIf="eForm.get('type').value && eForm.get('type').value.code=='GMPS'">
+				<h5 class="font-w400l text-center">
+					Suspendare acceptata
+				</h5>
+			</div>
+			<div class="col-2" *ngIf="eForm.get('type').value && eForm.get('type').value.code=='GMPP'">
+				<h5 class="font-w400l text-center">
+					Prelungire acceptata
+				</h5>
+			</div>
+			<div class="col-2" *ngIf="eForm.get('type').value && eForm.get('type').value.code=='GMPM'">
+				<h5 class="font-w400l text-center">
+					Modificare acceptata
+				</h5>
+			</div>
+			<div class="col-3">
 				<div class="md-form mt-3">
 					<mat-radio-group formControlName="raportStatus">
 						<div class="container">
@@ -1546,12 +1571,21 @@
 					<small class="text-muted"><strong class="text-danger">Status raport trebuie selectat</strong></small>
 				</div>
 			</div>
+			<div class="col-7" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='GMPS' || eForm.get('type').value.code=='GMPR')">
+				<div class="md-form">
+                    <textarea formControlName="cause" type="text" id="cauza"
+                              class="md-textarea form-control w-100" mdbInputDirective></textarea>
+					<label for="cauza">Cauza</label>
+				</div>
+				<div *ngIf="formSubmitted && !eForm.get('cause').value && (eForm.get('type').value.code=='GMPS' || eForm.get('type').value.code=='GMPR')">
+					<small class="text-muted"><strong class="text-danger">Cauza trebuie introdusa</strong></small>
+				</div>
+			</div>
 		</div>
 		<hr>
 		<div class="text-center">
 			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>
 			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Finisare</button>
-			<!--<button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>-->
 		</div>
 	</form>
 </div>

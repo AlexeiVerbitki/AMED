@@ -20,4 +20,8 @@ public class MedicamentePentruOrdinDTO
     private String modificationType;
     private String registrationNrDate;
     private String commercialName;
+    private String samples;
+    private String medicamentSeries;
+    private String expirationDate;
+    private String referenceStandards;
 }

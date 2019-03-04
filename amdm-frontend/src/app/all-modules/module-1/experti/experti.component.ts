@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Document} from '../../../models/document';
@@ -15,13 +15,15 @@ import {LoaderService} from '../../../shared/service/loader.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {AddExpertComponent} from '../../../dialog/add-expert/add-expert.component';
 import {RequestAdditionalDataDialogComponent} from '../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component';
+import {AddLaboratorStandardsComponent} from '../../../dialog/add-laborator-standards/add-laborator-standards.component';
+import {AddDivisionComponent} from '../../../dialog/add-division/add-division.component';
 
 @Component({
     selector: 'app-experti',
     templateUrl: './experti.component.html',
     styleUrls: ['./experti.component.css']
 })
-export class ExpertiComponent implements OnInit {
+export class ExpertiComponent implements OnInit, OnDestroy {
     private subscriptions: Subscription[] = [];
     expertForm: FormGroup;
     documents: Document [] = [];
@@ -32,6 +34,7 @@ export class ExpertiComponent implements OnInit {
     outputDocuments: any[] = [];
     formSubmitted: boolean;
     docTypes: any[];
+    docTypesInitial: any[];
     modelToSubmit: any;
     isNonAttachedDocuments = false;
     divisions: any[] = [];
@@ -41,6 +44,7 @@ export class ExpertiComponent implements OnInit {
     registrationRequestMandatedContacts: any[] = [];
     oaAttached = false;
     expertList: any[] = [];
+    standarts: any[];
 
     constructor(private fb: FormBuilder,
                 private authService: AuthService,
@@ -119,6 +123,8 @@ export class ExpertiComponent implements OnInit {
                         this.modelToSubmit = Object.assign({}, data);
                         this.registrationRequestMandatedContacts = data.registrationRequestMandatedContacts;
                         this.outputDocuments = data.outputDocuments;
+                        this.standarts = data.laboratorReferenceStandards;
+
                         this.expertForm.get('id').setValue(data.id);
                         this.expertForm.get('initiator').setValue(data.initiator);
                         this.expertForm.get('startDate').setValue(data.startDate);
@@ -183,6 +189,9 @@ export class ExpertiComponent implements OnInit {
                                     code: entry.code,
                                     volume: entry.volume,
                                     volumeQuantityMeasurement: entry.volumeQuantityMeasurement,
+                                    serialNr: entry.serialNr,
+                                    samplesNumber: entry.samplesNumber,
+                                    samplesExpirationDate: entry.samplesExpirationDate,
                                     instructions: entry.instructions.filter(t => t.type == 'I'),
                                     machets: entry.instructions.filter(t => t.type == 'M'),
                                     approved: entry.approved
@@ -206,20 +215,49 @@ export class ExpertiComponent implements OnInit {
                         this.docDetails = this.documents.find(t => t.docType.category == 'OA');
                         this.oaAttached = this.documents.find(t => t.docType.category == 'OA') ? true : false;
                         this.checkOutputDocumentsStatus();
-                        this.fillQuickSearches();
+                        this.fillQuickSearches(data);
                     })
                 );
             })
         );
     }
 
-    fillQuickSearches() {
+    fillQuickSearches(dataDB) {
         this.subscriptions.push(
             this.taskService.getRequestStepByIdAndCode('1', 'X').subscribe(step => {
                     this.subscriptions.push(
                         this.administrationService.getAllDocTypes().subscribe(data => {
                                 this.docTypes = data;
+                                this.docTypesInitial = Object.assign([], data);
                                 this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
+                                if (dataDB.labIncluded == 1 && !dataDB.labNumber && !this.outputDocuments.find(r => r.docType.category == 'LAB')) {
+                                    this.outputDocuments.push({
+                                        name: 'Solicitare desfasurare analize de laborator',
+                                        docType: this.docTypesInitial.find(r => r.category == 'LAB'),
+                                        status: 'Urmeaza a fi inclus in actul de primire-predare',
+                                        date: new Date()
+                                    });
+                                } else if (dataDB.labIncluded == 1 && dataDB.labNumber) {
+                                    this.outputDocuments.forEach((item, index) => {
+                                        if (item.docType.category == 'LAB') {
+                                            this.outputDocuments.splice(index, 1);
+                                        }
+                                    });
+                                    const rl = this.documents.find(r => r.docType.category == 'RL');
+                                    let statusDoc = '';
+                                    if (rl) {
+                                        statusDoc = 'Inclus in actul de primire-predare. Raspuns primit.';
+                                    } else {
+                                        statusDoc = 'Inclus in actul de primire-predare. Asteptare raspuns.';
+                                    }
+                                    this.outputDocuments.push({
+                                        name: 'Solicitare desfasurare analize de laborator',
+                                        docType: this.docTypesInitial.find(r => r.category == 'LAB'),
+                                        status: statusDoc,
+                                        date: new Date(),
+                                        number: dataDB.labNumber
+                                    });
+                                }
                             },
                             error => console.log(error)
                         )
@@ -362,6 +400,14 @@ export class ExpertiComponent implements OnInit {
     }
 
     success() {
+
+        const rl = this.documents.find(r => r.docType.category == 'RL');
+        const lab = this.outputDocuments.find(r => r.docType.category == 'LAB');
+        if (lab && !rl) {
+            this.errorHandlerService.showError('Rezultatul laboratorului nu a fost atasat.');
+            return;
+        }
+
         const findDocType = this.documents.find(t => t.docType.category == 'DD');
         if (!findDocType && this.modelToSubmit.ddIncluded) {
             this.errorHandlerService.showError('Dispozitia de distribuire nu este atasata.');
@@ -438,6 +484,7 @@ export class ExpertiComponent implements OnInit {
 
         x.documents = this.documents;
         x.outputDocuments = this.outputDocuments;
+        x.laboratorReferenceStandards = this.standarts;
         x.expertList = this.expertList;
 
         for (const med of x.medicaments) {
@@ -528,12 +575,25 @@ export class ExpertiComponent implements OnInit {
     checkOutputDocumentsStatus() {
         for (const entry of this.outputDocuments) {
             const isMatch = this.documents.some(elem => {
-                return (elem.docType.category == entry.docType.category && ((entry.docType.category == 'SL' && elem.number == entry.number) || entry.docType.category != 'SL')) ? true : false;
+                return (elem.docType.category == entry.docType.category && elem.number == entry.number) ? true : false;
             });
-            if (isMatch) {
-                entry.status = 'Atasat';
+            if (entry.docType.category != 'LAB') {
+                if (isMatch) {
+                    entry.status = 'Atasat';
+                } else {
+                    entry.status = 'Nu este atasat';
+                }
             } else {
-                entry.status = 'Nu este atasat';
+                if (entry.number) {
+                    const rl = this.documents.find(r => r.docType.category == 'RL');
+                    if (rl) {
+                        entry.status = 'Inclus in actul de primire-predare. Raspuns primit.';
+                    } else {
+                        entry.status = 'Inclus in actul de primire-predare. Asteptare raspuns.';
+                    }
+                } else {
+                    entry.status = 'Urmeaza a fi inclus in actul de primire-predare';
+                }
             }
         }
     }
@@ -594,6 +654,13 @@ export class ExpertiComponent implements OnInit {
     }
 
     addToAuthorizationOrder() {
+        const rl = this.documents.find(r => r.docType.category == 'RL');
+        const lab = this.outputDocuments.find(r => r.docType.category == 'LAB');
+        if (lab && !rl) {
+            this.errorHandlerService.showError('Rezultatul laboratorului nu a fost atasat.');
+            return;
+        }
+
         this.formSubmitted = true;
 
         if (this.expertForm.invalid) {
@@ -619,19 +686,6 @@ export class ExpertiComponent implements OnInit {
             if (resp) {
                 this.errorHandlerService.showError('Exista solicitari de date aditionale fara raspuns primit.');
                 return;
-            }
-        }
-
-        const rl = this.outputDocuments.find(r => r.docType.category == 'RL');
-        if (rl) {
-            if (!this.expertForm.get('labResponse').value) {
-                this.errorHandlerService.showError('Nu a fost primit rezultatul de la laborator.');
-                return;
-            } else if (rl.status != 'Atasat') {
-                this.errorHandlerService.showError('Rezultatul laboratorului nu a fost atasat.');
-                return;
-            } else {
-                rl.responseReceived = this.expertForm.get('labResponse').value;
             }
         }
 
@@ -740,6 +794,7 @@ export class ExpertiComponent implements OnInit {
 
         x.documents = this.documents;
         x.outputDocuments = this.outputDocuments;
+        x.laboratorReferenceStandards = this.standarts;
         x.expertList = this.expertList;
 
         for (const med of x.medicaments) {
@@ -778,7 +833,8 @@ export class ExpertiComponent implements OnInit {
 
     manufacturesStr(substance: any) {
         if (substance && substance.manufactures) {
-            let s = Array.prototype.map.call(substance.manufactures, s => s.manufacture.description + ' ' + (s.manufacture.country ? s.manufacture.country.description : '') + ' ' + s.manufacture.address + 'NRQW').toString();
+            let s = Array.prototype.map.call(substance.manufactures, s => s.manufacture.description + ' ' + (s.manufacture.country ? s.manufacture.country.description : '')
+                + ' ' + s.manufacture.address + 'NRQW').toString();
             s = s.replace(/NRQW/gi, ';');
             return s.replace(';,', '; ');
         }
@@ -883,7 +939,7 @@ export class ExpertiComponent implements OnInit {
 
     isDisabledLabButton(): boolean {
         return this.outputDocuments.some(elem => {
-            return elem.docType.category == 'RL' ? true : false;
+            return elem.docType.category == 'LAB' ? true : false;
         });
     }
 
@@ -952,18 +1008,35 @@ export class ExpertiComponent implements OnInit {
 
     requestLaboratoryAnalysis() {
 
-        this.outputDocuments.push({
-            name: 'Solicitare desfasurare analize de laborator',
-            docType: this.docTypes.find(r => r.category == 'RL'),
-            status: 'Nu este atasat',
-            date: new Date()
+        this.formSubmitted = true;
+
+        this.formSubmitted = false;
+
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.width = '600px';
+
+        const dialogRef = this.dialog.open(AddLaboratorStandardsComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result && result.response) {
+                this.subscriptions.push(this.requestService.laboratorAnalysis(this.expertForm.get('id').value).subscribe(data => {
+                        this.outputDocuments.push({
+                            name: 'Solicitare desfasurare analize de laborator',
+                            docType: this.docTypesInitial.find(r => r.category == 'LAB'),
+                            status: 'Urmeaza a fi inclus in actul de primire-predare',
+                            date: new Date()
+                        });
+                        this.standarts = result.standards;
+                        this.save();
+                    }, error => console.log(error))
+                );
+            }
         });
-        this.modelToSubmit.outputDocuments = this.outputDocuments;
-        this.subscriptions.push(this.requestService.addMedicamentRequest(this.modelToSubmit).subscribe(data => {
-                this.outputDocuments = data.body.outputDocuments;
-                this.checkOutputDocumentsStatus();
-            }, error => console.log(error))
-        );
 
     }
 
@@ -985,10 +1058,25 @@ export class ExpertiComponent implements OnInit {
 
         dialogRef2.afterClosed().subscribe(result => {
             if (result) {
+                if (doc.docType.category == 'LAB') {
+                    this.subscriptions.push(this.requestService.removeLaboratorAnalysis(this.expertForm.get('id').value).subscribe(data => {
+                            this.outputDocuments.forEach((item, index) => {
+                                if (item === doc) {
+                                    this.outputDocuments.splice(index, 1);
+                                }
+                            });
+                            this.standarts = [];
+                            this.save();
+                        }, error => console.log(error))
+                    );
+                    return;
+                }
+
                 this.loadingService.show();
-                this.modelToSubmit.outputDocuments = Object.assign([], this.outputDocuments);
-                this.modelToSubmit.outputDocuments.forEach((item, index) => {
-                    if (item === doc) { this.modelToSubmit.outputDocuments.splice(index, 1); }
+                this.outputDocuments.forEach((item, index) => {
+                    if (item === doc) {
+                        this.outputDocuments.splice(index, 1);
+                    }
                 });
 
                 if (doc.docType.category == 'SL') {
@@ -1003,12 +1091,31 @@ export class ExpertiComponent implements OnInit {
                 this.subscriptions.push(this.requestService.addMedicamentRequest(this.modelToSubmit).subscribe(data => {
                         this.outputDocuments = data.body.outputDocuments;
                         this.checkOutputDocumentsStatus();
-                        if (doc.docType.category == 'RL') {
-                            this.expertForm.get('labResponse').setValue(null);
-                        }
                         this.loadingService.hide();
                     }, error => this.loadingService.hide())
                 );
+            }
+        });
+    }
+
+    editDivision(division: any, index: number) {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+        dialogConfig2.panelClass = 'custom-dialog-container';
+
+        dialogConfig2.width = '600px';
+        dialogConfig2.data = division;
+
+        const dialogRef = this.dialog.open(AddDivisionComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result && result.response) {
+                this.divisions[index].samplesNumber = result.samplesNumber;
+                this.divisions[index].serialNr = result.serialNr;
+                this.divisions[index].samplesExpirationDate = result.samplesExpirationDate;
             }
         });
     }

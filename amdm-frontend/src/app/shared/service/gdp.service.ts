@@ -3,7 +3,7 @@ import {AdministrationService} from './administration.service';
 import {MedicamentService} from './medicament.service';
 import {RequestService} from './request.service';
 import {AuthService} from './authetication.service';
-import {HttpClient, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Company} from '../../models/company';
 import {Country} from '../../models/country';
@@ -54,6 +54,18 @@ export class GDPService {
 
     getAllMedicamentTypes(): Observable<any> {
         return this.administrationService.getAllMedicamentTypes();
+    }
+
+    loadAuthorizationsHistory(companyId): Observable<any> {
+        let Params = new HttpParams();
+        Params = Params.set('companyId', companyId);
+        return this.http.get('/api/gdp/load-authorizations-history', {params: Params});
+    }
+
+    loadCertificatesHistory(companyId): Observable<any> {
+        let Params = new HttpParams();
+        Params = Params.set('companyId', companyId);
+        return this.http.get('/api/gdp/load-certificates-history', {params: Params});
     }
 
     getCountries(): Observable<Country[]> {

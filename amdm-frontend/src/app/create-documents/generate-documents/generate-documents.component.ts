@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {DdListComponent} from './dd-list/dd-list.component';
 import {OaListComponent} from './oa-list/oa-list.component';
@@ -20,23 +20,27 @@ import {LmpcModifyListComponent} from './lmpc-modify-list/lmpc-modify-list.compo
 import {LmpcListComponent} from './lmpc-list/lmpc-list.component';
 import {RequestDdCtAmendComponent} from './request-dd-ct-amend/request-dd-ct-amend.component';
 import {DdCtAmendListComponent} from './dd-ct-amend-list/dd-ct-amend-list.component';
+import {DocumentsLabComponent} from './documents-lab/documents-lab.component';
+import {MedicamentsLabComponent} from './medicaments-lab/medicaments-lab.component';
 
 @Component({
     selector: 'app-generate-documents',
     templateUrl: './generate-documents.component.html',
     styleUrls: ['./generate-documents.component.css']
 })
-export class GenerateDocumentsComponent implements OnInit {
+export class GenerateDocumentsComponent implements OnInit, OnDestroy {
 
     @ViewChild('ddList') ddListHtml: DdListComponent;
     @ViewChild('ddmList') ddmListHtml: DdModifyListComponent;
     @ViewChild('oaList') oaListHtml: OaListComponent;
+    @ViewChild('labList') labListHtml: DocumentsLabComponent;
     @ViewChild('omList') omListHtml: OmListComponent;
     @ViewChild('oiList') oiListHtml: OiListComponent;
     @ViewChild('oimList') oimListHtml: OiModifyListComponent;
     @ViewChild('requestDD') requestDD: RequestsDdComponent;
     @ViewChild('requestDDM') requestDDM: RequestsDdModifyComponent;
     @ViewChild('medicamentsOA') medicamentsOA: MedicamentsOaComponent;
+    @ViewChild('medicamentsLab') medicamentsLab: MedicamentsLabComponent;
     @ViewChild('medicamentsOM') medicamentsOM: MedicamentsOmComponent;
     @ViewChild('requestOI') requestOI: RequestsOiComponent;
     @ViewChild('requestOIM') requestOIM: RequestsOiModifyComponent;
@@ -74,6 +78,10 @@ export class GenerateDocumentsComponent implements OnInit {
         this.medicamentsOA.loadMedicamentsForOA();
     }
 
+    labListModified(event) {
+        this.medicamentsLab.loadMedicamentsForLab();
+    }
+
     omListModified(event) {
         this.medicamentsOM.loadMedicamentsForOA();
     }
@@ -96,6 +104,10 @@ export class GenerateDocumentsComponent implements OnInit {
 
     loadOAs(event) {
         this.oaListHtml.loadOAs();
+    }
+
+    loadLab(event) {
+        this.labListHtml.loadLab();
     }
 
     loadOMs(event) {

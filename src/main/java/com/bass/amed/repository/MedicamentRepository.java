@@ -56,6 +56,11 @@ public interface MedicamentRepository extends JpaRepository<MedicamentEntity, In
             "WHERE m.approved = true and m.oaNumber is null and m.status = 'P'")
     List<MedicamentEntity> getMedicamentsForOA();
 
+    @Query("SELECT distinct m FROM MedicamentEntity m,RegistrationRequestsEntity  r " +
+            "LEFT JOIN FETCH m.manufactures " +
+            "WHERE m.requestId = r.id and r.labIncluded = true and r.labNumber is null")
+    List<MedicamentEntity> getMedicamentsForLab();
+
     @Query("SELECT distinct m FROM MedicamentHistoryEntity m " +
             "LEFT JOIN FETCH m.manufacturesHistory " +
             "WHERE m.approved = true and m.omNumber is null and m.status = 'P'")

@@ -101,6 +101,9 @@
 					<th scope="col">Numărul de unități</th>
 					<th scope="col">Volum</th>
 					<th scope="col">Unitate de masura (volum)</th>
+					<th scope="col">Numărul de eșantione</th>
+					<th scope="col">Seria medicamentului</th>
+					<th scope="col">Data expirării mostrelor</th>
 					<th scope="col">Cod medicament</th>
 					<th scope="col">Status</th>
 					<th scope="col">Actiuni</th>
@@ -112,12 +115,18 @@
 					<td>{{ division.description }}</td>
 					<td>{{ division.volume }}</td>
 					<td>{{ division.volumeQuantityMeasurement ? division.volumeQuantityMeasurement.description : '' }}</td>
+					<td>{{ division.samplesNumber }}</td>
+					<td>{{ division.serialNr }}</td>
+					<td>{{ division.samplesExpirationDate | date: 'dd/MM/yyyy' }}</td>
 					<td>{{ division.medicamentCode }}</td>
 					<td *ngIf="division.old==1">Divizare existenta</td>
 					<td *ngIf="division.old==0">Divizare noua</td>
 					<td>
 						<button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
 						        (click)="removeDivision(i,division)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+						</button>
+						<button *ngIf="division.old==1" type="button" class="btn btn-mdb-color btn-sm waves-light"
+						        (click)="editDivision(division,i)" mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
 						</button>
 					</td>
 				</tr>
@@ -211,6 +220,7 @@
 				<tr>
 					<th scope="col">Nr.</th>
 					<th scope="col">Denumire</th>
+					<th scope="col">Numărul compoziției</th>
 					<th scope="col">Status</th>
 					<th scope="col">Actiuni</th>
 				</tr>
@@ -219,6 +229,7 @@
 				<tr *ngFor="let substance of auxiliarySubstancesTable;let i = index">
 					<td>{{ i + 1 }}</td>
 					<th scope="row">{{ substance.auxSubstance.description }}</th>
+					<td>{{ substance.compositionNumberTo }}</td>
 					<td *ngIf="substance.status=='O'">Excipient existent</td>
 					<td *ngIf="substance.status!='O'">Excipient nou</td>
 					<td>
@@ -243,7 +254,7 @@
 			<div class="col-4">
 				<div class="md-form-modified">
 					<ng-select id="pharmaceuticalFormTypes" name="pharmaceuticalFormTypes" [items]="pharmaceuticalFormTypes" bindLabel="description"
-					           placeholder="Tip forma farmaceutica" (ngModelChange)="checkPharmaceuticalFormTypeValue(null)" formControlName="pharmaceuticalFormType"
+					           placeholder="Tip forma farmaceutica" (ngModelChange)="checkPharmaceuticalFormTypeValue()" formControlName="pharmaceuticalFormType"
 					           required="true">
 					</ng-select>
 					<div *ngIf="formSubmitted && eForm.get('medicament.pharmaceuticalFormType').invalid">
@@ -475,26 +486,12 @@
 						<mat-checkbox *ngIf="a.docType && (a.docType.category=='SL')" #checkBoxResponse
 						              [checked]="a.responseReceived==1" (change)="checkResponseReceived(a,checkBoxResponse)">Raspuns primit
 						</mat-checkbox>
-						<mat-radio-group *ngIf="a.docType && (a.docType.category=='RL')" formControlName="labResponse">
-							<div style="margin-left: 200px">
-								<div class="row">
-									<mat-radio-button name="prop1" value="1">Inregistrare acceptata</mat-radio-button>
-								</div>
-								<div class="row">
-									<mat-radio-button name="prop2" value="0">Inregistrare respinsa</mat-radio-button>
-								</div>
-								<div class="row">
-									<mat-radio-button name="prop3" value="2">Inregistrare acceptata conditionat</mat-radio-button>
-								</div>
-							</div>
-						</mat-radio-group>
 					</th>
 					<td>
 						<button *ngIf="a.docType && (a.docType.category=='SL')" class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)">
 							<i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
-						<button *ngIf="(a.status=='Nu este atasat' && a.responseReceived==false && a.docType.category=='SL') ||( a.docType.category=='RL' && a.status=='Nu este atasat')"
-						        class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
-						</button>
+						<button *ngIf="(a.status=='Nu este atasat' && a.responseReceived==false && a.docType.category=='SL') ||( a.docType.category=='LAB' && !a.number)"
+						        class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
 					</td>
 				</tr>
 				</tbody>

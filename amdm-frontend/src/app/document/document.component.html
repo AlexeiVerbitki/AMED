@@ -7,9 +7,9 @@
 				           placeholder="Tip document"
 				           formControlName="docType">
 				</ng-select>
-				<div *ngIf="formSubmitted && docForm.get('docType').invalid">
-					<small class="text-muted"><strong class="text-danger">Tip document trebuie selectat</strong></small>
-				</div>
+			</div>
+			<div *ngIf="formSubmitted && docForm.get('docType').invalid">
+				<small class="text-muted"><strong class="text-danger">Tip document trebuie selectat</strong></small>
 			</div>
 		</div>
 		<div class="col-3" *ngIf="!disabled">
@@ -22,18 +22,33 @@
 				<small class="text-muted"><strong class="text-danger">Numar document trebuie introdus</strong></small>
 			</div>
 		</div>
-		<div class="col-3" *ngIf="!disabled">
+		<div class="col" *ngIf="!disabled">
 			<div class="md-form"  *ngIf="!this.docForm.get('docType').value || !this.docForm.get('docType').value.needDate">
 				<input id="nrDateInvisibil" style="display:none;" mdbInputDirective type="text">
 			</div>
 			<div class="md-form-modified" *ngIf="this.docForm.get('docType').value && this.docForm.get('docType').value.needDate">
 				<mat-form-field class="w-100">
-					<input matInput [matDatepicker]="dateDoc" placeholder="Data emiterii documentului" formControlName="dateDoc" [attr.disabled]="true">
+					<input matInput [max]="maxDate" [matDatepicker]="dateDoc" placeholder="Data emiterii documentului" formControlName="dateDoc" [attr.disabled]="true">
 					<mat-datepicker-toggle matSuffix [for]="dateDoc"></mat-datepicker-toggle>
 					<mat-datepicker touchUi #dateDoc></mat-datepicker>
 				</mat-form-field>
 				<div *ngIf="formSubmitted && docForm.get('dateDoc').invalid && docForm.get('docType').value && docForm.get('docType').value.needDate">
 					<small class="text-muted"><strong class="text-danger">Data emiterii documentului trebuie introdusa</strong></small>
+				</div>
+			</div>
+		</div>
+		<div class="col" *ngIf="!disabled">
+			<div class="md-form"  *ngIf="!this.docForm.get('docType').value || !this.docForm.get('docType').value.needToDate">
+				<input id="nrToDateInvisibil" style="display:none;" mdbInputDirective type="text">
+			</div>
+			<div class="md-form-modified" *ngIf="this.docForm.get('docType').value && this.docForm.get('docType').value.needToDate">
+				<mat-form-field class="w-100">
+					<input matInput [min]="maxDate" [matDatepicker]="dateDoc2" placeholder="Data expirarii documentului" formControlName="toDateDoc" [attr.disabled]="true">
+					<mat-datepicker-toggle matSuffix [for]="dateDoc2"></mat-datepicker-toggle>
+					<mat-datepicker touchUi #dateDoc2></mat-datepicker>
+				</mat-form-field>
+				<div *ngIf="formSubmitted && docForm.get('toDateDoc').invalid && docForm.get('docType').value && docForm.get('docType').value.needToDate">
+					<small class="text-muted"><strong class="text-danger">Data expirarii documentului trebuie introdusa</strong></small>
 				</div>
 			</div>
 		</div>
@@ -46,7 +61,7 @@
 		</div>
 	</div>
 </form>
-<div class="gradient-card-header bg-sidebar border-gradient">
+<div class="gradient-card-header bg-sidebar border-gradient mt-2">
 	<div class="container-fluid">
 		<!-- Title -->
 		<div class="row">

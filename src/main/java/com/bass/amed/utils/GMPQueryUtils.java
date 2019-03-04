@@ -10,9 +10,9 @@ public class GMPQueryUtils
     {
         StringBuilder stringBuilder = new StringBuilder("SELECT g.id,e.name company,g.authorization_number authorizationNumber,g.authorization_start_date authorizationStartDate,g.authorization_end_date authorizationEndDate,\n" +
                 "       g.certificate_number certificateNumber,g.certificate_start_date certificateStartDate,g.certificate_end_date certificateEndDate, d.path authorizationPath, d1.path certificatePath,\n" +
-                "       g.status\n" +
+                "       g.status,g.from_date fromDate,g.to_Date toDate,g.cause \n" +
                 "FROM gmp_authorizations g,nm_economic_agents e,documents d,documents d1,registration_Requests r\n" +
-                "where g.company_id = e.id and d.id=g.authorization_id and d1.id=g.certificate_id and to_date is null\n" +
+                "where g.company_id = e.id and d.id=g.authorization_id and d1.id=g.certificate_id \n" +
                 "and r.id=g.release_request_id");
 
         if (gmpFilters.getRequestNumber() != null && !gmpFilters.getRequestNumber().isEmpty())

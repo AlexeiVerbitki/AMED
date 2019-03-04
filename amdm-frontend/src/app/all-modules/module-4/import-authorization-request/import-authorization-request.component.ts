@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Cerere} from '../../../models/cerere';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Observable, Subscription} from 'rxjs';
@@ -41,10 +41,10 @@ export class ImportAuthorizationRequestComponent implements OnInit, OnDestroy {
 
     importer: Observable<any[]>;
     loadingCompany = false;
-    // @Output() emitAuthorizationNUmber = new EventEmitter<string>()
     authorizationNumber: any = '';
     importRadioButton: any;
     companyInputs = new Subject<string>();
+    break;
     private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder,
@@ -100,17 +100,6 @@ export class ImportAuthorizationRequestComponent implements OnInit, OnDestroy {
 
         this.currentDate = new Date();
 
-
-        this.subscriptions.push(
-            this.administrationService.generateImportAuthDocNr().subscribe(data => {
-                    this.generatedDocNrSeq = data[0];
-                    this.rForm.get('requestNumber').setValue(this.generatedDocNrSeq);
-                },
-                error => console.log(error)
-            )
-        );
-
-
         this.subscriptions.push(
             this.taskService.getRequestStepByIdAndCode('3', 'R').subscribe(step => {
                     this.subscriptions.push(
@@ -147,7 +136,6 @@ export class ImportAuthorizationRequestComponent implements OnInit, OnDestroy {
         );
     }
 
-
     loadEconomicAgents() {
         this.importer =
             this.companyInputs.pipe(
@@ -171,12 +159,11 @@ export class ImportAuthorizationRequestComponent implements OnInit, OnDestroy {
             );
     }
 
-
     generateDocNr() {
         this.subscriptions.push(
-            this.administrationService.generateDocNr().subscribe(data => {
+            this.administrationService.generateImportAuthDocNr().subscribe(data => {
                     this.generatedDocNrSeq = data;
-                    this.rForm.get('requestNumber').setValue(this.generatedDocNrSeq);
+                    this.rForm.get('requestNumber').setValue(this.generatedDocNrSeq[0]);
                 },
                 error => console.log(error)
             )
@@ -224,7 +211,7 @@ export class ImportAuthorizationRequestComponent implements OnInit, OnDestroy {
                 break;
             }
             case '5': {
-                formModel.type.id = '18';
+                formModel.type.id = '47';
                 break;
             }
         }
@@ -239,6 +226,9 @@ export class ImportAuthorizationRequestComponent implements OnInit, OnDestroy {
 
 
         // formModel.importAuthorizationEntity.documents = this.docs;
+
+
+
         formModel.documents = this.docs;
         formModel.currentStep = 'E';
         formModel.initiator = this.authService.getUserName();
@@ -260,7 +250,7 @@ export class ImportAuthorizationRequestComponent implements OnInit, OnDestroy {
             'requestMandateDate*/
         }];
 
-        // console.log('formModel', formModel);
+        console.log('formModel', formModel);
         // console.log('rForm.valid', this.rForm.valid);
 
         if (this.rForm.valid) {
@@ -314,41 +304,50 @@ export class ImportAuthorizationRequestComponent implements OnInit, OnDestroy {
                     break;
                 }
                 case '5': {
-                    this.subscriptions.push(this.requestService.getAuthorizationByAuth(this.authorizationNumber).subscribe(data => {
-                            if (this.roleSrv.isRightAssigned('scr_module_7') || this.roleSrv.isRightAssigned('scr_admin')) {
-                                formModel.currentStep = data.currentStep;
-                                console.log('this.requestService.getAuthorizationByAuth(this.authorizationNumber', this.requestService.getAuthorizationByAuth(this.authorizationNumber))
-                                if (data.documents && data.documents.length > 0) {
-                                    data.documents.forEach(item => formModel.push(item));
-                                }
-                                // formModel.importAuthorizationEntity  = data.importAuthorizationEntity;
-                                // // formModel.importAuthorizationEntity.id = null;
-                                // formModel.importAuthorizationEntity.nmCustomsPointsList = null;
-                                // formModel.importAuthorizationEntity.importAuthorizationDetailsEntityList=null;
-                                // formModel.importAuthorizationEntity.importAuthorizationDetailsEntityList.forEach(item => item.id=null)
-                                // console.log("formModel",formModel);
-                                // this.emitAuthorizationNUmber.emit(this.authorizationNumber);
-                                this.subscriptions.push(this.requestService.addImportRequest(formModel).subscribe(data => {
-                                    this.router.navigate(['dashboard/module/import-authorization/import-management/' ,data.body.id, this.authorizationNumber]);
-                                }));
-                                // this.router.navigate(['dashboard/module/import-authorization/import-management/' + data.id]);
-                            } else if (this.roleSrv.isRightAssigned('scr_register_request')) {
-                                this.router.navigate(['/dashboard/homepage/']);
-                            }
-                        }, error => this.loadingService.hide())
-                    );
-                    break;
+                    if (this.roleSrv.isRightAssigned('scr_module_7') || this.roleSrv.isRightAssigned('scr_admin')) {
+                        console.log('5');
+                        if (this.authorizationNumber == '') {
+                            //this.successOrErrorHandlerService.showError('Numarul autorizatiei este invalid');
+                            this.loadingService.hide();
+                            return;
+                        }
+                        this.subscriptions.push(
+                            this.requestService.getAuthorizationByAuth(this.authorizationNumber).subscribe(ImportAuthorizationEntity => {
+                                console.log('auth', ImportAuthorizationEntity);
+                                formModel.importAuthorizationEntity = ImportAuthorizationEntity;
+                                formModel.importAuthorizationEntity.medType = this.medType;
+
+
+                                this.subscriptions.push(this.requestService.saveImportDeclaration(formModel).subscribe(data2 => {
+                                        console.log('data2', data2);
+
+                                    this.router.navigate(['dashboard/module/import-authorization/import-management/', data2.body.id]);
+                                    }, error => this.loadingService.hide()
+                                ));
+
+                            }, error1 => {
+                                this.loadingService.hide();
+                                console.log('auth', error1);
+                            })
+                        );
+
+                        //this.router.navigate(['dashboard/module/import-authorization/import-management/' + data.id]);
+                    } else if (this.roleSrv.isRightAssigned('scr_register_request')) {
+                        this.router.navigate(['/dashboard/homepage/']);
+                    }
                 }
             }
             this.loadingService.hide();
             this.formSubmitted = false;
-            //     }, error => this.loadingService.hide())
-            // );
+//     }, error => this.loadingService.hide())
+// );
 
         }
     }
 
-    ngOnDestroy(): void {
+    ngOnDestroy()
+        :
+        void {
         this.subscriptions.forEach(subscription => {
             subscription.unsubscribe();
         });

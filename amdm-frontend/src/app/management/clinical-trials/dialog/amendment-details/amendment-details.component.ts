@@ -13,25 +13,21 @@ import {UploadFileService} from '../../../../shared/service/upload/upload-file.s
 })
 export class AmendmentDetailsComponent implements OnInit, OnDestroy {
 
-    private subscriptions: Subscription[] = [];
     ctAmendForm: FormGroup;
     medicamentForm: FormGroup;
     refProdForm: FormGroup;
     placebForm: FormGroup;
     modifications: any[] = [];
-
     mediacalInstitutionsFromList: any[] = [];
     mediacalInstitutionsToList: any[] = [];
-
     isMedModified = false;
     isRefProdModified = false;
     isPlaceboModified = false;
-
     medActiveSubstancesFromList: any[] = [];
     medActiveSubstancesToList: any[] = [];
-
     refProdActiveSubstancesFromList: any[] = [];
     refProdActiveSubstancesToList: any[] = [];
+    private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder,
                 @Inject(MAT_DIALOG_DATA) public dataDialog: any,
@@ -213,14 +209,19 @@ export class AmendmentDetailsComponent implements OnInit, OnDestroy {
             return true;
         }
         return !(medicament.nameFrom == medicament.nameTo && medicament.manufactureFrom.id == medicament.manufactureTo.id && medicament.doseFrom == medicament.doseTo
-            && medicament.pharmFormFrom.id == medicament.pharmFormTo.id && medicament.atcCodeFrom.id == medicament.atcCodeTo.id && medicament.administModeFrom == medicament.administModeTo);
+            && medicament.pharmFormFrom.id == medicament.pharmFormTo.id && medicament.atcCodeFrom.id == medicament.atcCodeTo.id
+            && medicament.administModeFrom == medicament.administModeTo);
     }
 
     isReferenceProductModified(refProd: any) {
+        console.log('refProd', refProd);
         if (refProd.activeSubstances.some(as => as.status == 'N' || as.status == 'R')) {
             this.refProdActiveSubstancesFromList = refProd.activeSubstances.filter(as => as.status == 'U' || as.status == 'R');
             this.refProdActiveSubstancesToList = refProd.activeSubstances.filter(as => as.status == 'U' || as.status == 'N');
             return true;
+        }
+        if (refProd.nameFrom == '' && refProd.nameTo == '') {
+            return false;
         }
         return !(refProd.nameFrom == refProd.nameTo && refProd.manufactureFrom.id == refProd.manufactureTo.id && refProd.doseFrom == refProd.doseTo
             && refProd.pharmFormFrom.id == refProd.pharmFormTo.id && refProd.atcCodeFrom.id == refProd.atcCodeTo.id && refProd.administModeFrom == refProd.administModeTo);
@@ -244,15 +245,15 @@ export class AmendmentDetailsComponent implements OnInit, OnDestroy {
         );
     }
 
-    private saveToFileSystem(response: any, docName: string) {
-        const blob = new Blob([response]);
-        saveAs(blob, docName);
-    }
-
     ngOnDestroy(): void {
         this.subscriptions.forEach(s => {
             s.unsubscribe();
         });
+    }
+
+    private saveToFileSystem(response: any, docName: string) {
+        const blob = new Blob([response]);
+        saveAs(blob, docName);
     }
 
 }

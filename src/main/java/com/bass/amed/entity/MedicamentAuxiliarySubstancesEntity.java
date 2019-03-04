@@ -13,9 +13,12 @@ public class MedicamentAuxiliarySubstancesEntity
     private Integer id;
     @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )@JoinColumn( name = "substance_id" )
     private NmAuxiliarySubstancesEntity auxSubstance;
+    @Basic@Column(name = "composition_number")
+    private Integer compositionNumber;
 
     public void assign(MedicamentAuxiliarySubstancesHistoryEntity entity)
     {
         this.auxSubstance = entity.getAuxSubstance();
+        this.compositionNumber =entity.getCompositionNumberTo();
     }
 }

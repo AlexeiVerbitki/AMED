@@ -3,6 +3,7 @@ package com.bass.amed.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,6 +30,15 @@ public class MedicamentDivisionHistoryEntity
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "volume_unit_measurement_id")
     private NmUnitsOfMeasurementEntity volumeQuantityMeasurement;
+    @Basic
+    @Column(name = "serial_nr")
+    private String serialNr;
+    @Basic
+    @Column(name = "samples_number")
+    private Integer samplesNumber;
+    @Basic
+    @Column(name = "samples_expiration_date")
+    private Date samplesExpirationDate;
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)@JoinColumn(name = "division_history_id")
     private Set<MedicamentInstructionsHistoryEntity> instructionsHistory = new HashSet<>();
 }

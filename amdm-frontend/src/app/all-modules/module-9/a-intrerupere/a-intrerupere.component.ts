@@ -22,6 +22,7 @@ export class AIntrerupereComponent implements OnInit, OnDestroy {
     docs: Document[] = [];
     docTypes: any[];
     outDocuments: any[] = [];
+    mandatedContactName: string;
 
     constructor(private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
@@ -42,7 +43,7 @@ export class AIntrerupereComponent implements OnInit, OnDestroy {
             'requestNumber': [{value: '', disabled: true}],
             'startDate': [{value: '', disabled: true}],
             'endDate': [''],
-            'company': [''],
+            'company': [null],
             'currentStep': ['E'],
             'type': [],
             'typeCode': [''],
@@ -63,7 +64,12 @@ export class AIntrerupereComponent implements OnInit, OnDestroy {
                     this.cancelClinicalTrailForm.get('id').setValue(data.id);
                     this.cancelClinicalTrailForm.get('requestNumber').setValue(data.requestNumber);
                     this.cancelClinicalTrailForm.get('startDate').setValue(new Date(data.startDate));
-                    this.cancelClinicalTrailForm.get('company').setValue(data.company);
+                    if (data.company) {
+                        this.cancelClinicalTrailForm.get('company').setValue(data.company);
+                    } else {
+                        this.mandatedContactName = data.registrationRequestMandatedContacts[0].mandatedFirstname.concat(' ')
+                            .concat(data.registrationRequestMandatedContacts[0].mandatedLastname);
+                    }
                     this.cancelClinicalTrailForm.get('type').setValue(data.type);
                     this.cancelClinicalTrailForm.get('typeCode').setValue(data.type.code);
                     this.cancelClinicalTrailForm.get('initiator').setValue(data.initiator);

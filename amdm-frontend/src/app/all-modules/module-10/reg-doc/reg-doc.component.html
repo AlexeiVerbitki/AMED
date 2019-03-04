@@ -35,7 +35,7 @@
 		</div>
 		<app-document [documents]="documents" [nrCerere]="rForm.get('requestNumber').value" [dcTypes]="docTypes"></app-document>
 		<div *ngIf="formSubmitted && documents.length==0">
-			<small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
+			<small class="text-muted"><strong class="text-danger">Nici a fost incarcat document cu tip necesar</strong></small>
 		</div>
 		<div class="row">
 			<div class="col-md-4" *ngIf="isExecutor">
@@ -46,9 +46,13 @@
 					           bindLabel="username"
 					           placeholder="Executor"
 					           formControlName="executorList"
-					           [required]="true"
+					           [required]="false"
 					           [multiple]="true"
 					           [hideSelected]="true">
+						<ng-template ng-option-tmp let-item="item">
+							{{item.fullname}} <br/>
+							<small class="form-text">{{item.userGroup}}</small>
+						</ng-template>
 					</ng-select>
 					<div *ngIf="formSubmitted && rForm.get('executorList').invalid">
 						<small class="text-muted"><strong class="text-danger">Executorii trebuie selectati</strong></small>
@@ -71,18 +75,15 @@
 						<mat-datepicker-toggle matSuffix [for]="pickerTermen"></mat-datepicker-toggle>
 						<mat-datepicker #pickerTermen></mat-datepicker>
 					</mat-form-field>
-					<!--					<div *ngIf="formSubmitted && rForm.get('executionDate').invalid">-->
-					<!--						<small class="text-muted"><strong class="text-danger">Termenul de executare trebuie selectati</strong></small>-->
-					<!--					</div>-->
 				</div>
 			</div>
 		</div>
-		<hr>
+<!--		<hr>-->
 		<div class="row">
 			<div class="col-md-12">
 				<div class="md-form">
-					<textarea type="text" id="problematica" class="md-textarea form-control" mdbInputDirective rows="7" formControlName="problemDescription"
-					          [maxLength]="500"></textarea>
+					<textarea type="text" id="problematica" class="md-textarea form-control" mdbInputDirective rows="2" formControlName="problemDescription"
+					          [maxLength]="300"></textarea>
 					<label for="problematica">Subiect / Problematica</label>
 				</div>
 			</div>

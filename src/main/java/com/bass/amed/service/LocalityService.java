@@ -30,7 +30,7 @@ public class LocalityService
             throw new CustomException("Localitatea nu a fost gasita");
         }
 
-        local.get().setStateName(statesRepository.findById(local.get().getState().getId()).get().getDescription());
+        local.get().setStateName(statesRepository.findById(local.get().getStateId()).get().getDescription());
 
         return local.get();
     }

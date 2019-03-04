@@ -24,6 +24,8 @@ public class GMPFilterDTO implements Serializable
     private Date certificateStartDateFrom;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date certificateEndDateTo;
+    private Boolean searchAuthorizations;
+    private Boolean searchCertificates;
 
     public GMPFilterDTO()
     {

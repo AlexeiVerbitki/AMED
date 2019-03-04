@@ -250,6 +250,28 @@ public class LicenseController
         return new ResponseEntity<>(r.isPresent() ? r.get() : null, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/retrieve-license-by-idno-fill-state-name", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<LicensesEntity> loadLicenseByCompanyFillStateName(@RequestParam("idno") String idno) throws CustomException
+    {
+        logger.debug("Retrieve license by company id idno", idno);
+        Optional<NmEconomicAgentsEntity> firstChoice = economicAgentsRepository.findFirstByIdnoEqualsAndLicenseIdIsNotNull(idno);
+        Optional<LicensesEntity> r = Optional.empty();
+        if (firstChoice.isPresent())
+        {
+            r = licensesRepository.getActiveLicenseById(firstChoice.get().getLicenseId(), new Date());
+        }
+        LicensesEntity licenseDetails = r.orElse(new LicensesEntity());
+        for (NmEconomicAgentsEntity ece : licenseDetails.getEconomicAgents())
+        {
+            if (ece.getLocality() != null)
+            {
+                ece.setLocality(localityService.findLocalityById(ece.getLocality().getId()));
+            }
+            ece.setSelectedPharmaceutist(ece.getAgentPharmaceutist().stream().filter(af -> af.getSelectionDate() != null).max(Comparator.comparing(LicenseAgentPharmaceutistEntity::getSelectionDate)).orElse(null));
+        }
+        return new ResponseEntity<>(licenseDetails, HttpStatus.OK);
+    }
+
 
     @RequestMapping(value = "/retrieve-suspended-license-by-idno", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LicensesEntity> loadSuspendedLicenseByCompany(@RequestParam("idno") String idno) throws CustomException

@@ -54,6 +54,7 @@ import {SelectSubsidiaryModalComponent} from './all-modules/gdp/select-subsidiar
 import {InspectorsModalComponent} from './all-modules/gdp/inspectors-modal/inspectors-modal.component';
 import {SelectDocumentNumberComponent} from './dialog/select-document-number/select-document-number.component';
 import {AuthGuard} from './shared/auth-guard/auth.guard';
+import {AddLaboratorStandardsComponent} from './dialog/add-laborator-standards/add-laborator-standards.component';
 
 registerLocaleData(localeRo, 'ro-MD');
 
@@ -102,6 +103,7 @@ const interceptors = [{
         MedicamentHistoryDialogComponent,
         MedicamentModificationsDialogComponent,
         DivisionSelectDialogComponent,
+        AddLaboratorStandardsComponent,
         SelectSubsidiaryModalComponent,
         InspectorsModalComponent,
         SelectDocumentNumberComponent
@@ -122,7 +124,7 @@ const interceptors = [{
     ],
     schemas: [],
     entryComponents: [
-        DivisionSelectDialogComponent, AuxiliarySubstanceDialogComponent, ConfirmationDialogComponent, MedicamentHistoryDialogComponent, SelectDocumentNumberComponent,
+        DivisionSelectDialogComponent,AddLaboratorStandardsComponent, AuxiliarySubstanceDialogComponent, ConfirmationDialogComponent, MedicamentHistoryDialogComponent, SelectDocumentNumberComponent,
         MedicamentModificationsDialogComponent, RequestAdditionalDataDialogComponent, ActiveSubstanceDialogComponent, MedicamentDetailsDialogComponent,
         AddManufactureComponent, AddDivisionComponent, AddExpertComponent, SelectVariationTypeComponent, SelectSubsidiaryModalComponent, InspectorsModalComponent
     ],

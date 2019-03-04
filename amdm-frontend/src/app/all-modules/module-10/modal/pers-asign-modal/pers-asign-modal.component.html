@@ -1,0 +1,23 @@
+<h2 mat-dialog-title class="text-center">Adauga persoana pentru executare</h2>
+<mat-dialog-content class="mat-typography">
+	<div class="my-3">
+		<ng-select id="users"
+		           name="users"
+		           [items]="executors"
+		           [(ngModel)]="selectedItem"
+		           [required]="true"
+		           bindLabel="fullname"
+		           onChanges
+		           placeholder="Persoana delegata">
+			<ng-template ng-option-tmp let-item="item">
+				{{item.fullname}} <br/>
+				<small class="form-text">{{item.userGroup}}</small>
+			</ng-template>
+
+		</ng-select>
+	</div>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+	<button class="btn btn-dark-red-color btn-sm" [mat-dialog-close]="null" cdkFocusInitial>Cancel</button>
+	<button class="btn btn-dark-green-color btn-sm" (click)="addPerson()">Confirm</button>
+</mat-dialog-actions>

@@ -25,6 +25,7 @@ export class AAprobareComponent implements OnInit, OnDestroy {
     docs: Document[] = [];
     docTypes: any[];
     outDocuments: any[] = [];
+    mandatedContactName: string;
 
     constructor(private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
@@ -48,7 +49,7 @@ export class AAprobareComponent implements OnInit, OnDestroy {
             'requestNumber': [{value: '', disabled: true}],
             'startDate': [{value: '', disabled: true}],
             'endDate': [''],
-            'company': [''],
+            'company': [null],
             'currentStep': [''],
             'type': [],
             'typeCode': [''],
@@ -120,7 +121,13 @@ export class AAprobareComponent implements OnInit, OnDestroy {
                     this.approveClinicalTrailForm.get('id').setValue(data.id);
                     this.approveClinicalTrailForm.get('requestNumber').setValue(data.requestNumber);
                     this.approveClinicalTrailForm.get('startDate').setValue(new Date(data.startDate));
-                    this.approveClinicalTrailForm.get('company').setValue(data.company);
+                    if (data.company) {
+                        this.approveClinicalTrailForm.get('company').setValue(data.company);
+                    } else {
+                        this.mandatedContactName = data.registrationRequestMandatedContacts[0].mandatedFirstname.concat(' ')
+                            .concat(data.registrationRequestMandatedContacts[0].mandatedLastname);
+                    }
+
                     this.approveClinicalTrailForm.get('type').setValue(data.type);
                     this.approveClinicalTrailForm.get('typeCode').setValue(data.type.code);
                     this.approveClinicalTrailForm.get('initiator').setValue(data.initiator);

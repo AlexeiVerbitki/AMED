@@ -147,6 +147,9 @@ export class RequestService {
     addImportRequest(requestDetails: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/add-import-request', requestDetails, {observe: 'response'});
     }
+    saveImportDeclaration(requestDetails: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/add-import-declaration', requestDetails, {observe: 'response'});
+    }
     getImportRequest(id: string): Observable<any> {
         return this.http.get('/api/load-import-request', {params: {id: id}});
     }
@@ -219,6 +222,10 @@ export class RequestService {
         return this.http.get('/api/get-medicaments-oa');
     }
 
+    getMedicamentsForLab(): Observable<any> {
+        return this.http.get('/api/get-medicaments-lab');
+    }
+
     getMedicamentsForOM(): Observable<any> {
         return this.http.get('/api/get-medicaments-om');
     }
@@ -244,12 +251,24 @@ export class RequestService {
         return this.http.get('/api/get-oas');
     }
 
+    getLabs(): Observable<any> {
+        return this.http.get('/api/get-labs');
+    }
+
     getOMs(): Observable<any> {
         return this.http.get('/api/get-oms');
     }
 
     setMedicamentApproved(ids: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/medicament-approved', ids, {observe: 'response'});
+    }
+
+    laboratorAnalysis(requestId: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/laborator-analysis', requestId, {observe: 'response'});
+    }
+
+    removeLaboratorAnalysis(requestId: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/remove-laborator-analysis', requestId, {observe: 'response'});
     }
 
     setMedicamentModifyApproved(id: any): Observable<HttpResponse<any>> {

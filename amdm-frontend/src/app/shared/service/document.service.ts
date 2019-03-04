@@ -129,6 +129,10 @@ export class DocumentService {
         return this.http.post('/api/documents/generate-oa', oaDetails, {responseType: 'blob'});
     }
 
+    generateLab(labDetails: any): Observable<any> {
+        return this.http.post('/api/documents/generate-lab', labDetails, {responseType: 'blob'});
+    }
+
     generateOM(oaDetails: any): Observable<any> {
         return this.http.post('/api/documents/generate-om', oaDetails, {responseType: 'blob'});
     }
@@ -152,6 +156,11 @@ export class DocumentService {
     removeOI(element: any): Observable<any> {
         return this.http.post('/api/documents/remove-oi', element, {observe: 'response'});
     }
+
+    removeAct(element: any): Observable<any> {
+        return this.http.post('/api/documents/remove-act', element, {observe: 'response'});
+    }
+
 
     removeOIM(element: any): Observable<any> {
         return this.http.post('/api/documents/remove-oim', element, {observe: 'response'});

@@ -1,14 +1,4 @@
-import {
-    AfterViewInit,
-    Component,
-    ElementRef,
-    EventEmitter,
-    Input,
-    OnDestroy,
-    OnInit,
-    Output,
-    ViewChild
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Document} from '../models/document';
 import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog.component';
 import {MatDialog, MatSort, MatTable, MatTableDataSource} from '@angular/material';
@@ -44,8 +34,10 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('incarcaFisier')
     incarcaFisierVariable: ElementRef;
     @Output() documentModified = new EventEmitter();
+    @Output() documentModifiedData = new EventEmitter();
     private subscriptions: Subscription[] = [];
     visibility = false;
+    maxDate = new Date();
 
     displayedColumns: any[] = ['name', 'docType', 'docNumber', 'date', 'actions'];
     dataSource = new MatTableDataSource<any>();
@@ -60,7 +52,8 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
         this.docForm = fb.group({
             'docType': [null, Validators.required],
             'nrDoc': [null, Validators.required],
-            'dateDoc': [null, Validators.required]
+            'dateDoc': [null, Validators.required],
+            'toDateDoc' : [null, Validators.required],
         });
 
 
@@ -173,6 +166,7 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.subscriptions.push(this.uploadService.removeFileFromStorage(this.documents[index].path).subscribe(data => {
+                        this.documentModifiedData.emit({removed: true, data: this.documents[index]});
                         this.documents.splice(index, 1);
                         this.dataSource.data = this.documents.slice();
                         this.table.renderRows();
@@ -205,7 +199,8 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
         this.formSubmitted = true;
 
         if (this.docForm.get('docType').invalid || (this.docForm.get('nrDoc').invalid && this.docForm.get('docType').value.needDocNr)
-            || (this.docForm.get('dateDoc').invalid && this.docForm.get('docType').value.needDate)) {
+            || (this.docForm.get('dateDoc').invalid && this.docForm.get('docType').value.needDate)
+            || (this.docForm.get('toDateDoc').invalid && this.docForm.get('docType').value.needToDate)) {
             return false;
         }
 
@@ -254,7 +249,8 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
                         path: this.result.path,
                         isOld: false,
                         number: this.docForm.get('nrDoc').value,
-                        dateOfIssue: this.docForm.get('dateDoc').value
+                        dateOfIssue: this.docForm.get('dateDoc').value,
+                        expirationDate: this.docForm.get('toDateDoc').value
                     });
                     this.dataSource.data = this.documents.slice();
                     this.table.renderRows();
@@ -265,7 +261,9 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.docForm.get('docType').setValue(null);
                     this.docForm.get('nrDoc').setValue(null);
                     this.docForm.get('dateDoc').setValue(null);
+                    this.docForm.get('toDateDoc').setValue(null);
                     this.documentModified.emit(true);
+                    this.documentModifiedData.emit({removed: false, data: this.documents[this.documents.length - 1]});
                 }
             },
             error => {

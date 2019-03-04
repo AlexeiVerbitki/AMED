@@ -75,7 +75,7 @@ export class ProcessInterruptionModifyComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.navbarTitleService.showTitleMsg('Aprobarea modificarilor postautorizate / Întrerupere proces');
+        this.navbarTitleService.showTitleMsg('Aprobarea modificarilor postautorizare / Întrerupere proces');
 
         this.modalService.data.next('');
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {

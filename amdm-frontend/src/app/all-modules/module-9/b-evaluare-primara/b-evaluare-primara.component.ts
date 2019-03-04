@@ -84,8 +84,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
     isValidRefProduct = false;
     private subscriptions: Subscription[] = [];
     private amendmentIndex = -1;
-    private typeId: string;
-    private currentStep: string;
+    mandatedContactName: string;
 
     constructor(private fb: FormBuilder,
                 public dialog: MatDialog,
@@ -107,7 +106,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
             'id': [''],
             'requestNumber': {value: '', disabled: true},
             'startDate': {value: '', disabled: true},
-            'company': [''],
+            'company': [null],
             'type': [''],
             'typeCode': [''],
             'initiator': [null],
@@ -551,7 +550,12 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                         this.clinicTrailAmendForm.get('id').setValue(data.id);
                         this.clinicTrailAmendForm.get('requestNumber').setValue(data.requestNumber);
                         this.clinicTrailAmendForm.get('startDate').setValue(new Date(data.startDate));
-                        this.clinicTrailAmendForm.get('company').setValue(data.company);
+                        if (data.company) {
+                            this.clinicTrailAmendForm.get('company').setValue(data.company);
+                        } else {
+                            this.mandatedContactName = data.registrationRequestMandatedContacts[0].mandatedFirstname.concat(' ')
+                                .concat(data.registrationRequestMandatedContacts[0].mandatedLastname);
+                        }
                         this.clinicTrailAmendForm.get('type').setValue(data.type);
                         this.clinicTrailAmendForm.get('typeCode').setValue(data.type.code);
                         this.clinicTrailAmendForm.get('initiator').setValue(data.initiator);

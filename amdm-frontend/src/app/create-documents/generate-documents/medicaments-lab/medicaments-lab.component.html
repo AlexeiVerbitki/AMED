@@ -1,0 +1,88 @@
+<div class="gradient-card-header bg-sidebar border-gradient">
+  <div class="container-fluid">
+    <!-- Title -->
+    <div class="row">
+      <div class="col-6">
+        <div class="card-header-title white-text">Medicamente ce urmeaza a fi incluse in actul de primire-predare pentru analiza laborator</div>
+      </div>
+      <div class="col-6">
+        <div class="text-right fap text-white">
+          <i (click)="generateLab()" mdbTooltip="Generare act" placement="top" class="fa fa-files-o fa-lg fa-mt" aria-hidden="true"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="table-width">
+  <div>
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Denumire comerciala</th>
+        <td mat-cell *matCellDef="let element"> {{element.commercialName}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="dose">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Doza</th>
+        <td mat-cell *matCellDef="let element"> {{element.dose }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="pharmaceuticalForm">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Forma farmaceutica</th>
+        <td mat-cell *matCellDef="let element"> {{element.pharmaceuticalForm.description}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="division">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Număr unități</th>
+        <td mat-cell *matCellDef="let element"> {{element.division}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="volume">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Volum</th>
+        <td mat-cell *matCellDef="let element"> {{element.volume}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="volumeQuantityMeasurement">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Unitate de masura(volum)</th>
+        <td mat-cell *matCellDef="let element"> {{element.volumeQuantityMeasurement ? element.volumeQuantityMeasurement.description  : ''}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="samplesNumber">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Număr eșantione</th>
+        <td mat-cell *matCellDef="let element"> {{element.samplesNumber}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="serialNr">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Serie medicament</th>
+        <td mat-cell *matCellDef="let element"> {{element.serialNr}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="samplesExpirationDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Data expirării mostrelor</th>
+        <td mat-cell *matCellDef="let element"> {{element.samplesExpirationDate |  date: 'dd/MM/yyyy'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="authorizationHolder">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Detinator certificat de inregistrare</th>
+        <td mat-cell *matCellDef="let element"> {{element.authorizationHolder.description}}  {{element.authorizationHolder.address}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="manufacture">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Producator produs finit</th>
+        <td mat-cell *matCellDef="let element"> {{element.manufacture.manufacture.description}} {{element.manufacture.manufacture.address}}  </td>
+      </ng-container>
+
+      <ng-container matColumnDef="includedLab">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Include in act</th>
+        <td mat-cell *matCellDef="let element">
+          <mat-checkbox #checkboxIncludedLab [checked]="element.included" (change)="checkIncludedLab(element,checkboxIncludedLab)"></mat-checkbox>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <div *ngIf="dataSource.data.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+    <mat-paginator #pag2 [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+  </div>
+</div>

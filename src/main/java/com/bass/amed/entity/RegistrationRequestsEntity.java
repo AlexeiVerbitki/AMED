@@ -29,8 +29,8 @@ public class RegistrationRequestsEntity
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "company_id")
     private NmEconomicAgentsEntity company;
-//    @OneToOne( fetch = FetchType.LAZY, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
     @OneToOne( fetch = FetchType.LAZY, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
+//    @OneToOne( fetch = FetchType.LAZY, cascade = { CascadeType.ALL} )
     @JoinColumn( name = "import_id" )
     private ImportAuthorizationEntity importAuthorizationEntity;
     @OneToOne( fetch = FetchType.LAZY, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
@@ -137,4 +137,13 @@ public class RegistrationRequestsEntity
     @Basic
     @Column(name = "reg_subject")
     private String regSubject;
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "request_id")
+    private Set<LaboratorReferenceStandardsEntity> laboratorReferenceStandards = new HashSet<>();
+    @Basic
+    @Column(name = "lab_included")
+    private Boolean labIncluded;
+    @Basic
+    @Column(name = "lab_number")
+    private String labNumber;
 }

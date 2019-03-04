@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Document} from '../../../models/document';
 import {Observable, Subject, Subscription} from 'rxjs/index';
 import {ActivatedRoute, Router} from '@angular/router';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {RequestService} from '../../../shared/service/request.service';
 import {MedicamentService} from '../../../shared/service/medicament.service';
 import {AdministrationService} from '../../../shared/service/administration.service';
@@ -26,84 +26,67 @@ import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
     styleUrls: ['./a-evaluarea-primara.component.css']
 })
 export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
-    private readonly SEARCH_STRING_LENGTH: number = 2;
-
-    private subscriptions: Subscription[] = [];
     evaluateClinicalTrailForm: FormGroup;
     docs: Document[] = [];
     docTypes: any[];
-
     reqReqInitData: any;
-
     phaseList: any[] = [];
-
     //Treatments
     treatmentId: number;
     treatmentList: any[] = [
         {'id': 1, 'description': 'Unicentric', 'code': 'U'},
         {'id': 2, 'description': 'Multicentric', 'code': 'M'}
     ];
-
     //Provenances
     provenanceId: number;
     provenanceList: any[] = [
         {'id': 3, 'description': 'Național', 'code': 'N'},
         {'id': 4, 'description': 'Internațional', 'code': 'I'}
     ];
-
     //Investigators controls
     addInvestigatorForm: FormGroup;
     allInvestigatorsList: any[] = [];
     investigatorsList: any[] = [];
-
     //MediacalInstitutions controls
     addMediacalInstitutionForm: FormGroup;
     allMediacalInstitutionsList: any[] = [];
     mediacalInstitutionsList: any[] = [];
-
     //Payments control
     receiptsList: Receipt[] = [];
     paymentOrdersList: PaymentOrder[] = [];
     paymentTotal = 0;
-
     medicamentForm: FormGroup;
     referenceProductFormn: FormGroup;
     placeboFormn: FormGroup;
-
     manufacturers: Observable<any[]>;
     loadingManufacturer = false;
     manufacturerInputs = new Subject<string>();
+    farmForms: Observable<any[]>;
+    loadingFarmForms = false;
 
     // measureUnits: any[] = [];
     // measureUnitsRfPr: any[] = [];
     // measureUnitsPlacebo: any[] = [];
     // loadingMeasureUnits = false;
-
-    farmForms: Observable<any[]>;
-    loadingFarmForms = false;
     farmFormsInputs = new Subject<string>();
-
     atcCodes: Observable<any[]>;
     loadingAtcCodes = false;
     atcCodesInputs = new Subject<string>();
-
     manufacturersRfPr: Observable<any[]>;
     loadingManufacturerRfPr = false;
     manufacturerInputsRfPr = new Subject<string>();
-
-
     farmFormsRfPr: Observable<any[]>;
     loadingFarmFormsRfPr = false;
     farmFormsInputsRfPr = new Subject<string>();
-
     atcCodesRfPr: Observable<any[]>;
     loadingAtcCodesRfPr = false;
     atcCodesInputsRfPr = new Subject<string>();
-
     medActiveSubstances: any[] = [];
     refProdActiveSubstances: any[] = [];
-
     isValidRefProduct = false;
+    mandatedContactName: string;
+    private readonly SEARCH_STRING_LENGTH: number = 2;
+    private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder,
                 public dialog: MatDialog,
@@ -128,7 +111,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
             'id': [''],
             'requestNumber': {value: '', disabled: true},
             'startDate': {value: '', disabled: true},
-            'company': [''],
+            'company': [null],
             'type': [''],
             'typeCode': [''],
             'initiator': [null],
@@ -466,7 +449,12 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
                             this.evaluateClinicalTrailForm.get('id').setValue(data.id);
                             this.evaluateClinicalTrailForm.get('requestNumber').setValue(data.requestNumber);
                             this.evaluateClinicalTrailForm.get('startDate').setValue(new Date(data.startDate));
-                            this.evaluateClinicalTrailForm.get('company').setValue(data.company);
+                            if (data.company) {
+                                this.evaluateClinicalTrailForm.get('company').setValue(data.company);
+                            } else {
+                                this.mandatedContactName = data.registrationRequestMandatedContacts[0].mandatedFirstname.concat(' ')
+                                    .concat(data.registrationRequestMandatedContacts[0].mandatedLastname);
+                            }
                             this.evaluateClinicalTrailForm.get('type').setValue(data.type);
                             this.evaluateClinicalTrailForm.get('typeCode').setValue(data.type.code);
                             this.evaluateClinicalTrailForm.get('initiator').setValue(data.initiator);

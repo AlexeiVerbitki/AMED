@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {Subscription} from 'rxjs';
 import {RequestService} from '../../../shared/service/request.service';
@@ -13,7 +13,7 @@ import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.c
   templateUrl: './oi-list.component.html',
   styleUrls: ['./oi-list.component.css']
 })
-export class OiListComponent implements OnInit {
+export class OiListComponent implements OnInit, AfterViewInit {
 
   displayedColumns: any[] = ['number', 'date', 'name', 'status', 'actions'];
   dataSource = new MatTableDataSource<any>();

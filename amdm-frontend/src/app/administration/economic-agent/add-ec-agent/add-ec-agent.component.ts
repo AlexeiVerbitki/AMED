@@ -127,7 +127,11 @@ export class AddEcAgentComponent implements OnInit, OnDestroy {
 
                 this.filiale.forEach(fl => {
                     fl.companyType = fl.type.description;
-                    fl.address = this.states.find(st => st.id === fl.locality.stateId).description + ', ' + fl.locality.description + ', ' + fl.street;
+
+                    if (fl.locality)
+                    {
+                        fl.address = this.states.find(st => st.id === fl.locality.stateId).description + ', ' + fl.locality.description + ', ' + fl.street;
+                    }
                 });
             }));
 

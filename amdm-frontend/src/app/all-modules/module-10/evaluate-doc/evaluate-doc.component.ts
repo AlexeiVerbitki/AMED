@@ -17,6 +17,7 @@ import {CanModuleDeactivate} from '../../../shared/auth-guard/can-deactivate-gua
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {DatePipe} from '@angular/common';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {PersAsignModalComponent} from '../modal/pers-asign-modal/pers-asign-modal.component';
 
 @Component({
     selector: 'app-evaluate-doc',
@@ -37,6 +38,7 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, OnDestroy, C
     canBeDeactivated = false;
     private subscriptions: Subscription[] = [];
     isRg01: boolean;
+    isExecutionTermVisible = false;
 
     isReadOnlyMode = false;
     initiator = '';
@@ -54,6 +56,7 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, OnDestroy, C
             'id': null,
             'requestNumber': null,
             'currentDate': {disabled: true, value: new Date()},
+            'currentStep': null,
             'startDate': null,
             'recipient': '',
             'executors': [],
@@ -74,26 +77,32 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, OnDestroy, C
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
                 this.subscriptions.push(this.requestService.getDocumentModuleRequest(params['id']).subscribe(data => {
                         this.recipientList = data.recipientList;
-                        const pipe = new DatePipe('en-US');
+                        const pipe = new DatePipe('ro-MD');
                         this.eForm.get('id').setValue(data.id);
                         this.eForm.get('requestNumber').setValue(data.registrationRequestsEntity.requestNumber);
                         this.eForm.get('startDate').setValue(new Date(data.registrationRequestsEntity.startDate));
                         this.eForm.get('recipient').setValue(data.recipient);
-                        this.eForm.get('executionDateString').setValue(pipe.transform(new Date(data.executionDate), 'dd/MM/yyyy'));
+                        this.eForm.get('executionDateString').setValue(data.executionDate == null ? null :
+                            pipe.transform(new Date(data.executionDate), 'dd/MM/yyyy'));
                         this.eForm.get('executionDate').setValue(data.executionDate);
                         this.eForm.get('problemDescription').setValue(data.problemDescription);
                         this.eForm.get('executors').setValue(data.executors);
                         this.eForm.get('registrationRequestsEntity').setValue(data.registrationRequestsEntity);
+                        this.eForm.get('currentStep').setValue(data.registrationRequestsEntity.currentStep);
                         this.documents = data.registrationRequestsEntity.documents;
                         this.documents.forEach(doc => doc.isOld = true);
-                        this.assignedUsers = data.executors.map(u => u.name).join(', ');
+                        this.assignedUsers = data.executors.map(u => u.fullname).join(', ');
                         this.eForm.get('documentHistoryEntity').setValue(data.documentHistoryEntity);
-                        this.history = data.documentHistoryEntity.map(entity => entity.addDate.toLocaleString() + ' - ' + entity.assignee +
+                        this.history = data.documentHistoryEntity.map(entity => new Date(entity.addDate) + ' - ' + entity.assignee +
                             ': ' + entity.actionDescription).join('\r\n');
 
                         this.isRg01 = data.registrationRequestsEntity.requestNumber.startsWith('Rg01') ? true : false;
+                        this.isExecutionTermVisible = data.registrationRequestsEntity.requestNumber.startsWith('Rg03') ||
+                            data.registrationRequestsEntity.requestNumber.startsWith('Rg04') ||
+                            data.registrationRequestsEntity.requestNumber.startsWith('Rg05');
                         this.isReadOnlyMode = data.registrationRequestsEntity.currentStep.startsWith('F') ? true : false;
                         this.initiator = data.registrationRequestsEntity.initiator;
+                        // this.isExecutor =
                     })
                 );
             }, error1 => console.log('error  ', error1)
@@ -132,13 +141,9 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, OnDestroy, C
     }
 
     addComment(): void {
-
         const userName = this.authService.getUserName();
         const item = this.eForm.get('executors').value.filter(exec => exec.name == userName);
         const dialogRef = this.dialog.open(EvaluateModalComponent, {
-            // data: {
-            //     problemDescription: item,
-            // },
             hasBackdrop: true,
             width:
                 '650px'
@@ -147,15 +152,48 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, OnDestroy, C
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.actionDescription != '') {
                 this.eForm.get('documentHistoryEntity').value.push(result);
-                item.comment = '' + result.addDate.toLocaleString().trim() + ': ' + result.assignee + ' - ' +
+                item.comment = '' + result.addDate.toLocaleString() + ': ' + result.assignee + ' - ' +
                     result.actionDescription + '\r\n';
                 this.history = this.history + item.comment;
             }
         });
     }
 
-    finish(): void {
+    documentListModified(event) {
+        const actionDescription = event.removed ? 'A fost sters document cu nume: ' + event.data.name + ', tip: ' + event.data.docType.description
+            : 'A fost adaugat document cu nume: ' + event.data.name + ', tip: ' + event.data.docType.description;
+        const comment = '' + new Date().toLocaleString().trim() + ': ' + this.authService.getUserName() + ' - ' +
+            actionDescription + '\r\n';
+        this.history = this.history + comment;
+        this.eForm.get('documentHistoryEntity').value.push({id: null, addDate: new Date(), actionDescription: actionDescription, assignee: this.authService.getUserName()});
+    }
 
+    addPersonAssign(): void {
+        const dialogRef = this.dialog.open(PersAsignModalComponent, {
+            data: {
+                initiator: this.eForm.get('registrationRequestsEntity').value.initiator,
+                executors: this.eForm.get('executors').value,
+            },
+            hasBackdrop: true,
+            width: '650px',
+            panelClass: 'custom-dialog-container'
+        });
+
+        dialogRef.afterClosed().subscribe(response => {
+            if (response && response.username != '') {
+                const actionDescription = 'A delegat ' + response.fullname + ' pentru executare.';
+                this.eForm.get('documentHistoryEntity').value.push({id: null, addDate: new Date(), actionDescription: actionDescription, assignee: this.authService.getUserName()});
+
+                const comment = '' + new Date().toLocaleString() + ': ' + this.authService.getUserName() + ' - ' + actionDescription + '\r\n';
+                this.history = this.history + comment;
+
+                this.assignedUsers = this.assignedUsers + ', ' + response.fullname;
+                this.eForm.get('executors').value.push({id: null, name: response.username, fullname: response.fullname, confirmed: false, documentModuleId: null});
+            }
+        });
+    }
+
+    finish(): void {
         this.loadingService.show();
         const modelToCommit: any = this.eForm.value;
 
@@ -165,8 +203,10 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, OnDestroy, C
 
         modelToCommit.registrationRequestsEntity.documents = this.documents;
         modelToCommit.registrationRequestsEntity.requestHistories.push({
-            startDate: this.eForm.get('currentDate').value, endDate: new Date(),
-            username: this.authService.getUserName(), step: 'F'
+            startDate: this.eForm.get('currentDate').value,
+            endDate: new Date(),
+            username: this.authService.getUserName(),
+            step: 'F'
         });
         modelToCommit.documentHistoryEntity = this.eForm.get('documentHistoryEntity').value;
         this.subscriptions.push(this.requestService.saveDocumentModuleRequest(modelToCommit).subscribe(data => {
@@ -178,29 +218,53 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, OnDestroy, C
     }
 
     close(): void {
-        this.router.navigate(['dashboard/homepage']);
+        this.loadingService.show();
+        const modelToSubmit: any = this.eForm.value;
+
+        modelToSubmit.registrationRequestsEntity.currentStep = 'W';
+        modelToSubmit.registrationRequestsEntity.assignedUser = this.authService.getUserName();
+
+        modelToSubmit.registrationRequestsEntity.requestHistories.push({
+            startDate: this.eForm.get('startDate').value,
+            endDate: new Date(),
+            username: this.authService.getUserName(),
+            step: this.eForm.get('currentStep').value
+        });
+
+        this.subscriptions.push(this.requestService.saveDocumentModuleRequest(modelToSubmit).subscribe(data => {
+                this.canBeDeactivated = true;
+                this.loadingService.hide();
+                this.router.navigate(['dashboard/homepage']);
+            }, error => this.loadingService.hide())
+        );
+
     }
 
-    save(): void {
+    save(stepStatus: string): void {
         this.loadingService.show();
         const modelToCommit: any = this.eForm.value;
 
-        modelToCommit.registrationRequestsEntity.currentStep = 'E';
+        modelToCommit.registrationRequestsEntity.currentStep = stepStatus;
         modelToCommit.registrationRequestsEntity.assignedUser = this.authService.getUserName();
-        modelToCommit.registrationRequestsEntity.endDate = new Date();
+        // modelToCommit.registrationRequestsEntity.endDate = new Date();
 
         modelToCommit.registrationRequestsEntity.documents = this.documents;
         modelToCommit.registrationRequestsEntity.requestHistories.push({
-            startDate: this.eForm.get('currentDate').value, endDate: new Date(),
-            username: this.authService.getUserName(), step: 'E'
+            startDate: this.eForm.get('currentDate').value,
+            endDate: new Date(),
+            username: this.authService.getUserName(),
+            step: this.eForm.get('currentStep').value
         });
 
+        modelToCommit.executors = this.eForm.get('executors').value;
         this.subscriptions.push(this.requestService.saveDocumentModuleRequest(modelToCommit).subscribe(data => {
                 this.canBeDeactivated = true;
                 this.loadingService.hide();
                 this.router.navigate(['dashboard/homepage']);
             }, error => this.loadingService.hide())
         );
+
+        console.log(modelToCommit);
     }
 
     cancel(): void {
@@ -213,8 +277,10 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, OnDestroy, C
 
         modelToCommit.registrationRequestsEntity.documents = this.documents;
         modelToCommit.registrationRequestsEntity.requestHistories.push({
-            startDate: this.eForm.get('currentDate').value, endDate: new Date(),
-            username: this.authService.getUserName(), step: 'C'
+            startDate: this.eForm.get('currentDate').value,
+            endDate: new Date(),
+            username: this.authService.getUserName(),
+            step: this.eForm.get('currentStep').value
         });
 
         this.subscriptions.push(this.requestService.saveDocumentModuleRequest(modelToCommit).subscribe(data => {

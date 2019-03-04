@@ -17,6 +17,7 @@ import {ReportTypeSaesusar} from '../../../shared/enum/report-type-saesusar.enum
 import {ReportResponseType} from '../../../shared/enum/report-response-type.enum';
 import {ReportSource} from '../../../shared/enum/report-source.enum';
 import {SpecificReportType} from '../../../shared/enum/specific-report-type.enum';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 
 @Component({
     selector: 'app-c-notificare',
@@ -25,45 +26,34 @@ import {SpecificReportType} from '../../../shared/enum/specific-report-type.enum
 })
 export class CNotificareComponent implements OnInit, OnDestroy {
 
-    private subscriptions: Subscription[] = [];
     clinicTrailNotifForm: FormGroup;
-    private notificationIndex = -1;
-
     docs: Document[] = [];
     docTypes: any[] = [];
-
     addNotificationTypesForm: FormGroup;
     allNotificationTypesList: any[] = [];
-
     registerType = ReportRegisterMode;
     registerTypeValues: any[] = ReportRegisterMode.values();
-
     level = ReportLevel;
     levelValues: any[] = ReportLevel.values();
-
     reportType = ReportType;
     reportTypeValues: any[] = ReportType.values();
     showReportType = false;
-
     casuality = Casuality;
     casualityValues: any[] = Casuality.values();
-
     reportGender = ReportGender;
     reportGenderValues: any[] = ReportGender.values();
-
     reportTypeSaesusar = ReportTypeSaesusar;
     reportTypeSaesusarValues: any[] = ReportTypeSaesusar.values();
     showDiedDate = false;
-
     reportResponseType = ReportResponseType;
     reportResponseTypeValues: any[] = ReportResponseType.values();
-
     reportSource = ReportSource;
     reportSourceValues = ReportSource.values();
-
     specificReportType = SpecificReportType;
     specificReportTypeValues = SpecificReportType.values();
-
+    mandatedContactName: string;
+    private subscriptions: Subscription[] = [];
+    private notificationIndex = -1;
 
     constructor(private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
@@ -72,6 +62,7 @@ export class CNotificareComponent implements OnInit, OnDestroy {
                 private taskService: TaskService,
                 private administrationService: AdministrationService,
                 private authService: AuthService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 private loadingService: LoaderService) {
     }
 
@@ -80,7 +71,7 @@ export class CNotificareComponent implements OnInit, OnDestroy {
             'id': [''],
             'requestNumber': {value: '', disabled: true},
             'startDate': {value: '', disabled: true},
-            'company': [''],
+            'company': [null],
             'type': [''],
             'typeCode': [''],
             'initiator': [null],
@@ -181,13 +172,18 @@ export class CNotificareComponent implements OnInit, OnDestroy {
         this.loadNotificationTypes();
         this.subscribeToEvents();
 
-        console.log('specificReportType', this.specificReportType);
-        console.log('specificReportTypeValues', this.specificReportTypeValues);
+        // console.log('specificReportType', this.specificReportType);
+        // console.log('specificReportTypeValues', this.specificReportTypeValues);
     }
 
     subscribeToEvents() {
         this.subscriptions.push(
             this.addNotificationTypesForm.get('notificationType').valueChanges.subscribe(value => {
+                this.addNotificationTypesForm.get('startDateInternational').setValidators([]);
+                this.addNotificationTypesForm.get('startDateNational').setValidators([]);
+                this.addNotificationTypesForm.get('endDateNational').setValidators([]);
+                this.addNotificationTypesForm.get('endDateInternational').setValidators([]);
+
                 this.addNotificationTypesForm.get('reportDsurEntity').reset();
                 this.addNotificationTypesForm.get('reportSarLlrEntity').reset();
                 this.addNotificationTypesForm.get('reportSaeSusarEntity').reset();
@@ -195,9 +191,17 @@ export class CNotificareComponent implements OnInit, OnDestroy {
                 this.addNotificationTypesForm.get('startDateNational').reset();
                 this.addNotificationTypesForm.get('endDateNational').reset();
                 this.addNotificationTypesForm.get('endDateInternational').reset();
+
                 console.log('notificationTypeChange', value);
-                console.log('reportSaeSusarEntity', this.addNotificationTypesForm.get('reportSaeSusarEntity'));
-                if (value && value.code == 'DSUR') {
+                if (value && value.code == 'DDGSC') {
+                    this.addNotificationTypesForm.get('startDateInternational').setValidators([Validators.required]);
+                } else if (value && value.code == 'DDLSC') {
+                    this.addNotificationTypesForm.get('startDateNational').setValidators([Validators.required]);
+                } else if (value && value.code == 'DIGSC') {
+                    this.addNotificationTypesForm.get('endDateNational').setValidators([Validators.required]);
+                } else if (value && value.code == 'DILSC') {
+                    this.addNotificationTypesForm.get('endDateInternational').setValidators([Validators.required]);
+                } else if (value && value.code == 'DSUR') {
                     this.addNotificationTypesForm.get('reportDsurEntity.drugName')
                         .setValue(this.clinicTrailNotifForm.value.clinicalTrails.medicament.name + ' ' + this.clinicTrailNotifForm.value.clinicalTrails.medicament.dose);
                 }
@@ -302,7 +306,6 @@ export class CNotificareComponent implements OnInit, OnDestroy {
         );
     }
 
-
     initPage() {
         this.subscriptions.push(
             this.activatedRoute.params.subscribe(params => {
@@ -311,7 +314,12 @@ export class CNotificareComponent implements OnInit, OnDestroy {
                         this.clinicTrailNotifForm.get('id').setValue(data.id);
                         this.clinicTrailNotifForm.get('requestNumber').setValue(data.requestNumber);
                         this.clinicTrailNotifForm.get('startDate').setValue(new Date(data.startDate));
-                        this.clinicTrailNotifForm.get('company').setValue(data.company);
+                        if (data.company) {
+                            this.clinicTrailNotifForm.get('company').setValue(data.company);
+                        } else {
+                            this.mandatedContactName = data.registrationRequestMandatedContacts[0].mandatedFirstname.concat(' ')
+                                .concat(data.registrationRequestMandatedContacts[0].mandatedLastname);
+                        }
                         this.clinicTrailNotifForm.get('type').setValue(data.type);
                         this.clinicTrailNotifForm.get('typeCode').setValue(data.type.code);
                         this.clinicTrailNotifForm.get('initiator').setValue(data.initiator);
@@ -358,17 +366,28 @@ export class CNotificareComponent implements OnInit, OnDestroy {
         );
     }
 
+    dysplayInvalidControl(form: FormGroup) {
+        const ctFormControls = form['controls'];
+        for (const control of Object.keys(ctFormControls)) {
+            ctFormControls[control].markAsTouched();
+            ctFormControls[control].markAsDirty();
+        }
+    }
+
     onSubmit() {
+        const collectedDataForm = this.addNotificationTypesForm.value;
+
         if (this.addNotificationTypesForm.invalid) {
-            alert('invalidForm');
             console.log('this.addNotificationTypesForm', this.addNotificationTypesForm);
+            // return;
+            this.dysplayInvalidControl(this.addNotificationTypesForm);
+            this.errorHandlerService.showError('Datele notificarii sunt invalide');
             return;
         }
         // this.loadingService.show();
 
         const formModel = this.clinicTrailNotifForm.getRawValue();
         const findAmendment = formModel.clinicalTrails.clinicTrialNotificationEntities.find(notif => notif.registrationRequestId == formModel.id);
-        const collectedDataForm = this.addNotificationTypesForm.value;
 
         console.log('findAmendment', findAmendment);
         findAmendment.title = collectedDataForm.notificationTitle;

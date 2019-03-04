@@ -67,7 +67,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             'requestNumber': {value: null, disabled: true},
             'startDate': {value: new Date(), disabled: true},
             'currentStep': ['R'],
-            'company': ['', Validators.required],
+            'company': [{value: null, disabled: false}, Validators.required],
             'regSubject': ['', Validators.required],
 
             'registrationRequestMandatedContacts': this.fb.group({
@@ -109,6 +109,15 @@ export class RegCerereComponent implements OnInit, OnDestroy {
         this.manageClinicalTrailForm();
         this.loadDocTypes(Pages[this.registerClinicalTrailForm.get('flowControl').value]);
 
+    }
+
+    checkIndividual($event) {
+        if ($event.checked) {
+            this.registerClinicalTrailForm.get('company').reset();
+            this.registerClinicalTrailForm.get('company').disable();
+        } else {
+            this.registerClinicalTrailForm.get('company').enable();
+        }
     }
 
     manageClinicalTrailForm() {

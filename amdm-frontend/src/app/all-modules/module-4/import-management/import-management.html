@@ -33,10 +33,10 @@
 
             </div>
 
-            <app-document *ngIf="importData !== null && importData?.importAuthorizationEntity.medType==1" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMMA', step : 'F'}"></app-document>
-            <app-document *ngIf="importData !== null && importData?.importAuthorizationEntity.medType==2" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMMN', step : 'F'}"></app-document>
-            <app-document *ngIf="importData !== null && importData?.importAuthorizationEntity.medType==3" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMMP', step : 'F'}"></app-document>
-            <app-document *ngIf="importData !== null && importData?.importAuthorizationEntity.medType==4" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMAM', step : 'F'}"></app-document>
+            <app-document *ngIf="importData !== null && importData?.importAuthorizationEntity?.medType==1" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMMA', step : 'F'}"></app-document>
+            <app-document *ngIf="importData !== null && importData?.importAuthorizationEntity?.medType==2" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMMN', step : 'F'}"></app-document>
+            <app-document *ngIf="importData !== null && importData?.importAuthorizationEntity?.medType==3" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMMP', step : 'F'}"></app-document>
+            <app-document *ngIf="importData !== null && importData?.importAuthorizationEntity?.medType==4" [documents]="docs" [nrCerere]="generatedDocNrSeq" [dcTypeIdentifier]="{code: 'IMAM', step : 'F'}"></app-document>
             <h5 class="text-center font-weight-bold my-3" id="invoiceInfo">Informația despre Invoice</h5>
             <hr>
 
@@ -268,7 +268,7 @@
                     </div>
 
 
-                    <div class="col-md-4" *ngIf="importData?.importAuthorizationEntity.customsNumber">
+                    <div class="col-md-4" *ngIf="importData?.importAuthorizationEntity?.customsNumber">
                         <div class="md-form">
                             <input id="customsNumber" mdbInputDirective type="text" class="form-control" formControlName="customsNumber" >
                             <label for="customsNumber">Nr. declaraţiei vamale
@@ -277,7 +277,7 @@
                         </div>
                     </div>
 
-                    <div class="col-4" *ngIf="importData?.importAuthorizationEntity.customsDeclarationDate">
+                    <div class="col-4" *ngIf="importData?.importAuthorizationEntity?.customsDeclarationDate">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
                                 <input matInput [matDatepicker]="picker22" placeholder="Data declaraţiei  vamale"
@@ -288,7 +288,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4" *ngIf="importData?.importAuthorizationEntity.conditionsAndSpecification">
+                    <div class="col-md-4" *ngIf="importData?.importAuthorizationEntity?.conditionsAndSpecification">
                         <div class="md-form">
                             <input id="conditionsAndSpecification" mdbInputDirective type="text" class="form-control"
                                    formControlName="conditionsAndSpecification" >
@@ -334,9 +334,9 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <!--<tr *ngFor="let unitOfImport of importData?.importAuthorizationEntity.importAuthorizationDetailsEntityList;let i = index">-->
+                        <!--<tr *ngFor="let unitOfImport of importData?.importAuthorizationEntity?.importAuthorizationDetailsEntityList;let i = index">-->
                         <!--<th scope="row">{{ unitOfImport.name }}</th>-->
-                        <!--<td *ngIf="importData?.importAuthorizationEntity.medType!==4">{{ unitOfImport.atcCode.code}}</td>-->
+                        <!--<td *ngIf="importData?.importAuthorizationEntity?.medType!==4">{{ unitOfImport.atcCode.code}}</td>-->
                         <!--<td>{{ unitOfImport.dose }}</td>-->
                         <!--<td>{{ unitOfImport.unitsOfMeasurement }}</td>-->
                         <!--<td>{{ unitOfImport.producer.description }}</td>-->
@@ -349,7 +349,7 @@
                         <!--<td>{{ unitOfImport.expirationDate | date:'mediumDate' }}</td>-->
                         <!--<td>{{ unitOfImport.customsCode.code }}</td>-->
                         <!--<td>-->
-                        <!--<mat-checkbox [disabled]="true" [checked]="importData?.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved" (change)="setApproved(i)"></mat-checkbox>-->
+                        <!--<mat-checkbox [disabled]="true" [checked]="importData?.importAuthorizationEntity?.importAuthorizationDetailsEntityList[i].approved" (change)="setApproved(i)"></mat-checkbox>-->
                         <!--</td>-->
                         <!--<td>-->
                         <!--<button class="btn btn-primary waves-light btn-sm waves-light" (click)="showunitOfImport(unitOfImport, i)" mdbWavesEffect>Adaugă</button>-->
@@ -383,8 +383,8 @@
                     <br>
                 </section>
                 <div class="text-center">
-                    <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep()" type="button">Sălvează Declarația</button>
-                    <button class="btn btn-danger waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep()" type="button">Respinge Declarația</button>
+                    <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep()" type="button">Inregistreaza Declarația</button>
+                    <button class="btn btn-danger waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="cancel()" type="button">Respinge Declarația</button>
                     <!--<button class="btn btn-dark-red-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>-->
                 </div>
             </div>

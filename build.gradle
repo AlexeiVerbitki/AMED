@@ -59,18 +59,18 @@ dependencies {
     runtime('org.springframework.boot:spring-boot-starter-tomcat')
 }
 
-node {
-//    version = '8.9.4'
-//    download = false
-    nodeModulesDir = file("amdm-frontend")
-}
-
-task buildProd(type: NpmTask, dependsOn: 'npmInstall') {
-    group = 'build'
-    description = 'Compile client side folder for production'
-    args = ['run', 'build']
-
-}
-bootRun.dependsOn(npm_install)
-
-jar.dependsOn(buildProd)
+//node {
+////    version = '8.9.4'
+////    download = false
+//    nodeModulesDir = file("amdm-frontend")
+//}
+//
+//task buildProd(type: NpmTask, dependsOn: 'npmInstall') {
+//    group = 'build'
+//    description = 'Compile client side folder for production'
+//    args = ['run', 'build']
+//
+//}
+//bootRun.dependsOn(npm_install)
+//
+//jar.dependsOn(buildProd)

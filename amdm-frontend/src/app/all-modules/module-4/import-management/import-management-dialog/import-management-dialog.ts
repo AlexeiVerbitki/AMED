@@ -54,7 +54,7 @@ export class ImportManagementDialog implements OnInit {
     producerAddress: any;
     codeAmed: any;
     solicitantCompanyList: Observable<any[]>;
-    unitSumm: any;
+    unitSumm: number;
     formModel: any;
     valutaList: any[];
     importData: any;
@@ -285,7 +285,7 @@ export class ImportManagementDialog implements OnInit {
 
 
         const dialogValues = this.evaluateImportForm.getRawValue();
-        dialogValues.importAuthorizationEntity.unitOfImportTable.unitSumm  = this.unitSumm;
+        dialogValues.importAuthorizationEntity.unitOfImportTable.unitSumm  = this.unitSumm.toFixed(3);
             if (this.validPrice === false && this.validQuantity === false && this.invalidPrice === false && this.invalidQuantity === false /*&& this.invoiceDetailAdded === false*/) {
                 this.dialog.close(dialogValues);
                 this.addMedicamentClicked = false;
@@ -381,7 +381,7 @@ export class ImportManagementDialog implements OnInit {
                         this.approvedQuantity = val.approvedQuantity;
                         this.approvedPrice = val.price;
                         if (val.summ) {
-                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(val.summ.toFixed(2));
+                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(val.summ.toFixed(3));
                         } else this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').reset();
                         // this.unitSumm = val.summ;
                         if (val.currency.shortDescription) {
@@ -471,7 +471,7 @@ export class ImportManagementDialog implements OnInit {
                         this.approvedQuantity = val.approvedQuantity;
                         this.approvedPrice = val.price;
                         if (val.summ) {
-                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(val.summ);
+                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').setValue(val.summ.toFixed(3));
                         } else this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.summ').reset();
                         // this.unitSumm = val.summ;
                         if (val.currency.shortDescription) {

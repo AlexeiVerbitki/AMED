@@ -12,6 +12,15 @@
 					</div>
 				</div>
 			</div>
+			<div class="col-md-12">
+				<div class="md-form">
+					<input id="compositionNr" mdbInputDirective min="1" step="1" type="number" class="form-control" formControlName="compositionNumber">
+					<label for="compositionNr">Numărul compoziției<span class="text-danger">*</span></label>
+					<div *ngIf="formSubmitted && aForm.get('compositionNumber').invalid">
+						<small class="text-muted"><strong class="text-danger">Numărul compoziției trebuie introdus</strong></small>
+					</div>
+				</div>
+			</div>
 		</div>
 	</form>
 </div>

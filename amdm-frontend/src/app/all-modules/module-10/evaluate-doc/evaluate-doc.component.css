@@ -30,3 +30,7 @@ label.required:not(:empty):after, .field-header.required:after {
   font-style: italic;
   font-weight: 500;
 }
+
+.green-text {
+  color: #43a047;
+}

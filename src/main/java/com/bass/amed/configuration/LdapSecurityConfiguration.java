@@ -2,10 +2,7 @@ package com.bass.amed.configuration;
 
 import com.bass.amed.security.CustomHeaderFilter;
 import com.bass.amed.security.JWTConfigurer;
-import com.bass.amed.security.JWTFilter;
 import com.bass.amed.security.TokenProvider;
-import com.fasterxml.jackson.databind.Module;
-import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,8 +18,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-
-import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
@@ -48,7 +43,7 @@ public class LdapSecurityConfiguration extends WebSecurityConfigurerAdapter
                 .groupSearchBase(LDAP_GROUP_SEARCH_DN)
                 .groupSearchFilter("uniqueMember={0}")
                 .userSearchBase(LDAP_USER_SEARCH_DN)
-                .userSearchFilter("(uid={0})").rolePrefix("")
+                .userSearchFilter("(uid={0})")
                 .contextSource(getContextSource());
 
 
@@ -57,24 +52,26 @@ public class LdapSecurityConfiguration extends WebSecurityConfigurerAdapter
     @Override
     public void configure(WebSecurity web)
     {
-        web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**").antMatchers("/app/**/*.{js,html}").antMatchers("/api/authenticate");
+        web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**").antMatchers("/app/**/*.{js,html}");
     }
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception
     {
+        //        httpSecurity.httpBasic().and().authorizeRequests().anyRequest().authenticated().and().csrf().disable();
+
+
         httpSecurity.csrf().disable()
                 .headers().xssProtection().block(true)
                 .and().frameOptions().sameOrigin().httpStrictTransportSecurity().disable()
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().exceptionHandling().authenticationEntryPoint((req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token"))
                 .and().authorizeRequests().antMatchers("/").permitAll()
-                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/authenticate").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/").permitAll()
+                .antMatchers("/api/authenticate").permitAll()
                 .antMatchers("/api/reset-password").permitAll()
                 .antMatchers("/api/**").permitAll()
-//                .hasAnyRole("TEST")
+                //                .hasAnyRole("TEST")
                 .and().apply(securityConfigurerAdapter());
         //.hasAnyAuthority("ADMIN");
         //                .antMatchers("/actuator/**").hasAnyAuthority("ADMIN")
@@ -99,23 +96,10 @@ public class LdapSecurityConfiguration extends WebSecurityConfigurerAdapter
         return contextSource;
     }
 
-    @Bean
-    public JWTFilter jwtAuthFilter() throws Exception
-    {
-        return new JWTFilter(getTokenProvider());
-    }
-
-    @Bean
-    public FilterRegistrationBean filterRegistrationBean()
-    {
-        return new FilterRegistrationBean(new CustomHeaderFilter());
-    }
-
     private JWTConfigurer securityConfigurerAdapter()
     {
         return new JWTConfigurer(getTokenProvider());
     }
-
 
     @Bean
     public TokenProvider getTokenProvider()
@@ -124,11 +108,9 @@ public class LdapSecurityConfiguration extends WebSecurityConfigurerAdapter
     }
 
     @Bean
-    public Module hibernate5Module()
+    public FilterRegistrationBean filterRegistrationBean()
     {
-        Hibernate5Module hibernate5Module = new Hibernate5Module();
-        hibernate5Module.disable(Hibernate5Module.Feature.USE_TRANSIENT_ANNOTATION);
-        return hibernate5Module;
+        return new FilterRegistrationBean(new CustomHeaderFilter());
     }
 
 }

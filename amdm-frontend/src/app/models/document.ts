@@ -8,4 +8,6 @@ export class Document {
   number?:  string;
   dateOfIssue?: any;
   registrationRequestId?: number;
+  status?: string;
+  expirationDate?: any;
 }

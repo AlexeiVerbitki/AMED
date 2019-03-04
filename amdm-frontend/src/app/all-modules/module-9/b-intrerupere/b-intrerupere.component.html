@@ -1,96 +1,107 @@
 <div class="container-fluid sky z-depth-2">
-  <form [formGroup]='cancelClinicalTrailAmendmentForm' #f="ngForm">
-    <div class="row">
-      <div class="col-md-4">
-        <div class="md-form">
-          <input id="regNr" mdbInputDirective type="text" class="form-control"
-                 formControlName="requestNumber">
-          <label for="regNr">Nr. de înregistrare a cererii
-          </label>
+    <form [formGroup]='cancelClinicalTrailAmendmentForm' #f="ngForm">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="regNr" mdbInputDirective type="text" class="form-control"
+                           formControlName="requestNumber">
+                    <label for="regNr">Nr. de înregistrare a cererii
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form">
+                    <input id="regDate" [matDatepicker]="picker" mdbInputDirective type="text" class="form-control"
+                           formControlName="startDate" [attr.disabled]="true">
+                    <mat-datepicker touchUi #picker></mat-datepicker>
+                    <label for="regDate">Data de înregistrare a cererii
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form" *ngIf="f.value.company">
+                    <input id="company" mdbInputDirective type="text" class="form-control"
+                           value={{f.value.company.name}} [attr.disabled]="true">
+                    <label for="company">Compania solicitant
+                    </label>
+                </div>
+                <div class="md-form" *ngIf="!f.value.company">
+                    <input id="person" mdbInputDirective type="text" class="form-control"
+                           value={{mandatedContactName}} [attr.disabled]="true">
+                    <label for="person">Persoana fizica
+                    </label>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="col-md-4">
-        <div class="md-form">
-          <input id="regDate" [matDatepicker]="picker" mdbInputDirective type="text" class="form-control"
-                 formControlName="startDate" [attr.disabled]="true">
-          <mat-datepicker touchUi #picker></mat-datepicker>
-          <label for="regDate">Data de înregistrare a cererii
-          </label>
+        <hr>
+
+        <app-document [documents]="docs" [dcTypes]="docTypes"
+                      [nrCerere]="f.value.requestNumber"></app-document>
+        <div class="col-md-12">
+            <div class="md-form">
+                <input id="motiv" mdbInputDirective type="text" class="form-control"
+                       formControlName="interruptionReason">
+                <label for="motiv">Motiv
+                    <span class="text-danger">*</span>
+                </label>
+            </div>
+            <!-- <div *ngIf="formSubmitted && iForm.get('motiv').invalid">
+                 <small class="text-muted"><strong class="text-danger">Motivul trebuie selectat</strong></small>
+             </div>-->
         </div>
-      </div>
-      <div class="col-md-4">
-        <div class="md-form">
-          <input id="company" mdbInputDirective type="text" class="form-control"
-                 value={{f.value.company.name}} [attr.disabled]="true">
-          <label for="company">Compania solicitant
-          </label>
+
+        <!-- <h5 class="text-center font-weight-bold">Documente de iesire</h5> -->
+        <!-- <hr>
+        <div class="position-button">
+          <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect  (click)="requestNL()">Scrisoare de informare</button>
+        </div> -->
+        <div class="gradient-card-header bg-sidebar border-gradient">
+            <div class="container-fluid">
+                <!-- Title -->
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card-header-title white-text">Documente de iesire</div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-right fap text-white">
+                            <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
+                            >Scrisoare de informare
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
-      </div>
+        <!-- Card content -->
+        <div class="card-body card-body-cascade">
+            <table class="table table-widths-lg text-center">
+                <thead class="bg-sidebar white-text">
+                <tr>
+                    <th scope="col">Denumirea</th>
+                    <th scope="col">Numar</th>
+                    <th scope="col">Status document</th>
+                    <th>Actiuni</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let a of outDocuments">
+                    <th scope="row" *ngIf="a.docType.category=='NL' || a.docType.category=='OI'">{{ a.name }}</th>
+                    <th scope="row" *ngIf="a.docType.category=='NL' || a.docType.category=='OI'">{{ a.number }}</th>
+                    <th scope="row" *ngIf="a.docType.category=='NL' || a.docType.category=='OI'">{{ a.status }}</th>
+                    <td *ngIf="a.docType.category=='NL' || a.docType.category=='OI'">
+                        <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect><i class="fa fa-file fa-lg"
+                                                                                               aria-hidden="true"></i>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
+    <div class="text-center">
+        <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="doSubmit()">Intrerupere
+        </button>
     </div>
-    <hr>
-
-    <app-document [documents]="docs" [dcTypes]="docTypes"
-                  [nrCerere]="f.value.requestNumber"></app-document>
-    <div class="col-md-12">
-      <div class="md-form">
-        <input id="motiv" mdbInputDirective type="text" class="form-control" formControlName="interruptionReason">
-        <label for="motiv">Motiv
-          <span class="text-danger">*</span>
-        </label>
-      </div>
-      <!-- <div *ngIf="formSubmitted && iForm.get('motiv').invalid">
-           <small class="text-muted"><strong class="text-danger">Motivul trebuie selectat</strong></small>
-       </div>-->
-    </div>
-
-    <!-- <h5 class="text-center font-weight-bold">Documente de iesire</h5> -->
-    <!-- <hr>
-    <div class="position-button">
-      <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect  (click)="requestNL()">Scrisoare de informare</button>
-    </div> -->
-    <div class="gradient-card-header bg-sidebar border-gradient">
-      <div class="container-fluid">
-          <!-- Title -->
-          <div class="row">
-              <div class="col-6">
-                  <div class="card-header-title white-text">Documente de iesire</div>
-              </div>
-              <div class="col-6">
-                  <div class="text-right fap text-white">
-                      <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                          >Scrisoare de informare</button>
-                  </div>
-              </div>
-          </div>
-      </div>
-
-  </div>
-  <!-- Card content -->
-  <div class="card-body card-body-cascade">
-    <table class="table table-widths-lg text-center">
-      <thead class="bg-sidebar white-text">
-      <tr>
-        <th scope="col">Denumirea</th>
-        <th scope="col">Numar</th>
-        <th scope="col">Status document</th>
-        <th>Actiuni</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let a of outDocuments">
-        <th scope="row" *ngIf="a.docType.category=='NL' || a.docType.category=='OI'">{{ a.name }}</th>
-        <th scope="row" *ngIf="a.docType.category=='NL' || a.docType.category=='OI'">{{ a.number }}</th>
-        <th scope="row" *ngIf="a.docType.category=='NL' || a.docType.category=='OI'">{{ a.status }}</th>
-        <td *ngIf="a.docType.category=='NL' || a.docType.category=='OI'">
-          <button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect ><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-  </form>
-  <div class="text-center">
-    <button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="doSubmit()">Intrerupere</button>
-  </div>
 
 </div>

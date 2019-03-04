@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {LoaderService} from '../../../shared/service/loader.service';
@@ -11,7 +11,7 @@ import {DocumentService} from '../../../shared/service/document.service';
   templateUrl: './medicaments-om.component.html',
   styleUrls: ['./medicaments-om.component.css']
 })
-export class MedicamentsOmComponent implements OnInit {
+export class MedicamentsOmComponent implements OnInit, AfterViewInit {
 
   private subscriptions: Subscription[] = [];
   dataSource = new MatTableDataSource<any>();

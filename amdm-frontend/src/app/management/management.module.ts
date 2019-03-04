@@ -35,6 +35,7 @@ import {NotificationDetailslsComponent} from './clinical-trials/dialog/notificat
 import {LicenseHistoryDialogComponent} from './license/license-history-dialog/license-history-dialog.component';
 import {LicenseHistoryDetailComponent} from './license/license-history-detail/license-history-detail.component';
 import {GmpAuthorizationsComponent} from './gmp-authorizations/gmp-authorizations.component';
+import {ViewCauseGmpComponent} from '../dialog/view-cause-gmp/view-cause-gmp.component';
 
 
 @NgModule({
@@ -61,6 +62,7 @@ import {GmpAuthorizationsComponent} from './gmp-authorizations/gmp-authorization
         PriceAutoRevaluationComponent,
         LicenseDetailsComponent,
         GmpAuthorizationsComponent,
+        ViewCauseGmpComponent,
         CPCADTaskComponent,
         DrugAuthorizationDetailsDialogComponent,
         AnnihilationManagementComponent,
@@ -73,7 +75,7 @@ import {GmpAuthorizationsComponent} from './gmp-authorizations/gmp-authorization
         LicenseHistoryDetailComponent,
     ],
     entryComponents: [AddReceiptDialogComponent, PriceReqEditModalComponent, LicenseDetailsComponent, DrugAuthorizationDetailsDialogComponent, AnnihilationDetailsComponent,
-        ClinicalTrialsDetailsComponent, AmendmentDetailsComponent, NotificationDetailslsComponent, LicenseHistoryDialogComponent, LicenseHistoryDetailComponent],
+        ClinicalTrialsDetailsComponent, ViewCauseGmpComponent, AmendmentDetailsComponent, NotificationDetailslsComponent, LicenseHistoryDialogComponent, LicenseHistoryDetailComponent],
     providers: [LicenseService, AdministrationService, UploadFileService, AnnihilationService, MedicamentService, ClinicalTrialService],
 })
 export class ManagementModule {

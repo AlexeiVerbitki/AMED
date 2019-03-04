@@ -28,6 +28,7 @@ export class BAprobareComponent implements OnInit, OnDestroy {
     docs: Document[] = [];
     private subscriptions: Subscription[] = [];
     private amendmentIndex = -1;
+    mandatedContactName: string;
 
     constructor(private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
@@ -49,7 +50,7 @@ export class BAprobareComponent implements OnInit, OnDestroy {
             'requestNumber': [{value: '', disabled: true}],
             'startDate': [{value: '', disabled: true}],
             'endDate': [''],
-            'company': [''],
+            'company': [null],
             'currentStep': [''],
             'type': [],
             'typeCode': [''],
@@ -104,7 +105,12 @@ export class BAprobareComponent implements OnInit, OnDestroy {
                     this.approveClinicalTrailAmendForm.get('id').setValue(data.id);
                     this.approveClinicalTrailAmendForm.get('requestNumber').setValue(data.requestNumber);
                     this.approveClinicalTrailAmendForm.get('startDate').setValue(new Date(data.startDate));
-                    this.approveClinicalTrailAmendForm.get('company').setValue(data.company);
+                    if (data.company) {
+                        this.approveClinicalTrailAmendForm.get('company').setValue(data.company);
+                    } else {
+                        this.mandatedContactName = data.registrationRequestMandatedContacts[0].mandatedFirstname.concat(' ')
+                            .concat(data.registrationRequestMandatedContacts[0].mandatedLastname);
+                    }
                     this.approveClinicalTrailAmendForm.get('type').setValue(data.type);
                     this.approveClinicalTrailAmendForm.get('typeCode').setValue(data.type.code);
                     this.approveClinicalTrailAmendForm.get('initiator').setValue(data.initiator);

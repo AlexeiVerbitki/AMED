@@ -66,8 +66,14 @@ public class MedicamentEntity
     @Column(name = "prescription", nullable = true)
     private Byte prescription;
     @Basic
-    @Column(name = "serial_nr", nullable = true, length = 50)
+    @Column(name = "serial_nr")
     private String serialNr;
+    @Basic
+    @Column(name = "samples_number")
+    private Integer samplesNumber;
+    @Basic
+    @Column(name = "samples_expiration_date")
+    private Date samplesExpirationDate;
     @Basic
     @Column(name = "primare_package", nullable = true, length = 50)
     private String primarePackage;

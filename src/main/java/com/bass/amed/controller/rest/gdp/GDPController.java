@@ -6,7 +6,9 @@ import com.bass.amed.dto.gdp.GDPCertificateDTO;
 import com.bass.amed.dto.gdp.GDPOrderDTO;
 import com.bass.amed.dto.gmp.GMPAuthorizationDetailsDTO;
 import com.bass.amed.dto.gmp.GMPFilterDTO;
+import com.bass.amed.entity.GMPAuthorizationsEntity;
 import com.bass.amed.exception.CustomException;
+import com.bass.amed.repository.GMPAuthorizationsRepository;
 import com.bass.amed.repository.ManufactureRepository;
 import com.bass.amed.repository.SysParamsRepository;
 import com.bass.amed.repository.prices.PricesManagementRepository;
@@ -26,10 +28,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -40,11 +40,13 @@ public class GDPController
     @Autowired
     PricesManagementRepository pricesManagementRepository;
     @Autowired
-    ManufactureRepository      manufactureRepository;
+    ManufactureRepository manufactureRepository;
     @Autowired
     private SysParamsRepository sysParamsRepository;
     @Autowired
     private EntityManagerFactory entityManagerFactory;
+    @Autowired
+    private GMPAuthorizationsRepository gmpAuthorizationsRepository;
 
 
     @RequestMapping(value = "/accompanying-letter", method = RequestMethod.POST)
@@ -142,7 +144,7 @@ public class GDPController
     {
 
         ResourceLoader resourceLoader = new DefaultResourceLoader();
-        Resource       res            = resourceLoader.getResource(resourcePath);
+        Resource res = resourceLoader.getResource(resourcePath);
         return JasperCompileManager.compileReport(res.getInputStream());
     }
 
@@ -153,6 +155,7 @@ public class GDPController
 
         EntityManager em = null;
         List<GMPAuthorizationDetailsDTO> result = new ArrayList<>();
+        List<GMPAuthorizationDetailsDTO> response = new ArrayList<>();
         try
         {
             em = entityManagerFactory.createEntityManager();
@@ -161,6 +164,30 @@ public class GDPController
             Query query = em.createNativeQuery(queryString.toString(), GMPAuthorizationDetailsDTO.class);
             GMPQueryUtils.updateQueryWithValues(filter, query);
             result = query.getResultList();
+            if(!Boolean.TRUE.equals(filter.getSearchCertificates()))
+            {
+                Map<String, List<GMPAuthorizationDetailsDTO>> authorizationsEntityMap = result.stream().collect(Collectors.groupingBy(GMPAuthorizationDetailsDTO::getAuthorizationNumber));
+                for (List<GMPAuthorizationDetailsDTO> list : authorizationsEntityMap.values())
+                {
+                    GMPAuthorizationDetailsDTO auth = Collections.max(list, Comparator.comparing(c -> c.getFromDate()));
+                    auth.setIsAuthorization(true);
+                    GMPAuthorizationDetailsDTO gmp = new GMPAuthorizationDetailsDTO();
+                    gmp.assign(auth);
+                    response.add(gmp);
+                }
+            }
+            if(!Boolean.TRUE.equals(filter.getSearchAuthorizations()))
+            {
+                Map<String, List<GMPAuthorizationDetailsDTO>> certificatesMap = result.stream().collect(Collectors.groupingBy(GMPAuthorizationDetailsDTO::getCertificateNumber));
+                for (List<GMPAuthorizationDetailsDTO> list : certificatesMap.values())
+                {
+                    GMPAuthorizationDetailsDTO cert = Collections.max(list, Comparator.comparing(c -> c.getFromDate()));
+                    cert.setIsAuthorization(false);
+                    GMPAuthorizationDetailsDTO gmp = new GMPAuthorizationDetailsDTO();
+                    gmp.assign(cert);
+                    response.add(gmp);
+                }
+            }
             em.getTransaction().commit();
         }
         catch (Exception e)
@@ -177,7 +204,38 @@ public class GDPController
             em.close();
         }
 
+        response.sort(Comparator.comparing(GMPAuthorizationDetailsDTO::getCompany).thenComparing(Comparator.comparing(GMPAuthorizationDetailsDTO::getIsAuthorization))
+                .thenComparing(Comparator.comparing(GMPAuthorizationDetailsDTO::getId)));
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @RequestMapping("/load-authorizations-history")
+    public ResponseEntity<List<GMPAuthorizationsEntity>> loadAuthorizationsHistory(Integer companyId)
+    {
+        LOGGER.debug("Retrieve authorizations history by company id");
+        List<GMPAuthorizationsEntity> result = new ArrayList<>();
+        List<GMPAuthorizationsEntity> authorizations = gmpAuthorizationsRepository.findAllAuthorizationByCompanyId(companyId);
+        Map<String, List<GMPAuthorizationsEntity>> authorizationsEntityMap = authorizations.stream().collect(Collectors.groupingBy(GMPAuthorizationsEntity::getAuthorizationNumber));
+        for (List<GMPAuthorizationsEntity> list : authorizationsEntityMap.values())
+        {
+            result.add(Collections.max(list, Comparator.comparing(c -> c.getFromDate())));
+        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @RequestMapping("/load-certificates-history")
+    public ResponseEntity<List<GMPAuthorizationsEntity>> loadCertificatesHistory(Integer companyId)
+    {
+        LOGGER.debug("Retrieve certificates history by company id");
+        List<GMPAuthorizationsEntity> result = new ArrayList<>();
+        List<GMPAuthorizationsEntity> certificates = gmpAuthorizationsRepository.findAllAuthorizationByCompanyId(companyId);
+        Map<String, List<GMPAuthorizationsEntity>> certificatesEntityMap = certificates.stream().collect(Collectors.groupingBy(GMPAuthorizationsEntity::getCertificateNumber));
+        for (List<GMPAuthorizationsEntity> list : certificatesEntityMap.values())
+        {
+            result.add(Collections.max(list, Comparator.comparing(c -> c.getFromDate())));
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 
 }

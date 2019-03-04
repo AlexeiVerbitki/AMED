@@ -80,6 +80,10 @@ export class LicenseService {
         return this.http.get('/api/license/retrieve-license-by-idno', {params : { idno : idno} });
     }
 
+    retrieveLicenseByIdnoFillStateName(idno: string): Observable<any> {
+        return this.http.get('/api/license/retrieve-license-by-idno-fill-state-name', {params : { idno : idno} });
+    }
+
     retrieveSuspendedLicenseByIdno(idno: string): Observable<any> {
         return this.http.get('/api/license/retrieve-suspended-license-by-idno', {params : { idno : idno} });
     }

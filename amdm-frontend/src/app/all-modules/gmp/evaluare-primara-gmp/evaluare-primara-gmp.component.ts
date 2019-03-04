@@ -26,6 +26,7 @@ import {SelectDocumentNumberComponent} from '../../../dialog/select-document-num
 import {SelectInspectionDateForAfComponent} from '../../../dialog/select-inspection-date-for-af/select-inspection-date-for-af.component';
 import {UploadFileService} from '../../../shared/service/upload/upload-file.service';
 import {saveAs} from 'file-saver';
+import {GDPService} from '../../../shared/service/gdp.service';
 
 @Component({
     selector: 'app-evaluare-primara',
@@ -46,6 +47,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
     formSubmitted: boolean;
     outDocuments: any[] = [];
     authDocuments: any[] = [];
+    authHistory: any[] = [];
     reqTypes: any[];
     companyLicenseNotFound = false;
     initialData: any;
@@ -91,6 +93,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
     displayErrorNotSuspended = false;
     displayErrorNotActiveOrSuspended = false;
     displayErrorNotActiveEmitere = false;
+    ogmDoc: any;
 
     constructor(private fb: FormBuilder,
                 public dialog: MatDialog,
@@ -103,6 +106,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                 private loadingService: LoaderService,
                 private errorHandlerService: SuccessOrErrorHandlerService,
                 private licenseService: LicenseService,
+                private gdpService: GDPService,
                 private administrationService: AdministrationService,
                 private requestService: RequestService,
                 private router: Router,
@@ -156,6 +160,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
             'medicamentClinicalInvestigation': [false],
             'veterinary': [false],
             'groupLeader': [null],
+            'cause' : [null],
             'veterinaryDetails': {disabled: true, value: null},
             'informatiiLoculDistributieAngro':
                 fb.group({
@@ -351,7 +356,35 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                     t.expiredDate = auth.certificateEndDate;
                     this.authDocuments.push(t);
                 }
+                if (t.docType.category == 'OGM') {
+                    this.ogmDoc = t;
+                }
             });
+            this.authHistory = [];
+            this.subscriptions.push(this.gdpService.loadAuthorizationsHistory(request.company.id).subscribe(history => {
+                history.forEach(t => {
+                    t.status = this.getGMPStatus(new Date(t.authorizationEndDate) < new Date() ? 'E' : t.status, 'A');
+                    t.statusCode = new Date(t.authorizationEndDate) < new Date() ? 'E' : t.status;
+                    t.expiredDate = t.authorizationEndDate;
+                    t.docType = t.authorization.docType;
+                    t.number = t.authorizationNumber;
+                    t.dateOfIssue = t.authorizationStartDate;
+                    t.path = t.authorization.path;
+                    this.authHistory.push(t);
+                });
+            }));
+            this.subscriptions.push(this.gdpService.loadCertificatesHistory(request.company.id).subscribe(history => {
+                history.forEach(t => {
+                    t.status = this.getGMPStatus(new Date(t.certificateEndDate) < new Date() ? 'E' : t.status, 'C');
+                    t.statusCode = new Date(t.certificateEndDate) < new Date() ? 'E' : t.status;
+                    t.expiredDate = t.certificateEndDate;
+                    t.docType = t.certification.docType;
+                    t.number = t.certificateNumber;
+                    t.dateOfIssue = t.certificateStartDate;
+                    t.path = t.certification.path;
+                    this.authHistory.push(t);
+                });
+            }));
             request.gmpAuthorizations[0].periods.forEach(t => t.id = null);
             request.gmpAuthorizations[0].qualifiedPersons.forEach(t => t.id = null);
             request.gmpAuthorizations[0].laboratories.forEach(t => t.id = null);
@@ -388,15 +421,16 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
 
     fillOutputDocuments() {
         this.outDocuments = [];
-        if (this.docTypesInitial && this.eForm.get('type').value && (this.eForm.get('type').value.code == 'GMPE' || this.eForm.get('type').value.code == 'GMPM')) {
-            if (!this.outDocuments.find(t => t.docType.category == 'OGM')) {
+        if (this.docTypesInitial && this.eForm.get('type').value && (this.eForm.get('type').value.code == 'GMPE' || this.eForm.get('type').value.code == 'GMPM'
+            || this.eForm.get('type').value.code == 'GMPP')) {
+            if (!this.outDocuments.find(t => t.docType.category == 'OGM') && (this.eForm.get('type').value.code == 'GMPE' || this.eForm.get('type').value.code == 'GMPM')) {
                 this.outDocuments.push({
                     name: 'Ordinul de inspectare al întreprinderii',
                     docType: this.docTypesInitial.find(r => r.category == 'OGM'),
                     date: new Date()
                 });
             }
-            if (!this.outDocuments.find(t => t.docType.category == 'AFM')) {
+            if (!this.outDocuments.find(t => t.docType.category == 'AFM') && (this.eForm.get('type').value.code == 'GMPE' || this.eForm.get('type').value.code == 'GMPM')) {
                 this.outDocuments.push({
                     name: 'Autorizatie de fabricatie',
                     docType: this.docTypesInitial.find(r => r.category == 'AFM'),
@@ -447,7 +481,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         );
 
         this.subscriptions.push(
-            this.licenseService.retrieveLicenseByIdno(company.idno).subscribe(data => {
+            this.licenseService.retrieveLicenseByIdnoFillStateName(company.idno).subscribe(data => {
                     if (data) {
                         this.eForm.get('licenseId').setValue(data.id);
                         this.eForm.get('seria').setValue(data.serialNr);
@@ -731,11 +765,6 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         this.checkOutputDocumentsStatus();
         this.documents = data.documents;
         this.documents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-        let xs = this.documents;
-        xs = xs.map(x => {
-            x.isOld = true;
-            return x;
-        });
     }
 
     normalizeSubsidiaryList() {
@@ -753,7 +782,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
     commonNormalizeSubsidiary(cis: any) {
         cis.companyType = cis.type.description;
         if (cis.locality) {
-            cis.address = cis.locality.state.description + ', ' + cis.locality.description + ', ' + cis.street;
+            cis.address = cis.locality.stateName + ', ' + cis.locality.description + ', ' + cis.street;
         }
 
         let activitiesStr = '';
@@ -914,6 +943,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         const gmpAuthorization = {
             id: this.eForm.get('gmpID').value,
             status: 'P',
+            cause : this.eForm.get('cause').value,
             company: this.eForm.get('company').value,
             sterileProducts: [],
             neSterileProducts: [],
@@ -1254,6 +1284,11 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                 this.errorHandlerService.showError('Certificatul GMP nu este atasat.');
                 return;
             }
+        }
+
+        if (!this.eForm.get('cause').value && (this.eForm.get('type').value.code == 'GMPS' || this.eForm.get('type').value.code == 'GMPR')) {
+            this.errorHandlerService.showError('Cauza trebuie introdusa');
+            return;
         }
 
         this.formSubmitted = false;
@@ -1999,12 +2034,17 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
             data: {
                 idno: this.eForm.get('company').value.idno,
                 subsidiaryList: this.subsidiaryList,
-                selectedSubsidiaries: this.selectedSubsidiaries
+                selectedSubsidiaries: this.selectedSubsidiaries,
+                type: 'GMP'
             },
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.selectedSubsidiaries = result;
+                if (this.selectedSubsidiaries && this.selectedSubsidiaries.length > 0) {
+                    this.eForm.get('informatiiLoculDistributieAngro.placeDistributionName').setValue(this.selectedSubsidiaries[0].companyType);
+                    this.eForm.get('informatiiLoculDistributieAngro.placeDistributionAddress').setValue(this.selectedSubsidiaries[0].address);
+                }
             }
         });
     }
@@ -2419,8 +2459,18 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
             return;
         }
 
+        if (!this.eForm.get('informatiiLoculDistributieAngro.placeDistributionName').value) {
+            this.errorHandlerService.showError('Numele locului de fabricație trebuie introdus.');
+            return;
+        }
+
         if (!this.eForm.get('informatiiLoculDistributieAngro.placeDistributionAddress').value) {
             this.errorHandlerService.showError('Adresa locului de fabricaţie trebuie introdusa.');
+            return;
+        }
+
+        if (!this.eForm.get('informatiiLoculDistributieAngro.etapeleDeFabricatie').value) {
+            this.errorHandlerService.showError('Etapele de fabricaţie trebuie introduse.');
             return;
         }
 
@@ -2524,8 +2574,18 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
     }
 
     viewCGM() {
+        if (!this.eForm.get('informatiiLoculDistributieAngro.placeDistributionName').value) {
+            this.errorHandlerService.showError('Numele locului de fabricație trebuie introdus.');
+            return;
+        }
+
         if (!this.eForm.get('informatiiLoculDistributieAngro.placeDistributionAddress').value) {
             this.errorHandlerService.showError('Adresa locului de fabricaţie trebuie introdusa.');
+            return;
+        }
+
+        if (!this.eForm.get('informatiiLoculDistributieAngro.etapeleDeFabricatie').value) {
+            this.errorHandlerService.showError('Etapele de fabricaţie trebuie introduse.');
             return;
         }
 
@@ -2534,16 +2594,32 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const findDocTypeOGM = this.documents.find(t => t.docType.category == 'OGM');
-        if (!findDocTypeOGM && this.eForm.get('type').value.code == 'GMPE') {
-            this.errorHandlerService.showError('Ordinul de inspectare al întreprinderii nu este atasat.');
-            return;
-        }
+        let orderNumber = null;
+        let orderDateOfIssue = null;
+        let authorizationNumber = null;
+        let authorizationDateOfIssue = null;
+        if (this.eForm.get('type').value.code == 'GMPP') {
+            orderNumber = this.ogmDoc.number;
+            orderDateOfIssue = this.ogmDoc.dateOfIssue;
+            const findDocTypeAFM = this.authDocuments.find(t => t.docType.category == 'AFM');
+            authorizationNumber = findDocTypeAFM.number;
+            authorizationDateOfIssue = findDocTypeAFM.dateOfIssue;
+        } else {
+            const findDocTypeOGM = this.documents.find(t => t.docType.category == 'OGM');
+            if (!findDocTypeOGM && this.eForm.get('type').value.code == 'GMPE') {
+                this.errorHandlerService.showError('Ordinul de inspectare al întreprinderii nu este atasat.');
+                return;
+            }
 
-        const findDocTypeAFM = this.documents.find(t => t.docType.category == 'AFM');
-        if (!findDocTypeAFM) {
-            this.errorHandlerService.showError('Autorizatia de fabricatie nu este atasata.');
-            return;
+            const findDocTypeAFM = this.documents.find(t => t.docType.category == 'AFM');
+            if (!findDocTypeAFM) {
+                this.errorHandlerService.showError('Autorizatia de fabricatie nu este atasata.');
+                return;
+            }
+            orderNumber = findDocTypeOGM.number;
+            orderDateOfIssue = findDocTypeOGM.dateOfIssue;
+            authorizationNumber = findDocTypeAFM.number;
+            authorizationDateOfIssue = findDocTypeAFM.dateOfIssue;
         }
 
         const dialogConfig2 = new MatDialogConfig();
@@ -2561,19 +2637,19 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
             if (result && result.response) {
                 const model = this.extractedModelLayouts(result);
                 model.certificateNr = result.docNr;
-                model.orderDate = findDocTypeOGM.dateOfIssue;
-                model.orderNr = findDocTypeOGM.number;
+                model.orderDate = orderDateOfIssue;
+                model.orderNr = orderNumber;
                 model.licenseSeries = this.eForm.get('seria').value;
                 model.licenseNr = this.eForm.get('nrLic').value;
                 model.licenseDate = this.eForm.get('dataEliberariiLic').value;
-                model.autorizationDate = findDocTypeAFM.dateOfIssue;
+                model.autorizationDate = authorizationDateOfIssue;
                 model.qualityControlTestsImport = [];
                 model.preparateAsepticImport = this.eForm.get('asepticallyPrepared').value;
                 model.sterilizateFinalImport = this.eForm.get('terminallySterilised').value;
                 model.produseNesterileImport = this.eForm.get('nonsterileProducts').value;
                 model.medicamenteBiologiceImport = [];
                 model.otherImports = [];
-                model.autorizationNr = findDocTypeAFM.number;
+                model.autorizationNr = authorizationNumber;
                 if (this.eForm.get('testsForQualityControlImport').value) {
                     this.eForm.get('testsForQualityControlImport').value.forEach(t => model.qualityControlTestsImport.push({
                         value: t.description,
@@ -2829,8 +2905,18 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
     }
 
     viewAFM() {
+        if (!this.eForm.get('informatiiLoculDistributieAngro.placeDistributionName').value) {
+            this.errorHandlerService.showError('Numele locului de fabricație trebuie introdus.');
+            return;
+        }
+
         if (!this.eForm.get('informatiiLoculDistributieAngro.placeDistributionAddress').value) {
             this.errorHandlerService.showError('Adresa locului de fabricaţie trebuie introdusa.');
+            return;
+        }
+
+        if (!this.eForm.get('informatiiLoculDistributieAngro.etapeleDeFabricatie').value) {
+            this.errorHandlerService.showError('Etapele de fabricaţie trebuie introduse.');
             return;
         }
 

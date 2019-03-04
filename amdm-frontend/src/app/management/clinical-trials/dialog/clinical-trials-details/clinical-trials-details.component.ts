@@ -15,8 +15,9 @@ import {UploadFileService} from '../../../../shared/service/upload/upload-file.s
 })
 export class ClinicalTrialsDetailsComponent implements OnInit, OnDestroy {
 
-    private subscriptions: Subscription[] = [];
     ctForm: FormGroup;
+    mandatedContactName: string;
+    private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder,
                 public dialogRef: MatDialogRef<ClinicalTrialsDetailsComponent>,
@@ -27,7 +28,7 @@ export class ClinicalTrialsDetailsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        // console.log('dataDialog', this.dataDialog);
+        console.log('dataDialog', this.dataDialog);
 
         this.ctForm = this.fb.group({
             'id': {value: null, disabled: true},
@@ -66,14 +67,20 @@ export class ClinicalTrialsDetailsComponent implements OnInit, OnDestroy {
         });
 
         this.subscriptions.push(this.ctService.loadClinicalTrailById(this.dataDialog.id).subscribe(data => {
-                // console.log('filtered data', data);
+                console.log('filtered data', data);
                 this.ctForm.get('id').setValue(data.clinicalTrails.id);
                 this.ctForm.get('startDateInternational').setValue(data.clinicalTrails.startDateInternational ? new Date(data.clinicalTrails.startDateInternational) : '');
                 this.ctForm.get('startDateNational').setValue(data.clinicalTrails.startDateNational ? new Date(data.clinicalTrails.startDateNational) : '');
                 this.ctForm.get('endDateNational').setValue(data.clinicalTrails.endDateNational ? new Date(data.clinicalTrails.endDateNational) : '');
                 this.ctForm.get('endDateInternational').setValue(data.clinicalTrails.endDateInternational ? new Date(data.clinicalTrails.endDateInternational) : '');
                 this.ctForm.get('title').setValue(data.clinicalTrails.title);
-                this.ctForm.get('applicant').setValue(data.company.name);
+
+                if (data.company) {
+                    this.ctForm.get('applicant').setValue(data.company.name);
+                } else {
+                    this.mandatedContactName = data.registrationRequestMandatedContacts[0].mandatedFirstname.concat(' ')
+                        .concat(data.registrationRequestMandatedContacts[0].mandatedLastname);
+                }
                 this.ctForm.get('sponsor').setValue(data.clinicalTrails.sponsor);
                 this.ctForm.get('code').setValue(data.clinicalTrails.code);
                 this.ctForm.get('eudraCtNr').setValue(data.clinicalTrails.eudraCtNr);
@@ -107,6 +114,26 @@ export class ClinicalTrialsDetailsComponent implements OnInit, OnDestroy {
         );
     }
 
+    cancel() {
+        this.dialogRef.close();
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(s => {
+            s.unsubscribe();
+        });
+    }
+
+    loadFileFrom(path: string) {
+        this.subscriptions.push(this.uploadService.loadFile(path).subscribe(data => {
+                this.saveToFileSystem(data, path.substring(path.lastIndexOf('/') + 1));
+            },
+            error => {
+                console.log(error);
+            })
+        );
+    }
+
     private openAmendmentDetails(id: number) {
         const dialogRef = this.dialogAmendment.open(AmendmentDetailsComponent, {
             width: '1200px',
@@ -135,26 +162,6 @@ export class ClinicalTrialsDetailsComponent implements OnInit, OnDestroy {
             }
         });
         console.log('ct Id', id);
-    }
-
-    cancel() {
-        this.dialogRef.close();
-    }
-
-    ngOnDestroy(): void {
-        this.subscriptions.forEach(s => {
-            s.unsubscribe();
-        });
-    }
-
-    loadFileFrom(path: string) {
-        this.subscriptions.push(this.uploadService.loadFile(path).subscribe(data => {
-                this.saveToFileSystem(data, path.substring(path.lastIndexOf('/') + 1));
-            },
-            error => {
-                console.log(error);
-            })
-        );
     }
 
     private saveToFileSystem(response: any, docName: string) {

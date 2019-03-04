@@ -74,7 +74,7 @@ export class RegModifyCerereComponent implements OnInit, OnDestroy, CanModuleDea
     }
 
     ngOnInit() {
-        this.navbarTitleService.showTitleMsg('Aprobarea modificarilor postautorizate / Inregistrare cerere');
+        this.navbarTitleService.showTitleMsg('Aprobarea modificarilor postautorizare / Inregistrare cerere');
 
         this.subscriptions.push(
             this.administrationService.generateMedicamentPostAuthorizationRequestNumber().subscribe(data => {

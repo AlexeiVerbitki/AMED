@@ -1,8 +1,6 @@
 package com.bass.amed.entity;
 
 import lombok.Data;
-import org.hibernate.annotations.Generated;
-import org.hibernate.annotations.GenerationTime;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -37,5 +35,8 @@ public class DocumentsEntity
     @Basic
     @Column(name = "date_of_issue")
     private Timestamp dateOfIssue;
+    @Basic
+    @Column(name = "expiration_date")
+    private Timestamp expirationDate;
 
 }

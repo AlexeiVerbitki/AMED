@@ -131,6 +131,7 @@ public class XchangeUpdateService
 
         valCurrencies.getValutes().forEach(c -> {
             NmCurrenciesEntity        currency        = currencyRepository.findByCode(c.getNumCode());
+            if(currency == null) return;
             NmCurrenciesHistoryEntity currencyHistory = new NmCurrenciesHistoryEntity();
             currencyHistory.setCurrency(currency);
             currencyHistory.setMultiplicity(c.getNominal());

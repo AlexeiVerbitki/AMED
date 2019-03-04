@@ -30,6 +30,8 @@ import {DocumentModule} from '../document/document.module';
 import {XchangeinfoModule} from '../xchangeInfo/xchangeinfo.module';
 import { DdCtAmendListComponent } from './generate-documents/dd-ct-amend-list/dd-ct-amend-list.component';
 import { RequestDdCtAmendComponent } from './generate-documents/request-dd-ct-amend/request-dd-ct-amend.component';
+import {MedicamentsLabComponent} from './generate-documents/medicaments-lab/medicaments-lab.component';
+import {DocumentsLabComponent} from './generate-documents/documents-lab/documents-lab.component';
 
 @NgModule({
     imports: [
@@ -65,7 +67,9 @@ import { RequestDdCtAmendComponent } from './generate-documents/request-dd-ct-am
         LmpcListComponent,
         LmpcModifyListComponent,
         DdCtAmendListComponent,
-        RequestDdCtAmendComponent],
+        RequestDdCtAmendComponent,
+        MedicamentsLabComponent,
+        DocumentsLabComponent],
     entryComponents: [SelectIssueDateDialogComponent],
     providers: [DdListComponent, OaListComponent],
 })

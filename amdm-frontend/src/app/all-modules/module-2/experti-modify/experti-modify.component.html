@@ -59,8 +59,8 @@
 				<tbody>
 				<tr *ngFor="let expert of expertList;let i = index">
 					<td>{{ i + 1 }}</td>
-					<td>{{ expert.intern==1 ? 'Da' : 'Nu' }}</td>
-					<td>{{ expert.intern==1 ? expert.expert.name :  expert.expertName}}</td>
+					<td>{{ expert.intern == 1 ? 'Da' : 'Nu' }}</td>
+					<td>{{ expert.intern == 1 ? expert.expert.name : expert.expertName}}</td>
 					<td>{{ expert.decision }}</td>
 					<td>{{ expert.date| date: 'dd/MM/yyyy HH:mm:ss' }}</td>
 					<td>{{ expert.requestAdditionalDataNumber ? 'Da' : 'Nu'}}</td>
@@ -132,22 +132,33 @@
 					<th scope="col">Numărul de unități</th>
 					<th scope="col">Volum</th>
 					<th scope="col">Unitate de masura (volum)</th>
+					<th scope="col">Numărul de eșantione</th>
+					<th scope="col">Seria medicamentului</th>
+					<th scope="col">Data expirării mostrelor</th>
 					<th scope="col">Cod medicament</th>
-					<th scope="col">Status</th>									
-
+					<th scope="col">Status</th>
+					<th scope="col">Actiuni</th>
 					<!--<th scope="col">Aprobat</th>-->
 				</tr>
 				</thead>
 				<tbody>
 				<tr *ngFor="let division of divisions;let i = index">
-						<td>{{ i+1 }}</td>
-						<td>{{ division.description }}</td>
-						<td>{{ division.volume }}</td>
-						<td>{{ division.volumeQuantityMeasurement ? division.volumeQuantityMeasurement.description : '' }}</td>
-						<td>{{ division.medicamentCode }}</td>
-						<td *ngIf="division.old==1">Divizare existenta</td>
-						<td *ngIf="division.old==0">Divizare noua</td>
+					<td>{{ i + 1 }}</td>
+					<td>{{ division.description }}</td>
+					<td>{{ division.volume }}</td>
+					<td>{{ division.volumeQuantityMeasurement ? division.volumeQuantityMeasurement.description : '' }}</td>
+					<td>{{ division.samplesNumber }}</td>
+					<td>{{ division.serialNr }}</td>
+					<td>{{ division.samplesExpirationDate | date: 'dd/MM/yyyy' }}</td>
+					<td>{{ division.medicamentCode }}</td>
+					<td *ngIf="division.old==1">Divizare existenta</td>
+					<td *ngIf="division.old==0">Divizare noua</td>
 					<!--<td>  <mat-checkbox #checkboxApproved  [checked]="division.approved" (change)="checkApproved(division,checkboxApproved)"></mat-checkbox></td>-->
+						<td>
+							<button  type="button" class="btn btn-mdb-color btn-sm waves-light"
+							        (click)="editDivision(division,i)" mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+							</button>
+						</td>
 				</tr>
 				</tbody>
 			</table>
@@ -212,13 +223,15 @@
 				<tr>
 					<th scope="col">Nr.</th>
 					<th scope="col">Denumire</th>
+					<th scope="col">Numărul compoziției</th>
 					<th scope="col">Status</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr *ngFor="let substance of auxiliarySubstancesTable;let i = index">
-					<td>{{ i+1 }}</td>
+					<td>{{ i + 1 }}</td>
 					<th scope="row">{{ substance.auxSubstance.description }}</th>
+					<td>{{ substance.compositionNumberTo }}</td>
 					<td *ngIf="substance.status=='O'">Excipient existent</td>
 					<td *ngIf="substance.status!='O'">Excipient nou</td>
 				</tr>
@@ -369,7 +382,7 @@
 			</table>
 		</div>
 		<hr>
-		<app-instruction (removeInstr)="removeInstr($event)" (addInstr)="addInstr($event)"  [divisions]="divisions" [nrCerere]="expertForm.get('requestNumber').value" [modify]="true" [instructions]="instructions"></app-instruction>
+		<app-instruction (removeInstr)="removeInstr($event)" (addInstr)="addInstr($event)" [divisions]="divisions" [nrCerere]="expertForm.get('requestNumber').value" [modify]="true" [instructions]="instructions"></app-instruction>
 		<app-macheta (removeMaket)="removeMacheta($event)" (addMaket)="addMacheta($event)" [divisions]="divisions" [nrCerere]="expertForm.get('requestNumber').value" [modify]="true" [machets]="machets"></app-macheta>
 		<div class="gradient-card-header bg-sidebar border-gradient">
 			<div class="container-fluid">
@@ -412,23 +425,10 @@
 						<mat-checkbox *ngIf="a.docType && (a.docType.category=='SL')" #checkBoxResponse
 						              [checked]="a.responseReceived==1" (change)="checkResponseReceived(a,checkBoxResponse)">Raspuns primit
 						</mat-checkbox>
-						<mat-radio-group *ngIf="a.docType && (a.docType.category=='RL')" formControlName="labResponse">
-							<div style="margin-left: 200px">
-								<div class="row">
-									<mat-radio-button name="prop1" value="1">Inregistrare acceptata</mat-radio-button>
-								</div>
-								<div class="row">
-									<mat-radio-button name="prop2" value="0">Inregistrare respinsa</mat-radio-button>
-								</div>
-								<div class="row">
-									<mat-radio-button name="prop3" value="2">Inregistrare acceptata conditionat</mat-radio-button>
-								</div>
-							</div>
-						</mat-radio-group>
 					</th>
 					<td>
-						<button class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)"><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
-						<button *ngIf="(a.status=='Nu este atasat' && a.responseReceived==false && a.docType.category=='SL' && modelToSubmit && !modelToSubmit.ddIncluded) ||( a.docType.category=='RL' && a.status=='Nu este atasat')"
+						<button  *ngIf="a.docType.category!='LAB'" class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)"><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
+						<button *ngIf="(a.status=='Nu este atasat' && a.responseReceived==false && a.docType.category=='SL' && modelToSubmit && !modelToSubmit.ddIncluded) ||( a.docType.category=='LAB' && !a.number)"
 						        class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
 					</td>
 				</tr>

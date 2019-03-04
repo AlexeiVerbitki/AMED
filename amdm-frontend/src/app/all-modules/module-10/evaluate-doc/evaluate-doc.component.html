@@ -18,7 +18,8 @@
 				</div>
 			</div>
 		</div>
-		<app-document [documents]="documents" [nrCerere]="eForm.get('id').value" [dcTypes]="docTypes" [isDisabled]="isReadOnlyMode"></app-document>
+		<app-document [documents]="documents" (documentModifiedData)="documentListModified($event)" [nrCerere]="eForm.get('id').value" [dcTypes]="docTypes"
+		              [isDisabled]="isReadOnlyMode"></app-document>
 		<div *ngIf="formSubmitted && documents.length==0">
 			<small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
 		</div>
@@ -27,10 +28,10 @@
 				<div class="md-form">
 					<input id="recipient" mdbInputDirective type="text" class="form-control" formControlName="recipient"
 					       [attr.disabled]="true">
-					<label for="recipient">Expeditor</label>
+					<label for="recipient">{{isRg01 ? 'Solicitant' : 'Destinatar'}}</label>
 				</div>
 			</div>
-			<div class="col-lg-6" *ngIf="!isRg01">
+			<div class="col-lg-6" *ngIf="isExecutionTermVisible">
 				<div class="md-form">
 					<input id="executionDate" mdbInputDirective type="text" class="form-control" formControlName="executionDateString"
 					       [attr.disabled]="true">
@@ -39,56 +40,53 @@
 			</div>
 			<div class="col-md-12">
 				<div class="md-form">
-					<textarea type="text" id="problematica" class="md-textarea form-control" mdbInputDirective formControlName="problemDescription"></textarea>
-					<label for="problematica">Problematica</label>
+					<textarea type="text" id="problematica" class="md-textarea form-control" mdbInputDirective formControlName="problemDescription" rows="2"></textarea>
+					<label for="problematica">Subiect / Problematica</label>
 				</div>
 			</div>
 		</div>
-		<hr>
-		<div class="row align-items-center my-2" *ngIf="!isRg01">
-			<div class="col-6 mt-2">
-				<h5 class="text-center">Persoane asignate: <strong>{{assignedUsers}}</strong></h5>
-			</div>
-			<div class="col-6">
-				<button class="btn btn-indigo waves-light btn-sm" mdbWavesEffect (click)="addComment();"
-					[disabled]="isPersonAssigned()">
+		<div class="row my-2" *ngIf="!isRg01">
+			<div class="col-3">
+				<button class="btn btn-indigo waves-light btn-sm" mdbWavesEffect (click)="addComment()"
+				        [disabled]="!isPersonAssigned() || isReadOnlyMode">
 					Adauga comentariu <i class="ml-2 fa fa-pencil fa-lg" aria-hidden="true"></i>
 				</button>
+			</div>
+			<div class="col-9">
+				<div class="text-left"><h5 class="font-weight-bold">Persoane asignate
+					<a role="button" mdbTooltip="A delega persoana" placement="top"
+					   (click)="addPersonAssign()"><i class="ml-2 fa fa-plus green-text fa-lg" aria-hidden="true"></i></a></h5>
+					<span>{{assignedUsers}}</span></div>
 			</div>
 			<hr>
 		</div>
 		<hr>
-		<!-- <div class="row" *ngIf="!isRg01">
-			<div class="col-12">
-				<div class="md-form">
-					 <textarea type="text" id="history" class="md-textarea form-control" mdbInputDirective rows="10"
-						[attr.readonly]="true"></textarea> -->
 		<div class="container-fluid">
 			<div class="history">{{history}}</div>
 		</div>
 		<div class="text-center">
 			<div *ngIf="isPersonAssigned() && !isReadOnlyMode && !isInitiator()">
-				<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">
+				<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save('E')">
 					Salvare
 				</button>
-				<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>
+				<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save('EX')">
 					Executat
 				</button>
 				<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="close()">
 					Închide
 				</button>
 			</div>
-			<div *ngIf="isInitiator() && !isReadOnlyMode">
-				<button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="cancel()">
+			<div *ngIf="isInitiator() && !isReadOnlyMode" class="btn-group">
+				<button class="btn btn-dark-red-color waves-light btn-sm btn-sm-bl rounded-left" mdbWavesEffect (click)="cancel()">
 					Întrerupere
 				</button>
-				<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect>
+				<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save('RE')">
 					Re-Executare
 				</button>
-				<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="finish()">
+				<button class=" btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="finish()">
 					Finisare
 				</button>
-				<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="close()">
+				<button class="btn btn-dark-red-color waves-light btn-sm btn-sm-bl rounded-right" mdbWavesEffect (click)="close()">
 					Închide
 				</button>
 			</div>

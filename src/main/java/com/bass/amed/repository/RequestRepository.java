@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface RequestRepository extends JpaRepository<RegistrationRequestsEntity, Integer>
 {
@@ -19,6 +20,7 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
             "LEFT JOIN FETCH p.documents " +
             "LEFT JOIN FETCH p.paymentOrders " +
             "LEFT JOIN FETCH p.registrationRequestMandatedContacts " +
+            "LEFT JOIN FETCH p.laboratorReferenceStandards " +
             "WHERE p.id = (:id)")
     Optional<RegistrationRequestsEntity> findMedicamentRequestById(@Param("id") Integer id);
 
@@ -40,6 +42,7 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
             "LEFT JOIN FETCH p.paymentOrders " +
             "LEFT JOIN FETCH p.registrationRequestMandatedContacts " +
             "LEFT JOIN FETCH p.variations " +
+            "LEFT JOIN FETCH p.laboratorReferenceStandards " +
             "WHERE p.id = (:id)")
     Optional<RegistrationRequestsEntity> findMedicamentHistoryById(@Param("id") Integer id);
 
@@ -107,6 +110,7 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
     @Query(value = "SELECT p FROM RegistrationRequestsEntity p " +
             "LEFT JOIN FETCH p.clinicalTrails c " +
             "LEFT JOIN FETCH p.documents " +
+            "LEFT JOIN FETCH p.registrationRequestMandatedContacts " +
             "WHERE c.id = :id and p.type='3'  ")
     Optional<RegistrationRequestsEntity> findRegRequestByCtId(@Param("id") Integer ctId);
 
@@ -135,6 +139,10 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
     void setOINumber(@Param("ids") List<Integer> ids, @Param("oiNumber") String oiNumber);
 
     @Modifying
+    @Query("UPDATE RegistrationRequestsEntity p SET p.labNumber = :labNumber WHERE p.id in (:ids)")
+    void setLabNumber(@Param("ids") Set<Integer> ids, @Param("labNumber") String labNumber);
+
+    @Modifying
     @Query("UPDATE RegistrationRequestsEntity p SET p.expired = :expired WHERE p.id = :id")
     void setExpiredRequest(@Param("id") Integer id, @Param("expired") Boolean expired);
 
@@ -147,6 +155,9 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
 
     @Query("SELECT p FROM RegistrationRequestsEntity p WHERE p.oiNumber = :oiNumber")
     List<RegistrationRequestsEntity> findRequestsByOINumber(@Param("oiNumber") String oiNumber);
+
+    @Query("SELECT p FROM RegistrationRequestsEntity p WHERE p.labNumber = :labNumber")
+    List<RegistrationRequestsEntity> findRequestsByLabNumber(@Param("labNumber") String labNumber);
 
     @Query("SELECT distinct p FROM RegistrationRequestsEntity p " +
             "LEFT JOIN FETCH p.medicaments " +
@@ -168,6 +179,7 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
     @Query("SELECT DISTINCT p FROM RegistrationRequestsEntity p " +
             "LEFT JOIN FETCH p.expertList e " +
             "LEFT JOIN FETCH p.clinicalTrails ct " +
+            "LEFT JOIN FETCH p.registrationRequestMandatedContacts " +
             "WHERE p.type.id in (3) " +
             "and p.ddIncluded is null " +
             "and p.ddNumber is null " +
@@ -178,6 +190,7 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
     @Query("SELECT DISTINCT p FROM RegistrationRequestsEntity p " +
             "LEFT JOIN FETCH p.expertList e " +
             "LEFT JOIN FETCH p.clinicalTrails ct " +
+            "LEFT JOIN FETCH p.registrationRequestMandatedContacts " +
             "WHERE p.type.id in (4) " +
             "and p.ddIncluded is null " +
             "and p.ddNumber is null " +
@@ -233,5 +246,14 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
             "LEFT JOIN FETCH p.documents " +
             "WHERE p.id = (:id)")
     Optional<RegistrationRequestsEntity> getRequestDocuments(@Param("id") Integer id);
+
+    @Query("SELECT p FROM RegistrationRequestsEntity p " +
+            "LEFT JOIN FETCH p.laboratorReferenceStandards " +
+            "WHERE p.id = (:id)")
+    RegistrationRequestsEntity getLaboratorStandards(@Param("id") Integer id);
+
+    @Modifying
+    @Query("UPDATE RegistrationRequestsEntity p SET p.labIncluded = :include WHERE p.id= :requestId")
+    void laboratorAnalysis(@Param("requestId") Integer requestId, @Param("include") Boolean include);
 }
 

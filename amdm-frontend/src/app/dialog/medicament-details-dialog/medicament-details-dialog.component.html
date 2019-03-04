@@ -51,18 +51,6 @@
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="volum" mdbInputDirective type="text" class="form-control" formControlName="volume" [attr.disabled]="true">
-					<label for="volum">Volum </label>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="md-form">
-					<input id="volumeQuantityMeasurement" mdbInputDirective type="text" class="form-control" formControlName="volumeQuantityMeasurement" [attr.disabled]="true">
-					<label for="volumeQuantityMeasurement">Unitate de masura (volum)</label>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="md-form">
 					<input id="pharmaceuticalFormType" mdbInputDirective type="text" class="form-control" formControlName="pharmaceuticalFormType" [attr.disabled]="true">
 					<label for="pharmaceuticalFormType">Tip forma farmaceutica</label>
 				</div>
@@ -97,10 +85,22 @@
 					<label for="termenVal">Termen de valabilitate (luni) <span class="text-danger">*</span></label>
 				</div>
 			</div>
-			<div class="col-md-4">
+		</div>
+		<div class="row">
+			<div class="col-md-8">
 				<div class="md-form">
-					<input id="medicamentType" mdbInputDirective type="text" class="form-control" formControlName="medicamentType" [attr.disabled]="true">
-					<label for="medicamentType">Clasificarea medicamentului</label>
+					<input id="medType2" mdbInputDirective type="text" class="form-control" formControlName="medTypesValues" [attr.disabled]="true">
+					<label for="medType2">Tip cerere</label>
+				</div>
+			</div>
+			<div class="col-md-2">
+				<div class="md-form">
+					<mat-checkbox [checked]="mForm.get('originale').value" [disabled]="true">Original</mat-checkbox>
+				</div>
+			</div>
+			<div class="col-md-2">
+				<div class="md-form">
+					<mat-checkbox [checked]="mForm.get('orphan').value" [disabled]="true">Orfan</mat-checkbox>
 				</div>
 			</div>
 		</div>
@@ -127,28 +127,14 @@
 		<div class="row">
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="customsCode" mdbInputDirective type="text" class="form-control" formControlName="customsCode" [attr.disabled]="true">
-					<label for="customsCode">Cod vamal</label>
-				</div>
-			</div>
-			<div class="col-md-8">
-				<div class="md-form">
-					<input id="medType2" mdbInputDirective type="text" class="form-control" formControlName="medTypesValues" [attr.disabled]="true">
-					<label for="medType2">Tip cerere</label>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-4">
-				<div class="md-form">
 					<input id="priceMdl" mdbInputDirective type="text" class="form-control" formControlName="priceMdl" [attr.disabled]="true">
 					<label for="priceMdl">Prețul MDL</label>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="currencyCode" mdbInputDirective type="text" formControlName="currencyCode" class="form-control" [attr.disabled]="true">
-					<label for="currencyCode">Prețul în valută</label>
+					<input id="price" mdbInputDirective type="text" formControlName="price" class="form-control" [attr.disabled]="true">
+					<label for="price">Prețul în valută</label>
 				</div>
 			</div>
 			<div class="col-md-4">
@@ -174,7 +160,9 @@
 				<tr>
 					<th scope="col">Nr.</th>
 					<th scope="col">Cod medicament</th>
-					<th scope="col">Divizare</th>
+					<th scope="col">Numărul de unități</th>
+					<th scope="col">Volum</th>
+					<th scope="col">Unitate de masura (volum)</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -182,6 +170,8 @@
 					<td>{{ i + 1 }}</td>
 					<td>{{ division.code }}</td>
 					<td>{{ division.description }}</td>
+					<td>{{ division.volume }}</td>
+					<td>{{ division.volumeQuantityMeasurement }}</td>
 				</tr>
 				</tbody>
 			</table>
@@ -205,6 +195,7 @@
 					<th scope="col">Concentratie</th>
 					<th scope="col">Unitate de masură</th>
 					<th scope="col">Producători</th>
+					<th scope="col">Numărul compoziției</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -214,6 +205,7 @@
 					<td>{{ substance.quantity }}</td>
 					<td>{{ substance.unitsOfMeasurement.description }}</td>
 					<td>{{ manufacturesStr(substance)}}</td>
+					<td>{{ substance.compositionNumber }}</td>
 				</tr>
 				</tbody>
 			</table>
@@ -235,12 +227,14 @@
 				<tr>
 					<th scope="col">Nr.</th>
 					<th scope="col">Denumire</th>
+					<th scope="col">Numărul compoziției</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr *ngFor="let substance of auxiliarySubstancesTable;let i = index">
 					<td>{{ i+1 }}</td>
 					<th scope="row">{{ substance.auxSubstance.description }}</th>
+					<td>{{ substance.compositionNumber }}</td>
 				</tr>
 				</tbody>
 			</table>
@@ -302,7 +296,7 @@
 				<tr *ngFor="let instruction of instructions; let i = index">
 					<td>{{ instruction.name }}</td>
 					<td>{{ instruction.date | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
-					<td>{{ instruction.division }}</td>
+					<td>{{ getConcatenatedDivision(instruction.divisions) }}</td>
 					<td>
 						<button type="button" class="btn btn-mdb-color btn-sm waves-light" (click)="viewFile(instruction)"
 						        mdbWavesEffect><i class="fa fa-file-text fa-lg" aria-hidden="true"></i>
@@ -336,10 +330,47 @@
 				<tr *ngFor="let macheta of machets; let i = index">
 					<td>{{ macheta.name }}</td>
 					<td>{{ macheta.date | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
-					<td>{{ macheta.division }}</td>
+					<td>{{ getConcatenatedDivision(macheta.divisions)}}</td>
 					<td>
 						<button type="button" class="btn btn-mdb-color btn-sm waves-light" (click)="viewFile(macheta)"
 						        mdbWavesEffect><i class="fa fa-file-text fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-8">
+						<div class="card-header-title white-text">Documente</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<div class="card-body card-body-cascade">
+			<table class="table table-widths text-center table-sm">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Denumire</th>
+					<th scope="col">Tip document</th>
+					<th scope="col">Numar document</th>
+					<th scope="col">Data emiterii</th>
+					<th scope="col">Actiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let document of documents; let i = index">
+					<td>{{ document.name }}</td>
+					<td>{{ document.docType.description }}</td>
+					<td>{{ document.number }}</td>
+					<td>{{ document.dateOfIssue | date: 'dd/MM/yyyy' }}</td>
+					<td>
+						<button type="button" class="btn btn-mdb-color btn-sm waves-light" (click)="loadFile(document.path)"
+						        mdbWavesEffect><i class="fa fa-download fa-lg" aria-hidden="true"></i>
 						</button>
 					</td>
 				</tr>

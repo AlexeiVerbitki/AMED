@@ -15,10 +15,13 @@ public class MedicamentAuxiliarySubstancesHistoryEntity
     private NmAuxiliarySubstancesEntity auxSubstance;
     @Basic@Column(name = "status")
     private String status;
+    @Basic@Column(name = "composition_number_to")
+    private Integer compositionNumberTo;
 
     public void assign(MedicamentAuxiliarySubstancesEntity entity)
     {
         this.auxSubstance = entity.getAuxSubstance();
         this.status = "O";
+        this.compositionNumberTo = entity.getCompositionNumber();
     }
 }

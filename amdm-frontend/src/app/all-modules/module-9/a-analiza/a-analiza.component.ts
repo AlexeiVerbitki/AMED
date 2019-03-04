@@ -92,6 +92,8 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
     private subscriptions: Subscription[] = [];
     isValidRefProduct = false;
 
+    mandatedContactName: string;
+
     constructor(private fb: FormBuilder,
                 public dialog: MatDialog,
                 private activatedRoute: ActivatedRoute,
@@ -115,7 +117,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             'id': [''],
             'requestNumber': [{value: '', disabled: true}],
             'startDate': [{value: '', disabled: true}],
-            'company': [''],
+            'company': [null],
             'currentStep': ['E'],
             'type': [],
             'typeCode': [''],
@@ -318,7 +320,12 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                     this.analyzeClinicalTrailForm.get('id').setValue(data.id);
                     this.analyzeClinicalTrailForm.get('requestNumber').setValue(data.requestNumber);
                     this.analyzeClinicalTrailForm.get('startDate').setValue(new Date(data.startDate));
-                    this.analyzeClinicalTrailForm.get('company').setValue(data.company);
+                    if (data.company) {
+                        this.analyzeClinicalTrailForm.get('company').setValue(data.company);
+                    } else {
+                        this.mandatedContactName = data.registrationRequestMandatedContacts[0].mandatedFirstname.concat(' ')
+                            .concat(data.registrationRequestMandatedContacts[0].mandatedLastname);
+                    }
                     this.analyzeClinicalTrailForm.get('type').setValue(data.type);
                     this.analyzeClinicalTrailForm.get('typeCode').setValue(data.type.code);
                     this.analyzeClinicalTrailForm.get('initiator').setValue(data.initiator);

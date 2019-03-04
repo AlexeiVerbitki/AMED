@@ -125,4 +125,6 @@ public class GMPAuthorizationDetailsEntity
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "group_leader_id")
     private NmEmployeesEntity groupLeader;
+    @Transient
+    private String cause;
 }

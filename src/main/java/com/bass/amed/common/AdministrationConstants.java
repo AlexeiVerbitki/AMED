@@ -75,6 +75,5 @@ public interface AdministrationConstants
     String   SQL_GET_COLUMNS_NAMES =
             "SELECT COLUMN_NAME, COLUMN_COMMENT\n" +
                     "FROM INFORMATION_SCHEMA.COLUMNS\n" +
-                    "WHERE table_name = '%s'\n" +
-                    "AND table_schema = 'amed'";
+                    "WHERE table_name = '%s'\n" ;
 }

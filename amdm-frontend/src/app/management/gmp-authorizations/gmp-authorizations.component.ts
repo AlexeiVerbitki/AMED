@@ -4,10 +4,12 @@ import {Observable, Subject, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 import {AdministrationService} from '../../shared/service/administration.service';
 import {GDPService} from '../../shared/service/gdp.service';
-import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {NavbarTitleService} from '../../shared/service/navbar-title.service';
 import {UploadFileService} from '../../shared/service/upload/upload-file.service';
 import {saveAs} from 'file-saver';
+import {AddDescriptionComponent} from '../../dialog/add-description/add-description.component';
+import {ViewCauseGmpComponent} from '../../dialog/view-cause-gmp/view-cause-gmp.component';
 
 @Component({
     selector: 'app-gmp-authorizations',
@@ -22,8 +24,9 @@ export class GmpAuthorizationsComponent implements OnInit, AfterViewInit, OnDest
     companyInputs = new Subject<string>();
     maxDate = new Date();
     private subscriptions: Subscription[] = [];
-    displayedColumns: any[] = ['company', 'authorizationNumber', 'authorizationIssuedDate', 'authorizationExpirationDate', 'statusAuthorization', 'certifictionNumber',
-        'certifictionIssuedDate', 'certificationExpiredDate', 'statusCertificate', 'authorizationPath', 'certificatePath'];
+    // displayedColumns: any[] = ['company', 'authorizationNumber', 'authorizationIssuedDate', 'authorizationExpirationDate', 'statusAuthorization', 'certifictionNumber',
+    //   'certifictionIssuedDate', 'certificationExpiredDate', 'statusCertificate', 'authorizationPath', 'certificatePath'];
+    displayedColumns: any[] = ['company', 'docType', 'docNumber', 'docIssuedDate', 'docExpirationDate', 'status', 'path'];
     dataSource = new MatTableDataSource<any>();
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -32,6 +35,7 @@ export class GmpAuthorizationsComponent implements OnInit, AfterViewInit, OnDest
                 private administrationService: AdministrationService,
                 private navbarTitleService: NavbarTitleService,
                 private uploadService: UploadFileService,
+                private dialog: MatDialog,
                 private gmpService: GDPService) {
         this.mForm = fb.group({
             'requestNumber': [null],
@@ -42,6 +46,8 @@ export class GmpAuthorizationsComponent implements OnInit, AfterViewInit, OnDest
             'certificateNumber': [null],
             'certificateStartDateFrom': [null],
             'certificateEndDateTo': [null],
+            'checkCertificate': [null],
+            'checkAutorizare': [null],
         });
     }
 
@@ -74,6 +80,13 @@ export class GmpAuthorizationsComponent implements OnInit, AfterViewInit, OnDest
                     )
                 )
             );
+
+        this.mForm.get('authorizationNumber').disable();
+        this.mForm.get('authorizationStartDateFrom').disable();
+        this.mForm.get('authorizationStartDateTo').disable();
+        this.mForm.get('certificateNumber').disable();
+        this.mForm.get('certificateStartDateFrom').disable();
+        this.mForm.get('certificateEndDateTo').disable();
     }
 
     showGMPAuthorization() {
@@ -85,6 +98,8 @@ export class GmpAuthorizationsComponent implements OnInit, AfterViewInit, OnDest
 
     getAuthorisations() {
         const dto = this.mForm.value;
+        dto.searchAuthorizations = this.mForm.get('checkAutorizare').value;
+        dto.searchCertificates = this.mForm.get('checkCertificate').value;
         this.subscriptions.push(
             this.gmpService.getAuthorisationsByFilter(dto
             ).subscribe(request => {
@@ -147,6 +162,67 @@ export class GmpAuthorizationsComponent implements OnInit, AfterViewInit, OnDest
         } else if (status == 'R') {
             return 'Retras';
         }
+    }
+
+    checkCertificate(elem) {
+        this.mForm.get('checkAutorizare').setValue(false);
+        this.mForm.get('checkCertificate').setValue(elem.checked);
+        this.mForm.get('authorizationNumber').disable();
+        this.mForm.get('authorizationStartDateFrom').disable();
+        this.mForm.get('authorizationStartDateTo').disable();
+        this.mForm.get('authorizationNumber').setValue(null);
+        this.mForm.get('authorizationStartDateFrom').setValue(null);
+        this.mForm.get('authorizationStartDateTo').setValue(null);
+        if (elem.checked) {
+            this.mForm.get('certificateNumber').enable();
+            this.mForm.get('certificateStartDateFrom').enable();
+            this.mForm.get('certificateEndDateTo').enable();
+        } else {
+            this.mForm.get('certificateNumber').disable();
+            this.mForm.get('certificateStartDateFrom').disable();
+            this.mForm.get('certificateEndDateTo').disable();
+            this.mForm.get('certificateNumber').setValue(null);
+            this.mForm.get('certificateStartDateFrom').setValue(null);
+            this.mForm.get('certificateEndDateTo').setValue(null);
+        }
+    }
+
+    checkAutorizare(elem) {
+        this.mForm.get('checkCertificate').setValue(false);
+        this.mForm.get('checkAutorizare').setValue(elem.checked);
+        this.mForm.get('certificateNumber').disable();
+        this.mForm.get('certificateStartDateFrom').disable();
+        this.mForm.get('certificateEndDateTo').disable();
+        this.mForm.get('certificateNumber').setValue(null);
+        this.mForm.get('certificateStartDateFrom').setValue(null);
+        this.mForm.get('certificateEndDateTo').setValue(null);
+        if (elem.checked) {
+            this.mForm.get('authorizationNumber').enable();
+            this.mForm.get('authorizationStartDateFrom').enable();
+            this.mForm.get('authorizationStartDateTo').enable();
+        } else {
+            this.mForm.get('authorizationNumber').setValue(null);
+            this.mForm.get('authorizationStartDateFrom').setValue(null);
+            this.mForm.get('authorizationStartDateTo').setValue(null);
+            this.mForm.get('authorizationNumber').disable();
+            this.mForm.get('authorizationStartDateFrom').disable();
+            this.mForm.get('authorizationStartDateTo').disable();
+        }
+    }
+
+    showCause(cause) {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+        dialogConfig2.width = '600px';
+
+        dialogConfig2.data = {
+           cause : cause
+        };
+
+        this.dialog.open(ViewCauseGmpComponent, dialogConfig2);
     }
 }
 

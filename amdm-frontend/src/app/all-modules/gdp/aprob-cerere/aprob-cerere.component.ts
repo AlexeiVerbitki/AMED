@@ -366,9 +366,6 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
 
 
     save(onlySave: boolean) {
-        // if(onlySave) {
-        //     this.rForm.controls['decision'].setErrors(null);
-        // }
 
         this.formSubmitted = true;
 
@@ -409,7 +406,7 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
             id: s.id, gdpInspectionId: s.gdpInspectionId, subsidiary: {id: s.subsidiary.id}
         });
         this.gdpInspection.periods = (this.inspectorForm.get('periods') as FormArray).getRawValue();
-        modelToSubmit.gdpInspection = this.gdpInspection;
+        modelToSubmit.gdpInspection = JSON.parse(JSON.stringify(this.gdpInspection));
         modelToSubmit.gdpInspection.subsidiaries = subsidiaryIds;
 
         modelToSubmit.gdpInspection.autoDistributionOperations = this.inspectorForm.get('autoDistributionOperations').value;

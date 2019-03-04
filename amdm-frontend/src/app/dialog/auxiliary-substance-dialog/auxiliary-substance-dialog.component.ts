@@ -22,6 +22,7 @@ style;
                 @Inject(MAT_DIALOG_DATA) public dataDialog: any) {
         this.aForm = fb.group({
             'auxSubstance': [null, Validators.required],
+            'compositionNumber': [null, Validators.required],
             'response' : [null]
         });
     }

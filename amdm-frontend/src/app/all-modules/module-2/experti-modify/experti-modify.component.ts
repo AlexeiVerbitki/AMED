@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Document} from '../../../models/document';
@@ -23,13 +23,16 @@ import {
     TodoItemFlatNode
 } from '../../../dialog/select-variation-type/select-variation-type.component';
 import {SelectionModel} from '@angular/cdk/collections';
+import {AddLaboratorStandardsComponent} from '../../../dialog/add-laborator-standards/add-laborator-standards.component';
+import {AddDivisionComponent} from '../../../dialog/add-division/add-division.component';
+import {isNumeric} from 'rxjs/internal-compatibility';
 
 @Component({
     selector: 'app-experti',
     templateUrl: './experti-modify.component.html',
     styleUrls: ['./experti-modify.component.css']
 })
-export class ExpertiModifyComponent implements OnInit {
+export class ExpertiModifyComponent implements OnInit, OnDestroy {
     checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
     private subscriptions: Subscription[] = [];
     expertForm: FormGroup;
@@ -60,6 +63,8 @@ export class ExpertiModifyComponent implements OnInit {
     expertList: any[] = [];
     variationTypesIds: string;
     variationTypesIdsTemp: string;
+    standarts: any[];
+    docTypesInitial: any[];
 
     constructor(private fb: FormBuilder,
                 private authService: AuthService,
@@ -130,7 +135,7 @@ export class ExpertiModifyComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.navbarTitleService.showTitleMsg('Aprobarea modificarilor postautorizate / Expertiza');
+        this.navbarTitleService.showTitleMsg('Aprobarea modificarilor postautorizare / Expertiza');
 
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
                 this.subscriptions.push(this.requestService.getMedicamentHistory(params['id']).subscribe(data => {
@@ -139,6 +144,7 @@ export class ExpertiModifyComponent implements OnInit {
                         this.registrationRequestMandatedContacts = data.registrationRequestMandatedContacts;
                         this.outputDocuments = data.outputDocuments;
                         this.checkOutputDocumentsStatus();
+                        this.standarts = data.laboratorReferenceStandards;
                         this.expertForm.get('id').setValue(data.id);
                         this.expertForm.get('initiator').setValue(data.initiator);
                         this.expertForm.get('startDate').setValue(data.startDate);
@@ -200,6 +206,9 @@ export class ExpertiModifyComponent implements OnInit {
                                 medicamentCode: entry.medicamentCode,
                                 volume: entry.volume,
                                 volumeQuantityMeasurement: entry.volumeQuantityMeasurement,
+                                serialNr: entry.serialNr,
+                                samplesNumber: entry.samplesNumber,
+                                samplesExpirationDate: entry.samplesExpirationDate,
                                 instructions: entry.instructionsHistory.filter(t => t.type == 'I'),
                                 machets: entry.instructionsHistory.filter(t => t.type == 'M'),
                                 approved: entry.approved
@@ -256,7 +265,36 @@ export class ExpertiModifyComponent implements OnInit {
                     this.subscriptions.push(
                         this.administrationService.getAllDocTypes().subscribe(data => {
                                 this.docTypes = data;
+                                this.docTypesInitial = Object.assign([], data);
                                 this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
+                                if (data.labIncluded == 1 && !data.labNumber && !this.outputDocuments.find(r => r.docType.category == 'LAB')) {
+                                    this.outputDocuments.push({
+                                        name: 'Solicitare desfasurare analize de laborator',
+                                        docType: this.docTypesInitial.find(r => r.category == 'LAB'),
+                                        status: 'Urmeaza a fi inclus in actul de primire-predare',
+                                        date: new Date()
+                                    });
+                                } else if (data.labIncluded == 1 && data.labNumber) {
+                                    this.outputDocuments.forEach((item, index) => {
+                                        if (item.docType.category == 'LAB') {
+                                            this.outputDocuments.splice(index, 1);
+                                        }
+                                    });
+                                    const rl = this.documents.find(r => r.docType.category == 'RL');
+                                    let statusDoc = '';
+                                    if (rl) {
+                                        statusDoc = 'Inclus in actul de primire-predare. Raspuns primit.';
+                                    } else {
+                                        statusDoc = 'Inclus in actul de primire-predare. Asteptare raspuns.';
+                                    }
+                                    this.outputDocuments.push({
+                                        name: 'Solicitare desfasurare analize de laborator',
+                                        docType: this.docTypesInitial.find(r => r.category == 'LAB'),
+                                        status: statusDoc,
+                                        date: new Date(),
+                                        number: data.labNumber
+                                    });
+                                }
                             },
                             error => console.log(error)
                         )
@@ -404,6 +442,12 @@ export class ExpertiModifyComponent implements OnInit {
 
     success() {
 
+        const rl = this.documents.find(r => r.docType.category == 'RL');
+        const lab = this.outputDocuments.find(r => r.docType.category == 'LAB');
+        if (lab && !rl) {
+            this.errorHandlerService.showError('Rezultatul laboratorului nu a fost atasat.');
+            return;
+        }
         const findDDM = this.documents.find(t => t.docType.category == 'DDM');
         if (!findDDM && this.modelToSubmit.ddIncluded) {
             this.errorHandlerService.showError('Dispozitia de distribuire nu este atasata.');
@@ -467,6 +511,14 @@ export class ExpertiModifyComponent implements OnInit {
         x.endDate = new Date();
         x.assignedUser = usernameDB;
 
+        x.variations = [];
+        for (const sel of this.checklistSelection.selected) {
+            const xid = this.getVariationId(sel.item);
+            if (isNumeric(xid)) {
+                x.variations.push({variation: {id: xid}, value: this.getVariationValue(sel.item)});
+            }
+        }
+
         x.requestHistories.push({
             startDate: this.expertForm.get('data').value, endDate: new Date(),
             username: usernameDB, step: 'X'
@@ -483,6 +535,7 @@ export class ExpertiModifyComponent implements OnInit {
         x.outputDocuments = this.outputDocuments;
         x.medicaments = [];
         x.expertList = this.expertList;
+    	x.laboratorReferenceStandards = this.standarts;
 
         x.medicamentHistory[0].atcCodeTo = this.expertForm.get('medicament.atcCodeTo').value;
         x.medicamentHistory[0].registrationDate = this.expertForm.get('medicament.registrationDate').value;
@@ -493,7 +546,6 @@ export class ExpertiModifyComponent implements OnInit {
             t.instructionsHistory.push.apply(t.instructionsHistory, t.instructions);
             t.instructionsHistory.push.apply(t.instructionsHistory, t.machets);
         });
-        x.variations = this.modelToSubmit.variations;
         this.subscriptions.push(this.requestService.savePostauthorizationMedicament(x).subscribe(data => {
                 this.loadingService.hide();
                 this.router.navigate(['dashboard/homepage']);
@@ -549,12 +601,26 @@ export class ExpertiModifyComponent implements OnInit {
     checkOutputDocumentsStatus() {
         for (const entry of this.outputDocuments) {
             const isMatch = this.documents.some(elem => {
-                return (elem.docType.category == entry.docType.category && ((entry.docType.category == 'SL' && elem.number == entry.number) || entry.docType.category != 'SL')) ? true : false;
+                return (elem.docType.category == entry.docType.category && ((entry.docType.category == 'SL' && elem.number == entry.number) ||
+                    entry.docType.category != 'SL')) ? true : false;
             });
-            if (isMatch) {
-                entry.status = 'Atasat';
+            if (entry.docType.category != 'LAB') {
+                if (isMatch) {
+                    entry.status = 'Atasat';
+                } else {
+                    entry.status = 'Nu este atasat';
+                }
             } else {
-                entry.status = 'Nu este atasat';
+                if (entry.number) {
+                    const rl = this.documents.find(r => r.docType.category == 'RL');
+                    if (rl) {
+                        entry.status = 'Inclus in actul de primire-predare. Raspuns primit.';
+                    } else {
+                        entry.status = 'Inclus in actul de primire-predare. Asteptare raspuns.';
+                    }
+                } else {
+                    entry.status = 'Urmeaza a fi inclus in actul de primire-predare';
+                }
             }
         }
     }
@@ -633,6 +699,12 @@ export class ExpertiModifyComponent implements OnInit {
     }
 
     addToAuthorizationOrder() {
+        const rl = this.documents.find(r => r.docType.category == 'RL');
+        const lab = this.outputDocuments.find(r => r.docType.category == 'LAB');
+        if (lab && !rl) {
+            this.errorHandlerService.showError('Rezultatul laboratorului nu a fost atasat.');
+            return;
+        }
         this.formSubmitted = true;
 
         if (this.expertForm.invalid) {
@@ -654,20 +726,6 @@ export class ExpertiModifyComponent implements OnInit {
                 return;
             }
         }
-
-        const rl = this.outputDocuments.find(r => r.docType.category == 'RL');
-        if (rl) {
-            if (!this.expertForm.get('labResponse').value) {
-                this.errorHandlerService.showError('Nu a fost primit rezultatul de la laborator.');
-                return;
-            } else if (rl.status != 'Atasat') {
-                this.errorHandlerService.showError('Rezultatul laboratorului nu a fost atasat.');
-                return;
-            } else {
-                rl.responseReceived = this.expertForm.get('labResponse').value;
-            }
-        }
-
         this.loadingService.show();
         this.formSubmitted = false;
 
@@ -676,6 +734,11 @@ export class ExpertiModifyComponent implements OnInit {
                 this.loadingService.hide();
             }, error => this.loadingService.hide())
         );
+    }
+
+    getVariationValue(find: string): string {
+        const j = find.indexOf('- ') + 2;
+        return find.substr(j);
     }
 
     back() {
@@ -710,6 +773,14 @@ export class ExpertiModifyComponent implements OnInit {
                 x.documents = this.documents;
                 x.outputDocuments = this.outputDocuments.filter(t => t.docType.category != 'MP');
                 x.expertList = this.expertList;
+
+                x.variations = [];
+                for (const sel of this.checklistSelection.selected) {
+                    const xid = this.getVariationId(sel.item);
+                    if (isNumeric(xid)) {
+                        x.variations.push({variation: {id: xid}, value: this.getVariationValue(sel.item)});
+                    }
+                }
 
                 x.medicamentHistory[0].atcCodeTo = this.expertForm.get('medicament.atcCodeTo').value;
                 x.medicamentHistory[0].approved = false;
@@ -769,7 +840,7 @@ export class ExpertiModifyComponent implements OnInit {
 
         x.documents = this.documents;
         x.outputDocuments = this.outputDocuments;
-
+        x.laboratorReferenceStandards = this.standarts;
         x.medicamentHistory[0].divisionHistory = this.divisions;
         x.medicamentHistory[0].divisionHistory.forEach(t => {t.instructionsHistory = []; });
         x.medicamentHistory[0].divisionHistory.forEach(t => {
@@ -777,10 +848,17 @@ export class ExpertiModifyComponent implements OnInit {
             t.instructionsHistory.push.apply(t.instructionsHistory, t.machets);
         });
 
+        x.variations = [];
+        for (const sel of this.checklistSelection.selected) {
+            const xid = this.getVariationId(sel.item);
+            if (isNumeric(xid)) {
+                x.variations.push({variation: {id: xid}, value: this.getVariationValue(sel.item)});
+            }
+        }
+
         x.medicamentHistory[0].atcCodeTo = this.expertForm.get('medicament.atcCodeTo').value;
         x.medicamentHistory[0].registrationDate = this.expertForm.get('medicament.registrationDate').value;
         x.expertList = this.expertList;
-        x.variations = this.modelToSubmit.variations;
 
         this.subscriptions.push(this.requestService.addMedicamentHistoryRequest(x).subscribe(data => {
                 this.loadingService.hide();
@@ -790,7 +868,8 @@ export class ExpertiModifyComponent implements OnInit {
 
     manufacturesStr(substance: any) {
         if (substance && substance.manufactures) {
-            let s = Array.prototype.map.call(substance.manufactures, s => s.manufacture.description + ' ' + (s.manufacture.country ? s.manufacture.country.description : '') + ' ' + s.manufacture.address + 'NRQW').toString();
+            let s = Array.prototype.map.call(substance.manufactures, s => s.manufacture.description + ' ' + (s.manufacture.country ? s.manufacture.country.description : '')
+                + ' ' + s.manufacture.address + 'NRQW').toString();
             s = s.replace(/NRQW/gi, ';');
             return s.replace(';,', '; ');
         }
@@ -967,21 +1046,35 @@ export class ExpertiModifyComponent implements OnInit {
 
     requestLaboratoryAnalysis() {
 
-        this.save();
+        this.formSubmitted = true;
 
-        this.outputDocuments.push({
-            name: 'Solicitare desfasurare analize de laborator',
-            docType: this.docTypes.find(r => r.category == 'RL'),
-            status: 'Nu este atasat',
-            date: new Date()
+        this.formSubmitted = false;
+
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.width = '600px';
+
+        const dialogRef = this.dialog.open(AddLaboratorStandardsComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result && result.response) {
+                this.subscriptions.push(this.requestService.laboratorAnalysis(this.expertForm.get('id').value).subscribe(data => {
+                        this.outputDocuments.push({
+                            name: 'Solicitare desfasurare analize de laborator',
+                            docType: this.docTypesInitial.find(r => r.category == 'LAB'),
+                            status: 'Urmeaza a fi inclus in actul de primire-predare',
+                            date: new Date()
+                        });
+                        this.standarts = result.standards;
+                        this.save();
+                    }, error => console.log(error))
+                );
+            }
         });
-        this.modelToSubmit.outputDocuments = this.outputDocuments;
-        this.modelToSubmit.medicaments = [];
-        this.subscriptions.push(this.requestService.addMedicamentHistoryRequest(this.modelToSubmit).subscribe(data => {
-                this.outputDocuments = data.body.outputDocuments;
-                this.checkOutputDocumentsStatus();
-            }, error => console.log(error))
-        );
 
     }
 
@@ -1003,6 +1096,20 @@ export class ExpertiModifyComponent implements OnInit {
 
         dialogRef2.afterClosed().subscribe(result => {
             if (result) {
+                if (doc.docType.category == 'LAB') {
+                    this.subscriptions.push(this.requestService.removeLaboratorAnalysis(this.expertForm.get('id').value).subscribe(data => {
+                            this.outputDocuments.forEach((item, index) => {
+                                if (item === doc) {
+                                    this.outputDocuments.splice(index, 1);
+                                }
+                            });
+                            this.standarts = [];
+                            this.save();
+                        }, error => console.log(error))
+                    );
+                    return;
+                }
+
                 this.loadingService.show();
                 this.modelToSubmit.outputDocuments = Object.assign([], this.outputDocuments);
                 this.modelToSubmit.outputDocuments.forEach((item, index) => {
@@ -1021,12 +1128,31 @@ export class ExpertiModifyComponent implements OnInit {
                 this.subscriptions.push(this.requestService.addMedicamentRequest(this.modelToSubmit).subscribe(data => {
                         this.outputDocuments = data.body.outputDocuments;
                         this.checkOutputDocumentsStatus();
-                        if (doc.docType.category == 'RL') {
-                            this.expertForm.get('labResponse').setValue(null);
-                        }
                         this.loadingService.hide();
                     }, error => this.loadingService.hide())
                 );
+            }
+        });
+    }
+
+    editDivision(division: any, index: number) {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+        dialogConfig2.panelClass = 'custom-dialog-container';
+
+        dialogConfig2.width = '600px';
+        dialogConfig2.data = division;
+
+        const dialogRef = this.dialog.open(AddDivisionComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result && result.response) {
+                this.divisions[index].samplesNumber = result.samplesNumber;
+                this.divisions[index].serialNr = result.serialNr;
+                this.divisions[index].samplesExpirationDate = result.samplesExpirationDate;
             }
         });
     }
@@ -1042,9 +1168,29 @@ export class ExpertiModifyComponent implements OnInit {
         dialogConfig2.width = '1000px';
         dialogConfig2.height = '800px';
 
-        dialogConfig2.data = {values: this.checklistSelection, disabled : true};
+        dialogConfig2.data = {values: this.checklistSelection, disabled : false};
 
         const dialogRef = this.dialog.open(SelectVariationTypeComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+                if (result && result.response) {
+                    this.checklistSelection = result.values;
+                    //console.log(result.values);
+                }
+            }
+        );
+    }
+
+    getVariationId(find: string): string {
+        const i = this.variationTypesIds.indexOf(find) + find.length + 3;
+        const tempStr = this.variationTypesIds.substr(i);
+        const j = tempStr.indexOf(',');
+        const k = tempStr.indexOf('}');
+        if (j < k && j != -1) {
+            return this.variationTypesIds.substr(i, j - 1);
+        } else {
+            return this.variationTypesIds.substr(i, k - 1);
+        }
     }
 
 }
