@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Currency;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -26,8 +28,9 @@ public class ImportAuthorizationDTO implements Serializable
     private String authorizationsNumber;
     private String applicant;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private Timestamp expirationDate;
+    private Date expirationDate;
     private String summ;
     private String currency;
+    private String requestId;
 
 }

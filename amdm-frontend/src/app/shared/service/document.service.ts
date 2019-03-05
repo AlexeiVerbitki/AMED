@@ -75,6 +75,10 @@ export class DocumentService {
         return this.http.post('/api/documents/view-medicament-modification-certificate', model, {responseType: 'blob'});
     }
 
+    viewScrisoareDeAprobare(model: any): Observable<any> {
+        return this.http.post('/api/documents/view-scrisoare-de-aprobare', model, {responseType: 'blob'});
+    }
+
     viewOrdinDeInrerupereAInregistrariiMedicamentului(nrDocument: any): Observable<any> {
         return this.http.get('/api/documents/view-interrupt-order-of-medicament-registration', {
             params: {

@@ -169,11 +169,12 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
         const taskFormValue = this.taskForm.value;
         console.log('taskFormValue', taskFormValue);
         const searchCriteria = {
-            authorizationsNumber: taskFormValue.subject? taskFormValue.subject: '',
-            applicant: /*taskFormValue.applicant ? taskFormValue.applicant.id: '' */ "1",
-            expirationDate: '' /*taskFormValue.expirationDate? taskFormValue.expirationDate: null*/,
-            summ: ''/* taskFormValue.summ?  taskFormValue.summ: null*/,
-            currency: '' /*taskFormValue.currency.id? taskFormValue.currency.id: null*/,
+            authorizationsNumber: taskFormValue.subject? taskFormValue.subject: null,
+            applicant: taskFormValue.applicant ? taskFormValue.applicant.id: null,
+            expirationDate: taskFormValue.expirationDate? taskFormValue.expirationDate: null,
+            summ:  taskFormValue.summ?  taskFormValue.summ: '',
+            currency: (taskFormValue.currency && taskFormValue.currency.id)? taskFormValue.currency.id: null};
+
             // requestCode: taskFormValue.requestCode ? taskFormValue.requestCode.registerCode : '',
             // requestNumber: taskFormValue.requestNumber,
             // startDateFrom: taskFormValue.startDateFrom,
@@ -211,19 +212,26 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
             // specification: null,
             // SpecificationDate: null,
             // nmCustomsPointsList: null,
-        };
+
         console.log('searchCriteria', searchCriteria);
         // this.subscriptions.push(this.requestService.getAuthorizationByFilter(searchCriteria.authorizationsNumber, searchCriteria.applicant, searchCriteria.expirationDate, searchCriteria.summ, searchCriteria.currency).subscribe(data => {
-        this.subscriptions.push(this.requestService.getAuthorizationDetailsByNameOrCode('', searchCriteria.authorizationsNumber ).subscribe(data => {
-        // this.subscriptions.push(this.requestService.getAuthorizationByFilter(searchCriteria).subscribe(data => {
+        // this.subscriptions.push(this.requestService.getAuthorizationByFilter('', '',',','' ).subscribe(data => {
+        this.subscriptions.push(this.requestService.getAuthorizationByFilter(searchCriteria).subscribe(data => {
                 this.loadingService.hide();
-                this.dataSource.data = data;
-                console.log('data.body', data);
+                // this.dataSource.data = data;
+                console.log('data.body', data.body);
             }, error => {
                 this.loadingService.hide();
             })
         );
-        // console.log('searchCriteria', searchCriteria);
+        console.log('searchCriteria', searchCriteria);
+
+        // let request: string = '3591';
+        // this.subscriptions.push(this.requestService.getImportRequest(request).subscribe(requestData => {
+        //     console.log('requestData',requestData);
+        //     // this.dataSource.pushrequestData;
+        // }));
+        this.loadingService.hide();
 
     }
 

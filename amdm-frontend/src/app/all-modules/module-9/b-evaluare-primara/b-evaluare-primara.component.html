@@ -255,7 +255,7 @@
                     <div class="md-form">
                         <input id="numEudraCT" mdbInputDirective type="text" class="form-control"
                                formControlName="eudraCtNrTo">
-                        <label for="numEudraCT">Numărul Eudra CT nr.</label>
+                        <label for="numEudraCT">Eudra CT nr.</label>
                     </div>
                 </div>
             </div>
@@ -271,14 +271,14 @@
                     <div class="md-form">
                         <input id="popStudClinicNumNational" mdbInputDirective type="number" class="form-control"
                                formControlName="trialPopNatTo">
-                        <label for="popStudClinicNumNational">Numărul pacienților naționali</label>
+                        <label for="popStudClinicNumNational">Numărul subiecți naționali</label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="md-form">
                         <input id="popStudClinicNumInternational" mdbInputDirective type="number" class="form-control"
                                formControlName="trialPopInternatTo">
-                        <label for="popStudClinicNumInternational">Numărul pacienților internaționali</label>
+                        <label for="popStudClinicNumInternational">Numărul subiecți internaționali</label>
                     </div>
                 </div>
             </div>
@@ -392,7 +392,7 @@
             <hr>
 
             <div [formGroup]="medicamentForm">
-                <h5 class="text-center font-weight-bold">Medicamentul de investigat</h5>
+                <h5 class="text-center font-weight-bold">MIC Testat</h5>
                 <div class="row">
                     <div class="col-4">
                         <div class="md-form-modified">
@@ -504,7 +504,7 @@
                         <div class="md-form-modified">
                             <ng-select [items]="atcCodes | async"
                                        bindLabel="description"
-                                       placeholder="Grupa farmaceutica"
+                                       placeholder="Grupa farmacoterapeutică"
                                        formControlName="atcCodeTo"
                                        [loading]="loadingAtcCodes"
                                        [typeahead]="atcCodesInputs">
@@ -528,7 +528,7 @@
             </div>
 
             <div [formGroup]="referenceProductFormn">
-                <h5 class="text-center font-weight-bold">Produsul de referinţă</h5>
+                <h5 class="text-center font-weight-bold">MIC Referință</h5>
                 <div class="row">
                     <div class="col-4">
                         <div class="md-form-modified">
@@ -639,7 +639,7 @@
                         <div class="md-form-modified">
                             <ng-select [items]="atcCodesRfPr | async"
                                        bindLabel="description"
-                                       placeholder="Grupa farmaceutica"
+                                       placeholder="Grupa farmacoterapeutică"
                                        formControlName="atcCodeTo"
                                        [loading]="loadingAtcCodesRfPr"
                                        [typeahead]="atcCodesInputsRfPr"
@@ -664,7 +664,7 @@
             <hr>
 
             <div [formGroup]="placeboFormn">
-                <h5 class="text-center font-weight-bold">Placebo</h5>
+                <h5 class="text-center font-weight-bold">MIC Placebo</h5>
                 <div class="row">
                     <div class="col-4">
                         <div class="md-form-modified">

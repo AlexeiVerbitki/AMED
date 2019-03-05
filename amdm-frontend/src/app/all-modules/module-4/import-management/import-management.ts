@@ -254,7 +254,6 @@ export class ImportManagement implements OnInit, OnDestroy {
                     });
 
 
-
                     if (this.requestData.importAuthorizationEntity.seller) {
                         this.evaluateImportForm.get('importAuthorizationEntity.seller').setValue(this.requestData.importAuthorizationEntity.seller);
                     }
@@ -316,12 +315,6 @@ export class ImportManagement implements OnInit, OnDestroy {
                         this.evaluateImportForm.get('importAuthorizationEntity.invoiceSpecificatie').setValue(this.requestData.invoiceEntity.specification);
                     }
                     if (this.requestData.invoiceEntity && this.requestData.invoiceEntity.customsPointsEntity) {
-                        let arr =[];
-                        arr.push(this.requestData.invoiceEntity.customsPointsEntity);
-                        // for (const c of this.requestData.invoiceEntity.customsPointsEntity) {
-                        //     c.descrCode = c.description + ' - ' + c.code;
-                        //     arr = [...arr, c];
-                        // }
                         this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').setValue(this.requestData.invoiceEntity.customsPointsEntity);
                     }
 
@@ -371,10 +364,8 @@ export class ImportManagement implements OnInit, OnDestroy {
         this.loadUnitsOfMeasurement();
         this.loadMedicaments();
         this.loadInternationalMedicamentName();
-        // this.loadInvoiceDetails(this.requestData.importAuthorizationEntity.name, this.requestData.importAuthorizationEntity.authorizationsNumber, "false");
-
+        // this.loadCustomsPoints();
     }
-
     loadInvoiceDetails(name, auth, saved){
         this.subscriptions.push(this.requestService.getInvoiceQuota(name,auth, saved).subscribe(data => {
             console.log('loadInvoiceDetails()', data);
@@ -577,13 +568,18 @@ export class ImportManagement implements OnInit, OnDestroy {
 
             if (this.dialogResult) {
                 invoiceDetails.quantity = this.dialogResult.importAuthorizationEntity.unitOfImportTable.quantity;
-                invoiceDetails.price = this.dialogResult.importAuthorizationEntity.unitOfImportTable.price;
-                invoiceDetails.sum = this.dialogResult.importAuthorizationEntity.unitOfImportTable.unitSumm;
-                invoiceDetails.codeAmed = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.codeAmed;
-                invoiceDetails.name = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.name;
-                invoiceDetails.medicament = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.medicament;
-                invoiceDetails.authorizationsNumber = this.importData.importAuthorizationEntity.authorizationsNumber;
 
+                invoiceDetails.price = this.dialogResult.importAuthorizationEntity.unitOfImportTable.price;
+
+                invoiceDetails.sum = this.dialogResult.importAuthorizationEntity.unitOfImportTable.unitSumm;
+
+                invoiceDetails.codeAmed = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.codeAmed;
+
+                invoiceDetails.name = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.name;
+
+                invoiceDetails.medicament = this.dialogResult.importAuthorizationEntity.unitOfImportTable.pozitie.medicament;
+
+                invoiceDetails.authorizationsNumber = this.importData.importAuthorizationEntity.authorizationsNumber;
                 this.invoiceDetails.push(invoiceDetails);
             }
 

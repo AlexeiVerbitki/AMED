@@ -488,17 +488,17 @@ public final class AuditUtils
         ImportMedNotRegisteredEntity medicament = clinicalTrialsEntity.getMedicament();
         if (medicament != null && medicament.getName() != null && !medicament.getName().isEmpty())
         {
-            dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("nume medicament", medicament.getName(), medicament.getId(), request.getId()));
+            dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("nume MIC Testat", medicament.getName(), medicament.getId(), request.getId()));
             if (medicament.getManufacture() != null)
-                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("id producator medicament", medicament.getManufacture().getId(), medicament.getId(), request.getId()));
+                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("id producator MIC Testat", medicament.getManufacture().getId(), medicament.getId(), request.getId()));
             if (medicament.getDose() != null && !medicament.getDose().isEmpty())
-                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("concentratia medicamentului", medicament.getDose(), medicament.getId(), request.getId()));
+                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("concentratia MIC Testat", medicament.getDose(), medicament.getId(), request.getId()));
             if (medicament.getPharmaceuticalForm() != null)
-                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("forma farmaceutica a medicamentului", medicament.getPharmaceuticalForm().getDescription(), medicament.getId(), request.getId()));
+                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("forma farmaceutica MIC Testat", medicament.getPharmaceuticalForm().getDescription(), medicament.getId(), request.getId()));
             if (medicament.getAtcCode() != null)
-                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("codul ATC a medicamentului", medicament.getAtcCode().getCode(), medicament.getId(), request.getId()));
+                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("grupa farmacoterapeutică MIC Testat", medicament.getAtcCode().getCode(), medicament.getId(), request.getId()));
             if (medicament.getAdministratingMode() != null && !medicament.getAdministratingMode().isEmpty())
-                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("modul de administrare a medicamentului", medicament.getAdministratingMode(), medicament.getId(), request.getId()));
+                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("modul de administrare MIC Testat", medicament.getAdministratingMode(), medicament.getId(), request.getId()));
             if (!medicament.getActiveSubstances().isEmpty())
                 fillActiveSubstances(medicament.getActiveSubstances(), dummyEntities, medicament.getId(), request.getId());
         }
@@ -507,17 +507,17 @@ public final class AuditUtils
         ImportMedNotRegisteredEntity refProduct = clinicalTrialsEntity.getReferenceProduct();
         if (refProduct != null && refProduct.getName() != null && !refProduct.getName().isEmpty())
         {
-            dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("nume produs de referinta", refProduct.getName(), refProduct.getId(), request.getId()));
+            dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("nume MIC Referință", refProduct.getName(), refProduct.getId(), request.getId()));
             if (refProduct.getManufacture() != null)
-                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("id producator produs de referinta", refProduct.getManufacture().getId(), refProduct.getId(), request.getId()));
+                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("id producator MIC Referință", refProduct.getManufacture().getId(), refProduct.getId(), request.getId()));
             if (refProduct.getDose() != null && !refProduct.getDose().isEmpty())
-                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("concentratia produs de referinta", refProduct.getDose(), refProduct.getId(), request.getId()));
+                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("concentratia MIC Referință", refProduct.getDose(), refProduct.getId(), request.getId()));
             if (refProduct.getPharmaceuticalForm() != null)
-                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("forma farmaceutica a produsului de referinta", refProduct.getPharmaceuticalForm().getDescription(), refProduct.getId(), request.getId()));
+                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("forma farmaceutica MIC Referință", refProduct.getPharmaceuticalForm().getDescription(), refProduct.getId(), request.getId()));
             if (refProduct.getAtcCode() != null)
-                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("codul ATC a a produsului de referinta", refProduct.getAtcCode().getCode(), refProduct.getId(), request.getId()));
+                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("grupa farmacoterapeutică MIC Referință", refProduct.getAtcCode().getCode(), refProduct.getId(), request.getId()));
             if (refProduct.getAdministratingMode() != null && !refProduct.getAdministratingMode().isEmpty())
-                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("modul de administrare a produsului de referinta", refProduct.getAdministratingMode(), refProduct.getId(), request.getId()));
+                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("modul de administrare MIC Referință", refProduct.getAdministratingMode(), refProduct.getId(), request.getId()));
             if (!refProduct.getActiveSubstances().isEmpty())
                 fillActiveSubstances(refProduct.getActiveSubstances(), dummyEntities, refProduct.getId(), request.getId());
         }
@@ -526,11 +526,11 @@ public final class AuditUtils
         ImportMedNotRegisteredEntity placebo = clinicalTrialsEntity.getPlacebo();
         if (placebo != null && placebo.getName() != null && !placebo.getName().isEmpty())
         {
-            dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("nume placebo", placebo.getName(), placebo.getId(), request.getId()));
+            dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("nume MIC Placebo", placebo.getName(), placebo.getId(), request.getId()));
             if (placebo.getDose() != null && !placebo.getDose().isEmpty())
-                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("concentratia placebo", placebo.getDose(), placebo.getId(), request.getId()));
+                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("concentratia MIC Placebo", placebo.getDose(), placebo.getId(), request.getId()));
             if (placebo.getAdministratingMode() != null && !placebo.getAdministratingMode().isEmpty())
-                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("modul de administrare placebo", placebo.getAdministratingMode(), placebo.getId(), request.getId()));
+                dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("modul de administrare MIC Placebo", placebo.getAdministratingMode(), placebo.getId(), request.getId()));
         }
 
         //Unitatea medicala auditing
@@ -665,32 +665,32 @@ public final class AuditUtils
         CtMedAmendEntity medicament = clinicTrialAmendEntity.getMedicament();
         if ((medicament.getNameFrom() != null && !medicament.getNameFrom().equals(medicament.getNameTo()))
                 || (medicament.getNameTo() != null && !medicament.getNameTo().equals(medicament.getNameFrom())))
-            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("nume medicament", medicament.getNameFrom(), medicament.getNameTo(), medicament.getId(), request.getId()));
+            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("nume MIC Testat", medicament.getNameFrom(), medicament.getNameTo(), medicament.getId(), request.getId()));
         if ((medicament.getManufactureFrom() != null && !medicament.getManufactureFrom().equals(medicament.getManufactureTo()))
                 || (medicament.getManufactureTo() != null && !medicament.getManufactureTo().equals(medicament.getManufactureFrom())))
-            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("producator medicament",
+            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("producator MIC Testat",
                     medicament.getManufactureFrom() == null ? medicament.getManufactureFrom() : medicament.getManufactureFrom().getDescription(),
                     medicament.getManufactureTo() == null ? medicament.getManufactureTo() : medicament.getManufactureTo().getDescription(),
                     medicament.getId(), request.getId()));
         if ((medicament.getDoseFrom() != null && !medicament.getDoseFrom().equals(medicament.getDoseTo()))
                 || (medicament.getDoseTo() != null && !medicament.getDoseTo().equals(medicament.getDoseFrom())))
-            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("concentratia medicamentului", medicament.getDoseFrom(),
+            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("concentratia MIC Testat", medicament.getDoseFrom(),
                     medicament.getDoseTo(), medicament.getId(), request.getId()));
         if ((medicament.getPharmFormFrom() != null && !medicament.getPharmFormFrom().equals(medicament.getPharmFormTo()))
                 || (medicament.getPharmFormTo() != null && !medicament.getPharmFormTo().equals(medicament.getPharmFormFrom())))
-            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("forma farmaceutica a medicamentului",
+            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("forma farmaceutica MIC Testat",
                     medicament.getPharmFormFrom() == null ? medicament.getPharmFormFrom() : medicament.getPharmFormFrom().getDescription(),
                     medicament.getPharmFormTo() == null ? medicament.getPharmFormTo() : medicament.getPharmFormTo().getDescription(),
                     medicament.getId(), request.getId()));
         if ((medicament.getAtcCodeFrom() != null && !medicament.getAtcCodeFrom().equals(medicament.getAtcCodeTo()))
                 || (medicament.getAtcCodeTo() != null && !medicament.getAtcCodeTo().equals(medicament.getAtcCodeFrom())))
-            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("codul ATC a medicamentului",
+            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("grupa farmacoterapeutică MIC Testat",
                     medicament.getAtcCodeFrom() == null ? medicament.getAtcCodeFrom() : medicament.getAtcCodeFrom().getDescription(),
                     medicament.getAtcCodeTo() == null ? medicament.getAtcCodeTo() : medicament.getAtcCodeTo().getDescription(),
                     medicament.getId(), request.getId()));
         if ((medicament.getAdministModeFrom() != null && !medicament.getAdministModeFrom().equals(medicament.getAdministModeTo()))
                 || (medicament.getAdministModeTo() != null && !medicament.getAdministModeTo().equals(medicament.getAdministModeFrom())))
-            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("modul de administrare a medicamentului", medicament.getAdministModeFrom(),
+            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("modul de administrare MIC Testat", medicament.getAdministModeFrom(),
                     medicament.getAdministModeTo(), medicament.getId(), request.getId()));
         if (!medicament.getActiveSubstances().isEmpty())
             fillAmendmentActiveSubstances(medicament.getActiveSubstances(), dummyEntities, medicament.getId(), request.getId());
@@ -699,32 +699,32 @@ public final class AuditUtils
         CtMedAmendEntity referenceProduct = clinicTrialAmendEntity.getReferenceProduct();
         if ((referenceProduct.getNameFrom() != null && !referenceProduct.getNameFrom().equals(referenceProduct.getNameTo()))
                 || (referenceProduct.getNameTo() != null && !referenceProduct.getNameTo().equals(referenceProduct.getNameFrom())))
-            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("nume produs de referinta", referenceProduct.getNameFrom(), referenceProduct.getNameTo(), referenceProduct.getId(), request.getId()));
+            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("nume MIC Referință", referenceProduct.getNameFrom(), referenceProduct.getNameTo(), referenceProduct.getId(), request.getId()));
         if ((referenceProduct.getManufactureFrom() != null && !referenceProduct.getManufactureFrom().equals(referenceProduct.getManufactureTo()))
                 || (referenceProduct.getManufactureTo() != null && !referenceProduct.getManufactureTo().equals(referenceProduct.getManufactureFrom())))
-            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("producator produs de referinta",
+            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("producator MIC Referință",
                     referenceProduct.getManufactureFrom() == null ? referenceProduct.getManufactureFrom() : referenceProduct.getManufactureFrom().getDescription(),
                     referenceProduct.getManufactureTo() == null ? referenceProduct.getManufactureTo() : referenceProduct.getManufactureTo().getDescription(),
                     referenceProduct.getId(), request.getId()));
         if ((referenceProduct.getDoseFrom() != null && !referenceProduct.getDoseFrom().equals(referenceProduct.getDoseTo()))
                 || (referenceProduct.getDoseTo() != null && !referenceProduct.getDoseTo().equals(referenceProduct.getDoseFrom())))
-            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("concentratia produsului de referinta", referenceProduct.getDoseFrom(),
+            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("concentratia MIC Referință", referenceProduct.getDoseFrom(),
                     referenceProduct.getDoseTo(), referenceProduct.getId(), request.getId()));
         if ((referenceProduct.getPharmFormFrom() != null && !referenceProduct.getPharmFormFrom().equals(referenceProduct.getPharmFormTo()))
                 || (referenceProduct.getPharmFormTo() != null && !referenceProduct.getPharmFormTo().equals(referenceProduct.getPharmFormFrom())))
-            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("forma farmaceutica a produsului de referinta",
+            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("forma farmaceutica MIC Referință",
                     referenceProduct.getPharmFormFrom() == null ? referenceProduct.getPharmFormFrom() : referenceProduct.getPharmFormFrom().getDescription(),
                     referenceProduct.getPharmFormTo() == null ? referenceProduct.getPharmFormTo() : referenceProduct.getPharmFormTo().getDescription(),
                     referenceProduct.getId(), request.getId()));
         if ((referenceProduct.getAtcCodeFrom() != null && !referenceProduct.getAtcCodeFrom().equals(referenceProduct.getAtcCodeTo()))
                 || (referenceProduct.getAtcCodeTo() != null && !referenceProduct.getAtcCodeTo().equals(referenceProduct.getAtcCodeFrom())))
-            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("codul ATC a produsului de referinta",
+            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("grupa farmacoterapeutică MIC Referință",
                     referenceProduct.getAtcCodeFrom() == null ? referenceProduct.getAtcCodeFrom() : referenceProduct.getAtcCodeFrom().getDescription(),
                     referenceProduct.getAtcCodeTo() == null ? referenceProduct.getAtcCodeTo() : referenceProduct.getAtcCodeTo().getDescription(),
                     referenceProduct.getId(), request.getId()));
         if ((referenceProduct.getAdministModeFrom() != null && !referenceProduct.getAdministModeFrom().equals(referenceProduct.getAdministModeTo()))
                 || (referenceProduct.getAdministModeTo() != null && !referenceProduct.getAdministModeTo().equals(referenceProduct.getAdministModeFrom())))
-            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("modul de administrare a produsului de referinta", referenceProduct.getAdministModeFrom(),
+            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("modul de administrare MIC Referință", referenceProduct.getAdministModeFrom(),
                     referenceProduct.getAdministModeTo(), referenceProduct.getId(), request.getId()));
         if (!referenceProduct.getActiveSubstances().isEmpty())
             fillAmendmentActiveSubstances(referenceProduct.getActiveSubstances(), dummyEntities, referenceProduct.getId(), request.getId());
@@ -733,14 +733,14 @@ public final class AuditUtils
         CtMedAmendEntity placebo = clinicTrialAmendEntity.getPlacebo();
         if ((placebo.getNameFrom() != null && !placebo.getNameFrom().equals(placebo.getNameTo()))
                 || (placebo.getNameTo() != null && !placebo.getNameTo().equals(placebo.getNameFrom())))
-            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("nume placebo", placebo.getNameFrom(), placebo.getNameTo(), placebo.getId(), request.getId()));
+            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("nume MIC Placebo", placebo.getNameFrom(), placebo.getNameTo(), placebo.getId(), request.getId()));
         if ((placebo.getDoseFrom() != null && !placebo.getDoseFrom().equals(placebo.getDoseTo()))
                 || (placebo.getDoseTo() != null && !placebo.getDoseTo().equals(placebo.getDoseFrom())))
-            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("concentratia placebo", placebo.getDoseFrom(),
+            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("concentratia MIC Placebo", placebo.getDoseFrom(),
                     placebo.getDoseTo(), placebo.getId(), request.getId()));
         if ((placebo.getAdministModeFrom() != null && !placebo.getAdministModeFrom().equals(placebo.getAdministModeTo()))
                 || (placebo.getAdministModeTo() != null && !placebo.getAdministModeTo().equals(placebo.getAdministModeFrom())))
-            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("modul de administrare placebo", placebo.getAdministModeFrom(),
+            dummyEntities.add(fillAuditLogEntityForAmendmentClinicalTrialRegistration("modul de administrare MIC Placebo", placebo.getAdministModeFrom(),
                     placebo.getAdministModeTo(), placebo.getId(), request.getId()));
 
         //Unitatea medicala auditing

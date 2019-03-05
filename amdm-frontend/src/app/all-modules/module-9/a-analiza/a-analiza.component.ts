@@ -89,10 +89,15 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
     refProdActiveSubstances: any[] = [];
 
     expertList: any[] = [];
-    private subscriptions: Subscription[] = [];
     isValidRefProduct = false;
-
     mandatedContactName: string;
+    manufacturersPlacebo: Observable<any[]>;
+    loadingManufacturerPlacebo = false;
+    manufacturerInputsPlacebo = new Subject<string>();
+    farmFormsPlacebo: Observable<any[]>;
+    loadingFarmFormsPlacebo = false;
+    farmFormsInputsPlacebo = new Subject<string>();
+    private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder,
                 public dialog: MatDialog,
@@ -167,7 +172,8 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             'pharmaceuticalForm': [null, Validators.required],
             'atcCode': [null],
             'administratingMode': [null, Validators.required],
-            'activeSubstances': [null]
+            'activeSubstances': [null],
+            'subjectsSC': [null]
         });
 
         this.referenceProductFormn = this.fb.group({
@@ -182,7 +188,8 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             'pharmaceuticalForm': [null, Validators.required],
             'atcCode': [null, Validators.required],
             'administratingMode': [null, Validators.required],
-            'activeSubstances': [null]
+            'activeSubstances': [null],
+            'subjectsSC': [null]
         });
 
         this.placeboFormn = this.fb.group({
@@ -197,7 +204,8 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             'pharmaceuticalForm': [null],
             'atcCode': [null, Validators.required],
             'administratingMode': [null],
-            'activeSubstances': [null]
+            'activeSubstances': [null],
+            'subjectsSC': [null]
         });
 
         this.addInvestigatorForm = this.fb.group({
@@ -221,10 +229,24 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
 
         this.disableEnablePage();
 
+        this.loadManufacturersPlacebo();
+        this.loadFarmFormsPlacebo();
+
         this.loadPhasesList();
     }
 
     subscribeToEvents() {
+        this.subscriptions.push(
+            this.medicamentForm.get('atcCode').valueChanges.subscribe(value => {
+                if (value) {
+                    this.medicamentForm.get('subjectsSC').reset();
+                    this.medicamentForm.get('subjectsSC').disable();
+                } else {
+                    this.medicamentForm.get('subjectsSC').enable();
+                }
+            })
+        );
+
         this.subscriptions.push(
             this.referenceProductFormn.get('name').valueChanges.subscribe(value => {
                 (value && value.length > 0) ? this.isValidRefProduct = true : this.isValidRefProduct = false;
@@ -254,14 +276,16 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
             this.placeboFormn.get('name').valueChanges.subscribe(value => {
                 if (value && value.length > 0) {
                     this.placeboFormn.get('administratingMode').enable();
-                    this.placeboFormn.get('dose').enable();
+                    this.placeboFormn.get('pharmaceuticalForm').enable();
+                    this.placeboFormn.get('manufacture').enable();
                 } else {
                     this.placeboFormn.get('administratingMode').disable();
                     this.placeboFormn.get('administratingMode').reset();
-                    this.placeboFormn.get('dose').disable();
-                    this.placeboFormn.get('dose').reset();
+                    this.placeboFormn.get('pharmaceuticalForm').disable();
+                    this.placeboFormn.get('pharmaceuticalForm').reset();
+                    this.placeboFormn.get('manufacture').disable();
+                    this.placeboFormn.get('manufacture').reset();
                 }
-
             })
         );
     }
@@ -387,6 +411,50 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                 error => console.log(error)
             ));
         }));
+    }
+
+    loadFarmFormsPlacebo() {
+        this.farmFormsPlacebo =
+            this.farmFormsInputsPlacebo.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) {
+                        return true;
+                    }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingFarmFormsPlacebo = true;
+
+                }),
+                flatMap(term =>
+                    this.administrationService.getAllPharamceuticalFormsByName(term).pipe(
+                        tap(() => this.loadingFarmFormsPlacebo = false)
+                    )
+                )
+            );
+    }
+
+    loadManufacturersPlacebo() {
+        this.manufacturersPlacebo =
+            this.manufacturerInputsPlacebo.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) {
+                        return true;
+                    }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingManufacturerPlacebo = true;
+
+                }),
+                flatMap(term =>
+                    this.administrationService.getManufacturersByName(term).pipe(
+                        tap(() => this.loadingManufacturerPlacebo = false)
+                    )
+                )
+            );
     }
 
     loadMedicalInstitutionsList() {
@@ -814,13 +882,13 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         if (this.medicamentForm.invalid) {
             console.log('this.medicamentForm', this.medicamentForm);
             this.dysplayInvalidControl(this.medicamentForm);
-            this.errorHandlerService.showError('Medicamentul de investigat contine date invalide');
+            this.errorHandlerService.showError('MIC Testat contine date invalide');
             return;
         }
 
         if (this.referenceProductFormn.invalid) {
             this.dysplayInvalidControl(this.referenceProductFormn);
-            this.errorHandlerService.showError('Produsul de referinta contine date invalide');
+            this.errorHandlerService.showError('MIC Referință contine date invalide');
             return;
         }
 

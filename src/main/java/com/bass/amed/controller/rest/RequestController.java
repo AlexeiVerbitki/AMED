@@ -2002,7 +2002,7 @@ public class RequestController
         }
         else
         {
-            System.out.println("\n\n\n\n=====================\n        if (requests.getInvoiceEntity().getInvoiceDetailsEntitySet() != null)\n is null\n=====================\n\n\n");
+            System.out.println("\n\n\n\n=====================\ngetImportInvoiceEntity is null\n=====================\n\n\n");
         }
 
 
@@ -2091,11 +2091,14 @@ public class RequestController
             em = entityManagerFactory.createEntityManager();
             em.getTransaction().begin();
             ImportAuthorizationEntity importAuthorizationEntity = em.find(ImportAuthorizationEntity.class, requests.getImportAuthorizationEntity().getId()); /*requests.getClinicalTrails()*/
+            InvoiceEntity invoiceEntity = new InvoiceEntity();
             requests.setImportAuthorizationEntity(importAuthorizationEntity);
+            requests.setInvoiceEntity(invoiceEntity);
             em.persist(requests);
 
 
             requests.setImportAuthorizationEntity(importAuthorizationEntity);
+            requests.setInvoiceEntity(invoiceEntity);
 
             em.merge(requests);
             em.getTransaction().commit();
@@ -2111,6 +2114,22 @@ public class RequestController
         return new ResponseEntity<>(requests, HttpStatus.CREATED);
     }
 
+    @PostMapping(value = "/load-import-authorization-by-filter")
+    public ResponseEntity<List<ImportAuthorizationDTO>> getAuthorizationByFilter(@RequestBody ImportAuthorizationDTO filter) throws CustomException
+    {
+        List<ImportAuthorizationDTO> requestList = importAuthorizationRepository.getAuthorizationByFilter(filter.getAuthorizationsNumber(),
+                                                                                                          filter.getApplicant(),
+                                                                                                          filter.getExpirationDate(),
+                                                                                                          filter.getSumm(),
+                                                                                                          filter.getCurrency());
+        if (requestList != null)
+        {
+            throw new CustomException("Inregistrarea de Import nu a fost gasita");
+        }
+//        RegistrationRequestsEntity rrE = regOptional.get();
+
+        return new ResponseEntity<>(requestList, HttpStatus.OK);
+    }
 
     @GetMapping(value = "/load-import-request")
     public ResponseEntity<RegistrationRequestsEntity> getImportById(@RequestParam(value = "id") Integer id) throws CustomException
@@ -2124,8 +2143,6 @@ public class RequestController
 
         return new ResponseEntity<>(rrE, HttpStatus.OK);
     }
-
-
 
     @RequestMapping(value = "/view-import-authorization")
     public ResponseEntity<byte[]> viewImportAuthorization(@RequestBody RegistrationRequestsEntity request) throws CustomException
@@ -2510,9 +2527,7 @@ public class RequestController
         {
             throw new CustomException("Autorizatia cu numarul: " + authNr + " nu exista");
         }
-//        ImportAuthorizationEntity rrE = requestRepository.findRequestsByImportId(regOptional.get(0).getId());
 
-//        return new ResponseEntity<>(regOptional, HttpStatus.OK);
         return new ResponseEntity<>(regOptional.get(0), HttpStatus.OK);
     }
 

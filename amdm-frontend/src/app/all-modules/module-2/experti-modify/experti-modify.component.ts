@@ -26,6 +26,7 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {AddLaboratorStandardsComponent} from '../../../dialog/add-laborator-standards/add-laborator-standards.component';
 import {AddDivisionComponent} from '../../../dialog/add-division/add-division.component';
 import {isNumeric} from 'rxjs/internal-compatibility';
+import {SelectDocumentNumberComponent} from '../../../dialog/select-document-number/select-document-number.component';
 
 @Component({
     selector: 'app-experti',
@@ -246,7 +247,7 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
                         this.subscriptions.push(this.administrationService.variatonTypesJSON().subscribe(data2 => {
                                 this.variationTypesIds = JSON.stringify(data2.val2);
                                 if (data.variations) {
-                                    this.variationTypesIdsTemp =  this.variationTypesIds.substr(1);
+                                    this.variationTypesIdsTemp = this.variationTypesIds.substr(1);
                                     for (const v of data.variations) {
                                         const t = new TodoItemFlatNode();
                                         t.item = this.getVariationCodeById(v.variation.id, v.value);
@@ -307,9 +308,9 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
 
     getVariationCodeById(id: string, value: string): string {
         const i = this.variationTypesIdsTemp.indexOf(value + '":"' + id + '"') + value.length - 1;
-        const tempStr =  this.variationTypesIdsTemp.substr(1, i);
+        const tempStr = this.variationTypesIdsTemp.substr(1, i);
         const j = tempStr.lastIndexOf('"') + 1;
-        const finalStr  = tempStr.substr(j, i);
+        const finalStr = tempStr.substr(j, i);
         this.variationTypesIdsTemp = this.variationTypesIdsTemp.replace('"' + finalStr + '":"' + id + '"', '');
         return finalStr;
     }
@@ -395,7 +396,7 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
                 registrationDate: this.expertForm.get('medicament.registrationDate').value,
                 requestDate: this.expertForm.get('startDate').value,
                 variationTip: this.modelToSubmit.variations[0].value,
-                requestId : this.expertForm.get('id').value
+                requestId: this.expertForm.get('id').value
             };
 
             this.subscriptions.push(this.documentService.viewMedicamentModificationCertificate(m).subscribe(data => {
@@ -437,6 +438,46 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
                 }
                 )
             );
+        } else if (document.docType.category == 'SAV') {
+
+            const find = this.documents.find(t => t.docType.category == 'OM');
+            if (!find) {
+                this.errorHandlerService.showError('Ordinul de aprobare a modificarilor nu este atasat.');
+                return;
+            }
+
+            const o = this.documents.find(t => t.docType.category == 'OM');
+
+            const dialogConfig2 = new MatDialogConfig();
+
+            dialogConfig2.disableClose = false;
+            dialogConfig2.autoFocus = true;
+            dialogConfig2.hasBackdrop = true;
+
+            dialogConfig2.width = '400px';
+
+            const dialogRef = this.dialog.open(SelectDocumentNumberComponent, dialogConfig2);
+
+            dialogRef.afterClosed().subscribe(result => {
+                if (result && result.response) {
+                    const m = {
+                        medName: this.expertForm.get('medicamentName').value,
+                        orderNumber: o.number,
+                        requestId: this.expertForm.get('id').value,
+                        srisoareDeAprobareNumber : result.docNr
+                    };
+                    this.subscriptions.push(this.documentService.viewScrisoareDeAprobare(m).subscribe(data => {
+                            const file = new Blob([data], {type: 'application/pdf'});
+                            const fileURL = URL.createObjectURL(file);
+                            window.open(fileURL);
+                        }, error => {
+                            console.log('error ', error);
+                        }
+                        )
+                    );
+                }
+            });
+
         }
     }
 
@@ -535,13 +576,15 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
         x.outputDocuments = this.outputDocuments;
         x.medicaments = [];
         x.expertList = this.expertList;
-    	x.laboratorReferenceStandards = this.standarts;
+        x.laboratorReferenceStandards = this.standarts;
 
         x.medicamentHistory[0].atcCodeTo = this.expertForm.get('medicament.atcCodeTo').value;
         x.medicamentHistory[0].registrationDate = this.expertForm.get('medicament.registrationDate').value;
 
         x.medicamentHistory[0].divisionHistory = this.divisions;
-        x.medicamentHistory[0].divisionHistory.forEach(t => {t.instructionsHistory = []; });
+        x.medicamentHistory[0].divisionHistory.forEach(t => {
+            t.instructionsHistory = [];
+        });
         x.medicamentHistory[0].divisionHistory.forEach(t => {
             t.instructionsHistory.push.apply(t.instructionsHistory, t.instructions);
             t.instructionsHistory.push.apply(t.instructionsHistory, t.machets);
@@ -579,7 +622,7 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
                     id: this.expertForm.get('id').value,
                     medicaments: this.modelToSubmit.medicaments,
                     medicamentHistory: this.modelToSubmit.medicamentHistory,
-                    variations : this.modelToSubmit.variations
+                    variations: this.modelToSubmit.variations
                 };
                 modelToSubmit.requestHistories.push({
                     startDate: this.expertForm.get('data').value, endDate: new Date(),
@@ -659,7 +702,7 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
         dialogConfig2.width = '1100px';
 
         dialogConfig2.data = {
-            value : {code : this.medicamentsDetails[0].code, id : this.medicamentsDetails[0].id}
+            value: {code: this.medicamentsDetails[0].code, id: this.medicamentsDetails[0].id}
         };
 
         this.dialog.open(MedicamentDetailsDialogComponent, dialogConfig2);
@@ -771,7 +814,7 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
                 x.registrationRequestMandatedContacts = this.registrationRequestMandatedContacts;
 
                 x.documents = this.documents;
-                x.outputDocuments = this.outputDocuments.filter(t => t.docType.category != 'MP');
+                x.outputDocuments = this.outputDocuments.filter(t => t.docType.category != 'MP' &&  t.docType.category != 'SAV');
                 x.expertList = this.expertList;
 
                 x.variations = [];
@@ -842,7 +885,9 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
         x.outputDocuments = this.outputDocuments;
         x.laboratorReferenceStandards = this.standarts;
         x.medicamentHistory[0].divisionHistory = this.divisions;
-        x.medicamentHistory[0].divisionHistory.forEach(t => {t.instructionsHistory = []; });
+        x.medicamentHistory[0].divisionHistory.forEach(t => {
+            t.instructionsHistory = [];
+        });
         x.medicamentHistory[0].divisionHistory.forEach(t => {
             t.instructionsHistory.push.apply(t.instructionsHistory, t.instructions);
             t.instructionsHistory.push.apply(t.instructionsHistory, t.machets);
@@ -1113,7 +1158,9 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
                 this.loadingService.show();
                 this.modelToSubmit.outputDocuments = Object.assign([], this.outputDocuments);
                 this.modelToSubmit.outputDocuments.forEach((item, index) => {
-                    if (item === doc) { this.modelToSubmit.outputDocuments.splice(index, 1); }
+                    if (item === doc) {
+                        this.modelToSubmit.outputDocuments.splice(index, 1);
+                    }
                 });
 
                 if (doc.docType.category == 'SL') {
@@ -1168,7 +1215,7 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
         dialogConfig2.width = '1000px';
         dialogConfig2.height = '800px';
 
-        dialogConfig2.data = {values: this.checklistSelection, disabled : false};
+        dialogConfig2.data = {values: this.checklistSelection, disabled: false};
 
         const dialogRef = this.dialog.open(SelectVariationTypeComponent, dialogConfig2);
 

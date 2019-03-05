@@ -66,7 +66,7 @@ public class DrugDocumentsController {
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
         } catch (Exception e) {
-            throw new CustomException(e.getMessage());
+            throw new CustomException(e.getMessage(), e);
         }
 
         return ResponseEntity.ok().header("Content-Type", "application/pdf")

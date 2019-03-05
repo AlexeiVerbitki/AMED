@@ -891,13 +891,13 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
         if (this.medicamentForm.invalid) {
             this.dysplayInvalidControl(this.medicamentForm);
-            this.errorHandlerService.showError('Medicamentul de investigat contine date invalide');
+            this.errorHandlerService.showError('MIC Testat contine date invalide');
             return;
         }
 
         if (this.referenceProductFormn.invalid) {
             this.dysplayInvalidControl(this.referenceProductFormn);
-            this.errorHandlerService.showError('Produsul de referinta contine date invalide');
+            this.errorHandlerService.showError('MIC Referință contine date invalide');
             return;
         }
 

@@ -248,7 +248,7 @@
                     <div class="md-form">
                         <input id="numEudraCT" mdbInputDirective type="text" class="form-control"
                                formControlName="eudraCtNr">
-                        <label for="numEudraCT">Numărul Eudra CT nr. <span class="text-danger">*</span></label>
+                        <label for="numEudraCT">Eudra CT nr. <span class="text-danger">*</span></label>
                     </div>
                 </div>
             </div>
@@ -264,7 +264,7 @@
                     <div class="md-form">
                         <input id="popStudClinicNumNational" mdbInputDirective type="number" class="form-control"
                                formControlName="trialPopNat">
-                        <label for="popStudClinicNumNational">Numărul pacienților naționali <span
+                        <label for="popStudClinicNumNational">Numărul subiecți naționali <span
                                 class="text-danger">*</span></label>
                     </div>
                 </div>
@@ -272,7 +272,7 @@
                     <div class="md-form">
                         <input id="popStudClinicNumInternational" mdbInputDirective type="number" class="form-control"
                                formControlName="trialPopInternat">
-                        <label for="popStudClinicNumInternational">Numărul pacienților internaționali <span
+                        <label for="popStudClinicNumInternational">Numărul subiecți internaționali <span
                                 class="text-danger">*</span></label>
                     </div>
                 </div>
@@ -287,7 +287,7 @@
                                    placeholder="Instituţia medicala" formControlName="medicalInstitution"
                                    required="true">
                             <ng-template ng-option-tmp ng-label-tmp let-item="item">
-                                {{item.name}}ponsorul Studiului clinic
+                                {{item.name}}
                             </ng-template>
                         </ng-select>
                     </div>
@@ -390,7 +390,7 @@
             <hr>
 
             <div [formGroup]="medicamentForm">
-                <h5 class="text-center font-weight-bold">Medicamentul de investigat</h5>
+                <h5 class="text-center font-weight-bold">MIC Testat</h5>
                 <div class="row">
                     <div class="col-4">
                         <div class="md-form-modified">
@@ -416,7 +416,7 @@
                     </div>
                     <div class="col-4">
                         <div class="md-form-modified">
-                            <mat-form-field>
+                            <mat-form-field class="w-100">
                                 <input type="text" matInput placeholder="Concentrație" formControlName="dose">
                             </mat-form-field>
                         </div>
@@ -478,7 +478,7 @@
                     </table>
                 </div>
                 <div class="row">
-                    <div class="col-4">
+                    <div class="col-3">
                         <div class="md-form-modified">
                             <ng-select [items]="farmForms | async"
                                        bindLabel="description"
@@ -493,11 +493,11 @@
                             </ng-select>
                         </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-3">
                         <div class="md-form-modified">
                             <ng-select [items]="atcCodes | async"
                                        bindLabel="description"
-                                       placeholder="Grupa farmaceutica"
+                                       placeholder="Grupa farmacoterapeutică"
                                        formControlName="atcCode"
                                        [loading]="loadingAtcCodes"
                                        [typeahead]="atcCodesInputs">
@@ -508,7 +508,15 @@
                             </ng-select>
                         </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-3">
+                        <div class="md-form-modified">
+                            <mat-form-field class="w-100">
+                                <input type="text" matInput placeholder="Populaţie subiecţi SC"
+                                       formControlName="subjectsSC">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-3">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
                                 <input type="text" matInput placeholder="Calea de administrare"
@@ -521,7 +529,7 @@
             </div>
 
             <div [formGroup]="referenceProductFormn">
-                <h5 class="text-center font-weight-bold">Produsul de referinţă</h5>
+                <h5 class="text-center font-weight-bold">MIC Referință</h5>
                 <div class="row">
                     <div class="col-4">
                         <div class="md-form-modified">
@@ -623,7 +631,7 @@
                     <div class="col-4">
                         <div class="md-form-modified">
                             <ng-select [items]="atcCodesRfPr | async" bindLabel="description"
-                                       placeholder="Grupa farmaceutica"
+                                       placeholder="Grupa farmacoterapeutică"
                                        formControlName="atcCode" [loading]="loadingAtcCodesRfPr"
                                        [typeahead]="atcCodesInputsRfPr"
                                        required="true">
@@ -648,7 +656,7 @@
 
 
             <div [formGroup]="placeboFormn">
-                <h5 class="text-center font-weight-bold">Placebo</h5>
+                <h5 class="text-center font-weight-bold">MIC Placebo</h5>
                 <div class="row">
                     <div class="col-4">
                         <div class="md-form-modified">
@@ -659,9 +667,32 @@
                     </div>
                     <div class="col-4">
                         <div class="md-form-modified">
-                            <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Concentrație" formControlName="dose">
-                            </mat-form-field>
+                            <ng-select [items]="manufacturersPlacebo | async"
+                                       bindLabel="description"
+                                       placeholder="Producatorul"
+                                       formControlName="manufacture"
+                                       [loading]="loadingManufacturerPlacebo"
+                                       [typeahead]="manufacturerInputsPlacebo"
+                                       required="true">
+                                <ng-template ng-option-tmp let-item="item">
+                                    {{item.description}}
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="md-form-modified">
+                            <ng-select [items]="farmFormsPlacebo | async"
+                                       bindLabel="description"
+                                       placeholder="Forma farmaceutica"
+                                       formControlName="pharmaceuticalForm"
+                                       [loading]="loadingFarmFormsPlacebo"
+                                       [typeahead]="farmFormsInputsPlacebo"
+                                       required="true">
+                                <ng-template ng-option-tmp let-item="item">
+                                    {{item.description}}
+                                </ng-template>
+                            </ng-select>
                         </div>
                     </div>
                     <div class="col-4">

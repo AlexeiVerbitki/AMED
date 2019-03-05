@@ -27,4 +27,5 @@ public class AuthorizationCertificateDTO
     private Date requestDate;
     private String variationTip;
     private Integer requestId;
+    private String srisoareDeAprobareNumber;
 }

@@ -149,14 +149,14 @@ export class AmendmentDetailsComponent implements OnInit, OnDestroy {
                 }
                 if (currentAmendment.trialPopNatFrom !== currentAmendment.trialPopNatTo) {
                     this.modifications.push({
-                        field: 'Numărul pacienților naționali',
+                        field: 'Numărul subiecți naționali',
                         oldValue: currentAmendment.trialPopNatFrom,
                         newValue: currentAmendment.trialPopNatTo
                     });
                 }
                 if (currentAmendment.trialPopInternatFrom !== currentAmendment.trialPopInternatTo) {
                     this.modifications.push({
-                        field: 'Numărul pacienților internaționali',
+                        field: 'Numărul subiecți internaționali',
                         oldValue: currentAmendment.trialPopInternatFrom,
                         newValue: currentAmendment.trialPopInternatTo
                     });
@@ -192,9 +192,9 @@ export class AmendmentDetailsComponent implements OnInit, OnDestroy {
                 if (this.isPlacebFormModified(currentAmendment.placebo)) {
                     this.isPlaceboModified = true;
                     this.placebForm.setValue(currentAmendment.placebo);
-                    console.log('isPlaceboModified modified');
+                    // console.log('isPlaceboModified modified');
                 } else {
-                    console.log('isPlaceboModified not modified');
+                    // console.log('isPlaceboModified not modified');
                 }
 
                 // console.log('this.ctAmendForm', this.ctAmendForm);

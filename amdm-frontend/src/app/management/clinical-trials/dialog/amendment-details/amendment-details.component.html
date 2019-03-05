@@ -223,7 +223,7 @@
         <hr>
 
         <div *ngIf="isMedModified" [formGroup]="medicamentForm" #f2="ngForm">
-            <h3 class="text-center font-weight-bold">Medicamentul de investigat (valoare veche)</h3>
+            <h3 class="text-center font-weight-bold">MIC Testat (valoare veche)</h3>
             <div class="row">
                 <div class="col-4">
                     <div class="md-form-modified">
@@ -303,7 +303,7 @@
                     <div class="md-form-modified-select">
                         <ng-select
                                    bindLabel="description"
-                                   placeholder="Grupa farmaceutica"
+                                   placeholder="Grupa farmacoterapeutică"
                                    formControlName="atcCodeFrom">
                         </ng-select>
                     </div>
@@ -319,7 +319,7 @@
             </div>
             <hr>
 
-            <h3 class="text-center font-weight-bold">Medicamentul de investigat (valoare noua)</h3>
+            <h3 class="text-center font-weight-bold">MIC Testat (valoare noua)</h3>
             <div class="row">
                 <div class="col-4">
                     <div class="md-form-modified">
@@ -399,7 +399,7 @@
                     <div class="md-form-modified-select">
                         <ng-select
                                 bindLabel="description"
-                                placeholder="Grupa farmaceutica"
+                                placeholder="Grupa farmacoterapeutică"
                                 formControlName="atcCodeTo">
                         </ng-select>
                     </div>
@@ -418,7 +418,7 @@
 
         </div>
         <div *ngIf="isRefProdModified" [formGroup]="refProdForm" #f3="ngForm">
-            <h3 class="text-center font-weight-bold">Produs de referinta (valoare veche)</h3>
+            <h3 class="text-center font-weight-bold">MIC Referință (valoare veche)</h3>
             <div class="row">
                 <div class="col-4">
                     <div class="md-form-modified">
@@ -498,7 +498,7 @@
                     <div class="md-form-modified-select">
                         <ng-select
                                 bindLabel="description"
-                                placeholder="Grupa farmaceutica"
+                                placeholder="Grupa farmacoterapeutică"
                                 formControlName="atcCodeFrom">
                         </ng-select>
                     </div>
@@ -514,7 +514,7 @@
             </div>
             <hr>
 
-            <h3 class="text-center font-weight-bold">Produs de referinta (valoare noua)</h3>
+            <h3 class="text-center font-weight-bold">MIC Referință (valoare noua)</h3>
             <div class="row">
                 <div class="col-4">
                     <div class="md-form-modified">
@@ -594,7 +594,7 @@
                     <div class="md-form-modified-select">
                         <ng-select
                                 bindLabel="description"
-                                placeholder="Grupa farmaceutica"
+                                placeholder="Grupa farmacoterapeutică"
                                 formControlName="atcCodeTo">
                         </ng-select>
                     </div>
@@ -611,7 +611,7 @@
             <hr>
 
             <div *ngIf="isPlaceboModified" [formGroup]="placebForm">
-                <h3 class="text-center font-weight-bold">Placebo (valoare veche)</h3>
+                <h3 class="text-center font-weight-bold">MIC Placebo (valoare veche)</h3>
                 <div class="row">
                     <div class="col-4">
                         <div class="md-form-modified">
@@ -636,7 +636,7 @@
                         </div>
                     </div>
                 </div>
-                <h3 class="text-center font-weight-bold">Placebo (valoare noua)</h3>
+                <h3 class="text-center font-weight-bold">MIC Placebo (valoare noua)</h3>
                 <div class="row">
                     <div class="col-4">
                         <div class="md-form-modified">

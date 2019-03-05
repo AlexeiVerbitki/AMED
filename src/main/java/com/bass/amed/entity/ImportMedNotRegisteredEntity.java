@@ -1,14 +1,13 @@
 package com.bass.amed.entity;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "import_med_not_registered", schema = "amed", catalog = "")
+@Table(name = "import_med_not_registered", schema = "amed")
 public class ImportMedNotRegisteredEntity {
     private Integer id;
     private String name;
@@ -22,6 +21,7 @@ public class ImportMedNotRegisteredEntity {
     private NmAtcCodesEntity atcCode;
     private String administratingMode;
     private Set<NotRegMedActiveSubstEntity> activeSubstances = new HashSet<>();
+    private String subjectsSC;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -136,14 +136,22 @@ public class ImportMedNotRegisteredEntity {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     @JoinColumn(name = "not_reg_med_id")
-    public Set<NotRegMedActiveSubstEntity> getActiveSubstances()
-    {
+    public Set<NotRegMedActiveSubstEntity> getActiveSubstances() {
         return activeSubstances;
     }
 
-    public void setActiveSubstances(Set<NotRegMedActiveSubstEntity> activeSubstances)
-    {
+    public void setActiveSubstances(Set<NotRegMedActiveSubstEntity> activeSubstances) {
         this.activeSubstances = activeSubstances;
+    }
+
+    @Basic
+    @Column(name = "subjects_sc")
+    public String getSubjectsSC() {
+        return subjectsSC;
+    }
+
+    public void setSubjectsSC(String subjectsSC) {
+        this.subjectsSC = subjectsSC;
     }
 
     @Override
@@ -162,12 +170,12 @@ public class ImportMedNotRegisteredEntity {
                 Objects.equals(pharmaceuticalForm, that.pharmaceuticalForm) &&
                 Objects.equals(atcCode, that.atcCode) &&
                 Objects.equals(administratingMode, that.administratingMode) &&
-                Objects.equals(activeSubstances, that.activeSubstances);
+                Objects.equals(activeSubstances, that.activeSubstances) &&
+                Objects.equals(subjectsSC, that.subjectsSC);
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(id, name, registrationNumber, registrationDate, internationalMedicamentName, manufacture, dose, volumeQuantityMeasurement, pharmaceuticalForm, atcCode, administratingMode, activeSubstances);
+        return Objects.hash(id, name, registrationNumber, registrationDate, internationalMedicamentName, manufacture, dose, volumeQuantityMeasurement, pharmaceuticalForm, atcCode, administratingMode, activeSubstances, subjectsSC);
     }
 }

@@ -777,6 +777,15 @@ export class EvaluarePrimaraModifyComponent implements OnInit, OnDestroy {
             });
         }
 
+        if (!this.outDocuments.find(t => t.docType.category == 'SAV')) {
+            modelToSubmit.outputDocuments.push({
+                name: 'Scrisoare de aprobare variatii',
+                docType: this.docTypesInitial.find(r => r.category == 'SAV'),
+                number: 'SAV-' + this.eForm.get('requestNumber').value,
+                date: new Date()
+            });
+        }
+
         modelToSubmit.variations = [];
         for (const sel of this.checklistSelection.selected) {
             const xid = this.getVariationId(sel.item);

@@ -359,7 +359,7 @@ public class MedAnnihilationController
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
         } catch (Exception e)
         {
-            throw new CustomException(e.getMessage());
+            throw new CustomException(e.getMessage(), e);
         }
 
         return ResponseEntity.ok().header("Content-Type", "application/pdf")
@@ -416,7 +416,7 @@ public class MedAnnihilationController
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
         } catch (Exception e)
         {
-            throw new CustomException(e.getMessage());
+            throw new CustomException(e.getMessage(), e);
         }
 
         return ResponseEntity.ok().header("Content-Type", "application/pdf")

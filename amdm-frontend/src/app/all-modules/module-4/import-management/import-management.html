@@ -93,27 +93,15 @@
                     </div>
 
 
-                    <!--<div class="col-3">-->
-                        <!--<div class="md-form-modified">-->
-                            <!--<ng-select id="customsPoints" placeholder="Vama"-->
-                                       <!--formControlName="customsPoints">-->
-                                <!--<ng-option *ngFor="let point of customsPointsList" [value]="point">{{ point?.description }} - {{point?.code}}</ng-option>-->
-                            <!--</ng-select>-->
-                        <!--<div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.customsPoints').invalid ">-->
-                            <!--<small class="text-muted"><strong class="text-danger">Vama trebuie selectată</strong>-->
-                            <!--</small>-->
-                        <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
                     <div class="col-md-3">
                         <div class="md-form-modified">
                             <ng-select id="customsPoints" [items]="customsPointsList" bindLabel="description"
                                        placeholder="Vama" formControlName="customsPoints">
                             </ng-select>
-                            <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.customsPoints').invalid ">
-                                <small class="text-muted"><strong class="text-danger">Vama trebuie selectată</strong>
-                                </small>
-                            </div>
+                        <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.customsPoints').invalid ">
+                            <small class="text-muted"><strong class="text-danger">Vama trebuie selectată</strong>
+                            </small>
+                        </div>
                         </div>
                     </div>
 
@@ -345,9 +333,9 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <!--<tr *ngFor="let unitOfImport of importData?.importAuthorizationEntity?.importAuthorizationDetailsEntityList;let i = index">-->
+                        <!--<tr *ngFor="let unitOfImport of importData?.importAuthorizationEntity.importAuthorizationDetailsEntityList;let i = index">-->
                         <!--<th scope="row">{{ unitOfImport.name }}</th>-->
-                        <!--<td *ngIf="importData?.importAuthorizationEntity?.medType!==4">{{ unitOfImport.atcCode.code}}</td>-->
+                        <!--<td *ngIf="importData?.importAuthorizationEntity.medType!==4">{{ unitOfImport.atcCode.code}}</td>-->
                         <!--<td>{{ unitOfImport.dose }}</td>-->
                         <!--<td>{{ unitOfImport.unitsOfMeasurement }}</td>-->
                         <!--<td>{{ unitOfImport.producer.description }}</td>-->
@@ -360,7 +348,7 @@
                         <!--<td>{{ unitOfImport.expirationDate | date:'mediumDate' }}</td>-->
                         <!--<td>{{ unitOfImport.customsCode.code }}</td>-->
                         <!--<td>-->
-                        <!--<mat-checkbox [disabled]="true" [checked]="importData?.importAuthorizationEntity?.importAuthorizationDetailsEntityList[i].approved" (change)="setApproved(i)"></mat-checkbox>-->
+                        <!--<mat-checkbox [disabled]="true" [checked]="importData?.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved" (change)="setApproved(i)"></mat-checkbox>-->
                         <!--</td>-->
                         <!--<td>-->
                         <!--<button class="btn btn-primary waves-light btn-sm waves-light" (click)="showunitOfImport(unitOfImport, i)" mdbWavesEffect>Adaugă</button>-->

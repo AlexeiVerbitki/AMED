@@ -447,7 +447,7 @@ public class LicenseController
 
         } catch (Exception e)
         {
-            throw new CustomException(e.getMessage());
+            throw new CustomException(e.getMessage(), e);
         }
 
         return ResponseEntity.ok().header("Content-Type", "application/pdf")

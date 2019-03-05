@@ -49,7 +49,7 @@ public class ReceiptManagementService {
                     " COMP.name as company," +
                     " PO.number as bonNumber," +
                     " PO.date as emissionDate," +
-                    " POS.id + (select max(amed.payment_orders.id)+5 from amed.payment_orders) as serviceID," +
+                    " POS.id + (select max(payment_orders.id)+5 from payment_orders) as serviceID," +
                     " if(POS.additional_payment>0, 1, 0) as suplPay," +
                     " if(POS.additional_payment>0, POS.additional_payment*POS.quantity, SCH.amount*POS.quantity) as servicesSum," +
                     " REC.id as payID," +

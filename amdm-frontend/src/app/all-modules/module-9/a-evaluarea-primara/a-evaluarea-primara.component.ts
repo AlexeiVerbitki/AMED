@@ -64,14 +64,11 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
     farmForms: Observable<any[]>;
     loadingFarmForms = false;
 
-    // measureUnits: any[] = [];
-    // measureUnitsRfPr: any[] = [];
-    // measureUnitsPlacebo: any[] = [];
-    // loadingMeasureUnits = false;
     farmFormsInputs = new Subject<string>();
     atcCodes: Observable<any[]>;
     loadingAtcCodes = false;
     atcCodesInputs = new Subject<string>();
+
     manufacturersRfPr: Observable<any[]>;
     loadingManufacturerRfPr = false;
     manufacturerInputsRfPr = new Subject<string>();
@@ -87,6 +84,14 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
     mandatedContactName: string;
     private readonly SEARCH_STRING_LENGTH: number = 2;
     private subscriptions: Subscription[] = [];
+
+    manufacturersPlacebo: Observable<any[]>;
+    loadingManufacturerPlacebo = false;
+    manufacturerInputsPlacebo = new Subject<string>();
+
+    farmFormsPlacebo: Observable<any[]>;
+    loadingFarmFormsPlacebo = false;
+    farmFormsInputsPlacebo = new Subject<string>();
 
     constructor(private fb: FormBuilder,
                 public dialog: MatDialog,
@@ -163,7 +168,8 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
             'pharmaceuticalForm': [null, Validators.required],
             'atcCode': [null],
             'administratingMode': [null, Validators.required],
-            'activeSubstances': [null]
+            'activeSubstances': [null],
+            'subjectsSC': [null]
         });
 
         this.referenceProductFormn = this.fb.group({
@@ -178,7 +184,8 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
             'pharmaceuticalForm': [null, Validators.required],
             'atcCode': [null, Validators.required],
             'administratingMode': [null, Validators.required],
-            'activeSubstances': [null]
+            'activeSubstances': [null],
+            'subjectsSC': [null]
         });
 
         this.placeboFormn = this.fb.group({
@@ -193,7 +200,8 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
             'pharmaceuticalForm': [null],
             'atcCode': [null, Validators.required],
             'administratingMode': [null],
-            'activeSubstances': [null]
+            'activeSubstances': [null],
+            'subjectsSC': [null]
         });
 
         this.addInvestigatorForm = this.fb.group({
@@ -208,7 +216,6 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         this.initPage();
 
         this.loadManufacturers();
-        //this.initMeasureUnits();
         this.loadFarmForms();
         this.loadATCCodes();
 
@@ -216,11 +223,25 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         this.loadFarmFormsRfPr();
         this.loadATCCodesRfPr();
 
+        this.loadManufacturersPlacebo();
+        this.loadFarmFormsPlacebo();
+
         this.loadPhasesList();
         this.loadInvestigatorsList();
     }
 
     subscribeToEvents() {
+        this.subscriptions.push(
+            this.medicamentForm.get('atcCode').valueChanges.subscribe(value => {
+                if (value) {
+                    this.medicamentForm.get('subjectsSC').reset();
+                    this.medicamentForm.get('subjectsSC').disable();
+                } else {
+                    this.medicamentForm.get('subjectsSC').enable();
+                }
+            })
+        );
+
         this.subscriptions.push(
             this.referenceProductFormn.get('name').valueChanges.subscribe(value => {
                 (value && value.length > 0) ? this.isValidRefProduct = true : this.isValidRefProduct = false;
@@ -250,14 +271,16 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
             this.placeboFormn.get('name').valueChanges.subscribe(value => {
                 if (value && value.length > 0) {
                     this.placeboFormn.get('administratingMode').enable();
-                    this.placeboFormn.get('dose').enable();
+                    this.placeboFormn.get('pharmaceuticalForm').enable();
+                    this.placeboFormn.get('manufacture').enable();
                 } else {
                     this.placeboFormn.get('administratingMode').disable();
                     this.placeboFormn.get('administratingMode').reset();
-                    this.placeboFormn.get('dose').disable();
-                    this.placeboFormn.get('dose').reset();
+                    this.placeboFormn.get('pharmaceuticalForm').disable();
+                    this.placeboFormn.get('pharmaceuticalForm').reset();
+                    this.placeboFormn.get('manufacture').disable();
+                    this.placeboFormn.get('manufacture').reset();
                 }
-
             })
         );
     }
@@ -315,6 +338,28 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
             );
     }
 
+    loadFarmFormsPlacebo() {
+        this.farmFormsPlacebo =
+            this.farmFormsInputsPlacebo.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) {
+                        return true;
+                    }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingFarmFormsPlacebo = true;
+
+                }),
+                flatMap(term =>
+                    this.administrationService.getAllPharamceuticalFormsByName(term).pipe(
+                        tap(() => this.loadingFarmFormsPlacebo = false)
+                    )
+                )
+            );
+    }
+
     loadManufacturersRfPr() {
         this.manufacturersRfPr =
             this.manufacturerInputsRfPr.pipe(
@@ -332,6 +377,28 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
                 flatMap(term =>
                     this.administrationService.getManufacturersByName(term).pipe(
                         tap(() => this.loadingManufacturerRfPr = false)
+                    )
+                )
+            );
+    }
+
+    loadManufacturersPlacebo() {
+        this.manufacturersPlacebo =
+            this.manufacturerInputsPlacebo.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) {
+                        return true;
+                    }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingManufacturerPlacebo = true;
+
+                }),
+                flatMap(term =>
+                    this.administrationService.getManufacturersByName(term).pipe(
+                        tap(() => this.loadingManufacturerPlacebo = false)
                     )
                 )
             );
@@ -702,7 +769,6 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
     onSubmit() {
         const formModel = this.evaluateClinicalTrailForm.getRawValue();
 
-        //if (this.evaluateClinicalTrailForm.invalid || this.paymentTotal < 0) {
         if (this.evaluateClinicalTrailForm.invalid) {
             this.dysplayInvalidControl(this.evaluateClinicalTrailForm.get('clinicalTrails') as FormGroup);
             this.errorHandlerService.showError('Datele studiului clinic contine date invalide');
@@ -710,15 +776,15 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         }
 
         if (this.medicamentForm.invalid) {
-            console.log('this.medicamentForm', this.medicamentForm);
+            // console.log('this.medicamentForm', this.medicamentForm);
             this.dysplayInvalidControl(this.medicamentForm);
-            this.errorHandlerService.showError('Medicamentul de investigat contine date invalide');
+            this.errorHandlerService.showError('MIC Testat contine date invalide');
             return;
         }
 
         if (this.referenceProductFormn.invalid) {
             this.dysplayInvalidControl(this.referenceProductFormn);
-            this.errorHandlerService.showError('Produsul de referinta contine date invalide');
+            this.errorHandlerService.showError('MIC referință contine date invalide');
             return;
         }
 
@@ -728,9 +794,11 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
             return;
         }
 
-        // return;
         // console.log('this.medicamentForm', this.medicamentForm);
         // console.log('this.referenceProductFormn', this.referenceProductFormn);
+
+        // console.log('formModel', formModel);
+        // return;
 
         this.loadingService.show();
         formModel.documents = this.docs;
@@ -744,6 +812,8 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         formModel.clinicalTrails.referenceProduct.activeSubstances = this.refProdActiveSubstances;
         formModel.clinicalTrails.placebo = this.placeboFormn.value;
 
+        // console.log('formModel', formModel);
+        // return;
 
         formModel.requestHistories.sort((one, two) => (one.id > two.id ? 1 : -1));
         formModel.requestHistories.push({
@@ -836,7 +906,6 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
     }
 
     addRefProdActiveSubstanceDialog() {
-
         const dialogConfig2 = new MatDialogConfig();
 
         dialogConfig2.disableClose = false;
@@ -863,62 +932,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         );
     }
 
-    // editMedActiveSubstance(substance: any, index: number) {
-    //     const dialogConfig2 = new MatDialogConfig();
-    //
-    //     dialogConfig2.disableClose = false;
-    //     dialogConfig2.autoFocus = true;
-    //     dialogConfig2.hasBackdrop = true;
-    //
-    //     dialogConfig2.height = '650px';
-    //     dialogConfig2.width = '600px';
-    //     dialogConfig2.data = substance;
-    //
-    //     const dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
-    //
-    //     this.subscriptions.push(
-    //         dialogRef.afterClosed().subscribe(result => {
-    //             if (result !== null && result !== undefined && result.response) {
-    //                 this.medActiveSubstances[index] = {
-    //                     activeSubstance: result.activeSubstance,
-    //                     quantity: result.activeSubstanceQuantity,
-    //                     unitsOfMeasurement: result.activeSubstanceUnit,
-    //                     manufacture: result.manufactureSA
-    //                 };
-    //             }
-    //         })
-    //     );
-    // }
-
-    // editRefProdActiveSubstance(substance: any, index: number) {
-    //     const dialogConfig2 = new MatDialogConfig();
-    //
-    //     dialogConfig2.disableClose = false;
-    //     dialogConfig2.autoFocus = true;
-    //     dialogConfig2.hasBackdrop = true;
-    //
-    //     dialogConfig2.height = '650px';
-    //     dialogConfig2.width = '600px';
-    //     dialogConfig2.data = substance;
-    //
-    //     const dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
-    //
-    //     this.subscriptions.push(
-    //         dialogRef.afterClosed().subscribe(result => {
-    //             if (result !== null && result !== undefined && result.response) {
-    //                 this.refProdActiveSubstances[index] = {
-    //                     activeSubstance: result.activeSubstance,
-    //                     quantity: result.activeSubstanceQuantity,
-    //                     unitsOfMeasurement: result.activeSubstanceUnit,
-    //                     manufacture: result.manufactureSA
-    //                 };
-    //             }
-    //         })
-    //     );
-    // }
-
     removeMedActiveSubstance(index: number) {
-
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             data: {message: 'Sunteti sigur ca doriti sa stergeti aceasta substanta?', confirm: false}
         });
@@ -933,7 +947,6 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
     }
 
     removeRefProdActiveSubstance(index: number) {
-
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             data: {message: 'Sunteti sigur ca doriti sa stergeti aceasta substanta?', confirm: false}
         });
