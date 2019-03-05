@@ -14,6 +14,8 @@ import {AuthService} from '../../../shared/service/authetication.service';
 import {MedicamentService} from '../../../shared/service/medicament.service';
 import {ImportManagementDialog} from './import-management-dialog/import-management-dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {errorHandler} from "@angular/platform-browser/src/browser";
+import {SuccessOrErrorHandlerService} from "../../../shared/service/success-or-error-handler.service";
 
 export interface PeriodicElement {
     name: string;
@@ -98,6 +100,7 @@ export class ImportManagement implements OnInit, OnDestroy {
                 private authService: AuthService,
                 public dialogConfirmation: MatDialog,
                 public medicamentService: MedicamentService,
+                private successOrErrorHandlerService: SuccessOrErrorHandlerService,
                 private administrationService: AdministrationService) {
     }
 
@@ -294,6 +297,35 @@ export class ImportManagement implements OnInit, OnDestroy {
                     if (this.requestData.importAuthorizationEntity.specificationDate) {
                         this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').setValue(new Date(this.requestData.importAuthorizationEntity.specificationDate));
                     }
+                    if (this.requestData.invoiceEntity && this.requestData.invoiceEntity.invoiceNumber) {
+                        this.evaluateImportForm.get('importAuthorizationEntity.invoiceNumber').setValue(this.requestData.invoiceEntity.invoiceNumber);
+                    }
+                    if (this.requestData.invoiceEntity && this.requestData.invoiceEntity.invoiceDate) {
+                        this.evaluateImportForm.get('importAuthorizationEntity.invoiceDate').setValue(new Date(this.requestData.invoiceEntity.invoiceDate));
+                    }
+                    if (this.requestData.invoiceEntity && this.requestData.invoiceEntity.basisForInvoice) {
+                        this.evaluateImportForm.get('importAuthorizationEntity.invoiceBasis').setValue(this.requestData.invoiceEntity.basisForInvoice);
+                    }
+                    if (this.requestData.invoiceEntity && this.requestData.invoiceEntity.customsDeclarationDate) {
+                        this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsDate').setValue(new Date(this.requestData.invoiceEntity.customsDeclarationDate));
+                    }
+                    if (this.requestData.invoiceEntity && this.requestData.invoiceEntity.customsDeclarationNumber) {
+                        this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsNumber').setValue(this.requestData.invoiceEntity.customsDeclarationNumber);
+                    }
+                    if (this.requestData.invoiceEntity && this.requestData.invoiceEntity.specification) {
+                        this.evaluateImportForm.get('importAuthorizationEntity.invoiceSpecificatie').setValue(this.requestData.invoiceEntity.specification);
+                    }
+                    if (this.requestData.invoiceEntity && this.requestData.invoiceEntity.customsPointsEntity) {
+                        let arr =[];
+                        arr.push(this.requestData.invoiceEntity.customsPointsEntity);
+                        // for (const c of this.requestData.invoiceEntity.customsPointsEntity) {
+                        //     c.descrCode = c.description + ' - ' + c.code;
+                        //     arr = [...arr, c];
+                        // }
+                        this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').setValue(this.requestData.invoiceEntity.customsPointsEntity);
+                    }
+
+
                     this.evaluateImportForm.get('importAuthorizationEntity.authorizationsNumber').setValue(this.requestData.importAuthorizationEntity.id + '/' + new Date().getFullYear() + '-AM');
 
                     this.evaluateImportForm.get('importAuthorizationEntity.seller').disable();
@@ -820,20 +852,39 @@ export class ImportManagement implements OnInit, OnDestroy {
             this.loadingService.show();
 
             let invoiceDetailsEntity: any[] = [];
-            const invoiceEntity: any = {};
+            let invoiceEntity: any = {};
+            if (this.importData && this.importData.invoiceEntity) {
+                invoiceEntity = this.importData.invoiceEntity;
+            }
 
             // this.invoiceDetails.forEach
             invoiceDetailsEntity = this.invoiceDetails;
             invoiceDetailsEntity.forEach(item => item.saved = false);
 
-            invoiceEntity.invoiceNumber = this.evaluateImportForm.get('importAuthorizationEntity.invoiceNumber').value;
-            invoiceEntity.invoiceDate = new Date(this.evaluateImportForm.get('importAuthorizationEntity.invoiceDate').value);
-            invoiceEntity.basisForInvoice = this.evaluateImportForm.get('importAuthorizationEntity.invoiceBasis').value;
-            invoiceEntity.customsDeclarationDate = new Date(this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsDate').value);
-            invoiceEntity.customsDeclarationNumber = this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsNumber').value;
-            invoiceEntity.specification = this.evaluateImportForm.get('importAuthorizationEntity.invoiceSpecificatie').value;
-            invoiceEntity.customsPointsEntity = this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value;
-            invoiceEntity.invoiceDetailsEntitySet = invoiceDetailsEntity;
+            if (this.evaluateImportForm.get('importAuthorizationEntity.invoiceNumber').value) {
+                invoiceEntity.invoiceNumber = this.evaluateImportForm.get('importAuthorizationEntity.invoiceNumber').value;
+            } else invoiceEntity.invoiceNumber = null;
+            if (this.evaluateImportForm.get('importAuthorizationEntity.invoiceDate').value) {
+                invoiceEntity.invoiceDate = new Date(this.evaluateImportForm.get('importAuthorizationEntity.invoiceDate').value);
+            } else invoiceEntity.invoiceDate = null;
+            if (this.evaluateImportForm.get('importAuthorizationEntity.invoiceBasis').value) {
+                invoiceEntity.basisForInvoice = this.evaluateImportForm.get('importAuthorizationEntity.invoiceBasis').value;
+            } else invoiceEntity.basisForInvoice = null;
+            if (this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsDate').value) {
+                invoiceEntity.customsDeclarationDate = new Date(this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsDate').value);
+            } else invoiceEntity.customsDeclarationDate = null;
+            if (this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsNumber').value) {
+                invoiceEntity.customsDeclarationNumber = this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsNumber').value;
+            } else invoiceEntity.customsDeclarationNumber = null;
+            if (this.evaluateImportForm.get('importAuthorizationEntity.invoiceSpecificatie').value) {
+                invoiceEntity.specification = this.evaluateImportForm.get('importAuthorizationEntity.invoiceSpecificatie').value;
+            } else invoiceEntity.specification = null;
+            if (this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value) {
+                invoiceEntity.customsPointsEntity = this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value;
+            } else invoiceEntity.customsPointsEntity = null;
+            if (invoiceDetailsEntity.length > 0) {
+                invoiceEntity.invoiceDetailsEntitySet = invoiceDetailsEntity;
+            } else invoiceEntity.invoiceDetailsEntitySet = null;
 
             modelToSubmit = this.requestData;
             modelToSubmit.invoiceEntity = invoiceEntity;
@@ -859,7 +910,7 @@ export class ImportManagement implements OnInit, OnDestroy {
                     // alert('after addInvoiceRequest(modelToSubmit)');
                     console.log('addInvoiceRequest(modelToSubmit).subscribe(data) ', data);
                     this.loadingService.hide();
-                    alert("Saved")
+                this.successOrErrorHandlerService.showSuccess('Autorizatia salvata');
                 }, error => {
                     // alert('Something went wrong while sending the model');
                     console.log('error: ', error);
@@ -887,20 +938,23 @@ export class ImportManagement implements OnInit, OnDestroy {
             this.loadingService.show();
 
             let invoiceDetailsEntity: any[] = [];
-            const invoiceEntity: any = {};
+            let invoiceEntity: any = {};
+            if (this.importData && this.importData.invoiceEntity) {
+                invoiceEntity = this.importData.invoiceEntity;
+            }
 
             // this.invoiceDetails.forEach
             invoiceDetailsEntity = this.invoiceDetails;
             invoiceDetailsEntity.forEach(item => item.saved = true);
 
-            invoiceEntity.invoiceNumber = this.evaluateImportForm.get('importAuthorizationEntity.invoiceNumber').value;
-            invoiceEntity.invoiceDate = new Date(this.evaluateImportForm.get('importAuthorizationEntity.invoiceDate').value);
-            invoiceEntity.basisForInvoice = this.evaluateImportForm.get('importAuthorizationEntity.invoiceBasis').value;
-            invoiceEntity.customsDeclarationDate = new Date(this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsDate').value);
-            invoiceEntity.customsDeclarationNumber = this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsNumber').value;
-            invoiceEntity.specification = this.evaluateImportForm.get('importAuthorizationEntity.invoiceSpecificatie').value;
-            invoiceEntity.customsPointsEntity = this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value;
-            invoiceEntity.invoiceDetailsEntitySet = invoiceDetailsEntity;
+            if (this.evaluateImportForm.get('importAuthorizationEntity.invoiceNumber').value) {invoiceEntity.invoiceNumber = this.evaluateImportForm.get('importAuthorizationEntity.invoiceNumber').value;}
+            if (this.evaluateImportForm.get('importAuthorizationEntity.invoiceDate').value) {invoiceEntity.invoiceDate = new Date(this.evaluateImportForm.get('importAuthorizationEntity.invoiceDate').value);}
+            if (this.evaluateImportForm.get('importAuthorizationEntity.invoiceBasis').value) {invoiceEntity.basisForInvoice = this.evaluateImportForm.get('importAuthorizationEntity.invoiceBasis').value;}
+            if (this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsDate').value) {invoiceEntity.customsDeclarationDate = new Date(this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsDate').value);}
+            if (this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsNumber').value) {invoiceEntity.customsDeclarationNumber = this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsNumber').value;}
+            if (this.evaluateImportForm.get('importAuthorizationEntity.invoiceSpecificatie').value) {invoiceEntity.specification = this.evaluateImportForm.get('importAuthorizationEntity.invoiceSpecificatie').value;}
+            if (this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value) {invoiceEntity.customsPointsEntity = this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value;}
+            if (invoiceDetailsEntity) {invoiceEntity.invoiceDetailsEntitySet = invoiceDetailsEntity;}
 
             modelToSubmit = this.requestData;
             modelToSubmit.invoiceEntity = invoiceEntity;

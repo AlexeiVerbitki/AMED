@@ -93,16 +93,27 @@
                     </div>
 
 
-                    <div class="col-3">
+                    <!--<div class="col-3">-->
+                        <!--<div class="md-form-modified">-->
+                            <!--<ng-select id="customsPoints" placeholder="Vama"-->
+                                       <!--formControlName="customsPoints">-->
+                                <!--<ng-option *ngFor="let point of customsPointsList" [value]="point">{{ point?.description }} - {{point?.code}}</ng-option>-->
+                            <!--</ng-select>-->
+                        <!--<div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.customsPoints').invalid ">-->
+                            <!--<small class="text-muted"><strong class="text-danger">Vama trebuie selectată</strong>-->
+                            <!--</small>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <div class="col-md-3">
                         <div class="md-form-modified">
-                            <ng-select id="customsPoints" placeholder="Vama"
-                                       formControlName="customsPoints">
-                                <ng-option *ngFor="let point of customsPointsList" [value]="point">{{ point?.description }} - {{point?.code}}</ng-option>
+                            <ng-select id="customsPoints" [items]="customsPointsList" bindLabel="description"
+                                       placeholder="Vama" formControlName="customsPoints">
                             </ng-select>
-                        <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.customsPoints').invalid ">
-                            <small class="text-muted"><strong class="text-danger">Vama trebuie selectată</strong>
-                            </small>
-                        </div>
+                            <div *ngIf="formSubmitted && evaluateImportForm.get('importAuthorizationEntity.customsPoints').invalid ">
+                                <small class="text-muted"><strong class="text-danger">Vama trebuie selectată</strong>
+                                </small>
+                            </div>
                         </div>
                     </div>
 
@@ -383,7 +394,7 @@
                     <br>
                 </section>
                 <div class="text-center">
-                    <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep()" type="button">Inregistreaza Declarația</button>
+                    <button class="btn btn-primary waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="nextStep()" type="button">Inregistreaza Declarația</button>
                     <button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="save()" type="button">Salvarea Declarația</button>
                     <button class="btn btn-danger waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="cancel()" type="button">Respinge Declarația</button>
                     <!--<button class="btn btn-dark-red-color waves-light btn-sm btn-sm-bl " mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>-->

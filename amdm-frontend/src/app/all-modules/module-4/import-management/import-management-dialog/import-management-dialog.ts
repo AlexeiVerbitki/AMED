@@ -510,10 +510,22 @@ export class ImportManagementDialog implements OnInit {
 
 
 
-                        if (this.dialogData.invoiceDetails.find(x => x.codeAmed == val.codeAmed)) {
+                        if (this.dialogData.invoiceDetails.find(x => (x.codeAmed && x.codeAmed == val.codeAmed))) {
                             this.invoiceDetailAdded = true;
 
                             this.addedUnits = this.dialogData.invoiceDetails.filter(x => x.codeAmed == val.codeAmed).map(x => x.quantity).reduce((a, b) => a + b );
+
+
+                            this.remainingUnits = this.approvedQuantity - this.addedUnits - this.importedUnits;
+
+
+
+                            console.log('remainingUnits:', this.addedUnits);
+
+                        }else if (this.dialogData.invoiceDetails.find(x => x.name == val.name)) {
+                            this.invoiceDetailAdded = true;
+
+                            this.addedUnits = this.dialogData.invoiceDetails.filter(x => x.name == val.name).map(x => x.quantity).reduce((a, b) => a + b );
 
 
                             this.remainingUnits = this.approvedQuantity - this.addedUnits - this.importedUnits;

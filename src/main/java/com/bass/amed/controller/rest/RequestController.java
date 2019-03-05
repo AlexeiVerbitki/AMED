@@ -1990,12 +1990,12 @@ public class RequestController
         LOGGER.debug("\n\n\n\n=====================\nAdd Import\n=====================\n\n\n");
 
 
-        if (requests.getInvoiceEntity() == null)
-        {
-            throw new CustomException("/add-invoice Threw an error, requests.getInvoice() == null");
-        }
+//        if (requests.getInvoiceEntity() == null)
+//        {
+//            throw new CustomException("/add-invoice Threw an error, requests.getInvoice() == null");
+//        }
 
-        if (requests.getInvoiceEntity().getInvoiceDetailsEntitySet() != null)
+        if (requests != null && requests.getInvoiceEntity() != null)
         {
             requestRepository.save(requests);
 
@@ -2124,6 +2124,8 @@ public class RequestController
 
         return new ResponseEntity<>(rrE, HttpStatus.OK);
     }
+
+
 
     @RequestMapping(value = "/view-import-authorization")
     public ResponseEntity<byte[]> viewImportAuthorization(@RequestBody RegistrationRequestsEntity request) throws CustomException

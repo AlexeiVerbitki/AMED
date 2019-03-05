@@ -169,6 +169,11 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
         const taskFormValue = this.taskForm.value;
         console.log('taskFormValue', taskFormValue);
         const searchCriteria = {
+            authorizationsNumber: taskFormValue.subject? taskFormValue.subject: '',
+            applicant: /*taskFormValue.applicant ? taskFormValue.applicant.id: '' */ "1",
+            expirationDate: '' /*taskFormValue.expirationDate? taskFormValue.expirationDate: null*/,
+            summ: ''/* taskFormValue.summ?  taskFormValue.summ: null*/,
+            currency: '' /*taskFormValue.currency.id? taskFormValue.currency.id: null*/,
             // requestCode: taskFormValue.requestCode ? taskFormValue.requestCode.registerCode : '',
             // requestNumber: taskFormValue.requestNumber,
             // startDateFrom: taskFormValue.startDateFrom,
@@ -194,11 +199,7 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
             // customsCode: null,
             // customsNumber: null,
             // customsTransactionType: null,
-            authorizationsNumber: taskFormValue.subject? taskFormValue.subject: '',
-            applicant: /*taskFormValue.applicant ? taskFormValue.applicant.id: '' */ "1",
-            expirationDate: '2019-12-20' /*taskFormValue.expirationDate? taskFormValue.expirationDate: null*/,
-            summ: "40"/* taskFormValue.summ?  taskFormValue.summ: null*/,
-            currency: "6" /*taskFormValue.currency.id? taskFormValue.currency.id: null*/,
+
 
             // medType: null,
             // importAuthorizationDetailsEntityList: null,
