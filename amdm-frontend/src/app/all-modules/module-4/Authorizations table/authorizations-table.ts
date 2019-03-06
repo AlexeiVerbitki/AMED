@@ -78,10 +78,10 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
         // this.importType = ['1','2']
 
         this.importType = [
-            {description: 'Medicamente inregistrate', medType: '15'},
-            {description: 'Medicamente neinregistrate', medType: '16'},
-            {description: 'Materia prima', medType: '17'},
-            {description: 'Ambalajul', medType: '18'},
+            {description: 'Medicamente inregistrate', medType: '1'},
+            {description: 'Medicamente neinregistrate', medType: '2'},
+            {description: 'Materia prima', medType: '3'},
+            {description: 'Ambalajul', medType: '4'},
         ]
 
         this.status = [
