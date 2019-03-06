@@ -51,7 +51,7 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
             'requestCode': [null],
             'requestNumber': [null, Validators.pattern('^[0-9]{0,6}$')],
             'startDateFrom': [null],
-            'startDateTo': [null],
+            'expirationDate': [null],
             'company': [null],
             'request': [null],
             'requestType': [null],
@@ -192,32 +192,32 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
 
     }
 
-    findTasks() {
-        this.loadingService.show();
-        const taskFormValue = this.taskForm.value;
-        console.log('taskFormValue', taskFormValue);
-        const searchCriteria = {
-            requestCode: taskFormValue.requestCode ? taskFormValue.requestCode.registerCode : '',
-            requestNumber: taskFormValue.requestNumber,
-            startDateFrom: taskFormValue.startDateFrom,
-            startDateTo: taskFormValue.startDateTo,
-            comanyId: taskFormValue.company ? taskFormValue.company.id : '',
-            processId: taskFormValue.request ? taskFormValue.request.id : '',
-            processTypeId: taskFormValue.requestType ? taskFormValue.requestType.id : '',
-            stepCode: taskFormValue.step ? taskFormValue.step.code : '',
-            subject: taskFormValue.subject,
-        };
-        console.log('searchCriteria', searchCriteria);
-        this.subscriptions.push(this.taskService.getTasksByFilter(searchCriteria).subscribe(data => {
-                this.loadingService.hide();
-                this.dataSource.data = data.body;
-                console.log('data.body', data.body);
-            }, error => {
-                this.loadingService.hide();
-            })
-        );
-        // console.log('searchCriteria', searchCriteria);
-    }
+    // findTasks() {
+    //     this.loadingService.show();
+    //     const taskFormValue = this.taskForm.value;
+    //     console.log('taskFormValue', taskFormValue);
+    //     const searchCriteria = {
+    //         requestCode: taskFormValue.requestCode ? taskFormValue.requestCode.registerCode : '',
+    //         requestNumber: taskFormValue.requestNumber,
+    //         startDateFrom: taskFormValue.startDateFrom,
+    //         startDateTo: taskFormValue.startDateTo,
+    //         comanyId: taskFormValue.company ? taskFormValue.company.id : '',
+    //         processId: taskFormValue.request ? taskFormValue.request.id : '',
+    //         processTypeId: taskFormValue.requestType ? taskFormValue.requestType.id : '',
+    //         stepCode: taskFormValue.step ? taskFormValue.step.code : '',
+    //         subject: taskFormValue.subject,
+    //     };
+    //     console.log('searchCriteria', searchCriteria);
+    //     this.subscriptions.push(this.taskService.getTasksByFilter(searchCriteria).subscribe(data => {
+    //             this.loadingService.hide();
+    //             this.dataSource.data = data.body;
+    //             console.log('data.body', data.body);
+    //         }, error => {
+    //             this.loadingService.hide();
+    //         })
+    //     );
+    //     // console.log('searchCriteria', searchCriteria);
+    // }
 
     navigateToUrl(rowDetails: any) {
 

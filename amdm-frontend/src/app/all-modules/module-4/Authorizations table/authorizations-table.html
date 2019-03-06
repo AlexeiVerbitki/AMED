@@ -45,10 +45,10 @@
 			<div class="col-2">
 				<div class="md-form-modified">
 					<mat-form-field class="w-100">
-						<input matInput [matDatepicker]="startDateTo" placeholder="Data inceperii pina la"
-							   formControlName="startDateTo">
-						<mat-datepicker-toggle matSuffix [for]="startDateTo"></mat-datepicker-toggle>
-						<mat-datepicker touchUi #startDateTo></mat-datepicker>
+						<input matInput [matDatepicker]="expirationDate" placeholder="Data inceperii pina la"
+							   formControlName="expirationDate">
+						<mat-datepicker-toggle matSuffix [for]="expirationDate"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #expirationDate></mat-datepicker>
 					</mat-form-field>
 				</div>
 			</div>
@@ -65,6 +65,12 @@
 							<small class="form-text text-muted">{{item.idno}}</small>
 						</ng-template>
 					</ng-select>
+				</div>
+			</div>
+			<div class="col-2">
+				<div class="md-form">
+					<input id="summ" mdbInputDirective type="text" class="form-control" formControlName="summ">
+					<label for="subject">Suma</label>
 				</div>
 			</div>
 			<!--<div class="col-2">-->

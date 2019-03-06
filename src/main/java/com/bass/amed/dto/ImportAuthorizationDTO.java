@@ -28,7 +28,7 @@ public class ImportAuthorizationDTO implements Serializable
     private String authorizationsNumber;
     private String applicant;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private String expirationDate;
+    private Date expirationDate;
     private String summ;
     private String currency;
 //    private String requestId;

@@ -31,7 +31,7 @@ public interface ImportAuthorizationDTORepository extends JpaRepository<ImportAu
             , nativeQuery = true)
     List<ImportAuthorizationDTO> getAuthorizationByFilter(String authorizationNumber,
                                                           String applicant,
-                                                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) String expirationDate,
+                                                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date expirationDate,
                                                           String summ,
                                                           String currency);
 }
