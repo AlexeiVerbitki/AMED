@@ -13,6 +13,7 @@ import {AdministrationService} from "../../../shared/service/administration.serv
 import {LoaderService} from "../../../shared/service/loader.service";
 import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
 import {RequestService} from "../../../shared/service/request.service";
+import {SuccessOrErrorHandlerService} from "../../../shared/service/success-or-error-handler.service";
 
 @Component({
     selector: 'app-task',
@@ -31,7 +32,7 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
     loadingCompany = false;
     companyInputs = new Subject<string>();
 
-    displayedColumns: any[] = ['authorizationsNumber', 'importer', 'expirationDate', 'summ', 'currency',  ];
+    displayedColumns: any[] = ['authorizationsNumber', 'importer', 'expirationDate', 'summ', 'currency', 'medicament'  ];
     dataSource = new MatTableDataSource<any>();
     row: any;
     visibility = false;
@@ -45,14 +46,15 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
                 private administrationService: AdministrationService,
                 private loadingService: LoaderService,
                 private requestService: RequestService,
-                private navbarTitleService: NavbarTitleService) {
+                private navbarTitleService: NavbarTitleService,
+                private successOrErrorHandlerService: SuccessOrErrorHandlerService,) {
         this.taskForm = fb.group({
             'requestCode': [null],
-            'requestNumber': [null, Validators.pattern('^[0-9]{0,6}$')],
+            'medicament': [null],
             'startDateFrom': [null],
             'expirationDate': [null],
             'company': [null],
-            'request': [null],
+            'medType': [null],
             'requestType': [null],
             'step': [null],
             'subject': [null],
@@ -89,7 +91,6 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
             {description: 'Respinsa', authorized: '0'}
         ]
 
-        this.taskForm.get('requestNumber').disable();
         this.taskForm.get('requestCode').valueChanges.subscribe(val1 => {
             console.log('val1', val1);
             this.disabledElements(val1);
@@ -171,9 +172,12 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
         const searchCriteria = {
             authorizationsNumber: taskFormValue.subject? taskFormValue.subject: null,
             importer: taskFormValue.company ? taskFormValue.company.id: null,
-            expirationDate: taskFormValue.expirationDate? taskFormValue.expirationDate: null,
-            summ:  taskFormValue.summ?  taskFormValue.summ: null,
-            currency: (taskFormValue.currency && taskFormValue.currency.id)? taskFormValue.currency.id: null};
+            expirationDate: taskFormValue.expirationDate ? taskFormValue.expirationDate: null,
+            summ:  taskFormValue.summ ?  taskFormValue.summ: null,
+            currency: (taskFormValue.currency && taskFormValue.currency.id)? taskFormValue.currency.id: null,
+            medicament: taskFormValue.medicament ?  taskFormValue.medicament: null,
+            medType: (taskFormValue.medType && taskFormValue.medType.medType) ?  taskFormValue.medType.medType: null,
+            status: (taskFormValue.status && taskFormValue.status.authorized) ?  taskFormValue.status.authorized: null}
 
 
         console.log('searchCriteria', searchCriteria);
@@ -181,6 +185,9 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
                 this.loadingService.hide();
                 this.dataSource.data = data.body;
                 console.log('data.body', data.body);
+            if (data.body.length == 0) {
+                this.successOrErrorHandlerService.showError('Nu exista autorizatia cu date introduse');
+            }
             }, error => {
                 this.loadingService.hide();
             })

@@ -2123,12 +2123,23 @@ public class RequestController
                                                                                                           filter.getImporter(),
                                                                                                           filter.getExpirationDate(),
                                                                                                           filter.getSumm(),
-                                                                                                          filter.getCurrency());
-        if (requestList == null)
-        {
-            throw new CustomException("Inregistrarea de Import nu a fost gasita");
-        }
+                                                                                                          filter.getCurrency(),
+                                                                                                          filter.getMedicament(),
+                                                                                                          filter.getMedType(),
+                                                                                                          filter.getStatus());
+//        if (requestList == null)
+//        {
+//            throw new CustomException("Inregistrarea de Import nu a fost gasita");
+//        }
 //        RegistrationRequestsEntity rrE = regOptional.get();
+
+        requestList.forEach(autorizatie -> {
+            if (autorizatie.getAuthorizationsNumber() == null)
+            {
+                autorizatie.setAuthorizationsNumber("Numarul ipseste");
+            }
+        });
+
 
         return new ResponseEntity<>(requestList, HttpStatus.OK);
     }

@@ -31,6 +31,8 @@ public class ImportAuthorizationDTO implements Serializable
     private Date expirationDate;
     private String summ;
     private String currency;
-//    private String requestId;
+    private String medicament;
+    private String medType;
+    private String status;
 
 }

@@ -2,10 +2,16 @@
 	<form [formGroup]="taskForm">
 		<div class="row">
 
-			<div class="col-2">
+			<div class="col-3">
 				<div class="md-form">
 					<input id="subject" mdbInputDirective type="text" class="form-control" formControlName="subject">
 					<label for="subject">Numărul autorizației</label>
+				</div>
+			</div>
+			<div class="col-4">
+				<div class="md-form">
+					<input id="medicament" mdbInputDirective type="text" class="form-control" formControlName="medicament">
+					<label for="medicament">Cod Amed sau Denumiera</label>
 				</div>
 			</div>
 			<div class="col-2">
@@ -40,12 +46,12 @@
 				</div>
 			</div>
 
-			<div class="col-3">
+			<div class="col-4">
 				<div class="md-form-modified">
-					<ng-select id="customsPoints" [items]="importType"
+					<ng-select id="medType" [items]="importType"
 					           bindLabel="description"
 					           placeholder="Tipul importului"
-					           formControlName="request">
+					           formControlName="medType">
 					</ng-select>
 				</div>
 			</div>
@@ -151,6 +157,11 @@
 				<ng-container matColumnDef="currency">
 					<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Valuta</th>
 					<td mat-cell *matCellDef="let element"> {{element.currency}}</td>
+				</ng-container>
+
+				<ng-container matColumnDef="medicament">
+					<th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Denumire</th>
+					<td mat-cell *matCellDef="let element"> {{element.medicament}}</td>
 				</ng-container>
 
 				<!--<ng-container matColumnDef="endDate">-->
