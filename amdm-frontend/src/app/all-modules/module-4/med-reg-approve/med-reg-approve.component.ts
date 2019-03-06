@@ -185,11 +185,13 @@ export class MedRegApproveComponent implements OnInit, OnDestroy {
 
                     this.importDetailsList = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList;
 
-                    this.requestService.getActiveLicenses(data.importAuthorizationEntity.importer.idno).subscribe(data1 => {
-                        // console.log('this.requestService.getActiveLicenses(data.applicant.idno).subscribe', data1);
-                        this.activeLicenses = data1;
-                        // console.log('this.activeLicenses', this.activeLicenses);
-                    });
+                    if (data.importAuthorizationEntity.importer && data.importAuthorizationEntity.importer.idno) {
+                        this.requestService.getActiveLicenses(data.importAuthorizationEntity.importer.idno).subscribe(data1 => {
+                            // console.log('this.requestService.getActiveLicenses(data.applicant.idno).subscribe', data1);
+                            this.activeLicenses = data1;
+                            // console.log('this.activeLicenses', this.activeLicenses);
+                        });
+                    }
 
                     this.importDetailsList.forEach(item => {
                         item.approved == null ? item.approved = false : (item.approved = item.approved);
