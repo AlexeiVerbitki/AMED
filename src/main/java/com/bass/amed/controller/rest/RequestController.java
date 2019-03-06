@@ -2120,7 +2120,7 @@ public class RequestController
     public ResponseEntity<List<ImportAuthorizationDTO>> getAuthorizationByFilter(@RequestBody ImportAuthorizationDTO filter) throws CustomException
     {
         List<ImportAuthorizationDTO> requestList = importAuthorizationDTORepository.getAuthorizationByFilter(filter.getAuthorizationsNumber(),
-                                                                                                          filter.getApplicant(),
+                                                                                                          filter.getImporter(),
                                                                                                           filter.getExpirationDate(),
                                                                                                           filter.getSumm(),
                                                                                                           filter.getCurrency());

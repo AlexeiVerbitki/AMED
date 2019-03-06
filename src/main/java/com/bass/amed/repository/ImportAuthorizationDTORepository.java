@@ -15,22 +15,23 @@ public interface ImportAuthorizationDTORepository extends JpaRepository<ImportAu
     @Query(value = "SELECT " +
             "     ia.id                     id,\n" +
             "     ia.authorization_number   authorizationsNumber,\n " +
-            "     ia.applicant              applicant,\n " +
+            "     ea.name                   importer,\n " +
             "     ia.expiration_date        expirationDate,\n " +
             "     ia.summ                   summ,\n " +
-            "     ia.currency               currency\n " +
+            "     c.short_description       currency\n " +
 //            "     rr.id                     requestId\n " +
             "FROM import_authorization ia\n " +
-//            "     LEFT JOIN registration_requests rr on rr.import_id = ia.id \n " +
+            "     LEFT JOIN amed.nm_economic_agents ea on ia.importer_id = ea.id \n " +
+            "     LEFT JOIN amed.nm_currencies c on ia.currency = c.id \n " +
             "     WHERE\n" +
             "     (?1 IS NULL OR ia.authorization_number = ?1) AND\n" +
-            "     (?2 IS NULL OR ia.applicant = ?2) AND\n" +
+            "     (?2 IS NULL OR ia.importer_id = ?2) AND\n" +
             "     (?3 IS NULL OR ia.expiration_date = ?3) AND\n" +
             "     (?4 IS NULL OR ia.summ = ?4) AND\n" +
             "     (?5 IS NULL OR ia.currency = ?5)"
             , nativeQuery = true)
     List<ImportAuthorizationDTO> getAuthorizationByFilter(String authorizationNumber,
-                                                          String applicant,
+                                                          String importer,
                                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date expirationDate,
                                                           String summ,
                                                           String currency);

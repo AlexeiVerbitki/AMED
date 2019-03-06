@@ -31,8 +31,7 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
     loadingCompany = false;
     companyInputs = new Subject<string>();
 
-    // displayedColumns: any[] = ['step', 'status',  'requestNumber', 'startDate', 'company', 'deponent', 'subject', 'toatlSum', 'currency', 'endDate', ];
-    displayedColumns: any[] = ['authorizationsNumber', 'applicant', 'expirationDate', 'summ', 'currency',  ];
+    displayedColumns: any[] = ['authorizationsNumber', 'importer', 'expirationDate', 'summ', 'currency',  ];
     dataSource = new MatTableDataSource<any>();
     row: any;
     visibility = false;
@@ -57,7 +56,7 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
             'requestType': [null],
             'step': [null],
             'subject': [null],
-            'toatlSum': [null],
+            'summ': [null],
             'currency': [null],
             'status': [null],
         });
@@ -171,7 +170,7 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
         console.log('taskFormValue', taskFormValue);
         const searchCriteria = {
             authorizationsNumber: taskFormValue.subject? taskFormValue.subject: null,
-            applicant: taskFormValue.company ? taskFormValue.company.id: null,
+            importer: taskFormValue.company ? taskFormValue.company.id: null,
             expirationDate: taskFormValue.expirationDate? taskFormValue.expirationDate: null,
             summ:  taskFormValue.summ?  taskFormValue.summ: null,
             currency: (taskFormValue.currency && taskFormValue.currency.id)? taskFormValue.currency.id: null};
