@@ -215,8 +215,9 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
     @Query("UPDATE RegistrationRequestsEntity p SET p.outputDocumentId = :outputDocumentId WHERE p.id in (:ids)")
     void setOutputDocumentId(@Param("ids") List<Integer> ids, @Param("outputDocumentId") Integer outputDocumentId);
 
-    @Query("SELECT i FROM  RegistrationRequestsEntity i WHERE i.importAuthorizationEntity.id LIKE CONCAT(:authId, '%')")
-    RegistrationRequestsEntity findRequestsByImportId(@Param("authId") Integer authId);
+//    @Query("SELECT i FROM  RegistrationRequestsEntity i WHERE i.importAuthorizationEntity.id = :authId")
+    @Query(value = "SELECT * FROM registration_requests i WHERE i.import_id = ?1", nativeQuery = true)
+    List<RegistrationRequestsEntity> findRequestsByImportId(@Param("authId") Integer authId);
 
     @Query("SELECT p FROM RegistrationRequestsEntity p " +
             "LEFT JOIN FETCH p.outputDocuments " +

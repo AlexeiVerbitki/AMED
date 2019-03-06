@@ -166,11 +166,12 @@ export class RequestService {
     getAuthorizationDetailsByNameOrCode(id: string, authId: string): Observable<any> {
         return this.http.get('/api/load-import-authorization-details', {params: {id: id, authId: authId}});
     }
+    getRequestByImportId(id: string): Observable<any> {
+        return this.http.get('/api/load-requests-by-import-id', {params: {id: id}});
+    }
 
     getAuthorizationByFilter(request): Observable<any> {
         return this.http.post<any>('/api/load-import-authorization-by-filter', request, {observe: 'response'});
-    // getAuthorizationByFilter(authorizationsNumber: any, applicant: any,expirationDate: any, summ: any, currency: any ): Observable<any> {
-    //   return this.http.get('/api/load-import-authorization-by-filter', {params: {authorizationsNumber: authorizationsNumber, applicant: applicant, expirationDate: expirationDate, summ: summ, currency: currency}});
     }
 
     getInvoiceQuota(nameOrCodeAmed: string, authorizationNumber: string, saved: string): Observable<any> {

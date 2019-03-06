@@ -24,13 +24,13 @@ public class ImportAuthorizationDTO implements Serializable
     }
 
     @Id
-    private Integer id;
+    private String id;
     private String authorizationsNumber;
     private String applicant;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private Date expirationDate;
+    private String expirationDate;
     private String summ;
     private String currency;
-    private String requestId;
+//    private String requestId;
 
 }

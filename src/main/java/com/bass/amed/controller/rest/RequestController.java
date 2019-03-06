@@ -83,6 +83,8 @@ public class RequestController
     @Autowired
     private ImportAuthorizationRepository importAuthorizationRepository;
     @Autowired
+    private ImportAuthorizationDTORepository importAuthorizationDTORepository;
+    @Autowired
     private ImportAuthRepository importAuthRepository;
     @Autowired
     private InvoiceDetailsRepository invoiceDetailsRepository;
@@ -2117,12 +2119,12 @@ public class RequestController
     @PostMapping(value = "/load-import-authorization-by-filter")
     public ResponseEntity<List<ImportAuthorizationDTO>> getAuthorizationByFilter(@RequestBody ImportAuthorizationDTO filter) throws CustomException
     {
-        List<ImportAuthorizationDTO> requestList = importAuthorizationRepository.getAuthorizationByFilter(filter.getAuthorizationsNumber(),
+        List<ImportAuthorizationDTO> requestList = importAuthorizationDTORepository.getAuthorizationByFilter(filter.getAuthorizationsNumber(),
                                                                                                           filter.getApplicant(),
                                                                                                           filter.getExpirationDate(),
                                                                                                           filter.getSumm(),
                                                                                                           filter.getCurrency());
-        if (requestList != null)
+        if (requestList == null)
         {
             throw new CustomException("Inregistrarea de Import nu a fost gasita");
         }
@@ -2529,6 +2531,19 @@ public class RequestController
         }
 
         return new ResponseEntity<>(regOptional.get(0), HttpStatus.OK);
+    }
+
+
+    @GetMapping(value = "/load-requests-by-import-id")
+    public ResponseEntity<Integer >getRequestByImportId(@RequestParam(value = "id") Integer id) throws CustomException
+    {
+        List<RegistrationRequestsEntity> list = requestRepository.findRequestsByImportId(id);
+        if (list == null)
+        {
+            return null;
+        }
+
+        return new ResponseEntity<>(list.get(0).getId(), HttpStatus.OK);
     }
 
     @GetMapping(value = "/load-active-licenses")

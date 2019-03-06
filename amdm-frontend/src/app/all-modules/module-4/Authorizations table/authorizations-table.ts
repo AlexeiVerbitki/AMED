@@ -31,7 +31,8 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
     loadingCompany = false;
     companyInputs = new Subject<string>();
 
-    displayedColumns: any[] = ['step', 'status',  'requestNumber', 'startDate', 'company', 'deponent', 'subject', 'toatlSum', 'currency', 'endDate', ];
+    // displayedColumns: any[] = ['step', 'status',  'requestNumber', 'startDate', 'company', 'deponent', 'subject', 'toatlSum', 'currency', 'endDate', ];
+    displayedColumns: any[] = ['authorizationsNumber', 'applicant', 'expirationDate', 'summ', 'currency',  ];
     dataSource = new MatTableDataSource<any>();
     row: any;
     visibility = false;
@@ -170,55 +171,16 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
         console.log('taskFormValue', taskFormValue);
         const searchCriteria = {
             authorizationsNumber: taskFormValue.subject? taskFormValue.subject: null,
-            applicant: taskFormValue.applicant ? taskFormValue.applicant.id: null,
+            applicant: taskFormValue.company ? taskFormValue.company.id: null,
             expirationDate: taskFormValue.expirationDate? taskFormValue.expirationDate: null,
-            summ:  taskFormValue.summ?  taskFormValue.summ: '',
+            summ:  taskFormValue.summ?  taskFormValue.summ: null,
             currency: (taskFormValue.currency && taskFormValue.currency.id)? taskFormValue.currency.id: null};
 
-            // requestCode: taskFormValue.requestCode ? taskFormValue.requestCode.registerCode : '',
-            // requestNumber: taskFormValue.requestNumber,
-            // startDateFrom: taskFormValue.startDateFrom,
-            // startDateTo: taskFormValue.startDateTo,
-            // comanyId: taskFormValue.company ? taskFormValue.company.id : '',
-            // processId: taskFormValue.request ? taskFormValue.request.id : '',
-            // processTypeId: taskFormValue.requestType ? taskFormValue.requestType.id : '',
-            // stepCode: taskFormValue.step ? taskFormValue.step.code : '',
-            // subject: taskFormValue.subject,
-            // id: null,
-            // applicationRegistrationNumber: null,
-            // applicationDate: null,
-
-            // seller: null,
-            // basisForImport: null,
-            // importer: null,
-            // conditionsAndSpecification: null,
-            // quantity: null,
-            // price: null,
-
-            // producer: null,
-            // customsDeclarationDate: null,
-            // customsCode: null,
-            // customsNumber: null,
-            // customsTransactionType: null,
-
-
-            // medType: null,
-            // importAuthorizationDetailsEntityList: null,
-            // authorized: null,
-            // contract: null,
-            // contractDate: null,
-            // anexa: null,
-            // anexaDate: null,
-            // specification: null,
-            // SpecificationDate: null,
-            // nmCustomsPointsList: null,
 
         console.log('searchCriteria', searchCriteria);
-        // this.subscriptions.push(this.requestService.getAuthorizationByFilter(searchCriteria.authorizationsNumber, searchCriteria.applicant, searchCriteria.expirationDate, searchCriteria.summ, searchCriteria.currency).subscribe(data => {
-        // this.subscriptions.push(this.requestService.getAuthorizationByFilter('', '',',','' ).subscribe(data => {
         this.subscriptions.push(this.requestService.getAuthorizationByFilter(searchCriteria).subscribe(data => {
                 this.loadingService.hide();
-                // this.dataSource.data = data;
+                this.dataSource.data = data.body;
                 console.log('data.body', data.body);
             }, error => {
                 this.loadingService.hide();
@@ -226,11 +188,6 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
         );
         console.log('searchCriteria', searchCriteria);
 
-        // let request: string = '3591';
-        // this.subscriptions.push(this.requestService.getImportRequest(request).subscribe(requestData => {
-        //     console.log('requestData',requestData);
-        //     // this.dataSource.pushrequestData;
-        // }));
         this.loadingService.hide();
 
     }
@@ -263,10 +220,17 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
     }
 
     navigateToUrl(rowDetails: any) {
-        const urlToNavigate = rowDetails.navigationUrl + rowDetails.id;
-        if (urlToNavigate !== '') {
-            this.route.navigate([urlToNavigate]);
-        }
+
+
+        this.subscriptions.push(this.requestService.getRequestByImportId(rowDetails.id).subscribe(requestId => {
+            console.log("this.requestService.getImportRequest(rowDetails.id)", requestId)
+
+            const urlToNavigate = 'dashboard/module/import-authorization/registered-medicament-approve/' + requestId;
+            if (urlToNavigate !== '') {
+                console.log('urlToNavigate', urlToNavigate)
+                this.route.navigate([urlToNavigate]);
+            }
+        }));
     }
 
     isLink(rowDetails: any): boolean {
