@@ -2549,7 +2549,7 @@ public class RequestController
     public ResponseEntity<Integer >getRequestByImportId(@RequestParam(value = "id") Integer id) throws CustomException
     {
         List<RegistrationRequestsEntity> list = requestRepository.findRequestsByImportId(id);
-        if (list == null)
+        if (list.isEmpty())
         {
             return null;
         }

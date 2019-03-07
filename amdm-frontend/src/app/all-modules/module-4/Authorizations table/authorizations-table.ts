@@ -232,10 +232,11 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
             console.log("this.requestService.getImportRequest(rowDetails.id)", requestId)
 
             const urlToNavigate = 'dashboard/module/import-authorization/registered-medicament-approve/' + requestId;
-            if (urlToNavigate !== '') {
-                console.log('urlToNavigate', urlToNavigate)
-                this.route.navigate([urlToNavigate]);
-            }
+            console.log('urlToNavigate', urlToNavigate)
+            this.route.navigate([urlToNavigate]);
+
+        }, error => {
+            console.log("this.requestService.getImportRequest(rowDetails.id) errro");
         }));
     }
 
