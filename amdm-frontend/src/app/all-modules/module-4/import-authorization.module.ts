@@ -18,6 +18,8 @@ import {UploadFileService} from '../../shared/service/upload/upload-file.service
 import {MedRegApproveComponent} from './med-reg-approve/med-reg-approve.component';
 import {RequestService} from '../../shared/service/request.service';
 import {AuthorizationsTable} from "./Authorizations table/authorizations-table";
+import {ViewAuthorizationComponent} from "./Authorizations table/view-authorization/view-authorization.component";
+import {ViewAuthorizationDialog} from "./Authorizations table/view-authorization-dialog/view-authorization-dialog";
 
 
 @NgModule({
@@ -32,11 +34,12 @@ import {AuthorizationsTable} from "./Authorizations table/authorizations-table";
         XchangeinfoModule
     ],
     entryComponents: [
-        ImportMedDialogComponent, ImportManagementDialog
+        ImportMedDialogComponent, ImportManagementDialog, ViewAuthorizationDialog
     ],
     declarations: [ImportAuthorizationEvaluateComponent, ImportAuthorizationRequestComponent,
         MedRegComponent, AmbalajComponent,
-        MedRegApproveComponent, ImportMedDialogComponent, ImportManagement, ImportManagementDialog, AuthorizationsTable ],
+        MedRegApproveComponent, ImportMedDialogComponent, ImportManagement, ImportManagementDialog,
+        AuthorizationsTable, ViewAuthorizationComponent, ViewAuthorizationDialog ],
     providers: [UploadFileService, RequestService]
 })
 export class ImportAuthorizationModule {

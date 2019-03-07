@@ -1,22 +1,32 @@
-import {Cerere} from './../../../models/cerere';
+// import {Cerere} from './../../../models/cerere';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {MatDialog, MatDialogConfig} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
-import {AdministrationService} from '../../../shared/service/administration.service';
+// import {AdministrationService} from '../../../shared/service/administration.service';
 // import {debounceTime, distinctUntilChanged, filter, map, startWith, tap} from "rxjs/operators";
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
-import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+// import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 import {saveAs} from 'file-saver';
-import {Document} from '../../../models/document';
-import {RequestService} from '../../../shared/service/request.service';
+// import {Document} from '../../../models/document';
+// import {RequestService} from '../../../shared/service/request.service';
 import {Subject} from 'rxjs/index';
-import {LoaderService} from '../../../shared/service/loader.service';
-import {AuthService} from '../../../shared/service/authetication.service';
-import {MedicamentService} from '../../../shared/service/medicament.service';
-import {ImportMedDialogComponent} from '../dialog/import-med-dialog.component';
-import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {Cerere} from "../../../../models/cerere";
+import {ConfirmationDialogComponent} from "../../../../dialog/confirmation-dialog.component";
+import {RequestService} from "../../../../shared/service/request.service";
+import {LoaderService} from "../../../../shared/service/loader.service";
+import {MedicamentService} from "../../../../shared/service/medicament.service";
+import {NavbarTitleService} from "../../../../shared/service/navbar-title.service";
+import {AdministrationService} from "../../../../shared/service/administration.service";
+import {AuthService} from "../../../../shared/service/authetication.service";
+import {ImportMedDialogComponent} from "../../dialog/import-med-dialog.component";
+import {ViewAuthorizationDialog} from "../view-authorization-dialog/view-authorization-dialog";
+// import {LoaderService} from '../../../shared/service/loader.service';
+// import {AuthService} from '../../../shared/service/authetication.service';
+// import {MedicamentService} from '../../../shared/service/medicament.service';
+// import {ViewAuthorizationDialog} from '../dialog/import-med-dialog.component';
+// import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 
 export interface PeriodicElement {
     name: string;
@@ -27,11 +37,11 @@ export interface PeriodicElement {
 
 
 @Component({
-    selector: 'app-med-reg-approve',
-    templateUrl: './med-reg-approve.component.html',
-    styleUrls: ['./med-reg-approve.component.css']
+    selector: 'app-view-authorization',
+    templateUrl: './view-authorization.component.html',
+    styleUrls: ['./view-authorization.component.css']
 })
-export class MedRegApproveComponent implements OnInit, OnDestroy {
+export class ViewAuthorizationComponent implements OnInit, OnDestroy {
     cereri: Cerere[] = [];
     evaluateImportForm: FormGroup;
     currentDate: Date;
@@ -109,15 +119,16 @@ export class MedRegApproveComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.navbarTitleService.showTitleMsg('Aprobare autorizației');
         this.evaluateImportForm = this.fb.group({
-            'id': [''],
-            'requestNumber': [null],
+            'id': [{value: '', disabled: true}],
+            'requestNumber': [{value: null, disabled: true}],
             'startDate': [{value: new Date(), disabled: true}],
             'currentStep': ['AP'],
-            'company': ['', Validators.required],
-            'initiator': [null],
-            'assignedUser': [null],
+            // 'company': [''],
+            'company': [''],
+            'initiator': [{value: null, disabled: true}],
+            'assignedUser': [{value: null, disabled: true}],
             'data': {disabled: true, value: null},
-            'importType': [null, Validators.required],
+            'importType': [{value: null, disabled: true}],
             'type':
                 this.fb.group({
                     'id': ['']
@@ -127,50 +138,50 @@ export class MedRegApproveComponent implements OnInit, OnDestroy {
             'medicaments': [],
 
             'importAuthorizationEntity': this.fb.group({
-                'id': [Validators.required],
+                'id': [{value: null, disabled: true}],
                 'applicationDate': [new Date()],
-                'applicant': ['', Validators.required],
-                'seller': [null, Validators.required], // Tara si adresa lui e deja in baza
+                'applicant': [{value: '', disabled: true}],
+                'seller': [{value: null, disabled: true}], // Tara si adresa lui e deja in baza
                 'basisForImport': [],
-                'importer': [null, Validators.required], // Tara si adresa lui e deja in baza
-                'contract': [null, Validators.required],
-                'contractDate': [null, Validators.required],
-                'anexa': [null, Validators.required],
-                'anexaDate': [null, Validators.required],
-                'specification': [null, Validators.required],
-                'specificationDate': [null, Validators.required],
-                'conditionsAndSpecification': [''],
-                'quantity': [Validators.required],
-                'price': [Validators.required],
-                'currency': [Validators.required],
-                'summ': [Validators.required],
-                'producer_id': [Validators.required], // to be deleted
-                'stuff_type_id': [Validators.required], // to delete
-                'expiration_date': [Validators.required],
-                'customsNumber': [],
-                'customsDeclarationDate': [],
-                'authorizationsNumber': [], // inca nu exista la pasul acesta
-                'medType': [''],
-                'importAuthorizationDetailsEntityList': [],
-                'authorized': [],
-                'customsPoints': [],
+                'importer': [{value: null, disabled: true}], // Tara si adresa lui e deja in baza
+                'contract': [{value: null, disabled: true}],
+                'contractDate': [{value: null, disabled: true}],
+                'anexa': [{value: null, disabled: true}],
+                'anexaDate': [{value: null, disabled: true}],
+                'specification': [{value: null, disabled: true}],
+                'specificationDate': [{value: null, disabled: true}],
+                'conditionsAndSpecification': [{value: null, disabled: true}],
+                'quantity': [{value: null, disabled: true}],
+                'price': [{value: null, disabled: true}],
+                'currency': [{value: null, disabled: true}],
+                'summ': [{value: null, disabled: true}],
+                'producer_id': [{value: null, disabled: true}], // to be deleted
+                'stuff_type_id': [{value: null, disabled: true}], // to delete
+                'expiration_date': [{value: null, disabled: true}],
+                'customsNumber': [{value: null, disabled: true}],
+                'customsDeclarationDate': [{value: null, disabled: true}],
+                'authorizationsNumber': [{value: null, disabled: true}], // inca nu exista la pasul acesta
+                'medType': [{value: '', disabled: true}],
+                'importAuthorizationDetailsEntityList': [{value: null, disabled: true}],
+                'authorized': [{value: null, disabled: true}],
+                'customsPoints': [{value: null, disabled: true}],
                 'unitOfImportTable': this.fb.group({
-                    customsCode: [null, Validators.required],
-                    name: [null, Validators.required],
-                    quantity: [null, Validators.required],
-                    price: [null, Validators.required],
-                    currency: [null, Validators.required],
-                    summ: [null, Validators.required],
-                    producer: [null, Validators.required],
-                    expirationDate: [null, Validators.required],
-                    atcCode: [null, Validators.required],
-                    medicament: [null, Validators.required],
-                    pharmaceuticalForm: [null, Validators.required],
-                    dose: [null, Validators.required],
-                    registrationRmNumber: [null, Validators.required],
-                    unitsOfMeasurement: [null, Validators.required],
-                    registrationRmDate: [null, Validators.required],
-                    internationalMedicamentName: [null, Validators.required]
+                    customsCode: [{value: null, disabled: true}],
+                    name: [{value: '', disabled: true}],
+                    quantity: [{value: null, disabled: true}],
+                    price: [{value: null, disabled: true}],
+                    currency: [{value: null, disabled: true}],
+                    summ: [{value: null, disabled: true}],
+                    producer: [{value: null, disabled: true}],
+                    expirationDate: [{value: null, disabled: true}],
+                    atcCode: [{value: null, disabled: true}],
+                    medicament: [{value: null, disabled: true}],
+                    pharmaceuticalForm: [{value: null, disabled: true}],
+                    dose: [{value: null, disabled: true}],
+                    registrationRmNumber: [{value: null, disabled: true}],
+                    unitsOfMeasurement: [{value: null, disabled: true}],
+                    registrationRmDate: [{value: null, disabled: true}],
+                    internationalMedicamentName: [{value: null, disabled: true}]
                 }),
             }),
         });
@@ -482,7 +493,7 @@ export class MedRegApproveComponent implements OnInit, OnDestroy {
         dialogConfig2.data.medtType = this.importData.importAuthorizationEntity.medType;
         dialogConfig2.data.currentStep = this.importData.currentStep;
 
-        const dialogRef = this.dialog.open(ImportMedDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(ViewAuthorizationDialog, dialogConfig2);
 
         dialogRef.afterClosed().subscribe(result => {
             // console.log('result', result);

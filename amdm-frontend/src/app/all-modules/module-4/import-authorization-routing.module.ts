@@ -6,6 +6,7 @@ import {NgModule} from '@angular/core';
 import {MedRegApproveComponent} from './med-reg-approve/med-reg-approve.component';
 import {ImportManagement} from './import-management/import-management';
 import {AuthorizationsTable} from "./Authorizations table/authorizations-table";
+import {ViewAuthorizationComponent} from "./Authorizations table/view-authorization/view-authorization.component";
 
 const routes: Routes = [
     {path: 'register', component: ImportAuthorizationRequestComponent},
@@ -23,6 +24,8 @@ const routes: Routes = [
 
     {path: 'import-management/:id', component: ImportManagement},
     {path: 'authorizations-table', component:  AuthorizationsTable,},
+
+    {path: 'view-authorization/:id', component:  ViewAuthorizationComponent,},
 ];
 
 @NgModule({

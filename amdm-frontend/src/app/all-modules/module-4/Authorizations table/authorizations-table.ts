@@ -16,7 +16,7 @@ import {RequestService} from "../../../shared/service/request.service";
 import {SuccessOrErrorHandlerService} from "../../../shared/service/success-or-error-handler.service";
 
 @Component({
-    selector: 'app-task',
+    selector: 'app-authorizations-table',
     templateUrl: './authorizations-table.html',
     styleUrls: ['./authorizations-table.css']
 })
@@ -231,7 +231,7 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions.push(this.requestService.getRequestByImportId(rowDetails.id).subscribe(requestId => {
             console.log("this.requestService.getImportRequest(rowDetails.id)", requestId)
 
-            const urlToNavigate = 'dashboard/module/import-authorization/registered-medicament-approve/' + requestId;
+            const urlToNavigate = 'dashboard/module/import-authorization/view-authorization/' + requestId;
             console.log('urlToNavigate', urlToNavigate)
             this.route.navigate([urlToNavigate]);
 
