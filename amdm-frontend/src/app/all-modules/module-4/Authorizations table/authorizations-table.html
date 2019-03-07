@@ -2,7 +2,7 @@
 	<form [formGroup]="taskForm">
 		<div class="row">
 
-			<div class="col-3">
+			<div class="col-4">
 				<div class="md-form">
 					<input id="subject" mdbInputDirective type="text" class="form-control" formControlName="subject">
 					<label for="subject">Numărul autorizației</label>
@@ -14,21 +14,11 @@
 					<label for="medicament">Cod Amed sau Denumiera</label>
 				</div>
 			</div>
-			<div class="col-2">
-				<div class="md-form-modified">
-					<mat-form-field class="w-100">
-						<input matInput [matDatepicker]="expirationDate" placeholder="Data expirarii"
-						       formControlName="expirationDate">
-						<mat-datepicker-toggle matSuffix [for]="expirationDate"></mat-datepicker-toggle>
-						<mat-datepicker touchUi #expirationDate></mat-datepicker>
-					</mat-form-field>
-				</div>
-			</div>
-			<div class="col-md-3">
+			<div class="col-md-4">
 				<div class="md-form-modified">
 					<ng-select [items]="companii | async"
 					           bindLabel="name"
-					           placeholder="Solicitantul"
+					           placeholder="Compania"
 					           formControlName="company"
 					           [loading]="loadingCompany"
 					           [typeahead]="companyInputs">
@@ -39,14 +29,8 @@
 					</ng-select>
 				</div>
 			</div>
-			<div class="col-2">
-				<div class="md-form">
-					<input id="summ" mdbInputDirective type="text" class="form-control" formControlName="summ">
-					<label for="summ">Suma</label>
-				</div>
-			</div>
 
-			<div class="col-4">
+			<div class="col-3">
 				<div class="md-form-modified">
 					<ng-select id="medType" [items]="importType"
 					           bindLabel="description"
@@ -56,7 +40,27 @@
 				</div>
 			</div>
 
+			<div class="col-3">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input matInput [matDatepicker]="expirationDate" placeholder="Data expirarii"
+						       formControlName="expirationDate">
+						<mat-datepicker-toggle matSuffix [for]="expirationDate"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #expirationDate></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+
 			<div class="col-2">
+				<div class="md-form">
+					<input id="summ" mdbInputDirective type="text" class="form-control" formControlName="summ">
+					<label for="summ">Suma</label>
+				</div>
+			</div>
+
+
+
+			<div class="col-3">
 				<div class="md-form-modified">
 					<ng-select id="status" [items]="status"
 					           bindLabel="description"
@@ -65,27 +69,14 @@
 					</ng-select>
 				</div>
 			</div>
-		</div>
-		<div class="row">
-
-			<div class="col">
-				<div class="md-form-modified text-center">
-					<!--<button type="button" class="btn btn-indigo waves-light btn-md btn-rounded-button z-depth-4"-->
-					<!--mdbWavesEffect (click)="findTasks();"><i class="fa fa-search fa-lg" aria-hidden="true"></i>-->
-					<!--</button>-->
-					<button type="button" class="btn btn-danger waves-light btn-md btn-rounded-button z-depth-4"
-					        mdbWavesEffect (click)="findTasks2();"><i class="fa fa-search fa-lg" aria-hidden="true"></i>
-					</button>
-				</div>
+			<div class="col-1">
+			<button type="button" class="btn btn-indigo waves-light btn-md btn-rounded-button z-depth-4"
+			        mdbWavesEffect (click)="findTasks2();"><i class="fa fa-search fa-lg" aria-hidden="true"></i>
+			</button>
 			</div>
 		</div>
 	</form>
 	<div class="table-width">
-		<!--<div class="text-right">-->
-		<!--<mat-form-field class="w-25">-->
-		<!--<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtru" class="w-25">-->
-		<!--</mat-form-field>-->
-		<!--</div>-->
 		<div class="text-right" *ngIf="visibility">
 			<mat-form-field class="w-25">
 				<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtru" class="w-25">
@@ -103,7 +94,6 @@
 							<i class="fa fa-lg fa-mt" aria-hidden="true" (click)="changeVisibility();" [ngClass]="visibility ? 'fa-touched fa-search-plus' : 'fa-untouched fa-search-minus'"></i>
 							<i class="fa fa-file-excel-o fa-mt fa-lg" aria-hidden="true" mdbTooltip="Export in Excel" (click)="exportToExcel();"></i>
 							<i class="fa fa-files-o fa-mt fa-lg" aria-hidden="true" mdbTooltip="Export in CSV" (click)="exportToCsv();"></i>
-							<!--<i class="fa fa-file-pdf-o fa-mt fa-lg" atasria-hidden="true" mdbTooltip="Export in Pdf" (click)="exportToPdf();"></i>-->
 						</div>
 					</div>
 				</div>

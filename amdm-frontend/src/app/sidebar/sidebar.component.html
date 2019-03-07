@@ -66,6 +66,12 @@
                 </li>
                 <li class="nav-item" [routerLinkActive]="['active']"
                     *ngIf="checkRole('scr_module_5') || checkRole('scr_admin')">
+                    <a routerLink="/dashboard/module/import-authorization/authorizations-table" class="pl-3 nav-link waves-light"
+                       mdbWavesEffect><i class="fa fa-handshake-o fa-lg" aria-hidden="true"></i> Gestionare autorizatiilor</a>
+                       <!--mdbWavesEffect><i class="fa fa-handshake-o fa-lg" aria-hidden="true"></i> Autorizatiilor</a>-->
+                </li>
+                <li class="nav-item" [routerLinkActive]="['active']"
+                    *ngIf="checkRole('scr_module_5') || checkRole('scr_admin')">
                     <a routerLink="/dashboard/management/auto-revaluation" class="pl-3 nav-link waves-light"
                        mdbWavesEffect><i class="fa fa-balance-scale fa-lg" aria-hidden="true"></i> Reevaluare
                         prețuri</a>
@@ -203,7 +209,11 @@
                        class="pl-3 nav-link waves-light"
                        mdbWavesEffect><i class="fa fa-lock fa-lg" aria-hidden="true"></i></a>
                 </li>
-
+                <li class="nav-item" [routerLinkActive]="['active']" *ngIf="checkRole('scr_admin')">
+                    <a mdbTooltip="Gestionare autorizatiilor" placement="right" routerLink="dashboard/module/import-authorization/authorizations-table"
+                       class="pl-3 nav-link waves-light"
+                       mdbWavesEffect><i class="fa fa-lock fa-lg" aria-hidden="true"></i></a>
+                </li>
             </ul>
         </links>
     </div>
